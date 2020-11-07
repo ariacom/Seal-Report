@@ -378,7 +378,7 @@ namespace Seal.Helpers
             return result;
         }
 
-        public void ExecuteProcess(string path)
+        public void ExecuteProcess(string path, string arguments = null, string workingDirectory = null)
         {
             var proc = new Process
             {
@@ -388,7 +388,9 @@ namespace Seal.Helpers
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
+                    WorkingDirectory = workingDirectory,
+                    Arguments = arguments
                 }
             };
             LogMessage("Executing '{0}'", path);

@@ -148,6 +148,17 @@ var SWIDashboard = /** @class */ (function () {
             _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false, true); }, 1000 * data.refresh);
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
+        //Handle overflow for restrictions
+        var selects = "#" + data.itemguid + " .enum,#" + data.itemguid + " .operator_select";
+        $(selects).on('show.bs.dropdown', function () {
+            $('.muuri-item').css("overflow", "visible");
+            $('.muuri-item').css("z-index", "0");
+            $(this).closest(".muuri-item").css("z-index", "1");
+        });
+        $(selects).on('hidden.bs.dropdown', function () {
+            $('.muuri-item').css("overflow", "auto");
+            $('.muuri-item').css("z-index", "1");
+        });
     };
     SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force, forTimer) {
         if (!forTimer)
@@ -199,7 +210,7 @@ var SWIDashboard = /** @class */ (function () {
                     }
                     if (item.GroupName != "") {
                         //Group name 
-                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity", "0.2");
+                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName.startsWith("_") ? "" : item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity", "0.2");
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
                         var groupDrag = $("<h3 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder);

@@ -909,7 +909,7 @@ namespace SealWebServer.Controllers
             }
         }
 
-        ReportExecution getWidgetViews(DashboardWidget widget, out Report report, ref ReportView view, ref ReportView modelView)
+        ReportExecution getWidgetViews(Dashboard dashboard, DashboardWidget widget, out Report report, ref ReportView view, ref ReportView modelView)
         {
             ReportExecution execution = null;
             var filePath = Repository.ReportsFolder + widget.ReportPath;
@@ -925,7 +925,7 @@ namespace SealWebServer.Controllers
                 executions.RemoveAll(i => i.Report.FilePath == filePath && i.Report.LastModification != lastDateTime);
 
                 //find existing execution
-                foreach (var exec in executions.Where(i => i.Report.FilePath == filePath))
+                foreach (var exec in executions.Where(i => i.Report.FilePath == filePath && i.Dashboard == dashboard))
                 {
                     exec.Report.GetWidgetViewToParse(exec.Report.ExecutionView.Views, widget.GUID, ref view, ref modelView);
                     if (view != null)
@@ -946,7 +946,7 @@ namespace SealWebServer.Controllers
                     //Set url
                     report.WebUrl = GetWebUrl(Request, Response);
 
-                    execution = new ReportExecution() { Report = report };
+                    execution = new ReportExecution() { Report = report, Dashboard = dashboard };
                     executions.Add(execution);
                 }
                 else
@@ -1001,7 +1001,7 @@ namespace SealWebServer.Controllers
 
                 ReportView view = null, modelView = null;
                 Report report = null;
-                ReportExecution execution = getWidgetViews(widget, out report, ref view, ref modelView);
+                ReportExecution execution = getWidgetViews(dashboard, widget, out report, ref view, ref modelView);
                 report.ExecutionTriggerView = null;
                 report.ForWidget = true;
 
@@ -1163,7 +1163,7 @@ namespace SealWebServer.Controllers
                                 {
                                     ReportView view = null, modelView = null;
                                     Report report = null;
-                                    ReportExecution execution = getWidgetViews(item.Widget, out report, ref view, ref modelView);
+                                    ReportExecution execution = getWidgetViews(dashboard, item.Widget, out report, ref view, ref modelView);
                                     if (report.Cancel) break;
                                     if (modelView != null)
                                     {

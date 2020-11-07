@@ -272,8 +272,9 @@ function initRestrictions(parent) {
                     .done(function (data) {
                         //Update each view involved
                         data.forEach(function (value) {
-                            if (form.attr("id") != $(value).attr("id")) {
-                                var viewId = "#" + $(value).attr("id");
+                            var id = $(value).attr("id");
+                            if (id && form.attr("id") != id) {
+                                var viewId = "#" + id;
                                 $(viewId).html($(value).html());
                                 initRestrictions(viewId);
                             }
@@ -382,7 +383,7 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
     if (!forChart && source.height() > 30) posTop -= (source.height() - 30);
     posLeft += Math.min(0, window.innerWidth + scrollLeft - $popup.width() - posLeft);
     posTop += Math.min(0, window.innerHeight + scrollTop - $popup.height() - posTop - 50);
-
+    if ($(source).hasClass("text-right")) posLeft += source.width() - 120;
     $popup
         .show()
         .css({

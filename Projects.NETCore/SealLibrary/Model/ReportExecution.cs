@@ -80,6 +80,11 @@ namespace Seal.Model
         public Report RootReport = null;
 
         /// <summary>
+        /// Current dashboard if the report is executed for a dashboard
+        /// </summary>
+        public Dashboard Dashboard = null;
+
+        /// <summary>
         /// The parameter used if the execution was for a navigation
         /// </summary>
         public string NavigationParameter = null;
@@ -619,16 +624,17 @@ namespace Seal.Model
         public List<ReportModel> GetReportModelsToExecute()
         {
             var result = new List<ReportModel>();
-            if ((!Report.ForWidget && RootReport != null && RootReport.IsNavigating) ||  Report.ExecutionTriggerView != null)
+            if ((!Report.ForWidget && RootReport != null && RootReport.IsNavigating) || Report.ExecutionTriggerView != null)
             {
                 //Navigation or trigger view, we execute all the models
                 result = Report.ExecutionModels;
             }
-            else {
+            else
+            {
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
                     //Skip models having view restriction not triggered
-                    if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Contains(i)))
+                    if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Exists(j => j.IsIdenticalForPrompt(i))))
                     {
                         if (Report.ExecutionTriggerView == null || !model.ExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
                         {
@@ -903,7 +909,7 @@ namespace Seal.Model
         }
 
         bool _processSubReports = false;
-        Dictionary<ReportModel, List<string>> _previousPageIds = new Dictionary<ReportModel, List<string>>(); 
+        Dictionary<ReportModel, List<string>> _previousPageIds = new Dictionary<ReportModel, List<string>>();
         private void buildPages(ReportModel model)
         {
             _processSubReports = model.Elements.Exists(i => i.MetaColumn.SubReports.Count > 0);
@@ -1218,8 +1224,9 @@ namespace Seal.Model
                 if (colTotalElements.Count() > 0 && page.DataTable.Lines.Count > 0)
                 {
                     //We add first one/several final lines (one per element)
-                    ResultCell[] totalLine = new ResultCell[page.DataTable.Lines[0].Length];
-                    for (int i = 0; i < page.DataTable.Lines[0].Length; i++)
+                    var len = page.DataTable.Lines[0].Length;
+                    ResultCell[] totalLine = new ResultCell[len];
+                    for (int i = 0; i < len; i++)
                     {
                         if (Report.Cancel) break;
                         foreach (var element in colTotalElements)
@@ -1241,6 +1248,7 @@ namespace Seal.Model
                                     {
                                         totalCell.IsTitle = true;
                                         totalCell.Value = Report.Translate("Total");
+                                        totalCell.Element = null;
                                     }
                                 }
                                 totalLine[i] = totalCell;
@@ -1569,6 +1577,38 @@ namespace Seal.Model
             model.ExecuteLoadScript(model.FinalScript, "Final Script", model);
         }
 
+        private void buildNoAxisSerie(ResultPage page, ResultData data)
+        {
+            var firstData = data.Data.First(i => i.Element.IsSerie);
+            firstData.Element.AxisUseValues = false;
+            ResultSerie serie = page.Series.FirstOrDefault();
+            if (serie == null)
+            {
+                serie = new ResultSerie() { Element = firstData.Element, SplitterValues = "", SplitterCells = new ResultCell[0] { } };
+                page.Series.Add(serie);
+            }
+
+            int dimIndex = 0;
+            foreach (var dataCell in data.Data.Where(i => i.Element.IsSerie))
+            {
+                if (page.PrimaryXDimensions.Count == dimIndex)
+                {
+                    var newXValue = new ResultCell() { Value = dataCell.Element.DisplayNameElTranslated, Element = dataCell.Element };
+                    page.PrimaryXDimensions.Add(new ResultCell[1] { newXValue });
+                }
+                var xPrimaryDimensions = page.PrimaryXDimensions[dimIndex++];
+                ResultSerieValue serieValue = serie.Values.FirstOrDefault(i => i.XDimensionValues == xPrimaryDimensions);
+                if (serieValue == null)
+                {
+                    serieValue = new ResultSerieValue() { XDimensionValues = xPrimaryDimensions };
+                    serieValue.Yvalue = new ResultTotalCell() { Element = firstData.Element, IsSerie = true };
+                    serie.Values.Add(serieValue);
+                }
+
+                serieValue.Yvalue.Cells.Add(new ResultCell() { Element = firstData.Element, Value = dataCell.Value, ContextRow = dataCell.ContextRow, ContextCol = dataCell.ContextCol });
+            }
+        }
+
         private void buildSeries(ReportModel model)
         {
             foreach (ResultPage page in model.Pages)
@@ -1588,12 +1628,19 @@ namespace Seal.Model
                         if (Report.Cancel) break;
 
                         ResultCell[] xPrimaryDimensions = GetXSerieCells(AxisType.Primary, data.Row, data.Column, model);
+                        ResultCell[] xSecondaryDimensions = GetXSerieCells(AxisType.Secondary, data.Row, data.Column, model);
+
+                        if (xPrimaryDimensions.Length == 0 && xSecondaryDimensions.Length == 0)
+                        {
+                            //No axis handling: Create only one serie based on element names
+                            buildNoAxisSerie(page, data);
+                            break;
+                        }
 
                         int primaryIndex = FindDimension(xPrimaryDimensions, page.PrimaryXDimensions);
                         xPrimaryDimensions = page.PrimaryXDimensions[primaryIndex];
                         setSubReportNavigation(xPrimaryDimensions, data.Hidden);
 
-                        ResultCell[] xSecondaryDimensions = GetXSerieCells(AxisType.Secondary, data.Row, data.Column, model);
                         int secondaryIndex = FindDimension(xSecondaryDimensions, page.SecondaryXDimensions);
                         xSecondaryDimensions = page.SecondaryXDimensions[secondaryIndex];
                         setSubReportNavigation(xSecondaryDimensions, data.Hidden);

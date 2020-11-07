@@ -75,13 +75,73 @@ namespace Seal.Model
         public object Tag;
 
         /// <summary>
+        /// Default Css Class for a cell
+        /// </summary>
+        public static string DefaultCellCssClass = "";
+
+        /// <summary>
+        /// Default Css Class for a numeric cell
+        /// </summary>
+        public static string DefaultNumericCellCssClass = "text-right";
+
+        /// <summary>
+        /// Default Css Class  for a datetime cell
+        /// </summary>
+        public static string DefaultDateTimeCellCssClass = "text-right";
+
+        /// <summary>
+        /// Default Css Style for a cell
+        /// </summary>
+        public static string DefaultCellCssStyle = "";
+
+        /// <summary>
+        /// Default Css Style for a numeric cell
+        /// </summary>
+        public static string DefaultNumericCellCssStyle = "";
+
+        /// <summary>
+        /// Default Css Style for a datetime cell
+        /// </summary>
+        public static string DefaultDateTimeCellCssStyle = "";
+
+        /// <summary>
+        /// Default Css Class for a title cell
+        /// </summary>
+        public static string DefaultTitleCssClass = "";
+
+        /// <summary>
+        /// Default Css Class for a numeric title cell. Default value is 'text-right'
+        /// </summary>
+        public static string DefaultNumericTitleCssClass = "text-right";
+
+        /// <summary>
+        /// Default Css Class for a datetime title cell. Default value is 'text-right'
+        /// </summary>
+        public static string DefaultDateTimeTitleCssClass = "text-right";
+
+        /// <summary>
+        /// Default Css Style for a title cell
+        /// </summary>
+        public static string DefaultTitleCssStyle = "";
+
+        /// <summary>
+        /// Default Css Style for a numeric title cell. Default value is 'padding-right:25px;'
+        /// </summary>
+        public static string DefaultNumericTitleCssStyle = "padding-right:25px;";
+
+        /// <summary>
+        /// Default Css Style for a datetime title cell. Default value is 'padding-right:25px;'
+        /// </summary>
+        public static string DefaultDateTimeTitleCssStyle = "padding-right:25px;";
+
+        /// <summary>
         /// HTML value of the cell
         /// </summary>
         public string HTMLValue
         {
             get
             {
-                return !string.IsNullOrEmpty(FinalValue) ? FinalValue : DisplayValue.Replace("\r","").Replace("\n","<br>");
+                return !string.IsNullOrEmpty(FinalValue) ? FinalValue : DisplayValue.Replace("\r", "").Replace("\n", "<br>");
             }
         }
 
@@ -190,6 +250,60 @@ namespace Seal.Model
             }
         }
 
+        void updateFinalCssClass()
+        {
+            if (string.IsNullOrEmpty(FinalCssClass) && Element != null && Value != null && Element.IsEnum)
+            {
+                MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
+                if (value != null && !string.IsNullOrEmpty(value.Class)) FinalCssClass = value.Class;
+            }
+        }
+
+
+        /// <summary>
+        /// Css cell class for the summary table
+        /// </summary>
+        public string CellCssSummaryClass
+        {
+            get
+            {
+                updateFinalCssClass();
+                if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
+
+                string result = "";
+                if (Element != null)
+                {
+                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssClass : DefaultCellCssClass;
+                    else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssClass : DefaultNumericCellCssClass;
+                    else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssClass : DefaultDateTimeCellCssClass;
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Css cell class for the page table
+        /// </summary>
+        public string CellCssPageClass
+        {
+            get
+            {
+                updateFinalCssClass();
+                if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
+
+                string result = "";
+                if (Element != null)
+                {
+                    
+                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssClass : DefaultCellCssClass;
+                    else if (Element.IsNumeric) result = IsTitle ? "" : DefaultNumericCellCssClass;
+                    else if (Element.IsDateTime) result = IsTitle ? "" : DefaultDateTimeCellCssClass;
+                }
+                return result;
+            }
+        }
+
+
         /// <summary>
         /// Css cell class
         /// </summary>
@@ -197,18 +311,66 @@ namespace Seal.Model
         {
             get
             {
-                if (Element != null && Value != null && Element.IsEnum)
-                {
-                    MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
-                    if (value != null && !string.IsNullOrEmpty(value.Class)) FinalCssClass = value.Class;
-                }
-
+                updateFinalCssClass();
                 if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
 
                 string result = "";
-                if (!IsTitle && Element != null && !Element.IsEnum && string.IsNullOrEmpty(result))
+                if (Element != null)
                 {
-                    if (Element.IsNumeric || Element.IsDateTime) result = "text-right";
+                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssClass : DefaultCellCssClass;
+                    else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssClass : DefaultNumericCellCssClass;
+                    else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssClass : DefaultDateTimeCellCssClass;
+                }
+                return result;
+            }
+        }
+
+        void updateFinalCssStyle()
+        {
+            if (string.IsNullOrEmpty(FinalCssClass) && Element != null && Value != null && Element.IsEnum)
+            {
+                MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
+                if (value != null && !string.IsNullOrEmpty(value.Css)) FinalCssStyle = value.Css;
+            }
+        }
+
+        /// <summary>
+        /// Css cell style for summary table
+        /// </summary>
+        public string CellCssSummaryStyle
+        {
+            get
+            {
+                updateFinalCssStyle();
+                if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
+
+                string result = "";
+                if (Element != null)
+                {
+                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssStyle : DefaultCellCssStyle;
+                    else if (Element.IsNumeric) result = IsTitle ? "" : DefaultNumericCellCssStyle;
+                    else if (Element.IsDateTime) result = IsTitle ? "" : DefaultDateTimeCellCssStyle;
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Css cell style for page table
+        /// </summary>
+        public string CellCssPageStyle
+        {
+            get
+            {
+                updateFinalCssStyle();
+                if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
+
+                string result = "";
+                if (Element != null)
+                {
+                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssStyle : DefaultCellCssStyle;
+                    else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssStyle : DefaultNumericCellCssStyle;
+                    else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssStyle : DefaultDateTimeCellCssStyle;
                 }
                 return result;
             }
@@ -221,14 +383,17 @@ namespace Seal.Model
         {
             get
             {
-                if (Element != null && Value != null && Element.IsEnum)
-                {
-                    MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
-                    if (value != null && !string.IsNullOrEmpty(value.Css)) FinalCssStyle = value.Css;
-                }
-
+                updateFinalCssStyle();
                 if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
-                return "";
+
+                string result = "";
+                if (Element != null)
+                {
+                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssStyle : DefaultCellCssStyle;
+                    else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssStyle : DefaultNumericCellCssStyle;
+                    else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssStyle : DefaultDateTimeCellCssStyle;
+                }
+                return result;
             }
         }
 

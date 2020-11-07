@@ -788,6 +788,16 @@ namespace SealWebServer.Controllers
             return Json(result);
         }
 
+
+        void parseViews(ReportView  view, List<string> views)
+        {
+            views.Add(view.Parse());
+            foreach (var child in view.Views)
+            {
+                parseViews(child, views);
+            }
+        }
+
         /// <summary>
         /// Return the list of values for a Enumerated list with a filter for a report execution
         /// </summary>
@@ -800,6 +810,8 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 ReportExecution execution = getExecution(execution_guid);
+                if (execution == null) throw new Exception(string.Format("Unable to find execution id {0}", execution_guid));
+
                 var report = execution.Report;
                 report.ExecutionTriggerView = execution.Report.AllViews.FirstOrDefault(i => form_id.EndsWith(i.IdSuffix));
 
@@ -842,6 +854,7 @@ namespace SealWebServer.Controllers
 
                     lock (execution)
                     {
+                        report.IsNavigating = false;
                         initInputRestrictions(report);
 
                         //Get all restrictions involved
@@ -879,6 +892,7 @@ namespace SealWebServer.Controllers
                         foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0))
                         {
                             bool parseView = hasInputValue; //Parse all if input value involved
+                            if (!parseView) parseView = view.GetBoolValue(Parameter.ForceRefreshParameter);
 
                             if (!parseView && view.Model != null) //Parse if one restriction in the model
                             {
@@ -897,7 +911,11 @@ namespace SealWebServer.Controllers
                                     report.Status = ReportStatus.RenderingDisplay;
                                     report.CurrentModelView = view;
                                     views.Add(view.Parse());
-
+                                    if (report.ForWidget)
+                                    {
+                                        //Add also children when parsing for Widgets
+                                        foreach (var child in view.Views) parseViews(child, views);
+                                    }
                                 }
                                 finally
                                 {
