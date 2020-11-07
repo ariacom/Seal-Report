@@ -10,7 +10,7 @@
         gridLayout = view.GetValue("grid_layout");
     }
 }
-<div class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
+<div id='@("container_" + view.IdSuffix)' class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
     @foreach (string row in view.GetGridLayoutRows(gridLayout.Trim()))
     {
         <div class="row">

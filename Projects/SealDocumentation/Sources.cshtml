@@ -413,19 +413,26 @@
                             </p>
                             <p>
                                 In addition to <b>No SQL Tables</b>, a <strong>LINQ Data Source</strong> can have <b>Table Links</b> that reference tables defined in other <b>SQL or LINQ Data Sources</b> installed in the Repository.<br />
-    <b>Joins</b> can then be defined using the <b>Tables</b> referenced by the <b>Table Link</b>.
-</p>
+                                <b>Joins</b> can then be defined using the <b>Tables</b> referenced by the <b>Table Link</b>.
+                            </p>
                             <div class="bs-callout bs-callout-info">
                                 Defining <b>Table Links</b> and <b>Joins</b> allow to join different <b>Data Sources</b> (<eg>e.g. Performing a report that shows data from a SQL database and an Excel sheet</eg>).
                             </div>
-                        </div>
-                        <!-- end col -->
-                    </div>
-                    <!-- end row -->
-                    <div class="row">
-                        <div class="col-md-12">
+                            <p>
+                                In the LINQ Query, elements defined in a <b>No SQL table</b> are named with the <b>Table Name</b> and the <b>Column Name</b> (<eg>e.g. for the objective column of Excel Employee Objective: <i>ExcelEmployeeObjective["objective"]</i></eg>), and elements defined in a <b>Table Link</b> are named using the <b>Data Source Name</b> and the original <b>Column Name</b> (<eg>e.g. for the LastName column of Employees: <i>Northwind["Employees.LastName"]</i></eg>). 
+                            </p>
                             <div class="bs-callout bs-callout-demo">
-                                <h4>LINQ Source Sample</h4>
+                                <h4>Join Script Sample</h4>
+                                Example of a <code>Join clause</code> between <b>Northwind</b> tables and an <b>Excel Sheet</b> table.
+                                <pre class="brush: csharp">
+new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
+equals 
+new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }
+                    </pre>
+
+                            </div>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>LINQ Source Samples</h4>
                                 <a class="btn btn-primary live-sample">Live Sample: 2-LINQ/200-LINQ Source - Excel and CSV Sources</a><br />
                                 This report one new LINQ SQL Source with 2 No SQL Tables: One loaded from an Excel Sheet, one from a CSV file.<br /><br />
                                 <a class="btn btn-primary">Repository Data Source Sample: LINQ Sources</a><br />
@@ -481,16 +488,11 @@
     metaTable.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
                     </pre>
-                                <br />Example of a <code>Join clause</code> between <b>Northwind</b> tables and an <b>Excel Sheet</b> table.
-                                <pre class="brush: csharp">
-new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
-equals 
-new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }
-                    </pre>
-
                             </div>
                         </div>
-                        <!-- end row -->
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
                 </section>
                 <!-- end section -->
 
@@ -507,4 +509,5 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
         $(document).ready(function () {
             $("#sources_nav").addClass("active");
         });
-    </script>}
+    </script>
+}

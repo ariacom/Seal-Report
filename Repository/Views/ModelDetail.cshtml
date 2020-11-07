@@ -24,7 +24,7 @@ else
                         @for (int i = 0; i < page.PageTable.ColumnCount; i++)
                         {
                             ResultCell value = page.PageTable[1, i];
-                            <td @Raw(Helper.AddAttribute("class", value.CellCssClass)) @Raw(Helper.AddAttribute("style", value.CellCssStyle)) >@Raw(value.HTMLValue)</td>
+                            <td @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle)) >@Raw(value.HTMLValue)</td>
                         }
                     </tr>
                 </table>
@@ -41,8 +41,8 @@ else
                         ResultCell title = page.DataTable[0, i];
                         ResultCell value = page.DataTable[1, i];
                         <tr>
-                            <th @Raw(Helper.AddAttribute("class", title.CellCssClass)) @Raw(Helper.AddAttribute("style", title.CellCssStyle))>@Raw(title.HTMLValue):</th>
-                            <td @Raw(Helper.AddAttribute("class", value.CellCssClass)) @Raw(Helper.AddAttribute("style", value.CellCssStyle)) >@Raw(value.HTMLValue)</td>
+                            <th @Raw(Helper.AddAttribute("class", title.CellCssPageClass)) @Raw(Helper.AddAttribute("style", title.CellCssPageStyle))>@Raw(title.HTMLValue):</th>
+                            <td @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle)) >@Raw(value.HTMLValue)</td>
                         </tr>
                     }
                 </table>

@@ -5,7 +5,7 @@
     int index = 0;
     var views = view.Views.OrderBy(i => i.SortOrder).ToList();
 }
-<div class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
+<div id='@("model_container_" + view.IdSuffix)' class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
     @foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))
     {
         <div class="row">

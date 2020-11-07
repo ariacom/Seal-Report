@@ -93,29 +93,30 @@ namespace Seal.Forms
             new Tuple<string, string>(
                 "Simple format",
 @"//For performances reason, consider to process your result table in a dedicated Task with an execution step 'Models generated, before rendering' 
-if (cell.IsTitle)
+    if (cell.IsTitle)
 	{
         if (cell.ContextIsSummaryTable) {
     		cell.FinalCssStyle = ""font-weight:bold;"";
 	    	cell.FinalCssClass = ""warning lead""; 
         }
         else if (cell.ContextIsPageTable) {
+    		cell.FinalCssStyle = ""font-weight:bold;"";
 	    	cell.FinalCssClass = ""info""; 
         }
         else {
     		cell.FinalCssStyle = ""font-weight:bold;"";
-	    	cell.FinalCssClass = ""warning""; 
+	    	cell.FinalCssClass = ""primary""; 
         }
 	}
     else {
         if (cell.IsSubTotal) {
-    		cell.FinalCssClass = ""danger"";
+    		cell.FinalCssClass = ""primary text-center"";
         }
         else if (cell.IsTotal) {
-    		cell.FinalCssClass = ""info"";
+    		cell.FinalCssClass = ""danger text-center"";
         }
         else {
-            cell.FinalCssClass = ""success right""; //These may be Bootstrap classes: active success info warning danger etc...
+            cell.FinalCssClass = ""success text-right""; //These may be Bootstrap classes: active success info warning danger etc...
         }
     }
 "

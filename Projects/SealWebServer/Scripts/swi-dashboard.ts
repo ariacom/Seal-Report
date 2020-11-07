@@ -245,7 +245,7 @@ class SWIDashboard {
 
                     if (item.GroupName != "") {
                         //Group name 
-                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity", "0.2");
+                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName.startsWith("_") ? "" : item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity", "0.2");
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
                         var groupDrag = $("<h3 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder)

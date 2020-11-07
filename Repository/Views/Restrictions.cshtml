@@ -4,7 +4,6 @@
     ReportView view = report.CurrentView;
 }
 
-<!--restrictions_div-->
 @if (report.GenerateHTMLDisplay)
 {
 <form id="form_@view.IdSuffix" execguid="@report.ExecutionGUID" method="post" target="" target_report="@view.GetValue("target_report")" target_dashboard="@view.GetValue("target_dashboard")" style="padding-top:5px">

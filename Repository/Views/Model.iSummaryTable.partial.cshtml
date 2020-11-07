@@ -14,12 +14,12 @@
     <thead>
         @for (int row = 0; row < 1; row++)
         {
-            <tr @Raw(Helper.AddAttribute("class", "tr-totals"))>
+            <tr  @Raw(view.AddAttribute("class", "summary_header_class")) @Raw(view.AddAttribute("style", "summary_header_css"))>
                 @for (int col = 0; col < reportModel.SummaryTable.ColumnCount; col++)
                 {
                     ResultCell cell = reportModel.SummaryTable[row, col];
                     if (!view.GetBoolValue("display_summary_totals") && cell.IsTotal) { continue; }
-                    <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>
+                    <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(cell))>
                         @Raw(cell.HTMLValue)
                     </td>
                 }
@@ -29,12 +29,12 @@
     <tbody>
         @for (int row = reportModel.SummaryTable.BodyStartRow; row < reportModel.SummaryTable.BodyEndRow; row++)
         {
-            <tr @Raw(Helper.AddAttribute("class", ""))>
+            <tr @Raw(view.AddAttribute("class", "summary_body_class")) @Raw(view.AddAttribute("style", "summary_body_css"))>
                 @for (int col = 0; col < reportModel.SummaryTable.ColumnCount; col++)
                 {
                     ResultCell cell = reportModel.SummaryTable[row, col];
                     if (!view.GetBoolValue("display_summary_totals") && cell.IsTotal) { continue; }
-                    <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>
+                    <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(cell))>
                         @Raw(cell.HTMLValue)
                     </td>
                 }
@@ -46,12 +46,12 @@
         <tfoot>
             @for (int row = reportModel.SummaryTable.BodyEndRow; row < reportModel.SummaryTable.RowCount; row++)
             {
-                <tr @Raw(Helper.AddAttribute("class", "tr-totals"))>
+                <tr @Raw(view.AddAttribute("class", "summary_footer_class")) @Raw(view.AddAttribute("style", "summary_footer_css"))>
                     @for (int col = 0; col < reportModel.SummaryTable.ColumnCount; col++)
                     {
                         ResultCell cell = reportModel.SummaryTable[row, col];
                         if (!view.GetBoolValue("display_summary_totals") && cell.IsTotal) { continue; }
-                        <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>
+                        <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(cell))>
                             @Raw(cell.HTMLValue)
                         </td>
                     }

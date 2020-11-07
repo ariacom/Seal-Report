@@ -23,7 +23,7 @@ namespace Seal.Model
         public string WidgetGUID { get; set; }
 
         /// <summary>
-        /// Group name
+        /// Group name. Group name can be displayed as a blank string if it starts with underscore (e.g. _separator1).
         /// </summary>
         public string GroupName { get; set; } = "";
 

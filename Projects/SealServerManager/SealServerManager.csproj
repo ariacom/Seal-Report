@@ -78,8 +78,8 @@
       <HintPath>..\..\..\..\..\..\Windows\SysWOW64\inetsrv\Microsoft.Web.Administration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.20.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
-      <HintPath>..\packages\TaskScheduler.2.8.20\lib\net452\Microsoft.Win32.TaskScheduler.dll</HintPath>
+    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.21.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
+      <HintPath>..\packages\TaskScheduler.2.8.21\lib\net452\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
     <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>

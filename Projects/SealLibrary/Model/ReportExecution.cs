@@ -80,6 +80,11 @@ namespace Seal.Model
         public Report RootReport = null;
 
         /// <summary>
+        /// Current dashboard if the report is executed for a dashboard
+        /// </summary>
+        public Dashboard Dashboard = null;
+
+        /// <summary>
         /// The parameter used if the execution was for a navigation
         /// </summary>
         public string NavigationParameter = null;
@@ -629,7 +634,7 @@ namespace Seal.Model
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
                     //Skip models having view restriction not triggered
-                    if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Contains(i)))
+                    if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Exists(j => j.IsIdenticalForPrompt(i))))
                     {
                         if (Report.ExecutionTriggerView == null || !model.ExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
                         {
@@ -1219,8 +1224,9 @@ namespace Seal.Model
                 if (colTotalElements.Count() > 0 && page.DataTable.Lines.Count > 0)
                 {
                     //We add first one/several final lines (one per element)
-                    ResultCell[] totalLine = new ResultCell[page.DataTable.Lines[0].Length];
-                    for (int i = 0; i < page.DataTable.Lines[0].Length; i++)
+                    var len = page.DataTable.Lines[0].Length;
+                    ResultCell[] totalLine = new ResultCell[len];
+                    for (int i = 0; i < len; i++)
                     {
                         if (Report.Cancel) break;
                         foreach (var element in colTotalElements)
@@ -1242,6 +1248,7 @@ namespace Seal.Model
                                     {
                                         totalCell.IsTitle = true;
                                         totalCell.Value = Report.Translate("Total");
+                                        totalCell.Element = null;
                                     }
                                 }
                                 totalLine[i] = totalCell;

@@ -272,8 +272,9 @@ function initRestrictions(parent) {
                     .done(function (data) {
                         //Update each view involved
                         data.forEach(function (value) {
-                            if (form.attr("id") != $(value).attr("id")) {
-                                var viewId = "#" + $(value).attr("id");
+                            var id = $(value).attr("id");
+                            if (id && form.attr("id") != id) {
+                                var viewId = "#" + id;
                                 $(viewId).html($(value).html());
                                 initRestrictions(viewId);
                             }
