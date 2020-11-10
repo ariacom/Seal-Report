@@ -62,6 +62,7 @@ namespace Seal.Model
                     GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("EnumGUIDEL").SetIsBrowsable(true);
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum);
 
                     GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
                     GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -703,12 +704,20 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause.
+        /// If Yes, empty cells are set to 0.
         /// </summary>
         [DefaultValue(false)]
         [Category("Advanced"), DisplayName("Set empty cells to zero"), Description("If Yes, empty cells are set to 0."), Id(7, 5)]
         public bool SetNullToZero { get; set; } = false;
         public bool ShouldSerializeSetNullToZero() { return SetNullToZero; }
+
+        /// <summary>
+        /// If Yes, all the values defined in the enumerated list will be shown in the tables, even if the value is not the database Result Set.
+        /// </summary>
+        [DefaultValue(false)]
+        [Category("Advanced"), DisplayName("Show all enum values"), Description("If Yes, all the values defined in the enumerated list will be shown in the tables, even if the value is not the database Result Set."), Id(8, 5)]
+        public bool ShowAllEnums { get; set; } = false;
+        public bool ShouldSerializeShowAllEnums() { return ShowAllEnums; }
 
 
         /// <summary>

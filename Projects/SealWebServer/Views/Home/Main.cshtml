@@ -34,6 +34,7 @@
     <!--disable autofill for Chrome-->
     <input type="text" style="display:none">
     <input type="password" style="display:none">
+    <input type="hidden" name="id_load" id="id_load" value="" />
 
     @Html.Partial("~/Views/Home/Menu.cshtml")
 
@@ -295,10 +296,10 @@
                         </div>
                     </div>
                 </div>
-                    <div class="modal-footer">
-                        <button id="dashboard-export" type="button" class="btn btn-primary" data-dismiss="modal">@repository.TranslateWeb("Export")</button>
-                    </div>
+                <div class="modal-footer">
+                    <button id="dashboard-export" type="button" class="btn btn-primary" data-dismiss="modal">@repository.TranslateWeb("Export")</button>
                 </div>
+            </div>
         </div>
     </div>
 

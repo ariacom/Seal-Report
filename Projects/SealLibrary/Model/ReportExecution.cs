@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace Seal.Model
 {
@@ -724,6 +725,26 @@ namespace Seal.Model
             }
         }
 
+        private object[] getNewEnumRow(ReportModel model, ReportElement element, string enumValue, ResultCell[] pageValues)
+        {
+            //Force enum value by adding a row...
+            var objs = new object[model.ResultTable.Columns.Count];
+            for (int i = 0; i < model.ResultTable.Columns.Count; i++)
+            {
+                object obj = null;
+                if (element.SQLColumnName == model.ResultTable.Columns[i].ColumnName) obj = enumValue;
+                else if (pageValues != null)
+                {
+                    foreach (var pageValue in pageValues)
+                    {
+                        if (pageValue.Element.SQLColumnName == model.ResultTable.Columns[i].ColumnName) obj = pageValue.Value;
+                    }
+                }
+                objs[i] = obj;
+            }
+            return objs;
+        }
+
         /// <summary>
         /// Build the result pages of a report model
         /// </summary>
@@ -734,6 +755,70 @@ namespace Seal.Model
                 if (!Report.Cancel && model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call BuildResultTableModel() first...");
 
                 model.SetColumnsName();
+
+                //Force enum values
+                ResultCell[] currentPageValues = null;
+                foreach (var element in model.Elements.Where(i => i.IsEnum && i.ShowAllEnums))
+                {
+                    List<object[]> newRows = new List<object[]>();
+                    foreach (var enumVal in element.EnumEL.Values)
+                    {
+                        bool isFound = false;
+                        var enumValue = Report.EnumDisplayValue(element.EnumEL, enumVal.Id);
+                        currentPageValues = null;
+
+                        foreach (DataRow row in model.ResultTable.Rows)
+                        {
+                            if (Report.Cancel) break;
+                            ResultCell[] pageValues = GetResultCells(PivotPosition.Page, row, model);
+                            if (currentPageValues != null && IsDifferent(currentPageValues, pageValues))
+                            {
+                                //Add a value if not found for the current page
+                                if (!isFound)
+                                {
+                                    //Force enum value by adding a row...
+                                    newRows.Add(getNewEnumRow(model, element, enumValue, currentPageValues));
+                                }
+                                isFound = false;
+                            }
+                            currentPageValues = pageValues;
+                            if (row[element.SQLColumnName].ToString() == enumValue)
+                            {
+                                isFound = true;
+                            }
+                        }
+
+                        if (!isFound)
+                        {
+                            newRows.Add(getNewEnumRow(model, element, enumValue, currentPageValues));
+                        }
+                    }
+                    //Add new rows for the missing enum values
+                    if (newRows.Count > 0)
+                    {
+                        foreach (var newRow in newRows) model.ResultTable.Rows.Add(newRow);
+
+                        if (currentPageValues != null)
+                        {
+                            //Resort if necessary
+                            var sortString = "";
+                            foreach (var pageValue in currentPageValues) Helper.AddValue(ref sortString, ",", pageValue.Element.SQLColumnName + (pageValue.Element.SortOrder.Contains(ReportElement.kAscendantSortKeyword) ? " ASC" : " DESC"));
+                            model.ResultTable.DefaultView.Sort = sortString;
+                            model.ResultTable = model.ResultTable.DefaultView.ToTable();
+
+                        }
+                    }
+                }
+
+                //Handle set Zero to Null in the result table
+                foreach (var element in model.Elements.Where(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero))
+                {
+                    foreach (DataRow row in model.ResultTable.Rows)
+                    {
+                        if (Report.Cancel) break;
+                        if (row[element.SQLColumnName] == DBNull.Value || row[element.SQLColumnName] == null) row[element.SQLColumnName] = 0;
+                    }
+                }
 
                 if (!model.ExecResultPagesBuilt)
                 {
@@ -755,7 +840,7 @@ namespace Seal.Model
                         buildTotals(model);
                     }
                     model.Progression = 85; //85% 
-                    //Scripts
+                                            //Scripts
                     if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
                     //Series 
                     if (!Report.Cancel && model.HasSerie) buildSeries(model);
@@ -850,29 +935,6 @@ namespace Seal.Model
                 }
             }
         }
-
-        /*
-        private async Task TaskExecuteAsync(ReportTask task, CancellationToken cancellationToken)
-        {
-            await Task.Run(() =>
-            {
-                try
-                {
-                    task.Execute();
-                }
-                catch (Exception ex)
-                {
-                    var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
-                    Report.LogMessage("Error in task '{0}': {1}\r\n", task.Name, message);
-                    if (!task.IgnoreError)
-                    {
-                        Report.ExecutionErrors = message;
-                        Report.ExecutionErrorStackTrace = ex.StackTrace;
-                        task.CancelReport = true;
-                    }
-                }
-            });
-        }*/
 
         private void setSubReportNavigation(ResultCell[] cellsToAssign, ResultCell[] cellValues)
         {
@@ -999,12 +1061,14 @@ namespace Seal.Model
             if (model.Pages.Count == 0)
             {
                 model.Pages.Add(new ResultPage() { Report = Report, Model = model });
-
             }
         }
 
         private void buildTables(ReportModel model)
         {
+            bool hasShowAllEnums = model.Elements.Exists(i => i.IsEnum && i.ShowAllEnums);
+            bool hasNullToZero = model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero);
+
             initialSort(model);
 
             ResultCell[] headerPageValues = GetHeaderCells(PivotPosition.Page, model);
@@ -1113,7 +1177,6 @@ namespace Seal.Model
                 foreach (var row in page.Rows)
                 {
                     if (Report.Cancel) break;
-
                     line = new ResultCell[width];
                     //Row values
                     for (int i = 0; i < row.Length && i < width; i++) line[i] = row[i];
@@ -1145,11 +1208,8 @@ namespace Seal.Model
                     for (int i = 0; i < width; i++) if (line[i] == null) line[i] = new ResultCell() { };
                 }
 
-                //Set end row 
-                page.DataTable.BodyEndRow = page.DataTable.Lines.Count;
-
                 //Handle set Zero to Null
-                if (model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero))
+                if (hasNullToZero)
                 {
                     for (int col = page.DataTable.BodyStartColumn; col < page.DataTable.ColumnCount; col++)
                     {
@@ -1172,6 +1232,34 @@ namespace Seal.Model
                         }
                     }
                 }
+
+                if (hasShowAllEnums)
+                {
+                    //Remove empty line generated 
+                    foreach (var tableLine in page.DataTable.Lines.ToList())
+                    {
+                        bool skipLine = true;
+                        foreach (var cell in tableLine.Where(i => i.Element != null))
+                        {
+                            //Either a numeric value not equals to 0 or a value
+                            if (cell.Element.PivotPosition == PivotPosition.Data && cell.Element.IsNumeric && cell.Element.SetNullToZero)
+                            {
+                                if (cell.DoubleValue != 0) skipLine = false;
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(cell.DisplayValue)) skipLine = false;
+                            }
+
+                            if (!skipLine) break;
+                        }
+                        if (skipLine) page.DataTable.Lines.Remove(tableLine);
+                    }
+                }
+
+                //Set end row 
+                page.DataTable.BodyEndRow = page.DataTable.Lines.Count;
+
 
                 //Handle hidden
                 if (model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && (i.ShowTotal == ShowTotal.RowHidden || i.ShowTotal == ShowTotal.RowColumnHidden)))
@@ -2252,7 +2340,7 @@ namespace Seal.Model
         public ReportRestriction UpdateEnumValues(string enumId, string values)
         {
             var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
-
+            if (restriction == null) restriction = Report.AllExecutionRestrictions.OrderBy(i => i.GUID).FirstOrDefault(i => i.OptionValueHtmlId == enumId); //If restriction is part of a View
             if (restriction != null && restriction.EnumRE != null)
             {
                 if (!CurrentEnumValues.ContainsKey(restriction.EnumRE)) CurrentEnumValues.Add(restriction.EnumRE, null);
@@ -2277,16 +2365,21 @@ namespace Seal.Model
         public string GetEnumValues(string enumId, string filter)
         {
             var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
+            if (restriction == null) restriction = Report.AllExecutionRestrictions.OrderBy(i => i.GUID).FirstOrDefault(i => i.OptionValueHtmlId == enumId); //If restriction is part of a View
             var result = new StringBuilder();
             if (restriction != null && restriction.EnumRE != null)
             {
                 var enumRE = restriction.EnumRE;
 
                 //Set current restrictions
-                foreach (var r in Report.ExecutionCommonRestrictions.Where(i => i.EnumRE != null))
+                foreach (var r in Report.AllExecutionRestrictions.Where(i => i.EnumRE != null))
                 {
-                    if (!CurrentEnumValues.ContainsKey(r.EnumRE)) CurrentEnumValues.Add(r.EnumRE, null);
-                    CurrentEnumValues[r.EnumRE] = r.IsSQL ? r.EnumSQLValue : r.EnumLINQValue;
+                    r.SetEnumHtmlIds();
+                    if (!CurrentEnumValues.ContainsKey(r.EnumRE))
+                    {
+                        CurrentEnumValues.Add(r.EnumRE, null);
+                        CurrentEnumValues[r.EnumRE] = r.IsSQL ? r.EnumSQLValue : r.EnumLINQValue;
+                    }
                 }
 
                 var values = new List<MetaEV>();
