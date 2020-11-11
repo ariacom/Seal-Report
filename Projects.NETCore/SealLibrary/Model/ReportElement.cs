@@ -576,10 +576,22 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause.
+        /// If Yes, empty cells are set to 0.
         /// </summary>
         public bool SetNullToZero { get; set; } = false;
         public bool ShouldSerializeSetNullToZero() { return SetNullToZero; }
+
+        /// <summary>
+        /// If Yes, all the values defined in the enumerated list will be shown in the tables, even if the value is not the database Result Set.
+        /// </summary>
+        public bool ShowAllEnums { get; set; } = false;
+        public bool ShouldSerializeShowAllEnums() { return ShowAllEnums; }
+
+        /// <summary>
+        /// If True, the value contains HTML tags.
+        /// </summary>
+        public bool ContainsHtml { get; set; } = false;
+        public bool ShouldSerializeContainsHtml() { return ContainsHtml; }
 
 
         /// <summary>

@@ -75,7 +75,7 @@ class SWIMain {
             if ((e.keyCode || e.which) == 13) _main.login();
         });
 
-        $("#login-modal-submit").unbind('click').on("click", function () {
+        $("#login-modal-submit").unbind("click").on("click", function () {
             _main.login();
         });
 
@@ -133,7 +133,7 @@ class SWIMain {
         $("#main-container").css("display", "block");
 
         //Refresh
-        $("#refresh-nav-item").unbind('click').on("click", function () {
+        $("#refresh-nav-item").unbind("click").on("click", function () {
             if ($("#main-dashboard").css("display") != "block") {
                 _main.ReloadReportsTable();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
@@ -151,7 +151,7 @@ class SWIMain {
         SWIUtil.ShowHideControl($("#dashboards-nav-item"), _main._profile.managedashboards);
 
         //Dashboard toggle
-        $("#dashboard-toggle").unbind('click').on("click", function () {
+        $("#dashboard-toggle").unbind("click").on("click", function () {
             $outputPanel.hide();
             _main.showDashboard($("#main-dashboard").css("display") != "block");
 
@@ -183,7 +183,7 @@ class SWIMain {
         }
 
         //Folders
-        $("#folders-nav-item").unbind('click').on("click", function () {
+        $("#folders-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#create-folder-name").val("");
             $("#rename-folder-name").val(_main._folder.path);
@@ -191,7 +191,7 @@ class SWIMain {
             SWIUtil.ShowHideControl($("#folder-rename").parent(), _main._folder.manage == 2);
             SWIUtil.ShowHideControl($("#folder-delete").parent(), _main._folder.isEmpty && _main._folder.manage == 2);
 
-            $("#folder-create").unbind('click').on("click", function () {
+            $("#folder-create").unbind("click").on("click", function () {
                 $("#folder-dialog").modal('hide');
                 var newpath = _main._folder.path + (_main._folder.path == dirSeparator ? "" : dirSeparator) + $("#create-folder-name").val();
                 _gateway.CreateFolder(newpath, function () {
@@ -201,7 +201,7 @@ class SWIMain {
                 });
             });
 
-            $("#folder-rename").unbind('click').on("click", function () {
+            $("#folder-rename").unbind("click").on("click", function () {
                 $("#folder-dialog").modal('hide');
                 var newpath: string = $("#rename-folder-name").val();
                 _gateway.RenameFolder(_main._folder.path, newpath, function () {
@@ -211,7 +211,7 @@ class SWIMain {
                 });
             });
 
-            $("#folder-delete").unbind('click').on("click", function () {
+            $("#folder-delete").unbind("click").on("click", function () {
                 $("#folder-dialog").modal('hide');
                 _gateway.DeleteFolder(_main._folder.path, function () {
                     _main._profile.folder = SWIUtil.GetDirectoryName(_main._folder.path);
@@ -224,13 +224,20 @@ class SWIMain {
         });
 
         //Search
-        $("#search-nav-item").unbind('click').on("click", function () {
+        $("#search-pattern").unbind("keypress").on("keypress", function (e) {
+            if ((e.keyCode || e.which) == 13) {
+                $outputPanel.hide();
+                _main.search();
+            }
+        });
+
+        $("#search-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             _main.search();
         });
 
         //Profile
-        $("#profile-nav-item").unbind('click').on("click", function () {
+        $("#profile-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#profile-user").val(_main._profile.name);
             $("#profile-groups").val(_main._profile.group);
@@ -244,7 +251,7 @@ class SWIMain {
                 $select2.selectpicker('refresh');
             }
 
-            $("#profile-save").unbind('click').on("click", function (e) {
+            $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');
                 _gateway.SetUserProfile($("#culture-select").val(), $("#view-select").val(), function () {
                     location.reload(true);
@@ -271,7 +278,7 @@ class SWIMain {
         });
 
         //Disconnect
-        $("#disconnect-nav-item").unbind('click').on("click", function () {
+        $("#disconnect-nav-item").unbind("click").on("click", function () {
             SWIUtil.HideMessages();
             $outputPanel.hide();
             _gateway.Logout(function (e) {
@@ -284,7 +291,7 @@ class SWIMain {
         });
 
         //Delete reports
-        $("#report-delete-lightbutton").unbind('click').on("click", function () {
+        $("#report-delete-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this))) return;
             $outputPanel.hide();
 
@@ -312,7 +319,7 @@ class SWIMain {
         });
 
         //Rename
-        $("#report-rename-lightbutton").unbind('click').on("click", function () {
+        $("#report-rename-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this))) return;
             $outputPanel.hide();
 
@@ -320,7 +327,7 @@ class SWIMain {
             if (source) {
                 var filename: string = source.split(dirSeparator).pop();
                 var extension: string = filename.split('.').pop();
-                $("#report-name-save").unbind('click').on("click", function () {
+                $("#report-name-save").unbind("click").on("click", function () {
                     $waitDialog.modal();
                     var folder: string = _main._folder.path;
                     var destination: string = (folder != dirSeparator ? folder : "") + dirSeparator + $("#report-name").val() + "." + extension;
@@ -339,7 +346,7 @@ class SWIMain {
         });
 
         //Copy
-        $("#report-copy-lightbutton").unbind('click').on("click", function () {
+        $("#report-copy-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this))) return;
             $outputPanel.hide();
 
@@ -353,7 +360,7 @@ class SWIMain {
         });
 
         //Cut
-        $("#report-cut-lightbutton").unbind('click').on("click", function () {
+        $("#report-cut-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this))) return;
             $outputPanel.hide();
 
@@ -367,7 +374,7 @@ class SWIMain {
         });
 
         //Paste
-        $("#report-paste-lightbutton").unbind('click').on("click", function () {
+        $("#report-paste-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this))) return;
             $outputPanel.hide();
 

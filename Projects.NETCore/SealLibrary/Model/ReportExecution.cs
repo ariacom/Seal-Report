@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace Seal.Model
 {
@@ -246,7 +247,7 @@ namespace Seal.Model
             {
                 Report.Cancel = true;
                 //Audit
-                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogReportAudit(Report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, Report.SecurityContext, Report, null);
+                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogReportAudit(Report, null);
                 //Log files
                 Report.LogExecution();
             }
@@ -354,7 +355,7 @@ namespace Seal.Model
                 if (!Report.HasValidationErrors)
                 {
                     //Audit
-                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogReportAudit(Report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, Report.SecurityContext, Report, null);
+                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogReportAudit(Report, null);
                     //Log files
                     Report.LogExecution();
                 }
@@ -724,6 +725,30 @@ namespace Seal.Model
             }
         }
 
+        private void AddEnumRows(ReportModel model, ReportElement element, List<string> enumValues, DataRow row, ref int index, List<ResultCell[]> dimensions)
+        {
+            ReportElement[] elements = model.Elements.Where(i => i.PivotPosition != PivotPosition.Data && i.PivotPosition != PivotPosition.Hidden && i != element).ToArray();
+            var dimension = GetResultCells(elements, row);
+            int initialCount = dimensions.Count;
+            FindDimension(dimension, dimensions);
+            if (initialCount == dimensions.Count) return; //The dimension has been done already
+
+            //Force enum value by adding a new row per value to add...
+            foreach (var enumValue in enumValues)
+            {
+                var newRow = model.ResultTable.NewRow();
+                for (int i = 0; i < model.ResultTable.Columns.Count; i++)
+                {
+                    object obj = row[i];
+                    var colName = model.ResultTable.Columns[i].ColumnName;
+                    if (element.SQLColumnName == colName) obj = enumValue;
+                    else if (model.Elements.Exists(j => j.PivotPosition == PivotPosition.Data && j.SQLColumnName == colName)) obj = DBNull.Value; //Null value for data
+                    newRow[i] = obj;
+                }
+                model.ResultTable.Rows.InsertAt(newRow, index++);
+            }
+        }
+
         /// <summary>
         /// Build the result pages of a report model
         /// </summary>
@@ -734,6 +759,56 @@ namespace Seal.Model
                 if (!Report.Cancel && model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call BuildResultTableModel() first...");
 
                 model.SetColumnsName();
+
+                //Force enum values
+                if (model.Elements.Exists(i => i.IsEnum && i.ShowAllEnums))
+                {
+                    var enumsValues = new Dictionary<ReportElement, List<string>>();
+                    //Build list of enum values to force
+                    foreach (var element in model.Elements.Where(i => i.IsEnum && i.ShowAllEnums))
+                    {
+                        var values = new List<string>();
+                        foreach (var val in element.EnumEL.Values) values.Add(Report.EnumDisplayValue(element.EnumEL, val.Id));
+                        enumsValues.Add(element, values);
+                    }
+
+                    //First remove all used values
+                    foreach (DataRow row in model.ResultTable.Rows)
+                    {
+                        if (Report.Cancel) break;
+
+                        ReportElement[] elements = model.Elements.Where(i => i.PivotPosition != PivotPosition.Data && i.IsEnum && i.ShowAllEnums).ToArray();
+                        foreach (var enumValueCell in GetResultCells(elements, row))
+                        {
+                            enumsValues[enumValueCell.Element].Remove(enumValueCell.DisplayValue);
+                        }
+                    }
+
+                    foreach (var enumEl in enumsValues)
+                    {
+                        int index = 0;
+                        var dimensions = new List<ResultCell[]>();
+                        while (index < model.ResultTable.Rows.Count)
+                        {
+                            AddEnumRows(model, enumEl.Key, enumEl.Value, model.ResultTable.Rows[index], ref index, dimensions);
+                            index++;
+                        }
+                    }
+
+                    //Resort...
+                    model.ResultTable.DefaultView.Sort = model.execOrderByNameClause.ToString();
+                    model.ResultTable = model.ResultTable.DefaultView.ToTable();
+                }
+
+                //Handle set Zero to Null in the result table
+                foreach (var element in model.Elements.Where(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero))
+                {
+                    foreach (DataRow row in model.ResultTable.Rows)
+                    {
+                        if (Report.Cancel) break;
+                        if (row[element.SQLColumnName] == DBNull.Value || row[element.SQLColumnName] == null) row[element.SQLColumnName] = 0;
+                    }
+                }
 
                 if (!model.ExecResultPagesBuilt)
                 {
@@ -755,7 +830,7 @@ namespace Seal.Model
                         buildTotals(model);
                     }
                     model.Progression = 85; //85% 
-                    //Scripts
+                                            //Scripts
                     if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
                     //Series 
                     if (!Report.Cancel && model.HasSerie) buildSeries(model);
@@ -850,29 +925,6 @@ namespace Seal.Model
                 }
             }
         }
-
-        /*
-        private async Task TaskExecuteAsync(ReportTask task, CancellationToken cancellationToken)
-        {
-            await Task.Run(() =>
-            {
-                try
-                {
-                    task.Execute();
-                }
-                catch (Exception ex)
-                {
-                    var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
-                    Report.LogMessage("Error in task '{0}': {1}\r\n", task.Name, message);
-                    if (!task.IgnoreError)
-                    {
-                        Report.ExecutionErrors = message;
-                        Report.ExecutionErrorStackTrace = ex.StackTrace;
-                        task.CancelReport = true;
-                    }
-                }
-            });
-        }*/
 
         private void setSubReportNavigation(ResultCell[] cellsToAssign, ResultCell[] cellValues)
         {
@@ -999,12 +1051,13 @@ namespace Seal.Model
             if (model.Pages.Count == 0)
             {
                 model.Pages.Add(new ResultPage() { Report = Report, Model = model });
-
             }
         }
 
         private void buildTables(ReportModel model)
         {
+            bool hasNullToZero = model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero);
+
             initialSort(model);
 
             ResultCell[] headerPageValues = GetHeaderCells(PivotPosition.Page, model);
@@ -1113,7 +1166,6 @@ namespace Seal.Model
                 foreach (var row in page.Rows)
                 {
                     if (Report.Cancel) break;
-
                     line = new ResultCell[width];
                     //Row values
                     for (int i = 0; i < row.Length && i < width; i++) line[i] = row[i];
@@ -1145,11 +1197,8 @@ namespace Seal.Model
                     for (int i = 0; i < width; i++) if (line[i] == null) line[i] = new ResultCell() { };
                 }
 
-                //Set end row 
-                page.DataTable.BodyEndRow = page.DataTable.Lines.Count;
-
                 //Handle set Zero to Null
-                if (model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero))
+                if (hasNullToZero)
                 {
                     for (int col = page.DataTable.BodyStartColumn; col < page.DataTable.ColumnCount; col++)
                     {
@@ -1172,6 +1221,10 @@ namespace Seal.Model
                         }
                     }
                 }
+
+                //Set end row 
+                page.DataTable.BodyEndRow = page.DataTable.Lines.Count;
+
 
                 //Handle hidden
                 if (model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && (i.ShowTotal == ShowTotal.RowHidden || i.ShowTotal == ShowTotal.RowColumnHidden)))
@@ -2038,7 +2091,7 @@ namespace Seal.Model
                     }
 
                     //Audit
-                    Audit.LogReportAudit(report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, report.SecurityContext, report, schedule);
+                    Audit.LogReportAudit(report, schedule);
 
                     if (report.HasErrors)
                     {
@@ -2252,7 +2305,7 @@ namespace Seal.Model
         public ReportRestriction UpdateEnumValues(string enumId, string values)
         {
             var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
-
+            if (restriction == null) restriction = Report.AllExecutionRestrictions.OrderBy(i => i.GUID).FirstOrDefault(i => i.OptionValueHtmlId == enumId); //If restriction is part of a View
             if (restriction != null && restriction.EnumRE != null)
             {
                 if (!CurrentEnumValues.ContainsKey(restriction.EnumRE)) CurrentEnumValues.Add(restriction.EnumRE, null);
@@ -2277,16 +2330,21 @@ namespace Seal.Model
         public string GetEnumValues(string enumId, string filter)
         {
             var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
+            if (restriction == null) restriction = Report.AllExecutionRestrictions.OrderBy(i => i.GUID).FirstOrDefault(i => i.OptionValueHtmlId == enumId); //If restriction is part of a View
             var result = new StringBuilder();
             if (restriction != null && restriction.EnumRE != null)
             {
                 var enumRE = restriction.EnumRE;
 
                 //Set current restrictions
-                foreach (var r in Report.ExecutionCommonRestrictions.Where(i => i.EnumRE != null))
+                foreach (var r in Report.AllExecutionRestrictions.Where(i => i.EnumRE != null))
                 {
-                    if (!CurrentEnumValues.ContainsKey(r.EnumRE)) CurrentEnumValues.Add(r.EnumRE, null);
-                    CurrentEnumValues[r.EnumRE] = r.IsSQL ? r.EnumSQLValue : r.EnumLINQValue;
+                    r.SetEnumHtmlIds();
+                    if (!CurrentEnumValues.ContainsKey(r.EnumRE))
+                    {
+                        CurrentEnumValues.Add(r.EnumRE, null);
+                        CurrentEnumValues[r.EnumRE] = r.IsSQL ? r.EnumSQLValue : r.EnumLINQValue;
+                    }
                 }
 
                 var values = new List<MetaEV>();

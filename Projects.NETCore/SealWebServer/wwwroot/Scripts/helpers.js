@@ -228,7 +228,8 @@ function initRestrictions(parent) {
         if ($(this).attr("id")) {
             $("#id_load").val($(this).attr("id"));
 
-            if ($(this).attr("dependencies") == "true" && $(this).attr("filterchars") == 0) requestEnumData("", false);
+            var executionGUID = $(this).closest("form").attr("execguid");
+            if ($(this).attr("dependencies") == "true" && $(this).attr("filterchars") == 0) requestEnumData(executionGUID, "", false);
             else setEnumMessage($(this).attr("id"));
 
             var filter = "";
@@ -237,7 +238,7 @@ function initRestrictions(parent) {
                 if ($search.val() !== filter) { // search value is changed
                     filter = $search.val();
                     if (filter.length >= $("#" + $("#id_load").val()).attr("filterchars")) { // more than xx characters
-                        requestEnumData(filter, true);
+                        requestEnumData(executionGUID, filter, true);
                     }
                 }
             });
@@ -505,5 +506,73 @@ function submitViewParameter(executionId, viewId, parameterName, parameterValue)
         $("#parameter_view_value").val(parameterValue);
         $("#header_form").attr("action", "ActionUpdateViewParameter");
         $("#header_form").submit();
+    }
+}
+
+//Enum select picker
+function requestEnumData(executionGUID, filter, forceNoMessage) {
+    var result;
+
+    if (urlPrefix != "") {
+        $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: executionGUID, enum_id: $("#id_load").val(), filter: filter })
+            .done(function (data) {
+                result = jQuery.parseJSON(data);
+                fillEnumSelect(result, forceNoMessage || result.length > 0);
+            });
+    }
+    else {
+        $("#header_form").attr("action", "ActionGetEnumValues");
+        $("#filter_enumload").val(filter);
+        $("#header_form").submit();
+        result = jQuery.parseJSON($("#parameter_enumload").text());
+        fillEnumSelect(result, forceNoMessage || result.length > 0);
+    }
+    return result;
+}
+
+
+function fillEnumSelect(data, noMessage) {
+    var id = "#" + $("#id_load").val();
+
+    //Add selected items
+    $(id + " option:selected").each(function () {
+        var found = false;
+        for (var i = 0; !found && i < data.length; i++) {
+            if ($(this).val() === data[i].v) {
+                data[i].Selected = true;
+                found = true;
+            }
+        }
+
+        if (!found) {
+            data.push({ v: $(this).val(), t: $(this).text(), Selected: true });
+        }
+    });
+
+    var $enum = $(id);
+    if (data.length > 0 || $enum[0].length > 0) {
+        $enum.empty();
+        for (var i = 0; i < data.length; i++) {
+            $enum.append(
+                $("<option" + (data[i].Selected ? " selected" : "") + "></option>").attr("id", data[i].v).attr("value", data[i].v).text(data[i].t)
+            );
+        }
+        $enum.selectpicker("refresh");
+    }
+
+    if (!noMessage) setEnumMessage($("#id_load").val());
+}
+
+function setEnumMessage(id) {
+    var $enum = $("#" + id);
+    var $message = $("#enum-message");
+    if ($message) $message.text("");
+    if ($enum.attr("message")) {
+        //Add info message
+        if ($message.length == 0) {
+            $message = $("<li>").attr("id", "enum-message").addClass("no-results");
+        }
+        $message.text($enum.attr("message"));
+        $enum.parent().children("div").children("ul").append($message);
     }
 }

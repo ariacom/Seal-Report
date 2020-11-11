@@ -143,7 +143,7 @@ namespace Seal.Model
         /// <summary>
         /// Audit a report execution
         /// </summary>
-        public static void LogReportAudit(AuditType type, SecurityUser user, Report report, ReportSchedule schedule)
+        public static void LogReportAudit(Report report, ReportSchedule schedule)
         {
             Audit.LogAudit(report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, report.SecurityContext, report.FilePath, null, report.ExecutionErrors, report, schedule);
         }

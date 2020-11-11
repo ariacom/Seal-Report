@@ -2106,7 +2106,7 @@ model.ResultTable = query2.CopyToDataTable2();
 
         void checkRunningModels(string key, Dictionary<string, ReportModel> runningModels)
         {
-            if (ShareResultTable)
+            if (ShareResultTable && !Elements.Exists(i => i.IsEnum && i.ShowAllEnums)) //Do not share if show all enums as we will add rows to the result table
             {
                 lock (runningModels)
                 {

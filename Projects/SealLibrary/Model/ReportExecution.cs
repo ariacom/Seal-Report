@@ -725,24 +725,28 @@ namespace Seal.Model
             }
         }
 
-        private object[] getNewEnumRow(ReportModel model, ReportElement element, string enumValue, ResultCell[] pageValues)
+        private void AddEnumRows(ReportModel model, ReportElement element, List<string> enumValues, DataRow row, ref int index, List<ResultCell[]> dimensions)
         {
-            //Force enum value by adding a row...
-            var objs = new object[model.ResultTable.Columns.Count];
-            for (int i = 0; i < model.ResultTable.Columns.Count; i++)
+            ReportElement[] elements = model.Elements.Where(i => i.PivotPosition != PivotPosition.Data && i.PivotPosition != PivotPosition.Hidden && i != element).ToArray();
+            var dimension = GetResultCells(elements, row);
+            int initialCount = dimensions.Count;
+            FindDimension(dimension, dimensions);
+            if (initialCount == dimensions.Count) return; //The dimension has been done already
+
+            //Force enum value by adding a new row per value to add...
+            foreach (var enumValue in enumValues)
             {
-                object obj = null;
-                if (element.SQLColumnName == model.ResultTable.Columns[i].ColumnName) obj = enumValue;
-                else if (pageValues != null)
+                var newRow = model.ResultTable.NewRow();
+                for (int i = 0; i < model.ResultTable.Columns.Count; i++)
                 {
-                    foreach (var pageValue in pageValues)
-                    {
-                        if (pageValue.Element.SQLColumnName == model.ResultTable.Columns[i].ColumnName) obj = pageValue.Value;
-                    }
+                    object obj = row[i];
+                    var colName = model.ResultTable.Columns[i].ColumnName;
+                    if (element.SQLColumnName == colName) obj = enumValue;
+                    else if (model.Elements.Exists(j => j.PivotPosition == PivotPosition.Data && j.SQLColumnName == colName)) obj = DBNull.Value; //Null value for data
+                    newRow[i] = obj;
                 }
-                objs[i] = obj;
+                model.ResultTable.Rows.InsertAt(newRow, index++);
             }
-            return objs;
         }
 
         /// <summary>
@@ -757,57 +761,43 @@ namespace Seal.Model
                 model.SetColumnsName();
 
                 //Force enum values
-                ResultCell[] currentPageValues = null;
-                foreach (var element in model.Elements.Where(i => i.IsEnum && i.ShowAllEnums))
+                if (model.Elements.Exists(i => i.IsEnum && i.ShowAllEnums))
                 {
-                    List<object[]> newRows = new List<object[]>();
-                    foreach (var enumVal in element.EnumEL.Values)
+                    var enumsValues = new Dictionary<ReportElement, List<string>>();
+                    //Build list of enum values to force
+                    foreach (var element in model.Elements.Where(i => i.IsEnum && i.ShowAllEnums))
                     {
-                        bool isFound = false;
-                        var enumValue = Report.EnumDisplayValue(element.EnumEL, enumVal.Id);
-                        currentPageValues = null;
+                        var values = new List<string>();
+                        foreach (var val in element.EnumEL.Values) values.Add(Report.EnumDisplayValue(element.EnumEL, val.Id));
+                        enumsValues.Add(element, values);
+                    }
 
-                        foreach (DataRow row in model.ResultTable.Rows)
-                        {
-                            if (Report.Cancel) break;
-                            ResultCell[] pageValues = GetResultCells(PivotPosition.Page, row, model);
-                            if (currentPageValues != null && IsDifferent(currentPageValues, pageValues))
-                            {
-                                //Add a value if not found for the current page
-                                if (!isFound)
-                                {
-                                    //Force enum value by adding a row...
-                                    newRows.Add(getNewEnumRow(model, element, enumValue, currentPageValues));
-                                }
-                                isFound = false;
-                            }
-                            currentPageValues = pageValues;
-                            if (row[element.SQLColumnName].ToString() == enumValue)
-                            {
-                                isFound = true;
-                            }
-                        }
+                    //First remove all used values
+                    foreach (DataRow row in model.ResultTable.Rows)
+                    {
+                        if (Report.Cancel) break;
 
-                        if (!isFound)
+                        ReportElement[] elements = model.Elements.Where(i => i.PivotPosition != PivotPosition.Data && i.IsEnum && i.ShowAllEnums).ToArray();
+                        foreach (var enumValueCell in GetResultCells(elements, row))
                         {
-                            newRows.Add(getNewEnumRow(model, element, enumValue, currentPageValues));
+                            enumsValues[enumValueCell.Element].Remove(enumValueCell.DisplayValue);
                         }
                     }
-                    //Add new rows for the missing enum values
-                    if (newRows.Count > 0)
+
+                    foreach (var enumEl in enumsValues)
                     {
-                        foreach (var newRow in newRows) model.ResultTable.Rows.Add(newRow);
-
-                        if (currentPageValues != null)
+                        int index = 0;
+                        var dimensions = new List<ResultCell[]>();
+                        while (index < model.ResultTable.Rows.Count)
                         {
-                            //Resort if necessary
-                            var sortString = "";
-                            foreach (var pageValue in currentPageValues) Helper.AddValue(ref sortString, ",", pageValue.Element.SQLColumnName + (pageValue.Element.SortOrder.Contains(ReportElement.kAscendantSortKeyword) ? " ASC" : " DESC"));
-                            model.ResultTable.DefaultView.Sort = sortString;
-                            model.ResultTable = model.ResultTable.DefaultView.ToTable();
-
+                            AddEnumRows(model, enumEl.Key, enumEl.Value, model.ResultTable.Rows[index], ref index, dimensions);
+                            index++;
                         }
                     }
+
+                    //Resort...
+                    model.ResultTable.DefaultView.Sort = model.execOrderByNameClause.ToString();
+                    model.ResultTable = model.ResultTable.DefaultView.ToTable();
                 }
 
                 //Handle set Zero to Null in the result table
@@ -1066,7 +1056,6 @@ namespace Seal.Model
 
         private void buildTables(ReportModel model)
         {
-            bool hasShowAllEnums = model.Elements.Exists(i => i.IsEnum && i.ShowAllEnums);
             bool hasNullToZero = model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero);
 
             initialSort(model);
@@ -1230,30 +1219,6 @@ namespace Seal.Model
                                 break;
                             }
                         }
-                    }
-                }
-
-                if (hasShowAllEnums)
-                {
-                    //Remove empty line generated 
-                    foreach (var tableLine in page.DataTable.Lines.ToList())
-                    {
-                        bool skipLine = true;
-                        foreach (var cell in tableLine.Where(i => i.Element != null))
-                        {
-                            //Either a numeric value not equals to 0 or a value
-                            if (cell.Element.PivotPosition == PivotPosition.Data && cell.Element.IsNumeric && cell.Element.SetNullToZero)
-                            {
-                                if (cell.DoubleValue != 0) skipLine = false;
-                            }
-                            else
-                            {
-                                if (!string.IsNullOrEmpty(cell.DisplayValue)) skipLine = false;
-                            }
-
-                            if (!skipLine) break;
-                        }
-                        if (skipLine) page.DataTable.Lines.Remove(tableLine);
                     }
                 }
 
