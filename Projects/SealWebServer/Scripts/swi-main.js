@@ -59,7 +59,7 @@ var SWIMain = /** @class */ (function () {
             if ((e.keyCode || e.which) == 13)
                 _main.login();
         });
-        $("#login-modal-submit").unbind('click').on("click", function () {
+        $("#login-modal-submit").unbind("click").on("click", function () {
             _main.login();
         });
         _gateway.GetVersions(function (data) {
@@ -103,7 +103,7 @@ var SWIMain = /** @class */ (function () {
         $("#login-modal-error").text("");
         $("#main-container").css("display", "block");
         //Refresh
-        $("#refresh-nav-item").unbind('click').on("click", function () {
+        $("#refresh-nav-item").unbind("click").on("click", function () {
             if ($("#main-dashboard").css("display") != "block") {
                 _main.ReloadReportsTable();
                 if (SWIUtil.IsMobile())
@@ -119,7 +119,7 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.ShowHideControl($("#dashboard-toggle"), _main._profile.viewtype == 2); /* reports and dashboards */
         SWIUtil.ShowHideControl($("#dashboards-nav-item"), _main._profile.managedashboards);
         //Dashboard toggle
-        $("#dashboard-toggle").unbind('click').on("click", function () {
+        $("#dashboard-toggle").unbind("click").on("click", function () {
             $outputPanel.hide();
             _main.showDashboard($("#main-dashboard").css("display") != "block");
             if ($("#main-dashboard").css("display") == "block") {
@@ -145,13 +145,13 @@ var SWIMain = /** @class */ (function () {
             _main.showDashboard(false);
         }
         //Folders
-        $("#folders-nav-item").unbind('click').on("click", function () {
+        $("#folders-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#create-folder-name").val("");
             $("#rename-folder-name").val(_main._folder.path);
             SWIUtil.ShowHideControl($("#folder-rename").parent(), _main._folder.manage == 2);
             SWIUtil.ShowHideControl($("#folder-delete").parent(), _main._folder.isEmpty && _main._folder.manage == 2);
-            $("#folder-create").unbind('click').on("click", function () {
+            $("#folder-create").unbind("click").on("click", function () {
                 $("#folder-dialog").modal('hide');
                 var newpath = _main._folder.path + (_main._folder.path == dirSeparator ? "" : dirSeparator) + $("#create-folder-name").val();
                 _gateway.CreateFolder(newpath, function () {
@@ -160,7 +160,7 @@ var SWIMain = /** @class */ (function () {
                     SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been created"), 5000);
                 });
             });
-            $("#folder-rename").unbind('click').on("click", function () {
+            $("#folder-rename").unbind("click").on("click", function () {
                 $("#folder-dialog").modal('hide');
                 var newpath = $("#rename-folder-name").val();
                 _gateway.RenameFolder(_main._folder.path, newpath, function () {
@@ -169,7 +169,7 @@ var SWIMain = /** @class */ (function () {
                     SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been renamed"), 5000);
                 });
             });
-            $("#folder-delete").unbind('click').on("click", function () {
+            $("#folder-delete").unbind("click").on("click", function () {
                 $("#folder-dialog").modal('hide');
                 _gateway.DeleteFolder(_main._folder.path, function () {
                     _main._profile.folder = SWIUtil.GetDirectoryName(_main._folder.path);
@@ -180,12 +180,18 @@ var SWIMain = /** @class */ (function () {
             $("#folder-dialog").modal();
         });
         //Search
-        $("#search-nav-item").unbind('click').on("click", function () {
+        $("#search-pattern").unbind("keypress").on("keypress", function (e) {
+            if ((e.keyCode || e.which) == 13) {
+                $outputPanel.hide();
+                _main.search();
+            }
+        });
+        $("#search-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             _main.search();
         });
         //Profile
-        $("#profile-nav-item").unbind('click').on("click", function () {
+        $("#profile-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#profile-user").val(_main._profile.name);
             $("#profile-groups").val(_main._profile.group);
@@ -197,7 +203,7 @@ var SWIMain = /** @class */ (function () {
                 $select2.append(SWIUtil.GetOption("dashboards", SWIUtil.tr("Dashboards"), _main._profile.lastview, "glyphicon glyphicon-th-large"));
                 $select2.selectpicker('refresh');
             }
-            $("#profile-save").unbind('click').on("click", function (e) {
+            $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');
                 _gateway.SetUserProfile($("#culture-select").val(), $("#view-select").val(), function () {
                     location.reload(true);
@@ -224,7 +230,7 @@ var SWIMain = /** @class */ (function () {
             }
         });
         //Disconnect
-        $("#disconnect-nav-item").unbind('click').on("click", function () {
+        $("#disconnect-nav-item").unbind("click").on("click", function () {
             SWIUtil.HideMessages();
             $outputPanel.hide();
             _gateway.Logout(function (e) {
@@ -237,7 +243,7 @@ var SWIMain = /** @class */ (function () {
             });
         });
         //Delete reports
-        $("#report-delete-lightbutton").unbind('click').on("click", function () {
+        $("#report-delete-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this)))
                 return;
             $outputPanel.hide();
@@ -262,7 +268,7 @@ var SWIMain = /** @class */ (function () {
             $("#message-dialog").modal();
         });
         //Rename
-        $("#report-rename-lightbutton").unbind('click').on("click", function () {
+        $("#report-rename-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this)))
                 return;
             $outputPanel.hide();
@@ -270,7 +276,7 @@ var SWIMain = /** @class */ (function () {
             if (source) {
                 var filename = source.split(dirSeparator).pop();
                 var extension = filename.split('.').pop();
-                $("#report-name-save").unbind('click').on("click", function () {
+                $("#report-name-save").unbind("click").on("click", function () {
                     $waitDialog.modal();
                     var folder = _main._folder.path;
                     var destination = (folder != dirSeparator ? folder : "") + dirSeparator + $("#report-name").val() + "." + extension;
@@ -286,7 +292,7 @@ var SWIMain = /** @class */ (function () {
             }
         });
         //Copy
-        $("#report-copy-lightbutton").unbind('click').on("click", function () {
+        $("#report-copy-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this)))
                 return;
             $outputPanel.hide();
@@ -299,7 +305,7 @@ var SWIMain = /** @class */ (function () {
             SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or files(s) copied in the clipboard"), 5000);
         });
         //Cut
-        $("#report-cut-lightbutton").unbind('click').on("click", function () {
+        $("#report-cut-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this)))
                 return;
             $outputPanel.hide();
@@ -312,7 +318,7 @@ var SWIMain = /** @class */ (function () {
             SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or file(s) cut in the clipboard"), 5000);
         });
         //Paste
-        $("#report-paste-lightbutton").unbind('click').on("click", function () {
+        $("#report-paste-lightbutton").unbind("click").on("click", function () {
             if (!SWIUtil.IsEnabled($(this)))
                 return;
             $outputPanel.hide();

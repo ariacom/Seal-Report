@@ -110,7 +110,7 @@ var SWIDashboard = /** @class */ (function () {
         if (data.path && !_main._exporting) {
             nameLink.attr("path", data.path);
             nameLink.attr("viewGUID", data.viewGUID);
-            nameLink.unbind('click').on("click", function (e) {
+            nameLink.unbind("click").on("click", function (e) {
                 _gateway.ExecuteReport($(e.currentTarget).attr("path"), false, $(e.currentTarget).attr("viewGUID"), null);
             });
         }
@@ -276,7 +276,7 @@ var SWIDashboard = /** @class */ (function () {
                         $(this).children("div").hide();
                     });
                     //Refresh item
-                    refreshButton.unbind('click').on("click", function (e) {
+                    refreshButton.unbind("click").on("click", function (e) {
                         SWIUtil.HideMessages();
                         var dashboardGuid = $(this).closest('.panel').attr('did');
                         var itemGuid = $(this).closest('.panel').attr('id');
@@ -367,7 +367,7 @@ var SWIDashboard = /** @class */ (function () {
                 }
                 //Click on a dashboard pill
                 if (!_main._exporting) {
-                    menu.unbind('click').click(function () {
+                    menu.unbind("click").click(function () {
                         var id = $(this).attr("did");
                         _da._lastGUID = id;
                         _da._dashboard = _da._dashboards[id];
@@ -395,7 +395,7 @@ var SWIDashboard = /** @class */ (function () {
                     _da.initDashboardItems(data[i].GUID);
             }
             //Manage
-            $("#dashboards-nav-item").unbind('click').on("click", function () {
+            $("#dashboards-nav-item").unbind("click").on("click", function () {
                 SWIUtil.HideMessages();
                 _gateway.GetDashboards(function (data) {
                     $("#dashboard-view-label").html(_main._profile.defaultdashboards ? SWIUtil.tr("The default dashboards View is displayed") : SWIUtil.tr("Your personal dashboards View is displayed"));
@@ -413,7 +413,7 @@ var SWIDashboard = /** @class */ (function () {
                             "liveSearch": true,
                             "actionsBox": true
                         });
-                        $("#dashboard-add").unbind('click').on("click", function () {
+                        $("#dashboard-add").unbind("click").on("click", function () {
                             if ($("#dashboard-user").val() == "")
                                 return;
                             $("#dashboard-dialog").modal('hide');
@@ -439,7 +439,7 @@ var SWIDashboard = /** @class */ (function () {
                             "actionsBox": true
                         });
                         $("#dashboard-remove")
-                            .unbind('click').on("click", function () {
+                            .unbind("click").on("click", function () {
                             $("#dashboard-dialog").modal('hide');
                             _gateway.RemoveDashboard($("#dashboard-toremove").val(), function () {
                                 _da._lastGUID = null;
@@ -450,7 +450,7 @@ var SWIDashboard = /** @class */ (function () {
                     }
                     //Swap view
                     $("#dashboard-swapview")
-                        .unbind('click').on("click", function () {
+                        .unbind("click").on("click", function () {
                         $("#dashboard-dialog").modal('hide');
                         _gateway.SwapDashboardView(function () {
                             _da._lastGUID = null;
@@ -465,7 +465,7 @@ var SWIDashboard = /** @class */ (function () {
                 });
             });
             //Export
-            $("#export-nav-item").unbind('click').on("click", function () {
+            $("#export-nav-item").unbind("click").on("click", function () {
                 SWIUtil.HideMessages();
                 _gateway.GetUserDashboards(function (data) {
                     var select = $("#export-dashboards");
@@ -486,7 +486,7 @@ var SWIDashboard = /** @class */ (function () {
                     select.append(SWIUtil.GetOption("excel", SWIUtil.tr("Excel"), ""));
                     select.selectpicker("refresh");
                     SWIUtil.InitNumericInput();
-                    $("#dashboard-export").unbind('click').on("click", function () {
+                    $("#dashboard-export").unbind("click").on("click", function () {
                         SWIUtil.HideMessages();
                         if ($("#export-dashboards").val() == "")
                             return;

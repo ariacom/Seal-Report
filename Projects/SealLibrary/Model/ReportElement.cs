@@ -63,6 +63,7 @@ namespace Seal.Model
                     GetProperty("EnumGUIDEL").SetIsBrowsable(true);
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum);
+                    GetProperty("ContainsHtml").SetIsBrowsable(true);
 
                     GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
                     GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -707,7 +708,7 @@ namespace Seal.Model
         /// If Yes, empty cells are set to 0.
         /// </summary>
         [DefaultValue(false)]
-        [Category("Advanced"), DisplayName("Set empty cells to zero"), Description("If Yes, empty cells are set to 0."), Id(7, 5)]
+        [Category("Advanced"), DisplayName("Set empty cells to zero"), Description("If True, empty cells are set to 0."), Id(7, 5)]
         public bool SetNullToZero { get; set; } = false;
         public bool ShouldSerializeSetNullToZero() { return SetNullToZero; }
 
@@ -715,9 +716,17 @@ namespace Seal.Model
         /// If Yes, all the values defined in the enumerated list will be shown in the tables, even if the value is not the database Result Set.
         /// </summary>
         [DefaultValue(false)]
-        [Category("Advanced"), DisplayName("Show all enum values"), Description("If Yes, all the values defined in the enumerated list will be shown in the tables, even if the value is not the database Result Set."), Id(8, 5)]
+        [Category("Advanced"), DisplayName("Show all enum values"), Description("If True, all the values defined in the enumerated list will be shown in the tables, even if the value is not the database Result Set."), Id(8, 5)]
         public bool ShowAllEnums { get; set; } = false;
         public bool ShouldSerializeShowAllEnums() { return ShowAllEnums; }
+
+        /// <summary>
+        /// If True, the value contains HTML tags.
+        /// </summary>
+        [DefaultValue(false)]
+        [Category("Advanced"), DisplayName("Contains HTML"), Description("If True, the value contains HTML tags."), Id(9, 5)]
+        public bool ContainsHtml { get; set; } = false;
+        public bool ShouldSerializeContainsHtml() { return ContainsHtml; }
 
 
         /// <summary>

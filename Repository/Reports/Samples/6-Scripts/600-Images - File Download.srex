@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID><GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID><ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID><Sources><ReportSource><GUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>d826ff6e-821a-4834-aab8-d50ec18a6024</GUID><Name>model</Name><SourceGUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</SourceGUID><FinalScript>@using System.Data&#xD;
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID><GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID><ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID><Sources><ReportSource><GUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>d826ff6e-821a-4834-aab8-d50ec18a6024</GUID><Name>model</Name><SourceGUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</SourceGUID><FinalScript>@using System.Data&#xD;
 @{&#xD;
     ReportModel model = Model;&#xD;
  	ReportExecutionLog log = model.Report;&#xD;
@@ -70,7 +70,7 @@
     //cell.AddNavigationFileDownload("Download" + cell.DisplayValue);&#xD;
 }&#xD;
 &#xD;
-</NavigationScript></ReportElement></Elements></ReportModel></Models><CommonScripts><CommonScript><Name>GetImageBytesFromOLEField</Name><Script>@using System.Text&#xD;
+</NavigationScript><ContainsHtml>true</ContainsHtml></ReportElement></Elements></ReportModel></Models><CommonScripts><CommonScript><Name>GetImageBytesFromOLEField</Name><Script>@using System.Text&#xD;
 @using System.IO&#xD;
 &#xD;
 @functions &#xD;
@@ -124,4 +124,4 @@
 &lt;li&gt;Property 'Columns to hide' is set to 1 in the Data Table to hide the 'Employee ID' element.&lt;/li&gt;&#xD;
 &lt;/ul&gt;&#xD;
 &lt;/p&gt;&#xD;
-</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>0</SortOrder></ReportView></Views></Report>
+</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>0</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>

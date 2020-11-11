@@ -26,6 +26,8 @@ namespace SealWebServer.Controllers
         {
             var cookie = new HttpCookie(name, value);
             cookie.Expires = DateTime.Now.AddYears(2);
+            cookie.HttpOnly = true;
+
             Response.Cookies.Add(cookie);
         }
 
