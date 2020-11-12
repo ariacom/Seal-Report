@@ -1059,15 +1059,12 @@ namespace SealWebServer.Controllers
                 foreach (var key in keys) NavigationContext.Navigations.Remove(key.Key);
                 NavigationContext.SetNavigation(execution);
 
-                var execReportPath = widget.ExecReportPath;
-                if (string.IsNullOrEmpty(execReportPath)) execReportPath = widget.ReportPath;
-
                 var result = new
                 {
                     dashboardguid = guid,
                     itemguid,
                     executionguid = execution.Report.ExecutionGUID,
-                    path = !string.IsNullOrEmpty(widget.ExecViewGUID) ? execReportPath : "",
+                    path = !string.IsNullOrEmpty(widget.ExecViewGUID) ? widget.ReportPath : widget.ExecReportPath,
                     viewGUID = widget.ExecViewGUID,
                     lastexec = Translate("Last execution at") + " " + report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
                     description = Repository.TranslateWidgetDescription(widget.ReportPath.Replace(Repository.ReportsFolder, Path.DirectorySeparatorChar.ToString()), widget.Description),
