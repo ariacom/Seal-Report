@@ -62,7 +62,7 @@ namespace Seal.Model
                     GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("EnumGUIDEL").SetIsBrowsable(true);
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                    GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum);
+                    GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum && PivotPosition != PivotPosition.Data);
                     GetProperty("ContainsHtml").SetIsBrowsable(true);
 
                     GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));

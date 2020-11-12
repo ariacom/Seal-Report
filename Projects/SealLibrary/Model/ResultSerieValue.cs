@@ -14,8 +14,8 @@ namespace Seal.Model
     {
         int IComparer<ResultSerie>.Compare(ResultSerie x, ResultSerie y)
         {
-            ResultSerie sx = x as ResultSerie;
-            ResultSerie sy = y as ResultSerie;
+            ResultSerie sx = x;
+            ResultSerie sy = y;
 
             //Priority to element sort order
             if (sx.Element != sy.Element)
@@ -27,12 +27,7 @@ namespace Seal.Model
             else
             {
                 //Then by splitter values descending or ascending
-                var result = string.Compare(sx.SplitterValues, sy.SplitterValues);
-                if (sx.SplitterCells.Length > 0 && sx.SplitterCells[0].Element != null && !sx.SplitterCells[0].Element.SortOrder.Contains(ReportElement.kAscendantSortKeyword))
-                {
-                    return -1 * result;
-                }
-                return result;
+                return ResultCell.CompareCells(sx.SplitterCells, sy.SplitterCells);
             }
         }
     }
