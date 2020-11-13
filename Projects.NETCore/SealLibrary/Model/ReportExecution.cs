@@ -15,9 +15,6 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace Seal.Model
 {
@@ -635,7 +632,7 @@ namespace Seal.Model
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
                     //Skip models having view restriction not triggered
-                    if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Exists(j => j.IsIdenticalForPrompt(i))))
+                    if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Contains(i)))
                     {
                         if (Report.ExecutionTriggerView == null || !model.ExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
                         {
@@ -1106,7 +1103,14 @@ namespace Seal.Model
                 if (headerColumnValues.Length > 0 && model.ShowFirstLine)
                 {
                     line = new ResultCell[width];
-                    if (headerDataValues.Length == 1) line[0] = headerDataValues[0]; //Case 1 Data, title in first cell
+                    if (headerDataValues.Length == 1)
+                    {
+                        line[0] = headerDataValues[0]; //Case 1 Data, title in first cell
+                        if (string.IsNullOrEmpty(line[0].FinalCssClass) && string.IsNullOrEmpty(line[0].FinalCssStyle)) {
+                            line[0].FinalCssClass = "text-left"; //Force left
+                            line[0].FinalCssStyle = "padding-right:25px;"; 
+                        }                        
+                    }
                     for (int i = 0; i < headerColumnValues.Length; i++) line[headerRowValues.Length + i] = headerColumnValues[i];
                     //case cols, no rows, one data, add data title
                     if (headerColumnValues.Length > 0 && headerRowValues.Length == 0 && headerDataValues.Length == 1 && headerColumnValues.Length < width) line[headerColumnValues.Length] = headerDataValues[0];
@@ -1124,7 +1128,15 @@ namespace Seal.Model
                     if (i < headerColumnValues.Length)
                     {
                         //column values
-                        for (int j = 0; j < page.Columns.Count; j++) line[headerRowValues.Length + headerDataValues.Length * j] = page.Columns[j][i];
+                        for (int j = 0; j < page.Columns.Count; j++)
+                        {
+                            int index = headerRowValues.Length + headerDataValues.Length * j;
+                            line[index] = page.Columns[j][i];
+                            if (headerDataValues.Length > 0 && string.IsNullOrEmpty(line[index].FinalCssClass) && string.IsNullOrEmpty(line[index].FinalCssStyle)) {
+                                line[index].FinalCssClass = "text-right"; //Force right as the column displays an aggregate
+                                line[index].FinalCssStyle = "padding-right:25px;";
+                            }
+                        }
                     }
                     else
                     {

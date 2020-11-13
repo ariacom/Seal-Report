@@ -14,25 +14,17 @@ namespace Seal.Model
     {
         int IComparer<ResultSerie>.Compare(ResultSerie x, ResultSerie y)
         {
-            ResultSerie sx = x as ResultSerie;
-            ResultSerie sy = y as ResultSerie;
-
             //Priority to element sort order
-            if (sx.Element != sy.Element)
+            if (x.Element != y.Element)
             {
-                if (sx.Element.FinalSort > sy.Element.FinalSort) return 1;
-                else if (sx.Element.FinalSort < sy.Element.FinalSort) return -1;
+                if (x.Element.FinalSort > y.Element.FinalSort) return 1;
+                else if (x.Element.FinalSort < y.Element.FinalSort) return -1;
                 return 0;
             }
             else
             {
                 //Then by splitter values descending or ascending
-                var result = string.Compare(sx.SplitterValues, sy.SplitterValues);
-                if (sx.SplitterCells.Length > 0 && sx.SplitterCells[0].Element != null && !sx.SplitterCells[0].Element.SortOrder.Contains(ReportElement.kAscendantSortKeyword))
-                {
-                    return -1 * result;
-                }
-                return result;
+                return ResultCell.CompareCells(x.SplitterCells, y.SplitterCells);
             }
         }
     }

@@ -45,7 +45,7 @@ function restrictionSelectChange(source) {
             value3.parent().parent().css("display", display3);
             value4.parent().parent().css("display", display4);
         }
-        else if (value1.hasClass("enum") ) { //enum, select picker
+        else if (value1.hasClass("enum")) { //enum, select picker
             value1.selectpicker(display1 == "none" ? "hide" : "show");
         }
         else if (value1.hasClass("btn-group")) { //enum, buttons
@@ -253,6 +253,8 @@ function initRestrictions(parent) {
         var action = "ActionExecuteFromTrigger";
         form.addClass("disabled");
         button.removeClass("btn-success").addClass("btn-warning");
+        $('.enum').removeClass("open");
+
         if (urlPrefix !== "") {
             //trigger in a new report
             var target = (inReport ? form.attr("target_report") : form.attr("target_dashboard")).replace("<view_id>", form.attr("id"));
