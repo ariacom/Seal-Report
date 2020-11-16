@@ -214,7 +214,7 @@
                             </div>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Cell script</h4>
-                                <a class="btn btn-primary live-sample">Live Sample: 6-Scripts/601-Cell Script - Progression and running totals</a><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 05-Scripts/501-Cell Script - Progression and running totals</a><br />
                                 Two columns have been added in the report model with custom Cell script: One to calculate the Progression and the other one to calculate the Running Total.
                             </div>
                         </div>
@@ -363,6 +363,50 @@
                                 <img src="images/model-linq.png" alt="" class="img-thumbnail img-rounded">
                             </div>
                             <p>&nbsp;</p>
+                            <p>
+                                In the LINQ Query, elements defined in a <b>No SQL table</b> are named with the <b>Table Name</b> and the <b>Column Name</b> (<eg>e.g. for the objective column of Excel Employee Objective: <i>ExcelEmployeeObjective["objective"]</i></eg>), and elements defined in a <b>Table Link</b> are named using the <b>Data Source Name</b> and the original <b>Column Name</b> (<eg>e.g. for the LastName column of Employees: <i>Northwind["Employees.LastName"]</i></eg>).
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>LINQ Query Sample</h4>
+                                This script is generated for the <code>Excel Employees Objectives</code> model of the report:<br />
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/201-LINQ Samples CSV-Excel-JSON-XML</a><br />
+                                <pre class="brush: csharp">
+@@using System.Data
+@@{
+ReportModel model = Model;
+
+//Query
+var query =
+from Northwind in model.ExecResultTables["Northwind"].AsEnumerable()
+join ExcelEmployeeObjective in model.ExecResultTables["ExcelEmployeeObjective"].AsEnumerable() on
+new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
+equals 
+new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }
+
+group new { Northwind,ExcelEmployeeObjective } by new {
+  C0=Helper.ToDateTime(Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]),
+  C1=Helper.ToString(Northwind["Employees.LastName"]),
+  C4=Helper.ToDouble(Northwind["Employees.EmployeeID"])
+} into g
+
+orderby g.Key.C0,g.Key.C1,g.Sum(i => Helper.ToDouble(i.Northwind["(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice"])),g.Sum(i => Helper.ToDouble(i.ExcelEmployeeObjective["objective"]))
+
+select new {
+  C0=g.Key.C0,
+  C1=g.Key.C1,
+  C2=g.Sum(i => Helper.ToDouble(i.Northwind["(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice"])),
+  C3=g.Sum(i => Helper.ToDouble(i.ExcelEmployeeObjective["objective"])),
+  C4=g.Key.C4
+};
+
+//LINQ Query Script
+var query2 = query.Distinct();
+
+model.ResultTable = query2.CopyToDataTable2();
+}
+                    </pre>
+
+                            </div>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Report Restrictions in LINQ</h4>
                                 Restrictions are shared amongst the <strong>LINQ Model</strong> and its <b>Sub-Models</b>.<br />
@@ -811,7 +855,7 @@
                     <!-- end row -->
                     <div class="bs-callout bs-callout-demo">
                         <h4>Input Values Samples</h4>
-                        <a class="btn btn-primary live-sample">Live Sample: 4-Input Values/400-Input Values - Connection and threshold</a><br />
+                        <a class="btn btn-primary live-sample">Live Sample: 03-Input Values/300-Input Values - Connection and threshold</a><br />
                         This reports show the use of 2 input values.
                     </div>
                 </section>

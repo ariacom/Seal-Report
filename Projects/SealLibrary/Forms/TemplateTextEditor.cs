@@ -455,7 +455,22 @@ namespace Seal.Forms
     //report.GetReportModel(""aModelName"").GetRestrictionByName(""Category"").EnumValues.Add(""1"");
 
     //report.DisplayName = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + ""-"" + DateTime.Now.ToShortDateString();
-    
+
+    //Get the restriction from the column name
+    //var restr = report.GetReportModel(""aModelName"").Restrictions.FirstOrDefault(i =>  i.MetaColumn.Name == ""Products.CategoryID"");
+
+    /*Remove a given restriction from all models if the user belongs to a group
+    if (report.SecurityContext != null && report.SecurityContext.BelongsToGroup(""aGroupName"")) {
+        foreach (var model in report.Models) {
+            var restrictions = model.Restrictions.Where(i =>  i.MetaColumn.Name == ""Products.CategoryID"");
+            foreach (var restriction in restrictions) {
+                model.Restriction = model.Restriction.Replace(""[""+ restriction.GUID + ""]"", ""1=1"");
+            }
+            model.Restrictions.RemoveAll(i => restrictions.Contains(i));
+        }
+    }
+    */
+
     //Set the last value of an enum
     //var restr = report.GetReportModel(""aModelName"").GetRestrictionByName(""Category"");
     //restr.EnumValues.Clear();

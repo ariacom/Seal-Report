@@ -135,7 +135,11 @@
                                 <br />
                                 You can also override the default SQL generated with the following <b>Model</b> properties :
                                 <code>Select Clause</code>,<code>From Clause</code>,<code>Order By Clause</code>,<code>Group By Clause</code>,<code>Common Table Expression Clause</code><br />
-
+                            </div>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Custom expression for LINQ Models</h4>
+                                Like for <b>SQL Models</b>, you can change the default <b>C# expression</b> of an element part of a <b>LINQ Model</b> with the <code>Advanced->Custom expression</code> property.<br />
+                                <eg>e.g. 'Helper.ToString(Northwind["Employees.LastName"])' can be overriden to 'Helper.ToString(Northwind["Employees.LastName"]).ToUpper()'</eg>.
                             </div>
                         </div>
                         <!-- end col -->
@@ -182,6 +186,24 @@
                                 In line 16, a dynamic restriction is set using the name of the user logged.<br />
                                 Thus, when the <strong>Orders</strong> table is involved in a model, the table will be automatically filtered with this restriction.
                             </div>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Defining security during the login process:</h4>
+                                Run the <b>Server Manager</b> and edit the Web Security (<srmenu>CTRL + W</srmenu>), then add the following code to the <code>Custom Security Script</code>:
+                                <pre class="brush: csharp;">
+		var source = user.Security.Repository.Sources.FirstOrDefault(i => i.Name.StartsWith("Northwind"));
+		if (source != null)
+		{
+            foreach (var metaTable in source.MetaData.Tables.Where(i => i.Name.ToLower() == "orders")) 
+            {
+                if (user.BelongsToGroup("CustomerGroupName")) {            
+                    metaTable.WhereSQL = string.Format("{Orders.CustomerID in (SELECT CustomerID FROM Customers WHERE ContactName={0})", Helper.QuoteSingle(user.Name));
+                }
+            }        
+		}
+                                </pre>
+                                If the logged user belongs to the group named 'CustomerGroupName', a dynamic restriction will be added to the <b>Order</b> table.<br />
+                                Thus, when the user executes a report, he can only see the orders having his <b>ContactName</b>
+                            </div>
                             <div class="bs-callout bs-callout-warning">
                                 You may adapt this example to fit your requirements. There might be also other ways to implement dynamic security...
                             </div>
@@ -208,7 +230,7 @@
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>SQL Server Stored Procedures</h4>
-                                Check the report <strong>21-SQL Server Stored Procedure with parameters</strong> in the <strong>/Reports/Samples</strong> Repository sub-folder.<br />
+                                Check the report <strong>301-SQL Server Stored Procedure with parameters</strong> in the <strong>/Reports/Samples/04-MS SQLServer</strong> Repository sub-folder.<br />
                             </div>
                         </div>
                         <!-- end col -->
@@ -302,9 +324,9 @@
                             <br />
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Generating report results on the fly...</h4>
-                                Check the interesting report <strong>34-Task Generate several Report Results</strong> in the <strong>/Reports/Samples</strong> Repository sub-folder.<br />
+                                Check the interesting report <strong>102-Task Generate several Report Results</strong> in the <strong>/Reports/Samples/01-Tasks</strong> Repository sub-folder.<br />
                                 The reports has a task that generates a report result by country using the <strong>Search - Orders</strong> report.
-                                                                                                           <pre class="brush: csharp; ">
+                                <pre class="brush: csharp; ">
 @@using System.IO
 @@using System.Data
 @@{

@@ -358,10 +358,12 @@
                     </div>
                     <!-- end row -->
                     <div class="bs-callout bs-callout-demo">
-                        <h4>Dynamic Display Sample</h4>
+                        <h4>Dynamic Display Samples</h4>
                         <a class="btn btn-primary live-sample">Live Sample: 09-Enumerated List - Dynamic Display</a><br />
                         This report shows how the 'Product Name' prompted list depends on the choice of a 'Product Category'.<br />
                         The report contains also a custom enumerated list named to search the product name with characters.
+                        <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/210-Enumerated List LINQ - Dynamic Display</a><br />
+                        This report contains two <b>Enumerated Lists</b> defined by <code>Scripts</code> with a <b>LINQ</b> Source.
                     </div>
                 </section>
                 <!-- end section -->
@@ -419,7 +421,7 @@
                                 Defining <b>Table Links</b> and <b>Joins</b> allow to join different <b>Data Sources</b> (<eg>e.g. Performing a report that shows data from a SQL database and an Excel sheet</eg>).
                             </div>
                             <p>
-                                In the LINQ Query, elements defined in a <b>No SQL table</b> are named with the <b>Table Name</b> and the <b>Column Name</b> (<eg>e.g. for the objective column of Excel Employee Objective: <i>ExcelEmployeeObjective["objective"]</i></eg>), and elements defined in a <b>Table Link</b> are named using the <b>Data Source Name</b> and the original <b>Column Name</b> (<eg>e.g. for the LastName column of Employees: <i>Northwind["Employees.LastName"]</i></eg>). 
+                                In the LINQ Query, elements defined in a <b>No SQL table</b> are named with the <b>Table Name</b> and the <b>Column Name</b> (<eg>e.g. for the objective column of Excel Employee Objective: <i>ExcelEmployeeObjective["objective"]</i></eg>), and elements defined in a <b>Table Link</b> are named using the <b>Data Source Name</b> and the original <b>Column Name</b> (<eg>e.g. for the LastName column of Employees: <i>Northwind["Employees.LastName"]</i></eg>).
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Join Script Sample</h4>
@@ -433,7 +435,7 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
                             </div>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>LINQ Source Samples</h4>
-                                <a class="btn btn-primary live-sample">Live Sample: 2-LINQ/200-LINQ Source - Excel and CSV Sources</a><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/200-LINQ Source - Excel and CSV Sources</a><br />
                                 This report one new LINQ SQL Source with 2 No SQL Tables: One loaded from an Excel Sheet, one from a CSV file.<br /><br />
                                 <a class="btn btn-primary">Repository Data Source Sample: LINQ Sources</a><br />
                                 This source contains several <b>No SQL Tables</b> based on the <b>Table Templates</b> available.<br /><br />
