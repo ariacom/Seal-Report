@@ -173,19 +173,6 @@ class SWIDashboard {
 
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
-
-        //Handle overflow for restrictions
-        var selects = "#" + data.itemguid + " .enum,#" + data.itemguid + " .operator_select";
-        $(selects).on('show.bs.dropdown', function () {
-            $('.muuri-item').css("overflow", "visible");
-            $('.muuri-item').css("z-index", "0");
-            $(this).closest(".muuri-item").css("z-index", "1");
-        });
-        $(selects).on('hidden.bs.dropdown', function () {
-            $('.muuri-item').css("overflow", "auto");
-            $('.muuri-item').css("z-index", "1");
-        });
-
     }
 
     private refreshDashboardItem(guid: string, itemguid: string, force: boolean, forTimer: boolean) {

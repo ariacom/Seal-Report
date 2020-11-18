@@ -110,7 +110,7 @@ namespace Seal.Model
                         {
                             ResultCell cell = line[col];
                             var cellValue = cell.HTMLValue;
-                            if (!string.IsNullOrEmpty(search) && cellValue.ToLower().Contains(search2))
+                            if (!string.IsNullOrEmpty(search) && HttpUtility.HtmlDecode(cellValue).ToLower().Contains(search2))
                             {
                                 filtered = true;
                                 break;

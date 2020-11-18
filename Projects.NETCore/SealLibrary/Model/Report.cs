@@ -572,7 +572,10 @@ namespace Seal.Model
         /// After execution, indicates if the report has validation errors
         /// </summary>
         [XmlIgnore]
-        public bool HasValidationErrors = false;
+        public bool HasValidationErrors
+        {
+            get { return AllRestrictions.Exists(i => !string.IsNullOrEmpty(i.ValidationErrors)); }
+        }
 
         /// <summary>
         ///Execution messages after execution

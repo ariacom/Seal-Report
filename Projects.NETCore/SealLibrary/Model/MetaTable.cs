@@ -89,7 +89,7 @@ namespace Seal.Model
                 if (_tableTemplate == null)
                 {
                     if (!string.IsNullOrEmpty(TemplateName)) _tableTemplate = RepositoryServer.TableTemplates.FirstOrDefault(i => i.Name == TemplateName);
-                    if (_tableTemplate == null) _tableTemplate = RepositoryServer.TableTemplates.FirstOrDefault(i => i.Name == MetaTableTemplate.GenericName);
+                    if (_tableTemplate == null) _tableTemplate = RepositoryServer.TableTemplates.FirstOrDefault(i => i.Name == MetaTableTemplate.DefaultName);
 
                     InitParameters();
                 }
@@ -593,7 +593,7 @@ namespace Seal.Model
             lock (this)
             {
                 var definitionScript = DefinitionScript;
-                if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;
+                if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;               
 
                 if (!string.IsNullOrEmpty(definitionScript))
                 {

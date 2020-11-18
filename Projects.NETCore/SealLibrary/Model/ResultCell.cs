@@ -141,9 +141,8 @@ namespace Seal.Model
         {
             get
             {
-                var result = !string.IsNullOrEmpty(FinalValue) ? FinalValue : DisplayValue.Replace("\r", "").Replace("\n", "<br>");
-                if (Element != null && !Element.ContainsHtml) result = HttpUtility.HtmlEncode(result);
-                return result;
+                var value = (Element != null && !Element.ContainsHtml) ? HttpUtility.HtmlEncode(DisplayValue) : DisplayValue;
+                return !string.IsNullOrEmpty(FinalValue) ? FinalValue : value.Replace("\r", "").Replace("\n", "<br>");
             }
         }
 

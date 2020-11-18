@@ -101,3 +101,9 @@
     pointer-events: none;
     opacity: 0.4;
 }
+
+.restriction_error {
+    color:red;
+    font-style:italic;
+    font-weight: bold;
+}
