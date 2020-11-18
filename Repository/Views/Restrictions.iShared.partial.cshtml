@@ -15,6 +15,7 @@
     <div id="@id" class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
         <div class="panel-group" role="tablist">
             @Raw(view.GetValue("restrictions_header"))
+
             <!--rows of xx restrictions -->
             @for (int row = 0; row <= restrictions.Count / restrictionPerRow; row++)
             {

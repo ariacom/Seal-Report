@@ -897,7 +897,7 @@ namespace SealWebServer.Controllers
 
                             if (!parseView && view.Model != null) //Parse if one restriction in the model
                             {
-                                parseView = view.Model.Restrictions.Exists(i => restrictions.Contains(i.GUID));
+                                parseView = view.Model.AllExecutionRestrictions.Exists(i => restrictions.Contains(i.GUID));
                             }
 
                             if (!parseView && view.RestrictionsGUID != null) //Parse restriction views having the restriction                            

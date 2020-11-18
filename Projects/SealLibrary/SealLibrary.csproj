@@ -458,6 +458,9 @@
     <None Include="..\..\Repository\Sources\TableTemplates\Excel.cshtml">
       <Link>Table Templates\Excel.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Sources\TableTemplates\Default.cshtml">
+      <Link>Table Templates\Default.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Sources\TableTemplates\Generic.cshtml">
       <Link>Table Templates\Generic.cshtml</Link>
     </None>

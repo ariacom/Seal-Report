@@ -16,7 +16,7 @@ namespace Seal.Model
     /// </summary>
     public class MetaTableTemplate
     {
-        public const string GenericName = "Generic";
+        public const string DefaultName = "Default";
 
         /// <summary>
         /// Name 

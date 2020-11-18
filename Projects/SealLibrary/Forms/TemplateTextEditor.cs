@@ -440,7 +440,7 @@ namespace Seal.Forms
         link.ScriptResult = string.Format(""<b> This is a custom HTML built in the 'Report Navigation Script' from the server at {0}.</b><hr>"", DateTime.Now);
     }
 
-    //Check a full implementation in the sample report '17-Custom buttons and report navigation'
+    //Check a full implementation in the sample report '505-Navigation - Custom buttons and report execution'
 }
 ";
         const string razorInitScriptTemplate = @"@{

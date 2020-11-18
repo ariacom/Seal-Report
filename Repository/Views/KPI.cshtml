@@ -6,6 +6,7 @@
     ReportView modelView = report.CurrentModelView;
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
+    if (page == null) { return; }
     ResultTable table = page.DataTable;
 
     int trendIndex = view.GetNumericValue("kpi_trend_index");

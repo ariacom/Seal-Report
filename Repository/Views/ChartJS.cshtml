@@ -7,6 +7,7 @@
     ReportView modelView = report.CurrentModelView;
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
+    if (page == null) { return; }
     int serieIndex = 0;
 }
 

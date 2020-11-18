@@ -138,7 +138,7 @@ namespace Seal.Model
                 if (_tableTemplate == null)
                 {
                     if (!string.IsNullOrEmpty(TemplateName)) _tableTemplate = RepositoryServer.TableTemplates.FirstOrDefault(i => i.Name == TemplateName);
-                    if (_tableTemplate == null) _tableTemplate = RepositoryServer.TableTemplates.FirstOrDefault(i => i.Name == MetaTableTemplate.GenericName);
+                    if (_tableTemplate == null) _tableTemplate = RepositoryServer.TableTemplates.FirstOrDefault(i => i.Name == MetaTableTemplate.DefaultName);
 
                     InitParameters();
                 }
@@ -317,7 +317,7 @@ namespace Seal.Model
         /// <summary>
         /// The Default Razor Script used to load the data in the table. This can be overwritten in the model.
         /// </summary>
-        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model. If the definition script includes also the load of the data, this script should be left empty/blank."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model. If the definition script includes also the load of the data, this script can be left empty/blank."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string LoadScript { get; set; }
 
@@ -666,7 +666,7 @@ namespace Seal.Model
             lock (this)
             {
                 var definitionScript = DefinitionScript;
-                if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;
+                if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;               
 
                 if (!string.IsNullOrEmpty(definitionScript))
                 {

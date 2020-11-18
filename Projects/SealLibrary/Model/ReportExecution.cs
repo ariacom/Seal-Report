@@ -629,24 +629,40 @@ namespace Seal.Model
             }
             else
             {
-                foreach (ReportModel model in Report.ExecutionModels)
+                //Check if input value prompted
+                if (Report.InputValues.Exists(i => i.Prompt != PromptType.None && Report.ExecutionViewRestrictions.Contains(i)))
                 {
-                    //Skip models having view restriction not triggered
-                    if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Contains(i)))
+                    //If yes, add models with the Force Execution flag
+                    foreach (ReportModel model in Report.ExecutionModels)
                     {
-                        if (Report.ExecutionTriggerView == null || !model.ExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
+                        if (Report.AllViews.Exists(j => j.Model == model && j.GetBoolValue(Parameter.ForceExecutionParameter)))
                         {
-                            //And the model was not triggered, 
-                            //check if the model has a view with force_execution flag
-                            if (!Report.AllViews.Exists(j => j.Model == model && j.GetBoolValue(Parameter.ForceExecutionParameter)))
-                            {
-                                model.Pages.Clear();
-                                model.ResultTable = null;
-                                continue;
-                            }
+                            result.Add(model);
                         }
                     }
-                    result.Add(model);
+                }
+                else
+                {
+                    //If not, add all models, except those having a restriction in a Restriction View (unless force_execution flag is set)
+                    foreach (ReportModel model in Report.ExecutionModels)
+                    {
+                        //Skip models having view restriction not triggered
+                        if (model.AllExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Contains(i)))
+                        {
+                            if (Report.ExecutionTriggerView == null || !model.AllExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
+                            {
+                                //And the model was not triggered, 
+                                //check if the model has a view with force_execution flag
+                                if (!Report.AllViews.Exists(j => j.Model == model && j.GetBoolValue(Parameter.ForceExecutionParameter)))
+                                {
+                                    model.Pages.Clear();
+                                    model.ResultTable = null;
+                                    continue;
+                                }
+                            }
+                        }
+                        result.Add(model);
+                    }
                 }
             }
             return result;
@@ -1106,10 +1122,11 @@ namespace Seal.Model
                     if (headerDataValues.Length == 1)
                     {
                         line[0] = headerDataValues[0]; //Case 1 Data, title in first cell
-                        if (string.IsNullOrEmpty(line[0].FinalCssClass) && string.IsNullOrEmpty(line[0].FinalCssStyle)) {
+                        if (string.IsNullOrEmpty(line[0].FinalCssClass) && string.IsNullOrEmpty(line[0].FinalCssStyle))
+                        {
                             line[0].FinalCssClass = "text-left"; //Force left
-                            line[0].FinalCssStyle = "padding-right:25px;"; 
-                        }                        
+                            line[0].FinalCssStyle = "padding-right:25px;";
+                        }
                     }
                     for (int i = 0; i < headerColumnValues.Length; i++) line[headerRowValues.Length + i] = headerColumnValues[i];
                     //case cols, no rows, one data, add data title
@@ -1132,7 +1149,8 @@ namespace Seal.Model
                         {
                             int index = headerRowValues.Length + headerDataValues.Length * j;
                             line[index] = page.Columns[j][i];
-                            if (headerDataValues.Length > 0 && string.IsNullOrEmpty(line[index].FinalCssClass) && string.IsNullOrEmpty(line[index].FinalCssStyle)) {
+                            if (headerDataValues.Length > 0 && string.IsNullOrEmpty(line[index].FinalCssClass) && string.IsNullOrEmpty(line[index].FinalCssStyle))
+                            {
                                 line[index].FinalCssClass = "text-right"; //Force right as the column displays an aggregate
                                 line[index].FinalCssStyle = "padding-right:25px;";
                             }
@@ -1324,7 +1342,7 @@ namespace Seal.Model
                             {
                                 if (element.IsNumeric && element.CalculationOption == CalculationOption.PercentageColumn)
                                 {
-                                    foreach (ResultCell cell in totalCell.Cells) cell.Value = cell.DoubleValue / totalCell.DoubleValue;
+                                    foreach (ResultCell cell in totalCell.Cells) cell.Value = totalCell.DoubleValue != 0 ? cell.DoubleValue / totalCell.DoubleValue : null;
                                     totalCell.Value = 1;
                                 }
                             }
@@ -1385,7 +1403,7 @@ namespace Seal.Model
                             {
                                 if (element.IsNumeric && element.CalculationOption == CalculationOption.PercentageRow)
                                 {
-                                    foreach (ResultCell cell in totalCell.Cells) cell.Value = cell.DoubleValue / totalCell.DoubleValue;
+                                    foreach (ResultCell cell in totalCell.Cells) cell.Value = totalCell.DoubleValue != 0 ? cell.DoubleValue / totalCell.DoubleValue : null;
                                     totalCell.Value = 1;
                                 }
                                 else if (element.IsNumeric && element.CalculationOption == CalculationOption.PercentageAll)
@@ -1393,8 +1411,8 @@ namespace Seal.Model
                                     ResultTotalCell totalTotalCell = page.DataTable.TotalCells.FirstOrDefault(c => c.Element == element);
                                     if (totalTotalCell != null)
                                     {
-                                        foreach (ResultCell cell in totalCell.Cells) cell.Value = cell.DoubleValue / totalTotalCell.DoubleValue;
-                                        if (totalCell != totalTotalCell) totalCell.Value = totalCell.DoubleValue / totalTotalCell.DoubleValue;
+                                        foreach (ResultCell cell in totalCell.Cells) cell.Value = totalTotalCell.DoubleValue != 0 ? cell.DoubleValue / totalTotalCell.DoubleValue : null;
+                                        if (totalCell != totalTotalCell) totalCell.Value = totalTotalCell.DoubleValue != 0 ? totalCell.DoubleValue / totalTotalCell.DoubleValue : null;
                                     }
                                 }
 
