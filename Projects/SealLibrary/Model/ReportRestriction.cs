@@ -1850,6 +1850,12 @@ namespace Seal.Model
         }
 
         /// <summary>
+        ///Validation errors set during the execution
+        /// </summary>
+        [XmlIgnore]
+        public string ValidationErrors;
+
+        /// <summary>
         /// True if the restriction has time
         /// </summary>
         [XmlIgnore]

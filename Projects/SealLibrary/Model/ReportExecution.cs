@@ -237,7 +237,6 @@ namespace Seal.Model
         {
             Report.ExecutionMessages = "";
             Report.ExecutionErrors = "";
-            Report.HasValidationErrors = false;
 
             Report.InitForExecution();
             if (Report.HasErrors)
@@ -273,6 +272,7 @@ namespace Seal.Model
             {
                 try
                 {
+                    foreach (var restriction in Report.AllRestrictions) restriction.ValidationErrors = "";
                     if (Report.InputRestrictions.Count > 0 && Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution && !Report.IsNavigating)
                     {
                         //check input restrictions if report has already been executed
@@ -369,27 +369,25 @@ namespace Seal.Model
             Report.ExecutionErrors += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(error, args));
         }
 
-        private static bool validateDateKeyword(Report report, string val, string dateMessage)
+        private static bool validateDateKeyword(Report report, ReportRestriction restriction, string val, string dateMessage)
         {
             string val2 = report.TranslateDateKeywordsToEnglish(val);
             if (!ReportRestriction.HasDateKeyword(val2))
             {
-                report.HasValidationErrors = true;
-                report.ExecutionErrors += string.Format("{0}: '{1}'.\r\n{2}\r\n", report.Translate("Invalid date"), val, dateMessage);
+                restriction.ValidationErrors += string.Format("{0}: '{1}'.\r\n{2}\r\n", report.Translate("Invalid date"), val, dateMessage);
                 return false;
             }
             return true;
         }
 
-        private static bool validateNumeric(Report report, string val)
+        private static bool validateNumeric(Report report, ReportRestriction restriction, string val)
         {
             foreach (var v in ReportRestriction.GetVals(val))
             {
                 double d;
                 if (!Helper.ValidateNumeric(v, out d))
                 {
-                    report.HasValidationErrors = true;
-                    report.ExecutionErrors += string.Format("{0}: '{1}'\r\n", report.Translate("Invalid numeric value"), v);
+                    restriction.ValidationErrors += string.Format("{0}: '{1}'\r\n", report.Translate("Invalid numeric value"), v);
                     return false;
                 }
             }
@@ -402,6 +400,7 @@ namespace Seal.Model
         public static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired)
         {
             string dateMessage = report.Translate("Use the date format '{0}' or one of the following keywords:", report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + report.DateKeywordsList;
+            restriction.ValidationErrors = "";
 
             DateTime dt;
 
@@ -418,19 +417,18 @@ namespace Seal.Model
                     restriction.Date1Keyword = "";
                     restriction.Date1 = dt;
                 }
-                else if (validateDateKeyword(report, val, dateMessage)) restriction.Date1Keyword = report.TranslateDateKeywordsToEnglish(val);
+                else if (validateDateKeyword(report, restriction, val, dateMessage)) restriction.Date1Keyword = report.TranslateDateKeywordsToEnglish(val);
             }
             else if (restriction.IsNumeric)
             {
-                if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value1 = val;
+                if (string.IsNullOrEmpty(val) || validateNumeric(report, restriction, val)) restriction.Value1 = val;
             }
             else restriction.Value1 = val;
 
             //check required flag
             if (checkRequired && restriction.Required && string.IsNullOrEmpty(val))
             {
-                report.HasValidationErrors = true;
-                report.ExecutionErrors += string.Format("{0} '{1}'\r\n", report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
+                restriction.ValidationErrors += string.Format("{0} '{1}'\r\n", report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
             }
 
             if (restriction.Prompt != PromptType.PromptOneValue)
@@ -439,8 +437,7 @@ namespace Seal.Model
                 //check required flag
                 if (restriction.Prompt == PromptType.PromptTwoValues && checkRequired && restriction.Required && string.IsNullOrEmpty(val))
                 {
-                    report.HasValidationErrors = true;
-                    report.ExecutionErrors += string.Format("{0} '{1}'\r\n", report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
+                    restriction.ValidationErrors += string.Format("{0} '{1}'\r\n", report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
                 }
 
                 if (restriction.IsDateTime)
@@ -455,11 +452,11 @@ namespace Seal.Model
                         restriction.Date2Keyword = "";
                         restriction.Date2 = dt;
                     }
-                    else if (validateDateKeyword(report, val, dateMessage)) restriction.Date2Keyword = report.TranslateDateKeywordsToEnglish(val);
+                    else if (validateDateKeyword(report, restriction, val, dateMessage)) restriction.Date2Keyword = report.TranslateDateKeywordsToEnglish(val);
                 }
                 else if (restriction.IsNumeric)
                 {
-                    if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value2 = val;
+                    if (string.IsNullOrEmpty(val) || validateNumeric(report, restriction, val)) restriction.Value2 = val;
                 }
                 else restriction.Value2 = val;
 
@@ -478,11 +475,11 @@ namespace Seal.Model
                             restriction.Date3Keyword = "";
                             restriction.Date3 = dt;
                         }
-                        else if (validateDateKeyword(report, val, dateMessage)) restriction.Date3Keyword = report.TranslateDateKeywordsToEnglish(val);
+                        else if (validateDateKeyword(report, restriction, val, dateMessage)) restriction.Date3Keyword = report.TranslateDateKeywordsToEnglish(val);
                     }
                     else if (restriction.IsNumeric)
                     {
-                        if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value3 = val;
+                        if (string.IsNullOrEmpty(val) || validateNumeric(report, restriction, val)) restriction.Value3 = val;
                     }
                     else restriction.Value3 = val;
 
@@ -499,11 +496,11 @@ namespace Seal.Model
                             restriction.Date4Keyword = "";
                             restriction.Date4 = dt;
                         }
-                        else if (validateDateKeyword(report, val, dateMessage)) restriction.Date4Keyword = report.TranslateDateKeywordsToEnglish(val);
+                        else if (validateDateKeyword(report, restriction, val, dateMessage)) restriction.Date4Keyword = report.TranslateDateKeywordsToEnglish(val);
                     }
                     else if (restriction.IsNumeric)
                     {
-                        if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value4 = val;
+                        if (string.IsNullOrEmpty(val) || validateNumeric(report, restriction, val)) restriction.Value4 = val;
                     }
                     else restriction.Value4 = val;
                 }
@@ -546,8 +543,7 @@ namespace Seal.Model
                     //check required flag
                     if (restriction.EnumValues.Count == 0 && restriction.Required)
                     {
-                        Report.HasValidationErrors = true;
-                        Report.ExecutionErrors += string.Format("{0} '{1}'\r\n", Report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
+                        restriction.ValidationErrors += string.Format("{0} '{1}'\r\n", Report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
                     }
                 }
                 else
@@ -599,11 +595,8 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Report.HasValidationErrors = true;
                 Report.ExecutionErrors += ex.Message;
             }
-
-            if (!string.IsNullOrEmpty(Report.ExecutionErrors)) Report.Cancel = true;
         }
 
         /// <summary>
@@ -622,6 +615,13 @@ namespace Seal.Model
         public List<ReportModel> GetReportModelsToExecute()
         {
             var result = new List<ReportModel>();
+
+            //No execution if validation error
+            if (Report.HasValidationErrors)
+            {
+                return result;
+            }
+
             if ((!Report.ForWidget && RootReport != null && RootReport.IsNavigating) || Report.ExecutionTriggerView != null)
             {
                 //Navigation or trigger view, we execute all the models
@@ -1343,7 +1343,7 @@ namespace Seal.Model
                                 if (element.IsNumeric && element.CalculationOption == CalculationOption.PercentageColumn)
                                 {
                                     foreach (ResultCell cell in totalCell.Cells) cell.Value = totalCell.DoubleValue != 0 ? cell.DoubleValue / totalCell.DoubleValue : null;
-                                    totalCell.Value = 1;
+                                    if (totalCell.Cells.Count > 0) totalCell.Value = 1;
                                 }
                             }
                             //This cell is ok for one element, can break
@@ -1368,6 +1368,7 @@ namespace Seal.Model
                         foreach (var element in rowTotalElements)
                         {
                             ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = (element.ShowTotal == ShowTotal.RowColumn && i == page.DataTable.Lines.Count - 1) };
+                            totalCell.IsTitle = (i < page.DataTable.BodyStartRow);
                             bool isHeaderLine = false;
                             foreach (var cell in rowLine)
                             {

@@ -245,6 +245,17 @@ function initRestrictions(parent) {
         }
     });
 
+    //Handle overflow for restrictions in dashboards
+    $(parent + ".enum," + parent + ".operator_select").on('show.bs.dropdown', function () {
+        $('.muuri-item').css("overflow", "visible");
+        $('.muuri-item').css("z-index", "0");
+        $(this).closest(".muuri-item").css("z-index", "1");
+    });
+    $(parent + ".enum," + parent + ".operator_select").on('hidden.bs.dropdown', function () {
+        $('.muuri-item').css("overflow", "auto");
+        $('.muuri-item').css("z-index", "1");
+    });
+
     //Update button for view restrictions
     $(parent + ".update_view_restrictions").click(function () {
         var formId = $(this).attr("id").replace("button_", "form_");
@@ -276,7 +287,7 @@ function initRestrictions(parent) {
                         //Update each view involved
                         data.forEach(function (value) {
                             var id = $(value).attr("id");
-                            if (id && form.attr("id") != id) {
+                            if (id) {
                                 var viewId = "#" + id;
                                 $(viewId).html($(value).html());
                                 initRestrictions(viewId);
