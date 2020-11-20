@@ -211,7 +211,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the operator display text
         /// </summary>
-        [Category("Definition"), DisplayName("Operator label"), Description("If not empty, overwrite the operator display text."), Id(11, 1)]
+        [Category("Definition"), DisplayName("Operator label"), Description("If not empty, overwrite the operator display text if the operator is set to 'Value Only' or if the operator is not modifiable."), Id(11, 1)]
         public string OperatorLabel { get; set; }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace Seal.Model
         /// </summary>
         public string GetOperatorLabel(Operator op)
         {
-            if (Operator == Operator.ValueOnly || Model == null) return OperatorLabel;
+            if (Operator == Operator.ValueOnly || Model == null || OperatorStyle == RestrictionOperatorStyle.NotModifiable) return OperatorLabel;
             return Report.Translate(Helper.GetEnumDescription(typeof(Operator), op));
         }
 

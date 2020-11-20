@@ -706,7 +706,7 @@ namespace Seal.Model
             }
 
             List<string> groups = new List<string>();
-            foreach (var group in _windowsGroups) groups.Add(skipDomainName ? Path.GetFileName(group.ToLower()) : group.ToLower());
+            foreach (var group in _windowsGroups) groups.Add(skipDomainName && group.Contains("\\") ? Path.GetFileName(group.ToLower()) : group.ToLower());
 
             SecurityGroups.AddRange(Security.Groups.Where(i => groups.Contains(i.Name.ToLower())));
 

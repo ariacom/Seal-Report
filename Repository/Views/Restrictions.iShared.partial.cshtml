@@ -33,7 +33,7 @@
                         }
 
                         <div class="form-group restrictions_group @(view.Template.ForViewRestrictions ? "view_restriction" : "main_restriction")">
-                            @if (restriction.OperatorStyle == RestrictionOperatorStyle.Visible || restriction.OperatorStyle == RestrictionOperatorStyle.VisibleWithNulls)
+                            @if (restriction.Operator != Operator.ValueOnly && (restriction.OperatorStyle == RestrictionOperatorStyle.Visible || restriction.OperatorStyle == RestrictionOperatorStyle.VisibleWithNulls))
                             {
                                 <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select">
                                     @foreach (Operator op in restriction.AllowedDisplayOperators)
@@ -48,7 +48,7 @@
                             else
                             {
                                 <input type="hidden" name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" value="@restriction.Operator" />
-                                if (restriction.OperatorStyle == RestrictionOperatorStyle.NotModifiable)
+                                if (restriction.Operator == Operator.ValueOnly || restriction.OperatorStyle == RestrictionOperatorStyle.NotModifiable)
                                 {
                                     var opLabel = restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(restriction.Operator);
                                     <button type="button" class="btn btn-default form-control" style="text-align:left;overflow:hidden;cursor:default;" title="@Raw(Helper.ToHtml(opLabel))">

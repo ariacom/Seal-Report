@@ -235,7 +235,7 @@ namespace Seal.Model
         /// </summary>
         public string GetOperatorLabel(Operator op)
         {
-            if (Operator == Operator.ValueOnly || Model == null) return OperatorLabel;
+            if (Operator == Operator.ValueOnly || Model == null || OperatorStyle == RestrictionOperatorStyle.NotModifiable) return OperatorLabel;
             return Report.Translate(Helper.GetEnumDescription(typeof(Operator), op));
         }
 
