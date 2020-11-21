@@ -519,6 +519,7 @@
             this.mainImageList.Images.SetKeyName(15, "modelSQL.png");
             this.mainImageList.Images.SetKeyName(16, "configuration.png");
             this.mainImageList.Images.SetKeyName(17, "modelLINQ.png");
+            this.mainImageList.Images.SetKeyName(18, "viewModel.png");
             // 
             // mainPropertyGrid
             // 

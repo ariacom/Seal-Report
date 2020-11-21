@@ -178,7 +178,8 @@ namespace Seal
                 foreach (var childView in view.Views.OrderBy(i => i.SortOrder))
                 {
                     childView.SortOrder = index++;
-                    TreeNode childNode = new TreeNode(childView.Name) { ImageIndex = 8, SelectedImageIndex = 8 };
+                    var imageIndex = string.IsNullOrEmpty(childView.ModelGUID) ? 8 : 18;
+                    TreeNode childNode = new TreeNode(childView.Name) { ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
                     childNode.Tag = childView;
                     node.Nodes.Add(childNode);
                     initTreeNodeViews(childNode, childView);
@@ -235,7 +236,8 @@ namespace Seal
                 mainTreeView.Nodes.Add(_viewTN);
                 foreach (ReportView view in _report.Views)
                 {
-                    TreeNode reportViewTN = new TreeNode(view.Name) { ImageIndex = 8, SelectedImageIndex = 8 };
+                    var index = string.IsNullOrEmpty(view.ModelGUID) ? 8 : 18;
+                    TreeNode reportViewTN = new TreeNode(view.Name) { ImageIndex = index, SelectedImageIndex = index };
                     reportViewTN.Tag = view;
                     _viewTN.Nodes.Add(reportViewTN);
                     initTreeNodeViews(reportViewTN, view);
