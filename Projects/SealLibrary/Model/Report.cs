@@ -2068,6 +2068,20 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Retruns true if the restriction is referenced by a Restriction View
+        /// </summary>
+        /// <param name="restriction"></param>
+        /// <returns></returns>
+        public bool IsInRestrictionView(ReportRestriction restriction)
+        {
+            foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
+            {
+                if (view.Restrictions.Contains(restriction)) return true;
+            }
+            return false;
+        }            
+
         private List<ReportRestriction> _executionViewRestrictions = null;
         /// <summary>
         /// List of all view restrictions prompted at execution
@@ -2093,7 +2107,6 @@ namespace Seal.Model
                                 _executionViewRestrictions.Add(restriction);
                             }
                         }
-
                     }
 
                     //Copy similar restriction in all models

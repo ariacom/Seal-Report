@@ -403,7 +403,8 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
         .css({
             position: "absolute",
             left: posLeft,
-            top: posTop
+            top: posTop,
+            opacity: 1
         });
 
     if (popupNavMenuTimeout != -1) clearTimeout(popupNavMenuTimeout);

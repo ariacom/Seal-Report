@@ -647,7 +647,7 @@ namespace Seal.Model
                     foreach (ReportModel model in Report.ExecutionModels)
                     {
                         //Skip models having view restriction not triggered
-                        if (model.AllExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Contains(i)))
+                        if (model.AllExecutionRestrictions.Exists(i => Report.IsInRestrictionView(i)))
                         {
                             if (Report.ExecutionTriggerView == null || !model.AllExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
                             {
