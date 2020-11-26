@@ -1175,6 +1175,9 @@ namespace Seal.Model
             Report result = null;
             try
             {
+                path = FileHelper.ConvertOSFilePath(path);
+                if (!File.Exists(path)) throw new Exception("File not found: " + path);
+
                 XmlSerializer serializer = new XmlSerializer(typeof(Report));
                 using (XmlReader xr = XmlReader.Create(path))
                 {
@@ -2028,7 +2031,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Retruns true if the restriction is referenced by a Restriction View
+        /// Returns true if the restriction is referenced by a Restriction View
         /// </summary>
         /// <param name="restriction"></param>
         /// <returns></returns>

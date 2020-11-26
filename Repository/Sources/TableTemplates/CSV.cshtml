@@ -10,7 +10,6 @@
 
     table.DefinitionScript = @"@using System.IO
 @using System.Data
-@using System.Text
 @{
     MetaTable metaTable = Model;
     var path = metaTable.GetValue(""csv_path"").Replace(Repository.SealRepositoryKeyword, Repository.Instance.RepositoryPath);
@@ -24,15 +23,15 @@
         if (!string.IsNullOrEmpty(sep)) {
             separator = (sep == ""\\t"" ? '\t' : metaTable.GetValue(""csv_sep"")[0]);
         }
-        var encoding = Encoding.Default;
+        var encoding = System.Text.Encoding.Default;
         if (metaTable.GetValue(""csv_encoding"")==""UTF8"") {
-            encoding =  Encoding.UTF8;
+            encoding = System.Text.Encoding.UTF8;
         }
         else if (metaTable.GetValue(""csv_encoding"")==""Unicode"") {
-            encoding =  Encoding.Unicode;
+            encoding = System.Text.Encoding.Unicode;
         }
         else if (metaTable.GetValue(""csv_encoding"")==""ASCII"") {
-            encoding =  Encoding.ASCII;
+            encoding = System.Text.Encoding.ASCII;
         }
 
         if (metaTable.GetBoolValue(""csv_vb"", true)) {

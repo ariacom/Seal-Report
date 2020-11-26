@@ -12,7 +12,6 @@
 }</DefinitionScript><LoadScript>@using System.Data&#xD;
 @using System.Net.Http&#xD;
 @using Newtonsoft.Json.Linq&#xD;
-@using System.Text&#xD;
 @using Newtonsoft.Json&#xD;
 &#xD;
 @{&#xD;
@@ -38,7 +37,7 @@
              &#xD;
         //Post SWILogin&#xD;
         var json = JsonConvert.SerializeObject(new { user="", password=""} );&#xD;
-        var data = new StringContent(json, Encoding.UTF8, "application/json");&#xD;
+        var data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");&#xD;
         var responsePost = client.PostAsync(url+"SWILogin", data).Result;  &#xD;
         string responseBody = responsePost.Content.ReadAsStringAsync().Result;&#xD;
         dynamic login = JValue.Parse(responseBody);&#xD;
@@ -46,7 +45,7 @@
         &#xD;
         //Post SWISearch&#xD;
         json = JsonConvert.SerializeObject(new { path=@"\", pattern="er"} );&#xD;
-        data = new StringContent(json, Encoding.UTF8, "application/json");&#xD;
+        data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");&#xD;
         responsePost = client.PostAsync(url+"SWISearch", data).Result;  &#xD;
         responseBody = responsePost.Content.ReadAsStringAsync().Result;&#xD;
         dynamic search = JValue.Parse(responseBody);&#xD;

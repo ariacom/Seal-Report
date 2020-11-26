@@ -629,10 +629,10 @@ namespace Seal.Model
             }
             else
             {
-                //Check if input value prompted
+                //Check if an input value is prompted for a Restriction View
                 if (Report.InputValues.Exists(i => i.Prompt != PromptType.None && Report.ExecutionViewRestrictions.Contains(i)))
                 {
-                    //If yes, add models with the Force Execution flag
+                    //If yes, add only models with the Force Execution flag
                     foreach (ReportModel model in Report.ExecutionModels)
                     {
                         if (Report.AllViews.Exists(j => j.Model == model && j.GetBoolValue(Parameter.ForceExecutionParameter)))
@@ -651,8 +651,7 @@ namespace Seal.Model
                         {
                             if (Report.ExecutionTriggerView == null || !model.AllExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
                             {
-                                //And the model was not triggered, 
-                                //check if the model has a view with force_execution flag
+                                //The model was not triggered, skip it if the model has not a view with force_execution flag to true
                                 if (!Report.AllViews.Exists(j => j.Model == model && j.GetBoolValue(Parameter.ForceExecutionParameter)))
                                 {
                                     model.Pages.Clear();

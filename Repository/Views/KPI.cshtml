@@ -99,17 +99,19 @@
                 }
 
                 <span class="text-center btn @buttonColor @buttonSize" title="@Raw(headerValue)" style="@Raw(view.GetValue("kpi_button_css"))">
-                    <span class="@buttonIcon" aria-hidden="true"></span> @Raw(headerValue) <strong>@Raw(lastValue)</strong>
+                    <span class="@buttonIcon" aria-hidden="true"></span>
+                    @Raw(view.GetBoolValue("kpi_show_header") ? " " + headerValue + " " : "")
+                    <strong>@Raw(view.GetBoolValue("kpi_show_value") ? lastValue : "")</strong>
                     @if (trendPercentage != null)
                     {
-                        <span class="badge">@Raw(string.Format("{0:+0;-0;0} %", Convert.ToInt32(trendPercentage.Value)))</span>
+                        <span class="badge">@Raw(string.Format(view.GetValue("kpi_trend_pct_format"), trendPercentage.Value))</span>
                     }
                 </span>
 
                 if (!string.IsNullOrEmpty(goalValue))
                 {
                     <span class="text-center label @goalColor" title="@Raw(headerValue)" style="@Raw(view.GetValue("kpi_goal_css"))">
-                        <span class="glyphicon @goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null ? string.Format("({0:+0;-0;0} %)", Convert.ToInt32(goalPercentage.Value)) : "")
+                        <span class="glyphicon @goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null ? string.Format(view.GetValue("kpi_goal_pct_format"), goalPercentage.Value) : "")
                     </span>
                 }
             }

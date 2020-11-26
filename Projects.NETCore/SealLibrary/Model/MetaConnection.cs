@@ -65,7 +65,7 @@ namespace Seal.Model
 #if !NETCOREAPP
                 if (_connectionType == ConnectionType.MSSQLServer && DatabaseType != DatabaseType.MSSQLServer) {
                     DatabaseType = DatabaseType.MSSQLServer;
-                    MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (_dctd != null) MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 
 #endif

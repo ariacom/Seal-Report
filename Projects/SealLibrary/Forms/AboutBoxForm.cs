@@ -16,7 +16,7 @@ namespace Seal.Forms
         public AboutBoxForm()
         {
             InitializeComponent();
-            this.Text = String.Format("About {0}", AssemblyTitle.Replace(" Library",""));
+            this.Text = String.Format("About {0}", AssemblyTitle.Replace(" Library", ""));
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             linkLabel.Text = "Get the last version and free support at https://sealreport.org";
@@ -124,7 +124,10 @@ namespace Seal.Forms
                     text = Repository.Instance.LicenseText + "\r\n\r\n" + si.Text();
                     text = text.Trim();
                 }
-                catch { }
+                catch
+                {
+                    text = Repository.Instance.LicenseText;
+                }
 
                 if (string.IsNullOrWhiteSpace(text))
                 {

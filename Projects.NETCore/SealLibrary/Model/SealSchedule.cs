@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Seal.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
@@ -135,6 +136,9 @@ namespace Seal.Model
             SealSchedule result = null;
             try
             {
+                path = FileHelper.ConvertOSFilePath(path);
+                if (!File.Exists(path)) throw new Exception("File not found: " + path);
+
                 XmlSerializer serializer = new XmlSerializer(typeof(SealSchedule));
                 using (XmlReader xr = XmlReader.Create(path))
                 {

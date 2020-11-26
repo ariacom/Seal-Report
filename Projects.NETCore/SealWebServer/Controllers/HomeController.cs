@@ -1098,8 +1098,8 @@ namespace SealWebServer.Controllers
         SWIFile getFileDetail(string path)
         {
             if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
-            var folderDetail = getFolderDetail(SWIFolder.GetParentPath(path));
             path = FileHelper.ConvertOSFilePath(path);
+            var folderDetail = getFolderDetail(SWIFolder.GetParentPath(path));
             var fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
             if (fileDetail == null)
             {

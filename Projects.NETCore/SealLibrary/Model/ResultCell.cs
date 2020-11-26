@@ -408,7 +408,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Retruns true if at least a Sort is specified
+        /// Returns true if at least a Sort is specified
         /// </summary>
         public static bool ShouldSort(ResultCell[] values)
         {

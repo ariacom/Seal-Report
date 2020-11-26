@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Seal.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,6 +44,9 @@ namespace Seal.Model
             SecurityUserProfile result = null;
             try
             {
+                path = FileHelper.ConvertOSFilePath(path);
+                if (!File.Exists(path)) throw new Exception("File not found: " + path);
+
                 XmlSerializer serializer = new XmlSerializer(typeof(SecurityUserProfile));
                 using (XmlReader xr = XmlReader.Create(path))
                 {

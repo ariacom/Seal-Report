@@ -228,11 +228,11 @@
                                         webServerDestination = @@"\\wsl$\Ubuntu\seal";
                                     </pre>
                                     Execute the report, check <strong>'Web Report Server Distribution'</strong> restriction, then re-execute the report to deploy the Web Report Server.<br />
-                                    Files are copied from the installation directory <i>'\NETCore'</i> Sub-Folder to <i>'\\wsl$\Ubuntu\seal\Repository'</i> (<i>'/seal'</i> on Ubuntu).<br />
-                                    Save the report for future publications (Note that this deployment could also be made manually using Windows Explorer).
+                                    Files are copied from the installation directory <i>'\NETCore'</i> Sub-Folder to <i>'\\wsl$\Ubuntu\seal'</i> (<i>'/seal'</i> on Ubuntu).<br />
+                                    Save the report for future publications (Note that this deployment could also be made manually using the Windows Explorer).
                                 </li>
                                 <li>
-                                    Edit the report <i>System\510 Publication - Repository</i><br />
+                                    Using the <b>Report Designer</b>, open and edit the report <i>System\510 Publication - Repository</i><br />
                                     Modify the task script <code>'Publish Repository Files'</code> to configure the Destination Directory to <i>'\\wsl$\Ubuntu\seal\Repository'</i>:
                                     <pre class="brush: csharp">
                                         repositoryDestination = @@"\\wsl$\Ubuntu\seal\Repository";
@@ -241,7 +241,7 @@
                                     Set the restriction <strong>'Repository Source Folder'</strong> to <b>'Repository: Copy All Folders'</b>.<br />
                                     Re-execute the report.<br />
                                     Repository Files are copied to <i>'\\wsl$\Ubuntu\seal\Repository'</i> (<i>'/seal/Repository'</i> on Ubuntu).<br />
-                                    Save the report for future publications (Note that this deployment could also be made manually using Windows Explorer).
+                                    Save the report for future publications (Note that this deployment could also be made manually using the Windows Explorer).
                                 </li>
                             </ol>
                             <h3><strong>Step 3:</strong> Run the Web Report Server on Ubuntu.</h3>

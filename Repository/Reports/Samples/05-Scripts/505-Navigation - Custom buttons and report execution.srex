@@ -17,8 +17,7 @@
         }&#xD;
     }&#xD;
 }&#xD;
-</Script><SortOrder>1</SortOrder></ReportTask></Tasks><CommonScripts><CommonScript><Name>GetImageBytesFromOLEField</Name><Script>@using System.Text&#xD;
-@using System.IO&#xD;
+</Script><SortOrder>1</SortOrder></ReportTask></Tasks><CommonScripts><CommonScript><Name>GetImageBytesFromOLEField</Name><Script>@using System.IO&#xD;
 &#xD;
 @functions &#xD;
 {&#xD;
@@ -35,7 +34,7 @@
         const string TIFF_ID_BLOCK = "II*\u0000";&#xD;
         byte[] imageBytes;&#xD;
         // Get a UTF7 Encoded string version&#xD;
-        Encoding u8 = Encoding.UTF7;&#xD;
+        var u8 = System.Text.Encoding.UTF7;&#xD;
         string strTemp = u8.GetString(oleFieldBytes);&#xD;
         // Get the first 300 characters from the string&#xD;
         string strVTemp = strTemp.Substring(0, 300);&#xD;

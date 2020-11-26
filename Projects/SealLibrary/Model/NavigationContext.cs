@@ -49,7 +49,7 @@ namespace Seal.Model
                 //Sub-Report
                 if (newReport == null)
                 {
-                    string path = reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath);
+                    string path = FileHelper.ConvertOSFilePath(reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath));
                     if (!File.Exists(path)) path = rootReport.Repository.ReportsFolder + path;
                     newReport = Report.LoadFromFile(path, rootReport.Repository);
 

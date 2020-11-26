@@ -18,8 +18,8 @@ namespace Seal.Model
         {
             SealInterface result = null;
             //Check if an implementation is available in a .dll
-            string assembilesFolder = repository.AssembliesFolder;
-            if (File.Exists(Path.Combine(assembilesFolder, "SealInterface.dll")))
+            string assembliesFolder = repository.AssembliesFolder;
+            if (File.Exists(Path.Combine(assembliesFolder, "SealInterface.dll")))
             {
                 try
                 {
