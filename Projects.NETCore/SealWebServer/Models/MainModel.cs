@@ -3,6 +3,9 @@ using System.IO;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Main model used for the Web Report Server
+    /// </summary>
     public class MainModel
     {
         public Repository Repository;

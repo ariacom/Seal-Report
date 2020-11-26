@@ -12,6 +12,9 @@ using System.Diagnostics;
 
 namespace SealWebServer.Controllers
 {
+    /// <summary>
+    /// Main Controller of the Web Report Server
+    /// </summary>
     public partial class HomeController
     {
         private string getCookie(string name)

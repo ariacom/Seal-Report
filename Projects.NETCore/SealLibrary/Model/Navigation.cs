@@ -4,6 +4,9 @@
 //
 namespace Seal.Model
 {
+    /// <summary>
+    /// A navigation for a given ReportExecution and NavigationLink
+    /// </summary>
     public class Navigation
     {
         public ReportExecution Execution;

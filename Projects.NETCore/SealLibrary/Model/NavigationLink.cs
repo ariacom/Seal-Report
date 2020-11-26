@@ -7,6 +7,9 @@ using System.Collections.Specialized;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A link to handle a navigation from an element
+    /// </summary>
     public class NavigationLink
     {
         public const string HyperLinkPrefix = "HL:";
