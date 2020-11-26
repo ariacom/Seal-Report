@@ -13,6 +13,9 @@ using System.Web;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Class to perform the navigation (sub-report or drill)
+    /// </summary>
     public class NavigationContext
     {
         public Dictionary<string, Navigation> Navigations = new Dictionary<string, Navigation>();

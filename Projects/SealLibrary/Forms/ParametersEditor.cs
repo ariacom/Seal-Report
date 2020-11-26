@@ -11,6 +11,9 @@ using System.Linq;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Generic editor for parameter values
+    /// </summary>
     public class ParametersEditor : RootEditor
     {
         #region Editor

@@ -16,6 +16,9 @@ using System.Text;
 
 namespace SealWebServer.Controllers
 {
+    /// <summary>
+    /// Main Controller of the Web Report Server
+    /// </summary>
     public partial class HomeController : Controller
     {
         /// <summary>

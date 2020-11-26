@@ -11,6 +11,9 @@ using System.Linq;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Editor for a list of partial templates
+    /// </summary>
     public class PartialTemplatesEditor : RootEditor
     {
         #region Editor

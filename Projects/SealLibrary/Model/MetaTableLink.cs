@@ -8,6 +8,9 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Link to a MetaTable of another MetaSource
+    /// </summary>
     public class MetaTableLink
     {
 
