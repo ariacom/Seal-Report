@@ -1916,7 +1916,7 @@ namespace Seal.Model
                     {
                         Report.LogMessage("Executing Pre-Execution script.");
                         string result = RazorHelper.CompileExecute(output.PreScript, output);
-                        if (result != null && result == "0")
+                        if (result != null && result.Trim() == "0")
                         {
                             output.Information = Report.Translate("Pre-execution script returns 0. The report output generation has been cancelled.");
                             Report.LogMessage("Pre-execution script returns 0. The report output generation has been cancelled.");

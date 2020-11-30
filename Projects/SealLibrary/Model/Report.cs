@@ -2102,7 +2102,7 @@ namespace Seal.Model
                     {
                         foreach (ReportRestriction restriction in view.Restrictions)
                         {
-                            if (restriction.IsInputValue || !_executionViewRestrictions.Exists(i => i.IsIdenticalForPrompt(restriction)))
+                            if ((restriction.IsInputValue && !_executionViewRestrictions.Exists(i => i == restriction)) || !_executionViewRestrictions.Exists(i => i.IsIdenticalForPrompt(restriction)))
                             {
                                 //Force prompt if the restriction is involved in a view
                                 if (restriction.Prompt == PromptType.None) restriction.Prompt = PromptType.Prompt;

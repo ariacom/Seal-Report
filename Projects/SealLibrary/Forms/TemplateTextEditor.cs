@@ -23,6 +23,8 @@ namespace Seal.Forms
         const string razorPreOutputTemplate = @"@{
     ReportOutput output = Model;
     string result = ""1""; //Set result to 0 to cancel the report.
+    //Or cancel the report with the Cancel flag
+    //output.Report.Cancel = true;
 }
 @Raw(result)";
 
