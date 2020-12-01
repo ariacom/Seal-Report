@@ -499,20 +499,8 @@ namespace Seal.Model
 
                 lock (Repository.PathLock)
                 {
-                    if (ForOutput && OutputToExecute.Device is OutputFolderDevice && !OutputToExecute.ZipResult)
-                    {
-                        //no need to get unique file name
-                        if (Format != ReportFormat.pdf && Format != ReportFormat.excel)
-                        {
-                            fileFolder = OutputFolderDeviceResultFolder;
-                        }
-                        ResultFilePath = Path.Combine(fileFolder, Path.GetFileNameWithoutExtension(fileName)) + "." + ResultExtension;
-                    }
-                    else
-                    {
-                        //get unique file name in the result folder
-                        ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension, true);
-                    }
+                    //get unique file name in the result folder
+                    ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension, true);
                     //Display path is always an HTML one...
                     HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
                     Debug.WriteLine(string.Format("ResultFilePath:{0} HTMLDisplayFilePath:{1} for {2}", ResultFilePath, HTMLDisplayFilePath, OutputToExecute != null ? OutputToExecute.Name : ""));
@@ -1758,8 +1746,7 @@ namespace Seal.Model
                 if (view != null)
                 {
                     view.Name = Helper.GetUniqueName("View", (from i in Views select i.Name).ToList());
-                    var child = AddChildView(view, modelTemplate);
-                    if (child.TemplateName == ReportViewTemplate.ModelName) child.AddDefaultModelViews();
+                    AddChildView(view, modelTemplate);
                 }
             }
             return view;
@@ -1797,6 +1784,8 @@ namespace Seal.Model
                         break;
                     }
                 }
+                result.UseModelName = true;
+                result.Name = result.Model.Name;
             }
             parent.Views.Add(result);
             if (result.TemplateName == ReportViewTemplate.ModelName) result.AddDefaultModelViews();

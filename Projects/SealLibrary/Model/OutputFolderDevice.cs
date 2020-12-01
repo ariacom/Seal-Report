@@ -47,13 +47,19 @@ namespace Seal.Model
             if (string.IsNullOrEmpty(output.FolderPath)) throw new Exception("The output folder path is not specified in the report output.");
             if (string.IsNullOrEmpty(output.FileName)) throw new Exception("The file name is not specified in the report output.");
 
+            string finalPath;
             if (output.ZipResult)
             {
-                var zipPath = Path.Combine(report.OutputFolderDeviceResultFolder, Path.GetFileNameWithoutExtension(report.ResultFileName) + ".zip");
-                FileHelper.CreateZIP(report.ResultFilePath, Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath), zipPath, output.ZipPassword);
-                File.Delete(report.ResultFilePath);
-                report.ResultFilePath = zipPath;
+                finalPath = Path.Combine(report.OutputFolderDeviceResultFolder, Path.GetFileNameWithoutExtension(report.ResultFileName) + ".zip");
+                FileHelper.CreateZIP(report.ResultFilePath, Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath), finalPath, output.ZipPassword);
             }
+            else
+            {
+                finalPath = Path.Combine(report.OutputFolderDeviceResultFolder, Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath));
+                File.Copy(report.ResultFilePath, finalPath, true);
+            }
+            File.Delete(report.ResultFilePath);
+            report.ResultFilePath = finalPath;
 
             output.Information = report.Translate("Report result generated in '{0}'", report.DisplayResultFilePath);
             report.LogMessage("Report result generated in '{0}'", report.DisplayResultFilePath);

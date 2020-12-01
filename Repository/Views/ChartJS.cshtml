@@ -19,13 +19,16 @@
     if (modelView.InitPageChart(page))
     {
         string chartType = reportModel.ExecChartJSType;
+        string finalChartType = reportModel.ExecChartJSType;
+        bool isHorizontalBar = false;
         if (chartType == "pie" && view.GetBoolValue("chartjs_doughnut"))
         {
-            chartType = "doughnut";
+            finalChartType = "doughnut";
         }
         else if (chartType == "bar" && view.GetBoolValue("chartjs_bar_horizontal"))
         {
-            chartType = "horizontalBar";
+            isHorizontalBar = true;
+            finalChartType = "horizontalBar";
         }
         <div class="chart-container" style="page-break-inside:avoid; @(view.GetBoolValue("chartjs_responsive") ? "position:relative;" : "") @Helper.AddIfNotEmpty("width:", view.GetValue("chartjs_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("chartjs_contheight"), ";")">
             <canvas id="@chartId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("chartjs_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("chartjs_height"), "'"))></canvas>
@@ -35,9 +38,9 @@
                 var ctx = $("#@chartId");
                 var colorsDef = "@view.GetValue("chartjs_colors")";
                 var colors = null;
-                if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+                if (colorsDef == "d3") colors = d3.scale.category@((chartType == "pie" || chartType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
                 else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
-                else if (colorsDef == "d3c") colors = d3.scale.category20c().range(); 
+                else if (colorsDef == "d3c") colors = d3.scale.category20c().range();
                 else colors = @Raw(view.GetValue("chartjs_colors"));
 
                 var data = {
@@ -48,22 +51,78 @@
                     {
                         <text>
                     {
-                        @Raw(chartType != "horizontalBar" && reportModel.ExecChartJSType != "pie" && chartType != "polarArea" && chartType != "radar" ? "type: '" + serie.Element.ChartJSSerie.ToString().ToLower() + "'," : "")
+                        @Raw(!isHorizontalBar && chartType != "pie" && chartType != "polarArea" && chartType != "radar" ? "type: '" + serie.Element.ChartJSSerie.ToString().ToLower() + "'," : "")
                         labels: [@Raw(page.ChartXLabels)],
                         label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
-                        data: [@Raw(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" || reportModel.ExecChartJSType == "radar" ? serie.ChartYSerieValues : (chartType != "horizontalBar" ? serie.ChartXYSerieValues: serie.ChartYXSerieValues))],
-                        borderColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + serieIndex + "]"),
-                        backgroundColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + serieIndex++ + "]"),
+                        data: [@Raw(chartType == "pie" || chartType == "polarArea" || chartType == "radar" ? serie.ChartYSerieValues : (!isHorizontalBar? serie.ChartXYSerieValues: serie.ChartYXSerieValues))],
+                        borderColor: colors@(chartType == "pie" || chartType == "polarArea" ? "" : "[" + serieIndex + "]"),
+                        backgroundColor: colors@(chartType == "pie" || chartType == "polarArea" ? "" : "[" + serieIndex++ + "]"),
                         borderWidth: 1,
                         pointRadius: @Raw(view.GetValue("chartjs_point_radius")),
                         steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
                         fill: @Raw(view.GetValue("chartjs_fill")),
-                        @(chartType == "horizontalBar" ? "x" : "y")AxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
+                        datalabels: {
+                            align: '@view.GetValue("chartjs_label_align")',
+                            anchor: '@view.GetValue("chartjs_label_anchor")',
+                            clamp: true
+                        },
+                        @(isHorizontalBar? "x" : "y")AxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
                     },
                         </text>
                     }
                 ]
-            };
+                };
+
+               var valueFormatter = function (dataset, dataIndex) {
+                    var tooltipData = dataset.data[dataIndex];
+                    var format = (dataset.yAxisID == 'yaxis-2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
+                    var isDate = (dataset.yAxisID == 'yaxis-2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
+                    @if (chartType == "pie" || chartType == "polarArea" || chartType == "radar")
+                    {
+                        <text>
+                        var total = 0;
+                        for (var i in dataset.data) total += dataset.data[i];
+                        if (isDate) return d3.timeFormat(format)(new Date(tooltipData));
+                        else {
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return d3.format(format)(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
+                        }
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                        var val = tooltipData.@(isHorizontalBar ? "x" : "y");
+                        if (isDate) return d3.timeFormat(format)(new Date(val));
+                        else return d3.format(format)(Number(val)).valueFormat();
+                        </text>
+                    }
+                }
+
+                var toolTipFormatter = function (tooltipItem, data) {
+                    var dataset = data.datasets[tooltipItem.datasetIndex];
+                    var tooltipLabel = data.labels[tooltipItem.index];
+
+                    @if (chartType == "pie" || chartType == "polarArea" || chartType == "radar")
+                    {
+                        <text>
+                            return tooltipLabel + ': ' + valueFormatter(dataset, tooltipItem.index);
+                        </text>
+                    }
+                    else if (chartType == "scatter")
+                    {
+                        <text>
+                    return tooltipLabel + ': ' + valueFormatter(dataset, tooltipItem.index);
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            return valueFormatter(dataset, tooltipItem.index);
+                        </text>
+                    }
+                }
+
             var options = {
                 responsive: @view.GetBoolValueJS("chartjs_responsive"),
                 maintainAspectRatio: @view.GetBoolValueJS("chartjs_maintainratio"),
@@ -83,56 +142,41 @@
                 },
                 tooltips: {
                     callbacks: {
-                        label: function (tooltipItem, data) {
-                            var allData = data.datasets[tooltipItem.datasetIndex].data;
-                            var tooltipLabel = data.labels[tooltipItem.index];
-                            var tooltipData = allData[tooltipItem.index];
-                            var format = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
-                            var isDate = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
-                            var val = tooltipItem.@(chartType == "horizontalBar" ? "x" : "y")Label;
-                            var valStr = "";
-                            if (isDate) valStr = d3.timeFormat(format)(new Date(val));
-                            else valStr = d3.format(format)(Number(val)).valueFormat();
-
-                            @if (reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea")
-                            {
-                                <text>
-                                var total = 0;
-                                for (var i in allData) total += allData[i];
-                                if (isDate) valStr = d3.timeFormat(format)(new Date(tooltipData));
-                                else {
-                                    var tooltipPercentage = Math.round((tooltipData / total) * 100);
-                                    valStr = d3.format(format)(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
-                                }
-                                return tooltipLabel + ': ' + valStr;
-                                </text>
-                            }
-                            else if (reportModel.ExecChartJSType == "scatter")
-                            {
-                                <text>
-                                return data.labels[tooltipItem.index] + ': ' + valStr;
-                                </text>
-                            }
-                            else
-                            {
-                                <text>
-                                return valStr;
-                                </text>
-                            }
+                        label: toolTipFormatter
+                    }
+                },
+                plugins: {
+                    datalabels: {
+                        backgroundColor: function (context) {
+                            return context.dataset.backgroundColor;
+                        },
+                        borderRadius: 4,
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        },
+                        display: @Raw(view.GetValue("chartjs_label_display")),
+                        formatter: function (value, context) {
+                            return valueFormatter(context.dataset, context.dataIndex);
                         }
                     }
                 },
-                @if (reportModel.ExecChartJSType != "pie" && reportModel.ExecChartJSType != "polarArea" && reportModel.ExecChartJSType != "radar")
+                @if (chartType != "pie" && chartType != "polarArea" && chartType != "radar")
                 {
                 <text>
                 scales: {
-                    @(chartType != "horizontalBar" ? "x" : "y")Axes: [{
+                    @(!isHorizontalBar ? "x" : "y")Axes: [{
                         offset: true,
                         display: @view.GetBoolValueJS("chartjs_show_xaxis"),
-                        stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
+                        stacked: @Helper.ToJS(chartType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                         scaleLabel: {
                             display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_xaxis_title")))),
                             labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_xaxis_title"))))'
+                        },
+                        ticks: {
+                            callback: function (label, index, labels) {
+                                return @(chartType != "scatter" ? "label" : "this.chart.config.data.labels[index]");
+                            }
                         },
                         @if (reportModel.ExecChartIsDateTimeAxis) {
                             <text>
@@ -156,26 +200,25 @@
                             </text>
                             }
                         }],
-                    @(chartType != "horizontalBar" ? "y" : "x")Axes: [
+                    @(!isHorizontalBar ? "y" : "x")Axes: [
                         @if (reportModel.HasPrimaryYAxis) {
                             <text>
                             {
                                 id: 'yaxis-1',
                                 display: @view.GetBoolValueJS("chartjs_show_yaxis"),
-                                stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
+                                stacked: @Helper.ToJS(chartType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                                 scaleLabel: {
                                     display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_yaxis_title")))),
                                     labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis_title"))))'
                                 },
-                               ticks: {
+                                ticks: {
                                     @Raw(view.GetValueIfNotEmpty("min:", "chartjs_yaxis_min", ","))
                                     @Raw(view.GetValueIfNotEmpty("max:", "chartjs_yaxis_max", ","))
                                     @Raw(view.GetValueIfNotEmpty("stepSize:", "chartjs_yaxis_stepsize", ","))
                                     callback: function (label, index, labels) {
                                         if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(new Date(label));
                                         return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(label).valueFormat();
-                                    }
-                                }
+                                    }                                }
                             },
                             </text>
                         }
@@ -208,8 +251,7 @@
             };
 
             var @chartId = new Chart(ctx, {
-
-                type: '@chartType',
+                type: '@finalChartType',
                 data: data,
                 options: options
                 });

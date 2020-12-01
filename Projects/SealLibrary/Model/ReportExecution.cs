@@ -165,11 +165,6 @@ namespace Seal.Model
                 try
                 {
                     string folder = Path.GetDirectoryName(Report.ResultFilePath);
-                    if (Report.ForOutput && Report.OutputToExecute.Device is OutputFolderDevice)
-                    {
-                        //PDF for output folder -> the HTML was converted in temp and converted in destination folder
-                        folder = Report.OutputFolderDeviceResultFolder;
-                    }
                     string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".pdf";
                     Report.ExecutionView.PdfConverter.Dashboards = null;
                     Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(Report.ResultFilePath, newPath);
@@ -187,11 +182,6 @@ namespace Seal.Model
                 try
                 {
                     string folder = Path.GetDirectoryName(Report.ResultFilePath);
-                    if (Report.ForOutput && Report.OutputToExecute.Device is OutputFolderDevice)
-                    {
-                        //Excel for output folder -> the HTML was converted in temp and converted in destination folder
-                        folder = Report.OutputFolderDeviceResultFolder;
-                    }
                     string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".xlsx";
                     Report.ResultFilePath = Report.ExecutionView.ConvertToExcel(newPath);
                 }

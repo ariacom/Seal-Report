@@ -47,7 +47,8 @@
 
     @if (report.HasChartJSChart)
     {
-        @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"))
+        @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"))
+        @Raw(report.AttachScriptFile("chartjs-plugin-datalabels.min.js", "https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"))
     }
 
     @if (report.HasPlotlyChart)

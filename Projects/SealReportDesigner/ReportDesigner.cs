@@ -794,7 +794,14 @@ namespace Seal
             e.CancelEdit = true;
             if (mainTreeView.SelectedNode == null) return;
             object entity = mainTreeView.SelectedNode.Tag;
-            if (entity is MetaSource || entity is ReportModel || entity is ReportView || entity is ReportTask || entity is ReportOutput || entity is ReportSchedule)
+
+            if (entity is ReportView)
+            {
+                var view = entity as ReportView;
+                if (view.Template.ForReportModel && view.UseModelName) return;
+            }
+
+            if (entity is MetaSource || entity is ReportModel || entity is ReportTask || entity is ReportView || entity is ReportOutput || entity is ReportSchedule)
             {
                 e.CancelEdit = false;
             }

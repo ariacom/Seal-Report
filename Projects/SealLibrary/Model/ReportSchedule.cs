@@ -527,6 +527,7 @@ namespace Seal.Model
         /// The body of the email sent in case of success. If empty, a default text is used.
         /// </summary>
         [Category("Email notification in case of success"), DisplayName("Body"), Description("The body of the email sent in case of success. If empty, a default text is used."), Id(4, 3)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string NotificationEmailBody { get; set; }
 
         /// <summary>
@@ -714,7 +715,7 @@ namespace Seal.Model
                         taskDefinition.Triggers.Add(new DailyTrigger() { StartBoundary = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 0, 0), Enabled = false });
                         string schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory, Repository.SealTaskScheduler);
 #if DEBUG
-                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\x86\Debug", Repository.SealTaskScheduler);
+                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\x64\Debug", Repository.SealTaskScheduler);
 #endif
                         taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Helper.GetApplicationDirectory()));
                         RegisterTaskDefinition(taskDefinition);

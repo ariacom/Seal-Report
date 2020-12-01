@@ -37,9 +37,10 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("ModelGUID").SetIsBrowsable(Template.ForReportModel);
+                GetProperty("UseModelName").SetIsBrowsable(Template.ForReportModel);
                 GetProperty("RestrictionsToSelect").SetIsBrowsable(Template.ForViewRestrictions);
                 GetProperty("RestrictionViewGUID").SetIsBrowsable(Template.ForViewRestrictions);
-                
+
                 GetProperty("ReferenceViewGUID").SetIsBrowsable(true);
                 GetProperty("TemplateName").SetIsBrowsable(true);
                 GetProperty("TemplateDescription").SetIsBrowsable(true);
@@ -477,10 +478,33 @@ namespace Seal.Model
             set
             {
                 _modelGUID = value;
+                if (_dctd != null && UseModelName && Model != null)
+                {
+                    Name = Model.Name;
+                }
                 UpdateEditorAttributes();
             }
         }
         public bool ShouldSerializeModelGUID() { return !string.IsNullOrEmpty(_modelGUID); }
+
+        bool _useModelName = false;
+        /// <summary>
+        /// If true, the view name is got from the model name. This is only valid for a Model View.
+        /// </summary>
+        [DisplayName("Use model name"), Description("If true, the view name is got from the model name."), Category("Definition"), Id(4, 1)]
+        public bool UseModelName
+        {
+            get { return _useModelName; }
+            set
+            {
+                if (_dctd != null && value && Model != null)
+                {
+                    Name = Model.Name;
+                }
+                _useModelName = value;
+            }
+        }
+        public bool ShouldSerializeUseModelName() { return _useModelName; }
 
 
         /// <summary>
@@ -490,10 +514,11 @@ namespace Seal.Model
         public bool ShouldSerializeRestrictionsGUID() { return RestrictionsGUID.Count > 0; }
 
         [XmlIgnore]
-        public List<ReportRestriction> Restrictions { 
+        public List<ReportRestriction> Restrictions
+        {
             get
             {
-                return Report.AllRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
+                return Report.AllRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i => i.DisplayOrderRE).ToList();
             }
         }
 
@@ -549,7 +574,7 @@ namespace Seal.Model
             //Init partial templates
             var partialTemplateNames = (from n in Template.PartialTemplatesPath select Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(n))).ToList();
             //Add optional shared template
-            if (Template.SharedPartialTemplates != null) partialTemplateNames.AddRange(Template.SharedPartialTemplates);           
+            if (Template.SharedPartialTemplates != null) partialTemplateNames.AddRange(Template.SharedPartialTemplates);
 
             foreach (var partialName in partialTemplateNames)
             {
@@ -645,7 +670,7 @@ namespace Seal.Model
         /// <summary>
         /// The custom partial template texts for the view
         /// </summary>
-        [TypeConverter(typeof(ExpandableObjectConverter))] 
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Custom partial template Texts"), Description("The custom partial template texts for the view."), Category("Custom template texts"), Id(5, 3)]
         [XmlIgnore]
         public PartialTemplatesEditor PartialTemplatesConfiguration
@@ -744,7 +769,8 @@ namespace Seal.Model
                     if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
                 }
                 //Culture from the repository
-                if (_cultureInfo == null) {
+                if (_cultureInfo == null)
+                {
                     _cultureInfo = Report.Repository.CultureInfo.Clone() as CultureInfo;
                     if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
                 }

@@ -39,7 +39,7 @@
     OR make an request to find a group (to be implemented)...
     var request = new SearchRequest(""name"", ""cn="", System.DirectoryServices.Protocols.SearchScope.Subtree);
     var response = ldapConnection.SendRequest(request) as SearchResponse;
-    user.AddSecurityGroup((string)group);	
+    user.AddSecurityGroup(response.Entries[0].ToString());	
     */
 }";
 }
