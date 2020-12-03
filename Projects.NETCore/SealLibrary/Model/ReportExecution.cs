@@ -165,11 +165,6 @@ namespace Seal.Model
                 try
                 {
                     string folder = Path.GetDirectoryName(Report.ResultFilePath);
-                    if (Report.ForOutput && Report.OutputToExecute.Device is OutputFolderDevice)
-                    {
-                        //PDF for output folder -> the HTML was converted in temp and converted in destination folder
-                        folder = Report.OutputFolderDeviceResultFolder;
-                    }
                     string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".pdf";
                     Report.ExecutionView.PdfConverter.Dashboards = null;
                     Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(Report.ResultFilePath, newPath);
@@ -187,11 +182,6 @@ namespace Seal.Model
                 try
                 {
                     string folder = Path.GetDirectoryName(Report.ResultFilePath);
-                    if (Report.ForOutput && Report.OutputToExecute.Device is OutputFolderDevice)
-                    {
-                        //Excel for output folder -> the HTML was converted in temp and converted in destination folder
-                        folder = Report.OutputFolderDeviceResultFolder;
-                    }
                     string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".xlsx";
                     Report.ResultFilePath = Report.ExecutionView.ConvertToExcel(newPath);
                 }
@@ -1916,7 +1906,7 @@ namespace Seal.Model
                     {
                         Report.LogMessage("Executing Pre-Execution script.");
                         string result = RazorHelper.CompileExecute(output.PreScript, output);
-                        if (result != null && result == "0")
+                        if (result != null && result.Trim() == "0")
                         {
                             output.Information = Report.Translate("Pre-execution script returns 0. The report output generation has been cancelled.");
                             Report.LogMessage("Pre-execution script returns 0. The report output generation has been cancelled.");

@@ -22,7 +22,7 @@ namespace Seal.Model
     {
 
         /// <summary>
-        /// Create a basic enumarated list
+        /// Create a basic enumerated list
         /// </summary>
         /// <returns></returns>
         public static MetaEnum Create()

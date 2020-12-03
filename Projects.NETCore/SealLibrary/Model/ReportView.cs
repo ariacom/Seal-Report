@@ -362,6 +362,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// The name
+        /// </summary>
+        public override string Name
+        {
+            get {
+                if (UseModelName && Model != null) return Model.Name;
+                return _name; 
+            }
+            set { _name = value; }
+        }
+
+        /// <summary>
         /// View name translated
         /// </summary>
         public string ViewName
@@ -408,10 +420,32 @@ namespace Seal.Model
             set
             {
                 _modelGUID = value;
+                if (_dctd != null && UseModelName && Model != null)
+                {
+                    Name = Model.Name;
+                }
                 
             }
         }
         public bool ShouldSerializeModelGUID() { return !string.IsNullOrEmpty(_modelGUID); }
+
+        bool _useModelName = false;
+        /// <summary>
+        /// If true, the view name is got from the model name. This is only valid for a Model View.
+        /// </summary>
+        public bool UseModelName
+        {
+            get { return _useModelName; }
+            set
+            {
+                if (_dctd != null && value && Model != null)
+                {
+                    Name = Model.Name;
+                }
+                _useModelName = value;
+            }
+        }
+        public bool ShouldSerializeUseModelName() { return _useModelName; }
 
 
         /// <summary>
@@ -421,10 +455,11 @@ namespace Seal.Model
         public bool ShouldSerializeRestrictionsGUID() { return RestrictionsGUID.Count > 0; }
 
         [XmlIgnore]
-        public List<ReportRestriction> Restrictions { 
+        public List<ReportRestriction> Restrictions
+        {
             get
             {
-                return Report.AllRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
+                return Report.AllRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i => i.DisplayOrderRE).ToList();
             }
         }
 
@@ -472,7 +507,7 @@ namespace Seal.Model
             //Init partial templates
             var partialTemplateNames = (from n in Template.PartialTemplatesPath select Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(n))).ToList();
             //Add optional shared template
-            if (Template.SharedPartialTemplates != null) partialTemplateNames.AddRange(Template.SharedPartialTemplates);           
+            if (Template.SharedPartialTemplates != null) partialTemplateNames.AddRange(Template.SharedPartialTemplates);
 
             foreach (var partialName in partialTemplateNames)
             {
@@ -655,7 +690,8 @@ namespace Seal.Model
                     if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
                 }
                 //Culture from the repository
-                if (_cultureInfo == null) {
+                if (_cultureInfo == null)
+                {
                     _cultureInfo = Report.Repository.CultureInfo.Clone() as CultureInfo;
                     if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
                 }

@@ -1013,6 +1013,11 @@ namespace Seal.Forms
                 mainTreeView.SelectedNode.ImageIndex = entity.Enabled ? 12 : 14;
                 mainTreeView.SelectedNode.SelectedImageIndex = mainTreeView.SelectedNode.ImageIndex;
             }
+            else if (selectedEntity is ReportView && (propertyName == "UseModelName" || propertyName == "ModelGUID"))
+            {
+                ReportView entity = (ReportView)selectedEntity;
+                mainTreeView.SelectedNode.Text = entity.Name;
+            }
             else
             {
                 MetaSource source = GetSource(mainTreeView.SelectedNode);
