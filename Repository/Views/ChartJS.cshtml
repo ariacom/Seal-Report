@@ -204,7 +204,7 @@
                         },
                         ticks: {
                             callback: function (label, index, labels) {
-                                return @(chartType != "scatter" ? "label" : "this.chart.config.data.labels[index]");
+                                return @(chartType != "scatter" ? "label" : "this.chart ? this.chart.config.data.labels[index] : label");
                             }
                         },
                         @if (reportModel.ExecChartIsDateTimeAxis) {
