@@ -187,6 +187,13 @@ namespace Seal
             }
         }
 
+        void updateTreeNodeViewNames(TreeNode node)
+        {
+            var view = node.Tag as ReportView;
+            if (view != null) node.Text = view.Name;
+            foreach (TreeNode subNode in node.Nodes) updateTreeNodeViewNames(subNode);
+        }
+
         private TreeNode _reportTN;
         private TreeNode _sourceTN;
         private TreeNode _viewTN;
@@ -853,6 +860,7 @@ namespace Seal
                     ((RootComponent)entity).Name = e.Node.Text;
                     if (!(entity is ReportView)) mainTreeView.Sort();
                     if (entity is ReportSchedule) ((ReportSchedule)entity).SynchronizeTask();
+                    if (entity is ReportModel) updateTreeNodeViewNames(_viewTN);
                     SetModified();
                 }
             }

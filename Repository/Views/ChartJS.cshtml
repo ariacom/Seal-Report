@@ -44,59 +44,71 @@
                 else colors = @Raw(view.GetValue("chartjs_colors"));
 
                 var data = {
-                labels: [@Raw(page.ChartXLabels)],
-                navigations: [@Raw(page.ChartNavigations)],
-                datasets: [
+                    labels: [@Raw(page.ChartXLabels)],
+                    navigations: [@Raw(page.ChartNavigations)],
+                    datasets: [
                     @foreach (ResultSerie serie in page.Series.Where(i => i.Element.ChartJSSerie != ChartJSSerieDefinition.None).OrderBy(i => i, new ResultSerieComparer()))
                     {
                         <text>
-                    {
+                        {
                         @Raw(!isHorizontalBar && chartType != "pie" && chartType != "polarArea" && chartType != "radar" ? "type: '" + serie.Element.ChartJSSerie.ToString().ToLower() + "'," : "")
-                        labels: [@Raw(page.ChartXLabels)],
-                        label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
-                        data: [@Raw(chartType == "pie" || chartType == "polarArea" || chartType == "radar" ? serie.ChartYSerieValues : (!isHorizontalBar? serie.ChartXYSerieValues: serie.ChartYXSerieValues))],
-                        borderColor: colors@(chartType == "pie" || chartType == "polarArea" ? "" : "[" + serieIndex + "]"),
-                        backgroundColor: colors@(chartType == "pie" || chartType == "polarArea" ? "" : "[" + serieIndex++ + "]"),
-                        borderWidth: 1,
-                        pointRadius: @Raw(view.GetValue("chartjs_point_radius")),
-                        steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
-                        fill: @Raw(view.GetValue("chartjs_fill")),
-                        datalabels: {
-                            align: '@view.GetValue("chartjs_label_align")',
-                            anchor: '@view.GetValue("chartjs_label_anchor")',
-                            clamp: true
-                        },
+                            labels: [@Raw(page.ChartXLabels)],
+                            label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
+                            data: [@Raw(chartType == "pie" || chartType == "polarArea" || chartType == "radar" ? serie.ChartYSerieValues : (!isHorizontalBar? serie.ChartXYSerieValues: serie.ChartYXSerieValues))],
+                            borderColor: colors@(chartType == "pie" || chartType == "polarArea" ? "" : "[" + serieIndex + "]"),
+                            backgroundColor: colors@(chartType == "pie" || chartType == "polarArea" ? "" : "[" + serieIndex++ + "]"),
+                            borderWidth: 1,
+                            pointRadius: @Raw(view.GetValue("chartjs_point_radius")),
+                            steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
+                            fill: @Raw(view.GetValue("chartjs_fill")),
+                            datalabels: {
+                                align: '@view.GetValue("chartjs_label_align")',
+                                anchor: '@view.GetValue("chartjs_label_anchor")',
+                                clamp: true
+                            },
                         @(isHorizontalBar? "x" : "y")AxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
-                    },
+                        },
                         </text>
                     }
-                ]
+                    ]
                 };
 
-               var valueFormatter = function (dataset, dataIndex) {
-                    var tooltipData = dataset.data[dataIndex];
-                    var format = (dataset.yAxisID == 'yaxis-2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
-                    var isDate = (dataset.yAxisID == 'yaxis-2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
+                function getValue(dataset, dataIndex) {
                     @if (chartType == "pie" || chartType == "polarArea" || chartType == "radar")
                     {
                         <text>
-                        var total = 0;
-                        for (var i in dataset.data) total += dataset.data[i];
-                        if (isDate) return d3.timeFormat(format)(new Date(tooltipData));
-                        else {
-                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
-                            return d3.format(format)(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
-                        }
+                    return dataset.data[dataIndex];
                         </text>
                     }
                     else
                     {
                         <text>
-                        var val = tooltipData.@(isHorizontalBar ? "x" : "y");
-                        if (isDate) return d3.timeFormat(format)(new Date(val));
-                        else return d3.format(format)(Number(val)).valueFormat();
+                    return dataset.data[dataIndex].@(isHorizontalBar ? "x" : "y");
                         </text>
                     }
+                }
+
+                function getPercentage(dataset, dataIndex) {
+                    var total = 0;
+                    for (var i in dataset.data) total += getValue(dataset, i);
+                    return Math.round((getValue(dataset, dataIndex) / total) * 100);
+                }
+
+                var valueFormatter = function (dataset, dataIndex, type) {
+                    var format = (dataset.yAxisID == 'yaxis-2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
+                    var isDate = (dataset.yAxisID == 'yaxis-2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
+
+                    var val = getValue(dataset, dataIndex);
+                    if (isDate) return d3.timeFormat(format)(new Date(val));
+                    var valStr = d3.format(format)(Number(val)).valueFormat();
+
+                    if (type == "auto") type = '@(chartType == "pie" || chartType == "polarArea" || chartType == "radar" ? "vp" : "val")';
+                    if (type == "val") return valStr;
+
+                    var percentage = getPercentage(dataset, dataIndex);
+                    if (type == "per") return percentage + '%';
+                    if (type == "vp") return valStr + ' (' + percentage + '%)';
+                    return valStr;
                 }
 
                 var toolTipFormatter = function (tooltipItem, data) {
@@ -106,58 +118,75 @@
                     @if (chartType == "pie" || chartType == "polarArea" || chartType == "radar")
                     {
                         <text>
-                            return tooltipLabel + ': ' + valueFormatter(dataset, tooltipItem.index);
+                    return tooltipLabel + ': ' + valueFormatter(dataset, tooltipItem.index, '@view.GetValue("chartjs_tooltip_format")');
                         </text>
                     }
                     else if (chartType == "scatter")
                     {
                         <text>
-                    return tooltipLabel + ': ' + valueFormatter(dataset, tooltipItem.index);
+                    return tooltipLabel + ': ' + valueFormatter(dataset, tooltipItem.index, '@view.GetValue("chartjs_tooltip_format")');
                         </text>
                     }
                     else
                     {
                         <text>
-                            return valueFormatter(dataset, tooltipItem.index);
+                    return valueFormatter(dataset, tooltipItem.index, '@view.GetValue("chartjs_tooltip_format")');
                         </text>
                     }
                 }
 
-            var options = {
-                responsive: @view.GetBoolValueJS("chartjs_responsive"),
-                maintainAspectRatio: @view.GetBoolValueJS("chartjs_maintainratio"),
-                legend: {
-                    display: @view.GetBoolValueJS("chartjs_show_legend"),
-                    position: '@view.GetValue("chartjs_legend_position")'
-                },
-                title: {
-                    display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_title")))),
-                    text: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_title"))))',
-                    position: '@view.GetValue("chartjs_title_position")'
-                },
-                layout: {
-                    padding: {
+                var options = {
+                    responsive: @view.GetBoolValueJS("chartjs_responsive"),
+                    maintainAspectRatio: @view.GetBoolValueJS("chartjs_maintainratio"),
+                    legend: {
+                        display: @view.GetBoolValueJS("chartjs_show_legend"),
+                        position: '@view.GetValue("chartjs_legend_position")'
+                    },
+                    title: {
+                        display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_title")))),
+                        text: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_title"))))',
+                        position: '@view.GetValue("chartjs_title_position")'
+                    },
+                    layout: {
+                        padding: {
                         @view.GetValue("chartjs_padding")
-                    }
-                },
-                tooltips: {
-                    callbacks: {
-                        label: toolTipFormatter
-                    }
-                },
-                plugins: {
-                    datalabels: {
-                        backgroundColor: function (context) {
-                            return context.dataset.backgroundColor;
+                        }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            @Raw(chartType == "radar" ? "title: function() {return '';}," : "")                            
+                            label: toolTipFormatter
+                        }
+                    },
+                    plugins: {
+                        datalabels: {
+                            @Raw(view.GetValue("chartjs_label_border")),
+                            clamp: @view.GetBoolValueJS("chartjs_label_clamp"),
+                            clip: @view.GetBoolValueJS("chartjs_label_clip"),
+                            backgroundColor: function (context) {
+                                var backColor = '@view.GetValue("chartjs_label_back_color")';
+                                if (backColor == 'auto') return context.dataset.backgroundColor;
+                                return backColor;
+                            },
+                            color: '@view.GetValue("chartjs_label_color")',
+                            font: {
+                                @Raw(view.GetValue("chartjs_label_font"))
+                            },
+                            display: function (context) {
+                                var displayType = '@view.GetValue("chartjs_label_display")';
+                                if (displayType == 'false') return false;
+                                if (displayType == 'true') return true;
+                                if (displayType == 'auto') return 'auto';
+                                if (displayType == 'thr_val') {
+                                    return getValue(context.dataset, context.dataIndex) < @view.GetValue("chartjs_label_threshold") ? false : 'auto';
+                                }
+                                if (displayType == 'thr_per') {
+                                    return getPercentage(context.dataset, context.dataIndex) < @view.GetValue("chartjs_label_threshold") ? false : 'auto';
+                                }
+                                return false;
                         },
-                        borderRadius: 4,
-                        color: 'white',
-                        font: {
-                            weight: 'bold'
-                        },
-                        display: @Raw(view.GetValue("chartjs_label_display")),
                         formatter: function (value, context) {
-                            return valueFormatter(context.dataset, context.dataIndex);
+                            return valueFormatter(context.dataset, context.dataIndex, '@view.GetValue("chartjs_label_format")');
                         }
                     }
                 },

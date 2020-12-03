@@ -238,17 +238,8 @@ namespace Seal.Controls
             else restrictionsTextBox.ContextMenu = null;
         }
 
-
-
         private void scintilla_MouseUp(object sender, MouseEventArgs e)
         {
-            highlightRestriction(false);
-        }
-
-        private void scintilla_KeyUp(object sender, KeyEventArgs e)
-        {
-            ModelPanel.MainForm.IsModified = true;
-            RestrictionTextToModel();
             highlightRestriction(false);
         }
 

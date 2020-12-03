@@ -100,7 +100,6 @@ namespace Seal.Forms
             {
                 Cursor.Current = Cursors.WaitCursor;
                 string filter = filterToolStripTextBox.Text.ToLower();
-                checkedListBox.BeginUpdate();
                 List<object> checkedItems = CheckedItems;
                 List<object> filteredItems = new List<object>();
                 for (int i = 0; i < _source.Count; i++)
@@ -117,7 +116,6 @@ namespace Seal.Forms
             }
             finally
             {
-                checkedListBox.EndUpdate();
                 Cursor.Current = Cursors.Default;
             }
             enableControls();

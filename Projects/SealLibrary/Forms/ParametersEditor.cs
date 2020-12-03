@@ -179,10 +179,42 @@ namespace Seal.Model
             get { return _texts[10].Value; }
             set { _texts[10].Value = value; }
         }
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string t11
         {
             get { return _texts[11].Value; }
             set { _texts[11].Value = value; }
+        }
+
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string t12
+        {
+            get { return _texts[12].Value; }
+            set { _texts[12].Value = value; }
+        }
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string t13
+        {
+            get { return _texts[13].Value; }
+            set { _texts[13].Value = value; }
+        }
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string t14
+        {
+            get { return _texts[14].Value; }
+            set { _texts[14].Value = value; }
+        }
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string t15
+        {
+            get { return _texts[15].Value; }
+            set { _texts[15].Value = value; }
+        }
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string t16
+        {
+            get { return _texts[16].Value; }
+            set { _texts[16].Value = value; }
         }
 
         [TypeConverter(typeof(ViewParameterEnumConverter))]
@@ -392,6 +424,22 @@ namespace Seal.Model
             get { return _numerics[15].NumericValue; }
             set { _numerics[15].NumericValue = value; }
         }
+        public int n16
+        {
+            get { return _numerics[16].NumericValue; }
+            set { _numerics[16].NumericValue = value; }
+        }
+
+        public int n17
+        {
+            get { return _numerics[17].NumericValue; }
+            set { _numerics[17].NumericValue = value; }
+        }
+        public int n18
+        {
+            get { return _numerics[18].NumericValue; }
+            set { _numerics[18].NumericValue = value; }
+        }
 
         public bool b0
         {
@@ -553,6 +601,32 @@ namespace Seal.Model
         {
             get { return _strings[15].Value; }
             set { _strings[15].Value = value; }
+        }
+
+        public string s16
+        {
+            get { return _strings[16].Value; }
+            set { _strings[16].Value = value; }
+        }
+        public string s17
+        {
+            get { return _strings[17].Value; }
+            set { _strings[17].Value = value; }
+        }
+        public string s18
+        {
+            get { return _strings[18].Value; }
+            set { _strings[18].Value = value; }
+        }
+        public string s19
+        {
+            get { return _strings[19].Value; }
+            set { _strings[19].Value = value; }
+        }
+        public string s20
+        {
+            get { return _strings[20].Value; }
+            set { _strings[20].Value = value; }
         }
     }
 }

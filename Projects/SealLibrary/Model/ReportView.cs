@@ -427,6 +427,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// The name
+        /// </summary>
+        public override string Name
+        {
+            get {
+                if (UseModelName && Model != null) return Model.Name;
+                return _name; 
+            }
+            set { _name = value; }
+        }
+
+        /// <summary>
         /// View name translated
         /// </summary>
         public string ViewName
