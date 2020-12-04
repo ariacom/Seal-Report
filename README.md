@@ -1,4 +1,4 @@
-<a href="https://sealreport.org" target=_blank>Seal Report</a> offers a complete framework for producing daily reports and dashboards from any database.
+<a href="https://sealreport.org" target=_blank>Seal Report</a> offers a complete framework for producing daily reports and dashboards from any database or any No SQL source.
 
 The product focuses on **easy installation** and **report design**: Once setup, reports can be built and published in a minute. 
 
@@ -6,6 +6,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 
 ## Main Features
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
+* **LINQ queries**: Join and query any Data Sources (SQL, Excel, XML, Olap Cube, HTTP JSon, etc.) with the power of LINQ queries.
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
 * **HTML 5 Charts**: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
 * **Fully Responsive and HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
@@ -52,9 +53,9 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 ## System Requirements
 **For use:**
 * Windows 7, 2008, Windows 8, 2012, Windows 10 or greater
-* .Net Framework 4.5
+* .Net Framework 4.7
 * Database OLE DB, ODBC or SQLServer Drivers
-* For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
+* For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.7 or greater
 * .NET Core 3.1 for the .NET Core deployment (Web Report Server and the Seal Report Scheduler).
 
 
