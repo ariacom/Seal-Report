@@ -13,7 +13,7 @@
 @if (report.GenerateHTMLDisplay)
 {
     <div id="@id" class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
-        <div class="panel-group" role="tablist">
+        <div class="panel-group" style="margin-bottom:5px" role="tablist">
             @Raw(view.GetValue("restrictions_header"))
 
             <!--rows of xx restrictions -->

@@ -19,7 +19,7 @@ else
         <div>
             @if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0)
             {
-                <table class='table table-striped table-hover table-bordered'>
+                <table class='table table-striped table-hover table-bordered' @Raw(view.AddAttribute("style", "pagetable_css"))>
                     <tr>
                         @for (int i = 0; i < page.PageTable.ColumnCount; i++)
                         {
@@ -35,7 +35,7 @@ else
 
             @if (page.DataTable != null && page.DataTable.RowCount == 2)
             {
-                <table class='table table-striped table-hover table-bordered'>
+                <table class='table table-striped table-hover table-bordered' @Raw(view.AddAttribute("style", "datatable_css"))>
                     @for (int i = 0; i < page.DataTable.ColumnCount; i++)
                     {
                         ResultCell title = page.DataTable[0, i];

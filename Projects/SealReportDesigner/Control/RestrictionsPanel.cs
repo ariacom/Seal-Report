@@ -310,9 +310,10 @@ namespace Seal.Controls
         {
             if (!restrictionsTextBox.Focused) return;
             ModelPanel.MainForm.IsModified = true;
+            RestrictionTextToModel();
+            highlightRestriction(false);
             ModelPanel.MainForm.CannotRenderAnymore();
         }
-
 
         public void AddRestriction(MetaColumn column, bool forPrompt)
         {
