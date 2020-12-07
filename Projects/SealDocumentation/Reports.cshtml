@@ -624,36 +624,74 @@ model.ResultTable = query2.CopyToDataTable2();
                                     </li>
                                     <li>
                                         <b>View the Dashboard</b><br />
-                                        From the <b>Web Report Server</b>, logout and login to refresh the dashboard list, then go to the dashboard view and add the new Dashboard to you current view using the <b>Manage Dashboard</b> button.
+                                        From the <b>Web Report Server</b>, logout and login to refresh the dashboard list, then go to the dashboard view and add the new Dashboard to your current view using the <b>Manage Dashboard</b> button.
                                     </li>
                                 </ul>
                             </div>
                             <div class="bs-callout bs-callout-demo">
-                                Here is the dashboard definition file having 2 widget items (got from the KPI sample):
+                                The <b>&lt;DashboardItem></b> may have also other child nodes to define its properties in the <b>Dashboard</b>:<br />
+                                <ul>
+                                    <li><strong>Order</strong> to sort the items</li>
+                                    <li><strong>GroupName</strong> to group the items by a name (underscore may be used to force a line feed)</li>
+                                    <li><strong>GroupOrder</strong> to sort the groups</li>
+                                    <li><strong>Name</strong> to override the default <b>Widget</b> name</li>
+                                    <li><strong>Icon</strong> to override the default <b>Widget</b> icon</li>
+                                    <li><strong>Width</strong> to override the default <b>Widget</b> width</li>
+                                    <li><strong>Height</strong> to override the default <b>Widget</b> height</li>
+                                </ul>
+                                Here is the dashboard definition file having 5 Widget Items (got from the KPI sample):
                                 <pre class="brush: xml;">
-                                    &lt;?xml version="1.0" encoding="utf-8" ?>
-                                    &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-                                    &lt;GUID>37838ba-4859-4f43-8df5-7bd276076fbc&lt;/GUID>
-                                    &lt;Name>KPI&lt;/Name>
-                                    &lt;Items>
-                                        &lt;DashboardItem>
-                                        &lt;GUID>e1812486-2383-4557-afcd-4fd94a9c11fa&lt;/GUID>
-                                            &lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
-                                        &lt;/DashboardItem>
-                                        &lt;DashboardItem>
-                                        &lt;GUID>04a1e553-a77b-43bc-86cf-b89c9650e8d3&lt;/GUID>
-                                            &lt;WidgetGUID>1fda90cc-0e69-4b76-a385-b004e06c47a7&lt;/WidgetGUID>
-                                        &lt;/DashboardItem>
-                                    &lt;/Items>
-                                    &lt;/Dashboard>                                    
-</pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;Dashboard xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	&lt;GUID>d37838ba-4859-4f43-8df5-7bd276076fbc&lt;/GUID>
+	&lt;Name>KPI&lt;/Name>
+	&lt;Items>
+		&lt;DashboardItem>
+			&lt;GUID>e1812486-2383-4557-afcd-4fd94a9c11fa&lt;/GUID>
+			&lt;WidgetGUID>dfae6589-c56f-416e-8275-7b1dff80dafa&lt;/WidgetGUID>
+			&lt;GroupName>_separator&lt;/GroupName>
+			&lt;GroupOrder>2&lt;/GroupOrder>
+			&lt;Order>2&lt;/Order>
+		&lt;/DashboardItem>
+		&lt;DashboardItem>
+			&lt;GUID>04a1e553-a77b-43bc-86cf-b89c9650e8d3&lt;/GUID>
+			&lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
+			&lt;GroupName>_separator&lt;/GroupName>
+			&lt;GroupOrder>2&lt;/GroupOrder>
+			&lt;Order>1&lt;/Order>
+		&lt;/DashboardItem>
+		&lt;DashboardItem>
+			&lt;GUID>379346a5-3fbe-482d-8dfe-89e5393e1741&lt;/GUID>
+			&lt;WidgetGUID>1fda90cc-0e69-4b76-a385-b004e06c47a7&lt;/WidgetGUID>
+			&lt;GroupName>_separator&lt;/GroupName>
+			&lt;GroupOrder>2&lt;/GroupOrder>
+			&lt;Order>5&lt;/Order>
+		&lt;/DashboardItem>
+			&lt;DashboardItem>
+			&lt;GUID>4a858c46-c0b6-4969-b80a-048ad3b7afac&lt;/GUID>
+			&lt;WidgetGUID>70bce7d1-ad0c-4251-b941-7f9301fad084&lt;/WidgetGUID>
+			&lt;GroupName />
+			&lt;GroupOrder>1&lt;/GroupOrder>
+			&lt;Order>4&lt;/Order>
+			&lt;Name>KPI Sales / category&lt;/Name>
+		&lt;/DashboardItem>
+			&lt;DashboardItem>
+			&lt;GUID>5ea81662-c1a1-43a5-873e-15c7faef7f0a&lt;/GUID>
+			&lt;WidgetGUID>231d3919-edb3-4288-8e59-426836a3c860&lt;/WidgetGUID>
+			&lt;GroupName />
+			&lt;GroupOrder>1&lt;/GroupOrder>
+			&lt;Order>3&lt;/Order>
+		&lt;/DashboardItem>
+	&lt;/Items>
+&lt;/Dashboard>
+                                </pre>
                             </div>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Widgets Navigation</h4>
                                 From the <b>Report Designer</b>, use the <srmenu>Tools->Go to next widget in the report</srmenu> menu or <srmenu>CTRL+W</srmenu> to navigate between the different Widgets published contained in the report.
                             </div>
                             <div class="bs-callout bs-callout-demo">
-                                <h4>System Report for listing Dashboards and Widgets</h4>
+                                <h4>Dedicated System Report for listing Dashboards and Widgets</h4>
                                 <ul>
                                     <li>330 Reports - Dashboards and Widgets</li>
                                 </ul>
