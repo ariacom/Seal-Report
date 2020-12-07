@@ -92,7 +92,6 @@ namespace Seal.Controls
                 if (ModelPanel.Model.Restrictions.Exists(i => !restrictions.Contains(i))) ModelPanel.UpdateLINQModel();
                 ModelPanel.Model.Restrictions = restrictions;
             }
-
         }
 
         public void ModelToRestrictionText()
@@ -305,6 +304,11 @@ namespace Seal.Controls
             }
         }
 
+        private void scintilla_KeyUp(object sender, KeyEventArgs e)
+        {
+            RestrictionTextToModel();
+            highlightRestriction(false);
+        }
 
         private void restrictionsTextBox_TextChanged(object sender, EventArgs e)
         {

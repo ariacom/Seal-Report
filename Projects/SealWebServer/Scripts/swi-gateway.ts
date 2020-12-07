@@ -214,9 +214,10 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public GetDashboardItems(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public GetDashboardItems(guid: string, forExport: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetDashboardItems", {
-            guid: guid
+            guid: guid,
+            forExport: forExport
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });

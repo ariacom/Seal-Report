@@ -1,4 +1,5 @@
 ﻿using Seal.Helpers;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Seal.Model
@@ -8,8 +9,14 @@ namespace Seal.Model
     /// </summary>
     public class MainModel
     {
+        /// <summary>
+        /// Current Repository
+        /// </summary>
         public Repository Repository;
 
+        /// <summary>
+        /// True is the Web Report Designer is used
+        /// </summary>
         public bool HasEditor()
         {
 #if EDITOR
@@ -19,6 +26,9 @@ namespace Seal.Model
 #endif
         }
 
+        /// <summary>
+        /// True is JavaScripts are minified
+        /// </summary>
         public bool HasMinifiedScripts()
         {
 #if MINIFIED
@@ -54,9 +64,14 @@ namespace Seal.Model
         public string DashboardIds = "";
 
         /// <summary>
-        /// User defined object
+        /// Current user
         /// </summary>
-        public object Tag;
+        public SecurityUser User;
+
+        /// <summary>
+        /// Current report executions for dashboards
+        /// </summary>
+        public List<ReportExecution> DashboardExecutions;
 
         /// <summary>
         /// Is it for dashboards export

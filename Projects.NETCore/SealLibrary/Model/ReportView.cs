@@ -1510,6 +1510,20 @@ namespace Seal.Model
             if (_columnsHidden == null) _columnsHidden = GetValue(Parameter.ColumnsHiddenParameter).Split(';').ToList();
             return _columnsHidden.Contains((col + 1).ToString());
         }
+
+        /// <summary>
+        /// Returns true if the view and its children have only Restrictions
+        /// </summary>
+        public static bool OnlyRestrictions(ReportView view)
+        {
+            if (view.TemplateName != ReportViewTemplate.RestrictionsName && view.TemplateName != ReportViewTemplate.ModelContainerName && view.TemplateName != ReportViewTemplate.Container) return false;
+            bool result = true;
+            foreach (var child in view.Views)
+            {
+                if (!OnlyRestrictions(child)) result = false;
+            }
+            return result;
+        }
     }
 }
 

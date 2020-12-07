@@ -47,6 +47,7 @@
             this.restrictionsTextBox.DragOver += new System.Windows.Forms.DragEventHandler(this.restrictionsTextBox_DragOver);
             this.restrictionsTextBox.Leave += new System.EventHandler(this.restrictionsTextBox_Leave);
             this.restrictionsTextBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scintilla_MouseUp);
+            this.restrictionsTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.scintilla_KeyUp);
             // 
             // RestrictionsPanel
             // 

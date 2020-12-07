@@ -145,6 +145,14 @@ namespace Seal.Model
         [XmlIgnore]
         [JsonIgnore]
         public DateTime LastModification;
+
+        /// <summary>
+        /// True if the widget has on Restriction Views (flag set after the first execution)
+        /// </summary>
+        [XmlIgnore]
+        [JsonIgnore]
+        public bool OnlyRestrictions = false;
+
     }
 }
 

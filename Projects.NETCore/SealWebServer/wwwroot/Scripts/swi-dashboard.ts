@@ -208,7 +208,7 @@ class SWIDashboard {
             _da._gridsById[gridId] = null;
         });
 
-        _gateway.GetDashboardItems(guid, function (data) {
+        _gateway.GetDashboardItems(guid, _main._exporting, function (data) {
             var content = $("#" + guid);
             content.empty();
 

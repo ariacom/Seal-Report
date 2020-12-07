@@ -17,6 +17,7 @@ namespace Seal.Model
     {
         public const string ReportName = "Report";
         public const string ModelName = "Model";
+        public const string Container = "Container";
         public const string ModelDetailName = "Model Detail";
         public const string RestrictionsName = "Restrictions";
         public const string DataTableName = "Data Table";

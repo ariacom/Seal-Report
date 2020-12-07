@@ -30,6 +30,7 @@ namespace SealWebServer.Controllers
 
             try
             {
+                bool newAuthentication = false;
                 if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(token) && WebUser.Token != token))
                 {
                     CreateRepository();
@@ -45,6 +46,7 @@ namespace SealWebServer.Controllers
                     //Load profile
                     if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
                     WebUser.Profile.Path = WebUser.ProfilePath;
+                    newAuthentication = true;
                 }
 
                 //Audit
@@ -65,8 +67,11 @@ namespace SealWebServer.Controllers
                 else if (WebUser.ViewType == Seal.Model.ViewType.Dashboards && view == "reports") view = "dashboards";
 
                 //Refresh widgets
-                DashboardWidgetsPool.ForceReload();
-                DashboardExecutions.Clear();
+                if (newAuthentication)
+                {
+                    DashboardWidgetsPool.ForceReload();
+                    DashboardExecutions.Clear();
+                }
 
                 return Json(new SWIUserProfile()
                 {
@@ -714,7 +719,7 @@ namespace SealWebServer.Controllers
         /// Return the list of dashboard items for a dashboard
         /// </summary>
 
-        public ActionResult SWIGetDashboardItems(string guid)
+        public ActionResult SWIGetDashboardItems(string guid, bool forExport)
         {
             writeDebug("SWIGetDashboardItems");
             try
@@ -726,8 +731,14 @@ namespace SealWebServer.Controllers
                 var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
                 if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
 
-                foreach (var item in dashboard.Items) item.JSonSerialization = true;
-                return Json(dashboard.Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order).ToArray(), JsonRequestBehavior.AllowGet);
+                var items = dashboard.Items.ToList();
+                if (forExport) {
+                    //Do not show the views having on restrictions
+                    items = items.Where(i => !i.Widget.OnlyRestrictions).ToList();
+                }
+
+                foreach (var item in items) item.JSonSerialization = true;
+                return Json(items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order).ToArray(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -740,7 +751,7 @@ namespace SealWebServer.Controllers
         /// </summary>
         public ActionResult SWIGetDashboardItem(string guid, string itemguid)
         {
-            writeDebug("SWIGetDashboardItems");
+            writeDebug("SWIGetDashboardItem");
             try
             {
                 checkSWIAuthentication();
@@ -964,6 +975,7 @@ namespace SealWebServer.Controllers
 
                 if (view == null) throw new Exception("Error: the widget does not exist");
 
+                widget.OnlyRestrictions = ReportView.OnlyRestrictions(view);
                 //Set execution view from the new root...
                 report.CurrentViewGUID = report.GetRootView(view).GUID;
             }
@@ -1036,6 +1048,7 @@ namespace SealWebServer.Controllers
                     try
                     {
                         report.Status = ReportStatus.RenderingDisplay;
+                        report.Format = ReportFormat.html;
                         if (!string.IsNullOrEmpty(format) && format == "htmlprint")
                         {
                             //Only html print is supported
@@ -1133,7 +1146,8 @@ namespace SealWebServer.Controllers
                         var reference = Helper.NewGUID();
                         lock (_pdfToExport)
                         {
-                            model.Tag = WebUser;
+                            model.User = WebUser;
+                            model.DashboardExecutions = DashboardExecutions;
                             _pdfToExport.Add(reference, model);
                         }
                         var pdfConverter = Repository.Configuration.GetDashboardPdfConverter();
@@ -1221,9 +1235,10 @@ namespace SealWebServer.Controllers
 
                 if (model != null)
                 {
-
+                    //Copy session objects for the export
                     setSessionValue(SessionRepository, model.Repository);
-                    setSessionValue(SessionUser, model.Tag);
+                    setSessionValue(SessionUser, model.User);
+                    setSessionValue(SessionDashboardExecutions, model.DashboardExecutions);
                     if (!CheckAuthentication()) return _loginContentResult;
 
                     result = View("Main", model);
