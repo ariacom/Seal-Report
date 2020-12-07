@@ -28,8 +28,8 @@ A **live demonstration** of the <a href="https://sealreport.org/demo" target=_bl
 Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product.
 
 In addition to the Open Source version, **<a href="https://ariacom.com" target=_blank>Ariacom</a>** offers consulting on the product and 2 commercial components:
-* The <a href="https://ariacom.com/sealweblicense.cshtml" target=_blank>Web Report Designer</a> to edit and schedule reports from any web browser.
-* The <a href="https://ariacom.com/sealreportlicense.cshtml" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
+* The <a href="https://ariacom.com/sealweblicense" target=_blank>Web Report Designer</a> to edit and schedule reports from any web browser.
+* The <a href="https://ariacom.com/sealconverterlicense" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
 
 # Screen shots 
 ## HTML Report Result
