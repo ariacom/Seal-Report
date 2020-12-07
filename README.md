@@ -6,7 +6,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 
 ## Main Features
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
-* **LINQ queries**: Join and query any Data Sources (SQL, Excel, XML, Olap Cube, HTTP JSon, etc.) with the power of LINQ queries.
+* **LINQ queries**: Join and query any Data Sources (SQL, Excel, XML, OLAP Cube, HTTP JSon, etc.) with the power of LINQ queries.
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
 * **HTML 5 Charts**: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
 * **Fully Responsive and HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
