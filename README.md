@@ -6,7 +6,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 
 ## Main Features
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
-* **LINQ queries**: Join and query any Data Sources (SQL, Excel, XML, Olap Cube, HTTP JSon, etc.) with the power of LINQ queries.
+* **LINQ queries**: Join and query any Data Sources (SQL, Excel, XML, OLAP Cube, HTTP JSon, etc.) with the power of LINQ queries.
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
 * **HTML 5 Charts**: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
 * **Fully Responsive and HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
@@ -28,8 +28,8 @@ A **live demonstration** of the <a href="https://sealreport.org/demo" target=_bl
 Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product.
 
 In addition to the Open Source version, **<a href="https://ariacom.com" target=_blank>Ariacom</a>** offers consulting on the product and 2 commercial components:
-* The <a href="https://ariacom.com/sealweblicense.cshtml" target=_blank>Web Report Designer</a> to edit and schedule reports from any web browser.
-* The <a href="https://ariacom.com/sealreportlicense.cshtml" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
+* The <a href="https://ariacom.com/sealweblicense" target=_blank>Web Report Designer and Dashboard Manager</a> to edit reports and dashboards from any web browser.
+* The <a href="https://ariacom.com/sealconverterlicense" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
 
 # Screen shots 
 ## HTML Report Result
