@@ -231,7 +231,7 @@ function executeReport(nav, target) {
 function mainInit() {
     //force execute
     $("input").keydown(function (event) {
-        if (event.keyCode == 13) $("#execute_button").focus();
+        if (event.keyCode == 13 && !$(this).hasClass("trigger")) $("#execute_button").focus();
     });
 
     $("#execute_button").click(function () {

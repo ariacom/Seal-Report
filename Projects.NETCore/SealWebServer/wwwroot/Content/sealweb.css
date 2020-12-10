@@ -1,4 +1,8 @@
-﻿/* light buttons */
+﻿.numeric_input {
+    text-align: right;
+}
+
+/* light buttons */
 .lighticon-menu .lightbutton {
     display: inline-block;
     text-align: center;

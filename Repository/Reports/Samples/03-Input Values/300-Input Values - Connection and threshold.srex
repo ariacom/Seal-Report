@@ -16,7 +16,7 @@
 		}
 	}
 }
-</CellScript></ReportElement><ReportElement><GUID>49b8feca-b15f-40e9-b7d6-0dd6c3e31994</GUID><PivotPosition>Hidden</PivotPosition><SortOrder>Not sorted</SortOrder><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Outputs><ReportOutput><GUID>795d46d0-8a5e-4699-a65a-fc849b0ecc06</GUID><Name>test output with custom connection</Name><OutputDeviceGUID>c428a6ba-061b-4a47-b9bc-f3f02442ab4b</OutputDeviceGUID><PreScript /><PostScript /><ViewGUID>39efdbbf-396d-4914-8359-04dc78454400</ViewGUID><FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath><FileName>51-User input - Connection and threshold_{0:yyyy_MM_dd}</FileName><EmailZipAttachments xsi:nil="true" /><EmailZipPassword /><ZipPassword /><UserName /><UserGroups /><UserCulture /></ReportOutput></Outputs><Tasks><ReportTask><GUID>1210b6ab-e02b-4a64-925b-9ded7c223f1b</GUID><Name>Change the connection</Name><CancelReport>false</CancelReport><SourceGUID>6caded9a-0ac2-4b4d-b07c-03c3eb8aa2b8</SourceGUID><Script>@{
+</CellScript></ReportElement><ReportElement><GUID>49b8feca-b15f-40e9-b7d6-0dd6c3e31994</GUID><PivotPosition>Hidden</PivotPosition><SortOrder>Not sorted</SortOrder><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Tasks><ReportTask><GUID>1210b6ab-e02b-4a64-925b-9ded7c223f1b</GUID><Name>Change the connection</Name><CancelReport>false</CancelReport><SourceGUID>6caded9a-0ac2-4b4d-b07c-03c3eb8aa2b8</SourceGUID><Script>@{
     ReportTask task = Model;
     Report report = task.Report;
 &#xD;

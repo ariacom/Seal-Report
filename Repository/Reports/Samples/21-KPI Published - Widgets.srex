@@ -52,4 +52,4 @@ AND [6d4acdc0-bf69-451d-99a8-ce7886562b05]</Restriction><Restrictions><ReportRes
 }
 </CustomTemplate><Parameters><Parameter><Name>grid_layout</Name><Value>col-sm-4;col-sm-4;col-sm-4
 col-sm-12&#xD;
-col-sm-4;col-sm-4;(col-sm-8)</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>1</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>
+col-sm-4;col-sm-4;(col-sm-8)</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>drill_enabled</Name><Value>False</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>

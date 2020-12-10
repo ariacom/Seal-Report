@@ -113,12 +113,11 @@ class SWIDashboard {
         var addWidget = $("#add-widget-nav-item");
         var exportDashboard = $("#export-nav-item");
 
-        var spinnerHidden = !$(".spinner-menu").is(":visible");
         SWIUtil.ShowHideControl(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable);
-        SWIUtil.EnableButton(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable && spinnerHidden);
-        SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
+        SWIUtil.EnableButton(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable);
+        SWIUtil.EnableButton($("#dashboards-nav-item"), true);
         SWIUtil.ShowHideControl(exportDashboard, _da._dashboard);
-        SWIUtil.EnableButton(exportDashboard, _da._dashboard && spinnerHidden);
+        SWIUtil.EnableButton(exportDashboard, _da._dashboard);
     }
 
     private handleDashboardResult(data: any) {
@@ -195,8 +194,6 @@ class SWIDashboard {
     public initDashboardItems(guid: string) {
         var dashboard = _da._dashboards[guid];
         if (!dashboard) return;
-
-        $("[did='" + guid + "']").children(".spinner-menu").show();
         SWIUtil.ShowHideControl($("#add-widget-nav-item"), false);
         SWIUtil.EnableButton($("#dashboards-nav-item"), false);
         SWIUtil.EnableButton($("#export-nav-item"), false);
@@ -211,8 +208,6 @@ class SWIDashboard {
         _gateway.GetDashboardItems(guid, _main._exporting, function (data) {
             var content = $("#" + guid);
             content.empty();
-
-            $("[did='" + guid + "']").children(".spinner-menu").hide();
             _da.enableControls();
 
             var currentGroup = "";
@@ -399,26 +394,32 @@ class SWIDashboard {
                     });
                 }
 
-                //Spinner menu
+                //Active
                 if (!_main._exportingPrint) {
-                    menu.append($("<i class='fa fa-spinner fa-spin fa-1x fa-fw spinner-menu'></i>"));
-
                     var isActive = (dashboard.GUID == _da._lastGUID);
                     if (isActive) li.addClass("active");
                     $("#menu-dashboard").append(li.append(menu));
                 }
-
+                
                 //Click on a dashboard pill
                 if (!_main._exporting) {
                     menu.unbind("click").click(function () {
                         var id = $(this).attr("did");
                         _da._lastGUID = id;
                         _da._dashboard = _da._dashboards[id];
+
                         _da.enableControls();
                         _gateway.SetLastDashboard(_da._lastGUID, null);
                         _main._profile.dashboard = _da._lastGUID;
+
                         $(".item,.group-name").css("opacity", "0.2");
-                        redrawDashboard();
+                        if (!_da._dashboard.Loaded) {
+                            _da._dashboard.Loaded = true;
+                            _da.initDashboardItems(id);
+                        }
+                        else {
+                            redrawDashboard();
+                        }
                     });
                 }
 
@@ -431,11 +432,17 @@ class SWIDashboard {
                 if (isActive) content.addClass("in active");
             }
 
-            //Init active first
-            if (_da._lastGUID) _da.initDashboardItems(_da._lastGUID);
-            for (var i = 0; i < data.length; i++) {
-                if (!_da._lastGUID || data[i].GUID != _da._lastGUID) _da.initDashboardItems(data[i].GUID);
+            //Init
+            if (_main._exportingPrint) {
+                for (var i = 0; i < data.length; i++) {
+                    _da.initDashboardItems(data[i].GUID);
+                }
             }
+            else {
+                //Active first
+                if (_da._lastGUID) _da.initDashboardItems(_da._lastGUID);
+            }
+
 
             //Manage
             $("#dashboards-nav-item").unbind("click").on("click", function () {

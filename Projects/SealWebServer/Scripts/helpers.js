@@ -202,14 +202,13 @@ function initRestrictions(parent) {
     //trigger input: text, date, numeric
     $(parent + "input.trigger," + parent + "textarea.trigger").change(function (e) {
         if ($(this).attr("name")) {
-            if ($(this).parent().hasClass("date")) executeFromTrigger($(this));
-            else executeFromTrigger($(this));
+            executeFromTrigger($(this));
         }
     });
 
     //trigger input numeric: force if empty
     $(parent + ".numeric_input.trigger").blur(function () {
-        if ($(this).val() === "" && $(this).attr("name")) {
+        if ($(this).val() == "" && $(this).attr("name")) {
             executeFromTrigger($(this));
         }
     })

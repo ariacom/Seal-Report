@@ -27,6 +27,10 @@ body {
     margin-top: 4px;
 }
 
+.numeric_input {
+    text-align: right;
+}
+
 .dataTables_empty {
     display: none;
 }

@@ -1,55 +1,43 @@
-﻿/// <reference path="typings/jquery/jquery.d.ts" />
+/// <reference path="typings/jquery/jquery.d.ts" />
 /// <reference path="typings/bootstrap/index.d.ts" />
 /// <reference path="typings/main.d.ts" />
-
-var _da: SWIDashboard;
-var _daEditor: DashboardEditorInterface;
-var hasEditor: boolean;
-declare var exportFormat: string;
-declare var exportIds: string[];
-
-declare var Muuri: any;
-declare function redrawNVD3Charts();
-declare function redrawDataTables();
-declare function getTopLeft(item: any);
-declare function initNavCells(executionGUID: string, parentSelector: string);
-declare function initRestrictions(parent: any);
-declare function initDashboardRestrictions(parent: any);
-
-var wnvPdfConverter: any;
-
+var _da;
+var _daEditor;
+var hasEditor;
+var wnvPdfConverter;
 //Muuri layout
 function loadLayout(grid, serializedLayout) {
     var layout = JSON.parse(serializedLayout);
     var currentItems = grid.getItems();
     var currentItemIds = currentItems.map(function (item) {
-        return item.getElement().getAttribute('id')
+        return item.getElement().getAttribute('id');
     });
     var newItems = [];
     var itemId;
     var itemIndex;
-
     for (var i = 0; i < layout.length; i++) {
         itemId = layout[i];
         itemIndex = currentItemIds.indexOf(itemId);
         if (itemIndex > -1 && newItems.indexOf(currentItems[itemIndex]) == -1) {
-            newItems.push(currentItems[itemIndex])
+            newItems.push(currentItems[itemIndex]);
         }
     }
-
-    if (layout.length == newItems.length) grid.sort(newItems, { layout: 'instant' });
-    else grid.layout(true);
+    if (layout.length == newItems.length)
+        grid.sort(newItems, { layout: 'instant' });
+    else
+        grid.layout(true);
 }
-
 function redrawDashboard() {
     $("#nav_popupmenu").css("opacity", "0");
     if (_da._pendingRequest <= 0) {
-        if ($(".item").css("opacity") == "1") $(".item,.group-name,h1").css("opacity", "0.4");
+        if ($(".item").css("opacity") == "1")
+            $(".item,.group-name,h1").css("opacity", "0.4");
         setTimeout(function () {
             redrawNVD3Charts();
             redrawDataTables();
             _da.reorderItems(true);
-            if ($(".item").css("opacity") != "1") $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "0.6");
+            if ($(".item").css("opacity") != "1")
+                $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "0.6");
         }, 500);
         setTimeout(function () {
             $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "1");
@@ -57,25 +45,21 @@ function redrawDashboard() {
         }, 900);
     }
 }
-
-
-class SWIDashboard {
-    public _dashboards = [];
-    public _ids = [];
-    public _gridOrders = [];
-    public _grids = [];
-    public _gridsById = [];
-    public _refreshTimers = [];
-    public _dashboard;
-    public _lastGUID;
-    public _dragType;
-    public _dragData;
-    public _pendingRequest = 0;
-
-    public reorderItems(init: boolean) {
-        if (!_da || !_da._dashboard) return;
-
-        if (init) _da._gridsById = []; //Force rebuild of grids
+var SWIDashboard = /** @class */ (function () {
+    function SWIDashboard() {
+        this._dashboards = [];
+        this._ids = [];
+        this._gridOrders = [];
+        this._grids = [];
+        this._gridsById = [];
+        this._refreshTimers = [];
+        this._pendingRequest = 0;
+    }
+    SWIDashboard.prototype.reorderItems = function (init) {
+        if (!_da || !_da._dashboard)
+            return;
+        if (init)
+            _da._gridsById = []; //Force rebuild of grids
         _da._grids = [];
         $('.grid' + _da._dashboard.GUID).each(function () {
             var gridId = $(this).attr("id");
@@ -93,39 +77,34 @@ class SWIDashboard {
                     dragSort: true,
                 });
                 _da._gridsById[gridId] = grid;
-
                 if (hasEditor && _da._dashboard.Editable) {
                     _daEditor.initGridItemOrder(grid);
                 }
             }
             _da._grids.push(grid);
-
             var gridOrder = _da._gridOrders[gridId];
             if (gridOrder) {
                 loadLayout(grid, gridOrder);
-            } else {
+            }
+            else {
                 grid.layout(true);
             }
         });
-    }
-
-    public enableControls() {
+    };
+    SWIDashboard.prototype.enableControls = function () {
         var addWidget = $("#add-widget-nav-item");
         var exportDashboard = $("#export-nav-item");
-
         SWIUtil.ShowHideControl(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable);
         SWIUtil.EnableButton(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable);
         SWIUtil.EnableButton($("#dashboards-nav-item"), true);
         SWIUtil.ShowHideControl(exportDashboard, _da._dashboard);
         SWIUtil.EnableButton(exportDashboard, _da._dashboard);
-    }
-
-    private handleDashboardResult(data: any) {
+    };
+    SWIDashboard.prototype.handleDashboardResult = function (data) {
         var panel = $("#" + data.itemguid);
         var panelHeader = panel.children(".panel-heading");
-
         //Set description and hyper link
-        var nameLink: JQuery = panelHeader.find("a");
+        var nameLink = panelHeader.find("a");
         nameLink.attr("title", data.description);
         if (data.path && !_main._exporting) {
             nameLink.attr("path", data.path);
@@ -138,13 +117,10 @@ class SWIDashboard {
             nameLink.css("cursor", "default");
             nameLink.css("text-decoration", "none");
         }
-
         //Set content
         var panelBody = panel.children(".panel-body");
         panelBody.empty();
-
         panelBody.html(data.content);
-
         //Dynamic properties
         if (data.dynamic) {
             var newIcon = $(data.content).find("#new-widget-icon").val();
@@ -164,23 +140,20 @@ class SWIDashboard {
             }
         }
         panelHeader.children(".fa-spinner").hide();
-
         //Refresh button
         $("#rb" + data.itemguid).attr("title", data.lastexec);
-
         //Auto-refresh
-        if (data.refresh > 0) _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false, true) }, 1000 * data.refresh);
-
+        if (data.refresh > 0)
+            _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false, true); }, 1000 * data.refresh);
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
         initDashboardRestrictions("#" + data.itemguid);
-    }
-
-    private refreshDashboardItem(guid: string, itemguid: string, force: boolean, forTimer: boolean) {
-        if (!forTimer) _da._pendingRequest++;
+    };
+    SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force, forTimer) {
+        if (!forTimer)
+            _da._pendingRequest++;
         clearTimeout(_da._refreshTimers[itemguid]);
         $("#nav_popupmenu").css("opacity", "0");
-
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
             if (!forTimer) {
@@ -189,32 +162,28 @@ class SWIDashboard {
                 redrawDashboard();
             }
         });
-    }
-
-    public initDashboardItems(guid: string) {
+    };
+    SWIDashboard.prototype.initDashboardItems = function (guid) {
         var dashboard = _da._dashboards[guid];
-        if (!dashboard) return;
+        if (!dashboard)
+            return;
         SWIUtil.ShowHideControl($("#add-widget-nav-item"), false);
         SWIUtil.EnableButton($("#dashboards-nav-item"), false);
         SWIUtil.EnableButton($("#export-nav-item"), false);
-
         //re-init order
         $('.grid' + guid).each(function () {
             var gridId = $(this).attr("id");
             _da._gridOrders[gridId] = null;
             _da._gridsById[gridId] = null;
         });
-
         _gateway.GetDashboardItems(guid, _main._exporting, function (data) {
             var content = $("#" + guid);
             content.empty();
             _da.enableControls();
-
             var currentGroup = "";
-            var grid: JQuery = null;
+            var grid = null;
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
-
                 if (currentGroup != item.GroupName || !grid) {
                     content.append($("<hr class='group-name' style='margin:5px 2px'>"));
                     //Add current grid
@@ -226,25 +195,21 @@ class SWIDashboard {
                     if (hasEditor && _da._dashboards[guid].Editable) {
                         _daEditor.initGrid(grid);
                     }
-
                     if (item.GroupName != "") {
                         //Group name 
                         var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName.startsWith("_") ? "" : item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity", "0.2");
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
                         var groupDrag = $("<h3 style='margin:0px 5px'>").append(groupSpan);
-                        groupDrag.attr("group-order", item.GroupOrder)
+                        groupDrag.attr("group-order", item.GroupOrder);
                         content.append(groupDrag);
                         content.append(groupInput);
-
                         if (hasEditor && _da._dashboards[guid].Editable) {
                             _daEditor.initGridGroupName(groupSpan, groupInput, groupDrag);
                         }
                     }
                     content.append(grid);
-
                     currentGroup = item.GroupName;
                 }
-
                 //Dashboard item
                 var panel = $("<div class='item panel panel-" + item.Color + "' style='opacity: 0.2;page-break-inside:avoid;'>");
                 panel.attr("id", item.GUID);
@@ -252,19 +217,15 @@ class SWIDashboard {
                 var panelHeader = $("<div class='panel-heading text-left' style='padding-right:2px;'>");
                 panel.append(panelHeader);
                 panelHeader.append($("<span class='glyphicon glyphicon-" + item.Icon + "'>"));
-
-                if (!item.DisplayName) item.DisplayName = "";
+                if (!item.DisplayName)
+                    item.DisplayName = "";
                 var nameLink = $("<a>)").text(" " + item.DisplayName);
                 var panelName = $("<h3 class='panel-title' style='display:inline'>").append(nameLink);
-
                 panelHeader.append(panelName);
                 panelHeader.append($("<i class='fa fa-spinner fa-spin fa-sm fa-fw'></i>"));
-
                 var refreshButton = $("<button class='btn btn-sm btn-info' type='button' style='margin-left:2px;margin-right:0px;padding:0px 6px;'><span class='glyphicon glyphicon-refresh'></span></button>");
                 var panelButtons = $("<div style='display:none;float:right;white-space:nowrap;'>");
-
                 refreshButton.attr("id", "rb" + item.GUID);
-
                 panelButtons.append(refreshButton);
                 if (hasEditor && dashboard.Editable) {
                     var buttons = _daEditor.getEditButtons();
@@ -272,80 +233,70 @@ class SWIDashboard {
                         panelButtons.append(buttons[j]);
                     }
                 }
-
                 panelHeader.append(panelButtons);
-
                 var panelBody = $("<div class='panel-body'>");
                 panel.append(panelBody);
-
                 panelBody.append($("<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>"));
                 panelBody.append($("<h4 style='display:inline'></h4>").html(SWIUtil.tr("Processing") + "..."));
-
                 _da.refreshDashboardItem(guid, item.GUID, false, false);
-
                 //Size
-                if (item.Width > 0) panel.width(item.Width);
-                if (item.Height > 0) panel.height(item.Height);
+                if (item.Width > 0)
+                    panel.width(item.Width);
+                if (item.Height > 0)
+                    panel.height(item.Height);
                 panel.css("overflow", "auto");
-
                 //Panel buttons
                 if (!_main._exporting) {
                     panelHeader
                         .mouseenter(function (e) {
-                            var panelHeading = $(this).closest('.panel-heading');
-                            if (!panelHeading.children(".fa-spinner").is(":visible")) {
-                                var tl = getTopLeft($(this)[0]);
-                                var buttons = $(this).children("div");
-                                buttons.css("position", "absolute");
-                                buttons.css("left", tl[0] + $(this).width() - Math.max(buttons.width(), buttons.height()) + 15);
-                                buttons.css("top", tl[1] + 10);
-                                buttons.show();
-                            }
-
-                        })
+                        var panelHeading = $(this).closest('.panel-heading');
+                        if (!panelHeading.children(".fa-spinner").is(":visible")) {
+                            var tl = getTopLeft($(this)[0]);
+                            var buttons = $(this).children("div");
+                            buttons.css("position", "absolute");
+                            buttons.css("left", tl[0] + $(this).width() - Math.max(buttons.width(), buttons.height()) + 15);
+                            buttons.css("top", tl[1] + 10);
+                            buttons.show();
+                        }
+                    })
                         .mouseleave(function () {
-                            $(this).children("div").hide();
-                        });
-
+                        $(this).children("div").hide();
+                    });
                     //Refresh item
                     refreshButton.unbind("click").on("click", function (e) {
                         SWIUtil.HideMessages();
                         var dashboardGuid = $(this).closest('.panel').attr('did');
                         var itemGuid = $(this).closest('.panel').attr('id');
-
                         var panelHeading = $(this).closest('.panel-heading');
                         panelHeading.children(".fa-spinner").show();
-
                         _da.refreshDashboardItem(dashboardGuid, itemGuid, true, false);
                     });
                 }
-
                 grid.append(panel);
             } //for
-
-            if (_da._dashboard && guid == _da._dashboard.GUID) _da.reorderItems(false);
+            if (_da._dashboard && guid == _da._dashboard.GUID)
+                _da.reorderItems(false);
         });
-    }
-
-    public init() {
+    };
+    SWIDashboard.prototype.init = function () {
         _da = this;
         _da._dashboard = null;
-        if (!_da._lastGUID) _da._lastGUID = _main._profile.dashboard;
-        if (_daEditor) _daEditor.init();
-
+        if (!_da._lastGUID)
+            _da._lastGUID = _main._profile.dashboard;
+        if (_daEditor)
+            _daEditor.init();
         _gateway.GetUserDashboards(function (data) {
             _da._dashboards = [];
             $("#menu-dashboard").empty();
             $("#content-dashboard").empty();
-
             //filter in case of export
-            var data2: any[] = [];
+            var data2 = [];
             for (var i = 0; i < data.length; i++) {
-                if (_main._exporting && exportIds.indexOf(data[i].GUID) == -1) continue;
+                if (_main._exporting && exportIds.indexOf(data[i].GUID) == -1)
+                    continue;
                 data2.push(data[i]);
             }
             data = data2;
-
             //Init array
             _da._ids = [];
             for (var i = 0; i < data.length; i++) {
@@ -362,19 +313,18 @@ class SWIDashboard {
             //Build menu
             for (var i = 0; i < data.length; i++) {
                 var dashboard = data[i];
-
                 var menu = $("<a data-toggle='pill' href='#" + dashboard.GUID + "' did='" + dashboard.GUID + "'>");
                 if (_main._exportingPrint) {
                     menu = $("<h1>");
                     menu.css("opacity", "0.2");
                 }
-
-                if (dashboard.IsPersonal) menu.addClass("dashboard-personal");
+                if (dashboard.IsPersonal)
+                    menu.addClass("dashboard-personal");
                 menu.text(dashboard.DisplayName);
                 menu.attr("title", dashboard.FullName);
                 var li = $("<li>");
-                if (_main._exportingPrint) li = $("<div>");
-
+                if (_main._exportingPrint)
+                    li = $("<div>");
                 if (_main._profile.managedashboards && !_main._exporting && !_main._profile.defaultdashboards) {
                     //Drag and drop for menu
                     li.on("dragstart", function () {
@@ -383,7 +333,8 @@ class SWIDashboard {
                     });
                     li.prop("draggable", "true");
                     li.on("dragover", function (e) {
-                        if (_da._dragType == "menu") e.preventDefault();
+                        if (_da._dragType == "menu")
+                            e.preventDefault();
                     });
                     li.on("drop", function () {
                         _da._dragType = "";
@@ -393,25 +344,22 @@ class SWIDashboard {
                         });
                     });
                 }
-
                 //Active
                 if (!_main._exportingPrint) {
                     var isActive = (dashboard.GUID == _da._lastGUID);
-                    if (isActive) li.addClass("active");
+                    if (isActive)
+                        li.addClass("active");
                     $("#menu-dashboard").append(li.append(menu));
                 }
-                
                 //Click on a dashboard pill
                 if (!_main._exporting) {
                     menu.unbind("click").click(function () {
                         var id = $(this).attr("did");
                         _da._lastGUID = id;
                         _da._dashboard = _da._dashboards[id];
-
                         _da.enableControls();
                         _gateway.SetLastDashboard(_da._lastGUID, null);
                         _main._profile.dashboard = _da._lastGUID;
-
                         $(".item,.group-name").css("opacity", "0.2");
                         if (!_da._dashboard.Loaded) {
                             _da._dashboard.Loaded = true;
@@ -422,16 +370,15 @@ class SWIDashboard {
                         }
                     });
                 }
-
                 var content = $("<div id='" + dashboard.GUID + "'>");
-                if (_main._exportingPrint) $("#content-dashboard").append(menu);
-                else content.addClass("tab-pane fade")
-
+                if (_main._exportingPrint)
+                    $("#content-dashboard").append(menu);
+                else
+                    content.addClass("tab-pane fade");
                 $("#content-dashboard").append(content);
-
-                if (isActive) content.addClass("in active");
+                if (isActive)
+                    content.addClass("in active");
             }
-
             //Init
             if (_main._exportingPrint) {
                 for (var i = 0; i < data.length; i++) {
@@ -440,18 +387,15 @@ class SWIDashboard {
             }
             else {
                 //Active first
-                if (_da._lastGUID) _da.initDashboardItems(_da._lastGUID);
+                if (_da._lastGUID)
+                    _da.initDashboardItems(_da._lastGUID);
             }
-
-
             //Manage
             $("#dashboards-nav-item").unbind("click").on("click", function () {
                 SWIUtil.HideMessages();
                 _gateway.GetDashboards(function (data) {
-
-                    $("#dashboard-view-label").html(_main._profile.defaultdashboards ? SWIUtil.tr("The default dashboards View is displayed") : SWIUtil.tr("Your personal dashboards View is displayed"))
-                    $("#dashboard-swapview").html(_main._profile.defaultdashboards ? SWIUtil.tr("Display your personal dashboards View") : SWIUtil.tr("Display the default dashboards View"))
-
+                    $("#dashboard-view-label").html(_main._profile.defaultdashboards ? SWIUtil.tr("The default dashboards View is displayed") : SWIUtil.tr("Your personal dashboards View is displayed"));
+                    $("#dashboard-swapview").html(_main._profile.defaultdashboards ? SWIUtil.tr("Display your personal dashboards View") : SWIUtil.tr("Display the default dashboards View"));
                     //Add
                     SWIUtil.ShowHideControl($("#dashboard-add").parent(), !_main._profile.defaultdashboards && data.length > 0);
                     if (!_main._profile.defaultdashboards) {
@@ -465,9 +409,9 @@ class SWIDashboard {
                             "liveSearch": true,
                             "actionsBox": true
                         });
-
                         $("#dashboard-add").unbind("click").on("click", function () {
-                            if ($("#dashboard-user").val() == "") return;
+                            if ($("#dashboard-user").val() == "")
+                                return;
                             $("#dashboard-dialog").modal('hide');
                             _gateway.AddDashboard($("#dashboard-user").val(), function () {
                                 _da._lastGUID = null;
@@ -483,43 +427,39 @@ class SWIDashboard {
                         select.unbind("change").selectpicker("destroy").empty();
                         $.each(_da._ids, function (index, value) {
                             var removeDashboard = _da._dashboards[value];
-                            if (removeDashboard) select.append(SWIUtil.GetOption(removeDashboard.GUID, removeDashboard.FullName, ""));
+                            if (removeDashboard)
+                                select.append(SWIUtil.GetOption(removeDashboard.GUID, removeDashboard.FullName, ""));
                         });
-
                         select.selectpicker({
                             "liveSearch": true,
                             "actionsBox": true
                         });
-
                         $("#dashboard-remove")
                             .unbind("click").on("click", function () {
-                                $("#dashboard-dialog").modal('hide');
-                                _gateway.RemoveDashboard($("#dashboard-toremove").val(), function () {
-                                    _da._lastGUID = null;
-                                    _da.init();
-                                    SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboards have been removed from your view"), 5000);
-                                });
+                            $("#dashboard-dialog").modal('hide');
+                            _gateway.RemoveDashboard($("#dashboard-toremove").val(), function () {
+                                _da._lastGUID = null;
+                                _da.init();
+                                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboards have been removed from your view"), 5000);
                             });
+                        });
                     }
-
                     //Swap view
                     $("#dashboard-swapview")
                         .unbind("click").on("click", function () {
-                            $("#dashboard-dialog").modal('hide');
-                            _gateway.SwapDashboardView(function () {
-                                _da._lastGUID = null;
-                                _main._profile.defaultdashboards = !_main._profile.defaultdashboards;
-                                _da.init();
-                            });
+                        $("#dashboard-dialog").modal('hide');
+                        _gateway.SwapDashboardView(function () {
+                            _da._lastGUID = null;
+                            _main._profile.defaultdashboards = !_main._profile.defaultdashboards;
+                            _da.init();
                         });
-
+                    });
                     if (hasEditor) {
                         _daEditor.initDashboardMenu();
                     }
                     $("#dashboard-dialog").modal();
                 });
             });
-
             //Export
             $("#export-nav-item").unbind("click").on("click", function () {
                 SWIUtil.HideMessages();
@@ -534,7 +474,6 @@ class SWIDashboard {
                         "liveSearch": true,
                         "actionsBox": true
                     });
-
                     select = $("#export-format");
                     select.unbind("change").selectpicker("destroy").empty();
                     select.append(SWIUtil.GetOption("htmlprint", SWIUtil.tr("HTML Print"), ""));
@@ -543,17 +482,15 @@ class SWIDashboard {
                     select.append(SWIUtil.GetOption("excel", SWIUtil.tr("Excel"), ""));
                     select.selectpicker("refresh");
                     SWIUtil.InitNumericInput();
-
                     $("#dashboard-export").unbind("click").on("click", function () {
                         SWIUtil.HideMessages();
-                        if ($("#export-dashboards").val() == "") return;
+                        if ($("#export-dashboards").val() == "")
+                            return;
                         _gateway.ExportDashboards($("#export-dashboards").val(), $("#export-format").val(), $("#export-title").val(), $("#export-delay").val());
                     });
-
                     $("#export-dialog").modal();
                 });
             });
-
             //Export end
             $(document).ajaxStop(function () {
                 if (_main._exporting) {
@@ -573,14 +510,13 @@ class SWIDashboard {
                     }, 1000);
                 }
             });
-
             if (hasEditor) {
                 _daEditor.initMenu();
             }
-
             _da.enableControls();
         });
-
         _da.enableControls();
-    }
-}
+    };
+    return SWIDashboard;
+}());
+//# sourceMappingURL=swi-dashboard.js.map
