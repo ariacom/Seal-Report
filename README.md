@@ -54,7 +54,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 **For use:**
 * Windows 7, 2008, Windows 8, 2012, Windows 10 or greater
 * .Net Framework 4.7
-* Database OLE DB, ODBC or SQLServer Drivers
+* Database OLE DB, ODBC or SQL Server Drivers
 * For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.7 or greater
 * .NET Core 3.1 for the .NET Core deployment (Web Report Server and the Seal Report Scheduler).
 
