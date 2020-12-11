@@ -641,10 +641,21 @@ namespace Seal.Forms
     Report report = task.Report;
     //Take the first input value that has been defined in the report
     var inputValue = report.InputValues[0];
+    if (inputValue.Date1 == DateTime.MinValue) {
+        inputValue.Date1 = DateTime.Now;
+    }
+
     foreach (var model in report.Models) {
-        foreach (var restriction in model.Restrictions.Where(i => i.TypeRe == ColumnType.DateTime)) {
+        foreach (var restriction in model.Restrictions.Where(i => i.IsDateTime /* i.SQLColumn == ""Orders.OrderDate"" */)) {
+            restriction.Operator = Operator.Between;
+            restriction.Date1Keyword = """";
+            restriction.Date2Keyword = """";
+            restriction.Date1 = inputValue.Date1.AddYears(-1);
+            restriction.Date2 = inputValue.Date1;
+        }
+        foreach (var restriction in model.CommonRestrictions.Where(i => i.Name == ""Common_Value_Name"")) {
+            restriction.TypeRe = ColumnType.DateTime;
             restriction.Date1 = inputValue.Date1;
-            restriction.Date2 = inputValue.Date2;
         }
     }
 "
