@@ -1179,6 +1179,19 @@ namespace SealWebServer.Controllers
                                     Report report = null;
                                     ReportExecution execution = getWidgetViews(dashboard, item.Widget, out report, ref view, ref modelView);
                                     if (report.Cancel) break;
+                                    //Execute if necessary
+                                    lock (execution)
+                                    {
+                                        if (!report.IsExecuting && report.ExecutionEndDate == DateTime.MinValue)
+                                        {
+                                            //Disable basics
+                                            report.ExecutionView.InitParameters(false);
+                                            //Set HTML Format
+                                            report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
+                                            execution.Execute();
+                                        }
+                                        while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
+                                    }
                                     if (modelView != null)
                                     {
                                         views.Add(modelView);
