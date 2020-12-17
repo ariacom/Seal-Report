@@ -2659,6 +2659,9 @@ model.ResultTable = query2.CopyToDataTable2();
                         //Tables execution
                         foreach (var subModel in LINQSubModels)
                         {
+                            //Pre-load script
+                            ExecuteLoadScript(subModel.PreLoadScript, "Pre load script", subModel);
+
                             tasks.Add(subModel.GetModelResultTableAsync(runningModels));
                         }
 

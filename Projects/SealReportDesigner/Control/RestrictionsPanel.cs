@@ -225,7 +225,6 @@ namespace Seal.Controls
                     {
                         ModelPanel.MainForm.IsModified = true;
                         ModelPanel.MainForm.CannotRenderAnymore();
-                        ModelToRestrictionText();
                     }
                 });
 
