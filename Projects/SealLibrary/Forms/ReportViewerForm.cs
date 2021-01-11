@@ -326,7 +326,7 @@ namespace Seal.Forms
                         }
                         else //Drill or SubReport
                         {
-                            _execution = _navigation.Navigate(nav, _execution.RootReport);
+                            _execution = _navigation.Navigate(nav, _execution.RootReport, false);
                             _report = _execution.Report;
 
                             _canRender = false;

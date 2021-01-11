@@ -81,17 +81,10 @@ namespace Seal.Model
                 GetProperty("PdfConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(!ForPublication);
                 GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(!ForPublication);
-
-                GetProperty("DashboardExcelConverter").SetIsBrowsable(!ForPublication);
-                GetProperty("DashboardPdfConverter").SetIsBrowsable(!ForPublication);
-                GetProperty("HelperResetDashboardPDFConfigurations").SetIsBrowsable(!ForPublication);
-                GetProperty("HelperResetDashboardExcelConfigurations").SetIsBrowsable(!ForPublication);
                 if (!ForPublication)
                 {
                     ExcelConverter.InitEditor();
-                    DashboardExcelConverter.InitEditor();
                     PdfConverter.InitEditor();
-                    DashboardPdfConverter.InitEditor();
                 }
 
                 GetProperty("WebNETCore").SetIsBrowsable(ForPublication);
@@ -208,9 +201,9 @@ namespace Seal.Model
 
         bool _auditEnabled = false;
         /// <summary>
-        /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management, dashboard management.
+        /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management.
         /// </summary>
-        [Category("Audit Settings"), DisplayName("Audit Enabled"), Description("If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management, dashboard management."), Id(1, 3)]
+        [Category("Audit Settings"), DisplayName("Audit Enabled"), Description("If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management."), Id(1, 3)]
         [DefaultValue(false)]
         public bool AuditEnabled
         {
@@ -429,106 +422,6 @@ namespace Seal.Model
             get { return "<Click to reset the Excel configuration values to their default values>"; }
         }
 
-        /// <summary>
-        /// Current default configuration values for Dashboard Pdf converter
-        /// </summary>
-        public List<string> DashboardPdfConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializeDashboardPdfConfigurations() { return DashboardPdfConfigurations.Count > 0; }
-
-        private SealPdfConverter _dashboardPdfConverter = null;
-        /// <summary>
-        /// Editor Helper: All the default options applied to the PDF conversion from the HTML result.
-        /// </summary>
-        [XmlIgnore]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Dashboard PDF Configuration"), Description("All the options applied to the Dashboard PDF conversion from the HTML result."), Category("PDF and Excel Converter Configuration"), Id(20, 5)]
-        public SealPdfConverter DashboardPdfConverter
-        {
-            get
-            {
-                if (_dashboardPdfConverter == null)
-                {
-                    _dashboardPdfConverter = SealPdfConverter.Create();
-                    _dashboardPdfConverter.SetConfigurations(DashboardPdfConfigurations, null);
-                    _dashboardPdfConverter.Dashboards = new List<Dashboard>();
-                    UpdateEditorAttributes();
-                }
-                return _dashboardPdfConverter;
-            }
-            set { _dashboardPdfConverter = value; }
-        }
-
-        public SealPdfConverter GetDashboardPdfConverter()
-        {
-            var dashboardPdfConverter = SealPdfConverter.Create();
-            dashboardPdfConverter.SetConfigurations(DashboardPdfConfigurations, null);
-            return dashboardPdfConverter;
-        }
-
-        /// <summary>
-        /// True if the Pdf configurations were edited
-        /// </summary>
-        public bool DashboardPdfConverterEdited
-        {
-            get { return _dashboardPdfConverter != null; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset PDF configuration values to their default values
-        /// </summary>
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset Dashboard PDF configurations"), Description("Reset Dashboard PDF configuration values to their default values."), Id(21, 5)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperResetDashboardPDFConfigurations
-        {
-            get { return "<Click to reset the Dashboard PDF configuration values to their default values>"; }
-        }
-
-        /// <summary>
-        /// Current default configuration values for Excel converter
-        /// </summary>
-        public List<string> DashboardExcelConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializeDashboardExcelConfigurations() { return DashboardExcelConfigurations.Count > 0; }
-
-        private SealExcelConverter _dashboardExcelConverter = null;
-        /// <summary>
-        /// Editor Helper: All the default options applied to the Excel conversion from the view
-        /// </summary>
-        [XmlIgnore]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Dashboard Excel Configuration"), Description("All options applied to the Excel conversion for a Dashboard."), Category("PDF and Excel Converter Configuration"), Id(22, 5)]
-        public SealExcelConverter DashboardExcelConverter
-        {
-            get
-            {
-                if (_dashboardExcelConverter == null)
-                {
-                    _dashboardExcelConverter = SealExcelConverter.Create();
-                    _dashboardExcelConverter.ForDashboard = true;
-                    _dashboardExcelConverter.SetConfigurations(DashboardExcelConfigurations, null);
-                    UpdateEditorAttributes();
-                }
-                return _dashboardExcelConverter;
-            }
-            set { _dashboardExcelConverter = value; }
-        }
-
-        /// <summary>
-        /// True if the Excel configurations were edited
-        /// </summary>
-        public bool DashboardExcelConverterEdited
-        {
-            get { return _dashboardExcelConverter != null; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset Excel configuration values to their default values
-        /// </summary>
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset Dashboard Excel configurations"), Description("Reset Dashboard Excel configuration values to their default values."), Id(23, 5)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperResetDashboardExcelConfigurations
-        {
-            get { return "<Click to reset the Dashboard Excel configuration values to their default values>"; }
-        }
 
         /// <summary>
         /// All common scripts
@@ -683,17 +576,9 @@ namespace Seal.Model
             {
                 PdfConfigurations = PdfConverter.GetConfigurations();
             }
-            if (DashboardPdfConverterEdited)
-            {
-                DashboardPdfConfigurations = DashboardPdfConverter.GetConfigurations();
-            }
             if (ExcelConverterEdited)
             {
                 ExcelConfigurations = ExcelConverter.GetConfigurations();
-            }
-            if (DashboardExcelConverterEdited)
-            {
-                DashboardExcelConfigurations = DashboardExcelConverter.GetConfigurations();
             }
 #if !DEBUG && !NETCOREAPP
             //Set installation path, used by, to define schedules

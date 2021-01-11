@@ -41,6 +41,7 @@ namespace Seal.Model
         List<Parameter> _enums;
         List<Parameter> _numerics;
         List<Parameter> _bools;
+        List<Parameter> _views;
 
         void initList(List<Parameter> list, string prefix)
         {
@@ -76,6 +77,7 @@ namespace Seal.Model
             _enums = parameters.Where(i => i.Type == ViewParameterType.Enum).OrderBy(i => i.DisplayName).ToList();
             _numerics = parameters.Where(i => i.Type == ViewParameterType.Numeric).OrderBy(i => i.DisplayName).ToList();
             _bools = parameters.Where(i => i.Type == ViewParameterType.Boolean).OrderBy(i => i.DisplayName).ToList();
+            _views = parameters.Where(i => i.Type == ViewParameterType.RootReportView).OrderBy(i => i.DisplayName).ToList();
 
             Init();
             foreach (var property in Properties) property.SetIsBrowsable(false);
@@ -85,6 +87,7 @@ namespace Seal.Model
             initList(_enums, "e");
             initList(_numerics, "n");
             initList(_bools, "b");
+            initList(_views, "v");
 
             InitDefaultValues();
 
@@ -215,6 +218,27 @@ namespace Seal.Model
         {
             get { return _texts[16].Value; }
             set { _texts[16].Value = value; }
+        }
+
+        [TypeConverter(typeof(ReportViewConverter))]
+        public string v0
+        {
+            get { return _views[0].Value; }
+            set { _views[0].Value = value; }
+        }
+
+        [TypeConverter(typeof(ReportViewConverter))]
+        public string v1
+        {
+            get { return _views[1].Value; }
+            set { _views[1].Value = value; }
+        }
+
+        [TypeConverter(typeof(ReportViewConverter))]
+        public string v2
+        {
+            get { return _views[2].Value; }
+            set { _views[2].Value = value; }
         }
 
         [TypeConverter(typeof(ViewParameterEnumConverter))]

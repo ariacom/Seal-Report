@@ -69,15 +69,6 @@
                 </text>}
                 });
                 initNavCells('@report.ExecutionGUID', '[viewid="@(view.ViewId)"]');
-                dt.on('length.dt', function () {
-                    redrawDashboard();
-                });
-                dt.on('page.dt', function () {
-                    redrawDashboard();
-                });
-                dt.on('order.dt', function () {
-                    redrawDashboard();
-                });
             }
     }
     catch (e) { };

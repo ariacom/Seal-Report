@@ -21,16 +21,10 @@ function failure(xhr, status, error) {
     SWIUtil.ShowMessage("alert-danger", error +". " + _errorServer, 0);
 }
 
-class SWIGateway {
-    private _execForm: JQuery = null;
-    private getExecForm(action : string, target : string): JQuery {
-        if (this._execForm == null) this._execForm = $('<form method="post"/>').appendTo('body');
-        this._execForm.find("input").remove();
-        this._execForm.attr('target', target);
-        this._execForm.attr('action', _server + action);
-        return this._execForm;
-    }
 
+declare function postForm(url: string, target: string, data);
+
+class SWIGateway {
     public GetVersions(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetVersions", { })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
@@ -51,6 +45,12 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
+    public GetRootMenu(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIGetRootMenu")
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
+    }
+
     public GetUserProfile(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetUserProfile")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
@@ -63,10 +63,17 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public SetUserProfile(culture: string, defaultView: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public SetUserProfile(culture: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWISetUserProfile", {
-            culture: culture,
-            defaultView: defaultView
+            culture: culture
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
+    }
+
+    public SetLastView(view: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWISetLastView", {
+            view: view
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
@@ -135,30 +142,27 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public ExecuteReport(path: string, render: boolean, viewGUID: string, outputGUID: string) {
-        var f = this.getExecForm("SWExecuteReport", "_blank");
-        f.append($('<input />').attr('name', 'path').attr('value', path));
-        f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
-        f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
-        f.append($('<input />').attr('name', 'outputGUID').attr('value', outputGUID));
-        f.children('input').attr('type', 'hidden');
-        f.submit();
+    public ExecuteReport(path: string, viewGUID: string, outputGUID: string) {
+        postForm(_server + "SWExecuteReport", "_blank", { path: path, viewGUID: viewGUID, outputGUID: outputGUID });
     }
 
-    public ExecuteReportDefinition(report: any, render: boolean, viewGUID: string, outputGUID: string) {
-        var f = this.getExecForm("SWExecuteReportDefinition", "_blank");
-        f.append($('<input />').attr('name', 'report').attr('value', report));
-        f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
-        f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
-        f.append($('<input />').attr('name', 'outputGUID').attr('value', outputGUID));
-        f.children('input').attr('type', 'hidden');
-        f.submit();
+    public ExecuteReportDefinition(report: any, viewGUID: string, outputGUID: string) {
+        postForm(_server + "SWExecuteReportDefinition", "_blank", { report: report, viewGUID: viewGUID, outputGUID: outputGUID });
+    }
+
+    public ExecuteReportFromMenu(path: string, viewGUID: string, outputGUID: string,  callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWExecuteReport", {
+            path: path,
+            viewGUID: viewGUID,
+            outputGUID: outputGUID,
+            fromMenu: true
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public ViewFile(path: string) {
-        var f = this.getExecForm("SWViewFile", "_blank");
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
-        f.submit();
+        postForm(_server + "SWViewFile", "_blank", { path: path });
     }
 
     public GetReportDetail(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -201,197 +205,4 @@ class SWIGateway {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
-
-    public GetUserDashboards(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetUserDashboards")
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetDashboards(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetDashboards")
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetDashboardItems(guid: string, forExport: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetDashboardItems", {
-            guid: guid,
-            forExport: forExport
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetDashboardItem(guid: string, itemguid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetDashboardItem", {
-            guid: guid,
-            itemguid: itemguid
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetWidgets(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetWidgets")
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetDashboardResult(guid: string, itemguid: string, force: boolean, format: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetDashboardResult", {
-            guid: guid,
-            itemguid: itemguid,
-            force: force,
-            format: format
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public AddDashboard(guids: string[], callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIAddDashboard", {
-            guids: guids
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public RemoveDashboard(guids: string[], callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIRemoveDashboard", {
-            guids: guids
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public SwapDashboardView(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWISwapDashboardView", {
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public CreateDashboard(name: string, path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWICreateDashboard", {
-            name: name,
-            path: path
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public DeleteDashboard(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIDeleteDashboard", {
-            guid: guid
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public MoveDashboard(guid: string, name: string, path : string, copy: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIMoveDashboard", {
-            guid: guid,
-            name: name,
-            path: path,
-            copy: copy
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public AddDashboardItems(guid: string, widgetguids: string, group: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIAddDashboardItems", {
-            guid: guid,
-            widgetguids: widgetguids,
-            group: group
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public SaveDashboardItem(guid: string, itemguid: string, name: string, groupname: string, color: string, icon: string, width: number, height: number, refresh: number, dynamic:boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWISaveDashboardItem", {
-            guid: guid,
-            itemguid: itemguid,
-            name: name,
-            groupname: groupname,
-            color: color,
-            icon: icon,
-            width: width,
-            height: height,
-            refresh: refresh,
-            dynamic: dynamic
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public UpdateDashboardItemsGroupName(guid: string, oldname: string, newname: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIUpdateDashboardItemsGroupName", {
-            guid: guid,
-            oldname: oldname,
-            newname: newname
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public DeleteDashboardItem(guid: string, itemguid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIDeleteDashboardItem", {
-            guid: guid,
-            itemguid: itemguid
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public SwapDashboardOrder(guid1: string, guid2: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWISwapDashboardOrder", {
-            guid1: guid1,
-            guid2: guid2
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public SwapDashboardGroupOrder(guid: string, source: number, destination: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWISwapDashboardGroupOrder", {
-            guid: guid,
-            source: source,
-            destination: destination
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public SetLastDashboard(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWISetLastDashboard", {
-            guid: guid
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public SaveDashboardItemsOrder(guid: string, orders: string[], itemguid: string, groupname: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWISaveDashboardItemsOrder", {
-            guid: guid,
-            orders: orders,
-            itemguid: itemguid,
-            groupname: groupname
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public ExportDashboards(dashboards: string, format: string, title: string, delay: number) {
-        if (!delay) delay = -1;
-        var f = this.getExecForm("SWExportDashboards", "_blank");
-        f.append($('<input />').attr('name', 'dashboards').attr('value', dashboards));
-        f.append($('<input />').attr('name', 'format').attr('value', format));
-        f.append($('<input />').attr('name', 'title').attr('value', title));
-        f.append($('<input />').attr('name', 'delay').attr('value', delay));
-        f.children('input').attr('type', 'hidden');
-        f.submit();
-    }  
 }

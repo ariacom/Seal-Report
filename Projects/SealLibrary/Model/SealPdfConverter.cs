@@ -38,26 +38,6 @@ namespace Seal.Model
 
         #endregion
 
-        /// <summary>
-        /// Flag set before the dashboard conversion: true for Landscape
-        /// </summary>
-        public bool IsLandscapeParameter = false;
-
-        /// <summary>
-        /// Title set before the dashboard conversion
-        /// </summary>
-        public string TitleParameter = "";
-
-        /// <summary>
-        /// Conversion delay set before the dashboard conversion : Additional delay for the conversion
-        /// </summary>
-        public int ConversionDelayParameter = 2;
-
-        /// <summary>
-        /// Dashboards to convert if the converter is for Dashboards export
-        /// </summary>
-        public List<Dashboard> Dashboards;
-
         public static SealPdfConverter Create()
         {
             SealPdfConverter result = null;

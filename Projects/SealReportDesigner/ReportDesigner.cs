@@ -58,7 +58,6 @@ namespace Seal
         ModelPanel modelPanel = new ModelPanel();
         Repository _repository;
         ReportViewerForm _reportViewer = null;
-        ToolStripMenuItem nextWidgetMenuItem = new ToolStripMenuItem() { Text = "Go to next Widget in the report", ToolTipText = "select the next view having a published Widget", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W))), ShowShortcutKeys = true };
 
         public ReportDesigner()
         {
@@ -80,9 +79,6 @@ namespace Seal
             toolStripHelper = new ToolStripEditorHelper() { MainToolStrip = mainToolStrip, MainPropertyGrid = mainPropertyGrid, EntityHandler = this, MainTreeView = mainTreeView };
             toolsHelper = new ToolsHelper() { EntityHandler = this };
             toolsHelper.InitHelpers(toolsToolStripMenuItem, true);
-
-            toolsToolStripMenuItem.DropDownItems.Insert(4, nextWidgetMenuItem);
-            nextWidgetMenuItem.Click += nextWidget_Click;
 
             HelperEditor.HandlerInterface = this;
 
@@ -309,7 +305,6 @@ namespace Seal
             executeToolStripButton.Enabled = executeToolStripMenuItem.Enabled;
             renderToolStripMenuItem.Enabled = (_canRender && _report != null && _reportViewer != null && _reportViewer.Visible && _reportViewer.CanRender);
             renderToolStripButton.Enabled = renderToolStripMenuItem.Enabled;
-            nextWidgetMenuItem.Enabled = (_report != null);
 
             bool showViewOutput = (selectedEntity is ReportView || selectedEntity is ReportOutput);
             executeViewOutputToolStripMenuItem.Visible = showViewOutput;
@@ -726,7 +721,7 @@ namespace Seal
         }
 
 
-        bool _pdfExpanded = false, _excelExpanded = false, _configurationExpanded = true, _widgetExpanded = false;
+        bool _pdfExpanded = false, _excelExpanded = false, _configurationExpanded = true;
         private void mainTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (_lastDragOverNode != null) return;
@@ -746,8 +741,6 @@ namespace Seal
             if (entry != null) _excelExpanded = entry.Expanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "template configuration");
             if (entry != null) _configurationExpanded = entry.Expanded;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "widget definition");
-            if (entry != null) _widgetExpanded = entry.Expanded;
 
             mainPropertyGrid.SelectedObject = null;
             if (selectedEntity is ReportModel)
@@ -783,8 +776,6 @@ namespace Seal
             if (entry != null) entry.Expanded = _excelExpanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "template configuration");
             if (entry != null) entry.Expanded = _configurationExpanded;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "widget definition");
-            if (entry != null) entry.Expanded = _widgetExpanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "custom partial template texts");
             if (entry != null) entry.Expanded = true;
             entry = Helper.GetGridEntry(mainPropertyGrid, "schedule definition");
@@ -1292,7 +1283,6 @@ namespace Seal
                 views.Add((ReportView)newEntity);
                 _report.InitReferences();
                 ((RootComponent)newEntity).GUID = Guid.NewGuid().ToString();
-                if (!string.IsNullOrEmpty(((ReportView)newEntity).WidgetDefinition.GUID)) ((ReportView)newEntity).WidgetDefinition.GUID = Guid.NewGuid().ToString();
                 ((ReportView)newEntity).ReinitGUIDChildren();
                 ((RootComponent)newEntity).Name = Helper.GetUniqueName(((RootComponent)selectedEntity).Name + " - Copy", (from i in views select i.Name).ToList());
                 int idx = 1;
@@ -1730,38 +1720,6 @@ namespace Seal
         private void ReportDesigner_KeyDown(object sender, KeyEventArgs e)
         {
             toolStripHelper.HandleShortCut(e);
-        }
-
-
-        private void nextWidget_Click(object sender, EventArgs e)
-        {
-            ReportView currentView = mainTreeView.SelectedNode.Tag as ReportView;
-
-            if (_report != null)
-            {
-                List<ReportView> widgets = _report.GetWidgetViews();
-                if (widgets.Count > 0)
-                {
-                    ReportView view = widgets[0];
-                    if (currentView != null)
-                    {
-                        for (int i = 0; i < widgets.Count; i++)
-                        {
-                            if (currentView == widgets[i])
-                            {
-                                if (i == widgets.Count - 1) view = widgets[0];
-                                else view = widgets[i + 1];
-                            }
-                        }
-                    }
-                    _widgetExpanded = true;
-                    selectNode(view);
-                }
-                else
-                {
-                    MessageBox.Show("This report has no Widget published for Dashboards", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
         }
 
         #endregion

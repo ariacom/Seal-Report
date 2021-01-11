@@ -11,20 +11,21 @@
     }
 }
 
-    <script>
+<script>
     $(document).ready(function () {
         $('#tc_@(view.IdSuffix) li:eq(@view.GetNumericValue("tab_selected_index")) a').tab('show');
         $('#tc_@(view.IdSuffix) a').click(function (e) {
-            if (@Helper.ToJS(report.GenerateHTMLDisplay)) submitViewParameter("@report.ExecutionGUID", "@view.ViewId", "tab_selected_index", $($(this).attr('href')).index());
+            if (@Helper.ToJS(report.GenerateHTMLDisplay)) processSubmitViewParameter("tab_selected_index", $($(this).attr('href')).index(), "@view.ViewId");
             @if (report.HasNVD3Chart)
             {<text>
             redrawNVD3Charts();
             </text>
             }
             redrawDataTables();
+            showHideNavbar();
         });
     });
-    </script>
+</script>
 
 @if (!report.PrintLayout && view.GetValue("tab_position") == "right")
 {

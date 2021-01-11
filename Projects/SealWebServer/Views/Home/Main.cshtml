@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@(string.IsNullOrEmpty(model.Title) ? repository.Configuration.WebProductName : model.Title)</title>
+    <title>@repository.Configuration.WebProductName </title>
     <meta charset="utf-8" />
 
     <link href="~/Images/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
@@ -38,11 +38,11 @@
 
     @Html.Partial("~/Views/Home/Menu.cshtml")
 
-    <!--Reports view -->
-    <div id="main-container" class="container-fluid folderview" style="padding-top:62px; display:none;">
+    <!--Folders view -->
+    <div id="main-container" class="container-fluid folderview" style="padding-top:62px;display:none;">
         <div class="row">
             <div id="folder-view" class="col-sm-4" style="padding-right:0px">
-                <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;"></div>
+                <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;border-radius:10px;"></div>
             </div>
 
             <div id="file-view" class="col-sm-8" style="padding-right:0px">
@@ -65,13 +65,9 @@
         </div>
     </div>
 
-    <!--Dashboard view-->
-    <div id="main-dashboard" class="container-fluid dashboardview" style="padding-top:62px; display:none;">
-        <ul id="menu-dashboard" class="nav nav-pills"></ul>
-        <div id="content-dashboard" class="tab-content">
-        </div>
+    <!--Report view-->
+    <div id="report-body" class="container-fluid reportview" style="display:none;">
     </div>
-
 
     <!--Wait Dialog-->
     <div class="modal fade in" id="wait-dialog" role="dialog">
@@ -185,12 +181,6 @@
                             <select id="culture-select" data-width="100%"></select>
                         </div>
                     </div>
-                    <div class="form-group" id="view-select-group">
-                        <label for="view-select"><span class="fa fa-bars"></span> @repository.TranslateWeb("Default view")</label>
-                        <div>
-                            <select id="view-select" data-width="100%"></select>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
@@ -228,82 +218,7 @@
         </div>
     </div>
 
-    <!-- Dashboard Modal -->
-    <div id="dashboard-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" style="top:60px">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">@repository.TranslateWeb("Manage Dashboards")</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <h5 id="dashboard-view-label" style="font-style:italic;font-weight:bold;"></h5>
-                        <button id="dashboard-swapview" type="button" class="btn btn-primary"></button>
-                    </div>
-                    <div class="form-group">
-                        <h5>@repository.TranslateWeb("Update dashboards displayed in your personal view")</h5>
-                        <select id="dashboard-user" data-width="60%" multiple="multiple"></select>
-                        <button id="dashboard-add" type="button" class="btn btn-primary">@repository.TranslateWeb("Add dashboards")</button>
-                    </div>
-                    <div class="form-group">
-                        <select id="dashboard-toremove" data-width="60%" multiple="multiple"></select>
-                        <button id="dashboard-remove" type="button" class="btn btn-primary">@repository.TranslateWeb("Remove dashboards")</button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Close")</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Export Modal -->
-    <div id="export-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" style="top:60px">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">@repository.TranslateWeb("Export Dashboards")</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="form-horizontal col-sm-10" role="form">
-                            <div class="form-group">
-                                <label class="control-label col-sm-6" for="export-dashboards">@repository.TranslateWeb("Dashboards to export")</label>
-                                <div class="col-sm-6">
-                                    <select id="export-dashboards" multiple="multiple"></select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-6" for="export-format">@repository.TranslateWeb("Format")</label>
-                                <div class="col-sm-6">
-                                    <select id="export-format"></select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-6" for="export-title">@repository.TranslateWeb("Title")</label>
-                                <div class="col-sm-6">
-                                    <input id="export-title" class="form-control" value="@repository.TranslateWeb("Dashboard")">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-6" for="export-delay">@repository.TranslateWeb("PDF Conversion delay")</label>
-                                <div class="col-sm-6">
-                                    <input id="export-delay" class="form-control numeric_input" value="5">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="dashboard-export" type="button" class="btn btn-primary" data-dismiss="modal">@repository.TranslateWeb("Export")</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @if (model.HasEditor() && !model.Exporting)
+    @if (model.HasEditor())
     {
         @Html.Partial("~/Views/Home/MainEditor.cshtml");
     }
@@ -326,28 +241,15 @@
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <script src="~/Scripts/datetime-moment.js"></script>
 
-    <!-- muuri -->
-    <script src='~/Scripts/web-animations.min.js'></script>
-    <script src='~/Scripts/hammer.min.js'></script>
-    <script src='~/Scripts/muuri.min.js'></script>
-
-    <!-- libraries for widgets execution -->
+    <!-- common libraries -->
     <script src="~/Scripts/helpers.js"></script>
+    <script src="~/Scripts/common.js"></script>
     <script src="~/Scripts/d3.min.js"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
         <script src="~/Scripts/d3-time.v1.min.js"></script>
         <script src="~/Scripts/d3-time-format.v2.min.js"></script>
         <script src="~/Scripts/@("d3/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
-    }
-    <script src="~/Scripts/nv.d3.min.js"></script>
-    <script src="~/Scripts/chartNVD3.js"></script>
-    <script src="~/Scripts/Chart.min.js"></script>
-    <script src="~/Scripts/chartjs-plugin-datalabels.min.js"></script>
-    <script src="~/Scripts/plotly-latest.min.js"></script>
-    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
-    {
-        <script src="~/Scripts/plotly/@("plotly-locale-" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
     }
 
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
@@ -358,23 +260,16 @@
     <script type="text/javascript">
         //server
         var WebApplicationName = '@HomeController.GetWebUrl(Context.Request, Context.Response)';
-        var urlPrefix = WebApplicationName;
-        var inReport = false;
 
         //formats
-        var dateSeparator = '@Html.Raw(repository.CultureInfo.DateTimeFormat.DateSeparator)';
         var decimalSeparator = '@Html.Raw(repository.CultureInfo.NumberFormat.NumberDecimalSeparator)';
         var thousandSeparator = '@Html.Raw(Helper.ToJS(repository.CultureInfo.NumberFormat.NumberGroupSeparator))';
-        var currencySymbol = '@Html.Raw(Helper.ToJS(repository.CultureInfo.NumberFormat.CurrencySymbol))';
         var dirSeparator = '@(System.IO.Path.DirectorySeparatorChar == '\\' ? "\\\\" : System.IO.Path.DirectorySeparatorChar.ToString())';
         //for datepicker
         var languageName = '@repository.CultureInfo.TwoLetterISOLanguageName';
         var shortDateFormat = '@repository.MomentJSShortDateFormat';
         var shortDateTimeFormat = '@repository.MomentJSShortDateTimeFormat';
         var isUSdate = shortDateFormat.match(/^m/i);
-        var printLayout = false;
-        var exportFormat = '@(model.Format)';
-        var exportIds = '@(model.DashboardIds)'.split(',');
 
         var folderRightSchedule = @((int) FolderRight.Schedule);
         var folderRightEdit = @((int) FolderRight.Edit);
@@ -417,15 +312,15 @@
             language: {
                 decimal: decimalSeparator,
                 thousands: thousandSeparator,
-                processing: "@repository.TranslateReport("Processing...")",
-                lengthMenu: "@repository.TranslateReport("Show _MENU_ rows")",
-                zeroRecords: "@repository.TranslateReport("No rows")",
-                emptyTable: "@repository.TranslateReport("No records")",
-                info: "@repository.TranslateReport("Showing _START_ to _END_ of _TOTAL_")",
-                infoEmpty: "@repository.TranslateReport("Showing 0 to 0 of 0")",
-                infoFiltered: "@repository.TranslateReport("(filtered from _MAX_)")",
+                processing: "@Html.Raw(Helper.ToJS(repository.TranslateReport("Processing...")))",
+                lengthMenu: "@Html.Raw(Helper.ToJS(repository.TranslateReport("Show _MENU_ rows")))",
+                zeroRecords: "@Html.Raw(Helper.ToJS(repository.TranslateReport("No rows")))",
+                emptyTable: "@Html.Raw(Helper.ToJS(repository.TranslateReport("No records")))",
+                info: "@Html.Raw(Helper.ToJS(repository.TranslateReport("Showing _START_ to _END_ of _TOTAL_")))",
+                infoEmpty: "@Html.Raw(Helper.ToJS(repository.TranslateReport("Showing 0 to 0 of 0")))",
+                infoFiltered: "@Html.Raw(Helper.ToJS(repository.TranslateReport("(filtered from _MAX_)")))",
                 infoPostFix: "",
-                search: "@repository.TranslateReport("Filter:")",
+                search: "@Html.Raw(Helper.ToJS(repository.TranslateReport("Filter:")))",
                 paginate: {
                     first: "|&lt;",
                     previous: "&lt;&lt;",
@@ -438,63 +333,23 @@
             stateSave: false,
         });
 
-        var dtTooltips = {
-            today: '@repository.TranslateReportToJS("Go to today"))',
-            clear: '@repository.TranslateReportToJS("Clear selection")',
-            close: '@repository.TranslateReportToJS("Close")',
-            selectMonth: '@repository.TranslateReportToJS("Select Month")',
-            prevMonth: '@repository.TranslateReportToJS("Previous Month")',
-            nextMonth: '@repository.TranslateReportToJS("Next Month")',
-            selectYear: '@repository.TranslateReportToJS("Select Year")',
-            prevYear: '@repository.TranslateReportToJS("Previous Year")',
-            nextYear: '@repository.TranslateReportToJS("Next Year")',
-            selectDecade: '@repository.TranslateReportToJS("Select Decade")',
-            prevDecade: '@repository.TranslateReportToJS("Previous Decade")',
-            nextDecade: '@repository.TranslateReportToJS("Next Decade")',
-            prevCentury: '@repository.TranslateReportToJS("Previous Century")',
-            nextCentury: '@repository.TranslateReportToJS("Next Century")',
-            pickHour: '@repository.TranslateReportToJS("Pick Hour")',
-            incrementHour: '@repository.TranslateReportToJS("Increment")',
-            decrementHour: '@repository.TranslateReportToJS("Decrement")',
-            pickMinute: '@repository.TranslateReportToJS("Pick Minute")',
-            incrementMinute: '@repository.TranslateReportToJS("Increment")',
-            decrementMinute: '@repository.TranslateReportToJS("Decrement")',
-            pickSecond: '@repository.TranslateReportToJS("Pick Second")',
-            incrementSecond: '@repository.TranslateReportToJS("Increment")',
-            decrementSecond: '@repository.TranslateReportToJS("Decrement")',
-            togglePeriod: '@repository.TranslateReportToJS("Toggle Period")',
-            selectTime: '@repository.TranslateReportToJS("Select Time")'
-        };
-
-
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
 
-        var hasEditor = @Helper.ToJS(model.HasEditor() && !model.Exporting);
-        //specific for widget execution
-        function nvd3TranslateText(text)
-        {
-            @foreach (var translation in repository.NVD3Translations)
-            {
-            <text>if (text == '@Html.Raw(Helper.ToJS(translation.Key))') return '@Html.Raw(Helper.ToJS(translation.Value))';</text>
-            }
-            return text;
-        }
+        var hasEditor = @Helper.ToJS(model.HasEditor());
     </script>
 
     @if (!model.HasMinifiedScripts())
     {
         <script src="~/Scripts/swi-utils.js"></script>
         <script src="~/Scripts/swi-gateway.js"></script>
-        <script src="~/Scripts/swi-dashboard.js"></script>
         <script src="~/Scripts/swi-main.js"></script>
 
-        if (model.HasEditor() && !model.Exporting)
+        if (model.HasEditor())
         {
             <script src="~/Scripts/swi-button-group.js"></script>
             <script src="~/Scripts/swi-editor.js"></script>
             <script src="~/Scripts/swi-properties.js"></script>
-            <script src="~/Scripts/swi-dashboard-editor.js"></script>
         }
     }
     else

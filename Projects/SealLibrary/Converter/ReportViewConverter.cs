@@ -20,15 +20,6 @@ namespace Seal.Forms
             Report report = context.Instance as Report;
             if (report == null && context.Instance is ReportComponent) report = ((ReportComponent)context.Instance).Report;
             if (report == null && TemplateTextEditor.CurrentEntity is Report) report = (Report)TemplateTextEditor.CurrentEntity;
-
-            var widget = context.Instance as DashboardWidget;
-            if (widget != null && !string.IsNullOrEmpty(widget.ExecReportPath))
-            {
-                var path = report.Repository.ReportsFolder + widget.ExecReportPath;
-                if (File.Exists(path)) report = Report.LoadFromFile(path, report.Repository);
-                else report = null;
-            }
-
             return report;
         }
 
@@ -59,7 +50,7 @@ namespace Seal.Forms
             {
                 var list = getViewList(context.PropertyDescriptor, report);
                 choices = (from s in list select s.Name).ToList();
-                if (context.PropertyDescriptor.Name == "ReferenceViewGUID" || context.PropertyDescriptor.Name == "ExecViewGUID" || context.PropertyDescriptor.Name == "RestrictionViewGUID")
+                if (context.PropertyDescriptor.Name != "ViewGUID")
                 {
                     choices.Insert(0, "");
                 }

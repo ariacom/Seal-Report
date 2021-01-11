@@ -548,29 +548,6 @@ namespace Seal.Forms
  }
 ";
 
-        const string dashboardsScriptTemplate = @"@{
-    SecurityUser user = Model;
-    //Full documentation at https://sealreport.org/Help/Index.html
-
-    //user.Dashboards.Clear();
-
-    //Sample to add a personal Dashboard
-    user.LoadPersonalDashboard(
-        user.DashboardPersonalFolder+ @""\test.sdax"" /* dashboard path */
-    );
-
-    //Sample to add a public Dashboard
-    user.LoadPublicDashboard(
-        user.Security.Repository.DashboardPublicFolder + @""\General\KPI.sdax"", /* dashboard path */
-        ""General"", /* folder path */ 
-        ""General"", /* folder name */
-        true /* editable */
-    );
-
-    //Sample to remove a dashboard
-    //user.Dashboards.RemoveAll(i => i.Path == """" || i.Name.Contains(""test""));
-}";
-
         const string razorSourceInitScriptTemplate = @"@using System.Data
 @{
     MetaSource source = Model;
@@ -705,6 +682,19 @@ namespace Seal.Forms
 "
             ),
             new Tuple<string, string>(
+                "Set a view parameter value",
+@"ReportTask task = Model;
+    Report report = task.Report;
+    
+    //Select a view by name
+    var view = report.AllViews.FirstOrDefault(i => i.Name == ""View Name"");
+    if (view != null) {
+        //Set the parameter value: here for a ChartJS View, the chart title is got from the restriction value 
+        view.SetParameter(""chartjs_title"", report.Models.First(i => i.Name.StartsWith(""Model Name Prefix"")).GetRestrictionByName(""Restriction Name"").EnumDisplayValue);
+    }
+"
+            ),
+            new Tuple<string, string>(
                 "Update the navigation link text",
 @"ReportTask task = Model;
     Report report = task.Report;   
@@ -759,14 +749,17 @@ namespace Seal.Forms
     
     //If loaded in a task, the model will not be loaded during the standard models generation process
     report.LogMessage(""Loading model Result Table for model '{0}'"", model.Name);
-    task.Execution.LoadResultTableModel(model);   
-   
+    task.Execution.LoadResultTableModel(model);
+    while (!model.ExecResultTableLoaded) {
+        System.Threading.Thread.Sleep(100);
+    }
+
     report.LogMessage(""Building model Pages Result for model '{0}'"", model.Name);
     task.Execution.BuildResultPagesModel(model);       
 
     //If the task is executed after the standard models generation, these 2 flags may be reset before calling the methods
     //model.ExecResultTableLoaded = false; for LoadResultTableModel() to force the Load
-    //model.ExecResultPagesBuilt =false; for BuildResultPagesModel to force the build
+    //model.ExecResultPagesBuilt = false; for BuildResultPagesModel to force the build
 "
                 ),
             new Tuple<string, string>(
@@ -1342,13 +1335,6 @@ namespace Seal.Forms
                         template = folderDetailScriptTemplate;
                         frm.ObjectForCheckSyntax = new SecurityUser(null);
                         frm.Text = "Edit the Folder Detail Script";
-                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                    }
-                    else if (context.PropertyDescriptor.Name == "DashboardsScript")
-                    {
-                        template = dashboardsScriptTemplate;
-                        frm.ObjectForCheckSyntax = new SecurityUser(null);
-                        frm.Text = "Edit the Dashboards Script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

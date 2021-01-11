@@ -883,12 +883,6 @@ model.ResultTable = query2.CopyToDataTable2();
         public bool ExecResultPagesBuilt = false;
 
         /// <summary>
-        /// Page Ids got from previous execution
-        /// </summary>
-        [XmlIgnore]
-        public List<string> PreviousPageIds = new List<string>();
-
-        /// <summary>
         /// Check NVD3 Chart and set the ExecNVD3ChartType property
         /// </summary>
         public void CheckNVD3ChartIntegrity()

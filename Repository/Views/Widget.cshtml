@@ -1,0 +1,36 @@
+@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    Repository repository = report.Repository;
+}
+
+<div class='panel panel-@view.GetValue("widget_color") panel-widget' @Raw(view.AddAttribute("style", "widget_css")) >
+    @if (!string.IsNullOrEmpty(view.GetValue("widget_title")))
+    {
+        <div class='panel-heading text-left' @Raw(view.AddAttribute("style", "widget_heading_css")) >
+            <span class='glyphicon glyphicon-@view.GetValue("widget_icon")'></span>
+            <h3 class='panel-title' style='display:inline'>
+                @if (!string.IsNullOrEmpty(view.GetValue("widget_exec_view")))
+                {
+                    <a class="widget-title" style="cursor:pointer" path="@Raw(report.RelativeFilePath)" viewGUID="@view.GetValue("widget_exec_view")">@view.GetValue("widget_title")</a>
+                }
+                else if (!string.IsNullOrEmpty(view.GetValue("widget_exec_report")))
+                {
+                    <a class="widget-title" style="cursor:pointer" path="@Raw(view.GetValue("widget_exec_report"))">@view.GetValue("widget_title")</a>
+                }
+                else
+                {
+                    @Raw(view.GetValue("widget_title"))
+                }
+            </h3>
+        </div> <!--panel-heading-->
+    }
+    <div class='panel-body' @Raw(view.AddAttribute("style", "widget_body_css")) >
+        @foreach (var childView in view.Views)
+        {
+            @Raw(childView.Parse())
+        }
+    </div> <!--panel-body-->
+</div> <!--panel-->

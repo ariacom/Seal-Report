@@ -102,12 +102,9 @@ $.post("https://sealreport.org/demo/SWILogin", {
                             group (string) :  the user's group names<br />
                             culture (string) : the user's culture name<br />
                             folder (string) : the last folder viewed by the user<br />
-                            dashboard (string) : the last dashboard GUID viewed by the user<br />
-                            viewtype (int): 0 reports only, 1 dashboards only, 2 reports and dashboards<br />
+                            lastdashboard (string) : the last dashboard GUID viewed by the user<br />
                             lastview (string): last user's view (reports or dashboards)<br />
                             dashboardfolders ([string]): array of string of the dashboard folders with the edit right<br />
-                            managedashboards (bool): manage dashboards view right of the user<br />
-                            defaultdashboards (bool): true if the user views the default dashboards<br />
                             usertag (string) : custom tag string (e.g. may be used to show a photo of the user)<br />
                             error (string) : if any error, the error description
                         </td>
@@ -423,7 +420,6 @@ $.post("https://sealreport.org/demo/SWIGetUserProfile")
                             name (string): the user name<br />
                             group (string):  the user's group names<br />
                             culture (string): the user's culture name<br />
-                            viewtype (string): 0 for reports or 1 for dashboards<br />
                             error (string): if any error, the error description
                         </td>
                     </tr>

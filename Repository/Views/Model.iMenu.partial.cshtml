@@ -6,11 +6,11 @@
     Report report = view.Report;
 }
 
-    <script>
+<script>
     $(document).ready(function () {
         $('#tc_@(view.IdSuffix) li:eq(@view.GetNumericValue("model_menu_index")) a').tab('show');
         $('#tc_@(view.IdSuffix) a').click(function (e) {
-             if (@Helper.ToJS(report.GenerateHTMLDisplay)) submitViewParameter("@report.ExecutionGUID", "@view.ViewId", "model_menu_index", $($(this).attr('href')).index());
+            if (@Helper.ToJS(report.GenerateHTMLDisplay)) processSubmitViewParameter("model_menu_index", $($(this).attr('href'), '@view.ViewId').index());
             @if (report.HasNVD3Chart)
             {<text>
             redrawNVD3Charts();
@@ -19,7 +19,7 @@
             redrawDataTables();
         });
     });
-    </script>
+</script>
 
 
 @if (reportModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") != "none")

@@ -124,28 +124,6 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
-            else if (CollectionItemType == typeof(SecurityWidget))
-            {
-                frmCollectionEditorForm.Text = "Security Widgets Collection Editor";
-                allowAdd = true;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
-            else if (CollectionItemType == typeof(SecurityDashboardFolder))
-            {
-                frmCollectionEditorForm.Text = "Security Dashboard Folders Collection Editor";
-                allowAdd = Repository.Instance.GetPublicDashboardFolders().Count > 0;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
-            else if (CollectionItemType == typeof(SecurityDashboardOrder))
-            {
-                frmCollectionEditorForm.Text = "Dashboards Orders Collection Editor";
-                ((SecurityGroup)Context.Instance).InitDashboardOrders();
-                allowAdd = ((SecurityGroup)Context.Instance).Dashboards.Count > 0;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
             else if (CollectionItemType == typeof(SubReport))
             {
                 frmCollectionEditorForm.Text = "Sub-Reports Collection Editor";
@@ -242,23 +220,6 @@ namespace Seal.Forms
                 result.Report = (Report)Context.Instance;
                 instance = result;
             }
-            else if (instance is SecurityDashboardFolder && Context.Instance is SecurityGroup)
-            {
-                var dashboardFolder = (SecurityDashboardFolder)instance;
-                SecurityGroup securityGroup = (SecurityGroup)Context.Instance;
-                var folders = Repository.Instance.GetPublicDashboardFolders();
-
-                dashboardFolder.Name = (from d in folders.Where(i => !securityGroup.DashboardFolders.Exists(j => j.Name == i)) select d).FirstOrDefault();
-                if (dashboardFolder.Name == null) dashboardFolder.Name = securityGroup.DashboardFolders[0].Name;
-            }
-            else if (instance is SecurityDashboardOrder && Context.Instance is SecurityGroup)
-            {
-                var dashboardOrder = (SecurityDashboardOrder)instance;
-                dashboardOrder.SecurityGroup = (SecurityGroup)Context.Instance;
-                dashboardOrder.GUID = (from d in dashboardOrder.SecurityGroup.Dashboards.Where(i => !dashboardOrder.SecurityGroup.DefaultDashboards.Exists(j => j.GUID == i.GUID)) select d.GUID).FirstOrDefault();
-                if (dashboardOrder.GUID == null) dashboardOrder.GUID = dashboardOrder.SecurityGroup.Dashboards[0].GUID;
-                dashboardOrder.Order = dashboardOrder.SecurityGroup.DefaultDashboards.Count + 1;
-            }
             return instance;
         }
 
@@ -286,9 +247,6 @@ namespace Seal.Forms
             else if (value is SecurityColumn) result = ((SecurityColumn)value).DisplayName;
             else if (value is SecuritySource) result = ((SecuritySource)value).DisplayName;
             else if (value is SecurityDevice) result = ((SecurityDevice)value).DisplayName;
-            else if (value is SecurityWidget) result = ((SecurityWidget)value).DisplayName;
-            else if (value is SecurityDashboardFolder) result = ((SecurityDashboardFolder)value).DisplayName;
-            else if (value is SecurityDashboardOrder) result = ((SecurityDashboardOrder)value).Dashboard.FullName;
             else if (value is SecurityConnection) result = ((SecurityConnection)value).DisplayName;
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;

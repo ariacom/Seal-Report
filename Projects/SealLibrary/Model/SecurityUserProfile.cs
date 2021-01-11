@@ -12,7 +12,33 @@ using System.Xml.Serialization;
 namespace Seal.Model
 {
     /// <summary>
-    /// A SecurityUserProfile stores the dashboards viewed by a user
+    /// Store recent file for the user's profile
+    /// </summary>
+    public class RecentFileItem
+    {
+        /// <summary>
+        /// Relative path of the report
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
+        /// View GUID for the execution
+        /// </summary>
+        public string ViewGUID { get; set; }
+
+        /// <summary>
+        /// Output GUID for the execution
+        /// </summary>
+        public string OutputGUID { get; set; }
+
+        /// <summary>
+        /// Report name
+        /// </summary>
+        public string Name { get; set; }
+    }
+
+    /// <summary>
+    /// Object to store the culture and the recent reports of the user
     /// </summary>
     public class SecurityUserProfile
     {
@@ -22,19 +48,16 @@ namespace Seal.Model
         public string Culture { get; set; }
 
         /// <summary>
-        /// View of the user: dashboards or reports
+        /// List of recent reports
         /// </summary>
-        public string View { get; set; }
-
-        /// <summary>
-        /// True to display the default dashboards, if false Dashboards are used.
-        /// </summary>
-        public bool ViewDefaultDashboards { get; set; } = true;
-
-        /// <summary>
-        /// List of dashboard identifiers to display to the user
-        /// </summary>
-        public List<string> Dashboards { get; set; } = new List<string>();
+        public List<RecentFileItem> RecentReports { get; set; } = new List<RecentFileItem>();
+        public void SetRecentReports(Report report, string viewGUID, string outputGUID)
+        {
+            var path = report.FilePath.Replace(report.Repository.ReportsFolder, "");
+            RecentReports.RemoveAll(i => i.Path == path);
+            RecentReports.Insert(0, new RecentFileItem() { Path = path, ViewGUID = viewGUID, OutputGUID = outputGUID, Name = !string.IsNullOrEmpty(report.ExecutionName) ? report.ExecutionName : report.DisplayNameEx });
+            if (RecentReports.Count > 9) RecentReports.RemoveAt(RecentReports.Count - 1);
+        }
 
         /// <summary>
         /// Load the profile from a file path
@@ -76,8 +99,6 @@ namespace Seal.Model
         {
             try
             {
-                Dashboards.RemoveAll(i => string.IsNullOrEmpty(i));
-
                 XmlSerializer serializer = new XmlSerializer(typeof(SecurityUserProfile));
                 XmlWriterSettings ws = new XmlWriterSettings();
                 ws.NewLineHandling = NewLineHandling.Entitize;

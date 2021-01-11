@@ -49,39 +49,8 @@ namespace Seal.Model
         public string BaseURL = "";
 
         /// <summary>
-        /// Title used for dashboard export
-        /// </summary>
-        public string Title= "";
-
-        /// <summary>
-        /// Format used for dashboard export
-        /// </summary>
-        public string Format = "";
-
-        /// <summary>
-        /// List of dashboard ids to export
-        /// </summary>
-        public string DashboardIds = "";
-
-        /// <summary>
         /// Current user
         /// </summary>
         public SecurityUser User;
-
-        /// <summary>
-        /// Current report executions for dashboards
-        /// </summary>
-        public List<ReportExecution> DashboardExecutions;
-
-        /// <summary>
-        /// Is it for dashboards export
-        /// </summary>
-        public bool Exporting
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(Format);
-            }
-        }
     }
 }

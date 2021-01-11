@@ -12,7 +12,7 @@
 
 @if (report.GenerateHTMLDisplay || !report.PdfConversion)
 {
-    <nav id="bar_top" class='navbar navbar-default navbar-fixed-top'>
+    <nav id="bar_top" class='navbar navbar-default navbar-fixed-top' style='transition:top 0.3s;'>
         <div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
             <div class="navbar-header">
                 <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
@@ -32,16 +32,10 @@
             <div id="navbarCollapse" class="collapse navbar-collapse">
                 @if (report.GenerateHTMLDisplay)
                 {
-                    if (view.GetBoolValue("execute_button"))
-                    {
-                        <button id="execute_button" class="btn btn-success navbar-btn navbar-right">@report.Translate("Execute")</button>
-                    }
-                    if (report.HasRestrictions)
-                    {
-                            <button id="restrictions_button" type="button" class="btn btn-info navbar-btn navbar-right @(view.GetBoolValue("restriction_button") ? "active": "")" title="@report.Translate("Show/Hide Restrictions")">
-                                <span class="glyphicon glyphicon-filter"></span>
-                            </button>
-                        }
+                    <button id="execute_button" class="btn btn-success navbar-btn navbar-right">@report.Translate("Execute")</button>
+                    <button id="restrictions_button" type="button" class="btn btn-info navbar-btn navbar-right" title="@report.Translate("Show/Hide Restrictions")">
+                        <span class="glyphicon glyphicon-filter"></span>
+                    </button>
                     }
                     @if (report.GenerateHTMLDisplay || !report.PrintLayout)
                     {

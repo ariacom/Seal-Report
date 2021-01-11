@@ -208,7 +208,7 @@ Web;Execute;;Exécuter
 Web;Execute now;;Exécuter maintenant
 Web;Execution;;Exécution
 Web;Export;;Exporter
-Web;Export Dashboards;;Exporter les Dashboards
+Web;Export Dashboard;;Exporter le Dashboard
 Web;File name;;Nom du fichier
 Web;Folder;;Répertoire
 Web;Folders;;Répertoire
@@ -257,6 +257,7 @@ Web;Prompt;;Demander
 Web;Prompt at run-time;;Demander à l'exécution
 Web;Recur every;;Récurrent tous les
 Web;Refresh;;Rafraîchir
+Web;Reload and execute;;Recharger et exécuter
 Web;Remove;;Supprimer
 Web;Remove all;;Tout supprimer
 Web;Remove dashboards;;Enlever les Dashboards

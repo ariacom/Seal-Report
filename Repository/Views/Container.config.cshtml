@@ -32,17 +32,6 @@
     });
     Template.Parameters.Add(new Parameter()
     {
-        Name = "grid_layout_dashboard",
-        Type = ViewParameterType.Text,
-        TextValue = "",
-        DisplayName = "Grid layout for Dashboard result",
-        Description = "Grid layout used when generating the HTML for Dashboard Widget result. Typically Restrictions Views are shown and Model Views may be hidden. It follows the 'Grid layout' definition.",
-        TextSamples = new string[] {
-"col-sm-12;col-sm-0;|Hide the second view if it contains the model table or chart"
-}
-    });
-    Template.Parameters.Add(new Parameter()
-    {
         Name = "grid_layout_print",
         Type = ViewParameterType.Text,
         TextValue = "",
@@ -56,6 +45,5 @@
     Template.Parameters.Add(new Parameter() { Name = "grid_cell_css", DisplayName = "Grid cell CSS Style", Description = "CSS style attribute of a grid cell.", Enums = new string[] { "border: 2px solid blue;", "font-size: 10px;" }, UseOnlyEnumValues = false });
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>
-    () { "Report", "Tab Page", "Container" };
+    Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container" };
 }

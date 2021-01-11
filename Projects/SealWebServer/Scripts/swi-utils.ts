@@ -162,5 +162,4 @@ module SWIUtil {
         $("#refresh-nav-item").removeClass("fa-spin");
         $("#refresh-nav-item").css("display", "block");
     }
-
 }

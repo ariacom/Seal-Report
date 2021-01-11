@@ -373,6 +373,7 @@ namespace Seal.Model
         Boolean,
         Enum,
         Text,
+        RootReportView
     }
 
     public enum ReportStatus
@@ -425,26 +426,6 @@ namespace Seal.Model
         NoSelection,
         [Description("Can be selected")]
         Selection,
-    }
-
-    public enum ViewType
-    {
-        [Description("View reports only")]
-        Reports,
-        [Description("View dashboards only")]
-        Dashboards,
-        [Description("View reports and dashboards")]
-        ReportsDashboards,
-    }
-
-    public enum DashboardFolderRight
-    {
-        [Description("No right")]
-        None,
-        [Description("View dashboards")]
-        Execute,
-        [Description("Edit dashboards")]
-        Edit,
     }
 
     public enum FailoverEmailMode
@@ -515,11 +496,6 @@ namespace Seal.Model
         FolderCreate,
         FolderRename,
         FolderDelete,
-        DashboardCreate,
-        DashboardSave,
-        DashboardMove,
-        DashboardCopy,
-        DashboardDelete,
         EventError,
         EventServer,
         EventLoggedUsers,

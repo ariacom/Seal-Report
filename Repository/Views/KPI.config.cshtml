@@ -10,7 +10,7 @@
     Template.ForReportModel = false;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "kpi_css", DisplayName = "CSS style: Container", TextValue="width:250px;", Description = "CSS style attribute of the main DIV container.", Enums = new string[] { "width:100%; margin: 10px;", "padding: 10px;", "font-size: 10px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "kpi_css", DisplayName = "CSS style: Container", TextValue="width:250px;", Description = "CSS style attribute of the main DIV container.", Enums = new string[] { "width:100%;margin:10px;", "padding:10px;", "font-size: 10px;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "kpi_show_header", BoolValue = true, DisplayName = "Show header value", Description = "If true, the header value is shown." });
     Template.Parameters.Add(new Parameter() { Name = "kpi_show_value", BoolValue = true, DisplayName = "Show value", Description = "If true, the value is shown." });
     Template.Parameters.Add(new Parameter() { Name = "kpi_button_css", Value = "margin-top:5px;cursor:default;", DisplayName = "CSS style: KPI Button", Description = "CSS style attribute of the KPI button.", Enums = new string[] { "margin-top:5px;cursor:default;width:260px", "padding:10px;", "font-size:10px;" }, UseOnlyEnumValues = false });

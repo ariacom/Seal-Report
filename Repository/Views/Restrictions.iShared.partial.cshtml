@@ -6,7 +6,7 @@
     Repository repository = report.Repository;
     var restrictionPerRow = view.GetNumericValue("restrictions_per_row");
     if (restrictionPerRow == 0) { restrictionPerRow = 1; }
-    var restrictions = view.Template.ForViewRestrictions ? view.ExecutionPromptedRestrictions : report.ExecutionPromptedRestrictions;
+    var restrictions = view.Template.IsRestrictionsView ? view.ExecutionPromptedRestrictions : report.ExecutionPromptedRestrictions;
     var id = "restrictions_" + view.IdSuffix;
 }
 
@@ -32,7 +32,7 @@
                             </div>
                         }
 
-                        <div class="form-group restrictions_group @(view.Template.ForViewRestrictions ? "view_restriction" : "main_restriction")">
+                        <div class="form-group restrictions_group @(view.Template.IsRestrictionsView ? "view_restriction" : "main_restriction")">
                             @if (restriction.Operator != Operator.ValueOnly && (restriction.OperatorStyle == RestrictionOperatorStyle.Visible || restriction.OperatorStyle == RestrictionOperatorStyle.VisibleWithNulls))
                             {
                                 <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select">

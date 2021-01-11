@@ -24,7 +24,6 @@ namespace Seal.Model
         public const string SealRootProductName = "Seal";
         public const string SealConfigurationFileExtension = "scfx";
         public const string SealReportFileExtension = "srex";
-        public const string SealDashboardExtension = "sdax";
         public const string SealTaskScheduler = "SealTaskScheduler.exe";
         public const string SealReportDesigner = "SealReportDesigner.exe";
         public const string SealServerManager = "SealServerManager.exe";
@@ -516,7 +515,6 @@ namespace Seal.Model
                 if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
                 if (!Directory.Exists(PersonalFolder)) Directory.CreateDirectory(PersonalFolder);
                 if (!Directory.Exists(SchedulesFolder)) Directory.CreateDirectory(SchedulesFolder);
-                if (!Directory.Exists(DashboardPublicFolder)) Directory.CreateDirectory(DashboardPublicFolder);
             }
             catch { }
         }
@@ -718,36 +716,8 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Returns the dashboard personal folder path of a user
+        /// Translations file name pattern
         /// </summary>
-        public string GetDashboardPersonalFolder(SecurityUser user)
-        {
-            return Path.Combine(GetPersonalFolderName(user), "Dashboards");
-        }
-
-        /// <summary>
-        /// Returns the dashboard public folder path
-        /// </summary>
-        public string DashboardPublicFolder
-        {
-            get { return Path.Combine(RepositoryPath, "Dashboards"); }
-        }
-
-        /// <summary>
-        /// Current list of public dashboard folders
-        /// </summary>
-        public List<string> GetPublicDashboardFolders()
-        {
-            List<string> result = new List<string>();
-            foreach (var folder in Directory.GetDirectories(Repository.Instance.DashboardPublicFolder))
-            {
-                result.Add(Path.GetFileName(folder));
-            }
-            return result;
-        }
-        /// <summary>
-                 /// Translations file name pattern
-                 /// </summary>
         public string TranslationsPattern
         {
             get { return "Translations*.csv"; }
@@ -1000,54 +970,6 @@ namespace Seal.Model
         public string TranslateDevice(string instance, string reference)
         {
             return RepositoryTranslate("Device", instance, reference);
-        }
-
-        /// <summary>
-        /// Translate a Dashboard Folder
-        /// </summary>
-        public string TranslateDashboardFolder(string instance, string reference)
-        {
-            return RepositoryTranslate("DashboardFolder", instance, reference);
-        }
-
-        /// <summary>
-        /// Translate a Dashboard Name
-        /// </summary>
-        public string TranslateDashboardName(string instance, string reference)
-        {
-            return RepositoryTranslate("DashboardName", instance, reference);
-        }
-
-        /// <summary>
-        /// Translate a Dashboard Item Name
-        /// </summary>
-        public string TranslateDashboardItemName(string instance, string reference)
-        {
-            return RepositoryTranslate("DashboardItemName", instance, reference);
-        }
-
-        /// <summary>
-        /// Translate a Dashboard Item Group Name
-        /// </summary>
-        public string TranslateDashboardItemGroupName(string instance, string reference)
-        {
-            return RepositoryTranslate("DashboardItemGroupName", instance, reference);
-        }
-
-        /// <summary>
-        /// Translate a Widget Name
-        /// </summary>
-        public string TranslateWidgetName(string instance, string reference)
-        {
-            return RepositoryTranslate("WidgetName", instance, reference);
-        }
-
-        /// <summary>
-        /// Translate a Widget Description
-        /// </summary>
-        public string TranslateWidgetDescription(string instance, string reference)
-        {
-            return RepositoryTranslate("WidgetDescription", instance, reference);
         }
 
         /// <summary>

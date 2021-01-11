@@ -128,11 +128,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converter\DashboardOrderConverter.cs" />
+    <Compile Include="Converter\MenuNameConverter.cs" />
     <Compile Include="Converter\ScheduleRepeatConverter.cs" />
-    <Compile Include="Converter\DashboardFolderConverter.cs" />
-    <Compile Include="Converter\WidgetIconClassConverter.cs" />
-    <Compile Include="Converter\WidgetColorClassConverter.cs" />
     <Compile Include="Converter\RestrictionDateConverter.cs" />
     <Compile Include="Converter\RepositoryFolderConverter.cs" />
     <Compile Include="Converter\CultureInfoConverter.cs" />
@@ -148,7 +145,6 @@
     <Compile Include="Helpers\HelperForms.cs" />
     <Compile Include="Helpers\ObjectShredder.cs" />
     <Compile Include="Model\Audit.cs" />
-    <Compile Include="Model\SecurityDashboardOrder.cs" />
     <Compile Include="Model\EditorTableDefinition.cs" />
     <Compile Include="Forms\AboutBoxForm.cs">
       <SubType>Form</SubType>
@@ -243,9 +239,7 @@
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Model\CategoryFolder.cs" />
-    <Compile Include="Model\DashboardItem.cs" />
-    <Compile Include="Model\Dashboard.cs" />
-    <Compile Include="Model\DashboardWidgetsPool.cs" />
+    <Compile Include="Model\MenuReportViewsPool.cs" />
     <Compile Include="Model\MetaTableTemplate.cs" />
     <Compile Include="Model\MetaTableLink.cs" />
     <Compile Include="Model\Navigation.cs" />
@@ -270,9 +264,7 @@
     <Compile Include="Model\SealPdfConverter.cs" />
     <Compile Include="Model\SealSecurity.cs" />
     <Compile Include="Model\CommonScript.cs" />
-    <Compile Include="Model\SecurityDashboardFolder.cs" />
     <Compile Include="Model\SecurityUserProfile.cs" />
-    <Compile Include="Model\SecurityWidget.cs" />
     <Compile Include="Model\SecuritySource.cs" />
     <Compile Include="Model\SecurityDevice.cs" />
     <Compile Include="Model\SecurityConnection.cs" />
@@ -309,7 +301,6 @@
     <Compile Include="Model\ResultTotalCell.cs" />
     <Compile Include="Model\RootComponent.cs" />
     <Compile Include="Model\WebInterfaceModels.cs" />
-    <Compile Include="Model\DashboardWidget.cs" />
     <Compile Include="Model\SealSchedule.cs" />
     <Compile Include="Model\SealReportScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -428,6 +419,9 @@
     <None Include="..\..\Repository\Views\Report.iContent.partial.cshtml">
       <Link>Views\Report.iContent.partial.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\Report.iBody.partial.cshtml">
+      <Link>Views\Report.iBody.partial.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\Report.iInformation.partial.cshtml">
       <Link>Views\Report.iInformation.partial.cshtml</Link>
     </None>
@@ -479,7 +473,31 @@
     <None Include="..\..\Repository\Sources\TableTemplates\Database.cshtml">
       <Link>Table Templates\Database.cshtml</Link>
     </None>
-    <None Include="CD-Dashboard.cd" />
+    <None Include="..\..\Repository\Views\TabControl.config.cshtml">
+      <Link>Views\TabControl.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\TabControl.cshtml">
+      <Link>Views\TabControl.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\TabControl.iMenu.partial.cshtml">
+      <Link>Views\TabControl.iMenu.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\TabControl.iContent.partial.cshtml">
+      <Link>Views\TabControl.iContent.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\TabPage.config.cshtml">
+      <Link>Views\TabPage.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\TabPage.cshtml">
+      <Link>Views\TabPage.cshtml</Link>
+    </None>
+     <None Include="..\..\Repository\Views\Widget.config.cshtml">
+      <Link>Views\Widget.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Widget.cshtml">
+      <Link>Views\Widget.cshtml</Link>
+    </None>
+   <None Include="CD-Dashboard.cd" />
     <None Include="CD-Data Source.cd" />
     <None Include="packages.config" />
     <None Include="CD-Report Model.cd" />
@@ -538,24 +556,6 @@
     <Content Include="ScintillaNET FindReplaceDialog.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="..\..\Repository\Views\TabControl.config.cshtml">
-      <Link>Views\TabControl.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabControl.cshtml">
-      <Link>Views\TabControl.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabControl.iMenu.partial.cshtml">
-      <Link>Views\TabControl.iMenu.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabControl.iContent.partial.cshtml">
-      <Link>Views\TabControl.iContent.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabPage.config.cshtml">
-      <Link>Views\TabPage.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabPage.cshtml">
-      <Link>Views\TabPage.cshtml</Link>
-    </None>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

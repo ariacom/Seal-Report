@@ -37,7 +37,6 @@ namespace Seal.Forms
         OutputFileServerDevice _fileServerDevice;
         ReportModel _model;
         SealServerConfiguration _configuration;
-        DashboardWidget _widget;
 
         void setContext(ITypeDescriptorContext context)
         {
@@ -55,7 +54,6 @@ namespace Seal.Forms
             _fileServerDevice = context.Instance as OutputFileServerDevice;
             _model = context.Instance as ReportModel;
             _configuration = context.Instance as SealServerConfiguration;
-            _widget = context.Instance as DashboardWidget;
         }
 
         void setModified()
@@ -471,16 +469,6 @@ namespace Seal.Forms
                         _configuration.ExcelConfigurations = new List<string>();
                         _configuration.ExcelConverter = null;
                     }
-                    if (context.PropertyDescriptor.Name == "HelperResetDashboardPDFConfigurations")
-                    {
-                        _configuration.DashboardPdfConfigurations = new List<string>();
-                        _configuration.DashboardPdfConverter = null;
-                    }
-                    else if (context.PropertyDescriptor.Name == "HelperResetDashboardExcelConfigurations")
-                    {
-                        _configuration.DashboardExcelConfigurations = new List<string>();
-                        _configuration.DashboardExcelConverter = null;
-                    }
                 }
                 else if (_reportSchedule != null)
                 {
@@ -527,26 +515,6 @@ namespace Seal.Forms
                             Cursor.Current = Cursors.Default;
                         }
 
-                    }
-                }
-                else if (_widget != null)
-                {
-                    if (context.PropertyDescriptor.Name == "ExecReportPath")
-                    {
-                        OpenFileDialog dlg = new OpenFileDialog();
-                        dlg.Filter = string.Format(Repository.SealRootProductName + " Reports files (*.{0})|*.{0}|All files (*.*)|*.*", Repository.SealReportFileExtension);
-                        dlg.Title = "Select report to execute from the Widget";
-                        dlg.CheckFileExists = true;
-                        dlg.CheckPathExists = true;
-                        dlg.InitialDirectory = Repository.Instance.ReportsFolder;
-                        if (dlg.ShowDialog() == DialogResult.OK)
-                        {
-                            Report report = Report.LoadFromFile(dlg.FileName, Repository.Instance, false);
-                            if (report.ExecutionView == null) throw new Exception("This report has no view to execute..."); 
-                            _widget.ExecReportPath = report.FilePath.Replace(Repository.Instance.ReportsFolder, "");
-                            _widget.ExecViewGUID = report.ExecutionView.GUID;
-                            _widget.UpdateEditor();
-                        }
                     }
                 }
             }

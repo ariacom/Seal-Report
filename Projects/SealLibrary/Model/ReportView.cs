@@ -38,8 +38,9 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("ModelGUID").SetIsBrowsable(Template.ForReportModel);
                 GetProperty("UseModelName").SetIsBrowsable(Template.ForReportModel);
-                GetProperty("RestrictionsToSelect").SetIsBrowsable(Template.ForViewRestrictions);
-                GetProperty("RestrictionViewGUID").SetIsBrowsable(Template.ForViewRestrictions);
+                GetProperty("ShowInMenu").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
+                GetProperty("MenuName").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
+                GetProperty("RestrictionsToSelect").SetIsBrowsable(Template.IsRestrictionsView);
 
                 GetProperty("ReferenceViewGUID").SetIsBrowsable(true);
                 GetProperty("TemplateName").SetIsBrowsable(true);
@@ -61,12 +62,12 @@ namespace Seal.Model
                 GetProperty("ExcelConverter").SetIsBrowsable(true);
                 ExcelConverter.InitEditor();
 
-                GetProperty("WidgetDefinition").SetIsBrowsable(Template.Name != ReportViewTemplate.ReportName); //No widget from the root view...
                 GetProperty("WebExec").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
 
                 //Read only
                 GetProperty("TemplateName").SetIsReadOnly(true);
                 GetProperty("CustomTemplate").SetIsReadOnly(!UseCustomTemplate);
+                GetProperty("MenuName").SetIsReadOnly(!ShowInMenu);
 
                 //Helpers
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
@@ -431,9 +432,10 @@ namespace Seal.Model
         /// </summary>
         public override string Name
         {
-            get {
+            get
+            {
                 if (UseModelName && Model != null) return Model.Name;
-                return _name; 
+                return _name;
             }
             set { _name = value; }
         }
@@ -504,6 +506,7 @@ namespace Seal.Model
         /// If true, the view name is got from the model name. This is only valid for a Model View.
         /// </summary>
         [DisplayName("Use model name"), Description("If true, the view name is got from the model name."), Category("Definition"), Id(4, 1)]
+        [DefaultValue(false)]
         public bool UseModelName
         {
             get { return _useModelName; }
@@ -518,6 +521,34 @@ namespace Seal.Model
         }
         public bool ShouldSerializeUseModelName() { return _useModelName; }
 
+
+        bool _showInMenu = false;
+        /// <summary>
+        /// If true, the report view is shown and can be executed from the menu of the Web Report Server.
+        /// </summary>
+        [DisplayName("Show in the Web menu"), Description("If true, the report view is shown and can be executed from the menu of the Web Report Server."), Category("Definition"), Id(5, 1)]
+        [DefaultValue(false)]
+        public bool ShowInMenu
+        {
+            get { return _showInMenu; }
+            set
+            {
+                _showInMenu = value;
+                UpdateEditor();
+            }
+        }
+        public bool ShouldSerializeShowInMenu() { return _showInMenu; }
+
+        /// <summary>
+        /// If not empty, overrides the default name of the report view in the Web Menu. Sub-menus can be specified using the '/' character (e.g. 'Samples/Orders').
+        /// </summary>
+        [DefaultValue(null)]
+        [DisplayName("Menu name"), Description("If not empty, overrides the default name of the report view in the Web Menu. Sub-menus can be specified using the '/' character (e.g. 'Samples/General/Orders')."), Category("Definition"), Id(6, 1)]
+        [TypeConverter(typeof(MenuNameConverter))]
+        public string MenuName
+        {
+            get; set;
+        }
 
         /// <summary>
         /// List of Restrictions GUID to display for a Restrictions view.
@@ -560,19 +591,12 @@ namespace Seal.Model
             set { } //keep set for modification handler
         }
 
-        /// <summary>
-        /// When a new Window is specified, Root View executed from the Restriction View. If empty, the default report execution view is used.
-        /// </summary>
-        [DefaultValue(null)]
-        [Category("Definition"), DisplayName("New window: View to execute"), Description("When a new Window is specified, Root View executed from the Restriction View. If empty, the default report execution view is used."), Id(4, 1)]
-        [TypeConverter(typeof(ReportViewConverter))]
-        public string RestrictionViewGUID { get; set; }
-
+ 
         /// <summary>
         /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
         /// </summary>
         [DefaultValue(null)]
-        [DisplayName("Reference view"), Description("If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(5, 1)]
+        [DisplayName("Reference view"), Description("If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(8, 1)]
         [TypeConverter(typeof(ReportViewConverter))]
         public string ReferenceViewGUID { get; set; }
         public bool ShouldSerializeReferenceViewGUID() { return !string.IsNullOrEmpty(ReferenceViewGUID); }
@@ -808,27 +832,14 @@ namespace Seal.Model
             foreach (var view in Views) view.SetAdvancedConfigurations();
         }
 
-        #region Web Report Server and Dashboard Widgets
+        #region Web Report Server
 
         /// <summary>
         /// For the Web Report Server: If true, the view can be executed from the report list.
         /// </summary>
-        [Category("Web Report Server and Dashboard"), DisplayName("Web execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(2, 6)]
+        [Category("Web Report Server"), DisplayName("Web execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(2, 6)]
         [DefaultValue(true)]
         public bool WebExec { get; set; } = true;
-
-
-        public bool ShouldSerializeWidgetDefinition()
-        {
-            return WidgetDefinition.IsPublished || !string.IsNullOrEmpty(WidgetDefinition.GUID);
-        }
-
-        /// <summary>
-        /// Settings to publish the view as a dashboard widget. If a name is specified, the widget can be selected to build dashboards from the Web Report Server.
-        /// </summary>
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Widget definition"), Description("Settings to publish the view as a dashboard widget. If a name is specified, the widget can be selected to build dashboards from the Web Report Server."), Category("Web Report Server and Dashboard"), Id(3, 6)]
-        public DashboardWidget WidgetDefinition { get; set; } = new DashboardWidget();
 
         #endregion
 
@@ -1605,7 +1616,6 @@ namespace Seal.Model
             foreach (ReportView child in Views)
             {
                 child.GUID = Guid.NewGuid().ToString();
-                if (!string.IsNullOrEmpty(child.WidgetDefinition.GUID)) child.WidgetDefinition.GUID = Guid.NewGuid().ToString();
                 child.ReinitGUIDChildren();
             }
         }
@@ -1634,6 +1644,40 @@ namespace Seal.Model
                 if (!OnlyRestrictions(child)) result = false;
             }
             return result;
+        }
+
+
+
+        /// <summary>
+        /// Path of the view in the menu
+        /// </summary>
+        [XmlIgnore]
+        public string MenuPath
+        {
+            get
+            {
+                var result = MenuName;
+                if (string.IsNullOrEmpty(MenuName)) {
+                    result = Path.GetDirectoryName(Report.RelativeFilePath);
+                    if (!result.EndsWith("\\")) result += "\\";
+                    result += Path.GetFileNameWithoutExtension(Report.FilePath);
+                    result = result.Replace("\\", "/");
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Name of the report in the menu
+        /// </summary>
+        [XmlIgnore]
+        public string MenuReportViewName
+        {
+            get
+            {
+                var names = MenuPath.Split('/');
+                return Report.TranslateDisplayName(names.Length == 0 ? RootView.Name :names[names.Length - 1]);
+            }
         }
     }
 }

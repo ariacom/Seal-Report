@@ -61,7 +61,6 @@ namespace Seal.Model
                 GetProperty("DisplayName").SetIsBrowsable(true);
                 GetProperty("ViewGUID").SetIsBrowsable(true);
                 GetProperty("InputValues").SetIsBrowsable(true);
-                GetProperty("WidgetCache").SetIsBrowsable(true);
 
                 GetProperty("CommonScripts").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsBrowsable(true);
@@ -134,14 +133,6 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
         public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
-
-        /// <summary>
-        /// For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report.
-        /// </summary>
-        [Category("Definition"), DisplayName("Widgets cache duration"), Description("For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report."), Id(5, 1)]
-        [DefaultValue(60)]
-        public int WidgetCache { get; set; } = 60;
-        public bool ShouldSerializeWidgetCache() { return WidgetCache != 60; }
 
         /// <summary>
         /// List of data sources of the report (either from repository or defined in the report itself)
@@ -321,6 +312,15 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public string FilePath = "";
+
+        /// <summary>
+        /// Current file path without reports directory 
+        /// </summary>
+        [XmlIgnore]
+        public string RelativeFilePath
+        {
+            get { return FilePath.Replace(Repository.ReportsFolder, ""); }
+        }
 
         /// <summary>
         /// Last modification date of the report file 
@@ -917,6 +917,12 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the execution generates only the report body (not headers)
+        /// </summary>
+        [XmlIgnore]
+        public bool OnlyBody = false;
+
+        /// <summary>
         /// Task set if only one task has to be executed
         /// </summary>
         [XmlIgnore]
@@ -951,12 +957,6 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public ReportExecutionContext ExecutionContext = ReportExecutionContext.DesignerReport;
-
-        /// <summary>
-        /// True is the report is being executed and rendered for Dashboard Widget
-        /// </summary>
-        [XmlIgnore]
-        public bool ForWidget = false;
 
         /// <summary>
         /// Current result format generated durin a View Result: html, print, csv, pdf, excel
@@ -1331,17 +1331,12 @@ namespace Seal.Model
                 viewNewValues.Add(view.GUID, newGUID);
                 //Set new GUIDs
                 view.GUID = newGUID;
-                if (!string.IsNullOrEmpty(view.WidgetDefinition.GUID)) view.WidgetDefinition.GUID = Helper.NewGUID();
             }
 
             foreach (var view in AllViews)
             {
                 //Reference views
                 if (!string.IsNullOrEmpty(view.ReferenceViewGUID)) view.ReferenceViewGUID = viewNewValues[view.ReferenceViewGUID];
-                //Widgets
-                if (!string.IsNullOrEmpty(view.WidgetDefinition.ExecViewGUID)) view.WidgetDefinition.ExecViewGUID = viewNewValues[view.WidgetDefinition.ExecViewGUID];
-                //Restriction Views
-                if (!string.IsNullOrEmpty(view.RestrictionViewGUID)) view.RestrictionViewGUID = viewNewValues[view.RestrictionViewGUID];
             }
 
             //Current view of the report
@@ -1819,11 +1814,6 @@ namespace Seal.Model
                     if (output.ViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is used by the output '{1}'.", view.Name, output.Name));
                 }
 
-                foreach (var refView in AllViews)
-                {
-                    if (refView.WidgetDefinition.IsPublished && refView.WidgetDefinition.ExecViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is referenced by the Widget in the view '{1}'.", view.Name, refView.Name));
-                }
-
                 if (Views.Count == 1) throw new Exception("Unable to remove the view: The report must contain at least one View.");
                 Views.Remove(view);
                 //Change the default view if necessary
@@ -2006,7 +1996,7 @@ namespace Seal.Model
                         {
                             //Check that the restriction (or one identical) is not displayed in a restriction view
                             bool inRestrictionView = false;
-                            foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
+                            foreach (var view in AllViews.Where(i => i.Template.IsRestrictionsView))
                             {
                                 foreach (var restr2 in allRestrictions.Where(i => i.IsIdenticalForPrompt(restriction))) 
                                 {
@@ -2067,7 +2057,7 @@ namespace Seal.Model
         /// <returns></returns>
         public bool IsInRestrictionView(ReportRestriction restriction)
         {
-            foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
+            foreach (var view in AllViews.Where(i => i.Template.IsRestrictionsView))
             {
                 if (view.Restrictions.Contains(restriction)) return true;
             }
@@ -2087,7 +2077,7 @@ namespace Seal.Model
                 {
                     _executionViewRestrictions = new List<ReportRestriction>();
 
-                    foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
+                    foreach (var view in AllViews.Where(i => i.Template.IsRestrictionsView))
                     {
                         foreach (ReportRestriction restriction in view.Restrictions)
                         {
@@ -2535,57 +2525,6 @@ namespace Seal.Model
                 if (result != null) break;
             }
             return result;
-        }
-
-
-        /// <summary>
-        /// Get the widget view from the widgetGUID
-        /// </summary>
-        public void GetWidgetViewToParse(List<ReportView> views, string widgetGUID, ref ReportView widgetView, ref ReportView modelView)
-        {
-            foreach (var view in views)
-            {
-                if (view.WidgetDefinition.GUID == widgetGUID)
-                {
-                    widgetView = view;
-
-                    var lastView = widgetView;
-                    while (lastView.ParentView != null)
-                    {
-                        if (lastView.ParentView.Model != null)
-                        {
-                            modelView = lastView.ParentView;
-                            break;
-                        }
-                        else lastView = lastView.ParentView;
-                    }
-                }
-                if (widgetView != null) break;
-
-                GetWidgetViewToParse(view.Views, widgetGUID, ref widgetView, ref modelView);
-            }
-        }
-
-        /// <summary>
-        /// List of widget views of the report
-        /// </summary>
-        public List<ReportView> GetWidgetViews()
-        {
-            List<ReportView> result = new List<ReportView>();
-            foreach (var view in Views.OrderBy(i => i.SortOrder))
-            {
-                getWidgetViews(result, view);
-            }
-            return result;
-        }
-
-        void getWidgetViews(List<ReportView> widgetViews, ReportView view)
-        {
-            if (view.WidgetDefinition.IsPublished) widgetViews.Add(view);
-            foreach (var subview in view.Views.OrderBy(i => i.SortOrder))
-            {
-                getWidgetViews(widgetViews, subview);
-            }
         }
 
         /// <summary>

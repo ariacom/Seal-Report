@@ -1,0 +1,178 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+    Repository repository = report.Repository;
+}
+<script type="text/javascript">
+        var _generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
+
+        var _urlPrefix = "@report.WebUrl";
+        var _executionGUID = "@report.ExecutionGUID";
+        var _hasNavigation = @Helper.ToJS(report.HasNavigation && (report.IsNavigating || report.GenerateHTMLDisplay));/*SRKW do not modify*/
+        var _printLayout = @Helper.ToJS(report.PrintLayout);
+        var _showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode")== "enabledshownexec");
+        var _rootViewId = '@view.ViewId';
+
+        //text
+        var messagesText = '@report.Translate("Messages")';
+        var startingExecText = '@report.Translate("Starting execution...")';
+        var cancelText = '@report.Translate("Cancel")';
+
+        //formats
+        var languageName = '@view.CultureInfo.TwoLetterISOLanguageName';
+        var decimalSeparator = '@Raw(view.CultureInfo.NumberFormat.NumberDecimalSeparator)';
+        var shortDateFormat = '@Raw(repository.MomentJSShortDateFormat)';
+        var shortDateTimeFormat = '@Raw(repository.MomentJSShortDateTimeFormat)';
+        var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
+        var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
+
+        var dtTooltips = {
+            today: '@Raw(report.TranslateToJS("Go to today")))',
+            clear: '@Raw(report.TranslateToJS("Clear selection"))',
+            close: '@Raw(report.TranslateToJS("Close"))',
+            selectMonth: '@Raw(report.TranslateToJS("Select Month"))',
+            prevMonth: '@Raw(report.TranslateToJS("Previous Month"))',
+            nextMonth: '@Raw(report.TranslateToJS("Next Month"))',
+            selectYear: '@Raw(report.TranslateToJS("Select Year"))',
+            prevYear: '@Raw(report.TranslateToJS("Previous Year"))',
+            nextYear: '@Raw(report.TranslateToJS("Next Year"))',
+            selectDecade: '@Raw(report.TranslateToJS("Select Decade"))',
+            prevDecade: '@Raw(report.TranslateToJS("Previous Decade"))',
+            nextDecade: '@Raw(report.TranslateToJS("Next Decade"))',
+            prevCentury: '@Raw(report.TranslateToJS("Previous Century"))',
+            nextCentury: '@Raw(report.TranslateToJS("Next Century"))',
+            pickHour: '@Raw(report.TranslateToJS("Pick Hour"))',
+            incrementHour: '@Raw(report.TranslateToJS("Increment"))',
+            decrementHour: '@Raw(report.TranslateToJS("Decrement"))',
+            pickMinute: '@Raw(report.TranslateToJS("Pick Minute"))',
+            incrementMinute: '@Raw(report.TranslateToJS("Increment"))',
+            decrementMinute: '@Raw(report.TranslateToJS("Decrement"))',
+            pickSecond: '@Raw(report.TranslateToJS("Pick Second"))',
+            incrementSecond: '@Raw(report.TranslateToJS("Increment"))',
+            decrementSecond: '@Raw(report.TranslateToJS("Decrement"))',
+            togglePeriod: '@Raw(report.TranslateToJS("Toggle Period"))',
+            selectTime: '@Raw(report.TranslateToJS("Select Time"))'
+        };
+
+        function redrawDashboard() { }
+
+        $.fn.dataTable.moment(shortDateFormat);
+        $.fn.dataTable.moment(shortDateTimeFormat);
+        $.extend( true, $.fn.dataTable.defaults, {
+            responsive: {
+                details: {
+                    renderer: function (api, rowIdx, columns) {
+                        return dtRenderer(api, rowIdx, columns);
+                    }
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: ["firstcell"]},
+                {
+                    targets: "_all",
+                    createdCell: function (td, cellData, rowData, row, col) {
+                        dtCreatedCell(td, cellData, rowData, row, col);
+                    }
+                }
+            ],
+            language: {
+                decimal: decimalSeparator,
+                thousands: thousandSeparator,
+                processing: "@report.Translate("Processing...")",
+                lengthMenu: "@report.Translate("Show _MENU_ rows")",
+                zeroRecords: "@report.Translate("No rows")",
+                emptyTable: "@report.Translate("No records")",
+                info: "@report.Translate("Showing _START_ to _END_ of _TOTAL_")",
+                infoEmpty: "@report.Translate("Showing 0 to 0 of 0")",
+                infoFiltered: "@report.Translate("(filtered from _MAX_)")",
+                infoPostFix: "",
+                search: "@report.Translate("Filter:")",
+                paginate: {
+                    first: "|&lt;",
+                    previous: "&lt;&lt;",
+                    next: ">>",
+                    last: ">|"
+                }
+            },
+            pagingType: "full_numbers",
+            autoWidth: false,
+            stateSave: @Helper.ToJS(!string.IsNullOrEmpty(report.WebUrl)),
+            stateSaveCallback: function(settings,data) {
+                try {
+                    (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
+                        'DataTables_'+settings.sInstance+'_Result',
+                        JSON.stringify( data ));
+                } catch (e) {}
+            },
+            stateLoadCallback: function(settings) {
+                try {
+                    return JSON.parse(
+                        (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
+                            'DataTables_'+settings.sInstance+'_Result'
+                        ));
+                } catch (e) {}
+            }
+        });
+
+        $(document).ready(function () {
+            mainInit();
+            initRestrictions();
+
+            var refreshRate = @view.GetNumericValue("refresh_rate");
+            if (!_executionTimer && refreshRate > 0) _refreshTimer = setInterval(function () { executeReport(); }, refreshRate * 1000);
+            initMessageMenu();
+            scrollMessages();
+
+            $("#main_container").css("display", "block");
+            //Execute if force execution or no restriction
+            var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
+            var forceExecution = @Helper.ToJS(view.GetBoolValue(Parameter.ForceExecutionParameter) || report.HasNavigation);
+            var isExecuting = @Helper.ToJS(report.IsExecuting);
+            var isCancel = @Helper.ToJS(report.Cancel);
+            if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) {
+                executeReport();
+            }
+        });
+</script>
+
+<div id="main_container" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")" style="display:none;">
+    @if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "right")
+    {
+        <div class="row">
+            <div id="content_div" class="col-md-@(12-view.GetNumericValue("restrictions_width"))" classori="col-md-@(12-view.GetNumericValue("restrictions_width"))">
+                @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+            </div>
+            <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "") col-md-@view.GetNumericValue("restrictions_width")">
+                @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+            </div>
+        </div>
+    }
+    else if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "left")
+    {
+        <div class="row">
+            <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "") col-md-@view.GetNumericValue("restrictions_width")">
+                @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+            </div>
+            <div id="content_div" class="col-md-@(12-view.GetNumericValue("restrictions_width"))" classori="col-md-@(12-view.GetNumericValue("restrictions_width"))">
+                @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "")">
+            @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+        </div>
+        <div>
+            @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+        </div>
+    }
+</div>
+<!--back to top-->
+<a id="back-to-top" href="#" class="btn btn-warning btn-lg back-to-top" role="button" title="@report.Translate("Back to top")" data-toggle="tooltip" data-placement="top">
+    <span>&#916;</span>
+    <span id="back-to-top-close" style="top:0px;right:4px;font-size:14px;position:absolute;">&times;</span>
+</a>
+

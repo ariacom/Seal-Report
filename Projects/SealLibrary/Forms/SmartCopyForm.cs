@@ -828,14 +828,6 @@ namespace Seal.Forms
                                     view.ExcelConverter = null;
                                     view.ExcelConfigurations = viewSource.ExcelConfigurations.ToList();
                                 }
-                                else if (descriptor.Name == "WidgetDefinition")
-                                {
-                                    //Keep previous widget GUID
-                                    if (string.IsNullOrEmpty(view.WidgetDefinition.GUID)) view.WidgetDefinition.GUID = Guid.NewGuid().ToString();
-                                    var guid = view.WidgetDefinition.GUID;
-                                    view.WidgetDefinition = (DashboardWidget)Helper.Clone(descriptor.GetValue(_source));
-                                    view.WidgetDefinition.GUID = guid;
-                                }
                                 else if (descriptor.Name == "PartialTemplates")
                                 {
                                     view.PartialTemplates.Clear();

@@ -11,18 +11,7 @@ interface JQuery {
     dataTable(): any;
 }
 
-
 interface ReportEditorInterface {
     brand(): void;
     init(): void;
-}
-
-interface DashboardEditorInterface {
-    init(): void;
-    initGrid(grid: any);
-    initGridGroupName(groupSpan: any, groupInput: any, groupDrag: any);
-    initGridItemOrder(grid: any);
-    initMenu();
-    initDashboardMenu();
-    getEditButtons();
 }

@@ -3,22 +3,23 @@
     ReportView view = Model;
 }
 
-    <form id="header_form" method="post" execguid="@view.Report.ExecutionGUID" action="">
-        <input type="hidden" name="execution_guid" id="execution_guid" value="@view.Report.ExecutionGUID" />
-        <input type="hidden" name="navigation_id" id="navigation_id" value="" />
-        <input type="hidden" name="navigation_parameters" id="navigation_parameters" value="" />
-        <input type="hidden" name="navigation_result" id="navigation_result" value="" />
-        <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
-        <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
-        <input type="hidden" name="id_load" id="id_load" value="" />
-        <input type="hidden" name="values_load" id="values_load" value="" />
-        <input type="hidden" name="filter_enumload" id="filter_enumload" value="" />
+<form id="header_form" method="post" execguid="@view.Report.ExecutionGUID" action="">
+    <input type="hidden" name="execution_guid" id="execution_guid" value="@view.Report.ExecutionGUID" />
+    <input type="hidden" name="navigation_id" id="navigation_id" value="" />
+    <input type="hidden" name="navigation_target" id="navigation_target" value="" />
+    <input type="hidden" name="navigation_parameters" id="navigation_parameters" value="" />
+    <input type="hidden" name="navigation_result" id="navigation_result" value="" />
+    <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
+    <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
+    <input type="hidden" name="id_load" id="id_load" value="" />
+    <input type="hidden" name="values_load" id="values_load" value="" />
+    <input type="hidden" name="filter_enumload" id="filter_enumload" value="" />
 
-        <input type="hidden" name="parameter_view_id" id="parameter_view_id" value="" />
-        <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
-        <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
+    <input type="hidden" name="parameter_view_id" id="parameter_view_id" value="" />
+    <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
+    <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
 
-        <span style="display: none;" id="parameter_tableload"></span>
-        <span style="display: none;" id="parameter_enumload"></span>
-        @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
-    </form>
+    <span style="display: none;" id="parameter_tableload"></span>
+    <span style="display: none;" id="parameter_enumload"></span>
+    @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
+</form>

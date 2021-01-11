@@ -1,0 +1,307 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+    Repository repository = report.Repository;
+}
+
+<script type="text/javascript">
+
+        function processShowMsgDuringExec() {
+            var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode")== "enabledshownexec");
+            if (showMsgDuringExec) {
+                $("#@view.ViewId").removeClass("active in");
+                $("#report_button").parent().removeClass("active");
+                $("#information_button").parent().removeClass("active");
+                $("#message_div").addClass("active in");
+                $("#message_button").parent().addClass("active");
+            }
+        }
+
+        function processOpenMessagesInNewWindow() {
+            var myWindow = window.open('');
+            myWindow.document.write("<head><title>" + '@Raw(Helper.ToJS(report.Translate("Messages")))' + "</title></head><div id='messages'>" + $("#execution_messages").html() + "<div>");
+        }
+
+        function processSubmitViewParameter(parameterName, parameterValue, viewId) {
+            if (!viewId) viewId = '@view.ViewId';
+            if (_urlPrefix != "") {
+                $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+            }
+            else {
+                $("#parameter_view_id").val(viewId);
+                $("#parameter_view_name").val(parameterName);
+                $("#parameter_view_value").val(parameterValue);
+                $("#header_form").attr("action", "ActionUpdateViewParameter");
+                $("#header_form").submit();
+            }
+        }
+
+        function processInitProgressBar() {
+            $(".alert-danger").addClass('hidden');
+            $(".alert-danger").html("");
+
+            $("#execute_button").text('@Raw(Helper.ToJS(report.Translate("Cancel")))');
+            $("#execute_button").removeClass("btn-success").addClass("btn-warning");
+
+            $("#progress_panel").removeClass('hidden');
+            $(".progress").removeClass('hidden');
+            setProgressBarMessage("#progress_bar", 5,  '@Raw(Helper.ToJS(report.Translate("Starting execution...")))', "progress-bar-success");
+        }
+
+        function processReportExecuted() {
+            $("#nav_button").html('@Raw(Helper.ToJS(report.ExecutionName))');
+            $("#execute_button").html('@Raw(Helper.ToJS(report.Translate("Execute")))');
+            $("#execute_button").removeClass("btn-warning").addClass("btn-success");
+        }
+
+        function processInitDateTimePicker(parent) {
+            //Date Picker
+            $(parent + ".datepicker_datetime").datetimepicker({
+                showClose: true,
+                showClear: true,
+                format: shortDateTimeFormat,
+                tooltips: dtTooltips,
+                useCurrent: false
+            });
+
+            $(parent + ".datepicker_date").datetimepicker({
+                showClose: true,
+                showClear: true,
+                format: shortDateFormat,
+                tooltips: dtTooltips,
+                useCurrent: false
+            });
+
+            $(parent + ".datepicker_date," + parent + ".datepicker_datetime").datetimepicker({
+                locale: '@view.CultureInfo.TwoLetterISOLanguageName'
+            });
+        }
+
+        function processInitExecution() {
+            mainInit();
+            initRestrictions();
+            initWidgetsRestrictions();
+
+            var refreshRate = @view.GetNumericValue("refresh_rate");
+            if (!_executionTimer && refreshRate > 0) _refreshTimer = setInterval(function () { executeReport(); }, refreshRate * 1000);
+            initMessageMenu();
+            scrollMessages(_printLayout);
+
+            //Buttons
+            $("#report_button").attr("href", "#@(view.ViewId)_div");
+            $("#report_body_container").css("display", "block");
+
+            //Execute if force execution or no restriction
+            var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
+            var forceExecution = @Helper.ToJS(view.GetBoolValue(Parameter.ForceExecutionParameter) || report.HasNavigation);
+
+            if (!hasRestrictions) $("#restrictions_button").css("display", "none");
+            else if (@Helper.ToJS(view.GetBoolValue("restriction_button"))) $("#execute_button").addClass("active");
+
+            if (@Helper.ToJS(!view.GetBoolValue("execute_button"))) $("#execute_button").css("display", "none");
+
+            if ((forceExecution || !hasRestrictions) && !@Helper.ToJS(report.IsExecuting) && !@Helper.ToJS(report.Cancel)) {
+                executeReport();
+            }
+        }
+</script>
+
+<script type="text/javascript">
+        //globals
+        var _generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
+        var _urlPrefix = "@report.WebUrl";
+        var _executionGUID = "@report.ExecutionGUID";
+        var _hasNavigation = @Helper.ToJS(report.HasNavigation && (report.IsNavigating || report.GenerateHTMLDisplay));/*SRKW do not modify*/
+        var _printLayout = @Helper.ToJS(report.PrintLayout);
+        var _reportStandalone = @Helper.ToJS(!report.OnlyBody);
+
+        //formats
+        var decimalSeparator = '@Raw(view.CultureInfo.NumberFormat.NumberDecimalSeparator)';
+        var shortDateFormat = '@Raw(repository.MomentJSShortDateFormat)';
+        var shortDateTimeFormat = '@Raw(repository.MomentJSShortDateTimeFormat)';
+        var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
+        var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
+
+        var dtTooltips = {
+            today: '@Raw(report.TranslateToJS("Go to today")))',
+            clear: '@Raw(report.TranslateToJS("Clear selection"))',
+            close: '@Raw(report.TranslateToJS("Close"))',
+            selectMonth: '@Raw(report.TranslateToJS("Select Month"))',
+            prevMonth: '@Raw(report.TranslateToJS("Previous Month"))',
+            nextMonth: '@Raw(report.TranslateToJS("Next Month"))',
+            selectYear: '@Raw(report.TranslateToJS("Select Year"))',
+            prevYear: '@Raw(report.TranslateToJS("Previous Year"))',
+            nextYear: '@Raw(report.TranslateToJS("Next Year"))',
+            selectDecade: '@Raw(report.TranslateToJS("Select Decade"))',
+            prevDecade: '@Raw(report.TranslateToJS("Previous Decade"))',
+            nextDecade: '@Raw(report.TranslateToJS("Next Decade"))',
+            prevCentury: '@Raw(report.TranslateToJS("Previous Century"))',
+            nextCentury: '@Raw(report.TranslateToJS("Next Century"))',
+            pickHour: '@Raw(report.TranslateToJS("Pick Hour"))',
+            incrementHour: '@Raw(report.TranslateToJS("Increment"))',
+            decrementHour: '@Raw(report.TranslateToJS("Decrement"))',
+            pickMinute: '@Raw(report.TranslateToJS("Pick Minute"))',
+            incrementMinute: '@Raw(report.TranslateToJS("Increment"))',
+            decrementMinute: '@Raw(report.TranslateToJS("Decrement"))',
+            pickSecond: '@Raw(report.TranslateToJS("Pick Second"))',
+            incrementSecond: '@Raw(report.TranslateToJS("Increment"))',
+            decrementSecond: '@Raw(report.TranslateToJS("Decrement"))',
+            togglePeriod: '@Raw(report.TranslateToJS("Toggle Period"))',
+            selectTime: '@Raw(report.TranslateToJS("Select Time"))'
+        };
+
+        //d3 formatting
+        String.prototype.replaceAll = function (find, replace) {
+            var str = this;
+            return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+        };
+        String.prototype.valueFormat = function (value) {
+            var str = this;
+            return str.replaceAll(',', thousandSeparator).replaceAll('$', currencySymbol).replace('.', decimalSeparator);
+        };
+        String.prototype.normalizeNumeric = function (valueStr) {
+            return parseFloat(this.replaceAll(',', '').replace(/\s+/g, ''));
+        };
+
+        $.fn.dataTable.moment(shortDateFormat);
+        $.fn.dataTable.moment(shortDateTimeFormat);
+        $.extend(true, $.fn.dataTable.defaults, {
+            responsive: {
+                details: {
+                    renderer: function (api, rowIdx, columns) {
+                        return dtRenderer(api, rowIdx, columns);
+                    }
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: ["firstcell"]},
+                {
+                    targets: "_all",
+                    createdCell: function (td, cellData, rowData, row, col) {
+                        dtCreatedCell(td, cellData, rowData, row, col);
+                    }
+                }
+            ],
+            language: {
+                decimal: decimalSeparator,
+                thousands: thousandSeparator,
+                processing: "@Raw(Helper.ToJS(report.Translate("Processing...")))",
+                lengthMenu: "@Raw(Helper.ToJS(report.Translate("Show _MENU_ rows")))",
+                zeroRecords: "@Raw(Helper.ToJS(report.Translate("No rows")))",
+                emptyTable: "@Raw(Helper.ToJS(report.Translate("No records")))",
+                info: "@Raw(Helper.ToJS(report.Translate("Showing _START_ to _END_ of _TOTAL_")))",
+                infoEmpty: "@Raw(Helper.ToJS(report.Translate("Showing 0 to 0 of 0")))",
+                infoFiltered: "@Raw(Helper.ToJS(report.Translate("(filtered from _MAX_)")))",
+                infoPostFix: "",
+                search: "@Raw(Helper.ToJS(report.Translate("Filter:")))",
+                paginate: {
+                    first: "|&lt;",
+                    previous: "&lt;&lt;",
+                    next: ">>",
+                    last: ">|"
+                }
+            },
+            pagingType: "full_numbers",
+            autoWidth: false,
+            stateSave: @Helper.ToJS(!string.IsNullOrEmpty(report.WebUrl)),
+            stateSaveCallback: function(settings,data) {
+                try {
+                    (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
+                        'DataTables_'+settings.sInstance+'_Result',
+                        JSON.stringify( data ));
+                } catch (e) {}
+            },
+            stateLoadCallback: function(settings) {
+                try {
+                    return JSON.parse(
+                        (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
+                            'DataTables_'+settings.sInstance+'_Result'
+                        ));
+                } catch (e) {}
+            }
+        });
+
+        $(document).ready(function () {
+            processInitExecution();
+        });
+
+        @Raw(view.GetValue("additional_js"))
+</script>
+<style>
+            @Raw(view.GetValue("additional_css"))
+</style>
+
+<div id="report_body_container" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")" style="display:none;padding-top:65px;">
+    @if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "right")
+    {
+        <div class="row">
+            <div id="content_div" class="col-md-@(12-view.GetNumericValue("restrictions_width"))" classori="col-md-@(12-view.GetNumericValue("restrictions_width"))">
+                @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+            </div>
+            <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "") col-md-@view.GetNumericValue("restrictions_width")">
+                @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+            </div>
+        </div>
+    }
+    else if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "left")
+    {
+        <div class="row">
+            <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "") col-md-@view.GetNumericValue("restrictions_width")">
+                @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+            </div>
+            <div id="content_div" class="col-md-@(12-view.GetNumericValue("restrictions_width"))" classori="col-md-@(12-view.GetNumericValue("restrictions_width"))">
+                @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "")">
+            @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+        </div>
+        <div>
+            @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+        </div>
+    }
+</div>
+
+@if (report.HasChartJSChart)
+{
+    @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"))
+    @Raw(report.AttachScriptFile("chartjs-plugin-datalabels.min.js", "https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"))
+}
+
+@if (report.HasPlotlyChart)
+{
+    @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdn.plot.ly/plotly-1.48.1.min.js"))
+    if (view.CultureInfo.TwoLetterISOLanguageName != "en")
+    {
+        @Raw(report.AttachScriptFile("plotly\\plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
+    }
+}
+
+@if (report.HasNVD3Chart)
+{
+    @Raw(report.AttachScriptFile("nv.d3.min.js"))
+    @Raw(report.AttachCSSFile("nv.d3.min.css"))
+    <script>
+                function nvd3TranslateText(text)
+                {
+                    @foreach (var translation in repository.NVD3Translations)
+                    {
+                    <text>if (text == '@Raw(Helper.ToJS(translation.Key))') return '@Raw(Helper.ToJS(translation.Value))';</text>
+                    }
+                    return text;
+                }
+    </script>
+    @Raw(report.AttachScriptFile("chartNVD3.js"))
+}
+
+<!--back to top-->
+<a id="back-to-top" href="#" class="btn btn-warning btn-lg back-to-top" role="button" title="@Raw(Helper.ToJS(report.Translate("Back to top")))" data-toggle="tooltip" data-placement="top">
+    <span>&#916;</span>
+    <span id="back-to-top-close" style="top:0px;right:4px;font-size:14px;position:absolute;">&times;</span>
+</a>
+
