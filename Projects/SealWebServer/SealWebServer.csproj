@@ -165,9 +165,6 @@
     <Content Include="Scripts\i18n\selectpicker.pt.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\datetime-moment.js" />
-    <Content Include="Scripts\web-animations.min.js" />
-    <Content Include="Scripts\hammer.min.js" />
-    <Content Include="Scripts\muuri.min.js" />
     <Content Include="Scripts\helpers.js" />
     <Content Include="Scripts\jstree.min.js" />
     <Content Include="Scripts\d3.min.js" />
@@ -219,7 +216,6 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\swi-main.ts" />
-    <TypeScriptCompile Include="Scripts\swi-dashboard.ts" />
     <TypeScriptCompile Include="Scripts\swi-gateway.ts" />
     <TypeScriptCompile Include="Scripts\swi-utils.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap\index.d.ts" />
