@@ -412,6 +412,33 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the drill navigation is enabled
+        /// </summary>
+        [XmlIgnore]
+        public bool IsDrillEnabled
+        {
+            get
+            {
+                if (ModelView != null) return Report.ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter) && ModelView.GetBoolValue(Parameter.DrillEnabledParameter);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// True if the sub-reports navigation is enabled
+        /// </summary>
+        [XmlIgnore]
+        public bool IsSubReportsEnabled
+        {
+            get
+            {
+                if (ModelView != null) return Report.ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter) && ModelView.GetBoolValue(Parameter.SubReportsEnabledParameter);
+                return false;
+            }
+        }
+
+
+        /// <summary>
         /// Current root view
         /// </summary>
         public ReportView RootView
@@ -1436,7 +1463,7 @@ namespace Seal.Model
 
                 if (((ResultCell[])key).Length > 0)
                 {
-                    var navigation = Model.GetNavigation(((ResultCell[])key)[0], true);
+                    var navigation = Model.GetNavigation(this, ((ResultCell[])key)[0], true);
                     if (!string.IsNullOrEmpty(navigation))
                     {
                         if (navs.Length != 0) navs.Append(",");

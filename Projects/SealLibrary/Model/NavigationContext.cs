@@ -20,13 +20,12 @@ namespace Seal.Model
     {
         public Dictionary<string, Navigation> Navigations = new Dictionary<string, Navigation>();
 
-        public ReportExecution Navigate(string navigation, Report rootReport, bool newWindow)
+        public ReportExecution Navigate(string navigation, ReportExecution execution, bool newWindow)
         {
+            var rootReport = execution.RootReport;
             var parameters = HttpUtility.ParseQueryString(navigation);
             string reportPath = parameters.Get("rpa"); //For subreports
             string executionGuid = parameters.Get("exe"); //For drill
-            bool isSubReport = !string.IsNullOrEmpty(reportPath);
-            bool isDrill = !string.IsNullOrEmpty(executionGuid);
 
             Report newReport = null;
             string destLabel = "", srcRestriction = "";
@@ -59,6 +58,7 @@ namespace Seal.Model
                     string path = FileHelper.ConvertOSFilePath(reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath));
                     if (!File.Exists(path)) path = rootReport.Repository.ReportsFolder + path;
                     newReport = Report.LoadFromFile(path, rootReport.Repository);
+                    newReport.CurrentViewGUID = newReport.ViewGUID;
 
                     int index = 1;
                     while (true)
@@ -88,6 +88,15 @@ namespace Seal.Model
                 {
                     newReport = Navigations[executionGuid].Execution.Report.Clone();
                     newReport.ExecutionGUID = Guid.NewGuid().ToString();
+
+                    //Set view    
+                    newReport.CurrentViewGUID = execution.Report.CurrentViewGUID;
+                    //Set Navigation view if specified
+                    string viewGUID = parameters.Get("view");
+                    if (!string.IsNullOrEmpty(viewGUID) && newReport.Views.Exists(i => i.GUID == viewGUID))
+                    {
+                        newReport.CurrentViewGUID = viewGUID;
+                    }
 
                     string src = parameters.Get("src");
                     string dst = parameters.Get("dst");

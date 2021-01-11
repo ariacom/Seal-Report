@@ -206,21 +206,21 @@ function initWidgetsRestrictions(parent) {
     else parent += " ";
 
     //Handle overflow for restrictions in widgets
-    $(parent + ".enum," + parent + ".operator_select").on('show.bs.dropdown', function () {
+    $(parent + ".enum," + parent + ".operator_select").unbind("show.bs.dropdown").on('show.bs.dropdown', function () {
         $('.panel-widget').css("overflow", "visible");
         $('.panel-widget').css("z-index", "0");
         $(this).closest(".panel-widget").css("z-index", "1");
     });
-    $(parent + ".enum," + parent + ".operator_select").on('hidden.bs.dropdown', function () {
+    $(parent + ".enum," + parent + ".operator_select").unbind("hidden.bs.dropdown").on('hidden.bs.dropdown', function () {
         $('.panel-widget').css("overflow", "auto");
         $('.panel-widget').css("z-index", "1");
     });
-    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").on("dp.show", function (e) {
+    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").unbind("dp.show").on("dp.show", function (e) {
         $('.panel-widget').css("overflow", "visible");
         $('.panel-widget').css("z-index", "0");
         $(this).closest(".panel-widget").css("z-index", "1");
     });
-    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").on("dp.hide", function (e) {
+    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").unbind("dp.hide").on("dp.hide", function (e) {
         $('.panel-widget').css("overflow", "auto");
         $('.panel-widget').css("z-index", "1");
     });
@@ -253,7 +253,7 @@ function initBackToTop() {
 
 function initResize(printLayout) {
     //resize handler
-    $(window).on('resize', function () {
+    $(window).unbind('resize').on('resize', function () {
         resize(printLayout);
     });
     resize(printLayout);

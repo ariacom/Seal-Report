@@ -143,8 +143,6 @@ Report;Toggle Period;;Changer la période
 Report;Select Time;;Sélectionner l'heure
 Report;Subtotal;;Sous-total
 Web;Add;;Ajouter
-Web;Add dashboards;;Ajouter les Dashboards
-Web;Add widgets to the dashboard;;Ajouter des Widgets au Dashboard
 Web;Aggregate;;Agrégat
 Web;Auto-Refresh (seconds);;Actualiser (secondes)
 Web;BCC;;BCC
@@ -166,18 +164,12 @@ Web;Color;;Couleur
 Web;Connection;;Connexion
 Web;PDF Conversion delay;;Délai pour la conversion PDF
 Web;Copy;;Copier
-Web;Create a new dashboard;;Créer un nouveau Dashboard
 Web;Create in folder;;Créer dans le répertoire
 Web;Create new folder;;Créer un répertoire
 Web;Culture;;Culture
 Web;Custom SQL;;SQL Spécifique
 Web;Custom;;Spécifique
 Web;Cut;;Couper
-Web;Dashboard;;Dashboard
-Web;Dashboard name;;Nom du Dashboard
-Web;Dashboard Widget publication name;;Nom du Widget publié
-Web;Dashboard Widget description;;Description du Widget
-Web;Dashboards to export;;Dashboards à exporter
 Web;Days;;Jours
 Web;Days of the week;;Jours de la semaine
 Web;Default body;;Message par défaut
@@ -190,7 +182,6 @@ Web;Description;;Description
 Web;Device;;Périphérique
 Web;Disconnect;;Déconnecter
 Web;Display options;;Options d'affichage
-Web;Edit the widget properties;;Editer les propriétés du Widget
 Web;Edition;;Edition
 Web;Elements;;Eléments
 Web;End date;;Date de fin
@@ -208,7 +199,6 @@ Web;Execute;;Exécuter
 Web;Execute now;;Exécuter maintenant
 Web;Execution;;Exécution
 Web;Export;;Exporter
-Web;Export Dashboard;;Exporter le Dashboard
 Web;File name;;Nom du fichier
 Web;Folder;;Répertoire
 Web;Folders;;Répertoire
@@ -231,18 +221,18 @@ Web;Licensed to;;Licence pour
 Web;Login;;Connexion
 Web;Logout;;Déconnexion
 Web;Logout the user;;Déconnecte l'utilisateur
-Web;Manage Dashboards;;Gérer les dashboards
 Web;Manage Folders;;Gérer les répertoires
+Web;Menu name;;Nom du menu
 Web;Months;;Mois
 Web;Name;;Nom
 Web;New;;Nouveau
-Web;New dashboard name;;Nouveau nom du Dashboard
 Web;New folder path;;Nouveau répertoire
 Web;No Email destination specified in the schedule;;L'adresse Email n'est pas renseignée
 Web;No file name specified in the schedule;;Le nom du fichier n'est pas renseigné
 Web;OK;;OK
 Web;Operator;;Opérateur
 Web;"Optional addresses separated by ;";;"Adresses optionnelles séparées par ;"
+Web;Optional menu name;;Nom optionnel du menu
 Web;Optional title chart;;Titre optionnel du graphe
 Web;Options;;Options
 Web;Output;;Destination
@@ -260,11 +250,9 @@ Web;Refresh;;Rafraîchir
 Web;Reload and execute;;Recharger et exécuter
 Web;Remove;;Supprimer
 Web;Remove all;;Tout supprimer
-Web;Remove dashboards;;Enlever les Dashboards
 Web;Rename;;Renommer
 Web;Rename or move folder;;Renommer ou déplacer le répertoire
 Web;Rename, move or copy;;Renommer, déplacer ou copier
-Web;Rename, move or copy dashboard;;Renommer, déplacer ou copier le Dashboard
 Web;Repeat every;;Répéter tous les
 Web;Repeat interval is invalid;;L'intervalle de répétition n'est pas valide 
 Web;Repeat duration is invalid;;La durée de répétition n'est pas valide 
@@ -278,7 +266,7 @@ Web;Rights;;Droits
 Web;Save;;Enregistrer
 Web;Schedule;;Planification
 Web;Search;;Rechercher
-Web;Select the widgets to add to the dashboard;;Sélectionner les Widgets à ajouter au Dashboard
+Web;Show in menu;;Affichage menu
 Web;Show sub-totals;;Sous-totaux
 Web;Show totals;;Totaux
 Web;Sort;;Tri
@@ -287,20 +275,16 @@ Web;SQL Select Statement;;SQL Select
 Web;Start date;;Date de départ
 Web;Subject;;Sujet
 Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;;Le nombre maximum de connexions a été atteint pour votre licence ({0}). Merci d'essayer plus tard...
-Web;This Widget has an error. Please consider to remove it from your Dashboard...;;Ce Widget est en erreur. Vous pouvez éventuellement l'enlever de votre Dashboard... 
 Web;Title;;Titre
 Web;To;;Destinataire
 Web;Total aggr.;;Aggr. totaux
 Web;Type;;Type
-Web;Update dashboards displayed in your personal view;;Modifier les Dashboards affichés dans votre vue personnelle
 Web;User groups;;Groupes utilisateur
 Web;User name;;Nom d'utilisateur
 Web;Users;;Utilisateurs
 Web;Value;;Valeur
 Web;Values for axis;;Valeurs pour l'axe
 Web;Values;;Valeurs
-Web;Widget name;;Nom du Widget
-Web;Widget group name;;Nom du groupe du Widget
 Web;Width;;Largueur
 Web;Zip result;;Options ZIP
 Web;Zip password;;Mot de passe ZIP
@@ -346,13 +330,8 @@ WebJS;Custom;;Spécifique
 WebJS;Chart: Bar stacked;;Graphe: Barres empilées
 WebJS;Default report connection;;Connexion du rapport
 WebJS;Default repository connection;;Connexion du repository
-WebJS;Delete the dashboard;;Effacer le Dashboard
 WebJS;Descendant;;Descendant
-WebJS;Display the default dashboards View;;Afficher la vue par défaut des Dashboards
-WebJS;Display your personal dashboards View;;Afficher votre vue personnelle des Dashboards
-WebJS;Do you really want to delete the dashboard ?;;Voulez-vous vraiment effacer le Dashboard ?
 WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?
-WebJS;Dashboards;;Dashboards
 WebJS;Does not contain;;Ne contient pas
 WebJS;Drop your Column elements;;Eléments de type Colonne
 WebJS;Drop your Data;;Données
@@ -362,7 +341,6 @@ WebJS;Drop your Page elements;;Eléments de type Page
 WebJS;Drop your Restrictions;;Restrictions
 WebJS;Drop your Row elements;;Eléments de type Ligne
 WebJS;Edit report;;Editer le rapport
-WebJS;Edit widget properties;;Editer les propriétés du Widget
 WebJS;Email;;Courriel
 WebJS;Ends with;;Se termine par
 WebJS;Equals;;Egale
@@ -424,7 +402,6 @@ WebJS;No Schedule;;Aucune Planification
 WebJS;No schedule;;Pas de planification
 WebJS;No Sort;;Pas de tri
 WebJS;No total;;Pas de totaux
-WebJS;No widget;;Aucun widget
 WebJS;None;;Aucun
 WebJS;Not sorted;;Pas de tri
 WebJS;Number;;Nombre
@@ -459,7 +436,6 @@ WebJS;Public edition;;Edition publique
 WebJS;Public execution;;Exécution publique
 WebJS;Radar;;Radar
 WebJS;Remove;;Effacer
-WebJS;Remove widget from dashboard;;Enlever le Widget du Dashboard
 WebJS;Rename;;Renommer
 WebJS;Report;;Rapport
 WebJS;Reports;;Rapports
@@ -477,7 +453,6 @@ WebJS;Select all;;Tout
 WebJS;Server Version;;Version du serveur
 WebJS;Short date;;Date courte
 WebJS;Show _MENU_ reports;;Afficher _MENU_ rapports
-WebJS;Show _MENU_ widgets;;Afficher _MENU_ widgets
 WebJS;Show data tables;;Afficher les tableaux des données
 WebJS;Show execution message panel;;Afficher les messages d'exécutions
 WebJS;Show first header line;;Afficher la première ligne d'en-tête
@@ -490,32 +465,22 @@ WebJS;Splitter;;Séparateur
 WebJS;Stacked Area;;Empilé
 WebJS;Starts with;;Commence par
 WebJS;Sum;;Somme
-WebJS;The dashboard has been created;;Le Dashboard a été créé
-WebJS;The dashboard has been copied;;Le Dashboard a été copié
-WebJS;The dashboard has been deleted;;Le Dashboard a été effacé
-WebJS;The dashboard has been moved;;Le Dashboard a été déplacé
-WebJS;The dashboard has been renamed;;Le Dashboard a été renommé
-WebJS;The dashboards have been added to your view;;Les Dashboards ont été ajoutés à votre vue
-WebJS;The dashboards have been removed from your view;;Les Dashboards ont été enlevés de votre vue
-WebJS;The default dashboards View is displayed;;La vue par défaut des Dashboards est affichée
 WebJS;The folder has been created;;Le répertoire a été créé
 WebJS;The folder has been deleted;;Le répertoire a été effacé
 WebJS;The folder has been renamed;;Le répertoire a été renommé
 WebJS;The folder has been updated;;Le répertoire a été mis à jour
 WebJS;The report or file has been renamed;;Le rapport ou le fichier a été renommé
-WebJS;The widget has been deleted;;Le Widget a été effacé
 WebJS;Use data tables;;Utiliser les data tables
 WebJS;Use full screen width;;Utiliser toute la largueur de l'écran
 WebJS;View;;Vue
-WebJS;View dashboards;;Voir les Dashboards
+WebJS;View Folders;;Voir les répertoires
+WebJS;View Report;;Voir le rapport
 WebJS;View reports;;Voir les rapports
 WebJS;Views and outputs;;Vues et destinations
 WebJS;Warning;;Avertissement
-WebJS;Warning: Check the new dashboard name;;Attention: Vérifier le nouveau nom du Dashboard
 WebJS;Web Interface Version;;Version de l'interface Web
 WebJS;Weekly;;Hebdomadaire
 WebJS;weeks;;semaines
-WebJS;The dashboard has been updated;;Le Dashboard a été mis à jour
 WebJS;Yes;;Oui
 WebJS;Yes (a new line with sub-totals is added when the value changes);;Oui (Une nouvelle ligne avec les sous-totaux est ajoutée lorsque la valeur change)
 WebJS;Yes (element values are used for the axis);;Oui (Les valeurs de l'élément sont utilisés pour l'axe)
@@ -523,4 +488,3 @@ WebJS;Yes (the result is zipped);;Oui (Le fichier est zippé)
 WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message)
 WebJS;Yes, name, color and icon may change after execution;;Oui, le nom, la couleur ou l'icône peuvent changer après l'exécution
 WebJS;Yes (The output is not generated if the result set is empty);;Oui (la génération sera annulée s'il n'y a pas d'enregistrements)
-WebJS;Your personal dashboards View is displayed;;Votre vue personnelle des Dashboards est affichée

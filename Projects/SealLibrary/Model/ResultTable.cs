@@ -179,7 +179,7 @@ namespace Seal.Model
                     if (view.IsColumnHidden(col) || IsColumnHidden(col)) { continue; }
                     ResultCell cell = line[col];
                     var cellValue = cell.HTMLValue;
-                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
+                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(view, cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
                     sb.AppendFormat("\"{0}\",", fullValue);
                 }
                 sb.Length = sb.Length - 1;
@@ -303,12 +303,13 @@ namespace Seal.Model
         /// <summary>
         /// True if the column has cells with navigation links
         /// </summary>
-        public bool HasNavigation(int sourceRow, int col)
+        public bool HasNavigation(ReportView view, int sourceRow, int col)
         {
             if (sourceRow == BodyStartRow - 1)
             {
                 for (int row = BodyStartRow; row < BodyEndRow && col < ColumnCount; row++)
                 {
+                    this[row, col].InitNavigationLinks(view);
                     if (this[row, col].Links.Count > 0) return true;
                 }
             }

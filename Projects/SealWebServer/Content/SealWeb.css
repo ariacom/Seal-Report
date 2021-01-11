@@ -6,6 +6,10 @@
     display: none;
 }
 
+.foldersview, .reportview, .navbar-right {
+    transition: opacity 1s linear;
+}
+
 /* light buttons */
 .lighticon-menu .lightbutton {
     display: inline-block;

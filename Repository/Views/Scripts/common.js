@@ -151,12 +151,12 @@ function initRestrictions(parent) {
 
     processInitDateTimePicker(parent);
 
-    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").on("dp.change", function (e) {
+    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").unbind("dp.change").on("dp.change", function (e) {
         restrictionSelectChange(this.children[0]);
     });
 
     //trigger enum from select
-    $(parent + ".enum").on('hide.bs.select', function () {
+    $(parent + ".enum").unbind("hide.bs.select").on('hide.bs.select', function () {
         if ($(this).attr("id")) {
             if ($(this).hasClass("trigger_enum")) {
                 executeFromTrigger($(this));
@@ -208,7 +208,7 @@ function initRestrictions(parent) {
     })
     //trigger input: date picker
     setTimeout(function () {
-        $(parent + ".datepicker_date.trigger," + parent + ".datepicker_datetime.trigger").on("dp.change", function (e) {
+        $(parent + ".datepicker_date.trigger," + parent + ".datepicker_datetime.trigger").unbind("dp.change").on("dp.change", function (e) {
             var input = $(this.children[0]);
             if (input && (!e.date || e.date !== e.oldDate) && input.attr("name")) {
                 executeFromTrigger($(this));
@@ -217,7 +217,7 @@ function initRestrictions(parent) {
     }, 500);
 
     //dynamic filter for enums
-    $(parent + ".enum_dynamic").on('shown.bs.select', function () {
+    $(parent + ".enum_dynamic").unbind("shown.bs.select").on('shown.bs.select', function () {
         if ($(this).attr("id")) {
             $("#id_load").val($(this).attr("id"));
 
@@ -225,7 +225,7 @@ function initRestrictions(parent) {
             else setEnumMessage($(this).attr("id"));
 
             var filter = "";
-            $(parent + ".bs-searchbox input").on("input", function (evt) {
+            $(parent + ".bs-searchbox input").unbind("input").on("input", function (evt) {
                 var $search = $(evt.target);
                 if ($search.val() !== filter) { // search value is changed
                     filter = $search.val();
@@ -446,7 +446,7 @@ function executeReportNavigation(nav, target) {
     }
 
     if (nav != null && nav.startsWith("RE:")) { //Report execution
-        if (_urlPrefix == "") alert('Not supported from the Report Designer');
+        if (_urlPrefix == "") alert('Execution in an new Window is not supported from the Report Designer');
         else {
             postForm(_urlPrefix + "SWExecuteReport",
                 "_blank",
@@ -574,7 +574,7 @@ function mainInit() {
 
     //widget title
     $(".widget-title").unbind("click").on("click", function () {
-        if (_urlPrefix == "") alert('Not supported from the Report Designer');
+        if (_urlPrefix == "") alert('Execution in an new Window is not supported from the Report Designer');
         else {
             postForm(_urlPrefix + "SWExecuteReport",
                 "_blank",

@@ -298,11 +298,8 @@ namespace SealWebServer.Controllers
                     }
                     else
                     {
-                        execution = NavigationContext.Navigate(nav, execution.RootReport, !string.IsNullOrEmpty(navigation_target));
+                        execution = NavigationContext.Navigate(nav, execution, !string.IsNullOrEmpty(navigation_target));
                         Report report = execution.Report;
-
-                        if (execution.RootReport != null && execution.RootReport.GUID == report.GUID) report.CurrentViewGUID = execution.RootReport.CurrentViewGUID; //Drill, take view of root report
-                        else report.CurrentViewGUID = report.ViewGUID; //Sub-report, take the default view
 
                         if (string.IsNullOrEmpty(navigation_target))
                         {

@@ -2308,30 +2308,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the drill navigation is enabled
-        /// </summary>
-        [XmlIgnore]
-        public bool IsDrillEnabled
-        {
-            get
-            {
-                return ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter);
-            }
-        }
-
-        /// <summary>
-        /// True if the sub-reports navigation is enabled
-        /// </summary>
-        [XmlIgnore]
-        public bool IsSubReportsEnabled
-        {
-            get
-            {
-                return ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter);
-            }
-        }
-
-        /// <summary>
         /// True if the server pagination for DataTables is enabled
         /// </summary>
         [XmlIgnore]
@@ -2476,7 +2452,7 @@ namespace Seal.Model
 
         void fillFullViewList(List<ReportView> views, List<ReportView> result)
         {
-            foreach (var view in views)
+            foreach (var view in views.OrderBy(i => i.SortOrder))
             {
                 result.Add(view);
                 fillFullViewList(view.Views, result);

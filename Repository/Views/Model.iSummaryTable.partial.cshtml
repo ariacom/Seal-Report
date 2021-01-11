@@ -19,7 +19,7 @@
                 {
                     ResultCell cell = reportModel.SummaryTable[row, col];
                     if (!view.GetBoolValue("display_summary_totals") && cell.IsTotal) { continue; }
-                    <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(cell))>
+                    <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(view, cell))>
                         @Raw(cell.HTMLValue)
                     </td>
                 }
@@ -34,7 +34,7 @@
                 {
                     ResultCell cell = reportModel.SummaryTable[row, col];
                     if (!view.GetBoolValue("display_summary_totals") && cell.IsTotal) { continue; }
-                    <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(cell))>
+                    <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(view, cell))>
                         @Raw(cell.HTMLValue)
                     </td>
                 }
@@ -51,7 +51,7 @@
                     {
                         ResultCell cell = reportModel.SummaryTable[row, col];
                         if (!view.GetBoolValue("display_summary_totals") && cell.IsTotal) { continue; }
-                        <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(cell))>
+                        <td @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(view, cell))>
                             @Raw(cell.HTMLValue)
                         </td>
                     }

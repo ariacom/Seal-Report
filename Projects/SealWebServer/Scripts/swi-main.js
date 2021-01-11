@@ -65,7 +65,7 @@ var SWIMain = /** @class */ (function () {
             }
         });
         //General handlers
-        $(window).on('resize', function () {
+        $(window).unbind("resize").on('resize', function () {
             _main.resize();
         });
     };
@@ -340,15 +340,20 @@ var SWIMain = /** @class */ (function () {
             //Recent reports
             var parent = $("#menu-last-reports");
             parent.children(".menu-reports").remove();
-            SWIUtil.ShowHideControl($(".menu-last-reports"), menu.recentreports.length > 0);
             menu.recentreports.forEach(function (value) {
                 _main.addReportMenu(parent, value);
             });
             //Reports
             parent = $("#menu-main");
             parent.children(".menu-reports").remove();
+            if (menu.recentreports.length > 0)
+                parent.append($("<li class='divider menu-reports')>"));
             SWIUtil.ShowHideControl($(".divider-menu-reports"), menu.reports.length > 0);
             _main.initMenu(parent, menu.reports);
+            if (menu.recentreports.length > 0)
+                parent.append($("<li id='menu-divider-folders-report' class='divider menu-reports')>"));
+            parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
+            parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
             $('ul.dropdown-menu [data-toggle=dropdown]').unbind("click").on('click', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -368,6 +373,7 @@ var SWIMain = /** @class */ (function () {
                 var parent = $(this).parent();
                 _main.executeReport(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
             });
+            _main.enableControls();
         });
     };
     SWIMain.prototype.search = function () {
@@ -430,12 +436,15 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
         //Report or folders view
+        var reportShown = _main._reportPath && _main._profile.lastview == "report";
         SWIUtil.ShowHideControl($("#menu-view-folders"), _main._profile.lastview == "report");
         SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath && _main._profile.lastview == "folders");
-        SWIUtil.ShowHideControl($(".reportview"), _main._reportPath && _main._profile.lastview == "report");
+        SWIUtil.ShowHideControl($(".reportview"), reportShown);
         SWIUtil.ShowHideControl($(".folderview"), _main._profile.lastview == "folders");
         //Dividers
-        SWIUtil.ShowHideControl($(".menu-view-folders-report"), _main._reportPath != "" || _main._profile.lastview == "report");
+        SWIUtil.ShowHideControl($("#menu-divider-folders-report"), _main._reportPath != "" || _main._profile.lastview == "report");
+        //title color
+        $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d");
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
     };
     SWIMain.prototype.toJSTreeFolderData = function (data, result, parent) {
@@ -467,7 +476,7 @@ var SWIMain = /** @class */ (function () {
                 },
                 plugins: ["types", "wholerow"]
             });
-            $folderTree.on("changed.jstree", function () {
+            $folderTree.unbind("changed.jstree").on("changed.jstree", function () {
                 _main.ReloadReportsTable();
             });
             setTimeout(function () {
@@ -505,13 +514,12 @@ var SWIMain = /** @class */ (function () {
     SWIMain.prototype.executeReportFromMenu = function (path, viewGUID, outputGUID, name) {
         $("#report-body").empty();
         $("#nav_button").html(name);
-        $("#menu-view-report").html(name);
-        _main.toggleFoldersReport(true);
         $waitDialog.modal();
         _main._reportPath = path;
         _main._profile.lastreport.path = path;
         _main._profile.lastreport.viewGUID = viewGUID;
         _main._profile.lastreport.name = name;
+        _main.toggleFoldersReport(true);
         _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
             $("#report-body").html(data);
             _main.enableControls();
@@ -572,7 +580,7 @@ var SWIMain = /** @class */ (function () {
                 _main.enableControls();
             });
         }
-        $(".report-name").on("click", function (e) {
+        $(".report-name").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var path = $(e.currentTarget).data("path");
             if ($(e.currentTarget).data("isReport"))
@@ -580,13 +588,13 @@ var SWIMain = /** @class */ (function () {
             else
                 _gateway.ViewFile(path);
         });
-        $(".report-execute").on("click", function (e) {
+        $(".report-execute").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             _main.toggleFoldersReport(true);
             _main.executeReportFromMenu($target.parent().data("path"), null, null, $target.parent().data("name"));
         });
-        $(".report-output").on("click", function (e) {
+        $(".report-output").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             var $tableBody = $("#output-table-body");
@@ -600,7 +608,7 @@ var SWIMain = /** @class */ (function () {
                 'left': $target.offset().left - $outputPanel.width(),
                 'top': top
             }).show();
-            $("#output-panel-close").on("click", function () {
+            $("#output-panel-close").unbind("click").on("click", function () {
                 $outputPanel.hide();
             });
             _gateway.GetReportDetail($target.parent().data("path"), function (data) {
@@ -620,7 +628,7 @@ var SWIMain = /** @class */ (function () {
                 //adjust position with the final size
                 top = $target.offset().top + 40 - $outputPanel.height();
                 $outputPanel.css({ top: top, left: $target.offset().left - $outputPanel.width(), position: 'absolute' });
-                $(".output-name").on("click", function (e) {
+                $(".output-name").unbind("click").on("click", function (e) {
                     $outputPanel.hide();
                     _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
                 });
@@ -662,12 +670,12 @@ var SWIMain = /** @class */ (function () {
                     orderable: false
                 }]
         });
-        $(".report-checkbox").on("click", function () {
+        $(".report-checkbox").unbind("click").on("click", function () {
             _main.enableControls();
         });
-        $('#file-table').on('page.dt', function () {
+        $('#file-table').unbind("page.dt").on('page.dt', function () {
             setTimeout(function () {
-                $(".report-checkbox").on("click", function () {
+                $(".report-checkbox").unbind("click").on("click", function () {
                     _main.enableControls();
                 });
             }, 200);
@@ -680,6 +688,10 @@ var SWIMain = /** @class */ (function () {
         if (!viewreport)
             redrawDataTables();
         _main.enableControls();
+        //transition
+        var reportShown = _main._reportPath && _main._profile.lastview == "report";
+        $(!reportShown ? ".reportview" : ".folderview").css("opacity", "0.2");
+        $(reportShown ? ".reportview" : ".folderview").css("opacity", "1");
     };
     return SWIMain;
 }());

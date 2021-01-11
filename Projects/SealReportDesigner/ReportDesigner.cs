@@ -58,6 +58,7 @@ namespace Seal
         ModelPanel modelPanel = new ModelPanel();
         Repository _repository;
         ReportViewerForm _reportViewer = null;
+        ToolStripMenuItem nextModelViewMenuItem = new ToolStripMenuItem() { Text = "Go to next Model View", ToolTipText = "Select the next model view in the report", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W))), ShowShortcutKeys = true };
 
         public ReportDesigner()
         {
@@ -79,6 +80,9 @@ namespace Seal
             toolStripHelper = new ToolStripEditorHelper() { MainToolStrip = mainToolStrip, MainPropertyGrid = mainPropertyGrid, EntityHandler = this, MainTreeView = mainTreeView };
             toolsHelper = new ToolsHelper() { EntityHandler = this };
             toolsHelper.InitHelpers(toolsToolStripMenuItem, true);
+
+            toolsToolStripMenuItem.DropDownItems.Insert(4, nextModelViewMenuItem);
+            nextModelViewMenuItem.Click += nextModelView_Click;
 
             HelperEditor.HandlerInterface = this;
 
@@ -305,6 +309,7 @@ namespace Seal
             executeToolStripButton.Enabled = executeToolStripMenuItem.Enabled;
             renderToolStripMenuItem.Enabled = (_canRender && _report != null && _reportViewer != null && _reportViewer.Visible && _reportViewer.CanRender);
             renderToolStripButton.Enabled = renderToolStripMenuItem.Enabled;
+            nextModelViewMenuItem.Enabled = (_report != null);
 
             bool showViewOutput = (selectedEntity is ReportView || selectedEntity is ReportOutput);
             executeViewOutputToolStripMenuItem.Visible = showViewOutput;
@@ -358,7 +363,7 @@ namespace Seal
             }
         }
 
-        void selectNode(object entity)
+        public void selectNode(object entity)
         {
             TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, entity);
         }
@@ -1054,6 +1059,35 @@ namespace Seal
                 {
                     addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
 
+                    if (_report.Sources.Count > 1)
+                    {
+                        var item = new ToolStripMenuItem(string.Format("Keep {0} only", Helper.QuoteSingle(((RootComponent)entity).Name)));
+                        item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                        {
+                            var referenceSource = entity as ReportSource;
+                            //Remove first source with table links
+                            foreach (var source in _report.Sources.Where(i => i.GUID != referenceSource.GUID && i.MetaData.TableLinks.Count > 0).ToList())
+                            {
+                                try
+                                {
+                                    _report.RemoveSource(source);
+                                }
+                                catch { }
+                            }
+                            foreach (var source in _report.Sources.Where(i => i.GUID != referenceSource.GUID).ToList())
+                            {
+                                try
+                                {
+                                    _report.RemoveSource(source);
+                                }
+                                catch { }
+                            }
+                            IsModified = true;
+                            init();
+                        });
+                        treeContextMenuStrip.Items.Add(item);
+                    }
+
                     if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                     ToolStripMenuItem ts = new ToolStripMenuItem();
                     ts.Click += new System.EventHandler(convertReportSourceAsRepositorySource);
@@ -1720,6 +1754,47 @@ namespace Seal
         private void ReportDesigner_KeyDown(object sender, KeyEventArgs e)
         {
             toolStripHelper.HandleShortCut(e);
+        }
+
+        private void nextModelView_Click(object sender, EventArgs e)
+        {
+            ReportView currentView = mainTreeView.SelectedNode.Tag as ReportView;
+            if (_report != null)
+            {
+                if (currentView == null) currentView = _report.Views[0];
+
+                ReportView nextView = null;
+                var allViews = _report.AllViews;
+                for (int i = allViews.IndexOf(currentView)+1; i < allViews.Count; i++)
+                {
+                    if (allViews[i].Model != null)
+                    {
+                        if (i < allViews.Count - 2) nextView = allViews[i];
+                        else nextView = allViews[0];
+                        break;
+                    }
+                }
+                if (nextView == null)
+                {
+                    for (int i = 0; i <= allViews.IndexOf(currentView); i++)
+                    {
+                        if (allViews[i].Model != null)
+                        {
+                            nextView = allViews[i];
+                            break;
+                        }
+                    }
+                }
+
+                if (nextView != null)
+                {
+                    selectNode(nextView);
+                }
+                else
+                {
+                    MessageBox.Show("This report has no Model View", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
 
         #endregion

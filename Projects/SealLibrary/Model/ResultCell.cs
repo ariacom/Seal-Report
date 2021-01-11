@@ -500,6 +500,102 @@ namespace Seal.Model
             return 0;
         }
 
+        public void InitNavigationLinks(ReportView view)
+        {
+            //exe : execution guid of the source report
+            //src : guid element source for drill
+            //dst : guid element destination for drill
+            //val : value of the restriction
+            //res : guid element for a restriction
+            //rpa : report path for sub-report
+            //dis : display value for sub-report
+            if (_links == null)
+            {
+                _links = new List<NavigationLink>();
+                if (!IsTitle && !IsTotal && !IsTotalTotal && Element != null)
+                {
+                    var report = Element.Source.Report;
+                    if (view.IsDrillEnabled && Element.PivotPosition != PivotPosition.Data)
+                    {
+                        var modelView = view.ModelView;
+                        //Get Drill child links
+                        var metaData = Element.Source.MetaData;
+                        foreach (string childGUID in Element.MetaColumn.DrillChildren)
+                        {
+                            //Check that the element is not already in the model
+                            if (Element.Model.Elements.Exists(i => i.MetaColumnGUID == childGUID && i.PivotPosition == Element.PivotPosition)) continue;
+
+                            var child = metaData.GetColumnFromGUID(childGUID);
+                            if (child != null)
+                            {
+                                NavigationLink link = new NavigationLink();
+                                link.Type = NavigationType.Drill;
+                                link.Href = string.Format("exe={0}&src={1}&dst={2}&val={3}&view={4}", report.ExecutionGUID, Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue), modelView.GetValue(Parameter.NavigationView));
+                                link.Text = HttpUtility.HtmlEncode(report.Translate("Drill >") + " " + report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName));
+
+                                _links.Add(link);
+                            }
+                        }
+
+                        //Get drill parent link
+                        foreach (MetaTable table in Element.Source.MetaData.AllTables)
+                        {
+                            foreach (MetaColumn parentColumn in table.Columns.Where(i => i.DrillChildren.Contains(Element.MetaColumnGUID)))
+                            {
+                                //Check that the element is not already in the model
+                                if (Element.Model.Elements.Exists(i => i.MetaColumnGUID == parentColumn.GUID && i.PivotPosition == Element.PivotPosition)) continue;
+
+                                if (Element.MetaColumn.DrillUpOnlyIfDD)
+                                {
+                                    //check that the drill down occured
+                                    if (!report.DrillParents.Contains(parentColumn.GUID)) continue;
+                                }
+
+                                NavigationLink link = new NavigationLink();
+                                link.Type = NavigationType.Drill;
+                                link.Href = string.Format("exe={0}&src={1}&dst={2}&view={3}", report.ExecutionGUID, Element.MetaColumnGUID, parentColumn.GUID, modelView.GetValue(Parameter.NavigationView));
+                                link.Text = HttpUtility.HtmlEncode(report.Translate("Drill <") + " " + report.Repository.RepositoryTranslate("Element", parentColumn.Category + '.' + parentColumn.DisplayName, parentColumn.DisplayName));
+                                _links.Add(link);
+                            }
+                        }
+                    }
+
+                    //Get sub reports links
+                    if (view.IsSubReportsEnabled && Element.PivotPosition != PivotPosition.Data)
+                    {
+                        foreach (var subreport in Element.MetaColumn.SubReports.Where(i => i.Restrictions.Count > 0))
+                        {
+                            string subReportRestrictions = "";
+                            int index = 1;
+                            foreach (var guid in subreport.Restrictions)
+                            {
+                                var cellValue = SubReportValues.FirstOrDefault(i => i.Element.MetaColumnGUID == guid);
+                                if (cellValue != null && !string.IsNullOrEmpty(cellValue.NavigationValue))
+                                {
+                                    subReportRestrictions += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
+                                    index++;
+                                }
+                            }
+                            if (!string.IsNullOrEmpty(subReportRestrictions))
+                            {
+                                NavigationLink link = new NavigationLink();
+                                link.Type = NavigationType.SubReport;
+                                link.Href = string.Format("rpa={0}", HttpUtility.UrlEncode(subreport.Path));
+                                if (subreport.Restrictions.Count > 1 || !subreport.Restrictions.Contains(Element.MetaColumn.GUID))
+                                {
+                                    //Add the display value if necessary
+                                    link.Href += string.Format("&dis={0}", HttpUtility.UrlEncode(DisplayValue));
+                                }
+                                link.Href += subReportRestrictions;
+                                link.Text = report.Repository.RepositoryTranslate("SubReport", Element.MetaColumn.Category + '.' + Element.MetaColumn.DisplayName, subreport.Name);
+                                _links.Add(link);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         List<NavigationLink> _links = null;
         /// <summary>
         /// List of NavigationLink for the cell
@@ -508,97 +604,6 @@ namespace Seal.Model
         {
             get
             {
-                //exe : execution guid of the source report
-                //src : guid element source for drill
-                //dst : guid element destination for drill
-                //val : value of the restriction
-                //res : guid element for a restriction
-                //rpa : report path for sub-report
-                //dis : display value for sub-report
-                if (_links == null)
-                {
-                    _links = new List<NavigationLink>();
-                    if (!IsTitle && !IsTotal && !IsTotalTotal && Element != null)
-                    {
-                        var report = Element.Source.Report;
-                        if (report.IsDrillEnabled && Element.PivotPosition != PivotPosition.Data)
-                        {
-                            //Get Drill child links
-                            var metaData = Element.Source.MetaData;
-                            foreach (string childGUID in Element.MetaColumn.DrillChildren)
-                            {
-                                //Check that the element is not already in the model
-                                if (Element.Model.Elements.Exists(i => i.MetaColumnGUID == childGUID && i.PivotPosition == Element.PivotPosition)) continue;
-
-                                var child = metaData.GetColumnFromGUID(childGUID);
-                                if (child != null)
-                                {
-                                    NavigationLink link = new NavigationLink();
-                                    link.Type = NavigationType.Drill;
-                                    link.Href = string.Format("exe={0}&src={1}&dst={2}&val={3}", report.ExecutionGUID, Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue));
-                                    link.Text = HttpUtility.HtmlEncode(report.Translate("Drill >") + " " + report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName));
-
-                                    _links.Add(link);
-                                }
-                            }
-
-                            //Get drill parent link
-                            foreach (MetaTable table in Element.Source.MetaData.AllTables)
-                            {
-                                foreach (MetaColumn parentColumn in table.Columns.Where(i => i.DrillChildren.Contains(Element.MetaColumnGUID)))
-                                {
-                                    //Check that the element is not already in the model
-                                    if (Element.Model.Elements.Exists(i => i.MetaColumnGUID == parentColumn.GUID && i.PivotPosition == Element.PivotPosition)) continue;
-
-                                    if (Element.MetaColumn.DrillUpOnlyIfDD)
-                                    {
-                                        //check that the drill down occured
-                                        if (!report.DrillParents.Contains(parentColumn.GUID)) continue;
-                                    }
-
-                                    NavigationLink link = new NavigationLink();
-                                    link.Type = NavigationType.Drill;
-                                    link.Href = string.Format("exe={0}&src={1}&dst={2}", report.ExecutionGUID, Element.MetaColumnGUID, parentColumn.GUID);
-                                    link.Text = HttpUtility.HtmlEncode(report.Translate("Drill <") + " " + report.Repository.RepositoryTranslate("Element", parentColumn.Category + '.' + parentColumn.DisplayName, parentColumn.DisplayName));
-                                    _links.Add(link);
-                                }
-                            }
-                        }
-
-                        //Get sub reports links
-                        if (Element.Source.Report.IsSubReportsEnabled && Element.PivotPosition != PivotPosition.Data)
-                        {
-                            foreach (var subreport in Element.MetaColumn.SubReports.Where(i => i.Restrictions.Count > 0))
-                            {
-                                string subReportRestrictions = "";
-                                int index = 1;
-                                foreach (var guid in subreport.Restrictions)
-                                {
-                                    var cellValue = SubReportValues.FirstOrDefault(i => i.Element.MetaColumnGUID == guid);
-                                    if (cellValue != null && !string.IsNullOrEmpty(cellValue.NavigationValue))
-                                    {
-                                        subReportRestrictions += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
-                                        index++;
-                                    }
-                                }
-                                if (!string.IsNullOrEmpty(subReportRestrictions))
-                                {
-                                    NavigationLink link = new NavigationLink();
-                                    link.Type = NavigationType.SubReport;
-                                    link.Href = string.Format("rpa={0}", HttpUtility.UrlEncode(subreport.Path));
-                                    if (subreport.Restrictions.Count > 1 || !subreport.Restrictions.Contains(Element.MetaColumn.GUID))
-                                    {
-                                        //Add the display value if necessary
-                                        link.Href += string.Format("&dis={0}", HttpUtility.UrlEncode(DisplayValue));
-                                    }
-                                    link.Href += subReportRestrictions;
-                                    link.Text = report.Repository.RepositoryTranslate("SubReport", Element.MetaColumn.Category + '.' + Element.MetaColumn.DisplayName, subreport.Name);
-                                    _links.Add(link);
-                                }
-                            }
-                        }
-                    }
-                }
                 return _links;
             }
         }

@@ -2812,15 +2812,14 @@ model.ResultTable = query2.CopyToDataTable2();
         /// <summary>
         /// HTML Navigation for the report result
         /// </summary>
-        public string GetNavigation(ResultCell cell, bool serverSide = false)
+        public string GetNavigation(ReportView view, ResultCell cell, bool serverSide = false)
         {
             string navigation = "";
             if (Report.GenerateHTMLDisplay || serverSide)
             {
+                cell.InitNavigationLinks(view);
                 foreach (var link in cell.Links)
                 {
-                    if (link.Type == NavigationType.Drill && !Report.ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter)) continue;
-                    if (link.Type == NavigationType.SubReport && !Report.ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter)) continue;
                     navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.FullHref, link.Text /* Helper.ToHtml(link.Text) TODO for chart labels */);
                 }
                 navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", navigation));

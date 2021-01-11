@@ -138,6 +138,16 @@ namespace Seal.Controls
                         });
                         if (!Model.IsSubModel) menu.Items.Add(item);
                     }
+
+                    menu.Items.Add(new ToolStripSeparator());
+
+                    item = new ToolStripMenuItem("View source column");
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                    {
+                        MainForm.selectNode(column);
+                    });
+                    menu.Items.Add(item);
+
                 }
                 else if (elementTreeView.SelectedNode != null && elementTreeView.SelectedNode.Nodes.Count > 0)
                 {

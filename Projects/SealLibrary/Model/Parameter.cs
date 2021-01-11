@@ -29,6 +29,7 @@ namespace Seal.Model
         public const string CSVUtf8Parameter = "csv_utf8";
         public const string AutoScrollParameter = "messages_autoscroll";
         public const string RestrictionsExecView = "restrictions_exec_view";
+        public const string NavigationView = "navigation_view";
 
         #region Editor
 

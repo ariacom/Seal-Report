@@ -90,7 +90,7 @@ class SWIMain {
         );
 
         //General handlers
-        $(window).on('resize', function () {
+        $(window).unbind("resize").on('resize', function () {
             _main.resize();
         });
     }
@@ -399,7 +399,6 @@ class SWIMain {
             //Recent reports
             let parent = $("#menu-last-reports");
             parent.children(".menu-reports").remove();
-            SWIUtil.ShowHideControl($(".menu-last-reports"), menu.recentreports.length > 0);
             menu.recentreports.forEach(function (value) {
                 _main.addReportMenu(parent, value);
             });
@@ -407,8 +406,12 @@ class SWIMain {
             //Reports
             parent = $("#menu-main");
             parent.children(".menu-reports").remove();
+            if (menu.recentreports.length > 0) parent.append($("<li class='divider menu-reports')>"));
             SWIUtil.ShowHideControl($(".divider-menu-reports"), menu.reports.length > 0);
             _main.initMenu(parent, menu.reports);
+            if (menu.recentreports.length > 0) parent.append($("<li id='menu-divider-folders-report' class='divider menu-reports')>"));
+            parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
+            parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
             
             $('ul.dropdown-menu [data-toggle=dropdown]').unbind("click").on('click', function (event) {
                 event.preventDefault();
@@ -431,6 +434,8 @@ class SWIMain {
                 const parent = $(this).parent();
                 _main.executeReport(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
             });
+
+            _main.enableControls();
         });
     }
 
@@ -480,8 +485,8 @@ class SWIMain {
     }
 
     private enableControls() {
-        var right = 0; //1 Execute,2 Shedule,3 Edit
-        var files = false;
+        let right = 0; //1 Execute,2 Shedule,3 Edit
+        let files = false;
         if (_main._folder) {
             right = _main._folder.right;
             files = _main._folder.files;
@@ -491,7 +496,7 @@ class SWIMain {
 
         SWIUtil.EnableButton($("#report-edit-lightbutton"), right >= folderRightEdit && !files);
         SWIUtil.ShowHideControl($("#report-edit-lightbutton"), hasEditor);
-        var checked: number = $(".report-checkbox:checked").length;
+        const checked: number = $(".report-checkbox:checked").length;
         SWIUtil.EnableButton($("#report-rename-lightbutton"), checked == 1 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-delete-lightbutton"), checked != 0 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-cut-lightbutton"), checked != 0 && right >= folderRightEdit);
@@ -502,19 +507,22 @@ class SWIMain {
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
 
         //Report or folders view
+        const reportShown = _main._reportPath && _main._profile.lastview == "report";
         SWIUtil.ShowHideControl($("#menu-view-folders"), _main._profile.lastview == "report");
         SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath && _main._profile.lastview == "folders");
-        SWIUtil.ShowHideControl($(".reportview"), _main._reportPath && _main._profile.lastview == "report");
+        SWIUtil.ShowHideControl($(".reportview"), reportShown);
         SWIUtil.ShowHideControl($(".folderview"), _main._profile.lastview == "folders");
         //Dividers
-        SWIUtil.ShowHideControl($(".menu-view-folders-report"), _main._reportPath != "" || _main._profile.lastview == "report");
+        SWIUtil.ShowHideControl($("#menu-divider-folders-report"), _main._reportPath != "" || _main._profile.lastview == "report");
+        //title color
+        $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d");
 
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
     }
 
     private toJSTreeFolderData(data: any, result: any, parent: string) {
-        for (var i = 0; i < data.length; i++) {
-            var folder = data[i];
+        for (let i = 0; i < data.length; i++) {
+            const folder = data[i];
             result[result.length] = { "id": folder.path, "parent": parent, "text": (folder.name == "" ? "Reports" : folder.name), "state": { "opened": folder.expand, "selected": (folder.name == "") } }
             if (folder.folders && folder.folders.length > 0) _main.toJSTreeFolderData(folder.folders, result, folder.path);
             if (folder.right == 4) _main._canEdit = true;
@@ -541,7 +549,7 @@ class SWIMain {
                 plugins: ["types", "wholerow"]
             });
 
-            $folderTree.on("changed.jstree", function () {
+            $folderTree.unbind("changed.jstree").on("changed.jstree", function () {
                 _main.ReloadReportsTable();
             });
 
@@ -584,13 +592,12 @@ class SWIMain {
     private executeReportFromMenu(path: string, viewGUID: string, outputGUID: string, name: string) {
         $("#report-body").empty();
         $("#nav_button").html(name);
-        $("#menu-view-report").html(name);
-        _main.toggleFoldersReport(true);
         $waitDialog.modal();
         _main._reportPath = path;
         _main._profile.lastreport.path = path;
         _main._profile.lastreport.viewGUID = viewGUID;
         _main._profile.lastreport.name = name;
+        _main.toggleFoldersReport(true);
         _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
             $("#report-body").html(data);
             _main.enableControls();
@@ -653,21 +660,21 @@ class SWIMain {
             });
         }
 
-        $(".report-name").on("click", function (e) {
+        $(".report-name").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             const path = $(e.currentTarget).data("path");
             if ($(e.currentTarget).data("isReport")) _main.executeReport(path, null, null);
             else _gateway.ViewFile(path);
         });
 
-        $(".report-execute").on("click", function (e) {
+        $(".report-execute").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             _main.toggleFoldersReport(true);
             _main.executeReportFromMenu($target.parent().data("path"), null, null, $target.parent().data("name"));
         });
 
-        $(".report-output").on("click", function (e) {
+        $(".report-output").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             var $tableBody = $("#output-table-body");
@@ -682,7 +689,7 @@ class SWIMain {
                 'top': top
             }).show();
 
-            $("#output-panel-close").on("click", function () {
+            $("#output-panel-close").unbind("click").on("click", function () {
                 $outputPanel.hide();
             });
 
@@ -707,7 +714,7 @@ class SWIMain {
                     $outputPanel.css({ top: top, left: $target.offset().left - $outputPanel.width(), position: 'absolute' });
 
 
-                    $(".output-name").on("click", function (e) {
+                    $(".output-name").unbind("click").on("click", function (e) {
                         $outputPanel.hide();
                         _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
                     });
@@ -754,13 +761,13 @@ class SWIMain {
             }]
         });
 
-        $(".report-checkbox").on("click", function () {
+        $(".report-checkbox").unbind("click").on("click", function () {
             _main.enableControls();
         });
 
-        $('#file-table').on('page.dt', function () {
+        $('#file-table').unbind("page.dt").on('page.dt', function () {
             setTimeout(function () {
-                $(".report-checkbox").on("click", function () {
+                $(".report-checkbox").unbind("click").on("click", function () {
                     _main.enableControls();
                 });
             }, 200);
@@ -776,5 +783,10 @@ class SWIMain {
         if (!viewreport) redrawDataTables();
 
         _main.enableControls();
+
+        //transition
+        const reportShown = _main._reportPath && _main._profile.lastview == "report";
+        $(!reportShown ? ".reportview" : ".folderview").css("opacity", "0.2");
+        $(reportShown ? ".reportview" : ".folderview").css("opacity", "1");
     }
 }
