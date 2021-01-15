@@ -34,6 +34,7 @@ namespace Seal.Model
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("IsDynamic").SetIsBrowsable(true);
                 GetProperty("IsDbRefresh").SetIsBrowsable(true);
+                GetProperty("ValuesPerConnection").SetIsBrowsable(true);
                 GetProperty("UsePosition").SetIsBrowsable(true);
                 GetProperty("Translate").SetIsBrowsable(true);
                 GetProperty("Sql").SetIsBrowsable(true);
@@ -54,7 +55,7 @@ namespace Seal.Model
                 //Read only
                 GetProperty("SqlDisplay").SetIsReadOnly(!IsDynamic);
                 GetProperty("IsDbRefresh").SetIsReadOnly(!IsDynamic);
-                GetProperty("Values").SetIsReadOnly(!IsDynamic);
+                GetProperty("ValuesPerConnection").SetIsReadOnly(IsDbRefresh);
                 GetProperty("NumberOfValues").SetIsReadOnly(true);
 
                 GetProperty("FilterChars").SetIsReadOnly(!HasDynamicDisplay);
@@ -95,7 +96,7 @@ namespace Seal.Model
         /// </summary>
         [DefaultValue(false)]
         [Category("Definition"), DisplayName("List is dynamically loaded from the 'SQL Select Statement' or from the 'Load Script'"), Description("If True, the list is loaded using the 'SQL Select Statement' and/or the 'Script' defined."), Id(2, 1)]
-        public Boolean IsDynamic
+        public bool IsDynamic
         {
             get { return _isDynamic; }
             set
@@ -105,28 +106,53 @@ namespace Seal.Model
             }
         }
 
+        private bool _isDbRefresh = false;
         /// <summary>
         /// If True, the list is loaded before a report execution. Should be set to False if the SQL or the Load Script has poor performances.
         /// </summary>
         [DefaultValue(false)]
         [Category("Definition"), DisplayName("List is refreshed before the report execution"), Description("If True, the list is loaded before a report execution. Should be set to False if the SQL or the Load Script has poor performances."), Id(3, 1)]
-        public Boolean IsDbRefresh { get; set; } = false;
+        public bool IsDbRefresh
+        {
+            get { return _isDbRefresh; }
+            set
+            {
+                _isDbRefresh = value;
+                UpdateEditorAttributes();
+            }
+        }
+
+        /// <summary>
+        /// If True, the enum loads and stores the values for each connection.
+        /// </summary>
+        [DefaultValue(false)]
+        [Category("Definition"), DisplayName("List values depend on the connection"), Description("If True, the enum loads and stores the values for each connection."), Id(4, 1)]
+        public bool ValuesPerConnection { get; set; } = false;
 
         /// <summary>
         /// True if the list has dynamic display
         /// </summary>
+        [XmlIgnore]
         public bool HasDynamicDisplay
         {
             get { return IsDynamic && IsDbRefresh; }
         }
 
+        /// <summary>
+        /// True if the list need to request the server on popup 
+        /// </summary>
+        [XmlIgnore]
+        public bool RequestServerOnPopup
+        {
+            get { return IsDynamic && IsDbRefresh && !(FilterChars == 0 && !HasDependencies); }
+        }
 
         private string _sql;
 
         /// <summary>
         /// If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell.
         /// </summary>
-        [Category("Definition"), DisplayName("SQL Select Statement"), Description("If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(4, 1)]
+        [Category("Definition"), DisplayName("SQL Select Statement"), Description("If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(5, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string Sql
         {
@@ -139,11 +165,10 @@ namespace Seal.Model
         }
 
         private string _script;
-
         /// <summary>
         /// If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty.
         /// </summary>
-        [Category("Definition"), DisplayName("Script"), Description("If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Script"), Description("If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string Script
         {
@@ -159,15 +184,15 @@ namespace Seal.Model
         /// If True, the current position of the values in the list is used to sort the column in the report result
         /// </summary>
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Use defined position to sort in reports"), Description("If True, the current position of the values in the list is used to sort the column in the report result."), Id(5, 1)]
-        public Boolean UsePosition { get; set; } = false;
+        [Category("Definition"), DisplayName("Use defined position to sort in reports"), Description("If True, the current position of the values in the list is used to sort the column in the report result."), Id(7, 1)]
+        public bool UsePosition { get; set; } = false;
 
         /// <summary>
         /// If True, the enumerated values are translated using the Repository translations
         /// </summary>
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are translated using the Repository translations."), Id(6, 1)]
-        public Boolean Translate { get; set; } = false;
+        [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are translated using the Repository translations."), Id(8, 1)]
+        public bool Translate { get; set; } = false;
 
         /// <summary>
         /// If the list is dynamic, refreshed before execution and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed
@@ -203,10 +228,12 @@ namespace Seal.Model
         [XmlIgnore]
         public bool HasDependencies
         {
-            get { return 
-                    (!string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumValuesKeyword)) ||
-                    (!string.IsNullOrEmpty(ScriptDisplay) && ScriptDisplay.Contains(Repository.EnumValuesKeyword))
-                    ;
+            get
+            {
+                return
+                  (!string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumValuesKeyword)) ||
+                  (!string.IsNullOrEmpty(ScriptDisplay) && ScriptDisplay.Contains(Repository.EnumValuesKeyword))
+                  ;
             }
         }
 
@@ -215,9 +242,16 @@ namespace Seal.Model
         /// </summary>
         [DefaultValue(null)]
         [Category("Values"), DisplayName("Values"), Description("The list of values used for this enumerated list"), Id(1, 3)]
-        [Editor(typeof(EnumValueCollectionEditor), typeof(UITypeEditor))]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<MetaEV> Values { get; set; } = new List<MetaEV>();
         public bool ShouldSerializeValues() { return !HasDynamicDisplay && Values.Count > 0; }
+
+
+        public List<MetaEV> GetValues(MetaConnection connection)
+        {
+            if (!ValuesPerConnection || connection == null) return Values;
+            return Values.Where(i => i.ConnectionGUID == connection.GUID).ToList();
+        }
 
         /// <summary>
         /// New enum values set by the dynamic display Script
@@ -275,7 +309,7 @@ namespace Seal.Model
                 {
                     foreach (DataRow row in table.Rows)
                     {
-                        if (!row.IsNull(0))
+                        if (!row.IsNull(0)) 
                         {
                             MetaEV value = new MetaEV();
                             value.Id = row[0].ToString();
@@ -349,8 +383,22 @@ namespace Seal.Model
 
                 if (!string.IsNullOrEmpty(Sql))
                 {
-                    connection = _source.GetOpenConnection();
-                    Values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                    if (ValuesPerConnection)
+                    {
+                        Values.Clear();
+                        foreach (var metaConnection in _source.Connections)
+                        {
+                            connection = metaConnection.GetOpenConnection();
+                            var vals = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                            foreach (var ev in vals) ev.ConnectionGUID = metaConnection.GUID;
+                            Values.AddRange(vals);
+                        }
+                    }
+                    else
+                    {
+                        connection = _source.GetOpenConnection();
+                        Values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(Script))
@@ -376,9 +424,10 @@ namespace Seal.Model
         /// <summary>
         /// Return the display value from the identifer
         /// </summary>
-        public string GetDisplayValue(string id, bool forRestriction = false)
+        public string GetDisplayValue(string id, MetaConnection connection, bool forRestriction = false)
         {
-            MetaEV value = Values.FirstOrDefault(i => i.Id == id);
+            var values = ValuesPerConnection ? GetValues(connection) : Values;
+            MetaEV value = values.FirstOrDefault(i => i.Id == id);
             return value == null ? id : (forRestriction ? value.DisplayRestriction : value.DisplayValue);
         }
 

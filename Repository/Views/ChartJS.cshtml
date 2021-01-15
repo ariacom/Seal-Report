@@ -154,7 +154,7 @@
                     },
                     tooltips: {
                         callbacks: {
-                            @Raw(chartType == "radar" ? "title: function() {return '';}," : "")                            
+                            @Raw(chartType == "radar" ? "title: function() {return '';}," : "")
                             label: toolTipFormatter
                         }
                     },
@@ -186,7 +186,9 @@
                                 return false;
                         },
                         formatter: function (value, context) {
-                            return valueFormatter(context.dataset, context.dataIndex, '@view.GetValue("chartjs_label_format")');
+                            var type = '@view.GetValue("chartjs_label_format")';
+                            if (type == "auto") type = '@(chartType == "pie" || chartType == "polarArea" || chartType == "radar" ? "per" : "val")';
+                            return valueFormatter(context.dataset, context.dataIndex, type);
                         }
                     }
                 },

@@ -250,6 +250,7 @@ namespace Seal.Model
         [Category("Model definition"), DisplayName("Share result table"), Description("If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization)."), Id(8, 1)]
         [DefaultValue(true)]
         public bool ShareResultTable { get; set; } = true;
+        public bool ShouldSerializeShareResultTable() { return !ShareResultTable; }
 
         /// <summary>
         /// If true, the query is printed in the report messages (for debug purpose).
@@ -257,6 +258,7 @@ namespace Seal.Model
         [Category("Model definition"), DisplayName("Print query"), Description("If true, the LINQ or SQL Query is printed in the report messages (for debug purpose)."), Id(9, 1)]
         [DefaultValue(false)]
         public bool PrintQuery { get; set; } = false;
+        public bool ShouldSerializePrintQuery() { return PrintQuery; }
 
         /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header
@@ -264,6 +266,7 @@ namespace Seal.Model
         [Category("Model definition"), DisplayName("Show first header line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(10, 1)]
         [DefaultValue(true)]
         public bool ShowFirstLine { get; set; } = true;
+        public bool ShouldSerializeShowFirstLine() { return !ShowFirstLine; }
 
         /// <summary>
         /// Alias name used for the table defining the select
@@ -2591,7 +2594,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
                     _command.CommandText = Sql;
 
-                    if (PrintQuery)
+                    if (PrintQuery || Report.PrintQueries)
                     {
                         Report.LogMessage("Model '{0}' SQL Query:\r\n{1}\r\n", Name, Sql);
                     }
@@ -2678,7 +2681,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         }
 
                         var loadScript = LoadScript ?? LINQLoadScript;
-                        if (PrintQuery)
+                        if (PrintQuery || Report.PrintQueries)
                         {
                             Report.LogMessage("Model '{0}' LINQ Query:\r\n{1}\r\n", Name, loadScript);
                         }
@@ -2762,6 +2765,16 @@ model.ResultTable = query2.CopyToDataTable2();
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Translate the enum using the Enum context
+        /// </summary>
+        public string EnumDisplayValue(MetaEnum me, string id, bool forRestriction = false)
+        {
+            string result = me.GetDisplayValue(id, Connection, forRestriction);
+            if (me.Translate) result = Report.TranslateEnumValue(me, result);
+            return result;
         }
 
         /// <summary>

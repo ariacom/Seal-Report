@@ -126,28 +126,5 @@ Category;Customers;Customers;;Clients
 Device;Folder Device;Folder Device;;Répertoire
 Device;Email Device;Email Device;;Courriel
 Device;GMail Device;GMail Device;;Courriel Gmail
-DashboardFolder;\General;General;;Général
-DashboardFolder;\Sales;Sales;;Ventes
-DashboardName;\Sales\Product Sales.sdax;Product Sales;;Vente Produits
-DashboardItemGroupName;\Sales\Product Sales.sdax;Detail;;Détail
-DashboardName;\General\KPI.sdax;KPI;;KPI
-DashboardItemName;\General\KPI.sdax;KPI Sales / category;;KPI Ventes / catégorie
-DashboardItemGroupName;\General\KPI.sdax;Quick Search;;Recherche rapide
-WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
-WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
-WidgetName;\Overview - Sales.srex;Sales for 1997;;Ventes pour 1997
-WidgetName;\Overview - Sales.srex;Sales per category;;Ventes par catégorie
-WidgetName;\Overview - Sales.srex;Orders;;Commandes
-WidgetDescription;\Overview - Sales.srex;Chart of sales per category for 1997;;Graphes des ventes par catégorie pour 1997
-WidgetDescription;\Overview - Sales.srex;Chart of sales, discounts and progressions for 1997;;Graphes des ventes, réductions et progressions pour 1997
-WidgetDescription;\Overview - Sales.srex;Table of sales, discounts and progressions for 1997;;Tableau des ventes, réductions et progressions pour 1997
-WidgetDescription;\Overview - Sales.srex;Pie chart of sales per category;;Graphe camembert des ventes par catégorie
-WidgetName;\Samples\20-KPI.srex;Product Sales;;Ventes Produits
-WidgetName;\Samples\21-KPI Published.srex;KPI Customers;;KPI Clients
-WidgetName;\Samples\21-KPI Published.srex;KPI Sales per category;;KPI Ventes par catégorie
-WidgetName;\Samples\21-KPI Published.srex;Sales per employee;;Ventes par employé
-WidgetName;\Samples\21-KPI Published.srex;KPI Orders;;KPI Commandes
-WidgetName;\Samples\21-KPI Published.srex;KPI Products;;KPI Produits
-WidgetName;\Samples\21-KPI Published.srex;Last Amount;;Dernier Montant
 GeneralText;CellScript;Download;;Télécharger
 GeneralText;CellScript;Visit;;Visiter

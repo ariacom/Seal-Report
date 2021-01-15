@@ -222,8 +222,8 @@ namespace Seal.Model
                 if (Element.IsEnum)
                 {
                     MetaEV enumValue = null;
-                    if (Element.EnumEL.Translate) enumValue = Element.EnumEL.Values.FirstOrDefault(i => Element.Model.Report.EnumDisplayValue(Element.EnumEL, i.Id, false) == result);
-                    else enumValue = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == result);
+                    if (Element.EnumEL.Translate) enumValue = Element.MetaEnumValuesEL.FirstOrDefault(i => Element.Model.EnumDisplayValue(Element.EnumEL, i.Id, false) == result);
+                    else enumValue = Element.MetaEnumValuesEL.FirstOrDefault(i => i.DisplayValue == result);
                     if (enumValue != null) result = enumValue.Id;
                 }
                 else if (Element.IsDateTime && Value is DateTime)
@@ -255,7 +255,7 @@ namespace Seal.Model
         {
             if (string.IsNullOrEmpty(FinalCssClass) && Element != null && Value != null && Element.IsEnum)
             {
-                MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
+                MetaEV value = Element.MetaEnumValuesEL.FirstOrDefault(i => i.DisplayValue == Value.ToString());
                 if (value != null && !string.IsNullOrEmpty(value.Class)) FinalCssClass = value.Class;
             }
         }
@@ -330,7 +330,7 @@ namespace Seal.Model
         {
             if (string.IsNullOrEmpty(FinalCssClass) && Element != null && Value != null && Element.IsEnum)
             {
-                MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
+                MetaEV value = Element.MetaEnumValuesEL.FirstOrDefault(i => i.DisplayValue == Value.ToString());
                 if (value != null && !string.IsNullOrEmpty(value.Css)) FinalCssStyle = value.Css;
             }
         }

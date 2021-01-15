@@ -507,7 +507,7 @@ namespace Seal.Model
                 if (restriction.IsEnum)
                 {
                     List<string> selected_enum = new List<string>();
-                    foreach (var enumVal in restriction.EnumRE.Values)
+                    foreach (var enumVal in restriction.MetaEnumValuesRE)
                     {
                         var val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
                         if (val.ToLower() == "true")
@@ -761,7 +761,7 @@ namespace Seal.Model
                     foreach (var element in model.Elements.Where(i => i.IsEnum && i.ShowAllEnums))
                     {
                         var values = new List<string>();
-                        foreach (var val in element.EnumEL.Values) values.Add(Report.EnumDisplayValue(element.EnumEL, val.Id));
+                        foreach (var val in element.EnumEL.GetValues(model.Connection)) values.Add(element.Model.EnumDisplayValue(element.EnumEL, val.Id));
                         enumsValues.Add(element, values);
                     }
 
@@ -2327,7 +2327,7 @@ namespace Seal.Model
                 if (values == null) values = "";
                 foreach (var v in values.Split('\n').Where(i => !string.IsNullOrEmpty(i)))
                 {
-                    foreach (var ev in restriction.EnumRE.Values)
+                    foreach (var ev in restriction.MetaEnumValuesRE)
                     {
                         if (restriction.OptionHtmlId + ev.HtmlId == v) restriction.EnumValues.Add(ev.Id);
                     }
@@ -2369,7 +2369,7 @@ namespace Seal.Model
                 //Apply auto filter if any
                 if (values.Count == 0 && enumRE.FilterChars > 0 && filter.Length >= enumRE.FilterChars && string.IsNullOrEmpty(enumRE.SqlDisplay) && string.IsNullOrEmpty(enumRE.ScriptDisplay))
                 {
-                    foreach (var enumDef in enumRE.Values)
+                    foreach (var enumDef in restriction.MetaEnumValuesRE)
                     {
                         var display = restriction.GetEnumDisplayValue(enumDef.Id).ToLower();
                         if (display.Contains(filter.ToLower()))
@@ -2379,7 +2379,7 @@ namespace Seal.Model
                     }
                 }
 
-                foreach (var enumDef in enumRE.Values.Where(i => values.Exists(j => i.Id == j.Id)))
+                foreach (var enumDef in restriction.MetaEnumValuesRE.Where(i => values.Exists(j => i.Id == j.Id)))
                 {
                     var display = restriction.GetEnumDisplayValue(enumDef.Id);
                     result.Append(result.Length == 0 ? "[" : ",");

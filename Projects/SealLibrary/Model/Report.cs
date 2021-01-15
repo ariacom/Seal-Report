@@ -61,6 +61,7 @@ namespace Seal.Model
                 GetProperty("DisplayName").SetIsBrowsable(true);
                 GetProperty("ViewGUID").SetIsBrowsable(true);
                 GetProperty("InputValues").SetIsBrowsable(true);
+                GetProperty("PrintQueries").SetIsBrowsable(true);
 
                 GetProperty("CommonScripts").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsBrowsable(true);
@@ -133,6 +134,14 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
         public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
+
+        /// <summary>
+        /// If true, the query is printed in the report messages (for debug purpose).
+        /// </summary>
+        [Category("Definition"), DisplayName("Print model queries"), Description("If true, the LINQ or SQL Query executed for the models are printed in the report messages (for debug purpose)."), Id(4, 1)]
+        [DefaultValue(false)]
+        public bool PrintQueries { get; set; } = false;
+        public bool ShouldSerializePrintQueries() { return PrintQueries; }
 
         /// <summary>
         /// List of data sources of the report (either from repository or defined in the report itself)
@@ -583,15 +592,15 @@ namespace Seal.Model
                 restriction.EnumValues.Clear();
                 if (restriction.FirstSelection == FirstEnumSelection.All)
                 {
-                    restriction.EnumValues.AddRange(from v in restriction.EnumRE.Values select v.Id);
+                    restriction.EnumValues.AddRange(from v in restriction.MetaEnumValuesRE select v.Id);
                 }
-                else if (restriction.FirstSelection == FirstEnumSelection.First && restriction.EnumRE.Values.Count > 0)
+                else if (restriction.FirstSelection == FirstEnumSelection.First && restriction.MetaEnumValuesRE.Count > 0)
                 {
-                    restriction.EnumValues.Add(restriction.EnumRE.Values.First().Id);
+                    restriction.EnumValues.Add(restriction.MetaEnumValuesRE.First().Id);
                 }
-                if (restriction.FirstSelection == FirstEnumSelection.Last && restriction.EnumRE.Values.Count > 0)
+                if (restriction.FirstSelection == FirstEnumSelection.Last && restriction.MetaEnumValuesRE.Count > 0)
                 {
-                    restriction.EnumValues.Add(restriction.EnumRE.Values.Last().Id);
+                    restriction.EnumValues.Add(restriction.MetaEnumValuesRE.Last().Id);
                 }
                 restriction.FirstSelection = FirstEnumSelection.None;
             }
@@ -1801,8 +1810,16 @@ namespace Seal.Model
                     var v2 = FindView(view.Views, refView.ReferenceViewGUID);
                     if (v2 != null)
                     {
-                        throw new Exception(string.Format("Unable to remove the view '{0}': This view or one of its children named '{2}' is referenced by the view '{1}'.", view.Name, refView.Name, v2.Name));
+                        throw new Exception(string.Format("Unable to remove the view '{0}':\r\nThis view or one of its children named '{2}' is referenced by the view '{1}'.", view.Name, refView.Name, v2.Name));
                     }
+                }
+            }
+
+            foreach (var refView in AllViews)
+            {
+                if (refView.GetValue("widget_exec_view") == view.GUID.ToString() || refView.GetValue("restrictions_exec_view") == view.GUID.ToString() || refView.GetValue(Parameter.NavigationView) == view.GUID.ToString())
+                {
+                    throw new Exception(string.Format("Unable to remove the view '{0}':\r\nThis view is referenced by the view '{1}'.", view.Name, refView.Name));
                 }
             }
 
@@ -1811,10 +1828,10 @@ namespace Seal.Model
                 //Delete a root view
                 foreach (ReportOutput output in Outputs)
                 {
-                    if (output.ViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is used by the output '{1}'.", view.Name, output.Name));
+                    if (output.ViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}':\r\nThis view is used by the output '{1}'.", view.Name, output.Name));
                 }
 
-                if (Views.Count == 1) throw new Exception("Unable to remove the view: The report must contain at least one View.");
+                if (Views.Count == 1) throw new Exception("Unable to remove the view:\r\nThe report must contain at least one View.");
                 Views.Remove(view);
                 //Change the default view if necessary
                 if (view.GUID == ViewGUID) ViewGUID = Views[0].GUID;
@@ -2641,14 +2658,13 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Translate the enum using the Enum context
+        /// Translate using the Enum context
         /// </summary>
-        public string EnumDisplayValue(MetaEnum instance, string id, bool forRestriction = false)
+        public string TranslateEnumValue(MetaEnum instance, string reference)
         {
-            string result = instance.GetDisplayValue(id, forRestriction);
-            if (instance.Translate) result = Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Enum", instance.Name, result);
-            return result;
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Enum", instance.Name, reference);
         }
+
 
         /// <summary>
         /// Translate the enum message using the EnumMessage context

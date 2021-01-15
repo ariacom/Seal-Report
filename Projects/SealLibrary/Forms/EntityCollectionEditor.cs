@@ -149,6 +149,15 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(MetaEV))
+            {
+                frmCollectionEditorForm.Text = "Enum Values Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                //Set reference
+                var metaEnum = _component as MetaEnum;
+                foreach (var ev in metaEnum.Values) ev.MetaEnum = metaEnum;
+            }
 
             TableLayoutPanel tlpLayout = frmCollectionEditorForm.Controls[0] as TableLayoutPanel;
 
@@ -220,6 +229,10 @@ namespace Seal.Forms
                 result.Report = (Report)Context.Instance;
                 instance = result;
             }
+            else if (instance is MetaEV)
+            {
+                ((MetaEV) instance).MetaEnum = _component as MetaEnum;
+            }
             return instance;
         }
 
@@ -252,6 +265,11 @@ namespace Seal.Forms
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;
             else if (value is CommonScript) result = ((CommonScript)value).Name;
             else if (value is SealServerConfiguration.FileReplacePattern) result = ((SealServerConfiguration.FileReplacePattern)value).ToString();
+            else if (value is MetaEV)
+            {
+                var item = value as MetaEV;
+                return base.GetDisplayText(string.IsNullOrEmpty(item.Id) ? "<Empty value>" : string.Format("{0}", item.DisplayValue));
+            }
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
     }

@@ -16,6 +16,15 @@ namespace Seal.Forms
         const string DefaultRepositoryStr = "<Default repository connection>";
         const string DefaultReportStr = "<Current connection>";
 
+        MetaSource getSource(ITypeDescriptorContext context)
+        {
+            MetaSource source = context.Instance as MetaSource;
+            if (context.Instance is ReportModel) source = ((ReportModel)context.Instance).Source;
+            else if (context.Instance is ReportTask) source = ((ReportTask)context.Instance).Source;
+            else if (context.Instance is MetaEV) source = ((MetaEV)context.Instance).MetaEnum.Source;
+            return source;
+        }
+
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
             return true; //true means show a combobox
@@ -28,10 +37,7 @@ namespace Seal.Forms
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
             string[] choices = new string[] { "" };
-            MetaSource source = context.Instance as MetaSource;
-            if (context.Instance is ReportModel) source = ((ReportModel)context.Instance).Source;
-            else if (context.Instance is ReportTask) source = ((ReportTask)context.Instance).Source;
-
+            MetaSource source = getSource(context);
             if (source != null)
             {
                 List<string> choices2 = (from s in source.Connections select s.Name + (!s.IsEditable ? " (Repository)" : "")).ToList();
@@ -59,10 +65,7 @@ namespace Seal.Forms
         {
             if (context != null && value != null)
             {
-                MetaSource source = context.Instance as MetaSource;
-                if (context.Instance is ReportModel) source = ((ReportModel)context.Instance).Source;
-                else if (context.Instance is ReportTask) source = ((ReportTask)context.Instance).Source;
-
+                MetaSource source = getSource(context);
                 if (source != null)
                 {
                     if (source is ReportSource && value.ToString() == ReportSource.DefaultRepositoryConnectionGUID) return string.Format("{0} ({1})", DefaultRepositoryStr, ((ReportSource)source).RepositoryConnection.Name);
@@ -81,10 +84,7 @@ namespace Seal.Forms
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            MetaSource source = context.Instance as MetaSource;
-            if (context.Instance is ReportModel) source = ((ReportModel)context.Instance).Source;
-            else if (context.Instance is ReportTask) source = ((ReportTask)context.Instance).Source;
-
+            MetaSource source = getSource(context);
             if (source != null)
             {
                 if (source is ReportSource && ((ReportSource)source).RepositoryConnection != null && value.ToString() == string.Format("{0} ({1})", DefaultRepositoryStr, ((ReportSource)source).RepositoryConnection.Name)) return ReportSource.DefaultRepositoryConnectionGUID;

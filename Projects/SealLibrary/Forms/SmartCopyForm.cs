@@ -626,6 +626,7 @@ namespace Seal.Forms
                             item.GUID = Guid.NewGuid().ToString();
                             modelDestination.Restriction = modelDestination.Restriction.Replace(oldGUID, item.GUID);
                         }
+
                         if (!reportsToSave.Contains(report)) reportsToSave.Add(report);
                     }
                     else
@@ -636,7 +637,18 @@ namespace Seal.Forms
                         foreach (var property in propertiesCheckedListBox.CheckedItems.OfType<PropertyItem>().Where(i => i.Object != null))
                         {
                             PropertyDescriptor descriptor = property.Object as PropertyDescriptor;
-                            if (descriptor != null) descriptor.SetValue(model, descriptor.GetValue(_source));
+                            if (descriptor != null)
+                            {
+                                if (descriptor.Name == "CommonRestrictions")
+                                {
+                                    var list = descriptor.GetValue(_source) as List<ReportRestriction>;
+                                    if (list != null)
+                                    {
+                                        model.CommonRestrictions = (List<ReportRestriction>)Helper.Clone(list);
+                                    }
+                                }
+                                else descriptor.SetValue(model, descriptor.GetValue(_source));
+                            }
                             model.InitReferences();
                         }
 

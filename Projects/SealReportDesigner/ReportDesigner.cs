@@ -58,7 +58,7 @@ namespace Seal
         ModelPanel modelPanel = new ModelPanel();
         Repository _repository;
         ReportViewerForm _reportViewer = null;
-        ToolStripMenuItem nextModelViewMenuItem = new ToolStripMenuItem() { Text = "Go to next Model View", ToolTipText = "Select the next model view in the report", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W))), ShowShortcutKeys = true };
+        ToolStripMenuItem nextModelViewMenuItem = new ToolStripMenuItem() { Text = "Go to next Model View", ToolTipText = "Select the next model view in the report", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G))), ShowShortcutKeys = true };
 
         public ReportDesigner()
         {
@@ -81,7 +81,8 @@ namespace Seal
             toolsHelper = new ToolsHelper() { EntityHandler = this };
             toolsHelper.InitHelpers(toolsToolStripMenuItem, true);
 
-            toolsToolStripMenuItem.DropDownItems.Insert(4, nextModelViewMenuItem);
+            toolsToolStripMenuItem.DropDownItems.Insert(4, new ToolStripSeparator());
+            toolsToolStripMenuItem.DropDownItems.Insert(5, nextModelViewMenuItem);
             nextModelViewMenuItem.Click += nextModelView_Click;
 
             HelperEditor.HandlerInterface = this;

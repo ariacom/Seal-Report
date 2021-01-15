@@ -152,7 +152,6 @@
     <Compile Include="Forms\AboutBoxForm.Designer.cs">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ConnectionCollectionEditor.cs" />
     <Compile Include="Forms\ConnectionStringEditor.cs" />
     <Compile Include="Forms\FormHelper.cs" />
     <Compile Include="Forms\InformationErrorUITypeEditor.cs" />
@@ -190,7 +189,6 @@
     </Compile>
     <Compile Include="Model\ExecutionInterface.cs" />
     <Compile Include="Forms\HelperEditor.cs" />
-    <Compile Include="Forms\EnumValueCollectionEditor.cs" />
     <Compile Include="Converter\RestrictionOperatorConverter.cs" />
     <Compile Include="Forms\MultipleSelectForm.cs">
       <SubType>Form</SubType>
@@ -491,13 +489,13 @@
     <None Include="..\..\Repository\Views\TabPage.cshtml">
       <Link>Views\TabPage.cshtml</Link>
     </None>
-     <None Include="..\..\Repository\Views\Widget.config.cshtml">
+    <None Include="..\..\Repository\Views\Widget.config.cshtml">
       <Link>Views\Widget.config.cshtml</Link>
     </None>
     <None Include="..\..\Repository\Views\Widget.cshtml">
       <Link>Views\Widget.cshtml</Link>
     </None>
-   <None Include="CD-Dashboard.cd" />
+    <None Include="CD-Dashboard.cd" />
     <None Include="CD-Data Source.cd" />
     <None Include="packages.config" />
     <None Include="CD-Report Model.cd" />

@@ -1201,7 +1201,7 @@ namespace SealWebServer.Controllers
                                             var optionValues = report.PreInputRestrictions[key];
                                             //Convert values into index of the enum...
                                             var preOptionvalues = optionValues.Split(',');
-                                            foreach (var enumDef in restriction.EnumRE.Values)
+                                            foreach (var enumDef in restriction.MetaEnumValuesRE)
                                             {
                                                 if (preOptionvalues.Contains(enumDef.Id))
                                                 {
