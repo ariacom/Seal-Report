@@ -37,14 +37,14 @@ namespace Seal.Model
         public PersonalFolderRight PersFolderRight { get; set; } = PersonalFolderRight.None;
 
         /// <summary>
-        /// Define if the group can view Reports and Dashboards
+        /// If true, the folders view of the reports is shown
         /// </summary>
-        public bool ShowAllFolders { get; set; } = false;
+        public bool ShowFoldersView { get; set; } = true;
 
         /// <summary>
-        /// Define if the group can view Reports and Dashboards
+        /// If true, parent folder with no rights are also shown in the tree view
         /// </summary>
-        public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
+        public bool ShowAllFolders { get; set; } = false;
 
         /// <summary>
         /// Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
@@ -60,11 +60,6 @@ namespace Seal.Model
         /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
         /// </summary>
         public bool SqlModel { get; set; } = false;
-
-        /// <summary>
-        /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
-        /// </summary>
-        public bool WidgetPublication { get; set; } = true;
 
         /// <summary>
         /// For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default, all devices can be selected.
@@ -91,38 +86,6 @@ namespace Seal.Model
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }
 
         /// <summary>
-        /// If true, the user can define a Personal Dashboards View (e.g. add/remove dashboards in his view or change orders).
-        /// </summary>
-        public bool ManageDashboards { get; set; } = true;
-
-        /// <summary>
-        /// The default Dashboards displayed to the user.
-        /// </summary>
-        public List<SecurityDashboardOrder> DefaultDashboards { get; set; } = new List<SecurityDashboardOrder>();
-
-        /// <summary>
-        /// If true, users of the group have a personal folder to create personal dashboards.
-        /// </summary>
-        public bool PersonalDashboardFolder { get; set; } = false;
-
-        /// <summary>
-        /// The dashboard folder configurations for this group used for Web Publication of dashboards. By default, repository dashboard folders have no right.
-        /// </summary>
-        public List<SecurityDashboardFolder> DashboardFolders { get; set; } = new List<SecurityDashboardFolder>();
-        public bool ShouldSerializeDashboardFolders() { return DashboardFolders.Count > 0; }
-
-        /// <summary>
-        /// For the Dashboard Manager: Widget rights for the group. Set rights to widgets through the security tags or names assigned. By default all widgets can be selected.
-        /// </summary>
-        public List<SecurityWidget> Widgets { get; set; } = new List<SecurityWidget>();
-        public bool ShouldSerializeWidgets() { return Widgets.Count > 0; }
-
-        /// <summary>
-        /// Optional script executed to define/modify the dashboards published for the user. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
-        /// </summary>
-        public string DashboardsScript { get; set; }
-
-        /// <summary>
         /// The culture used for users belonging to the group. If empty, the default culture is used.
         /// </summary>
         public string Culture { get; set; }
@@ -131,77 +94,6 @@ namespace Seal.Model
         /// The logo file name used for to generate the reports. If empty, the default logo is used.
         /// </summary>
         public string LogoName { get; set; }
-
-
-        public void InitDashboardOrders()
-        {
-            _dashboards = null;
-            foreach (var dOrder in DefaultDashboards)
-            {
-                dOrder.Dashboard = Dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
-                dOrder.SecurityGroup = this;
-            }
-            DefaultDashboards.RemoveAll(i => Dashboards== null);
-        }
-
-        List<Dashboard> _dashboards = null;
-        /// <summary>
-        /// List of dashboards available for this group (used for editor)
-        /// </summary>
-        [XmlIgnore]
-        public List<Dashboard> Dashboards
-        {
-            get
-            {
-                if (_dashboards == null)
-                {
-                    _dashboards = new List<Dashboard>();
-                    foreach (var f in DashboardFolders.Where(i => i.Right != DashboardFolderRight.None))
-                    {
-                        var dir = Path.Combine(Repository.Instance.DashboardPublicFolder, FileHelper.CleanFilePath(f.Name));
-                        if (Directory.Exists(dir))
-                        {
-                            foreach (var p in Directory.GetFiles(dir, "*." + Repository.SealDashboardExtension))
-                            {
-                                try
-                                {
-                                    var dashboard = Dashboard.LoadFromFile(p);
-                                    dashboard.FullName = string.Format("{0}\\{1}", Path.GetFileName(dir), dashboard.Name);
-                                    _dashboards.Add(dashboard);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Debug.WriteLine(ex.Message);
-                                }
-                            }
-                        }
-                    }
-                }
-                return _dashboards;
-            }
-        }
-
-
-        /// <summary>
-        /// List of default dashboards names in a string
-        /// </summary>
-        public string DefaultDashboardsViewDisplay
-        {
-            get
-            {
-                string result = "";
-                foreach (var dOrder in DefaultDashboards.OrderBy(i => i.Order))
-                {
-                    var d = Dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
-                    if (d != null)
-                    {
-                        if (!string.IsNullOrEmpty(result)) result += ";";
-                        result += d.Name;
-                    }
-                }
-                return result;
-            }
-        }
     }
 }
 

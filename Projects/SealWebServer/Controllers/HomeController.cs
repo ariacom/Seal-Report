@@ -39,6 +39,7 @@ namespace SealWebServer.Controllers
         public const string SealLastReportNameCookieName = "SR_Last_Report_Name";
         public const string SealLastReportPathCookieName = "SR_Last_Report_Path";
         public const string SealLastReportViewGUIDCookieName = "SR_Last_Report_ViewGUID";
+        public const string SealLastReportOutputGUIDCookieName = "SR_Last_Report_OutputGUID";
 
         const string _loginContent = "<html><script>window.top.location.href='Main';</script></html>";
         string _noReportFoundMessage

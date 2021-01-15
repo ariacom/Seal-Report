@@ -69,7 +69,7 @@ namespace Seal.Model
                 }
                 return result;
             }
-        } 
+        }
 
         void fillFolder(SWIFolder folder, List<SWIFolder> folders)
         {
@@ -174,52 +174,8 @@ namespace Seal.Model
         /// </summary>
         public void SaveProfile()
         {
-            //Clean ids not published anymore
-            Profile.Dashboards.RemoveAll(i => !GetDashboards().Exists(j => j.GUID == i));
             Profile.SaveToFile();
         }
-
-        /// <summary>
-        /// Clear the current cache for Dashboards and Widgets 
-        /// </summary>
-        public void ClearCache()
-        {
-            //reset pointers of objects having translations
-            Dashboards = null;
-            _widgets = null;
-        }
-
-        private List<SecurityDashboardFolder> _securityDashboardFolders = null;
-        /// <summary>
-        /// List of folder for dashboard publication
-        /// </summary>
-        public List<SecurityDashboardFolder> SecurityDashboardFolders
-        {
-            get
-            {
-                if (_securityDashboardFolders == null)
-                {
-                    _securityDashboardFolders = new List<SecurityDashboardFolder>();
-                    foreach (var sgroup in SecurityGroups)
-                    {
-                        foreach (var sdf in sgroup.DashboardFolders)
-                        {
-                            var current = _securityDashboardFolders.FirstOrDefault(i => i.Name == sdf.Name);
-                            if (current == null)
-                            {
-                                _securityDashboardFolders.Add(sdf);
-                                current = sdf;                           
-                            }
-
-                            //Set highest right
-                            if (current.Right < sdf.Right) current.Right = sdf.Right;
-                        }
-                    }
-                }
-                return _securityDashboardFolders;
-            }
-        }
-
 
         private PersonalFolderRight? _persFolderRight = null;
         /// <summary>
@@ -261,51 +217,25 @@ namespace Seal.Model
             }
         }
 
-        private bool? _widgetPublication = null;
+        private bool? _showFoldersView = null;
         /// <summary>
-        /// True if the user has right to publish Dashboard Widgets
+        /// If true, folders view is shown
         /// </summary>
-        public bool WidgetPublication
+        public bool ShowFoldersView
         {
             get
             {
-                if (_widgetPublication == null)
+                if (_showFoldersView == null)
                 {
-                    _widgetPublication = false;
+                    _showFoldersView = false;
                     foreach (var group in SecurityGroups)
                     {
-                        if (group.WidgetPublication) _widgetPublication = true;
+                        if (group.ShowFoldersView) _showFoldersView = true;
                     }
                 }
-                return _widgetPublication.Value;
+                return _showFoldersView.Value;
             }
         }
-
-        private ViewType? _viewType = null;
-        /// <summary>
-        /// Views allowed for the user: reports and/or dashboards
-        /// </summary>
-        public ViewType ViewType
-        {
-            get
-            {
-                if (_viewType == null)
-                {
-                    foreach (var group in SecurityGroups)
-                    {
-                        if (_viewType == null || _viewType < group.ViewType) _viewType = group.ViewType;
-                    }
-
-                    if (_viewType == null) _viewType = ViewType.Reports;
-                }
-                return _viewType.Value;
-            }
-        }
-
-        /// <summary>
-        /// If true, Dashboards are shown first when the user login
-        /// </summary>
-        public bool ViewDashboardsFirst = false;
 
         private bool? _showAllFolder = null;
         /// <summary>
@@ -324,102 +254,6 @@ namespace Seal.Model
                     }
                 }
                 return _showAllFolder.Value;
-            }
-        }
-
-        List<SWIDashboardFolder> _dashboardFolders;
-        /// <summary>
-        /// List of SWIDashboardFolder for the Web Report Server
-        /// </summary>
-        public List<SWIDashboardFolder> DashboardFolders
-        {
-            get
-            {
-                if (_dashboardFolders == null)
-                {
-                    _dashboardFolders = new List<SWIDashboardFolder>();
-                    if (HasPersonalDashboardFolder)
-                    {
-                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateWeb("Personal"), path = SWIDashboardFolder.PersonalPath });
-                    }
-
-                    //public
-                    foreach (var f in SecurityDashboardFolders.Where(i => i.Right == DashboardFolderRight.Edit))
-                    {
-                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateDashboardFolder(Path.DirectorySeparatorChar.ToString() + f.FolderPath, f.Name), path = f.FolderPath });
-                    }
-                }
-                return _dashboardFolders;
-            }
-        }
-
-        private bool? _manageDashboards = null;
-        /// <summary>
-        /// True if the user can manage dashboards
-        /// </summary>
-        public bool ManageDashboards
-        {
-            get
-            {
-                if (_manageDashboards == null)
-                {
-                    _manageDashboards = false;
-                    foreach (var group in SecurityGroups)
-                    {
-                        if (group.ManageDashboards) _manageDashboards = true;
-                    }
-                }
-                return _manageDashboards.Value;
-            }
-        }
-
-        private List<SecurityDashboardOrder> _defaultDashboards = null;
-        /// <summary>
-        /// True if the usercan manage dashboards
-        /// </summary>
-        public List<SecurityDashboardOrder> DefaultDashboardOrders
-        {
-            get
-            {
-                if (_defaultDashboards == null)
-                {
-                    var allOrders = new List<SecurityDashboardOrder>();
-                    foreach (var group in SecurityGroups)
-                    {
-                        foreach (var dOrder in group.DefaultDashboards)
-                        {
-                            allOrders.Add(dOrder);
-                        }
-                    }
-                    //Unique and sort 
-                    _defaultDashboards = new List<SecurityDashboardOrder>();
-                    foreach (var dOrder in allOrders.OrderBy(i => i.Order))
-                    {
-                        if (!_defaultDashboards.Exists(i => i.GUID == dOrder.GUID)) _defaultDashboards.Add(dOrder);
-                    }
-                }
-                return _defaultDashboards;
-            }
-        }
-
-
-        private bool? _hasPersonalDashboardFolder = null;
-        /// <summary>
-        /// True if the user has a personal folder for dashboards
-        /// </summary>
-        public bool HasPersonalDashboardFolder
-        {
-            get
-            {
-                if (_hasPersonalDashboardFolder == null)
-                {
-                    _hasPersonalDashboardFolder = false;
-                    foreach (var group in SecurityGroups)
-                    {
-                        if (group.PersonalDashboardFolder) _hasPersonalDashboardFolder = true;
-                    }
-                }
-                return _hasPersonalDashboardFolder.Value;
             }
         }
 
@@ -619,30 +453,6 @@ namespace Seal.Model
         }
 
 
-        private List<SecurityWidget> _securityWidgets = null;
-        /// <summary>
-        /// List of widgets that cannot be edited with the Web Report Designer
-        /// </summary>
-        public List<SecurityWidget> ForbiddenWidgets
-        {
-            get
-            {
-                if (_securityWidgets == null) InitEditionRights();
-                return _securityWidgets;
-            }
-        }
-
-        /// <summary>
-        /// True if the widget can be selected 
-        /// </summary>
-        public bool CanSelectWidget(DashboardWidget item)
-        {
-            return !ForbiddenWidgets.Exists(i =>
-                (string.IsNullOrEmpty(i.ReportName) || i.ReportName == item.ReportName) &&
-                (string.IsNullOrEmpty(i.Tag) || i.Tag == item.Tag) &&
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
-                );
-        }
 
         private void InitEditionRights()
         {
@@ -650,7 +460,6 @@ namespace Seal.Model
             _securityDevices = new List<SecurityDevice>();
             _securitySources = new List<SecuritySource>();
             _securityColumns = new List<SecurityColumn>();
-            _securityWidgets = new List<SecurityWidget>();
 
             foreach (var sgroup in SecurityGroups)
             {
@@ -658,7 +467,6 @@ namespace Seal.Model
                 _securityDevices.AddRange(sgroup.Devices.Where(i => i.Right == EditorRight.NoSelection));
                 _securitySources.AddRange(sgroup.Sources.Where(i => i.Right == EditorRight.NoSelection));
                 _securityColumns.AddRange(sgroup.Columns.Where(i => i.Right == EditorRight.NoSelection));
-                _securityWidgets.AddRange(sgroup.Widgets.Where(i => i.Right == EditorRight.NoSelection));
             }
         }
 
@@ -841,33 +649,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// List of default dashboards names in a string
-        /// </summary>
-        public string DefaultDashboardsViewDisplay
-        {
-            get
-            {
-                string result = "";
-                var dashboards = new List<Dashboard>();
-                foreach (var group in SecurityGroups)
-                {
-                    dashboards.AddRange(group.Dashboards);
-                }
-
-                foreach (var dOrder in DefaultDashboardOrders.OrderBy(i => i.Order))
-                {
-                    var d = dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
-                    if (d != null)
-                    {
-                        if (!string.IsNullOrEmpty(result)) result += ";";
-                        result += d.Name;
-                    }
-                }
-                return result;
-            }
-        }
-
-        /// <summary>
         /// Returns true if the user belongs to a group given by a name
         /// </summary>
         public bool BelongsToGroup(string groupName)
@@ -903,214 +684,23 @@ namespace Seal.Model
             }
         }
 
-
-        #region Dashboard
-        private Dictionary<string, DashboardWidget> _widgets = null;
         /// <summary>
-        /// List of widgets available
+        /// List reports menu
         /// </summary>
-        public Dictionary<string, DashboardWidget> Widgets
+        public List<ReportView> GetMenuReportViews()
         {
-            get
+            var result = new List<ReportView>();
+            foreach (var view in MenuReportViewsPool.MenuReportViews)
             {
-                if (_widgets == null || _widgets.Count == 0)
+                var folder = FindSecurityFolder(view.Report.RelativeFilePath);
+                if (folder.FolderRight != FolderRight.None)
                 {
-                    _widgets = new Dictionary<string, DashboardWidget>();
-                    foreach (var widget in DashboardWidgetsPool.Widgets.Values.OrderBy(i => i.Name))
-                    {
-                        if (CanSelectWidget(widget))
-                        {
-                            DashboardWidget newWidget = (DashboardWidget) Helper.Clone(widget);
-                            newWidget.ReportName = widget.ReportName;
-                            newWidget.ReportPath = widget.ReportPath;
-                            _widgets.Add(newWidget.GUID, newWidget);
-                            var instance = newWidget.ReportPath.Replace(Security.Repository.ReportsFolder, Path.DirectorySeparatorChar.ToString());
-                            newWidget.Name = Security.Repository.TranslateWidgetName(instance, newWidget.Name);
-                            newWidget.Description = Security.Repository.TranslateWidgetDescription(instance, newWidget.Description);
-                        }
-                    }
+                    result.Add(view);
                 }
-                return _widgets;
             }
+            return result;
         }
-
-        /// <summary>
-        /// Load a personal dashboard and its widgets
-        /// </summary>
-        public void LoadPersonalDashboard(string path)
-        {
-            loadDashboard(path, SWIDashboardFolder.PersonalPath, "", true, true);
-        }
-
-        /// <summary>
-        /// Load a public dashboard and its widgets
-        /// </summary>
-        public void LoadPublicDashboard(string path, string folderPath, string folderName, bool editable)
-        {
-            loadDashboard(path, folderPath, folderName, editable, false);
-        }
-
-        void loadDashboard(string path, string folderPath, string folderName, bool editable, bool isPersonal)
-        {
-            try
-            {
-                var dashboard = Dashboards.FirstOrDefault(i => i.Path == path);
-                if (dashboard == null || dashboard.LastModification != File.GetLastWriteTime(path))
-                {
-                    if (dashboard != null) Dashboards.Remove(dashboard);
-                    dashboard = Dashboard.LoadFromFile(path);
-                    Dashboards.Add(dashboard);
-                }
-                dashboard.IsPersonal = isPersonal;
-                dashboard.Editable = editable;
-                dashboard.Folder = folderPath;
-
-                dashboard.DisplayName = Security.Repository.TranslateDashboardName(path.Replace(Security.Repository.DashboardPublicFolder, ""), dashboard.Name);
-                var repositoryPath = path.Replace(Security.Repository.DashboardPublicFolder, "");
-
-                if (dashboard.IsPersonal)
-                {
-                    dashboard.FullName = string.Format("{0} ({1})", dashboard.DisplayName, Security.Repository.TranslateWeb("Personal"));
-                }
-                else if (!string.IsNullOrEmpty(folderName))
-                {
-                    dashboard.FullName = string.Format("{0} ({1})", dashboard.DisplayName, Security.Repository.TranslateDashboardFolder(Path.GetDirectoryName(repositoryPath), folderName));
-                }
-                else
-                {
-                    dashboard.FullName = dashboard.DisplayName;
-                }
-                dashboard.ReinitGroupOrders();
-                //Init items and translate labels
-                foreach (var item in dashboard.Items)
-                {
-                    var widget = DashboardWidgetsPool.Widgets.ContainsKey(item.WidgetGUID) ? DashboardWidgetsPool.Widgets[item.WidgetGUID] : null;
-                    if (widget == null) continue;
-                    if (!string.IsNullOrEmpty(item.Name) && item.Name != widget.Name)
-                    {
-                        item.DisplayName = Security.Repository.TranslateDashboardItemName(repositoryPath, item.Name);
-                    }
-                    else
-                    {
-                        var instance = widget.ReportPath.Replace(Security.Repository.ReportsFolder, Path.DirectorySeparatorChar.ToString());
-                        item.DisplayName = Security.Repository.TranslateWidgetName(instance, widget.Name);
-                    }
-                    item.SetWidget(widget);
-
-                    if (!string.IsNullOrEmpty(item.GroupName)) item.DisplayGroupName = Security.Repository.TranslateDashboardItemGroupName(repositoryPath, item.GroupName);
-                }
-                //Remove lost widgets...
-                dashboard.Items.RemoveAll(i => i.Widget == null);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-        }
-
-        private string _dashboardPersonalFolder;
-        /// <summary>
-        /// Path of the dashboard personal folder
-        /// </summary>
-        public string DashboardPersonalFolder
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_dashboardPersonalFolder))
-                {
-                    _dashboardPersonalFolder = Path.Combine(Security.Repository.GetPersonalFolder(this), "_Dashboards");
-                    if (!Directory.Exists(_dashboardPersonalFolder)) Directory.CreateDirectory(_dashboardPersonalFolder);
-                }
-                return _dashboardPersonalFolder;
-            }
-        }
-
-        /// <summary>
-        /// List of dashboards viewed by the user
-        /// </summary>
-        public List<Dashboard> UserDashboards
-        {
-            get
-            {
-                var result = new List<Dashboard>();
-                var dashboards = GetDashboards();
-
-                var orders = DefaultDashboardOrders.ToList();
-                if (ManageDashboards && !Profile.ViewDefaultDashboards)
-                {
-                    //Get dashboard from profile
-                    int order = 1;
-                    orders.Clear();
-                    foreach (var guid in Profile.Dashboards)
-                    {
-                        orders.Add(new SecurityDashboardOrder() { GUID = guid, Order = order++ }); 
-                    }
-                }
-
-                foreach (var dOrder in orders.OrderBy(i => i.Order))
-                {
-                    var d = dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
-                    if (d != null)
-                    {
-                        d.Order = dOrder.Order;
-                        if (result.FirstOrDefault(i => i.FullName == d.FullName) != null) d.FullName += " [" + Path.GetFileNameWithoutExtension(d.Path) + "]";
-                        result.Add(d);
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        public List<Dashboard> Dashboards = null;
-        /// <summary>
-        /// Load all dashboards for the user
-        /// </summary>
-        public List<Dashboard> GetDashboards()
-        {
-            try
-            {
-                if (Dashboards == null) Dashboards = new List<Dashboard>();
-                //personal
-                if (HasPersonalDashboardFolder)
-                {
-                    foreach (var p in Directory.GetFiles(DashboardPersonalFolder, "*." + Repository.SealDashboardExtension))
-                    {
-                        LoadPersonalDashboard(p);
-                    }
-                }
-
-                //public
-                foreach (var f in SecurityDashboardFolders. Where(i => i.Right != DashboardFolderRight.None))
-                {
-                    var dir = Path.Combine(Security.Repository.DashboardPublicFolder, FileHelper.CleanFilePath(f.Name));
-                    if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                    foreach (var p in Directory.GetFiles(dir, "*." + Repository.SealDashboardExtension))
-                    {
-                        LoadPublicDashboard(p, f.FolderPath, f.Name, f.Right == DashboardFolderRight.Edit);
-                    }
-                }
-
-                //remove deleted
-                Dashboards.RemoveAll(i => !File.Exists(i.Path));
-
-                //Dashboards Script
-                ScriptNumber = 1;
-                foreach (var group in SecurityGroups.Where(i => !string.IsNullOrEmpty(i.DashboardsScript)).OrderBy(i => i.Name))
-                {
-                    RazorHelper.CompileExecute(group.DashboardsScript, this);
-                    ScriptNumber++;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-            return Dashboards;
-        }
-        #endregion
-
     }
 }
+
 

@@ -15,27 +15,28 @@ var $elementDropDown: JQuery;
 var _gateway: SWIGateway;
 var _main: SWIMain;
 var _editor: ReportEditorInterface;
-var _dashboard: SWIDashboard;
 
 declare var folderRightSchedule: number;
 declare var folderRightEdit: number;
 declare var hasEditor: boolean;
 declare var dirSeparator: string;
-declare var exportFormat : string;
+
+declare function redrawDataTables();
+declare function showHideNavbar();
 
 $(document).ready(function () {
     _gateway = new SWIGateway();
-    _dashboard = new SWIDashboard();
+
     _main = new SWIMain();
     _main.Process();
 
     $(window).scroll(function () {
         SWIUtil.HideMessages();
+        showHideNavbar();
     });
 });
 
 class SWIMain {
-    private _connected: boolean = false;
     public _profile: any = null;
     private _canEdit: boolean = false;
     public _folder: any = null;
@@ -43,9 +44,8 @@ class SWIMain {
     private _clipboard: string[];
     private _clipboardCut: boolean = false;
     private _folderpath: string = "\\";
-    public _exporting: boolean = false;
-    public _exportingPrint: boolean = false;
-
+    private _reportPath: string;
+    
     public Process() {
         $waitDialog = $("#wait-dialog");
         $editDialog = $("#edit-dialog");
@@ -54,16 +54,6 @@ class SWIMain {
         $outputPanel = $("#output-panel");
         $propertiesPanel = $("#properties-panel");
         $elementDropDown = $("#element-dropdown");
-
-        //Dashboard export
-        _main._exporting = (exportFormat != "");
-        _main._exportingPrint = (exportFormat == "htmlprint" || exportFormat == "pdf" || exportFormat == "pdflandscape");
-        if (_main._exporting) {
-            $(".hide-export").css("display", "none");
-            $("#main-dashboard").css("padding-top", "15px");
-        }
-
-        $(".navbar-right").hide();
 
         $waitDialog.modal('show');
 
@@ -99,20 +89,21 @@ class SWIMain {
             }
         );
 
-        //General handler
-        $(window).on('resize', function () {
+        //General handlers
+        $(window).unbind("resize").on('resize', function () {
             _main.resize();
         });
     }
 
+
     private loginSuccess(data: any) {
-        _main._connected = true;
         if (_main._profile && _main._profile.culture && _main._profile.culture != data.culture) {
             $("body").css("opacity", "0.1");
             location.reload(true);
         }
 
         _main._profile = data;
+        _main._reportPath = "";
         _main._folder = null;
         _main._searchMode = false;
         _main._clipboard = null;
@@ -132,55 +123,23 @@ class SWIMain {
 
         $("#main-container").css("display", "block");
 
+        _main.refreshMenu();
+
+        if (_main._profile.showfolders) _main.loadFolderTree();
+        else _main._profile.lastview = "report";
+
+        if (_editor) _editor.brand();
+
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
-            if ($("#main-dashboard").css("display") != "block") {
-                _main.ReloadReportsTable();
-                if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
-            }
-            else if (_dashboard) {
-                _dashboard = new SWIDashboard();
-                _dashboard.init();
-            }
+            _main.ReloadReportsTable();
+            if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
         });
 
-        var hasReports = (_main._profile.viewtype == 0 || _main._profile.viewtype == 2);
-        var hasDashboard = (_main._profile.viewtype == 1 || _main._profile.viewtype == 2);
-
-        SWIUtil.ShowHideControl($("#dashboard-toggle"), _main._profile.viewtype == 2); /* reports and dashboards */
-        SWIUtil.ShowHideControl($("#dashboards-nav-item"), _main._profile.managedashboards);
-
-        //Dashboard toggle
-        $("#dashboard-toggle").unbind("click").on("click", function () {
-            $outputPanel.hide();
-            _main.showDashboard($("#main-dashboard").css("display") != "block");
-
-            if ($("#main-dashboard").css("display") == "block") {
-                redrawNVD3Charts();
-                redrawDataTables();
-            }
+        //Reload and execute
+        $("#reload-nav-item").unbind("click").on("click", function () {
+            _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, _main._profile.lastreport.outputGUID, _main._profile.lastreport.name);
         });
-
-        if (hasReports) {
-            _main.loadFolderTree();
-        }
-
-        if (hasDashboard) {
-            setTimeout(function () {
-                _dashboard.init();
-            }, 500);
-        }
-
-        if (_editor) {
-            _editor.brand();
-        }
-
-        if (_main._profile.lastview == "dashboards" || _main._exporting) {
-            _main.showDashboard(true);
-        }
-        else {
-            _main.showDashboard(false);
-        }
 
         //Folders
         $("#folders-nav-item").unbind("click").on("click", function () {
@@ -228,6 +187,7 @@ class SWIMain {
             if ((e.keyCode || e.which) == 13) {
                 $outputPanel.hide();
                 _main.search();
+                return false;
             }
         });
 
@@ -241,15 +201,6 @@ class SWIMain {
             $outputPanel.hide();
             $("#profile-user").val(_main._profile.name);
             $("#profile-groups").val(_main._profile.group);
-
-            SWIUtil.ShowHideControl($("#view-select-group"), _main._profile.viewtype == 2);
-            if (_main._profile.viewtype == 2 /* reports and dashboards */) {
-                var $select2 = $("#view-select");
-                $select2.unbind("change").selectpicker("destroy").empty();
-                $select2.append(SWIUtil.GetOption("reports", SWIUtil.tr("Reports"), _main._profile.lastview, "glyphicon glyphicon-th-list"));
-                $select2.append(SWIUtil.GetOption("dashboards", SWIUtil.tr("Dashboards"), _main._profile.lastview, "glyphicon glyphicon-th-large"));
-                $select2.selectpicker('refresh');
-            }
 
             $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');
@@ -281,10 +232,12 @@ class SWIMain {
         $("#disconnect-nav-item").unbind("click").on("click", function () {
             SWIUtil.HideMessages();
             $outputPanel.hide();
-            _gateway.Logout(function (e) {
-                _main._connected = false;
-                $("#main-container").css("display", "none");
-                $("#main-dashboard").css("display", "none");
+            $("#report-body").empty();
+
+            _gateway.Logout(function () {
+                $("#report-body").empty();
+                $("#nav_button").text("");
+                SWIUtil.ShowHideControl($("#main-container,#report-body,#menu-view-report,.reportview,.folderview"), false);
                 _main.showLogin();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             });
@@ -396,8 +349,6 @@ class SWIMain {
                 });
             }
         });
-        _main.enableControls();
-        _main.resize();
 
         $(document).ajaxStart(function () {
             SWIUtil.StartSpinning();
@@ -405,6 +356,86 @@ class SWIMain {
 
         $(document).ajaxStop(function () {
             SWIUtil.StopSpinning();
+        });
+
+        _main.enableControls();
+        _main.resize();
+
+        //Start last report
+        if (_main._profile.lastview == "report" && _main._profile.lastreport.path) {
+            _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, _main._profile.lastreport.outputGUID, _main._profile.lastreport.name);
+        }
+        else {
+            $waitDialog.modal('hide');
+        }
+    }
+
+    private addReportMenu(parent, value) {
+        let aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
+        aref.append($("<span class='external-navigation glyphicon glyphicon-share'></span></a>"));
+        parent.append($("<li class='menu-reports'>").append(aref));
+    }
+
+    private initMenu(parent, items) {
+        items.forEach(function (value) {
+            if (value.path) {
+                _main.addReportMenu(parent, value);
+            }
+            else {
+                const li = $("<li class='menu-reports dropdown dropdown-submenu'>");
+                const label = $("<a href='#' class='dropdown-toggle' data-toggle='dropdown'>").html(value.name);
+                li.append(label);
+                parent.append(li);
+                const ul = $("<ul class='dropdown-menu'>");
+                li.append(ul);
+                _main.initMenu(ul, value.items);
+            }
+        });
+    }
+
+    public refreshMenu() {
+        //Menu
+        _gateway.GetRootMenu(function (menu) {
+            //Recent reports
+            let parent = $("#menu-last-reports");
+            parent.children(".menu-reports").remove();
+            menu.recentreports.forEach(function (value) {
+                _main.addReportMenu(parent, value);
+            });
+
+            //Reports
+            parent = $("#menu-main");
+            parent.children(".menu-reports").remove();
+            if (menu.recentreports.length > 0) parent.append($("<li class='divider menu-reports')>"));
+            SWIUtil.ShowHideControl($(".divider-menu-reports"), menu.reports.length > 0);
+            _main.initMenu(parent, menu.reports);
+            if (menu.recentreports.length > 0) parent.append($("<li id='menu-divider-folders-report' class='divider menu-reports')>"));
+            parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
+            parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
+            
+            $('ul.dropdown-menu [data-toggle=dropdown]').unbind("click").on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                $(this).parent().siblings().removeClass('open');
+                $(this).parent().toggleClass('open');
+            });
+
+            //Toggle report/folders
+            $("#menu-view-folders, #menu-view-report, #nav_button").unbind("click").on("click", function () {
+                _main.toggleFoldersReport(_main._profile.lastview != "report");
+            });
+
+            //Execute reports from menu
+            $("a.menu-report").unbind("click").on("click", function () {
+                _main.executeReportFromMenu($(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"), $(this).text());
+            });
+            $("a.menu-report span").unbind("click").on("click", function () {
+                //new window
+                const parent = $(this).parent();
+                _main.executeReport(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
+            });
+
+            _main.enableControls();
         });
     }
 
@@ -420,7 +451,6 @@ class SWIMain {
 
     private loginFailure(data: any, firstTry: boolean) {
         $waitDialog.modal('hide');
-        _main._connected = false;
         if (!firstTry) $("#login-modal-error").text(data.error);
         _main.showLogin();
         _main.enableControls();
@@ -450,21 +480,23 @@ class SWIMain {
             $("#file-table-view").height($(window).height() - 125);
         }
         else {
-            $("#folder-tree").css("max-height", ($(window).height()/2 - 45));
+            $("#folder-tree").css("max-height", ($(window).height() / 2 - 45));
         }
     }
 
     private enableControls() {
-        var right = 0; //1 Execute,2 Shedule,3 Edit
-        var files = false;
+        let right = 0; //1 Execute,2 Shedule,3 Edit
+        let files = false;
         if (_main._folder) {
             right = _main._folder.right;
             files = _main._folder.files;
         }
         $outputPanel.hide();
+        $('#back-to-top').tooltip('hide');
+
         SWIUtil.EnableButton($("#report-edit-lightbutton"), right >= folderRightEdit && !files);
         SWIUtil.ShowHideControl($("#report-edit-lightbutton"), hasEditor);
-        var checked: number = $(".report-checkbox:checked").length;
+        const checked: number = $(".report-checkbox:checked").length;
         SWIUtil.EnableButton($("#report-rename-lightbutton"), checked == 1 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-delete-lightbutton"), checked != 0 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-cut-lightbutton"), checked != 0 && right >= folderRightEdit);
@@ -474,12 +506,23 @@ class SWIMain {
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
 
+        //Report or folders view
+        const reportShown = _main._reportPath && _main._profile.lastview == "report";
+        SWIUtil.ShowHideControl($("#menu-view-folders"), _main._profile.lastview == "report");
+        SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath && _main._profile.lastview == "folders");
+        SWIUtil.ShowHideControl($(".reportview"), reportShown);
+        SWIUtil.ShowHideControl($(".folderview"), _main._profile.lastview == "folders");
+        //Dividers
+        SWIUtil.ShowHideControl($("#menu-divider-folders-report"), _main._reportPath != "" || _main._profile.lastview == "report");
+        //title color
+        $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d");
+
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
     }
 
     private toJSTreeFolderData(data: any, result: any, parent: string) {
-        for (var i = 0; i < data.length; i++) {
-            var folder = data[i];
+        for (let i = 0; i < data.length; i++) {
+            const folder = data[i];
             result[result.length] = { "id": folder.path, "parent": parent, "text": (folder.name == "" ? "Reports" : folder.name), "state": { "opened": folder.expand, "selected": (folder.name == "") } }
             if (folder.folders && folder.folders.length > 0) _main.toJSTreeFolderData(folder.folders, result, folder.path);
             if (folder.right == 4) _main._canEdit = true;
@@ -506,7 +549,7 @@ class SWIMain {
                 plugins: ["types", "wholerow"]
             });
 
-            $folderTree.on("changed.jstree", function () {
+            $folderTree.unbind("changed.jstree").on("changed.jstree", function () {
                 _main.ReloadReportsTable();
             });
 
@@ -517,8 +560,6 @@ class SWIMain {
                 $folderTree.jstree("deselect_all");
                 if (_main._folderpath) $folderTree.jstree('select_node', _main._folderpath);
             }, 100);
-
-            $waitDialog.modal('hide');
         });
     }
 
@@ -538,6 +579,33 @@ class SWIMain {
             _main.buildReportsTable(data);
             _main._profile.folder = path;
             SWIUtil.StopSpinning();
+        });
+    }
+
+    private executeReport(path: string, viewGUID: string, outputGUID: string) {
+        _gateway.ExecuteReport(path, viewGUID, outputGUID);
+        setTimeout(function () {
+            _main.refreshMenu();
+        }, 2000);
+    }
+
+    private executeReportFromMenu(path: string, viewGUID: string, outputGUID: string, name: string) {
+        $("#report-body").empty();
+        $("#nav_button").html(name);
+        $waitDialog.modal();
+        _main._reportPath = path;
+        _main._profile.lastreport.path = path;
+        _main._profile.lastreport.viewGUID = viewGUID;
+        _main._profile.lastreport.outputGUID = outputGUID;
+        _main._profile.lastreport.name = name;
+        _main.toggleFoldersReport(true);
+        _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
+            $("#report-body").html(data);
+            _main.enableControls();
+            $waitDialog.modal('hide');
+            setTimeout(function () {
+                _main.refreshMenu();
+            }, 2000);
         });
     }
 
@@ -571,9 +639,10 @@ class SWIMain {
             $tableBody.append($tr);
             if (_main._canEdit) $tr.append($("<td class='hidden-xs'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
             $tr.append($("<td>").append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isreport).text(file.name)));
-            var $td = $("<td>").css("text-align", "center").data("path", file.path);
+            var $td = $("<td>").css("text-align", "center").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
             $tr.append($td);
             if (file.isreport) {
+                $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Execute report")).addClass("btn btn-default btn-table fa fa-play report-execute"));
                 $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Views and outputs")).addClass("btn btn-default btn-table fa fa-list-ul report-output"));
                 if (file.right >= folderRightSchedule && hasEditor) $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Edit report")).addClass("btn btn-default fa fa-pencil report-edit hidden-xs"));
             }
@@ -592,13 +661,21 @@ class SWIMain {
             });
         }
 
-        $(".report-name").on("click", function (e) {
+        $(".report-name").unbind("click").on("click", function (e) {
             $outputPanel.hide();
-            if ($(e.currentTarget).data("isReport")) _gateway.ExecuteReport($(e.currentTarget).data("path"), false, null, null);
-            else _gateway.ViewFile($(e.currentTarget).data("path"));
+            const path = $(e.currentTarget).data("path");
+            if ($(e.currentTarget).data("isReport")) _main.executeReport(path, null, null);
+            else _gateway.ViewFile(path);
         });
 
-        $(".report-output").on("click", function (e) {
+        $(".report-execute").unbind("click").on("click", function (e) {
+            $outputPanel.hide();
+            var $target = $(e.currentTarget);
+            _main.toggleFoldersReport(true);
+            _main.executeReportFromMenu($target.parent().data("path"), null, null, $target.parent().data("name"));
+        });
+
+        $(".report-output").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             var $tableBody = $("#output-table-body");
@@ -610,37 +687,47 @@ class SWIMain {
                 'position': 'absolute',
                 'z-index': '10000',
                 'left': $target.offset().left - $outputPanel.width(),
-                'top': top
+                'top': top,
+                'opacity': 0.4
             }).show();
 
-            $("#output-panel-close").on("click", function () {
+
+            $("#output-panel-close").unbind("click").on("click", function () {
                 $outputPanel.hide();
             });
 
             _gateway.GetReportDetail($target.parent().data("path"),
                 function (data) {
+                    $outputPanel.css("opacity", "1");
                     $tableBody.empty();
                     for (var i = 0; i < data.views.length; i++) {
                         var $tr = $("<tr>");
                         $tableBody.append($tr);
                         $tr.append($("<td>").append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayname)));
+                        $tr.append($("<td>").append($("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-default btn-table fa fa-play output-execute")));
                         $tr.append($("<td>").html(SWIUtil.tr("View")));
                     }
                     for (var i = 0; i < data.outputs.length; i++) {
                         var $tr = $("<tr>");
                         $tableBody.append($tr);
                         $tr.append($("<td>").append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayname)));
+                        $tr.append($("<td>").append($("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-default btn-table fa fa-play output-execute")));
                         $tr.append($("<td>").html(SWIUtil.tr("Output")));
                     }
 
                     //adjust position with the final size
                     top = $target.offset().top + 40 - $outputPanel.height();
                     $outputPanel.css({ top: top, left: $target.offset().left - $outputPanel.width(), position: 'absolute' });
-                    
 
-                    $(".output-name").on("click", function (e) {
+
+                    $(".output-name").unbind("click").on("click", function (e) {
                         $outputPanel.hide();
-                        _gateway.ExecuteReport($target.parent().data("path"), false, $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
+                        _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
+                    });
+                    $(".output-execute").unbind("click").on("click", function (e) {
+                        $outputPanel.hide();
+                        _main.toggleFoldersReport(true);
+                        _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name") + " - " + $(e.currentTarget).data("name"));
                     });
                 },
                 function (data) {
@@ -685,13 +772,13 @@ class SWIMain {
             }]
         });
 
-        $(".report-checkbox").on("click", function () {
+        $(".report-checkbox").unbind("click").on("click", function () {
             _main.enableControls();
         });
-        
-        $('#file-table').on('page.dt', function () {
+
+        $('#file-table').unbind("page.dt").on('page.dt', function () {
             setTimeout(function () {
-                $(".report-checkbox").on("click", function () {
+                $(".report-checkbox").unbind("click").on("click", function () {
                     _main.enableControls();
                 });
             }, 200);
@@ -700,26 +787,17 @@ class SWIMain {
         _main.enableControls();
     }
 
-    private showDashboard(show: boolean) {
-        //Dashboard toggle
-        var span = $("#dashboard-toggle").children("span");
-        span.removeClass("glyphicon-th-large");
-        span.removeClass("glyphicon-th-list");
-        if (show) {
-            $(".folderview").hide();
-            $(".dashboardview").show(); 
-            SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.dashboardfolders.length != 0);
-            span.addClass("glyphicon-th-list");
-            $("#dashboard-toggle").attr("title", SWIUtil.tr2("View reports"));
-            _dashboard.reorderItems(true);
-        }
-        else {
-            $(".folderview").show();
-            $(".dashboardview").hide();
-            SWIUtil.ShowHideControl($(".dashboardvieweditor"), false);
-            span.addClass("glyphicon-th-large");
-            $("#dashboard-toggle").attr("title", SWIUtil.tr2("View dashboards"));
-        }
-        redrawDataTables();
+    public toggleFoldersReport(viewreport: boolean) {
+        _main._profile.lastview = (viewreport ? "report" : "folders");
+        _gateway.SetLastView(_main._profile.lastview, null);
+
+        if (!viewreport) redrawDataTables();
+
+        _main.enableControls();
+
+        //transition
+        const reportShown = _main._reportPath && _main._profile.lastview == "report";
+        $(!reportShown ? ".reportview" : ".folderview").css("opacity", "0.2");
+        $(reportShown ? ".reportview" : ".folderview").css("opacity", "1");
     }
 }

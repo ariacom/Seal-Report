@@ -31,13 +31,15 @@ namespace SealWebServer.Controllers
         public const string SessionLastFolder = "SessionLastFolder";
         public const string SessionUser = "SessionUser";
         public const string SessionNavigationContext = "SessionNavigationContext";
-        public const string SessionDashboardExecutions = "SessionDashboardExecutions";
         public const string SessionUploadedFiles = "SessionUploadedFiles";
 
         public const string SealCultureCookieName = "SR_Culture_Name";
         public const string SealLastViewCookieName = "SR_Last_View";
         public const string SealLastFolderCookieName = "SR_Last_Folder";
-        public const string SealLastDashboardCookieName = "SR_Last_Dashboard";
+        public const string SealLastReportNameCookieName = "SR_Last_Report_Name";
+        public const string SealLastReportPathCookieName = "SR_Last_Report_Path";
+        public const string SealLastReportViewGUIDCookieName = "SR_Last_Report_ViewGUID";
+        public const string SealLastReportOutputGUIDCookieName = "SR_Last_Report_OutputGUID";
 
         const string _loginContent = "<html><script>window.top.location.href='Main';</script></html>";
         string _noReportFoundMessage
@@ -95,7 +97,6 @@ namespace SealWebServer.Controllers
             setSessionValue(SessionUser, user);
             //Clear previous Session variables
             setSessionValue(SessionNavigationContext, null);
-            setSessionValue(SessionDashboardExecutions, null);
 #if NETCOREAPP
             user.SessionID = SessionKey;
 #else
@@ -241,7 +242,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Navigate to a new report execution: Either for Drill or SubReport
         /// </summary>
-        public ActionResult ActionNavigate(string execution_guid)
+        public ActionResult ActionNavigate(string execution_guid, string navigation_target)
         {
             writeDebug("ActionNavigate");
             try
@@ -249,7 +250,7 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
                 if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
 
-                ReportExecution execution = getExecution(execution_guid);
+                ReportExecution execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
                     if (execution.RootReport == null) execution.RootReport = execution.Report;
@@ -297,8 +298,22 @@ namespace SealWebServer.Controllers
                     }
                     else
                     {
-                        execution = NavigationContext.Navigate(nav, execution.RootReport);
+                        execution = NavigationContext.Navigate(nav, execution, !string.IsNullOrEmpty(navigation_target));
                         Report report = execution.Report;
+
+                        if (string.IsNullOrEmpty(navigation_target))
+                        {
+                            //Same window, keep the context
+                            report.OnlyBody = execution.RootReport.OnlyBody;
+                        }
+                        else
+                        {
+                            //Navigation to a new window, simple new execution
+                            report.OnlyBody = false;
+                            execution.RootReport = null;
+                            report.IsNavigating = false;
+                        }
+
                         //Check rights if not in subreports or personal folders
                         if (!string.IsNullOrEmpty(Path.GetDirectoryName(report.FilePath)) && !report.FilePath.StartsWith(report.Repository.SubReportsFolder) && !report.FilePath.StartsWith(Repository.PersonalFolder))
                         {
@@ -313,9 +328,6 @@ namespace SealWebServer.Controllers
 
                         report.ExecutionContext = ReportExecutionContext.WebReport;
                         report.SecurityContext = WebUser;
-
-                        if (execution.RootReport != null && execution.RootReport.GUID == report.GUID) report.CurrentViewGUID = execution.RootReport.CurrentViewGUID; //Drill, take view of root report
-                        else report.CurrentViewGUID = report.ViewGUID; //Sub-report, take the default view
 
                         report.InitForExecution();
                         execution.RenderHTMLDisplayForViewer();
@@ -516,8 +528,6 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
-                if (execution == null) execution = DashboardExecutions.FirstOrDefault(i => i.Report.ExecutionGUID == execution_guid);
-
                 if (execution != null)
                 {
                     Report report = execution.Report;
@@ -546,6 +556,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
+
                     string resultPath = execution.GenerateHTMLResult();
                     return getFileResult(resultPath, execution.Report);
                 }
@@ -716,7 +727,7 @@ namespace SealWebServer.Controllers
             {
                 if (!CheckAuthentication()) return _loginContentResult;
 
-                ReportExecution execution = getExecution(execution_guid);
+                ReportExecution execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
                     var view = execution.Report.ExecutionView.GetView(viewid);
@@ -750,7 +761,6 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
-                if (execution == null) execution = DashboardExecutions.FirstOrDefault(i => i.Report.ExecutionGUID == execution_guid);
                 if (execution != null)
                 {
                     execution.UpdateEnumValues(id, values);
@@ -775,7 +785,6 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
-                if (execution == null) execution = DashboardExecutions.FirstOrDefault(i => i.Report.ExecutionGUID == execution_guid);
                 if (execution != null)
                 {
                     result = execution.GetEnumValues(enum_id, filter);
@@ -789,7 +798,7 @@ namespace SealWebServer.Controllers
         }
 
 
-        void parseViews(ReportView  view, List<string> views)
+        void parseViews(ReportView view, List<string> views)
         {
             views.Add(view.Parse());
             foreach (var child in view.Views)
@@ -799,9 +808,9 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Return the list of values for a Enumerated list with a filter for a report execution
+        /// Execute a report and parse the views involved when triggered from a Restrictions View
         /// </summary>
-        public ActionResult ActionExecuteFromTrigger(string execution_guid, string form_id, string target)
+        public ActionResult ActionExecuteFromTrigger(string execution_guid, string form_id)
         {
             writeDebug("ActionExecuteFromTrigger");
             var views = new List<string>();
@@ -809,7 +818,7 @@ namespace SealWebServer.Controllers
             {
                 if (!CheckAuthentication()) return _loginContentResult;
 
-                ReportExecution execution = getExecution(execution_guid);
+                ReportExecution execution = getReportExecution(execution_guid);
                 if (execution == null) throw new Exception(string.Format("Unable to find execution id {0}", execution_guid));
 
                 var report = execution.Report;
@@ -817,41 +826,6 @@ namespace SealWebServer.Controllers
 
                 if (!string.IsNullOrEmpty(form_id) && execution != null)
                 {
-                    if (!string.IsNullOrEmpty(target))
-                    {
-                        //Trigger in another window
-                        var rootReport = execution.RootReport;
-                        var triggerViewGUID = report.ExecutionTriggerView.GUID;
-                        report.IsNavigating = false;
-                        report.PreInputRestrictions.Clear();
-                        //Reapply restrictions
-                        initInputRestrictions(report);
-                        //Apply input restrictions if any
-                        if (report.InputRestrictions.Count > 0) execution.CheckInputRestrictions();
-
-                        //Reset context for navigation, remove previous, keep root
-                        var keys = NavigationContext.Navigations.Where(i => i.Value.Execution.RootReport.ExecutionGUID == report.ExecutionGUID).ToArray();
-                        foreach (var key in keys) NavigationContext.Navigations.Remove(key.Key);
-
-                        //Clone the report for a new execution
-                        report = report.Clone(); //New executionGUID
-                        report.ExecutionTriggerView = execution.Report.AllViews.FirstOrDefault(i => i.GUID == triggerViewGUID);
-                        //Set execution view
-                        if (report.ExecutionTriggerView != null) report.CurrentViewGUID = string.IsNullOrEmpty(report.ExecutionTriggerView.RestrictionViewGUID) ? report.ViewGUID : report.ExecutionTriggerView.RestrictionViewGUID;
-
-                        execution = initReportExecution(report, report.CurrentViewGUID, "", false);
-                        report.IsNavigating = false;
-                        report.ForWidget = false;
-                        execution.Execute();
-                        while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
-
-                        //Set navigation context
-                        NavigationContext.SetNavigation(execution);
-
-                        return getFileResult(report.HTMLDisplayFilePath, report);
-                    }
-
-
                     lock (execution)
                     {
                         report.IsNavigating = false;
@@ -911,11 +885,6 @@ namespace SealWebServer.Controllers
                                     report.Status = ReportStatus.RenderingDisplay;
                                     report.CurrentModelView = view;
                                     views.Add(view.Parse());
-                                    if (report.ForWidget)
-                                    {
-                                        //Add also children when parsing for Widgets
-                                        foreach (var child in view.Views) parseViews(child, views);
-                                    }
                                 }
                                 finally
                                 {
@@ -947,400 +916,438 @@ namespace SealWebServer.Controllers
         }
 
 
+        /// <summary>
+        /// Execute a report in a new window when triggered from a Restrictions View
+        /// </summary>
+        public ActionResult ActionExecuteFromTriggerNewWindow(string execution_guid_trigger, string form_id)
+        {
+            writeDebug("ActionExecuteFromTriggerNewWindow");
+            try
+            {
+                if (!CheckAuthentication()) return _loginContentResult;
+
+                ReportExecution execution = getReportExecution(execution_guid_trigger);
+                if (execution == null) throw new Exception(string.Format("Unable to find execution id {0}", execution_guid_trigger));
+
+                var report = execution.Report;
+                report.ExecutionTriggerView = execution.Report.AllViews.FirstOrDefault(i => form_id.EndsWith(i.IdSuffix));
+                //Trigger in another window
+                var rootReport = execution.RootReport;
+                var triggerViewGUID = report.ExecutionTriggerView.GUID;
+                report.IsNavigating = false;
+                report.PreInputRestrictions.Clear();
+                //Reapply restrictions
+                initInputRestrictions(report);
+                //Apply input restrictions if any
+                if (report.InputRestrictions.Count > 0) execution.CheckInputRestrictions();
+
+                //Reset context for navigation, remove previous, keep root
+                var keys = NavigationContext.Navigations.Where(i => i.Value.Execution.RootReport.ExecutionGUID == report.ExecutionGUID).ToArray();
+                foreach (var key in keys) NavigationContext.Navigations.Remove(key.Key);
+
+                //Clone the report for a new execution
+                report = report.Clone(); //New executionGUID
+                report.ExecutionTriggerView = execution.Report.AllViews.FirstOrDefault(i => i.GUID == triggerViewGUID);
+                //Set execution view
+                if (report.ExecutionTriggerView != null) report.CurrentViewGUID = string.IsNullOrEmpty(report.ExecutionTriggerView.GetValue(Parameter.RestrictionsExecView)) ? report.ViewGUID : report.ExecutionTriggerView.GetValue(Parameter.RestrictionsExecView);
+
+                execution = initReportExecution(report, report.CurrentViewGUID, "", false);
+                report.IsNavigating = false;
+                execution.Execute();
+                while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
+
+                //Set navigation context
+                NavigationContext.SetNavigation(execution);
+
+                return getFileResult(report.HTMLDisplayFilePath, report);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+
         #region private methods
 
         void checkSWIAuthentication()
-        {
-            if (WebUser == null || !WebUser.IsAuthenticated) throw new SessionLostException("Error: user is not authenticated");
-        }
-
-        JsonResult HandleSWIException(Exception ex)
-        {
-            if (!(ex is ValidationException) && !(ex is SessionLostException))
             {
-                var detail = getContextDetail(Request, WebUser);
-                Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
-                WebHelper.WriteWebException(ex, detail);
+                if (WebUser == null || !WebUser.IsAuthenticated) throw new SessionLostException("Error: user is not authenticated");
             }
-            return Json(new { error = ex.Message.Replace(Repository.RepositoryPath, ""), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
-        }
 
-        ReportExecution getExecution(string execution_guid)
-        {
-            var execution = getReportExecution(execution_guid);
-            if (execution == null)
+            JsonResult HandleSWIException(Exception ex)
             {
-                //Navigation from dashboard, set the root report in the session
-                execution = DashboardExecutions.FirstOrDefault(i => i.Report.ExecutionGUID == execution_guid);
-                setSessionValue(execution_guid, execution);
+                if (!(ex is ValidationException) && !(ex is SessionLostException))
+                {
+                    var detail = getContextDetail(Request, WebUser);
+                    Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
+                    WebHelper.WriteWebException(ex, detail);
+                }
+                return Json(new { error = ex.Message.Replace(Repository.RepositoryPath, ""), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
             }
-            return execution;
-        }
 
-        string getFullPath(string path)
-        {
-            path = FileHelper.ConvertOSFilePath(path);
-            if (path.StartsWith(SWIFolder.GetPersonalRoot())) return Repository.GetPersonalFolder(WebUser) + path.Substring(1);
-            else return Repository.ReportsFolder + path;
-        }
-
-        SWIFolder getParentFolder(string path)
-        {
-            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
-            if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
-            path = FileHelper.ConvertOSFilePath(path);
-            return getFolder(SWIFolder.GetParentPath(path));
-        }
-        SWIFolder getFolder(string path)
-        {
-            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
-            checkSWIAuthentication();
-            if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
-            path = FileHelper.ConvertOSFilePath(path);
-
-            SWIFolder result = WebUser.AllFolders.FirstOrDefault(i => i.path == path);
-            if (result != null)
+            string getFullPath(string path)
             {
-                //Folder was already initialized
+                path = FileHelper.ConvertOSFilePath(path);
+                if (path.StartsWith(SWIFolder.GetPersonalRoot())) return Repository.GetPersonalFolder(WebUser) + path.Substring(1);
+                else return Repository.ReportsFolder + path;
+            }
+
+            SWIFolder getParentFolder(string path)
+            {
+                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+                if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
+                path = FileHelper.ConvertOSFilePath(path);
+                return getFolder(SWIFolder.GetParentPath(path));
+            }
+            SWIFolder getFolder(string path)
+            {
+                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+                checkSWIAuthentication();
+                if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
+                path = FileHelper.ConvertOSFilePath(path);
+
+                SWIFolder result = WebUser.AllFolders.FirstOrDefault(i => i.path == path);
+                if (result != null)
+                {
+                    //Folder was already initialized
+                    result.SetFullPath(getFullPath(path));
+                    return result;
+                }
+
+                result = new SWIFolder();
+                result.path = path;
+                result.right = 0;
+                result.sql = WebUser.SqlModel;
                 result.SetFullPath(getFullPath(path));
+
+                if (result.IsPersonal)
+                {
+                    //Personal
+                    if (WebUser.PersonalFolderRight == PersonalFolderRight.None) throw new Exception("Error: this user has no personal folder");
+                    result.SetManageFlag(true, true, result.FinalPath == "");
+                    result.expand = false;
+                    string prefix = Repository.GetPersonalFolderName(WebUser);
+                    result.name = (result.FinalPath == "" ? prefix : Path.GetFileName(result.FinalPath));
+                    result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
+                    result.right = (int)FolderRight.Edit;
+                    result.files = (WebUser.PersonalFolderRight == PersonalFolderRight.Files);
+                }
+                else
+                {
+                    result.name = (result.FinalPath == Path.DirectorySeparatorChar.ToString() ? Translate("Reports") : Repository.TranslateFolderName(path));
+                    result.fullname = Translate("Reports") + Repository.TranslateFolderPath(result.FinalPath);
+                    SecurityFolder securityFolder = WebUser.FindSecurityFolder(path);
+                    if (securityFolder != null)
+                    {
+                        result.SetManageFlag(securityFolder.UseSubFolders, securityFolder.ManageFolder, securityFolder.IsDefined);
+                        result.expand = securityFolder.ExpandSubFolders;
+                        result.right = (int)securityFolder.FolderRight;
+                        result.files = securityFolder.FilesOnly;
+                    }
+                }
                 return result;
             }
 
-            result = new SWIFolder();
-            result.path = path;
-            result.right = 0;
-            result.sql = WebUser.SqlModel;
-            result.SetFullPath(getFullPath(path));
+            SWIFolderDetail getFolderDetail(string path, bool refresh = false)
+            {
+                path = FileHelper.ConvertOSFilePath(path);
+                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
 
-            if (result.IsPersonal)
-            {
-                //Personal
-                if (WebUser.PersonalFolderRight == PersonalFolderRight.None) throw new Exception("Error: this user has no personal folder");
-                result.SetManageFlag(true, true, result.FinalPath == "");
-                result.expand = false;
-                string prefix = Repository.GetPersonalFolderName(WebUser);
-                result.name = (result.FinalPath == "" ? prefix : Path.GetFileName(result.FinalPath));
-                result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
-                result.right = (int)FolderRight.Edit;
-                result.files = (WebUser.PersonalFolderRight == PersonalFolderRight.Files);
-            }
-            else
-            {
-                result.name = (result.FinalPath == Path.DirectorySeparatorChar.ToString() ? Translate("Reports") : Repository.TranslateFolderName(path));
-                result.fullname = Translate("Reports") + Repository.TranslateFolderPath(result.FinalPath);
-                SecurityFolder securityFolder = WebUser.FindSecurityFolder(path);
-                if (securityFolder != null)
+                SWIFolderDetail folderDetail = null;
+                if (refresh)
                 {
-                    result.SetManageFlag(securityFolder.UseSubFolders, securityFolder.ManageFolder, securityFolder.IsDefined);
-                    result.expand = securityFolder.ExpandSubFolders;
-                    result.right = (int)securityFolder.FolderRight;
-                    result.files = securityFolder.FilesOnly;
+                    WebUser.FolderDetails.RemoveAll(i => i.folder.path == path);
                 }
-            }
-            return result;
-        }
-
-        SWIFolderDetail getFolderDetail(string path, bool refresh = false)
-        {
-            path = FileHelper.ConvertOSFilePath(path);
-            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
-
-            SWIFolderDetail folderDetail = null;
-            if (refresh)
-            {
-                WebUser.FolderDetails.RemoveAll(i => i.folder.path == path);
-            }
-            else
-            {
-                folderDetail = WebUser.FolderDetails.FirstOrDefault(i => i.folder.path == path);
-                if (folderDetail != null)
+                else
                 {
-                    return folderDetail;
+                    folderDetail = WebUser.FolderDetails.FirstOrDefault(i => i.folder.path == path);
+                    if (folderDetail != null)
+                    {
+                        return folderDetail;
+                    }
                 }
+
+                SWIFolder folder = getFolder(path);
+                var files = new List<SWIFile>();
+                if (folder.right > 0)
+                {
+                    foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
+                    {
+                        //check right on files only
+                        if (folder.files && FileHelper.IsSealReportFile(newPath)) continue;
+                        if (folder.IsPersonal && newPath.ToLower() == WebUser.ProfilePath.ToLower()) continue;
+
+                        files.Add(new SWIFile()
+                        {
+                            path = FileHelper.ConvertOSFilePath(folder.Combine(Path.GetFileName(newPath))),
+                            name = Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
+                            last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
+                            isreport = FileHelper.IsSealReportFile(newPath),
+                            right = folder.right
+                        });
+                    }
+                }
+
+                //Folder Detail script
+                WebUser.FolderDetail = new SWIFolderDetail() { folder = folder, files = files.ToArray() };
+                WebUser.ScriptNumber = 1;
+                WebUser.FolderDetailFiles = files;
+                foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FolderDetailScript)).OrderBy(i => i.Name))
+                {
+                    RazorHelper.CompileExecute(group.FolderDetailScript, WebUser);
+                    WebUser.ScriptNumber++;
+                }
+                folderDetail = WebUser.FolderDetail;
+                WebUser.FolderDetails.Add(folderDetail);
+
+                return folderDetail;
             }
 
-            SWIFolder folder = getFolder(path);
-            var files = new List<SWIFile>();
-            if (folder.right > 0)
+            SWIFile getFileDetail(string path)
             {
-                foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
+                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+                path = FileHelper.ConvertOSFilePath(path);
+                var folderDetail = getFolderDetail(SWIFolder.GetParentPath(path));
+                var fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
+                if (fileDetail == null)
                 {
-                    //check right on files only
-                    if (folder.files && FileHelper.IsSealReportFile(newPath)) continue;
-                    if (folder.IsPersonal && newPath.ToLower() == WebUser.ProfilePath.ToLower()) continue;
+                    folderDetail = getFolderDetail(SWIFolder.GetParentPath(path), true);
+                    fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
+                }
+                if (fileDetail == null)
+                {
+                    throw new Exception("Error: file not found");
+                }
+                return fileDetail;
+            }
 
+            void fillFolder(SWIFolder folder)
+            {
+                List<SWIFolder> subFolders = new List<SWIFolder>();
+                if (folder.IsPersonal && WebUser.PersonalFolderRight == PersonalFolderRight.None) return;
+
+                string folderPath = folder.GetFullPath();
+                foreach (string subFolder in Directory.GetDirectories(folderPath))
+                {
+                    SWIFolder sub = getFolder(folder.Combine(subFolder));
+                    //Add if right on this folder, or a sub folder is defined with this root
+                    if ((sub.right > 0) || WebUser.SecurityGroups.Exists(i => i.Folders.Exists(j => j.Path.StartsWith(sub.path + (sub.path == Path.DirectorySeparatorChar.ToString() ? "" : Path.DirectorySeparatorChar.ToString())) && j.FolderRight != FolderRight.None)))
+                    {
+                        fillFolder(sub);
+                        subFolders.Add(sub);
+                    }
+                }
+                folder.folders = subFolders.ToArray();
+            }
+
+            void searchFolder(SWIFolder folder, string pattern, List<SWIFile> files)
+            {
+                var folderDetail = getFolderDetail(folder.path, true);
+
+                foreach (var file in (folderDetail.files.Where(i => i.name.ToLower().Contains(pattern.ToLower()))))
+                {
                     files.Add(new SWIFile()
                     {
-                        path = FileHelper.ConvertOSFilePath(folder.Combine(Path.GetFileName(newPath))),
-                        name = Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
-                        last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                        isreport = FileHelper.IsSealReportFile(newPath),
-                        right = folder.right
+                        path = file.path,
+                        name = folder.fullname + (folder.fullname.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString()) +  file.name,
+                        last = file.last,
+                        isreport = file.isreport,
+                        right = file.right
                     });
+
+                }
+
+                foreach (string subFolder in Directory.GetDirectories(folder.GetFullPath()))
+                {
+                    SWIFolder sub = getFolder(folder.Combine(subFolder));
+                    if (sub.right > 0) searchFolder(sub, pattern, files);
                 }
             }
 
-            //Folder Detail script
-            WebUser.FolderDetail = new SWIFolderDetail() { folder = folder, files = files.ToArray() };
-            WebUser.ScriptNumber = 1;
-            WebUser.FolderDetailFiles = files;
-            foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FolderDetailScript)).OrderBy(i => i.Name))
+            void initInputRestrictions(Report report)
             {
-                RazorHelper.CompileExecute(group.FolderDetailScript, WebUser);
-                WebUser.ScriptNumber++;
-            }
-            folderDetail = WebUser.FolderDetail;
-            WebUser.FolderDetails.Add(folderDetail);
+                report.InputRestrictions.Clear();
 
-            return folderDetail;
-        }
+                //Do not use input restrictions for navigation...
+                if (report.IsNavigating) return;
 
-        SWIFile getFileDetail(string path)
-        {
-            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
-            path = FileHelper.ConvertOSFilePath(path);
-            var folderDetail = getFolderDetail(SWIFolder.GetParentPath(path));
-            var fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
-            if (fileDetail == null)
-            {
-                folderDetail = getFolderDetail(SWIFolder.GetParentPath(path), true);
-                fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
-            }
-            if (fileDetail == null)
-            {
-                throw new Exception("Error: file not found");
-            }
-            return fileDetail;
-        }
-
-        void fillFolder(SWIFolder folder)
-        {
-            List<SWIFolder> subFolders = new List<SWIFolder>();
-            if (folder.IsPersonal && WebUser.PersonalFolderRight == PersonalFolderRight.None) return;
-
-            string folderPath = folder.GetFullPath();
-            foreach (string subFolder in Directory.GetDirectories(folderPath))
-            {
-                if (folder.IsPersonal && subFolder.ToLower() == WebUser.DashboardPersonalFolder.ToLower()) continue;
-
-                SWIFolder sub = getFolder(folder.Combine(subFolder));
-                //Add if right on this folder, or a sub folder is defined with this root
-                if ((sub.right > 0) || WebUser.SecurityGroups.Exists(i => i.Folders.Exists(j => j.Path.StartsWith(sub.path + (sub.path == Path.DirectorySeparatorChar.ToString() ? "" : Path.DirectorySeparatorChar.ToString())) && j.FolderRight != FolderRight.None)))
+                if (report.PreInputRestrictions.Count > 0)
                 {
-                    fillFolder(sub);
-                    subFolders.Add(sub);
-                }
-            }
-            folder.folders = subFolders.ToArray();
-        }
-
-        void searchFolder(SWIFolder folder, string pattern, List<SWIFile> files)
-        {
-            var folderDetail = getFolderDetail(folder.path, true);
-
-            foreach (var file in (folderDetail.files.Where(i => Path.GetFileName(i.path).ToLower().Contains(pattern.ToLower()))))
-            {
-                files.Add(new SWIFile()
-                {
-                    path = file.path,
-                    name = folder.fullname + Path.DirectorySeparatorChar.ToString() + file.name,
-                    last = file.last,
-                    isreport = file.isreport,
-                    right = file.right
-                });
-
-            }
-
-            foreach (string subFolder in Directory.GetDirectories(folder.GetFullPath()))
-            {
-                SWIFolder sub = getFolder(folder.Combine(subFolder));
-                if (sub.right > 0) searchFolder(sub, pattern, files);
-            }
-        }
-
-        void initInputRestrictions(Report report)
-        {
-            report.InputRestrictions.Clear();
-
-            //Do not use input restrictions for navigation...
-            if (report.IsNavigating) return;
-
-            if (report.PreInputRestrictions.Count > 0)
-            {
-                int i = 0;
-                while (true)
-                {
-                    string prefix = string.Format("r{0}", i);
-                    string key = prefix + "_name";
-                    if (report.PreInputRestrictions.ContainsKey(key))
+                    int i = 0;
+                    while (true)
                     {
-                        var displayName = report.PreInputRestrictions[key].ToLower();
-                        foreach (ReportRestriction restriction in report.ExecutionCommonRestrictions.Where(j => j.DisplayNameEl.ToLower() == displayName))
+                        string prefix = string.Format("r{0}", i);
+                        string key = prefix + "_name";
+                        if (report.PreInputRestrictions.ContainsKey(key))
                         {
-                            //Convert values to normal input using the html id...
-                            key = prefix + "_operator";
-                            if (report.PreInputRestrictions.ContainsKey(key))
+                            var displayName = report.PreInputRestrictions[key].ToLower();
+                            foreach (ReportRestriction restriction in report.ExecutionCommonRestrictions.Where(j => j.DisplayNameEl.ToLower() == displayName))
                             {
-                                //operator
-                                report.InputRestrictions.Add(restriction.OperatorHtmlId, report.PreInputRestrictions[key]);
-                                if (restriction.IsEnumRE)
+                                //Convert values to normal input using the html id...
+                                key = prefix + "_operator";
+                                if (report.PreInputRestrictions.ContainsKey(key))
                                 {
-                                    restriction.SetEnumHtmlIds();
-
-                                    //options
-                                    key = prefix + "_enum_values";
-                                    if (report.PreInputRestrictions.ContainsKey(key))
+                                    //operator
+                                    report.InputRestrictions.Add(restriction.OperatorHtmlId, report.PreInputRestrictions[key]);
+                                    if (restriction.IsEnumRE)
                                     {
-                                        var optionValues = report.PreInputRestrictions[key];
-                                        //Convert values into index of the enum...
-                                        var preOptionvalues = optionValues.Split(',');
-                                        foreach (var enumDef in restriction.EnumRE.Values)
+                                        restriction.SetEnumHtmlIds();
+
+                                        //options
+                                        key = prefix + "_enum_values";
+                                        if (report.PreInputRestrictions.ContainsKey(key))
                                         {
-                                            if (preOptionvalues.Contains(enumDef.Id))
+                                            var optionValues = report.PreInputRestrictions[key];
+                                            //Convert values into index of the enum...
+                                            var preOptionvalues = optionValues.Split(',');
+                                            foreach (var enumDef in restriction.MetaEnumValuesRE)
                                             {
-                                                report.InputRestrictions.Add(restriction.OptionHtmlId + enumDef.HtmlId, "true");
+                                                if (preOptionvalues.Contains(enumDef.Id))
+                                                {
+                                                    report.InputRestrictions.Add(restriction.OptionHtmlId + enumDef.HtmlId, "true");
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                else if (restriction.IsDateTime)
-                                {
-                                    //convert to user input format
-                                    DateTime dt;
-                                    key = prefix + "_value_1";
-                                    if (report.PreInputRestrictions.ContainsKey(key))
+                                    else if (restriction.IsDateTime)
                                     {
-                                        if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                        //convert to user input format
+                                        DateTime dt;
+                                        key = prefix + "_value_1";
+                                        if (report.PreInputRestrictions.ContainsKey(key))
                                         {
-                                            report.InputRestrictions.Add(restriction.ValueHtmlId + "_1", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                            if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                            {
+                                                report.InputRestrictions.Add(restriction.ValueHtmlId + "_1", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                            }
                                         }
-                                    }
-                                    key = prefix + "_value_2";
-                                    if (report.PreInputRestrictions.ContainsKey(key))
-                                    {
-                                        if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                        key = prefix + "_value_2";
+                                        if (report.PreInputRestrictions.ContainsKey(key))
                                         {
-                                            report.InputRestrictions.Add(restriction.ValueHtmlId + "_2", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                            if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                            {
+                                                report.InputRestrictions.Add(restriction.ValueHtmlId + "_2", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                            }
                                         }
-                                    }
-                                    key = prefix + "_value_3";
-                                    if (report.PreInputRestrictions.ContainsKey(key))
-                                    {
-                                        if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                        key = prefix + "_value_3";
+                                        if (report.PreInputRestrictions.ContainsKey(key))
                                         {
-                                            report.InputRestrictions.Add(restriction.ValueHtmlId + "_3", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                            if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                            {
+                                                report.InputRestrictions.Add(restriction.ValueHtmlId + "_3", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                            }
                                         }
-                                    }
-                                    key = prefix + "_value_4";
-                                    if (report.PreInputRestrictions.ContainsKey(key))
-                                    {
-                                        if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                        key = prefix + "_value_4";
+                                        if (report.PreInputRestrictions.ContainsKey(key))
                                         {
-                                            report.InputRestrictions.Add(restriction.ValueHtmlId + "_4", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                            if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                            {
+                                                report.InputRestrictions.Add(restriction.ValueHtmlId + "_4", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                            }
                                         }
-                                    }
 
-                                }
-                                else
-                                {
-                                    //standard values
-                                    key = prefix + "_value_1";
-                                    if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_1", report.PreInputRestrictions[key]);
-                                    key = prefix + "_value_2";
-                                    if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_2", report.PreInputRestrictions[key]);
-                                    key = prefix + "_value_3";
-                                    if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_3", report.PreInputRestrictions[key]);
-                                    key = prefix + "_value_4";
-                                    if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_4", report.PreInputRestrictions[key]);
+                                    }
+                                    else
+                                    {
+                                        //standard values
+                                        key = prefix + "_value_1";
+                                        if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_1", report.PreInputRestrictions[key]);
+                                        key = prefix + "_value_2";
+                                        if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_2", report.PreInputRestrictions[key]);
+                                        key = prefix + "_value_3";
+                                        if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_3", report.PreInputRestrictions[key]);
+                                        key = prefix + "_value_4";
+                                        if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_4", report.PreInputRestrictions[key]);
+                                    }
                                 }
                             }
-                        }
-                        i++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                //get restriction values from the form request (if any)
-                foreach (string key in Request.Form.Keys)
-                {
-                    string value = Request.Form[key];
-                    if (value != null)
-                    {
-                        if (key.EndsWith("_Option_Value"))
-                        {
-                            foreach (string optionValue in value.Split(','))
-                            {
-                                report.InputRestrictions.Add(optionValue, "true");
-                            }
+                            i++;
                         }
                         else
                         {
-                            report.InputRestrictions.Add(key, value);
+                            break;
                         }
                     }
                 }
+                else
+                {
+                    //get restriction values from the form request (if any)
+                    foreach (string key in Request.Form.Keys)
+                    {
+                        string value = Request.Form[key];
+                        if (value != null)
+                        {
+                            if (key.EndsWith("_Option_Value"))
+                            {
+                                foreach (string optionValue in value.Split(','))
+                                {
+                                    report.InputRestrictions.Add(optionValue, "true");
+                                }
+                            }
+                            else
+                            {
+                                report.InputRestrictions.Add(key, value);
+                            }
+                        }
+                    }
+                }
+                report.PreInputRestrictions.Clear();
             }
-            report.PreInputRestrictions.Clear();
-        }
 
 
-        private ReportExecution initReportExecution(Report report, string viewGUID, string outputGUID, bool toResult)
-        {
-            Repository repository = report.Repository;
-
-            report.ExecutionContext = toResult ? ReportExecutionContext.WebOutput : ReportExecutionContext.WebReport;
-            report.SecurityContext = WebUser;
-            report.CurrentViewGUID = report.ViewGUID;
-
-            //Init Pre Input restrictions
-            report.PreInputRestrictions.Clear();
-            foreach (string key in Request.Form.Keys) report.PreInputRestrictions.Add(key, Request.Form[key]);
-            foreach (string key in Request.Query.Keys) report.PreInputRestrictions.Add(key, Request.Query[key]);
-
-            //execute to output
-            if (!string.IsNullOrEmpty(outputGUID))
+            private ReportExecution initReportExecution(Report report, string viewGUID, string outputGUID, bool toResult)
             {
-                report.OutputToExecute = report.Outputs.FirstOrDefault(i => i.GUID == outputGUID);
-                if (report.OutputToExecute == null) throw new Exception("Invalid report output to execute");
-                if (!report.OutputToExecute.PublicExec && !string.IsNullOrEmpty(report.OutputToExecute.UserName) && WebUser.Name != report.OutputToExecute.UserName) throw new Exception("This output is not public and can only be executed by:" + report.OutputToExecute.UserName);
-                report.ExecutionContext = ReportExecutionContext.WebOutput;
-                report.CurrentViewGUID = report.OutputToExecute.ViewGUID;
+                Repository repository = report.Repository;
+
+                report.ExecutionContext = toResult ? ReportExecutionContext.WebOutput : ReportExecutionContext.WebReport;
+                report.SecurityContext = WebUser;
+                report.CurrentViewGUID = report.ViewGUID;
+
+                //Init Pre Input restrictions
+                report.PreInputRestrictions.Clear();
+                foreach (string key in Request.Form.Keys) report.PreInputRestrictions.Add(key, Request.Form[key]);
+                foreach (string key in Request.Query.Keys) report.PreInputRestrictions.Add(key, Request.Query[key]);
+
+                //execute to output
+                if (!string.IsNullOrEmpty(outputGUID))
+                {
+                    report.OutputToExecute = report.Outputs.FirstOrDefault(i => i.GUID == outputGUID);
+                    if (report.OutputToExecute == null) throw new Exception("Invalid report output to execute");
+                    if (!report.OutputToExecute.PublicExec && !string.IsNullOrEmpty(report.OutputToExecute.UserName) && WebUser.Name != report.OutputToExecute.UserName) throw new Exception("This output is not public and can only be executed by:" + report.OutputToExecute.UserName);
+                    report.ExecutionContext = ReportExecutionContext.WebOutput;
+                    report.CurrentViewGUID = report.OutputToExecute.ViewGUID;
+                }
+
+                //execute with custom view
+                if (!string.IsNullOrEmpty(viewGUID)) report.CurrentViewGUID = viewGUID;
+
+                ReportExecution execution = new ReportExecution() { Report = report };
+
+                setSessionValue(report.ExecutionGUID, execution);
+                report.WebUrl = GetWebUrl(Request, Response);
+
+                //Purge temp files here
+                FileHelper.PurgeTempApplicationDirectory();
+
+                report.InitForExecution();
+                initInputRestrictions(report);
+                //Apply input restrictions if any
+                if (report.InputRestrictions.Count > 0) execution.CheckInputRestrictions();
+
+                return execution;
             }
 
-            //execute with custom view
-            if (!string.IsNullOrEmpty(viewGUID)) report.CurrentViewGUID = viewGUID;
-
-            ReportExecution execution = new ReportExecution() { Report = report };
-
-            setSessionValue(report.ExecutionGUID, execution);
-            report.WebUrl = GetWebUrl(Request, Response);
-
-            //Purge temp files here
-            FileHelper.PurgeTempApplicationDirectory();
-
-            report.InitForExecution();
-            initInputRestrictions(report);
-            //Apply input restrictions if any
-            if (report.InputRestrictions.Count > 0) execution.CheckInputRestrictions();
-
-            return execution;
-        }
-
-        private ReportExecution getReportExecution(string execution_guid)
-        {
-            ReportExecution result = null;
-            if (!string.IsNullOrEmpty(execution_guid) && getSessionValue(execution_guid) is ReportExecution)
+            private ReportExecution getReportExecution(string execution_guid)
             {
-                result = getSessionValue(execution_guid) as ReportExecution;
+                ReportExecution result = null;
+                if (!string.IsNullOrEmpty(execution_guid) && getSessionValue(execution_guid) is ReportExecution)
+                {
+                    result = getSessionValue(execution_guid) as ReportExecution;
+                }
+                return result;
             }
-            return result;
-        }
 
-        #endregion
+            #endregion
+        }
     }
-}

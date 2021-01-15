@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using System.Collections.Generic;
 using System.IO;
 
 namespace Seal.Model
@@ -15,12 +16,9 @@ namespace Seal.Model
         public string group;
         public string culture;
         public string folder;
-        public string dashboard;
+        public SWIMenuItem lastreport;
         public string lastview;
-        public ViewType viewtype;
-        public SWIDashboardFolder[] dashboardfolders;
-        public bool managedashboards = false;
-        public bool defaultdashboards = true;
+        public bool showfolders;
         public string usertag;
     }
 
@@ -140,17 +138,6 @@ namespace Seal.Model
         }
     }
 
-    /// <summary>
-    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
-    /// </summary>
-    public class SWIDashboardFolder
-    {
-        public static string PersonalPath = ":";
-
-        public string name;
-        public string path;
-    }
-
 
     /// <summary>
     /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
@@ -235,4 +222,15 @@ namespace Seal.Model
         public string val;
     }
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
+    public class SWIMenuItem
+    {
+        public string path;
+        public string viewGUID;
+        public string outputGUID;
+        public string name;
+        public List<SWIMenuItem> items = new List<SWIMenuItem>();
+    }
 }

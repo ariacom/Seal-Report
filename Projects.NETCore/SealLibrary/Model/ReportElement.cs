@@ -11,6 +11,7 @@ using Seal.Helpers;
 using System.Globalization;
 using System.Drawing.Design;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Seal.Model
 {
@@ -281,13 +282,14 @@ namespace Seal.Model
 
             bool elementSortPosition = (IsSorted && en.UsePosition);
             MetaEV value = null;
-            if (useDisplayValue) value = en.Values.FirstOrDefault(i => i.DisplayValue == enumValue);
-            else value = en.Values.FirstOrDefault(i => i.Id == enumValue);
+            var values = en.GetValues(Model.Connection);
+            if (useDisplayValue) value = values.FirstOrDefault(i => i.DisplayValue == enumValue);
+            else value = values.FirstOrDefault(i => i.Id == enumValue);
 
             if (value != null)
             {
-                string sortPrefix = elementSortPosition ? string.Format("{0:000000}", en.Values.LastIndexOf(value)) : "";
-                result = sortPrefix + Report.EnumDisplayValue(en, value.Id);
+                string sortPrefix = elementSortPosition ? string.Format("{0:000000}", values.LastIndexOf(value)) : "";
+                result = sortPrefix + Model.EnumDisplayValue(en, value.Id);
             }
             else
             {
@@ -657,6 +659,18 @@ namespace Seal.Model
                     result.RefreshEnum();
                 }
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// List of values of the element enum
+        /// </summary>
+        [XmlIgnore]
+        public List<MetaEV> MetaEnumValuesEL
+        {
+            get
+            {
+                return EnumEL.GetValues(Model.Connection);
             }
         }
 

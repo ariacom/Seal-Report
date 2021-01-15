@@ -218,19 +218,11 @@ namespace Seal.Model
             foreach (var group in Groups)
             {
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
-                result.AppendFormat("    View Type: {0}\r\n", Helper.GetEnumDescription(group.ViewType.GetType(), group.ViewType));
-                result.AppendLine();
                 result.AppendFormat("    Personal Folder: {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
                 result.AppendLine();
                 result.AppendFormat("    Show all folders: {0}\r\n", group.ShowAllFolders ? "yes" : "no");
                 result.AppendLine();
-                result.AppendFormat("    Dashboard Personal View: {0}\r\n", group.ManageDashboards ? "yes" : "no");
-                result.AppendLine();
-                result.AppendFormat("    Dashboard Personal Folder: {0}\r\n", group.PersonalDashboardFolder? "yes" : "no");
-                result.AppendLine();
                 result.AppendFormat("    SQL Models: {0}\r\n", group.SqlModel ? "yes" : "no");
-                result.AppendLine();
-                result.AppendFormat("    Widget Publication: {0}\r\n", group.WidgetPublication ? "yes" : "no");
                 result.AppendLine();
                 foreach (var item in group.Devices)
                 {
@@ -247,14 +239,6 @@ namespace Seal.Model
                 foreach (var item in group.Columns)
                 {
                     result.AppendFormat("    Column:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
-                }
-                foreach (var item in group.DashboardFolders)
-                {
-                    result.AppendFormat("    Dashboard Folder:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
-                }
-                foreach (var item in group.Widgets)
-                {
-                    result.AppendFormat("    Widget:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 result.AppendLine();
 

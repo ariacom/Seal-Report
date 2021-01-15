@@ -20,31 +20,34 @@ namespace Seal.Model
     {
         public Dictionary<string, Navigation> Navigations = new Dictionary<string, Navigation>();
 
-        public ReportExecution Navigate(string navigation, Report rootReport)
+        public ReportExecution Navigate(string navigation, ReportExecution execution, bool newWindow)
         {
+            var rootReport = execution.RootReport;
             var parameters = HttpUtility.ParseQueryString(navigation);
             string reportPath = parameters.Get("rpa"); //For subreports
             string executionGuid = parameters.Get("exe"); //For drill
-            bool isSubReport = !string.IsNullOrEmpty(reportPath);
-            bool isDrill = !string.IsNullOrEmpty(executionGuid);
 
             Report newReport = null;
-
-            //Check if the same navigation with the same execution GUID occured
-            var previousNav = Navigations.Values.FirstOrDefault(i => i.Execution.NavigationParameter == navigation && i.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID);
-            if (previousNav != null) newReport = previousNav.Execution.Report;
-
             string destLabel = "", srcRestriction = "";
-            if (Navigations.Count(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID) == 1)
+            Navigation previousNav = null;
+
+            if (!newWindow)
             {
-                //For the first navigation, we update the JS file in the result to show up the button
-                string html = File.ReadAllText(rootReport.ResultFilePath);
-                html = html.Replace("var hasNavigation = false;/*SRKW do not modify*/", "var hasNavigation = true;");
-                rootReport.ResultFilePath = Helpers.FileHelper.GetUniqueFileName(rootReport.ResultFilePath);
-                File.WriteAllText(rootReport.ResultFilePath, html, System.Text.Encoding.UTF8);
-                rootReport.IsNavigating = true;
-                rootReport.HasNavigation = true;
-                Navigations.First(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID).Value.Link.Href = !string.IsNullOrEmpty(rootReport.WebUrl) ? ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + rootReport.ExecutionGUID : rootReport.ResultFilePath;
+                //Check if the same navigation with the same execution GUID occured
+                previousNav = Navigations.Values.FirstOrDefault(i => i.Execution.NavigationParameter == navigation && i.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID);
+                if (previousNav != null) newReport = previousNav.Execution.Report;
+
+                if (Navigations.Count(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID) == 1)
+                {
+                    //For the first navigation, we update the JS file in the result to show up the button
+                    string html = File.ReadAllText(rootReport.ResultFilePath);
+                    html = html.Replace("var _hasNavigation = false;/*SRKW do not modify*/", "var _hasNavigation = true;");
+                    rootReport.ResultFilePath = Helpers.FileHelper.GetUniqueFileName(rootReport.ResultFilePath);
+                    File.WriteAllText(rootReport.ResultFilePath, html, System.Text.Encoding.UTF8);
+                    rootReport.IsNavigating = true;
+                    rootReport.HasNavigation = true;
+                    Navigations.First(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID).Value.Link.Href = rootReport.ExecutionGUID; // !string.IsNullOrEmpty(rootReport.WebUrl) ? ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + rootReport.ExecutionGUID : rootReport.ResultFilePath;
+                }
             }
 
             if (!string.IsNullOrEmpty(reportPath))
@@ -55,6 +58,7 @@ namespace Seal.Model
                     string path = FileHelper.ConvertOSFilePath(reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath));
                     if (!File.Exists(path)) path = rootReport.Repository.ReportsFolder + path;
                     newReport = Report.LoadFromFile(path, rootReport.Repository);
+                    newReport.CurrentViewGUID = newReport.ViewGUID;
 
                     int index = 1;
                     while (true)
@@ -82,16 +86,17 @@ namespace Seal.Model
                 //Drill
                 if (newReport == null)
                 {
-                    if (Navigations.ContainsKey(executionGuid))
-                    {
-                        newReport = Navigations[executionGuid].Execution.Report.Clone();
-                    }
-                    else
-                    {
-                        //Drill from dashboard
-                        newReport = rootReport.Clone();
-                    }
+                    newReport = Navigations[executionGuid].Execution.Report.Clone();
                     newReport.ExecutionGUID = Guid.NewGuid().ToString();
+
+                    //Set view    
+                    newReport.CurrentViewGUID = execution.Report.CurrentViewGUID;
+                    //Set Navigation view if specified
+                    string viewGUID = parameters.Get("view");
+                    if (!string.IsNullOrEmpty(viewGUID) && newReport.Views.Exists(i => i.GUID == viewGUID))
+                    {
+                        newReport.CurrentViewGUID = viewGUID;
+                    }
 
                     string src = parameters.Get("src");
                     string dst = parameters.Get("dst");
@@ -169,7 +174,7 @@ namespace Seal.Model
                 Type = NavigationType.SubReport,
                 Text = execution.Report.ExecutionName
             };
-            navigation.Link.Href = !string.IsNullOrEmpty(execution.Report.WebUrl) ? ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + execution.Report.ExecutionGUID : execution.Report.ResultFilePath;
+            navigation.Link.Href = execution.Report.ExecutionGUID;
 
             //set root report here
             if (execution.RootReport == null) execution.RootReport = execution.Report;
@@ -180,7 +185,15 @@ namespace Seal.Model
             string links = "";
             foreach (var navigation in Navigations.Values.Where(i => i.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID))
             {
-                links += string.Format("<li><a href='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Link.Href), HttpUtility.HtmlEncode(navigation.Link.Text));
+                if (!string.IsNullOrEmpty(navigation.Execution.Report.WebUrl)) 
+                {
+                    //Execution from Web
+                    links += string.Format("<li><a href='#' execution_guid='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Link.Href), HttpUtility.HtmlEncode(navigation.Link.Text));
+                }
+                else
+                {
+                    links += string.Format("<li><a href='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Execution.Report.ResultFilePath), HttpUtility.HtmlEncode(navigation.Link.Text));
+                }
             }
             return links;
         }

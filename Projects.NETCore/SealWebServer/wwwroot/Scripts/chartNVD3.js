@@ -19,11 +19,11 @@ function nvd3TranslateTextAxis(text) {
         index = text.lastIndexOf("...");
         var index2 = text.lastIndexOf("(");
         if (index != -1 && index2 != -1) {
-            if (printLayout) return text.substr(0, index2);
+            if (_printLayout) return text.substr(0, index2);
             return (text.substr(0, index2) + nvd3TranslateText(suffix)).substring(0,index) + "...";
         }
     }
-    if (index != -1 && index == text.length - suffix.length) return text.substr(0, index) + (printLayout ? "" : nvd3TranslateText(suffix));
+    if (index != -1 && index == text.length - suffix.length) return text.substr(0, index) + (_printLayout ? "" : nvd3TranslateText(suffix));
     return text;
 }
 

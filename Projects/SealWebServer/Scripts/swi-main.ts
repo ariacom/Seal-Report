@@ -138,7 +138,7 @@ class SWIMain {
 
         //Reload and execute
         $("#reload-nav-item").unbind("click").on("click", function () {
-            _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, null, _main._profile.lastreport.name);
+            _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, _main._profile.lastreport.outputGUID, _main._profile.lastreport.name);
         });
 
         //Folders
@@ -363,7 +363,7 @@ class SWIMain {
 
         //Start last report
         if (_main._profile.lastview == "report" && _main._profile.lastreport.path) {
-            _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, null, _main._profile.lastreport.name);
+            _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, _main._profile.lastreport.outputGUID, _main._profile.lastreport.name);
         }
         else {
             $waitDialog.modal('hide');
@@ -371,7 +371,7 @@ class SWIMain {
     }
 
     private addReportMenu(parent, value) {
-        let aref = $("<a href='#' class='menu-report' path='" + value.path + "' '" + value.viewGUID + "'>").html(value.name);
+        let aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
         aref.append($("<span class='external-navigation glyphicon glyphicon-share'></span></a>"));
         parent.append($("<li class='menu-reports'>").append(aref));
     }
@@ -596,6 +596,7 @@ class SWIMain {
         _main._reportPath = path;
         _main._profile.lastreport.path = path;
         _main._profile.lastreport.viewGUID = viewGUID;
+        _main._profile.lastreport.outputGUID = outputGUID;
         _main._profile.lastreport.name = name;
         _main.toggleFoldersReport(true);
         _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
@@ -686,8 +687,10 @@ class SWIMain {
                 'position': 'absolute',
                 'z-index': '10000',
                 'left': $target.offset().left - $outputPanel.width(),
-                'top': top
+                'top': top,
+                'opacity': 0.4
             }).show();
+
 
             $("#output-panel-close").unbind("click").on("click", function () {
                 $outputPanel.hide();
@@ -695,17 +698,20 @@ class SWIMain {
 
             _gateway.GetReportDetail($target.parent().data("path"),
                 function (data) {
+                    $outputPanel.css("opacity", "1");
                     $tableBody.empty();
                     for (var i = 0; i < data.views.length; i++) {
                         var $tr = $("<tr>");
                         $tableBody.append($tr);
                         $tr.append($("<td>").append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayname)));
+                        $tr.append($("<td>").append($("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-default btn-table fa fa-play output-execute")));
                         $tr.append($("<td>").html(SWIUtil.tr("View")));
                     }
                     for (var i = 0; i < data.outputs.length; i++) {
                         var $tr = $("<tr>");
                         $tableBody.append($tr);
                         $tr.append($("<td>").append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayname)));
+                        $tr.append($("<td>").append($("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-default btn-table fa fa-play output-execute")));
                         $tr.append($("<td>").html(SWIUtil.tr("Output")));
                     }
 
@@ -717,6 +723,11 @@ class SWIMain {
                     $(".output-name").unbind("click").on("click", function (e) {
                         $outputPanel.hide();
                         _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
+                    });
+                    $(".output-execute").unbind("click").on("click", function (e) {
+                        $outputPanel.hide();
+                        _main.toggleFoldersReport(true);
+                        _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name") + " - " + $(e.currentTarget).data("name"));
                     });
                 },
                 function (data) {

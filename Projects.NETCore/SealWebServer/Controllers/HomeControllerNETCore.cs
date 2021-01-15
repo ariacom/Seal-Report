@@ -108,7 +108,7 @@ namespace SealWebServer.Controllers
         private void setCookie(string name, string value)
         {
             var options = new CookieOptions() { Expires = DateTime.Now.AddYears(2), HttpOnly = true };
-            Response.Cookies.Append(name, value, options);
+            Response.Cookies.Append(name, value == null ? "" : value, options);
         }
 
         private ActionResult getFileResult(string path, Report report)

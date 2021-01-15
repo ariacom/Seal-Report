@@ -244,7 +244,6 @@ namespace Seal.Helpers
         {
             foreach (var folder in Directory.GetDirectories(path))
             {
-                if (folder.ToLower().EndsWith("_dashboards")) continue;
                 string newFolder = folder.StartsWith(Repository.Instance.PersonalFolder) ? folder.Substring(Repository.Instance.PersonalFolder.Length) : folder;
                 choices.Add(newFolder);
                 AddPersonalFolderChoices(folder, choices);

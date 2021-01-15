@@ -20,6 +20,7 @@ namespace Seal.Model
         public const string Container = "Container";
         public const string ModelDetailName = "Model Detail";
         public const string RestrictionsName = "Restrictions";
+        public const string WidgetName = "Widget";
         public const string DataTableName = "Data Table";
         public const string DataTableEditorName = "Data Table Editor";
         public const string PageTableName = "Page Table";
@@ -62,14 +63,30 @@ namespace Seal.Model
         public List<string> ParentNames { get; set; } = new List<string>();
 
         /// <summary>
-        /// True if the template is for a report model
+        /// True if the template is for a report model view
         /// </summary>
         public bool ForReportModel { get; set; } = false;
 
         /// <summary>
-        /// True if the template is for view restrictions
+        /// True if the template is for a restrictions view
         /// </summary>
-        public bool ForViewRestrictions { get; set; } = false;
+        public bool IsRestrictionsView { 
+            get
+            {
+                return Name == RestrictionsName;
+            }
+        }
+
+        /// <summary>
+        /// True if the template is for a widget view
+        /// </summary>
+        public bool IsWidgetView
+        {
+            get
+            {
+                return Name == WidgetName;
+            }
+        }
 
         /// <summary>
         /// Additional partial templates to add to the template: Name of the partial template 

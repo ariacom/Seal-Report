@@ -561,7 +561,7 @@ namespace Seal.Model
             set
             {
                 _showInMenu = value;
-                UpdateEditor();
+                UpdateEditorAttributes();
             }
         }
         public bool ShouldSerializeShowInMenu() { return _showInMenu; }

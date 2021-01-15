@@ -139,6 +139,19 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// List of values of the restriction enum
+        /// </summary>
+        [XmlIgnore]
+        public List<MetaEV> MetaEnumValuesRE
+        {
+            get
+            {
+                return EnumRE.GetValues(Model.Connection);
+            }
+        }
+
+
+        /// <summary>
         /// Initialize the Html Ids of the enum values of the restriction
         /// </summary>
         public void SetEnumHtmlIds()
@@ -146,7 +159,7 @@ namespace Seal.Model
             if (IsEnum)
             {
                 int i = 0;
-                foreach (var enumDef in EnumRE.Values) enumDef.HtmlId = (i++).ToString();
+                foreach (var enumDef in MetaEnumValuesRE) enumDef.HtmlId = (i++).ToString();
             }
         }
 
@@ -160,11 +173,11 @@ namespace Seal.Model
             {
                 if (EnumRE == null) return new List<MetaEV>();
 
-                if (!EnumRE.HasDynamicDisplay) return EnumRE.Values;
+                if (!EnumRE.RequestServerOnPopup) return MetaEnumValuesRE;
 
                 //Add only selected values...
                 var result = new List<MetaEV>();
-                foreach (var v in EnumRE.Values)
+                foreach (var v in MetaEnumValuesRE)
                 {
                     if (EnumValues.Contains(v.Id))
                     {
@@ -910,7 +923,7 @@ namespace Seal.Model
                 {
                     foreach (string enumValue in EnumValues)
                     {
-                        Helper.AddValue(ref result, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Report.EnumDisplayValue(EnumRE, enumValue, true));
+                        Helper.AddValue(ref result, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Model.EnumDisplayValue(EnumRE, enumValue, true));
                     }
                 }
                 return result;
@@ -1035,7 +1048,7 @@ namespace Seal.Model
         /// </summary>
         public string GetEnumDisplayValue(string id)
         {
-            return Report.EnumDisplayValue(EnumRE, id, true);
+            return Model.EnumDisplayValue(EnumRE, id, true);
         }
 
         /// <summary>

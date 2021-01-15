@@ -78,11 +78,6 @@ namespace Seal.Model
         public Report RootReport = null;
 
         /// <summary>
-        /// Current dashboard if the report is executed for a dashboard
-        /// </summary>
-        public Dashboard Dashboard = null;
-
-        /// <summary>
         /// The parameter used if the execution was for a navigation
         /// </summary>
         public string NavigationParameter = null;
@@ -166,7 +161,6 @@ namespace Seal.Model
                 {
                     string folder = Path.GetDirectoryName(Report.ResultFilePath);
                     string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".pdf";
-                    Report.ExecutionView.PdfConverter.Dashboards = null;
                     Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(Report.ResultFilePath, newPath);
                     Report.ResultFilePath = newPath;
                 }
@@ -293,7 +287,16 @@ namespace Seal.Model
                 //Render first to get the result file, necessary if new extension or for output
                 if (!Report.Cancel && !Report.IsBasicHTMLWithNoOutput)
                 {
-                    RenderResult();
+                    bool originalOnlyBody = Report.OnlyBody;
+                    try
+                    {
+                        Report.OnlyBody = false;
+                        RenderResult();
+                    }
+                    finally
+                    {
+                        Report.OnlyBody = originalOnlyBody;
+                    }
                     Report.LogMessage("Report result generated in '{0}'", Report.DisplayResultFilePath);
                 }
 
@@ -513,7 +516,7 @@ namespace Seal.Model
                 if (restriction.IsEnum)
                 {
                     List<string> selected_enum = new List<string>();
-                    foreach (var enumVal in restriction.EnumRE.Values)
+                    foreach (var enumVal in restriction.MetaEnumValuesRE)
                     {
                         var val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
                         if (val.ToLower() == "true")
@@ -612,7 +615,7 @@ namespace Seal.Model
                 return result;
             }
 
-            if ((!Report.ForWidget && RootReport != null && RootReport.IsNavigating) || Report.ExecutionTriggerView != null)
+            if ((RootReport != null && RootReport.IsNavigating) || Report.ExecutionTriggerView != null)
             {
                 //Navigation or trigger view, we execute all the models
                 result = Report.ExecutionModels;
@@ -710,9 +713,6 @@ namespace Seal.Model
                     {
                         Report.LogMessage("Model '{0}': Loading result table...", model.Name);
 
-                        //Keep page Ids from previous execution as they may be requested by a Widget Pagination...
-                        model.PreviousPageIds = (from page in model.Pages select page.PageId).ToList();
-
                         await model.FillResultTableAsync(_runningModels, _runningSubTables);
 
                         if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
@@ -758,7 +758,7 @@ namespace Seal.Model
         {
             try
             {
-                if (!Report.Cancel && model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call BuildResultTableModel() first...");
+                if (!Report.Cancel && model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call LoadResultTableModel() first...");
 
                 model.SetColumnsName();
 
@@ -770,7 +770,7 @@ namespace Seal.Model
                     foreach (var element in model.Elements.Where(i => i.IsEnum && i.ShowAllEnums))
                     {
                         var values = new List<string>();
-                        foreach (var val in element.EnumEL.Values) values.Add(Report.EnumDisplayValue(element.EnumEL, val.Id));
+                        foreach (var val in element.EnumEL.GetValues(model.Connection)) values.Add(element.Model.EnumDisplayValue(element.EnumEL, val.Id));
                         enumsValues.Add(element, values);
                     }
 
@@ -963,7 +963,6 @@ namespace Seal.Model
         }
 
         bool _processSubReports = false;
-        Dictionary<ReportModel, List<string>> _previousPageIds = new Dictionary<ReportModel, List<string>>();
         private void buildPages(ReportModel model)
         {
             _processSubReports = model.Elements.Exists(i => i.MetaColumn.SubReports.Count > 0);
@@ -1003,9 +1002,6 @@ namespace Seal.Model
                     //Create Page table
                     currentPage.Pages = pageValues;
                     model.Pages.Add(currentPage);
-
-                    //set previous page ids if exists
-                    if (model.PreviousPageIds.Count >= model.Pages.Count) currentPage.PageId = model.PreviousPageIds[model.Pages.Count - 1];
 
                     //Set navigation values if any
                     setSubReportNavigation(pageValues, hiddenValues);
@@ -2183,6 +2179,8 @@ namespace Seal.Model
         public string GenerateHTMLResult()
         {
             Report.IsNavigating = false;
+
+            var originalFromMenu = Report.OnlyBody;
             var originalFormat = Report.Format;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"));
 
@@ -2191,6 +2189,7 @@ namespace Seal.Model
             try
             {
                 Report.Format = ReportFormat.html;
+                Report.OnlyBody = false;
                 if (paginationParameter != null) paginationParameter.BoolValue = false;
                 Report.Status = ReportStatus.RenderingResult;
                 Report.ExecutionViewResultFormat = ReportFormat.html.ToString();
@@ -2201,6 +2200,7 @@ namespace Seal.Model
             finally
             {
                 Report.ExecutionViewResultFormat = "";
+                Report.OnlyBody = originalFromMenu;
                 Report.Format = originalFormat;
                 if (paginationParameter != null) paginationParameter.BoolValue = initialValue;
                 Report.Status = ReportStatus.Executed;
@@ -2244,10 +2244,12 @@ namespace Seal.Model
         public string GeneratePrintResult()
         {
             Report.IsNavigating = false;
+            var originalFromMenu = Report.OnlyBody;
             var originalFormat = Report.Format;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
             try
             {
+                Report.OnlyBody = false;
                 Report.Format = ReportFormat.print;
                 Report.Status = ReportStatus.RenderingResult;
                 Report.ExecutionViewResultFormat = ReportFormat.print.ToString();
@@ -2257,6 +2259,7 @@ namespace Seal.Model
             }
             finally
             {
+                Report.OnlyBody = originalFromMenu;
                 Report.ExecutionViewResultFormat = "";
                 Report.Format = originalFormat;
                 Report.Status = ReportStatus.Executed;
@@ -2279,7 +2282,6 @@ namespace Seal.Model
             {
                 string source = GeneratePrintResult();
                 newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
-                Report.ExecutionView.PdfConverter.Dashboards = null;
                 Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
             }
             finally
@@ -2334,7 +2336,7 @@ namespace Seal.Model
                 if (values == null) values = "";
                 foreach (var v in values.Split('\n').Where(i => !string.IsNullOrEmpty(i)))
                 {
-                    foreach (var ev in restriction.EnumRE.Values)
+                    foreach (var ev in restriction.MetaEnumValuesRE)
                     {
                         if (restriction.OptionHtmlId + ev.HtmlId == v) restriction.EnumValues.Add(ev.Id);
                     }
@@ -2376,7 +2378,7 @@ namespace Seal.Model
                 //Apply auto filter if any
                 if (values.Count == 0 && enumRE.FilterChars > 0 && filter.Length >= enumRE.FilterChars && string.IsNullOrEmpty(enumRE.SqlDisplay) && string.IsNullOrEmpty(enumRE.ScriptDisplay))
                 {
-                    foreach (var enumDef in enumRE.Values)
+                    foreach (var enumDef in restriction.MetaEnumValuesRE)
                     {
                         var display = restriction.GetEnumDisplayValue(enumDef.Id).ToLower();
                         if (display.Contains(filter.ToLower()))
@@ -2386,7 +2388,7 @@ namespace Seal.Model
                     }
                 }
 
-                foreach (var enumDef in enumRE.Values.Where(i => values.Exists(j => i.Id == j.Id)))
+                foreach (var enumDef in restriction.MetaEnumValuesRE.Where(i => values.Exists(j => i.Id == j.Id)))
                 {
                     var display = restriction.GetEnumDisplayValue(enumDef.Id);
                     result.Append(result.Length == 0 ? "[" : ",");

@@ -86,7 +86,8 @@ namespace SealWebServer.Controllers
                     folder = getCookie(SealLastFolderCookieName),
                     lastreport = new SWIMenuItem() { 
                         path = lastReportPath, 
-                        viewGUID = getCookie(SealLastReportViewGUIDCookieName), 
+                        viewGUID = getCookie(SealLastReportViewGUIDCookieName),
+                        outputGUID = getCookie(SealLastReportOutputGUIDCookieName),
                         name = getCookie(SealLastReportNameCookieName) 
                     },
                     lastview = view,
@@ -569,6 +570,9 @@ namespace SealWebServer.Controllers
                 report = Report.LoadFromFile(filePath, repository);
                 report.OnlyBody = (fromMenu != null && fromMenu.Value);
 
+                var execution = initReportExecution(report, viewGUID, outputGUID, false);
+                execution.RenderHTMLDisplayForViewer();
+
                 WebUser.Profile.SetRecentReports(report, viewGUID, outputGUID);
                 WebUser.SaveProfile();
 
@@ -576,9 +580,7 @@ namespace SealWebServer.Controllers
                 setCookie(SealLastReportNameCookieName, lastReport.Name);
                 setCookie(SealLastReportPathCookieName, lastReport.Path);
                 setCookie(SealLastReportViewGUIDCookieName, lastReport.ViewGUID);
-
-                var execution = initReportExecution(report, viewGUID, outputGUID, false);
-                execution.RenderHTMLDisplayForViewer();
+                setCookie(SealLastReportOutputGUIDCookieName, lastReport.OutputGUID);
 
                 if (fromMenu != null && fromMenu.Value) return Json( System.IO.File.ReadAllText(report.HTMLDisplayFilePath) );
                 return getFileResult(report.HTMLDisplayFilePath, report);

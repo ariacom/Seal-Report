@@ -1,8 +1,4 @@
-﻿using Seal.Helpers;
-using System.Collections.Generic;
-using System.IO;
-
-namespace Seal.Model
+﻿namespace Seal.Model
 {
     /// <summary>
     /// Main model used for the Web Report Server

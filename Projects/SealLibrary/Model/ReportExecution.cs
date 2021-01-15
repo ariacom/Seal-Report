@@ -287,7 +287,16 @@ namespace Seal.Model
                 //Render first to get the result file, necessary if new extension or for output
                 if (!Report.Cancel && !Report.IsBasicHTMLWithNoOutput)
                 {
-                    RenderResult();
+                    bool originalOnlyBody = Report.OnlyBody;
+                    try
+                    {
+                        Report.OnlyBody = false;
+                        RenderResult();
+                    }
+                    finally
+                    {
+                        Report.OnlyBody = originalOnlyBody;
+                    }
                     Report.LogMessage("Report result generated in '{0}'", Report.DisplayResultFilePath);
                 }
 

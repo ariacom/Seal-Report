@@ -158,16 +158,19 @@ namespace Seal.Model
         /// If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization).
         /// </summary>
         public bool ShareResultTable { get; set; } = true;
+        public bool ShouldSerializeShareResultTable() { return !ShareResultTable; }
 
         /// <summary>
         /// If true, the query is printed in the report messages (for debug purpose).
         /// </summary>
         public bool PrintQuery { get; set; } = false;
+        public bool ShouldSerializePrintQuery() { return PrintQuery; }
 
         /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header
         /// </summary>
         public bool ShowFirstLine { get; set; } = true;
+        public bool ShouldSerializeShowFirstLine() { return !ShowFirstLine; }
 
         /// <summary>
         /// Alias name used for the table defining the select
@@ -751,12 +754,6 @@ model.ResultTable = query2.CopyToDataTable2();
         /// </summary>
         [XmlIgnore]
         public bool ExecResultPagesBuilt = false;
-
-        /// <summary>
-        /// Page Ids got from previous execution
-        /// </summary>
-        [XmlIgnore]
-        public List<string> PreviousPageIds = new List<string>();
 
         /// <summary>
         /// Check NVD3 Chart and set the ExecNVD3ChartType property
@@ -2467,7 +2464,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
                     _command.CommandText = Sql;
 
-                    if (PrintQuery)
+                    if (PrintQuery || Report.PrintQueries)
                     {
                         Report.LogMessage("Model '{0}' SQL Query:\r\n{1}\r\n", Name, Sql);
                     }
@@ -2529,6 +2526,9 @@ model.ResultTable = query2.CopyToDataTable2();
                         //Tables execution
                         foreach (var subModel in LINQSubModels)
                         {
+                            //Pre-load script
+                            ExecuteLoadScript(subModel.PreLoadScript, "Pre load script", subModel);
+
                             tasks.Add(subModel.GetModelResultTableAsync(runningModels));
                         }
 
@@ -2551,7 +2551,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         }
 
                         var loadScript = LoadScript ?? LINQLoadScript;
-                        if (PrintQuery)
+                        if (PrintQuery || Report.PrintQueries)
                         {
                             Report.LogMessage("Model '{0}' LINQ Query:\r\n{1}\r\n", Name, loadScript);
                         }
@@ -2638,6 +2638,16 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
         /// <summary>
+        /// Translate the enum using the Enum context
+        /// </summary>
+        public string EnumDisplayValue(MetaEnum me, string id, bool forRestriction = false)
+        {
+            string result = me.GetDisplayValue(id, Connection, forRestriction);
+            if (me.Translate) result = Report.TranslateEnumValue(me, result);
+            return result;
+        }
+
+        /// <summary>
         /// Invert the rows and the columns of all DataTables of the pages generated
         /// </summary>
         public void InvertDataTables()
@@ -2685,15 +2695,14 @@ model.ResultTable = query2.CopyToDataTable2();
         /// <summary>
         /// HTML Navigation for the report result
         /// </summary>
-        public string GetNavigation(ResultCell cell, bool serverSide = false)
+        public string GetNavigation(ReportView view, ResultCell cell, bool serverSide = false)
         {
             string navigation = "";
             if (Report.GenerateHTMLDisplay || serverSide)
             {
+                cell.InitNavigationLinks(view);
                 foreach (var link in cell.Links)
                 {
-                    if (link.Type == NavigationType.Drill && !Report.ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter)) continue;
-                    if (link.Type == NavigationType.SubReport && !Report.ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter)) continue;
                     navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.FullHref, link.Text /* Helper.ToHtml(link.Text) TODO for chart labels */);
                 }
                 navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", navigation));

@@ -104,10 +104,10 @@ namespace Seal.Model
         public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
 
         /// <summary>
-        /// For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report.
+        /// If true, the query is printed in the report messages (for debug purpose).
         /// </summary>
-        public int WidgetCache { get; set; } = 60;
-        public bool ShouldSerializeWidgetCache() { return WidgetCache != 60; }
+        public bool PrintQueries { get; set; } = false;
+        public bool ShouldSerializePrintQueries() { return PrintQueries; }
 
         /// <summary>
         /// List of data sources of the report (either from repository or defined in the report itself)
@@ -280,6 +280,15 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public string FilePath = "";
+
+        /// <summary>
+        /// Current file path without reports directory 
+        /// </summary>
+        [XmlIgnore]
+        public string RelativeFilePath
+        {
+            get { return FilePath.Replace(Repository.ReportsFolder, ""); }
+        }
 
         /// <summary>
         /// Last modification date of the report file 
@@ -542,15 +551,15 @@ namespace Seal.Model
                 restriction.EnumValues.Clear();
                 if (restriction.FirstSelection == FirstEnumSelection.All)
                 {
-                    restriction.EnumValues.AddRange(from v in restriction.EnumRE.Values select v.Id);
+                    restriction.EnumValues.AddRange(from v in restriction.MetaEnumValuesRE select v.Id);
                 }
-                else if (restriction.FirstSelection == FirstEnumSelection.First && restriction.EnumRE.Values.Count > 0)
+                else if (restriction.FirstSelection == FirstEnumSelection.First && restriction.MetaEnumValuesRE.Count > 0)
                 {
-                    restriction.EnumValues.Add(restriction.EnumRE.Values.First().Id);
+                    restriction.EnumValues.Add(restriction.MetaEnumValuesRE.First().Id);
                 }
-                if (restriction.FirstSelection == FirstEnumSelection.Last && restriction.EnumRE.Values.Count > 0)
+                if (restriction.FirstSelection == FirstEnumSelection.Last && restriction.MetaEnumValuesRE.Count > 0)
                 {
-                    restriction.EnumValues.Add(restriction.EnumRE.Values.Last().Id);
+                    restriction.EnumValues.Add(restriction.MetaEnumValuesRE.Last().Id);
                 }
                 restriction.FirstSelection = FirstEnumSelection.None;
             }
@@ -876,6 +885,12 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the execution generates only the report body (not headers)
+        /// </summary>
+        [XmlIgnore]
+        public bool OnlyBody = false;
+
+        /// <summary>
         /// Task set if only one task has to be executed
         /// </summary>
         [XmlIgnore]
@@ -910,12 +925,6 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public ReportExecutionContext ExecutionContext = ReportExecutionContext.DesignerReport;
-
-        /// <summary>
-        /// True is the report is being executed and rendered for Dashboard Widget
-        /// </summary>
-        [XmlIgnore]
-        public bool ForWidget = false;
 
         /// <summary>
         /// Current result format generated durin a View Result: html, print, csv, pdf, excel
@@ -1290,17 +1299,12 @@ namespace Seal.Model
                 viewNewValues.Add(view.GUID, newGUID);
                 //Set new GUIDs
                 view.GUID = newGUID;
-                if (!string.IsNullOrEmpty(view.WidgetDefinition.GUID)) view.WidgetDefinition.GUID = Helper.NewGUID();
             }
 
             foreach (var view in AllViews)
             {
                 //Reference views
                 if (!string.IsNullOrEmpty(view.ReferenceViewGUID)) view.ReferenceViewGUID = viewNewValues[view.ReferenceViewGUID];
-                //Widgets
-                if (!string.IsNullOrEmpty(view.WidgetDefinition.ExecViewGUID)) view.WidgetDefinition.ExecViewGUID = viewNewValues[view.WidgetDefinition.ExecViewGUID];
-                //Restriction Views
-                if (!string.IsNullOrEmpty(view.RestrictionViewGUID)) view.RestrictionViewGUID = viewNewValues[view.RestrictionViewGUID];
             }
 
             //Current view of the report
@@ -1765,8 +1769,16 @@ namespace Seal.Model
                     var v2 = FindView(view.Views, refView.ReferenceViewGUID);
                     if (v2 != null)
                     {
-                        throw new Exception(string.Format("Unable to remove the view '{0}': This view or one of its children named '{2}' is referenced by the view '{1}'.", view.Name, refView.Name, v2.Name));
+                        throw new Exception(string.Format("Unable to remove the view '{0}':\r\nThis view or one of its children named '{2}' is referenced by the view '{1}'.", view.Name, refView.Name, v2.Name));
                     }
+                }
+            }
+
+            foreach (var refView in AllViews)
+            {
+                if (refView.GetValue("widget_exec_view") == view.GUID.ToString() || refView.GetValue("restrictions_exec_view") == view.GUID.ToString() || refView.GetValue(Parameter.NavigationView) == view.GUID.ToString())
+                {
+                    throw new Exception(string.Format("Unable to remove the view '{0}':\r\nThis view is referenced by the view '{1}'.", view.Name, refView.Name));
                 }
             }
 
@@ -1775,15 +1787,10 @@ namespace Seal.Model
                 //Delete a root view
                 foreach (ReportOutput output in Outputs)
                 {
-                    if (output.ViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is used by the output '{1}'.", view.Name, output.Name));
+                    if (output.ViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}':\r\nThis view is used by the output '{1}'.", view.Name, output.Name));
                 }
 
-                foreach (var refView in AllViews)
-                {
-                    if (refView.WidgetDefinition.IsPublished && refView.WidgetDefinition.ExecViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is referenced by the Widget in the view '{1}'.", view.Name, refView.Name));
-                }
-
-                if (Views.Count == 1) throw new Exception("Unable to remove the view: The report must contain at least one View.");
+                if (Views.Count == 1) throw new Exception("Unable to remove the view:\r\nThe report must contain at least one View.");
                 Views.Remove(view);
                 //Change the default view if necessary
                 if (view.GUID == ViewGUID) ViewGUID = Views[0].GUID;
@@ -1965,7 +1972,7 @@ namespace Seal.Model
                         {
                             //Check that the restriction (or one identical) is not displayed in a restriction view
                             bool inRestrictionView = false;
-                            foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
+                            foreach (var view in AllViews.Where(i => i.Template.IsRestrictionsView))
                             {
                                 foreach (var restr2 in allRestrictions.Where(i => i.IsIdenticalForPrompt(restriction))) 
                                 {
@@ -2026,7 +2033,7 @@ namespace Seal.Model
         /// <returns></returns>
         public bool IsInRestrictionView(ReportRestriction restriction)
         {
-            foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
+            foreach (var view in AllViews.Where(i => i.Template.IsRestrictionsView))
             {
                 if (view.Restrictions.Contains(restriction)) return true;
             }
@@ -2046,7 +2053,7 @@ namespace Seal.Model
                 {
                     _executionViewRestrictions = new List<ReportRestriction>();
 
-                    foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
+                    foreach (var view in AllViews.Where(i => i.Template.IsRestrictionsView))
                     {
                         foreach (ReportRestriction restriction in view.Restrictions)
                         {
@@ -2277,30 +2284,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the drill navigation is enabled
-        /// </summary>
-        [XmlIgnore]
-        public bool IsDrillEnabled
-        {
-            get
-            {
-                return ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter);
-            }
-        }
-
-        /// <summary>
-        /// True if the sub-reports navigation is enabled
-        /// </summary>
-        [XmlIgnore]
-        public bool IsSubReportsEnabled
-        {
-            get
-            {
-                return ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter);
-            }
-        }
-
-        /// <summary>
         /// True if the server pagination for DataTables is enabled
         /// </summary>
         [XmlIgnore]
@@ -2445,7 +2428,7 @@ namespace Seal.Model
 
         void fillFullViewList(List<ReportView> views, List<ReportView> result)
         {
-            foreach (var view in views)
+            foreach (var view in views.OrderBy(i => i.SortOrder))
             {
                 result.Add(view);
                 fillFullViewList(view.Views, result);
@@ -2494,57 +2477,6 @@ namespace Seal.Model
                 if (result != null) break;
             }
             return result;
-        }
-
-
-        /// <summary>
-        /// Get the widget view from the widgetGUID
-        /// </summary>
-        public void GetWidgetViewToParse(List<ReportView> views, string widgetGUID, ref ReportView widgetView, ref ReportView modelView)
-        {
-            foreach (var view in views)
-            {
-                if (view.WidgetDefinition.GUID == widgetGUID)
-                {
-                    widgetView = view;
-
-                    var lastView = widgetView;
-                    while (lastView.ParentView != null)
-                    {
-                        if (lastView.ParentView.Model != null)
-                        {
-                            modelView = lastView.ParentView;
-                            break;
-                        }
-                        else lastView = lastView.ParentView;
-                    }
-                }
-                if (widgetView != null) break;
-
-                GetWidgetViewToParse(view.Views, widgetGUID, ref widgetView, ref modelView);
-            }
-        }
-
-        /// <summary>
-        /// List of widget views of the report
-        /// </summary>
-        public List<ReportView> GetWidgetViews()
-        {
-            List<ReportView> result = new List<ReportView>();
-            foreach (var view in Views.OrderBy(i => i.SortOrder))
-            {
-                getWidgetViews(result, view);
-            }
-            return result;
-        }
-
-        void getWidgetViews(List<ReportView> widgetViews, ReportView view)
-        {
-            if (view.WidgetDefinition.IsPublished) widgetViews.Add(view);
-            foreach (var subview in view.Views.OrderBy(i => i.SortOrder))
-            {
-                getWidgetViews(widgetViews, subview);
-            }
         }
 
         /// <summary>
@@ -2685,14 +2617,13 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Translate the enum using the Enum context
+        /// Translate using the Enum context
         /// </summary>
-        public string EnumDisplayValue(MetaEnum instance, string id, bool forRestriction = false)
+        public string TranslateEnumValue(MetaEnum instance, string reference)
         {
-            string result = instance.GetDisplayValue(id, forRestriction);
-            if (instance.Translate) result = Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Enum", instance.Name, result);
-            return result;
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Enum", instance.Name, reference);
         }
+
 
         /// <summary>
         /// Translate the enum message using the EnumMessage context

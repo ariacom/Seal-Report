@@ -636,6 +636,7 @@ function mainInit() {
                                     }
                                     else {
                                         //Execution from the menu
+                                        if (typeof (toggleFoldersReport) === typeof (Function)) toggleFoldersReport(true);
                                         $.post(_urlPrefix + "HtmlResultFile", { execution_guid: $(this).attr("execution_guid") })
                                             .done(function (data) {
                                                 $("#report-body").html(data);

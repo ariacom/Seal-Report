@@ -2,13 +2,15 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing.Design;
 using System.Xml.Serialization;
 
 namespace Seal.Model
 {
     /// <summary>
-    /// A MetaEV define a value of an enumerated list
+    /// A MetaEV defines a value of an enumerated list
     /// </summary>
     public class MetaEV
     {
@@ -21,6 +23,11 @@ namespace Seal.Model
         /// The optional display value
         /// </summary>
         public string Val { get; set; }
+
+        /// <summary>
+        /// If set, the enumerated value is only valid when the connection is used. If empty, the value is valid for all connections.
+        /// </summary>
+        public string ConnectionGUID { get; set; }
 
         /// <summary>
         /// The optional display value for the restriction list
@@ -58,6 +65,12 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public string HtmlId;
+
+        /// <summary>
+        /// Meta enum of the value. Used only for the editor.
+        /// </summary>
+        [XmlIgnore]
+        public MetaEnum MetaEnum;
     }
 }
 
