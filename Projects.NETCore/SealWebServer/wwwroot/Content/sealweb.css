@@ -69,6 +69,14 @@ a {
     margin-bottom: 2px;
 }
 
+#output-table-body td, #file-table-body td {
+    vertical-align: middle;
+    padding: 4px;
+}
+
+.btn-table {
+    font-size: 12px;
+}
 
 /* jstree */
 .jstree-wholerow-clicked {

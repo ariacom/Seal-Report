@@ -4,10 +4,6 @@
     Report report = view.Report;
     Repository repository = report.Repository;
     var configuration = repository.Configuration;
-
-    var showMessageClass = (report.ShowExecutionMessages ? "class='active'" : "");
-    var showInfoClass = (string.IsNullOrEmpty(showMessageClass) && view.GetBoolValue("information_button") ? "class='active'" : "");
-    var showReportClass = (string.IsNullOrEmpty(showMessageClass) && string.IsNullOrEmpty(showInfoClass) ? "class='active'" : "");
 }
 
 @if (report.GenerateHTMLDisplay || !report.PdfConversion)
@@ -40,12 +36,9 @@
                     @if (report.GenerateHTMLDisplay || !report.PrintLayout)
                     {
                         <ul class="nav navbar-nav navbar-right">
-                            <li @Raw(showReportClass)><a id="report_button" class="sr_tab" data-toggle="tab" href="#@(view.ViewId)_div">@report.Translate("Report")</a></li>
-                            <li @Raw(showInfoClass)><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
-                            @if (view.GetValue("messages_mode") != "disabled")
-                            {
-                                <li @Raw(showMessageClass)><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
-                            }
+                            <li><a id="report_button" class="sr_tab" data-toggle="tab" href="#@(view.ViewId)_div">@report.Translate("Report")</a></li>
+                            <li><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
+                            <li><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
                             @if (report.GenerateHTMLDisplay)
                             {
                                 <li class="dropdown">

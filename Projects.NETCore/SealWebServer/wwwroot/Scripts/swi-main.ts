@@ -372,7 +372,7 @@ class SWIMain {
 
     private addReportMenu(parent, value) {
         let aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
-        aref.append($("<span class='external-navigation glyphicon glyphicon-share'></span></a>"));
+        aref.append($("<span class='external-navigation glyphicon glyphicon-new-window'></span>"));
         parent.append($("<li class='menu-reports'>").append(aref));
     }
 
@@ -433,6 +433,8 @@ class SWIMain {
                 //new window
                 const parent = $(this).parent();
                 _main.executeReport(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
+                $("#menu-main").dropdown('toggle');
+                return false;
             });
 
             _main.enableControls();
@@ -642,9 +644,17 @@ class SWIMain {
             var $td = $("<td>").css("text-align", "center").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
             $tr.append($td);
             if (file.isreport) {
-                $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Execute report")).addClass("btn btn-default btn-table fa fa-play report-execute"));
-                $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Views and outputs")).addClass("btn btn-default btn-table fa fa-list-ul report-output"));
-                if (file.right >= folderRightSchedule && hasEditor) $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Edit report")).addClass("btn btn-default fa fa-pencil report-edit hidden-xs"));
+                var button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
+                button.append($("<span class='glyphicon glyphicon-new-window'></span>"));
+                $td.append(button);
+                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Views and outputs")).addClass("btn btn-default btn-table report-output");
+                button.append($("<span class='glyphicon glyphicon-th-list'></span>"));
+                $td.append(button);
+                if (file.right >= folderRightSchedule && hasEditor) {
+                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Edit report")).addClass("btn btn-default btn-table report-edit hidden-xs");
+                    button.append($("<span class='glyphicon glyphicon-pencil'></span>"));
+                    $td.append(button);
+                }
             }
             $tr.append($("<td>").css("text-align", "right").addClass("hidden-xs").text(file.last));
         }
@@ -663,16 +673,18 @@ class SWIMain {
 
         $(".report-name").unbind("click").on("click", function (e) {
             $outputPanel.hide();
-            const path = $(e.currentTarget).data("path");
-            if ($(e.currentTarget).data("isReport")) _main.executeReport(path, null, null);
+            var $target = $(e.currentTarget);
+            const path = $target.data("path");
+            if ($target.data("isReport")) {
+                _main.toggleFoldersReport(true);
+                _main.executeReportFromMenu(path, null, null, $target.text());
+            }
             else _gateway.ViewFile(path);
         });
 
         $(".report-execute").unbind("click").on("click", function (e) {
             $outputPanel.hide();
-            var $target = $(e.currentTarget);
-            _main.toggleFoldersReport(true);
-            _main.executeReportFromMenu($target.parent().data("path"), null, null, $target.parent().data("name"));
+            _main.executeReport($(e.currentTarget).parent().data("path"), null, null);
         });
 
         $(".report-output").unbind("click").on("click", function (e) {
@@ -688,7 +700,7 @@ class SWIMain {
                 'z-index': '10000',
                 'left': $target.offset().left - $outputPanel.width(),
                 'top': top,
-                'opacity': 0.4
+                'opacity': 0.6
             }).show();
 
 
@@ -704,14 +716,18 @@ class SWIMain {
                         var $tr = $("<tr>");
                         $tableBody.append($tr);
                         $tr.append($("<td>").append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayname)));
-                        $tr.append($("<td>").append($("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-default btn-table fa fa-play output-execute")));
+                        var button = $("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
+                        button.append($("<span class='glyphicon glyphicon-new-window'></span>"));
+                        $tr.append($("<td>").append(button));
                         $tr.append($("<td>").html(SWIUtil.tr("View")));
                     }
                     for (var i = 0; i < data.outputs.length; i++) {
                         var $tr = $("<tr>");
                         $tableBody.append($tr);
                         $tr.append($("<td>").append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayname)));
-                        $tr.append($("<td>").append($("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-default btn-table fa fa-play output-execute")));
+                        var button = $("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
+                        button.append($("<span class='glyphicon glyphicon-new-window'></span>"));
+                        $tr.append($("<td>").append(button));
                         $tr.append($("<td>").html(SWIUtil.tr("Output")));
                     }
 
@@ -720,11 +736,11 @@ class SWIMain {
                     $outputPanel.css({ top: top, left: $target.offset().left - $outputPanel.width(), position: 'absolute' });
 
 
-                    $(".output-name").unbind("click").on("click", function (e) {
+                    $(".output-execute").unbind("click").on("click", function (e) {
                         $outputPanel.hide();
                         _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
                     });
-                    $(".output-execute").unbind("click").on("click", function (e) {
+                    $(".output-name").unbind("click").on("click", function (e) {
                         $outputPanel.hide();
                         _main.toggleFoldersReport(true);
                         _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name") + " - " + $(e.currentTarget).data("name"));

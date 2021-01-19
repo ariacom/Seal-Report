@@ -15,6 +15,7 @@ body {
 }
 
 #restrictions_button {
+    display: none;
     margin-right: 5px;
 }
 

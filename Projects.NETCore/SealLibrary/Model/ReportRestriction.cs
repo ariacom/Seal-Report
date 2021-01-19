@@ -146,7 +146,7 @@ namespace Seal.Model
         {
             get
             {
-                return EnumRE.GetValues(Model.Connection);
+                return Model == null ? EnumRE.Values : EnumRE.GetValues(Model.Connection);
             }
         }
 
@@ -1030,7 +1030,7 @@ namespace Seal.Model
 
         string GetDisplayRestriction(string value, string dateKeyword, DateTime date)
         {
-            string result = "";
+            string result;
             if (IsDateTime)
             {
                 if (!string.IsNullOrEmpty(dateKeyword)) result = Helper.QuoteSingle(dateKeyword);
@@ -1048,6 +1048,13 @@ namespace Seal.Model
         /// </summary>
         public string GetEnumDisplayValue(string id)
         {
+            if (Model == null)
+            {
+                //Case of input values
+                string result = EnumRE.GetDisplayValue(id, null, true);
+                if (EnumRE.Translate) result = Report.TranslateEnumValue(EnumRE, result);
+                return result;
+            }
             return Model.EnumDisplayValue(EnumRE, id, true);
         }
 

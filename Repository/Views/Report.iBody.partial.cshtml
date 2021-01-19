@@ -8,7 +8,17 @@
 
 <script type="text/javascript">
 
-        function processShowMsgDuringExec() {
+    function processShowMsgDuringExec() {
+            var showMessages = @Helper.ToJS(view.GetValue("messages_mode") != "disabled");
+            if (showMessages) {
+                $("#message_button").addClass("reportview");
+                $("#message_button").css("display", "inline-block");
+            }
+            else {
+                $("#message_button").removeClass("reportview");
+                $("#message_button").css("display", "none");
+            }
+
             var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode")== "enabledshownexec");
             if (showMsgDuringExec) {
                 $("#@view.ViewId").removeClass("active in");
@@ -50,10 +60,33 @@
             setProgressBarMessage("#progress_bar", 5,  '@Raw(Helper.ToJS(report.Translate("Starting execution...")))', "progress-bar-success");
         }
 
+    function processReportViews() {
+            var showMessages = @Helper.ToJS(report.ShowExecutionMessages);
+            var showInformation = @Helper.ToJS(!report.ShowExecutionMessages && view.GetBoolValue("information_button"));
+
+            $("#report_button").parent().removeClass("active");
+            $("#information_button").parent().removeClass("active");
+            $("#message_button").parent().removeClass("active");
+            if (showMessages) {
+                $("#message_button").parent().addClass("active");
+                $("#message_div").addClass("active in");
+            }
+            else if (showInformation) {
+                $("#information_button").parent().addClass("active");
+                $("#information_div").addClass("active in");
+            }
+            else {
+                $("#report_button").parent().addClass("active");
+                $("#@view.ViewId").addClass("active in");
+            }
+        }
+
         function processReportExecuted() {
             $("#nav_button").html('@Raw(Helper.ToJS(report.ExecutionName))');
             $("#execute_button").html('@Raw(Helper.ToJS(report.Translate("Execute")))');
             $("#execute_button").removeClass("btn-warning").addClass("btn-success");
+
+            processReportViews();
         }
 
         function processInitDateTimePicker(parent) {
@@ -97,8 +130,15 @@
             var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
             var forceExecution = @Helper.ToJS(view.GetBoolValue(Parameter.ForceExecutionParameter) || report.HasNavigation);
 
-            if (!hasRestrictions) $("#restrictions_button").css("display", "none");
-            else if (@Helper.ToJS(view.GetBoolValue("restriction_button"))) $("#execute_button").addClass("active");
+            if (hasRestrictions) {
+                $("#restrictions_button").addClass("reportview");
+                $("#restrictions_button").css("display", "inline-block");
+                if (@Helper.ToJS(view.GetBoolValue("restriction_button"))) $("#execute_button").addClass("active");
+            }
+            else {
+                $("#restrictions_button").removeClass("reportview");
+                $("#restrictions_button").css("display", "none");
+            }
 
             if (@Helper.ToJS(!view.GetBoolValue("execute_button"))) $("#execute_button").css("display", "none");
 
@@ -225,6 +265,8 @@
 
         $(document).ready(function () {
             processInitExecution();
+
+            processReportViews();
         });
 
         @Raw(view.GetValue("additional_js"))

@@ -728,9 +728,21 @@ namespace Seal.Forms
                 //if (row["TABLE_TYPE"].ToString() == "SYSTEM TABLE" || row["TABLE_TYPE"].ToString() == "SYSTEM VIEW") continue;
                 MetaTable table = MetaTable.Create();
                 string schema = "";
+                string catalog = "";
+                if (schemaTables.Columns.Contains("TABLE_CATALOG")) catalog= row["TABLE_CATALOG"].ToString();
                 if (schemaTables.Columns.Contains("TABLE_SCHEMA")) schema = row["TABLE_SCHEMA"].ToString();
                 else if (schemaTables.Columns.Contains("TABLE_SCHEM")) schema = row["TABLE_SCHEM"].ToString();
-                table.Name = (!string.IsNullOrEmpty(schema) ? source.GetTableName(schema) + "." : "") + source.GetTableName(row["TABLE_NAME"].ToString());
+
+                if (!string.IsNullOrEmpty(schema) || !string.IsNullOrEmpty(catalog))
+                {
+                    table.Name = catalog + "." + schema + "." + source.GetTableName(row["TABLE_NAME"].ToString());
+
+                }
+                else
+                {
+                    table.Name = source.GetTableName(row["TABLE_NAME"].ToString());
+                }
+
                 if (schemaTables.Columns.Contains("TABLE_TYPE")) table.Type = row["TABLE_TYPE"].ToString();
                 table.Source = source;
                 tables.Add(table);
@@ -750,6 +762,7 @@ namespace Seal.Forms
             CheckBox autoCreateColumns = new CheckBox() { Text = "Auto create table columns", Checked = true, AutoSize = true };
             CheckBox autoCreateJoins = new CheckBox() { Text = "Auto create joins", Checked = true, AutoSize = true };
             CheckBox useTableSchemaName = new CheckBox() { Text = "Use schema name", Checked = false, AutoSize = true };
+            CheckBox useTableCatalogName = new CheckBox() { Text = "Use catalog name", Checked = false, AutoSize = true };
             CheckBox keepColumnNames = new CheckBox() { Text = "Keep column names", Checked = false, AutoSize = true };
 
             try
@@ -773,8 +786,15 @@ namespace Seal.Forms
                     options.Add(autoCreateColumns);
                     options.Add(autoCreateJoins);
 
-                    if (tables.Count > 0 && tables[0].Name.Contains(".")) options.Add(useTableSchemaName);
-                    if (tables.Count > 0) options.Add(keepColumnNames);
+                    if (tables.Count > 0)
+                    {
+                        if (tables[0].Name.Contains(".")) 
+                        {
+                            options.Add(useTableCatalogName);
+                            options.Add(useTableSchemaName);
+                        }
+                        options.Add(keepColumnNames);
+                    }
                 }
                 else if (entity is TableLinkFolder)
                 {
@@ -841,10 +861,17 @@ namespace Seal.Forms
                             if (entity is TableFolder && item is MetaTable)
                             {
                                 MetaTable table = (MetaTable)item;
-                                if (!useTableSchemaName.Checked)
+                                if (table.Name.Contains("."))
                                 {
                                     string[] names = table.Name.Split('.');
-                                    if (names.Length == 2) table.Name = names[1];
+                                    table.Name = names.Last();
+                                    if (names.Length == 3) 
+                                    {
+                                        var finalName = "";
+                                        if (useTableCatalogName.Checked) finalName += names[0] + ".";
+                                        if (useTableSchemaName.Checked) finalName += names[1] + ".";
+                                        table.Name = finalName + names[2];
+                                    }
                                 }
 
                                 if (source.MetaData.Tables.Exists(i => i.AliasName == table.AliasName))

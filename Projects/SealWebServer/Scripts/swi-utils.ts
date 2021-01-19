@@ -34,7 +34,7 @@ module SWIUtil {
         setTimeout(function () {
         $waitDialog.modal('hide');
         SWIUtil.HideMessages();
-        var $alert = $("<div class='alert' style='position:absolute; width:80%; z-index: 2000;margin-bottom:0;'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><p>" + message + "</p></div>");
+        var $alert = $("<div class='alert sr-alert' style='position:absolute; width:80%; z-index: 2000;margin-bottom:0;'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><p>" + message + "</p></div>");
         $alert.css("top", ($(window).height() - 54).toString() + "px");
         $alert.css("left", ($(window).width()/10).toString() + "px");
         $alert.addClass(alertClass);
@@ -45,7 +45,7 @@ module SWIUtil {
     }
 
     export function HideMessages() {
-        $('.alert').alert('close');
+        $('.sr-alert').alert('close');
     }
 
     export function EnableButton(button: JQuery, enabled: boolean) {

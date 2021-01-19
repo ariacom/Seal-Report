@@ -348,6 +348,7 @@ WebJS;Error;;Erreur
 WebJS;Unexpected error on server;;Erreur sur le serveur
 WebJS;Excel;;Excel
 WebJS;Excel: Use element format;;Excel: Utiliser le format de l'élément
+WebJS;Execute report in a new window;;Exécuter le rapport dans une nouvelle fenêtre
 WebJS;Folder;;Répertoire
 WebJS;For columns;;Pour les colonnes
 WebJS;For rows;;Pour les lignes

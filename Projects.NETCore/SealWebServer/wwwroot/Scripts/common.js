@@ -82,7 +82,7 @@ function executeFromTrigger(source /* trigger from a control */, form /* trigger
             if (target) {
                 form.attr("action", _urlPrefix + "ActionExecuteFromTriggerNewWindow");
                 form.attr("target", target);
-                form.submit(); 
+                form.submit();
                 return;
             }
             else {
@@ -264,7 +264,7 @@ function showPopupNavMenu(source, content, forChart) {
 
     //For web add option to navigate in another tab
     if (_urlPrefix != "") {
-        content = content.replace(new RegExp('</a>', 'g'), '<span class="external-navigation glyphicon glyphicon-share"></span></a>');
+        content = content.replace(new RegExp('</a>', 'g'), '<span class="external-navigation glyphicon glyphicon-new-window"></span></a>');
     }
 
     $popup.html(content);
@@ -507,7 +507,6 @@ function executeReport(nav) {
         $.post(url, form.serialize()).done(function (data) {
             if (nav != null) {
                 $(_reportStandalone ? 'body' : '#report-body').html(data);
-                processReportExecuted();
             }
         });
     }
@@ -636,6 +635,7 @@ function mainInit() {
                                     }
                                     else {
                                         //Execution from the menu
+                                        _main.toggleFoldersReport(true);
                                         $.post(_urlPrefix + "HtmlResultFile", { execution_guid: $(this).attr("execution_guid") })
                                             .done(function (data) {
                                                 $("#report-body").html(data);

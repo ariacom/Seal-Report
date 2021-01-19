@@ -7,7 +7,7 @@
 }
 
 <!--view_div-->
-<div id='@(view.ViewId)_div' class='view tab-pane fade @((view.GetBoolValue("information_button") || report.ShowExecutionMessages) && !report.PrintLayout ? "" : "active in")'>
+<div id='@(view.ViewId)_div' class='view tab-pane fade @((view.GetBoolValue("information_button") || report.ShowExecutionMessages) && !report.PrintLayout ? "" : "active in")' style="transition:1s">
     @if (report.IsExecuting && !report.Cancel && (report.Status == ReportStatus.RenderingResult || report.IsBasicHTMLWithNoOutput))
     {
         @Raw(view.ParseChildren());
