@@ -61,6 +61,7 @@ namespace SealWebServer.Controllers
 
                 //Set default view
                 string view = getCookie(SealLastViewCookieName);
+                if (string.IsNullOrEmpty(view)) view = "folders";
                 //Check rights
                 if (!WebUser.ShowFoldersView && view == "folders") view = "report";
 

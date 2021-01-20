@@ -6,7 +6,7 @@
     display: none;
 }
 
-.foldersview, .reportview, .navbar-right, #output-panel {
+.foldersview, .reportview, .navbar-right, #output-panel, #message_button {
     transition: opacity 1s linear;
 }
 

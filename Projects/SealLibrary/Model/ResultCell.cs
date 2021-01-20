@@ -604,6 +604,7 @@ namespace Seal.Model
         {
             get
             {
+                if (_links == null) _links = new List<NavigationLink>();
                 return _links;
             }
         }

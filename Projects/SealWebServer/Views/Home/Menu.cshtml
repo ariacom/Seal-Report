@@ -20,7 +20,9 @@
                 <a id="brand-id" class="navbar-brand hidden-xs" href="#">@repository.Configuration.WebProductName</a>
                 <ul style="float:left;margin:0;padding:10px 0px;list-style:none">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:10px 5px"> <span class="glyphicon glyphicon-menu-hamburger btn btn-sm btn-primary" aria-hidden="true"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:10px 5px" title="@repository.TranslateWeb("Reports menu")"> 
+                        <span class="glyphicon glyphicon-menu-hamburger btn btn-sm btn-primary" aria-hidden="true"></span>
+                        </a>
                         <ul id="menu-main" class="dropdown-menu">
                             <li class="dropdown dropdown-submenu menu-last-reports">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -32,7 +34,8 @@
                         </ul>
                     </li>
                 </ul>
-                <a id="nav_button" href="#" class="navbar-brand"></a><span id="nav_badge" class="badge navbar-left hidden">@repository.TranslateReport("Nav")</span>
+                <a id="nav_button" href="#" class="navbar-brand"  title="@repository.TranslateWeb("Toggle Report or Folders view")"></a>
+                <span id="nav_badge" class="badge navbar-left hidden">@repository.TranslateReport("Nav")</span>
             </div>
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">

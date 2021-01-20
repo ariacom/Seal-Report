@@ -57,6 +57,7 @@ Report;Is not Null;;N'est pas Null
 Report;Is Null;;Est Null
 Report;Is smaller or equal than;;Est plus petit ou égal à
 Report;Is smaller than;;Est plus petit que
+Report;Logs;;Journal
 Report;Maximum of;;Maximum de
 Report;Minimum of;;Minimum de
 Report;Model;;Modèle
@@ -245,6 +246,7 @@ Web;Profile;;Profil
 Web;Profile information;;Profil utilisateur
 Web;Prompt;;Demander
 Web;Prompt at run-time;;Demander à l'exécution
+Web;Recent Reports;;Derniers rapports
 Web;Recur every;;Récurrent tous les
 Web;Refresh;;Rafraîchir
 Web;Reload and execute;;Recharger et exécuter
@@ -261,6 +263,7 @@ Web;Report name;;Nom du rapport
 Web;Report title;;Titre du rapport
 Web;Report title if different from report name;;Titre du rapport si différent du nom
 Web;Reports;;Rapports
+Web;Reports menu;;Menu des rapports
 Web;Result as body;;Message HTML
 Web;Rights;;Droits
 Web;Save;;Enregistrer
@@ -279,6 +282,7 @@ Web;Title;;Titre
 Web;To;;Destinataire
 Web;Total aggr.;;Aggr. totaux
 Web;Type;;Type
+Web;Toggle Report or Folders view;;Voir le rapport ou les répertoires
 Web;User groups;;Groupes utilisateur
 Web;User name;;Nom d'utilisateur
 Web;Users;;Utilisateurs

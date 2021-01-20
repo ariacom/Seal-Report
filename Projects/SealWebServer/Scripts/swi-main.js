@@ -105,6 +105,7 @@ var SWIMain = /** @class */ (function () {
         });
         //Reload and execute
         $("#reload-nav-item").unbind("click").on("click", function () {
+            $waitDialog.modal();
             _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, _main._profile.lastreport.outputGUID, _main._profile.lastreport.name);
         });
         //Folders
@@ -161,7 +162,7 @@ var SWIMain = /** @class */ (function () {
             $("#profile-groups").val(_main._profile.group);
             $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');
-                _gateway.SetUserProfile($("#culture-select").val(), $("#view-select").val(), function () {
+                _gateway.SetUserProfile($("#culture-select").val(), function () {
                     location.reload(true);
                 });
             });
@@ -337,20 +338,23 @@ var SWIMain = /** @class */ (function () {
     SWIMain.prototype.refreshMenu = function () {
         //Menu
         _gateway.GetRootMenu(function (menu) {
+            if (menu.reports.length == 0 && menu.recentreports.length == 0)
+                SWIUtil.ShowHideControl($("#menu-main"), false);
             //Recent reports
             var parent = $("#menu-last-reports");
             parent.children(".menu-reports").remove();
             menu.recentreports.forEach(function (value) {
                 _main.addReportMenu(parent, value);
             });
+            SWIUtil.ShowHideControl($(".menu-last-reports"), menu.recentreports.length > 0);
             //Reports
             parent = $("#menu-main");
             parent.children(".menu-reports").remove();
-            if (menu.recentreports.length > 0)
+            if (menu.recentreports.length > 0 && menu.reports.length > 0)
                 parent.append($("<li class='divider menu-reports')>"));
             SWIUtil.ShowHideControl($(".divider-menu-reports"), menu.reports.length > 0);
             _main.initMenu(parent, menu.reports);
-            if (menu.recentreports.length > 0)
+            if (menu.reports.length > 0 || menu.recentreports.length > 0)
                 parent.append($("<li id='menu-divider-folders-report' class='divider menu-reports')>"));
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
@@ -366,6 +370,7 @@ var SWIMain = /** @class */ (function () {
             });
             //Execute reports from menu
             $("a.menu-report").unbind("click").on("click", function () {
+                $waitDialog.modal();
                 _main.executeReportFromMenu($(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"), $(this).text());
             });
             $("a.menu-report span").unbind("click").on("click", function () {
@@ -514,9 +519,9 @@ var SWIMain = /** @class */ (function () {
         }, 2000);
     };
     SWIMain.prototype.executeReportFromMenu = function (path, viewGUID, outputGUID, name) {
+        $(".navbar-header,#navbar").addClass("disabled");
         $("#report-body").empty();
         $("#nav_button").html(name);
-        $waitDialog.modal();
         _main._reportPath = path;
         _main._profile.lastreport.path = path;
         _main._profile.lastreport.viewGUID = viewGUID;
@@ -524,6 +529,7 @@ var SWIMain = /** @class */ (function () {
         _main._profile.lastreport.name = name;
         _main.toggleFoldersReport(true);
         _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
+            $(".navbar-header,#navbar").removeClass("disabled");
             $("#report-body").html(data);
             _main.enableControls();
             $waitDialog.modal('hide');
@@ -595,7 +601,7 @@ var SWIMain = /** @class */ (function () {
             var $target = $(e.currentTarget);
             var path = $target.data("path");
             if ($target.data("isReport")) {
-                _main.toggleFoldersReport(true);
+                $waitDialog.modal();
                 _main.executeReportFromMenu(path, null, null, $target.text());
             }
             else
@@ -653,7 +659,7 @@ var SWIMain = /** @class */ (function () {
                 });
                 $(".output-name").unbind("click").on("click", function (e) {
                     $outputPanel.hide();
-                    _main.toggleFoldersReport(true);
+                    $waitDialog.modal();
                     _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name") + " - " + $(e.currentTarget).data("name"));
                 });
             }, function (data) {
