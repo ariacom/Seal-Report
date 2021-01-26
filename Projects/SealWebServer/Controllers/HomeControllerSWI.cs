@@ -59,39 +59,15 @@ namespace SealWebServer.Controllers
                 if (string.IsNullOrEmpty(culture) || string.IsNullOrEmpty(WebUser.WebUserName)) culture = getCookie(SealCultureCookieName);
                 if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
 
-                //Set default view
-                string view = getCookie(SealLastViewCookieName);
-                if (string.IsNullOrEmpty(view)) view = "folders";
-                //Check rights
-                if (!WebUser.ShowFoldersView && view == "folders") view = "report";
-
                 //Refresh menu reports
                 if (newAuthentication) MenuReportViewsPool.ForceReload();
                 
-                //Check last report
-                var lastReportPath = getCookie(SealLastReportPathCookieName);
-                if (view == "report" && !string.IsNullOrEmpty(lastReportPath))
-                {
-                    if (!System.IO.File.Exists(Repository.ReportsFolder + lastReportPath))
-                    {
-                        lastReportPath = "";
-                        setCookie(SealLastReportPathCookieName, "");
-                    }
-                }
-
                 return Json(new SWIUserProfile()
                 {
                     name = WebUser.Name,
                     group = WebUser.SecurityGroupsDisplay,
                     culture = Repository.CultureInfo.EnglishName,
                     folder = getCookie(SealLastFolderCookieName),
-                    lastreport = new SWIMenuItem() { 
-                        path = lastReportPath, 
-                        viewGUID = getCookie(SealLastReportViewGUIDCookieName),
-                        outputGUID = getCookie(SealLastReportOutputGUIDCookieName),
-                        name = getCookie(SealLastReportNameCookieName) 
-                    },
-                    lastview = view,
                     showfolders = WebUser.ShowFoldersView,
                     usertag = WebUser.Tag
                 }, JsonRequestBehavior.AllowGet); ;
@@ -126,7 +102,7 @@ namespace SealWebServer.Controllers
         }
 
 
-        IEnumerable<SWIMenuItem> getWebMenu(bool personal)
+        IEnumerable<SWIMenuItem> getWebMenu()
         {
             var result = new List<SWIMenuItem>();
             foreach (var view in WebUser.GetMenuReportViews())
@@ -156,7 +132,7 @@ namespace SealWebServer.Controllers
         void checkRecentFiles()
         {
             //Clean reports
-            WebUser.Profile.RecentReports.RemoveAll(i => !System.IO.File.Exists(Repository.ReportsFolder + i.Path));
+            WebUser.Profile.RecentReports.RemoveAll(i => !System.IO.File.Exists(getFullPath(i.Path)));
         }
 
         /// <summary>
@@ -179,7 +155,7 @@ namespace SealWebServer.Controllers
                                              name = r.Name
                                          }
                                          ).ToArray(),
-                        reports = getWebMenu(false)
+                        reports = getWebMenu()
                     }
                     , JsonRequestBehavior.AllowGet);
             }
@@ -574,14 +550,8 @@ namespace SealWebServer.Controllers
                 var execution = initReportExecution(report, viewGUID, outputGUID, false);
                 execution.RenderHTMLDisplayForViewer();
 
-                WebUser.Profile.SetRecentReports(report, viewGUID, outputGUID);
+                WebUser.Profile.SetRecentReports(path, report, viewGUID, outputGUID);
                 WebUser.SaveProfile();
-
-                var lastReport = WebUser.Profile.RecentReports[0];
-                setCookie(SealLastReportNameCookieName, lastReport.Name);
-                setCookie(SealLastReportPathCookieName, lastReport.Path);
-                setCookie(SealLastReportViewGUIDCookieName, lastReport.ViewGUID);
-                setCookie(SealLastReportOutputGUIDCookieName, lastReport.OutputGUID);
 
                 if (fromMenu != null && fromMenu.Value) return Json( System.IO.File.ReadAllText(report.HTMLDisplayFilePath) );
                 return getFileResult(report.HTMLDisplayFilePath, report);
@@ -762,24 +732,6 @@ namespace SealWebServer.Controllers
             try
             {
                 return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Info }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return HandleSWIException(ex);
-            }
-        }
-
-        /// <summary>
-        /// Set the last view (report or folders) of the logged user
-        /// </summary>
-        public ActionResult SWISetLastView(string view)
-        {
-            writeDebug("SWISetLastView");
-            try
-            {
-                checkSWIAuthentication();
-                setCookie(SealLastViewCookieName, view);
-                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

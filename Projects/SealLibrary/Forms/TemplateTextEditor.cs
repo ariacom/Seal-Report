@@ -34,9 +34,9 @@ namespace Seal.Forms
 
         const string displayNameTemplate = @"@{
     Report report = Model;
-    string result = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + "" "" + DateTime.Now.ToShortDateString();
-    //result = report.ExecutionView.Name;
-    //result = report.GetReportModel(""aModelName"").GetRestrictionByName(""A restriction name"").DisplayValue1;
+    var result = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + "" "" + DateTime.Now.ToShortDateString();
+    //var result = report.ExecutionView.Name;
+    //var result = report.GetReportModel(""aModelName"").GetRestrictionByName(""A restriction name"").DisplayValue1;
 }
 @Raw(result)";
 

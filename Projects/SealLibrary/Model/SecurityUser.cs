@@ -692,8 +692,8 @@ namespace Seal.Model
             var result = new List<ReportView>();
             foreach (var view in MenuReportViewsPool.MenuReportViews)
             {
-                var folder = FindSecurityFolder(view.Report.RelativeFilePath);
-                if (folder.FolderRight != FolderRight.None)
+                var folder = FindSecurityFolder(Path.GetDirectoryName(FileHelper.ConvertOSFilePath(view.Report.RelativeFilePath)));
+                if (folder != null && folder.FolderRight != FolderRight.None)
                 {
                     result.Add(view);
                 }

@@ -328,7 +328,10 @@ namespace Seal.Model
         [XmlIgnore]
         public string RelativeFilePath
         {
-            get { return FilePath.Replace(Repository.ReportsFolder, ""); }
+            get { 
+                if (FilePath.StartsWith(Repository.ReportsFolder)) return FilePath.Replace(Repository.ReportsFolder, "");
+                return Path.GetFileName(FilePath);
+            }
         }
 
         /// <summary>
@@ -1329,34 +1332,9 @@ namespace Seal.Model
         /// </summary>
         public void InitGUIDAndSchedules()
         {
-            GUID = Guid.NewGuid().ToString();
-
-            var viewNewValues = new Dictionary<string, string>();
-            var restrNewValues = new Dictionary<string, string>();
-
-            foreach (var view in AllViews)
-            {
-                var newGUID = Guid.NewGuid().ToString();
-                viewNewValues.Add(view.GUID, newGUID);
-                //Set new GUIDs
-                view.GUID = newGUID;
-            }
-
-            foreach (var view in AllViews)
-            {
-                //Reference views
-                if (!string.IsNullOrEmpty(view.ReferenceViewGUID)) view.ReferenceViewGUID = viewNewValues[view.ReferenceViewGUID];
-            }
-
-            //Current view of the report
-            ViewGUID = viewNewValues[ViewGUID];
-            CurrentViewGUID = ViewGUID;
-
-            //Output views
-            foreach (var output in Outputs)
-            {
-                output.ViewGUID = viewNewValues[output.ViewGUID];
-            }
+            GUID = Helper.NewGUID();
+            //Output 
+            foreach (var output in Outputs) output.GUID = Helper.NewGUID();
 
             //No schedule
             Schedules.Clear();

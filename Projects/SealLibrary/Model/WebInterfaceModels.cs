@@ -16,8 +16,6 @@ namespace Seal.Model
         public string group;
         public string culture;
         public string folder;
-        public SWIMenuItem lastreport;
-        public string lastview;
         public bool showfolders;
         public string usertag;
     }

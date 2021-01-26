@@ -21,6 +21,7 @@ namespace Seal.Model
         public const string DrillAllParameter = "drill_all";
         public const string SubReportsEnabledParameter = "subreports_enabled";
         public const string ServerPaginationParameter = "serverpagination_enabled";
+        public const string EnableResultsMenuParameter = "resultsmenu_enabled";        
         public const string ForceExecutionParameter = "force_execution";
         public const string ForceRefreshParameter = "force_refresh";
         public const string ForceModelsLoad = "force_models_load";

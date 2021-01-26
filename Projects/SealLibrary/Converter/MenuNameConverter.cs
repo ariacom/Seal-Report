@@ -31,7 +31,7 @@ namespace Seal.Forms
                 choices.Add("");
                 var path = Path.GetDirectoryName(view.Report.RelativeFilePath).Replace("\\", "/");
                 choices.Add(path + "/" + view.Report.ExecutionName);
-                choices.Add(path + "/" + view.Name);
+                if (view.Name != view.Report.ExecutionName) choices.Add(path + "/" + view.Name);
             }
             return new StandardValuesCollection(choices);
         }   

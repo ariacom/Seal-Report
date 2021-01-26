@@ -61,13 +61,6 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
-    SWIGateway.prototype.SetLastView = function (view, callback, errorcb) {
-        $.post(_server + "SWISetLastView", {
-            view: view
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    };
     SWIGateway.prototype.DeleteFiles = function (paths, callback, errorcb) {
         $.post(_server + "SWIDeleteFiles", {
             paths: paths

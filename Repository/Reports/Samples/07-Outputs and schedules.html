@@ -91,6 +91,7 @@ body {
 }
 
 #restrictions_button {
+    display: none;
     margin-right: 5px;
 }
 
@@ -1126,7 +1127,7 @@ function initWidgetsRestrictions(parent) {
         $('.panel-widget').css("z-index", "1");
     });
 }
-function initBackToTop() {
+function initScrollReport() {
     //back to top
     $(window).scroll(function () {
         if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
@@ -1185,6 +1186,7 @@ var _refreshTimer = null;
 var _prevScrollpos = window.pageYOffset;
 var _inExecution = false;
 var _popupNavMenuTimeout = -1;
+var _initScrollReportDone = false;
 
 //Restrictions
 function restrictionSelectChange(source) {
@@ -1263,7 +1265,7 @@ function executeFromTrigger(source /* trigger from a control */, form /* trigger
             if (target) {
                 form.attr("action", _urlPrefix + "ActionExecuteFromTriggerNewWindow");
                 form.attr("target", target);
-                form.submit(); 
+                form.submit();
                 return;
             }
             else {
@@ -1445,7 +1447,7 @@ function showPopupNavMenu(source, content, forChart) {
 
     //For web add option to navigate in another tab
     if (_urlPrefix != "") {
-        content = content.replace(new RegExp('</a>', 'g'), '<span class="external-navigation glyphicon glyphicon-share"></span></a>');
+        content = content.replace(new RegExp('</a>', 'g'), '<span class="external-navigation glyphicon glyphicon-new-window"></span></a>');
     }
 
     $popup.html(content);
@@ -1558,9 +1560,12 @@ function requestEnumData(filter, forceNoMessage) {
 // Show Hide Navbar
 function showHideNavbar() {
     const currentScrollPos = window.pageYOffset;
-    if (_prevScrollpos > currentScrollPos || currentScrollPos < 20) {
+    if (_prevScrollpos > currentScrollPos) {
+        $('#bar_top').fadeIn();
         $("#bar_top").css("top", 0);
-    } else {
+    }
+    else {
+        $('#bar_top').fadeOut();
         $("#bar_top").css("top", -1 * $("#bar_top").height());
     }
     _prevScrollpos = currentScrollPos;
@@ -1688,7 +1693,6 @@ function executeReport(nav) {
         $.post(url, form.serialize()).done(function (data) {
             if (nav != null) {
                 $(_reportStandalone ? 'body' : '#report-body').html(data);
-                processReportExecuted();
             }
         });
     }
@@ -1789,7 +1793,7 @@ function mainInit() {
     });
 
     //result links
-    $(".sr_result").unbind("click").on("click", function () {
+    $(".result_item").unbind("click").on("click", function () {
         var form = $("#header_form");
         form.attr("target", _urlPrefix != "" ? "_blank" : "");
         form.attr("action", _urlPrefix + $(this).attr("id"));
@@ -1817,6 +1821,7 @@ function mainInit() {
                                     }
                                     else {
                                         //Execution from the menu
+                                        _main.toggleFoldersReport(true);
                                         $.post(_urlPrefix + "HtmlResultFile", { execution_guid: $(this).attr("execution_guid") })
                                             .done(function (data) {
                                                 $("#report-body").html(data);
@@ -1847,7 +1852,10 @@ function mainInit() {
     }
     initNavCells();
 
-    if (!_printLayout) initBackToTop();
+    if (!_printLayout && !_initScrollReportDone) {
+        initScrollReport();
+        _initScrollReportDone = true;
+    }
     initResize(_printLayout);
 }
 
@@ -1857,6 +1865,7 @@ function mainInit() {
     </head>
     <body>
         
+
     <nav id="bar_top" class='navbar navbar-default navbar-fixed-top' style='transition:top 0.3s;'>
         <div class="container-fluid">
             <div class="navbar-header">
@@ -1872,65 +1881,102 @@ function mainInit() {
                 <a id="nav_button" href="#" class="navbar-brand">07-Outputs and schedules</a><span id="nav_badge" class="badge navbar-left hidden">Nav</span>
             </div>
             <div id="navbarCollapse" class="collapse navbar-collapse">
-                                            <ul class="nav navbar-nav navbar-right">
-                            <li class='active'><a id="report_button" class="sr_tab" data-toggle="tab" href="#32b3cf19-1186-4f72-9cc9-eb376ef10526_div">Rapport</a></li>
-                            <li ><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">Information</a></li>
-                                <li ><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">Messages</a></li>
-                                                    </ul>
-                </div>
+                                    <ul class="nav navbar-nav navbar-right">
+                        <li><a id="report_button" class="sr_tab" data-toggle="tab" href="#789d9832-609a-4fb6-ad8a-475f17517c79_div">Rapport</a></li>
+                        <li><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">Information</a></li>
+                        <li><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">Messages</a></li>
+                        <li id="results_menu" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                R&#233;sultats
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a id="HtmlResult" class="result_item" href="#">Afficher le r&#233;sultat HTML</a></li>
+                                <li><a id="PrintResult" class="result_item" href="#">Afficher le r&#233;sultat Impression</a></li>
+                                <li><a id="CSVResult" class="result_item" href="#">Afficher le r&#233;sultat CSV</a></li>
+                                <li><a id="PDFResult" class="result_item converter_item" href="#">Afficher le r&#233;sultat PDF</a></li>
+                                <li><a id="ExcelResult" class="result_item converter_item" href="#">Afficher le r&#233;sultat Excel</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+            </div>
         </div>
     </nav>
 
 
         
+
 <script type="text/javascript">
 
-        function processShowMsgDuringExec() {
-            var showMsgDuringExec = false;
-            if (showMsgDuringExec) {
-                $("#32b3cf19-1186-4f72-9cc9-eb376ef10526").removeClass("active in");
-                $("#report_button").parent().removeClass("active");
-                $("#information_button").parent().removeClass("active");
-                $("#message_div").addClass("active in");
+    function processShowMsgDuringExec() {
+        var showMsgDuringExec = false;
+        if (showMsgDuringExec) {
+            $("#789d9832-609a-4fb6-ad8a-475f17517c79").removeClass("active in");
+            $("#report_button").parent().removeClass("active");
+            $("#information_button").parent().removeClass("active");
+            $("#message_div").addClass("active in");
+            $("#message_button").parent().addClass("active");
+        }
+    }
+
+    function processOpenMessagesInNewWindow() {
+        var myWindow = window.open('');
+        myWindow.document.write("<head><title>" + 'Messages' + "</title></head><div id='messages'>" + $("#execution_messages").html() + "<div>");
+    }
+
+    function processSubmitViewParameter(parameterName, parameterValue, viewId) {
+        if (!viewId) viewId = '789d9832-609a-4fb6-ad8a-475f17517c79';
+        if (_urlPrefix != "") {
+            $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+        }
+        else {
+            $("#parameter_view_id").val(viewId);
+            $("#parameter_view_name").val(parameterName);
+            $("#parameter_view_value").val(parameterValue);
+            $("#header_form").attr("action", "ActionUpdateViewParameter");
+            $("#header_form").submit();
+        }
+    }
+
+    function processInitProgressBar() {
+        $(".alert-danger").addClass('hidden');
+        $(".alert-danger").html("");
+
+        $("#execute_button").text('Annuler');
+        $("#execute_button").removeClass("btn-success").addClass("btn-warning");
+
+        $("#progress_panel").removeClass('hidden');
+        $(".progress").removeClass('hidden');
+        setProgressBarMessage("#progress_bar", 5,  'Exécution...', "progress-bar-success");
+    }
+
+    function processReportViews() {
+            var showMessages = false;
+            var showInformation = false;
+
+            $("#report_button").parent().removeClass("active");
+            $("#information_button").parent().removeClass("active");
+            $("#message_button").parent().removeClass("active");
+            if (showMessages) {
                 $("#message_button").parent().addClass("active");
+                $("#message_div").addClass("active in");
             }
-        }
-
-        function processOpenMessagesInNewWindow() {
-            var myWindow = window.open('');
-            myWindow.document.write("<head><title>" + 'Messages' + "</title></head><div id='messages'>" + $("#execution_messages").html() + "<div>");
-        }
-
-        function processSubmitViewParameter(parameterName, parameterValue, viewId) {
-            if (!viewId) viewId = '32b3cf19-1186-4f72-9cc9-eb376ef10526';
-            if (_urlPrefix != "") {
-                $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+            else if (showInformation) {
+                $("#information_button").parent().addClass("active");
+                $("#information_div").addClass("active in");
             }
             else {
-                $("#parameter_view_id").val(viewId);
-                $("#parameter_view_name").val(parameterName);
-                $("#parameter_view_value").val(parameterValue);
-                $("#header_form").attr("action", "ActionUpdateViewParameter");
-                $("#header_form").submit();
+                $("#report_button").parent().addClass("active");
+                $("#789d9832-609a-4fb6-ad8a-475f17517c79").addClass("active in");
             }
-        }
-
-        function processInitProgressBar() {
-            $(".alert-danger").addClass('hidden');
-            $(".alert-danger").html("");
-
-            $("#execute_button").text('Annuler');
-            $("#execute_button").removeClass("btn-success").addClass("btn-warning");
-
-            $("#progress_panel").removeClass('hidden');
-            $(".progress").removeClass('hidden');
-            setProgressBarMessage("#progress_bar", 5,  'Exécution...', "progress-bar-success");
         }
 
         function processReportExecuted() {
             $("#nav_button").html('07-Outputs and schedules');
             $("#execute_button").html('Exécuter');
             $("#execute_button").removeClass("btn-warning").addClass("btn-success");
+
+            processReportViews();
         }
 
         function processInitDateTimePicker(parent) {
@@ -1967,18 +2013,12 @@ function mainInit() {
             scrollMessages(_printLayout);
 
             //Buttons
-            $("#report_button").attr("href", "#32b3cf19-1186-4f72-9cc9-eb376ef10526_div");
+            $("#report_button").attr("href", "#789d9832-609a-4fb6-ad8a-475f17517c79_div");
             $("#report_body_container").css("display", "block");
 
             //Execute if force execution or no restriction
             var hasRestrictions = false;
             var forceExecution = true;
-
-            if (!hasRestrictions) $("#restrictions_button").css("display", "none");
-            else if (true) $("#execute_button").addClass("active");
-
-            if (false) $("#execute_button").css("display", "none");
-
             if ((forceExecution || !hasRestrictions) && !true && !false) {
                 executeReport();
             }
@@ -1988,8 +2028,8 @@ function mainInit() {
 <script type="text/javascript">
         //globals
         var _generateHTMLDisplay =  false;
-        var _urlPrefix = "/seal/";
-        var _executionGUID = "4d08089129fd4b65a7dfabd263193c4d";
+        var _urlPrefix = "";
+        var _executionGUID = "ea49170f70a247aca23070b70802448b";
         var _hasNavigation = false;/*SRKW do not modify*/
         var _printLayout = false;
         var _reportStandalone = true;
@@ -2082,7 +2122,7 @@ function mainInit() {
             },
             pagingType: "full_numbers",
             autoWidth: false,
-            stateSave: true,
+            stateSave: false,
             stateSaveCallback: function(settings,data) {
                 try {
                     (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
@@ -2100,8 +2140,41 @@ function mainInit() {
             }
         });
 
+        //Menu buttons
+        if (false) {
+            $("#restrictions_button").addClass("reportview");
+            $("#restrictions_button").css("display", "inline-block");
+            if (true) $("#execute_button").addClass("active");
+        }
+        else {
+            $("#restrictions_button").removeClass("reportview");
+            $("#restrictions_button").css("display", "none");
+        }
+
+        if (true) {
+            $("#message_button").addClass("reportview");
+            $("#message_button").css("display", "inline-block");
+        }
+        else {
+            $("#message_button").removeClass("reportview");
+            $("#message_button").css("display", "none");
+        }
+
+        if (false) {
+            $("#results_menu").addClass("reportview");
+            $("#results_menu").css("display", "inline-block");
+        }
+        else {
+            $("#results_menu").removeClass("reportview");
+            $("#results_menu").css("display", "none");
+        }
+        $(".converter_item").css("display", true ? "inline-block" : "none");
+
+        if (false) $("#execute_button").css("display", "none");
+
         $(document).ready(function () {
             processInitExecution();
+            processReportViews();
         });
 
         
@@ -2113,8 +2186,9 @@ function mainInit() {
 <div id="report_body_container" class="container-fluid" style="display:none;padding-top:65px;">
         <div id="restrictions_div" class="collapse in">
             
-<form id="header_form" method="post" execguid="4d08089129fd4b65a7dfabd263193c4d" action="">
-    <input type="hidden" name="execution_guid" id="execution_guid" value="4d08089129fd4b65a7dfabd263193c4d" />
+
+<form id="header_form" method="post" execguid="ea49170f70a247aca23070b70802448b" action="">
+    <input type="hidden" name="execution_guid" id="execution_guid" value="ea49170f70a247aca23070b70802448b" />
     <input type="hidden" name="navigation_id" id="navigation_id" value="" />
     <input type="hidden" name="navigation_target" id="navigation_target" value="" />
     <input type="hidden" name="navigation_parameters" id="navigation_parameters" value="" />
@@ -2133,11 +2207,13 @@ function mainInit() {
     <span style="display: none;" id="parameter_enumload"></span>
     
 
+
 </form>
 
         </div>
         <div>
             
+
 <!-- status-->
 <div id="alert_status">
     </div>
@@ -2158,7 +2234,8 @@ function mainInit() {
 
 <div class="tab-content">
     
-<div id="information_div" class="tab-pane fade ">
+
+<div id="information_div" class="tab-pane fade " style="transition:1s">
     <script type="text/javascript">
     $(document).ready(function () {
         var dt = $('#information_table');
@@ -2180,7 +2257,7 @@ function mainInit() {
     </script>
 
         <ul class="list-group">
-            <li class="list-group-item">Date d&#39;ex&#233;cution: 15.01.2021  14:35</li>
+            <li class="list-group-item">Date d&#39;ex&#233;cution: 25.01.2021  11:49</li>
             <li class="list-group-item">Dur&#233;e d&#39;ex&#233;cution: 0 seconde</li>
                 <li class="list-group-item">3 simple outputs and 2 schedules to generate the reports daily at 9:00</li>
         </ul>
@@ -2207,47 +2284,53 @@ function mainInit() {
 </div>
 
     
-    <div id="message_div" class="tab-pane fade ">
+
+    <div id="message_div" class="tab-pane fade "  style="transition:1s">
         <ul id='message_popupmenu' class='dropdown-menu' role='menu'>
             <li><label class="checkbox-inline" style="margin-left:5px"><input id="message_autoscroll" type="checkbox" checked>D&#233;filement automatique</label></li>
             <li><a id="message_export" class="message_options" style="margin-left:5px" href='#'>Exporter les messages...</a></li>
         </ul>
-        <div id="execution_messages" class="alert alert-info" role="alert">14:35:02 Starting execution of &#39;07-Outputs and schedules&#39; (User:&#39;&#39; Groups:&#39;Default Group&#39;)...<br>14:35:02 Starting to build models...<br>14:35:02 Build models of Execution set 1...<br>14:35:02 Model &#39;model&#39;: Loading result table...<br>14:35:02 Model &#39;model&#39;: Executing main query...<br>14:35:02 Model &#39;model&#39;: Building pages...<br>14:35:02 Model &#39;model&#39;: Building tables...<br>14:35:02 Model &#39;model&#39;: Building totals...<br>14:35:02 Rendering report...<br></div>
+        <div id="execution_messages" class="alert alert-info" role="alert">11:49:54 Starting execution of &#39;07-Outputs and schedules&#39; (No security context)...<br>11:49:54 Starting to build models...<br>11:49:54 Build models of Execution set 1...<br>11:49:54 Model &#39;model&#39;: Loading result table...<br>11:49:54 Model &#39;model&#39;: Executing main query...<br>11:49:54 Model &#39;model&#39;: Building pages...<br>11:49:54 Model &#39;model&#39;: Building tables...<br>11:49:54 Model &#39;model&#39;: Building totals...<br>11:49:54 Rendering report...<br></div>
     </div>
 
     
-<!--view_div-->
-<div id='32b3cf19-1186-4f72-9cc9-eb376ef10526_div' class='view tab-pane fade active in'>
 
-    <div id='model_a27d52bd61ef4ba3b3471921b0fee8b7'  style='margin-top:5px;'>
+<!--view_div-->
+<div id='789d9832-609a-4fb6-ad8a-475f17517c79_div' class='view tab-pane fade active in' style="transition:1s">
+
+
+    <div id='model_4db85868af6c431d82be8ad7a82c2d6b'  style='margin-top:5px;'>
+
 
 <script>
     $(document).ready(function () {
-        $('#tc_a27d52bd61ef4ba3b3471921b0fee8b7 li:eq(0) a').tab('show');
-        $('#tc_a27d52bd61ef4ba3b3471921b0fee8b7 a').click(function (e) {
-            if (false) processSubmitViewParameter("model_menu_index", $($(this).attr('href'), 'aca80756-8514-46d8-9082-a4fc25b1d1b3').index());
+        $('#tc_4db85868af6c431d82be8ad7a82c2d6b li:eq(0) a').tab('show');
+        $('#tc_4db85868af6c431d82be8ad7a82c2d6b a').click(function (e) {
+            if (false) processSubmitViewParameter("model_menu_index", $($(this).attr('href'), '8b23c6ae-ab40-4ba7-a15b-b58cee463b3c').index());
             redrawDataTables();
         });
     });
 </script>
 
 
-    <ul id="tc_a27d52bd61ef4ba3b3471921b0fee8b7" class="nav nav-pills   ">
-            <li class="active"><a data-toggle="pill" href='#a27d52bd61ef4ba3b3471921b0fee8b7_summary'>Sommaire</a></li>
+    <ul id="tc_4db85868af6c431d82be8ad7a82c2d6b" class="nav nav-pills   ">
+            <li class="active"><a data-toggle="pill" href='#4db85868af6c431d82be8ad7a82c2d6b_summary'>Sommaire</a></li>
                     <li class=''>
-                <a data-toggle="pill" href='#a27d52bd61ef4ba3b3471921b0fee8b7a292b489fe254d6093de91ef6b0d0ddd'>1996</a>
+                <a data-toggle="pill" href='#4db85868af6c431d82be8ad7a82c2d6b8fb4049de152444487a6934668565ec5'>1996</a>
             </li>
             <li class=''>
-                <a data-toggle="pill" href='#a27d52bd61ef4ba3b3471921b0fee8b7e45144b06b5c425d842e613776c5b480'>1997</a>
+                <a data-toggle="pill" href='#4db85868af6c431d82be8ad7a82c2d6b2d474c0739a54f22a4d919ee47fc2629'>1997</a>
             </li>
             <li class=''>
-                <a data-toggle="pill" href='#a27d52bd61ef4ba3b3471921b0fee8b762614866d8b8433fa1be2cc8106ed281'>1998</a>
+                <a data-toggle="pill" href='#4db85868af6c431d82be8ad7a82c2d6b3eb5587058464db4addbf65d3ee0e393'>1998</a>
             </li>
     </ul>
             <div class="tab-content">
                 
-    <div class="tab-pane fade in active" id="a27d52bd61ef4ba3b3471921b0fee8b7_summary">
+
+    <div class="tab-pane fade in active" id="4db85868af6c431d82be8ad7a82c2d6b_summary">
         
+
 <table class='table table-striped table-hover table-bordered' style='margin-top:5px;'>
     <thead>
             <tr  class='active' >
@@ -2331,10 +2414,12 @@ function mainInit() {
 
     </div>
 
-    <div class="container-fluid tab-pane fade" id="a27d52bd61ef4ba3b3471921b0fee8b7a292b489fe254d6093de91ef6b0d0ddd">
-        <div id='model_container_6536e5d5fa45400096ae704854e8601b' class="container-fluid">
+    <div class="container-fluid tab-pane fade" id="4db85868af6c431d82be8ad7a82c2d6b8fb4049de152444487a6934668565ec5">
+        
+<div id='model_container_57274de1e2b3439d9374bebe4d8a2968' class="container-fluid">
         <div class="row">
                 <div class=" " >
+
 
 
         <table class='table table-striped table-hover table-bordered' style='margin-top:5px;' >
@@ -2384,13 +2469,14 @@ function mainInit() {
             <div class="row">
             
 
+
     <!--Chart JS-->
         <div class="chart-container" style="page-break-inside:avoid; position:relative; height:400px;">
-            <canvas id="cjsd94cd2fa4f284926a54dcbb8f3d25b1e"  ></canvas>
+            <canvas id="cjscb898b0050d143719b5400bce25b572a"  ></canvas>
         </div>
         <script>
             $(document).ready(function () {
-                var ctx = $("#cjsd94cd2fa4f284926a54dcbb8f3d25b1e");
+                var ctx = $("#cjscb898b0050d143719b5400bce25b572a");
                 var colorsDef = "d3";
                 var colors = null;
                 if (colorsDef == "d3") colors = d3.scale.category10().range();
@@ -2400,14 +2486,14 @@ function mainInit() {
 
                 var data = {
                     labels: ['USA','Austria','Germany','Brazil','France','Ireland','Canada','Sweden','Belgium','Venezuela','UK','Mexico','Switzerland','Finland','Denmark','Spain','Portugal','Norway','Italy','Poland'],
-                    navigations: ["<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=USA&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Austria&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Germany&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Brazil&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=France&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Ireland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Canada&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Sweden&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Belgium&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Venezuela&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=UK&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Mexico&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Switzerland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Finland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Denmark&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Spain&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Portugal&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Norway&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Italy&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Poland&view='><a href='#'>Navigation &gt; Ville</a></li>"],
+                    navigations: ["<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=USA'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Austria'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Germany'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Brazil'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=France'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Ireland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Canada'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Sweden'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Belgium'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Venezuela'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=UK'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Mexico'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Switzerland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Finland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Denmark'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Spain'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Portugal'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Norway'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Italy'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Poland'><a href='#'>Navigation &gt; Ville</a></li>"],
                     datasets: [
-
+                        
                         {
                         type: 'bar',
                             labels: ['USA','Austria','Germany','Brazil','France','Ireland','Canada','Sweden','Belgium','Venezuela','UK','Mexico','Switzerland','Finland','Denmark','Spain','Portugal','Norway','Italy','Poland'],
                             label: 'Montant',
-                            data: [{x:0,y:17747.93503189087},{x:1,y:17281.380004882812},{x:2,y:17068.784706115723},{x:3,y:13841.480001449585},{x:4,y:9486.040004730225},{x:5,y:5478.020172119141},{x:6,y:4345.280059814453},{x:7,y:4177.225189208984},{x:8,y:3923.2001953125},{x:9,y:3918.0698852539062},{x:10,y:2976.480010986328},{x:11,y:2848.4000205993652},{x:12,y:1703.9999885559082},{x:13,y:1634},{x:14,y:1507.1999816894531},{x:15,y:1391.900013923645},{x:16,y:852.7200317382812},{x:17,y:272.40000915527344},{x:18,y:268.03999519348145},{x:19,y:159}],
+                            data: [{x:0,y:17747.9350318909},{x:1,y:17281.3800048828},{x:2,y:17068.7847061157},{x:3,y:13841.4800014496},{x:4,y:9486.04000473022},{x:5,y:5478.02017211914},{x:6,y:4345.28005981445},{x:7,y:4177.22518920899},{x:8,y:3923.20019531251},{x:9,y:3918.0698852539},{x:10,y:2976.48001098633},{x:11,y:2848.40002059937},{x:12,y:1703.99998855591},{x:13,y:1634},{x:14,y:1507.19998168945},{x:15,y:1391.90001392365},{x:16,y:852.720031738281},{x:17,y:272.400009155273},{x:18,y:268.039995193481},{x:19,y:159}],
                             borderColor: colors[0],
                             backgroundColor: colors[0],
                             borderWidth: 1,
@@ -2422,11 +2508,12 @@ function mainInit() {
                         yAxisID: 'yaxis-1'
                         },
                         
+                        
                         {
                         type: 'bar',
                             labels: ['USA','Austria','Germany','Brazil','France','Ireland','Canada','Sweden','Belgium','Venezuela','UK','Mexico','Switzerland','Finland','Denmark','Spain','Portugal','Norway','Italy','Poland'],
                             label: 'Rabais',
-                            data: [{x:0,y:1525.865002155304},{x:1,y:3170.7200050354004},{x:2,y:1071.1149806976318},{x:3,y:2767.8200178146362},{x:4,y:188.55999779701233},{x:5,y:787.180046081543},{x:6,y:424.3199996948242},{x:7,y:313.37501335144043},{x:8,y:129.60000610351562},{x:9,y:362.43000411987305},{x:10,y:214.11999893188477},{x:11,y:0},{x:12,y:64.49999713897705},{x:13,y:8},{x:14,y:0},{x:15,y:73.79999923706055},{x:16,y:126.4800033569336},{x:17,y:0},{x:18,y:5.1600000858306885},{x:19,y:0}],
+                            data: [{x:0,y:1525.8650021553},{x:1,y:3170.7200050354},{x:2,y:1071.11498069763},{x:3,y:2767.82001781464},{x:4,y:188.559997797012},{x:5,y:787.180046081543},{x:6,y:424.319999694824},{x:7,y:313.37501335144},{x:8,y:129.600006103516},{x:9,y:362.430004119873},{x:10,y:214.119998931885},{x:11,y:0},{x:12,y:64.4999971389771},{x:13,y:8},{x:14,y:0},{x:15,y:73.7999992370605},{x:16,y:126.480003356934},{x:17,y:0},{x:18,y:5.16000008583069},{x:19,y:0}],
                             borderColor: colors[1],
                             backgroundColor: colors[1],
                             borderWidth: 1,
@@ -2440,6 +2527,7 @@ function mainInit() {
                             },
                         yAxisID: 'yaxis-1'
                         },
+                        
                         
                         {
                         type: 'line',
@@ -2459,13 +2547,15 @@ function mainInit() {
                             },
                         yAxisID: 'yaxis-2'
                         },
-                                            ]
+                        
+                    ]
                 };
 
                 function getValue(dataset, dataIndex) {
-
+                        
                     return dataset.data[dataIndex].y;
-                                        }
+                        
+                }
 
                 function getPercentage(dataset, dataIndex) {
                     var total = 0;
@@ -2494,9 +2584,10 @@ function mainInit() {
                     var dataset = data.datasets[tooltipItem.datasetIndex];
                     var tooltipLabel = data.labels[tooltipItem.index];
 
-
+                        
                     return valueFormatter(dataset, tooltipItem.index, 'auto');
-                                        }
+                        
+                }
 
                 var options = {
                     responsive: true,
@@ -2555,7 +2646,7 @@ function mainInit() {
                         }
                     }
                 },
-
+                
                 scales: {
                     xAxes: [{
                         offset: true,
@@ -2572,7 +2663,7 @@ function mainInit() {
                         },
                         }],
                     yAxes: [
-
+                            
                             {
                                 id: 'yaxis-1',
                                 display: true,
@@ -2590,6 +2681,7 @@ function mainInit() {
                                         return d3.format(',.0f')(label).valueFormat();
                                     }                                }
                             },
+                            
                                                     
                             {
                                 id: 'yaxis-2',
@@ -2609,26 +2701,28 @@ function mainInit() {
                                     }
                                 }
                             },
-                                                ]
+                            
+                    ]
                 }
-                            };
+                
+            };
 
-            var cjsd94cd2fa4f284926a54dcbb8f3d25b1e = new Chart(ctx, {
+            var cjscb898b0050d143719b5400bce25b572a = new Chart(ctx, {
                 type: 'bar',
                 data: data,
                 options: options
                 });
                 // Navigation
                 if (false) {
-                    $("#cjsd94cd2fa4f284926a54dcbb8f3d25b1e").click(
+                    $("#cjscb898b0050d143719b5400bce25b572a").click(
                         function (evt) {
-                            var points = cjsd94cd2fa4f284926a54dcbb8f3d25b1e.getElementsAtEvent(evt);
+                            var points = cjscb898b0050d143719b5400bce25b572a.getElementsAtEvent(evt);
                             if (points && points.length > 0) {
                                 var index = points[0]["_index"];
-                                var label = cjsd94cd2fa4f284926a54dcbb8f3d25b1e.data.labels[index];
-                                var value = cjsd94cd2fa4f284926a54dcbb8f3d25b1e.data.datasets[0].data[index];
-                                var nav = cjsd94cd2fa4f284926a54dcbb8f3d25b1e.data.navigations[index];
-                                if (nav) showPopupNavMenu(evt, nav, true, '4d08089129fd4b65a7dfabd263193c4d');
+                                var label = cjscb898b0050d143719b5400bce25b572a.data.labels[index];
+                                var value = cjscb898b0050d143719b5400bce25b572a.data.datasets[0].data[index];
+                                var nav = cjscb898b0050d143719b5400bce25b572a.data.navigations[index];
+                                if (nav) showPopupNavMenu(evt, nav, true, 'ea49170f70a247aca23070b70802448b');
                             }
                         }
                     );
@@ -2640,16 +2734,19 @@ function mainInit() {
         <div class="row">
             
 
-        </div>
-        <div class="row">
-            
 
         </div>
         <div class="row">
             
+
+
+        </div>
+        <div class="row">
+            
+
     <script type="text/javascript">
     $(document).ready(function () {
-        var dt = $('#dt_4a2f40fe67994d8e8e06cd70aefdea9a');
+        var dt = $('#dt_b53d0fa44a4e4dc7816bad408fea3399');
         try {
             if (dt != null && true && !false)
             {
@@ -2669,13 +2766,13 @@ function mainInit() {
                 scrollX: false,
                 scrollCollapse: false,
                                                                 });
-                initNavCells('4d08089129fd4b65a7dfabd263193c4d', '[viewid="eebf3ec3-52c3-4041-a7a3-de8d64e64de5"]');
+                initNavCells('ea49170f70a247aca23070b70802448b', '[viewid="210f5ada-b21c-48b9-a34d-a59526c0d50a"]');
             }
     }
     catch (e) { };
     });
     </script>
-    <table id='dt_4a2f40fe67994d8e8e06cd70aefdea9a' viewid='eebf3ec3-52c3-4041-a7a3-de8d64e64de5' class='table-responsive table table-striped table-hover table-condensed' >
+    <table id='dt_b53d0fa44a4e4dc7816bad408fea3399' viewid='210f5ada-b21c-48b9-a34d-a59526c0d50a' class='table-responsive table table-striped table-hover table-condensed' >
         <thead>
                 <tr class='active' >
                         <th   ></th>
@@ -2714,7 +2811,7 @@ function mainInit() {
                         <th class='text-right' style='padding-right:25px;' >Quantit&#233;</th>
                 </tr>
         </thead>
-
+            
                 <tbody>
                         <tr  >
                                 <td   >Austria</td>
@@ -2722,10 +2819,10 @@ function mainInit() {
                                 <td class='text-right'  >2&#160;528</td>
                                 <td class='text-right'  >188</td>
                                 <td class='text-right'  >662</td>
-                                <td class='text-right'  >212</td>
+                                <td class='text-right'  >213</td>
                                 <td class='text-right'  >65</td>
                                 <td class='text-right'  >1&#160;914</td>
-                                <td class='text-right'  >310</td>
+                                <td class='text-right'  >311</td>
                                 <td class='text-right'  >127</td>
                                 <td class='text-right'  >1&#160;042</td>
                                 <td class='text-right'  >119</td>
@@ -3009,7 +3106,7 @@ function mainInit() {
                                 <td class='text-right'  >533</td>
                                 <td class='text-right'  >40</td>
                                 <td class='text-right'  >50</td>
-                                <td class='text-right'  >486</td>
+                                <td class='text-right'  >487</td>
                                 <td class='text-right'  >0</td>
                                 <td class='text-right'  >35</td>
                                 <td class='text-right'  >380</td>
@@ -3077,7 +3174,8 @@ function mainInit() {
                                 <td class='text-right'  >217</td>
                         </tr>
                 </tbody>
-                    <tfoot>
+            
+        <tfoot>
                 <tr class='active tr-totals' >
                         <td  >Total</td>
                         <td class='text-right' >47&#160;919</td>
@@ -3105,10 +3203,12 @@ function mainInit() {
 
 
     </div>
-    <div class="container-fluid tab-pane fade" id="a27d52bd61ef4ba3b3471921b0fee8b7e45144b06b5c425d842e613776c5b480">
-        <div id='model_container_6536e5d5fa45400096ae704854e8601b' class="container-fluid">
+    <div class="container-fluid tab-pane fade" id="4db85868af6c431d82be8ad7a82c2d6b2d474c0739a54f22a4d919ee47fc2629">
+        
+<div id='model_container_57274de1e2b3439d9374bebe4d8a2968' class="container-fluid">
         <div class="row">
                 <div class=" " >
+
 
 
         <table class='table table-striped table-hover table-bordered' style='margin-top:5px;' >
@@ -3158,13 +3258,14 @@ function mainInit() {
             <div class="row">
             
 
+
     <!--Chart JS-->
         <div class="chart-container" style="page-break-inside:avoid; position:relative; height:400px;">
-            <canvas id="cjsc0467f3bca4e4bbea2a48f29e35d7af6"  ></canvas>
+            <canvas id="cjs093c8247e9a743c09860f3795e53287e"  ></canvas>
         </div>
         <script>
             $(document).ready(function () {
-                var ctx = $("#cjsc0467f3bca4e4bbea2a48f29e35d7af6");
+                var ctx = $("#cjs093c8247e9a743c09860f3795e53287e");
                 var colorsDef = "d3";
                 var colors = null;
                 if (colorsDef == "d3") colors = d3.scale.category10().range();
@@ -3174,14 +3275,14 @@ function mainInit() {
 
                 var data = {
                     labels: ['Germany','USA','France','Austria','Brazil','Denmark','Sweden','UK','Canada','Venezuela','Mexico','Belgium','Switzerland','Ireland','Italy','Finland','Portugal','Argentina','Poland','Norway','Spain'],
-                    navigations: ["<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Germany&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=USA&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=France&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Austria&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Brazil&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Denmark&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Sweden&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=UK&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Canada&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Venezuela&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Mexico&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Belgium&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Switzerland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Ireland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Italy&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Finland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Portugal&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Argentina&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Poland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Norway&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Spain&view='><a href='#'>Navigation &gt; Ville</a></li>"],
+                    navigations: ["<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Germany'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=USA'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=France'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Austria'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Brazil'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Denmark'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Sweden'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=UK'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Canada'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Venezuela'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Mexico'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Belgium'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Switzerland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Ireland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Italy'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Finland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Portugal'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Argentina'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Poland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Norway'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Spain'><a href='#'>Navigation &gt; Ville</a></li>"],
                     datasets: [
-
+                        
                         {
                         type: 'bar',
                             labels: ['Germany','USA','France','Austria','Brazil','Denmark','Sweden','UK','Canada','Venezuela','Mexico','Belgium','Switzerland','Ireland','Italy','Finland','Portugal','Argentina','Poland','Norway','Spain'],
                             label: 'Montant',
-                            data: [{x:0,y:59847.5425453186},{x:1,y:56299.88729476929},{x:2,y:29496.202346801758},{x:3,y:24934.419834136963},{x:4,y:21178.10741710663},{x:5,y:19622.537344932556},{x:6,y:16899.75496673584},{x:7,y:14058.459904670715},{x:8,y:13558.085266113281},{x:9,y:12300.789012908936},{x:10,y:8723.277488708496},{x:11,y:7321.380020141602},{x:12,y:6415.483856201172},{x:13,y:6367.150012969971},{x:14,y:3533.249942779541},{x:15,y:2573.162540435791},{x:16,y:2430.950065612793},{x:17,y:1409.1000061035156},{x:18,y:675.5},{x:19,y:536},{x:20,y:300.99999618530273}],
+                            data: [{x:0,y:59847.5425453185},{x:1,y:56299.8872947693},{x:2,y:29496.2023468018},{x:3,y:24934.4198341369},{x:4,y:21178.1074171066},{x:5,y:19622.5373449326},{x:6,y:16899.7549667358},{x:7,y:14058.4599046707},{x:8,y:13558.0852661133},{x:9,y:12300.7890129089},{x:10,y:8723.27748870849},{x:11,y:7321.3800201416},{x:12,y:6415.48385620117},{x:13,y:6367.15001296997},{x:14,y:3533.24994277954},{x:15,y:2573.16254043579},{x:16,y:2430.95006561279},{x:17,y:1409.10000610351},{x:18,y:675.5},{x:19,y:536},{x:20,y:300.999996185303}],
                             borderColor: colors[0],
                             backgroundColor: colors[0],
                             borderWidth: 1,
@@ -3196,11 +3297,12 @@ function mainInit() {
                         yAxisID: 'yaxis-1'
                         },
                         
+                        
                         {
                         type: 'bar',
                             labels: ['Germany','USA','France','Austria','Brazil','Denmark','Sweden','UK','Canada','Venezuela','Mexico','Belgium','Switzerland','Ireland','Italy','Finland','Portugal','Argentina','Poland','Norway','Spain'],
                             label: 'Rabais',
-                            data: [{x:0,y:3181.307535648346},{x:1,y:2894.9325528144836},{x:2,y:1177.4975094795227},{x:3,y:1704.6799812316895},{x:4,y:999.9025278091431},{x:5,y:1326.4124774932861},{x:6,y:736.8950033187866},{x:7,y:435.5900049209595},{x:8,y:2648.915075302124},{x:9,y:731.7410097122192},{x:10,y:291.12250328063965},{x:11,y:477.7200012207031},{x:12,y:194.27600288391113},{x:13,y:704.1000032424927},{x:14,y:154.64999628067017},{x:15,y:133.23750114440918},{x:16,y:409.9500107765198},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:6}],
+                            data: [{x:0,y:3181.30753564835},{x:1,y:2894.93255281448},{x:2,y:1177.49750947952},{x:3,y:1704.67998123169},{x:4,y:999.902527809142},{x:5,y:1326.41247749329},{x:6,y:736.895003318786},{x:7,y:435.59000492096},{x:8,y:2648.91507530212},{x:9,y:731.741009712219},{x:10,y:291.122503280639},{x:11,y:477.720001220703},{x:12,y:194.276002883911},{x:13,y:704.100003242493},{x:14,y:154.649996280671},{x:15,y:133.237501144409},{x:16,y:409.95001077652},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:6}],
                             borderColor: colors[1],
                             backgroundColor: colors[1],
                             borderWidth: 1,
@@ -3214,6 +3316,7 @@ function mainInit() {
                             },
                         yAxisID: 'yaxis-1'
                         },
+                        
                         
                         {
                         type: 'line',
@@ -3233,13 +3336,15 @@ function mainInit() {
                             },
                         yAxisID: 'yaxis-2'
                         },
-                                            ]
+                        
+                    ]
                 };
 
                 function getValue(dataset, dataIndex) {
-
+                        
                     return dataset.data[dataIndex].y;
-                                        }
+                        
+                }
 
                 function getPercentage(dataset, dataIndex) {
                     var total = 0;
@@ -3268,9 +3373,10 @@ function mainInit() {
                     var dataset = data.datasets[tooltipItem.datasetIndex];
                     var tooltipLabel = data.labels[tooltipItem.index];
 
-
+                        
                     return valueFormatter(dataset, tooltipItem.index, 'auto');
-                                        }
+                        
+                }
 
                 var options = {
                     responsive: true,
@@ -3329,7 +3435,7 @@ function mainInit() {
                         }
                     }
                 },
-
+                
                 scales: {
                     xAxes: [{
                         offset: true,
@@ -3346,7 +3452,7 @@ function mainInit() {
                         },
                         }],
                     yAxes: [
-
+                            
                             {
                                 id: 'yaxis-1',
                                 display: true,
@@ -3364,6 +3470,7 @@ function mainInit() {
                                         return d3.format(',.0f')(label).valueFormat();
                                     }                                }
                             },
+                            
                                                     
                             {
                                 id: 'yaxis-2',
@@ -3383,26 +3490,28 @@ function mainInit() {
                                     }
                                 }
                             },
-                                                ]
+                            
+                    ]
                 }
-                            };
+                
+            };
 
-            var cjsc0467f3bca4e4bbea2a48f29e35d7af6 = new Chart(ctx, {
+            var cjs093c8247e9a743c09860f3795e53287e = new Chart(ctx, {
                 type: 'bar',
                 data: data,
                 options: options
                 });
                 // Navigation
                 if (false) {
-                    $("#cjsc0467f3bca4e4bbea2a48f29e35d7af6").click(
+                    $("#cjs093c8247e9a743c09860f3795e53287e").click(
                         function (evt) {
-                            var points = cjsc0467f3bca4e4bbea2a48f29e35d7af6.getElementsAtEvent(evt);
+                            var points = cjs093c8247e9a743c09860f3795e53287e.getElementsAtEvent(evt);
                             if (points && points.length > 0) {
                                 var index = points[0]["_index"];
-                                var label = cjsc0467f3bca4e4bbea2a48f29e35d7af6.data.labels[index];
-                                var value = cjsc0467f3bca4e4bbea2a48f29e35d7af6.data.datasets[0].data[index];
-                                var nav = cjsc0467f3bca4e4bbea2a48f29e35d7af6.data.navigations[index];
-                                if (nav) showPopupNavMenu(evt, nav, true, '4d08089129fd4b65a7dfabd263193c4d');
+                                var label = cjs093c8247e9a743c09860f3795e53287e.data.labels[index];
+                                var value = cjs093c8247e9a743c09860f3795e53287e.data.datasets[0].data[index];
+                                var nav = cjs093c8247e9a743c09860f3795e53287e.data.navigations[index];
+                                if (nav) showPopupNavMenu(evt, nav, true, 'ea49170f70a247aca23070b70802448b');
                             }
                         }
                     );
@@ -3414,16 +3523,19 @@ function mainInit() {
         <div class="row">
             
 
-        </div>
-        <div class="row">
-            
 
         </div>
         <div class="row">
             
+
+
+        </div>
+        <div class="row">
+            
+
     <script type="text/javascript">
     $(document).ready(function () {
-        var dt = $('#dt_f2a182ed55c64b6eb4458ed54b3fa96d');
+        var dt = $('#dt_4da4af4f9cba4fdc9108ec4ae52dfdc4');
         try {
             if (dt != null && true && !false)
             {
@@ -3443,13 +3555,13 @@ function mainInit() {
                 scrollX: false,
                 scrollCollapse: false,
                                                                 });
-                initNavCells('4d08089129fd4b65a7dfabd263193c4d', '[viewid="eebf3ec3-52c3-4041-a7a3-de8d64e64de5"]');
+                initNavCells('ea49170f70a247aca23070b70802448b', '[viewid="210f5ada-b21c-48b9-a34d-a59526c0d50a"]');
             }
     }
     catch (e) { };
     });
     </script>
-    <table id='dt_f2a182ed55c64b6eb4458ed54b3fa96d' viewid='eebf3ec3-52c3-4041-a7a3-de8d64e64de5' class='table-responsive table table-striped table-hover table-condensed' >
+    <table id='dt_4da4af4f9cba4fdc9108ec4ae52dfdc4' viewid='210f5ada-b21c-48b9-a34d-a59526c0d50a' class='table-responsive table table-striped table-hover table-condensed' >
         <thead>
                 <tr class='active' >
                         <th   ></th>
@@ -3488,7 +3600,7 @@ function mainInit() {
                         <th class='text-right' style='padding-right:25px;' >Quantit&#233;</th>
                 </tr>
         </thead>
-
+            
                 <tbody>
                         <tr  >
                                 <td   >Argentina</td>
@@ -3498,7 +3610,7 @@ function mainInit() {
                                 <td class='text-right'  >370</td>
                                 <td class='text-right'  >0</td>
                                 <td class='text-right'  >29</td>
-                                <td class='text-right'  >390</td>
+                                <td class='text-right'  >391</td>
                                 <td class='text-right'  >0</td>
                                 <td class='text-right'  >30</td>
                                 <td class='text-right'  >594</td>
@@ -3606,7 +3718,7 @@ function mainInit() {
                                 <td class='text-right'  >443</td>
                                 <td class='text-right'  >0</td>
                                 <td class='text-right'  >37</td>
-                                <td class='text-right'  >462</td>
+                                <td class='text-right'  >463</td>
                                 <td class='text-right'  >57</td>
                                 <td class='text-right'  >56</td>
                                 <td class='text-right'  >784</td>
@@ -3663,7 +3775,7 @@ function mainInit() {
                                 <td class='text-right'  >3&#160;124</td>
                                 <td class='text-right'  >531</td>
                                 <td class='text-right'  >178</td>
-                                <td class='text-right'  >1&#160;786</td>
+                                <td class='text-right'  >1&#160;787</td>
                                 <td class='text-right'  >0</td>
                                 <td class='text-right'  >73</td>
                                 <td class='text-right'  >6&#160;367</td>
@@ -3807,7 +3919,7 @@ function mainInit() {
                                 <td class='text-right'  >1&#160;909</td>
                                 <td class='text-right'  >25</td>
                                 <td class='text-right'  >96</td>
-                                <td class='text-right'  >1&#160;828</td>
+                                <td class='text-right'  >1&#160;829</td>
                                 <td class='text-right'  >80</td>
                                 <td class='text-right'  >36</td>
                                 <td class='text-right'  >6&#160;415</td>
@@ -3869,7 +3981,8 @@ function mainInit() {
                                 <td class='text-right'  >871</td>
                         </tr>
                 </tbody>
-                    <tfoot>
+            
+        <tfoot>
                 <tr class='active tr-totals' >
                         <td  >Total</td>
                         <td class='text-right' >103&#160;924</td>
@@ -3897,10 +4010,12 @@ function mainInit() {
 
 
     </div>
-    <div class="container-fluid tab-pane fade" id="a27d52bd61ef4ba3b3471921b0fee8b762614866d8b8433fa1be2cc8106ed281">
-        <div id='model_container_6536e5d5fa45400096ae704854e8601b' class="container-fluid">
+    <div class="container-fluid tab-pane fade" id="4db85868af6c431d82be8ad7a82c2d6b3eb5587058464db4addbf65d3ee0e393">
+        
+<div id='model_container_57274de1e2b3439d9374bebe4d8a2968' class="container-fluid">
         <div class="row">
                 <div class=" " >
+
 
 
         <table class='table table-striped table-hover table-bordered' style='margin-top:5px;' >
@@ -3950,13 +4065,14 @@ function mainInit() {
             <div class="row">
             
 
+
     <!--Chart JS-->
         <div class="chart-container" style="page-break-inside:avoid; position:relative; height:400px;">
-            <canvas id="cjs8c1ef4898cc34ddb8b685b3dda99adc5"  ></canvas>
+            <canvas id="cjs89d98bb56b2c4c1292f2c8d29d6f7e5d"  ></canvas>
         </div>
         <script>
             $(document).ready(function () {
-                var ctx = $("#cjs8c1ef4898cc34ddb8b685b3dda99adc5");
+                var ctx = $("#cjs89d98bb56b2c4c1292f2c8d29d6f7e5d");
                 var colorsDef = "d3";
                 var colors = null;
                 if (colorsDef == "d3") colors = d3.scale.category10().range();
@@ -3966,14 +4082,14 @@ function mainInit() {
 
                 var data = {
                     labels: ['USA','Germany','Brazil','Austria','Venezuela','UK','Sweden','France','Canada','Belgium','Spain','Argentina','Italy','Norway','Ireland','Mexico','Switzerland','Finland','Denmark','Poland'],
-                    navigations: ["<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=USA&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Germany&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Brazil&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Austria&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Venezuela&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=UK&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Sweden&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=France&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Canada&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Belgium&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Spain&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Argentina&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Italy&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Norway&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Ireland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Mexico&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Switzerland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Finland&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Denmark&view='><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=4d08089129fd4b65a7dfabd263193c4d&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Poland&view='><a href='#'>Navigation &gt; Ville</a></li>"],
+                    navigations: ["<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=USA'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Germany'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Brazil'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Austria'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Venezuela'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=UK'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Sweden'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=France'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Canada'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Belgium'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Spain'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Argentina'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Italy'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Norway'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Ireland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Mexico'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Switzerland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Finland'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Denmark'><a href='#'>Navigation &gt; Ville</a></li>","<li nav='exe=ea49170f70a247aca23070b70802448b&src=20ed0b7a-87dd-4aaa-8d48-feab848e396b&dst=c6a7dd72-742e-4e2b-9f73-7acfcb5c8971&val=Poland'><a href='#'>Navigation &gt; Ville</a></li>"],
                     datasets: [
-
+                        
                         {
                         type: 'bar',
                             labels: ['USA','Germany','Brazil','Austria','Venezuela','UK','Sweden','France','Canada','Belgium','Spain','Argentina','Italy','Norway','Ireland','Mexico','Switzerland','Finland','Denmark','Poland'],
                             label: 'Montant',
-                            data: [{x:0,y:56111.615589141846},{x:1,y:51895.2213973999},{x:2,y:31360.314949035645},{x:3,y:17094.799926757812},{x:4,y:13056.634979248047},{x:5,y:11846.760009765625},{x:6,y:11468.679870605469},{x:7,y:10244.560030937195},{x:8,y:8651.224975585938},{x:9,y:6100.980003356934},{x:10,y:5326.84001159668},{x:11,y:4269.4999923706055},{x:12,y:3779.5},{x:13,y:3742.749975204468},{x:14,y:3290.3699340820312},{x:15,y:2674.400001525879},{x:16,y:2302.2900257110596},{x:17,y:1353.9999694824219},{x:18,y:1299.5850067138672},{x:19,y:1238.0999755859375}],
+                            data: [{x:0,y:56111.6155891419},{x:1,y:51895.2213973999},{x:2,y:31360.3149490356},{x:3,y:17094.7999267578},{x:4,y:13056.6349792481},{x:5,y:11846.7600097656},{x:6,y:11468.6798706055},{x:7,y:10244.5600309372},{x:8,y:8651.22497558594},{x:9,y:6100.98000335693},{x:10,y:5326.84001159668},{x:11,y:4269.49999237061},{x:12,y:3779.5},{x:13,y:3742.74997520447},{x:14,y:3290.36993408203},{x:15,y:2674.40000152588},{x:16,y:2302.29002571106},{x:17,y:1353.99996948242},{x:18,y:1299.58500671387},{x:19,y:1238.09997558594}],
                             borderColor: colors[0],
                             backgroundColor: colors[0],
                             borderWidth: 1,
@@ -3988,11 +4104,12 @@ function mainInit() {
                         yAxisID: 'yaxis-1'
                         },
                         
+                        
                         {
                         type: 'bar',
                             labels: ['USA','Germany','Brazil','Austria','Venezuela','UK','Sweden','France','Canada','Belgium','Spain','Argentina','Italy','Norway','Ireland','Mexico','Switzerland','Finland','Denmark','Poland'],
                             label: 'Rabais',
-                            data: [{x:0,y:3076.234523266554},{x:1,y:3800.0685176849365},{x:2,y:1141.2350273132324},{x:3,y:1309.6000213623047},{x:4,y:1021.325008392334},{x:5,y:315},{x:6,y:1496.3199672698975},{x:7,y:802.1900050640106},{x:8,y:562.5749816894531},{x:9,y:157.89999961853027},{x:10,y:134.79999923706055},{x:11,y:0},{x:12,y:178.5},{x:13,y:0},{x:14,y:215.3700008392334},{x:15,y:0},{x:16,y:350.7100086212158},{x:17,y:30},{x:18,y:12.21500015258789},{x:19,y:0}],
+                            data: [{x:0,y:3076.23452326655},{x:1,y:3800.06851768494},{x:2,y:1141.23502731323},{x:3,y:1309.60002136231},{x:4,y:1021.32500839233},{x:5,y:315},{x:6,y:1496.3199672699},{x:7,y:802.190005064011},{x:8,y:562.574981689453},{x:9,y:157.89999961853},{x:10,y:134.79999923706},{x:11,y:0},{x:12,y:178.5},{x:13,y:0},{x:14,y:215.370000839234},{x:15,y:0},{x:16,y:350.710008621215},{x:17,y:30},{x:18,y:12.2150001525879},{x:19,y:0}],
                             borderColor: colors[1],
                             backgroundColor: colors[1],
                             borderWidth: 1,
@@ -4006,6 +4123,7 @@ function mainInit() {
                             },
                         yAxisID: 'yaxis-1'
                         },
+                        
                         
                         {
                         type: 'line',
@@ -4025,13 +4143,15 @@ function mainInit() {
                             },
                         yAxisID: 'yaxis-2'
                         },
-                                            ]
+                        
+                    ]
                 };
 
                 function getValue(dataset, dataIndex) {
-
+                        
                     return dataset.data[dataIndex].y;
-                                        }
+                        
+                }
 
                 function getPercentage(dataset, dataIndex) {
                     var total = 0;
@@ -4060,9 +4180,10 @@ function mainInit() {
                     var dataset = data.datasets[tooltipItem.datasetIndex];
                     var tooltipLabel = data.labels[tooltipItem.index];
 
-
+                        
                     return valueFormatter(dataset, tooltipItem.index, 'auto');
-                                        }
+                        
+                }
 
                 var options = {
                     responsive: true,
@@ -4121,7 +4242,7 @@ function mainInit() {
                         }
                     }
                 },
-
+                
                 scales: {
                     xAxes: [{
                         offset: true,
@@ -4138,7 +4259,7 @@ function mainInit() {
                         },
                         }],
                     yAxes: [
-
+                            
                             {
                                 id: 'yaxis-1',
                                 display: true,
@@ -4156,6 +4277,7 @@ function mainInit() {
                                         return d3.format(',.0f')(label).valueFormat();
                                     }                                }
                             },
+                            
                                                     
                             {
                                 id: 'yaxis-2',
@@ -4175,26 +4297,28 @@ function mainInit() {
                                     }
                                 }
                             },
-                                                ]
+                            
+                    ]
                 }
-                            };
+                
+            };
 
-            var cjs8c1ef4898cc34ddb8b685b3dda99adc5 = new Chart(ctx, {
+            var cjs89d98bb56b2c4c1292f2c8d29d6f7e5d = new Chart(ctx, {
                 type: 'bar',
                 data: data,
                 options: options
                 });
                 // Navigation
                 if (false) {
-                    $("#cjs8c1ef4898cc34ddb8b685b3dda99adc5").click(
+                    $("#cjs89d98bb56b2c4c1292f2c8d29d6f7e5d").click(
                         function (evt) {
-                            var points = cjs8c1ef4898cc34ddb8b685b3dda99adc5.getElementsAtEvent(evt);
+                            var points = cjs89d98bb56b2c4c1292f2c8d29d6f7e5d.getElementsAtEvent(evt);
                             if (points && points.length > 0) {
                                 var index = points[0]["_index"];
-                                var label = cjs8c1ef4898cc34ddb8b685b3dda99adc5.data.labels[index];
-                                var value = cjs8c1ef4898cc34ddb8b685b3dda99adc5.data.datasets[0].data[index];
-                                var nav = cjs8c1ef4898cc34ddb8b685b3dda99adc5.data.navigations[index];
-                                if (nav) showPopupNavMenu(evt, nav, true, '4d08089129fd4b65a7dfabd263193c4d');
+                                var label = cjs89d98bb56b2c4c1292f2c8d29d6f7e5d.data.labels[index];
+                                var value = cjs89d98bb56b2c4c1292f2c8d29d6f7e5d.data.datasets[0].data[index];
+                                var nav = cjs89d98bb56b2c4c1292f2c8d29d6f7e5d.data.navigations[index];
+                                if (nav) showPopupNavMenu(evt, nav, true, 'ea49170f70a247aca23070b70802448b');
                             }
                         }
                     );
@@ -4206,16 +4330,19 @@ function mainInit() {
         <div class="row">
             
 
-        </div>
-        <div class="row">
-            
 
         </div>
         <div class="row">
             
+
+
+        </div>
+        <div class="row">
+            
+
     <script type="text/javascript">
     $(document).ready(function () {
-        var dt = $('#dt_3062c005a8b44293b4ddf7c9eee38dd6');
+        var dt = $('#dt_9aa34e72ddc14cddb9ef5c3c9b7051d6');
         try {
             if (dt != null && true && !false)
             {
@@ -4235,13 +4362,13 @@ function mainInit() {
                 scrollX: false,
                 scrollCollapse: false,
                                                                 });
-                initNavCells('4d08089129fd4b65a7dfabd263193c4d', '[viewid="eebf3ec3-52c3-4041-a7a3-de8d64e64de5"]');
+                initNavCells('ea49170f70a247aca23070b70802448b', '[viewid="210f5ada-b21c-48b9-a34d-a59526c0d50a"]');
             }
     }
     catch (e) { };
     });
     </script>
-    <table id='dt_3062c005a8b44293b4ddf7c9eee38dd6' viewid='eebf3ec3-52c3-4041-a7a3-de8d64e64de5' class='table-responsive table table-striped table-hover table-condensed' >
+    <table id='dt_9aa34e72ddc14cddb9ef5c3c9b7051d6' viewid='210f5ada-b21c-48b9-a34d-a59526c0d50a' class='table-responsive table table-striped table-hover table-condensed' >
         <thead>
                 <tr class='active' >
                         <th   ></th>
@@ -4280,7 +4407,7 @@ function mainInit() {
                         <th class='text-right' style='padding-right:25px;' >Quantit&#233;</th>
                 </tr>
         </thead>
-
+            
                 <tbody>
                         <tr  >
                                 <td   >Argentina</td>
@@ -4305,7 +4432,7 @@ function mainInit() {
                                 <td class='text-right'  >4&#160;421</td>
                                 <td class='text-right'  >189</td>
                                 <td class='text-right'  >459</td>
-                                <td class='text-right'  >2&#160;324</td>
+                                <td class='text-right'  >2&#160;325</td>
                                 <td class='text-right'  >0</td>
                                 <td class='text-right'  >117</td>
                                 <td class='text-right'  >6&#160;777</td>
@@ -4374,7 +4501,7 @@ function mainInit() {
                         </tr>
                         <tr  >
                                 <td   >Denmark</td>
-                                <td class='text-right'  >292</td>
+                                <td class='text-right'  >293</td>
                                 <td class='text-right'  >0</td>
                                 <td class='text-right'  >35</td>
                                 <td class='text-right'  >232</td>
@@ -4464,8 +4591,8 @@ function mainInit() {
                         </tr>
                         <tr  >
                                 <td   >Italy</td>
-                                <td class='text-right'  >826</td>
-                                <td class='text-right'  >148</td>
+                                <td class='text-right'  >827</td>
+                                <td class='text-right'  >149</td>
                                 <td class='text-right'  >72</td>
                                 <td class='text-right'  >560</td>
                                 <td class='text-right'  >0</td>
@@ -4477,7 +4604,7 @@ function mainInit() {
                                 <td class='text-right'  >30</td>
                                 <td class='text-right'  >50</td>
                                 <td class='text-right'  >3&#160;780</td>
-                                <td class='text-right'  >178</td>
+                                <td class='text-right'  >179</td>
                                 <td class='text-right'  >178</td>
                         </tr>
                         <tr  >
@@ -4518,7 +4645,7 @@ function mainInit() {
                         </tr>
                         <tr  >
                                 <td   >Poland</td>
-                                <td class='text-right'  >340</td>
+                                <td class='text-right'  >341</td>
                                 <td class='text-right'  >0</td>
                                 <td class='text-right'  >45</td>
                                 <td class='text-right'  >592</td>
@@ -4590,11 +4717,11 @@ function mainInit() {
                         </tr>
                         <tr  >
                                 <td   >UK</td>
-                                <td class='text-right'  >3&#160;230</td>
-                                <td class='text-right'  >112</td>
+                                <td class='text-right'  >3&#160;231</td>
+                                <td class='text-right'  >113</td>
                                 <td class='text-right'  >133</td>
                                 <td class='text-right'  >4&#160;862</td>
-                                <td class='text-right'  >202</td>
+                                <td class='text-right'  >203</td>
                                 <td class='text-right'  >106</td>
                                 <td class='text-right'  >634</td>
                                 <td class='text-right'  >0</td>
@@ -4636,14 +4763,15 @@ function mainInit() {
                                 <td class='text-right'  >768</td>
                                 <td class='text-right'  >313</td>
                                 <td class='text-right'  >3&#160;312</td>
-                                <td class='text-right'  >22</td>
+                                <td class='text-right'  >23</td>
                                 <td class='text-right'  >75</td>
                                 <td class='text-right'  >13&#160;057</td>
                                 <td class='text-right'  >1&#160;021</td>
                                 <td class='text-right'  >691</td>
                         </tr>
                 </tbody>
-                    <tfoot>
+            
+        <tfoot>
                 <tr class='active tr-totals' >
                         <td  >Total</td>
                         <td class='text-right' >116&#160;025</td>

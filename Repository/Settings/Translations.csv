@@ -282,7 +282,6 @@ Web;Title;;Titre
 Web;To;;Destinataire
 Web;Total aggr.;;Aggr. totaux
 Web;Type;;Type
-Web;Toggle Report or Folders view;;Voir le rapport ou les répertoires
 Web;User groups;;Groupes utilisateur
 Web;User name;;Nom d'utilisateur
 Web;Users;;Utilisateurs
@@ -475,6 +474,7 @@ WebJS;The folder has been deleted;;Le répertoire a été effacé
 WebJS;The folder has been renamed;;Le répertoire a été renommé
 WebJS;The folder has been updated;;Le répertoire a été mis à jour
 WebJS;The report or file has been renamed;;Le rapport ou le fichier a été renommé
+WebJS;Toggle Report or Folders view;;Voir le rapport ou les répertoires
 WebJS;Use data tables;;Utiliser les data tables
 WebJS;Use full screen width;;Utiliser toute la largueur de l'écran
 WebJS;View;;Vue

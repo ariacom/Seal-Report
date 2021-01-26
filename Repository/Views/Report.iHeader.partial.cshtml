@@ -32,35 +32,29 @@
                     <button id="restrictions_button" type="button" class="btn btn-info navbar-btn navbar-right" title="@report.Translate("Show/Hide Restrictions")">
                         <span class="glyphicon glyphicon-filter"></span>
                     </button>
-                    }
-                    @if (report.GenerateHTMLDisplay || !report.PrintLayout)
-                    {
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a id="report_button" class="sr_tab" data-toggle="tab" href="#@(view.ViewId)_div">@report.Translate("Report")</a></li>
-                            <li><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
-                            <li><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
-                            @if (report.GenerateHTMLDisplay)
-                            {
-                                <li class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                        @report.Translate("Results")
-                                        <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a id="HtmlResult" class="sr_result" href="#">@report.Translate("View HTML Result")</a></li>
-                                        <li><a id="PrintResult" class="sr_result" href="#">@report.Translate("View Print Result")</a></li>
-                                        <li><a id="CSVResult" class="sr_result" href="#">@report.Translate("View CSV Result")</a></li>
-                                        @if (view.GetBoolValue("converter_button"))
-                                        {
-                                            <li><a id="PDFResult" class="sr_result" href="#">@report.Translate("View PDF Result")</a></li>
-                                            <li><a id="ExcelResult" class="sr_result" href="#">@report.Translate("View Excel Result")</a></li>
-                                        }
-                                    </ul>
-                                </li>
-                            }
-                        </ul>
-                    }
-                </div>
+                }
+                @if (report.GenerateHTMLDisplay || !report.PrintLayout)
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a id="report_button" class="sr_tab" data-toggle="tab" href="#@(view.ViewId)_div">@report.Translate("Report")</a></li>
+                        <li><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
+                        <li><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
+                        <li id="results_menu" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                @report.Translate("Results")
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a id="HtmlResult" class="result_item" href="#">@report.Translate("View HTML Result")</a></li>
+                                <li><a id="PrintResult" class="result_item" href="#">@report.Translate("View Print Result")</a></li>
+                                <li><a id="CSVResult" class="result_item" href="#">@report.Translate("View CSV Result")</a></li>
+                                <li><a id="PDFResult" class="result_item converter_item" href="#">@report.Translate("View PDF Result")</a></li>
+                                <li><a id="ExcelResult" class="result_item converter_item" href="#">@report.Translate("View Excel Result")</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
+            </div>
         </div>
     </nav>
 }

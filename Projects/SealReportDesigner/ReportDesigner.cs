@@ -918,6 +918,28 @@ namespace Seal
             treeContextMenuStrip.Items.Add(ts);
         }
 
+        void addMoveUpDown(object tag)
+        {
+            if (mainTreeView.SelectedNode.Parent.Nodes.Count == 1) return;
+
+            ToolStripMenuItem tsUp = null, tsDown = null;
+            if (mainTreeView.SelectedNode.Parent.Nodes[0] != mainTreeView.SelectedNode)
+            {
+                tsUp = new ToolStripMenuItem() { Text = "Move up", Tag = tag };
+                tsUp.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
+            }
+            if (mainTreeView.SelectedNode.Parent.Nodes[mainTreeView.SelectedNode.Parent.Nodes.Count -1] != mainTreeView.SelectedNode)
+            {
+                tsDown = new ToolStripMenuItem() { Text = "Move down", Tag = tag };
+                tsDown.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
+            }
+
+
+            if (treeContextMenuStrip.Items.Count > 0 && (tsUp != null || tsDown != null)) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+            if (tsDown != null) treeContextMenuStrip.Items.Add(tsDown);
+            if (tsUp != null) treeContextMenuStrip.Items.Add(tsUp);
+        }
+
         void addExecuteRenderContextItem(string name, string name2 = "")
         {
             if (executeToolStripMenuItem.Enabled)
@@ -975,6 +997,7 @@ namespace Seal
                     addRemoveItem("Remove Views...");
                     addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                     addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addMoveUpDown(entity);
                     addSmartCopyItem("Smart copy...", entity);
                     if (mainTreeView.SelectedNode.Parent.Tag is ViewFolder) addExecuteRenderContextItem(((RootComponent)entity).Name);
                 }
@@ -1359,6 +1382,24 @@ namespace Seal
             {
                 IsModified = true;
                 init(newEntity);
+            }
+        }
+
+        private void moveUpDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            bool isDown = ((ToolStripMenuItem)sender).Text.ToLower().Contains("down");
+            if (selectedEntity is ReportView)
+            {
+                var viewToMove = selectedEntity as ReportView;
+                //move the position
+                List<ReportView> views = (mainTreeView.SelectedNode.Parent.Tag is ReportView) ? ((ReportView)mainTreeView.SelectedNode.Parent.Tag).Views : _report.Views;
+                foreach (var view in views) view.SortOrder = 10 * view.SortOrder;
+                viewToMove.SortOrder += isDown ? 15 : -15;
+                int index = 0;
+                foreach (var view in views.OrderBy(i => i.SortOrder)) view.SortOrder = index++;
+                SetModified();
+                mainTreeView.Sort();
+//                mainTreeView.SelectedNode = sourceNode;
             }
         }
 

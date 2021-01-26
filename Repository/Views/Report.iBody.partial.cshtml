@@ -9,56 +9,46 @@
 <script type="text/javascript">
 
     function processShowMsgDuringExec() {
-            var showMessages = @Helper.ToJS(view.GetValue("messages_mode") != "disabled");
-            if (showMessages) {
-                $("#message_button").addClass("reportview");
-                $("#message_button").css("display", "inline-block");
-            }
-            else {
-                $("#message_button").removeClass("reportview");
-                $("#message_button").css("display", "none");
-            }
-
-            var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode")== "enabledshownexec");
-            if (showMsgDuringExec) {
-                $("#@view.ViewId").removeClass("active in");
-                $("#report_button").parent().removeClass("active");
-                $("#information_button").parent().removeClass("active");
-                $("#message_div").addClass("active in");
-                $("#message_button").parent().addClass("active");
-            }
+        var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode")== "enabledshownexec");
+        if (showMsgDuringExec) {
+            $("#@view.ViewId").removeClass("active in");
+            $("#report_button").parent().removeClass("active");
+            $("#information_button").parent().removeClass("active");
+            $("#message_div").addClass("active in");
+            $("#message_button").parent().addClass("active");
         }
+    }
 
-        function processOpenMessagesInNewWindow() {
-            var myWindow = window.open('');
-            myWindow.document.write("<head><title>" + '@Raw(Helper.ToJS(report.Translate("Messages")))' + "</title></head><div id='messages'>" + $("#execution_messages").html() + "<div>");
+    function processOpenMessagesInNewWindow() {
+        var myWindow = window.open('');
+        myWindow.document.write("<head><title>" + '@Raw(Helper.ToJS(report.Translate("Messages")))' + "</title></head><div id='messages'>" + $("#execution_messages").html() + "<div>");
+    }
+
+    function processSubmitViewParameter(parameterName, parameterValue, viewId) {
+        if (!viewId) viewId = '@view.ViewId';
+        if (_urlPrefix != "") {
+            $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
         }
-
-        function processSubmitViewParameter(parameterName, parameterValue, viewId) {
-            if (!viewId) viewId = '@view.ViewId';
-            if (_urlPrefix != "") {
-                $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
-            }
-            else {
-                $("#parameter_view_id").val(viewId);
-                $("#parameter_view_name").val(parameterName);
-                $("#parameter_view_value").val(parameterValue);
-                $("#header_form").attr("action", "ActionUpdateViewParameter");
-                $("#header_form").submit();
-            }
+        else {
+            $("#parameter_view_id").val(viewId);
+            $("#parameter_view_name").val(parameterName);
+            $("#parameter_view_value").val(parameterValue);
+            $("#header_form").attr("action", "ActionUpdateViewParameter");
+            $("#header_form").submit();
         }
+    }
 
-        function processInitProgressBar() {
-            $(".alert-danger").addClass('hidden');
-            $(".alert-danger").html("");
+    function processInitProgressBar() {
+        $(".alert-danger").addClass('hidden');
+        $(".alert-danger").html("");
 
-            $("#execute_button").text('@Raw(Helper.ToJS(report.Translate("Cancel")))');
-            $("#execute_button").removeClass("btn-success").addClass("btn-warning");
+        $("#execute_button").text('@Raw(Helper.ToJS(report.Translate("Cancel")))');
+        $("#execute_button").removeClass("btn-success").addClass("btn-warning");
 
-            $("#progress_panel").removeClass('hidden');
-            $(".progress").removeClass('hidden');
-            setProgressBarMessage("#progress_bar", 5,  '@Raw(Helper.ToJS(report.Translate("Starting execution...")))', "progress-bar-success");
-        }
+        $("#progress_panel").removeClass('hidden');
+        $(".progress").removeClass('hidden');
+        setProgressBarMessage("#progress_bar", 5,  '@Raw(Helper.ToJS(report.Translate("Starting execution...")))', "progress-bar-success");
+    }
 
     function processReportViews() {
             var showMessages = @Helper.ToJS(report.ShowExecutionMessages);
@@ -114,8 +104,8 @@
 
         function processInitExecution() {
             mainInit();
-            initRestrictions();
-            initWidgetsRestrictions();
+            initRestrictions("#report_body_container");
+            initWidgetsRestrictions("#report_body_container");
 
             var refreshRate = @view.GetNumericValue("refresh_rate");
             if (!_executionTimer && refreshRate > 0) _refreshTimer = setInterval(function () { executeReport(); }, refreshRate * 1000);
@@ -129,19 +119,6 @@
             //Execute if force execution or no restriction
             var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
             var forceExecution = @Helper.ToJS(view.GetBoolValue(Parameter.ForceExecutionParameter) || report.HasNavigation);
-
-            if (hasRestrictions) {
-                $("#restrictions_button").addClass("reportview");
-                $("#restrictions_button").css("display", "inline-block");
-                if (@Helper.ToJS(view.GetBoolValue("restriction_button"))) $("#execute_button").addClass("active");
-            }
-            else {
-                $("#restrictions_button").removeClass("reportview");
-                $("#restrictions_button").css("display", "none");
-            }
-
-            if (@Helper.ToJS(!view.GetBoolValue("execute_button"))) $("#execute_button").css("display", "none");
-
             if ((forceExecution || !hasRestrictions) && !@Helper.ToJS(report.IsExecuting) && !@Helper.ToJS(report.Cancel)) {
                 executeReport();
             }
@@ -263,9 +240,40 @@
             }
         });
 
+        //Menu buttons
+        if (@Helper.ToJS(report.HasRestrictions)) {
+            $("#restrictions_button").addClass("reportview");
+            $("#restrictions_button").css("display", "inline-block");
+            if (@Helper.ToJS(view.GetBoolValue("restriction_button"))) $("#execute_button").addClass("active");
+        }
+        else {
+            $("#restrictions_button").removeClass("reportview");
+            $("#restrictions_button").css("display", "none");
+        }
+
+        if (@Helper.ToJS(view.GetValue("messages_mode") != "disabled")) {
+            $("#message_button").addClass("reportview");
+            $("#message_button").css("display", "inline-block");
+        }
+        else {
+            $("#message_button").removeClass("reportview");
+            $("#message_button").css("display", "none");
+        }
+
+        if (@Helper.ToJS(report.GenerateHTMLDisplay && view.GetBoolValue(Parameter.EnableResultsMenuParameter))) {
+            $("#results_menu").addClass("reportview");
+            $("#results_menu").css("display", "inline-block");
+        }
+        else {
+            $("#results_menu").removeClass("reportview");
+            $("#results_menu").css("display", "none");
+        }
+        $(".converter_item").css("display", @Helper.ToJS(view.GetBoolValue("converter_button")) ? "inline-block" : "none");
+
+        if (@Helper.ToJS(!view.GetBoolValue("execute_button"))) $("#execute_button").css("display", "none");
+
         $(document).ready(function () {
             processInitExecution();
-
             processReportViews();
         });
 

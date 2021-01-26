@@ -31,6 +31,10 @@ a {
     cursor: pointer;
 }
 
+.nopointer {
+    cursor: default !important;
+}
+
 .lightbutton:hover {
     /*color: see theme*/
 }

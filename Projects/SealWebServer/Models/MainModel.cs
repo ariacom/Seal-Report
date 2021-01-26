@@ -43,10 +43,5 @@
         /// Base URL path of the Web Report Server
         /// </summary>
         public string BaseURL = "";
-
-        /// <summary>
-        /// Current user
-        /// </summary>
-        public SecurityUser User;
     }
 }

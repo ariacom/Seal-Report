@@ -225,7 +225,7 @@ function initWidgetsRestrictions(parent) {
         $('.panel-widget').css("z-index", "1");
     });
 }
-function initBackToTop() {
+function initScrollReport() {
     //back to top
     $(window).scroll(function () {
         if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
