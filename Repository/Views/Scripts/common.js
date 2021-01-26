@@ -382,7 +382,7 @@ function showHideNavbar() {
         $('#bar_top').fadeIn();
         $("#bar_top").css("top", 0);
     }
-    else {
+    else if (currentScrollPos > 0) {
         $('#bar_top').fadeOut();
         $("#bar_top").css("top", -1 * $("#bar_top").height());
     }
