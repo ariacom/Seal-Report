@@ -78,7 +78,7 @@ namespace Seal.Model
         /// <summary>
         /// List of folder children.
         /// </summary>
-        public SWIFolder[] folders = new SWIFolder[0];
+        public List<SWIFolder> folders = new List<SWIFolder>();
 
         public void SetManageFlag(bool useSubFolders, bool manageFolder, bool isDefined)
         {
@@ -179,7 +179,7 @@ namespace Seal.Model
     public class SWIFolderDetail
     {
         public SWIFolder folder = null;
-        public SWIFile[] files = null;
+        public List<SWIFile> files = new List<SWIFile>();
     }
 
     /// <summary>
@@ -207,8 +207,8 @@ namespace Seal.Model
     /// </summary>
     public class SWIReportDetail
     {
-        public SWIView[] views;
-        public SWIOutput[] outputs;
+        public List<SWIView> views = new List<SWIView>();
+        public List<SWIOutput> outputs = new List<SWIOutput>();
     }
 
     /// <summary>
@@ -218,6 +218,15 @@ namespace Seal.Model
     {
         public string id;
         public string val;
+    }
+
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
+    public class SWIWebMenu
+    {
+        public List<SWIMenuItem> recentreports = new List<SWIMenuItem>();
+        public List<SWIMenuItem> reports = new List<SWIMenuItem>();
     }
 
     /// <summary>

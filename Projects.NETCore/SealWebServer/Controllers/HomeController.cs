@@ -33,13 +33,8 @@ namespace SealWebServer.Controllers
         public const string SessionNavigationContext = "SessionNavigationContext";
         public const string SessionUploadedFiles = "SessionUploadedFiles";
 
-        public const string SealCultureCookieName = "SR_Culture_Name";
-        public const string SealLastViewCookieName = "SR_Last_View";
-        public const string SealLastFolderCookieName = "SR_Last_Folder";
-        public const string SealLastReportNameCookieName = "SR_Last_Report_Name";
-        public const string SealLastReportPathCookieName = "SR_Last_Report_Path";
-        public const string SealLastReportViewGUIDCookieName = "SR_Last_Report_ViewGUID";
-        public const string SealLastReportOutputGUIDCookieName = "SR_Last_Report_OutputGUID";
+        public const string SealCultureCookieName = "SWI_Culture_Name";
+        public const string SealLastFolderCookieName = "SWI_Last_Folder";
 
         const string _loginContent = "<html><script>window.top.location.href='Main';</script></html>";
         string _noReportFoundMessage
@@ -530,6 +525,9 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
+                    //Do not allow to change sensible parameters
+                    if (parameter_view_name == Parameter.EnableResultsMenuParameter) throw new Exception("Incorrect action");
+
                     Report report = execution.Report;
                     report.UpdateViewParameter(parameter_view_id, parameter_view_name, parameter_view_value);
                     return new EmptyResult();
@@ -557,6 +555,8 @@ namespace SealWebServer.Controllers
                 if (execution != null)
                 {
 
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
+
                     string resultPath = execution.GenerateHTMLResult();
                     return getFileResult(resultPath, execution.Report);
                 }
@@ -582,6 +582,8 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
+
                     return getFileResult(execution.Report.ResultFilePath, execution.Report);
                 }
             }
@@ -607,6 +609,8 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
+
                     string resultPath = execution.GeneratePrintResult();
                     return getFileResult(resultPath, execution.Report);
                 }
@@ -632,6 +636,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
                     if (execution.IsConvertingToPDF) return Content(Translate("Sorry, the conversion is being in progress in another window..."));
 
                     string resultPath = "";
@@ -668,6 +673,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
                     if (execution.IsConvertingToExcel) return Content(Translate("Sorry, the conversion is being in progress in another window..."));
 
                     string resultPath = "";
@@ -704,6 +710,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
                     string resultPath = "";
                     resultPath = execution.GenerateCSVResult();
                     return getFileResult(resultPath, execution.Report);
@@ -1090,9 +1097,8 @@ namespace SealWebServer.Controllers
                 }
 
                 //Folder Detail script
-                WebUser.FolderDetail = new SWIFolderDetail() { folder = folder, files = files.ToArray() };
+                WebUser.FolderDetail = new SWIFolderDetail() { folder = folder, files = files };
                 WebUser.ScriptNumber = 1;
-                WebUser.FolderDetailFiles = files;
                 foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FolderDetailScript)).OrderBy(i => i.Name))
                 {
                     RazorHelper.CompileExecute(group.FolderDetailScript, WebUser);
@@ -1138,7 +1144,7 @@ namespace SealWebServer.Controllers
                         subFolders.Add(sub);
                     }
                 }
-                folder.folders = subFolders.ToArray();
+                folder.folders = subFolders;
             }
 
             void searchFolder(SWIFolder folder, string pattern, List<SWIFile> files)

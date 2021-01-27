@@ -377,9 +377,12 @@ function requestEnumData(filter, forceNoMessage) {
 // Show Hide Navbar
 function showHideNavbar() {
     const currentScrollPos = window.pageYOffset;
-    if (_prevScrollpos > currentScrollPos || currentScrollPos < 20) {
+    if (_prevScrollpos > currentScrollPos) {
+        $('#bar_top').fadeIn();
         $("#bar_top").css("top", 0);
-    } else {
+    }
+    else if (currentScrollPos > 0) {
+        $('#bar_top').fadeOut();
         $("#bar_top").css("top", -1 * $("#bar_top").height());
     }
     _prevScrollpos = currentScrollPos;
@@ -607,7 +610,7 @@ function mainInit() {
     });
 
     //result links
-    $(".sr_result").unbind("click").on("click", function () {
+    $(".result_item").unbind("click").on("click", function () {
         var form = $("#header_form");
         form.attr("target", _urlPrefix != "" ? "_blank" : "");
         form.attr("action", _urlPrefix + $(this).attr("id"));
@@ -666,6 +669,8 @@ function mainInit() {
     }
     initNavCells();
 
-    if (!_printLayout) initBackToTop();
+    if (!_printLayout) {
+        initScrollReport();
+    }
     initResize(_printLayout);
 }

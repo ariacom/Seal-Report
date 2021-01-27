@@ -1098,9 +1098,8 @@ namespace SealWebServer.Controllers
                 }
 
                 //Folder Detail script
-                WebUser.FolderDetail = new SWIFolderDetail() { folder = folder, files = files.ToArray() };
+                WebUser.FolderDetail = new SWIFolderDetail() { folder = folder, files = files };
                 WebUser.ScriptNumber = 1;
-                WebUser.FolderDetailFiles = files;
                 foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FolderDetailScript)).OrderBy(i => i.Name))
                 {
                     RazorHelper.CompileExecute(group.FolderDetailScript, WebUser);
@@ -1146,7 +1145,7 @@ namespace SealWebServer.Controllers
                         subFolders.Add(sub);
                     }
                 }
-                folder.folders = subFolders.ToArray();
+                folder.folders = subFolders;
             }
 
             void searchFolder(SWIFolder folder, string pattern, List<SWIFile> files)

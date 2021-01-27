@@ -71,14 +71,6 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public SetLastView(view: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWISetLastView", {
-            view: view
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
     public DeleteFiles(paths: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIDeleteFiles", {
             paths: paths

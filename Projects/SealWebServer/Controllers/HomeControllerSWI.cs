@@ -144,20 +144,29 @@ namespace SealWebServer.Controllers
             try
             {
                 checkSWIAuthentication();
-                return Json(
-                    new
-                    {
-                        recentreports = (from r in WebUser.Profile.RecentReports 
-                                         select new SWIMenuItem() {
-                                             path = r.Path,
-                                             viewGUID = r.ViewGUID,
-                                             outputGUID = r.OutputGUID,
-                                             name = r.Name
-                                         }
-                                         ).ToArray(),
-                        reports = getWebMenu()
-                    }
-                    , JsonRequestBehavior.AllowGet);
+                WebUser.WebMenu = new SWIWebMenu()
+                {
+                    recentreports = (from r in WebUser.Profile.RecentReports
+                                     select new SWIMenuItem()
+                                     {
+                                         path = r.Path,
+                                         viewGUID = r.ViewGUID,
+                                         outputGUID = r.OutputGUID,
+                                         name = r.Name
+                                     }
+                                         ).ToList(),
+                    reports = getWebMenu().ToList()
+                };
+
+                //Apply menu scripts
+                WebUser.ScriptNumber = 1;
+                foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.MenuScript)).OrderBy(i => i.Name))
+                {
+                    RazorHelper.CompileExecute(group.MenuScript, WebUser);
+                    WebUser.ScriptNumber++;
+                }
+
+                return Json(WebUser.WebMenu, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -219,7 +228,7 @@ namespace SealWebServer.Controllers
                     WebUser.ScriptNumber++;
 
                 }
-                return Json(WebUser.Folders.ToArray(), JsonRequestBehavior.AllowGet);
+                return Json(WebUser.Folders, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -260,7 +269,7 @@ namespace SealWebServer.Controllers
                 path = folder.GetFullPath();
                 searchFolder(folder, pattern, files);
 
-                return Json(new SWIFolderDetail() { files = files.ToArray() }, JsonRequestBehavior.AllowGet);
+                return Json(new SWIFolderDetail() { files = files }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -353,9 +362,9 @@ namespace SealWebServer.Controllers
                 Repository repository = Repository;
                 Report report = Report.LoadFromFile(newPath, repository, false);
                 SWIReportDetail result = new SWIReportDetail();
-                result.views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToArray();
-                result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || string.IsNullOrEmpty(j.UserName) || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
-                if (result.views.Length == 0 && result.outputs.Length == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToArray();
+                result.views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToList();
+                result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || string.IsNullOrEmpty(j.UserName) || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToList() : new List<SWIOutput>();
+                if (result.views.Count == 0 && result.outputs.Count == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToList();
 
                 return Json(result, JsonRequestBehavior.AllowGet);
 

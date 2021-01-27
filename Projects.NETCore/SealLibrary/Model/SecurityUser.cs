@@ -84,14 +84,9 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Current folder detail of the user (used for Folder Detail Scripts)
+        /// Current folder detail of the user
         /// </summary>
         public SWIFolderDetail FolderDetail = new SWIFolderDetail();
-
-        /// <summary>
-        /// Current files for a folder detail (used for Folder Detail Scripts)
-        /// </summary>
-        public List<SWIFile> FolderDetailFiles;
 
         /// <summary>
         /// Current script execution number when several Folders or Folder Detail scripts are executed.
@@ -101,7 +96,12 @@ namespace Seal.Model
         /// <summary>
         /// List of all SWIFolderDetail of the user. The list is built when the user browse the folders.
         /// </summary>
-        public List<SWIFolderDetail> FolderDetails = new List<SWIFolderDetail>();
+        public List<SWIFolderDetail> FolderDetails = new List<SWIFolderDetail>();        
+        
+        /// <summary>
+        /// Current reports web menu of the user (used for Folder Detail Scripts)
+        /// </summary>
+        public SWIWebMenu WebMenu = new SWIWebMenu();
 
         /// <summary>
         /// Current SecurityUserProfile
@@ -692,8 +692,8 @@ namespace Seal.Model
             var result = new List<ReportView>();
             foreach (var view in MenuReportViewsPool.MenuReportViews)
             {
-                var folder = FindSecurityFolder(view.Report.RelativeFilePath);
-                if (folder.FolderRight != FolderRight.None)
+                var folder = FindSecurityFolder(Path.GetDirectoryName(FileHelper.ConvertOSFilePath(view.Report.RelativeFilePath)));
+                if (folder != null && folder.FolderRight != FolderRight.None)
                 {
                     result.Add(view);
                 }

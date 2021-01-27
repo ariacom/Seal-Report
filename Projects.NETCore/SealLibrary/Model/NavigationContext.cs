@@ -93,10 +93,7 @@ namespace Seal.Model
                     newReport.CurrentViewGUID = execution.Report.CurrentViewGUID;
                     //Set Navigation view if specified
                     string viewGUID = parameters.Get("view");
-                    if (!string.IsNullOrEmpty(viewGUID) && newReport.Views.Exists(i => i.GUID == viewGUID))
-                    {
-                        newReport.CurrentViewGUID = viewGUID;
-                    }
+                    if (!string.IsNullOrEmpty(viewGUID) && newReport.Views.Exists(i => i.GUID == viewGUID)) newReport.CurrentViewGUID = viewGUID;
 
                     string src = parameters.Get("src");
                     string dst = parameters.Get("dst");

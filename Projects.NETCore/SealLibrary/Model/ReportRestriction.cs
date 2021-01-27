@@ -923,7 +923,8 @@ namespace Seal.Model
                 {
                     foreach (string enumValue in EnumValues)
                     {
-                        Helper.AddValue(ref result, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Model.EnumDisplayValue(EnumRE, enumValue, true));
+
+                        Helper.AddValue(ref result, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetEnumDisplayValue(enumValue));
                     }
                 }
                 return result;

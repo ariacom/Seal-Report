@@ -57,6 +57,11 @@ namespace Seal.Model
         public string FolderDetailScript { get; set; }
 
         /// <summary>
+        /// Optional script executed to define/modify the reports menu of the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+        /// </summary>
+        public string MenuScript { get; set; }
+
+        /// <summary>
         /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
         /// </summary>
         public bool SqlModel { get; set; } = false;

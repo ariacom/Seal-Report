@@ -2700,8 +2700,7 @@ model.ResultTable = query2.CopyToDataTable2();
             string navigation = "";
             if (Report.GenerateHTMLDisplay || serverSide)
             {
-                cell.InitNavigationLinks(view);
-                foreach (var link in cell.Links)
+                foreach (var link in cell.GetNavigationLinks(view))
                 {
                     navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.FullHref, link.Text /* Helper.ToHtml(link.Text) TODO for chart labels */);
                 }

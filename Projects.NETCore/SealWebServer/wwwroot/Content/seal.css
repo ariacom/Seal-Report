@@ -52,6 +52,7 @@
     bottom: 0;
     right: 20px;
     display: none;
+    z-index: 100;
 }
 
 .navigation_icon {

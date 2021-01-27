@@ -22,18 +22,13 @@ declare var hasEditor: boolean;
 declare var dirSeparator: string;
 
 declare function redrawDataTables();
-declare function showHideNavbar();
+declare function initScrollReport();
 
 $(document).ready(function () {
     _gateway = new SWIGateway();
 
     _main = new SWIMain();
     _main.Process();
-
-    $(window).scroll(function () {
-        SWIUtil.HideMessages();
-        showHideNavbar();
-    });
 });
 
 class SWIMain {
@@ -45,6 +40,8 @@ class SWIMain {
     private _clipboardCut: boolean = false;
     private _folderpath: string = "\\";
     private _reportPath: string;
+    public _lastReport: any = new Object();
+    public _currentView: string = "folders";
     
     public Process() {
         $waitDialog = $("#wait-dialog");
@@ -125,8 +122,17 @@ class SWIMain {
 
         _main.refreshMenu();
 
-        if (_main._profile.showfolders) _main.loadFolderTree();
-        else _main._profile.lastview = "report";
+        _main._currentView = "folders";
+        if (_main._profile.showfolders) {
+            _main.loadFolderTree();
+            $("#nav_button").attr("title", SWIUtil.tr2("Toggle Report or Folders view"));
+            $("#nav_button").removeClass("nopointer");
+        }
+        else {
+            _main._currentView = "report";
+            $("#nav_button").attr("title", "");
+            $("#nav_button").addClass("nopointer");
+        }
 
         if (_editor) _editor.brand();
 
@@ -138,7 +144,8 @@ class SWIMain {
 
         //Reload and execute
         $("#reload-nav-item").unbind("click").on("click", function () {
-            _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, _main._profile.lastreport.outputGUID, _main._profile.lastreport.name);
+            $waitDialog.modal();
+            _main.executeReportFromMenu(_main._lastReport.path, _main._lastReport.viewGUID, _main._lastReport.outputGUID, _main._lastReport.name);
         });
 
         //Folders
@@ -200,11 +207,11 @@ class SWIMain {
         $("#profile-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#profile-user").val(_main._profile.name);
-            $("#profile-groups").val(_main._profile.group);
+            $("#profile-groups").val(_main._profile.group.replace(";", "\r"));
 
             $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');
-                _gateway.SetUserProfile($("#culture-select").val(), $("#view-select").val(), function () {
+                _gateway.SetUserProfile($("#culture-select").val(), function () {
                     location.reload(true);
                 });
             });
@@ -360,14 +367,9 @@ class SWIMain {
 
         _main.enableControls();
         _main.resize();
+        _main.toggleFoldersReport(false);
 
-        //Start last report
-        if (_main._profile.lastview == "report" && _main._profile.lastreport.path) {
-            _main.executeReportFromMenu(_main._profile.lastreport.path, _main._profile.lastreport.viewGUID, _main._profile.lastreport.outputGUID, _main._profile.lastreport.name);
-        }
-        else {
-            $waitDialog.modal('hide');
-        }
+        $waitDialog.modal('hide');
     }
 
     private addReportMenu(parent, value) {
@@ -396,20 +398,24 @@ class SWIMain {
     public refreshMenu() {
         //Menu
         _gateway.GetRootMenu(function (menu) {
+            if (menu.reports.length != 0 || menu.recentreports.length != 0) $("#menu-main-button").removeClass("disabled");
+            else $("#menu-main-button").addClass("disabled");
+
             //Recent reports
             let parent = $("#menu-last-reports");
             parent.children(".menu-reports").remove();
             menu.recentreports.forEach(function (value) {
                 _main.addReportMenu(parent, value);
             });
+            SWIUtil.ShowHideControl($(".menu-last-reports"), menu.recentreports.length > 0);
 
             //Reports
             parent = $("#menu-main");
             parent.children(".menu-reports").remove();
-            if (menu.recentreports.length > 0) parent.append($("<li class='divider menu-reports')>"));
+            if (menu.recentreports.length > 0 && menu.reports.length > 0) parent.append($("<li class='divider menu-reports')>"));
             SWIUtil.ShowHideControl($(".divider-menu-reports"), menu.reports.length > 0);
             _main.initMenu(parent, menu.reports);
-            if (menu.recentreports.length > 0) parent.append($("<li id='menu-divider-folders-report' class='divider menu-reports')>"));
+            if (menu.reports.length > 0 || menu.recentreports.length > 0) parent.append($("<li id='menu-divider-folders-report' class='divider menu-reports')>"));
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
             
@@ -422,11 +428,12 @@ class SWIMain {
 
             //Toggle report/folders
             $("#menu-view-folders, #menu-view-report, #nav_button").unbind("click").on("click", function () {
-                _main.toggleFoldersReport(_main._profile.lastview != "report");
+                _main.toggleFoldersReport(_main._currentView != "report");
             });
 
             //Execute reports from menu
             $("a.menu-report").unbind("click").on("click", function () {
+                $waitDialog.modal();
                 _main.executeReportFromMenu($(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"), $(this).text());
             });
             $("a.menu-report span").unbind("click").on("click", function () {
@@ -509,13 +516,13 @@ class SWIMain {
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
 
         //Report or folders view
-        const reportShown = _main._reportPath && _main._profile.lastview == "report";
-        SWIUtil.ShowHideControl($("#menu-view-folders"), _main._profile.lastview == "report");
-        SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath && _main._profile.lastview == "folders");
+        const reportShown = _main._reportPath && _main._currentView == "report";
+        SWIUtil.ShowHideControl($("#menu-view-folders"), _main._currentView == "report" && _main._profile.showfolders);
+        SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath && _main._currentView != "report");
         SWIUtil.ShowHideControl($(".reportview"), reportShown);
-        SWIUtil.ShowHideControl($(".folderview"), _main._profile.lastview == "folders");
+        SWIUtil.ShowHideControl($(".folderview"), _main._currentView != "report");
         //Dividers
-        SWIUtil.ShowHideControl($("#menu-divider-folders-report"), _main._reportPath != "" || _main._profile.lastview == "report");
+        SWIUtil.ShowHideControl($("#menu-divider-folders-report"), (_main._reportPath != "" || _main._currentView == "report") && _main._profile.showfolders);
         //title color
         $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d");
 
@@ -555,13 +562,12 @@ class SWIMain {
                 _main.ReloadReportsTable();
             });
 
-
             setTimeout(function () {
                 if (!_main._profile.folder || _main._profile.folder == "" || !$folderTree.jstree(true).get_node(_main._profile.folder)) _main._profile.folder = "";
                 _main._folderpath = _main._profile.folder;
                 $folderTree.jstree("deselect_all");
                 if (_main._folderpath) $folderTree.jstree('select_node', _main._folderpath);
-            }, 100);
+            }, 500);
         });
     }
 
@@ -592,17 +598,23 @@ class SWIMain {
     }
 
     private executeReportFromMenu(path: string, viewGUID: string, outputGUID: string, name: string) {
+        $(".navbar-header,#navbar").addClass("disabled");
+
+        $(".fixedHeader-floating").empty();
         $("#report-body").empty();
+        $(window).unbind("scroll");
+
         $("#nav_button").html(name);
-        $waitDialog.modal();
         _main._reportPath = path;
-        _main._profile.lastreport.path = path;
-        _main._profile.lastreport.viewGUID = viewGUID;
-        _main._profile.lastreport.outputGUID = outputGUID;
-        _main._profile.lastreport.name = name;
+        _main._lastReport.path = path;
+        _main._lastReport.viewGUID = viewGUID;
+        _main._lastReport.outputGUID = outputGUID;
+        _main._lastReport.name = name;
         _main.toggleFoldersReport(true);
         _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
+            $(".navbar-header,#navbar").removeClass("disabled");
             $("#report-body").html(data);
+            initScrollReport();
             _main.enableControls();
             $waitDialog.modal('hide');
             setTimeout(function () {
@@ -676,7 +688,7 @@ class SWIMain {
             var $target = $(e.currentTarget);
             const path = $target.data("path");
             if ($target.data("isReport")) {
-                _main.toggleFoldersReport(true);
+                $waitDialog.modal();
                 _main.executeReportFromMenu(path, null, null, $target.text());
             }
             else _gateway.ViewFile(path);
@@ -742,7 +754,7 @@ class SWIMain {
                     });
                     $(".output-name").unbind("click").on("click", function (e) {
                         $outputPanel.hide();
-                        _main.toggleFoldersReport(true);
+                        $waitDialog.modal();
                         _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name") + " - " + $(e.currentTarget).data("name"));
                     });
                 },
@@ -804,15 +816,14 @@ class SWIMain {
     }
 
     public toggleFoldersReport(viewreport: boolean) {
-        _main._profile.lastview = (viewreport ? "report" : "folders");
-        _gateway.SetLastView(_main._profile.lastview, null);
+        _main._currentView = (viewreport || !_main._profile.showfolders ? "report" : "folders");
 
         if (!viewreport) redrawDataTables();
 
         _main.enableControls();
 
         //transition
-        const reportShown = _main._reportPath && _main._profile.lastview == "report";
+        const reportShown = _main._reportPath && _main._currentView == "report";
         $(!reportShown ? ".reportview" : ".folderview").css("opacity", "0.2");
         $(reportShown ? ".reportview" : ".folderview").css("opacity", "1");
     }

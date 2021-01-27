@@ -308,8 +308,7 @@ namespace Seal.Model
             {
                 for (int row = BodyStartRow; row < BodyEndRow && col < ColumnCount; row++)
                 {
-                    this[row, col].InitNavigationLinks(view);
-                    if (this[row, col].Links.Count > 0) return true;
+                    if (this[row, col].GetNavigationLinks(view).Count > 0) return true;
                 }
             }
             return false;

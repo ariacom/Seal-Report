@@ -295,7 +295,7 @@ namespace Seal.Model
                 string result = "";
                 if (Element != null)
                 {
-                    
+
                     if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssClass : DefaultCellCssClass;
                     else if (Element.IsNumeric) result = IsTitle ? "" : DefaultNumericCellCssClass;
                     else if (Element.IsDateTime) result = IsTitle ? "" : DefaultDateTimeCellCssClass;
@@ -500,7 +500,18 @@ namespace Seal.Model
             return 0;
         }
 
-        public void InitNavigationLinks(ReportView view)
+        List<NavigationLink> _links;
+
+        public List<NavigationLink> Links
+        {
+            get
+            {
+                if (_links == null) initNavigationLinks();
+                return _links;
+            }
+        }
+
+        void initNavigationLinks()
         {
             //exe : execution guid of the source report
             //src : guid element source for drill
@@ -515,9 +526,8 @@ namespace Seal.Model
                 if (!IsTitle && !IsTotal && !IsTotalTotal && Element != null)
                 {
                     var report = Element.Source.Report;
-                    if (view.IsDrillEnabled && Element.PivotPosition != PivotPosition.Data)
+                    if (Element.PivotPosition != PivotPosition.Data)
                     {
-                        var modelView = view.ModelView;
                         //Get Drill child links
                         var metaData = Element.Source.MetaData;
                         foreach (string childGUID in Element.MetaColumn.DrillChildren)
@@ -530,7 +540,7 @@ namespace Seal.Model
                             {
                                 NavigationLink link = new NavigationLink();
                                 link.Type = NavigationType.Drill;
-                                link.Href = string.Format("exe={0}&src={1}&dst={2}&val={3}&view={4}", report.ExecutionGUID, Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue), modelView.GetValue(Parameter.NavigationView));
+                                link.Href = string.Format("exe={0}&src={1}&dst={2}&val={3}", report.ExecutionGUID, Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue));
                                 link.Text = HttpUtility.HtmlEncode(report.Translate("Drill >") + " " + report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName));
 
                                 _links.Add(link);
@@ -553,7 +563,7 @@ namespace Seal.Model
 
                                 NavigationLink link = new NavigationLink();
                                 link.Type = NavigationType.Drill;
-                                link.Href = string.Format("exe={0}&src={1}&dst={2}&view={3}", report.ExecutionGUID, Element.MetaColumnGUID, parentColumn.GUID, modelView.GetValue(Parameter.NavigationView));
+                                link.Href = string.Format("exe={0}&src={1}&dst={2}", report.ExecutionGUID, Element.MetaColumnGUID, parentColumn.GUID);
                                 link.Text = HttpUtility.HtmlEncode(report.Translate("Drill <") + " " + report.Repository.RepositoryTranslate("Element", parentColumn.Category + '.' + parentColumn.DisplayName, parentColumn.DisplayName));
                                 _links.Add(link);
                             }
@@ -561,7 +571,7 @@ namespace Seal.Model
                     }
 
                     //Get sub reports links
-                    if (view.IsSubReportsEnabled && Element.PivotPosition != PivotPosition.Data)
+                    if (Element.PivotPosition != PivotPosition.Data)
                     {
                         foreach (var subreport in Element.MetaColumn.SubReports.Where(i => i.Restrictions.Count > 0))
                         {
@@ -596,17 +606,31 @@ namespace Seal.Model
             }
         }
 
-        List<NavigationLink> _links = null;
         /// <summary>
-        /// List of NavigationLink for the cell
+        /// Retrun the list of navigation links in the View context
         /// </summary>
-        public List<NavigationLink> Links
+        public List<NavigationLink> GetNavigationLinks(ReportView view)
         {
-            get
+            var result = new List<NavigationLink>();
+            foreach (var link in Links)
             {
-                return _links;
+                if (link.Type == NavigationType.Drill && !view.IsDrillEnabled) continue;
+                if (link.Type == NavigationType.SubReport && !view.IsSubReportsEnabled) continue;
+
+                var newLink = new NavigationLink() { Cell = link.Cell, Href = link.Href, Parameters = link.Parameters, Report = link.Report, Tag = link.Tag, Text = link.Text, Type = link.Type };
+                Helper.CopyProperties(link, newLink);
+                if (newLink.Type == NavigationType.Drill)
+                {
+                    //Add the navigation if exists
+                    var modelView = view.ModelView;
+                    var navigationView = modelView.GetValue(Parameter.NavigationView);
+                    if (!string.IsNullOrEmpty(navigationView)) newLink.Href += string.Format("&view={0}", modelView.GetValue(Parameter.NavigationView));
+                }
+                result.Add(newLink);
             }
+            return result;
         }
+
 
         /// <summary>
         /// Add a navigation link from this cell to download a file. The file will be loaded in the Navigation Script of the model.

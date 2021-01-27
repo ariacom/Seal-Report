@@ -4,7 +4,6 @@ var _refreshTimer = null;
 var _prevScrollpos = window.pageYOffset;
 var _inExecution = false;
 var _popupNavMenuTimeout = -1;
-var _initScrollReportDone = false;
 
 //Restrictions
 function restrictionSelectChange(source) {
@@ -670,9 +669,8 @@ function mainInit() {
     }
     initNavCells();
 
-    if (!_printLayout && !_initScrollReportDone) {
+    if (!_printLayout) {
         initScrollReport();
-        _initScrollReportDone = true;
     }
     initResize(_printLayout);
 }

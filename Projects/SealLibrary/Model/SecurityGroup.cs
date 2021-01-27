@@ -33,6 +33,7 @@ namespace Seal.Model
                 GetProperty("Folders").SetIsBrowsable(true);
                 GetProperty("FoldersScript").SetIsBrowsable(true);
                 GetProperty("FolderDetailScript").SetIsBrowsable(true);
+                GetProperty("MenuScript").SetIsBrowsable(true);
                 GetProperty("Columns").SetIsBrowsable(true);
                 GetProperty("SqlModel").SetIsBrowsable(true);
                 GetProperty("Devices").SetIsBrowsable(true);
@@ -99,6 +100,13 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Folder Detail Script"), Description("Optional script executed to define/modify the reports published in the Web Report Server for a given folder. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(11, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string FolderDetailScript { get; set; }
+
+        /// <summary>
+        /// Optional script executed to define/modify the reports menu of the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+        /// </summary>
+        [Category("Definition"), DisplayName("Menu Script"), Description("Optional script executed to define/modify the reports menu of the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(12, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string MenuScript { get; set; }
 
         /// <summary>
         /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.

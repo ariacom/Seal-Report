@@ -4,7 +4,6 @@ var _refreshTimer = null;
 var _prevScrollpos = window.pageYOffset;
 var _inExecution = false;
 var _popupNavMenuTimeout = -1;
-var _initScrollReportDone = false;
 
 //Restrictions
 function restrictionSelectChange(source) {
@@ -382,7 +381,7 @@ function showHideNavbar() {
         $('#bar_top').fadeIn();
         $("#bar_top").css("top", 0);
     }
-    else {
+    else if (currentScrollPos > 0) {
         $('#bar_top').fadeOut();
         $("#bar_top").css("top", -1 * $("#bar_top").height());
     }
@@ -670,9 +669,8 @@ function mainInit() {
     }
     initNavCells();
 
-    if (!_printLayout && !_initScrollReportDone) {
+    if (!_printLayout) {
         initScrollReport();
-        _initScrollReportDone = true;
     }
     initResize(_printLayout);
 }

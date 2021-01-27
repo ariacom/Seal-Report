@@ -22,16 +22,13 @@ declare var hasEditor: boolean;
 declare var dirSeparator: string;
 
 declare function redrawDataTables();
+declare function initScrollReport();
 
 $(document).ready(function () {
     _gateway = new SWIGateway();
 
     _main = new SWIMain();
     _main.Process();
-
-    $(window).scroll(function () {
-        SWIUtil.HideMessages();
-    });
 });
 
 class SWIMain {
@@ -210,7 +207,7 @@ class SWIMain {
         $("#profile-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#profile-user").val(_main._profile.name);
-            $("#profile-groups").val(_main._profile.group);
+            $("#profile-groups").val(_main._profile.group.replace(";", "\r"));
 
             $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');
@@ -570,7 +567,7 @@ class SWIMain {
                 _main._folderpath = _main._profile.folder;
                 $folderTree.jstree("deselect_all");
                 if (_main._folderpath) $folderTree.jstree('select_node', _main._folderpath);
-            }, 200);
+            }, 500);
         });
     }
 
@@ -602,7 +599,11 @@ class SWIMain {
 
     private executeReportFromMenu(path: string, viewGUID: string, outputGUID: string, name: string) {
         $(".navbar-header,#navbar").addClass("disabled");
+
+        $(".fixedHeader-floating").empty();
         $("#report-body").empty();
+        $(window).unbind("scroll");
+
         $("#nav_button").html(name);
         _main._reportPath = path;
         _main._lastReport.path = path;
@@ -613,6 +614,7 @@ class SWIMain {
         _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
             $(".navbar-header,#navbar").removeClass("disabled");
             $("#report-body").html(data);
+            initScrollReport();
             _main.enableControls();
             $waitDialog.modal('hide');
             setTimeout(function () {

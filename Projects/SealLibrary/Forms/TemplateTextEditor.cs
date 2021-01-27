@@ -505,27 +505,26 @@ namespace Seal.Forms
         const string foldersScriptTemplate = @"@{
     SecurityUser user = Model;
     //Full documentation at https://sealreport.org/Help/Index.html
+    //user.ScriptNumber is a number incremented if several scripts are executed
     
-    //Sample to define a folder
-    //user.Folders.Clear();
-    //user.Folders.Add(new SWIFolder() { path = @""\Samples"", name = ""New Samples"", right = 4, sql = true, manage = 2, expand = true });
+    //Sample to define folders
+    user.Folders.Clear();
+    user.Folders.Add(new SWIFolder() { path = @""\Samples"", name = ""New Samples"", right = 4, sql = true, manage = 0, expand = true });
+    user.Folders.Add(new SWIFolder() { path = @""\"", name = ""Root"", right = 4, sql = true, manage = 0, expand = true });
 
     SWIFolder sampleFolder = user.AllFolders.FirstOrDefault(i => i.path ==  @""\Samples"");
     if (sampleFolder != null) {
-        //Sample to add a subfolder (physical path must be created...)
-        //sampleFolder.folders = sampleFolder.folders.Concat(new SWIFolder[] { new SWIFolder() { path = @""\Samples\subfolder"", name = ""Samples Sub Folder"", right = 4, sql = false, manage = 2}}).ToArray();
+        //Sample to add a subfolder
+        sampleFolder.folders.Add(new SWIFolder() { path = @""\System"", name = ""System in a sub-folder"", right = 4, sql = false, manage = 0});
         
         //Sample to modify a folder
-        //sampleFolder.name = ""New Samples 2""; 
-        //sampleFolder.manage = 1; 
-        //sampleFolder.right = 4;
-        //sampleFolder.sql = false;        
-    }
-    
-    //Sample to remove a folder
-    SWIFolder rootFolder = user.AllFolders.FirstOrDefault(i => i.path ==  @""\"");
-    if (rootFolder != null) {
-        //rootFolder.folders = rootFolder.folders.Where(i => i.path != @""\Samples"").ToArray();
+        sampleFolder.name = ""New Samples 2""; 
+        sampleFolder.manage = 1; 
+        sampleFolder.right = 4;
+        sampleFolder.sql = false;
+
+        //Sample to remove a folder
+        //sampleFolder.folders.RemoveAll(i => i.path == @""\System"");
     }
 }
 ";
@@ -533,19 +532,44 @@ namespace Seal.Forms
         const string folderDetailScriptTemplate = @"@{
     SecurityUser user = Model;
     //Full documentation at https://sealreport.org/Help/Index.html
+    //user.ScriptNumber is a number incremented if several scripts are executed
 
     if (user.FolderDetail.folder.path == @""\Samples"") {
-        //Sample to filter reports
-        //user.FolderDetail.files = user.FolderDetail.files.Where(i => i.name.Contains(""Charts"")).ToArray(); 
-
+        //Filter reports
+        user.FolderDetail.files.RemoveAll(i => !i.name.Contains(""Charts"")); 
+        
         //Sample to change a report 
-        SWIFile file = user.FolderDetailFiles.FirstOrDefault(i => i.name == ""04-Charts Gallery - Basics"");
+        SWIFile file = user.FolderDetail.files.FirstOrDefault(i => i.name == ""04-Charts Gallery - Basics"");
         if (file != null) {
-            //file.name = ""04-Charts Gallery - Basics NEW"";
-            //file.right = 1;
+            file.name = ""04-Charts Gallery - Basics NEW"";
+            file.right = 1;
         }
     }
+    
+    if (user.FolderDetail.folder.path == @""\"") {
+        //Sample to add a report 
+        user.FolderDetail.files.Add(new SWIFile() { path=@""\Samples\04-Charts Gallery - Basics.srex"", name=""Charts from Root"", last="""", isreport=true, right=1}); 
+    }
  }
+";
+
+        const string menuScriptTemplate = @"@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+    //user.ScriptNumber is a number incremented if several scripts are executed
+
+    //Sample to define a menu
+    var reports = user.WebMenu.reports;
+    reports.Clear();
+    reports.Add(new SWIMenuItem() { path = @""\Samples\04-Charts Gallery - Basics.srex"", viewGUID = null, outputGUID = null, name = ""View Charts"" });
+    // subMenu
+    var subMenu = new SWIMenuItem() { name = ""A SubMenu"" };
+    subMenu.items.Add(new SWIMenuItem() { path = @""\Search - Orders.srex"", viewGUID = null, outputGUID = null, name = ""Search"" });
+    reports.Add(subMenu);
+    
+    //Clear recent reports
+    user.WebMenu.recentreports.Clear();
+}
 ";
 
         const string razorSourceInitScriptTemplate = @"@using System.Data
@@ -1335,6 +1359,13 @@ namespace Seal.Forms
                         template = folderDetailScriptTemplate;
                         frm.ObjectForCheckSyntax = new SecurityUser(null);
                         frm.Text = "Edit the Folder Detail Script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "MenuScript")
+                    {
+                        template = menuScriptTemplate;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Menu Script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

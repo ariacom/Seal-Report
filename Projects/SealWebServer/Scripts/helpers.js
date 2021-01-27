@@ -227,7 +227,7 @@ function initWidgetsRestrictions(parent) {
 }
 function initScrollReport() {
     //back to top
-    $(window).scroll(function () {
+    $(window).unbind("scroll").scroll(function () {
         if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
         else $('#back-to-top').fadeOut();
 
