@@ -226,12 +226,15 @@ function initWidgetsRestrictions(parent) {
     });
 }
 function initScrollReport() {
-    //back to top
+    //scroll
     $(window).unbind("scroll").scroll(function () {
+        //back to top
         if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
         else $('#back-to-top').fadeOut();
-
+        //nav bar
         showHideNavbar();
+        //alerts
+        $('.sr-alert').alert('close');
     });
 
     $('#back-to-top').unbind("click").on("click", function () {
