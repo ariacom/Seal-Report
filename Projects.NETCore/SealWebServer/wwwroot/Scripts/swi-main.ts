@@ -207,7 +207,7 @@ class SWIMain {
         $("#profile-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#profile-user").val(_main._profile.name);
-            $("#profile-groups").val(_main._profile.group.replace(";", "\r"));
+            $("#profile-groups").val(_main._profile.group.replaceAll(";", "\r"));
 
             $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');
