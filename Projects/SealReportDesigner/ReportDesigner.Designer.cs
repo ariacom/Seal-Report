@@ -520,6 +520,7 @@
             this.mainImageList.Images.SetKeyName(16, "configuration.png");
             this.mainImageList.Images.SetKeyName(17, "modelLINQ.png");
             this.mainImageList.Images.SetKeyName(18, "viewModel.png");
+            this.mainImageList.Images.SetKeyName(19, "viewWidget.png");
             // 
             // mainPropertyGrid
             // 

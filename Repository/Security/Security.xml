@@ -60,7 +60,7 @@
             user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);&#xD;
         }&#xD;
 	}&#xD;
-}</Script><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /><SecurityFolder><Path>\System</Path><UseSubFolders>false</UseSubFolders><ExpandSubFolders>false</ExpandSubFolders></SecurityFolder></Folders><PersFolderRight>Reports</PersFolderRight><FoldersScript /><FolderDetailScript /><SqlModel>true</SqlModel><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><Culture /></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel></SecurityGroup><SecurityGroup><Name>Group (Scripts 1)</Name><FoldersScript>@{&#xD;
+}</Script><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /><SecurityFolder><Path>\System</Path><UseSubFolders>false</UseSubFolders><ExpandSubFolders>false</ExpandSubFolders></SecurityFolder></Folders><PersFolderRight>Reports</PersFolderRight><FoldersScript /><FolderDetailScript /><SqlModel>true</SqlModel><DefaultPriority>1</DefaultPriority><Culture /><StartupReport /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><DefaultPriority>1</DefaultPriority><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><DefaultPriority>1</DefaultPriority><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><DefaultPriority>1</DefaultPriority><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><DefaultPriority>1</DefaultPriority><Culture /></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel><DefaultPriority>1</DefaultPriority></SecurityGroup><SecurityGroup><Name>Group (Scripts 1)</Name><FoldersScript>@{&#xD;
     SecurityUser user = Model;&#xD;
     //Full documentation at https://sealreport.org/Help/Index.html&#xD;
     &#xD;
@@ -106,7 +106,7 @@
         user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts Gallery - Basics.srex", name="Charts from Root", last="", isreport=true, right=1}); &#xD;
     }&#xD;
 }&#xD;
-</FolderDetailScript></SecurityGroup><SecurityGroup><Name>Group (Scripts 2)</Name><PersFolderRight>Reports</PersFolderRight><FoldersScript>@{&#xD;
+</FolderDetailScript><DefaultPriority>1</DefaultPriority></SecurityGroup><SecurityGroup><Name>Group (Scripts 2)</Name><PersFolderRight>Reports</PersFolderRight><FoldersScript>@{&#xD;
     SecurityUser user = Model;&#xD;
     //Full documentation at https://sealreport.org/Help/Index.html&#xD;
     //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
@@ -127,7 +127,7 @@
         user.FolderDetail.files.RemoveAll(i =&gt; i.path != @"\Samples\04-Charts Gallery - Basics.srex"); &#xD;
     }&#xD;
 }&#xD;
-</FolderDetailScript></SecurityGroup><SecurityGroup><Name>Group (Menu)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ShowFoldersView>false</ShowFoldersView><MenuScript>@{&#xD;
+</FolderDetailScript><DefaultPriority>1</DefaultPriority></SecurityGroup><SecurityGroup><Name>Group (Menu)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ShowFoldersView>false</ShowFoldersView><MenuScript>@{&#xD;
     SecurityUser user = Model;&#xD;
     //Full documentation at https://sealreport.org/Help/Index.html&#xD;
     //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
@@ -144,4 +144,4 @@
     //Clear recent reports&#xD;
     user.WebMenu.recentreports.Clear();&#xD;
 }&#xD;
-</MenuScript></SecurityGroup></Groups></SealSecurity>
+</MenuScript><DefaultPriority>1</DefaultPriority></SecurityGroup></Groups></SealSecurity>

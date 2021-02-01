@@ -33,9 +33,6 @@ namespace SealWebServer.Controllers
         public const string SessionNavigationContext = "SessionNavigationContext";
         public const string SessionUploadedFiles = "SessionUploadedFiles";
 
-        public const string SealCultureCookieName = "SWI_Culture_Name";
-        public const string SealLastFolderCookieName = "SWI_Last_Folder";
-
         const string _loginContent = "<html><script>window.top.location.href='Main';</script></html>";
         string _noReportFoundMessage
         {
@@ -65,10 +62,6 @@ namespace SealWebServer.Controllers
         Repository CreateRepository()
         {
             Repository repository = Repository.Create();
-            //Set culture from cookie
-            string culture = getCookie(SealCultureCookieName);
-            if (!string.IsNullOrEmpty(culture)) repository.SetCultureInfo(culture);
-
             setSessionValue(SessionRepository, repository);
             return repository;
         }

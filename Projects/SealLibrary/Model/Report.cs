@@ -498,10 +498,7 @@ namespace Seal.Model
                     foreach (string group in groups) SecurityContext.AddSecurityGroup(group);
                 }
 
-                if (!string.IsNullOrEmpty(OutputToExecute.UserCulture))
-                {
-                    SecurityContext.SetDefaultCulture(OutputToExecute.UserCulture);
-                }
+                if (!string.IsNullOrEmpty(OutputToExecute.UserCulture)) Repository.SetCultureInfo(OutputToExecute.UserCulture);
             }
 
             try

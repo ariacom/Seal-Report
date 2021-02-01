@@ -115,7 +115,7 @@ namespace Seal.Model
         protected ColumnType _type = ColumnType.Default;
         [DefaultValue(ColumnType.Default)]
         [Category("Definition"), DisplayName("Data type"), Description("Data type of the column."), Id(2, 1)]
-        [TypeConverter(typeof(NamedEnumConverter))]
+        [TypeConverter(typeof(NamedEnumConverterNoDefault))]
         public ColumnType Type
         {
             get { return _type; }

@@ -129,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\MenuNameConverter.cs" />
+    <Compile Include="Converter\NamedEnumConverterNoDefault.cs" />
     <Compile Include="Converter\ScheduleRepeatConverter.cs" />
     <Compile Include="Converter\RestrictionDateConverter.cs" />
     <Compile Include="Converter\RepositoryFolderConverter.cs" />

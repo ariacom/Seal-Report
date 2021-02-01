@@ -40,6 +40,10 @@ namespace Seal.Model
                 GetProperty("Connections").SetIsBrowsable(true);
                 GetProperty("Sources").SetIsBrowsable(true);
 
+                GetProperty("OnStartup").SetIsBrowsable(true);
+                GetProperty("StartupReport").SetIsBrowsable(true);
+                GetProperty("DefaultPriority").SetIsBrowsable(true);
+                GetProperty("EditProfile").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
                 GetProperty("PersFolderRight").SetIsBrowsable(true);
@@ -148,16 +152,43 @@ namespace Seal.Model
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }
 
         /// <summary>
+        /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.
+        /// </summary>
+        [Category("Default Options"), DisplayName("\t\t\tPriority"), Description("Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user."), Id(1, 5)]
+        public int DefaultPriority { get; set; } = 1;
+
+        /// <summary>
+        /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.
+        /// </summary>
+        [DefaultValue(true)]
+        [Category("Default Options"), DisplayName("\t\tEdit profile"), Description("If true, the user can edit his profile (default culture and startup report) from the Web Server."), Id(1, 5)]
+        public bool EditProfile { get; set; } = true;
+
+        /// <summary>
         /// The culture used for users belonging to the group. If empty, the default culture is used.
         /// </summary>
-        [Category("Options"), DisplayName("Culture"), Description("The culture used for users belonging to the group. If empty, the default culture is used."), Id(1, 5)]
+        [Category("Default Options"), DisplayName("\tCulture"), Description("The culture used for users belonging to the group. If empty, the default culture is used."), Id(2, 5)]
         [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
         public string Culture { get; set; }
 
         /// <summary>
         /// The logo file name used for to generate the reports. If empty, the default logo is used.
         /// </summary>
-        [Category("Options"), DisplayName("Logo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(3, 5)]
+        [Category("Default Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(4, 5)]
         public string LogoName { get; set; }
+        /// <summary>
+        /// The action to take after the user logs in.
+        /// </summary>
+        [DefaultValue(StartupOptions.None)]
+        [TypeConverter(typeof(NamedEnumConverterNoDefault))]
+        [Category("Default Options"), DisplayName("\tOn startup"), Description("The action to take after the user logs in."), Id(3, 5)]
+        public StartupOptions OnStartup { get; set; } = StartupOptions.None;
+
+        /// <summary>
+        /// If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex').
+        /// </summary>
+        [Category("Default Options"), DisplayName("Report executed on startup"), Description("If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex')."), Id(4, 5)]
+        public string StartupReport { get; set; }
+
     }
 }

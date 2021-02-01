@@ -4,25 +4,26 @@
     Report report = Model;
     ReportView view = report.CurrentView;
     Repository repository = report.Repository;
+    var title = view.GetBoolValue("widget_viewname_as_title") ? view.Name : view.GetValue("widget_title");
 }
 
 <div class='panel panel-@view.GetValue("widget_color") panel-widget' @Raw(view.AddAttribute("style", "widget_css")) >
-    @if (!string.IsNullOrEmpty(view.GetValue("widget_title")))
+    @if (!string.IsNullOrEmpty(title))
     {
         <div class='panel-heading text-left' @Raw(view.AddAttribute("style", "widget_heading_css")) >
             <span class='glyphicon glyphicon-@view.GetValue("widget_icon")'></span>
             <h3 class='panel-title' style='display:inline'>
                 @if (!string.IsNullOrEmpty(view.GetValue("widget_exec_view")))
                 {
-                    <a class="widget-title" style="cursor:pointer" path="@Raw(report.RelativeFilePath)" viewGUID="@view.GetValue("widget_exec_view")">@view.GetValue("widget_title")</a>
+                    <a class="widget-title" style="cursor:pointer" path="@Raw(report.RelativeFilePath)" viewGUID="@view.GetValue("widget_exec_view")">@title</a>
                 }
                 else if (!string.IsNullOrEmpty(view.GetValue("widget_exec_report")))
                 {
-                    <a class="widget-title" style="cursor:pointer" path="@Raw(view.GetValue("widget_exec_report"))">@view.GetValue("widget_title")</a>
+                    <a class="widget-title" style="cursor:pointer" path="@Raw(view.GetValue("widget_exec_report"))">@title</a>
                 }
                 else
                 {
-                    @Raw(view.GetValue("widget_title"))
+                    @Raw(title)
                 }
             </h3>
         </div> <!--panel-heading-->

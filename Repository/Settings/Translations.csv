@@ -231,6 +231,7 @@ Web;New folder path;;Nouveau répertoire
 Web;No Email destination specified in the schedule;;L'adresse Email n'est pas renseignée
 Web;No file name specified in the schedule;;Le nom du fichier n'est pas renseigné
 Web;OK;;OK
+Web;On startup;;Au démarrage
 Web;Operator;;Opérateur
 Web;"Optional addresses separated by ;";;"Adresses optionnelles séparées par ;"
 Web;Optional menu name;;Nom optionnel du menu
@@ -333,7 +334,9 @@ WebJS;Custom;;Spécifique
 WebJS;Chart: Bar stacked;;Graphe: Barres empilées
 WebJS;Default report connection;;Connexion du rapport
 WebJS;Default repository connection;;Connexion du repository
+WebJS;Default startup;;Démarrage par défaut
 WebJS;Descendant;;Descendant
+WebJS;Do not execute report;;Ne pas exécuter de rapport
 WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?
 WebJS;Does not contain;;Ne contient pas
 WebJS;Drop your Column elements;;Eléments de type Colonne
@@ -348,7 +351,8 @@ WebJS;Email;;Courriel
 WebJS;Ends with;;Se termine par
 WebJS;Equals;;Egale
 WebJS;Error;;Erreur
-WebJS;Unexpected error on server;;Erreur sur le serveur
+WebJS;Execute the last report;;Exécuter le dernier rapport
+WebJS;Execute the report;;Exécuter le rapport
 WebJS;Excel;;Excel
 WebJS;Excel: Use element format;;Excel: Utiliser le format de l'élément
 WebJS;Execute report in a new window;;Exécuter le rapport dans une nouvelle fenêtre
@@ -477,6 +481,7 @@ WebJS;The report or file has been renamed;;Le rapport ou le fichier a été reno
 WebJS;Toggle Report or Folders view;;Voir le rapport ou les répertoires
 WebJS;Use data tables;;Utiliser les data tables
 WebJS;Use full screen width;;Utiliser toute la largueur de l'écran
+WebJS;Unexpected error on server;;Erreur sur le serveur
 WebJS;View;;Vue
 WebJS;View Folders;;Voir les répertoires
 WebJS;View Report;;Voir le rapport

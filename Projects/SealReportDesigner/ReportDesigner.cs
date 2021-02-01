@@ -58,7 +58,8 @@ namespace Seal
         ModelPanel modelPanel = new ModelPanel();
         Repository _repository;
         ReportViewerForm _reportViewer = null;
-        ToolStripMenuItem nextModelViewMenuItem = new ToolStripMenuItem() { Text = "Go to next Model View", ToolTipText = "Select the next model view in the report", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G))), ShowShortcutKeys = true };
+        ToolStripMenuItem nextWidgetViewMenuItem = new ToolStripMenuItem() { Text = "Go to next Widget View", ToolTipText = "Select the next Widget view in the report", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W))), ShowShortcutKeys = true };
+        ToolStripMenuItem nextModelViewMenuItem = new ToolStripMenuItem() { Text = "Go to next Model View", ToolTipText = "Select the next Model view in the report", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G))), ShowShortcutKeys = true };
 
         public ReportDesigner()
         {
@@ -83,7 +84,9 @@ namespace Seal
 
             toolsToolStripMenuItem.DropDownItems.Insert(4, new ToolStripSeparator());
             toolsToolStripMenuItem.DropDownItems.Insert(5, nextModelViewMenuItem);
-            nextModelViewMenuItem.Click += nextModelView_Click;
+            nextModelViewMenuItem.Click += nextView_Click;
+            toolsToolStripMenuItem.DropDownItems.Insert(5, nextWidgetViewMenuItem);
+            nextWidgetViewMenuItem.Click += nextView_Click;
 
             HelperEditor.HandlerInterface = this;
 
@@ -179,7 +182,9 @@ namespace Seal
                 foreach (var childView in view.Views.OrderBy(i => i.SortOrder))
                 {
                     childView.SortOrder = index++;
-                    var imageIndex = string.IsNullOrEmpty(childView.ModelGUID) ? 8 : 18;
+                    var imageIndex = 8;
+                    if (childView.TemplateName == "Model") imageIndex = 18;
+                    else if (childView.TemplateName == "Widget") imageIndex = 19;
                     TreeNode childNode = new TreeNode(childView.Name) { ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
                     childNode.Tag = childView;
                     node.Nodes.Add(childNode);
@@ -244,8 +249,10 @@ namespace Seal
                 mainTreeView.Nodes.Add(_viewTN);
                 foreach (ReportView view in _report.Views)
                 {
-                    var index = string.IsNullOrEmpty(view.ModelGUID) ? 8 : 18;
-                    TreeNode reportViewTN = new TreeNode(view.Name) { ImageIndex = index, SelectedImageIndex = index };
+                    var imageIndex = 8;
+                    if (view.TemplateName == "Model") imageIndex = 18;
+                    else if (view.TemplateName == "Widget") imageIndex = 19;
+                    TreeNode reportViewTN = new TreeNode(view.Name) { ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
                     reportViewTN.Tag = view;
                     _viewTN.Nodes.Add(reportViewTN);
                     initTreeNodeViews(reportViewTN, view);
@@ -1798,18 +1805,21 @@ namespace Seal
             toolStripHelper.HandleShortCut(e);
         }
 
-        private void nextModelView_Click(object sender, EventArgs e)
+        private void nextView_Click(object sender, EventArgs e)
         {
             ReportView currentView = mainTreeView.SelectedNode.Tag as ReportView;
             if (_report != null)
             {
+                var templateToSearch = "Model";
+                if (sender == nextWidgetViewMenuItem) templateToSearch = "Widget";
+
                 if (currentView == null) currentView = _report.Views[0];
 
                 ReportView nextView = null;
                 var allViews = _report.AllViews;
                 for (int i = allViews.IndexOf(currentView)+1; i < allViews.Count; i++)
                 {
-                    if (allViews[i].Model != null)
+                    if (allViews[i].TemplateName == templateToSearch)
                     {
                         if (i < allViews.Count - 2) nextView = allViews[i];
                         else nextView = allViews[0];
@@ -1820,7 +1830,7 @@ namespace Seal
                 {
                     for (int i = 0; i <= allViews.IndexOf(currentView); i++)
                     {
-                        if (allViews[i].Model != null)
+                        if (allViews[i].TemplateName == templateToSearch)
                         {
                             nextView = allViews[i];
                             break;
