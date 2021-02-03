@@ -48,6 +48,26 @@ namespace Seal.Model
         public string Culture { get; set; }
 
         /// <summary>
+        /// Action to take after the user logs in
+        /// </summary>
+        public StartupOptions OnStartup { get; set; } = StartupOptions.Default;
+
+        /// <summary>
+        /// Relative report path to execute when the user logs in if OnStartup = 'Execute a specific report'
+        /// </summary>
+        public string StartUpReport { get; set; }
+
+        /// <summary>
+        /// Name of report to execute when the user logs in if OnStartup = 'Execute a specific report'
+        /// </summary>
+        public string StartupReportName { get; set; }
+
+        /// <summary>
+        /// Last folder of the user
+        /// </summary>
+        public string LastFolder { get; set; }
+
+        /// <summary>
         /// List of recent reports
         /// </summary>
         public List<RecentFileItem> RecentReports { get; set; } = new List<RecentFileItem>();

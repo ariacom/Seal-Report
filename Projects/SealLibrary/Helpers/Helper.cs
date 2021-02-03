@@ -60,6 +60,7 @@ namespace Seal.Helpers
             bool result = true;
             foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(obj1))
             {
+                if (item.IsReadOnly) continue;
                 if (!string.IsNullOrEmpty(skipEmptySuffix) && string.IsNullOrEmpty(item.GetValue(obj1).ToString()) && item.Name.EndsWith(skipEmptySuffix)) continue;
 
                 if (item.GetValue(obj1).ToString() != item.GetValue(obj2).ToString())

@@ -17,7 +17,13 @@ namespace Seal.Model
         public string culture;
         public string folder;
         public bool showfolders;
+        public bool editprofile;
         public string usertag;
+        public StartupOptions onstartup;
+        public string startupreport;
+        public string startupreportname;
+        public string report;
+        public string reportname;
     }
 
     /// <summary>

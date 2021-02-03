@@ -569,5 +569,17 @@ namespace Seal.Model
         [Description("Not visible")]
         NotVisible,
     }
+
+    public enum StartupOptions
+    {
+        [Description("Default")]
+        Default,
+        [Description("Do not execute report")]
+        None,
+        [Description("Execute the last report")]
+        ExecuteLast,
+        [Description("Execute a specific report")]
+        ExecuteReport,
+    }
 }
 

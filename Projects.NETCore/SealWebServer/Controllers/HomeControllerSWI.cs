@@ -54,23 +54,85 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(AuditType.Login, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
-                //Set culture
+                //Set repository defaults
+                var defaultGroup = WebUser.DefaultGroup;
+                if (!string.IsNullOrEmpty(defaultGroup.Culture)) Repository.SetCultureInfo(defaultGroup.Culture);
+                if (!string.IsNullOrEmpty(defaultGroup.LogoName)) Repository.Configuration.LogoName = defaultGroup.LogoName;
+
                 string culture = WebUser.Profile.Culture;
-                if (string.IsNullOrEmpty(culture) || string.IsNullOrEmpty(WebUser.WebUserName)) culture = getCookie(SealCultureCookieName);
                 if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
+
+                string reportToExecute =  "", reportToExecuteName = "";
+                bool executeLast = false;
+                if (defaultGroup.EditProfile && WebUser.Profile.OnStartup != StartupOptions.Default)
+                {
+                    if (WebUser.Profile.OnStartup == StartupOptions.ExecuteLast && WebUser.Profile.RecentReports.Count > 0) executeLast = true;
+                    else if (WebUser.Profile.OnStartup == StartupOptions.ExecuteReport)
+                    {
+                        reportToExecute = WebUser.Profile.StartUpReport;
+                        reportToExecuteName = WebUser.Profile.StartupReportName;
+                    }
+                }
+                else
+                {
+                    if (defaultGroup.OnStartup == StartupOptions.ExecuteLast) executeLast = true;
+                    else if (defaultGroup.OnStartup == StartupOptions.ExecuteReport)
+                    {
+                        reportToExecute = defaultGroup.StartupReport;
+                        reportToExecuteName = Repository.TranslateFileName(defaultGroup.StartupReport);
+                    }
+                }
+
+                if (executeLast && WebUser.Profile.RecentReports.Count > 0)
+                {
+                    reportToExecute = WebUser.Profile.RecentReports[0].Path;
+                    reportToExecuteName = WebUser.Profile.RecentReports[0].Name;
+                }
 
                 //Refresh menu reports
                 if (newAuthentication) MenuReportViewsPool.ForceReload();
-                
-                return Json(new SWIUserProfile()
+
+                var profile = new SWIUserProfile()
                 {
                     name = WebUser.Name,
                     group = WebUser.SecurityGroupsDisplay,
                     culture = Repository.CultureInfo.EnglishName,
-                    folder = getCookie(SealLastFolderCookieName),
+                    folder = WebUser.Profile.LastFolder,
                     showfolders = WebUser.ShowFoldersView,
-                    usertag = WebUser.Tag
-                }); ;
+                    editprofile = defaultGroup.EditProfile,
+                    usertag = WebUser.Tag,
+                    onstartup = WebUser.Profile.OnStartup,
+                    startupreport = WebUser.Profile.StartUpReport,
+                    startupreportname = WebUser.Profile.StartupReportName,
+                    report = reportToExecute,
+                    reportname = reportToExecuteName,
+                };
+
+                if (!string.IsNullOrEmpty(profile.startupreport))
+                {
+                    try
+                    {
+                        getFileDetail(profile.startupreport);
+                    }
+                    catch {
+                        profile.startupreport = "";
+                        profile.startupreportname = "";
+                    }
+                }
+                if (!string.IsNullOrEmpty(profile.report))
+                {
+                    try
+                    {
+                        getFileDetail(profile.report);
+                    }
+                    catch
+                    {
+                        profile.report = "";
+                        profile.reportname = "";
+                    }
+                }
+
+                return Json(profile); 
             }
             catch (Exception ex)
             {
@@ -246,7 +308,8 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
                 var folderDetail = getFolderDetail(path, true);
-                setCookie(SealLastFolderCookieName, path);
+                WebUser.Profile.LastFolder = path;
+                WebUser.Profile.SaveToFile();
                 return Json(folderDetail);
             }
             catch (Exception ex)
@@ -626,19 +689,26 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Set the culture for the logged user.
         /// </summary>
-        public ActionResult SWISetUserProfile(string culture)
+        public ActionResult SWISetUserProfile(string culture, string onStartup, string startupReport, string startupReportName)
         {
             writeDebug("SWISetUserProfile");
             try
             {
                 checkSWIAuthentication();
+                if (!WebUser.DefaultGroup.EditProfile) throw new Exception("Error: no right to change profile");
+
                 if (string.IsNullOrEmpty(culture)) throw new Exception("Error: culture must be supplied");
                 if (culture != Repository.CultureInfo.EnglishName)
                 {
                     if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
-                    setCookie(SealCultureCookieName, culture);
                     WebUser.Profile.Culture = culture;
-                }               
+                }
+                var onStartupVal = StartupOptions.Default;
+                if (Enum.TryParse(onStartup, out onStartupVal)) {
+                    WebUser.Profile.OnStartup = onStartupVal;
+                    WebUser.Profile.StartUpReport = startupReport;
+                    WebUser.Profile.StartupReportName = startupReportName;
+                }
                 WebUser.SaveProfile();
 
                 return Json(new { });

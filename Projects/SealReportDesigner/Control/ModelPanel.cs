@@ -140,8 +140,7 @@ namespace Seal.Controls
                     }
 
                     menu.Items.Add(new ToolStripSeparator());
-
-                    item = new ToolStripMenuItem("View source column");
+                    item = new ToolStripMenuItem("Go to the source Column");
                     item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                     {
                         MainForm.selectNode(column);

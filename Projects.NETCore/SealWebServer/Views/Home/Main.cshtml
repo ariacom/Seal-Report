@@ -81,7 +81,7 @@
     </div>
 
     <!-- Views and Output -->
-    <div id="output-panel" class="panel panel-default" style="display:none; border-color:black;transition: 1s">
+    <div id="output-panel" class="panel panel-default" style="display:none;">
         <div class="panel-heading" style="height:20px;padding: 0px 10px;"><button type='button' id="output-panel-close" class='close'>&times;</button></div>
         <div id="output-panel-content">
             <table class="table table-striped">
@@ -172,19 +172,26 @@
                     </div>
                     <div class="form-group">
                         <label for="profile-groups"><span class="fa fa-users"></span> @repository.TranslateWeb("User groups")</label>
-                        <textarea rows="4" class="form-control" id="profile-groups" disabled="disabled" >
+                        <textarea rows="4" class="form-control" id="profile-groups" disabled="disabled">
                         </textarea>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group edit-profile">
                         <label for="culture-select"><span class="fa fa-language"></span> @repository.TranslateWeb("Culture")</label>
                         <div>
                             <select id="culture-select" data-width="100%"></select>
                         </div>
                     </div>
+                    <div class="form-group edit-profile">
+                        <label for="onstartup-select"><span class="fa fa-power-off"></span> @repository.TranslateWeb("On startup")</label>
+                        <div>
+                            <select id="onstartup-select" data-width="100%"></select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
-                    <button id="profile-save" type="button" class="btn btn-primary">@repository.TranslateWeb("Save")</button>
+                    <button id="profile-cancel" type="button" class="btn btn-default edit-profile" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                    <button id="profile-save" type="button" class="btn btn-primary edit-profile">@repository.TranslateWeb("Save")</button>
+                    <button id="profile-close" type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Close")</button>
                 </div>
             </div>
         </div>

@@ -1,13 +1,13 @@
-﻿declare var WebApplicationName: string;
-var _server: string = WebApplicationName;
-var _errorServer: string = SWIUtil.tr("Unexpected error on server") + ": '" + _server + "'"; 
-
-function callbackHandler(data: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
+var _server = WebApplicationName;
+var _errorServer = SWIUtil.tr("Unexpected error on server") + ": '" + _server + "'";
+function callbackHandler(data, callback, errorcb) {
     if (!data.error) {
-        if (callback) callback(data);
+        if (callback)
+            callback(data);
     }
     else {
-        if (errorcb) errorcb(data);
+        if (errorcb)
+            errorcb(data);
         else {
             SWIUtil.ShowMessage("alert-danger", data.error, 0);
             if (!data.authenticated) {
@@ -16,54 +16,45 @@ function callbackHandler(data: any, callback: (data: any) => void, errorcb?: (da
         }
     }
 }
-
 function failure(xhr, status, error) {
-    SWIUtil.ShowMessage("alert-danger", error +". " + _errorServer, 0);
+    SWIUtil.ShowMessage("alert-danger", error + ". " + _errorServer, 0);
 }
-
-
-declare function postForm(url: string, target: string, data);
-
-class SWIGateway {
-    public GetVersions(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetVersions", { })
+var SWIGateway = /** @class */ (function () {
+    function SWIGateway() {
+    }
+    SWIGateway.prototype.GetVersions = function (callback, errorcb) {
+        $.post(_server + "SWIGetVersions", {})
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public Login(user: string, password: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.Login = function (user, password, callback, errorcb) {
         $.post(_server + "SWILogin", {
             user: user, password: password
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public Logout(callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.Logout = function (callback, errorcb) {
         $.post(_server + "SWILogout")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetRootMenu(callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.GetRootMenu = function (callback, errorcb) {
         $.post(_server + "SWIGetRootMenu")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetUserProfile(callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.GetUserProfile = function (callback, errorcb) {
         $.post(_server + "SWIGetUserProfile")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetCultures(callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.GetCultures = function (callback, errorcb) {
         $.post(_server + "SWIGetCultures")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public SetUserProfile(culture: string, onstartup: string, startupreport: string, startupreportname: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.SetUserProfile = function (culture, onstartup, startupreport, startupreportname, callback, errorcb) {
         $.post(_server + "SWISetUserProfile", {
             culture: culture,
             onstartup: onstartup,
@@ -72,80 +63,68 @@ class SWIGateway {
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public DeleteFiles(paths: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.DeleteFiles = function (paths, callback, errorcb) {
         $.post(_server + "SWIDeleteFiles", {
             paths: paths
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public MoveFile(source: string, destination: string, copy : boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.MoveFile = function (source, destination, copy, callback, errorcb) {
         $.post(_server + "SWIMoveFile", {
             source: source, destination: destination, copy: copy
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetRootFolders(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetRootFolders", {
-        })
+    };
+    SWIGateway.prototype.GetRootFolders = function (callback, errorcb) {
+        $.post(_server + "SWIGetRootFolders", {})
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetFolderDetail(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.GetFolderDetail = function (path, callback, errorcb) {
         $.post(_server + "SWIGetFolderDetail", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public CreateFolder(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.CreateFolder = function (path, callback, errorcb) {
         $.post(_server + "SWICreateFolder", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public DeleteFolder(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.DeleteFolder = function (path, callback, errorcb) {
         $.post(_server + "SWIDeleteFolder", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public RenameFolder(source: string, destination : string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.RenameFolder = function (source, destination, callback, errorcb) {
         $.post(_server + "SWIRenameFolder", {
             source: source, destination: destination
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public Search(path: string, pattern: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.Search = function (path, pattern, callback, errorcb) {
         $.post(_server + "SWISearch", {
             path: path, pattern: pattern
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public ExecuteReport(path: string, viewGUID: string, outputGUID: string) {
+    };
+    SWIGateway.prototype.ExecuteReport = function (path, viewGUID, outputGUID) {
         postForm(_server + "SWExecuteReport", "_blank", { path: path, viewGUID: viewGUID, outputGUID: outputGUID });
-    }
-
-    public ExecuteReportDefinition(report: any, viewGUID: string, outputGUID: string) {
+    };
+    SWIGateway.prototype.ExecuteReportDefinition = function (report, viewGUID, outputGUID) {
         postForm(_server + "SWExecuteReportDefinition", "_blank", { report: report, viewGUID: viewGUID, outputGUID: outputGUID });
-    }
-
-    public ExecuteReportFromMenu(path: string, viewGUID: string, outputGUID: string,  callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.ExecuteReportFromMenu = function (path, viewGUID, outputGUID, callback, errorcb) {
         $.post(_server + "SWExecuteReport", {
             path: path,
             viewGUID: viewGUID,
@@ -154,50 +133,46 @@ class SWIGateway {
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public ViewFile(path: string) {
+    };
+    SWIGateway.prototype.ViewFile = function (path) {
         postForm(_server + "SWViewFile", "_blank", { path: path });
-    }
-
-    public GetReportDetail(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.GetReportDetail = function (path, callback, errorcb) {
         $.post(_server + "SWIGetReportDetail", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public NewReportDefinition(path: string, sqlmodel : boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.NewReportDefinition = function (path, sqlmodel, callback, errorcb) {
         $.post(_server + "SWINewReportDefinition", {
             path: path,
             sqlmodel: sqlmodel
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public GetReportDefinition(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.GetReportDefinition = function (path, callback, errorcb) {
         $.post(_server + "SWIGetReportDefinition", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public SaveReportDefinition(path: string, check: boolean, report: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.SaveReportDefinition = function (path, check, report, callback, errorcb) {
         $.post(_server + "SWISaveReportDefinition", {
             path: path, check: check, report: report
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
-    public RefreshSQLModel(report: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    };
+    SWIGateway.prototype.RefreshSQLModel = function (report, callback, errorcb) {
         $.post(_server + "SWIRefreshSQLModel", {
             report: report
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-}
+    };
+    return SWIGateway;
+}());
+//# sourceMappingURL=swi-gateway.js.map

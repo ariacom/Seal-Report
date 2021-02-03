@@ -551,10 +551,11 @@ namespace Seal
 
         private void selectAfterLoad()
         {
-            if (_report.Models.Count > 0 && _report.Models[0].Elements.Count > 0) selectNode(_report.Models[0]);
+            if (_report.Models.Count > 0 && _report.Models.OrderBy(i => i.Name).First().Elements.Count > 0) selectNode(_report.Models.OrderBy(i => i.Name).First());
             else if (_report.Tasks.Count > 0) selectNode(_report.Tasks.OrderBy(i => i.SortOrder).First());
             else if (_report.Models.Count > 0) selectNode(_report.Models[0]);
             else if (_report.Sources.Count > 0) selectNode(_report.Sources[0]);
+            else if (_report.Views.Count > 0) selectNode(_report.Views[0]);
         }
 
         private void openReport(string path)
@@ -928,7 +929,7 @@ namespace Seal
                 tsUp = new ToolStripMenuItem() { Text = "Move up", Tag = tag };
                 tsUp.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
             }
-            if (mainTreeView.SelectedNode.Parent.Nodes[mainTreeView.SelectedNode.Parent.Nodes.Count -1] != mainTreeView.SelectedNode)
+            if (mainTreeView.SelectedNode.Parent.Nodes[mainTreeView.SelectedNode.Parent.Nodes.Count - 1] != mainTreeView.SelectedNode)
             {
                 tsDown = new ToolStripMenuItem() { Text = "Move down", Tag = tag };
                 tsDown.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
@@ -993,8 +994,8 @@ namespace Seal
                 }
                 else if (entity is ReportView)
                 {
-                    var currentTemplateName = ((ReportView)entity).TemplateName;
-                    foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(currentTemplateName)))
+                    var view = (ReportView)entity;
+                    foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(view.TemplateName)))
                     {
                         addAddItem("Add a " + template.Name + " View", template, template.Description);
                     }
@@ -1002,6 +1003,17 @@ namespace Seal
                     addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                     addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                     addMoveUpDown(entity);
+
+                    if (view.Model != null)
+                    {
+                        treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        var item = new ToolStripMenuItem("Go to the Model");
+                        item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                        {
+                            selectNode(view.Model);
+                        });
+                        treeContextMenuStrip.Items.Add(item);
+                    }
                     addSmartCopyItem("Smart copy...", entity);
                     if (mainTreeView.SelectedNode.Parent.Tag is ViewFolder) addExecuteRenderContextItem(((RootComponent)entity).Name);
                 }
@@ -1049,6 +1061,18 @@ namespace Seal
 
                     addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                     addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+
+                    var view = _report.AllViews.FirstOrDefault(i => i.Model == reportModel);
+                    if (view != null)
+                    {
+                        treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        var item = new ToolStripMenuItem("Go to the first model View");
+                        item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                        {
+                            selectNode(view);
+                        });
+                        treeContextMenuStrip.Items.Add(item);
+                    }
                     addSmartCopyItem("Smart copy...", entity);
 
                     ToolStripMenuItem ts = new ToolStripMenuItem();
@@ -1822,7 +1846,7 @@ namespace Seal
 
                 ReportView nextView = null;
                 var allViews = _report.AllViews;
-                for (int i = allViews.IndexOf(currentView)+1; i < allViews.Count; i++)
+                for (int i = allViews.IndexOf(currentView) + 1; i < allViews.Count; i++)
                 {
                     if (allViews[i].TemplateName == templateToSearch)
                     {

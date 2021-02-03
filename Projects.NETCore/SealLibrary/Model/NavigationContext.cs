@@ -292,16 +292,19 @@ namespace Seal.Model
                         }
                     }
                 }
-                //Set new GUID
-                if (element != null)
+                //Set new GUIDs
+                if (!model.Elements.Exists(i => i.MetaColumnGUID == dst))
                 {
-                    changeElementGUID(element, dst, newReport.ExecutionView);
-                    destLabel = element.DisplayNameElTranslated;
-                }
+                    if (element != null)
+                    {
+                        changeElementGUID(element, dst, newReport.ExecutionView);
+                        destLabel = element.DisplayNameElTranslated;
+                    }
 
-                foreach (var el in els)
-                {
-                    changeElementGUID(el.Key, el.Value, newReport.ExecutionView);
+                    foreach (var el in els)
+                    {
+                        changeElementGUID(el.Key, el.Value, newReport.ExecutionView);
+                    }
                 }
             }
         }

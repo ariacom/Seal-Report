@@ -91,6 +91,16 @@ namespace Seal.Model
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }
 
         /// <summary>
+        /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.
+        /// </summary>
+        public int DefaultPriority { get; set; } = 1;
+
+        /// <summary>
+        /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.
+        /// </summary>
+        public bool EditProfile { get; set; } = true;
+
+        /// <summary>
         /// The culture used for users belonging to the group. If empty, the default culture is used.
         /// </summary>
         public string Culture { get; set; }
@@ -99,6 +109,16 @@ namespace Seal.Model
         /// The logo file name used for to generate the reports. If empty, the default logo is used.
         /// </summary>
         public string LogoName { get; set; }
+        /// <summary>
+        /// The action to take after the user logs in.
+        /// </summary>
+        public StartupOptions OnStartup { get; set; } = StartupOptions.None;
+
+        /// <summary>
+        /// If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex').
+        /// </summary>
+        public string StartupReport { get; set; }
+
     }
 }
 

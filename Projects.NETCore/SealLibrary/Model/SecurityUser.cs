@@ -307,35 +307,14 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Set the default user's culture
+        /// Default group of the user
         /// </summary>
-        public void SetDefaultCulture(string culture)
+        public SecurityGroup DefaultGroup
         {
-            if (!string.IsNullOrEmpty(culture))
+            get
             {
-                Security.Repository.SetCultureInfo(culture);
+                return SecurityGroups.OrderBy(i => i.DefaultPriority).FirstOrDefault();
             }
-        }
-
-        /// <summary>
-        /// Set the default logo name
-        /// </summary>
-        public void SetDefaultLogoName(string logoName)
-        {
-            if (!string.IsNullOrEmpty(logoName))
-            {
-                Security.Repository.Configuration.LogoName = logoName;
-            }
-        }
-
-        /// <summary>
-        /// Set defaults from a security group 
-        /// </summary>
-        public void SetGroupConfiguration(SecurityGroup group)
-        {
-            //set defaults from the group
-            SetDefaultCulture(group.Culture);
-            SetDefaultLogoName(group.LogoName);
         }
 
         /// <summary>
@@ -346,7 +325,6 @@ namespace Seal.Model
             if (Security == null) return null;
             return Security.FindSecurityFolder(SecurityGroups, folder);
         }
-
 
         private List<SecurityColumn> _securityColumns = null;
         /// <summary>
@@ -478,7 +456,6 @@ namespace Seal.Model
             if (Security.Groups.Count > 0)
             {
                 SecurityGroups.Add(Security.Groups[0]);
-                SetGroupConfiguration(Security.Groups[0]);
             }
             else
             {
@@ -495,7 +472,6 @@ namespace Seal.Model
             if (newGroup != null)
             {
                 SecurityGroups.Add(newGroup);
-                SetGroupConfiguration(newGroup);
             }
             else
             {
@@ -525,10 +501,6 @@ namespace Seal.Model
                 {
                     Warning += group + "\r\n";
                 }
-            }
-            else if (SecurityGroups.Count > 0)
-            {
-                SetGroupConfiguration(SecurityGroups[0]);
             }
         }
 
