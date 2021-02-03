@@ -4,7 +4,7 @@
     Report report = Model;
     ReportView view = report.CurrentView;
     Repository repository = report.Repository;
-    var title = view.GetBoolValue("widget_viewname_as_title") ? view.Name : view.GetValue("widget_title");
+    var title = report.TranslateViewName(view.GetBoolValue("widget_name_as_title") ? view.Name : view.GetValue("widget_title"));
 }
 
 <div class='panel panel-@view.GetValue("widget_color") panel-widget' @Raw(view.AddAttribute("style", "widget_css")) >

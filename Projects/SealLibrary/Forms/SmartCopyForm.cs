@@ -285,15 +285,28 @@ namespace Seal.Forms
             _destinationItems.Clear();
             _destinationItems.Add(new PropertyItem() { Name = destinationName + " Select/Unselect All", Object = null });
             addToDestinationList(_report);
+
+            var loadedReports = new List<Report>();
             foreach (var item in reportsListBox.Items.OfType<PropertyItem>())
             {
-                addToDestinationList((Report)item.Object);
+                var report = (Report)item.Object;
+                //Reload report if necessary
+                if (report != _report && report.LastModification != File.GetLastWriteTime(report.FilePath)) report = Report.LoadFromFile(report.FilePath, _report.Repository, false);
+                addToDestinationList(report);
+                loadedReports.Add(report);
             }
+            reportsListBox.Items.Clear();
+            foreach (var report in loadedReports)
+            {
+                reportsListBox.Items.Add(new PropertyItem() { Name = report.FilePath, Object = report });
+            }
+
             applyFilter();
         }
 
         void addToDestinationList(Report report)
         {
+
             string destinationName = getDestinationName();
             string fileName = convertFileName(report.FilePath);
             if (destinationName.StartsWith(ReportsKeyword))

@@ -79,7 +79,7 @@ namespace SealWebServer.Controllers
                     else if (defaultGroup.OnStartup == StartupOptions.ExecuteReport)
                     {
                         reportToExecute = defaultGroup.StartupReport;
-                        reportToExecuteName = Path.GetFileNameWithoutExtension(defaultGroup.StartupReport);
+                        reportToExecuteName = Repository.TranslateFileName(defaultGroup.StartupReport);
                     }
                 }
 

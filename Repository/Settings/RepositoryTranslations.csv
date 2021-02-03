@@ -17,7 +17,7 @@ Element;Employees.Birth Date;Birth Date;;Date de naissance
 Element;Employees.City;City;;Ville
 Element;Employees.Country;Country;;Pays
 Element;Employees.Extension;Extension;;Extension
-Element;Employees.Employee Name;Employee Name;;Nom de l'employé
+Element;Employees.Employee;Employee;;Employé
 Element;Employees.First Name;First Name;;Prénom
 Element;Employees.Hire Date;Hire Date;;Date d'engagement
 Element;Employees.Home Phone;Home Phone;;Téléphone maison
@@ -74,6 +74,7 @@ Element;Order Details.Amount;Amount;;Montant
 Element;Order Details.Discount;Discount;;Rabais
 Element;Order Details.Orders Amount;Orders Amount;;Montant Commandes
 Element;Orders.Orders Count;Orders Count;;Nombre de Commandes
+Element;Customers.Clients Count;Clients Count;;Nombre de Clients
 EnumMessage;Product Name;Please select a Category first;;Veuillez sélectionner une catégorie de produit
 EnumMessage;Product Name Search By Char;Please type 2 characters;;Veuillez entrer 2 caractères
 Enum;Category;Beverages;;Boissons
@@ -92,18 +93,26 @@ ReportViewName;\Overview - Sales.srex;Customer country;;Pays du client
 ReportViewName;\Overview - Sales.srex;Category;;Catégorie
 ReportViewName;\Overview - Sales.srex;General;;Général
 ReportViewName;\Overview - Sales.srex;Orders;;Commandes
+ReportViewName;\Overview - Sales.srex;Sales per month;;Ventes par mois
+ReportViewName;\Overview - Sales.srex;Goals;;Buts à atteindre
+ReportViewName;\Overview - Sales.srex;Sales per category;;Ventes par catégorie
+ReportViewName;\Overview - Sales.srex;Sales per employee;;Ventes par employé
+ReportViewName;\Overview - Sales.srex;Sales per customer country and employee;;Ventes par pays et employé
+ReportViewName;\Overview - Sales.srex;Sales per customer country and category;;Ventes par pays et catégorie
+ReportViewName;\Overview - Sales.srex;Sales;;Ventes
+ReportViewName;\Overview - Sales.srex;Sales progression;;Progression des ventes
+ReportViewName;\Overview - Sales.srex;KPI Sales;;KPI Ventes
 ReportGeneral;\Overview - Sales.srex;Sales and discounts per %Order Month%;;Ventes et rabais par %Order Month%
 ReportGeneral;\Overview - Sales.srex;Sales per %0%;;Ventes par %0%
 ReportGeneral;\Overview - Sales.srex;Sales per %0% and %1%;;Ventes par %0% et %1%
 ReportGeneral;\Overview - Sales.srex;Discounts per %0% and %1%;;Rabais par %0% et %1%
 ReportOutputName;\Overview - Sales.srex;HTML File;;Fichier HTML
 FileName;\Search - Orders.srex;Search - Orders;;Recherche - Commandes
-FileName;\Search - Reports.srex;Search - Reports;;Recherche - Rapports
 ReportDisplayName;\Search - Orders.srex;Search - Orders;;Recherche - Commandes
 ReportDisplayName;\Search - Reports.srex;Search - Reports;;Recherche - Rapports
 ReportViewName;\Search - Orders.srex;Orders;;Commandes
 SubReport;Customers.Customer;Customer Detail;;Détail Client
-SubReport;Employees.Employee Name;Employee Detail;;Détail Employé
+SubReport;Employees.Employee;Employee;;Employé
 SubReport;Orders.Order ID;Order Detail;;Détail Commande
 SubReport;Suppliers.Supplier;Supplier Detail;;Détail Fournisseur
 SubReport;Products.Product Name;Product Detail;;Détail Produit

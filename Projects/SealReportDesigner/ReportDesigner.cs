@@ -835,15 +835,6 @@ namespace Seal
                 else if (entity is ReportView)
                 {
                     e.Node.Text = e.Label;
-                    if (mainTreeView.SelectedNode.Parent != null && mainTreeView.SelectedNode.Parent.Tag is ReportView)
-                    {
-                        ReportView parent = (ReportView)mainTreeView.SelectedNode.Parent.Tag;
-                        e.Node.Text = Helper.GetUniqueName(e.Label, (from i in parent.Views select i.Name).ToList());
-                    }
-                    else if (mainTreeView.SelectedNode.Parent != null && mainTreeView.SelectedNode.Parent.Tag is ViewFolder)
-                    {
-                        e.Node.Text = Helper.GetUniqueName(e.Label, (from i in Report.Views select i.Name).ToList());
-                    }
                 }
                 else if (entity is ReportTask)
                 {
@@ -929,9 +920,11 @@ namespace Seal
         {
             if (mainTreeView.SelectedNode.Parent.Nodes.Count == 1) return;
 
-            ToolStripMenuItem tsUp = null, tsDown = null;
+            ToolStripMenuItem tsFirst = null, tsUp = null, tsDown = null, tsLast = null;
             if (mainTreeView.SelectedNode.Parent.Nodes[0] != mainTreeView.SelectedNode)
             {
+                tsFirst = new ToolStripMenuItem() { Text = "Move first", Tag = tag };
+                tsFirst.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
                 tsUp = new ToolStripMenuItem() { Text = "Move up", Tag = tag };
                 tsUp.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
             }
@@ -939,12 +932,16 @@ namespace Seal
             {
                 tsDown = new ToolStripMenuItem() { Text = "Move down", Tag = tag };
                 tsDown.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
+                tsLast = new ToolStripMenuItem() { Text = "Move last", Tag = tag };
+                tsLast.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
             }
 
 
             if (treeContextMenuStrip.Items.Count > 0 && (tsUp != null || tsDown != null)) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
-            if (tsDown != null) treeContextMenuStrip.Items.Add(tsDown);
+            if (tsFirst != null) treeContextMenuStrip.Items.Add(tsFirst);
             if (tsUp != null) treeContextMenuStrip.Items.Add(tsUp);
+            if (tsDown != null) treeContextMenuStrip.Items.Add(tsDown);
+            if (tsLast != null) treeContextMenuStrip.Items.Add(tsLast);
         }
 
         void addExecuteRenderContextItem(string name, string name2 = "")
@@ -1394,19 +1391,24 @@ namespace Seal
 
         private void moveUpDownToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            bool isDown = ((ToolStripMenuItem)sender).Text.ToLower().Contains("down");
+            var increment = 0;
+            var text = ((ToolStripMenuItem)sender).Text.ToLower();
+            if (text.Contains("first")) increment = -10000;
+            else if (text.Contains("last")) increment = 10000;
+            else if (text.Contains("down")) increment = 15;
+            else increment = -15;
             if (selectedEntity is ReportView)
             {
                 var viewToMove = selectedEntity as ReportView;
                 //move the position
                 List<ReportView> views = (mainTreeView.SelectedNode.Parent.Tag is ReportView) ? ((ReportView)mainTreeView.SelectedNode.Parent.Tag).Views : _report.Views;
                 foreach (var view in views) view.SortOrder = 10 * view.SortOrder;
-                viewToMove.SortOrder += isDown ? 15 : -15;
+                viewToMove.SortOrder += increment;
                 int index = 0;
                 foreach (var view in views.OrderBy(i => i.SortOrder)) view.SortOrder = index++;
                 SetModified();
                 mainTreeView.Sort();
-//                mainTreeView.SelectedNode = sourceNode;
+                selectNode(viewToMove);
             }
         }
 
@@ -1807,9 +1809,12 @@ namespace Seal
 
         private void nextView_Click(object sender, EventArgs e)
         {
-            ReportView currentView = mainTreeView.SelectedNode.Tag as ReportView;
+
             if (_report != null)
             {
+                if (mainTreeView.SelectedNode == null) selectNode(_report.Views[0]);
+                ReportView currentView = mainTreeView.SelectedNode.Tag as ReportView;
+
                 var templateToSearch = "Model";
                 if (sender == nextWidgetViewMenuItem) templateToSearch = "Widget";
 

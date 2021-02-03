@@ -9,6 +9,7 @@
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }
     int serieIndex = 0;
+    var series = page.Series.Where(i => i.Element.ChartJSSerie != ChartJSSerieDefinition.None).OrderBy(i => i, new ResultSerieComparer());
 }
 
 @if (reportModel.HasChartJSSerie && page.Series.Count > 0 && modelView.GetBoolValue("show_charts"))
@@ -52,6 +53,7 @@
                         <text>
                         {
                         @Raw(!isHorizontalBar && chartType != "pie" && chartType != "polarArea" && chartType != "radar" ? "type: '" + serie.Element.ChartJSSerie.ToString().ToLower() + "'," : "")
+                            index: @serieIndex,
                             labels: [@Raw(page.ChartXLabels)],
                             label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
                             data: [@Raw(chartType == "pie" || chartType == "polarArea" || chartType == "radar" ? serie.ChartYSerieValues : (!isHorizontalBar? serie.ChartXYSerieValues: serie.ChartYXSerieValues))],
@@ -173,7 +175,13 @@
                                 @Raw(view.GetValue("chartjs_label_font"))
                             },
                             display: function (context) {
-                                var displayType = '@view.GetValue("chartjs_label_display")';
+                                @foreach(var ls in view.GetValue("chartjs_label_series").Replace("{LAST}", (series.Count()-1).ToString()).Split(';').Where(i => !string.IsNullOrEmpty(i)))
+                                {
+                                    <text>
+                                    if (@Raw(ls) == context.dataset.index) return false;
+                                    </text>
+                                }
+                                var displayType = '@(view.GetValue("chartjs_label_display"))';
                                 if (displayType == 'false') return false;
                                 if (displayType == 'true') return true;
                                 if (displayType == 'auto') return 'auto';

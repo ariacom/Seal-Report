@@ -15,6 +15,7 @@
         reportModel.InvertDataTables();
     }
     ResultTable table = page.DataTable;
+    var sortConfiguration = view.GetValue("data_tables_sort_configuration").Replace("{LAST}", (table.ColumnCount-1).ToString());
 }
 
 @if (table != null && table.RowCount > 0 && table.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
@@ -35,7 +36,7 @@
                 info: @view.GetBoolValueJS("data_tables_show_information"),
                 searching: @view.GetBoolValueJS("data_tables_filter_enabled"),
                 processing: @view.GetBoolValueJS("data_tables_show_processing"),
-                order: [@Raw(view.GetValue("data_tables_sort_configuration"))],
+                order: [@Raw(sortConfiguration)],
                 serverSide: @Helper.ToJS(report.IsServerPaginationEnabled && enabled),
                 @Raw(Helper.AddIfNotEmpty("scrollY: '", view.GetValue("data_tables_scrolly"), "',"))
                 scrollX: @view.GetBoolValueJS("data_tables_scrollx"),
