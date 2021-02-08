@@ -322,12 +322,6 @@
     <None Include="..\..\Repository\Views\Model.iSummaryTable.partial.cshtml">
       <Link>Views\Model.iSummaryTable.partial.cshtml</Link>
     </None>
-    <None Include="..\..\Repository\Views\ModelContainer.config.cshtml">
-      <Link>Views\ModelContainer.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ModelContainer.cshtml">
-      <Link>Views\ModelContainer.cshtml</Link>
-    </None>
     <None Include="..\..\Repository\Views\PageTable.config.cshtml">
       <Link>Views\PageTable.config.cshtml</Link>
     </None>

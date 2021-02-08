@@ -12,7 +12,6 @@
     //Shared template
     Template.SharedPartialTemplates = new string[] { "Restrictions.iShared" };
 
-
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = Parameter.ReportFormatParameter, Value = "html", Enums = new string[] { "html|HTML", "print|HTML Print", "csv|CSV Excel", "pdf|PDF", "excel|Excel", "custom|Custom" }, DisplayName = "Report format", Description = "Format of the report result. If format is Custom, Report.ResultFilePath must be specified in a child script template." });
     Template.Parameters.Add(new Parameter() { Name = "report_description", DisplayName = "Report description", Description = "Optional report description displayed in the information panel." });

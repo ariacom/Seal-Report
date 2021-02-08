@@ -8,6 +8,7 @@
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
+    Template.IsModelViewChild = true;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "chartjs_width", DisplayName = "Chart width", Description = "The chart width. Valid only when the chart is not responsive (Set Is Responsive to False).", Enums = new string[] { "", "300px", "400px", "600px", "80%" }, UseOnlyEnumValues = false });
@@ -56,6 +57,6 @@
     Template.Parameters.Add(new Parameter() { Name = "chartjs_tooltip_format", DisplayName = "Tooltip: Type", Description = "Type of values shown in the tooltip. If 'auto', the format depends on the chart type (e.g. percentage is displayed for pie charts).", Value = "auto", Enums = new string[] { "auto", "val|value", "per|percentage", "vp|value and percentage" }, UseOnlyEnumValues = true });
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>() { "Model", "Model Container" };
+    Template.ParentNames = new List<string>() { "Model", "Container", "Widget", "Tab Page" };
 }
   

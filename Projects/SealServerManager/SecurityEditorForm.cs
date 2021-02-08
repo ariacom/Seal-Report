@@ -87,27 +87,6 @@ Web Report Designer Security
             Close();
         }
 
-        private void summaryToolStripButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                string result = _security.GetSecuritySummary();
-                ExecutionForm frm = new ExecutionForm(null);
-                frm.Text = "Security summary";
-                frm.cancelToolStripButton.Visible = false;
-                frm.pauseToolStripButton.Visible = false;
-                frm.logTextBox.Text = result;
-                frm.logTextBox.SelectionStart = 0;
-                frm.logTextBox.SelectionLength = 0;
-                frm.ShowDialog();
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
         void mainPropertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             if (e.ChangedItem.PropertyDescriptor.Name == "ProviderName" && _security.UseCustomScript && !string.IsNullOrEmpty(_security.Script))

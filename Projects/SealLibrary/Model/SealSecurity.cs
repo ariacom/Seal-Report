@@ -230,66 +230,6 @@ namespace Seal.Model
             return result;
         }
 
-
-        string getSecuritySummary(SecurityGroup group, string folder)
-        {
-            StringBuilder result = new StringBuilder();
-            List<SecurityGroup> groups = new List<SecurityGroup>();
-            groups.Add(group);
-            string folder2 = folder.Substring(Repository.ReportsFolder.Length);
-            SecurityFolder securityFolder = FindSecurityFolder(groups, folder2);
-            if (securityFolder != null)
-            {
-                result.AppendLine(string.Format("    Folder:'{0}' => Right:{1}; Use Sub-folders:{2}; Manage Sub-folders:{3}; Files Only:{4}\r\n", folder2, Helper.GetEnumDescription(securityFolder.FolderRight.GetType(), securityFolder.FolderRight), securityFolder.UseSubFolders ? "Yes" : "No", securityFolder.UseSubFolders && securityFolder.ManageFolder ? "Yes" : "No", securityFolder.FilesOnly ? "Yes" : "No"));
-            }
-
-            foreach (string subFolder in Directory.GetDirectories(folder))
-            {
-                result.Append(getSecuritySummary(group, subFolder));
-            }
-            return result.ToString();
-        }
-
-        /// <summary>
-        /// Security summary
-        /// </summary>
-        public string GetSecuritySummary()
-        {
-            StringBuilder result = new StringBuilder();
-
-            initSecurity();
-            foreach (var group in Groups)
-            {
-                result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
-                result.AppendFormat("    Personal Folder: {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
-                result.AppendLine();
-                result.AppendFormat("    Show all folders: {0}\r\n", group.ShowAllFolders ? "yes" : "no");
-                result.AppendLine();
-                result.AppendFormat("    SQL Models: {0}\r\n", group.SqlModel ? "yes" : "no");
-                result.AppendLine();
-                foreach (var item in group.Devices)
-                {
-                    result.AppendFormat("    Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
-                }
-                foreach (var item in group.Sources)
-                {
-                    result.AppendFormat("    Source:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
-                }
-                foreach (var item in group.Connections)
-                {
-                    result.AppendFormat("    Connection:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
-                }
-                foreach (var item in group.Columns)
-                {
-                    result.AppendFormat("    Column:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
-                }
-                result.AppendLine();
-
-                result.AppendLine(getSecuritySummary(group, Repository.ReportsFolder + Path.DirectorySeparatorChar.ToString()));
-            }
-            return result.ToString();
-        }
-
         void initSecurity()
         {
             //init at least a security group

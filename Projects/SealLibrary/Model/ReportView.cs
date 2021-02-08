@@ -194,7 +194,7 @@ namespace Seal.Model
         {
             if (TemplateName == ReportViewTemplate.ModelName && Views.Count == 0)
             {
-                var containerView = Report.AddChildView(this, ReportViewTemplate.ModelContainerName);
+                var containerView = Report.AddChildView(this, ReportViewTemplate.ContainerName);
                 Report.AddChildView(containerView, ReportViewTemplate.PageTableName);
                 Report.AddChildView(containerView, ReportViewTemplate.ChartJSName);
                 Report.AddChildView(containerView, ReportViewTemplate.ChartNVD3Name);
@@ -391,24 +391,52 @@ namespace Seal.Model
         /// <summary>
         /// True if the view is the root view (no parent)
         /// </summary>
+        [XmlIgnore]
         public bool IsRootView
         {
             get { return Template.ParentNames.Count == 0; }
         }
 
         /// <summary>
-        /// True if the view is an ancestor of a givenen view
+        /// True if the view is an ancestor of a given view
         /// </summary>
         public bool IsAncestorOf(ReportView view)
         {
-            bool result = false;
-            foreach (ReportView child in Views)
+            ReportView parent = view;
+            while (parent.ParentView != null)
             {
-                if (child == view) return true;
-                result = child.IsAncestorOf(view);
-                if (result) break;
+                parent = parent.ParentView;
+                if (view == this) return true;
             }
-            return result;
+            return false;
+        }
+
+        /// <summary>
+        /// Retruns the view templates that can be child of the view
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportViewTemplate> ReportViewTemplateChildren
+        {
+            get
+            {
+                var result = new List<ReportViewTemplate>();
+                foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(TemplateName)))
+                {
+                    if (template.ForReportModel)
+                    {
+                        //the view has already a model
+                        if (ModelView != null) continue;
+                    }
+                    if (template.IsModelViewChild)
+                    {
+                        //the view has no model so far
+                        if (ModelView == null) continue;
+                    }
+
+                    result.Add(template);
+                }
+                return result;
+            }
         }
 
         /// <summary>
@@ -437,22 +465,6 @@ namespace Seal.Model
             }
         }
 
-
-        /// <summary>
-        /// Current root view
-        /// </summary>
-        public ReportView RootView
-        {
-            get
-            {
-                ReportView result = this;
-                foreach (var view in Report.Views)
-                {
-                    if (view.IsAncestorOf(this)) return view;
-                }
-                return this;
-            }
-        }
 
         /// <summary>
         /// The name
@@ -488,7 +500,8 @@ namespace Seal.Model
         {
             get
             {
-                if (_templateName.EndsWith(" HTML")) return _templateName.Replace(" HTML", ""); //backward compatibility
+                if (_templateName.EndsWith(" HTML")) return _templateName.Replace(" HTML", ""); //backward compatibility before 5.0
+                if (_templateName == "Model Container") return ("Container"); //backward compatibility before 6.1
                 return _templateName;
             }
             set { _templateName = value; }
@@ -618,7 +631,7 @@ namespace Seal.Model
             set { } //keep set for modification handler
         }
 
- 
+
         /// <summary>
         /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
         /// </summary>
@@ -657,6 +670,7 @@ namespace Seal.Model
         /// <summary>
         /// Current ReportViewTemplate
         /// </summary>
+        [XmlIgnore]
         public ReportViewTemplate Template
         {
             get
@@ -815,6 +829,7 @@ namespace Seal.Model
         /// <summary>
         /// Current CultureInfo
         /// </summary>
+        [XmlIgnore]
         public CultureInfo CultureInfo
         {
             get
@@ -967,6 +982,7 @@ namespace Seal.Model
         /// <summary>
         /// True if the PDF Converter was edited
         /// </summary>
+        [XmlIgnore]
         public bool PdfConverterEdited
         {
             get { return _pdfConverter != null; }
@@ -1007,6 +1023,7 @@ namespace Seal.Model
         /// <summary>
         /// True if the Excel converter was edited
         /// </summary>
+        [XmlIgnore]
         public bool ExcelConverterEdited
         {
             get { return _excelConverter != null; }
@@ -1621,6 +1638,7 @@ namespace Seal.Model
         /// <summary>
         /// Returns the first ancestor view having a model
         /// </summary>
+        [XmlIgnore]
         public ReportView ModelView
         {
             get
@@ -1632,6 +1650,20 @@ namespace Seal.Model
                     result = result.ParentView;
                 }
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Helper to get the root view of the view
+        /// </summary>
+        [XmlIgnore]
+        public ReportView RootView
+        {
+            get
+            {
+                ReportView result = this;
+                while (result.ParentView != null) result = result.ParentView;
+                return result;
             }
         }
 
@@ -1659,21 +1691,6 @@ namespace Seal.Model
             return _columnsHidden.Contains((col + 1).ToString());
         }
 
-        /// <summary>
-        /// Returns true if the view and its children have only Restrictions
-        /// </summary>
-        public static bool OnlyRestrictions(ReportView view)
-        {
-            if (view.TemplateName != ReportViewTemplate.RestrictionsName && view.TemplateName != ReportViewTemplate.ModelContainerName && view.TemplateName != ReportViewTemplate.Container) return false;
-            bool result = true;
-            foreach (var child in view.Views)
-            {
-                if (!OnlyRestrictions(child)) result = false;
-            }
-            return result;
-        }
-
-
 
         /// <summary>
         /// Path of the view in the menu
@@ -1684,7 +1701,8 @@ namespace Seal.Model
             get
             {
                 var result = MenuName;
-                if (string.IsNullOrEmpty(MenuName)) {
+                if (string.IsNullOrEmpty(MenuName))
+                {
                     result = Path.GetDirectoryName(Report.RelativeFilePath);
                     if (!result.EndsWith("\\")) result += "\\";
                     result += Path.GetFileNameWithoutExtension(Report.FilePath);
@@ -1703,7 +1721,7 @@ namespace Seal.Model
             get
             {
                 var names = MenuPath.Split('/');
-                return Report.TranslateDisplayName(names.Length == 0 ? RootView.Name :names[names.Length - 1]);
+                return Report.TranslateDisplayName(names.Length == 0 ? RootView.Name : names[names.Length - 1]);
             }
         }
     }

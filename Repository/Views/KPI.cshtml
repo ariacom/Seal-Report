@@ -41,7 +41,7 @@
     }
 }
 
-<div class="text-center" style="@Raw(view.GetValue("kpi_css"))">
+<div class="@Raw(view.GetValue("kpi_class"))" style="@Raw(view.GetValue("kpi_css"))">
     @{
         for (int col = 0; col < table.ColumnCount && table.RowCount > 1; col++)
         {

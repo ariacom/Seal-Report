@@ -420,7 +420,7 @@ namespace Seal.Forms
             {
                 if (parentView != _source)
                 {
-                    if (!addRadioButton.Checked || ((ReportView)_source).Template.ParentNames.Contains(parentView.Template.Name))
+                    if (!addRadioButton.Checked || parentView.ReportViewTemplateChildren.Exists(i => i.Name == ((ReportView)_source).TemplateName))
                     {
                         _destinationItems.Add(new PropertyItem() { Name = name, Object = parentView });
                     }

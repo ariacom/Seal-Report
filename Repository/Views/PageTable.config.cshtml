@@ -8,6 +8,7 @@
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
+    Template.IsModelViewChild = true;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "page_table_caption", DisplayName = "Caption", Description = "Optional caption or title displayed at the bottom of the page table." });
@@ -19,6 +20,6 @@
 
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>() { "Model", "Model Container" };
+    Template.ParentNames = new List<string>() { "Model", "Container", "Widget", "Tab Page" };
 }
   

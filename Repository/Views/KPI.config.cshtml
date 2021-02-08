@@ -8,9 +8,11 @@
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
+    Template.IsModelViewChild = true;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "kpi_css", DisplayName = "CSS style: Container", TextValue="width:250px;", Description = "CSS style attribute of the main DIV container.", Enums = new string[] { "width:100%;margin:10px;", "padding:10px;", "font-size: 10px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "kpi_class", DisplayName = "CSS class: Container", TextValue = "text-center", Description = "CSS class attribute of the main DIV container.", Enums = new string[] { "text-center;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "kpi_css", DisplayName = "CSS style: Container", TextValue="", Description = "CSS style attribute of the main DIV container.", Enums = new string[] { "width:250px;", "width:100%;margin:10px;", "padding:10px;", "font-size: 10px;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "kpi_show_header", BoolValue = true, DisplayName = "Show header value", Description = "If true, the header value is shown." });
     Template.Parameters.Add(new Parameter() { Name = "kpi_show_value", BoolValue = true, DisplayName = "Show value", Description = "If true, the value is shown." });
     Template.Parameters.Add(new Parameter() { Name = "kpi_button_css", Value = "margin-top:5px;cursor:default;", DisplayName = "CSS style: KPI Button", Description = "CSS style attribute of the KPI button.", Enums = new string[] { "margin-top:5px;cursor:default;width:260px", "padding:10px;", "font-size:10px;" }, UseOnlyEnumValues = false });
@@ -27,6 +29,6 @@
     Template.Parameters.Add(new Parameter() { Name = "kpi_button_size", DisplayName = "Button size", Description = "Size of the buttons used to display the values.", Enums = new string[] { "|default", "btn-lg|large", "btn-sm|small", "btn-xs|very small" }, UseOnlyEnumValues = true });
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>() { "Model", "Model Container" };
+    Template.ParentNames = new List<string>() { "Model", "Container", "Widget", "Tab Page" };
 }
   

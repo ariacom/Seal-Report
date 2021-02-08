@@ -272,6 +272,9 @@
 
         if (@Helper.ToJS(!view.GetBoolValue("execute_button"))) $("#execute_button").css("display", "none");
 
+        //enables controls if not standalone
+        if (typeof _main !== 'undefined') _main.enableControls();
+
         $(document).ready(function () {
             processInitExecution();
             processReportViews();

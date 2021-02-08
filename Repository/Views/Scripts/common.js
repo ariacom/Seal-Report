@@ -156,7 +156,7 @@ function initRestrictions(parent) {
     });
 
     //trigger enum from select
-    $(parent + ".enum").unbind("hide.bs.select").on('hide.bs.select', function () {
+    $(parent + ".enum").unbind('changed.bs.select').on('changed.bs.select', function (e) {
         if ($(this).attr("id")) {
             if ($(this).hasClass("trigger_enum")) {
                 executeFromTrigger($(this));
@@ -260,11 +260,6 @@ function showPopupNavMenu(source, content, forChart) {
             .mouseleave(function () {
                 $popup.hide();
             });
-    }
-
-    //For web add option to navigate in another tab
-    if (_urlPrefix != "") {
-        content = content.replace(new RegExp('</a>', 'g'), '<span class="external-navigation glyphicon glyphicon-new-window"></span></a>');
     }
 
     $popup.html(content);

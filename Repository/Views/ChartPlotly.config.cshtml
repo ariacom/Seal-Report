@@ -8,6 +8,7 @@
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
+    Template.IsModelViewChild = true;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "plotly_width", DisplayName = "Chart width", Description = "The chart width. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "500px", "600px", "50%", "80%" }, UseOnlyEnumValues = false });
@@ -31,5 +32,5 @@
     Template.Parameters.Add(new Parameter() { Name = "plotly_margins", DisplayName = "Margins", Description = "Margins (in pixels) used for the chart.", Value = "auto", Enums = new string[] { "auto|Auto (default)", "{t:40, l:50, b:40, r:50, pad:2}" }, UseOnlyEnumValues = false });
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>() { "Model", "Model Container" };
+    Template.ParentNames = new List<string>() { "Model", "Container", "Widget", "Tab Page" };
 }

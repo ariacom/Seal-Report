@@ -995,7 +995,7 @@ namespace Seal
                 else if (entity is ReportView)
                 {
                     var view = (ReportView)entity;
-                    foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(view.TemplateName)))
+                    foreach (var template in  view.ReportViewTemplateChildren)
                     {
                         addAddItem("Add a " + template.Name + " View", template, template.Description);
                     }
@@ -1679,7 +1679,7 @@ namespace Seal
                 {
                     ReportView sourceView = sourceNode.Tag as ReportView;
                     ReportView targetView = targetNode.Tag as ReportView;
-                    if (sourceView.Template.ParentNames.Contains(targetView.Template.Name) && !sourceView.IsAncestorOf(targetView))
+                    if (targetView.ReportViewTemplateChildren.Exists(i => i.Name == sourceView.TemplateName) && !sourceView.IsAncestorOf(targetView))
                     {
                         //move the parent
                         ReportView parent = sourceNode.Parent.Tag as ReportView;
@@ -1767,7 +1767,7 @@ namespace Seal
                         //move position
                         e.Effect = DragDropEffects.Move;
                     }
-                    else if (sourceView.Template.ParentNames.Contains(targetView.Template.Name))
+                    else if (targetView.ReportViewTemplateChildren.Exists(i => i.Name == sourceView.TemplateName))
                     {
                         //move parent, check that the source if not a parent of the target
                         if (!sourceView.IsAncestorOf(targetView)) e.Effect = DragDropEffects.Move;

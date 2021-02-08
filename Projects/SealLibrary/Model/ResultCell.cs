@@ -189,7 +189,7 @@ namespace Seal.Model
         /// <summary>
         /// Deprecated: Kept for compatibility
         /// </summary>
-        public string ValueNoHTML //Kept for compatibility
+        public string ValueNoHTML //Kept for backward compatibility before 5.0
         {
             get
             {

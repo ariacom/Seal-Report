@@ -32,7 +32,6 @@
             this.mainToolStrip = new System.Windows.Forms.ToolStrip();
             this.okToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.cancelToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.summaryToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.mainPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -49,8 +48,7 @@
             // 
             this.mainToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.okToolStripButton,
-            this.cancelToolStripButton,
-            this.summaryToolStripButton});
+            this.cancelToolStripButton});
             this.mainToolStrip.Location = new System.Drawing.Point(0, 0);
             this.mainToolStrip.Name = "mainToolStrip";
             this.mainToolStrip.Size = new System.Drawing.Size(764, 25);
@@ -79,17 +77,6 @@
             this.cancelToolStripButton.Size = new System.Drawing.Size(47, 22);
             this.cancelToolStripButton.Text = "Cancel";
             this.cancelToolStripButton.Click += new System.EventHandler(this.cancelToolStripButton_Click);
-            // 
-            // summaryToolStripButton
-            // 
-            this.summaryToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.summaryToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("summaryToolStripButton.Image")));
-            this.summaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.summaryToolStripButton.Name = "summaryToolStripButton";
-            this.summaryToolStripButton.Size = new System.Drawing.Size(173, 22);
-            this.summaryToolStripButton.Text = "View security groups summary";
-            this.summaryToolStripButton.ToolTipText = "Display a summary per group and per folder";
-            this.summaryToolStripButton.Click += new System.EventHandler(this.summaryToolStripButton_Click);
             // 
             // mainPanel
             // 
@@ -185,6 +172,5 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.TextBox infoTextBox;
         private System.Windows.Forms.PropertyGrid mainPropertyGrid;
-        private System.Windows.Forms.ToolStripButton summaryToolStripButton;
     }
 }

@@ -9,9 +9,10 @@
     //If true, the view can be configured for a report modelbtotals
 
     Template.ForReportModel = false;
+    Template.IsModelViewChild = true;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "data_table_caption", DisplayName = "Caption", Description = "Optional caption or title displayed at the bottom of the data table." });
+            Template.Parameters.Add(new Parameter() { Name = "data_table_caption", DisplayName = "Caption", Description = "Optional caption or title displayed at the bottom of the data table." });
     Template.Parameters.Add(new Parameter() { Name = "data_table_caption_css", DisplayName = "Caption CSS Style", Value = "text-align:center;", Description = "CSS style attribute of the table caption.", Enums = new string[] { "caption-side:bottom; text-align:center;", "caption-side:top; text-align:right; font-weight:bold;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_enabled", DisplayName = "Data tables: Is enabled", BoolValue = true, Description = "If true, Data Tables feature is enabled to allow pagination, sorting and filtering in tables." });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_scrolly", Value = "", DisplayName = "Data tables: Vertical scrolling", Description = "If set, it constrains the table to the given height, and enable scrolling for any data which overflows the current viewport.", Enums = new string[] { "200px", "300px" }, UseOnlyEnumValues = false });
@@ -47,5 +48,5 @@
     Template.Parameters.Add(new Parameter() { Name = Parameter.ColumnsHiddenParameter, DisplayName = "Options: Columns to hide", Value = "", Description = "List of column numbers to hide in the table. List of indexes separated by semi-column (e.g. '1;2' to hide column 1 and 2).", Enums = new string[] { "2;4;6" }, UseOnlyEnumValues = false });
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>() { "Model", "Model Container" };
+    Template.ParentNames = new List<string>() { "Model", "Container", "Widget", "Tab Page" };
 }
