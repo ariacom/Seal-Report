@@ -1709,6 +1709,7 @@ namespace Seal.Model
             result.Name = Helper.GetUniqueName(template.Name, (from i in parent.Views select i.Name).ToList());
             result.Report = this;
             result.InitReferences();
+            result.ParentView = parent;
             result.SortOrder = parent.Views.Count > 0 ? parent.Views.Max(i => i.SortOrder) + 1 : 1;
             if (template.ForReportModel)
             {
@@ -2423,35 +2424,14 @@ namespace Seal.Model
                 return result;
             }
         }
-        /// <summary>
-        /// Helper to get the root view from a child view
-        /// </summary>
-        public ReportView GetRootView(ReportView child)
-        {
-            ReportView result = null;
-            foreach (var view in Views)
-            {
-                if (view.GUID == child.GUID || FindView(view.Views, child.GUID) == child)
-                {
-                    result = view;
-                    break;
-                }
-            }
-            return result;
-        }
+
 
         /// <summary>
         /// Helper to get the a view from its execution id
         /// </summary>
         public ReportView GetViewFromExecId(string viewId)
         {
-            ReportView result = null;
-            foreach (var view in Views)
-            {
-                result = view.GetView(viewId);
-                if (result != null) break;
-            }
-            return result;
+            return AllViews.FirstOrDefault(i => i.ViewId == viewId);
         }
 
         /// <summary>

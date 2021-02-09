@@ -1685,6 +1685,7 @@ namespace Seal
                         ReportView parent = sourceNode.Parent.Tag as ReportView;
                         parent.Views.Remove(sourceView);
                         targetView.Views.Add(sourceView);
+                        targetView.InitReferences();
                         SetModified();
                         init(sourceView);
                         e.Effect = DragDropEffects.Move;

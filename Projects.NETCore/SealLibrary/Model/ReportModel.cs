@@ -2692,6 +2692,7 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
 
+        const string ExternalLink = "<span class='external-navigation glyphicon glyphicon-new-window'></span>";
         /// <summary>
         /// HTML Navigation for the report result
         /// </summary>
@@ -2702,7 +2703,9 @@ model.ResultTable = query2.CopyToDataTable2();
             {
                 foreach (var link in cell.GetNavigationLinks(view))
                 {
-                    navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.FullHref, link.Text /* Helper.ToHtml(link.Text) TODO for chart labels */);
+                    var externalLink = "";
+                    if (!string.IsNullOrEmpty(Report.WebUrl) && (link.Type == NavigationType.Drill || link.Type == NavigationType.SubReport)) externalLink = ExternalLink;
+                    navigation += string.Format("<li nav='{0}'><a href='#'>{1}{2}</a></li>", link.FullHref, link.Text, externalLink);
                 }
                 navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", navigation));
             }
