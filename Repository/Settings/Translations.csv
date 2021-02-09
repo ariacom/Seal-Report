@@ -332,6 +332,7 @@ WebJS;Decimal;;Décimale
 WebJS;Default;;Défaut
 WebJS;Custom;;Spécifique
 WebJS;Chart: Bar stacked;;Graphe: Barres empilées
+WebJS;Default culture;;Culture par défaut
 WebJS;Default report connection;;Connexion du rapport
 WebJS;Default repository connection;;Connexion du repository
 WebJS;Default startup;;Démarrage par défaut

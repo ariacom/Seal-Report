@@ -389,6 +389,7 @@
             user.AddSecurityGroup("Group (Execute)");&#xD;
             user.AddSecurityGroup("Group (Edit)");&#xD;
         }&#xD;
+        result.RemoveAll(i =&gt; i.SecurityGroups.Count == 0);&#xD;
 &#xD;
         return result;&#xD;
     }&#xD;

@@ -56,11 +56,12 @@ namespace SealWebServer.Controllers
 
                 //Set repository defaults
                 var defaultGroup = WebUser.DefaultGroup;
-                if (!string.IsNullOrEmpty(defaultGroup.Culture)) Repository.SetCultureInfo(defaultGroup.Culture);
                 if (!string.IsNullOrEmpty(defaultGroup.LogoName)) Repository.Configuration.LogoName = defaultGroup.LogoName;
 
                 string culture = WebUser.Profile.Culture;
                 if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
+                else if (!string.IsNullOrEmpty(defaultGroup.Culture)) Repository.SetCultureInfo(defaultGroup.Culture);
+                else if (Repository.CultureInfo.EnglishName != Repository.Instance.CultureInfo.EnglishName) Repository.SetCultureInfo(Repository.Instance.CultureInfo.EnglishName);
 
                 string reportToExecute =  "", reportToExecuteName = "";
                 bool executeLast = false;
@@ -96,7 +97,7 @@ namespace SealWebServer.Controllers
                 {
                     name = WebUser.Name,
                     group = WebUser.SecurityGroupsDisplay,
-                    culture = Repository.CultureInfo.EnglishName,
+                    culture = culture,
                     folder = WebUser.Profile.LastFolder,
                     showfolders = WebUser.ShowFoldersView,
                     editprofile = defaultGroup.EditProfile,
@@ -697,12 +698,18 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 if (!WebUser.DefaultGroup.EditProfile) throw new Exception("Error: no right to change profile");
 
-                if (string.IsNullOrEmpty(culture)) throw new Exception("Error: culture must be supplied");
-                if (culture != Repository.CultureInfo.EnglishName)
+                if (string.IsNullOrEmpty(culture))
+                {
+                    WebUser.Profile.Culture = "";
+                    if (!string.IsNullOrEmpty(WebUser.DefaultGroup.Culture)) Repository.SetCultureInfo(WebUser.DefaultGroup.Culture);
+                    else Repository.SetCultureInfo(Repository.Instance.CultureInfo.EnglishName);
+                }
+                else
                 {
                     if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
                     WebUser.Profile.Culture = culture;
                 }
+
                 var onStartupVal = StartupOptions.Default;
                 if (Enum.TryParse(onStartup, out onStartupVal)) {
                     WebUser.Profile.OnStartup = onStartupVal;

@@ -242,6 +242,7 @@ class SWIMain {
             $select = $("#culture-select");
             if ($select.children("option").length == 0) {
                 _gateway.GetCultures(function (data) {
+                    $select.append(SWIUtil.GetOption("", SWIUtil.tr("Default culture"), _main._profile.culture));
                     for (var i = 0; i < data.length; i++) {
                         $select.append(SWIUtil.GetOption(data[i].id, data[i].val, _main._profile.culture));
                     }
