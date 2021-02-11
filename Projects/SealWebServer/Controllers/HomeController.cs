@@ -265,7 +265,7 @@ namespace SealWebServer.Controllers
                         var data = NavigationContext.NavigateScript(nav, execution.Report, parameters);
                         return Json(data);
                     }
-                    else if (nav.StartsWith(NavigationLink.ReportExecutionPrefix)) //Report Script
+                    else if (nav.StartsWith(NavigationLink.ReportExecutionPrefix)) //Report execution
                     {
                         Report report = execution.Report;
                         string path = report.Repository.ReportsFolder + nav.Substring(3);
