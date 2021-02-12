@@ -91,9 +91,9 @@ namespace Seal.Model
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }
 
         /// <summary>
-        /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.
+        /// Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user.
         /// </summary>
-        public int DefaultPriority { get; set; } = 1;
+        public int Weight { get; set; } = 1;
 
         /// <summary>
         /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.

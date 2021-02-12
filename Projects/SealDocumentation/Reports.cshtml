@@ -472,6 +472,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>Model</b>: Main view to display a model. Its children are dedicated to view each part of the model result: Page tables, Data tables, Charts, KPI.</li>
                                 <li><b>Model Detail</b>: Show a model as a detailed record. This view works for a model result having a single record.</li>
                                 <li><b>Container</b>: A grid container (refer to Bootstrap 3 grid at <a href="https://getbootstrap.com/docs/3.4/css/#grid" target="_blank">https://getbootstrap.com/docs/3.4/css/#grid</a>). </li>
+                                <li><b>Widget</b>: A container to display a panel with a title, icon and color. A optional report can be executed from the title.</li>
                                 <li><b>Tab Control</b>: A Tab Control container. Only Tab Page children can be defined from this view.</li>
                                 <li><b>Tab Page</b>: Container for a given page of the parent Tab Control. The name of the view is used for the Tab.</li>
                                 <li><b>Free</b>: Empty view that can be used freely to add HTML or text during the rendering.</li>
@@ -487,7 +488,6 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>NVD3 Chart</b>: Render the NVD3 series of the page result</li>
                                 <li><b>Plotly Chart</b>: Render the Plotly series of the page result</li>
                                 <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optional columns to define the goal if the column name has the _GOAL suffix).</li>
-                                <li><b>Model Container</b>: A grid container for the page result (refer to Bootstrap 3 grid at <a href="https://getbootstrap.com/docs/3.4/css/#grid" target="_blank">https://getbootstrap.com/docs/3.4/css/#grid</a>). </li>
                             </ul>
 
                             <div class="bs-callout bs-callout-info">
@@ -541,164 +541,16 @@ model.ResultTable = query2.CopyToDataTable2();
                                 If one of the restrictions of the view has the <code>Trigger execution</code> flag set to <b>False</b>, a <b>Refresh</b> button is also displayed to allow the execution.
                             </p>
                             <p>
-                                If the properties <code>Target Window for Report</code> (for a Report context) or <code>Target Window for Report</code> (for a Dashboard Widget context) are set, the execution occurs in a new window using the optional view defined in <code>New Window: View to execute</code>.
+                                If the property <code>Target window</code> is set, the execution occurs in a new window using the optional view defined in <code>Target window: View to execute</code>.
                             </p>
                         </div>
-                    </div>
-                    <div class="bs-callout bs-callout-info">
-                        <h4>Restriction Views in Dashboards</h4>
-                        Like a normal <b>Report View</b>, a <strong>Restriction View</strong> can be defined in a <b>Dashboard Widget</b>.<br />
-                        All other <b>Widgets</b> part of the <b>Dashboard</b> having a model impacted by the restrictions will also be updated and refreshed.
                     </div>
                     <div class="bs-callout bs-callout-demo">
                         <h4>Samples</h4>
-                        <a class="btn btn-primary live-sample">Live Sample: 31-Restrictions Views - Report</a><br />
+                        <a class="btn btn-primary live-sample">Live Sample: 31-Restrictions Views</a><br />
                         This report shows different ways to use <strong>Restriction Views</strong> in a report result.<br /><br />
-                        <a class="btn btn-primary live-sample">Live Sample: 32-Restrictions Views - Widgets</a><br />
-                        This report defines several <b>Dashboard Widgets</b> having <strong>Restriction Views</strong>. These <b>Widgets</b> are part of the <b>Restrictions</b> Dashboard.
                     </div>
                     <!-- end col -->
-                    <!-- end row -->
-                    <div id="lineViews_widget" class="row" style="padding-top:35px">
-                        <div class="col-md-12">
-                            <h4>Widget Publication for Dashboards</h4>
-                            <p>
-                                To be able to display a view in a <b>Dashboard</b>, it has to be published as a <b>Widget</b>.<br />
-                                Just expand the <code>Widget Definition</code> property and set a  <code>Name</code>, the view is then published and will be available to be published manually or through the <b>Dashboard Manager</b>.<br />
-                                Several properties allow to configure the <b>Widget</b> default look and behavior  (<eg>e.g. Default height and width, auto-refresh rate, etc.</eg>).
-                            </p>
-                            <div class="bs-callout bs-callout-warning">
-                                <h4>Create or edit your dashboards manually</h4>
-                                <ul>
-                                    <li>
-                                        <b>Dashboard folders security</b><br />
-                                        Using the Server Manager, use the Menu <srmenu>Configure Web Security (CTRL+W)</srmenu>, then
-                                        click on Security Groups and edit the Default Group, check that at least a Dashboard Folder is defined in the Dashboard Security.
-                                    </li>
-                                    <li>
-                                        <b>Create the Dashboard file</b><br />
-                                        Using a text editor, create a dashboard definition file (*.sdax) into one sub-folder of the <i>\Dashboards</i> Repository sub-folder with the following content:
-                                        <pre class="brush: xml; highlight: [3,4]">
-                                    &lt;?xml version="1.0" encoding="utf-8" ?>
-                                    &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-                                    &lt;GUID>yourDashboardGUID&lt;/GUID>
-                                    &lt;Name>Your Dashboard Name&lt;/Name>
-                                    &lt;Items>
-                                    &lt;/Items>
-                                    &lt;/Dashboard>                                    
-                                </pre>
-                                        Replace the <i>yourDashboardGUID</i> value by any unique identifier.
-                                    </li>
-                                    <li>
-                                        <b>Get Widget GUID</b><br />
-                                        Using the <b>Report Designer</b>, open the report and browse to a Widget Definition (<srmenu>Tools->Go to next widget in the report</srmenu> menu or <srmenu>CTRL+W</srmenu>), then copy and paste the <code>Dashboard XML</code> text into the <b>&lt;Items&gt;</b> XML tag.
-                                        <pre class="brush: xml; highlight: [6,7,8]">
-                                    &lt;?xml version="1.0" encoding="utf-8" ?>
-                                    &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-                                    &lt;GUID>yourDashboardGUID&lt;/GUID>
-                                    &lt;Name>Your Dashboard Name&lt;/Name>
-                                    &lt;Items>
-                                        &lt;DashboardItem>
-                                            &lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
-                                        &lt;/DashboardItem>
-                                    &lt;/Items>
-                                    &lt;/Dashboard>                                    
-                                </pre>
-                                    </li>
-                                    <li>
-                                        <b>Add the item GUID</b><br />
-                                        Add a unique &lt;GUID> value to the &lt;DashboardItem> element.
-                                        <pre class="brush: xml; highlight: [7]">
-                                    &lt;?xml version="1.0" encoding="utf-8" ?>
-                                    &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-                                    &lt;GUID>yourDashboardGUID&lt;/GUID>
-                                    &lt;Name>Your Dashboard Name&lt;/Name>
-                                    &lt;Items>
-                                        &lt;DashboardItem>
-                                            &lt;GUID>yourItemGUID&lt;/GUID>
-                                            &lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
-                                        &lt;/DashboardItem>
-                                    &lt;/Items>
-                                    &lt;/Dashboard>                                    
-                                </pre>
-                                    </li>
-                                    <li>
-                                        <b>View the Dashboard</b><br />
-                                        From the <b>Web Report Server</b>, logout and login to refresh the dashboard list, then go to the dashboard view and add the new Dashboard to your current view using the <b>Manage Dashboard</b> button.
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="bs-callout bs-callout-demo">
-                                The <b>&lt;DashboardItem></b> may have also other child nodes to define its properties in the <b>Dashboard</b>:<br />
-                                <ul>
-                                    <li><strong>Order</strong> to sort the items</li>
-                                    <li><strong>GroupName</strong> to group the items by a name (underscore may be used to force a line feed)</li>
-                                    <li><strong>GroupOrder</strong> to sort the groups</li>
-                                    <li><strong>Name</strong> to override the default <b>Widget</b> name</li>
-                                    <li><strong>Icon</strong> to override the default <b>Widget</b> icon</li>
-                                    <li><strong>Width</strong> to override the default <b>Widget</b> width</li>
-                                    <li><strong>Height</strong> to override the default <b>Widget</b> height</li>
-                                </ul>
-                                Here is the dashboard definition file having 5 Widget Items (got from the KPI sample):
-                                <pre class="brush: xml;">
-&lt;?xml version="1.0" encoding="utf-8"?>
-&lt;Dashboard xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	&lt;GUID>d37838ba-4859-4f43-8df5-7bd276076fbc&lt;/GUID>
-	&lt;Name>KPI&lt;/Name>
-	&lt;Items>
-		&lt;DashboardItem>
-			&lt;GUID>e1812486-2383-4557-afcd-4fd94a9c11fa&lt;/GUID>
-			&lt;WidgetGUID>dfae6589-c56f-416e-8275-7b1dff80dafa&lt;/WidgetGUID>
-			&lt;GroupName>_separator&lt;/GroupName>
-			&lt;GroupOrder>2&lt;/GroupOrder>
-			&lt;Order>2&lt;/Order>
-		&lt;/DashboardItem>
-		&lt;DashboardItem>
-			&lt;GUID>04a1e553-a77b-43bc-86cf-b89c9650e8d3&lt;/GUID>
-			&lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
-			&lt;GroupName>_separator&lt;/GroupName>
-			&lt;GroupOrder>2&lt;/GroupOrder>
-			&lt;Order>1&lt;/Order>
-		&lt;/DashboardItem>
-		&lt;DashboardItem>
-			&lt;GUID>379346a5-3fbe-482d-8dfe-89e5393e1741&lt;/GUID>
-			&lt;WidgetGUID>1fda90cc-0e69-4b76-a385-b004e06c47a7&lt;/WidgetGUID>
-			&lt;GroupName>_separator&lt;/GroupName>
-			&lt;GroupOrder>2&lt;/GroupOrder>
-			&lt;Order>5&lt;/Order>
-		&lt;/DashboardItem>
-			&lt;DashboardItem>
-			&lt;GUID>4a858c46-c0b6-4969-b80a-048ad3b7afac&lt;/GUID>
-			&lt;WidgetGUID>70bce7d1-ad0c-4251-b941-7f9301fad084&lt;/WidgetGUID>
-			&lt;GroupName />
-			&lt;GroupOrder>1&lt;/GroupOrder>
-			&lt;Order>4&lt;/Order>
-			&lt;Name>KPI Sales / category&lt;/Name>
-		&lt;/DashboardItem>
-			&lt;DashboardItem>
-			&lt;GUID>5ea81662-c1a1-43a5-873e-15c7faef7f0a&lt;/GUID>
-			&lt;WidgetGUID>231d3919-edb3-4288-8e59-426836a3c860&lt;/WidgetGUID>
-			&lt;GroupName />
-			&lt;GroupOrder>1&lt;/GroupOrder>
-			&lt;Order>3&lt;/Order>
-		&lt;/DashboardItem>
-	&lt;/Items>
-&lt;/Dashboard>
-                                </pre>
-                            </div>
-                            <div class="bs-callout bs-callout-warning">
-                                <h4>Widgets Navigation</h4>
-                                From the <b>Report Designer</b>, use the <srmenu>Tools->Go to next widget in the report</srmenu> menu or <srmenu>CTRL+W</srmenu> to navigate between the different Widgets published contained in the report.
-                            </div>
-                            <div class="bs-callout bs-callout-demo">
-                                <h4>Dedicated System Report for listing Dashboards and Widgets</h4>
-                                <ul>
-                                    <li>330 Reports - Dashboards and Widgets</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- end col -->
-                    </div>
                     <!-- end row -->
                 </section>
                 <!-- end section -->
@@ -832,7 +684,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 A task references one <strong>Data Source</strong> and on <strong>Connection</strong>.<br />
                                 A report can have several tasks executed sequentially from the top to the bottom.<br />
                                 A task can be executed at different <strong>step</strong> of the report generation (<eg>e.g. A task can be executed after the model generation and before the rendering to modify the result tables</eg>)<br />
-                                If a task is a Razor Script, it can stop the report execution by setting the <code>CancelReport</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g if a given condition fails, the report is cancelled</eg>).<br />
+                                If a task is a Razor Script, it can stop the report execution by setting the <code>CancelReport</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g. if a given condition fails, the report is cancelled</eg>).<br />
                                 Using the <code>Execute for each connection</code> property, a task can be executed for all connections defined in the <strong>Data Source</strong>.<br /><br />
 
                                 As Tasks executes a Razor Script, they can reference, instantiate and use objects from any .Net/.NET Core Assemblies located in the <b>\Assemblies</b> Repository sub-folder.<br />

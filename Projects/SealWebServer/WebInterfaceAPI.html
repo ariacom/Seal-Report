@@ -45,7 +45,7 @@
     <div class="container">
 
         <div class="col-lg-12">
-            <h2>Seal Web Interface Version 6.0</h2>
+            <h2>Seal Web Interface Version 6.1</h2>
         </div>
         <div class="col-lg-12">
             <h2>SWIGetVersions</h2>
@@ -86,7 +86,7 @@ $.post("https://sealreport.org/demo/SWIGetVersions")
                             <pre>
 $.post("https://sealreport.org/demo/SWILogin", {
     user: "the user name", // The user name
-    password: "the password" // The password
+    password: "the password", // The password
     token: "an authentication token" // Optional token that can be used in the Security Provider Script
 })
 .done(function (data) {
@@ -102,10 +102,14 @@ $.post("https://sealreport.org/demo/SWILogin", {
                             group (string) :  the user's group names<br />
                             culture (string) : the user's culture name<br />
                             folder (string) : the last folder viewed by the user<br />
-                            lastdashboard (string) : the last dashboard GUID viewed by the user<br />
-                            lastview (string): last user's view (reports or dashboards)<br />
-                            dashboardfolders ([string]): array of string of the dashboard folders with the edit right<br />
+                            showfolders (boolean) : true if the user can view the folders<br />
+                            editprofile (boolean) : true if the user can edit his profile<br />
                             usertag (string) : custom tag string (e.g. may be used to show a photo of the user)<br />
+                            onstartup : action taken after the login (0=Default, 1=Do not execute report, 2=Execute the last report, 3=Execute a specific report)<br />
+                            startupreport : if onstartup=3, specific report to execute<br />
+                            startupreportname : if onstartup=3, specific report name<br />
+                            report : if set, the report to execute after the login<br />
+                            reportname : if set, the report name to execute after the login<br />
                             error (string) : if any error, the error description
                         </td>
                     </tr>
@@ -162,9 +166,9 @@ $.post("https://sealreport.org/demo/SWIGetRootFolders", {
                             path (string) : the folder path<br />
                             name (string) : the translated folder name<br />
                             fullname (string): the full path translated of the folder<br />
-                            right (integer): folder right (0 = No right, 1 = Execute reports / View files, 2 = Execute reports and outputs / View files, 3 = Edit schedules / View files, 4 = Edit reports / Manage files)<br />
-                            expand (boolean): true is the folder must be expanded in the tree view<br />
-                            manage (integer): manage flag for the folder. (0 = do not manage sub-folders, 1 = manage sub-folders only as they are defined by the security (no rename or delete allowed), 2 = manage all: create, delete and rename sub-folders<br />
+                            right (integer): folder right (0=No right, 1=Execute reports / View files, 2=Execute reports and outputs / View files, 3=Edit schedules / View files, 4=Edit reports / Manage files)<br />
+                            expand (boolean): true if the folder must be expanded in the tree view<br />
+                            manage (integer): manage flag for the folder (0=Do not manage sub-folders, 1=Manage sub-folders only as they are defined by the security (no rename or delete allowed), 2=Manage all: create, delete and rename sub-folders<br />
                             folders ([folder]): array of children folders<br />
                             error (string): if any error, the error description
                         </td>
@@ -206,7 +210,7 @@ $.post("https://sealreport.org/demo/SWIGetFolderDetail", {
                             name (string): the translated file name<br />
                             last (string): the last modification date and time<br />
                             isreport (boolean): true if the file is a report<br />
-                            right (int): right applied to the folder (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
+                            right (int): right applied to the folder (0=Execute reports, 1=Execute reports, 2=Schedule reports, 3=Edit reports)<br />
                         </td>
                     </tr>
                 </tbody>
@@ -223,7 +227,7 @@ $.post("https://sealreport.org/demo/SWIGetFolderDetail", {
                         <td>
 <pre>
 $.post("https://sealreport.org/demo/SWISearch", {
-    path: "\\" // The path of the folder to start the search
+    path: "\\", // The path of the folder to start the search
     pattern: "re" // Pattern contained in the file name of the files returned
 })
 .done(function (data) {
@@ -246,7 +250,7 @@ $.post("https://sealreport.org/demo/SWISearch", {
                             name (string): the translated file name<br />
                             last (string): the last modification date and time<br />
                             isreport (boolean): true if the file is a report<br />
-                            right (int): right applied to the folder (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
+                            right (int): right applied to the folder (0=Execute reports, 1=Execute reports, 2=Schedule reports, 3=Edit reports)<br />
                         </td>
                     </tr>
                 </tbody>
@@ -263,7 +267,7 @@ $.post("https://sealreport.org/demo/SWISearch", {
                         <td>
 <pre>
 $.post("https://sealreport.org/demo/SWIGetReportDetail", {
-    path: "\\", // The path of the report
+    path: "\\" // The path of the report
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -416,7 +420,7 @@ $.post("https://sealreport.org/demo/SWIGetUserProfile")
                     <tr>
                         <th>Returns</th>
                         <td>
-                            authenticated (bool): true if the user is authenticated, if false the other properties are not set.
+                            authenticated (bool): true if the user is authenticated, if false the other properties are not set<br />
                             name (string): the user name<br />
                             group (string):  the user's group names<br />
                             culture (string): the user's culture name<br />
@@ -431,14 +435,16 @@ $.post("https://sealreport.org/demo/SWIGetUserProfile")
             <h2>SWISetUserProfile</h2>
             <table class="table table-striped">
                 <tbody>
-                    <tr><th>Description</th><td>Set the culture and the default view (reports or dashboards) for the logged user.</td></tr>
+                    <tr><th>Description</th><td>Set the culture and the startup report for the logged user.</td></tr>
                     <tr>
                         <th>Call</th>
                         <td>
                             <pre>
 $.post("https://sealreport.org/demo/SWISetUserProfile", {
-            culture: "it-IT" // the new user's culture name or code
-            defaultView: "dashboards" // reports or dashboards
+            culture: "it-IT", // the new user's culture name or code
+            onStartup: 3, //action taken after the login (0=Default, 1=Do not execute report, 2=Execute the last report, 3=Execute a specific report)
+            startupReport: "/Overview - Sales.srex", // if onStartup=3, the report to execute
+            startupReportName: "Overview - Sales" // if onStartup=3, the report name to execute
 })
 .done(function (data) {
         if (!data.error) { /* Do your job here */ }
@@ -495,7 +501,7 @@ $.post("https://sealreport.org/demo/SWITranslate", {
                         <td>
 <pre>
 $.post("https://sealreport.org/demo/SWIDeleteFiles", {
-    paths: "\\report1.srex\n\\report2.srex", // The paths of the files to delete separated by \n
+    paths: "\\report1.srex\n\\report2.srex" // The paths of the files to delete separated by \n
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -553,7 +559,7 @@ $.post("https://sealreport.org/demo/SWIMoveFile", {
                         <td>
 <pre>
 $.post("https://sealreport.org/demo/SWIViewFile", {
-    path: "\\report.htm", // The path of the file to view
+    path: "\\report.htm" // The path of the file to view
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -582,7 +588,7 @@ $.post("https://sealreport.org/demo/SWIViewFile", {
                         <td>
 <pre>
 $.post("https://sealreport.org/demo/SWICreateFolder", {
-    path: "\\Samples\\SubFolder", // The path of the folder to create
+    path: "\\Samples\\SubFolder" // The path of the folder to create
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -610,7 +616,7 @@ $.post("https://sealreport.org/demo/SWICreateFolder", {
                         <td>
 <pre>
 $.post("https://sealreport.org/demo/SWIDeleteFolder", {
-    path: "\\Samples\\SubFolder", // The path of the folder to delete
+    path: "\\Samples\\SubFolder" // The path of the folder to delete
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -639,7 +645,7 @@ $.post("https://sealreport.org/demo/SWIDeleteFolder", {
 <pre>
 $.post("https://sealreport.org/demo/SWIDeleteFolder", {
     source: "\\Samples\\SubFolder", // The path of the folder to rename
-    destination: "\\Samples\\NewSubFolder", // The path of the folder to rename
+    destination: "\\Samples\\NewSubFolder" // The path of the folder to rename
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -775,8 +781,6 @@ $.post("https://sealreport.org/demo/SWISaveReportDefinition", {
                 </tbody>
             </table>
         </div>
-
-
     </div>
 </body>
 </html>

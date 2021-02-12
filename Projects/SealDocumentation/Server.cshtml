@@ -13,7 +13,6 @@
                     <ul class="nav">
                         <li><a href="#lineConfiguration">Server Configuration</a></li>
                         <li><a href="#lineTools">Server Tools</a></li>
-                        <li><a href="#lineDashboard">Dashboards</a></li>
                         <li>
                             <a href="#lineSecurity">Web Security</a>
                             <ul class="nav">
@@ -39,7 +38,7 @@
                                 <div class="col-md-12 full">
                                     <div>
                                         <p>
-                                            Seal Report includes a <b>Web Report Server</b> to publish and edit your reports and dashboards on the Web.<br /><br />
+                                            Seal Report includes a <b>Web Report Server</b> to publish and edit your reports on the Web.<br /><br />
                                             On <strong>Windows OS</strong>, the server must have Internet Information Server (IIS) installed with the option <b>Application Development/ASP.Net 4.5</b> or greater.<br /><br />
                                             On <strong>Linux OS</strong>, the server must have ASP .NET Core installed (Refer to <a href="https://docs.microsoft.com/en-us/dotnet/core/install/" target="_blank">https://docs.microsoft.com/en-us/dotnet/core/install/</a>).
                                         </p>
@@ -159,9 +158,6 @@
                                 <li>
                                     <b>Synchronize Report Schedules with the logged user</b> performs the same but the schedule is defined with the user running the <b>Server Manager</b>.
                                 </li>
-                                <li>
-                                    <b>List Widgets published in the repository</b> browses all the reports in the repository and shows all the Widget published with their location.
-                                </li>
                             </ul>
                             <div class="bs-callout bs-callout-info">
                                 <h4>System Reports</h4>
@@ -174,56 +170,6 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                </section>
-                <!-- end section -->
-                <section id="lineDashboard" class="section">
-                    <div class="row">
-                        <div class="col-md-12 left-align">
-                            <h2 class="dark-text">Dashboards <hr></h2>
-                        </div>
-                        <!-- end col -->
-                    </div>
-                    <!-- end row -->
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p>
-                                The <b>Web Report Server</b> allows the publication and the management of <strong>Dashboards</strong>.<br />
-
-                                A <strong>Dashboard</strong> contains several <strong>Widget Items</strong> that references a published <strong>Widget</strong>.<br />
-                                A <strong>Widget Item</strong> has its own configuration to override the <strong>Widget</strong> properties (<eg>e.g. to change the size, the color, the icons, etc.</eg>).<br /><br />
-                                A <strong>Widget</strong> is a report view published for <strong>Dashboard</strong>.<br />
-                                <ck>Check <a href="~/Reports.cshtml#lineViews_widget">Widget Publication for Dashboards</a> for more information on Widget</ck>.<br /><br />
-
-                                <strong>Dashboards</strong> are defined in files (*.sdax) located in the <i>/Dashboards</i> Repository sub-folder.<br />
-                                Using the <b>Dashboard Manager</b>, a user can also create and manage <strong>Personal Dashboards</strong>, in this case the <strong>Dashboards</strong> files are located in his personal folder under the <i>/SpecialFolders/Personal</i> Repository sub-folder.<br />
-                            </p>
-                        </div>
-                        <!-- end col -->
-                    </div>
-                    <!-- end row -->
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <div class="caption">
-                                <b>Dashboard Objects</b>
-                            </div>
-                            <img src="images/CD-Dashboard.png" alt="" class="img-thumbnail img-rounded">
-                            <div>
-                                <ck>Check also <a href="~/Help/Index.html" target="_blank">Seal Report Library (Seal.Model namespace)</a> for more information</ck>.
-                            </div>
-                        </div>
-                        <!-- end col -->
-                    </div>
-                    <p>
-                        If a user has the right to view Dashboards, he can display either his <b>default dashboards View</b> or his <b>personal dashboards View</b>.<br />
-                        The <b>default dashboards View</b> shows the default dashboards defined and sorted in the user's security groups.<br />
-                        Having a <b>personal dashboards View</b> allows the user to add/remove published dashboards (<eg>The user is interested in only 2 dashboards amongst 5 published and he wants to sort them</eg>).
-                    </p>
-                    <div class="bs-callout bs-callout-danger">
-                        <h4>Web Report Designer and Dashboard Manager</h4>
-                        The <b>Dashboard Manager</b> is a commercial component available at <a href="https://ariacom.com/SealWeblicense" target="_blank">https://ariacom.com</a> and is not part of the Open Source version.<br />
-                        If you are interested in using the designer to create your dashboards from the Web Report Server, please contact <a href="https://ariacom.com/Contact" target="_blank">Ariacom</a> to request a demonstration login.
-                    </div>
                 </section>
                 <!-- end section -->
                 <section id="lineSecurity" class="section">
@@ -325,15 +271,11 @@
 
                                 A <strong>Security Group</strong> allows to configure:<br />
                                 - which repository folders are published for the user,<br />
-                                - if the user can view reports and/or dashboards,<br />
+                                - if the user can view reports,<br />
                                 - if the user has personal folders,<br />
                                 - which columns, data sources, connections or devices can be selected with the <b>Web Report Designer</b>,<br />
-                                - which dashboards folders are published,<br />
-                                - if the user has a personal dashboards view,<br />
-                                - if the user has a personal folder for dashboards,<br />
-                                - which widgets can be selected from the <b>Dashboard Manager</b>.<br /><br />
 
-                                A <strong>Security Group</strong> has a collection of repository <code>Folders</code>, each folder has a given relative path and right (from <b>No Right</b> to <b>Edit Reports</b>) and a collection of <code>Dashboard Folders</code>, with a given name and right (from <b>No Right</b> to <b>Edit Dashboards</b>).
+                                A <strong>Security Group</strong> has a collection of repository <code>Folders</code>, each folder has a given relative path and right (from <b>No Right</b> to <b>Edit Reports</b>).
                             </p>
                             <div class="bs-callout bs-callout-info">
                                 If a user belongs to several groups, the following rules are applied:<br /><br />
@@ -349,10 +291,7 @@
                                         <b>Show all folders</b>: True if one group has this flag set to true.
                                     </li>
                                     <li>
-                                        <b>View type</b>: The union of the views (Reports, Dashboards).
-                                    </li>
-                                    <li>
-                                        <b>Folders and Folder Detail Scripts</b> are executed sequentially sorted by group name.
+                                        <b>Folders, Folder Detail and Menu Scripts</b> are executed sequentially sorted by group name.
                                     </li>
                                 </ul>
 
@@ -366,34 +305,15 @@
                                     </li>
                                 </ul>
 
-                                For the <b>Dashboards</b> publication<br />
+                                For <b>Default values</b><br />
                                 <ul>
                                     <li>
-                                        <b>Dashboards Folders</b>: The union of the Dashboards folders published with their highest right.
-                                    </li>
-                                    <li>
-                                        <b>Dashboards Scripts</b> are executed sequentially sorted by group name.
-                                    </li>
-                                    <li>
-                                        <b>Personal Dashboard View</b>: Is true if one group has this flag set to true.
-                                    </li>
-                                    <li>
-                                        <b>Dashboards in Default View</b>: The union of the Dashboards listed for each group.
-                                    </li>
-                                    <li>
-                                        <b>Personal Dashboard Folder</b>: Is true if one group has a personal Dashboard Folder.
-                                    </li>
-                                </ul>
-
-                                For the <b>Dashboard Manager</b> security<br />
-                                <ul>
-                                    <li>
-                                        <b>Widgets</b>: Cannot be selected if it is specified in one group.<br />
+                                        The options (Edit Profile, Culture, Logo, Startup) are taken from the group having the highest weight.
                                     </li>
                                 </ul>
                             </div>
                             <p>
-                                A <b>Meta Column</b> or a <b>Widget</b> may have a <code>Security Tag</code> property. This text can be used to define rights for the designers.
+                                A <b>Meta Column</b> may have a <code>Security Tag</code> property. This text can be used to define rights for the designers.
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>List the current right definitions</h4>
@@ -421,7 +341,7 @@
                         <div class="col-md-12">
                             <h4>Custom Publications</h4>
                             <p>
-                                In addition to the security applied on report and dashboard folders, dedicated scripts (properties of a <b>Security Group</b>) allow to modify the reports or dashboards published to the logged user.<br />
+                                In addition to the security applied on report folders, dedicated scripts (properties of a <b>Security Group</b>) allow to modify the reports published to the logged user.<br />
                                 <ul>
                                     <li>
                                         <code>Folder Script</code>: Optional script executed to define/modify the folders published in the <b>Web Report Server</b>.
@@ -430,7 +350,7 @@
                                         <code>Folder Detail Script</code>: Optional script executed to define/modify the reports published in the <b>Web Report Server</b> for a given folder.
                                     </li>
                                     <li>
-                                        <code>Dashboards Script</code>: Optional script executed to define/modify the dashboards published for the user.
+                                        <code>Menu Script</code>: Optional script executed to define/modify the reports of the logged user.
                                     </li>
                                 </ul>
                             </p>
@@ -439,13 +359,13 @@
                             </p>
                         </div>
                         <div class="bs-callout bs-callout-demo">
-                            Script sample to filter reports in the <b>/Samples</b> folder:
-                                                                   <pre class="brush: csharp; highlight: [5]">
+                            <code>Folder Detail Script</code> sample to filter 'Charts' reports in the <b>/Samples</b> folder:
+                            <pre class="brush: csharp; highlight: [5]">
 @@{
     SecurityUser user = Model;
      if (user.FolderDetail.folder.path == @@"\Samples") {
         //Sample to filter reports
-        user.FolderDetail.files = user.FolderDetail.files.Where(i => i.name.Contains("Charts")).ToArray(); 
+        user.FolderDetail.files = user.FolderDetail.files.Where(i => i.name.Contains("Charts")).ToList(); 
     }
 }
                             </pre>

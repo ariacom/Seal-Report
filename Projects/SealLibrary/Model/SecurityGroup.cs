@@ -42,7 +42,7 @@ namespace Seal.Model
 
                 GetProperty("OnStartup").SetIsBrowsable(true);
                 GetProperty("StartupReport").SetIsBrowsable(true);
-                GetProperty("DefaultPriority").SetIsBrowsable(true);
+                GetProperty("Weight").SetIsBrowsable(true);
                 GetProperty("EditProfile").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
@@ -152,10 +152,10 @@ namespace Seal.Model
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }
 
         /// <summary>
-        /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.
+        /// Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user.
         /// </summary>
-        [Category("Default Options"), DisplayName("\t\t\tPriority"), Description("Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user."), Id(1, 5)]
-        public int DefaultPriority { get; set; } = 1;
+        [Category("Default Options"), DisplayName("\t\t\tWeight"), Description("Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user."), Id(1, 5)]
+        public int Weight { get; set; } = 1;
 
         /// <summary>
         /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.

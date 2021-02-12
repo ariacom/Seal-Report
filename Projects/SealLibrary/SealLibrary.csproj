@@ -490,7 +490,6 @@
     <None Include="..\..\Repository\Views\Widget.cshtml">
       <Link>Views\Widget.cshtml</Link>
     </None>
-    <None Include="CD-Dashboard.cd" />
     <None Include="CD-Data Source.cd" />
     <None Include="packages.config" />
     <None Include="CD-Report Model.cd" />

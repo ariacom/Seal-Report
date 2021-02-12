@@ -42,7 +42,7 @@
                             <div class="row">
                                 <div class="col-md-12 full intro1" style="padding:10px 20px;margin-top:0px">
                                     <p>
-                                        <strong>Seal Report</strong> offers a complete framework for producing daily reports and dashboards from any database or any No SQL source.
+                                        <strong>Seal Report</strong> offers a complete framework for producing daily reports from any database or any No SQL source.
                                         <br>
                                         The product focuses on easy installation and report design: Once setup, reports can be built and published in a minute.
                                         <br><br>
@@ -74,6 +74,9 @@
                                             <b>HTML 5 Charts</b>: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
                                         </li>
                                         <li>
+                                            <b>KPI and Widget Views</b>: Create and display your Key Performance Indicators in a single report.
+                                        </li>
+                                        <li>
                                             <b>Fully Responsive and HTML Rendering using Razor engine</b>: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
                                         </li>
                                         <li>
@@ -86,13 +89,7 @@
                                             <b>Drill Down navigation and Sub Reports</b>: Navigate in your report result to drill to a detail or to execute another report.
                                         </li>
                                         <li>
-                                            <b>Dashboards View</b>: Display your KPIs or published Widgets in a single view.
-                                        </li>
-                                        <li>
                                             <b>Report Tasks</b>: Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
-                                        </li>
-                                        <li>
-                                            <b>No SQL Data Sources</b>: Fill up your source Data Tables from your own code and display them in a report.
                                         </li>
                                         <li>
                                             <b>Low TCO (total cost of ownership)</b>: The product is designed for minimal ongoing maintenance.
@@ -229,14 +226,12 @@
                                             <th>Scheduler Service</th>
                                             <th>Web Report Server</th>
                                             <th>Web Report Designer<sup>1</sup></th>
-                                            <th>Dashboard Manager<sup>1</sup></th>
                                             <th>PDF and Excel Converter<sup>2</sup></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td><b>Windows<br />.Net</b></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
@@ -254,14 +249,12 @@
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
                                         </tr>
                                         <tr>
                                             <td><b>Linux<br />.NET Core</b></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
@@ -276,14 +269,12 @@
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
                                         </tr>
                                         <tr>
                                             <td><b>Azure (Linux)<br />.NET Core</b></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
@@ -294,7 +285,7 @@
                                 <b>Remarks:</b>
                                 <i>
                                     <ol>
-                                        <li>Requires the <a href="https://ariacom.com/SealWebLicense" target="_blank">Web Report Designer and Dashboard Manager</a> commercial component.</li>
+                                        <li>Requires the <a href="https://ariacom.com/SealWebLicense" target="_blank">Web Report Designer</a> commercial component.</li>
                                         <li>Requires the <a href="https://ariacom.com/SealConverterLicense" target="_blank">PDF and Excel Converter</a> commercial component.</li>
                                         <li>Requires a separate <a href="https://ariacom.com/SealConverterInstallation" target="_blank">PDF Server</a> on a Windows computer.</li>
                                     </ol>
@@ -327,7 +318,7 @@
                     <div class="row">
                         <div class="col-md-12 left-align">
                             <p>
-                                The <strong>Seal Repository</strong> stores all the entities managed by Seal Report: Data Sources, Devices, Reports and Dashboards.<br>
+                                The <strong>Seal Repository</strong> stores all the entities managed by Seal Report: Data Sources, Devices, Reports.<br>
                                 In addition, the repository contains extra folders for the Settings (configuration and dictionary for translations), the Views (used to render report result), the Security (configuration and providers).<br>
                                 By default, the repository root folder is located in <i>"C:\ProgramData\Seal Report Repository"</i>.
                             </p>
@@ -348,9 +339,6 @@
                                 <li>
                                     <strong>Tasks</strong> may be defined to perform SQL or Script tasks.
                                 </li>
-                                <li>
-                                    <strong>Dashboards</strong> offer a view of widgets published in different reports.
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -370,7 +358,7 @@
                             <ul>
                                 <li>The <strong>Server Manager</strong> (a Windows application) edits repository Data Sources, Devices and is used to perform administrative tasks (checking sources and reports, publishing web site, configuring the server, editing the security, etc.).</li>
                                 <li>The <strong>Report Designer</strong> (a Windows application) creates, edits and executes reports.</li>
-                                <li>The <strong>Web Report Server</strong> (an ASP.Net or .NET Core Web application) allows the end-users to edit and execute the reports and dashboards published from the Web.</li>
+                                <li>The <strong>Web Report Server</strong> (an ASP.Net or .NET Core Web application) allows the end-users to edit and execute the reports published from the Web.</li>
                                 <li>The <strong>Task Scheduler</strong> (a console application) is invoked by the Windows Task Scheduler to schedule report execution on a Device (folder or email).</li>
                                 <li>The <strong>Seal Report Scheduler</strong> (a Windows Service application or .NET Core Worker Service) to execute the report schedules defined in the repository (folder, file server or email).</li>
                             </ul>
@@ -398,9 +386,6 @@
                                     <strong>Assemblies:</strong> additional DLL (*.dll) that can be referenced in all Razor scripts. You can add your own assemblies in this folder and call them from any script compiled and executed during a report execution (e.g. in a Task).
                                 </li>
                                 <li>
-                                    <strong>Dashboards:</strong> dashboards files(*.sdax) edited and published by the Web Report Server.
-                                </li>
-                                <li>
                                     <strong>Databases:</strong> dedicated folder for local database files (e.g. an MS Access file, an Excel file).
                                 </li>
                                 <li>
@@ -425,7 +410,7 @@
                                     <strong>Sources\TableTemplates:</strong> table templates (*.cshtml) referenced by No SQL tables defined in LINQ Data Sources.
                                 </li>
                                 <li>
-                                    <strong>SpecialFolders\Personal:</strong> dedicated folder to store personal folders for each user. The folder contains reports, dashboards, files and the user's profile (_profile.xml).
+                                    <strong>SpecialFolders\Personal:</strong> dedicated folder to store personal folders for each user. The folder contains reports, files and the user's profile (_profile.xml).
                                 </li>
                                 <li>
                                     <strong>SpecialFolders\Schedules:</strong> report schedules (*.xml) when the <b>Seal Report Scheduler</b> is used. One file per schedule.
@@ -462,7 +447,7 @@
                         <div class="col-md-12 bs-callout bs-callout-info">
                             <h4>Consulting and Components: Get State of the Art Help</h4>
                             If you need professional consulting, trainings or workshops, please contact <a href="https://ariacom.com" target="_blank">Ariacom</a>.<br>
-                            In addition to the open source version of the Web Report Server, a <a href="https://ariacom.com/SealWebLicense" target="_blank">Web Report Designer</a> is available to edit and schedule your reports and to design your dashboards from any Web browser.<br>
+                            In addition to the open source version of the Web Report Server, a <a href="https://ariacom.com/SealWebLicense" target="_blank">Web Report Designer</a> is available to edit and schedule your reports from any Web browser.<br>
                             The company also offers a <a href="https://ariacom.com/SealConverterLicense" target="_blank">PDF and Excel Converter</a> component to generate <b>PDF Documents</b> and native <b>Excel Workbooks</b> directly from your Seal reports.<br>
                         </div>
                         <div class="col-md-12 bs-callout bs-callout-warning">

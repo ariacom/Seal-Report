@@ -313,7 +313,7 @@ namespace Seal.Model
         {
             get
             {
-                return SecurityGroups.OrderBy(i => i.DefaultPriority).FirstOrDefault();
+                return SecurityGroups.OrderByDescending(i => i.Weight).FirstOrDefault();
             }
         }
 

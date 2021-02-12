@@ -37,6 +37,7 @@
         var sealServer = "/demo/";
         //sealServer = "http://localhost:17178/seal/";
         var connected = false;
+        var name = "";
 
         function enableControls() {
             $("button").prop("disabled", !connected);
@@ -58,6 +59,7 @@
                         .done(function (data) {
                             if (!data.error) {
                                 connected = true;
+                                name = data.name;
                                 $("#login_label").html("SWILogin Done:'" + data.name + "'<br>" + JSON.stringify(data));
                                 $("#logout_label").text("");
                             }
@@ -176,11 +178,11 @@
 
             $("#execute3_button")
                 .click(function () {
-                    $("#execute3_label").text("Executing '07-Outputs and schedules' with a specified view");
+                    $("#execute3_label").text("Executing '07-Outputs and schedules' with the view 'No summary'");
                     var form = $('<form method="post" target="_blank"/>').appendTo('body');
                     form.attr('action', sealServer + "SWExecuteReport");
                     form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
-                    form.append($('<input />').attr('name', 'viewGUID').attr('value', "2194db7c-bdea-459c-b055-d2e630d7f829"));
+                    form.append($('<input />').attr('name', 'viewGUID').attr('value', "02b6abf5-cd7c-4cbd-8da2-35f3b9d06ffe"));
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
@@ -245,18 +247,23 @@
                     form.submit();
                 });
 
-            $("#set_up_button")
-                .click(function () {
-                    $.post(sealServer + "SWISetUserProfile", { culture: "fr-FR" })
-                        .done(function (data) {
-                            if (!data.error) {
-                                $("#set_up_label").html("SWISetUserProfile Done: culture set to French (France).");
-                            }
-                            else {
-                                $("#set_up_label").text("Error: " + data.error);
-                            }
-                        })
-                });
+                $("#set_up_button")
+                    .click(function () {
+                        if (!name) {
+                            alert('This user cannot change the profile');
+                        }
+                        else {
+                            $.post(sealServer + "SWISetUserProfile", { culture: "fr-FR" })
+                                .done(function (data) {
+                                    if (!data.error) {
+                                        $("#set_up_label").html("SWISetUserProfile Done: culture set to French (France).");
+                                    }
+                                    else {
+                                        $("#set_up_label").text("Error: " + data.error);
+                                    }
+                                })
+                        }
+                    });
 
             $("#get_up_button")
                 .click(function () {
@@ -276,7 +283,7 @@
                     $.post(sealServer + "SWITranslate", { context: "Report", reference: "report restrictions" })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#translate_label").html("SWITranslate Done: Translation->" + data.text + "<br>" + JSON.stringify(data));
+                                $("#translate_label").html("SWITranslate Done: 'report restrictions'->" + data.text + "<br>" + JSON.stringify(data));
                             }
                             else {
                                 $("#translate_label").text("Error: " + data.error);
@@ -289,7 +296,7 @@
                     $.post(sealServer + "SWITranslate", { context: "Element", instance: "Customers.City", reference: "City" })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#repository_translate_label").html("SWITranslate Done: Translation->" + data.text + "<br>" + JSON.stringify(data));
+                                $("#repository_translate_label").html("SWITranslate Done: 'City'->" + data.text + "<br>" + JSON.stringify(data));
                             }
                             else {
                                 $("#repository_translate_label").text("Error: " + data.error);
@@ -305,6 +312,7 @@
                                 $("#connect_label").text("");
                                 $("#logout_label").text("Disconnected");
                                 connected = false;
+                                name = "";
                             }
                             else {
                                 $("#browse_detail_label").text("Error: " + data.error);
@@ -428,13 +436,13 @@
                         </tr>
                         <tr>
                             <td>
-                                <button id="generate2_button">Generate '07-Outputs and schedules' in Output</button>
+                                <button id="generate2_button">Generate '07-Outputs and schedules' in Output and View the result</button>
                             </td>
                             <td width="50%"><label id="generate2_label"></label></td>
                         </tr>
                         <tr>
                             <td>
-                                <button id="generate3_button">Generate '07-Outputs and schedules' in Excel</button>
+                                <button id="generate3_button">Generate '07-Outputs and schedules' in Excel and View the result</button>
                             </td>
                             <td width="50%"><label id="generate3_label"></label></td>
                         </tr>

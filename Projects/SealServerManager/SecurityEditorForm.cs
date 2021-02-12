@@ -61,7 +61,7 @@ Rules applied if a user belongs to several groups:
 - Personal folder: the highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files)
 - Show folders view: true if one group has this flag set to true
 - Tree View: Show all folders: true if one group has this flag set to true
-- Folders and Folder Detail Scripts are executed sequentially sorted by group name
+- Folders, Folder Detail and Menu Scripts are executed sequentially sorted by group name
 
 Web Report Designer Security
 - SQL Models: True if true in one group
@@ -69,6 +69,8 @@ Web Report Designer Security
 - Sources: Cannot be selected if it is specified in one group
 - Connections: Cannot be selected if it is specified in one group
 - Columns: Cannot be selected if it is specified in one group
+
+- Default options (Edit Profile, Culture, Logo, Startup) are taken from the group having the highest weight.
 ";
             
             Visible = true;

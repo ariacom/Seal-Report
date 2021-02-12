@@ -696,7 +696,7 @@ namespace SealWebServer.Controllers
             try
             {
                 checkSWIAuthentication();
-                if (!WebUser.DefaultGroup.EditProfile) throw new Exception("Error: no right to change profile");
+                if (!WebUser.DefaultGroup.EditProfile) throw new Exception("No right to change the profile");
 
                 if (string.IsNullOrEmpty(culture))
                 {

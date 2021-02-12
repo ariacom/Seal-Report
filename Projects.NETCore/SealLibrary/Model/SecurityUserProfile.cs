@@ -73,6 +73,7 @@ namespace Seal.Model
         public List<RecentFileItem> RecentReports { get; set; } = new List<RecentFileItem>();
         public void SetRecentReports(string path, Report report, string viewGUID, string outputGUID)
         {
+            path = FileHelper.ConvertOSFilePath(path);
             RecentReports.RemoveAll(i => i.Path == path);
             RecentReports.Insert(0, new RecentFileItem() { Path = path, ViewGUID = viewGUID, OutputGUID = outputGUID, Name = !string.IsNullOrEmpty(report.ExecutionName) ? report.ExecutionName : report.DisplayNameEx });
             if (RecentReports.Count > 9) RecentReports.RemoveAt(RecentReports.Count - 1);
