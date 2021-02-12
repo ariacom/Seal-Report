@@ -512,6 +512,8 @@ function executeReport(nav) {
         form.attr("action", url);
         form.submit();
     }
+    //spinner
+    if ($("#nav_button").children().length == 0) $("#nav_button").append($("<i class='fa fa-spinner fa-spin fa-sm'></i>"));
     //disable controls during execution
     $('#restrictions_div').addClass("disabled");
     $('.view').css("display", "none");

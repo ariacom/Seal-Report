@@ -122,6 +122,7 @@
             if ((forceExecution || !hasRestrictions) && !@Helper.ToJS(report.IsExecuting) && !@Helper.ToJS(report.Cancel)) {
                 executeReport();
             }
+            else $("#nav_button").html('@Raw(Helper.ToJS(report.ExecutionName))');
         }
 </script>
 
