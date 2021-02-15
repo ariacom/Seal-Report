@@ -183,6 +183,10 @@ table.dataTable {
     animation-duration: 1s;
 }
 
+#nav_button .fa-spin {
+    opacity: 0.6;
+    margin-left: 5px;
+}
 
 /* sub-menus */
 .dropdown-submenu {

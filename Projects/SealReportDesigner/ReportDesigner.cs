@@ -138,6 +138,8 @@ namespace Seal
                 _repository = new Repository();
                 MessageBox.Show("No repository has been defined or found for this installation. Reports will not be rendered. Please modify the .config file to set a RepositoryPath containing at least a Views subfolder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            InstallHelper.InstallConverter(helpToolStripMenuItem, Repository.Instance.AssembliesFolder);
         }
 
         //EntityHandlerInterface
@@ -664,7 +666,6 @@ namespace Seal
             AboutBoxForm frm = new AboutBoxForm();
             frm.ShowDialog(this);
         }
-
 
         private void showScriptErrorsToolStripMenuItem_Click(object sender, EventArgs e)
         {

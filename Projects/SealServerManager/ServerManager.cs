@@ -54,13 +54,6 @@ namespace Seal
 
         public ServerManager()
         {
-            /*       if (Properties.Settings.Default.CallUpgrade)
-                   {
-                       Properties.Settings.Default.Upgrade();
-                       Properties.Settings.Default.CallUpgrade = false;
-                       Properties.Settings.Default.Save();
-                   }*/
-
             InitializeComponent();
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
@@ -378,6 +371,8 @@ namespace Seal
         private void ServerManager_Load(object sender, EventArgs e)
         {
             KeyPreview = true;
+
+            InstallHelper.InstallConverter(helpToolStripMenuItem, Repository.Instance.AssembliesFolder);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
