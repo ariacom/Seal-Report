@@ -461,7 +461,6 @@ class SWIMain {
                 _main.toggleFoldersReport(_main._currentView != "report");
             });
             $("#nav_button").unbind("mouseover").on("mouseover", function () {
-//                $("#menu-main").parent().removeClass("open").removeClass("in").addClass("collapse");
                 if ($("#menu-main").parent().hasClass("open")) $("#menu-main").dropdown('toggle');
             });           
 
