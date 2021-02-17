@@ -4,6 +4,7 @@
 //
 using Seal.Helpers;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -15,13 +16,27 @@ namespace Seal.Model
     /// </summary>
     public class SealInterface
     {
+        static bool _loaded = false;
         public static SealInterface Create(Repository repository)
         {
             SealInterface result = null;
             //Check if an implementation is available in a .dll
-            string assembliesFolder = repository.AssembliesFolder;
-            if (File.Exists(Path.Combine(assembliesFolder, "SealInterface.dll")))
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SealInterface.dll");
+            if (File.Exists(path))
             {
+                if (!_loaded)
+                {
+                    try
+                    {
+                        Assembly.LoadFrom(path);
+                        _loaded = true;
+                    }
+                    catch (Exception Exception)
+                    {
+                        Debug.WriteLine(Exception.Message);
+                    }
+                }
+
                 try
                 {
                     Assembly currentAssembly = AppDomain.CurrentDomain.Load("SealInterface");
@@ -33,12 +48,14 @@ namespace Seal.Model
                 catch { }
             }
 
+
             if (result == null) result = new SealInterface();
-            
+
             return result;
         }
 
-        public virtual void Init() {
+        public virtual void Init()
+        {
         }
 
         public virtual string Text()
@@ -50,8 +67,8 @@ namespace Seal.Model
         public virtual bool ProcessAction(string action, WebBrowser webBrowser, NavigationContext navigation)
         {
             return false;
-        } 
- #endif
+        }
+#endif
         protected Repository _repository = null;
     }
 }
