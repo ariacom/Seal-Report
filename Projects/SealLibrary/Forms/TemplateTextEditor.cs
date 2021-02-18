@@ -442,7 +442,22 @@ namespace Seal.Forms
         link.ScriptResult = string.Format(""<b> This is a custom HTML built in the 'Report Navigation Script' from the server at {0}.</b><hr>"", DateTime.Now);
     }
 
-    //Check a full implementation in the sample report '505-Navigation - Custom buttons and report execution'
+    //Parsing the link parameters or the HttpRequest
+    var parameters = ""Parameters and Request:\r\n"";
+    if (link.Parameters != null) {
+        foreach (var k in  link.Parameters.AllKeys) {
+            parameters += string.Format(""Parameter {0}={1}\r\n"", k, link.Parameters[k]);
+        }
+    }
+    
+    if (link.Request != null) {
+        foreach (var k in  link.Request.Form.AllKeys) {
+            parameters += string.Format(""Form {0}={1}\r\n"", k, link.Request.Form[k]);
+        }
+        parameters += string.Format(""{0} File(s)\r\n"", link.Request.Files.Count);
+    }
+
+    //Check implementations in the sample reports '505-Navigation - Custom buttons and report execution' and '506-Navigation - File and  fields Upload'
 }
 ";
         const string razorInitScriptTemplate = @"@{
