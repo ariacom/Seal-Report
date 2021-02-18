@@ -131,7 +131,13 @@ namespace Seal.Model
             return new ReportExecution() { NavigationParameter = navigation, Report = newReport, RootReport = rootReport };
         }
 
-        public string NavigateScript(string navigation, Report report, NameValueCollection parameters)
+        public string NavigateScript(string navigation, Report report, NameValueCollection parameters,
+#if !NETCOREAPP
+            HttpRequestBase request = null
+#else
+            Microsoft.AspNetCore.Http.HttpRequest request = null
+#endif
+            )
         {
             var linkGUID = navigation.Substring(3);
             var result = "";
@@ -139,6 +145,7 @@ namespace Seal.Model
             {
                 var link = report.NavigationLinks[linkGUID];
                 link.Parameters = parameters;
+                link.Request = request;
                 if (link.Cell != null && link.Cell.Element != null) //Cell navigation script
                 {
                     RazorHelper.CompileExecute(link.Cell.Element.NavigationScript, link);

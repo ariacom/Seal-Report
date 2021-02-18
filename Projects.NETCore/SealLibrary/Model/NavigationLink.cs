@@ -4,6 +4,7 @@
 //
 
 using System.Collections.Specialized;
+using System.Web;
 
 namespace Seal.Model
 {
@@ -48,6 +49,15 @@ namespace Seal.Model
         /// Optional parameters that can be used in the navigation script (e.g. form values for a custom script)
         /// </summary>
         public NameValueCollection Parameters;
+
+        /// <summary>
+        /// Current Request that can be used in the Navigation Script (e.g. getting a file upload) 
+        /// </summary>
+#if !NETCOREAPP
+        public HttpRequestBase Request;
+#else
+        public Microsoft.AspNetCore.Http.HttpRequest Request;
+#endif
     }
 }
 

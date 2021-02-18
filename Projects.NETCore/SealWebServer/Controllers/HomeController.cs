@@ -253,12 +253,18 @@ namespace SealWebServer.Controllers
                     if (execution.RootReport == null) execution.RootReport = execution.Report;
 
                     string nav = Request.Form[ReportExecution.HtmlId_navigation_id];
+                    if (string.IsNullOrEmpty(nav)) nav = NavigationLink.ReportScriptPrefix;
                     NameValueCollection parameters = null;
                     if (Request.Form.ContainsKey(ReportExecution.HtmlId_navigation_parameters)) parameters = HttpUtility.ParseQueryString(Request.Form[ReportExecution.HtmlId_navigation_parameters]);
 
-                    if (nav.StartsWith(NavigationLink.FileDownloadPrefix)) //File download
+                    if (nav.StartsWith(NavigationLink.ReportScriptPrefix)) //Report Script
                     {
-                        var filePath = NavigationContext.NavigateScript(nav, execution.Report, parameters);
+                        var data = NavigationContext.NavigateScript(nav, execution.Report, parameters, Request);
+                        return Json(data);
+                    }
+                    else if (nav.StartsWith(NavigationLink.FileDownloadPrefix)) //File download
+                    {
+                        var filePath = NavigationContext.NavigateScript(nav, execution.Report, parameters, Request);
                         if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
                         {
                             return getFileResult(filePath, null);
@@ -267,11 +273,6 @@ namespace SealWebServer.Controllers
                         {
                             throw new Exception(string.Format("Invalid file path got from the navigation script: '{0}'", filePath));
                         }
-                    }
-                    else if (nav.StartsWith(NavigationLink.ReportScriptPrefix)) //Report Script
-                    {
-                        var data = NavigationContext.NavigateScript(nav, execution.Report, parameters);
-                        return Json(data);
                     }
                     else if (nav.StartsWith(NavigationLink.ReportExecutionPrefix)) //Report execution
                     {
