@@ -8,15 +8,13 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
 * **LINQ queries**: Join and query any Data Sources (SQL, Excel, XML, OLAP Cube, HTTP JSon, etc.) with the power of LINQ queries.
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
-* **HTML 5 Charts**: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
+* **HTML 5 Charts**: Define and display Ch**art Series in two mo**use clicks (Support of ChartJS, NVD3 and Plotly libraries).
+* **KPI and Widget Views**: Create and display your Key Performance Indicators in a single report.
 * **Fully Responsive and HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
 * **Web Report Server**: Publish and edit your reports on the web (Support of Windows and Linux OS with .NET Core).
 * **Report scheduler**: Schedule your report executions and generate results in folders, FTP or send them by emails (integrated with the Windows Tasks Scheduler or available as a service)
 * **Drill Down navigation and Sub Reports:** Navigate in your report result to drill to a detail or to execute another report.
-* **Dashboards View**: Display your KPIs or published Widgets in a single view.
 * **Report Tasks:** Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
-* **No SQL Data Sources:**
-Fill up your source Data Tables from your own code and display them in a report.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
 * **.NET Core** projects and distribution for the Web Report Server and the Seal Report Scheduler to run on Linux OS and Azure Platform.
 * **NuGet packages** to ease integration into existing projects.
@@ -28,7 +26,7 @@ A **live demonstration** of the <a href="https://sealreport.org/demo" target=_bl
 Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product.
 
 In addition to the Open Source version, **<a href="https://ariacom.com" target=_blank>Ariacom</a>** offers consulting on the product and 2 commercial components:
-* The <a href="https://ariacom.com/sealweblicense" target=_blank>Web Report Designer and Dashboard Manager</a> to edit reports and dashboards from any web browser.
+* The <a href="https://ariacom.com/sealweblicense" target=_blank>Web Report Designer</a> to edit reports from any web browser.
 * The <a href="https://ariacom.com/sealconverterlicense" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
 
 # Screen shots 
@@ -40,9 +38,6 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 
 ## Web Report Server
 ![Web Report Server](https://ariacom.com/ImagesGITHUB/webServer2.png)
-
-## Dashboard View
-![Dashboard](https://ariacom.com/ImagesGITHUB/dashboard2.png)
 
 ## Report Result with Responsive Layout
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResultResp.png) 
