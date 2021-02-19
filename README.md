@@ -1,4 +1,4 @@
-<a href="https://sealreport.org" target=_blank>Seal Report</a> offers a complete framework for producing daily reports and dashboards from any database or any No SQL source.
+<a href="https://sealreport.org" target=_blank>Seal Report</a> offers a complete framework for producing daily reports from any database or any No SQL source.
 
 The product focuses on **easy installation** and **report design**: Once setup, reports can be built and published in a minute. 
 
