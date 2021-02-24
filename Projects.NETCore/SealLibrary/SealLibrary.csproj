@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Configurations>Debug;Release</Configurations>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Company>Ariacom</Company>
     <Product>Seal Report</Product>
     <PackageProjectUrl>https://sealreport.org</PackageProjectUrl>
     <Description>.NET Core distribution of the Seal Report Library.</Description>
     <PackageId>SealReportLibrary.NETCore</PackageId>
-    <PackageReleaseNotes>First Nuget package publication.</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <Copyright>Copyright (c) Seal Report (sealreport@gmail.com)</Copyright>
     <PackageIcon>sealNugetLogo.png</PackageIcon>
     <PackageTags>Seal Report SealReport SealLibrary</PackageTags>

@@ -44,7 +44,6 @@ namespace Seal.Helpers
         public bool UseDbDataAdapter = false;
         public int InsertBurstSize = 500;
         public int MaxDecimalNumber = -1; //If set, limit the number of decimals for numeric values
-        public string ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
         public Encoding DefaultEncoding = Encoding.Default;
         public bool TrimText = true;
         public bool RemoveCrLf = false;

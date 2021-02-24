@@ -809,11 +809,9 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
-                "Load a table from an Excel file, may need ODBC Office 2007 Drivers",
+                "Load a table from an Excel file",
 @"ReportTask task = Model;
 	var helper = new TaskHelper(task);
-	//helper.DatabaseHelper.ExcelOdbcDriver = ""Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}}; DBQ={0}"";
-	//helper.DatabaseHelper.ExcelOdbcDriver = ""Driver={{Microsoft Excel Driver (*.xls)}};DBQ={0}"";
 	helper.LoadTableFromExcel(
         @""c:\temp\loadFolder"", //Folder used to store the files processed 
         @""c:\temp\excelFile.xlsx"", //source Excel file path
