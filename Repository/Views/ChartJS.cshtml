@@ -97,8 +97,9 @@
                 }
 
                 var valueFormatter = function (dataset, dataIndex, type) {
-                    var format = (dataset.yAxisID == 'yaxis-2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
-                    var isDate = (dataset.yAxisID == 'yaxis-2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
+                    var axisID = dataset.@(isHorizontalBar ? "x" : "y")AxisID;
+                    var format = (axisID == 'yaxis-2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
+                    var isDate = (axisID == 'yaxis-2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
 
                     var val = getValue(dataset, dataIndex);
                     if (isDate) return d3.timeFormat(format)(new Date(val));
@@ -245,6 +246,7 @@
                             {
                                 id: 'yaxis-1',
                                 display: @view.GetBoolValueJS("chartjs_show_yaxis"),
+                                position: '@(isHorizontalBar ? "bottom" : "left")',
                                 stacked: @Helper.ToJS(chartType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                                 scaleLabel: {
                                     display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_yaxis_title")))),
@@ -266,7 +268,8 @@
                             {
                                 id: 'yaxis-2',
                                 display: @view.GetBoolValueJS("chartjs_show_yaxis"),
-                                position: 'right',
+                                type: 'linear',
+                                position: '@(isHorizontalBar ? "top" : "right")',
                                 scaleLabel: {
                                     display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_yaxis2_title")))),
                                     labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis2_title"))))'

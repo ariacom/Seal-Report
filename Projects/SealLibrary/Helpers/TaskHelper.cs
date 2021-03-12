@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Data.Common;
 using System.Data.OleDb;
+using OfficeOpenXml;
 
 namespace Seal.Helpers
 {
@@ -185,6 +186,7 @@ namespace Seal.Helpers
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceExcelPath);
                 LogMessage("Starting Loading Excel Table from '{0}'", sourcePath);
                 DataTable table = DatabaseHelper.LoadDataTableFromExcel(sourcePath, sourceTabName, startRow, startColumn, endColumnIndex);
+
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
@@ -211,6 +213,51 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Load all Excel files located in a directory into tables, using the tab name as table name. 
+        /// </summary>
+        public bool LoadTablesFromExcel(string loadFolder, string sourceExcelDirectory, string searchPattern = "*.xlsx", bool useAllConnections = false)
+        {
+            bool result = false;
+            try
+            {
+                foreach(var f in Directory.GetFiles(sourceExcelDirectory, searchPattern))
+                {
+                    if (CheckForNewFileSource(loadFolder, f))
+                    {
+                        ExcelPackage package;
+                        try
+                        {
+                            package = new ExcelPackage(new FileInfo(f));
+                        }
+                        catch
+                        {
+                            string newPath = FileHelper.GetTempUniqueFileName(f);
+                            FileHelper.PurgeTempApplicationDirectory();
+                            File.Copy(f, newPath, true);
+                            package = new ExcelPackage(new FileInfo(newPath));
+                        }
+                        var workbook = package.Workbook;
+                        var tabs = (from ws in workbook.Worksheets select ws.Name);                        
+                        foreach (var tab in tabs)
+                        {
+                            LoadTableFromExcel(f, tab, tab, useAllConnections);
+                        }
+                        result = true;
+                        File.Copy(f, Path.Combine(loadFolder, Path.GetFileName(f)), true);
+                    }
+                    else
+                    {
+                        LogMessage("No import done");
+                    }
+                }
+            }
+            finally
+            {
+                LogDebug();
+            }
+            return result;
+        }
 
         public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = true)
         {
@@ -507,7 +554,7 @@ namespace Seal.Helpers
         /// <summary>
         /// Execute .sql files located in a directory
         /// </summary>
-        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11, string fileNameFilter = "")
+        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11, string fileNameFilter = "", int waitCommands = 20, int waitConnections = 100, int waitFiles = 10)
         {
             _mssqlError = "";
             _mssqlErrorClassLevel = errorClassLevel;
@@ -525,7 +572,7 @@ namespace Seal.Helpers
                     string connectionString = connection.FullConnectionString;
                     if (connection.ConnectionType == ConnectionType.OleDb)
                     {
-                        OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connection.FullConnectionString);
+                        var builder = new OleDbConnectionStringBuilder(connection.FullConnectionString);
                         connectionString = string.Format("Server={0};Database={1};", builder["Data Source"], builder["Initial Catalog"]);
                         connectionString += (builder.ContainsKey("User ID") ? string.Format("User Id={0};Password={1};", builder["User ID"], builder["Password"]) : "Trusted_Connection=True;");
                     }
@@ -601,22 +648,36 @@ namespace Seal.Helpers
                                     command.CommandText = commandString;
                                     command.ExecuteNonQuery();
                                 }
-                                Thread.Sleep(200);
+                                Thread.Sleep(waitCommands);
                                 if (!string.IsNullOrEmpty(_mssqlError) && stopOnError) throw new Exception(_mssqlError);
                             }
                         }
-                        Thread.Sleep(500);
+                        Thread.Sleep(waitConnections);
                     }
                     finally
                     {
                         conn.Close();
                     }
                 }
+                Thread.Sleep(waitFiles);
             }
 
             LogMessage("File execution terminated.");
         }
 
+
+        public void CreateMSSQLIndex(string tableName, string colNames, bool isCluster = false)
+        {
+            var indexName = string.Format("IX_{0}_{1}", tableName, colNames.Replace(",", "_"));
+            LogMessage("Creating Index for {0}({1})", tableName, colNames);
+
+            string sql = @"
+IF EXISTS (SELECT * FROM sysindexes WHERE name = '{0}') 
+DROP INDEX {0} on {1};
+CREATE {3} INDEX {0} ON {1}({2})
+";
+            ExecuteNonQuery(string.Format(sql, indexName, tableName, colNames, isCluster ? "CLUSTERED" : "NONCLUSTERED"));
+        }
 
         void MSSQLConnection_InfoMessage(object sender, SqlInfoMessageEventArgs e)
         {

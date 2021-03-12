@@ -346,6 +346,26 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Fill a dictionary of files for CreateZIP
+        /// </summary>
+        static void FillZipDictionaryFiles(Dictionary<string, string> files, string dir, string targetDir, string filter, bool recursive)
+        {
+            foreach (var f in Directory.GetFiles(dir, filter))
+            {
+                files.Add(f, targetDir + Path.GetFileNameWithoutExtension(f) + Path.GetExtension(f));
+            }
+
+            if (recursive)
+            {
+                foreach (var d in Directory.GetDirectories(dir))
+                {
+                    FillZipDictionaryFiles(files, d, targetDir + Path.GetFileName(d) + "\\", filter, recursive);
+                }
+            }
+        }
+
+
         #region Seal Attachments
         public static string GetResultFilePrefix(string path)
         {

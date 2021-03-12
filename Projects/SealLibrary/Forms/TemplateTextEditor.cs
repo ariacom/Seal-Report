@@ -863,7 +863,7 @@ namespace Seal.Forms
                 "Query or update the database",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
-	string name = (string) helper.ExecuteScalar(""select LastName from employees"");
+    string name = (string) helper.ExecuteScalar(""select LastName from employees"");
     helper.LogMessage(""Name="" + name);
     helper.ExecuteNonQuery(
         ""update employees set LastName = '' where 1=0"", //SQL statement to execute 
@@ -875,14 +875,14 @@ namespace Seal.Forms
                 "Execute a program and display Standard Output and Errors",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
-	helper.ExecuteProcess(@""executablePath"",""argument"",@""workingDirectory"");
+    helper.ExecuteProcess(@""executablePath"",""argument"",@""workingDirectory"");
 "
                 ),
             new Tuple<string, string>(
                 "Execute MS SQLServer Scripts (files *.sql) located in a directory",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
-	helper.ExecuteMSSQLScripts(
+    helper.ExecuteMSSQLScripts(
         @""scriptsDirectory"",
         false, //if true, the scripts are executed for all connections defined in the Source
         true, //if false, the execution continues even if an error occurs

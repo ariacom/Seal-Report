@@ -102,6 +102,33 @@ namespace Seal.Helpers
             }
         }
 
+
+        static public void SetPropertyValue(object item, string propertyName, string propertyValue)
+        {
+            PropertyInfo prop = item.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+            if (null != prop && prop.CanWrite)
+            {
+                if (prop.PropertyType.IsEnum)
+                {
+                    var propertyVals = propertyValue.Split(' ');
+                    prop.SetValue(item, Enum.Parse(prop.PropertyType, propertyVals[0]));
+                }
+                else if (prop.PropertyType.Name == "Boolean" && !string.IsNullOrWhiteSpace(propertyValue))
+                {
+                    prop.SetValue(item, bool.Parse(propertyValue));
+                }
+                else if (prop.PropertyType.Name == "Int32")
+                {
+                    prop.SetValue(item, int.Parse(propertyValue));
+                }
+                else
+                {
+                    prop.SetValue(item, propertyValue);
+                }
+            }
+        }
+
+
         static public string NewGUID()
         {
             return Guid.NewGuid().ToString().Replace("-","");

@@ -1,3 +1,370 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><SealServerConfiguration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><WebProductName>Seal Report</WebProductName><FileReplacePatterns><FileReplacePattern><FileName>datatables.min.css</FileName><OldValue>url(Bootstrap-3.3.7/fonts/glyphicons-halflings-regular</OldValue><NewValue>url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular</NewValue></FileReplacePattern></FileReplacePatterns><CssFiles>_ed.editor.bootstrap.min.css</CssFiles><ScriptFiles>_ed.common.js&#xD;
 _ed.dataTables.editor.min.js&#xD;
-_ed.editor.bootstrap.min.js</ScriptFiles><TaskFolderName>Seal Report</TaskFolderName><AuditEnabled>true</AuditEnabled><InitScript /><PdfServicePassword /><PdfWebServiceURL /><DefaultCulture /><CsvSeparator /><WebApplicationName>/Seal</WebApplicationName><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebPublicationDirectory>/Seal</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>
+_ed.editor.bootstrap.min.js</ScriptFiles><TaskFolderName>Seal Report</TaskFolderName><AuditEnabled>true</AuditEnabled><InitScript /><PdfServicePassword /><PdfWebServiceURL /><PdfConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;HtmlToPdfConverter xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;HtmlViewerWidth&gt;1024&lt;/HtmlViewerWidth&gt;&#xD;
+  &lt;HtmlViewerHeight&gt;0&lt;/HtmlViewerHeight&gt;&#xD;
+  &lt;HtmlViewerZoom&gt;100&lt;/HtmlViewerZoom&gt;&#xD;
+  &lt;ClipHtmlView&gt;false&lt;/ClipHtmlView&gt;&#xD;
+  &lt;LicenseKey /&gt;&#xD;
+  &lt;JavaScriptEnabled&gt;true&lt;/JavaScriptEnabled&gt;&#xD;
+  &lt;Enable3DTransformations&gt;false&lt;/Enable3DTransformations&gt;&#xD;
+  &lt;EnableWebGL&gt;false&lt;/EnableWebGL&gt;&#xD;
+  &lt;EnableAccelerated2DCanvas&gt;false&lt;/EnableAccelerated2DCanvas&gt;&#xD;
+  &lt;EnablePersistentStorage&gt;false&lt;/EnablePersistentStorage&gt;&#xD;
+  &lt;LocalFilesAccessEnabled&gt;true&lt;/LocalFilesAccessEnabled&gt;&#xD;
+  &lt;SvgFontsEnabled&gt;false&lt;/SvgFontsEnabled&gt;&#xD;
+  &lt;WebFontsEnabled&gt;true&lt;/WebFontsEnabled&gt;&#xD;
+  &lt;EnableHttp2&gt;false&lt;/EnableHttp2&gt;&#xD;
+  &lt;PostScriptFontsEnabled&gt;true&lt;/PostScriptFontsEnabled&gt;&#xD;
+  &lt;ExtensionsEnabled&gt;false&lt;/ExtensionsEnabled&gt;&#xD;
+  &lt;DownloadAllResources&gt;false&lt;/DownloadAllResources&gt;&#xD;
+  &lt;PrerenderEnabled&gt;false&lt;/PrerenderEnabled&gt;&#xD;
+  &lt;InterruptSlowJavaScript&gt;false&lt;/InterruptSlowJavaScript&gt;&#xD;
+  &lt;MaxHtmlViewerHeight&gt;0&lt;/MaxHtmlViewerHeight&gt;&#xD;
+  &lt;MinHtmlViewerHeight&gt;0&lt;/MinHtmlViewerHeight&gt;&#xD;
+  &lt;InitialHtmlViewerHeight&gt;0&lt;/InitialHtmlViewerHeight&gt;&#xD;
+  &lt;DefaultHtmlEncoding /&gt;&#xD;
+  &lt;ImagePartSize&gt;32000&lt;/ImagePartSize&gt;&#xD;
+  &lt;TriggeringMode&gt;ConversionDelay&lt;/TriggeringMode&gt;&#xD;
+  &lt;ConversionDelay&gt;2&lt;/ConversionDelay&gt;&#xD;
+  &lt;ManualTriggeringConversionDelay&gt;2&lt;/ManualTriggeringConversionDelay&gt;&#xD;
+  &lt;NavigationTimeout&gt;60&lt;/NavigationTimeout&gt;&#xD;
+  &lt;PersistentHttpRequestHeaders&gt;true&lt;/PersistentHttpRequestHeaders&gt;&#xD;
+  &lt;XPSupplementalLanguages&gt;false&lt;/XPSupplementalLanguages&gt;&#xD;
+&lt;/HtmlToPdfConverter&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfDocumentOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;AutoCloseExternalDocs&gt;true&lt;/AutoCloseExternalDocs&gt;&#xD;
+  &lt;LeftMargin&gt;10&lt;/LeftMargin&gt;&#xD;
+  &lt;RightMargin&gt;10&lt;/RightMargin&gt;&#xD;
+  &lt;TopMargin&gt;10&lt;/TopMargin&gt;&#xD;
+  &lt;BottomMargin&gt;10&lt;/BottomMargin&gt;&#xD;
+  &lt;X&gt;0&lt;/X&gt;&#xD;
+  &lt;Y&gt;0&lt;/Y&gt;&#xD;
+  &lt;Width&gt;-1&lt;/Width&gt;&#xD;
+  &lt;Height&gt;-1&lt;/Height&gt;&#xD;
+  &lt;TopSpacing&gt;0&lt;/TopSpacing&gt;&#xD;
+  &lt;BottomSpacing&gt;0&lt;/BottomSpacing&gt;&#xD;
+  &lt;BackColor /&gt;&#xD;
+  &lt;PdfCompressionLevel&gt;Normal&lt;/PdfCompressionLevel&gt;&#xD;
+  &lt;JpegCompressionEnabled&gt;true&lt;/JpegCompressionEnabled&gt;&#xD;
+  &lt;JpegCompressionLevel&gt;10&lt;/JpegCompressionLevel&gt;&#xD;
+  &lt;CompressCrossReference&gt;false&lt;/CompressCrossReference&gt;&#xD;
+  &lt;PdfPageSize&gt;&#xD;
+    &lt;Width&gt;595&lt;/Width&gt;&#xD;
+    &lt;Height&gt;842&lt;/Height&gt;&#xD;
+  &lt;/PdfPageSize&gt;&#xD;
+  &lt;PdfStandardSubset&gt;Full&lt;/PdfStandardSubset&gt;&#xD;
+  &lt;ColorSpace&gt;RGB&lt;/ColorSpace&gt;&#xD;
+  &lt;ColorProfile&gt;Custom&lt;/ColorProfile&gt;&#xD;
+  &lt;FitWidth&gt;true&lt;/FitWidth&gt;&#xD;
+  &lt;FitHeight&gt;false&lt;/FitHeight&gt;&#xD;
+  &lt;StretchToFit&gt;false&lt;/StretchToFit&gt;&#xD;
+  &lt;SinglePage&gt;false&lt;/SinglePage&gt;&#xD;
+  &lt;AutoSizePdfPage&gt;true&lt;/AutoSizePdfPage&gt;&#xD;
+  &lt;AvoidTextBreak&gt;true&lt;/AvoidTextBreak&gt;&#xD;
+  &lt;AvoidImageBreak&gt;false&lt;/AvoidImageBreak&gt;&#xD;
+  &lt;PdfPageOrientation&gt;Landscape&lt;/PdfPageOrientation&gt;&#xD;
+  &lt;ShowHeader&gt;false&lt;/ShowHeader&gt;&#xD;
+  &lt;ShowFooter&gt;false&lt;/ShowFooter&gt;&#xD;
+  &lt;EmbedFonts&gt;true&lt;/EmbedFonts&gt;&#xD;
+  &lt;LiveUrlsEnabled&gt;true&lt;/LiveUrlsEnabled&gt;&#xD;
+  &lt;InteractiveHiddenElements&gt;false&lt;/InteractiveHiddenElements&gt;&#xD;
+  &lt;InternalLinksEnabled&gt;true&lt;/InternalLinksEnabled&gt;&#xD;
+  &lt;TiledRenderingEnabled&gt;true&lt;/TiledRenderingEnabled&gt;&#xD;
+  &lt;EnhancedGraphicsQuality&gt;true&lt;/EnhancedGraphicsQuality&gt;&#xD;
+  &lt;TransparentImagesEnabled&gt;true&lt;/TransparentImagesEnabled&gt;&#xD;
+  &lt;ImagesScalingEnabled&gt;false&lt;/ImagesScalingEnabled&gt;&#xD;
+  &lt;NoSizeElementsEnabled&gt;false&lt;/NoSizeElementsEnabled&gt;&#xD;
+  &lt;TransparencyEnabled&gt;true&lt;/TransparencyEnabled&gt;&#xD;
+  &lt;TableHeaderRepeatEnabled&gt;true&lt;/TableHeaderRepeatEnabled&gt;&#xD;
+  &lt;TableFooterRepeatEnabled&gt;true&lt;/TableFooterRepeatEnabled&gt;&#xD;
+  &lt;StackRepeatedTableHeaders&gt;true&lt;/StackRepeatedTableHeaders&gt;&#xD;
+  &lt;StackRepeatedTableFooters&gt;true&lt;/StackRepeatedTableFooters&gt;&#xD;
+&lt;/PdfDocumentOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfSecurityOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;CanAssembleDocument&gt;true&lt;/CanAssembleDocument&gt;&#xD;
+  &lt;CanCopyContent&gt;true&lt;/CanCopyContent&gt;&#xD;
+  &lt;CanCopyAccessibilityContent&gt;true&lt;/CanCopyAccessibilityContent&gt;&#xD;
+  &lt;CanEditAnnotations&gt;true&lt;/CanEditAnnotations&gt;&#xD;
+  &lt;CanEditContent&gt;true&lt;/CanEditContent&gt;&#xD;
+  &lt;CanFillFormFields&gt;true&lt;/CanFillFormFields&gt;&#xD;
+  &lt;CanPrint&gt;true&lt;/CanPrint&gt;&#xD;
+  &lt;CanPrintHighResolution&gt;true&lt;/CanPrintHighResolution&gt;&#xD;
+  &lt;KeySize&gt;EncryptKey128Bit&lt;/KeySize&gt;&#xD;
+  &lt;EncryptionAlgorithm&gt;RC4&lt;/EncryptionAlgorithm&gt;&#xD;
+  &lt;OwnerPassword /&gt;&#xD;
+  &lt;UserPassword /&gt;&#xD;
+&lt;/PdfSecurityOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfHeaderOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;HeaderBackColor /&gt;&#xD;
+  &lt;HeaderHeight&gt;40&lt;/HeaderHeight&gt;&#xD;
+  &lt;PageNumberingStartIndex&gt;0&lt;/PageNumberingStartIndex&gt;&#xD;
+  &lt;PageNumberingPageCountIncrement&gt;0&lt;/PageNumberingPageCountIncrement&gt;&#xD;
+&lt;/PdfHeaderOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfFooterOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;FooterBackColor /&gt;&#xD;
+  &lt;FooterHeight&gt;20&lt;/FooterHeight&gt;&#xD;
+  &lt;PageNumberingStartIndex&gt;0&lt;/PageNumberingStartIndex&gt;&#xD;
+  &lt;PageNumberingPageCountIncrement&gt;0&lt;/PageNumberingPageCountIncrement&gt;&#xD;
+&lt;/PdfFooterOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfDocumentInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;CreatedDate&gt;0001-01-01T00:00:00&lt;/CreatedDate&gt;&#xD;
+&lt;/PdfDocumentInfo&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfBookmarkOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;AutoBookmarksEnabled&gt;false&lt;/AutoBookmarksEnabled&gt;&#xD;
+  &lt;HierarchicalBookmarks&gt;true&lt;/HierarchicalBookmarks&gt;&#xD;
+  &lt;AllowDefaultTitle&gt;true&lt;/AllowDefaultTitle&gt;&#xD;
+  &lt;DefaultTitle&gt;Bookmark&lt;/DefaultTitle&gt;&#xD;
+  &lt;MaxTitleLength&gt;-1&lt;/MaxTitleLength&gt;&#xD;
+&lt;/PdfBookmarkOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;ViewerPreferences xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;HideToolbar&gt;false&lt;/HideToolbar&gt;&#xD;
+  &lt;HideMenuBar&gt;false&lt;/HideMenuBar&gt;&#xD;
+  &lt;HideWindowUI&gt;false&lt;/HideWindowUI&gt;&#xD;
+  &lt;FitWindow&gt;false&lt;/FitWindow&gt;&#xD;
+  &lt;CenterWindow&gt;false&lt;/CenterWindow&gt;&#xD;
+  &lt;DisplayDocTitle&gt;false&lt;/DisplayDocTitle&gt;&#xD;
+  &lt;NonFullScreenPageMode&gt;UseNone&lt;/NonFullScreenPageMode&gt;&#xD;
+  &lt;Direction&gt;L2R&lt;/Direction&gt;&#xD;
+  &lt;PageMode&gt;UseNone&lt;/PageMode&gt;&#xD;
+  &lt;PageLayout&gt;OneColumn&lt;/PageLayout&gt;&#xD;
+&lt;/ViewerPreferences&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;SealPdfCfg xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;ConverterScript&gt;@using Winnovative&#xD;
+@using Seal.Converter&#xD;
+@using System.Drawing&#xD;
+@using System.IO&#xD;
+@{		&#xD;
+	//Full documentation of the converter at https://www.winnovative-software.com/Help/html_to_pdf/Index.aspx&#xD;
+	Seal.Converter.PdfConverter converterModel = Model;&#xD;
+    Seal.Model.Repository repository = converterModel.Repository; &#xD;
+	HtmlToPdfConverter converter = converterModel.Converter;&#xD;
+&#xD;
+	Seal.Model.ReportView view = converterModel.View;  //Root view&#xD;
+    var title = view.Report.ExecutionName;&#xD;
+&#xD;
+    // Header &#xD;
+    converter.PdfDocumentOptions.ShowHeader = true;&#xD;
+	var headerImagePath = Path.Combine(repository.ViewImagesFolder, repository.Configuration.LogoName);&#xD;
+	if (System.IO.File.Exists(headerImagePath)) {&#xD;
+		ImageElement headerImage =  new ImageElement(0, 0, headerImagePath);&#xD;
+		converter.PdfHeaderOptions.AddElement(headerImage);&#xD;
+	}&#xD;
+	else {&#xD;
+		TextElement logoText = new TextElement(0, 0, repository.Configuration.WebProductName, new Font(new FontFamily("Arial"), 12, FontStyle.Italic, GraphicsUnit.Point));&#xD;
+		logoText.TextAlign = HorizontalTextAlign.Left;&#xD;
+		logoText.EmbedSysFont = true;&#xD;
+		converter.PdfHeaderOptions.AddElement(logoText);&#xD;
+	}&#xD;
+&#xD;
+    TextElement headerText = new TextElement(0, 10, title, new Font(new FontFamily("Arial"), 14, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point));&#xD;
+	headerText.TextAlign = (title.Length &amp;gt; 25 ? HorizontalTextAlign.Right : HorizontalTextAlign.Center);&#xD;
+	headerText.EmbedSysFont = true;&#xD;
+	converter.PdfHeaderOptions.AddElement(headerText);&#xD;
+&#xD;
+    //Table of contents: Style 1 for Tab Pages, Style 2 for Model Pages&#xD;
+    converter.TableOfContentsOptions.Title = repository.TranslateReport("Table of Contents");&#xD;
+    converter.TableOfContentsOptions.TitleStyle = "font-family:'Arial'; font-size:28px; font-weight:normal";&#xD;
+&#xD;
+    converter.TableOfContentsOptions.SetItemStyle(1, "font-family:'Arial'; font-size:20px; font-weight:bold; font-style:normal;");&#xD;
+    converter.TableOfContentsOptions.SetPageNumberStyle(1, "font-family:'Arial'; font-size:20px; font-weight:bold; font-style:normal;");&#xD;
+&#xD;
+    converter.TableOfContentsOptions.SetItemStyle(2, "font-family:'Arial'; font-size:18px; font-weight:normal; font-style:normal;");&#xD;
+    converter.TableOfContentsOptions.SetPageNumberStyle(2, "font-family:'Arial'; font-size:18px; font-weight:normal; font-style:normal;");&#xD;
+&#xD;
+    //Calculate width&#xD;
+    float documentWidth = converter.PdfDocumentOptions.PdfPageSize.Width - converter.PdfDocumentOptions.LeftMargin - converter.PdfDocumentOptions.RightMargin;&#xD;
+	if (converter.PdfDocumentOptions.PdfPageOrientation == PdfPageOrientation.Landscape) {&#xD;
+		documentWidth = converter.PdfDocumentOptions.PdfPageSize.Height - converter.PdfDocumentOptions.LeftMargin - converter.PdfDocumentOptions.RightMargin;&#xD;
+	}	&#xD;
+&#xD;
+    // Header line &#xD;
+	LineElement headerLine = new LineElement(0, converter.PdfHeaderOptions.HeaderHeight - 4, documentWidth, converter.PdfHeaderOptions.HeaderHeight - 4);&#xD;
+	headerLine.ForeColor = Color.Gray;&#xD;
+	converter.PdfHeaderOptions.AddElement(headerLine);	    &#xD;
+&#xD;
+	// Footer &#xD;
+	converter.PdfDocumentOptions.ShowFooter = true;&#xD;
+	TextElement footerText = new TextElement(0, 6, repository.TranslateReport("Page 2 &amp;amp;p; of &amp;amp;P;"), new Font(new FontFamily("Arial"), 9, GraphicsUnit.Point));&#xD;
+	footerText.TextAlign = HorizontalTextAlign.Right;&#xD;
+	footerText.ForeColor = Color.Gray;&#xD;
+	footerText.EmbedSysFont = true;&#xD;
+	converter.PdfFooterOptions.AddElement(footerText);&#xD;
+&#xD;
+	TextElement footerText2 = new TextElement(0, 6, DateTime.Now.ToString("d", repository.CultureInfo) + " " + DateTime.Now.ToString("t", repository.CultureInfo), new Font(new FontFamily("Arial"), 9, GraphicsUnit.Point));&#xD;
+	footerText2.TextAlign = HorizontalTextAlign.Left;&#xD;
+	footerText2.ForeColor = Color.Gray;&#xD;
+	footerText2.EmbedSysFont = true;&#xD;
+	converter.PdfFooterOptions.AddElement(footerText2);	&#xD;
+&#xD;
+	// Footer line &#xD;
+	LineElement footerLine = new LineElement(0, 4, documentWidth, 4);&#xD;
+    footerLine.ForeColor = Color.Gray;&#xD;
+	converter.PdfFooterOptions.AddElement(footerLine);&#xD;
+}&lt;/ConverterScript&gt;&#xD;
+  &lt;DocumentScript&gt;@using Winnovative&#xD;
+@using Seal.Converter&#xD;
+@using System.Drawing&#xD;
+@{&#xD;
+    //Full documentation of the converter at https://www.winnovative-software.com/Help/html_to_pdf/Index.aspx&#xD;
+    Seal.Converter.PdfConverter converterModel = Model;&#xD;
+    Seal.Model.Repository repository = converterModel.Repository;&#xD;
+    HtmlToPdfConverter converter = converterModel.Converter;&#xD;
+    Document document = converterModel.Document;&#xD;
+&#xD;
+	Seal.Model.ReportView view = converterModel.View; //Root view&#xD;
+&#xD;
+    if (document == null) {&#xD;
+        throw new Exception("Document is not initialized, make sure that the property 'Use PDF Client Library' is set to False in the Server Configuration");&#xD;
+    }&#xD;
+&#xD;
+	/* Uncomment to draw a sample text	*/&#xD;
+	for (int i = 0; i &amp;lt; document.Pages.Count; i++)&#xD;
+	{&#xD;
+		PdfPage page = document.Pages[i];&#xD;
+		TextElement text = new TextElement(200, 300, "This is a text sample...", new Font(new FontFamily("Arial"), 24, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point));&#xD;
+		text.ForeColor = Color.Orange;&#xD;
+		text.TextAngle = 45;&#xD;
+		page.AddElement(text);&#xD;
+	}	&#xD;
+    &#xD;
+}&lt;/DocumentScript&gt;&#xD;
+&lt;/SealPdfCfg&gt;</string></PdfConfigurations><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;SealExcelCfg xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;&#xD;
+  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;&#xD;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;&#xD;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;&#xD;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;&#xD;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;&#xD;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;&#xD;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;&#xD;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;&#xD;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;&#xD;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;&#xD;
+  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;&#xD;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;&#xD;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;&#xD;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;&#xD;
+  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;&#xD;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;&#xD;
+  &lt;RootConfigurationScript /&gt;&#xD;
+  &lt;RootMainScript /&gt;&#xD;
+  &lt;RootHeaderScript /&gt;&#xD;
+  &lt;ConfigurationScript /&gt;&#xD;
+  &lt;MainScript /&gt;&#xD;
+  &lt;HeaderScript /&gt;&#xD;
+  &lt;SummaryScript /&gt;&#xD;
+  &lt;PageScript /&gt;&#xD;
+  &lt;ChartScript&gt;@using Seal.Converter
+@using OfficeOpenXml.Drawing.Chart
+@{    
+    //Full documentation of the EPPlus OpenXml converter at https://github.com/JanKallman/EPPlus
+    ExcelConverter converter = Model;
+    var page = converter.Page;
+    var view = converter.View;
+    var report = converter.View.Report;
+
+    //Chart: rowStart and colStart can be modified here to set an absolute or relative position of the items displayed...
+    int rowStart = converter.CurrentRow;
+    int colStart = converter.CurrentCol;
+    //Target sheet can be changed here
+    var currentSheet = converter.Sheet;
+
+    if (view.Model.HasSerie &amp;amp;&amp;amp; page.Series.Count &amp;gt; 0 &amp;amp;&amp;amp; view.GetBoolValue("show_charts", true))
+    {
+        if (view.InitPageChart(page)) {
+            if(converter.NewSheetForCharts) {
+                converter.Sheet = converter.SetAdditionalSheet(currentSheet.Name + " " + view.Report.Repository.TranslateReport("Charts"), ref rowStart, ref colStart);
+            }
+
+            int serieIndex = 1;
+            var firstSerie = page.Series.OrderBy(i =&amp;gt; i.Element.YAxisType).First(); //Take primary axis first
+
+            eChartType chartType = converter.ConvertChartType(firstSerie.Element);
+            ExcelChart chart = converter.Sheet.Drawings.AddChart(view.ChartTitle + "_" + Guid.NewGuid().ToString(), chartType);
+            chart.SetPosition(rowStart-1, 0, colStart-1, 0);
+            chart.SetSize(converter.ChartWidth, converter.ChartHeight);
+            chart.Title.Text = view.GetTranslatedMappedLabel(view.ChartTitle);
+            rowStart = chart.To.Row + 1;
+            var currentChart = chart;
+
+            //Series Y values
+            int colIndex = 0;
+            ResultCell lastValueCell = null;
+            foreach (var serie in page.Series.OrderBy(i =&amp;gt; i, new ResultSerieComparer()))
+            {
+                var chartType2 = converter.ConvertChartType(serie.Element);
+                var axis2 = (serie.Element.YAxisType == Seal.Model.AxisType.Secondary);
+                if (chartType != chartType2 || chart.UseSecondaryAxis != axis2) {
+                    //New chart type
+                    currentChart = chart.PlotArea.ChartTypes.Add(chartType2);
+                    currentChart.UseSecondaryAxis = axis2;
+                }
+
+                colIndex = 0;
+                converter.Sheet.Cells[rowStart + serieIndex, colStart + colIndex].Value = serie.SerieDisplayName;
+                colIndex++;
+                foreach (var xDimensionKey in page.PrimaryXValues.Keys)
+                {
+                    //Find the corresponding serie value...
+                    var value = serie.Values.FirstOrDefault(i =&amp;gt; i.XDimensionValues == xDimensionKey);
+                    if (value != null) {
+                        converter.SetValue(rowStart + serieIndex, colStart + colIndex, value.Yvalue);
+                        lastValueCell = value.Yvalue;
+                    }
+                    colIndex++;
+                }
+                
+                var valuesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart + serieIndex, colStart + 1, rowStart + serieIndex, colStart + page.PrimaryXValues.Keys.Count);
+                var namesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart, colStart + 1, rowStart, colStart + page.PrimaryXValues.Keys.Count);
+                var chartSerie = currentChart.Series.Add(valuesRange, namesRange);
+                chartSerie.Header = serie.SerieDisplayName;
+
+                if (lastValueCell != null) {
+                    //Add a total column
+                    converter.SetValue(rowStart + serieIndex, colStart + colIndex, lastValueCell);
+                    converter.Sheet.Cells[rowStart + serieIndex, colStart + colIndex].Formula = "SUM(" + valuesRange + ")";
+                }           
+                
+                serieIndex++;
+            }
+
+            //Series X Values
+            colIndex = 1;
+            foreach (var xValues in page.PrimaryXValues.Keys)
+            {
+                var xVals = (Seal.Model.ResultCell[]) xValues;
+                if (xVals.Length == 1) { 
+                    converter.SetValue(rowStart, colStart + colIndex, xVals[0]);
+                }
+                else { //Several values for an axis, we force the string without the format
+                    converter.Sheet.Cells[rowStart, colStart + colIndex].Value = page.PrimaryXValues[xValues];
+                }
+                colIndex++;
+            }
+            if (lastValueCell != null) {
+                converter.Sheet.Cells[rowStart, colStart + colIndex].Value = report.Translate("Total");
+                //Add total row
+                converter.Sheet.Cells[rowStart + serieIndex, colStart].Value = report.Translate("Total");
+                for(colIndex = 1; colIndex &amp;lt;= page.PrimaryXValues.Keys.Count + 1; colIndex++)
+                {
+                    var valuesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart + 1, colStart + colIndex, rowStart + serieIndex - 1, colStart + colIndex);
+                    converter.SetValue(rowStart + serieIndex, colStart + colIndex, lastValueCell);
+                    converter.Sheet.Cells[rowStart + serieIndex, colStart + colIndex].Formula = "SUM(" + valuesRange + ")";
+                }
+                
+            }
+
+            if (converter.Sheet == currentSheet) 
+            {
+                converter.CurrentRow = rowStart + serieIndex + 2;
+            }
+        }
+    }
+    converter.Sheet = currentSheet;
+}
+&lt;/ChartScript&gt;&#xD;
+  &lt;DataScript /&gt;&#xD;
+&lt;/SealExcelCfg&gt;</string></ExcelConfigurations><DefaultCulture /><CsvSeparator /><WebApplicationName>/Seal</WebApplicationName><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebPublicationDirectory>/Seal</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>
