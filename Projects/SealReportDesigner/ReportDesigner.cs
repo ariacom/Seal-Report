@@ -355,6 +355,17 @@ namespace Seal
             return result;
         }
 
+        bool checkRunning()
+        {
+            bool result = true;
+            if (_report != null && _reportViewer != null && !_reportViewer.CanExecute)
+            {
+                DialogResult dlgResult = MessageBox.Show("The report is being executed, do you want to continue ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dlgResult == DialogResult.No) result = false;
+            }
+            return result;
+        }
+
         object selectedEntity
         {
             get
@@ -482,6 +493,7 @@ namespace Seal
 #endif
             Properties.Settings.Default.Save();
             if (!checkModified()) e.Cancel = true;
+            if (!checkRunning()) e.Cancel = true;
         }
 
         private void buildMRUMenus()
@@ -517,6 +529,7 @@ namespace Seal
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!checkModified()) return;
+            if (!checkRunning()) return;
 
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.Filter = string.Format(Repository.SealRootProductName + " Reports files (*.{0})|*.{0}|All files (*.*)|*.*", Repository.SealReportFileExtension);
@@ -593,6 +606,8 @@ namespace Seal
             {
                 Cursor.Current = Cursors.WaitCursor;
                 if (!checkModified()) return;
+                if (!checkRunning()) return;
+
                 if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();
 
                 if (_repository == null || _repository.MustReload()) _repository = Repository.Create();
@@ -652,6 +667,8 @@ namespace Seal
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!checkModified()) return;
+            if (!checkRunning()) return;
+
             if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();
             _report = null;
             toolStripHelper.SetHelperButtons(null);

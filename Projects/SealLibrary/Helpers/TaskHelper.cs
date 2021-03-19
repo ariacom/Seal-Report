@@ -179,8 +179,9 @@ namespace Seal.Helpers
             return result;
         }
 
-        public void LoadTableFromExcel(string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0)
+        public int LoadTableFromExcel(string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0)
         {
+            int result = 0;
             try
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceExcelPath);
@@ -200,6 +201,7 @@ namespace Seal.Helpers
                         DatabaseHelper.CreateTable(dbCommand, table);
                         LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
                         DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
+                        result = table.Rows.Count;
                     }
                     finally
                     {
@@ -211,6 +213,7 @@ namespace Seal.Helpers
             {
                 LogDebug();
             }
+            return result;
         }
 
         /// <summary>
@@ -546,122 +549,122 @@ namespace Seal.Helpers
         /// <summary>
         /// Execute a .sql file
         /// </summary>
-        public void ExecuteMSSQLFile(string filePath, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11)
+        public void ExecuteMSSQLFile(string filePath, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11, int waitCommands = 20, int waitConnections = 100)
         {
-            ExecuteMSSQLScripts(Path.GetDirectoryName(filePath), useAllConnections, stopOnError, errorClassLevel, Path.GetFileName(filePath));
+            //ExecuteMSSQLScripts(Path.GetDirectoryName(filePath), useAllConnections, stopOnError, errorClassLevel, Path.GetFileName(filePath));
+            _mssqlError = "";
+            _mssqlErrorClassLevel = errorClassLevel;
+
+            LogMessage("Processing file '{0}'", filePath);
+            foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
+            {
+                if (_task.CancelReport) break;
+
+                string connectionString = connection.FullConnectionString;
+                if (connection.ConnectionType == ConnectionType.OleDb)
+                {
+                    var builder = new OleDbConnectionStringBuilder(connection.FullConnectionString);
+                    connectionString = string.Format("Server={0};Database={1};", builder["Data Source"], builder["Initial Catalog"]);
+                    connectionString += (builder.ContainsKey("User ID") ? string.Format("User Id={0};Password={1};", builder["User ID"], builder["Password"]) : "Trusted_Connection=True;");
+                }
+                else if (connection.ConnectionType == ConnectionType.Odbc)
+                {
+                    throw new Exception("Odbc connection type not supported");
+                }
+                SqlConnection conn = new SqlConnection(connectionString);
+                try
+                {
+                    conn.FireInfoMessageEventOnUserErrors = true;
+                    conn.InfoMessage += MSSQLConnection_InfoMessage;
+                    conn.Open();
+                    string script = File.ReadAllText(filePath);
+                    // split script on GO command
+                    IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                    List<string> commands = new List<string>();
+                    string startCmd = "";
+                    bool inComment = false;
+                    foreach (string commandString in commandStrings)
+                    {
+                        if (!string.IsNullOrEmpty(commandString.Trim()))
+                        {
+                            if (!inComment)
+                            {
+                                if (hasStartCommentAtTheEnd(commandString))
+                                {
+                                    //start of comment
+                                    inComment = true;
+                                    startCmd = commandString + "GO";
+                                }
+                                else
+                                {
+                                    //normal case
+                                    commands.Add(startCmd + commandString);
+                                    inComment = false;
+                                    startCmd = "";
+                                }
+
+                            }
+                            else
+                            {
+                                //in comment
+                                if (!hasEndCommentAtTheBeginning(commandString))
+                                {
+                                    //no end of comment
+                                    startCmd += commandString + "GO";
+                                }
+                                else if (hasEndCommentAtTheBeginning(commandString) && hasStartCommentAtTheEnd(commandString))
+                                {
+                                    //end of comment, but start again
+                                    startCmd += commandString + "GO";
+                                }
+                                else
+                                {
+                                    //end of comment
+                                    commands.Add(startCmd + commandString);
+                                    inComment = false;
+                                    startCmd = "";
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (string commandString in commands)
+                    {
+                        if (!string.IsNullOrEmpty(commandString.Trim()))
+                        {
+                            DateTime startCommand = DateTime.Now;
+                            using (var command = new SqlCommand("", conn))
+                            {
+                                command.CommandTimeout = 0;
+                                command.CommandText = commandString;
+                                command.ExecuteNonQuery();
+                            }
+                            Thread.Sleep(waitCommands);
+                            if (!string.IsNullOrEmpty(_mssqlError) && stopOnError) throw new Exception(_mssqlError);
+                        }
+                    }
+                    Thread.Sleep(waitConnections);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
         }
 
         /// <summary>
         /// Execute .sql files located in a directory
         /// </summary>
-        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11, string fileNameFilter = "", int waitCommands = 20, int waitConnections = 100, int waitFiles = 10)
+        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11, string fileNameFilter = "*.sql", int waitCommands = 20, int waitConnections = 100, int waitFiles = 10)
         {
-            _mssqlError = "";
-            _mssqlErrorClassLevel = errorClassLevel;
-
-            var files = Directory.GetFiles(scriptsDirectory, "*.sql");
-            foreach (var file in files.OrderBy(i => i))
+            var files = Directory.GetFiles(scriptsDirectory, fileNameFilter);
+            foreach (var f in files.OrderBy(i => i))
             {
-                if (!string.IsNullOrEmpty(fileNameFilter) && !Path.GetFileNameWithoutExtension(file).ToLower().Contains(fileNameFilter.ToLower())) continue;
+                if (!string.IsNullOrEmpty(fileNameFilter) && !Path.GetFileNameWithoutExtension(f).ToLower().Contains(fileNameFilter.ToLower())) continue;
 
-                LogMessage("Processing file '{0}'", file);
-                foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
-                {
-                    if (_task.CancelReport) break;
-
-                    string connectionString = connection.FullConnectionString;
-                    if (connection.ConnectionType == ConnectionType.OleDb)
-                    {
-                        var builder = new OleDbConnectionStringBuilder(connection.FullConnectionString);
-                        connectionString = string.Format("Server={0};Database={1};", builder["Data Source"], builder["Initial Catalog"]);
-                        connectionString += (builder.ContainsKey("User ID") ? string.Format("User Id={0};Password={1};", builder["User ID"], builder["Password"]) : "Trusted_Connection=True;");
-                    }
-                    else if (connection.ConnectionType == ConnectionType.Odbc)
-                    {
-                        throw new Exception("Odbc connection type not supported");
-                    }
-                    SqlConnection conn = new SqlConnection(connectionString);
-                    try
-                    {
-                        conn.FireInfoMessageEventOnUserErrors = true;
-                        conn.InfoMessage += MSSQLConnection_InfoMessage;
-                        conn.Open();
-                        string script = File.ReadAllText(file);
-                        // split script on GO command
-                        IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
-                        List<string> commands = new List<string>();
-                        string startCmd = "";
-                        bool inComment = false;
-                        foreach (string commandString in commandStrings)
-                        {
-                            if (!string.IsNullOrEmpty(commandString.Trim()))
-                            {
-                                if (!inComment)
-                                {
-                                    if (hasStartCommentAtTheEnd(commandString))
-                                    {
-                                        //start of comment
-                                        inComment = true;
-                                        startCmd = commandString + "GO";
-                                    }
-                                    else
-                                    {
-                                        //normal case
-                                        commands.Add(startCmd + commandString);
-                                        inComment = false;
-                                        startCmd = "";
-                                    }
-
-                                }
-                                else
-                                {
-                                    //in comment
-                                    if (!hasEndCommentAtTheBeginning(commandString))
-                                    {
-                                        //no end of comment
-                                        startCmd += commandString + "GO";
-                                    }
-                                    else if (hasEndCommentAtTheBeginning(commandString) && hasStartCommentAtTheEnd(commandString))
-                                    {
-                                        //end of comment, but start again
-                                        startCmd += commandString + "GO";
-                                    }
-                                    else
-                                    {
-                                        //end of comment
-                                        commands.Add(startCmd + commandString);
-                                        inComment = false;
-                                        startCmd = "";
-                                    }
-                                }
-                            }
-                        }
-
-                        foreach (string commandString in commands)
-                        {
-                            if (!string.IsNullOrEmpty(commandString.Trim()))
-                            {
-                                DateTime startCommand = DateTime.Now;
-                                using (var command = new SqlCommand("", conn))
-                                {
-                                    command.CommandTimeout = 0;
-                                    command.CommandText = commandString;
-                                    command.ExecuteNonQuery();
-                                }
-                                Thread.Sleep(waitCommands);
-                                if (!string.IsNullOrEmpty(_mssqlError) && stopOnError) throw new Exception(_mssqlError);
-                            }
-                        }
-                        Thread.Sleep(waitConnections);
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
+                ExecuteMSSQLFile(f, useAllConnections, stopOnError, errorClassLevel, waitCommands, waitConnections);
                 Thread.Sleep(waitFiles);
             }
-
             LogMessage("File execution terminated.");
         }
 

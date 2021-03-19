@@ -353,7 +353,7 @@ namespace Seal.Helpers
         {
             foreach (var f in Directory.GetFiles(dir, filter))
             {
-                files.Add(f, targetDir + Path.GetFileNameWithoutExtension(f) + Path.GetExtension(f));
+                files.Add(f, targetDir + Path.GetFileName(f));
             }
 
             if (recursive)
