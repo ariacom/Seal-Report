@@ -1,501 +1,501 @@
-Context;Reference;en;ru
-NVD3;(right axis);;(правая ось)
-NVD3;Expanded;;Расширенный
-NVD3;Grouped;;Сгруппированный
-NVD3;Re-scale y-axis;;Изменить масштаб оси Y
-NVD3;Stacked;;Сложенный
-NVD3;Stream;;Поток
-Report;(filtered from _MAX_);;(отфильтрованно с _MAX_)
-Report;!=;;!=
-Report;# of % selected;;# из % выделенных
-Report;<;;<
-Report;<=;;<=
-Report;=;;=
-Report;>;;>
-Report;>=;;>=
-Report;A value is required for;;Требуется значение для 
-Report;All selected;;Все выбранны
-Report;All;;Все
-Report;and;;и
-Report;Auto Scroll enabled;;Автопрокрутка включена
-Report;Average of;;В среднем
-Report;Back to top;;Наверх
-Report;Between;;Между
-Report;Cancel;;Отмена
-Report;Cancelling report...;;Отмена отчета ...
-Report;Charts;;Диаграммы
-Report;Contains;;Содержит
-Report;Count of;;Количество
-Report;Close;;Закрывать
-Report;Description;;Описание
-Report;Does not contain;;Не содержит
-Report;Drill <;;Drill <
-Report;Drill >;;Drill>
-Report;Duration (seconds);;Продолжительность (секунды)
-Report;Email sent to '{0}';;Письмо отправлено на '{0}'
-Report;Ends with;;Заканчивается на
-Report;Equals;;Равно
-Report;Execute;;Выполнять
-Report;Executing report...;;Выполнение отчета ...
-Report;Execution date;;Дата запуска
-Report;Execution duration;;Срок запуска
-Report;execution messages;;сообщения запуска
-Report;Export messages...;;Экспорт сообщений ...
-Report;Filter:;;Фильтр:
-Report;Goal;;Цель
-Report;Hide;;Скрывать
-Report;Invalid date;;Недействительная дата
-Report;Invalid numeric value;;Неверное числовое значение
-Report;Is between;;Между
-Report;Is different from;;Отличается от
-Report;Is empty;;Пустой
-Report;Is greater or equal than;;Больше или равно чем
-Report;Is greater than;;Больше, чем
-Report;Is not between;;Не между
-Report;Is not empty;;Не пусто
-Report;Is not Null;;Не является нулем
-Report;Is Null;;Нулевой
-Report;Is smaller or equal than;;Меньше или равно чем
-Report;Is smaller than;;Меньше чем
-Report;Logs;;Журналы
-Report;Maximum of;;Максимум
-Report;Minimum of;;Минимум
-Report;Model;;Модель
-Report;Model loaded...;;Модель загружена ...
-Report;Models loaded...;;Модели загружены ...
-Report;New report;;Новый отчет
-Report;No records;;Нет записей
-Report;No records. The report output generation has been cancelled.;;Нет записей. Формирование вывода отчета было отменено.
-Report;No reports;;Нет отчетов
-Report;No rows;;Нет строк
-Report;Not Between;;Не между
-Report;Not Contains;;Не содержит
-Report;Now;;Сейчас
-Report;Page;;Страница
-Report;"Page &p; of &P;";;"Страница & p; из & P;"
-Report;Pages;;Страницы
-Report;Please find the report '{0}' in attachment.;;"Вы можете найти отчет ""{0}"" во вложении."
-Report;Processing;;Обработка
-Report;Processing...;;Обработка...
-Report;Please enter a value;;Пожалуйста, введите значение
-Report;Records;;Записи
-Report;Report;;Отчет
-Report;Report has been cancelled;;Отчет был отменен
-Report;report information;;сообщить информацию
-Report;report restrictions;;сообщить об ограничениях
-Report;Report result generated in '{0}';;Результат отчета создан в '{0}'
-Report;report result panel;;панель результатов отчета
-Report;Restrictions;;Ограничения
-Report;Results;;Результаты
-Report;second;;второй
-Report;seconds;;секунды
-Report;Select all;;Выбрать все
-Report;Show;;Показать
-Report;Show/Hide Restrictions;;Показать / скрыть ограничения
-Report;Show _MENU_ reports;;Показать отчеты _MENU_
-Report;Show _MENU_ rows;;Показать _MENU_ строк
-Report;Showing _START_ to _END_ of _TOTAL_;;Показаны с _START_ по _END_ из _TOTAL_
-Report;Showing 0 to 0 of 0;;Показано с 0 по 0 из 0
-Report;Starting execution...;;Запуск выполнения ...
-Report;Starts with;;Начинается с
-Report;Sum of;;Сумма
-Report;Summary;;Резюме
-Report;Table of Contents;;Оглавление
-Report;Task executed...;;Задача выполнена ...
-Report;Tasks executed...;;Задачи выполнены ...
-Report;The report has been generated.;;Отчет сформирован.
-Report;This report has execution errors. Please check details in the Logs Files...;;В этом отчете есть ошибки выполнения. Пожалуйста, проверьте подробности в файлах журналов ...
-Report;ThisMonth;;Этот месяц
-Report;ThisWeek;;На этой неделе
-Report;ThisYear;;В этом году
-Report;ThisQuarter;;ЭтотКвартал
-Report;ThisSemester;;Этот семестр
-Report;ThisMinute;;ЭтаМинута
-Report;ThisHour;;ЭтотЧас
-Report;Today;;Сегодня
-Report;Total;;Общее
-Report;Use the date format '{0}' or one of the following keywords:;;"Используйте формат даты ""{0}"" или одно из следующих ключевых слов:"
-Report;Refresh;;Обновить
-Report;View CSV Result;;Просмотреть результат в формате CSV
-Report;View Excel Result;;Посмотреть результат в Excel
-Report;View HTML Result;;Посмотреть результат HTML
-Report;View PDF Result;;Посмотреть результат в PDF
-Report;View Print Result;;Посмотреть результат печати
-Report;View report result file;;Просмотреть файл результатов отчета
-Report;Go to today;;Перейти на сегодня
-Report;Clear selection;;Очистить фильтр
-Report;Select Month;;Выберите месяц
-Report;Previous Month;;Прошлый месяц
-Report;Next Month;;Следующий месяц
-Report;Select Year;;Выберите год
-Report;Previous Year;;Предыдущий год
-Report;Next Year;;Следующий год
-Report;Select Decade;;Выберите Десятилетие
-Report;Previous Decade;;Предыдущее десятилетие
-Report;Next Decade;;Следующее десятилетие
-Report;Previous Century;;Предыдущий век
-Report;Next Century;;Следующий век
-Report;Pick Hour;;Выберите час
-Report;Increment;;Инкремент
-Report;Decrement;;Декремент
-Report;Pick Minute;;Выберите минуту
-Report;Pick Second;;Выбрать второй
-Report;Toggle Period;;Переключить период
-Report;Select Time;;Выберите время
-Report;Subtotal;;Промежуточный итог
-Web;Add;;Добавить
-Web;Aggregate;;Совокупный
-Web;Auto-Refresh (seconds);;Автообновление (секунды)
-Web;BCC;;BCC
-Web;Body;;Тело
-Web;Cancel;;Отмена
-Web;Cancel if empty;;Отменить, если пусто
-Web;CC;;CC
-Web;Chart axis;;Ось диаграммы
-Web;Chart height;;Высота диаграммы
-Web;Chart JS;;Диаграмма JS
-Web;Chart NVD3;;График NVD3
-Web;Chart Plotly;;Plotly график
-Web;Chart sort;;Сортировка диаграммы
-Web;Chart title;;Заголовок диаграммы
-Web;Chart width;;Ширина диаграммы
-Web;Check SQL;;Проверить SQL
-Web;Close;;Закрыть
-Web;Color;;Цвет
-Web;Connection;;Связь
-Web;PDF Conversion delay;;Задержка преобразования PDF
-Web;Copy;;Копировать
-Web;Create in folder;;Создать в папке
-Web;Create new folder;;Создать новую папку
-Web;Culture;;Культура
-Web;Custom SQL;;Пользовательский SQL
-Web;Custom;;Пользовательский
-Web;Cut;;Вырезать
-Web;Days;;Дни
-Web;Days of the week;;Дни недели
-Web;Default body;;Тело по умолчанию
-Web;Default sender address;;Адрес отправителя по умолчанию
-Web;Default subject;;Тема по умолчанию
-Web;Default view;;Вид по умолчанию
-Web;Delete;;Удалить
-Web;Delete folder;;Удалить папку
-Web;Description;;Описание
-Web;Device;;Устройство
-Web;Disconnect;;Отключить
-Web;Display options;;Показать варианты
-Web;Edition;;Версия
-Web;Elements;;Элементы
-Web;End date;;Дата окончания
-Web;End date is before start date;;Дата окончания раньше даты начала
-Web;Enter a password to protect the Zip file;;Введите пароль для защиты Zip-файла
-Web;"Enter addresses separated by ;";;"Введите адреса через;"
-Web;Enter password;;Введите пароль
-Web;Enter the file name without extension;;Введите имя файла без расширения
-Web;Enter user name;;Введите имя пользователя
-Web;Enter your new file name;;Введите ваше новое имя файла
-Web;Error;;Ошибка
-Web;Error: only files (and not reports) can be copied to this folder.;;Ошибка: в эту папку можно копировать только файлы (но не отчеты).
-Web;Error: This report name exists already.;;Ошибка: это название отчета уже существует.
-Web;Execute;;Выполнить
-Web;Execute now;;Выполнить сейчас
-Web;Execution;;Выполнение
-Web;Export;;Экспорт
-Web;File name;;Имя файла
-Web;Folder;;Папка
-Web;Folders;;Папки
-Web;for a duration of;;на срок
-Web;Format;;Формат
-Web;From;;Из
-Web;Grid mode;;Режим таблицы
-Web;Group name;;Имя группы
-Web;Height;;Высота
-Web;Icon;;Икона
-Web;Inconsistent duration or interval for the schedule. Check your entries.;;Несоответствие продолжительности или интервала расписанию. Проверьте свои записи.
-Web;Invalid user name or password;;Неправильное имя пользователя или пароль
-Web;Is dynamic;;Динамичный
-Web;Is enabled;;Включен
-Web;Is Multiline;;Многострочный
-Web;Is required;;Требуется
-Web;Last;;Последний
-Web;Last execution at;;Последний запуск в
-Web;Licensed to;;Лицензия на
-Web;Login;;Авторизоваться
-Web;Logout;;Выйти
-Web;Logout the user;;Выйти из системы
-Web;Manage Folders;;Управление папками
-Web;Menu name;;Название меню
-Web;Months;;Месяцы
-Web;Name;;Имя
-Web;New;;Новый
-Web;New folder path;;Новый путь к папке
-Web;No Email destination specified in the schedule;;Адрес электронной почты не указан в расписании
-Web;No file name specified in the schedule;;В расписании не указано имя файла
-Web;OK;;ОК
-Web;On startup;;На старте
-Web;Operator;;Оператор
-Web;"Optional addresses separated by ;";;"Необязательные адреса, разделенные;"
-Web;Optional menu name;;Необязательное название меню
-Web;Optional title chart;;Необязательная таблица заголовков
-Web;Options;;Параметры
-Web;Output;;Выход
-Web;Password;;Пароль
-Web;Paste;;Вставить
-Web;Personal;;Личное
-Web;Pivot mode;;Режим Pivot
-Web;Please wait;;Пожалуйста, подождите
-Web;Profile;;Профиль
-Web;Profile information;;Информация профиля
-Web;Prompt;;Подсказка
-Web;Prompt at run-time;;Подсказка во время выполнения
-Web;Recent Reports;;Последние отчеты
-Web;Recur every;;Повторяются каждый
-Web;Refresh;;Обновить
-Web;Reload and execute;;Перезагрузить и выполнить
-Web;Remove;;Удалять
-Web;Remove all;;Убрать все
-Web;Rename;;Переименовать
-Web;Rename or move folder;;Переименовать или переместить папку
-Web;Rename, move or copy;;Переименовать, переместить или скопировать
-Web;Repeat every;;Повторять каждые
-Web;Repeat interval is invalid;;Интервал повтора недействителен
-Web;Repeat duration is invalid;;Недопустимая продолжительность повтора
-Web;Report;;Отчет
-Web;Report name;;Название отчета
-Web;Report title;;Заголовок отчета
-Web;Report title if different from report name;;Заголовок отчета, если он отличается от имени отчета
-Web;Reports;;Отчеты
-Web;Reports menu;;Меню отчетов
-Web;Result as body;;Результат как тело
-Web;Rights;;Права
-Web;Save;;Сохранить
-Web;Schedule;;Расписание
-Web;Search;;Поиск
-Web;Show in menu;;Показать в меню
-Web;Show sub-totals;;Показать промежуточные итоги
-Web;Show totals;;Показать итоги
-Web;Sort;;Сортировать
-Web;SQL;;SQL
-Web;SQL Select Statement;;Оператор выбора SQL
-Web;Start date;;Дата начала
-Web;Subject;;Предмет
-Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;;Достигнуто максимальное количество пользователей для вашей лицензии ({0}). Пожалуйста, попробуйте войти позже ...
-Web;Title;;Заголовок
-Web;To;;К
-Web;Total aggr.;;Всего.
-Web;Type;;Тип
-Web;User groups;;Группы пользователей
-Web;User name;;Имя пользователя
-Web;Users;;Пользователи
-Web;Value;;Значение
-Web;Values for axis;;Значения для оси
-Web;Values;;Значения
-Web;Width;;Ширина
-Web;Zip result;;Сжатый результат
-Web;Zip password;;Пароль к архиву
-WebJS;# of % selected;;# из% выбрано
-WebJS;% of the column;;% столбца
-WebJS;% of the row;;% строки
-WebJS;% of the total;;% от общего
-WebJS;1 Decimal;;1 десятичный
-WebJS;2 Decimals;;2 десятичных знака
-WebJS;3 Decimals;;3 знака после запятой
-WebJS;4 Decimals;;4 десятичных знака
-WebJS;Actions;;Действия
-WebJS;All selected;;Все выбрано
-WebJS;and;;а также
-WebJS;Ascendant;;Асцендент
-WebJS;Automatic ascendant;;Автоматическое увеличение
-WebJS;Automatic descendant;;Автоматическое уменьшение
-WebJS;Average;;В среднем
-WebJS;Average of;;В среднем
-WebJS;Axis;;Ось
-WebJS;Bar;;Бар
-WebJS;By axis label ascending;;По метке оси по возрастанию
-WebJS;By axis label descending;;По метке оси по убыванию
-WebJS;By point ascending;;По точке по возрастанию
-WebJS;By point descending;;По пунктам по убыванию
-WebJS;Cancel;;Отмена
-WebJS;Contains;;Содержит
-WebJS;Copy to;;Скопировать в
-WebJS;Count;;Считать
-WebJS;Count of;;Количество
-WebJS;Create in;;Создать в
-WebJS;Create a Standard report;;Создать стандартный отчет
-WebJS;Create a SQL report;;Создать отчет SQL
-WebJS;CSV;;CSV
-WebJS;CSV: Use element format;;CSV: использовать формат элемента
-WebJS;Daily;;Ежедневно
-WebJS;Data tables responsive;;Адаптивные таблицы данных
-WebJS;day;;день
-WebJS;days;;дней
-WebJS;Decimal;;Десятичный
-WebJS;Default;;По умолчанию
-WebJS;Custom;;Обычай
-WebJS;Chart: Bar stacked;;График: столбик с накоплением
-WebJS;Default culture;;Культура по умолчанию
-WebJS;Default report connection;;Подключение к отчету по умолчанию
-WebJS;Default repository connection;;Подключение к репозиторию по умолчанию
-WebJS;Default startup;;Запуск по умолчанию
-WebJS;Descendant;;Потомок
-WebJS;Do not execute report;;Не выполнять отчет
-WebJS;Do you really want to delete the reports or files selected ?;;Вы действительно хотите удалить выбранные отчеты или файлы?
-WebJS;Does not contain;;Не содержит
-WebJS;Drop your Column elements;;Отбросьте элементы столбца
-WebJS;Drop your Data;;Отбросьте ваши данные
-WebJS;Drop your Data elements;;Отбросьте элементы данных
-WebJS;Drop your Elements;;Бросьте свои элементы
-WebJS;Drop your Page elements;;Отбросьте элементы страницы
-WebJS;Drop your Restrictions;;Отбросьте свои ограничения
-WebJS;Drop your Row elements;;Отбросьте элементы строки
-WebJS;Edit report;;Редактировать отчет
-WebJS;Email;;Электронное письмо
-WebJS;Ends with;;Заканчивается на
-WebJS;Equals;;Равно
-WebJS;Error;;Ошибка
-WebJS;Execute the last report;;Выполнить последний отчет
-WebJS;Execute the report;;Выполнить отчет
-WebJS;Excel;;Excel
-WebJS;Excel: Use element format;;Excel: использовать формат элемента
-WebJS;Execute report in a new window;;Выполнить отчет в новом окне
-WebJS;Folder;;Папка
-WebJS;For columns;;Для столбцов
-WebJS;For rows;;Для строк
-WebJS;For rows (total only);;Для строк (только итого)
-WebJS;For rows and columns;;Для строк и столбцов
-WebJS;For rows and columns (total only);;Для строк и столбцов (только итого)
-WebJS;Force execution;;Принудительное выполнение
-WebJS;General;;Общий
-WebJS;General date long time;;Общая дата долгое время
-WebJS;General date short time;;Общая дата короткое время
-WebJS;Horizontal Bar;;Горизонтальное меню
-WebJS;hour;;час
-WebJS;hours;;часы
-WebJS;HTML;;HTML
-WebJS;HTML Print;;HTML печать
-WebJS;Indefinitely;;Бесконечно
-WebJS;Is between;;Между
-WebJS;Is different from;;Отличается от
-WebJS;Is empty;;Пустой
-WebJS;Is greater or equal than;;Больше или равно чем
-WebJS;Is greater than;;Больше, чем
-WebJS;Is not between;;Не между
-WebJS;Is not empty;;Не пусто
-WebJS;Is not Null;;Не является нулем
-WebJS;Is Null;;Нулевой
-WebJS;Is smaller or equal than;;Меньше или равно чем
-WebJS;Is smaller than;;Меньше чем
-WebJS;Last modification;;Последняя модификация
-WebJS;Last;;Последний
-WebJS;Line;;Линия
-WebJS;Long date;;Длинная дата
-WebJS;Maximum;;Максимум
-WebJS;Maximum of;;Максимум
-WebJS;Minimum;;Минимум
-WebJS;Minimum of;;Минимум
-WebJS;minute;;минута
-WebJS;minutes;;минут
-WebJS;Model updated;;Модель обновлена
-WebJS;Modified;;Изменено
-WebJS;Monthly;;Ежемесячно
-WebJS;Move to;;Перейти к
-WebJS;New Output for;;Новый результат для
-WebJS;New report;;Новый отчет
-WebJS;New Schedule;;Новое расписание
-WebJS;No;;Нет
-WebJS;No (axis values are linear);;Нет (значения оси линейны)
-WebJS;No calculation option;;Нет параметра расчета
-WebJS;No Output;;Нет вывода
-WebJS;No prompt;;Нет подсказки
-WebJS;No report;;Нет отчета
-WebJS;No Schedule;;Нет расписания
-WebJS;No schedule;;Нет расписания
-WebJS;No Sort;;Без сортировки
-WebJS;No total;;Нет всего
-WebJS;None;;Никто
-WebJS;Not sorted;;Не отсортировано
-WebJS;Number;;Число
-WebJS;Number 1 dec.;;№1 дек.
-WebJS;Number 2 dec.;;№ 2 дек.
-WebJS;Number 3 dec.;;№3 дек.
-WebJS;Number 4 dec.;;№4 дек.
-WebJS;One time;;Один раз
-WebJS;OK;;ОК
-WebJS;Options;;Параметры
-WebJS;Output;;Выход
-WebJS;PDF;;PDF
-WebJS;PDF Landscape;;PDF 
-WebJS;PDF Print;;PDF Печать
-WebJS;Percentage;;Процент
-WebJS;Percentage 1 Dec.;;Процент 1 дек.
-WebJS;Percentage 2 Dec.;;Процент 2 дек.
-WebJS;Pie;;Пирог
-WebJS;Please note that only schedules can be edited for this report.;;Обратите внимание, что для этого отчета можно редактировать только расписание.
-WebJS;Please wait;;Пожалуйста, подождите
-WebJS;Polar Area;;Полярная зона
-WebJS;Private (The output cannot be edited by other users);;Частный (вывод не может редактироваться другими пользователями)
-WebJS;Private (The output cannot be executed by other users);;Частный (вывод не может быть выполнен другими пользователями)
-WebJS;Profile;;Профиль
-WebJS;Please select first the type of report you want to create...;;Пожалуйста, выберите сначала тип отчета, который вы хотите создать ...
-WebJS;Processing;;Обработка
-WebJS;Prompt at execution;;Оперативно при исполнении
-WebJS;Prompt only one value;;Подскажите только одно значение
-WebJS;Prompt only two values;;Подскажите только два значения
-WebJS;Public;;Общее
-WebJS;Public edition;;Общее издание
-WebJS;Public execution;;Общее выполнение
-WebJS;Radar;;Радар
-WebJS;Remove;;Удалять
-WebJS;Rename;;Переименовать
-WebJS;Report;;Отчет
-WebJS;Reports;;Отчеты
-WebJS;Report has been modified, do you really want to close ?;;Отчет был изменен, вы действительно хотите закрыть?
-WebJS;Report saved;;Отчет сохранен
-WebJS;report(s) or file(s) cut in the clipboard;;отчет (ы) или файл (ы) вырезаны в буфере обмена
-WebJS;report(s) or file(s) have been deleted;;отчет (ы) или файл (ы) были удалены
-WebJS;report(s) or file(s) processed;;отчет (ы) или файл (ы) обработаны
-WebJS;report(s) or files(s) copied in the clipboard;;отчет (ы) или файлы (ы), скопированные в буфер обмена
-WebJS;Scatter;;Разброс
-WebJS;Schedule;;Расписание
-WebJS;second;;второй
-WebJS;seconds;;секунды
-WebJS;Select all;;Выбрать все
-WebJS;Server Version;;Версия сервера
-WebJS;Short date;;Короткая дата
-WebJS;Show _MENU_ reports;;Показать отчеты _MENU_
-WebJS;Show data tables;;Показать таблицы данных
-WebJS;Show execution message panel;;Показать панель сообщений о выполнении
-WebJS;Show first header line;;Показать первую строку заголовка
-WebJS;Show information panel;;Показать информационную панель
-WebJS;Show page tables;;Показать таблицы страниц
-WebJS;Show report result panel;;Показать панель результатов отчета
-WebJS;Show restrictions panel;;Показать панель ограничений
-WebJS;Show summary table;;Показать сводную таблицу
-WebJS;Splitter;;Разделитель
-WebJS;Stacked Area;;Сложенная область
-WebJS;Starts with;;Начинается с
-WebJS;Sum;;Сумма
-WebJS;The folder has been created;;Папка создана
-WebJS;The folder has been deleted;;Папка удалена
-WebJS;The folder has been renamed;;Папка была переименована
-WebJS;The folder has been updated;;Папка обновлена
-WebJS;The report or file has been renamed;;Отчет или файл были переименованы
-WebJS;Toggle Report or Folders view;;Переключить режим просмотра отчетов или папок
-WebJS;Use data tables;;Использовать таблицы данных
-WebJS;Use full screen width;;Использовать полную ширину экрана
-WebJS;Unexpected error on server;;Неожиданная ошибка на сервере
-WebJS;View;;Вид
-WebJS;View Folders;;Просмотр папок
-WebJS;View Report;;Посмотреть отчет
-WebJS;View reports;;Просмотр отчетов
-WebJS;Views and outputs;;Просмотры и выходы
-WebJS;Warning;;Предупреждение
-WebJS;Web Interface Version;;Версия веб-интерфейса
-WebJS;Weekly;;Еженедельно
-WebJS;weeks;;недели
-WebJS;Yes;;да
-WebJS;Yes (a new line with sub-totals is added when the value changes);;Да (при изменении значения добавляется новая строка с промежуточными итогами)
-WebJS;Yes (element values are used for the axis);;Да (для оси используются значения элементов)
-WebJS;Yes (the result is zipped);;Да (результат заархивирован)
-WebJS;Yes (the HTML result is the body);;Да (результат HTML )
-WebJS;Yes, name, color and icon may change after execution;;Да, название, цвет и значок могут измениться после выполнения
-WebJS;Yes (The output is not generated if the result set is empty);;Да (вывод не создается, если набор пуст) 
+Context;Reference;ru
+NVD3;(right axis);(правая ось)
+NVD3;Expanded;Расширенный
+NVD3;Grouped;Сгруппированный
+NVD3;Re-scale y-axis;Изменить масштаб оси Y
+NVD3;Stacked;Сложенный
+NVD3;Stream;Поток
+Report;(filtered from _MAX_);(отфильтрованно с _MAX_)
+Report;!=;!=
+Report;# of % selected;# из % выделенных
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Требуется значение для 
+Report;All selected;Все выбранны
+Report;All;Все
+Report;and;и
+Report;Auto Scroll enabled;Автопрокрутка включена
+Report;Average of;В среднем
+Report;Back to top;Наверх
+Report;Between;Между
+Report;Cancel;Отмена
+Report;Cancelling report...;Отмена отчета ...
+Report;Charts;Диаграммы
+Report;Contains;Содержит
+Report;Count of;Количество
+Report;Close;Закрывать
+Report;Description;Описание
+Report;Does not contain;Не содержит
+Report;Drill <;Drill <
+Report;Drill >;Drill>
+Report;Duration (seconds);Продолжительность (секунды)
+Report;Email sent to '{0}';Письмо отправлено на '{0}'
+Report;Ends with;Заканчивается на
+Report;Equals;Равно
+Report;Execute;Выполнять
+Report;Executing report...;Выполнение отчета ...
+Report;Execution date;Дата запуска
+Report;Execution duration;Срок запуска
+Report;execution messages;сообщения запуска
+Report;Export messages...;Экспорт сообщений ...
+Report;Filter:;Фильтр:
+Report;Goal;Цель
+Report;Hide;Скрывать
+Report;Invalid date;Недействительная дата
+Report;Invalid numeric value;Неверное числовое значение
+Report;Is between;Между
+Report;Is different from;Отличается от
+Report;Is empty;Пустой
+Report;Is greater or equal than;Больше или равно чем
+Report;Is greater than;Больше, чем
+Report;Is not between;Не между
+Report;Is not empty;Не пусто
+Report;Is not Null;Не является нулем
+Report;Is Null;Нулевой
+Report;Is smaller or equal than;Меньше или равно чем
+Report;Is smaller than;Меньше чем
+Report;Logs;Журналы
+Report;Maximum of;Максимум
+Report;Minimum of;Минимум
+Report;Model;Модель
+Report;Model loaded...;Модель загружена ...
+Report;Models loaded...;Модели загружены ...
+Report;New report;Новый отчет
+Report;No records;Нет записей
+Report;No records. The report output generation has been cancelled.;Нет записей. Формирование вывода отчета было отменено.
+Report;No reports;Нет отчетов
+Report;No rows;Нет строк
+Report;Not Between;Не между
+Report;Not Contains;Не содержит
+Report;Now;Сейчас
+Report;Page;Страница
+Report;"Page &p; of &P;";"Страница & p; из & P;"
+Report;Pages;Страницы
+Report;Please find the report '{0}' in attachment.;"Вы можете найти отчет ""{0}"" во вложении."
+Report;Processing;Обработка
+Report;Processing...;Обработка...
+Report;Please enter a value;Пожалуйста, введите значение
+Report;Records;Записи
+Report;Report;Отчет
+Report;Report has been cancelled;Отчет был отменен
+Report;report information;сообщить информацию
+Report;report restrictions;сообщить об ограничениях
+Report;Report result generated in '{0}';Результат отчета создан в '{0}'
+Report;report result panel;панель результатов отчета
+Report;Restrictions;Ограничения
+Report;Results;Результаты
+Report;second;второй
+Report;seconds;секунды
+Report;Select all;Выбрать все
+Report;Show;Показать
+Report;Show/Hide Restrictions;Показать / скрыть ограничения
+Report;Show _MENU_ reports;Показать отчеты _MENU_
+Report;Show _MENU_ rows;Показать _MENU_ строк
+Report;Showing _START_ to _END_ of _TOTAL_;Показаны с _START_ по _END_ из _TOTAL_
+Report;Showing 0 to 0 of 0;Показано с 0 по 0 из 0
+Report;Starting execution...;Запуск выполнения ...
+Report;Starts with;Начинается с
+Report;Sum of;Сумма
+Report;Summary;Резюме
+Report;Table of Contents;Оглавление
+Report;Task executed...;Задача выполнена ...
+Report;Tasks executed...;Задачи выполнены ...
+Report;The report has been generated.;Отчет сформирован.
+Report;This report has execution errors. Please check details in the Logs Files...;В этом отчете есть ошибки выполнения. Пожалуйста, проверьте подробности в файлах журналов ...
+Report;ThisMonth;Этот месяц
+Report;ThisWeek;На этой неделе
+Report;ThisYear;В этом году
+Report;ThisQuarter;ЭтотКвартал
+Report;ThisSemester;Этот семестр
+Report;ThisMinute;ЭтаМинута
+Report;ThisHour;ЭтотЧас
+Report;Today;Сегодня
+Report;Total;Общее
+Report;Use the date format '{0}' or one of the following keywords:;"Используйте формат даты ""{0}"" или одно из следующих ключевых слов:"
+Report;Refresh;Обновить
+Report;View CSV Result;Просмотреть результат в формате CSV
+Report;View Excel Result;Посмотреть результат в Excel
+Report;View HTML Result;Посмотреть результат HTML
+Report;View PDF Result;Посмотреть результат в PDF
+Report;View Print Result;Посмотреть результат печати
+Report;View report result file;Просмотреть файл результатов отчета
+Report;Go to today;Перейти на сегодня
+Report;Clear selection;Очистить фильтр
+Report;Select Month;Выберите месяц
+Report;Previous Month;Прошлый месяц
+Report;Next Month;Следующий месяц
+Report;Select Year;Выберите год
+Report;Previous Year;Предыдущий год
+Report;Next Year;Следующий год
+Report;Select Decade;Выберите Десятилетие
+Report;Previous Decade;Предыдущее десятилетие
+Report;Next Decade;Следующее десятилетие
+Report;Previous Century;Предыдущий век
+Report;Next Century;Следующий век
+Report;Pick Hour;Выберите час
+Report;Increment;Инкремент
+Report;Decrement;Декремент
+Report;Pick Minute;Выберите минуту
+Report;Pick Second;Выбрать второй
+Report;Toggle Period;Переключить период
+Report;Select Time;Выберите время
+Report;Subtotal;Промежуточный итог
+Web;Add;Добавить
+Web;Aggregate;Совокупный
+Web;Auto-Refresh (seconds);Автообновление (секунды)
+Web;BCC;BCC
+Web;Body;Тело
+Web;Cancel;Отмена
+Web;Cancel if empty;Отменить, если пусто
+Web;CC;CC
+Web;Chart axis;Ось диаграммы
+Web;Chart height;Высота диаграммы
+Web;Chart JS;Диаграмма JS
+Web;Chart NVD3;График NVD3
+Web;Chart Plotly;Plotly график
+Web;Chart sort;Сортировка диаграммы
+Web;Chart title;Заголовок диаграммы
+Web;Chart width;Ширина диаграммы
+Web;Check SQL;Проверить SQL
+Web;Close;Закрыть
+Web;Color;Цвет
+Web;Connection;Связь
+Web;PDF Conversion delay;Задержка преобразования PDF
+Web;Copy;Копировать
+Web;Create in folder;Создать в папке
+Web;Create new folder;Создать новую папку
+Web;Culture;Культура
+Web;Custom SQL;Пользовательский SQL
+Web;Custom;Пользовательский
+Web;Cut;Вырезать
+Web;Days;Дни
+Web;Days of the week;Дни недели
+Web;Default body;Тело по умолчанию
+Web;Default sender address;Адрес отправителя по умолчанию
+Web;Default subject;Тема по умолчанию
+Web;Default view;Вид по умолчанию
+Web;Delete;Удалить
+Web;Delete folder;Удалить папку
+Web;Description;Описание
+Web;Device;Устройство
+Web;Disconnect;Отключить
+Web;Display options;Показать варианты
+Web;Edition;Версия
+Web;Elements;Элементы
+Web;End date;Дата окончания
+Web;End date is before start date;Дата окончания раньше даты начала
+Web;Enter a password to protect the Zip file;Введите пароль для защиты Zip-файла
+Web;"Enter addresses separated by ;";"Введите адреса через;"
+Web;Enter password;Введите пароль
+Web;Enter the file name without extension;Введите имя файла без расширения
+Web;Enter user name;Введите имя пользователя
+Web;Enter your new file name;Введите ваше новое имя файла
+Web;Error;Ошибка
+Web;Error: only files (and not reports) can be copied to this folder.;Ошибка: в эту папку можно копировать только файлы (но не отчеты).
+Web;Error: This report name exists already.;Ошибка: это название отчета уже существует.
+Web;Execute;Выполнить
+Web;Execute now;Выполнить сейчас
+Web;Execution;Выполнение
+Web;Export;Экспорт
+Web;File name;Имя файла
+Web;Folder;Папка
+Web;Folders;Папки
+Web;for a duration of;на срок
+Web;Format;Формат
+Web;From;Из
+Web;Grid mode;Режим таблицы
+Web;Group name;Имя группы
+Web;Height;Высота
+Web;Icon;Икона
+Web;Inconsistent duration or interval for the schedule. Check your entries.;Несоответствие продолжительности или интервала расписанию. Проверьте свои записи.
+Web;Invalid user name or password;Неправильное имя пользователя или пароль
+Web;Is dynamic;Динамичный
+Web;Is enabled;Включен
+Web;Is Multiline;Многострочный
+Web;Is required;Требуется
+Web;Last;Последний
+Web;Last execution at;Последний запуск в
+Web;Licensed to;Лицензия на
+Web;Login;Авторизоваться
+Web;Logout;Выйти
+Web;Logout the user;Выйти из системы
+Web;Manage Folders;Управление папками
+Web;Menu name;Название меню
+Web;Months;Месяцы
+Web;Name;Имя
+Web;New;Новый
+Web;New folder path;Новый путь к папке
+Web;No Email destination specified in the schedule;Адрес электронной почты не указан в расписании
+Web;No file name specified in the schedule;В расписании не указано имя файла
+Web;OK;ОК
+Web;On startup;На старте
+Web;Operator;Оператор
+Web;"Optional addresses separated by ;";"Необязательные адреса, разделенные;"
+Web;Optional menu name;Необязательное название меню
+Web;Optional title chart;Необязательная таблица заголовков
+Web;Options;Параметры
+Web;Output;Выход
+Web;Password;Пароль
+Web;Paste;Вставить
+Web;Personal;Личное
+Web;Pivot mode;Режим Pivot
+Web;Please wait;Пожалуйста, подождите
+Web;Profile;Профиль
+Web;Profile information;Информация профиля
+Web;Prompt;Подсказка
+Web;Prompt at run-time;Подсказка во время выполнения
+Web;Recent Reports;Последние отчеты
+Web;Recur every;Повторяются каждый
+Web;Refresh;Обновить
+Web;Reload and execute;Перезагрузить и выполнить
+Web;Remove;Удалять
+Web;Remove all;Убрать все
+Web;Rename;Переименовать
+Web;Rename or move folder;Переименовать или переместить папку
+Web;Rename, move or copy;Переименовать, переместить или скопировать
+Web;Repeat every;Повторять каждые
+Web;Repeat interval is invalid;Интервал повтора недействителен
+Web;Repeat duration is invalid;Недопустимая продолжительность повтора
+Web;Report;Отчет
+Web;Report name;Название отчета
+Web;Report title;Заголовок отчета
+Web;Report title if different from report name;Заголовок отчета, если он отличается от имени отчета
+Web;Reports;Отчеты
+Web;Reports menu;Меню отчетов
+Web;Result as body;Результат как тело
+Web;Rights;Права
+Web;Save;Сохранить
+Web;Schedule;Расписание
+Web;Search;Поиск
+Web;Show in menu;Показать в меню
+Web;Show sub-totals;Показать промежуточные итоги
+Web;Show totals;Показать итоги
+Web;Sort;Сортировать
+Web;SQL;SQL
+Web;SQL Select Statement;Оператор выбора SQL
+Web;Start date;Дата начала
+Web;Subject;Предмет
+Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;Достигнуто максимальное количество пользователей для вашей лицензии ({0}). Пожалуйста, попробуйте войти позже ...
+Web;Title;Заголовок
+Web;To;К
+Web;Total aggr.;Всего.
+Web;Type;Тип
+Web;User groups;Группы пользователей
+Web;User name;Имя пользователя
+Web;Users;Пользователи
+Web;Value;Значение
+Web;Values for axis;Значения для оси
+Web;Values;Значения
+Web;Width;Ширина
+Web;Zip result;Сжатый результат
+Web;Zip password;Пароль к архиву
+WebJS;# of % selected;# из% выбрано
+WebJS;% of the column;% столбца
+WebJS;% of the row;% строки
+WebJS;% of the total;% от общего
+WebJS;1 Decimal;1 десятичный
+WebJS;2 Decimals;2 десятичных знака
+WebJS;3 Decimals;3 знака после запятой
+WebJS;4 Decimals;4 десятичных знака
+WebJS;Actions;Действия
+WebJS;All selected;Все выбрано
+WebJS;and;а также
+WebJS;Ascendant;Асцендент
+WebJS;Automatic ascendant;Автоматическое увеличение
+WebJS;Automatic descendant;Автоматическое уменьшение
+WebJS;Average;В среднем
+WebJS;Average of;В среднем
+WebJS;Axis;Ось
+WebJS;Bar;Бар
+WebJS;By axis label ascending;По метке оси по возрастанию
+WebJS;By axis label descending;По метке оси по убыванию
+WebJS;By point ascending;По точке по возрастанию
+WebJS;By point descending;По пунктам по убыванию
+WebJS;Cancel;Отмена
+WebJS;Contains;Содержит
+WebJS;Copy to;Скопировать в
+WebJS;Count;Считать
+WebJS;Count of;Количество
+WebJS;Create in;Создать в
+WebJS;Create a Standard report;Создать стандартный отчет
+WebJS;Create a SQL report;Создать отчет SQL
+WebJS;CSV;CSV
+WebJS;CSV: Use element format;CSV: использовать формат элемента
+WebJS;Daily;Ежедневно
+WebJS;Data tables responsive;Адаптивные таблицы данных
+WebJS;day;день
+WebJS;days;дней
+WebJS;Decimal;Десятичный
+WebJS;Default;По умолчанию
+WebJS;Custom;Обычай
+WebJS;Chart: Bar stacked;График: столбик с накоплением
+WebJS;Default culture;Культура по умолчанию
+WebJS;Default report connection;Подключение к отчету по умолчанию
+WebJS;Default repository connection;Подключение к репозиторию по умолчанию
+WebJS;Default startup;Запуск по умолчанию
+WebJS;Descendant;Потомок
+WebJS;Do not execute report;Не выполнять отчет
+WebJS;Do you really want to delete the reports or files selected ?;Вы действительно хотите удалить выбранные отчеты или файлы?
+WebJS;Does not contain;Не содержит
+WebJS;Drop your Column elements;Отбросьте элементы столбца
+WebJS;Drop your Data;Отбросьте ваши данные
+WebJS;Drop your Data elements;Отбросьте элементы данных
+WebJS;Drop your Elements;Бросьте свои элементы
+WebJS;Drop your Page elements;Отбросьте элементы страницы
+WebJS;Drop your Restrictions;Отбросьте свои ограничения
+WebJS;Drop your Row elements;Отбросьте элементы строки
+WebJS;Edit report;Редактировать отчет
+WebJS;Email;Электронное письмо
+WebJS;Ends with;Заканчивается на
+WebJS;Equals;Равно
+WebJS;Error;Ошибка
+WebJS;Execute the last report;Выполнить последний отчет
+WebJS;Execute the report;Выполнить отчет
+WebJS;Excel;Excel
+WebJS;Excel: Use element format;Excel: использовать формат элемента
+WebJS;Execute report in a new window;Выполнить отчет в новом окне
+WebJS;Folder;Папка
+WebJS;For columns;Для столбцов
+WebJS;For rows;Для строк
+WebJS;For rows (total only);Для строк (только итого)
+WebJS;For rows and columns;Для строк и столбцов
+WebJS;For rows and columns (total only);Для строк и столбцов (только итого)
+WebJS;Force execution;Принудительное выполнение
+WebJS;General;Общий
+WebJS;General date long time;Общая дата долгое время
+WebJS;General date short time;Общая дата короткое время
+WebJS;Horizontal Bar;Горизонтальное меню
+WebJS;hour;час
+WebJS;hours;часы
+WebJS;HTML;HTML
+WebJS;HTML Print;HTML печать
+WebJS;Indefinitely;Бесконечно
+WebJS;Is between;Между
+WebJS;Is different from;Отличается от
+WebJS;Is empty;Пустой
+WebJS;Is greater or equal than;Больше или равно чем
+WebJS;Is greater than;Больше, чем
+WebJS;Is not between;Не между
+WebJS;Is not empty;Не пусто
+WebJS;Is not Null;Не является нулем
+WebJS;Is Null;Нулевой
+WebJS;Is smaller or equal than;Меньше или равно чем
+WebJS;Is smaller than;Меньше чем
+WebJS;Last modification;Последняя модификация
+WebJS;Last;Последний
+WebJS;Line;Линия
+WebJS;Long date;Длинная дата
+WebJS;Maximum;Максимум
+WebJS;Maximum of;Максимум
+WebJS;Minimum;Минимум
+WebJS;Minimum of;Минимум
+WebJS;minute;минута
+WebJS;minutes;минут
+WebJS;Model updated;Модель обновлена
+WebJS;Modified;Изменено
+WebJS;Monthly;Ежемесячно
+WebJS;Move to;Перейти к
+WebJS;New Output for;Новый результат для
+WebJS;New report;Новый отчет
+WebJS;New Schedule;Новое расписание
+WebJS;No;Нет
+WebJS;No (axis values are linear);Нет (значения оси линейны)
+WebJS;No calculation option;Нет параметра расчета
+WebJS;No Output;Нет вывода
+WebJS;No prompt;Нет подсказки
+WebJS;No report;Нет отчета
+WebJS;No Schedule;Нет расписания
+WebJS;No schedule;Нет расписания
+WebJS;No Sort;Без сортировки
+WebJS;No total;Нет всего
+WebJS;None;Никто
+WebJS;Not sorted;Не отсортировано
+WebJS;Number;Число
+WebJS;Number 1 dec.;№1 дек.
+WebJS;Number 2 dec.;№ 2 дек.
+WebJS;Number 3 dec.;№3 дек.
+WebJS;Number 4 dec.;№4 дек.
+WebJS;One time;Один раз
+WebJS;OK;ОК
+WebJS;Options;Параметры
+WebJS;Output;Выход
+WebJS;PDF;PDF
+WebJS;PDF Landscape;PDF 
+WebJS;PDF Print;PDF Печать
+WebJS;Percentage;Процент
+WebJS;Percentage 1 Dec.;Процент 1 дек.
+WebJS;Percentage 2 Dec.;Процент 2 дек.
+WebJS;Pie;Пирог
+WebJS;Please note that only schedules can be edited for this report.;Обратите внимание, что для этого отчета можно редактировать только расписание.
+WebJS;Please wait;Пожалуйста, подождите
+WebJS;Polar Area;Полярная зона
+WebJS;Private (The output cannot be edited by other users);Частный (вывод не может редактироваться другими пользователями)
+WebJS;Private (The output cannot be executed by other users);Частный (вывод не может быть выполнен другими пользователями)
+WebJS;Profile;Профиль
+WebJS;Please select first the type of report you want to create...;Пожалуйста, выберите сначала тип отчета, который вы хотите создать ...
+WebJS;Processing;Обработка
+WebJS;Prompt at execution;Оперативно при исполнении
+WebJS;Prompt only one value;Подскажите только одно значение
+WebJS;Prompt only two values;Подскажите только два значения
+WebJS;Public;Общее
+WebJS;Public edition;Общее издание
+WebJS;Public execution;Общее выполнение
+WebJS;Radar;Радар
+WebJS;Remove;Удалять
+WebJS;Rename;Переименовать
+WebJS;Report;Отчет
+WebJS;Reports;Отчеты
+WebJS;Report has been modified, do you really want to close ?;Отчет был изменен, вы действительно хотите закрыть?
+WebJS;Report saved;Отчет сохранен
+WebJS;report(s) or file(s) cut in the clipboard;отчет (ы) или файл (ы) вырезаны в буфере обмена
+WebJS;report(s) or file(s) have been deleted;отчет (ы) или файл (ы) были удалены
+WebJS;report(s) or file(s) processed;отчет (ы) или файл (ы) обработаны
+WebJS;report(s) or files(s) copied in the clipboard;отчет (ы) или файлы (ы), скопированные в буфер обмена
+WebJS;Scatter;Разброс
+WebJS;Schedule;Расписание
+WebJS;second;второй
+WebJS;seconds;секунды
+WebJS;Select all;Выбрать все
+WebJS;Server Version;Версия сервера
+WebJS;Short date;Короткая дата
+WebJS;Show _MENU_ reports;Показать отчеты _MENU_
+WebJS;Show data tables;Показать таблицы данных
+WebJS;Show execution message panel;Показать панель сообщений о выполнении
+WebJS;Show first header line;Показать первую строку заголовка
+WebJS;Show information panel;Показать информационную панель
+WebJS;Show page tables;Показать таблицы страниц
+WebJS;Show report result panel;Показать панель результатов отчета
+WebJS;Show restrictions panel;Показать панель ограничений
+WebJS;Show summary table;Показать сводную таблицу
+WebJS;Splitter;Разделитель
+WebJS;Stacked Area;Сложенная область
+WebJS;Starts with;Начинается с
+WebJS;Sum;Сумма
+WebJS;The folder has been created;Папка создана
+WebJS;The folder has been deleted;Папка удалена
+WebJS;The folder has been renamed;Папка была переименована
+WebJS;The folder has been updated;Папка обновлена
+WebJS;The report or file has been renamed;Отчет или файл были переименованы
+WebJS;Toggle Report or Folders view;Переключить режим просмотра отчетов или папок
+WebJS;Use data tables;Использовать таблицы данных
+WebJS;Use full screen width;Использовать полную ширину экрана
+WebJS;Unexpected error on server;Неожиданная ошибка на сервере
+WebJS;View;Вид
+WebJS;View Folders;Просмотр папок
+WebJS;View Report;Посмотреть отчет
+WebJS;View reports;Просмотр отчетов
+WebJS;Views and outputs;Просмотры и выходы
+WebJS;Warning;Предупреждение
+WebJS;Web Interface Version;Версия веб-интерфейса
+WebJS;Weekly;Еженедельно
+WebJS;weeks;недели
+WebJS;Yes;да
+WebJS;Yes (a new line with sub-totals is added when the value changes);Да (при изменении значения добавляется новая строка с промежуточными итогами)
+WebJS;Yes (element values are used for the axis);Да (для оси используются значения элементов)
+WebJS;Yes (the result is zipped);Да (результат заархивирован)
+WebJS;Yes (the HTML result is the body);Да (результат HTML )
+WebJS;Yes, name, color and icon may change after execution;Да, название, цвет и значок могут измениться после выполнения
+WebJS;Yes (The output is not generated if the result set is empty);Да (вывод не создается, если набор пуст) 
