@@ -7,30 +7,47 @@
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }
+    var series = page.Series.Where(i => i.Element.ChartJSSerie != ChartJSSerieDefinition.None).OrderBy(i => i, new ResultSerieComparer());
 }
 
-@if (reportModel.HasPlotlySerie && page.Series.Count > 0 && modelView.GetBoolValue("show_charts"))
+@if (reportModel.HasPlotlySerie && series.Count() > 0 && modelView.GetBoolValue("show_charts"))
 {
     <!--Chart Plotly-->
     bool chartOk = false;
+    var axisCount = view.GetNumericValue("plotly_xaxis_count");
     string chartId = "cpl" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
+        var xLabels = axisCount > 0 ? string.Join(",", page.ChartXLabels.Split(',').Take(axisCount)) : page.ChartXLabels;
         <div id="@chartId" style="page-break-inside:avoid; @Helper.AddIfNotEmpty("width:", view.GetValue("plotly_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("plotly_height"), ";")"></div>
 
         <script>
             $(document).ready(function () {
                 var colorsDef = "@view.GetValue("plotly_colors")";
                 var colors = null;
-                if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+                if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecPlotlyChartType == "pie" ? page.PrimaryXDimensions.Count : series.Count()) <= 10 ? "1" : "2")0().range();
                 else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
                 else if (colorsDef == "d3c") colors = d3.scale.category20c().range();
                 else colors = @Raw(view.GetValue("plotly_colors"));
 
+                var colorMappings = {@Raw(view.GetValue("plotly_color_mappings"))};
+                if (@(!string.IsNullOrEmpty(view.GetValue("plotly_color_mappings")) ? "true" : "false") && '@reportModel.ExecPlotlyChartType' == 'pie') {
+                    colors = [@Raw(xLabels)].map(function (i) { return colorMappings[i] });
+                }
+
                 var @chartId = $("#@chartId")[0];
                 var data = [
-                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.PlotlySerie != PlotlySerieDefinition.None).OrderBy(i => i, new ResultSerieComparer()))
+                    @foreach (ResultSerie serie in series)
                     {
+                        var color = "colors[" + page.Series.IndexOf(serie) + "]";
+                        var xSerieValues = axisCount > 0 ? string.Join(",", serie.ChartXSerieValues.Split(',').Take(axisCount)) : serie.ChartXSerieValues;
+                        var ySerieValues = axisCount > 0 ? string.Join(",", serie.ChartYSerieValues.Split(',').Take(axisCount)) : serie.ChartYSerieValues;
+                        var yDateSerieValues = axisCount > 0 ? string.Join(",", serie.ChartYDateSerieValues.Split(',').Take(axisCount)) : serie.ChartYDateSerieValues;
+                        var xDateTimeSerieValues = axisCount > 0 ? string.Join(",", serie.ChartXDateTimeSerieValues.Split(',').Take(axisCount)) : serie.ChartXDateTimeSerieValues;
+                        if (reportModel.ExecPlotlyChartType != "pie" && !string.IsNullOrEmpty(view.GetValue("plotly_color_mappings")))
+                        {
+                            color = "colorMappings['" + serie.SerieDisplayName + "']";
+                        }
                         <text>
                         {
                             type: '@serie.Element.PlotlySerie.ToString().ToLower()',
@@ -38,8 +55,8 @@
                             @if (reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("plotly_bar_orientation") == "h")
                             {
                             <text>
-                            x: [@Raw(serie.ChartYSerieValues)],
-                            y: [@Raw(reportModel.ExecChartIsDateTimeAxis ? serie.ChartXSerieValues : page.ChartXLabels)],
+                            x: [@Raw(ySerieValues)],
+                            y: [@Raw(reportModel.ExecChartIsDateTimeAxis ? xSerieValues : xLabels)],
                             orientation: 'h',
                             </text>
                             }
@@ -47,8 +64,8 @@
                             {
                             <text>
                             separators: decimalSeparator + thousandSeparator,
-                            labels: [@Raw(page.ChartXLabels)],
-                            values: [@Raw(serie.ChartYSerieValues)],
+                            labels: [@Raw(xLabels)],
+                            values: [@Raw(ySerieValues)],
                             hoverinfo: 'text',
                             textinfo: '@view.GetValue("plotly_pie_textinfo")',
                             </text>
@@ -56,14 +73,14 @@
                             else
                             {
                             <text>
-                            x: [@Raw(reportModel.ExecChartIsDateTimeAxis ? serie.ChartXDateTimeSerieValues : page.ChartXLabels)],
-                            y: [@Raw(Helper.FirstNotEmpty(serie.ChartYDateSerieValues, serie.ChartYSerieValues))],
+                            x: [@Raw(reportModel.ExecChartIsDateTimeAxis ? xDateTimeSerieValues : xLabels)],
+                            y: [@Raw(Helper.FirstNotEmpty(yDateSerieValues, ySerieValues))],
                             @Raw(serie.Element.YAxisType == AxisType.Secondary ? "yaxis: 'y2'," : "")
                             </text>
                             }
                             mode: '@view.GetValue("plotly_scatter_mode")',
                             hole: @view.GetValue("plotly_pie_hole"),
-                            marker: { color: colors[@page.Series.IndexOf(serie)] },
+                            marker: { color: @Raw(color) },
                         },
                         </text>
                     }
@@ -79,10 +96,11 @@
                     });
                     data[0].text = text;
                 }
-                
+
                 var layout =
-                    {
+                {
                     autosize: true,
+                    colorway: colors,
                     separators: decimalSeparator + thousandSeparator,
                     title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_title"))))',
                     xaxis: {

@@ -7,15 +7,18 @@
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }
+    var series = page.Series.Where(i => i.Element.ChartJSSerie != ChartJSSerieDefinition.None).OrderBy(i => i, new ResultSerieComparer());
 }
 
-@if (reportModel.HasNVD3Serie && page.Series.Count > 0 && modelView.GetBoolValue("show_charts"))
+@if (reportModel.HasNVD3Serie && series.Count() > 0 && modelView.GetBoolValue("show_charts"))
 {
     <!--Chart NVD3-->
     bool chartOk = false;
+    var axisCount = view.GetNumericValue("nvd3_xaxis_count");
     string chartId = "cnv" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
+        var xLabels = axisCount > 0 ? string.Join(",", page.ChartXLabels.Split(',').Take(axisCount)) : page.ChartXLabels;
         <div id='@chartId' style="page-break-inside:avoid; position: relative; @Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_contheight"), ";")">
             <svg style="@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_height"), ";")" />
         </div>
@@ -23,16 +26,18 @@
             $(document).ready(function () {
                 nv.addGraph(function () {
                     var series = new Array();
-                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.Nvd3Serie != NVD3SerieDefinition.None).OrderBy(i => i, new ResultSerieComparer()))
+                    @foreach (ResultSerie serie in series)
                     {
                         string multiChartOption = (reportModel.ExecNVD3ChartType == "multiChart" ? string.Format(",type:'{0}',yAxis:{1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
+                        var data = axisCount > 0 ? string.Join("},{", serie.ChartXYSerieValues.Split(new string[] { "},{" }, StringSplitOptions.None).Take(axisCount)) + "}" : serie.ChartXYSerieValues;
+
                         <text>
-                            series.push({ key: '@Raw(Helper.ToJS(serie.SerieDisplayName))', values: [@Raw(serie.ChartXYSerieValues)] @Raw(multiChartOption) });
+                            series.push({ key: '@Raw(Helper.ToJS(serie.SerieDisplayName))', values: [@Raw(data)] @Raw(multiChartOption) });
                         </text>
                     }
 
                     var chartType = '@reportModel.ExecNVD3ChartType';
-                    var xLabels = [@Raw(page.ChartXLabels)];
+                    var xLabels = [@Raw(xLabels)];
                     var XValueFormatter = function (value) {
                         if (@Helper.ToJS(reportModel.ExecChartIsNumericAxis)) return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3XAxisFormat))')(value).valueFormat();
                         if (@Helper.ToJS(reportModel.ExecChartIsDateTimeAxis)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3XAxisFormat))')(new Date(value));
@@ -54,10 +59,15 @@
                     //Root Script
                     var colorsDef = "@view.GetValue("nvd3_colors")";
                     var colors = null;
-                    if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+                    if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecNVD3ChartType == "pieChart" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
                     else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
                     else if (colorsDef == "d3c") colors = d3.scale.category20c().range();
                     else colors = @Raw(view.GetValue("nvd3_colors"));
+
+                    var colorMappings = {@Raw(view.GetValue("nvd3_color_mappings"))};
+                    if (@(!string.IsNullOrEmpty(view.GetValue("nvd3_color_mappings")) ? "true" : "false")) {
+                        colors = (chartType == 'pieChart' ? [@Raw(xLabels)].map(function (i) { return colorMappings[i] }) : series.map(function (i) { return colorMappings[i.key] }));
+                    }
 
                     (@chartId).color(colors);
                     //Axis format
