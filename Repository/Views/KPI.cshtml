@@ -110,8 +110,9 @@
 
                 if (!string.IsNullOrEmpty(goalValue))
                 {
+                    <br />
                     <span class="text-center label @goalColor" title="@Raw(headerValue)" style="@Raw(view.GetValue("kpi_goal_css"))">
-                        <span class="glyphicon @goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null ? string.Format(view.GetValue("kpi_goal_pct_format"), goalPercentage.Value) : "")
+                        <span class="glyphicon @goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null && view.GetValue("kpi_goal_pct_format") != "none" ? string.Format(view.GetValue("kpi_goal_pct_format"), goalPercentage.Value) : "")
                     </span>
                 }
             }

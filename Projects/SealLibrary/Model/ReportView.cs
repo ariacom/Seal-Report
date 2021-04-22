@@ -546,7 +546,7 @@ namespace Seal.Model
         /// If true, the view name is got from the model name. This is only valid for a Model View.
         /// </summary>
         [DisplayName("Use model name"), Description("If true, the view name is got from the model name."), Category("Definition"), Id(4, 1)]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool UseModelName
         {
             get { return _useModelName; }

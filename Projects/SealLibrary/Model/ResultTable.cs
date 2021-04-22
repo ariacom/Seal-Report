@@ -168,7 +168,7 @@ namespace Seal.Model
             var rowBodyStyle = view.GetValue("data_table_body_css");
             var rowSubClass = view.GetValue("data_table_subtotal_class");
             var rowSubStyle = view.GetValue("data_table_subtotal_css");
-
+            
             for (int row = start; row < _filteredLines.Count && row < start + len; row++)
             {
                 ResultCell[] line = _filteredLines[row];

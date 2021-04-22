@@ -412,7 +412,7 @@ namespace Seal.Model
         /// </summary>
         public static bool ShouldSort(ResultCell[] values)
         {
-            if (values != null) return values.FirstOrDefault(i => i.Element.FinalSortOrder != null) != null;
+            if (values != null) return values.FirstOrDefault(i => i.Element != null && i.Element.FinalSortOrder != null) != null;
             return false;
         }
 

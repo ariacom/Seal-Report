@@ -583,7 +583,7 @@ function mainInit() {
     });
 
     //print layout
-    if (_printLayout) {
+    if (_printLayout && _reportStandalone) {
         $("nav").removeClass("navbar-fixed-top");
         $("#report_body_container").css("padding-top", "0px");
     }

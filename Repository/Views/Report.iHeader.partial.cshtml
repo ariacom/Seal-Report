@@ -19,11 +19,11 @@
                 </button>
                 @if (configuration.HasLogo)
                 {
-                    <a href="#" class="navbar-left hidden-xs"  title="@configuration.WebProductName">
+                    <a href="#" class="navbar-left hidden-xs"  title="@configuration.WebProductName" style="cursor: default">
                         <img src="@report.AttachImageFile(configuration.LogoName)" class="img-responsive">
                     </a>
                 }
-                <a id="nav_button" href="#" class="navbar-brand">@(!configuration.HasLogo ? configuration.WebProductName + " - " : "")@report.ExecutionName</a><span id="nav_badge" class="badge navbar-left hidden">@report.Translate("Nav")</span>
+                <a id="nav_button" href="#" class="navbar-brand" style="cursor: default">@report.ExecutionName</a><span id="nav_badge" class="badge navbar-left hidden">@report.Translate("Nav")</span>
             </div>
             <div id="navbarCollapse" class="collapse navbar-collapse">
                 @if (report.GenerateHTMLDisplay)

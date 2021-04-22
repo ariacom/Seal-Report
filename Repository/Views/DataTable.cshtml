@@ -15,6 +15,7 @@
         reportModel.InvertDataTables();
     }
     ResultTable table = page.DataTable;
+    var sortEnabled = view.GetBoolValue("data_tables_enabled") && view.GetBoolValue("data_tables_sort_enabled");
     var sortConfiguration = view.GetValue("data_tables_sort_configuration").Replace("{LAST}", (table.ColumnCount-1).ToString());
 }
 
@@ -88,7 +89,8 @@
                     {
                         if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                         ResultCell cell = table[row, col];
-                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue)@Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(view, row, col) && report.GenerateHTMLDisplay ? "<span class='navigation_icon glyphicon glyphicon-new-window'></span>" : "")</th>
+                        var cellCssStyle = sortEnabled ? cell.CellCssStyle : cell.CellCssStyle.Replace("padding-right:25px;", "padding-right:0px;"); //Remove padding if no sort
+                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cellCssStyle)) @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue)@Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(view, row, col) && report.GenerateHTMLDisplay ? "<span class='navigation_icon glyphicon glyphicon-new-window'></span>" : "")</th>
                     }
                 </tr>
             }
