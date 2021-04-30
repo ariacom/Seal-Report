@@ -7,7 +7,7 @@
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }
-    var series = page.Series.Where(i => i.Element.ChartJSSerie != ChartJSSerieDefinition.None).OrderBy(i => i, new ResultSerieComparer());
+    var series = page.Series.Where(i => i.Element.Nvd3Serie != NVD3SerieDefinition.None).OrderBy(i => i, new ResultSerieComparer());
 }
 
 @if (reportModel.HasNVD3Serie && series.Count() > 0 && modelView.GetBoolValue("show_charts"))

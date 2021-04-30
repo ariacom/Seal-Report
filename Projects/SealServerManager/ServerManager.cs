@@ -83,11 +83,13 @@ namespace Seal
             Icon = Properties.Resources.serverManager;
 
             //Repository management, should be part of the installation
-            _repository = Repository.Create();
-            if (_repository == null)
+            try
             {
-                _repository = new Repository();
-                MessageBox.Show("No repository has been defined or found for this installation. Reports will not be rendered. Please modify the .configuration file to set a RepositoryPath containing at least a Views subfolder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _repository = Repository.Create();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             //handle program args
