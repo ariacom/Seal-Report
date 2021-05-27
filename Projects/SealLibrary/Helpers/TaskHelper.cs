@@ -660,8 +660,6 @@ namespace Seal.Helpers
             var files = Directory.GetFiles(scriptsDirectory, fileNameFilter);
             foreach (var f in files.OrderBy(i => i))
             {
-                if (!string.IsNullOrEmpty(fileNameFilter) && !Path.GetFileNameWithoutExtension(f).ToLower().Contains(fileNameFilter.ToLower())) continue;
-
                 ExecuteMSSQLFile(f, useAllConnections, stopOnError, errorClassLevel, waitCommands, waitConnections);
                 Thread.Sleep(waitFiles);
             }

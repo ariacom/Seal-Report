@@ -576,9 +576,15 @@ namespace Seal.Forms
     //Sample to define a menu
     var reports = user.WebMenu.reports;
     reports.Clear();
-    reports.Add(new SWIMenuItem() { path = @""\Samples\04-Charts Gallery - Basics.srex"", viewGUID = null, outputGUID = null, name = ""View Charts"" });
+    var item = new SWIMenuItem() { path = @""\Samples\04-Charts Gallery - Basics.srex"", viewGUID = null, outputGUID = null, name = ""View Charts"" };
+    
+    //extra classes for the menu item
+    //item.classes = ""disabled"";
+
+    reports.Add(item);
     // subMenu
     var subMenu = new SWIMenuItem() { name = ""A SubMenu"" };
+    //subMenu.classes = ""disabled label-danger"";
     subMenu.items.Add(new SWIMenuItem() { path = @""\Search - Orders.srex"", viewGUID = null, outputGUID = null, name = ""Search"" });
     reports.Add(subMenu);
     

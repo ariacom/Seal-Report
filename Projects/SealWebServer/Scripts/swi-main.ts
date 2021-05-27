@@ -403,7 +403,8 @@ class SWIMain {
     }
 
     private addReportMenu(parent, value) {
-        let aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
+        const aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
+        if (value.classes !== "") aref.addClass(value.classes);
         aref.append($("<span class='external-navigation glyphicon glyphicon-new-window'></span>"));
         parent.append($("<li class='menu-reports'>").append(aref));
     }
@@ -416,6 +417,7 @@ class SWIMain {
             else {
                 const li = $("<li class='menu-reports dropdown dropdown-submenu'>");
                 const label = $("<a href='#' class='dropdown-toggle' data-toggle='dropdown'>").html(value.name);
+                if (value.classes !== "") label.addClass(value.classes);
                 li.append(label);
                 parent.append(li);
                 const ul = $("<ul class='dropdown-menu'>");

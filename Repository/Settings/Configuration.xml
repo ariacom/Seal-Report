@@ -131,104 +131,104 @@ _ed.editor.bootstrap.min.js</ScriptFiles><TaskFolderName>Seal Report</TaskFolder
   &lt;PageLayout&gt;OneColumn&lt;/PageLayout&gt;&#xD;
 &lt;/ViewerPreferences&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
 &lt;SealPdfCfg xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
-  &lt;ConverterScript&gt;@using Winnovative&#xD;
-@using Seal.Converter&#xD;
-@using System.Drawing&#xD;
-@using System.IO&#xD;
-@{		&#xD;
-	//Full documentation of the converter at https://www.winnovative-software.com/Help/html_to_pdf/Index.aspx&#xD;
-	Seal.Converter.PdfConverter converterModel = Model;&#xD;
-    Seal.Model.Repository repository = converterModel.Repository; &#xD;
-	HtmlToPdfConverter converter = converterModel.Converter;&#xD;
-&#xD;
-	Seal.Model.ReportView view = converterModel.View;  //Root view&#xD;
-    var title = view.Report.ExecutionName;&#xD;
-&#xD;
-    // Header &#xD;
-    converter.PdfDocumentOptions.ShowHeader = true;&#xD;
-	var headerImagePath = Path.Combine(repository.ViewImagesFolder, repository.Configuration.LogoName);&#xD;
-	if (System.IO.File.Exists(headerImagePath)) {&#xD;
-		ImageElement headerImage =  new ImageElement(0, 0, headerImagePath);&#xD;
-		converter.PdfHeaderOptions.AddElement(headerImage);&#xD;
-	}&#xD;
-	else {&#xD;
-		TextElement logoText = new TextElement(0, 0, repository.Configuration.WebProductName, new Font(new FontFamily("Arial"), 12, FontStyle.Italic, GraphicsUnit.Point));&#xD;
-		logoText.TextAlign = HorizontalTextAlign.Left;&#xD;
-		logoText.EmbedSysFont = true;&#xD;
-		converter.PdfHeaderOptions.AddElement(logoText);&#xD;
-	}&#xD;
-&#xD;
-    TextElement headerText = new TextElement(0, 10, title, new Font(new FontFamily("Arial"), 14, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point));&#xD;
-	headerText.TextAlign = (title.Length &amp;gt; 25 ? HorizontalTextAlign.Right : HorizontalTextAlign.Center);&#xD;
-	headerText.EmbedSysFont = true;&#xD;
-	converter.PdfHeaderOptions.AddElement(headerText);&#xD;
-&#xD;
-    //Table of contents: Style 1 for Tab Pages, Style 2 for Model Pages&#xD;
-    converter.TableOfContentsOptions.Title = repository.TranslateReport("Table of Contents");&#xD;
-    converter.TableOfContentsOptions.TitleStyle = "font-family:'Arial'; font-size:28px; font-weight:normal";&#xD;
-&#xD;
-    converter.TableOfContentsOptions.SetItemStyle(1, "font-family:'Arial'; font-size:20px; font-weight:bold; font-style:normal;");&#xD;
-    converter.TableOfContentsOptions.SetPageNumberStyle(1, "font-family:'Arial'; font-size:20px; font-weight:bold; font-style:normal;");&#xD;
-&#xD;
-    converter.TableOfContentsOptions.SetItemStyle(2, "font-family:'Arial'; font-size:18px; font-weight:normal; font-style:normal;");&#xD;
-    converter.TableOfContentsOptions.SetPageNumberStyle(2, "font-family:'Arial'; font-size:18px; font-weight:normal; font-style:normal;");&#xD;
-&#xD;
-    //Calculate width&#xD;
-    float documentWidth = converter.PdfDocumentOptions.PdfPageSize.Width - converter.PdfDocumentOptions.LeftMargin - converter.PdfDocumentOptions.RightMargin;&#xD;
-	if (converter.PdfDocumentOptions.PdfPageOrientation == PdfPageOrientation.Landscape) {&#xD;
-		documentWidth = converter.PdfDocumentOptions.PdfPageSize.Height - converter.PdfDocumentOptions.LeftMargin - converter.PdfDocumentOptions.RightMargin;&#xD;
-	}	&#xD;
-&#xD;
-    // Header line &#xD;
-	LineElement headerLine = new LineElement(0, converter.PdfHeaderOptions.HeaderHeight - 4, documentWidth, converter.PdfHeaderOptions.HeaderHeight - 4);&#xD;
-	headerLine.ForeColor = Color.Gray;&#xD;
-	converter.PdfHeaderOptions.AddElement(headerLine);	    &#xD;
-&#xD;
-	// Footer &#xD;
-	converter.PdfDocumentOptions.ShowFooter = true;&#xD;
-	TextElement footerText = new TextElement(0, 6, repository.TranslateReport("Page 2 &amp;amp;p; of &amp;amp;P;"), new Font(new FontFamily("Arial"), 9, GraphicsUnit.Point));&#xD;
-	footerText.TextAlign = HorizontalTextAlign.Right;&#xD;
-	footerText.ForeColor = Color.Gray;&#xD;
-	footerText.EmbedSysFont = true;&#xD;
-	converter.PdfFooterOptions.AddElement(footerText);&#xD;
-&#xD;
-	TextElement footerText2 = new TextElement(0, 6, DateTime.Now.ToString("d", repository.CultureInfo) + " " + DateTime.Now.ToString("t", repository.CultureInfo), new Font(new FontFamily("Arial"), 9, GraphicsUnit.Point));&#xD;
-	footerText2.TextAlign = HorizontalTextAlign.Left;&#xD;
-	footerText2.ForeColor = Color.Gray;&#xD;
-	footerText2.EmbedSysFont = true;&#xD;
-	converter.PdfFooterOptions.AddElement(footerText2);	&#xD;
-&#xD;
-	// Footer line &#xD;
-	LineElement footerLine = new LineElement(0, 4, documentWidth, 4);&#xD;
-    footerLine.ForeColor = Color.Gray;&#xD;
-	converter.PdfFooterOptions.AddElement(footerLine);&#xD;
+  &lt;ConverterScript&gt;@using Winnovative
+@using Seal.Converter
+@using System.Drawing
+@using System.IO
+@{		
+	//Full documentation of the converter at https://www.winnovative-software.com/Help/html_to_pdf/Index.aspx
+	Seal.Converter.PdfConverter converterModel = Model;
+    Seal.Model.Repository repository = converterModel.Repository; 
+	HtmlToPdfConverter converter = converterModel.Converter;
+
+	Seal.Model.ReportView view = converterModel.View;  //Root view
+    var title = view.Report.ExecutionName;
+
+    // Header 
+    converter.PdfDocumentOptions.ShowHeader = true;
+	var headerImagePath = Path.Combine(repository.ViewImagesFolder, repository.Configuration.LogoName);
+	if (System.IO.File.Exists(headerImagePath)) {
+		ImageElement headerImage =  new ImageElement(0, 0, headerImagePath);
+		converter.PdfHeaderOptions.AddElement(headerImage);
+	}
+	else {
+		TextElement logoText = new TextElement(0, 0, repository.Configuration.WebProductName, new Font(new FontFamily("Arial"), 12, FontStyle.Italic, GraphicsUnit.Point));
+		logoText.TextAlign = HorizontalTextAlign.Left;
+		logoText.EmbedSysFont = true;
+		converter.PdfHeaderOptions.AddElement(logoText);
+	}
+
+    TextElement headerText = new TextElement(0, 10, title, new Font(new FontFamily("Arial"), 14, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point));
+	headerText.TextAlign = (title.Length &amp;gt; 25 ? HorizontalTextAlign.Right : HorizontalTextAlign.Center);
+	headerText.EmbedSysFont = true;
+	converter.PdfHeaderOptions.AddElement(headerText);
+
+    //Table of contents: Style 1 for Tab Pages, Style 2 for Model Pages
+    converter.TableOfContentsOptions.Title = repository.TranslateReport("Table of Contents");
+    converter.TableOfContentsOptions.TitleStyle = "font-family:'Arial'; font-size:28px; font-weight:normal";
+
+    converter.TableOfContentsOptions.SetItemStyle(1, "font-family:'Arial'; font-size:20px; font-weight:bold; font-style:normal;");
+    converter.TableOfContentsOptions.SetPageNumberStyle(1, "font-family:'Arial'; font-size:20px; font-weight:bold; font-style:normal;");
+
+    converter.TableOfContentsOptions.SetItemStyle(2, "font-family:'Arial'; font-size:18px; font-weight:normal; font-style:normal;");
+    converter.TableOfContentsOptions.SetPageNumberStyle(2, "font-family:'Arial'; font-size:18px; font-weight:normal; font-style:normal;");
+
+    //Calculate width
+    float documentWidth = converter.PdfDocumentOptions.PdfPageSize.Width - converter.PdfDocumentOptions.LeftMargin - converter.PdfDocumentOptions.RightMargin;
+	if (converter.PdfDocumentOptions.PdfPageOrientation == PdfPageOrientation.Landscape) {
+		documentWidth = converter.PdfDocumentOptions.PdfPageSize.Height - converter.PdfDocumentOptions.LeftMargin - converter.PdfDocumentOptions.RightMargin;
+	}	
+
+    // Header line 
+	LineElement headerLine = new LineElement(0, converter.PdfHeaderOptions.HeaderHeight - 4, documentWidth, converter.PdfHeaderOptions.HeaderHeight - 4);
+	headerLine.ForeColor = Color.Gray;
+	converter.PdfHeaderOptions.AddElement(headerLine);	    
+
+	// Footer 
+	converter.PdfDocumentOptions.ShowFooter = true;
+	TextElement footerText = new TextElement(0, 6, repository.TranslateReport("Page 2 &amp;amp;p; of &amp;amp;P;"), new Font(new FontFamily("Arial"), 9, GraphicsUnit.Point));
+	footerText.TextAlign = HorizontalTextAlign.Right;
+	footerText.ForeColor = Color.Gray;
+	footerText.EmbedSysFont = true;
+	converter.PdfFooterOptions.AddElement(footerText);
+
+	TextElement footerText2 = new TextElement(0, 6, DateTime.Now.ToString("d", repository.CultureInfo) + " " + DateTime.Now.ToString("t", repository.CultureInfo), new Font(new FontFamily("Arial"), 9, GraphicsUnit.Point));
+	footerText2.TextAlign = HorizontalTextAlign.Left;
+	footerText2.ForeColor = Color.Gray;
+	footerText2.EmbedSysFont = true;
+	converter.PdfFooterOptions.AddElement(footerText2);	
+
+	// Footer line 
+	LineElement footerLine = new LineElement(0, 4, documentWidth, 4);
+    footerLine.ForeColor = Color.Gray;
+	converter.PdfFooterOptions.AddElement(footerLine);
 }&lt;/ConverterScript&gt;&#xD;
-  &lt;DocumentScript&gt;@using Winnovative&#xD;
-@using Seal.Converter&#xD;
-@using System.Drawing&#xD;
-@{&#xD;
-    //Full documentation of the converter at https://www.winnovative-software.com/Help/html_to_pdf/Index.aspx&#xD;
-    Seal.Converter.PdfConverter converterModel = Model;&#xD;
-    Seal.Model.Repository repository = converterModel.Repository;&#xD;
-    HtmlToPdfConverter converter = converterModel.Converter;&#xD;
-    Document document = converterModel.Document;&#xD;
-&#xD;
-	Seal.Model.ReportView view = converterModel.View; //Root view&#xD;
-&#xD;
-    if (document == null) {&#xD;
-        throw new Exception("Document is not initialized, make sure that the property 'Use PDF Client Library' is set to False in the Server Configuration");&#xD;
-    }&#xD;
-&#xD;
-	/* Uncomment to draw a sample text	*/&#xD;
-	for (int i = 0; i &amp;lt; document.Pages.Count; i++)&#xD;
-	{&#xD;
-		PdfPage page = document.Pages[i];&#xD;
-		TextElement text = new TextElement(200, 300, "This is a text sample...", new Font(new FontFamily("Arial"), 24, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point));&#xD;
-		text.ForeColor = Color.Orange;&#xD;
-		text.TextAngle = 45;&#xD;
-		page.AddElement(text);&#xD;
-	}	&#xD;
-    &#xD;
+  &lt;DocumentScript&gt;@using Winnovative
+@using Seal.Converter
+@using System.Drawing
+@{
+    //Full documentation of the converter at https://www.winnovative-software.com/Help/html_to_pdf/Index.aspx
+    Seal.Converter.PdfConverter converterModel = Model;
+    Seal.Model.Repository repository = converterModel.Repository;
+    HtmlToPdfConverter converter = converterModel.Converter;
+    Document document = converterModel.Document;
+
+	Seal.Model.ReportView view = converterModel.View; //Root view
+
+    if (document == null) {
+        throw new Exception("Document is not initialized, make sure that the property 'Use PDF Client Library' is set to False in the Server Configuration");
+    }
+
+	/* Uncomment to draw a sample text	*/
+	for (int i = 0; i &amp;lt; document.Pages.Count; i++)
+	{
+		PdfPage page = document.Pages[i];
+		TextElement text = new TextElement(200, 300, "This is a text sample...", new Font(new FontFamily("Arial"), 24, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point));
+		text.ForeColor = Color.Orange;
+		text.TextAngle = 45;
+		page.AddElement(text);
+	}	
+    
 }&lt;/DocumentScript&gt;&#xD;
 &lt;/SealPdfCfg&gt;</string></PdfConfigurations><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
 &lt;SealExcelCfg xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;

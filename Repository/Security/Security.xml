@@ -60,7 +60,30 @@
             user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);&#xD;
         }&#xD;
 	}&#xD;
-}</Script><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /><SecurityFolder><Path>\System</Path><UseSubFolders>false</UseSubFolders><ExpandSubFolders>false</ExpandSubFolders></SecurityFolder></Folders><PersFolderRight>Reports</PersFolderRight><FoldersScript /><FolderDetailScript /><SqlModel>true</SqlModel><DefaultPriority>1</DefaultPriority><Culture /><StartupReport /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><DefaultPriority>1</DefaultPriority><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><DefaultPriority>1</DefaultPriority><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><DefaultPriority>1</DefaultPriority><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><DefaultPriority>1</DefaultPriority><Culture /></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel><DefaultPriority>1</DefaultPriority></SecurityGroup><SecurityGroup><Name>Group (Scripts 1)</Name><FoldersScript>@{&#xD;
+}</Script><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /><SecurityFolder><Path>\System</Path><UseSubFolders>false</UseSubFolders><ExpandSubFolders>false</ExpandSubFolders></SecurityFolder></Folders><PersFolderRight>Reports</PersFolderRight><FoldersScript /><FolderDetailScript /><MenuScript>@{&#xD;
+    SecurityUser user = Model;&#xD;
+    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
+    //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
+&#xD;
+    //Sample to define a menu&#xD;
+    var reports = user.WebMenu.reports;&#xD;
+    reports.Clear();&#xD;
+    var item = new SWIMenuItem() { path = @"\Samples\04-Charts Gallery - Basics.srex", viewGUID = null, outputGUID = null, name = "View Charts" };&#xD;
+    &#xD;
+    //extra classes for the menu item&#xD;
+    item.classes = "disabled";&#xD;
+&#xD;
+    reports.Add(item);&#xD;
+    // subMenu&#xD;
+    var subMenu = new SWIMenuItem() { name = "A SubMenu" };&#xD;
+    subMenu.classes = "disabled label-danger";&#xD;
+    subMenu.items.Add(new SWIMenuItem() { path = @"\Search - Orders.srex", viewGUID = null, outputGUID = null, name = "Search" });&#xD;
+    reports.Add(subMenu);&#xD;
+    &#xD;
+    //Clear recent reports&#xD;
+    user.WebMenu.recentreports.Clear();&#xD;
+}&#xD;
+</MenuScript><SqlModel>true</SqlModel><Weight>1</Weight><Culture /><StartupReport /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><Weight>1</Weight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><Weight>1</Weight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><Weight>1</Weight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><Weight>1</Weight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel><Weight>1</Weight></SecurityGroup><SecurityGroup><Name>Group (Scripts 1)</Name><FoldersScript>@{&#xD;
     SecurityUser user = Model;&#xD;
     //Full documentation at https://sealreport.org/Help/Index.html&#xD;
     &#xD;
@@ -106,7 +129,7 @@
         user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts Gallery - Basics.srex", name="Charts from Root", last="", isreport=true, right=1}); &#xD;
     }&#xD;
 }&#xD;
-</FolderDetailScript><DefaultPriority>1</DefaultPriority></SecurityGroup><SecurityGroup><Name>Group (Scripts 2)</Name><PersFolderRight>Reports</PersFolderRight><FoldersScript>@{&#xD;
+</FolderDetailScript><Weight>1</Weight></SecurityGroup><SecurityGroup><Name>Group (Scripts 2)</Name><PersFolderRight>Reports</PersFolderRight><FoldersScript>@{&#xD;
     SecurityUser user = Model;&#xD;
     //Full documentation at https://sealreport.org/Help/Index.html&#xD;
     //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
@@ -127,7 +150,7 @@
         user.FolderDetail.files.RemoveAll(i =&gt; i.path != @"\Samples\04-Charts Gallery - Basics.srex"); &#xD;
     }&#xD;
 }&#xD;
-</FolderDetailScript><DefaultPriority>1</DefaultPriority></SecurityGroup><SecurityGroup><Name>Group (Menu)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ShowFoldersView>false</ShowFoldersView><MenuScript>@{&#xD;
+</FolderDetailScript><Weight>1</Weight></SecurityGroup><SecurityGroup><Name>Group (Menu)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ShowFoldersView>false</ShowFoldersView><MenuScript>@{&#xD;
     SecurityUser user = Model;&#xD;
     //Full documentation at https://sealreport.org/Help/Index.html&#xD;
     //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
@@ -144,4 +167,4 @@
     //Clear recent reports&#xD;
     user.WebMenu.recentreports.Clear();&#xD;
 }&#xD;
-</MenuScript><DefaultPriority>1</DefaultPriority></SecurityGroup></Groups></SealSecurity>
+</MenuScript><Weight>1</Weight></SecurityGroup></Groups></SealSecurity>
