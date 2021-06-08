@@ -166,9 +166,10 @@ namespace Seal.Model
                 throw new Exception("Unable to save the schedule file. The file has been modified by another user.");
             }
             XmlSerializer serializer = new XmlSerializer(typeof(SealSchedule));
-            using (XmlWriter xw = XmlWriter.Create(FilePath))
+            using (var tw = new StreamWriter(FilePath))
             {
-                serializer.Serialize(xw, this);
+                serializer.Serialize(tw, this);
+                tw.Close();
             }
             LastModification = File.GetLastWriteTime(FilePath);
         }

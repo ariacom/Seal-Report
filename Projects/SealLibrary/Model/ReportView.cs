@@ -500,6 +500,7 @@ namespace Seal.Model
         {
             get
             {
+                if (_templateName == null) return "";
                 if (_templateName.EndsWith(" HTML")) return _templateName.Replace(" HTML", ""); //backward compatibility before 5.0
                 if (_templateName == "Model Container") return ("Container"); //backward compatibility before 6.1
                 return _templateName;

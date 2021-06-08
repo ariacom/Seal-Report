@@ -1466,11 +1466,9 @@ namespace Seal.Model
                 }
 
                 XmlSerializer serializer = new XmlSerializer(typeof(Report));
-                XmlWriterSettings ws = new XmlWriterSettings();
-                ws.NewLineHandling = NewLineHandling.Entitize;
-                using (XmlWriter xw = XmlWriter.Create(path, ws))
-                {
-                    serializer.Serialize(xw, this);
+                using (var tw = new StreamWriter(path)) {
+                    serializer.Serialize(tw, this);
+                    tw.Close();
                 }
             }
             finally

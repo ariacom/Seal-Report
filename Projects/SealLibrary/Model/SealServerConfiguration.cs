@@ -587,12 +587,12 @@ namespace Seal.Model
                 _installationDirectory = Path.GetDirectoryName(Application.ExecutablePath); 
             }
 #endif
+
             XmlSerializer serializer = new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides);
-            XmlWriterSettings ws = new XmlWriterSettings();
-            ws.NewLineHandling = NewLineHandling.Entitize;
-            using (XmlWriter xw = XmlWriter.Create(path, ws))
+            using (var tw = new StreamWriter(path))
             {
-                serializer.Serialize(xw, this);
+                serializer.Serialize(tw, this);
+                tw.Close();
             }
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
