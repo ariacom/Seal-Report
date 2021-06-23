@@ -153,20 +153,6 @@ namespace Seal
             init(entity);
         }
 
-        public void EditSchedule(ReportSchedule schedule)
-        {
-            try
-            {
-                TaskEditDialog frm = new TaskEditDialog(schedule.Task, true, true);
-                frm.AvailableTabs = AvailableTaskTabs.General | AvailableTaskTabs.Actions | AvailableTaskTabs.Conditions | AvailableTaskTabs.Triggers | AvailableTaskTabs.Settings | AvailableTaskTabs.History;
-                frm.ShowDialog(this);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(string.Format("Unable to edit the schedule...\r\nCheck that the 'Report Designer' has been executed with the option 'Run as administrator'\r\nOR\r\nSet the Report Designer option 'Schedule reports with current user.\r\n\r\n{0}", ex.Message));
-            }
-        }
-
         public void RefreshModelTreeView()
         {
             modelPanel.ReinitSource();
@@ -1357,7 +1343,12 @@ namespace Seal
             path = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + string.Format(@"\..\..\..\{0}\bin\Debug", Path.GetFileNameWithoutExtension(Repository.SealServerManager)), Repository.SealServerManager);
 #endif
             MetaSource metaSource = _repository.Sources.FirstOrDefault(i => i.GUID == source.MetaSourceGUID);
-            if (metaSource != null) Process.Start(path, string.Format("/o {0}", Helper.QuoteDouble(metaSource.FilePath)));
+            if (metaSource != null)
+            {
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(path, string.Format("/o {0}", Helper.QuoteDouble(metaSource.FilePath))) { UseShellExecute = true };
+                p.Start();
+            }
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)

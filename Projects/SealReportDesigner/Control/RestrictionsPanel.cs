@@ -216,7 +216,7 @@ namespace Seal.Controls
                 restrictionsTextBox.SelectionEnd = endPos + 1;
                 restrictionsTextBox.Focus();
 
-                MenuItem item = new MenuItem("Smart copy...");
+                ToolStripMenuItem item = new ToolStripMenuItem("Smart copy...");
                 item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     SmartCopyForm form = new SmartCopyForm("Smart copy of " + restriction.DisplayNameEl, restriction, restriction.Model.Report);
@@ -228,12 +228,12 @@ namespace Seal.Controls
                     }
                 });
 
-                restrictionsTextBox.ContextMenu = new ContextMenu();
-                restrictionsTextBox.ContextMenu.MenuItems.Add(item);
+                restrictionsTextBox.ContextMenuStrip = new ContextMenuStrip();
+                restrictionsTextBox.ContextMenuStrip.Items.Add(item);
 
 
             }
-            else restrictionsTextBox.ContextMenu = null;
+            else restrictionsTextBox.ContextMenuStrip = null;
         }
 
         private void scintilla_MouseUp(object sender, MouseEventArgs e)

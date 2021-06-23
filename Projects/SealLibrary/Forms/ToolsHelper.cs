@@ -136,11 +136,15 @@ namespace Seal.Forms
 #if DEBUG
                     path = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + string.Format(@"\..\..\..\{0}\bin\Debug", Path.GetFileNameWithoutExtension(exe)), exe);
 #endif
-                    Process.Start(path);
+                    var p = new Process();
+                    p.StartInfo = new ProcessStartInfo(path) { UseShellExecute = true };
+                    p.Start();
                 }
                 else if (sender == _openReportFolder)
                 {
-                    Process.Start(Repository.Instance.ReportsFolder);
+                    var p = new Process();
+                    p.StartInfo = new ProcessStartInfo(Repository.Instance.ReportsFolder) { UseShellExecute = true };
+                    p.Start();
                 }
 
                 if (thread != null)
@@ -383,7 +387,9 @@ namespace Seal.Forms
 
                 log.Log("\r\nExport of the Data Source translations terminated.\r\n\r\nThe file has been saved to '{0}' and can be re-worked and merged with the repository translations file.\r\n\r\nNote that the effective repository translations file is 'RepositoryTranslations.csv' in the Repository Sub-Folder 'Settings'.", fileName);
 
-                Process.Start(fileName);
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(fileName) { UseShellExecute = true };
+                p.Start();
             }
             catch (Exception ex)
             {
@@ -479,7 +485,9 @@ namespace Seal.Forms
 
                 log.Log("\r\nExport of the Folders and Reports translations terminated.\r\n\r\nThe file has been saved to '{0}' and can be re-worked and merged with the repository translations file.\r\n\r\nNote that the effective repository translations file is 'RepositoryTranslations.csv' in the Repository Sub-Folder 'Settings'.", fileName);
 
-                Process.Start(fileName);
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(fileName) { UseShellExecute = true };
+                p.Start();
             }
             catch (Exception ex)
             {

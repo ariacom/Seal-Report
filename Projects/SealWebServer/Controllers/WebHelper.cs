@@ -8,7 +8,8 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SealWebServer.Controllers
 {

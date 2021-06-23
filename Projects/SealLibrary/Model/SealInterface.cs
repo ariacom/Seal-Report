@@ -63,12 +63,10 @@ namespace Seal.Model
             return "";
         }
 
-#if !NETCOREAPP
         public virtual bool ProcessAction(string action, WebBrowser webBrowser, NavigationContext navigation)
         {
             return false;
         }
-#endif
         protected Repository _repository = null;
     }
 }

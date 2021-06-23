@@ -1,30 +1,1342 @@
-﻿<?xml version="1.0" encoding="utf-8"?><MetaSource xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><GUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</GUID><Name>Northwind</Name><Connections><MetaConnection><GUID>442f6511-a22b-47ec-a33e-e1c7344adb68</GUID><Name>Local MS SQL Server</Name><DatabaseType>MSSQLServer</DatabaseType><ConnectionType>MSSQLServer</ConnectionType><ConnectionString /><MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True</MSSqlServerConnectionString></MetaConnection><MetaConnection><GUID>164f0017-471d-4741-937c-3df7881ca392</GUID><Name>Ariacom Demonstration Server</Name><DatabaseType>MSSQLServer</DatabaseType><ConnectionType>MSSQLServer</ConnectionType><ConnectionString /><MSSqlServerConnectionString>Server=ariacom.com;Database=Northwind;</MSSqlServerConnectionString><UserName>demo</UserName><Password>jFBdR+/x69+IBwkZSf06Hw==</Password></MetaConnection></Connections><ConnectionGUID>164f0017-471d-4741-937c-3df7881ca392</ConnectionGUID><MetaData><Tables><MetaTable><GUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</GUID><Name>Customers</Name><Type>TABLE</Type><WhereSQL /><Columns><MetaColumn><GUID>e39285bf-1ca4-4059-a72a-73c90cc168dd</GUID><Name>Customers.Address</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Address</DisplayName><DisplayOrder>5</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</GUID><Name>Customers.City</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>City</DisplayName><DisplayOrder>6</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><DrillChildren><string>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</string></DrillChildren></MetaColumn><MetaColumn><GUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</GUID><Name>Customers.CompanyName</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Customer</DisplayName><DisplayOrder>2</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><DrillChildren><string>12ce241a-1f80-4b69-a023-66df46152046</string></DrillChildren><SubReports><SubReport><Name>Customer Detail</Name><Path>%SEALREPOSITORY%\SubReports\Customer Detail.srex</Path><Restrictions><string>d937c8fc-64a6-415f-a77f-d3d1914e406d</string></Restrictions></SubReport></SubReports></MetaColumn><MetaColumn><GUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</GUID><Name>Customers.ContactName</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Customer Contact</DisplayName><DisplayOrder>3</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>ecab8418-c406-4837-8fdb-7341c9b45f56</GUID><Name>Customers.ContactTitle</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Contact Title</DisplayName><DisplayOrder>4</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</GUID><Name>Customers.Country</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Customer Country</DisplayName><DisplayOrder>9</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><EnumGUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</EnumGUID><DrillChildren><string>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</string></DrillChildren></MetaColumn><MetaColumn><GUID>9cdc0eb2-eb64-4b96-8ea9-0405736b4809</GUID><Name>Customers.Fax</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Fax</DisplayName><DisplayOrder>11</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>add7d793-5327-4604-997d-cdfeb474b09a</GUID><Name>Customers.Phone</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Phone</DisplayName><DisplayOrder>10</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>e24a016c-11d6-4b7c-9319-c1ad5864841c</GUID><Name>Customers.PostalCode</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Postal Code</DisplayName><DisplayOrder>8</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>7386da67-f083-4527-a303-aa24de5f7d13</GUID><Name>Customers.Region</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Region</DisplayName><DisplayOrder>7</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>d937c8fc-64a6-415f-a77f-d3d1914e406d</GUID><Name>Customers.CustomerID</Name><Type>Text</Type><Category>Customers</Category><Tag>Master</Tag><DisplayName>Customer ID</DisplayName><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn></Columns></MetaTable><MetaTable><GUID>61152bde-427a-4113-8f7d-322a1280bede</GUID><Name>Employees</Name><Type>TABLE</Type><WhereSQL /><Columns><MetaColumn><GUID>a17dc90f-cf54-4da1-b655-019a5ca175ed</GUID><Name>Employees.Address</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Address</DisplayName><DisplayOrder>8</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</GUID><Name>Employees.BirthDate</Name><Type>DateTime</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Birth Date</DisplayName><DisplayOrder>6</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>d</Format></MetaColumn><MetaColumn><GUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</GUID><Name>Employees.City</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>City</DisplayName><DisplayOrder>9</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><DrillChildren><string>da2dbe92-e90c-4415-b354-1bc589839048</string></DrillChildren></MetaColumn><MetaColumn><GUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</GUID><Name>Employees.Country</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Country</DisplayName><DisplayOrder>12</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><EnumGUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</EnumGUID><DrillChildren><string>5d08f638-1b78-4850-b6cb-d46b5ce72f94</string></DrillChildren></MetaColumn><MetaColumn><GUID>9af39b8d-8b3a-4db2-a093-8abac0fb8e62</GUID><Name>Employees.Extension</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Extension</DisplayName><DisplayOrder>14</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>da2dbe92-e90c-4415-b354-1bc589839048</GUID><Name>Employees.LastName</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Employee</DisplayName><DisplayOrder>2</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><EnumGUID>f2611e98-b25e-450d-a9cc-6811dda32d94</EnumGUID><DrillChildren><string>12ce241a-1f80-4b69-a023-66df46152046</string></DrillChildren><SubReports><SubReport><Name>Employee Detail</Name><Path>%SEALREPOSITORY%\SubReports\Employee Detail.srex</Path><Restrictions><string>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</string></Restrictions></SubReport></SubReports></MetaColumn><MetaColumn><GUID>b4a7f5d4-1045-4c67-b724-578e116ceff5</GUID><Name>Employees.HireDate</Name><Type>DateTime</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Hire Date</DisplayName><DisplayOrder>7</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>d</Format></MetaColumn><MetaColumn><GUID>9b0f675f-fbb0-4f9c-9dca-9e15039e75ec</GUID><Name>Employees.HomePhone</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Home Phone</DisplayName><DisplayOrder>13</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>0a5fef96-fd6b-4d51-bff0-59d458533a57</GUID><Name>convert(varchar(max),Employees.Notes)</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Notes</DisplayName><DisplayOrder>16</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</GUID><Name>Employees.PostalCode</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Postal Code</DisplayName><DisplayOrder>11</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>80720d2a-0ebf-457b-8539-6eb07205c6c9</GUID><Name>Employees.Region</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Region</DisplayName><DisplayOrder>10</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>a042cb87-8838-46a8-a679-3e49f666a7b7</GUID><Name>Employees.ReportsTo</Name><Type>Numeric</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Reports To</DisplayName><DisplayOrder>17</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>793c07a5-b7bd-41ae-bdea-506ad244005e</GUID><Name>Employees.Title</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Title</DisplayName><DisplayOrder>4</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>4d365f0e-0e2a-4a58-8411-11fd6d8900db</GUID><Name>Employees.TitleOfCourtesy</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Title Of Courtesy</DisplayName><DisplayOrder>5</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</GUID><Name>Employees.EmployeeID</Name><Type>Numeric</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>Employee ID</DisplayName><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>adf4d26e-1dc0-4fdd-9de7-c7469cbc9d1a</GUID><Name>Employees.FirstName</Name><Type>Text</Type><Category>Employees</Category><Tag>Master</Tag><DisplayName>First Name</DisplayName><DisplayOrder>3</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn></Columns></MetaTable><MetaTable><GUID>691ae384-bd74-4708-93a7-abea6ed56e55</GUID><Name>Orders</Name><Type>TABLE</Type><WhereSQL /><Columns><MetaColumn><GUID>b5dee061-380a-4dac-a74d-fd573de1a07c</GUID><Name>Orders.Freight</Name><Type>Numeric</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Freight</DisplayName><DisplayOrder>6</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>4a3f4d69-3781-4679-8797-f425478de0d9</GUID><Name>Orders.OrderDate</Name><Type>DateTime</Type><Category>Orders</Category><Tag>Master</Tag><DisplayName>Order Date</DisplayName><DisplayOrder>2</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>d</Format></MetaColumn><MetaColumn><GUID>12ce241a-1f80-4b69-a023-66df46152046</GUID><Name>Orders.OrderID</Name><Type>Numeric</Type><Category>Orders</Category><Tag>Master</Tag><DisplayName>Order ID</DisplayName><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format><DrillUpOnlyIfDD>true</DrillUpOnlyIfDD><SubReports><SubReport><Name>Order Detail</Name><Path>%SEALREPOSITORY%\SubReports\Order Detail.srex</Path><Restrictions><string>12ce241a-1f80-4b69-a023-66df46152046</string></Restrictions></SubReport></SubReports></MetaColumn><MetaColumn><GUID>ab168a45-6852-44b7-8eff-378968669f14</GUID><Name>Orders.RequiredDate</Name><Type>DateTime</Type><Category>Orders</Category><Tag>Master</Tag><DisplayName>Required Date</DisplayName><DisplayOrder>3</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>d</Format></MetaColumn><MetaColumn><GUID>2003a407-ab31-4514-bc83-8e9479c42e2d</GUID><Name>Orders.ShipAddress</Name><Type>Text</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Ship Address</DisplayName><DisplayOrder>8</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>e93c456c-40d9-494e-ba21-711177339870</GUID><Name>Orders.ShipCity</Name><Type>Text</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Ship City</DisplayName><DisplayOrder>9</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><DrillChildren><string>8ccab7ae-77ad-4cb9-9345-d176a463c21b</string></DrillChildren></MetaColumn><MetaColumn><GUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</GUID><Name>Orders.ShipCountry</Name><Type>Text</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Ship Country</DisplayName><DisplayOrder>12</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><EnumGUID>fcf64fca-579d-4b79-be22-3c2059989ec3</EnumGUID><DrillChildren><string>e93c456c-40d9-494e-ba21-711177339870</string></DrillChildren></MetaColumn><MetaColumn><GUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</GUID><Name>Orders.ShipName</Name><Type>Text</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Ship Name</DisplayName><DisplayOrder>7</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><DrillChildren><string>12ce241a-1f80-4b69-a023-66df46152046</string></DrillChildren></MetaColumn><MetaColumn><GUID>ce574340-1504-4bf7-9228-c64f79cf9803</GUID><Name>Orders.ShippedDate</Name><Type>DateTime</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Shipped Date</DisplayName><DisplayOrder>4</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>d</Format></MetaColumn><MetaColumn><GUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</GUID><Name>Orders.ShipPostalCode</Name><Type>Text</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Ship Postal Code</DisplayName><DisplayOrder>11</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</GUID><Name>Orders.ShipRegion</Name><Type>Text</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Ship Region</DisplayName><DisplayOrder>10</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</GUID><Name>Orders.ShipVia</Name><Type>Numeric</Type><Category>Orders/Shipping</Category><Tag>Master</Tag><DisplayName>Ship Via</DisplayName><DisplayOrder>5</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>64369c69-f298-466f-a241-d7388b2b0e80</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name><Type>DateTime</Type><Category>Orders</Category><Tag>Master</Tag><DisplayName>Order Year</DisplayName><DisplayOrder>13</DisplayOrder><DateTimeStandardFormat>Custom</DateTimeStandardFormat><Format>yyyy</Format><DrillChildren><string>057c81db-d2c0-4938-9a64-6d6d33668baa</string></DrillChildren></MetaColumn><MetaColumn><GUID>057c81db-d2c0-4938-9a64-6d6d33668baa</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name><Type>DateTime</Type><Category>Orders</Category><Tag>Master</Tag><DisplayName>Order Month</DisplayName><DisplayOrder>14</DisplayOrder><DateTimeStandardFormat>Custom</DateTimeStandardFormat><Format>MM/yyyy</Format><DrillChildren><string>12ce241a-1f80-4b69-a023-66df46152046</string></DrillChildren></MetaColumn></Columns></MetaTable><MetaTable><GUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</GUID><Name>Products</Name><Type>TABLE</Type><Columns><MetaColumn><GUID>b372adcc-127b-4044-98ba-12d9b94af34c</GUID><Name>Products.Discontinued</Name><Type>Numeric</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Discontinued</DisplayName><DisplayOrder>9</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</GUID><Name>Products.ProductID</Name><Type>Numeric</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Product Name</DisplayName><DisplayOrder>2</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><EnumGUID>b9126304-1091-45e0-93e6-c2f028c02f8f</EnumGUID><DrillChildren><string>12ce241a-1f80-4b69-a023-66df46152046</string></DrillChildren><SubReports><SubReport><Name>Product Detail</Name><Path>%SEALREPOSITORY%\SubReports\Product Detail.srex</Path><Restrictions><string>d0a693f9-e276-4e6d-9ac2-d4d031610430</string></Restrictions></SubReport></SubReports></MetaColumn><MetaColumn><GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID><Name>Products.QuantityPerUnit</Name><Type>Text</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Quantity Per Unit</DisplayName><DisplayOrder>4</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>75715efd-6f8a-48ba-8f8e-2297d956d184</GUID><Name>Products.ReorderLevel</Name><Type>Numeric</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Reorder Level</DisplayName><DisplayOrder>8</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</GUID><Name>Products.UnitPrice</Name><Type>Numeric</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Unit Price</DisplayName><DisplayOrder>5</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</GUID><Name>Products.UnitsInStock</Name><Type>Numeric</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Units In Stock</DisplayName><DisplayOrder>6</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>6fa87b3b-048f-4680-9516-35679cba84bf</GUID><Name>Products.UnitsOnOrder</Name><Type>Numeric</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Units On Order</DisplayName><DisplayOrder>7</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID><Name>Products.CategoryID</Name><Type>Text</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Category</DisplayName><DisplayOrder>3</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><EnumGUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</EnumGUID><DrillChildren><string>087ed2f1-b58b-4407-9291-8329ee5dbfe1</string></DrillChildren></MetaColumn><MetaColumn><GUID>d0a693f9-e276-4e6d-9ac2-d4d031610430</GUID><Name>Products.ProductID</Name><Type>Numeric</Type><Category>Products</Category><Tag>Master</Tag><DisplayName>Product ID</DisplayName><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn></Columns></MetaTable><MetaTable><GUID>44179bfc-3a4a-4568-8137-364f06941c23</GUID><Name>Shippers</Name><Type>TABLE</Type><Columns><MetaColumn><GUID>9026a76c-6c06-4240-8320-cf6debcc73ca</GUID><Name>Shippers.CompanyName</Name><Type>Text</Type><Category>Shippers</Category><Tag>Master</Tag><DisplayName>Shipper</DisplayName><DisplayOrder>2</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>f1689c68-6619-4c2b-8b1f-5b0b9a66ace7</GUID><Name>Shippers.Phone</Name><Type>Text</Type><Category>Shippers</Category><Tag>Master</Tag><DisplayName>Phone</DisplayName><DisplayOrder>3</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>d56fe600-8f12-411b-b4cc-a73152d2e040</GUID><Name>Shippers.ShipperID</Name><Type>Numeric</Type><Category>Shippers</Category><Tag>Master</Tag><DisplayName>Shipper ID</DisplayName><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn></Columns></MetaTable><MetaTable><GUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</GUID><Name>Suppliers</Name><Type>TABLE</Type><Columns><MetaColumn><GUID>24c64479-ab3a-462d-a3e5-eddd4be4dcc9</GUID><Name>Suppliers.Address</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Address</DisplayName><DisplayOrder>5</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>e2113646-4a55-4077-8d34-a22bdef1354b</GUID><Name>Suppliers.City</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>City</DisplayName><DisplayOrder>6</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><DrillChildren><string>b5e2a5d1-4885-442c-9a7b-d460234c19e0</string></DrillChildren></MetaColumn><MetaColumn><GUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</GUID><Name>Suppliers.CompanyName</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Supplier</DisplayName><DisplayOrder>2</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><DrillChildren><string>12ce241a-1f80-4b69-a023-66df46152046</string></DrillChildren><SubReports><SubReport><Name>Supplier Detail</Name><Path>%SEALREPOSITORY%\SubReports\Supplier Detail.srex</Path><Restrictions><string>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</string></Restrictions></SubReport></SubReports></MetaColumn><MetaColumn><GUID>7e3f60fc-66fc-4b35-aa56-ef06b4a6bf22</GUID><Name>Suppliers.ContactName</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Contact Name</DisplayName><DisplayOrder>3</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</GUID><Name>Suppliers.ContactTitle</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Contact Title</DisplayName><DisplayOrder>4</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>70328799-b9e4-4e93-b851-88be7514c802</GUID><Name>Suppliers.Country</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Supplier Country</DisplayName><DisplayOrder>9</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><EnumGUID>c94b4e37-2c8a-4f34-965f-004b888f5c66</EnumGUID><DrillChildren><string>e2113646-4a55-4077-8d34-a22bdef1354b</string></DrillChildren></MetaColumn><MetaColumn><GUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</GUID><Name>Suppliers.Fax</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Fax</DisplayName><DisplayOrder>11</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</GUID><Name>convert(varchar,Suppliers.HomePage)</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Home Page</DisplayName><DisplayOrder>12</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>41e673d0-7852-43d0-9ef4-c64649f9020a</GUID><Name>Suppliers.Phone</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Phone</DisplayName><DisplayOrder>10</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>addf0212-9876-4747-919d-830cb40d2506</GUID><Name>Suppliers.PostalCode</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Postal Code</DisplayName><DisplayOrder>8</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</GUID><Name>Suppliers.Region</Name><Type>Text</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Region</DisplayName><DisplayOrder>7</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat></MetaColumn><MetaColumn><GUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</GUID><Name>Suppliers.SupplierID</Name><Type>Numeric</Type><Category>Suppliers</Category><Tag>Master</Tag><DisplayName>Supplier ID</DisplayName><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn></Columns></MetaTable><MetaTable><GUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</GUID><Name>[Order Details]</Name><Type>TABLE</Type><Columns><MetaColumn><GUID>f2cf72ab-afdc-4d0e-ba73-80c3d6f47eea</GUID><Name>100*[Order Details].Discount</Name><Type>Numeric</Type><Category>Order Details</Category><Tag>Master</Tag><DisplayName>Discount Rate</DisplayName><DisplayOrder>3</DisplayOrder><NumericStandardFormat>Numeric2</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N2</Format></MetaColumn><MetaColumn><GUID>cb20a340-73d5-4e52-b7fc-59dab043c176</GUID><Name>[Order Details].Quantity</Name><Type>Numeric</Type><Category>Order Details</Category><Tag>Master</Tag><DisplayName>Quantity</DisplayName><DisplayOrder>2</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</GUID><Name>[Order Details].UnitPrice</Name><Type>Numeric</Type><Category>Order Details</Category><Tag>Master</Tag><DisplayName>Unit Price</DisplayName><NumericStandardFormat>Numeric2</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N2</Format></MetaColumn><MetaColumn><GUID>067548ce-bc83-48b8-8212-aa359bd12f9b</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><Type>Numeric</Type><Category>Order Details</Category><Tag>Master</Tag><DisplayName>Amount</DisplayName><DisplayOrder>4</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn><MetaColumn><GUID>a63be915-3593-4377-8155-5ab3a78f45ba</GUID><Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name><Type>Numeric</Type><Category>Order Details</Category><Tag>Master</Tag><DisplayName>Discount</DisplayName><DisplayOrder>5</DisplayOrder><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>N0</Format></MetaColumn></Columns></MetaTable></Tables><Joins><MetaJoin><GUID>a9008ab3-aece-4d4e-9eb6-547e99e4584e</GUID><Name>Customers Orders</Name><LeftTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</LeftTableGUID><RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID><Clause>Customers.CustomerID = Orders.CustomerID
-</Clause></MetaJoin><MetaJoin><GUID>4e512b9e-fb6e-4b50-8c42-551d8f1e59e6</GUID><Name>Employees Orders</Name><LeftTableGUID>61152bde-427a-4113-8f7d-322a1280bede</LeftTableGUID><RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID><Clause>Employees.EmployeeID = Orders.EmployeeID
-</Clause></MetaJoin><MetaJoin><GUID>c28e50ed-ac67-4f1b-8ec9-58c26b3506d6</GUID><Name>Shippers Orders</Name><LeftTableGUID>44179bfc-3a4a-4568-8137-364f06941c23</LeftTableGUID><RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID><Clause>Shippers.ShipperID = Orders.ShipVia
-</Clause></MetaJoin><MetaJoin><GUID>a5486989-c2b9-4797-9adc-4191d73f073f</GUID><Name>Suppliers Products</Name><LeftTableGUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</LeftTableGUID><RightTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</RightTableGUID><Clause>Suppliers.SupplierID = Products.SupplierID
-</Clause></MetaJoin><MetaJoin><GUID>cc460fce-7f59-4d77-a440-953ea8ffd85c</GUID><Name>Orders [Order Details]</Name><LeftTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</LeftTableGUID><RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID><Clause>Orders.OrderID = [Order Details].OrderID
-</Clause></MetaJoin><MetaJoin><GUID>b493bd23-60d1-409d-84c4-8dab23304c20</GUID><Name>Products [Order Details]</Name><LeftTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</LeftTableGUID><RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID><Clause>Products.ProductID = [Order Details].ProductID
-</Clause></MetaJoin></Joins><Enums><MetaEnum><GUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</GUID><Name>Category</Name><IsDynamic>true</IsDynamic><Sql>SELECT DISTINCT 
+<?xml version="1.0" encoding="utf-8"?>
+<MetaSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</GUID>
+  <Name>Northwind</Name>
+  <Connections>
+    <MetaConnection>
+      <GUID>442f6511-a22b-47ec-a33e-e1c7344adb68</GUID>
+      <Name>Local MS SQL Server</Name>
+      <DatabaseType>MSSQLServer</DatabaseType>
+      <ConnectionType>MSSQLServer</ConnectionType>
+      <ConnectionString />
+      <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True</MSSqlServerConnectionString>
+    </MetaConnection>
+    <MetaConnection>
+      <GUID>164f0017-471d-4741-937c-3df7881ca392</GUID>
+      <Name>Ariacom Demonstration Server</Name>
+      <DatabaseType>MSSQLServer</DatabaseType>
+      <ConnectionType>MSSQLServer</ConnectionType>
+      <ConnectionString />
+      <MSSqlServerConnectionString>Server=ariacom.com;Database=Northwind;</MSSqlServerConnectionString>
+      <UserName>demo</UserName>
+      <Password>jFBdR+/x69+IBwkZSf06Hw==</Password>
+    </MetaConnection>
+  </Connections>
+  <ConnectionGUID>164f0017-471d-4741-937c-3df7881ca392</ConnectionGUID>
+  <MetaData>
+    <Tables>
+      <MetaTable>
+        <GUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</GUID>
+        <Name>Customers</Name>
+        <Type>TABLE</Type>
+        <WhereSQL />
+        <Columns>
+          <MetaColumn>
+            <GUID>e39285bf-1ca4-4059-a72a-73c90cc168dd</GUID>
+            <Name>Customers.Address</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Address</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</GUID>
+            <Name>Customers.City</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>City</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</GUID>
+            <Name>Customers.CompanyName</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Customer</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+            </DrillChildren>
+            <SubReports>
+              <SubReport>
+                <Name>Customer Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Customer Detail.srex</Path>
+                <Restrictions>
+                  <string>d937c8fc-64a6-415f-a77f-d3d1914e406d</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</GUID>
+            <Name>Customers.ContactName</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Customer Contact</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>ecab8418-c406-4837-8fdb-7341c9b45f56</GUID>
+            <Name>Customers.ContactTitle</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Contact Title</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</GUID>
+            <Name>Customers.Country</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Customer Country</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <EnumGUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</EnumGUID>
+            <DrillChildren>
+              <string>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>9cdc0eb2-eb64-4b96-8ea9-0405736b4809</GUID>
+            <Name>Customers.Fax</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Fax</DisplayName>
+            <DisplayOrder>11</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>add7d793-5327-4604-997d-cdfeb474b09a</GUID>
+            <Name>Customers.Phone</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Phone</DisplayName>
+            <DisplayOrder>10</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>e24a016c-11d6-4b7c-9319-c1ad5864841c</GUID>
+            <Name>Customers.PostalCode</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Postal Code</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7386da67-f083-4527-a303-aa24de5f7d13</GUID>
+            <Name>Customers.Region</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Region</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>d937c8fc-64a6-415f-a77f-d3d1914e406d</GUID>
+            <Name>Customers.CustomerID</Name>
+            <Type>Text</Type>
+            <Category>Customers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Customer ID</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>61152bde-427a-4113-8f7d-322a1280bede</GUID>
+        <Name>Employees</Name>
+        <Type>TABLE</Type>
+        <WhereSQL />
+        <Columns>
+          <MetaColumn>
+            <GUID>a17dc90f-cf54-4da1-b655-019a5ca175ed</GUID>
+            <Name>Employees.Address</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Address</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</GUID>
+            <Name>Employees.BirthDate</Name>
+            <Type>DateTime</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Birth Date</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>d</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</GUID>
+            <Name>Employees.City</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>City</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>da2dbe92-e90c-4415-b354-1bc589839048</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</GUID>
+            <Name>Employees.Country</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Country</DisplayName>
+            <DisplayOrder>12</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <EnumGUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</EnumGUID>
+            <DrillChildren>
+              <string>5d08f638-1b78-4850-b6cb-d46b5ce72f94</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>9af39b8d-8b3a-4db2-a093-8abac0fb8e62</GUID>
+            <Name>Employees.Extension</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Extension</DisplayName>
+            <DisplayOrder>14</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>da2dbe92-e90c-4415-b354-1bc589839048</GUID>
+            <Name>Employees.LastName</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Employee</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <EnumGUID>f2611e98-b25e-450d-a9cc-6811dda32d94</EnumGUID>
+            <DrillChildren>
+              <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+            </DrillChildren>
+            <SubReports>
+              <SubReport>
+                <Name>Employee Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Employee Detail.srex</Path>
+                <Restrictions>
+                  <string>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b4a7f5d4-1045-4c67-b724-578e116ceff5</GUID>
+            <Name>Employees.HireDate</Name>
+            <Type>DateTime</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Hire Date</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>d</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>9b0f675f-fbb0-4f9c-9dca-9e15039e75ec</GUID>
+            <Name>Employees.HomePhone</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Home Phone</DisplayName>
+            <DisplayOrder>13</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>0a5fef96-fd6b-4d51-bff0-59d458533a57</GUID>
+            <Name>convert(varchar(max),Employees.Notes)</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Notes</DisplayName>
+            <DisplayOrder>16</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</GUID>
+            <Name>Employees.PostalCode</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Postal Code</DisplayName>
+            <DisplayOrder>11</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>80720d2a-0ebf-457b-8539-6eb07205c6c9</GUID>
+            <Name>Employees.Region</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Region</DisplayName>
+            <DisplayOrder>10</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>a042cb87-8838-46a8-a679-3e49f666a7b7</GUID>
+            <Name>Employees.ReportsTo</Name>
+            <Type>Numeric</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Reports To</DisplayName>
+            <DisplayOrder>17</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>793c07a5-b7bd-41ae-bdea-506ad244005e</GUID>
+            <Name>Employees.Title</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Title</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>4d365f0e-0e2a-4a58-8411-11fd6d8900db</GUID>
+            <Name>Employees.TitleOfCourtesy</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Title Of Courtesy</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</GUID>
+            <Name>Employees.EmployeeID</Name>
+            <Type>Numeric</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Employee ID</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>adf4d26e-1dc0-4fdd-9de7-c7469cbc9d1a</GUID>
+            <Name>Employees.FirstName</Name>
+            <Type>Text</Type>
+            <Category>Employees</Category>
+            <Tag>Master</Tag>
+            <DisplayName>First Name</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>691ae384-bd74-4708-93a7-abea6ed56e55</GUID>
+        <Name>Orders</Name>
+        <Type>TABLE</Type>
+        <WhereSQL />
+        <Columns>
+          <MetaColumn>
+            <GUID>b5dee061-380a-4dac-a74d-fd573de1a07c</GUID>
+            <Name>Orders.Freight</Name>
+            <Type>Numeric</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Freight</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>4a3f4d69-3781-4679-8797-f425478de0d9</GUID>
+            <Name>Orders.OrderDate</Name>
+            <Type>DateTime</Type>
+            <Category>Orders</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Order Date</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>d</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>12ce241a-1f80-4b69-a023-66df46152046</GUID>
+            <Name>Orders.OrderID</Name>
+            <Type>Numeric</Type>
+            <Category>Orders</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Order ID</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <DrillUpOnlyIfDD>true</DrillUpOnlyIfDD>
+            <SubReports>
+              <SubReport>
+                <Name>Order Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Order Detail.srex</Path>
+                <Restrictions>
+                  <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>ab168a45-6852-44b7-8eff-378968669f14</GUID>
+            <Name>Orders.RequiredDate</Name>
+            <Type>DateTime</Type>
+            <Category>Orders</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Required Date</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>d</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2003a407-ab31-4514-bc83-8e9479c42e2d</GUID>
+            <Name>Orders.ShipAddress</Name>
+            <Type>Text</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Ship Address</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>e93c456c-40d9-494e-ba21-711177339870</GUID>
+            <Name>Orders.ShipCity</Name>
+            <Type>Text</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Ship City</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>8ccab7ae-77ad-4cb9-9345-d176a463c21b</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</GUID>
+            <Name>Orders.ShipCountry</Name>
+            <Type>Text</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Ship Country</DisplayName>
+            <DisplayOrder>12</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <EnumGUID>fcf64fca-579d-4b79-be22-3c2059989ec3</EnumGUID>
+            <DrillChildren>
+              <string>e93c456c-40d9-494e-ba21-711177339870</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</GUID>
+            <Name>Orders.ShipName</Name>
+            <Type>Text</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Ship Name</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>ce574340-1504-4bf7-9228-c64f79cf9803</GUID>
+            <Name>Orders.ShippedDate</Name>
+            <Type>DateTime</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Shipped Date</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>d</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</GUID>
+            <Name>Orders.ShipPostalCode</Name>
+            <Type>Text</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Ship Postal Code</DisplayName>
+            <DisplayOrder>11</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</GUID>
+            <Name>Orders.ShipRegion</Name>
+            <Type>Text</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Ship Region</DisplayName>
+            <DisplayOrder>10</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</GUID>
+            <Name>Orders.ShipVia</Name>
+            <Type>Numeric</Type>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Ship Via</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>64369c69-f298-466f-a241-d7388b2b0e80</GUID>
+            <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+            <Type>DateTime</Type>
+            <Category>Orders</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Order Year</DisplayName>
+            <DisplayOrder>13</DisplayOrder>
+            <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+            <Format>yyyy</Format>
+            <DrillChildren>
+              <string>057c81db-d2c0-4938-9a64-6d6d33668baa</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>057c81db-d2c0-4938-9a64-6d6d33668baa</GUID>
+            <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+            <Type>DateTime</Type>
+            <Category>Orders</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Order Month</DisplayName>
+            <DisplayOrder>14</DisplayOrder>
+            <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+            <Format>MM/yyyy</Format>
+            <DrillChildren>
+              <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+            </DrillChildren>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</GUID>
+        <Name>Products</Name>
+        <Type>TABLE</Type>
+        <Columns>
+          <MetaColumn>
+            <GUID>b372adcc-127b-4044-98ba-12d9b94af34c</GUID>
+            <Name>Products.Discontinued</Name>
+            <Type>Numeric</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Discontinued</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</GUID>
+            <Name>Products.ProductID</Name>
+            <Type>Numeric</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Product Name</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <EnumGUID>b9126304-1091-45e0-93e6-c2f028c02f8f</EnumGUID>
+            <DrillChildren>
+              <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+            </DrillChildren>
+            <SubReports>
+              <SubReport>
+                <Name>Product Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Product Detail.srex</Path>
+                <Restrictions>
+                  <string>d0a693f9-e276-4e6d-9ac2-d4d031610430</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID>
+            <Name>Products.QuantityPerUnit</Name>
+            <Type>Text</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Quantity Per Unit</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>75715efd-6f8a-48ba-8f8e-2297d956d184</GUID>
+            <Name>Products.ReorderLevel</Name>
+            <Type>Numeric</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Reorder Level</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</GUID>
+            <Name>Products.UnitPrice</Name>
+            <Type>Numeric</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Unit Price</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</GUID>
+            <Name>Products.UnitsInStock</Name>
+            <Type>Numeric</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Units In Stock</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>6fa87b3b-048f-4680-9516-35679cba84bf</GUID>
+            <Name>Products.UnitsOnOrder</Name>
+            <Type>Numeric</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Units On Order</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID>
+            <Name>Products.CategoryID</Name>
+            <Type>Text</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Category</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <EnumGUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</EnumGUID>
+            <DrillChildren>
+              <string>087ed2f1-b58b-4407-9291-8329ee5dbfe1</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>d0a693f9-e276-4e6d-9ac2-d4d031610430</GUID>
+            <Name>Products.ProductID</Name>
+            <Type>Numeric</Type>
+            <Category>Products</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Product ID</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>44179bfc-3a4a-4568-8137-364f06941c23</GUID>
+        <Name>Shippers</Name>
+        <Type>TABLE</Type>
+        <Columns>
+          <MetaColumn>
+            <GUID>9026a76c-6c06-4240-8320-cf6debcc73ca</GUID>
+            <Name>Shippers.CompanyName</Name>
+            <Type>Text</Type>
+            <Category>Shippers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Shipper</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f1689c68-6619-4c2b-8b1f-5b0b9a66ace7</GUID>
+            <Name>Shippers.Phone</Name>
+            <Type>Text</Type>
+            <Category>Shippers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Phone</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>d56fe600-8f12-411b-b4cc-a73152d2e040</GUID>
+            <Name>Shippers.ShipperID</Name>
+            <Type>Numeric</Type>
+            <Category>Shippers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Shipper ID</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</GUID>
+        <Name>Suppliers</Name>
+        <Type>TABLE</Type>
+        <Columns>
+          <MetaColumn>
+            <GUID>24c64479-ab3a-462d-a3e5-eddd4be4dcc9</GUID>
+            <Name>Suppliers.Address</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Address</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>e2113646-4a55-4077-8d34-a22bdef1354b</GUID>
+            <Name>Suppliers.City</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>City</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>b5e2a5d1-4885-442c-9a7b-d460234c19e0</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</GUID>
+            <Name>Suppliers.CompanyName</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Supplier</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+            </DrillChildren>
+            <SubReports>
+              <SubReport>
+                <Name>Supplier Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Supplier Detail.srex</Path>
+                <Restrictions>
+                  <string>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e3f60fc-66fc-4b35-aa56-ef06b4a6bf22</GUID>
+            <Name>Suppliers.ContactName</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Contact Name</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</GUID>
+            <Name>Suppliers.ContactTitle</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Contact Title</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>70328799-b9e4-4e93-b851-88be7514c802</GUID>
+            <Name>Suppliers.Country</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Supplier Country</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <EnumGUID>c94b4e37-2c8a-4f34-965f-004b888f5c66</EnumGUID>
+            <DrillChildren>
+              <string>e2113646-4a55-4077-8d34-a22bdef1354b</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</GUID>
+            <Name>Suppliers.Fax</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Fax</DisplayName>
+            <DisplayOrder>11</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</GUID>
+            <Name>convert(varchar,Suppliers.HomePage)</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Home Page</DisplayName>
+            <DisplayOrder>12</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>41e673d0-7852-43d0-9ef4-c64649f9020a</GUID>
+            <Name>Suppliers.Phone</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Phone</DisplayName>
+            <DisplayOrder>10</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>addf0212-9876-4747-919d-830cb40d2506</GUID>
+            <Name>Suppliers.PostalCode</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Postal Code</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</GUID>
+            <Name>Suppliers.Region</Name>
+            <Type>Text</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Region</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</GUID>
+            <Name>Suppliers.SupplierID</Name>
+            <Type>Numeric</Type>
+            <Category>Suppliers</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Supplier ID</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</GUID>
+        <Name>[Order Details]</Name>
+        <Type>TABLE</Type>
+        <Columns>
+          <MetaColumn>
+            <GUID>f2cf72ab-afdc-4d0e-ba73-80c3d6f47eea</GUID>
+            <Name>100*[Order Details].Discount</Name>
+            <Type>Numeric</Type>
+            <Category>Order Details</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Discount Rate</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <NumericStandardFormat>Numeric2</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N2</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>cb20a340-73d5-4e52-b7fc-59dab043c176</GUID>
+            <Name>[Order Details].Quantity</Name>
+            <Type>Numeric</Type>
+            <Category>Order Details</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Quantity</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</GUID>
+            <Name>[Order Details].UnitPrice</Name>
+            <Type>Numeric</Type>
+            <Category>Order Details</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Unit Price</DisplayName>
+            <NumericStandardFormat>Numeric2</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N2</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>067548ce-bc83-48b8-8212-aa359bd12f9b</GUID>
+            <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+            <Type>Numeric</Type>
+            <Category>Order Details</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Amount</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>a63be915-3593-4377-8155-5ab3a78f45ba</GUID>
+            <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+            <Type>Numeric</Type>
+            <Category>Order Details</Category>
+            <Tag>Master</Tag>
+            <DisplayName>Discount</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+    </Tables>
+    <Joins>
+      <MetaJoin>
+        <GUID>a9008ab3-aece-4d4e-9eb6-547e99e4584e</GUID>
+        <Name>Customers Orders</Name>
+        <LeftTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</LeftTableGUID>
+        <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
+        <Clause>Customers.CustomerID = Orders.CustomerID
+</Clause>
+      </MetaJoin>
+      <MetaJoin>
+        <GUID>4e512b9e-fb6e-4b50-8c42-551d8f1e59e6</GUID>
+        <Name>Employees Orders</Name>
+        <LeftTableGUID>61152bde-427a-4113-8f7d-322a1280bede</LeftTableGUID>
+        <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
+        <Clause>Employees.EmployeeID = Orders.EmployeeID
+</Clause>
+      </MetaJoin>
+      <MetaJoin>
+        <GUID>c28e50ed-ac67-4f1b-8ec9-58c26b3506d6</GUID>
+        <Name>Shippers Orders</Name>
+        <LeftTableGUID>44179bfc-3a4a-4568-8137-364f06941c23</LeftTableGUID>
+        <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
+        <Clause>Shippers.ShipperID = Orders.ShipVia
+</Clause>
+      </MetaJoin>
+      <MetaJoin>
+        <GUID>a5486989-c2b9-4797-9adc-4191d73f073f</GUID>
+        <Name>Suppliers Products</Name>
+        <LeftTableGUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</LeftTableGUID>
+        <RightTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</RightTableGUID>
+        <Clause>Suppliers.SupplierID = Products.SupplierID
+</Clause>
+      </MetaJoin>
+      <MetaJoin>
+        <GUID>cc460fce-7f59-4d77-a440-953ea8ffd85c</GUID>
+        <Name>Orders [Order Details]</Name>
+        <LeftTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</LeftTableGUID>
+        <RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID>
+        <Clause>Orders.OrderID = [Order Details].OrderID
+</Clause>
+      </MetaJoin>
+      <MetaJoin>
+        <GUID>b493bd23-60d1-409d-84c4-8dab23304c20</GUID>
+        <Name>Products [Order Details]</Name>
+        <LeftTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</LeftTableGUID>
+        <RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID>
+        <Clause>Products.ProductID = [Order Details].ProductID
+</Clause>
+      </MetaJoin>
+    </Joins>
+    <Enums>
+      <MetaEnum>
+        <GUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</GUID>
+        <Name>Category</Name>
+        <IsDynamic>true</IsDynamic>
+        <Sql>SELECT DISTINCT 
 CategoryID, CategoryName
 FROM Categories
-ORDER BY 2</Sql><Translate>true</Translate><Values><MetaEV><Id>1</Id><Val>Beverages</Val></MetaEV><MetaEV><Id>2</Id><Val>Condiments</Val></MetaEV><MetaEV><Id>3</Id><Val>Confections</Val></MetaEV><MetaEV><Id>4</Id><Val>Dairy Products</Val></MetaEV><MetaEV><Id>5</Id><Val>Grains/Cereals</Val></MetaEV><MetaEV><Id>6</Id><Val>Meat/Poultry</Val></MetaEV><MetaEV><Id>7</Id><Val>Produce</Val></MetaEV><MetaEV><Id>8</Id><Val>Seafood</Val></MetaEV></Values></MetaEnum><MetaEnum><GUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</GUID><Name>Customer Country</Name><IsDynamic>true</IsDynamic><Sql>SELECT DISTINCT 
+ORDER BY 2</Sql>
+        <Translate>true</Translate>
+        <Values>
+          <MetaEV>
+            <Id>1</Id>
+            <Val>Beverages</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>2</Id>
+            <Val>Condiments</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>3</Id>
+            <Val>Confections</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>4</Id>
+            <Val>Dairy Products</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>5</Id>
+            <Val>Grains/Cereals</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>6</Id>
+            <Val>Meat/Poultry</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>7</Id>
+            <Val>Produce</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>8</Id>
+            <Val>Seafood</Val>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</GUID>
+        <Name>Customer Country</Name>
+        <IsDynamic>true</IsDynamic>
+        <Sql>SELECT DISTINCT 
 Customers.Country 
 FROM Customers 
-ORDER BY 1</Sql><Values><MetaEV><Id>Argentina</Id></MetaEV><MetaEV><Id>Austria</Id></MetaEV><MetaEV><Id>Belgium</Id></MetaEV><MetaEV><Id>Brazil</Id></MetaEV><MetaEV><Id>Canada</Id></MetaEV><MetaEV><Id>Denmark</Id></MetaEV><MetaEV><Id>Finland</Id></MetaEV><MetaEV><Id>France</Id></MetaEV><MetaEV><Id>Germany</Id></MetaEV><MetaEV><Id>Ireland</Id></MetaEV><MetaEV><Id>Italy</Id></MetaEV><MetaEV><Id>Mexico</Id></MetaEV><MetaEV><Id>Norway</Id></MetaEV><MetaEV><Id>Poland</Id></MetaEV><MetaEV><Id>Portugal</Id></MetaEV><MetaEV><Id>Spain</Id></MetaEV><MetaEV><Id>Sweden</Id></MetaEV><MetaEV><Id>Switzerland</Id></MetaEV><MetaEV><Id>UK</Id></MetaEV><MetaEV><Id>USA</Id></MetaEV><MetaEV><Id>Venezuela</Id></MetaEV></Values></MetaEnum><MetaEnum><GUID>c94b4e37-2c8a-4f34-965f-004b888f5c66</GUID><Name>Supplier Country</Name><IsDynamic>true</IsDynamic><Sql>SELECT DISTINCT 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>Argentina</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Austria</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Belgium</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Brazil</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Canada</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Denmark</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Finland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>France</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Germany</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Ireland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Italy</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Mexico</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Norway</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Poland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Portugal</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Spain</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sweden</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Switzerland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>UK</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>USA</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Venezuela</Id>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>c94b4e37-2c8a-4f34-965f-004b888f5c66</GUID>
+        <Name>Supplier Country</Name>
+        <IsDynamic>true</IsDynamic>
+        <Sql>SELECT DISTINCT 
 Suppliers.Country 
 FROM Suppliers 
-ORDER BY 1</Sql><Values><MetaEV><Id>Australia</Id></MetaEV><MetaEV><Id>Brazil</Id></MetaEV><MetaEV><Id>Canada</Id></MetaEV><MetaEV><Id>Denmark</Id></MetaEV><MetaEV><Id>Finland</Id></MetaEV><MetaEV><Id>France</Id></MetaEV><MetaEV><Id>Germany</Id></MetaEV><MetaEV><Id>Italy</Id></MetaEV><MetaEV><Id>Japan</Id></MetaEV><MetaEV><Id>Netherlands</Id></MetaEV><MetaEV><Id>Norway</Id></MetaEV><MetaEV><Id>Singapore</Id></MetaEV><MetaEV><Id>Spain</Id></MetaEV><MetaEV><Id>Sweden</Id></MetaEV><MetaEV><Id>UK</Id></MetaEV><MetaEV><Id>USA</Id></MetaEV></Values></MetaEnum><MetaEnum><GUID>f2611e98-b25e-450d-a9cc-6811dda32d94</GUID><Name>Employee Name</Name><IsDynamic>true</IsDynamic><Sql>SELECT DISTINCT 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>Australia</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Brazil</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Canada</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Denmark</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Finland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>France</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Germany</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Italy</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Japan</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Netherlands</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Norway</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Singapore</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Spain</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sweden</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>UK</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>USA</Id>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>f2611e98-b25e-450d-a9cc-6811dda32d94</GUID>
+        <Name>Employee Name</Name>
+        <IsDynamic>true</IsDynamic>
+        <Sql>SELECT DISTINCT 
 Employees.LastName 
 FROM Employees 
-ORDER BY 1</Sql><Values><MetaEV><Id>Buchanan</Id></MetaEV><MetaEV><Id>Callahan</Id></MetaEV><MetaEV><Id>Davolio</Id></MetaEV><MetaEV><Id>Dodsworth</Id></MetaEV><MetaEV><Id>Fuller</Id></MetaEV><MetaEV><Id>King</Id></MetaEV><MetaEV><Id>Leverling</Id></MetaEV><MetaEV><Id>Peacock</Id></MetaEV><MetaEV><Id>Suyama</Id></MetaEV></Values></MetaEnum><MetaEnum><GUID>fcf64fca-579d-4b79-be22-3c2059989ec3</GUID><Name>Ship Country</Name><IsDynamic>true</IsDynamic><Sql>SELECT DISTINCT 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>Buchanan</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Callahan</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Davolio</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Dodsworth</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Fuller</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>King</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Leverling</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Peacock</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Suyama</Id>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>fcf64fca-579d-4b79-be22-3c2059989ec3</GUID>
+        <Name>Ship Country</Name>
+        <IsDynamic>true</IsDynamic>
+        <Sql>SELECT DISTINCT 
 Orders.ShipCountry 
 FROM Orders 
-ORDER BY 1</Sql><Values><MetaEV><Id>Argentina</Id></MetaEV><MetaEV><Id>Austria</Id></MetaEV><MetaEV><Id>Belgium</Id></MetaEV><MetaEV><Id>Brazil</Id></MetaEV><MetaEV><Id>Canada</Id></MetaEV><MetaEV><Id>Denmark</Id></MetaEV><MetaEV><Id>Finland</Id></MetaEV><MetaEV><Id>France</Id></MetaEV><MetaEV><Id>Germany</Id></MetaEV><MetaEV><Id>Ireland</Id></MetaEV><MetaEV><Id>Italy</Id></MetaEV><MetaEV><Id>Mexico</Id></MetaEV><MetaEV><Id>Norway</Id></MetaEV><MetaEV><Id>Poland</Id></MetaEV><MetaEV><Id>Portugal</Id></MetaEV><MetaEV><Id>Spain</Id></MetaEV><MetaEV><Id>Sweden</Id></MetaEV><MetaEV><Id>Switzerland</Id></MetaEV><MetaEV><Id>UK</Id></MetaEV><MetaEV><Id>USA</Id></MetaEV><MetaEV><Id>Venezuela</Id></MetaEV></Values></MetaEnum><MetaEnum><GUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</GUID><Name>Employee Country</Name><IsDynamic>true</IsDynamic><Sql>SELECT DISTINCT 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>Argentina</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Austria</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Belgium</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Brazil</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Canada</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Denmark</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Finland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>France</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Germany</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Ireland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Italy</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Mexico</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Norway</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Poland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Portugal</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Spain</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sweden</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Switzerland</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>UK</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>USA</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>Venezuela</Id>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</GUID>
+        <Name>Employee Country</Name>
+        <IsDynamic>true</IsDynamic>
+        <Sql>SELECT DISTINCT 
 Employees.Country 
 FROM Employees 
-ORDER BY 1</Sql><Values><MetaEV><Id>UK</Id></MetaEV><MetaEV><Id>USA</Id></MetaEV></Values></MetaEnum><MetaEnum><GUID>b9126304-1091-45e0-93e6-c2f028c02f8f</GUID><Name>Product Name</Name><IsDynamic>true</IsDynamic><IsDbRefresh>true</IsDbRefresh><Sql>SELECT ProductID, ProductName &#xD;
-FROM Products&#xD;
-ORDER BY ProductName</Sql><Translate>true</Translate><Message>Please select a Category first</Message><SqlDisplay>SELECT ProductID, ProductName &#xD;
-FROM Products&#xD;
-WHERE CategoryID IN ({EnumValues_Category})&#xD;
-ORDER BY ProductName</SqlDisplay></MetaEnum></Enums></MetaData></MetaSource>
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>UK</Id>
+          </MetaEV>
+          <MetaEV>
+            <Id>USA</Id>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>b9126304-1091-45e0-93e6-c2f028c02f8f</GUID>
+        <Name>Product Name</Name>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>true</IsDbRefresh>
+        <Sql>SELECT ProductID, ProductName 
+FROM Products
+ORDER BY ProductName</Sql>
+        <Translate>true</Translate>
+        <Message>Please select a Category first</Message>
+        <SqlDisplay>SELECT ProductID, ProductName 
+FROM Products
+WHERE CategoryID IN ({EnumValues_Category})
+ORDER BY ProductName</SqlDisplay>
+      </MetaEnum>
+    </Enums>
+  </MetaData>
+</MetaSource>

@@ -337,7 +337,9 @@ namespace Seal.Forms
 
                         if (MessageBox.Show(string.Format("A Sub-Report named '{0}' has been created in the dedicated Repository folder.\r\n{1}\r\nDo you want to edit it using a new Report Designer ?", Path.GetFileName(path), message), "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                         {
-                            Process.Start(path);
+                            var p = new Process();
+                            p.StartInfo = new ProcessStartInfo(path) { UseShellExecute = true };
+                            p.Start();
                         };
 
                         _metaColumn.UpdateEditor();
@@ -396,7 +398,9 @@ namespace Seal.Forms
                     }
                     else if (context.PropertyDescriptor.Name == "HelperOpenSubReportFolder")
                     {
-                        Process.Start(_metaColumn.Source.Repository.SubReportsFolder);
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(_metaColumn.Source.Repository.SubReportsFolder) { UseShellExecute = true };
+                        p.Start();
                     }
                 }
                 else if (_metaJoin != null)
@@ -472,13 +476,11 @@ namespace Seal.Forms
                 }
                 else if (_reportSchedule != null)
                 {
-                    if (HandlerInterface != null && context.PropertyDescriptor.Name == "HelperEditProperties")
+                    if (context.PropertyDescriptor.Name == "HelperRunTaskScheduler")
                     {
-                        HandlerInterface.EditSchedule(_reportSchedule);
-                    }
-                    else if (context.PropertyDescriptor.Name == "HelperRunTaskScheduler")
-                    {
-                        Process.Start(Path.Combine(Environment.SystemDirectory, "taskschd.msc"), "/s");
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(Path.Combine(Environment.SystemDirectory, "taskschd.msc"), "/s") { UseShellExecute = true };
+                        p.Start();
                     }
                 }
                 else if (_parameter != null)

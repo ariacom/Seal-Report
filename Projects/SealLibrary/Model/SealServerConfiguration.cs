@@ -189,7 +189,7 @@ namespace Seal.Model
             set
             {
                 _useSealScheduler = value;
-                UpdateEditor(); //!NETCore
+                UpdateEditor(); 
             }
         }
 
@@ -214,7 +214,7 @@ namespace Seal.Model
             set
             {
                 _auditEnabled = value;
-                UpdateEditor(); //!NETCore
+                UpdateEditor(); 
             }
         }
 
@@ -580,7 +580,7 @@ namespace Seal.Model
             {
                 ExcelConfigurations = ExcelConverter.GetConfigurations();
             }
-#if !DEBUG && !NETCOREAPP
+#if !DEBUG 
             //Set installation path, used by, to define schedules
             if (Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealServerManager.ToLower() || Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealReportDesigner.ToLower())
             {

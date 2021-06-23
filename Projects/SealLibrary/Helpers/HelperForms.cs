@@ -38,15 +38,29 @@ namespace Seal.Helpers
         }
 
 
-        public static GridItemCollection GetAllGridEntries(PropertyGrid grid)
+        public static List<GridItem> GetAllGridEntries(PropertyGrid grid)
         {
-            object view = grid.GetType().GetField("gridView", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(grid);
-            return (GridItemCollection)view.GetType().InvokeMember("GetAllGridEntries", BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance, null, view, null);
+            var result = new List<GridItem>();
+            GridItem root = grid.SelectedGridItem;
+            //Get the parent
+            while (root != null && root.Parent != null) root = root.Parent;
+            if (root != null)
+            {
+                foreach (GridItem item in root.GridItems)
+                {
+                    foreach (GridItem item2 in item.GridItems)
+                    {
+                        result.Add(item2);
+                    }
+                }
+            }
+
+            return root != null ? result : null;
         }
 
         public static GridItem GetGridEntry(PropertyGrid grid, string label)
         {
-            var entries = Helper.GetAllGridEntries(grid);
+            var entries = GetAllGridEntries(grid);
             if (entries != null)
             {
                 foreach (GridItem item in entries)

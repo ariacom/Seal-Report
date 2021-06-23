@@ -211,7 +211,7 @@ namespace Seal.Model
         {
             MetaConnection result = MetaConnection.Create(this);
             result.ConnectionString = DefaultConnectionString;
-            result.DatabaseType = ConnectionStringEditor.GetDatabaseType(result.ConnectionString); //!NETCore
+            result.DatabaseType = Helper.GetDatabaseType(result.ConnectionString); 
 
             result.Name = Helper.GetUniqueName(result.Name, (from i in Connections select i.Name).ToList());
             Connections.Add(result);

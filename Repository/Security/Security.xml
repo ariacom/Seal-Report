@@ -1,4 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?><SealSecurity xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><ProviderName>Basic Authentication</ProviderName><UseCustomScript>true</UseCustomScript><Script>@{
+<?xml version="1.0" encoding="utf-8"?>
+<SealSecurity xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ProviderName>Basic Authentication</ProviderName>
+  <UseCustomScript>true</UseCustomScript>
+  <Script>@{
     SecurityUser user = Model;
 	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
 	//user.WebUserName -&gt; user name from the login screen
@@ -6,9 +10,9 @@
 
 	user.Name = user.WebUserName; //Display name
     //security check can be hardcoded
-	if (string.IsNullOrEmpty(user.WebUserName)) {&#xD;
-		user.AddDefaultSecurityGroup();&#xD;
-	}&#xD;
+	if (string.IsNullOrEmpty(user.WebUserName)) {
+		user.AddDefaultSecurityGroup();
+	}
 	else if (user.WebUserName == "ex" &amp;&amp; user.WebPassword == "ex")
 	{
 		user.AddSecurityGroup("Group (Execute)");
@@ -30,141 +34,247 @@
 		user.AddSecurityGroup("Group (Execute)");
 		user.AddSecurityGroup("Group (Edit)");
 	}
-	else if (user.WebUserName == "sc1" &amp;&amp; user.WebPassword == "sc1")&#xD;
-	{&#xD;
-		user.AddSecurityGroup("Group (Scripts 1)");&#xD;
-	}&#xD;
-	else if (user.WebUserName == "sc2" &amp;&amp; user.WebPassword == "sc2")&#xD;
-	{&#xD;
-		user.AddSecurityGroup("Group (Scripts 1)");&#xD;
-		user.AddSecurityGroup("Group (Scripts 2)");&#xD;
-	}&#xD;
-	else if (user.WebUserName == "menu" &amp;&amp; user.WebPassword == "menu")&#xD;
-	{&#xD;
-		user.AddSecurityGroup("Group (Menu)");&#xD;
-	}&#xD;
-	else if (user.WebUserName == "demo" &amp;&amp; user.WebPassword == "demo")&#xD;
-	{&#xD;
-		user.AddSecurityGroup("Group (Demo)");&#xD;
-	}&#xD;
-	else if (user.WebUserName == "nogroup" &amp;&amp; user.WebPassword == "nogroup")&#xD;
-	{&#xD;
-        throw new Exception("This user has no group");&#xD;
-	}&#xD;
-	else if (user.WebUserName == "ben" &amp;&amp; user.WebPassword == "ben")&#xD;
-	{&#xD;
-        user.Name = "Benjaminto Seal";&#xD;
-		user.AddDefaultSecurityGroup();&#xD;
-        var imagePath = @"C:\temp\" + user.WebUserName + ".png";&#xD;
-        if (System.IO.File.Exists(imagePath)) {&#xD;
-            user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);&#xD;
-        }&#xD;
-	}&#xD;
-}</Script><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /><SecurityFolder><Path>\System</Path><UseSubFolders>false</UseSubFolders><ExpandSubFolders>false</ExpandSubFolders></SecurityFolder></Folders><PersFolderRight>Reports</PersFolderRight><FoldersScript /><FolderDetailScript /><MenuScript>@{&#xD;
-    SecurityUser user = Model;&#xD;
-    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
-    //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
-&#xD;
-    //Sample to define a menu&#xD;
-    var reports = user.WebMenu.reports;&#xD;
-    reports.Clear();&#xD;
-    var item = new SWIMenuItem() { path = @"\Samples\04-Charts Gallery - Basics.srex", viewGUID = null, outputGUID = null, name = "View Charts" };&#xD;
-    &#xD;
-    //extra classes for the menu item&#xD;
-    item.classes = "disabled";&#xD;
-&#xD;
-    reports.Add(item);&#xD;
-    // subMenu&#xD;
-    var subMenu = new SWIMenuItem() { name = "A SubMenu" };&#xD;
-    subMenu.classes = "disabled label-danger";&#xD;
-    subMenu.items.Add(new SWIMenuItem() { path = @"\Search - Orders.srex", viewGUID = null, outputGUID = null, name = "Search" });&#xD;
-    reports.Add(subMenu);&#xD;
-    &#xD;
-    //Clear recent reports&#xD;
-    user.WebMenu.recentreports.Clear();&#xD;
-}&#xD;
-</MenuScript><SqlModel>true</SqlModel><Weight>1</Weight><Culture /><StartupReport /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><Weight>1</Weight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><Weight>1</Weight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><Weight>1</Weight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><Weight>1</Weight><Culture /></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel><Weight>1</Weight></SecurityGroup><SecurityGroup><Name>Group (Scripts 1)</Name><FoldersScript>@{&#xD;
-    SecurityUser user = Model;&#xD;
-    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
-    &#xD;
-    //Sample to define folders&#xD;
-    user.Folders.Clear();&#xD;
-    user.Folders.Add(new SWIFolder() { path = @"\Samples", name = "New Samples", right = 4, sql = true, manage = 0, expand = true });&#xD;
-    user.Folders.Add(new SWIFolder() { path = @"\", name = "Root", right = 4, sql = true, manage = 0, expand = true });&#xD;
-&#xD;
-    SWIFolder sampleFolder = user.AllFolders.FirstOrDefault(i =&gt; i.path ==  @"\Samples");&#xD;
-    if (sampleFolder != null) {&#xD;
-        //Sample to add a subfolder&#xD;
-        sampleFolder.folders.Add(new SWIFolder() { path = @"\System", name = "System in a sub-folder", right = 4, sql = false, manage = 0});&#xD;
-        &#xD;
-        //Sample to modify a folder&#xD;
-        sampleFolder.name = "New Samples 2"; &#xD;
-        sampleFolder.manage = 1; &#xD;
-        sampleFolder.right = 4;&#xD;
-        sampleFolder.sql = false;&#xD;
-&#xD;
-        //Sample to remove a folder&#xD;
-        //sampleFolder.folders.RemoveAll(i =&gt; i.path == @"\System");&#xD;
-    }&#xD;
-}&#xD;
-</FoldersScript><FolderDetailScript>@{&#xD;
-    SecurityUser user = Model;&#xD;
-    &#xD;
-    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
-&#xD;
-    if (user.FolderDetail.folder.path == @"\Samples") {&#xD;
-        //Filter reports&#xD;
-        user.FolderDetail.files.RemoveAll(i =&gt; !i.name.Contains("Charts")); &#xD;
-        &#xD;
-        //Sample to change a report &#xD;
-        SWIFile file = user.FolderDetail.files.FirstOrDefault(i =&gt; i.name == "04-Charts Gallery - Basics");&#xD;
-        if (file != null) {&#xD;
-            file.name = "04-Charts Gallery - Basics NEW";&#xD;
-            file.right = 1;&#xD;
-        }&#xD;
-    }&#xD;
-    &#xD;
-    if (user.FolderDetail.folder.path == @"\") {&#xD;
-        //Sample to add a report &#xD;
-        user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts Gallery - Basics.srex", name="Charts from Root", last="", isreport=true, right=1}); &#xD;
-    }&#xD;
-}&#xD;
-</FolderDetailScript><Weight>1</Weight></SecurityGroup><SecurityGroup><Name>Group (Scripts 2)</Name><PersFolderRight>Reports</PersFolderRight><FoldersScript>@{&#xD;
-    SecurityUser user = Model;&#xD;
-    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
-    //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
-    &#xD;
-    //Sample add folders&#xD;
-    user.Folders.Add(new SWIFolder() { path = @"\Samples\01-Tasks", name = "Tasks for User SC2", right = 4, sql = false, manage = 0});&#xD;
-}&#xD;
-</FoldersScript><FolderDetailScript>@{&#xD;
-    SecurityUser user = Model;&#xD;
-    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
-    //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
-&#xD;
-    if (user.FolderDetail.folder.path == @"\System") {&#xD;
-        user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts Gallery - Basics.srex", name="Charts from System", last="", isreport=true, right=1}); &#xD;
-    }&#xD;
-&#xD;
-    if (user.FolderDetail.folder.path == @"\") {&#xD;
-        user.FolderDetail.files.RemoveAll(i =&gt; i.path != @"\Samples\04-Charts Gallery - Basics.srex"); &#xD;
-    }&#xD;
-}&#xD;
-</FolderDetailScript><Weight>1</Weight></SecurityGroup><SecurityGroup><Name>Group (Menu)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ShowFoldersView>false</ShowFoldersView><MenuScript>@{&#xD;
-    SecurityUser user = Model;&#xD;
-    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
-    //user.ScriptNumber is a number incremented if several scripts are executed&#xD;
-&#xD;
-    //Sample to define a menu&#xD;
-    var reports = user.WebMenu.reports;&#xD;
-    reports.Clear();&#xD;
-    reports.Add(new SWIMenuItem() { path = @"\Samples\04-Charts Gallery - Basics.srex", viewGUID = null, outputGUID = null, name = "View Charts" });&#xD;
-    // subMenu&#xD;
-    var subMenu = new SWIMenuItem() { name = "A SubMenu" };&#xD;
-    subMenu.items.Add(new SWIMenuItem() { path = @"\Search - Orders.srex", viewGUID = null, outputGUID = null, name = "Search" });&#xD;
-    reports.Add(subMenu);&#xD;
-    &#xD;
-    //Clear recent reports&#xD;
-    user.WebMenu.recentreports.Clear();&#xD;
-}&#xD;
-</MenuScript><Weight>1</Weight></SecurityGroup></Groups></SealSecurity>
+	else if (user.WebUserName == "sc1" &amp;&amp; user.WebPassword == "sc1")
+	{
+		user.AddSecurityGroup("Group (Scripts 1)");
+	}
+	else if (user.WebUserName == "sc2" &amp;&amp; user.WebPassword == "sc2")
+	{
+		user.AddSecurityGroup("Group (Scripts 1)");
+		user.AddSecurityGroup("Group (Scripts 2)");
+	}
+	else if (user.WebUserName == "menu" &amp;&amp; user.WebPassword == "menu")
+	{
+		user.AddSecurityGroup("Group (Menu)");
+	}
+	else if (user.WebUserName == "demo" &amp;&amp; user.WebPassword == "demo")
+	{
+		user.AddSecurityGroup("Group (Demo)");
+	}
+	else if (user.WebUserName == "nogroup" &amp;&amp; user.WebPassword == "nogroup")
+	{
+        throw new Exception("This user has no group");
+	}
+	else if (user.WebUserName == "ben" &amp;&amp; user.WebPassword == "ben")
+	{
+        user.Name = "Benjaminto Seal";
+		user.AddDefaultSecurityGroup();
+        var imagePath = @"C:\temp\" + user.WebUserName + ".png";
+        if (System.IO.File.Exists(imagePath)) {
+            user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);
+        }
+	}
+}</Script>
+  <Groups>
+    <SecurityGroup>
+      <Name>Default Group</Name>
+      <Folders>
+        <SecurityFolder />
+        <SecurityFolder>
+          <Path>\System</Path>
+          <UseSubFolders>false</UseSubFolders>
+          <ExpandSubFolders>false</ExpandSubFolders>
+        </SecurityFolder>
+      </Folders>
+      <PersFolderRight>Reports</PersFolderRight>
+      <FoldersScript />
+      <FolderDetailScript />
+      <MenuScript />
+      <SqlModel>true</SqlModel>
+      <Weight>1</Weight>
+      <Culture />
+      <StartupReport />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Execute)</Name>
+      <Folders>
+        <SecurityFolder>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <Weight>1</Weight>
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Execute Output)</Name>
+      <Folders>
+        <SecurityFolder>
+          <Path>\Samples</Path>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>ExecuteReportOuput</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\System</Path>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>ExecuteReportOuput</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <Weight>1</Weight>
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Schedule)</Name>
+      <Folders>
+        <SecurityFolder>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>Schedule</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <PersFolderRight>Files</PersFolderRight>
+      <Weight>1</Weight>
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Edit)</Name>
+      <Folders>
+        <SecurityFolder />
+      </Folders>
+      <PersFolderRight>Reports</PersFolderRight>
+      <Devices>
+        <SecurityDevice>
+          <Name>Folder Device</Name>
+        </SecurityDevice>
+      </Devices>
+      <Sources>
+        <SecuritySource>
+          <Name>RSS No SQL Source</Name>
+        </SecuritySource>
+      </Sources>
+      <Connections>
+        <SecurityConnection>
+          <Name>connection</Name>
+        </SecurityConnection>
+      </Connections>
+      <Columns>
+        <SecurityColumn>
+          <Source>Northwind</Source>
+          <Tag />
+          <Category>Products</Category>
+        </SecurityColumn>
+        <SecurityColumn>
+          <Source>Northwind</Source>
+          <Tag />
+          <Category>Customers</Category>
+        </SecurityColumn>
+      </Columns>
+      <Weight>1</Weight>
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Demo)</Name>
+      <PersFolderRight>Reports</PersFolderRight>
+      <SqlModel>true</SqlModel>
+      <Weight>1</Weight>
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Scripts 1)</Name>
+      <FoldersScript>@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+    
+    //Sample to define folders
+    user.Folders.Clear();
+    user.Folders.Add(new SWIFolder() { path = @"\Samples", name = "New Samples", right = 4, sql = true, manage = 0, expand = true });
+    user.Folders.Add(new SWIFolder() { path = @"\", name = "Root", right = 4, sql = true, manage = 0, expand = true });
+
+    SWIFolder sampleFolder = user.AllFolders.FirstOrDefault(i =&gt; i.path ==  @"\Samples");
+    if (sampleFolder != null) {
+        //Sample to add a subfolder
+        sampleFolder.folders.Add(new SWIFolder() { path = @"\System", name = "System in a sub-folder", right = 4, sql = false, manage = 0});
+        
+        //Sample to modify a folder
+        sampleFolder.name = "New Samples 2"; 
+        sampleFolder.manage = 1; 
+        sampleFolder.right = 4;
+        sampleFolder.sql = false;
+
+        //Sample to remove a folder
+        //sampleFolder.folders.RemoveAll(i =&gt; i.path == @"\System");
+    }
+}
+</FoldersScript>
+      <FolderDetailScript>@{
+    SecurityUser user = Model;
+    
+    //Full documentation at https://sealreport.org/Help/Index.html
+
+    if (user.FolderDetail.folder.path == @"\Samples") {
+        //Filter reports
+        user.FolderDetail.files.RemoveAll(i =&gt; !i.name.Contains("Charts")); 
+        
+        //Sample to change a report 
+        SWIFile file = user.FolderDetail.files.FirstOrDefault(i =&gt; i.name == "04-Charts Gallery - Basics");
+        if (file != null) {
+            file.name = "04-Charts Gallery - Basics NEW";
+            file.right = 1;
+        }
+    }
+    
+    if (user.FolderDetail.folder.path == @"\") {
+        //Sample to add a report 
+        user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts Gallery - Basics.srex", name="Charts from Root", last="", isreport=true, right=1}); 
+    }
+}
+</FolderDetailScript>
+      <Weight>1</Weight>
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Scripts 2)</Name>
+      <PersFolderRight>Reports</PersFolderRight>
+      <FoldersScript>@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+    //user.ScriptNumber is a number incremented if several scripts are executed
+    
+    //Sample add folders
+    user.Folders.Add(new SWIFolder() { path = @"\Samples\01-Tasks", name = "Tasks for User SC2", right = 4, sql = false, manage = 0});
+}
+</FoldersScript>
+      <FolderDetailScript>@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+    //user.ScriptNumber is a number incremented if several scripts are executed
+
+    if (user.FolderDetail.folder.path == @"\System") {
+        user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts Gallery - Basics.srex", name="Charts from System", last="", isreport=true, right=1}); 
+    }
+
+    if (user.FolderDetail.folder.path == @"\") {
+        user.FolderDetail.files.RemoveAll(i =&gt; i.path != @"\Samples\04-Charts Gallery - Basics.srex"); 
+    }
+}
+</FolderDetailScript>
+      <Weight>1</Weight>
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Menu)</Name>
+      <Folders>
+        <SecurityFolder>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <ShowFoldersView>false</ShowFoldersView>
+      <MenuScript>@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+    //user.ScriptNumber is a number incremented if several scripts are executed
+
+    //Sample to define a menu
+    var reports = user.WebMenu.reports;
+    reports.Clear();
+    reports.Add(new SWIMenuItem() { path = @"\Samples\04-Charts Gallery - Basics.srex", viewGUID = null, outputGUID = null, name = "View Charts" });
+    // subMenu
+    var subMenu = new SWIMenuItem() { name = "A SubMenu" };
+    subMenu.items.Add(new SWIMenuItem() { path = @"\Search - Orders.srex", viewGUID = null, outputGUID = null, name = "Search" });
+    reports.Add(subMenu);
+    
+    //Clear recent reports
+    user.WebMenu.recentreports.Clear();
+}
+</MenuScript>
+      <Weight>1</Weight>
+    </SecurityGroup>
+  </Groups>
+</SealSecurity>

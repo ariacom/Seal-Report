@@ -1,7 +1,317 @@
-﻿<?xml version="1.0" encoding="utf-8"?><MetaSource xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><GUID>3d80412e-03a4-4a96-818a-a2aecef4c813</GUID><Name>Audit MS SQLServer</Name><Connections><MetaConnection><GUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</GUID><Name>Local MS SQLServer</Name><DatabaseType>MSSQLServer</DatabaseType><ConnectionType>MSSQLServer</ConnectionType><ConnectionString /><OdbcConnectionString /><MSSqlServerConnectionString>Server=localhost;Database=Audit;Trusted_Connection=True</MSSqlServerConnectionString><UserName /></MetaConnection></Connections><ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID><MetaData><Tables><MetaTable><GUID>36ffc9d2-1a1b-4357-8c46-24331e961794</GUID><Name>sr_audit</Name><Type>TABLE</Type><Columns><MetaColumn><GUID>5dd58e57-2737-42a7-820d-47373b21984a</GUID><Name>sr_audit.event_date</Name><Type>DateTime</Type><Category>Audit</Category><DisplayName>Date</DisplayName><DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat><Format>G</Format></MetaColumn><MetaColumn><GUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</GUID><Name>sr_audit.event_type</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Type</DisplayName><DisplayOrder>2</DisplayOrder><EnumGUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</EnumGUID></MetaColumn><MetaColumn><GUID>2e05ad38-4028-4c66-858f-396d466443cf</GUID><Name>sr_audit.user_name</Name><Type>Text</Type><Category>Audit</Category><DisplayName>User</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>963c0203-23ea-4558-be75-ffa167656cab</GUID><Name>sr_audit.user_groups</Name><Type>Text</Type><Category>Audit</Category><DisplayName>User groups</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn><MetaColumn><GUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</GUID><Name>sr_audit.execution_name</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Execution name</DisplayName><DisplayOrder>9</DisplayOrder></MetaColumn><MetaColumn><GUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</GUID><Name>sr_audit.event_path</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Path</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>a390f265-6761-41ac-b323-56f3ceb45b83</GUID><Name>sr_audit.execution_view</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Execution view</DisplayName><DisplayOrder>11</DisplayOrder></MetaColumn><MetaColumn><GUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</GUID><Name>sr_audit.execution_duration</Name><Type>Numeric</Type><Category>Audit</Category><DisplayName>Execution duration</DisplayName><DisplayOrder>12</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>b7995c78-1815-4985-9df9-399438ce4f68</GUID><Name>sr_audit.event_error</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Error</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</GUID><Name>sr_audit.output_type</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Output type</DisplayName><DisplayOrder>13</DisplayOrder></MetaColumn><MetaColumn><GUID>db1a144e-d051-486c-a668-9926a38b7f73</GUID><Name>sr_audit.output_name</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Output name</DisplayName><DisplayOrder>14</DisplayOrder></MetaColumn><MetaColumn><GUID>8457637b-d72b-48bf-8fb1-118adfeef0be</GUID><Name>sr_audit.schedule_name</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Schedule name</DisplayName><DisplayOrder>16</DisplayOrder></MetaColumn><MetaColumn><GUID>db93240e-46a2-43a2-8b0a-079915daee93</GUID><Name>sr_audit.output_information</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Output information</DisplayName><DisplayOrder>15</DisplayOrder></MetaColumn><MetaColumn><GUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</GUID><Name>sr_audit.execution_context</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Execution context</DisplayName><DisplayOrder>10</DisplayOrder><EnumGUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</EnumGUID></MetaColumn><MetaColumn><GUID>c53bdc07-c591-43e8-9f61-e0ce41709800</GUID><Name>DATETIME2FROMPARTS(year(sr_audit.event_date),1,1,0,0,0,0,0)</Name><Type>DateTime</Type><Category>Audit</Category><DisplayName>Event year</DisplayName><DisplayOrder>17</DisplayOrder><DateTimeStandardFormat>Custom</DateTimeStandardFormat><Format>yyyy</Format><DrillChildren><string>58078fce-3cac-4279-b274-2f760caa4247</string></DrillChildren></MetaColumn><MetaColumn><GUID>58078fce-3cac-4279-b274-2f760caa4247</GUID><Name>DATETIME2FROMPARTS(year(sr_audit.event_date),month(sr_audit.event_date),1,0,0,0,0,0)</Name><Type>DateTime</Type><Category>Audit</Category><DisplayName>Event month</DisplayName><DisplayOrder>18</DisplayOrder><DateTimeStandardFormat>Custom</DateTimeStandardFormat><Format>MM/yyyy</Format><DrillChildren><string>f55cc735-d7e2-4724-9f1a-8c484b6ba251</string></DrillChildren></MetaColumn><MetaColumn><GUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</GUID><Name>CONVERT(date, sr_audit.event_date)</Name><Type>DateTime</Type><Category>Audit</Category><DisplayName>Event day</DisplayName><DisplayOrder>19</DisplayOrder><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><Format>d</Format></MetaColumn><MetaColumn><GUID>54acc367-0703-48c9-ad29-f1914dbfa994</GUID><Name>sr_audit.event_detail</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Detail</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</GUID><Name>sr_audit.user_session</Name><Type>Text</Type><Category>Audit</Category><DisplayName>User session</DisplayName><DisplayOrder>8</DisplayOrder></MetaColumn><MetaColumn><GUID>8f4337f8-57f0-4d68-91cb-c1b797fbbd81</GUID><Name>convert(int,sr_audit.event_detail)</Name><Type>Numeric</Type><Category>Audit</Category><DisplayName>Detail Numeric</DisplayName><DisplayOrder>4</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>04457a7a-d910-40dc-b344-a9b801b18c54</GUID><Name>convert(varchar,DATEPART(year, sr_audit.event_date)) + '  W' + RIGHT('00'+convert(varchar,DATEPART(week, sr_audit.event_date)),2)</Name><Type>Text</Type><Category>Audit</Category><DisplayName>Event week</DisplayName><DisplayOrder>18</DisplayOrder><Format>d</Format></MetaColumn></Columns></MetaTable></Tables><Enums><MetaEnum><GUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</GUID><Name>Event type</Name><Sql>SELECT DISTINCT &#xD;
-sr_audit.event_type, sr_audit.event_type&#xD;
-FROM sr_audit &#xD;
-ORDER BY 1</Sql><Values><MetaEV><Id>EventError</Id><Val>Event Error</Val></MetaEV><MetaEV><Id>EventLoggedUsers</Id><Val>Event Logged Users</Val></MetaEV><MetaEV><Id>EventServer</Id><Val>Event Server</Val></MetaEV><MetaEV><Id>FileCopy</Id><Val>File Copy</Val></MetaEV><MetaEV><Id>FileDelete</Id><Val>File Delete</Val></MetaEV><MetaEV><Id>FileMove</Id><Val>File Move</Val></MetaEV><MetaEV><Id>FolderCreate</Id><Val>Folder Create</Val></MetaEV><MetaEV><Id>FolderDelete</Id><Val>Folder Delete</Val></MetaEV><MetaEV><Id>FolderRename</Id><Val>Folder Rename</Val></MetaEV><MetaEV><Id>Login</Id><Val>Login</Val></MetaEV><MetaEV><Id>LoginFailure</Id><Val>Login Failure</Val></MetaEV><MetaEV><Id>Logout</Id><Val>Logout</Val></MetaEV><MetaEV><Id>ReportExecution</Id><Val>Report Execution</Val></MetaEV><MetaEV><Id>ReportExecutionError</Id><Val>Report Execution Error</Val></MetaEV><MetaEV><Id>ReportSave</Id><Val>Report Save</Val></MetaEV></Values></MetaEnum><MetaEnum><GUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</GUID><Name>Execution context</Name><Sql>SELECT DISTINCT &#xD;
-sr_audit.execution_context &#xD;
-FROM sr_audit &#xD;
-ORDER BY 1</Sql><Values><MetaEV><Id>DesignerOutput</Id><Val>Designer (Output)</Val></MetaEV><MetaEV><Id>DesignerReport</Id><Val>Designer (Report)</Val></MetaEV><MetaEV><Id>TaskScheduler</Id><Val>Scheduler</Val></MetaEV><MetaEV><Id>WebOutput</Id><Val>Web (Output)</Val></MetaEV><MetaEV><Id>WebReport</Id><Val>Web (Report)</Val></MetaEV></Values></MetaEnum></Enums></MetaData></MetaSource>
+<?xml version="1.0" encoding="utf-8"?>
+<MetaSource xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <GUID>3d80412e-03a4-4a96-818a-a2aecef4c813</GUID>
+  <Name>Audit MS SQLServer</Name>
+  <Connections>
+    <MetaConnection>
+      <GUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</GUID>
+      <Name>Local MS SQLServer</Name>
+      <DatabaseType>MSSQLServer</DatabaseType>
+      <ConnectionType>MSSQLServer</ConnectionType>
+      <ConnectionString />
+      <OdbcConnectionString />
+      <MSSqlServerConnectionString>Server=localhost;Database=Audit;Trusted_Connection=True</MSSqlServerConnectionString>
+      <UserName />
+    </MetaConnection>
+  </Connections>
+  <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>
+  <MetaData>
+    <Tables>
+      <MetaTable>
+        <GUID>36ffc9d2-1a1b-4357-8c46-24331e961794</GUID>
+        <Name>sr_audit</Name>
+        <Type>TABLE</Type>
+        <Columns>
+          <MetaColumn>
+            <GUID>5dd58e57-2737-42a7-820d-47373b21984a</GUID>
+            <Name>sr_audit.event_date</Name>
+            <Type>DateTime</Type>
+            <Category>Audit</Category>
+            <DisplayName>Date</DisplayName>
+            <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
+            <Format>G</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</GUID>
+            <Name>sr_audit.event_type</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Type</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <EnumGUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</EnumGUID>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2e05ad38-4028-4c66-858f-396d466443cf</GUID>
+            <Name>sr_audit.user_name</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>User</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>963c0203-23ea-4558-be75-ffa167656cab</GUID>
+            <Name>sr_audit.user_groups</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>User groups</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</GUID>
+            <Name>sr_audit.execution_name</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Execution name</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</GUID>
+            <Name>sr_audit.event_path</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Path</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>a390f265-6761-41ac-b323-56f3ceb45b83</GUID>
+            <Name>sr_audit.execution_view</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Execution view</DisplayName>
+            <DisplayOrder>11</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</GUID>
+            <Name>sr_audit.execution_duration</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>Execution duration</DisplayName>
+            <DisplayOrder>12</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b7995c78-1815-4985-9df9-399438ce4f68</GUID>
+            <Name>sr_audit.event_error</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Error</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</GUID>
+            <Name>sr_audit.output_type</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Output type</DisplayName>
+            <DisplayOrder>13</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>db1a144e-d051-486c-a668-9926a38b7f73</GUID>
+            <Name>sr_audit.output_name</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Output name</DisplayName>
+            <DisplayOrder>14</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8457637b-d72b-48bf-8fb1-118adfeef0be</GUID>
+            <Name>sr_audit.schedule_name</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Schedule name</DisplayName>
+            <DisplayOrder>16</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>db93240e-46a2-43a2-8b0a-079915daee93</GUID>
+            <Name>sr_audit.output_information</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Output information</DisplayName>
+            <DisplayOrder>15</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</GUID>
+            <Name>sr_audit.execution_context</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Execution context</DisplayName>
+            <DisplayOrder>10</DisplayOrder>
+            <EnumGUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</EnumGUID>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>c53bdc07-c591-43e8-9f61-e0ce41709800</GUID>
+            <Name>DATETIME2FROMPARTS(year(sr_audit.event_date),1,1,0,0,0,0,0)</Name>
+            <Type>DateTime</Type>
+            <Category>Audit</Category>
+            <DisplayName>Event year</DisplayName>
+            <DisplayOrder>17</DisplayOrder>
+            <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+            <Format>yyyy</Format>
+            <DrillChildren>
+              <string>58078fce-3cac-4279-b274-2f760caa4247</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>58078fce-3cac-4279-b274-2f760caa4247</GUID>
+            <Name>DATETIME2FROMPARTS(year(sr_audit.event_date),month(sr_audit.event_date),1,0,0,0,0,0)</Name>
+            <Type>DateTime</Type>
+            <Category>Audit</Category>
+            <DisplayName>Event month</DisplayName>
+            <DisplayOrder>18</DisplayOrder>
+            <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+            <Format>MM/yyyy</Format>
+            <DrillChildren>
+              <string>f55cc735-d7e2-4724-9f1a-8c484b6ba251</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</GUID>
+            <Name>CONVERT(date, sr_audit.event_date)</Name>
+            <Type>DateTime</Type>
+            <Category>Audit</Category>
+            <DisplayName>Event day</DisplayName>
+            <DisplayOrder>19</DisplayOrder>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>d</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>54acc367-0703-48c9-ad29-f1914dbfa994</GUID>
+            <Name>sr_audit.event_detail</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Detail</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</GUID>
+            <Name>sr_audit.user_session</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>User session</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8f4337f8-57f0-4d68-91cb-c1b797fbbd81</GUID>
+            <Name>convert(int,sr_audit.event_detail)</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>Detail Numeric</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>04457a7a-d910-40dc-b344-a9b801b18c54</GUID>
+            <Name>convert(varchar,DATEPART(year, sr_audit.event_date)) + '  W' + RIGHT('00'+convert(varchar,DATEPART(week, sr_audit.event_date)),2)</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Event week</DisplayName>
+            <DisplayOrder>18</DisplayOrder>
+            <Format>d</Format>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+    </Tables>
+    <Enums>
+      <MetaEnum>
+        <GUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</GUID>
+        <Name>Event type</Name>
+        <Sql>SELECT DISTINCT 
+sr_audit.event_type, sr_audit.event_type
+FROM sr_audit 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>EventError</Id>
+            <Val>Event Error</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>EventLoggedUsers</Id>
+            <Val>Event Logged Users</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>EventServer</Id>
+            <Val>Event Server</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FileCopy</Id>
+            <Val>File Copy</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FileDelete</Id>
+            <Val>File Delete</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FileMove</Id>
+            <Val>File Move</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FolderCreate</Id>
+            <Val>Folder Create</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FolderDelete</Id>
+            <Val>Folder Delete</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FolderRename</Id>
+            <Val>Folder Rename</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Login</Id>
+            <Val>Login</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>LoginFailure</Id>
+            <Val>Login Failure</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Logout</Id>
+            <Val>Logout</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ReportExecution</Id>
+            <Val>Report Execution</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ReportExecutionError</Id>
+            <Val>Report Execution Error</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ReportSave</Id>
+            <Val>Report Save</Val>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</GUID>
+        <Name>Execution context</Name>
+        <Sql>SELECT DISTINCT 
+sr_audit.execution_context 
+FROM sr_audit 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>DesignerOutput</Id>
+            <Val>Designer (Output)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>DesignerReport</Id>
+            <Val>Designer (Report)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>TaskScheduler</Id>
+            <Val>Scheduler</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>WebOutput</Id>
+            <Val>Web (Output)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>WebReport</Id>
+            <Val>Web (Report)</Val>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+    </Enums>
+  </MetaData>
+</MetaSource>

@@ -211,7 +211,7 @@ namespace Seal.Helpers
             var result = new List<string>();
             if (!string.IsNullOrEmpty(listInput))
             {
-                foreach (var input in listInput.Replace("\r\n", ";").Split(';'))
+                foreach (var input in listInput.Replace("\r\n", "§").Replace("\r", "§").Replace("\n", "§").Split('§'))
                 {
                     if (!string.IsNullOrEmpty(input)) result.Add(input);
                 }
@@ -747,6 +747,29 @@ namespace Seal.Helpers
             return connection;
         }
 
+        static public DatabaseType GetDatabaseType(string connectionString)
+        {
+            DatabaseType result = DatabaseType.Standard;
+            if (connectionString.ToLower().Contains("oracle"))
+            {
+                result = DatabaseType.Oracle;
+            }
+            else if (connectionString.ToLower().Contains(".mdb") || connectionString.ToLower().Contains(".accdb"))
+            {
+                result = DatabaseType.MSAccess;
+            }
+            else if (connectionString.ToLower().Contains(".xls") || connectionString.ToLower().Contains("excel driver"))
+            {
+                result = DatabaseType.MSExcel;
+            }
+            else if (connectionString.ToLower().Contains("sqlncli"))
+            {
+                result = DatabaseType.MSSQLServer;
+            }
+
+            return result;
+        }
+
         static public string GetOleDbConnectionString(string input, string userName, string password)
         {
             string result = input;
@@ -895,26 +918,6 @@ namespace Seal.Helpers
             return result;
         }
 
-#if !NETCOREAPP
-        public static void RunInAnotherAppDomain(string assemblyFile, string[] args)
-        {
-            // RazorEngine cannot clean up from the default appdomain...
-            Console.WriteLine("Switching to second AppDomain, for RazorEngine...");
-            AppDomainSetup adSetup = new AppDomainSetup();
-            adSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            var current = AppDomain.CurrentDomain;
-            // You only need to add strongnames when your appdomain is not a full trust environment.
-            var strongNames = new System.Security.Policy.StrongName[0];
-
-            var domain = AppDomain.CreateDomain(
-                Path.GetFileNameWithoutExtension(assemblyFile), null,
-                current.SetupInformation, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted),
-                strongNames);
-            domain.ExecuteAssembly(assemblyFile, args);
-            // RazorEngine will cleanup. 
-            AppDomain.Unload(domain);
-        }
-#endif
 
         public static string GetApplicationDirectory()
         {

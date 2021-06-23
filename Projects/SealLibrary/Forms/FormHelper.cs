@@ -96,7 +96,7 @@ namespace Seal.Forms
                     var sourceLines = ex.CompilationData.SourceCode.Split('\n');
                     if (err.Line > 0 && err.Line < sourceLines.Length)
                     {
-                        var pattern = sourceLines[err.Line - 1].Trim();
+                        var pattern = sourceLines[err.Line].Trim();
                         foreach (var line in textBox.Lines)
                         {
                             var line2 = line.Text.Trim();

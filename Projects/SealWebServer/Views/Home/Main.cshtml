@@ -35,7 +35,7 @@
     <input type="password" style="display:none">
     <input type="hidden" name="id_load" id="id_load" value="" />
 
-    @Html.Partial("~/Views/Home/Menu.cshtml")
+    @await Html.PartialAsync("~/Views/Home/Menu.cshtml")
 
     <!--Folders view -->
     <div id="main-container" class="container-fluid folderview" style="padding-top:62px;display:none;">
@@ -69,7 +69,7 @@
     </div>
 
     <!--Wait Dialog-->
-    <div class="modal fade in" id="wait-dialog" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal fade in" id="wait-dialog"data-backdrop="static" data-keyboard="false" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body" style="text-align:center">
@@ -227,7 +227,7 @@
 
     @if (model.HasEditor())
     {
-        @Html.Partial("~/Views/Home/MainEditor.cshtml");
+        @await Html.PartialAsync("~/Views/Home/MainEditor.cshtml");
     }
 
     <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">

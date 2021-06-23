@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>ee0875f1aa084546ad7d01851f51d6c3</GUID>
+  <ViewGUID>cdbccd20-d833-4783-ac0c-4f0ae9fb83f4</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>651d9841-53de-4676-84bd-134ec53b62c1</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>618ab846-7318-4c6e-a74f-020e5b6c4e5e</GUID>
+            <Sql>select * from employees</Sql>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <WhereSQL>@{
+  MetaTable table = Model;
+  string result = "";
+  if (table.Source.Report != null &amp;&amp; table.Source.Report.SecurityContext != null)
+  {
+    result = string.Format("lastname={0}", Helper.QuoteSingle(table.Source.Report.SecurityContext.Name));
+  }
+}
+@Raw(result)</WhereSQL>
+            <Columns>
+              <MetaColumn>
+                <GUID>61f9708f-5531-4a65-8e96-1a062337a17a</GUID>
+                <Name>SealMasterTable.EmployeeID</Name>
+                <Type>Numeric</Type>
+                <Category>Master</Category>
+                <DisplayName>Employee ID</DisplayName>
+                <Format>N0</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>26f8313d-9768-406b-a71b-7e6be0bc56c3</GUID>
+                <Name>SealMasterTable.LastName</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Last Name</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>c7723eb3-ca23-4c0d-95b1-5f1b0a467d91</GUID>
+                <Name>SealMasterTable.FirstName</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>First Name</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>bbe90c11-d28c-40bb-a770-2d0911dcc4a7</GUID>
+                <Name>SealMasterTable.Title</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Title</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9d0f9fe7-1969-497a-b33d-1b324169cd25</GUID>
+                <Name>SealMasterTable.TitleOfCourtesy</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Title Of Courtesy</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>7460e4b3-34e3-42a7-bdc8-4efec0261dae</GUID>
+                <Name>SealMasterTable.BirthDate</Name>
+                <Type>DateTime</Type>
+                <Category>Master</Category>
+                <DisplayName>Birth Date</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+                <Format>d</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>77db904d-0d58-4837-87e3-8a06e03f5e62</GUID>
+                <Name>SealMasterTable.HireDate</Name>
+                <Type>DateTime</Type>
+                <Category>Master</Category>
+                <DisplayName>Hire Date</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+                <Format>d</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>974cffc5-a7a9-4916-85d5-1a1749d1d778</GUID>
+                <Name>SealMasterTable.Address</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Address</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>22a5718f-071f-499e-bb4d-91d5fda3ec5a</GUID>
+                <Name>SealMasterTable.City</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>City</DisplayName>
+                <DisplayOrder>9</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>bb85d214-6cbe-4108-b1b4-b2925d8daf48</GUID>
+                <Name>SealMasterTable.Region</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Region</DisplayName>
+                <DisplayOrder>10</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>fe9b4b67-342d-451b-afe6-f7eebd0a7fc4</GUID>
+                <Name>SealMasterTable.PostalCode</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Postal Code</DisplayName>
+                <DisplayOrder>11</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>f03dc4cb-6c8b-401e-ac31-dc1bcee7e8fa</GUID>
+                <Name>SealMasterTable.Country</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Country</DisplayName>
+                <DisplayOrder>12</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5bc2f094-5cc3-4912-9983-b071d3c7a53d</GUID>
+                <Name>SealMasterTable.HomePhone</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Home Phone</DisplayName>
+                <DisplayOrder>13</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>7e0768c5-7700-41d4-a464-0d8bd5af2f62</GUID>
+                <Name>SealMasterTable.Extension</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Extension</DisplayName>
+                <DisplayOrder>14</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>a8d447d4-e268-47a0-8402-edfff901813d</GUID>
+                <Name>SealMasterTable.Photo</Name>
+                <Type>Numeric</Type>
+                <Category>Master</Category>
+                <DisplayName>Photo</DisplayName>
+                <DisplayOrder>15</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>1fcf64a1-ad89-442d-a46c-554ab87ea8bb</GUID>
+                <Name>SealMasterTable.Notes</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Notes</DisplayName>
+                <DisplayOrder>16</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>2ee3fc71-6348-4d7c-b897-488436382e12</GUID>
+                <Name>SealMasterTable.ReportsTo</Name>
+                <Type>Numeric</Type>
+                <Category>Master</Category>
+                <DisplayName>Reports To</DisplayName>
+                <DisplayOrder>17</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>ee8de4d1-1c22-42bf-8c6f-2afd971d4369</GUID>
+      <Name>model</Name>
+      <SourceGUID>651d9841-53de-4676-84bd-134ec53b62c1</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>1ad86583-eea2-452a-821d-7f60b100b4a2</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a263a337-5565-47ab-bb1f-d1407829aa20</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7a77b836-9706-4eca-980a-fe6f5271920c</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>RowColumn</ShowTotal>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2f2d7f6e-981f-4325-945d-4407e6d7decc</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>RowColumn</ShowTotal>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[c5bfa4e3-7512-40a4-ade6-d9eb3285aeaf]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>c5bfa4e3-7512-40a4-ade6-d9eb3285aeaf</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumValues>
+            <string>1</string>
+            <string>3</string>
+            <string>7</string>
+            <string>8</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>2f740b1e-cac4-4b16-acdb-08fd6aa9d987</GUID>
+      <Name>Add table borders</Name>
+      <CancelReport>false</CancelReport>
+      <SourceGUID>651d9841-53de-4676-84bd-134ec53b62c1</SourceGUID>
+      <Step>BeforeRendering</Step>
+      <Script>@using System.Data
+@{
+    //Add borders to the final result tables
+    ReportTask task = Model;
+    Report report = task.Report;   
+    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'
+    foreach (var model in report.Models) 
+    {
+        foreach (var page in model.Pages) 
+        {
+            //Format data result table
+            string style = "solid", width = "1px";
+            int rowIndex = 0;
+            foreach (var line in page.DataTable.Lines) 
+            {
+                int colIndex = 0;                
+                foreach (var cell in line) 
+                {
+                    cell.FinalCssStyle = "";
+                    if (rowIndex == 0) { //First line
+                        cell.FinalCssStyle = string.Format("border-top-style:{0};border-top-width:{1};", style, width);
+                    }
+                    if (rowIndex == page.DataTable.RowCount -1) {  //Last line
+                        cell.FinalCssStyle = string.Format("border-bottom-style:{0};border-bottom-width:{1};", style, width);
+                    }
+                    if (colIndex == 0) { //First column
+                        cell.FinalCssStyle += string.Format("border-left-style:{0};border-left-width:{1};", style, width);
+                    }
+                    
+                    //Columns
+                    int modulo = model.GetElements(PivotPosition.Data).Count();
+                    if (modulo == 0 || colIndex % modulo == 0 || colIndex == page.DataTable.ColumnCount -1) {
+                        cell.FinalCssStyle += string.Format("border-right-style:{0};border-right-width:{1};", style, width);
+                    }
+                    colIndex++;
+                }                
+                rowIndex++;
+            }
+            
+            //Limit to 10 first 
+        }
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>cdbccd20-d833-4783-ac0c-4f0ae9fb83f4</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>eb3f420a-4ab3-4427-b46f-ec35f793dc0d</GUID>
+          <Name>model</Name>
+          <Views>
+            <ReportView>
+              <GUID>49c3516a-6acb-4a1a-b6cc-56b41b48678f</GUID>
+              <Name>Data Table</Name>
+              <TemplateName>Data Table</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>data_tables_sort_configuration</Name>
+                  <Value>[{LAST}-1,'desc']</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>ee8de4d1-1c22-42bf-8c6f-2afd971d4369</ModelGUID>
+          <CustomTemplate />
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>cd934a9d-95bc-4751-8bd3-80156a177729</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;A custom task 'Add borders'.&lt;/li&gt;
+&lt;li&gt;Data table Sort Configuration set to "[{LAST}-1,'desc']" to sort by total amount descending.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>report_description</Name>
+          <Value>How to use of the Final Script of the model to remove rows and columns in the result table...</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>0</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

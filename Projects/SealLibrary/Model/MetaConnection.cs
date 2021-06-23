@@ -44,13 +44,11 @@ namespace Seal.Model
                 GetProperty("DateTimeFormat").SetIsBrowsable(true);
 
                 GetProperty("ConnectionType").SetIsBrowsable(true);
-                if (IsEditable) GetProperty("ConnectionString").SetIsBrowsable(true);
-                else GetProperty("ConnectionString2").SetIsBrowsable(true);
+                GetProperty("ConnectionString").SetIsBrowsable(true);
                 GetProperty("OdbcConnectionString").SetIsBrowsable(true);
                 GetProperty("MSSqlServerConnectionString").SetIsBrowsable(true);
 
                 GetProperty("ConnectionString").SetIsReadOnly(!IsEditable);
-                GetProperty("ConnectionString2").SetIsReadOnly(!IsEditable);
                 GetProperty("OdbcConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MSSqlServerConnectionString").SetIsReadOnly(!IsEditable);
 
@@ -118,35 +116,21 @@ namespace Seal.Model
             set
             {
                 _connectionType = value;
-#if !NETCOREAPP
                 if (_connectionType == ConnectionType.MSSQLServer && DatabaseType != DatabaseType.MSSQLServer) {
                     DatabaseType = DatabaseType.MSSQLServer;
                     if (_dctd != null) MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 UpdateEditorAttributes();
-#endif
             }
-
         }
 
         /// <summary>
         /// OLE DB Connection string used to connect to the database if the connection type is OLE DB
         /// </summary>
         [DefaultValue(null)]
-        [DisplayName("OLE DB Connection string"), Description("OLE DB Connection string used to connect to the database if the connection type is OLE DB. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(4, 1)]
-        [Editor(typeof(ConnectionStringEditor), typeof(UITypeEditor))]
+        [DisplayName("OLE DB Connection string"), Description("OLE DB Connection string used to connect to the database if the connection type is OleDb. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(4, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string ConnectionString { get; set; }
-
-        /// <summary>
-        /// Property Helper for editor
-        /// </summary>
-        [DefaultValue(null)]
-        [DisplayName("Connection string"), Description("OLEDB Connection string used to connect to the database if the connection type is OleDb. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(4, 1)]
-        [XmlIgnore]
-        public string ConnectionString2
-        {
-            get { return ConnectionString; }
-        }
 
         /// <summary>
         /// ODBC Connection string used to connect to the database if the connection type is ODBC
@@ -304,7 +288,7 @@ namespace Seal.Model
         /// </summary>
         public void CheckConnection()
         {
-            Cursor.Current = Cursors.WaitCursor; //!NETCore
+            Cursor.Current = Cursors.WaitCursor; 
             Error = "";
             Information = "";
             try
@@ -320,8 +304,8 @@ namespace Seal.Model
                 Information = "Error got when checking the connection.";
             }
             Information = Helper.FormatMessage(Information);
-            UpdateEditorAttributes(); //!NETCore
-            Cursor.Current = Cursors.Default; //!NETCore
+            UpdateEditorAttributes(); 
+            Cursor.Current = Cursors.Default; 
         }
 
 

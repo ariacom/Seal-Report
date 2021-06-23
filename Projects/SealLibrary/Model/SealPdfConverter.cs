@@ -48,13 +48,8 @@ namespace Seal.Model
                 {
                     string assembliesFolder = Repository.Instance.AssembliesFolder;
                     //Load related DLLs
-#if NETCOREAPP
                     Assembly.LoadFrom(Path.Combine(assembliesFolder, "WnvHtmlToPdf_NetCore.dll"));
                     Assembly.LoadFrom(Path.Combine(assembliesFolder, "WnvHtmlToPdfClient_NetCore.dll"));
-#else
-                    Assembly.LoadFrom(Path.Combine(assembliesFolder, "wnvhtmltopdf.dll"));
-                    Assembly.LoadFrom(Path.Combine(assembliesFolder, "WnvHtmlToPdfClient.dll"));
-#endif
                     Assembly currentAssembly = Assembly.LoadFrom(Repository.Instance.SealConverterPath);
                     Type t = currentAssembly.GetType("Seal.Converter.PdfConverter", true);
                     object[] args = new object[] { };
@@ -100,9 +95,9 @@ namespace Seal.Model
             return false;
         }
 
-        public virtual void ConfigureTemplateEditor(TemplateTextEditorForm frm, string propertyName, ref string template, ref string language) { } //!NETCore
+        public virtual void ConfigureTemplateEditor(TemplateTextEditorForm frm, string propertyName, ref string template, ref string language) { } 
 
-        public IEntityHandler EntityHandler = null; //!NETCore
+        public IEntityHandler EntityHandler = null; 
 
         public virtual string GetLicenseText()
         {

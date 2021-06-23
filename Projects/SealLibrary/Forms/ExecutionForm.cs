@@ -162,7 +162,9 @@ namespace Seal.Forms
         {
             string path = FileHelper.GetTempUniqueFileName("log.txt");
             FileHelper.WriteFile(path, logTextBox.Text);
-            Process.Start(path);
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo(path) { UseShellExecute = true };
+            p.Start();
             FileHelper.PurgeTempApplicationDirectory();
         }
 

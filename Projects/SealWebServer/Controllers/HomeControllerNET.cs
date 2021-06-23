@@ -2,8 +2,9 @@
 using Seal.Model;
 using Seal.Helpers;
 using System.IO;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 using System.Text;
 using System.Security.Principal;
 using System;
@@ -58,14 +59,14 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Return the full Web URL
         /// </summary>
-        public static string GetWebUrl(HttpRequestBase request, HttpResponseBase response)
+        public static string GetWebUrl(HttpRequest request, HttpResponse response)
         {
             var appPath = request.ApplicationPath + (request.ApplicationPath.EndsWith("/") ? "" : "/");
             if (!request.RequestContext.HttpContext.Session.IsCookieless) return appPath;
             return response.ApplyAppPathModifier(appPath);
         }
 
-        private string getContextDetail(HttpRequestBase request, SecurityUser user)
+        private string getContextDetail(HttpRequest request, SecurityUser user)
         {
             var result = new StringBuilder("\r\n");
             try
@@ -87,7 +88,7 @@ namespace SealWebServer.Controllers
             return result.ToString();
         }
 
-        string getIPAddress(HttpRequestBase request)
+        string getIPAddress(HttpRequest request)
         {
             string ipAddress = request.ServerVariables["HTTP_X_FORWARDED_FOR"];
             if (!string.IsNullOrEmpty(ipAddress))
@@ -121,3 +122,4 @@ namespace SealWebServer.Controllers
         }
     }
 }
+

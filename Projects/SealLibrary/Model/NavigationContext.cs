@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace Seal.Model
 {
@@ -131,13 +132,7 @@ namespace Seal.Model
             return new ReportExecution() { NavigationParameter = navigation, Report = newReport, RootReport = rootReport };
         }
 
-        public string NavigateScript(string navigation, Report report, NameValueCollection parameters,
-#if !NETCOREAPP
-            HttpRequestBase request = null
-#else
-            Microsoft.AspNetCore.Http.HttpRequest request = null
-#endif
-            )
+        public string NavigateScript(string navigation, Report report, NameValueCollection parameters, HttpRequest request = null)
         {
             var linkGUID = navigation.Substring(3);
             var result = "";

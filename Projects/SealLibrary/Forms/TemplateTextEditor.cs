@@ -13,6 +13,9 @@ using Seal.Model;
 using Seal.Helpers;
 using ScintillaNET;
 using System.Text;
+using System.Data.OleDb;
+using System.Data;
+using System.Diagnostics;
 
 namespace Seal.Forms
 {
@@ -697,7 +700,7 @@ namespace Seal.Forms
                 foreach (var cell in line) 
                 {
                     if (cell.IsTitle) {
-                        cell.FinalCssStyle = ""font-size:20px; color:blue;"";
+                        cell.FinalCssStyle = ""font-size:20px;color:blue;"";
                     }
                 }
             }       
@@ -711,6 +714,71 @@ namespace Seal.Forms
                     }
                 }
             }       
+        }
+    }
+"
+                ),
+            new Tuple<string, string>(
+                "Add borders to the final result tables",
+@"ReportTask task = Model;
+    Report report = task.Report;   
+    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'
+    foreach (var model in report.Models /*.Where(i => i.Name == "") */) 
+    {
+        foreach (var page in model.Pages) 
+        {
+            //Format data result table
+            string style = ""solid"", width = ""1px"";
+            int rowIndex = 0;
+            foreach (var line in page.DataTable.Lines) 
+            {
+                int colIndex = 0;                
+                foreach (var cell in line) 
+                {
+                    cell.FinalCssStyle = """";
+                    if (rowIndex == 0) { //First line
+                        cell.FinalCssStyle = string.Format(""border-top-style:{0};border-top-width:{1};"", style, width);
+                    }
+                    if (rowIndex == page.DataTable.RowCount -1) {  //Last line
+                        cell.FinalCssStyle = string.Format(""border-bottom-style:{0};border-bottom-width:{1};"", style, width);
+                    }
+                    if (colIndex == 0) { //First column
+                        cell.FinalCssStyle += string.Format(""border-left-style:{0};border-left-width:{1};"", style, width);
+                    }
+                    
+                    //Columns
+                    int modulo = model.GetElements(PivotPosition.Data).Count();
+                    if (modulo == 0 || colIndex % modulo == 0 || colIndex == page.DataTable.ColumnCount -1) {
+                        cell.FinalCssStyle += string.Format(""border-right-style:{0};border-right-width:{1};"", style, width);
+                    }
+                    colIndex++;
+                }                
+                rowIndex++;
+            }       
+        }
+    }
+"
+                ),
+            new Tuple<string, string>(
+                "Keep only xx rows in the result tables",
+@"ReportTask task = Model;
+    Report report = task.Report;   
+    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'
+    foreach (var model in report.Models /*.Where(i => i.Name == "") */) 
+    {
+        foreach (var page in model.Pages) 
+        {
+            var dataTable = page.DataTable;
+            var rowsToKeep = 10; //Number of body rows to keep
+            if (dataTable != null && dataTable.Lines.Count > rowsToKeep) {
+                var newLines = dataTable.Lines.Take(dataTable.BodyStartRow + rowsToKeep).ToList();
+                //Add totals
+                for (int i = dataTable.BodyEndRow; i < dataTable.RowCount; i++) {
+                    newLines.Add(dataTable.Lines[i]);
+                }
+                dataTable.BodyEndRow = dataTable.BodyStartRow + rowsToKeep;
+                dataTable.Lines = newLines;
+            }
         }
     }
 "
@@ -890,6 +958,14 @@ namespace Seal.Forms
     var helper = new TaskHelper(task);
     helper.ExecuteMSSQLScripts(
         @""scriptsDirectory"",
+        false, //if true, the scripts are executed for all connections defined in the Source
+        true, //if false, the execution continues even if an error occurs
+        11 //error class level to consider an error versus information/warning
+    );
+
+    //Execute just one file
+    helper.ExecuteMSSQLFile(
+        @""C:\temp\aScript.sql"",
         false, //if true, the scripts are executed for all connections defined in the Source
         true, //if false, the execution continues even if an error occurs
         11 //error class level to consider an error versus information/warning
@@ -1211,6 +1287,35 @@ namespace Seal.Forms
                 }
                 else if (context.Instance is MetaConnection)
                 {
+                    if (context.PropertyDescriptor.Name == "ConnectionString")
+                    {
+                        template = "";
+
+                        List<string> samples = new List<string>();
+                        try
+                        {
+                            OleDbEnumerator enumerator = new OleDbEnumerator();
+                            DataTable table = enumerator.GetElements();
+                            foreach (DataRow row in table.Rows)
+                            {
+                                var sourceName = row["SOURCES_NAME"].ToString();
+                                if (!sourceName.ToLower().Contains("enumerator"))
+                                {
+                                    samples.Add(string.Format("Provider={0};Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=Northwind;Data Source=localhost;|{1}", sourceName, row["SOURCES_DESCRIPTION"]));
+                                }
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                            samples.Add("Provider=SQLNCLI11;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=Northwind;Data Source=localhost;|SQLServer Native Client");
+                        }
+                        frm.SetSamples(samples);
+
+
+                        frm.Text = "Edit the MS SQLServer Connection script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
                     if (context.PropertyDescriptor.Name == "MSSqlServerConnectionString")
                     {
                         template = sqlConnectionString;

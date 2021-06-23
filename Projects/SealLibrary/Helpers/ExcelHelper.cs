@@ -26,7 +26,7 @@ namespace Seal.Helpers
         static public string FromCsv(string value)
         {
             string result = value;
-            if (value.StartsWith("\"") && value.EndsWith("\"")) result = result.Substring(1, value.Length - 2);
+            if (value.StartsWith("\"") && value.EndsWith("\"") && value.Length > 2) result = result.Substring(1, value.Length - 2);
             result = result.Replace("\"\"", "\"");
             return result;
         }

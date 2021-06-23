@@ -15,17 +15,9 @@ namespace SealTaskHandler
         {
             if (args.Length > 0)
             {
-                if (AppDomain.CurrentDomain.IsDefaultAppDomain())
-                {
-                    Helper.RunInAnotherAppDomain(Assembly.GetExecutingAssembly().Location, args);
-                }
-                else
-                {
-                    ReportExecution.ExecuteReportSchedule(args[0].ToString());
-                }
+                ReportExecution.ExecuteReportSchedule(args[0].ToString());
                 return;
             }
-
         }
     }
 }

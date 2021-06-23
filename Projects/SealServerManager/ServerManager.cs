@@ -195,10 +195,6 @@ namespace Seal
         {
         }
 
-        public void EditSchedule(ReportSchedule schedule)
-        {
-        }
-
         public void RefreshModelTreeView()
         {
         }
@@ -630,7 +626,9 @@ namespace Seal
 
         private void openFolderToolStripButton_Click(object sender, EventArgs e)
         {
-            Process.Start(_repository.RepositoryPath);
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo(_repository.RepositoryPath) { UseShellExecute = true };
+            p.Start();
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -663,11 +661,18 @@ namespace Seal
         {
             if (sender == openTasksToolStripButton)
             {
-                if (Helper.CheckTaskSchedulerOS()) Process.Start(Path.Combine(Environment.SystemDirectory, "taskschd.msc"), "/s");
+                if (Helper.CheckTaskSchedulerOS())
+                {
+                    var p = new Process();
+                    p.StartInfo = new ProcessStartInfo(Path.Combine(Environment.SystemDirectory, "taskschd.msc"), "/s") { UseShellExecute = true };
+                    p.Start();
+                }
             }
             else if (sender == openEventsToolStripButton)
             {
-                Process.Start(Path.Combine(Environment.SystemDirectory, "eventvwr.msc"), "/s");
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(Path.Combine(Environment.SystemDirectory, "eventvwr.msc"), "/s") { UseShellExecute = true };
+                p.Start();
             }
         }
 

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 using OfficeOpenXml;
+using System.Collections.Generic;
 
 namespace Seal.Helpers
 {
@@ -37,16 +38,39 @@ namespace Seal.Helpers
         public string ColumnDateTimeType = "";
         public string InsertStartCommand = "";
         public string InsertEndCommand = "";
-        public int ColumnCharLength = 0; //0= means auto size
-        public int NoRowsCharLength = 50; //Char length taken if the table loaded as no row
-        public int LoadBurstSize = 0; //0 = Load all records in one
-        public string LoadSortColumn = ""; //Sort column used if LoadBurstSize is specified
+        /// <summary>
+        /// 0 = means auto size
+        /// </summary>
+        public int ColumnCharLength = 0;
+        /// <summary>
+        /// Char length taken if the table loaded as no row
+        /// </summary>
+        public int NoRowsCharLength = 50;
+        /// <summary>
+        /// 0 = Load all records in one
+        /// </summary>
+        public int LoadBurstSize = 0;
+        /// <summary>
+        /// Sort column used if LoadBurstSize is specified
+        /// </summary>
+        public string LoadSortColumn = "";
         public bool UseDbDataAdapter = false;
         public int InsertBurstSize = 500;
-        public int MaxDecimalNumber = -1; //If set, limit the number of decimals for numeric values
+        /// <summary>
+        /// If set, limit the number of decimals for numeric values
+        /// </summary>
+        public int MaxDecimalNumber = -1;
         public Encoding DefaultEncoding = Encoding.Default;
         public bool TrimText = true;
         public bool RemoveCrLf = false;
+        /// <summary>
+        /// /If true, insert command is built with multi rows 
+        /// </summary>
+        public bool UseMultiRowsInsert = false;
+        /// <summary>
+        /// Optional table hints for insert
+        /// </summary>
+        public string InsertTableHints = "";
 
         public bool DebugMode = false;
         public StringBuilder DebugLog = new StringBuilder();
@@ -338,30 +362,139 @@ namespace Seal.Helpers
             try
             {
                 command.Transaction = transaction;
+                var tableName = CleanName(table.TableName);
                 if (deleteFirst)
                 {
-                    command.CommandText = string.Format("delete from {0}", CleanName(table.TableName));
+                    command.CommandText = $"delete from {tableName}";
                     ExecuteCommand(command);
                 }
 
                 StringBuilder sql = new StringBuilder("");
-                string sqlTemplate = string.Format("insert into {0} ({1})", CleanName(table.TableName), GetTableColumnNames(table)) + " values ({0});\r\n";
-                foreach (DataRow row in table.Rows)
+                string sqlTemplate = "";
+                if (UseMultiRowsInsert)
                 {
-                    sql.AppendFormat(sqlTemplate, GetTableColumnValues(row, dateTimeFormat));
-                    cnt++;
-                    if (cnt % InsertBurstSize == 0)
+                    //use the multi rows insert
+                    sqlTemplate = string.Format("insert into {0} {1} ({2}) values\r\n", tableName, InsertTableHints, GetTableColumnNames(table));
+                    sql.Append(sqlTemplate);
+                    for (int i = 0; i < table.Rows.Count; i++)
+                    {
+                        DataRow row = table.Rows[i];
+                        sql.AppendFormat("({0})", GetTableColumnValues(row, dateTimeFormat));
+                        cnt++;
+                        if (cnt % InsertBurstSize == 0)
+                        {
+                            command.CommandText = GetInsertCommand(sql.ToString());
+                            ExecuteCommand(command);
+                            sql = new StringBuilder(i != table.Rows.Count - 1 ? sqlTemplate : "");
+                        }
+                        else
+                        {
+                            if (i != table.Rows.Count - 1) sql.Append(",\r\n");
+                        }
+                    }
+
+                    if (sql.Length != 0)
                     {
                         command.CommandText = GetInsertCommand(sql.ToString());
                         ExecuteCommand(command);
-                        sql = new StringBuilder("");
                     }
                 }
-
-                if (sql.Length != 0)
+                else
                 {
-                    command.CommandText = GetInsertCommand(sql.ToString());
+                    //insert for standard SQL
+                    sqlTemplate = string.Format("insert into {0} {1} ({2})",tableName, InsertTableHints, GetTableColumnNames(table)) + " values ({0});\r\n";
+                    foreach (DataRow row in table.Rows)
+                    {
+                        sql.AppendFormat(sqlTemplate, GetTableColumnValues(row, dateTimeFormat));
+                        cnt++;
+                        if (cnt % InsertBurstSize == 0)
+                        {
+                            command.CommandText = GetInsertCommand(sql.ToString());
+                            ExecuteCommand(command);
+                            sql = new StringBuilder("");
+                        }
+                    }
+
+                    if (sql.Length != 0)
+                    {
+                        command.CommandText = GetInsertCommand(sql.ToString());
+                        ExecuteCommand(command);
+                    }
+                }
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+
+        public void RawInsertTable(DbCommand command, string tableName, string[] columns, List<string[]> rows, bool deleteFirst)
+        {
+            DbTransaction transaction = command.Connection.BeginTransaction();
+            int cnt = 0;
+            try
+            {
+                command.Transaction = transaction;
+                tableName = CleanName(tableName);
+                if (deleteFirst)
+                {
+                    command.CommandText = $"delete from {tableName}";
                     ExecuteCommand(command);
+                }
+
+                StringBuilder sql = new StringBuilder("");
+                string sqlTemplate = "";
+                if (UseMultiRowsInsert)
+                {
+                    //use the multi rows insert
+                    sqlTemplate = string.Format("insert into {0} {1} ({2}) values\r\n", tableName, InsertTableHints, string.Join(",", columns));
+                    sql.Append(sqlTemplate);
+                    for (int i = 0; i < rows.Count; i++)
+                    {
+                        sql.AppendFormat("({0})", string.Join(",", rows[i]));
+                        cnt++;
+                        if (cnt % InsertBurstSize == 0)
+                        {
+                            command.CommandText = GetInsertCommand(sql.ToString());
+                            ExecuteCommand(command);
+                            sql = new StringBuilder(i != rows.Count - 1 ? sqlTemplate : "");
+                        }
+                        else
+                        {
+                            if (i != rows.Count - 1) sql.Append(",\r\n");
+                        }
+                    }
+
+                    if (sql.Length != 0)
+                    {
+                        command.CommandText = GetInsertCommand(sql.ToString());
+                        ExecuteCommand(command);
+                    }
+                }
+                else
+                {
+                    //insert for standard SQL
+                    sqlTemplate = string.Format("insert into {0} {1} ({2})", tableName, InsertTableHints, string.Join(",", columns)) + " values ({0});\r\n";
+                    for (int i = 0; i < rows.Count; i++)
+                    {
+                        sql.AppendFormat(sqlTemplate, string.Join(",", rows[i]));
+                        cnt++;
+                        if (cnt % InsertBurstSize == 0)
+                        {
+                            command.CommandText = GetInsertCommand(sql.ToString());
+                            ExecuteCommand(command);
+                            sql = new StringBuilder("");
+                        }
+                    }
+
+                    if (sql.Length != 0)
+                    {
+                        command.CommandText = GetInsertCommand(sql.ToString());
+                        ExecuteCommand(command);
+                    }
                 }
                 transaction.Commit();
             }

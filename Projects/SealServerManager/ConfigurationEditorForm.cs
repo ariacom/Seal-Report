@@ -218,12 +218,16 @@ New parameter values may require a restart of the Report Designer or the Web Ser
         {
             string appName = (_configuration.WebApplicationName == "/" ? "" : _configuration.WebApplicationName);
             string url = string.Format("http://localhost{0}/Main", appName);
-            Process.Start(url);
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo(url) { UseShellExecute = true };
+            p.Start();
         }
 
         private void iisManagerToolStripButton_Click(object sender, EventArgs e)
         {
-            Process.Start(System.Environment.SystemDirectory + @"\inetsrv\iis.msc", "/s");
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo(System.Environment.SystemDirectory + @"\inetsrv\iis.msc", "/s") { UseShellExecute = true };
+            p.Start();
         }
     }
 }

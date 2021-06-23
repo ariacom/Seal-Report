@@ -271,7 +271,7 @@ namespace Seal.Model
             set
             {
                 _emailMessagesInBody = value;
-                UpdateEditorAttributes();  //!NETCore
+                UpdateEditorAttributes();  
             }
         }
 
@@ -294,7 +294,7 @@ namespace Seal.Model
             set
             {
                 _emailSkipAttachments = value;
-                UpdateEditorAttributes();  //!NETCore
+                UpdateEditorAttributes();  
             }
         }
 
@@ -329,7 +329,7 @@ namespace Seal.Model
                     _zipResult = EmailZipAttachments.Value;
                     EmailZipAttachments = null;
                 }
-                UpdateEditorAttributes();  //!NETCore
+                UpdateEditorAttributes();  
             }
         }
 

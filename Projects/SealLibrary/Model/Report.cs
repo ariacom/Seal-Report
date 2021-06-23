@@ -328,7 +328,8 @@ namespace Seal.Model
         [XmlIgnore]
         public string RelativeFilePath
         {
-            get { 
+            get
+            {
                 if (FilePath.StartsWith(Repository.ReportsFolder)) return FilePath.Replace(Repository.ReportsFolder, "");
                 return Path.GetFileName(FilePath);
             }
@@ -399,10 +400,8 @@ namespace Seal.Model
                         if (!string.IsNullOrEmpty(OutputToExecute.FolderPath))
                         {
                             result = Repository.ReplaceRepositoryKeyword(OutputToExecute.FolderPath);
-#if NETCOREAPP
-                if (Path.DirectorySeparatorChar == '/' && result.Contains("\\")) result = result.Replace("\\", "/");
-                else if (Path.DirectorySeparatorChar == '\\' && result.Contains("/")) result = result.Replace("/", "\\");
-#endif 
+                            if (Path.DirectorySeparatorChar == '/' && result.Contains("\\")) result = result.Replace("\\", "/");
+                            else if (Path.DirectorySeparatorChar == '\\' && result.Contains("/")) result = result.Replace("/", "\\");
                             if (!Directory.Exists(result)) Directory.CreateDirectory(result);
                         }
                     }
@@ -1466,7 +1465,8 @@ namespace Seal.Model
                 }
 
                 XmlSerializer serializer = new XmlSerializer(typeof(Report));
-                using (var tw = new StreamWriter(path)) {
+                using (var tw = new StreamWriter(path))
+                {
                     serializer.Serialize(tw, this);
                     tw.Close();
                 }
@@ -1573,7 +1573,7 @@ namespace Seal.Model
             if (Sources.Count == 0) throw new Exception("Unable to create a model: No source available.\r\nPlease create or add a source first.");
             ReportSource source = Sources.FirstOrDefault(i => i.IsDefault);
             if (source == null) source = Sources[0];
-            if (sqlModel && !source.IsSQL) 
+            if (sqlModel && !source.IsSQL)
             {
                 source = Sources.FirstOrDefault(i => i.IsSQL);
                 if (source == null) throw new Exception("Unable to create a SQL model: No SQL source available.\r\nPlease create or add a SQL source first.");
@@ -1762,7 +1762,6 @@ namespace Seal.Model
                         break;
                     }
                 }
-                result.UseModelName = true;
                 result.Name = result.Model.Name;
             }
             parent.Views.Add(result);
@@ -1989,13 +1988,13 @@ namespace Seal.Model
                             bool inRestrictionView = false;
                             foreach (var view in AllViews.Where(i => i.Template.IsRestrictionsView))
                             {
-                                foreach (var restr2 in allRestrictions.Where(i => i.IsIdenticalForPrompt(restriction))) 
+                                foreach (var restr2 in allRestrictions.Where(i => i.IsIdenticalForPrompt(restriction)))
                                 {
                                     if (view.RestrictionsGUID.Contains(restr2.GUID)) inRestrictionView = true;
                                 }
                             }
                             if (inRestrictionView) continue;
-                          
+
                             //Ok, add it
                             _executionCommonRestrictions.Add(restriction);
                         }
@@ -2053,7 +2052,7 @@ namespace Seal.Model
                 if (view.Restrictions.Contains(restriction)) return true;
             }
             return false;
-        }            
+        }
 
         private List<ReportRestriction> _executionViewRestrictions = null;
         /// <summary>

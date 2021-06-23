@@ -53,10 +53,6 @@ namespace Seal.Model
         /// <summary>
         /// Current Request that can be used in the Navigation Script (e.g. getting a file upload) 
         /// </summary>
-#if !NETCOREAPP
-        public HttpRequestBase Request;
-#else
         public Microsoft.AspNetCore.Http.HttpRequest Request;
-#endif
     }
 }

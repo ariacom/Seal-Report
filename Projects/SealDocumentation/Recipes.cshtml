@@ -268,7 +268,9 @@
                 System.Threading.Thread.Sleep(100);
             }
             string resultPath = execution.GenerateHTMLResult();
-            Process.Start(resultPath); //result contains the file path of the HTML report result
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true }; //resultPath contains the file path of the HTML report result
+            p.Start();
                                 </pre>
                             <p>
                                 The following code shows how to create a report having a restriction (also got from the <strong>TestAndSamples</strong> project of the solution).
@@ -319,7 +321,9 @@
             execution.Execute();
             while (report.IsExecuting) System.Threading.Thread.Sleep(100);
             string result = execution.GenerateHTMLResult();
-            Process.Start(result);
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo(result) { UseShellExecute = true };
+            p.Start();
                             </pre>
                             <br />
                             <div class="bs-callout bs-callout-demo">
@@ -515,7 +519,7 @@ executeReport("/Overview - Sales.srex");
                             <pre class="brush: csharp; highlight: [3]">
                 title: {
                     display: true,
-                    text: '@@Raw(Helper.ToJS("Sales for " + page.PageTable[1,0].HTMLValue))', //Value 1 of Page Table
+                    text: '@@Raw(Helper.ToJS("Sales for " + page.PageTable[1,0].DisplayValue))', //Value 1 of Page Table
 //HTML for first restriction    Raw(Helper.ToJS("Sales for " + reportModel.GetRestrictionByName("Order Year").DisplayValue1))',               
 //for Enum                      Raw(Helper.ToJS("Sales for " + reportModel.GetRestrictionByName("Category").EnumDisplayValue))', 
                     position: '@@view.GetValue("chartjs_title_position")'

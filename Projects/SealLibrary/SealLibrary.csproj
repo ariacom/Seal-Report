@@ -1,590 +1,158 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6D8D30F4-B36E-4A02-8704-D63C5A35DF1F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>reportDesigner.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\SealLibrary.xml</DocumentationFile>
-    <NoWarn>1591</NoWarn>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>none</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>1591</NoWarn>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DefineConstants />
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.11.3.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.11.3\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentFTP, Version=32.4.4.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentFTP.32.4.4\lib\net45\FluentFTP.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="jose-jwt, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\jose-jwt.2.5.0\lib\net40\jose-jwt.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=19.9.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AnalysisServices.AdomdClient.retail.amd64.19.9.0.1\lib\net45\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AnalysisServices.SPClient.Interfaces, Version=19.9.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AnalysisServices.AdomdClient.retail.amd64.19.9.0.1\lib\net45\Microsoft.AnalysisServices.SPClient.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.21.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
-      <HintPath>..\packages\TaskScheduler.2.8.21\lib\net452\Microsoft.Win32.TaskScheduler.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
-      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
-    </Reference>
-    <Reference Include="ScintillaNET FindReplaceDialog, Version=1.4.0.17540, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\ScintillaNET FindReplaceDialog.dll</HintPath>
-    </Reference>
-    <Reference Include="ScintillaNET, Version=3.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\jacobslusser.ScintillaNET.3.6.3\lib\net40\ScintillaNET.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Design">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.DirectoryServices.AccountManagement" />
-    <Reference Include="System.DirectoryServices.Protocols" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.Packaging, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Packaging.4.7.0\lib\net46\System.IO.Packaging.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
+    <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\License.txt" />
+    <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\SciLexer.dll" />
+    <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\SciLexer.exp" />
+    <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\SciLexer.lib" />
+    <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\SciLexer.pdb" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Converter\MenuNameConverter.cs" />
-    <Compile Include="Converter\NamedEnumConverterNoDefault.cs" />
-    <Compile Include="Converter\ScheduleRepeatConverter.cs" />
-    <Compile Include="Converter\RestrictionDateConverter.cs" />
-    <Compile Include="Converter\RepositoryFolderConverter.cs" />
-    <Compile Include="Converter\CultureInfoConverter.cs" />
-    <Compile Include="Converter\SecurityProviderConverter.cs" />
-    <Compile Include="Converter\ReportViewConverter.cs" />
-    <Compile Include="Converter\ViewParameterEnumConverter.cs" />
-    <Compile Include="Converter\CultureNameConverter.cs" />
-    <Compile Include="Forms\CultureCollectionEditor.cs" />
-    <Compile Include="Forms\RestrictionsEditor.cs" />
-    <Compile Include="Forms\PartialTemplatesEditor.cs" />
-    <Compile Include="Forms\ScheduleCollectionEditor.cs" />
-    <Compile Include="Forms\InstallHelper.cs" />
-    <Compile Include="Helpers\DataTableLoader.cs" />
-    <Compile Include="Helpers\HelperForms.cs" />
-    <Compile Include="Helpers\ObjectShredder.cs" />
-    <Compile Include="Model\Audit.cs" />
-    <Compile Include="Model\EditorTableDefinition.cs" />
-    <Compile Include="Forms\AboutBoxForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AboutBoxForm.Designer.cs">
-      <DependentUpon>AboutBoxForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ConnectionStringEditor.cs" />
-    <Compile Include="Forms\FormHelper.cs" />
-    <Compile Include="Forms\InformationErrorUITypeEditor.cs" />
-    <Compile Include="Forms\JoinsEditor.cs" />
-    <Compile Include="Forms\SmartCopyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SmartCopyForm.Designer.cs">
-      <DependentUpon>SmartCopyForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ColumnsSelector.cs" />
-    <Compile Include="Forms\ToolsHelper.cs" />
-    <Compile Include="Forms\ToolStripEditorHelper.cs" />
-    <Compile Include="Forms\EntityCollectionEditor.cs" />
-    <Compile Include="Forms\TemplateTextEditor.cs" />
-    <Compile Include="Forms\TemplateTextEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\TemplateTextEditorForm.Designer.cs">
-      <DependentUpon>TemplateTextEditorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ReportViewerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ReportViewerForm.Designer.cs">
-      <DependentUpon>ReportViewerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\RestrictionEnumValuesEditor.cs" />
-    <Compile Include="Forms\IEntityHandler.cs" />
-    <Compile Include="Forms\ExecutionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ExecutionForm.Designer.cs">
-      <DependentUpon>ExecutionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\ExecutionInterface.cs" />
-    <Compile Include="Forms\HelperEditor.cs" />
-    <Compile Include="Converter\RestrictionOperatorConverter.cs" />
-    <Compile Include="Forms\MultipleSelectForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MultipleSelectForm.Designer.cs">
-      <DependentUpon>MultipleSelectForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\WebBrowserHelper.cs" />
-    <Compile Include="Helpers\PropertyGridHelper.cs" />
-    <Compile Include="Helpers\RazorHelper.cs" />
-    <Compile Include="Helpers\ScintillaHelper.cs" />
-    <Compile Include="Helpers\ScintillaRestrictionLexer.cs" />
-    <Compile Include="Helpers\TreeViewEditorHelper.cs" />
-    <Compile Include="Forms\SQLEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SQLEditorForm.Designer.cs">
-      <DependentUpon>SQLEditorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Converter\ReportModelConverter.cs" />
-    <Compile Include="Converter\SourceTableConverter.cs" />
-    <Compile Include="Converter\CustomFormatConverter.cs" />
-    <Compile Include="Converter\CustomNameConverter.cs" />
-    <Compile Include="Converter\DateKeywordConverter.cs" />
-    <Compile Include="Converter\MetaEnumConverter.cs" />
-    <Compile Include="Converter\MetaSourceConverter.cs" />
-    <Compile Include="Forms\SQLEditor.cs" />
-    <Compile Include="Converter\NamedEnumConverter.cs" />
-    <Compile Include="Converter\SerieDefinitionConverter.cs" />
-    <Compile Include="Converter\SortOrderConverter.cs" />
-    <Compile Include="Converter\SourceConnectionConverter.cs" />
-    <Compile Include="DynamicTypeDescriptor\CustomComponentModel.cs" />
-    <Compile Include="DynamicTypeDescriptor\DynamicTypeDescriptor.cs" />
-    <Compile Include="DynamicTypeDescriptor\StandardValueEditorUI.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="DynamicTypeDescriptor\StandardValueEditorUI.designer.cs">
-      <DependentUpon>StandardValueEditorUI.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Helpers\CryptoHelper.cs" />
-    <Compile Include="Helpers\ExcelHelper.cs" />
-    <Compile Include="Helpers\Impersonator.cs" />
-    <Compile Include="Helpers\TaskDatabaseHelper.cs" />
-    <Compile Include="Helpers\TaskHelper.cs" />
-    <Compile Include="Helpers\TreeViewHelper.cs" />
-    <Compile Include="Helpers\FileHelper.cs" />
-    <Compile Include="Helpers\Helper.cs" />
-    <Compile Include="Model\CategoryFolder.cs" />
-    <Compile Include="Model\MenuReportViewsPool.cs" />
-    <Compile Include="Model\MetaTableTemplate.cs" />
-    <Compile Include="Model\MetaTableLink.cs" />
-    <Compile Include="Model\Navigation.cs" />
-    <Compile Include="Model\NavigationContext.cs" />
-    <Compile Include="Model\NavigationLink.cs" />
-    <Compile Include="Model\OutputEMailDevice.cs" />
-    <Compile Include="Model\OutputFileServerDevice.cs" />
-    <Compile Include="Model\OutputFolderDevice.cs" />
-    <Compile Include="Forms\ParametersEditor.cs" />
-    <Compile Include="Model\ReportTask.cs" />
-    <Compile Include="Model\ReportSchedule.cs" />
-    <Compile Include="Model\ReportOutput.cs" />
-    <Compile Include="Model\OutputDevice.cs" />
-    <Compile Include="Model\ReportViewPartialTemplate.cs" />
-    <Compile Include="Model\RepositoryServer.cs" />
-    <Compile Include="Model\RepositoryTranslation.cs" />
-    <Compile Include="Model\ReportViewTemplate.cs" />
-    <Compile Include="Model\Parameter.cs" />
-    <Compile Include="Model\RootEditor.cs" />
-    <Compile Include="Model\SealInterface.cs" />
-    <Compile Include="Model\SealExcelConverter.cs" />
-    <Compile Include="Model\SealPdfConverter.cs" />
-    <Compile Include="Model\SealSecurity.cs" />
-    <Compile Include="Model\CommonScript.cs" />
-    <Compile Include="Model\SecurityUserProfile.cs" />
-    <Compile Include="Model\SecuritySource.cs" />
-    <Compile Include="Model\SecurityDevice.cs" />
-    <Compile Include="Model\SecurityConnection.cs" />
-    <Compile Include="Model\SecurityColumn.cs" />
-    <Compile Include="Model\SecurityProvider.cs" />
-    <Compile Include="Model\SecurityFolder.cs" />
-    <Compile Include="Model\SecurityGroup.cs" />
-    <Compile Include="Model\SecurityUser.cs" />
-    <Compile Include="Model\SealServerConfiguration.cs" />
-    <Compile Include="Model\SubReport.cs" />
-    <Compile Include="Model\MetaEV.cs" />
-    <Compile Include="Model\ReportSource.cs" />
-    <Compile Include="Model\MetaJoin.cs" />
-    <Compile Include="Model\Enums.cs" />
-    <Compile Include="Model\MetaColumn.cs" />
-    <Compile Include="Model\MetaConnection.cs" />
-    <Compile Include="Model\MetaData.cs" />
-    <Compile Include="Model\MetaEnum.cs" />
-    <Compile Include="Model\MetaSource.cs" />
-    <Compile Include="Model\MetaTable.cs" />
-    <Compile Include="Model\Report.cs" />
-    <Compile Include="Model\ReportComponent.cs" />
-    <Compile Include="Model\ReportElement.cs" />
-    <Compile Include="Model\ReportExecution.cs" />
-    <Compile Include="Model\ReportModel.cs" />
-    <Compile Include="Model\ReportRestriction.cs" />
-    <Compile Include="Model\ReportView.cs" />
-    <Compile Include="Model\Repository.cs" />
-    <Compile Include="Model\ResultCell.cs" />
-    <Compile Include="Model\ResultData.cs" />
-    <Compile Include="Model\ResultPage.cs" />
-    <Compile Include="Model\ResultSerieValue.cs" />
-    <Compile Include="Model\ResultTable.cs" />
-    <Compile Include="Model\ResultTotalCell.cs" />
-    <Compile Include="Model\RootComponent.cs" />
-    <Compile Include="Model\WebInterfaceModels.cs" />
-    <Compile Include="Model\SealSchedule.cs" />
-    <Compile Include="Model\SealReportScheduler.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <Content Include="..\..\Repository\Views\Content\seal.css" Link="Views\Content\seal.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.22.0.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+      <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+    <PackageReference Include="DocumentFormat.OpenXml">
+      <Version>2.11.3</Version>
+    </PackageReference>
+    <PackageReference Include="EPPlus">
+      <Version>4.5.3.3</Version>
+    </PackageReference>
+    <PackageReference Include="FluentFTP">
+      <Version>32.4.4</Version>
+    </PackageReference>
+    <PackageReference Include="jose-jwt">
+      <Version>2.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="RazorEngine.NetCore.ZuLiang" Version="2.2.3.6" />
+    <PackageReference Include="ScintillaNET.Core" Version="3.6.51" />
+    <PackageReference Include="SharpZipLib">
+      <Version>1.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SSH.NET">
+      <Version>2016.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.IO.FileSystem.Primitives">
+      <Version>4.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Net.Http">
+      <Version>4.3.4</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation">
+      <Version>4.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="TaskScheduler">
+      <Version>2.8.21</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="..\..\Repository\Views\Model.cshtml">
-      <Link>Views\Model.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Model.iSummaryTable.partial.cshtml">
-      <Link>Views\Model.iSummaryTable.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\PageTable.config.cshtml">
-      <Link>Views\PageTable.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\PageTable.cshtml">
-      <Link>Views\PageTable.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\DataTable.config.cshtml">
-      <Link>Views\DataTable.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\DataTable.cshtml">
-      <Link>Views\DataTable.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ChartPlotly.config.cshtml">
-      <Link>Views\ChartPlotly.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ChartPlotly.cshtml">
-      <Link>Views\ChartPlotly.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ChartNVD3.config.cshtml">
-      <Link>Views\ChartNVD3.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ChartNVD3.cshtml">
-      <Link>Views\ChartNVD3.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ChartJS.config.cshtml">
-      <Link>Views\ChartJS.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ChartJS.cshtml">
-      <Link>Views\ChartJS.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\KPI.config.cshtml">
-      <Link>Views\KPI.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\KPI.cshtml">
-      <Link>Views\KPI.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Restrictions.cshtml">
-      <Link>Views\Restrictions.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Restrictions.config.cshtml">
-      <Link>Views\Restrictions.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Restrictions.iShared.partial.cshtml">
-      <Link>Views\Restrictions.iShared.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Model.iCSV.partial.cshtml">
-      <Link>Views\Model.iCSV.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Model.iPages.partial.cshtml">
-      <Link>Views\Model.iPages.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Model.iMenu.partial.cshtml">
-      <Link>Views\Model.iMenu.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Model.config.cshtml">
-      <Link>Views\Model.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ModelDetail.iCSV.partial.cshtml">
-      <Link>Views\ModelDetail.iCSV.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ModelDetail.cshtml">
-      <Link>Views\ModelDetail.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ModelDetail.config.cshtml">
-      <Link>Views\ModelDetail.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Container.cshtml">
-      <Link>Views\Container.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Container.config.cshtml">
-      <Link>Views\Container.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Free.cshtml">
-      <Link>Views\Free.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Free.config.cshtml">
-      <Link>Views\Free.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.cshtml">
-      <Link>Views\Report.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.config.cshtml">
-      <Link>Views\Report.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.iHeader.partial.cshtml">
-      <Link>Views\Report.iHeader.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.iContent.partial.cshtml">
-      <Link>Views\Report.iContent.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.iBody.partial.cshtml">
-      <Link>Views\Report.iBody.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.iInformation.partial.cshtml">
-      <Link>Views\Report.iInformation.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.iMessages.partial.cshtml">
-      <Link>Views\Report.iMessages.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.iRestrictions.partial.cshtml">
-      <Link>Views\Report.iRestrictions.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Report.iViews.partial.cshtml">
-      <Link>Views\Report.iViews.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Scripts\common.js">
-      <Link>Views\Scripts\common.js</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Scripts\chartNVD3.js">
-      <Link>Views\Scripts\chartNVD3.js</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Scripts\helpers.js">
-      <Link>Views\Scripts\common.js</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Content\seal.css">
-      <Link>Views\Content\seal.css</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\CSV.cshtml">
-      <Link>Table Templates\CSV.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\Excel.cshtml">
-      <Link>Table Templates\Excel.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\Default.cshtml">
-      <Link>Table Templates\Default.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\Generic.cshtml">
-      <Link>Table Templates\Generic.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\Adomd OLAP MDX.cshtml">
-      <Link>Table Templates\Adomd OLAP MDX.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\HTTPClient JSON.cshtml">
-      <Link>Table Templates\HTTPClient JSON.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\XmlReader RSS.cshtml">
-      <Link>Table Templates\XmlReader RSS.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\Xml File.cshtml">
-      <Link>Table Templates\Xml File.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Sources\TableTemplates\Database.cshtml">
-      <Link>Table Templates\Database.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabControl.config.cshtml">
-      <Link>Views\TabControl.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabControl.cshtml">
-      <Link>Views\TabControl.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabControl.iMenu.partial.cshtml">
-      <Link>Views\TabControl.iMenu.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabControl.iContent.partial.cshtml">
-      <Link>Views\TabControl.iContent.partial.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabPage.config.cshtml">
-      <Link>Views\TabPage.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\TabPage.cshtml">
-      <Link>Views\TabPage.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Widget.config.cshtml">
-      <Link>Views\Widget.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Widget.cshtml">
-      <Link>Views\Widget.cshtml</Link>
-    </None>
-    <None Include="CD-Data Source.cd" />
-    <None Include="packages.config" />
-    <None Include="CD-Report Model.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Forms\AboutBoxForm.resx">
-      <DependentUpon>AboutBoxForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SmartCopyForm.resx">
-      <DependentUpon>SmartCopyForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TemplateTextEditorForm.resx">
-      <DependentUpon>TemplateTextEditorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ExecutionForm.resx">
-      <DependentUpon>ExecutionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MultipleSelectForm.resx">
-      <DependentUpon>MultipleSelectForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ReportViewerForm.resx">
-      <DependentUpon>ReportViewerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SQLEditorForm.resx">
-      <DependentUpon>SQLEditorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DynamicTypeDescriptor\StandardValueEditorUI.resx">
-      <DependentUpon>StandardValueEditorUI.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="ADODB">
-      <Guid>{B691E011-1797-432E-907A-4D8C69339129}</Guid>
-      <VersionMajor>6</VersionMajor>
-      <VersionMinor>1</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="MSDASC">
-      <Guid>{2206CEB0-19C1-11D1-89E0-00C04FD7A829}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ScintillaNET FindReplaceDialog.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
+    <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="CD-Report.cd" />
-    <None Include="CD-Security.cd" />
-    <None Include="Resources\checkedRed.png" />
-    <None Include="Resources\checkedGreen.png" />
-    <None Include="Resources\helper.png" />
-    <None Include="Resources\seal_barking.wav" />
-    <None Include="Resources\checkedBlue.png" />
-    <None Include="Resources\error.png" />
-    <Content Include="reportDesigner.ico" />
-    <Content Include="Resources\error2.png" />
-    <Content Include="Resources\information.png" />
-    <None Include="Resources\reportDesigner.ico" />
-    <None Include="Resources\serverManager.ico" />
-    <Content Include="SciLexer.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>copy "$(ProjectDir)..\..\Repository\Views\Scripts\common.js" "$(ProjectDir)..\SealWebServer\Scripts\"
-copy "$(ProjectDir)..\..\Repository\Views\Scripts\chartNVD3.js" "$(ProjectDir)..\SealWebServer\Scripts\"
-copy "$(ProjectDir)..\..\Repository\Views\Scripts\helpers.js" "$(ProjectDir)..\SealWebServer\Scripts\"
-copy "$(ProjectDir)..\..\Repository\Views\Content\seal.css" "$(ProjectDir)..\SealWebServer\Content\"
-</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <None Include="..\..\Repository\Sources\TableTemplates\Adomd OLAP MDX.cshtml" Link="TableTemplates\Adomd OLAP MDX.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\CSV.cshtml" Link="TableTemplates\CSV.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\Database.cshtml" Link="TableTemplates\Database.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\Default.cshtml" Link="TableTemplates\Default.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\Excel.cshtml" Link="TableTemplates\Excel.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\Generic.cshtml" Link="TableTemplates\Generic.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\HTTPClient JSON.cshtml" Link="TableTemplates\HTTPClient JSON.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\Xml File.cshtml" Link="TableTemplates\Xml File.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\XmlReader RSS.cshtml" Link="TableTemplates\XmlReader RSS.cshtml" />
+    <None Include="..\..\Repository\Views\ChartJS.config.cshtml" Link="Views\ChartJS.config.cshtml" />
+    <None Include="..\..\Repository\Views\ChartJS.cshtml" Link="Views\ChartJS.cshtml" />
+    <None Include="..\..\Repository\Views\ChartNVD3.config.cshtml" Link="Views\ChartNVD3.config.cshtml" />
+    <None Include="..\..\Repository\Views\ChartNVD3.cshtml" Link="Views\ChartNVD3.cshtml" />
+    <None Include="..\..\Repository\Views\ChartPlotly.config.cshtml" Link="Views\ChartPlotly.config.cshtml" />
+    <None Include="..\..\Repository\Views\ChartPlotly.cshtml" Link="Views\ChartPlotly.cshtml" />
+    <None Include="..\..\Repository\Views\Container.config.cshtml" Link="Views\Container.config.cshtml" />
+    <None Include="..\..\Repository\Views\Container.cshtml" Link="Views\Container.cshtml" />
+    <None Include="..\..\Repository\Views\DataTable.config.cshtml" Link="Views\DataTable.config.cshtml" />
+    <None Include="..\..\Repository\Views\DataTable.cshtml" Link="Views\DataTable.cshtml" />
+    <None Include="..\..\Repository\Views\Free.config.cshtml" Link="Views\Free.config.cshtml" />
+    <None Include="..\..\Repository\Views\Free.cshtml" Link="Views\Free.cshtml" />
+    <None Include="..\..\Repository\Views\KPI.config.cshtml" Link="Views\KPI.config.cshtml" />
+    <None Include="..\..\Repository\Views\KPI.cshtml" Link="Views\KPI.cshtml" />
+    <None Include="..\..\Repository\Views\Model.config.cshtml" Link="Views\Model.config.cshtml" />
+    <None Include="..\..\Repository\Views\Model.cshtml" Link="Views\Model.cshtml" />
+    <None Include="..\..\Repository\Views\Model.iCSV.partial.cshtml" Link="Views\Model.iCSV.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Model.iMenu.partial.cshtml" Link="Views\Model.iMenu.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Model.iPages.partial.cshtml" Link="Views\Model.iPages.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Model.iSummaryTable.partial.cshtml" Link="Views\Model.iSummaryTable.partial.cshtml" />
+    <None Include="..\..\Repository\Views\ModelDetail.config.cshtml" Link="Views\ModelDetail.config.cshtml" />
+    <None Include="..\..\Repository\Views\ModelDetail.cshtml" Link="Views\ModelDetail.cshtml" />
+    <None Include="..\..\Repository\Views\ModelDetail.iCSV.partial.cshtml" Link="Views\ModelDetail.iCSV.partial.cshtml" />
+    <None Include="..\..\Repository\Views\PageTable.config.cshtml" Link="Views\PageTable.config.cshtml" />
+    <None Include="..\..\Repository\Views\PageTable.cshtml" Link="Views\PageTable.cshtml" />
+    <None Include="..\..\Repository\Views\Report.config.cshtml" Link="Views\Report.config.cshtml" />
+    <None Include="..\..\Repository\Views\Report.cshtml" Link="Views\Report.cshtml" />
+    <None Include="..\..\Repository\Views\Report.iBody.partial.cshtml" Link="Views\Report.iBody.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Report.iContent.partial.cshtml" Link="Views\Report.iContent.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Report.iHeader.partial.cshtml" Link="Views\Report.iHeader.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Report.iInformation.partial.cshtml" Link="Views\Report.iInformation.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Report.iMessages.partial.cshtml" Link="Views\Report.iMessages.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Report.iRestrictions.partial.cshtml" Link="Views\Report.iRestrictions.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Report.iViews.partial.cshtml" Link="Views\Report.iViews.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Restrictions.config.cshtml" Link="Views\Restrictions.config.cshtml" />
+    <None Include="..\..\Repository\Views\Restrictions.cshtml" Link="Views\Restrictions.cshtml" />
+    <None Include="..\..\Repository\Views\Restrictions.iShared.partial.cshtml" Link="Views\Restrictions.iShared.partial.cshtml" />
+    <None Include="..\..\Repository\Views\Scripts\chartNVD3.js" Link="Views\Scripts\chartNVD3.js" />
+    <None Include="..\..\Repository\Views\Scripts\common.js" Link="Views\Scripts\common.js" />
+    <None Include="..\..\Repository\Views\Scripts\helpers.js" Link="Views\Scripts\helpers.js" />
+    <None Include="..\..\Repository\Views\TabControl.config.cshtml" Link="Views\TabControl.config.cshtml" />
+    <None Include="..\..\Repository\Views\TabControl.cshtml" Link="Views\TabControl.cshtml" />
+    <None Include="..\..\Repository\Views\TabControl.iContent.partial.cshtml" Link="Views\TabControl.iContent.partial.cshtml" />
+    <None Include="..\..\Repository\Views\TabControl.iMenu.partial.cshtml" Link="Views\TabControl.iMenu.partial.cshtml" />
+    <None Include="..\..\Repository\Views\TabPage.config.cshtml" Link="Views\TabPage.config.cshtml" />
+    <None Include="..\..\Repository\Views\TabPage.cshtml" Link="Views\TabPage.cshtml" />
+    <None Include="..\..\Repository\Views\Widget.config.cshtml" Link="Views\Widget.config.cshtml" />
+    <None Include="..\..\Repository\Views\Widget.cshtml" Link="Views\Widget.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TableTemplates\" />
+    <Folder Include="Views\Content\" />
+    <Folder Include="Views\Scripts\" />
+  </ItemGroup>
 </Project>

@@ -103,9 +103,9 @@ namespace Seal.Model
             return false;
         }
 
-        public virtual void ConfigureTemplateEditor(TemplateTextEditorForm frm, string propertyName, ref string template, ref string language) { } //!NETCore
+        public virtual void ConfigureTemplateEditor(TemplateTextEditorForm frm, string propertyName, ref string template, ref string language) { } 
 
-        public IEntityHandler EntityHandler = null; //!NETCore
+        public IEntityHandler EntityHandler = null; 
 
         public virtual string GetLicenseText()
         {

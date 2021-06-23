@@ -202,7 +202,9 @@ namespace Seal.Forms
             {
                 var path = FileHelper.GetTempUniqueFileName("sample.txt");
                 File.WriteAllText(path, ((ToolStripMenuItem)sender).Tag.ToString(), Encoding.UTF8);
-                Process.Start(path);
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(path) { UseShellExecute = true };
+                p.Start();
             }
         }
 

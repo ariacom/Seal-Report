@@ -7,7 +7,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Seal.Helpers;
 using Seal.Model;
 using System.Threading;
@@ -24,7 +25,6 @@ namespace SealWebServer.Controllers
     {
     }
 
-    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public partial class HomeController : Controller
     {
         public const string SessionRepository = "SessionRepository";
@@ -174,7 +174,6 @@ namespace SealWebServer.Controllers
             Response.Headers.Add("title", Path.GetFileName(filePath));
             Response.Headers.Add("content-disposition", "inline;filename=\"" + Path.GetFileName(filePath) + "\"");
             Response.ContentType = "text/html";
-            Response.Cache.SetLastModified(DateTime.Now);//!NETCore
             return Content(System.IO.File.ReadAllText(filePath));
         }
 
@@ -256,7 +255,7 @@ namespace SealWebServer.Controllers
                     string nav = Request.Form[ReportExecution.HtmlId_navigation_id];
                     if (string.IsNullOrEmpty(nav)) nav = NavigationLink.ReportScriptPrefix;
                     NameValueCollection parameters = null;
-                    if (Request.Form[ReportExecution.HtmlId_navigation_parameters] != null) parameters = HttpUtility.ParseQueryString(Request.Form[ReportExecution.HtmlId_navigation_parameters]);
+                    if (Request.Form.ContainsKey(ReportExecution.HtmlId_navigation_parameters)) parameters = HttpUtility.ParseQueryString(Request.Form[ReportExecution.HtmlId_navigation_parameters]);
 
                     if (nav.StartsWith(NavigationLink.ReportScriptPrefix)) //Report Script
                     {
@@ -748,7 +747,7 @@ namespace SealWebServer.Controllers
                         if (page == null && view.ModelView.Model.Pages.Count > 0) page = view.ModelView.Model.Pages.First();
                         if (page != null)
                         {
-                            return Json(page.DataTable.GetLoadTableData(view, parameters), JsonRequestBehavior.AllowGet);
+                            return Json(page.DataTable.GetLoadTableData(view, parameters));
                         }
                     }
                 }
@@ -994,7 +993,7 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
                 WebHelper.WriteWebException(ex, detail);
             }
-            return Json(new { error = ex.Message.Replace(Repository.RepositoryPath, ""), authenticated = (WebUser != null && WebUser.IsAuthenticated) }, JsonRequestBehavior.AllowGet);
+            return Json(new { error = ex.Message.Replace(Repository.RepositoryPath, ""), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
         }
 
         string getFullPath(string path)
@@ -1317,7 +1316,7 @@ namespace SealWebServer.Controllers
             //Init Pre Input restrictions
             report.PreInputRestrictions.Clear();
             foreach (string key in Request.Form.Keys) report.PreInputRestrictions.Add(key, Request.Form[key]);
-            foreach (string key in Request.QueryString.Keys) report.PreInputRestrictions.Add(key, Request.QueryString[key]);
+            foreach (string key in Request.Query.Keys) report.PreInputRestrictions.Add(key, Request.Query[key]);
 
             //execute to output
             if (!string.IsNullOrEmpty(outputGUID))

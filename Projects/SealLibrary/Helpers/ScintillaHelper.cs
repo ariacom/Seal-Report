@@ -3,9 +3,10 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using ScintillaNET;
+using ScintillaNET_FindReplaceDialog;
 using System;
 using System.Drawing;
-using ScintillaNET_FindReplaceDialog;
+//using ScintillaNET_FindReplaceDialog;
 using System.Windows.Forms;
 
 namespace Seal.Helpers
@@ -19,7 +20,7 @@ namespace Seal.Helpers
             else if (lang == "mssql") Init(scintilla, Lexer.Sql);
             else if (lang == "html") Init(scintilla, Lexer.Html);
         }
- 
+
         public static void Init(Scintilla scintilla, Lexer lex, bool showLineNumber = true)
         {
             scintilla.Lexer = lex;
@@ -203,7 +204,7 @@ namespace Seal.Helpers
                     GoTo MyGoTo = new GoTo((Scintilla)sender);
                     MyGoTo.ShowGoToDialog();
                     e.SuppressKeyPress = true;
-                }
+                }               
             }
         }
 
