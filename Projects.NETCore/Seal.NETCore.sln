@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealWebServer.NETCore", "SealWebServer\SealWebServer.NETCore.csproj", "{DCD6C87C-A399-4AA7-8E17-696016A0E795}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealLibrary", "SealLibrary\SealLibrary.csproj", "{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealSchedulerService", "SealSchedulerService\SealSchedulerService.csproj", "{0F1C314C-781B-4616-B4DC-C6F57FB2B4CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCD6C87C-A399-4AA7-8E17-696016A0E795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCD6C87C-A399-4AA7-8E17-696016A0E795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCD6C87C-A399-4AA7-8E17-696016A0E795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCD6C87C-A399-4AA7-8E17-696016A0E795}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F1C314C-781B-4616-B4DC-C6F57FB2B4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F1C314C-781B-4616-B4DC-C6F57FB2B4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F1C314C-781B-4616-B4DC-C6F57FB2B4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F1C314C-781B-4616-B4DC-C6F57FB2B4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E785EE28-4E25-4CB2-91FC-9B4F60968214}
+	EndGlobalSection
+EndGlobal

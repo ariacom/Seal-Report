@@ -118,7 +118,9 @@ namespace Seal.Model
                 _connectionType = value;
                 if (_connectionType == ConnectionType.MSSQLServer && DatabaseType != DatabaseType.MSSQLServer) {
                     DatabaseType = DatabaseType.MSSQLServer;
+#if NETCOREWINDOWS
                     if (_dctd != null) MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
                 }
                 UpdateEditorAttributes();
             }
@@ -283,6 +285,7 @@ namespace Seal.Model
         }
 
 
+#if NETCOREWINDOWS
         /// <summary>
         /// Check the current connection
         /// </summary>
@@ -307,7 +310,7 @@ namespace Seal.Model
             UpdateEditorAttributes(); 
             Cursor.Current = Cursors.Default; 
         }
-
+#endif
 
         #region Helpers
         /// <summary>

@@ -744,6 +744,7 @@ namespace Seal.Model
         public bool ShouldSerializePartialTemplates() { return PartialTemplates.Count > 0; }
 
 
+#if NETCOREWINDOWS
         /// <summary>
         /// The custom partial template texts for the view
         /// </summary>
@@ -759,7 +760,7 @@ namespace Seal.Model
                 return editor;
             }
         }
-
+#endif
 
         /// <summary>
         /// The view parameters
@@ -785,6 +786,7 @@ namespace Seal.Model
         }
         public bool ShouldSerializeCultureName() { return !string.IsNullOrEmpty(_cultureName); }
 
+#if NETCOREWINDOWS
         /// <summary>
         /// The view configuration values for edition.
         /// </summary>
@@ -800,7 +802,7 @@ namespace Seal.Model
                 return editor;
             }
         }
-
+#endif
 
         /// <summary>
         /// Current sort order of the view
@@ -970,7 +972,9 @@ namespace Seal.Model
                     _pdfConverter = SealPdfConverter.Create();
                     if (PdfConfigurations.Count == 0) PdfConfigurations = Repository.Instance.Configuration.PdfConfigurations.ToList();
                     _pdfConverter.SetConfigurations(PdfConfigurations, this);
-                    _pdfConverter.EntityHandler = HelperEditor.HandlerInterface; 
+#if NETCOREWINDOWS
+                    _pdfConverter.EntityHandler = HelperEditor.HandlerInterface;
+#endif                    
                     UpdateEditorAttributes();
                 }
                 return _pdfConverter;
@@ -1011,7 +1015,9 @@ namespace Seal.Model
                 {
                     _excelConverter = SealExcelConverter.Create();
                     _excelConverter.SetConfigurations(ExcelConfigurations, this);
-                    _excelConverter.EntityHandler = HelperEditor.HandlerInterface; 
+#if NETCOREWINDOWS
+                    _excelConverter.EntityHandler = HelperEditor.HandlerInterface;
+#endif
                     UpdateEditorAttributes();
                 }
                 return _excelConverter;

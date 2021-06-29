@@ -21,6 +21,10 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;NETCOREWINDOWS</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\License.txt" />
     <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\SciLexer.dll" />

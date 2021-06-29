@@ -364,6 +364,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Table Type"), Description("Type of the table got from database catalog."), Id(8, 1)]
         public string Type { get; set; }
 
+#if NETCOREWINDOWS
         /// <summary>
         /// The parameter values for edition.
         /// </summary>
@@ -379,6 +380,7 @@ namespace Seal.Model
                 return editor;
             }
         }
+#endif
 
         /// <summary>
         /// If true, the table must be refreshed for dynamic columns

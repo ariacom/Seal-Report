@@ -140,7 +140,9 @@ namespace Seal.Model
             {
                 SealSchedule.Start = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -159,7 +161,9 @@ namespace Seal.Model
             {
                 SealSchedule.End = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -180,7 +184,9 @@ namespace Seal.Model
             {
                 SealSchedule.Type = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -199,7 +205,9 @@ namespace Seal.Model
             {
                 SealSchedule.DaysInterval = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -218,7 +226,9 @@ namespace Seal.Model
             {
                 SealSchedule.WeeksInterval = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -238,7 +248,9 @@ namespace Seal.Model
             {
                 SealSchedule.Weekdays = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -258,7 +270,9 @@ namespace Seal.Model
             {
                 SealSchedule.Months = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -278,7 +292,9 @@ namespace Seal.Model
             {
                 SealSchedule.Days = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -299,7 +315,9 @@ namespace Seal.Model
             {
                 SealSchedule.RepeatInterval = Helper.ToTimeSpan(value, null);
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -320,7 +338,9 @@ namespace Seal.Model
             {
                 SealSchedule.RepeatDuration = Helper.ToTimeSpan(value, null);
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 

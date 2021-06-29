@@ -61,6 +61,7 @@ namespace Seal.Model
             get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
         }
 
+#if NETCOREWINDOWS
         /// <summary>
         /// Product icon
         /// </summary>
@@ -68,6 +69,7 @@ namespace Seal.Model
         {
             get { return Path.GetFileName(Application.ExecutablePath).ToLower() == SealServerManager.ToLower() ? Properties.Resources.serverManager : Properties.Resources.reportDesigner; }
         }
+#endif
 
         private string _licenseText = null;
         /// <summary>

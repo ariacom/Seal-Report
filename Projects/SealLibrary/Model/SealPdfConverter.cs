@@ -95,9 +95,11 @@ namespace Seal.Model
             return false;
         }
 
+#if NETCOREWINDOWS
         public virtual void ConfigureTemplateEditor(TemplateTextEditorForm frm, string propertyName, ref string template, ref string language) { } 
 
-        public IEntityHandler EntityHandler = null; 
+        public IEntityHandler EntityHandler = null;
+#endif
 
         public virtual string GetLicenseText()
         {

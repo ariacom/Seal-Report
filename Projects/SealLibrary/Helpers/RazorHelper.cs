@@ -38,7 +38,9 @@ namespace Seal.Helpers
         static LdapConnection dummy4 = null;
         static SyndicationFeed dummy5 = null;
         static XDocument dummy6 = null;
+#if NETCOREWINDOWS
         static Control dummy7 = null; 
+#endif
         static PrincipalContext dummy8 = null;
         static JwtSettings dummy9 = null; 
         static JObject dummy10 = null;
@@ -69,7 +71,9 @@ namespace Seal.Helpers
                     if (dummy4 == null) dummy4 = new LdapConnection("");
                     if (dummy5 == null) dummy5 = new SyndicationFeed();
                     if (dummy6 == null) dummy6 = new XDocument();
+#if NETCOREWINDOWS
                     if (dummy7 == null) dummy7 = new Control();
+#endif
                     if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
                     if (dummy9 == null) dummy9 = JWT.DefaultSettings; 
                     if (dummy10 == null) dummy10 = JObject.Parse("{}");

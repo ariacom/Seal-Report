@@ -189,7 +189,9 @@ namespace Seal.Model
             set
             {
                 _useSealScheduler = value;
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
@@ -214,7 +216,9 @@ namespace Seal.Model
             set
             {
                 _auditEnabled = value;
-                UpdateEditor(); 
+#if NETCOREWINDOWS
+                UpdateEditor();
+#endif
             }
         }
 
