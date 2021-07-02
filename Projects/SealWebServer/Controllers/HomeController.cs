@@ -85,11 +85,7 @@ namespace SealWebServer.Controllers
             setSessionValue(SessionUser, user);
             //Clear previous Session variables
             setSessionValue(SessionNavigationContext, null);
-#if NETCOREAPP
             user.SessionID = SessionKey;
-#else
-            user.SessionID = Session.SessionID;
-#endif            
             return user;
         }
 
@@ -166,11 +162,7 @@ namespace SealWebServer.Controllers
         ContentResult GetContentResult(string filePath)
         {
             Response.Clear();
-#if NETCOREAPP
             Response.Headers.Clear();
-#else
-            Response.ClearContent();
-#endif
             Response.Headers.Add("title", Path.GetFileName(filePath));
             Response.Headers.Add("content-disposition", "inline;filename=\"" + Path.GetFileName(filePath) + "\"");
             Response.ContentType = "text/html";
@@ -187,14 +179,8 @@ namespace SealWebServer.Controllers
             {
                 if (Repository == null) CreateRepository();
                 var model = new MainModel() { Repository = Repository };
-#if NETCOREAPP
                 model.ServerPath = WebRootPath;
                 model.BaseURL = Request.PathBase.Value;
-#else
-                model.ServerPath = Request.PhysicalApplicationPath;
-                model.BaseURL = Request.ApplicationPath;
-#endif
-
                 result = View(model);
             }
             catch (Exception ex)

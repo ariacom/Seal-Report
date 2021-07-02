@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net5.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>SealTaskScheduler</RootNamespace>
     <AssemblyName>SealTaskScheduler</AssemblyName>
@@ -44,11 +43,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+</ItemGroup>
+ 
+  <ItemGroup>
     <ProjectReference Include="..\SealLibrary\SealLibrary.csproj">
     </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
   </ItemGroup>  
 </Project>

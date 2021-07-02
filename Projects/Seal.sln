@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealReportDesigner", "SealReportDesigner\SealReportDesigner.csproj", "{5E5FBBF8-5E9E-434D-984B-621CDFC68A13}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealLibrary", "SealLibrary\SealLibrary.csproj", "{6D8D30F4-B36E-4A02-8704-D63C5A35DF1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealLibraryWin", "SealLibraryWin\SealLibraryWin.csproj", "{6D8D30F4-B36E-4A02-8704-D63C5A35DF1F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealServerManager", "SealServerManager\SealServerManager.csproj", "{58D85F14-1341-484F-AF1E-0C0E67D07FBD}"
 EndProject
@@ -18,8 +18,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealSchedulerService", "SealSchedulerService\SealSchedulerService.csproj", "{F4F80028-673D-4431-92C7-5246AE7EF056}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{C4F5FD97-263B-4721-B13B-6EB6D2B8D1A9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3} = {E035B9C5-4173-4B54-AAB4-AA26255DB6B3}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seal.NETCoreSync", "Seal.NETCoreSync\Seal.NETCoreSync.csproj", "{DA16F945-A990-437C-9F7F-CAA2698604A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealLibrary", "SealLibrary\SealLibrary.csproj", "{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,14 +94,14 @@ Global
 		{C4F5FD97-263B-4721-B13B-6EB6D2B8D1A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4F5FD97-263B-4721-B13B-6EB6D2B8D1A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C4F5FD97-263B-4721-B13B-6EB6D2B8D1A9}.Release|x64.ActiveCfg = Release|Any CPU
-		{DA16F945-A990-437C-9F7F-CAA2698604A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA16F945-A990-437C-9F7F-CAA2698604A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA16F945-A990-437C-9F7F-CAA2698604A7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DA16F945-A990-437C-9F7F-CAA2698604A7}.Debug|x64.Build.0 = Debug|Any CPU
-		{DA16F945-A990-437C-9F7F-CAA2698604A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA16F945-A990-437C-9F7F-CAA2698604A7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA16F945-A990-437C-9F7F-CAA2698604A7}.Release|x64.ActiveCfg = Release|Any CPU
-		{DA16F945-A990-437C-9F7F-CAA2698604A7}.Release|x64.Build.0 = Release|Any CPU
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}.Debug|x64.Build.0 = Debug|Any CPU
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}.Release|x64.ActiveCfg = Release|Any CPU
+		{E035B9C5-4173-4B54-AAB4-AA26255DB6B3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

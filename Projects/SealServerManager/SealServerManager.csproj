@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SealLibrary\SealLibrary.csproj">
+    <ProjectReference Include="..\SealLibraryWin\SealLibraryWin.csproj">
     </ProjectReference>
   </ItemGroup>
 
