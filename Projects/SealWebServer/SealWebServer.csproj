@@ -19,7 +19,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\HomeControllerNET.cs" />
     <Compile Remove="Controllers\HomeControllerSWIEditor.cs" />
     <Compile Remove="Models\SWIReportModels.cs" />
   </ItemGroup>

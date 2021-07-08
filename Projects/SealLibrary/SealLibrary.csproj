@@ -136,4 +136,8 @@
     <Folder Include="Model\" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="cd $(TargetDir)&#xD;&#xA;call obfuscar.bat&#xD;&#xA;&#xD;&#xA;copy $(TargetPath) C:\_dev\Seal-Report\Repository\Assemblies\SealInterface.dll&#xD;&#xA;&#xD;&#xA;" />
+  </Target>
+
 </Project>

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Seal.Helpers;
+using System.Reflection;
 #if WINDOWS
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
@@ -654,9 +655,10 @@ namespace Seal.Model
             }
 #if !DEBUG 
             //Set installation path, used by, to define schedules
-            if (Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealServerManager.ToLower() || Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealReportDesigner.ToLower())
+            var exePath = Assembly.GetExecutingAssembly().Location;
+            if (Path.GetFileName(exePath).ToLower() == Repository.SealServerManager.ToLower() || Path.GetFileName(exePath).ToLower() == Repository.SealReportDesigner.ToLower())
             {
-                _installationDirectory = Path.GetDirectoryName(Application.ExecutablePath); 
+                _installationDirectory = Path.GetDirectoryName(exePath); 
             }
 #endif
 
