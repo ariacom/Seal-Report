@@ -84,17 +84,13 @@ namespace Seal.Model
         /// <summary>
         /// Last modification date time
         /// </summary>
-#if WINDOWS
         [XmlIgnore]
-#endif
         public DateTime LastTemplateModification = DateTime.Now;
 
         /// <summary>
         /// Current view
         /// </summary>
-#if WINDOWS
         [XmlIgnore]
-#endif
         public ReportView View = null;
     }
 
