@@ -649,7 +649,11 @@ namespace Seal.Model
         {
             get
             {
+#if WINDOWS
+                return Path.Combine(AssembliesFolder, "SealConverterWin.dll");
+#else
                 return Path.Combine(AssembliesFolder, "SealConverter.dll");
+#endif
             }
         }
 
@@ -747,7 +751,7 @@ namespace Seal.Model
             return inputFolder.Replace(Repository.SealRepositoryKeyword, RepositoryPath).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
         }
 
-        #region Translations and Cultures
+#region Translations and Cultures
 
         //Translations, one dictionary per context
         Dictionary<string, RepositoryTranslation> _translations = null;
@@ -1058,9 +1062,9 @@ namespace Seal.Model
             return result;
         }
 
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
         //Helpers
         /// <summary>
         /// Find and load report form its identifier
@@ -1099,6 +1103,6 @@ namespace Seal.Model
         }
 
 
-        #endregion
+#endregion
     }
 }
