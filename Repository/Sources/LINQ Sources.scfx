@@ -1,118 +1,502 @@
-﻿<?xml version="1.0" encoding="utf-8"?><MetaSource xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><GUID>727fca56-c6cc-438f-913e-e1828e91ba14</GUID><Name>LINQ Sources</Name><Connections><MetaConnection><GUID>1285493d-dd2a-414a-be7d-0e0610fa408c</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>1285493d-dd2a-414a-be7d-0e0610fa408c</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>5c86dc5c-f386-422a-accb-4cdb7a9ec562</GUID><Name>Excel Employee Objective</Name><TemplateName>Excel</TemplateName><Parameters><Parameter><Name>excel_path</Name><Value>%SEALREPOSITORY%/Databases/Northwind employee objectives.xlsx</Value></Parameter></Parameters><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>58d5b01b-8ea9-4491-81c2-97f2a58c4b9c</GUID><Name>year</Name><Type>Numeric</Type><Category>Excel Employee Objectives</Category><DisplayName>Year</DisplayName><NumericStandardFormat>Decimal0</NumericStandardFormat><Format>D0</Format></MetaColumn><MetaColumn><GUID>757d5af8-0e97-4941-85ec-07d5b35bcd36</GUID><Name>employee</Name><Type>Text</Type><Category>Excel Employee Objectives</Category><DisplayName>Employee</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>7b227cde-db1d-41c3-bf66-435598caabf8</GUID><Name>objective</Name><Type>Numeric</Type><Category>Excel Employee Objectives</Category><DisplayName>Objective</DisplayName><DisplayOrder>3</DisplayOrder><Format>N0</Format></MetaColumn></Columns></MetaTable><MetaTable><GUID>47b9a25e-f31e-4a04-9bde-5e47a673599d</GUID><Name>CSV Seal Translations</Name><TemplateName>CSV</TemplateName><Parameters><Parameter><Name>csv_path</Name><Value>%SEALREPOSITORY%/Settings/Translations.csv</Value></Parameter><Parameter><Name>csv_sep</Name><Value>;</Value></Parameter></Parameters><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>dda3817d-aa7e-4549-80ff-c823d6a520b8</GUID><Name>Context</Name><Type>Text</Type><Category>Seal Translations</Category><DisplayName>Context</DisplayName></MetaColumn><MetaColumn><GUID>4bad32bf-d8b9-4690-b1c8-d63c3d4341d5</GUID><Name>Reference</Name><Type>Text</Type><Category>Seal Translations</Category><DisplayName>Reference</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>123b4648-c418-4dff-a509-a526311df062</GUID><Name>en</Name><Type>Text</Type><Category>Seal Translations</Category><DisplayName>En</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>bd098986-d8e3-4e08-ab05-94247b324f5c</GUID><Name>fr</Name><Type>Text</Type><Category>Seal Translations</Category><DisplayName>Fr</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn></Columns></MetaTable><MetaTable><GUID>3eff04c9-b75d-4d76-bd3d-aa7a6f0eeb14</GUID><Name>HTTP JSon Reports</Name><TemplateName>HTTPClient JSON</TemplateName><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-&#xD;
-    metaTable.NoSQLTable = new DataTable();&#xD;
-    //Sample to search reports on https://sealreport.org/demo/  &#xD;
-    metaTable.NoSQLTable.Columns.Add(new DataColumn("Name", typeof(string)));&#xD;
-    metaTable.NoSQLTable.Columns.Add(new DataColumn("Path", typeof(string)));&#xD;
-    metaTable.NoSQLTable.Columns.Add(new DataColumn("Last Modification", typeof(string)));&#xD;
-&#xD;
-    metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);&#xD;
-}</DefinitionScript><LoadScript>@using System.Data&#xD;
-@using System.Net.Http&#xD;
-@using Newtonsoft.Json.Linq&#xD;
-@using Newtonsoft.Json&#xD;
-&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
-    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
-    List&lt;ReportRestriction&gt; restrictions = (reportModel != null ? reportModel.Restrictions : null);&#xD;
-    &#xD;
-    var client = new HttpClient();&#xD;
-    client.DefaultRequestHeaders.Accept.Clear();&#xD;
-    client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");&#xD;
-    try&#xD;
-    {&#xD;
-        //Sample to search reports on https://sealreport.org/demo/  &#xD;
-        string url = "https://sealreport.org/demo/";&#xD;
-        //url = "http://localhost:17178/seal/";&#xD;
-&#xD;
-        //Get SWIGetVersions&#xD;
-        string response = client.GetStringAsync(url + "SWIGetVersions").Result;    &#xD;
-        dynamic responseGet = JValue.Parse(response);        &#xD;
-        metaTable.LogMessage("Version: " + responseGet.SWIVersion);&#xD;
-             &#xD;
-        //Post SWILogin&#xD;
-        var json = JsonConvert.SerializeObject(new { user="", password=""} );&#xD;
-        var data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");&#xD;
-        var responsePost = client.PostAsync(url+"SWILogin", data).Result;  &#xD;
-        string responseBody = responsePost.Content.ReadAsStringAsync().Result;&#xD;
-        dynamic login = JValue.Parse(responseBody);&#xD;
-        metaTable.LogMessage("Login '{0}' Group '{1}' ", login.name, login.group);&#xD;
-        &#xD;
-        //Post SWISearch&#xD;
-        json = JsonConvert.SerializeObject(new { path=@"\", pattern="er"} );&#xD;
-        data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");&#xD;
-        responsePost = client.PostAsync(url+"SWISearch", data).Result;  &#xD;
-        responseBody = responsePost.Content.ReadAsStringAsync().Result;&#xD;
-        dynamic search = JValue.Parse(responseBody);&#xD;
-        foreach (var file in search.files) {&#xD;
-            table.Rows.Add(&#xD;
-                System.IO.Path.GetFileName(file.name.ToString()),&#xD;
-                file.path,&#xD;
-                file.last&#xD;
-            );&#xD;
-        }&#xD;
-        metaTable.LogMessage("Loaded {0} rows", table.Rows.Count);&#xD;
-    }&#xD;
-    catch(Exception e)&#xD;
-    {&#xD;
-        metaTable.LogMessage(String.Format("Exception getting response from HttpClient: {0}", e.Message));&#xD;
-        if (e.InnerException != null) {&#xD;
-            metaTable.LogMessage(String.Format("Exception2 getting response from HttpClient: {0}", e.InnerException.Message));&#xD;
-            if (e.InnerException.InnerException != null) {&#xD;
-                metaTable.LogMessage(String.Format("Exception3 getting response from HttpClient: {0}", e.InnerException.InnerException.Message));&#xD;
-                if (e.InnerException.InnerException.InnerException != null) {&#xD;
-                    metaTable.LogMessage(String.Format("Exception4 getting response from HttpClient: {0}", e.InnerException.InnerException.InnerException.Message));&#xD;
-                }&#xD;
-            }&#xD;
-        }&#xD;
-        throw e;&#xD;
-    }&#xD;
- }</LoadScript><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>019e22ad-ed86-447e-be89-e7d1f1a58ca4</GUID><Name>Name</Name><Type>Text</Type><Category>HTTPJSon Reports</Category><DisplayName>Name</DisplayName></MetaColumn><MetaColumn><GUID>5cb65c0b-5752-49d5-9f03-a1269132c553</GUID><Name>Path</Name><Type>Text</Type><Category>HTTPJSon Reports</Category><DisplayName>Path</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>017b4942-e367-4228-9b09-baaeb85cb86b</GUID><Name>Last Modification</Name><Type>Text</Type><Category>HTTPJSon Reports</Category><DisplayName>Last Modification</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn></Columns></MetaTable><MetaTable><GUID>2be6dd19-ffc5-4abb-a3f8-c4370451a1ea</GUID><Name>XML Northwind Elements</Name><TemplateName>Xml File</TemplateName><Parameters><Parameter><Name>xml_path</Name><Value>%SEALREPOSITORY%/Sources/Northwind.scfx</Value></Parameter><Parameter><Name>xml_node_name</Name><Value>MetaColumn</Value></Parameter></Parameters><DefinitionScript /><LoadScript /><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>764bd519-ef9a-4ad5-9661-20a3e6851f3e</GUID><Name>GUID</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>GUID</DisplayName></MetaColumn><MetaColumn><GUID>33da27b7-2b6f-450b-892e-46fc12aa7aac</GUID><Name>Name</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>Name</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>cdcd5155-fc1c-4586-b763-e9b5e3ffcc10</GUID><Name>Type</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>Type</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>0dfb8e62-6161-412d-95cd-b31ecc1389be</GUID><Name>Category</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>Category</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>9afe851c-267f-482c-93d9-57add24f878d</GUID><Name>Tag</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>Tag</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>7dd42ae9-83e1-4a1d-b2c8-075fccf25363</GUID><Name>DisplayName</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>Display Name</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>99034f69-6fb2-4ad4-b366-3e6ab4e3066a</GUID><Name>DisplayOrder</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>Display Order</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn><MetaColumn><GUID>95bff8b4-ddd2-4887-8ee2-2aa4fc3fa7a2</GUID><Name>NumericStandardFormat</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>Numeric Standard Format</DisplayName><DisplayOrder>8</DisplayOrder></MetaColumn><MetaColumn><GUID>89b7d74d-b24f-45f3-861e-decc7ac48235</GUID><Name>DateTimeStandardFormat</Name><Type>Text</Type><Category>XML Northwind Elements</Category><DisplayName>Date Time Standard Format</DisplayName><DisplayOrder>9</DisplayOrder></MetaColumn></Columns></MetaTable><MetaTable><GUID>743a9440-ee1e-4767-a089-0610010a7194</GUID><Name>XML RSS News</Name><TemplateName>XmlReader RSS</TemplateName><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = new DataTable();&#xD;
-	//Define the table columns  &#xD;
-	table.Columns.Add(new DataColumn("Id", typeof(string)));&#xD;
-	table.Columns.Add(new DataColumn("Date", typeof(DateTime)));&#xD;
-	table.Columns.Add(new DataColumn("Title", typeof(string)));&#xD;
-	table.Columns.Add(new DataColumn("Summary", typeof(string)));&#xD;
-	table.Columns.Add(new DataColumn("Link", typeof(string)));&#xD;
-	table.Columns.Add(new DataColumn("Categories", typeof(string)));&#xD;
-	table.Columns.Add(new DataColumn("TitleWithLink", typeof(string)));&#xD;
-	metaTable.NoSQLTable = table;&#xD;
-}</DefinitionScript><LoadScript>@using System.Data&#xD;
-@using System.Text&#xD;
-@using System.Collections&#xD;
-@using System.Web&#xD;
-@using System.Xml&#xD;
-@using System.ServiceModel.Syndication&#xD;
-@{&#xD;
-	//Just feed the table from the RSS data &#xD;
-    MetaTable metaTable = Model;&#xD;
-	DataTable table = metaTable.NoSQLTable;&#xD;
-&#xD;
-	var url = metaTable.GetValue("rss_url");&#xD;
-    metaTable.LogMessage("Loading RSS feed from {0}", url);&#xD;
-	var reader = XmlReader.Create(url);&#xD;
-	var feed = SyndicationFeed.Load(reader);&#xD;
-	foreach (var item in feed.Items)&#xD;
-	{&#xD;
-		string link = item.Links.Count &gt;0 ? item.Links[0].Uri.AbsoluteUri : "";&#xD;
-		string categories = "";&#xD;
-		foreach (var category in item.Categories)&#xD;
-		{&#xD;
-			categories += category.Name + ";";&#xD;
-		}&#xD;
-		string titleWithLink = string.Format("&lt;a href='{0}' target=_blank&gt;{1}&lt;/a&gt;", link, HttpUtility.HtmlEncode(item.Title.Text)); &#xD;
-		//Values must match the table definition&#xD;
-		table.Rows.Add(item.Id, item.PublishDate.DateTime, item.Title.Text, item.Summary.Text, link, categories, titleWithLink);&#xD;
-	}	&#xD;
-    metaTable.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}</LoadScript><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>d79f061b-781d-4671-adce-e74ddb08ca23</GUID><Name>Id</Name><Type>Text</Type><Category>XML RSS News</Category><DisplayName>Id</DisplayName></MetaColumn><MetaColumn><GUID>3a801036-efab-43cf-8a11-5a6a9937aca1</GUID><Name>Date</Name><Type>DateTime</Type><Category>XML RSS News</Category><DisplayName>Date</DisplayName><DisplayOrder>2</DisplayOrder><Format>d</Format></MetaColumn><MetaColumn><GUID>10f90359-e151-46ba-bbcc-7ace67f304cb</GUID><Name>Title</Name><Type>Text</Type><Category>XML RSS News</Category><DisplayName>Title</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>db183e8a-a333-464c-b8e2-59c0d0c0421a</GUID><Name>Summary</Name><Type>Text</Type><Category>XML RSS News</Category><DisplayName>Summary</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>0c4d29b5-57d0-4b0a-ac05-ed9fa58de1da</GUID><Name>Link</Name><Type>Text</Type><Category>XML RSS News</Category><DisplayName>Link</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>2d38238b-f010-459e-945f-a7f3e15bba0e</GUID><Name>Categories</Name><Type>Text</Type><Category>XML RSS News</Category><DisplayName>Categories</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>588fb1e2-834b-4e5a-ac53-99bc3dc2607d</GUID><Name>TitleWithLink</Name><Type>Text</Type><Category>XML RSS News</Category><DisplayName>Title With Link</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn></Columns></MetaTable></Tables><TableLinks><MetaTableLink><SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID><TableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</TableGUID></MetaTableLink><MetaTableLink><SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID><TableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</TableGUID></MetaTableLink><MetaTableLink><SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID><TableGUID>61152bde-427a-4113-8f7d-322a1280bede</TableGUID></MetaTableLink><MetaTableLink><SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID><TableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</TableGUID></MetaTableLink><MetaTableLink><SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID><TableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</TableGUID></MetaTableLink><MetaTableLink><SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID><TableGUID>44179bfc-3a4a-4568-8137-364f06941c23</TableGUID></MetaTableLink><MetaTableLink><SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID><TableGUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</TableGUID></MetaTableLink></TableLinks><Joins><MetaJoin><GUID>d2dd99fb-92f2-4be3-8eaf-db745b9de237</GUID><Name>Customers - ExcelEmployeeObjective</Name><LeftTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</LeftTableGUID><RightTableGUID>5c86dc5c-f386-422a-accb-4cdb7a9ec562</RightTableGUID><Clause>new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}&#xD;
-equals &#xD;
-new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }</Clause><IsBiDirectional>false</IsBiDirectional></MetaJoin></Joins></MetaData></MetaSource>
+<?xml version="1.0" encoding="utf-8"?>
+<MetaSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>727fca56-c6cc-438f-913e-e1828e91ba14</GUID>
+  <Name>LINQ Sources</Name>
+  <Connections>
+    <MetaConnection>
+      <GUID>1285493d-dd2a-414a-be7d-0e0610fa408c</GUID>
+      <Name>connection</Name>
+      <DatabaseType>Standard</DatabaseType>
+      <ConnectionType>OleDb</ConnectionType>
+      <ConnectionString />
+      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
+      <ClearPassword />
+    </MetaConnection>
+  </Connections>
+  <ConnectionGUID>1285493d-dd2a-414a-be7d-0e0610fa408c</ConnectionGUID>
+  <IsDefault>false</IsDefault>
+  <IsNoSQL>true</IsNoSQL>
+  <IgnorePrePostError>false</IgnorePrePostError>
+  <MetaData>
+    <Tables>
+      <MetaTable>
+        <GUID>5c86dc5c-f386-422a-accb-4cdb7a9ec562</GUID>
+        <Name>Excel Employee Objective</Name>
+        <TemplateName>Excel</TemplateName>
+        <Parameters>
+          <Parameter>
+            <Name>excel_path</Name>
+            <Value>%SEALREPOSITORY%/Databases/Northwind employee objectives.xlsx</Value>
+          </Parameter>
+        </Parameters>
+        <CacheDuration>0</CacheDuration>
+        <DynamicColumns>true</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
+        <Columns>
+          <MetaColumn>
+            <GUID>58d5b01b-8ea9-4491-81c2-97f2a58c4b9c</GUID>
+            <Name>year</Name>
+            <Type>Numeric</Type>
+            <Category>Excel Employee Objectives</Category>
+            <DisplayName>Year</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <NumericStandardFormat>Decimal0</NumericStandardFormat>
+            <Format>D0</Format>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>757d5af8-0e97-4941-85ec-07d5b35bcd36</GUID>
+            <Name>employee</Name>
+            <Type>Text</Type>
+            <Category>Excel Employee Objectives</Category>
+            <DisplayName>Employee</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7b227cde-db1d-41c3-bf66-435598caabf8</GUID>
+            <Name>objective</Name>
+            <Type>Numeric</Type>
+            <Category>Excel Employee Objectives</Category>
+            <DisplayName>Objective</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <Format>N0</Format>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>47b9a25e-f31e-4a04-9bde-5e47a673599d</GUID>
+        <Name>CSV Seal Translations</Name>
+        <TemplateName>CSV</TemplateName>
+        <Parameters>
+          <Parameter>
+            <Name>csv_path</Name>
+            <Value>%SEALREPOSITORY%/Settings/Translations.csv</Value>
+          </Parameter>
+          <Parameter>
+            <Name>csv_sep</Name>
+            <Value>;</Value>
+          </Parameter>
+        </Parameters>
+        <CacheDuration>0</CacheDuration>
+        <DynamicColumns>true</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
+        <Columns>
+          <MetaColumn>
+            <GUID>dda3817d-aa7e-4549-80ff-c823d6a520b8</GUID>
+            <Name>Context</Name>
+            <Type>Text</Type>
+            <Category>Seal Translations</Category>
+            <DisplayName>Context</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>4bad32bf-d8b9-4690-b1c8-d63c3d4341d5</GUID>
+            <Name>Reference</Name>
+            <Type>Text</Type>
+            <Category>Seal Translations</Category>
+            <DisplayName>Reference</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>123b4648-c418-4dff-a509-a526311df062</GUID>
+            <Name>en</Name>
+            <Type>Text</Type>
+            <Category>Seal Translations</Category>
+            <DisplayName>En</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>bd098986-d8e3-4e08-ab05-94247b324f5c</GUID>
+            <Name>fr</Name>
+            <Type>Text</Type>
+            <Category>Seal Translations</Category>
+            <DisplayName>Fr</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>3eff04c9-b75d-4d76-bd3d-aa7a6f0eeb14</GUID>
+        <Name>HTTP JSon Reports</Name>
+        <TemplateName>HTTPClient JSON</TemplateName>
+        <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+
+    metaTable.NoSQLTable = new DataTable();
+    //Sample to search reports on https://sealreport.org/demo/  
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Name", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Path", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Last Modification", typeof(string)));
+
+    metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}</DefinitionScript>
+        <LoadScript>@using System.Data
+@using System.Net.Http
+@using Newtonsoft.Json.Linq
+@using Newtonsoft.Json
+
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List&lt;ReportRestriction&gt; restrictions = (reportModel != null ? reportModel.Restrictions : null);
+    
+    var client = new HttpClient();
+    client.DefaultRequestHeaders.Accept.Clear();
+    client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+    try
+    {
+        //Sample to search reports on https://sealreport.org/demo/  
+        string url = "https://sealreport.org/demo/";
+        //url = "http://localhost:17178/seal/";
+
+        //Get SWIGetVersions
+        string response = client.GetStringAsync(url + "SWIGetVersions").Result;    
+        dynamic responseGet = JValue.Parse(response);        
+        metaTable.LogMessage("Version: " + responseGet.SWIVersion);
+             
+        //Post SWILogin
+        var json = JsonConvert.SerializeObject(new { user="", password=""} );
+        var data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        var responsePost = client.PostAsync(url+"SWILogin", data).Result;  
+        string responseBody = responsePost.Content.ReadAsStringAsync().Result;
+        dynamic login = JValue.Parse(responseBody);
+        metaTable.LogMessage("Login '{0}' Group '{1}' ", login.name, login.group);
+        
+        //Post SWISearch
+        json = JsonConvert.SerializeObject(new { path=@"\", pattern="er"} );
+        data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        responsePost = client.PostAsync(url+"SWISearch", data).Result;  
+        responseBody = responsePost.Content.ReadAsStringAsync().Result;
+        dynamic search = JValue.Parse(responseBody);
+        foreach (var file in search.files) {
+            table.Rows.Add(
+                System.IO.Path.GetFileName(file.name.ToString()),
+                file.path,
+                file.last
+            );
+        }
+        metaTable.LogMessage("Loaded {0} rows", table.Rows.Count);
+    }
+    catch(Exception e)
+    {
+        metaTable.LogMessage(String.Format("Exception getting response from HttpClient: {0}", e.Message));
+        if (e.InnerException != null) {
+            metaTable.LogMessage(String.Format("Exception2 getting response from HttpClient: {0}", e.InnerException.Message));
+            if (e.InnerException.InnerException != null) {
+                metaTable.LogMessage(String.Format("Exception3 getting response from HttpClient: {0}", e.InnerException.InnerException.Message));
+                if (e.InnerException.InnerException.InnerException != null) {
+                    metaTable.LogMessage(String.Format("Exception4 getting response from HttpClient: {0}", e.InnerException.InnerException.InnerException.Message));
+                }
+            }
+        }
+        throw e;
+    }
+ }</LoadScript>
+        <CacheDuration>0</CacheDuration>
+        <DynamicColumns>true</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
+        <Columns>
+          <MetaColumn>
+            <GUID>019e22ad-ed86-447e-be89-e7d1f1a58ca4</GUID>
+            <Name>Name</Name>
+            <Type>Text</Type>
+            <Category>HTTPJSon Reports</Category>
+            <DisplayName>Name</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>5cb65c0b-5752-49d5-9f03-a1269132c553</GUID>
+            <Name>Path</Name>
+            <Type>Text</Type>
+            <Category>HTTPJSon Reports</Category>
+            <DisplayName>Path</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>017b4942-e367-4228-9b09-baaeb85cb86b</GUID>
+            <Name>Last Modification</Name>
+            <Type>Text</Type>
+            <Category>HTTPJSon Reports</Category>
+            <DisplayName>Last Modification</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>2be6dd19-ffc5-4abb-a3f8-c4370451a1ea</GUID>
+        <Name>XML Northwind Elements</Name>
+        <TemplateName>Xml File</TemplateName>
+        <Parameters>
+          <Parameter>
+            <Name>xml_path</Name>
+            <Value>%SEALREPOSITORY%/Sources/Northwind.scfx</Value>
+          </Parameter>
+          <Parameter>
+            <Name>xml_node_name</Name>
+            <Value>MetaColumn</Value>
+          </Parameter>
+        </Parameters>
+        <DefinitionScript />
+        <LoadScript />
+        <CacheDuration>0</CacheDuration>
+        <DynamicColumns>true</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
+        <Columns>
+          <MetaColumn>
+            <GUID>764bd519-ef9a-4ad5-9661-20a3e6851f3e</GUID>
+            <Name>GUID</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>GUID</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>33da27b7-2b6f-450b-892e-46fc12aa7aac</GUID>
+            <Name>Name</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>Name</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>cdcd5155-fc1c-4586-b763-e9b5e3ffcc10</GUID>
+            <Name>Type</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>Type</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>0dfb8e62-6161-412d-95cd-b31ecc1389be</GUID>
+            <Name>Category</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>Category</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>9afe851c-267f-482c-93d9-57add24f878d</GUID>
+            <Name>Tag</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>Tag</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7dd42ae9-83e1-4a1d-b2c8-075fccf25363</GUID>
+            <Name>DisplayName</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>Display Name</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>99034f69-6fb2-4ad4-b366-3e6ab4e3066a</GUID>
+            <Name>DisplayOrder</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>Display Order</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>95bff8b4-ddd2-4887-8ee2-2aa4fc3fa7a2</GUID>
+            <Name>NumericStandardFormat</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>Numeric Standard Format</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>89b7d74d-b24f-45f3-861e-decc7ac48235</GUID>
+            <Name>DateTimeStandardFormat</Name>
+            <Type>Text</Type>
+            <Category>XML Northwind Elements</Category>
+            <DisplayName>Date Time Standard Format</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>743a9440-ee1e-4767-a089-0610010a7194</GUID>
+        <Name>XML RSS News</Name>
+        <TemplateName>XmlReader RSS</TemplateName>
+        <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = new DataTable();
+	//Define the table columns  
+	table.Columns.Add(new DataColumn("Id", typeof(string)));
+	table.Columns.Add(new DataColumn("Date", typeof(DateTime)));
+	table.Columns.Add(new DataColumn("Title", typeof(string)));
+	table.Columns.Add(new DataColumn("Summary", typeof(string)));
+	table.Columns.Add(new DataColumn("Link", typeof(string)));
+	table.Columns.Add(new DataColumn("Categories", typeof(string)));
+	table.Columns.Add(new DataColumn("TitleWithLink", typeof(string)));
+	metaTable.NoSQLTable = table;
+}</DefinitionScript>
+        <LoadScript>@using System.Data
+@using System.Text
+@using System.Collections
+@using System.Web
+@using System.Xml
+@using System.ServiceModel.Syndication
+@{
+	//Just feed the table from the RSS data 
+    MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+
+	var url = metaTable.GetValue("rss_url");
+    metaTable.LogMessage("Loading RSS feed from {0}", url);
+	var reader = XmlReader.Create(url);
+	var feed = SyndicationFeed.Load(reader);
+	foreach (var item in feed.Items)
+	{
+		string link = item.Links.Count &gt;0 ? item.Links[0].Uri.AbsoluteUri : "";
+		string categories = "";
+		foreach (var category in item.Categories)
+		{
+			categories += category.Name + ";";
+		}
+		string titleWithLink = string.Format("&lt;a href='{0}' target=_blank&gt;{1}&lt;/a&gt;", link, HttpUtility.HtmlEncode(item.Title.Text)); 
+		//Values must match the table definition
+		table.Rows.Add(item.Id, item.PublishDate.DateTime, item.Title.Text, item.Summary.Text, link, categories, titleWithLink);
+	}	
+    metaTable.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+        <CacheDuration>0</CacheDuration>
+        <DynamicColumns>true</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
+        <Columns>
+          <MetaColumn>
+            <GUID>d79f061b-781d-4671-adce-e74ddb08ca23</GUID>
+            <Name>Id</Name>
+            <Type>Text</Type>
+            <Category>XML RSS News</Category>
+            <DisplayName>Id</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3a801036-efab-43cf-8a11-5a6a9937aca1</GUID>
+            <Name>Date</Name>
+            <Type>DateTime</Type>
+            <Category>XML RSS News</Category>
+            <DisplayName>Date</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <Format>d</Format>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>10f90359-e151-46ba-bbcc-7ace67f304cb</GUID>
+            <Name>Title</Name>
+            <Type>Text</Type>
+            <Category>XML RSS News</Category>
+            <DisplayName>Title</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>db183e8a-a333-464c-b8e2-59c0d0c0421a</GUID>
+            <Name>Summary</Name>
+            <Type>Text</Type>
+            <Category>XML RSS News</Category>
+            <DisplayName>Summary</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>0c4d29b5-57d0-4b0a-ac05-ed9fa58de1da</GUID>
+            <Name>Link</Name>
+            <Type>Text</Type>
+            <Category>XML RSS News</Category>
+            <DisplayName>Link</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2d38238b-f010-459e-945f-a7f3e15bba0e</GUID>
+            <Name>Categories</Name>
+            <Type>Text</Type>
+            <Category>XML RSS News</Category>
+            <DisplayName>Categories</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>588fb1e2-834b-4e5a-ac53-99bc3dc2607d</GUID>
+            <Name>TitleWithLink</Name>
+            <Type>Text</Type>
+            <Category>XML RSS News</Category>
+            <DisplayName>Title With Link</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+    </Tables>
+    <TableLinks>
+      <MetaTableLink>
+        <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+        <TableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</TableGUID>
+      </MetaTableLink>
+      <MetaTableLink>
+        <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+        <TableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</TableGUID>
+      </MetaTableLink>
+      <MetaTableLink>
+        <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+        <TableGUID>61152bde-427a-4113-8f7d-322a1280bede</TableGUID>
+      </MetaTableLink>
+      <MetaTableLink>
+        <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+        <TableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</TableGUID>
+      </MetaTableLink>
+      <MetaTableLink>
+        <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+        <TableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</TableGUID>
+      </MetaTableLink>
+      <MetaTableLink>
+        <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+        <TableGUID>44179bfc-3a4a-4568-8137-364f06941c23</TableGUID>
+      </MetaTableLink>
+      <MetaTableLink>
+        <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+        <TableGUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</TableGUID>
+      </MetaTableLink>
+    </TableLinks>
+    <Joins>
+      <MetaJoin>
+        <GUID>d2dd99fb-92f2-4be3-8eaf-db745b9de237</GUID>
+        <Name>Customers - ExcelEmployeeObjective</Name>
+        <LeftTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</LeftTableGUID>
+        <RightTableGUID>5c86dc5c-f386-422a-accb-4cdb7a9ec562</RightTableGUID>
+        <Clause>new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
+equals 
+new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }</Clause>
+        <JoinType>Inner</JoinType>
+        <IsBiDirectional>false</IsBiDirectional>
+      </MetaJoin>
+    </Joins>
+  </MetaData>
+</MetaSource>

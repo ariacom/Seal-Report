@@ -2,20 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Seal</RootNamespace>
+    <AssemblyName>SealLibrary</AssemblyName>
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Company>Ariacom</Company>
     <Product>Seal Report</Product>
+    <Version>6.5.0.0</Version>
+    <FileVersion>6.5.0.0</FileVersion>
+    <Description>Seal Report Library</Description>
+    <Authors>Ariacom</Authors>
+    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://sealreport.org</PackageProjectUrl>
-    <Description>.NET Core distribution of the Seal Report Library.</Description>
     <PackageId>SealReportLibrary.NETCore</PackageId>
-    <PackageReleaseNotes>First Nuget package publication.</PackageReleaseNotes>
-    <Copyright>Copyright (c) Seal Report (sealreport@gmail.com)</Copyright>
+    <PackageReleaseNotes>Nuget package publication</PackageReleaseNotes>
     <PackageIcon>sealNugetLogo.png</PackageIcon>
     <PackageTags>Seal Report SealReport SealLibrary</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Authors>Ariacom</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -27,11 +30,6 @@
     <DefineConstants></DefineConstants>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="appsettings.Development.json" />
-    <None Remove="appsettings.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\SealLibraryWin\Helpers\CryptoHelper.cs" Link="Helpers\CryptoHelper.cs" />
@@ -109,19 +107,6 @@
     <Compile Include="..\SealLibraryWin\Model\SecurityUserProfile.cs" Link="Model\SecurityUserProfile.cs" />
     <Compile Include="..\SealLibraryWin\Model\SubReport.cs" Link="Model\SubReport.cs" />
     <Compile Include="..\SealLibraryWin\Model\WebInterfaceModels.cs" Link="Model\WebInterfaceModels.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.Development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>

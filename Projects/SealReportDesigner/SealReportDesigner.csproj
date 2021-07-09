@@ -4,10 +4,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealReportDesigner</AssemblyName>
     <ApplicationIcon>reportDesigner.ico</ApplicationIcon>
+    <Product>Seal Report</Product>
+    <Version>6.5.0.0</Version>
+    <FileVersion>6.5.0.0</FileVersion>
+    <Description>Seal Report Designer</Description>
+    <Authors>Ariacom</Authors>
+    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

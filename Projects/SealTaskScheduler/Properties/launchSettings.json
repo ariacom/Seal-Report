@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SealTaskScheduler": {
+      "commandName": "Project",
+      "commandLineArgs": "fc056480-31c1-41bc-afc0-2baefecc1024"
+    }
+  }
+}

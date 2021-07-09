@@ -8,6 +8,12 @@
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealServerManager</AssemblyName>
     <ApplicationIcon>serverManager.ico</ApplicationIcon>
+    <Product>Seal Report</Product>
+    <Version>6.5.0.0</Version>
+    <FileVersion>6.5.0.0</FileVersion>
+    <Description>Seal Server Manager</Description>
+    <Authors>Ariacom</Authors>
+    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

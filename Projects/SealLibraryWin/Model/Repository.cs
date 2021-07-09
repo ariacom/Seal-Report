@@ -42,6 +42,10 @@ namespace Seal.Model
         public const string EnumValuesKeyword = "{EnumValues_";
         public const string JoinAutoName = "<AutomaticJoinName>";
 
+        //appsettings.json
+        public const string SealConfigurationSectionKeyword = "SealConfiguration";
+        public const string SealConfigurationRepositoryPathKeyword = "RepositoryPath";
+
         public static object PathLock = new object();
 
         public const string SealWebPublishTemp = "temp";
@@ -277,7 +281,7 @@ namespace Seal.Model
             if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
             {
                 //Missing repository, try in wwwroot (to easy Azure deployment...)
-                path = Repository.DefaultRepository;
+                path = DefaultRepository;
                 if (!Directory.Exists(path) || path == Path.GetPathRoot(path))
                 {
                     //Set default

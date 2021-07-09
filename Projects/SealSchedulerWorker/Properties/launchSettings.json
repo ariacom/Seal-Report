@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "SealSchedulerService": {
+    "SealSchedulerWorker": {
       "commandName": "Project",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"

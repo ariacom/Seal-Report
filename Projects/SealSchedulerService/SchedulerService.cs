@@ -1,4 +1,5 @@
-﻿using Seal.Helpers;
+﻿using Microsoft.Extensions.Configuration;
+using Seal.Helpers;
 using Seal.Model;
 using System;
 using System.Diagnostics;
@@ -25,6 +26,13 @@ namespace SealSchedulerService
         {
             try
             {
+                //Set repository path
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+                var section = configuration.GetSection(Repository.SealConfigurationSectionKeyword);
+                if (section != null) Repository.RepositoryConfigurationPath = configuration.GetSection(Repository.SealConfigurationSectionKeyword)[Repository.SealConfigurationRepositoryPathKeyword];
+
                 SealReportScheduler.Instance.Run();
             }
             catch (Exception ex)

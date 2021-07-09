@@ -17,7 +17,7 @@ namespace SealSchedulerService
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             //Set repository path
-            Repository.RepositoryConfigurationPath = configuration.GetValue<string>("SealConfiguration:RepositoryPath");
+            Repository.RepositoryConfigurationPath = configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
 
             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Scheduler from the Scheduler Service");
             //Run scheduler
@@ -35,7 +35,7 @@ namespace SealSchedulerService
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
             }
         }
-        
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (SealReportScheduler.Running)

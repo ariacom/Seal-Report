@@ -2,7 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>dotnet-SealSchedulerW-87460D40-5A14-4E5C-BF0E-476B4F6344B7</UserSecretsId>
+    <RootNamespace>Seal</RootNamespace>
+    <AssemblyName>SealSchedulerWorker</AssemblyName>
+    <Configurations>Debug;Release</Configurations>
+    <Product>Seal Report</Product>
+    <Version>6.5.0.0</Version>
+    <FileVersion>6.5.0.0</FileVersion>
+    <Description>Seal Report Scheduler Worker</Description>
+    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

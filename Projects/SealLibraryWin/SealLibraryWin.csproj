@@ -4,11 +4,14 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealLibraryWin</AssemblyName>
-    <ApplicationIcon />
-    <StartupObject />
+    <Product>Seal Report</Product>
+    <Version>6.5.0.0</Version>
+    <FileVersion>6.5.0.0</FileVersion>
+    <Description>Seal Report Library (Windows)</Description>
+    <Authors>Ariacom</Authors>
+    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -27,19 +30,11 @@
     <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\SciLexer.exp" />
     <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\SciLexer.lib" />
     <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\SciLexer.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="appsettings.json" />
+    <Content Remove="C:\Users\ep\.nuget\packages\scintillanet.core\3.6.51\contentFiles\any\netcoreapp3.1\version.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\..\Repository\Views\Content\seal.css" Link="Views\Content\seal.css" />
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -82,21 +77,6 @@
     <PackageReference Include="TaskScheduler">
       <Version>2.8.21</Version>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 
   <ItemGroup>

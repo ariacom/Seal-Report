@@ -3,9 +3,16 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
+    <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealWebServer</AssemblyName>
-	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Product>Seal Report</Product>
+    <Version>6.5.0.0</Version>
+    <FileVersion>6.5.0.0</FileVersion>
+    <Description>Seal Report Web Server</Description>
+    <Authors>Ariacom</Authors>
+    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	  <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -37,10 +44,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="3.1.6" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Obfuscar" Version="2.2.28">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

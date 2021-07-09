@@ -24,8 +24,6 @@ namespace SealWebServer
 {
     public partial class Startup
     {
-        private const string SealConfigurationKey = "SealConfiguration";
-        
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
@@ -34,11 +32,11 @@ namespace SealWebServer
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             //Set repository path
-            Repository.RepositoryConfigurationPath = Configuration.GetValue<string>($"{SealConfigurationKey}:RepositoryPath");
-            DebugMode = Configuration.GetValue<Boolean>($"{SealConfigurationKey}:DebugMode", false);
-            RunScheduler = Configuration.GetValue<Boolean>($"{SealConfigurationKey}:RunScheduler", false);
-            SessionTimeout = Configuration.GetValue<int>($"{SealConfigurationKey}:SessionTimeout", 60);
-            PathBaseProxy = Configuration.GetValue<string>($"{SealConfigurationKey}:PathBaseProxy", null);
+            Repository.RepositoryConfigurationPath = Configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
+            DebugMode = Configuration.GetValue<Boolean>($"{Repository.SealConfigurationSectionKeyword}:DebugMode", false);
+            RunScheduler = Configuration.GetValue<Boolean>($"{Repository.SealConfigurationSectionKeyword}:RunScheduler", false);
+            SessionTimeout = Configuration.GetValue<int>($"{Repository.SealConfigurationSectionKeyword}:SessionTimeout", 60);
+            PathBaseProxy = Configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:PathBaseProxy", null);
             
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
@@ -64,7 +62,7 @@ namespace SealWebServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureSessionServices(services, Configuration.GetSection(SealConfigurationKey).Get<SessionConfiguration>());
+            ConfigureSessionServices(services, Configuration.GetSection(Repository.SealConfigurationSectionKeyword).Get<SessionConfiguration>());
             
             services
                 .AddControllersWithViews()
