@@ -442,7 +442,9 @@ namespace Seal.Model
                 {
                     try
                     {
-                        Assembly.LoadFrom(assembly);
+                        if (Path.GetFileName(assembly) != "SealConverter.dll" && Path.GetFileName(assembly) != "SealConverterWin.dll") {
+                            Assembly.LoadFrom(assembly);
+                        }
                     }
                     catch (Exception Exception)
                     {
