@@ -22,6 +22,6 @@ _ed.editor.bootstrap.min.js</ScriptFiles>
   <CsvSeparator />
   <WebApplicationName>/Seal</WebApplicationName>
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>
-  <WebPublicationDirectory>/Seal</WebPublicationDirectory>
+  <WebPublicationDirectory>C:\inetpub\wwwroot\Seal</WebPublicationDirectory>
   <InstallationDirectory />
 </SealServerConfiguration>

@@ -69,7 +69,7 @@ namespace Seal.Forms
 It creates an application under the 'Default Web Site' of IIS using the 'LocalSystem' Windows Account.
 
 IIS must be installed with the following features: 
-Application Development/ASP.Net 4.5 or greater
+Application Development/ASP.Net 5 or greater
 
 The site can be configured with any user having the following rights:
 Read access to the repository directory ({0}).
@@ -82,7 +82,7 @@ Note that publishing will stop the current Web Server instance.
                 {
                     infoTextBox.Text = @"No Internet Information Server detected on this machine.
 Please install IIS with the following features: 
-Application Development/ASP.Net 4.5 or greater
+Application Development/ASP.Net 5 or greater
 ";
                 }
             }
@@ -133,13 +133,11 @@ New parameter values may require a restart of the Report Designer or the Web Ser
             try
             {
                 string publicationDirectory = _configuration.WebPublicationDirectory;
-                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), _configuration.WebNETCore ? "NETCore" : "Web.Net");
+                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Web");
 #if DEBUG
-                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\";
-                if (_configuration.WebNETCore)
-                {
-                    sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\..\Projects.NETCore\SealWebServer\bin\Release\netcoreapp3.1\publish\";
-                }
+                FileHelper.CopyDirectory(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\wwwroot", publicationDirectory + @"\wwwroot", true);
+                File.Copy(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\web.config", publicationDirectory + @"\web.config", true);
+                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\bin\Release\net5.0";
 #endif
 
                 //Copy installation directory
@@ -147,15 +145,14 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true);
 
                 //Check config...
-                var currentConfig = Path.Combine(publicationDirectory, _configuration.WebNETCore ? "appsettings.json" : "web.config");
-                var releaseConfig = Path.Combine(publicationDirectory, _configuration.WebNETCore ? "appsettings.Release.json" : "web.release.config");
+                var currentConfig = Path.Combine(publicationDirectory, "appsettings.json");
+                var releaseConfig = Path.Combine(publicationDirectory, "appsettings.Release.json");
                 if (!File.Exists(currentConfig) && File.Exists(releaseConfig))
                 {
                     log.Log("Creating Config file from '{0}'", releaseConfig);
                     //Replace repository path
                     var configText = File.ReadAllText(releaseConfig);
-                    if (_configuration.WebNETCore) configText = configText.Replace("\"RepositoryPath\": \"\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
-                    else configText = configText.Replace(@"C:\ProgramData\Seal Report Repository", _configuration.Repository.RepositoryPath);
+                    configText = configText.Replace("\"RepositoryPath\": \"\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
                     File.WriteAllText(currentConfig, configText);
                 }
 
@@ -178,7 +175,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                         log.Log("Creating Application Pool");
                         pool = serverMgr.ApplicationPools.Add(_configuration.WebApplicationPoolName);
                     }
-                    pool.ManagedRuntimeVersion = _configuration.WebNETCore ?  "" : "v4.0";
+                    pool.ManagedRuntimeVersion = "";
                     if (Marshal.SizeOf(typeof(IntPtr)) != 8) pool.Enable32BitAppOnWin64 = true; //Test if 32bit
 
                     pool.ProcessModel.IdentityType = Microsoft.Web.Administration.ProcessModelIdentityType.LocalSystem;

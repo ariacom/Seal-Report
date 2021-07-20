@@ -89,7 +89,6 @@ namespace Seal.Model
                     PdfConverter.InitEditor();
                 }
 
-                GetProperty("WebNETCore").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
                 GetProperty("WebPublicationDirectory").SetIsBrowsable(ForPublication);
@@ -540,15 +539,6 @@ namespace Seal.Model
         [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(4, 3)]
 #endif
         public string CsvSeparator { get; set; } = "";
-
-        /// <summary>
-        /// If true, the Web site is published with the NET Core distribution.
-        /// </summary>
-#if WINDOWS
-        [Category("Web Server IIS Publication"), DisplayName("Use NET Core Distribution"), Description("If true, the Web site is published with the NET Core distribution."), Id(1, 3)]
-        [DefaultValue(false)]
-#endif
-        public bool WebNETCore { get; set; } = false;
 
         /// <summary>
         /// The name of the IIS Web application. Use '/' to publish on 'Default Web Site'

@@ -133,7 +133,7 @@ namespace Seal
                 {
                     Microsoft.Web.Administration.ServerManager serverMgr = new Microsoft.Web.Administration.ServerManager();
                     //try to get default directory...
-                    _repository.Configuration.WebPublicationDirectory = Path.Combine(serverMgr.Sites[0].Applications[0].VirtualDirectories[0].PhysicalPath.Replace("%SystemDrive%\\", Path.GetPathRoot(Environment.SystemDirectory)), _repository.Configuration.WebApplicationName);
+                    _repository.Configuration.WebPublicationDirectory = Path.Combine(serverMgr.Sites[0].Applications[0].VirtualDirectories[0].PhysicalPath.Replace("%SystemDrive%\\", Path.GetPathRoot(Environment.SystemDirectory)), _repository.Configuration.WebApplicationName.Replace("/",""));
                 }
                 catch { }
             }
