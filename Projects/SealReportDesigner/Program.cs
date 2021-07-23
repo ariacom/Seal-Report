@@ -31,6 +31,9 @@ namespace Seal
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            //Set repository configuration path
+            Repository.RepositoryConfigurationPath = Properties.Settings.Default.RepositoryPath;
+
             bool execute = (args.Length >= 1 && args[0].ToLower() == "/e");
             bool executeOutputOrView = (args.Length >= 1 && args[0].ToLower() == "/x");
             string reportToOpen = null;

@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 #if WINDOWS
 using System.Windows.Forms;
 using System.Drawing;

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Threading;
 using Seal.Helpers;
 using System.Reflection;
+using Seal.Model;
 
 namespace Seal
 {
@@ -26,6 +27,9 @@ namespace Seal
             // Set the unhandled exception mode to force all Windows Forms errors to go through 
             // our handler.
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+            //Set repository configuration path
+            Repository.RepositoryConfigurationPath = Properties.Settings.Default.RepositoryPath;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
