@@ -83,7 +83,7 @@ namespace Seal.Model
                     //Get the name for configuration text to avoid useless parsing and save time
                     foreach (var template in _viewTemplates.Where(i => !i.IsParsed))
                     {
-                        if (template.Configuration.Contains(string.Format("\"{0}\";", name)))
+                        if (template.Configuration.Contains("ReportViewTemplate." + name.Replace(" ","")) || template.Configuration.Contains(string.Format("\"{0}\";", name))) 
                         {
                             template.ParseConfiguration();
                             break;

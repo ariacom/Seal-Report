@@ -122,7 +122,7 @@ namespace Seal.Model
             Report.PdfConversion = (Report.Format == ReportFormat.pdf);
 
             Report.Status = ReportStatus.RenderingResult;
-            string result;
+            string result = "";
             if (Report.HasExternalViewer && Report.Format != ReportFormat.pdf)
             {
                 //use the children to render in a new extension file
@@ -134,13 +134,19 @@ namespace Seal.Model
             }
             else
             {
-                //normal result rendering
-                result = Render();
+                if (Report.Format == ReportFormat.pdf)
+                {
+                    Report.ResultFilePath = GeneratePrintResult();
+                }
+                else {
+                    //normal result rendering
+                    result = Render();
+                }
             }
 
             try
             {
-                if (Report.Format != ReportFormat.custom) File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                if (Report.Format != ReportFormat.pdf && Report.Format != ReportFormat.custom) File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
             }
             catch (Exception ex)
             {

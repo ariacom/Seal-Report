@@ -19,6 +19,7 @@
     Template.Parameters.Add(new Parameter() { Name = "widget_css", Value = "page-break-inside:avoid;overflow:auto;margin-top:5px;", DisplayName = "Panel CSS Style", Description = "CSS style attribute of the main panel.", Enums = new string[] { "width:400px;height:300px;page-break-inside:avoid;overflow:auto;", "page-break-inside:avoid;overflow:auto" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "widget_heading_css", Value = "padding-right:2px;", DisplayName = "Panel heading CSS Style", Description = "CSS style attribute of the heading panel." });
     Template.Parameters.Add(new Parameter() { Name = "widget_body_css", Value = "", DisplayName = "Panel body CSS Style", Description = "CSS style attribute of the body panel." });
+    Template.Parameters.Add(new Parameter() { Name = "print_break_after_view", DisplayName = "Print: Force a break after the view", BoolValue = false, Description = "If true, a new page is started after the view is displayed for the print layout." });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Model", "Tab Page", "Container" };

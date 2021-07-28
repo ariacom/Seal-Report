@@ -35,3 +35,9 @@
         }
     </div> <!--panel-body-->
 </div> <!--panel-->
+
+@if (report.PrintLayout && view.GetBoolValue("print_break_after_view"))
+{
+    <div style="page-break-after:always;">
+    </div>
+}

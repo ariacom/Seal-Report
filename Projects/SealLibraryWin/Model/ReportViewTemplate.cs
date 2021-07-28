@@ -189,6 +189,7 @@ namespace Seal.Model
                 ReportViewTemplate template = new ReportViewTemplate();
                 if (template.Init(path)) viewTemplates.Add(template);
             }
+            if (viewTemplates.Count == 0) throw new Exception(string.Format("Unable to find View templates in the repository at {0}.\r\nCheck your installation", templateFolder));
             return viewTemplates;
         }
 
