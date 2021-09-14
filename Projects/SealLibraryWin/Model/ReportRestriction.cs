@@ -309,6 +309,7 @@ namespace Seal.Model
         {
             get
             {
+                if (EnumRE == null) return null;
                 return Model == null ? EnumRE.Values : EnumRE.GetValues(Model.Connection);
             }
         }
@@ -1391,7 +1392,6 @@ namespace Seal.Model
                 string result = "";
                 if (IsEnum)
                 {
-                    var type = MetaColumn.Type;
                     if (EnumValues.Count == 0) result = "\"\"";
                     foreach (string enumValue in EnumValues)
                     {

@@ -10,6 +10,7 @@ using System.IO;
 using Seal.Forms;
 using Seal.Helpers;
 using System.Reflection;
+using System.Text;
 
 namespace Seal
 {
@@ -23,6 +24,9 @@ namespace Seal
         {
             // Add the event handler for handling UI thread exceptions to the event.
             Application.ThreadException += new ThreadExceptionEventHandler(ExceptionHandler);
+
+            //Encoding registration
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             // Set the unhandled exception mode to force all Windows Forms errors to go through 
             // our handler.

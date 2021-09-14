@@ -10,6 +10,7 @@ using System.Threading;
 using Seal.Helpers;
 using System.Reflection;
 using Seal.Model;
+using System.Text;
 
 namespace Seal
 {
@@ -21,6 +22,9 @@ namespace Seal
         [STAThread]
         static void Main(string[] args)
         {
+            //Encoding registration
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             // Add the event handler for handling UI thread exceptions to the event.
             Application.ThreadException += new ThreadExceptionEventHandler(ExceptionHandler);
 

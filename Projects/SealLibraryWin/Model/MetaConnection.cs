@@ -306,13 +306,14 @@ namespace Seal.Model
         }
 
 
-#if WINDOWS
         /// <summary>
         /// Check the current connection
         /// </summary>
         public void CheckConnection()
         {
-            Cursor.Current = Cursors.WaitCursor; 
+#if WINDOWS
+            Cursor.Current = Cursors.WaitCursor;
+#endif
             Error = "";
             Information = "";
             try
@@ -328,10 +329,11 @@ namespace Seal.Model
                 Information = "Error got when checking the connection.";
             }
             Information = Helper.FormatMessage(Information);
+#if WINDOWS
             UpdateEditorAttributes(); 
-            Cursor.Current = Cursors.Default; 
-        }
+            Cursor.Current = Cursors.Default;
 #endif
+        }
 
         #region Helpers
         /// <summary>

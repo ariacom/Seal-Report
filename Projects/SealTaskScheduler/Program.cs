@@ -7,6 +7,7 @@ using Seal.Helpers;
 using Seal.Model;
 using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace SealTaskScheduler
 {
@@ -16,6 +17,9 @@ namespace SealTaskScheduler
         {
             if (args.Length > 0)
             {
+                //Encoding registration
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
                 try
                 {
                     //Set repository path

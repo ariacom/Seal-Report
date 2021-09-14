@@ -4,7 +4,7 @@
     ReportView view = report.CurrentView;
     int index = 0;
     var views = view.Views.OrderBy(i => i.SortOrder).ToList();
-    var gridLayout = report.GenerateHTMLDisplay ? view.GetValue("grid_layout") : view.GetValue("grid_layout_print");
+    var gridLayout = report.PrintLayout ? view.GetValue("grid_layout_print") : view.GetValue("grid_layout");
     if (string.IsNullOrWhiteSpace(gridLayout))
     {
         gridLayout = view.GetValue("grid_layout");

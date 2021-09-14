@@ -1535,31 +1535,6 @@ AND [d2f0c0b7-b97d-49d4-a241-d0f7653cce6c]</Restriction>
       </Restrictions>
     </ReportModel>
   </Models>
-  <Tasks>
-    <ReportTask>
-      <GUID>5bb08da4-6659-4ec2-9c74-b92da8fcafb5</GUID>
-      <Name>Change layout for PDF</Name>
-      <CancelReport>false</CancelReport>
-      <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <Step>BeforeRendering</Step>
-      <Script>@{
-    ReportTask task = Model;
-    Report report = task.Report;
-
-    report.LogMessage("Setting the grid layout");
-    var gridLayout = "col-sm-4;col-sm-4;col-sm-4;\r\ncol-sm-4;col-sm-4;col-sm-4;\r\ncol-sm-5;col-sm-7;";
-    if (report.PrintLayout &amp;&amp; report.PdfConversion) {
-        //Change the grid layout for the PDF export
-        gridLayout = "col-sm-8;\r\ncol-sm-8;\r\ncol-sm-8;\r\ncol-sm-8;\r\n";
-    }
-    var containerView = report.AllViews.FirstOrDefault(i =&gt; i.Name =="General Container View");
-    if (containerView != null) {
-       containerView.SetParameter("grid_layout", gridLayout);
-    }    
-}</Script>
-      <SortOrder>1</SortOrder>
-    </ReportTask>
-  </Tasks>
   <Views>
     <ReportView>
       <GUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</GUID>
@@ -2871,6 +2846,13 @@ glyphicon glyphicon-ok</Value>
 col-sm-4;col-sm-4;col-sm-4;
 col-sm-5;col-sm-7;</Value>
                     </Parameter>
+                    <Parameter>
+                      <Name>grid_layout_print</Name>
+                      <Value>col-sm-8;
+col-sm-8;
+col-sm-8;
+col-sm-8;</Value>
+                    </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
                 </ReportView>
@@ -3119,6 +3101,39 @@ col-sm-5;col-sm-7;</Value>
   &lt;DocumentScript /&gt;
 &lt;/SealPdfCfg&gt;</string>
       </PdfConfigurations>
+      <ExcelConfigurations>
+        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;NewSheetWidget&gt;false&lt;/NewSheetWidget&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
+  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+      </ExcelConfigurations>
     </ReportView>
     <ReportView>
       <GUID>13b5dbfb-4650-47d1-84fb-3580df6bec03</GUID>

@@ -17,6 +17,9 @@ namespace SealSchedulerService
         /// </summary>
         static void Main()
         {
+            //Encoding registration
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
 #if RELEASE
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]

@@ -136,6 +136,12 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
+                "Hide all cells in the table",
+@"//For performances reason, consider to process your result table in a dedicated Task with an execution step 'Models generated, before rendering' 
+    cell.FinalCssStyle = ""display:none;"";
+"
+                ),
+            new Tuple<string, string>(
                 "Calculate a progression",
 @"if (cell.IsSerie && cell.ContextRow > 0 && cell.ContextCol == -1)
 	{
@@ -422,8 +428,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorModelReportNavigationScriptTemplate = @"@using System.IO
-@{
+        const string razorModelReportNavigationScriptTemplate = @"@{
     NavigationLink link = Model;
     Report report = link.Report;
 
@@ -453,10 +458,10 @@ namespace Seal.Forms
     }
     
     if (link.Request != null) {
-        foreach (var k in  link.Request.Form.AllKeys) {
+        foreach (var k in  link.Request.Form.Keys) {
             parameters += string.Format(""Form {0}={1}\r\n"", k, link.Request.Form[k]);
         }
-        parameters += string.Format(""{0} File(s)\r\n"", link.Request.Files.Count);
+        parameters += string.Format(""{0} File(s)\r\n"", link.Request.Form.Files.Count);
     }
 
     //Check implementations in the sample reports '505-Navigation - Custom buttons and report execution' and '506-Navigation - File and  fields Upload'

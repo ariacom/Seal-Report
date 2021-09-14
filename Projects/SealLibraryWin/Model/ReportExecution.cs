@@ -134,19 +134,13 @@ namespace Seal.Model
             }
             else
             {
-                if (Report.Format == ReportFormat.pdf)
-                {
-                    Report.ResultFilePath = GeneratePrintResult();
-                }
-                else {
-                    //normal result rendering
-                    result = Render();
-                }
+                //normal result rendering
+                result = Render();
             }
 
             try
             {
-                if (Report.Format != ReportFormat.pdf && Report.Format != ReportFormat.custom) File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                if (Report.Format != ReportFormat.custom) File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
             }
             catch (Exception ex)
             {
@@ -883,7 +877,7 @@ namespace Seal.Model
                     while (!Report.Cancel)
                     {
                         if (threadTask.IsCompleted) break;
-                        Thread.Sleep(50);
+                        Thread.Sleep(20);
                     }
                     //Cancel execution
                     if (Report.Cancel)

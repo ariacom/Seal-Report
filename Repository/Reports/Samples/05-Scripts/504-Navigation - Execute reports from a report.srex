@@ -1,94 +1,293 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CurrentViewGUID>62ff2828-ce28-40a7-b89b-dce393f4d399</CurrentViewGUID><GUID>9b4462d6-d81d-4743-97ab-3d4bd01cea7d</GUID><ViewGUID>62ff2828-ce28-40a7-b89b-dce393f4d399</ViewGUID><Sources><ReportSource><GUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</GUID><Name>Reports</Name><Connections><MetaConnection><GUID>5216e238-323f-4891-985c-e9c4196ecf49</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>5216e238-323f-4891-985c-e9c4196ecf49</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>f09f5456-f125-403b-bfa1-16583f103a7d</GUID><Name>Reports</Name><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    //Script executed to define the result table columns that will be loaded by the 'Load Script'&#xD;
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("path", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("last_modification", typeof(DateTime)));&#xD;
-    table.Columns.Add(new DataColumn("load_error", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-    ReportExecutionLog log = metaTable;&#xD;
-    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
-    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
-&#xD;
-    if (report != null &amp;&amp; report.Tag != null) {&#xD;
-        foreach (var item in ((List&lt;Report&gt;) report.Tag)) {&#xD;
-            table.Rows.Add(&#xD;
-                item.DisplayNameEx, &#xD;
-                item.FilePath.Replace(report.Repository.ReportsFolder, ""), &#xD;
-                item.LastModification,&#xD;
-                item.LoadErrors&#xD;
-                );&#xD;
-        }&#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>8418af01-9b19-44ef-a396-d6eaafc0e174</GUID><Name>path</Name><Type>Text</Type><Category>Reports</Category><DisplayName>Path</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>51a42026-7b83-4d5e-9633-b21cb85f3682</GUID><Name>last_modification</Name><Type>DateTime</Type><Category>Reports</Category><DisplayName>Last modification</DisplayName><DisplayOrder>3</DisplayOrder><DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat><Format>G</Format></MetaColumn><MetaColumn><GUID>cf8cf340-8651-489a-bbbe-6bf04a989ae1</GUID><Name>name</Name><Type>Text</Type><Category>Reports</Category><DisplayName>Name</DisplayName></MetaColumn><MetaColumn><GUID>a2209938-0f1d-4ce1-8ea0-26fc62ba9af7</GUID><Name>load_error</Name><Type>Text</Type><Category>Reports</Category><DisplayName>Load error</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource></Sources><Models><ReportModel><GUID>f31eea7f-e982-44e1-8d12-0d304f372949</GUID><Name>Reports</Name><SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID><LINQSubTables><MetaTable><GUID>f09f5456-f125-403b-bfa1-16583f103a7d</GUID><Name>Reports</Name></MetaTable></LINQSubTables><Elements><ReportElement><GUID>cbd04069-22d3-410e-97f7-6ed872876cdc</GUID><Name>name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>cf8cf340-8651-489a-bbbe-6bf04a989ae1</MetaColumnGUID><CellScript>@{&#xD;
-	//Add Hyperlink, Report Execution or File Download navigation&#xD;
-	ResultCell cell=Model;&#xD;
-	ReportElement element = cell.Element;&#xD;
-	ReportModel reportModel = element.Model;&#xD;
-	Report report = reportModel.Report;&#xD;
-&#xD;
-    //Report Execution in a new browser tab&#xD;
-    cell.AddNavigationReportExecution(cell.ContextCurrentLine[1].Value.ToString(), "Execute " + cell.Value.ToString());&#xD;
-&#xD;
-    //Report Execution in the navigation context&#xD;
-    cell.AddNavigationReportNavigation(cell.ContextCurrentLine[1].Value.ToString(), "Navigate to " + cell.Value.ToString());&#xD;
-&#xD;
-}&#xD;
-</CellScript></ReportElement><ReportElement><GUID>41fc19b6-0f79-471c-b1a9-41a1def015dc</GUID><Name>path</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>8418af01-9b19-44ef-a396-d6eaafc0e174</MetaColumnGUID></ReportElement><ReportElement><GUID>ce31532a-5457-435c-a44a-668a40679b18</GUID><Name>last_modification</Name><DisplayName /><Format>G</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><MetaColumnGUID>51a42026-7b83-4d5e-9633-b21cb85f3682</MetaColumnGUID></ReportElement><ReportElement><GUID>57431183-775e-49db-9156-6837d9d4862a</GUID><Name>load_error</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>a2209938-0f1d-4ce1-8ea0-26fc62ba9af7</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Tasks><ReportTask><GUID>a3ff48d8-a5ce-4d27-b68f-c4edb362a15c</GUID><Name>Fill reports list</Name><CancelReport>false</CancelReport><SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID><Script>@using System.IO&#xD;
-@{&#xD;
-    ReportTask task = Model;&#xD;
-    Report report = task.Report;&#xD;
-&#xD;
-    report.Tag = new List&lt;Report&gt;();&#xD;
-    SearchReports(report, report.Repository.ReportsFolder);&#xD;
-}&#xD;
-&#xD;
-@functions {&#xD;
-    public void SearchReports(Report currentReport, string folder) {&#xD;
-        var list = (List&lt;Report&gt;) currentReport.Tag;&#xD;
-    &#xD;
-        var log = currentReport;&#xD;
-        Repository repository = currentReport.Repository;&#xD;
-        foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))&#xD;
-        {&#xD;
-            try {&#xD;
-                Report report = Report.LoadFromFile(reportPath, repository);&#xD;
-                if (!string.IsNullOrEmpty(report.LoadErrors)) log.LogMessage("Error loading the report: {0}", report.LoadErrors);&#xD;
-                //Add report to the list&#xD;
-                list.Add(report);&#xD;
-            }&#xD;
-            catch (Exception ex) {&#xD;
-                log.LogMessage("Error loading the report: {0}\r\n{1}", reportPath, ex.Message);&#xD;
-            }&#xD;
-        }&#xD;
-        //Search in sub-folders&#xD;
-        foreach (string subFolder in Directory.GetDirectories(folder))&#xD;
-        {&#xD;
-            if (currentReport.Cancel) return;&#xD;
-            SearchReports(currentReport, subFolder);&#xD;
-        }                            &#xD;
-    }&#xD;
-} &#xD;
-&#xD;
-</Script><SortOrder>1</SortOrder></ReportTask></Tasks><Views><ReportView><GUID>62ff2828-ce28-40a7-b89b-dce393f4d399</GUID><Name>View</Name><Views><ReportView><GUID>a18b0ed6-9c7e-4217-bd9d-6e25c4e2fbd3</GUID><Name>Model</Name><Views><ReportView><GUID>c2e8de61-3eb5-498e-84e2-39d82e1553ad</GUID><Name>Model Container</Name><Views><ReportView><GUID>1a34c316-4b02-45f5-9180-102cecd21543</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>d3995f70-6cce-4804-82a9-c67cf6be0d86</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>210aa3a3-5678-4b08-87b6-adda5067fd2b</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>19e43cfb-d3eb-46bf-bc09-48c84e42b68b</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>92a34c03-69a1-4b03-ad13-75217df3b8f4</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>f31eea7f-e982-44e1-8d12-0d304f372949</ModelGUID><SortOrder>2</SortOrder><WidgetDefinition><GUID>ee8d8ddc-17b4-489c-abbf-bcc6578f8c34</GUID><Name>Reports to execute</Name><Description>Execute reports from the Widget</Description><Icon>glyphicon glyphicon-list-alt</Icon><Color>success</Color></WidgetDefinition></ReportView><ReportView><GUID>e5434897-ecdc-478e-a7c4-a9167ad805a6</GUID><Name>Highlights</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>&lt;p&gt;&#xD;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;&#xD;
-&lt;ul&gt;&#xD;
-&lt;li&gt;A LINQ Source 'Reports' (No SQL) to list all reports in the repository.&lt;/li&gt;&#xD;
-&lt;li&gt;'Fill reports list' task to fill the reports source.&lt;/li&gt;&#xD;
-&lt;li&gt;Cell script on the 'Name' element to add 2 different navigation menus.&lt;/li&gt;&#xD;
-&lt;/ul&gt;&#xD;
-&lt;/p&gt;&#xD;
-</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>messages_mode</Name><Value>enabledshownexec</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CurrentViewGUID>62ff2828-ce28-40a7-b89b-dce393f4d399</CurrentViewGUID>
+  <GUID>9b4462d6-d81d-4743-97ab-3d4bd01cea7d</GUID>
+  <ViewGUID>62ff2828-ce28-40a7-b89b-dce393f4d399</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</GUID>
+      <Name>Reports</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>5216e238-323f-4891-985c-e9c4196ecf49</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>5216e238-323f-4891-985c-e9c4196ecf49</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>f09f5456-f125-403b-bfa1-16583f103a7d</GUID>
+            <Name>Reports</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+                ReportExecutionLog log = metaTable;
+
+    //Script executed to define the result table columns that will be loaded by the 'Load Script'
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("name", typeof(string)));
+    table.Columns.Add(new DataColumn("path", typeof(string)));
+    table.Columns.Add(new DataColumn("last_modification", typeof(DateTime)));
+    table.Columns.Add(new DataColumn("load_error", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+
+    if (report != null &amp;&amp; report.Tag != null) {
+        foreach (var item in ((List&lt;Report&gt;) report.Tag)) {
+            table.Rows.Add(
+                item.DisplayNameEx, 
+                item.FilePath.Replace(report.Repository.ReportsFolder, ""), 
+                item.LastModification,
+                item.LoadErrors
+                );
+        }
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>8418af01-9b19-44ef-a396-d6eaafc0e174</GUID>
+                <Name>path</Name>
+                <Type>Text</Type>
+                <Category>Reports</Category>
+                <DisplayName>Path</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>51a42026-7b83-4d5e-9633-b21cb85f3682</GUID>
+                <Name>last_modification</Name>
+                <Type>DateTime</Type>
+                <Category>Reports</Category>
+                <DisplayName>Last modification</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+                <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
+                <Format>G</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>cf8cf340-8651-489a-bbbe-6bf04a989ae1</GUID>
+                <Name>name</Name>
+                <Type>Text</Type>
+                <Category>Reports</Category>
+                <DisplayName>Name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>a2209938-0f1d-4ce1-8ea0-26fc62ba9af7</GUID>
+                <Name>load_error</Name>
+                <Type>Text</Type>
+                <Category>Reports</Category>
+                <DisplayName>Load error</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>f31eea7f-e982-44e1-8d12-0d304f372949</GUID>
+      <Name>Reports</Name>
+      <SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>f09f5456-f125-403b-bfa1-16583f103a7d</GUID>
+          <Name>Reports</Name>
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>cbd04069-22d3-410e-97f7-6ed872876cdc</GUID>
+          <Name>name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>cf8cf340-8651-489a-bbbe-6bf04a989ae1</MetaColumnGUID>
+          <CellScript>@{
+	//Add Hyperlink, Report Execution or File Download navigation
+	ResultCell cell=Model;
+	ReportElement element = cell.Element;
+	ReportModel reportModel = element.Model;
+	Report report = reportModel.Report;
+
+    //Report Execution in a new browser tab
+    cell.AddNavigationReportExecution(cell.ContextCurrentLine[1].Value.ToString(), "Execute " + cell.Value.ToString());
+
+    //Report Execution in the navigation context
+    cell.AddNavigationReportNavigation(cell.ContextCurrentLine[1].Value.ToString(), "Navigate to " + cell.Value.ToString());
+
+}
+</CellScript>
+        </ReportElement>
+        <ReportElement>
+          <GUID>41fc19b6-0f79-471c-b1a9-41a1def015dc</GUID>
+          <Name>path</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>8418af01-9b19-44ef-a396-d6eaafc0e174</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ce31532a-5457-435c-a44a-668a40679b18</GUID>
+          <Name>last_modification</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>51a42026-7b83-4d5e-9633-b21cb85f3682</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>57431183-775e-49db-9156-6837d9d4862a</GUID>
+          <Name>load_error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>a2209938-0f1d-4ce1-8ea0-26fc62ba9af7</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>a3ff48d8-a5ce-4d27-b68f-c4edb362a15c</GUID>
+      <Name>Fill reports list</Name>
+      <CancelReport>false</CancelReport>
+      <SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID>
+      <Script>@using System.IO
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    report.Tag = new List&lt;Report&gt;();
+    SearchReports(report, report.Repository.ReportsFolder);
+}
+
+@functions {
+    public void SearchReports(Report currentReport, string folder) {
+        var list = (List&lt;Report&gt;) currentReport.Tag;
+    
+        var log = currentReport;
+        Repository repository = currentReport.Repository;
+        foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))
+        {
+            try {
+                Report report = Report.LoadFromFile(reportPath, repository);
+                if (!string.IsNullOrEmpty(report.LoadErrors)) log.LogMessage("Error loading the report {0}: {1}", reportPath, report.LoadErrors);
+                //Add report to the list
+                list.Add(report);
+            }
+            catch (Exception ex) {
+                log.LogMessage("Error loading the report: {0}\r\n{1}", reportPath, ex.Message);
+            }
+        }
+        //Search in sub-folders
+        foreach (string subFolder in Directory.GetDirectories(folder))
+        {
+            if (currentReport.Cancel) return;
+            SearchReports(currentReport, subFolder);
+        }                            
+    }
+} 
+
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>62ff2828-ce28-40a7-b89b-dce393f4d399</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>a18b0ed6-9c7e-4217-bd9d-6e25c4e2fbd3</GUID>
+          <Name>Reports</Name>
+          <Views>
+            <ReportView>
+              <GUID>c2e8de61-3eb5-498e-84e2-39d82e1553ad</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>1a34c316-4b02-45f5-9180-102cecd21543</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>d3995f70-6cce-4804-82a9-c67cf6be0d86</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>210aa3a3-5678-4b08-87b6-adda5067fd2b</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>19e43cfb-d3eb-46bf-bc09-48c84e42b68b</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>92a34c03-69a1-4b03-ad13-75217df3b8f4</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>f31eea7f-e982-44e1-8d12-0d304f372949</ModelGUID>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>e5434897-ecdc-478e-a7c4-a9167ad805a6</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;A LINQ Source 'Reports' (No SQL) to list all reports in the repository.&lt;/li&gt;
+&lt;li&gt;'Fill reports list' task to fill the reports source.&lt;/li&gt;
+&lt;li&gt;Cell script on the 'Name' element to add 2 different navigation menus.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshownexec</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

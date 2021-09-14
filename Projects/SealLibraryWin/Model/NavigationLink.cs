@@ -3,6 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 
+using Microsoft.AspNetCore.Http;
 using System.Collections.Specialized;
 
 namespace Seal.Model
@@ -52,6 +53,6 @@ namespace Seal.Model
         /// <summary>
         /// Current Request that can be used in the Navigation Script (e.g. getting a file upload) 
         /// </summary>
-        public Microsoft.AspNetCore.Http.HttpRequest Request;
+        public HttpRequest Request;
     }
 }

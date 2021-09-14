@@ -865,6 +865,7 @@ namespace Seal.Model
         {
             get
             {
+                if (EnumEL == null) return null;
                 return EnumEL.GetValues(Model.Connection);
             }
         }

@@ -46,9 +46,11 @@ namespace Seal.Helpers
 
         static public void CopyProperties(object src, object dest, string[] skipNames = null)
         {
+            var xmlIgnore = new XmlIgnoreAttribute();
             foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(src))
             {
                 if (skipNames != null && skipNames.Contains(item.Name)) continue;
+                if (item.Attributes.Contains(xmlIgnore)) continue;
                 item.SetValue(dest, item.GetValue(src));
             }
         }
