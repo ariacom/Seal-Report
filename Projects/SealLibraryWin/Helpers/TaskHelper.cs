@@ -199,7 +199,7 @@ namespace Seal.Helpers
                     {
                         LogMessage("Dropping and creating table '{0}'", destinationTableName);
                         DatabaseHelper.CreateTable(dbCommand, table);
-                        LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                        LogMessage("Copying {0:N0} rows in '{1}'", table.Rows.Count, destinationTableName);
                         DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
                         result = table.Rows.Count;
                     }
@@ -303,7 +303,7 @@ namespace Seal.Helpers
                     {
                         LogMessage("Dropping and creating table '{0}'", destinationTableName);
                         DatabaseHelper.CreateTable(dbCommand, table);
-                        LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                        LogMessage("Copying {0:N0} rows in '{1}'", table.Rows.Count, destinationTableName);
                         DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
                     }
                     finally
@@ -380,7 +380,7 @@ namespace Seal.Helpers
                                         DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
                                         DatabaseHelper.CreateTable(dbCommand, table);
                                     }
-                                    LogMessage("Copying {0} rows in '{1}' for index {2} to {3}", table.Rows.Count, destinationTableName, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
+                                    LogMessage("Copying {0:N0} rows in '{1}' for index {2} to {3}", table.Rows.Count, destinationTableName, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
                                     DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
                                     lastIndex += DatabaseHelper.LoadBurstSize;
                                 }
@@ -405,7 +405,7 @@ namespace Seal.Helpers
                                 LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
                                 DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
                                 DatabaseHelper.CreateTable(dbCommand, table);
-                                LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                                LogMessage("Copying {0:N0} rows in '{1}'", table.Rows.Count, destinationTableName);
                                 DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
                             }
                             finally

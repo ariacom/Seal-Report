@@ -225,7 +225,7 @@ namespace Seal.Model
 
         bool _auditEnabled = false;
         /// <summary>
-        /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management.
+        /// If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management.
         /// </summary>
 #if WINDOWS
         [Category("Audit Settings"), DisplayName("Audit Enabled"), Description("If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management."), Id(1, 3)]

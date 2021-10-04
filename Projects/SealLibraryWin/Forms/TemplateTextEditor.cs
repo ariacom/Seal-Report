@@ -884,6 +884,12 @@ namespace Seal.Forms
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
     helper.RefreshRepositoryEnums();
+
+    //Force refresh of a given enum list got from a source
+    //var el = task.Report.Sources.First(i => i.Name.StartsWith(""source name"")).MetaData.Enums.FirstOrDefault(i => i.Name == ""enum name"");
+    //if (el != null) {
+    //    el.RefreshEnum();
+    //}
 "
                 ),
             new Tuple<string, string>(
