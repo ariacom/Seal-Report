@@ -129,7 +129,7 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="5.0.1" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="5.0.0" />
-    <PackageReference Include="System.DirectoryServices.Protocols" Version="5.0.0" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="5.0.1" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="5.0.0" />
     <PackageReference Include="TaskScheduler" Version="2.9.1" />
