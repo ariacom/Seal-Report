@@ -11,7 +11,7 @@ function callbackHandler(data, callback, errorcb) {
         else {
             SWIUtil.ShowMessage("alert-danger", data.error, 0);
             if (!data.authenticated) {
-                location.reload(true);
+                location.reload();
             }
         }
     }

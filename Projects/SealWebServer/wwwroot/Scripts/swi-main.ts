@@ -96,7 +96,7 @@ class SWIMain {
     private loginSuccess(data: any) {
         if (_main._profile && _main._profile.culture && _main._profile.culture != data.culture) {
             $("body").css("opacity", "0.1");
-            location.reload(true);
+            location.reload();
         }
 
         _main._profile = data;
@@ -222,7 +222,7 @@ class SWIMain {
                     }
 
                     _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, function () {
-                        location.reload(true);
+                        location.reload();
                     });
                 }
             });

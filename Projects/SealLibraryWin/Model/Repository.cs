@@ -42,6 +42,8 @@ namespace Seal.Model
         public const string EnumFilterKeyword = "{EnumFilter";
         public const string EnumValuesKeyword = "{EnumValues_";
         public const string JoinAutoName = "<AutomaticJoinName>";
+        public const string SealConverterDll = "SealConverter.dll";
+        public const string SealConverterWinDll = "SealConverterWin.dll";
 
         //appsettings.json
         public const string SealConfigurationSectionKeyword = "SealConfiguration";
@@ -447,7 +449,7 @@ namespace Seal.Model
                 {
                     try
                     {
-                        if (Path.GetFileName(assembly) != "SealConverter.dll" && Path.GetFileName(assembly) != "SealConverterWin.dll") {
+                        if (Path.GetFileName(assembly) != Repository.SealConverterDll && Path.GetFileName(assembly) != Repository.SealConverterWinDll) {
                             Assembly.LoadFrom(assembly);
                         }
                     }

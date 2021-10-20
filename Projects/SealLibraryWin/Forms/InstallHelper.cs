@@ -17,7 +17,7 @@ namespace Seal.Forms
     {
         public static void InstallConverter(ToolStripMenuItem menu, string destinationFolder)
         {
-            if (!File.Exists(destinationFolder + "\\SealConverter.dll")) {
+            if (!File.Exists(Path.Combine(destinationFolder,Repository.SealConverterDll))) {
                 var mi = new ToolStripMenuItem() { Text = "Install the PDF and Excel Converter..." };
                 menu.DropDownItems.Add(new ToolStripSeparator());
                 menu.DropDownItems.Add(mi);

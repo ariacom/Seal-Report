@@ -26,6 +26,7 @@ using FluentFTP;
 using Microsoft.AnalysisServices.AdomdClient;
 using OfficeOpenXml;
 using Microsoft.AspNetCore.Html;
+using System.Diagnostics;
 
 namespace Seal.Helpers
 {
@@ -52,7 +53,7 @@ namespace Seal.Helpers
         static HttpClient dummy16 = null;
         static AdomdConnection dummy17 = null;
         static ExcelPackage dummy18 = null;
-
+        static EventLogEntryType dummy19 = EventLogEntryType.Information;
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
         {
@@ -85,6 +86,7 @@ namespace Seal.Helpers
                     if (dummy16 == null) dummy16 = new HttpClient();
                     if (dummy17 == null) dummy17 = new AdomdConnection();
                     if (dummy18 == null) dummy18 = new ExcelPackage();
+                    dummy19 = EventLogEntryType.Error;
                 }
                 catch (Exception ex)
                 {

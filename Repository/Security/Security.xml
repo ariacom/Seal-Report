@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SealSecurity xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ProviderName>Basic Authentication</ProviderName>
   <UseCustomScript>true</UseCustomScript>
   <Script>@{
@@ -7,7 +7,6 @@
 	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
 	//user.WebUserName -&gt; user name from the login screen
 	//user.WebPassword -&gt; password from the login screen
-
 	user.Name = user.WebUserName; //Display name
     //security check can be hardcoded
 	if (string.IsNullOrEmpty(user.WebUserName)) {
