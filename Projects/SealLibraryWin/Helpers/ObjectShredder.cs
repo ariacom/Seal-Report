@@ -126,7 +126,11 @@ namespace Seal.Helpers
 
             foreach (PropertyInfo p in pi)
             {
-                values[_ordinalMap[p.Name]] = p.GetValue(instance, null);
+                try
+                {
+                    values[_ordinalMap[p.Name]] = p.GetValue(instance, null);
+                }
+                catch { }
             }
 
             // Return the property and field values of the instance.
