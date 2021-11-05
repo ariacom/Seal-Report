@@ -700,6 +700,32 @@ namespace Seal.Model
 
                 if (!string.IsNullOrEmpty(definitionScript))
                 {
+                    //For Mongo, set restrictions on the server (after AsQueryable())
+                    if (TableTemplate.Name == MetaTableTemplate.MongoDBName)
+                    {
+                        if (!withLoad) definitionScript = definitionScript.Replace(".AsQueryable()", ".AsQueryable().Take(50)");
+                        else
+                        {
+                            //check restrictions
+                            var restrictions = "";
+                            foreach (var restriction in NoSQLModel.Restrictions.Where(i => i.MetaColumn.MetaTable.AliasName == this.AliasName))
+                            {
+                                if (restrictions == "") restrictions += " AND ";
+                                restrictions += restriction.LINQText;
+
+
+                            }
+                            restrictions = @"
+.Find(Builders<BsonDocument>.Filter.Or(
+Builders<BsonDocument>.Filter.Regex(""title"", new BsonRegularExpression("".* Blacksmith.*"")),
+Builders<BsonDocument>.Filter.Regex(""plot"", new BsonRegularExpression("".*camera.*""))
+))
+                            ";
+                            definitionScript = definitionScript.Replace(".AsQueryable()", restrictions);
+                        }
+                    }
+
+
                     RazorHelper.CompileExecute(definitionScript, this);
                     if (withLoad)
                     {

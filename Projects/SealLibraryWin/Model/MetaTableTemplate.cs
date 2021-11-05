@@ -17,6 +17,7 @@ namespace Seal.Model
     public class MetaTableTemplate
     {
         public const string DefaultName = "Default";
+        public const string MongoDBName = "Mongo DB";
 
         /// <summary>
         /// Name 
