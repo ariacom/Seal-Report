@@ -2527,10 +2527,8 @@ model.ResultTable = query2.CopyToDataTable2();
             foreach (var table in noSQLtables)
             {
                 var subTable = currentSubTables.FirstOrDefault(i => i.GUID == table.GUID);
-                if (subTable == null)
-                {
-                    subTable = new MetaTable() { GUID = table.GUID };
-                }
+                if (subTable == null) subTable = new MetaTable() { GUID = table.GUID };
+
                 subTable.Name = table.Name;
                 subTable.Model = this;
                 subTable.Source = table.Source;
@@ -2539,6 +2537,48 @@ model.ResultTable = query2.CopyToDataTable2();
                 subTable.CacheDuration = table.CacheDuration;
                 //Init default parameters
                 subTable.InitParameters();
+
+                //Mongo stages handling
+                if (subTable.IsMongoDb && subTable.GetBoolValue("mongo_sync", true))
+                {
+                    subTable.LoadInitScript = "";
+
+                    //Elements
+
+                    //Restrictions = match stage
+                    var restrs = Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable.GUID == subTable.GUID).ToList();
+                    if (restrs.Count > 0)
+                    {
+                        subTable.LoadInitScript = @"@using MongoDB.Bson
+@{
+    MetaTable metaTable = Model;
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            ""$match"",
+            new BsonDocument(""$and"",
+                new BsonArray {
+";
+                        var restrStr = "";
+                        foreach (var restr in restrs)
+                        {
+                            restrStr += restr.MongoText;
+                        }
+
+                        if (!string.IsNullOrEmpty(restrStr))
+                        {
+                            subTable.LoadInitScript += restrStr;
+                            subTable.LoadInitScript += @"
+                }
+             )
+        )
+    );
+}";
+                        }
+                        else {
+                            subTable.LoadInitScript = "";
+                        }
+                    }
+                }
 
                 LINQSubTables.Add(subTable);
             }

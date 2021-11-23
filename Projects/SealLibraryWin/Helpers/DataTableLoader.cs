@@ -120,10 +120,13 @@ namespace Seal.Helpers
                             fillFromBsonDocument(colName + MongoSeparator, el.Value.AsBsonDocument, dt, keyNames, arrayName, dr);
                             continue;
                         }
-                        if (processArray && (isDocumentArray || isSingleArray))
+                        if (isDocumentArray || isSingleArray)
                         {
-                            //Duplicate rows for each value
-                            fillFromBsonArray(colName == arrayName ? "" : colName + MongoSeparator, el.Value.AsBsonArray, dt, dr, keyNames, colName == arrayName ? "" : arrayName);
+                            if (processArray)
+                            {
+                                //Duplicate rows for each value
+                                fillFromBsonArray(colName == arrayName ? "" : colName + MongoSeparator, el.Value.AsBsonArray, dt, dr, keyNames, colName == arrayName ? "" : arrayName);
+                            }
                             continue;
                         }
 
@@ -148,10 +151,13 @@ namespace Seal.Helpers
                     }
                     else
                     {
-                        if (processArray && (isDocumentArray || isSingleArray))
+                        if (isDocumentArray || isSingleArray)
                         {
-                            //Duplicate rows for each value
-                            fillFromBsonArray(colName == arrayName ? "" : colName + MongoSeparator, el.Value.AsBsonArray, dt, dr, keyNames, colName == arrayName ? "" : arrayName);
+                            if (processArray)
+                            {
+                                //Duplicate rows for each value
+                                fillFromBsonArray(colName == arrayName ? "" : colName + MongoSeparator, el.Value.AsBsonArray, dt, dr, keyNames, colName == arrayName ? "" : arrayName);
+                            }
                             continue;
                         }
 
@@ -162,7 +168,7 @@ namespace Seal.Helpers
                                 string val = el.Value.ToString();
                                 if (el.Value.IsBsonArray && val.Length > 2) val = val.Substring(1, val.Length - 2);
 
-                                dr[colName] = val;
+                                dr[colName] = el.Value;
                             }
                             catch
                             {
@@ -171,7 +177,7 @@ namespace Seal.Helpers
                         }
                     }
                 }
-                if (processArray) break;
+                if (processArray || string.IsNullOrEmpty(arrayName)) break;
                 processArray = true;
             }
 
@@ -186,7 +192,7 @@ namespace Seal.Helpers
         /// </summary>
         static public DataTable FromMongoDB(List<BsonDocument> collection, string[] keyNames = null, string arrayName = null)
         {
-            DataTable dt = new DataTable(collection.ToString());
+            DataTable dt = new DataTable();
             if (collection.Count == 0) return dt;
 
             foreach (BsonDocument doc in collection)

@@ -221,6 +221,13 @@ namespace Seal.Forms
         };
 
 
+
+        const string razorTableDefaultTemplate = @"@using System.Data
+@{
+    MetaTable metaTable = Model;
+}; ";
+
+
         const string razorTableDefinitionScriptTemplate = @"@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -246,6 +253,11 @@ namespace Seal.Forms
     log.LogMessage(""{0} column(s) defined"", metaTable.NoSQLTable.Columns.Count);
 }
 ";
+
+        const string razorTableLoadInitScriptTemplate = @"@using System.Data
+@{
+    MetaTable metaTable = Model;
+}; ";
 
         const string razorTableLoadScriptTemplate = @"@using System.Data
 @{
@@ -1351,13 +1363,35 @@ namespace Seal.Forms
                 }
                 else if (context.Instance is MetaTable)
                 {
-                    if (context.PropertyDescriptor.Name == "DefinitionScript")
+                    if (context.PropertyDescriptor.Name == "DefinitionInitScript")
+                    {
+                        var table = context.Instance as MetaTable;
+                        template = table.TableTemplate != null ? table.DefaultDefinitionInitScript : razorTableDefaultTemplate;
+
+                        frm.ObjectForCheckSyntax = context.Instance;
+                        frm.Text = "Edit the script executed before the table definition execution";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+
+                        if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
+                    }
+                    else if (context.PropertyDescriptor.Name == "DefinitionScript")
                     {
                         var table = context.Instance as MetaTable;
                         template = table.TableTemplate != null ? table.DefaultDefinitionScript : razorTableDefinitionScriptTemplate;
 
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script to define the table";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+
+                        if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
+                    }
+                    else if (context.PropertyDescriptor.Name == "LoadInitScript")
+                    {
+                        var table = context.Instance as MetaTable;
+                        template = table.TableTemplate != null ? table.LoadInitScript : razorTableLoadInitScriptTemplate;
+
+                        frm.ObjectForCheckSyntax = context.Instance;
+                        frm.Text = "Edit the script executed before the table load execution";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
 
                         if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;

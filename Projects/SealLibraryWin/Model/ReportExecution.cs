@@ -679,6 +679,7 @@ namespace Seal.Model
                 {
                     tasks.Add(buildResultTables(model));
                 }
+
                 await Task.WhenAll(tasks);
             }
             Report.RenderOnly = false;

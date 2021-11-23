@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Seal.Model;
 using Seal.Helpers;
 using ScintillaNET;
+using System.Linq;
 
 namespace Seal.Forms
 {
@@ -205,8 +206,10 @@ namespace Seal.Forms
                         {
                             model.BuildQuery(false, true);
                             EntityHandler.UpdateModelNode();
-
-                            MessageBox.Show(string.Format("The LINQ Model has been refreshed...\r\n\r\nIt contains {0} SQL Sub-Model(s) and {1} NoSQL Sub-Table(s).", model.LINQSubModels.Count, model.LINQSubTables.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            var msg = string.Format("The LINQ Model has been refreshed...\r\n\r\nIt contains {0} SQL Sub-Model(s) and {1} NoSQL Sub-Table(s).", model.LINQSubModels.Count, model.LINQSubTables.Count);
+                            var cnt = model.LINQSubTables.Count(i => i.IsMongoDb && i.GetBoolValue(MetaTable.ParameterNameMongoSync, true));
+                            if (cnt > 0) msg += $"\r\n\r\n'Load Init Scripts' have been generated for {cnt} Mongo DB Sub-table(s).";
+                            MessageBox.Show(msg, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else if (key == Keys.F7 || key == Keys.F8)
                         {

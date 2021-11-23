@@ -3,18 +3,26 @@
     MetaTable table = Model;
 
     //Parameters for this table
-    table.Parameters.Add(new Parameter() { Name = "collection", Value = "", DisplayName = "Collection Name", Description = "The collection name to load." });
+    table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoSync, BoolValue = true, DisplayName = "Synchronize Restrictions", Description = "If true, the restrictions defined in the model are applied as a stage in the 'Load Init Script' of the table. If false, the 'Load Init Script' can be manually overwritten." });
+    table.Parameters.Add(new Parameter() { Name = "mongo_collection", Value = "", DisplayName = "Mongo Collection Name", Description = "The collection name to load." });
+
+    table.DefinitionInitScript = @"@using MongoDB.Bson
+@{
+    MetaTable metaTable = Model;
+    //Add a stage to limit the number of records for the table definition 
+    metaTable.MongoStages.Add(new BsonDocument(""$limit"" , 100));
+};
+";
 
     table.DefinitionScript = @"@using System.Data
 @using MongoDB.Driver
 @using MongoDB.Bson
 @{
     MetaTable metaTable = Model;
-    var settings = ""mongodb+srv://epf:epMongo2015@cluster0.1b0hc.mongodb.net/sample_mflix?retryWrites=true&w=majority"";
+    var settings = ""mongodb+srv://demosr@cluster0.1b0hc.mongodb.net/sample_mflix?retryWrites=true&w=majority"";
     MongoClient client = new MongoClient(settings);
     var database = client.GetDatabase(""sample_mflix"");
-    metaTable.NoSQLTable = DataTableLoader.FromMongoDB(database.GetCollection<BsonDocument>(""movies"").AsQueryable().ToList());
-
+    metaTable.NoSQLTable = DataTableLoader.FromMongoDB(database.GetCollection<BsonDocument>(metaTable.GetValue(""mongo_collection"")).Aggregate<BsonDocument>(metaTable.MongoStages).ToList());
 }";
 
     table.LoadScript = @"";

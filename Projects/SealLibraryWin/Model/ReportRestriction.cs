@@ -1512,6 +1512,52 @@ namespace Seal.Model
             return result;
         }
 
+        string GetMongoValue(string value, DateTime date, Operator op)
+        {
+            string result = "";
+            if (IsNumeric)
+            {
+                if (string.IsNullOrEmpty(value)) result = "0";
+                else
+                {
+                    var vals = GetVals(value);
+                    if (vals.Length > 0)
+                    {
+                        double d;
+                        if (!Helper.ValidateNumeric(vals[0], out d))
+                        {
+                            throw new Exception("Invalid numeric value: " + vals[0]);
+                        }
+                        result = d.ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    }
+                }
+            }
+            else if (IsDateTime)
+            {
+                if (date == DateTime.MinValue) date = DateTime.Now;
+                result = string.Format("new DateTime({0},{1},{2},{3},{4},{5})", date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+            }
+            else
+            {
+                string value2 = value;
+                if (string.IsNullOrEmpty(value)) value2 = "";
+                if (Operator == Operator.Contains || Operator == Operator.StartsWith || Operator == Operator.EndsWith)
+                {
+                    result = "new BsonRegularExpression(@\"/";
+                    if (Operator == Operator.StartsWith) result += "^";
+                    result += value2.Replace("/","\\/").Replace("\"","\"\"");
+                    if (Operator == Operator.EndsWith) result += "$";
+                    result += "/" + (CaseSensitive ? "" : "i") + "\")";
+                }
+                else
+                {
+                    if (ColumnName == "_id") result = $"ObjectId.Parse(@{Helper.QuoteDouble(value2)})";
+                    else result = "@" + Helper.QuoteDouble(value2);
+                }
+            }
+            return result;
+        }
+
         /// <summary>
         /// Array of string from a value having CR/LF
         /// </summary>
@@ -1797,6 +1843,73 @@ namespace Seal.Model
                     _LINQText += GetLINQValue(Value1, FinalDate1, _operator);
                 }
             }
+
+            BuildMongoText();
+        }
+
+        void BuildMongoText()
+        {
+            _MongoText = "";
+
+            string MongoOperator = "";
+            if (_operator == Operator.IsNull || _operator == Operator.IsNotNull)
+            {
+                //Not or Not Null
+                _MongoText += $"new BsonDocument({Helper.QuoteDouble(ColumnName)}, new BsonDocument(\"${(_operator == Operator.IsNull ? "eq" : "ne")}\", BsonNull.Value)),\r\n";
+            }
+            else if (_operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty)
+            {
+                _MongoText += $"new BsonDocument({Helper.QuoteDouble(ColumnName)}, new BsonDocument(\"${(_operator == Operator.IsEmpty ? "eq" : "ne")}\", \"\")),\r\n";
+            }
+            else
+            {
+                //Other cases
+                if (_operator == Operator.Contains || _operator == Operator.StartsWith || _operator == Operator.EndsWith) MongoOperator = "$in";
+                else if (_operator == Operator.NotContains) MongoOperator = "$nin";
+                else if (_operator == Operator.Equal) MongoOperator = "$in";
+                else if (_operator == Operator.NotEqual) MongoOperator = "$nin";
+                else if (_operator == Operator.Smaller) MongoOperator = "$lt";
+                else if (_operator == Operator.SmallerEqual) MongoOperator = "$lte";
+                else if (_operator == Operator.Greater) MongoOperator = "$gt";
+                else if (_operator == Operator.GreaterEqual) MongoOperator = "$gte";
+
+                if (_operator == Operator.Between || _operator == Operator.NotBetween)
+                {
+                    _MongoText += $"new BsonDocument(\"${(_operator == Operator.NotBetween ? "or" : "and")}\", new BsonArray {{";
+                    _MongoText += $"new BsonDocument({Helper.QuoteDouble(ColumnName)}, new BsonDocument(\"${(_operator == Operator.NotBetween ? "lt" : "gte")}\", ";
+                    _MongoText += GetMongoValue(Value1, FinalDate1, _operator);
+                    _MongoText += ")),";
+                    _MongoText += $"new BsonDocument({Helper.QuoteDouble(ColumnName)}, new BsonDocument(\"${(_operator == Operator.NotBetween ? "gt" : "lte")}\", ";
+                    _MongoText += GetMongoValue(Value2, FinalDate2, _operator);
+                    _MongoText += "))}),\r\n";
+                }
+                else if (_operator == Operator.Equal || _operator == Operator.NotEqual || IsContainOperator || _operator == Operator.StartsWith || _operator == Operator.EndsWith)
+                {
+                    _MongoText += string.Format("new BsonDocument({0}, new BsonDocument(\"{1}\", new BsonArray {{", Helper.QuoteDouble(ColumnName), MongoOperator);
+                    if (IsEnum)
+                    {
+                        foreach (var ev in EnumValues)
+                        {
+                            _MongoText += string.Format("{0},", GetMongoValue(ev, FinalDate1, Operator));
+                        }
+                    }
+                    else
+                    {
+                        if (HasValue1) _MongoText += string.Format("{0},", GetMongoValue(Value1, FinalDate1, Operator));
+                        if (HasValue2) _MongoText += string.Format("{0},", GetMongoValue(Value2, FinalDate2, Operator));
+                        if (HasValue3) _MongoText += string.Format("{0},", GetMongoValue(Value3, FinalDate3, Operator));
+                        if (HasValue4) _MongoText += string.Format("{0},", GetMongoValue(Value4, FinalDate4, Operator));
+                    }
+                    _MongoText += "})),\r\n";
+                    return;
+                }
+                else
+                {
+                    _MongoText += string.Format("new BsonDocument({0}, new BsonDocument(\"{1}\", ", Helper.QuoteDouble(ColumnName), MongoOperator);
+                    _MongoText += GetMongoValue(Value1, FinalDate1, _operator);
+                    _MongoText += ")),\r\n";
+                }
+            }
         }
 
         [XmlIgnore]
@@ -1871,6 +1984,20 @@ namespace Seal.Model
             {
                 BuildTexts();
                 return _LINQText;
+            }
+        }
+
+        string _MongoText;
+        /// <summary>
+        /// LINQ of the restriction 
+        /// </summary>
+        [XmlIgnore]
+        public string MongoText
+        {
+            get
+            {
+                BuildTexts();
+                return _MongoText;
             }
         }
 

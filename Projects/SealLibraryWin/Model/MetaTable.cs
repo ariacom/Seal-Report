@@ -13,6 +13,7 @@ using RazorEngine.Templating;
 using System.Globalization;
 using System.Data.Common;
 using System.Text.RegularExpressions;
+using MongoDB.Bson;
 #if WINDOWS
 using System.Drawing.Design;
 using Seal.Forms;
@@ -26,6 +27,9 @@ namespace Seal.Model
     /// </summary>
     public class MetaTable : RootComponent, ReportExecutionLog
     {
+        public const string ParameterNameMongoSync = "mongo_sync";
+
+
 #if WINDOWS
         #region Editor
 
@@ -45,7 +49,9 @@ namespace Seal.Model
                 GetProperty("Sql").SetIsBrowsable(IsSQL);
                 GetProperty("TemplateName").SetIsBrowsable(!IsSQL);
                 GetProperty("ParameterValues").SetIsBrowsable(!IsSQL && Parameters.Count > 0);
+                GetProperty("DefinitionInitScript").SetIsBrowsable(!IsSQL);
                 GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL);
+                GetProperty("LoadInitScript").SetIsBrowsable(!IsSQL);
                 GetProperty("LoadScript").SetIsBrowsable(!IsSQL);
                 GetProperty("CacheDuration").SetIsBrowsable(!IsSQL);
                 GetProperty("PostSQL").SetIsBrowsable(IsSQL);
@@ -56,6 +62,8 @@ namespace Seal.Model
                 GetProperty("HelperCheckTable").SetIsBrowsable(true);
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
+
+                if (IsSubTable) GetProperty("LoadScript").SetDisplayName("Load Script");
 
                 //Readonly
                 GetProperty("TemplateName").SetIsReadOnly(true);
@@ -126,6 +134,13 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public ReportModel NoSQLModel = null;
+
+        /// <summary>
+        /// Pipeline stages for Mongo queries
+        /// </summary>
+        [XmlIgnore]
+        public List<BsonDocument> MongoStages = new List<BsonDocument>();
+
 
         /// <summary>
         /// The Razor Script used to built the DataTable object that defines the table
@@ -225,6 +240,24 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Default definition init script coming either from the template or from the root table (for a subtable)
+        /// </summary>
+        [XmlIgnore]
+        public string DefaultDefinitionInitScript
+        {
+            get
+            {
+                string result = null;
+                if (IsSubTable && RootTable != null)
+                {
+                    result = string.IsNullOrEmpty(RootTable.DefinitionScript) ? RootTable.DefaultDefinitionInitScript : RootTable.DefinitionInitScript;
+                }
+                else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultDefinitionInitScript;
+                return result ?? "";
+            }
+        }
+
+        /// <summary>
         /// Default definition script coming either from the template or from the root table (for a subtable)
         /// </summary>
         [XmlIgnore]
@@ -278,6 +311,7 @@ namespace Seal.Model
 
             if (DefinitionScript != null && DefinitionScript.Trim().Replace("\r\n", "\n") == DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
             if (LoadScript != null && LoadScript.Trim().Replace("\r\n", "\n") == DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
+            if (IsMongoDb && GetBoolValue(ParameterNameMongoSync, true)) LoadInitScript = null;
         }
 
         /// <summary>
@@ -316,19 +350,37 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Optional Razor Script executed before the execution of the DefinitionScript
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Definition Init Script"), Description("Optional Razor Script executed before the execution of the DefinitionScript."), Id(1, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string DefinitionInitScript { get; set; }
+
+        /// <summary>
         /// The Razor Script used to built the DataTable object that defines the table
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(1, 1)]
+        [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(2, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string DefinitionScript { get; set; }
 
         /// <summary>
+        /// Optional Razor Script executed before the execution of the LoadScript. In particular, this script is used for Mongo DB table to add stages executed on the server. It can be overwritten if the 'Synchronize Restrictions' parameter of the table is set to false. 
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Load Init Script"), Description("Optional Razor Script executed before the execution of the LoadScript. In particular, this script is used for Mongo DB table to add stages executed on the server. It can be overwritten if the 'Synchronize Restrictions' parameter of the table is set to false."), Id(4, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string LoadInitScript { get; set; }
+
+        /// <summary>
         /// The Default Razor Script used to load the data in the table. This can be overwritten in the model.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model. If the definition script includes also the load of the data, this script can be left empty/blank."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model. If the definition script includes also the load of the data, this script can be left empty/blank."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string LoadScript { get; set; }
@@ -577,6 +629,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the table is for a Mongo DB
+        /// </summary>
+        public bool IsMongoDb
+        {
+            get { return TemplateName == MetaTableTemplate.MongoDBName; }
+        }
+
+        /// <summary>
         /// Report Model when the MetaTable comes from a SQL Model or when is a SubTable of a LINQ query
         /// </summary>
         [XmlIgnore]
@@ -700,31 +760,9 @@ namespace Seal.Model
 
                 if (!string.IsNullOrEmpty(definitionScript))
                 {
-                    //For Mongo, set restrictions on the server (after AsQueryable())
-                    if (TableTemplate.Name == MetaTableTemplate.MongoDBName)
-                    {
-                        if (!withLoad) definitionScript = definitionScript.Replace(".AsQueryable()", ".AsQueryable().Take(50)");
-                        else
-                        {
-                            //check restrictions
-                            var restrictions = "";
-                            foreach (var restriction in NoSQLModel.Restrictions.Where(i => i.MetaColumn.MetaTable.AliasName == this.AliasName))
-                            {
-                                if (restrictions == "") restrictions += " AND ";
-                                restrictions += restriction.LINQText;
-
-
-                            }
-                            restrictions = @"
-.Find(Builders<BsonDocument>.Filter.Or(
-Builders<BsonDocument>.Filter.Regex(""title"", new BsonRegularExpression("".* Blacksmith.*"")),
-Builders<BsonDocument>.Filter.Regex(""plot"", new BsonRegularExpression("".*camera.*""))
-))
-                            ";
-                            definitionScript = definitionScript.Replace(".AsQueryable()", restrictions);
-                        }
-                    }
-
+                    MongoStages.Clear();
+                    if (!withLoad && !string.IsNullOrEmpty(DefinitionInitScript)) RazorHelper.CompileExecute(DefinitionInitScript, this);
+                    if (withLoad && !string.IsNullOrEmpty(LoadInitScript)) RazorHelper.CompileExecute(LoadInitScript, this);
 
                     RazorHelper.CompileExecute(definitionScript, this);
                     if (withLoad)

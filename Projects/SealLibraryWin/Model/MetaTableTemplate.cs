@@ -108,6 +108,16 @@ namespace Seal.Model
             }
         }
 
+        public string DefaultDefinitionInitScript
+        {
+            get
+            {
+                InitDefaultScripts();
+                if (_table.DefinitionInitScript == null) _table.DefinitionInitScript = "";
+                return _table.DefinitionInitScript;
+            }
+        }
+
         public string DefaultDefinitionScript
         {
             get
