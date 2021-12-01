@@ -4,13 +4,26 @@
 
     //Parameters for this table
     table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoSync, BoolValue = true, DisplayName = "Synchronize Restrictions", Description = "If true, the restrictions defined in the model are applied as a stage in the 'Load Init Script' of the table. If false, the 'Load Init Script' can be manually overwritten." });
-    table.Parameters.Add(new Parameter() { Name = "mongo_collection", Value = "", DisplayName = "Mongo Collection Name", Description = "The collection name to load." });
+    table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoRestrictionOperator, Value = "$and", DisplayName = "Restriction operator applied", Description = "Define the operator applied if several restrictions are defined for the table.", Enums = new string[] { "$and","$or"}, UseOnlyEnumValues = false });
+    table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoDatabase, Value = "", DisplayName = "Database Name", Description = "The Database name of the Mongo Server." });
+    table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoCollection, Value = "", DisplayName = "Mongo Collection Name", Description = "The collection name to load." });
+    table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoArrayName, Value = "", DisplayName = "Array name in the collection", Description = "If set, the table is built with the values of the array specified." });
+    table.Parameters.Add(new Parameter() { Name = "mongo_field_names_add", TextValue = "", DisplayName = "Parent field names to add", Description = "If an array name is specified, defines the field of the parent object to keep as a column in the table. One field name per line." });
+    table.Parameters.Add(new Parameter() { Name = "mongo_field_names_ignore", TextValue = "", DisplayName = "Field names to ignore", Description = "Defines the fields to ignore in the table. One field name per line." });
 
     table.DefinitionInitScript = @"@using MongoDB.Bson
 @{
     MetaTable metaTable = Model;
-    //Add a stage to limit the number of records for the table definition 
-    metaTable.MongoStages.Add(new BsonDocument(""$limit"" , 100));
+    if (!metaTable.WithDataLoad) {
+        //Add a stage to limit the number of records for the table definition 
+        metaTable.MongoStages.Add(new BsonDocument(""$limit"" , 100));
+    }
+
+    var arrayName = metaTable.GetValue(MetaTable.ParameterNameMongoArrayName);
+    if (!string.IsNullOrEmpty(arrayName)) {
+        //Unwind stage for array
+        metaTable.MongoStages.Add(new BsonDocument(""$unwind"" , Helper.QuoteDouble(arrayName)));
+    }
 };
 ";
 
@@ -19,10 +32,20 @@
 @using MongoDB.Bson
 @{
     MetaTable metaTable = Model;
-    var settings = ""mongodb+srv://demosr@cluster0.1b0hc.mongodb.net/sample_mflix?retryWrites=true&w=majority"";
-    MongoClient client = new MongoClient(settings);
-    var database = client.GetDatabase(""sample_mflix"");
-    metaTable.NoSQLTable = DataTableLoader.FromMongoDB(database.GetCollection<BsonDocument>(metaTable.GetValue(""mongo_collection"")).Aggregate<BsonDocument>(metaTable.MongoStages).ToList());
+    MongoClient client = new MongoClient(metaTable.Source.Connection.FullConnectionString);
+    var dbName = metaTable.GetValue(MetaTable.ParameterNameMongoDatabase);
+    var collectionName = metaTable.GetValue(MetaTable.ParameterNameMongoCollection);
+    if (!client.ListDatabaseNames().ToList().Contains(dbName)) {
+        throw new Exception(""Database name not found on the server"");
+    }
+    var database = client.GetDatabase(dbName);
+    if (!database.ListCollectionNames().ToList().Contains(collectionName)) {
+        throw new Exception(""Collection name not found in the database"");
+    }
+    var collection = database.GetCollection<BsonDocument>(collectionName);
+    var fieldsToAdd = metaTable.GetValue(""mongo_field_names_add"").Replace(""\r\n"",""\n"").Split('\n');
+    var fieldsToIgnore = metaTable.GetValue(""mongo_field_names_ignore"").Replace(""\r\n"",""\n"").Split('\n');
+    metaTable.NoSQLTable = DataTableLoader.FromMongoDB(collection.Aggregate<BsonDocument>(metaTable.MongoStages).ToList(), """", fieldsToAdd, fieldsToIgnore);
 }";
 
     table.LoadScript = @"";

@@ -54,12 +54,13 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
-    SWIGateway.prototype.SetUserProfile = function (culture, onstartup, startupreport, startupreportname, callback, errorcb) {
+    SWIGateway.prototype.SetUserProfile = function (culture, onstartup, startupreport, startupreportname, executionmode, callback, errorcb) {
         $.post(_server + "SWISetUserProfile", {
             culture: culture,
             onstartup: onstartup,
             startupreport: startupreport,
-            startupreportname: startupreportname
+            startupreportname: startupreportname,
+            executionmode: executionmode
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });

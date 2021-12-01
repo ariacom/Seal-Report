@@ -194,7 +194,7 @@ Web;Enter the file name without extension;;Nom du fichier sans l'extension
 Web;Enter user name;;Entrer le nom d'utilisateur
 Web;Enter your new file name;;Entrer un nouveau nom de fichier
 Web;Error;;Erreur
-Web;Error: only files (and not reports) can be copied to this folder.;;Erreur: Seulement les fichiers (et non les rapports) peuvent être copiés dans ce répetoire.
+Web;Error: only files (and not reports) can be copied to this folder.;;Erreur: Seulement les fichiers (et non les rapports) peuvent être copiés dans ce répertoire.
 Web;Error: This report name exists already.;;Erreur: Ce nom de rapport existe déjà
 Web;Execute;;Exécuter
 Web;Execute now;;Exécuter maintenant
@@ -247,7 +247,6 @@ Web;Profile;;Profil
 Web;Profile information;;Profil utilisateur
 Web;Prompt;;Demander
 Web;Prompt at run-time;;Demander à l'exécution
-Web;Recent Reports;;Derniers rapports
 Web;Recur every;;Récurrent tous les
 Web;Refresh;;Rafraîchir
 Web;Reload and execute;;Recharger et exécuter
@@ -260,6 +259,7 @@ Web;Repeat every;;Répéter tous les
 Web;Repeat interval is invalid;;L'intervalle de répétition n'est pas valide 
 Web;Repeat duration is invalid;;La durée de répétition n'est pas valide 
 Web;Report;;Rapport
+Web;Report execution mode;;Mode d'exécution des rapports
 Web;Report name;;Nom du rapport
 Web;Report title;;Titre du rapport
 Web;Report title if different from report name;;Titre du rapport si différent du nom
@@ -302,6 +302,7 @@ WebJS;3 Decimals;;3 Décimales
 WebJS;4 Decimals;;4 Décimales
 WebJS;Actions;;Actions
 WebJS;All selected;;Tout est sélectionné
+WebJS;Allow only execution in a new Window;;Autoriser seulement l'execution dans une nouvelle fenêtre
 WebJS;and;;et
 WebJS;Ascendant;;Ascendant
 WebJS;Automatic ascendant;;Automatique ascendant
@@ -333,6 +334,7 @@ WebJS;Default;;Défaut
 WebJS;Custom;;Spécifique
 WebJS;Chart: Bar stacked;;Graphe: Barres empilées
 WebJS;Default culture;;Culture par défaut
+WebJS;Default mode;;Mode par défaut
 WebJS;Default report connection;;Connexion du rapport
 WebJS;Default repository connection;;Connexion du repository
 WebJS;Default startup;;Démarrage par défaut
@@ -352,6 +354,8 @@ WebJS;Email;;Courriel
 WebJS;Ends with;;Se termine par
 WebJS;Equals;;Egale
 WebJS;Error;;Erreur
+WebJS;Execute report in a new Window;;Exécuter le rapport dans une nouvelle fenêtre
+WebJS;Execute report in the current Window;;Exécuter le rapport dans la fenêtre en cours
 WebJS;Execute the last report;;Exécuter le dernier rapport
 WebJS;Execute the report;;Exécuter le rapport
 WebJS;Excel;;Excel

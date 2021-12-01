@@ -35,7 +35,7 @@ namespace Seal.Model
                 GetProperty("LeftTableGUID").SetIsBrowsable(true);
                 GetProperty("RightTableGUID").SetIsBrowsable(true);
                 GetProperty("Clause").SetIsBrowsable(true);
-                GetProperty("IsBiDirectional").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("IsBiDirectional").SetIsBrowsable(true);
                 GetProperty("JoinType").SetIsBrowsable(!Source.IsNoSQL);
 
                 GetProperty("HelperCheckJoin").SetIsBrowsable(true);
@@ -197,11 +197,11 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Indicates if the join can also be used in the other direction (left-right or right-left)
+        /// Indicates if the join can also be used in the other direction (left-right or right-left). For LINQ tables, the join clause must have the pattern with 'equals' (e.g. 'Helper.ToString(leftTable["col1"]) equals Helper.ToString(rightTable["col2"])').
         /// </summary>
 #if WINDOWS
        [DefaultValue(true)]
-        [Category("Definition"), DisplayName("Is bi-directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left)."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Is bi-directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left). For LINQ tables, the join clause must have the pattern with 'equals' (e.g. 'Helper.ToString(leftTable[\"col1\"]) equals Helper.ToString(rightTable[\"col2\"])')."), Id(3, 1)]
 #endif
         public bool IsBiDirectional { get; set; } = true;
 

@@ -49,7 +49,7 @@ namespace Seal.Model
         /// The name of the security tag (must match with the tags defined in the columns)
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Security Tag"), Description("The name of the security tag (must match with the tags defined in the columns)."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Security tag"), Description("The name of the security tag (must match with the tags defined in the columns)."), Id(2, 1)]
 #endif
         public string Tag { get; set; }
 

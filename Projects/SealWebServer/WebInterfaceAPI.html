@@ -444,7 +444,8 @@ $.post("https://sealreport.org/demo/SWISetUserProfile", {
             culture: "it-IT", // the new user's culture name or code
             onStartup: 3, //action taken after the login (0=Default, 1=Do not execute report, 2=Execute the last report, 3=Execute a specific report)
             startupReport: "/Overview - Sales.srex", // if onStartup=3, the report to execute
-            startupReportName: "Overview - Sales" // if onStartup=3, the report name to execute
+            startupReportName: "Overview - Sales", // if onStartup=3, the report name to execute
+            executionMode: 0 //(0=Default, 1=Execute by default in a new Window, 2=Execute in the same Window, 3=Execute always in a new Window)
 })
 .done(function (data) {
         if (!data.error) { /* Do your job here */ }

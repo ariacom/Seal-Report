@@ -15,6 +15,7 @@ using Seal.Helpers;
 using System.Collections;
 using System.Data.Common;
 using System.Data.Odbc;
+using MongoDB.Driver;
 
 namespace Seal.Forms
 {
@@ -576,6 +577,9 @@ namespace Seal.Forms
                         ts.Text = "Add a " + template.Name + " Table";
                         treeContextMenuStrip.Items.Add(ts);
                     }
+                    treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                    addFromToolStripMenuItem.Text = string.Format("Add {0}s from Mongo DB Catalog...", entityName);
+                    treeContextMenuStrip.Items.Add(addFromToolStripMenuItem);
                 }
                 else
                 {
@@ -709,7 +713,7 @@ namespace Seal.Forms
                         join.LeftTableGUID = table1.GUID;
                         join.RightTableGUID = table2.GUID;
                         join.Source = source;
-                        join.IsBiDirectional = source.IsSQL;
+                        join.IsBiDirectional = true;
                         joins.Add(join);
                     }
 
@@ -771,25 +775,46 @@ namespace Seal.Forms
                 Cursor.Current = Cursors.WaitCursor;
                 if (entity is TableFolder)
                 {
-                    DbConnection connection = source.GetOpenConnection();
-                    DataTable schemaTables = connection.GetSchema("Tables");
                     List<MetaTable> tables = new List<MetaTable>();
-                    addSchemaTables(schemaTables, tables, source);
-                    if (connection is OdbcConnection)
+                    if (source.IsNoSQL)
                     {
-                        //Add views for odbc connections..
-                        addSchemaTables(connection.GetSchema("Views"), tables, source);
+                        if (source.Connection.ConnectionType != ConnectionType.MongoDB || string.IsNullOrEmpty(source.Connection.MongoDBConnectionString))
+                        {
+                            throw new Exception("Please configure a Mongo DB Connection first");
+                        }
+                        MongoClient client = new MongoClient(source.Connection.FullConnectionString);
+                        foreach (var dbName in client.ListDatabaseNames().ToList<string>().OrderBy(i => i))
+                        {
+                            var database = client.GetDatabase(dbName);
+                            foreach (var collectionName in database.ListCollectionNames().ToList().OrderBy(i => i))
+                            {
+                                MetaTable table = MetaTable.Create();
+                                table.Name = $"{dbName}.{collectionName}";
+                                table.Source = source;
+                                tables.Add(table);
+                            }
+                        }
                     }
+                    else {
+                        DbConnection connection = source.GetOpenConnection();
+                        DataTable schemaTables = connection.GetSchema("Tables");
+                        addSchemaTables(schemaTables, tables, source);
+                        if (connection is OdbcConnection)
+                        {
+                            //Add views for odbc connections..
+                            addSchemaTables(connection.GetSchema("Views"), tables, source);
+                        }
+                        options.Add(autoCreateJoins);
+                    }
+                    options.Add(autoCreateColumns);
 
                     selectSource = tables.OrderBy(i => i.AliasName).ToList();
                     name = "DisplayName";
 
-                    options.Add(autoCreateColumns);
-                    options.Add(autoCreateJoins);
 
                     if (tables.Count > 0)
                     {
-                        if (tables[0].Name.Contains(".")) 
+                        if (source.IsSQL && tables[0].Name.Contains(".")) 
                         {
                             options.Add(useTableCatalogName);
                             options.Add(useTableSchemaName);
@@ -862,7 +887,7 @@ namespace Seal.Forms
                             if (entity is TableFolder && item is MetaTable)
                             {
                                 MetaTable table = (MetaTable)item;
-                                if (table.Name.Contains("."))
+                                if (source.IsSQL && table.Name.Contains("."))
                                 {
                                     string[] names = table.Name.Split('.');
                                     table.Name = names.Last();
@@ -873,6 +898,19 @@ namespace Seal.Forms
                                         if (useTableSchemaName.Checked) finalName += names[1] + ".";
                                         table.Name = finalName + names[2];
                                     }
+                                }
+                                else if (source.IsNoSQL)
+                                {
+                                    //Mongo DB Table
+                                    string[] names = table.Name.Split('.');
+                                    table.Name = names.Last();
+                                    table.TemplateName = "Mongo DB";
+                                    table.DynamicColumns = true;
+                                    _ = table.TableTemplate;
+                                    var param = table.Parameters.FirstOrDefault(i => i.Name == MetaTable.ParameterNameMongoDatabase);
+                                    if (param != null) param.Value = names.First();
+                                    param = table.Parameters.FirstOrDefault(i => i.Name == MetaTable.ParameterNameMongoCollection);
+                                    if (param != null) param.Value = names.Last();
                                 }
 
                                 if (source.MetaData.Tables.Exists(i => i.AliasName == table.AliasName))
@@ -885,12 +923,18 @@ namespace Seal.Forms
                                     table.KeepColumnNames = true;
                                 }
 
-                                if (autoCreateColumns.Checked && source.IsSQL)
+                                if (autoCreateColumns.Checked)
                                 {
-                                    DbConnection connection = source.GetOpenConnection();
-                                    source.AddColumnsFromCatalog(table.Columns, connection, table);
+                                    if (source.IsSQL)
+                                    {
+                                        DbConnection connection = source.GetOpenConnection();
+                                        source.AddColumnsFromCatalog(table.Columns, connection, table);
+                                    }
+                                    else
+                                    {
+                                        table.Refresh();
+                                    }
                                 }
-
 
                                 source.MetaData.Tables.Add(table);
                             }

@@ -786,6 +786,18 @@ namespace Seal.Helpers
             return result;
         }
 
+        static public string GetMongoConnectionString(string input, string userName, string password)
+        {
+            string result = input;
+            try
+            {
+                if (result != null && result.Contains("%USER%")) result = string.Format(result.Replace("%USER%", "{0}"), userName);
+                if (result != null && result.Contains("%PASSWORD%")) result = string.Format(result.Replace("%PASSWORD%", "{0}"), password);
+            }
+            catch { }
+            return result;
+        }
+
         public static int CalculateHash(string str)
         {
             return string.IsNullOrEmpty(str) ? 0 : str.GetHashCode();
@@ -997,7 +1009,7 @@ namespace Seal.Helpers
         static public DateTime? ToDateTime(object obj)
         {
             if (obj != null && obj == DBNull.Value) obj = null;
-            return obj == null ? (DateTime?) null : Convert.ToDateTime(obj);
+            return obj == null ? (DateTime?) null : Convert.ToDateTime(obj, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -1006,7 +1018,7 @@ namespace Seal.Helpers
         static public double? ToDouble(object obj)
         {
             if (obj != null && obj == DBNull.Value) obj = null;
-            return obj == null ? (double?)null : Convert.ToDouble(obj);
+            return obj == null ? (double?)null : Convert.ToDouble(obj, CultureInfo.InvariantCulture);
         }
     }
 }

@@ -28,7 +28,10 @@ namespace Seal.Model
     public class MetaTable : RootComponent, ReportExecutionLog
     {
         public const string ParameterNameMongoSync = "mongo_sync";
-
+        public const string ParameterNameMongoDatabase = "mongo_database";
+        public const string ParameterNameMongoCollection = "mongo_collection";
+        public const string ParameterNameMongoArrayName = "mongo_array_name";
+        public const string ParameterNameMongoRestrictionOperator = "mongo_restriction_operator";
 
 #if WINDOWS
         #region Editor
@@ -637,6 +640,16 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the table has the same mongo DB connection, database and collection
+        /// </summary>
+        public bool HasSameMongoCollection(MetaTable table)
+        {
+            return GetValue(ParameterNameMongoDatabase) == table.GetValue(ParameterNameMongoDatabase)
+                && GetValue(ParameterNameMongoCollection) == table.GetValue(ParameterNameMongoCollection)
+                && LINQSourceGUID == LINQSourceGUID;
+        }
+
+        /// <summary>
         /// Report Model when the MetaTable comes from a SQL Model or when is a SubTable of a LINQ query
         /// </summary>
         [XmlIgnore]
@@ -755,13 +768,15 @@ namespace Seal.Model
         {
             lock (this)
             {
+                WithDataLoad = withLoad;
+
                 var definitionScript = DefinitionScript;
                 if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;               
 
                 if (!string.IsNullOrEmpty(definitionScript))
                 {
                     MongoStages.Clear();
-                    if (!withLoad && !string.IsNullOrEmpty(DefinitionInitScript)) RazorHelper.CompileExecute(DefinitionInitScript, this);
+                    if (!string.IsNullOrEmpty(DefinitionInitScript)) RazorHelper.CompileExecute(DefinitionInitScript, this);
                     if (withLoad && !string.IsNullOrEmpty(LoadInitScript)) RazorHelper.CompileExecute(LoadInitScript, this);
 
                     RazorHelper.CompileExecute(definitionScript, this);
@@ -969,7 +984,7 @@ namespace Seal.Model
                 }
                 else
                 {
-                    BuildNoSQLTable(true);
+                    BuildNoSQLTable(!IsMongoDb);
                 }
 
                 if (string.IsNullOrEmpty(Error)) Information = "Table checked successfully";
@@ -1005,6 +1020,7 @@ namespace Seal.Model
             string result = "";
             try
             {
+                int cnt = 1000;
                 if (IsSQL)
                 {
                     string sql = string.Format("SELECT {0} FROM {1}", column.Name, FullSQLName);
@@ -1013,7 +1029,6 @@ namespace Seal.Model
                     DbCommand command = connection.CreateCommand();
                     command.CommandText = sql;
                     var reader = command.ExecuteReader();
-                    int cnt = 1000;
                     while (reader.Read() && --cnt >= 0)
                     {
                         string valueStr = "";
@@ -1033,9 +1048,10 @@ namespace Seal.Model
                 else
                 {
                     result = string.Format("{0}:\r\n", column.DisplayName);
-                    DataTable table = BuildNoSQLTable(true);
+                    DataTable table = BuildNoSQLTable(!IsMongoDb);
                     foreach (DataRow row in table.Rows)
                     {
+                        if (--cnt == 0) break;
                         result += string.Format("{0}\r\n", row[column.Name]);
                     }
                 }
@@ -1059,6 +1075,12 @@ namespace Seal.Model
         [XmlIgnore]
         public DataTable NoSQLCacheTable = null;
 
+
+        /// <summary>
+        /// Set to true if the Load of the table must also include data 
+        /// </summary>
+        [XmlIgnore]
+        public bool WithDataLoad = false;
 
         #region Helpers
 

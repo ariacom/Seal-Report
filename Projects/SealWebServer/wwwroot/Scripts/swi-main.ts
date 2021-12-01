@@ -42,7 +42,9 @@ class SWIMain {
     private _reportPath: string;
     public _lastReport: any = new Object();
     public _currentView: string = "folders";
-    
+    public _newWindow: boolean = true;
+    public _reportIcon: string;
+
     public Process() {
         $waitDialog = $("#wait-dialog");
         $editDialog = $("#edit-dialog");
@@ -106,6 +108,13 @@ class SWIMain {
         _main._clipboard = null;
         _main._clipboardCut = false;
         _main.clearFilesTable();
+        _main._newWindow = (_main._profile.executionmode === 1 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 1));
+        _main._reportIcon = (_main._newWindow ? "log-in" : "new-window");
+        //disable current window
+        if (_main._profile.executionmode === 3 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 3)) {
+            _main._newWindow = true;
+            _main._reportIcon = null;
+        }
 
         $("#search-pattern").val("");
 
@@ -220,8 +229,9 @@ class SWIMain {
                         startupreport = _main._lastReport.path;
                         startupreportname = _main._lastReport.name;
                     }
+                    var executionmode = $("#executionmode-select").val();
 
-                    _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, function () {
+                    _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, executionmode, function () {
                         location.reload();
                     });
                 }
@@ -237,6 +247,14 @@ class SWIMain {
             $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute the last report"), _main._profile.onstartup));
             if (_main._profile.startupreportname) $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Execute the report") + " '" + _main._profile.startupreportname + "'", _main._profile.onstartup));
             if (_main._lastReport.name && _main._lastReport.name != _main._profile.startupreportname) $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.name + "'", _main._profile.onstartup));
+            $select.selectpicker('refresh');
+
+            $select = $("#executionmode-select");
+            $select.empty();
+            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default mode"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute report in a new Window"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute report in the current Window"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Allow only execution in a new Window"), _main._profile.executionmode));
             $select.selectpicker('refresh');
 
             $select = $("#culture-select");
@@ -257,6 +275,7 @@ class SWIMain {
                 $("#profile-dialog").modal();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             }
+
         });
 
         //Disconnect
@@ -404,7 +423,7 @@ class SWIMain {
 
     private addReportMenu(parent, value) {
         let aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
-        aref.append($("<span class='external-navigation glyphicon glyphicon-new-window'></span>"));
+        if (_main._reportIcon !== null) aref.append($("<span class='external-navigation glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
         parent.append($("<li class='menu-reports'>").append(aref));
     }
 
@@ -431,24 +450,22 @@ class SWIMain {
             if (menu.reports.length != 0 || menu.recentreports.length != 0) $("#menu-main-button").removeClass("disabled");
             else $("#menu-main-button").addClass("disabled");
 
-            //Recent reports
-            let parent = $("#menu-last-reports");
-            parent.children(".menu-reports").remove();
-            menu.recentreports.forEach(function (value) {
-                _main.addReportMenu(parent, value);
-            });
-            SWIUtil.ShowHideControl($(".menu-last-reports"), menu.recentreports.length > 0);
-
             //Reports
-            parent = $("#menu-main");
+            var parent = $("#menu-main");
             parent.children(".menu-reports").remove();
-            if (menu.recentreports.length > 0 && menu.reports.length > 0) parent.append($("<li class='divider menu-reports')>"));
             SWIUtil.ShowHideControl($(".divider-menu-reports"), menu.reports.length > 0);
             _main.initMenu(parent, menu.reports);
             if (menu.reports.length > 0 || menu.recentreports.length > 0) parent.append($("<li id='menu-divider-folders-report' class='divider menu-reports')>"));
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
-            
+            //Recent reports
+            if (menu.recentreports.length > 0) {
+                parent.append($("<li class='divider menu-reports')>"));
+                menu.recentreports.forEach(function (value) {
+                    _main.addReportMenu(parent, value);
+                });
+            }
+
             $('ul.dropdown-menu [data-toggle=dropdown]').unbind("click").on('click', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -462,18 +479,27 @@ class SWIMain {
             });
             $("#nav_button").unbind("mouseover").on("mouseover", function () {
                 if ($("#menu-main").parent().hasClass("open")) $("#menu-main").dropdown('toggle');
-            });           
+            });
 
             //Execute reports from menu
             $("a.menu-report").unbind("click").on("click", function () {
-                $waitDialog.modal();
-                _main.executeReportFromMenu($(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"), $(this).text());
+                if (!_main._newWindow) {
+                    $waitDialog.modal();
+                    _main.executeReportFromMenu($(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"), $(this).text());
+                }
+                else {
+                    _main.executeReport($(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"));
+                }
             });
             $("a.menu-report span").unbind("click").on("click", function () {
-                //new window
                 const parent = $(this).parent();
-                _main.executeReport(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
-                $("#menu-main").dropdown('toggle');
+                if (!_main._newWindow) {
+                    _main.executeReport(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
+                }
+                else {
+                    _main.executeReportFromMenu(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"), parent.text());
+                    $("#menu-main").dropdown('toggle');
+                }
                 return false;
             });
 
@@ -689,10 +715,12 @@ class SWIMain {
             var $td = $("<td>").css("text-align", "center").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
             $tr.append($td);
             if (file.isreport) {
-                var button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
-                button.append($("<span class='glyphicon glyphicon-new-window'></span>"));
-                $td.append(button);
-                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Views and outputs")).addClass("btn btn-default btn-table report-output");
+                if (_main._reportIcon !== null) {
+                    var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current Window" : "Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
+                    iconButton.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
+                    $td.append(iconButton);
+                }
+                var button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Views and outputs")).addClass("btn btn-default btn-table report-output");
                 button.append($("<span class='glyphicon glyphicon-th-list'></span>"));
                 $td.append(button);
                 if (file.right >= folderRightSchedule && hasEditor) {
@@ -720,16 +748,29 @@ class SWIMain {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             const path = $target.data("path");
+            const name = $target.data("name");
             if ($target.data("isReport")) {
-                $waitDialog.modal();
-                _main.executeReportFromMenu(path, null, null, $target.text());
+                if (_main._newWindow) {
+                    _main.executeReport(path, null, null);
+                }
+                else {
+                    $waitDialog.modal();
+                    _main.executeReportFromMenu(path, null, null, name);
+                }
             }
             else _gateway.ViewFile(path);
         });
 
         $(".report-execute").unbind("click").on("click", function (e) {
             $outputPanel.hide();
-            _main.executeReport($(e.currentTarget).parent().data("path"), null, null);
+            const path = $(e.currentTarget).parent().data("path");
+            const name = $(e.currentTarget).parent().data("name");
+            if (!_main._newWindow) {
+                _main.executeReport(path, null, null);
+            }
+            else {
+                _main.executeReportFromMenu(path, null, null, name);
+            }
         });
 
         $(".report-output").unbind("click").on("click", function (e) {
@@ -761,18 +802,22 @@ class SWIMain {
                         var $tr = $("<tr>");
                         $tableBody.append($tr);
                         $tr.append($("<td>").append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayname)));
-                        var button = $("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
-                        button.append($("<span class='glyphicon glyphicon-new-window'></span>"));
-                        $tr.append($("<td>").append(button));
+                        if (_main._reportIcon !== null) {
+                            var button = $("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
+                            button.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
+                            $tr.append($("<td>").append(button));
+                        }
                         $tr.append($("<td>").html(SWIUtil.tr("View")));
                     }
                     for (var i = 0; i < data.outputs.length; i++) {
                         var $tr = $("<tr>");
                         $tableBody.append($tr);
                         $tr.append($("<td>").append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayname)));
-                        var button = $("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
-                        button.append($("<span class='glyphicon glyphicon-new-window'></span>"));
-                        $tr.append($("<td>").append(button));
+                        if (_main._reportIcon !== null) {
+                            var button = $("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
+                            button.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
+                            $tr.append($("<td>").append(button));
+                        }
                         $tr.append($("<td>").html(SWIUtil.tr("Output")));
                     }
 
@@ -783,12 +828,23 @@ class SWIMain {
 
                     $(".output-execute").unbind("click").on("click", function (e) {
                         $outputPanel.hide();
-                        _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
+                        if (!_main._newWindow) {
+                            _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
+                        }
+                        else {
+                            $waitDialog.modal();
+                            _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name"));
+                        }
                     });
                     $(".output-name").unbind("click").on("click", function (e) {
                         $outputPanel.hide();
-                        $waitDialog.modal();
-                        _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name") + " - " + $(e.currentTarget).html());
+                        if (!_main._newWindow) {
+                            $waitDialog.modal();
+                            _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name"));
+                        }
+                        else {
+                            _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
+                        }
                     });
                 },
                 function (data) {

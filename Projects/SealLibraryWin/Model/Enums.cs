@@ -39,6 +39,8 @@ namespace Seal.Model
         Odbc,
         [Description("MS SQLServer")]
         MSSQLServer,
+        [Description("Mongo DB")]
+        MongoDB,
     }
 
     public enum ColumnType
@@ -581,4 +583,17 @@ namespace Seal.Model
         [Description("Execute a specific report")]
         ExecuteReport,
     }
+
+    public enum ExecutionMode
+    {
+        [Description("Default")]
+        Default,
+        [Description("Execute in a new Window")]
+        NewWindow,
+        [Description("Execute in the same Window")]
+        SameWindow,
+        [Description("Allow only execution in a new Window")]
+        AlwaysNewWindow,
+    }
+
 }

@@ -24,6 +24,8 @@ namespace Seal.Model
         public string startupreportname;
         public string report;
         public string reportname;
+        public ExecutionMode executionmode;
+        public ExecutionMode groupexecutionmode;
     }
 
     /// <summary>

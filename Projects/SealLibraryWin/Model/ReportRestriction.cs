@@ -1750,6 +1750,9 @@ namespace Seal.Model
 
         void BuildLINQText()
         {
+            _LINQText = "";
+            _MongoText = "";
+
             if (_operator == Operator.ValueOnly)
             {
                 if (IsEnum)
@@ -1764,7 +1767,6 @@ namespace Seal.Model
                 return;
             }
 
-            _LINQText = "";
 
             if (!HasValue)
             {
@@ -1850,16 +1852,17 @@ namespace Seal.Model
         void BuildMongoText()
         {
             _MongoText = "";
+            var colName = MetaColumn.Name;
 
             string MongoOperator = "";
             if (_operator == Operator.IsNull || _operator == Operator.IsNotNull)
             {
                 //Not or Not Null
-                _MongoText += $"new BsonDocument({Helper.QuoteDouble(ColumnName)}, new BsonDocument(\"${(_operator == Operator.IsNull ? "eq" : "ne")}\", BsonNull.Value)),\r\n";
+                _MongoText += $"new BsonDocument({Helper.QuoteDouble(colName)}, new BsonDocument(\"${(_operator == Operator.IsNull ? "eq" : "ne")}\", BsonNull.Value)),\r\n";
             }
             else if (_operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty)
             {
-                _MongoText += $"new BsonDocument({Helper.QuoteDouble(ColumnName)}, new BsonDocument(\"${(_operator == Operator.IsEmpty ? "eq" : "ne")}\", \"\")),\r\n";
+                _MongoText += $"new BsonDocument({Helper.QuoteDouble(colName)}, new BsonDocument(\"${(_operator == Operator.IsEmpty ? "eq" : "ne")}\", \"\")),\r\n";
             }
             else
             {
@@ -1876,16 +1879,16 @@ namespace Seal.Model
                 if (_operator == Operator.Between || _operator == Operator.NotBetween)
                 {
                     _MongoText += $"new BsonDocument(\"${(_operator == Operator.NotBetween ? "or" : "and")}\", new BsonArray {{";
-                    _MongoText += $"new BsonDocument({Helper.QuoteDouble(ColumnName)}, new BsonDocument(\"${(_operator == Operator.NotBetween ? "lt" : "gte")}\", ";
+                    _MongoText += $"new BsonDocument({Helper.QuoteDouble(colName)}, new BsonDocument(\"${(_operator == Operator.NotBetween ? "lt" : "gte")}\", ";
                     _MongoText += GetMongoValue(Value1, FinalDate1, _operator);
                     _MongoText += ")),";
-                    _MongoText += $"new BsonDocument({Helper.QuoteDouble(ColumnName)}, new BsonDocument(\"${(_operator == Operator.NotBetween ? "gt" : "lte")}\", ";
+                    _MongoText += $"new BsonDocument({Helper.QuoteDouble(colName)}, new BsonDocument(\"${(_operator == Operator.NotBetween ? "gt" : "lte")}\", ";
                     _MongoText += GetMongoValue(Value2, FinalDate2, _operator);
                     _MongoText += "))}),\r\n";
                 }
                 else if (_operator == Operator.Equal || _operator == Operator.NotEqual || IsContainOperator || _operator == Operator.StartsWith || _operator == Operator.EndsWith)
                 {
-                    _MongoText += string.Format("new BsonDocument({0}, new BsonDocument(\"{1}\", new BsonArray {{", Helper.QuoteDouble(ColumnName), MongoOperator);
+                    _MongoText += string.Format("new BsonDocument({0}, new BsonDocument(\"{1}\", new BsonArray {{", Helper.QuoteDouble(colName), MongoOperator);
                     if (IsEnum)
                     {
                         foreach (var ev in EnumValues)
@@ -1905,7 +1908,7 @@ namespace Seal.Model
                 }
                 else
                 {
-                    _MongoText += string.Format("new BsonDocument({0}, new BsonDocument(\"{1}\", ", Helper.QuoteDouble(ColumnName), MongoOperator);
+                    _MongoText += string.Format("new BsonDocument({0}, new BsonDocument(\"{1}\", ", Helper.QuoteDouble(colName), MongoOperator);
                     _MongoText += GetMongoValue(Value1, FinalDate1, _operator);
                     _MongoText += ")),\r\n";
                 }

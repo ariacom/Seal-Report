@@ -63,6 +63,11 @@ namespace Seal.Model
         public string StartupReportName { get; set; }
 
         /// <summary>
+        /// If true, reports are executed in a new window by default
+        /// </summary>
+        public ExecutionMode ExecutionMode { get; set; } = ExecutionMode.Default;
+
+        /// <summary>
         /// Last folder of the user
         /// </summary>
         public string LastFolder { get; set; }

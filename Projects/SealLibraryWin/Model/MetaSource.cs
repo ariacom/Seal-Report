@@ -304,7 +304,7 @@ namespace Seal.Model
             result.Name = Repository.JoinAutoName;
             result.Name = Helper.GetUniqueName(result.Name, (from i in MetaData.Joins select i.Name).ToList());
             result.Source = this;
-            result.IsBiDirectional = IsSQL;
+            result.IsBiDirectional = true;
             MetaData.Joins.Add(result);
             return result;
         }

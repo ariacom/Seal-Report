@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Seal.Helpers;
 using System.Data.Common;
+using MongoDB.Driver;
 #if WINDOWS
 using System.Drawing.Design;
 using Seal.Forms;
@@ -47,10 +48,12 @@ namespace Seal.Model
                 GetProperty("ConnectionString").SetIsBrowsable(true);
                 GetProperty("OdbcConnectionString").SetIsBrowsable(true);
                 GetProperty("MSSqlServerConnectionString").SetIsBrowsable(true);
+                GetProperty("MongoDBConnectionString").SetIsBrowsable(Source != null && Source.IsNoSQL);
 
                 GetProperty("ConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("OdbcConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MSSqlServerConnectionString").SetIsReadOnly(!IsEditable);
+                GetProperty("MongoDBConnectionString").SetIsReadOnly(!IsEditable);
 
                 GetProperty("UserName").SetIsBrowsable(true);
                 if (IsEditable) GetProperty("ClearPassword").SetIsBrowsable(true);
@@ -112,7 +115,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(ConnectionType.OleDb)]
-        [DisplayName("Connection type"), Description("The type of the connection object used: OleDbConnection, OdbcConnection or SqlConnection."), Category("Definition"), Id(3, 1)]
+        [DisplayName("Connection type"), Description("The type of the connection object used: OleDbConnection, OdbcConnection, SqlConnection or MongoClient."), Category("Definition"), Id(3, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public ConnectionType ConnectionType
@@ -165,6 +168,16 @@ namespace Seal.Model
         public string MSSqlServerConnectionString { get; set; }
 
         /// <summary>
+        /// Mongo DB Connection string used to connect to the database if the connection type is Mongo DB
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
+        [DisplayName("Mongo DB Connection string"), Description("Mongo DB Connection string used to connect to the database if the connection type is Mongo DB. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder. %USER% for the user name. %PASSWORD% for the password."), Category("Definition"), Id(6, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string MongoDBConnectionString { get; set; }
+
+        /// <summary>
         /// The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).
         /// </summary>
 #if WINDOWS
@@ -192,6 +205,10 @@ namespace Seal.Model
                 else if (ConnectionType == ConnectionType.Odbc)
                 {
                     result = Helper.GetOdbcConnectionString(OdbcConnectionString, UserName, ClearPassword);
+                }
+                else if (ConnectionType == ConnectionType.MongoDB)
+                {
+                    result = Helper.GetMongoConnectionString(MongoDBConnectionString, UserName, ClearPassword);
                 }
                 else
                 {
@@ -318,10 +335,19 @@ namespace Seal.Model
             Information = "";
             try
             {
-                DbConnection connection = DbConnection;
-                connection.Open();
-                connection.Close();
+                if (ConnectionType != ConnectionType.MongoDB)
+                {
+                    DbConnection connection = DbConnection;
+                    connection.Open();
+                    connection.Close();
+                }
+                else
+                {
+                    MongoClient client = new MongoClient(FullConnectionString);
+                    var dbs = client.ListDatabaseNames().ToList();
+                }
                 Information = "Database connection checked successfully.";
+
             }
             catch (Exception ex)
             {

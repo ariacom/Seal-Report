@@ -107,6 +107,8 @@ namespace SealWebServer.Controllers
                     startupreportname = WebUser.Profile.StartupReportName,
                     report = reportToExecute,
                     reportname = reportToExecuteName,
+                    executionmode = WebUser.Profile.ExecutionMode,
+                    groupexecutionmode = defaultGroup.ExecutionMode
                 };
 
                 if (!string.IsNullOrEmpty(profile.startupreport))
@@ -690,7 +692,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Set the culture for the logged user.
         /// </summary>
-        public ActionResult SWISetUserProfile(string culture, string onStartup, string startupReport, string startupReportName)
+        public ActionResult SWISetUserProfile(string culture, string onStartup, string startupReport, string startupReportName, string executionMode)
         {
             writeDebug("SWISetUserProfile");
             try
@@ -698,7 +700,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 if (!WebUser.DefaultGroup.EditProfile) throw new Exception("No right to change the profile");
 
-                if (string.IsNullOrEmpty(culture))
+               if (string.IsNullOrEmpty(culture))
                 {
                     WebUser.Profile.Culture = "";
                     if (!string.IsNullOrEmpty(WebUser.DefaultGroup.Culture)) Repository.SetCultureInfo(WebUser.DefaultGroup.Culture);
@@ -716,6 +718,13 @@ namespace SealWebServer.Controllers
                     WebUser.Profile.StartUpReport = startupReport;
                     WebUser.Profile.StartupReportName = startupReportName;
                 }
+
+                var execMode = ExecutionMode.Default;
+                if (Enum.TryParse(executionMode, out execMode))
+                {
+                    WebUser.Profile.ExecutionMode = execMode;
+                }
+
                 WebUser.SaveProfile();
 
                 return Json(new { });

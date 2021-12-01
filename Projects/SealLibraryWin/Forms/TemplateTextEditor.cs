@@ -1112,6 +1112,7 @@ namespace Seal.Forms
 
 
         const string sqlConnectionString = @"Server=myServerAddress;Database=myDatabase;Trusted_Connection=True";
+        const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@myServer";
         const string odbcConnectionString = @"DSN=myDataSourceName;DATABASE=myDatabase";
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
@@ -1335,7 +1336,7 @@ namespace Seal.Forms
                         frm.SetSamples(samples);
 
 
-                        frm.Text = "Edit the MS SQLServer Connection script";
+                        frm.Text = "Edit the MS SQLServer Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
                     if (context.PropertyDescriptor.Name == "MSSqlServerConnectionString")
@@ -1344,10 +1345,16 @@ namespace Seal.Forms
                         frm.Text = "Edit the MS SQLServer Connection script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
+                    if (context.PropertyDescriptor.Name == "MongoDBConnectionString")
+                    {
+                        template = mongoConnectionString;
+                        frm.Text = "Edit the Mongo DB Connection string";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
                     if (context.PropertyDescriptor.Name == "OdbcConnectionString")
                     {
                         template = odbcConnectionString;
-                        frm.Text = "Edit the ODBC Connection script";
+                        frm.Text = "Edit the ODBC Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
                 }
@@ -1388,7 +1395,7 @@ namespace Seal.Forms
                     else if (context.PropertyDescriptor.Name == "LoadInitScript")
                     {
                         var table = context.Instance as MetaTable;
-                        template = table.TableTemplate != null ? table.LoadInitScript : razorTableLoadInitScriptTemplate;
+                        template = table.TableTemplate != null && table.LoadInitScript != null ? table.LoadInitScript : razorTableLoadInitScriptTemplate;
 
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script executed before the table load execution";

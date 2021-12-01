@@ -1748,7 +1748,8 @@ model.ResultTable = query2.CopyToDataTable2();
             if (IsLINQ)
             {
                 var tables = new List<MetaTable>();
-                foreach (var table in FromTables) {
+                foreach (var table in FromTables)
+                {
                     if (!tables.Exists(i => i.LINQResultName == table.LINQResultName)) tables.Add(table);
                 }
                 FromTables = tables;
@@ -1792,7 +1793,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (!list.Exists(i => i.LeftTableGUID == join.LeftTableGUID && i.RightTableGUID == join.RightTableGUID)) joinsToUse[join.LeftTableGUID].Add(join);
                     }
 
-                    if (!IsLINQ && join.IsBiDirectional)
+                    if (join.IsBiDirectional)
                     {
                         //Create a new join having the other left-right
                         var newJoin = MetaJoin.Create();
@@ -1808,6 +1809,15 @@ model.ResultTable = query2.CopyToDataTable2();
                         else newJoin.JoinType = join.JoinType;
 
                         newJoin.Clause = join.Clause;
+                        if (IsLINQ)
+                        {
+                            //invert also the clause using equals
+                            var clauses = join.Clause.Split(" equals ");
+                            if (clauses.Length == 2)
+                            {
+                                newJoin.Clause = clauses[1] + " equals " + clauses[0];
+                            }
+                        }
 
                         if (!joinsToUse.Keys.Contains(newJoin.LeftTableGUID)) joinsToUse.Add(newJoin.LeftTableGUID, new List<MetaJoin>() { newJoin });
                         else
@@ -2143,8 +2153,6 @@ model.ResultTable = query2.CopyToDataTable2();
                             {
                                 //we take only the joins that can reach a table different than the new reached table
                                 var joins = path.joinsToUse[key].Where(i => i.RightTableGUID != newTable.GUID).ToArray();
-                                //If LINQ, filter, we do not take joins giving the same Source
-                                if (IsLINQ) joins = joins.Where(i => i.LeftTable.LINQResultName != newTable.LINQResultName && i.RightTable.LINQResultName != newTable.LINQResultName).ToArray();
 
                                 if (joins.Length > 0) newJoinPath.joinsToUse.Add(key, joins);
                             }
@@ -2538,26 +2546,15 @@ model.ResultTable = query2.CopyToDataTable2();
                 //Init default parameters
                 subTable.InitParameters();
 
-                //Mongo stages handling
-                if (subTable.IsMongoDb && subTable.GetBoolValue("mongo_sync", true))
+                //MONGO DB Restrictions
+                if (subTable.IsMongoDb && SubModelsSetRestr  && subTable.GetBoolValue(MetaTable.ParameterNameMongoSync, true))
                 {
-                    subTable.LoadInitScript = "";
-
-                    //Elements
-
+                    //Mongo stages handling
+                    var script = "";
                     //Restrictions = match stage
-                    var restrs = Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable.GUID == subTable.GUID).ToList();
+                    var restrs = Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable.HasSameMongoCollection(subTable)).ToList();
                     if (restrs.Count > 0)
                     {
-                        subTable.LoadInitScript = @"@using MongoDB.Bson
-@{
-    MetaTable metaTable = Model;
-    metaTable.MongoStages.Add(
-        new BsonDocument(
-            ""$match"",
-            new BsonDocument(""$and"",
-                new BsonArray {
-";
                         var restrStr = "";
                         foreach (var restr in restrs)
                         {
@@ -2566,17 +2563,87 @@ model.ResultTable = query2.CopyToDataTable2();
 
                         if (!string.IsNullOrEmpty(restrStr))
                         {
-                            subTable.LoadInitScript += restrStr;
-                            subTable.LoadInitScript += @"
-                }
-             )
+                            script += @$"
+    //Restrictions
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            ""$match"",
+            new BsonDocument({Helper.QuoteDouble(subTable.GetValue(MetaTable.ParameterNameMongoRestrictionOperator))},
+                new BsonArray {{
+{restrStr}
+                }}
+            )
         )
     );
-}";
+";
                         }
-                        else {
-                            subTable.LoadInitScript = "";
+                    }
+                    //Elements = Project stage
+                    var elementsToSelect = Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.GUID == subTable.GUID).ToList();
+                    if (elementsToSelect.Count > 0)
+                    {
+                        var elementStr = "";
+                        var colNames = new List<string>();
+
+                        foreach (var colName in (from c in elementsToSelect select c.MetaColumn.Name).Distinct())
+                        {
+                            colNames.Add(colName);
                         }
+                        //Add array name if any
+                        if (!string.IsNullOrEmpty(subTable.GetValue(MetaTable.ParameterNameMongoArrayName))) elementStr += $"{{{Helper.QuoteDouble(subTable.GetValue(MetaTable.ParameterNameMongoArrayName))},1}},\r\n";
+                        //Add restriction elements used for LINQ
+                        foreach (var colName in (from c in restrs select c.MetaColumn.Name).Distinct())
+                        {
+                            colNames.Add(colName);
+                        }
+                        //elements used to perform the LINQ joins: we parse all columns defined in the sources involved
+                        foreach (var join in ExecTableJoins)
+                        {
+                            var sources = new List<MetaSource>();
+                            if (!sources.Contains(join.LeftTable.Source)) sources.Add(join.LeftTable.Source);
+                            if (!sources.Contains(join.RightTable.Source)) sources.Add(join.RightTable.Source);
+                            foreach (var s in sources)
+                            {
+                                foreach (var t in s.MetaData.Tables)
+                                {
+                                    foreach (var col in t.Columns)
+                                    {
+                                        if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.LINQResultName, Helper.QuoteDouble(col.Name))))
+                                        {
+                                            colNames.Add(col.Name);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        foreach (var colName in colNames.Distinct())
+                        {
+                            elementStr += $"{{{Helper.QuoteDouble(colName)},1}},\r\n";
+                        }
+
+                        if (!string.IsNullOrEmpty(elementStr))
+                        {
+                            script += @$"
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            ""$project"",
+            new BsonDocument{{
+{elementStr}
+            }}
+        )
+    );
+";
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(script))
+                    {
+                        subTable.LoadInitScript = @$"@using MongoDB.Bson
+@{{
+    MetaTable metaTable = Model;
+{script}
+}}";
                     }
                 }
 

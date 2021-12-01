@@ -35,7 +35,7 @@ namespace Seal.Forms
         public IEntityHandler EntityHandler = null;
 
         ToolStripMenuItem _checkSource = new ToolStripMenuItem() { Text = "Check Data Sources...", ToolTipText = "Check all data source definitions with the objects in the database", AutoToolTip = true };
-        ToolStripMenuItem _refreshEnum = new ToolStripMenuItem() { Text = "Refresh Enumerated Lists...", ToolTipText = "Refresh all the dynamic enmerated list values from the database", AutoToolTip = true };
+        ToolStripMenuItem _refreshEnum = new ToolStripMenuItem() { Text = "Refresh Enumerated lists...", ToolTipText = "Refresh all the dynamic enmerated list values from the database", AutoToolTip = true };
         ToolStripMenuItem _exportSourceTranslations = new ToolStripMenuItem() { Text = "Export Data Source translations in CSV...", ToolTipText = "Export all translations found in the Data Source into a CSV file.", AutoToolTip = true };
         ToolStripMenuItem _exportReportsTranslations = new ToolStripMenuItem() { Text = "Export Folders and Reports translations in CSV...", ToolTipText = "Export all report and folders translations found in the repository into a CSV file.", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedules = new ToolStripMenuItem() { Text = "Synchronize Report Schedules...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler", AutoToolTip = true };
@@ -273,7 +273,7 @@ namespace Seal.Forms
             StringBuilder errorSummary = new StringBuilder("");
             try
             {
-                log.Log("Starting Refresh Enumerated Lists\r\n");
+                log.Log("Starting Refresh Enumerated lists\r\n");
 
                 foreach (MetaSource source in sources.OrderBy(i => i.Name))
                 {
@@ -302,7 +302,7 @@ namespace Seal.Forms
             {
                 log.Log("\r\n[UNEXPECTED ERROR RECEIVED]\r\n{0}\r\n", ex.Message);
             }
-            log.Log("Refresh Enumerated Lists terminated\r\n");
+            log.Log("Refresh Enumerated lists terminated\r\n");
 
             if (errorCount > 0) log.Log("SUMMARY: {0} Error(s) detected.\r\n{1}", errorCount, errorSummary);
             else log.Log("Youpi, pas d'erreur !");
@@ -362,7 +362,7 @@ namespace Seal.Forms
                 log.Log("Adding enum values in context: Enum\r\n");
                 foreach (var enumList in Source.MetaData.Enums.Where(i => i.Translate))
                 {
-                    foreach (var enumVal in enumList.Values)
+                    foreach (var enumVal in (from v in enumList.Values select new { v.DisplayValue, v.DisplayRestriction }).Distinct())
                     {
                         translations.AppendFormat("Enum{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumVal.DisplayValue), extraSeparators);
                         if (enumVal.DisplayValue != enumVal.DisplayRestriction) translations.AppendFormat("Enum{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumVal.DisplayRestriction), extraSeparators);

@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>27ec1e21-b888-484f-b44b-88479f2da094</GUID>
+  <ViewGUID>b5261f11-90c5-440c-a949-3ad50f9d81a4</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>693d71d0-3d28-41ba-a74c-6c703f2c86ff</GUID>
+      <Name>Mongo DB (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData />
+      <MetaSourceGUID>1f7b6741-c62f-4903-90ed-2fe3229190a7</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>bd4d098a-0eb9-4321-9f89-69803d2752cc</GUID>
+      <Name>Movies</Name>
+      <SourceGUID>693d71d0-3d28-41ba-a74c-6c703f2c86ff</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>9a38018c-7451-4965-bcdc-659f3bdecd4c</GUID>
+          <Name>movies</Name>
+          <TemplateName>Mongo DB</TemplateName>
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>16656596-c83a-4f5a-bd6f-dd0614c6f216</GUID>
+          <Name>title</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f735004b-a199-4670-98b9-2137f3d924f1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7ac6ed24-7d76-4b36-a370-a95894457103</GUID>
+          <Name>year</Name>
+          <DisplayName />
+          <Format>D</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>824275c2-9fb6-41c0-bfec-2c215904c49d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>888586eb-8264-46c2-a5f1-aa5f62d279a4</GUID>
+          <Name>type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>32d16d3e-2a49-48e0-a1b2-83f91661e5a2</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e87babcf-9b41-44be-bd8e-ef0324c421d5</GUID>
+          <Name>imdb.rating</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>bd55319a-2ac4-45a6-952a-7e7f6b610dd2</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9744ad03-775b-47fa-8716-1f316ac55418</GUID>
+          <Name>imdb.votes</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>01ffd19c-67b6-4efa-8565-916f54dabf56</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[b938c9c4-daf2-4046-a819-f381c145ca89]
+&amp;&amp; [32717e24-ceaf-4a0c-aff1-6a4d9d956674]
+&amp;&amp; [d46c3085-431f-4032-91ea-a59231f0117e]
+&amp;&amp; [7ca67ccc-707d-4ae2-a755-735a2097371e]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>b938c9c4-daf2-4046-a819-f381c145ca89</GUID>
+          <Name>imdb.rating</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>bd55319a-2ac4-45a6-952a-7e7f6b610dd2</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Greater</Operator>
+          <Value1>8</Value1>
+          <FormatRe>N0</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>32717e24-ceaf-4a0c-aff1-6a4d9d956674</GUID>
+          <Name>title</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f735004b-a199-4670-98b9-2137f3d924f1</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>d46c3085-431f-4032-91ea-a59231f0117e</GUID>
+          <Name>plot</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5cf2ad43-e59b-46d8-961e-0ec6ec3a818c</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>7ca67ccc-707d-4ae2-a755-735a2097371e</GUID>
+          <Name>year</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <Format>D</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>824275c2-9fb6-41c0-bfec-2c215904c49d</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <DisplayOrderRE>4</DisplayOrderRE>
+          <FormatRe>D</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>df040d40-3c44-425f-a887-2403b407559f</GUID>
+      <Name>Casts</Name>
+      <SourceGUID>693d71d0-3d28-41ba-a74c-6c703f2c86ff</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>5d7cc165-50df-4ffa-acc9-bf23b6136a10</GUID>
+          <Name>movies_casts</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>mongo_sync</Name>
+              <Value>False</Value>
+            </Parameter>
+          </Parameters>
+          <LoadInitScript>@using MongoDB.Bson
+@{
+    MetaTable metaTable = Model;
+
+    //Restrictions
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$match",
+            new BsonDocument("$and",
+                new BsonArray {
+new BsonDocument("imdb.rating", new BsonDocument("$gt", 8)),
+new BsonDocument("cast.value", new BsonDocument("$in", new BsonArray {new BsonRegularExpression(@"/John/i"),})),
+
+                }
+            )
+        )
+    );
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument{
+{"cast",1},
+{"title",1},
+{"value",1},
+{"imdb.rating",1},
+{"plot",1},
+{"year",1},
+{"_id",1},
+
+            }
+        )
+    );
+
+}</LoadInitScript>
+        </MetaTable>
+        <MetaTable>
+          <GUID>9a38018c-7451-4965-bcdc-659f3bdecd4c</GUID>
+          <Name>movies</Name>
+          <TemplateName>Mongo DB</TemplateName>
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>8f22122c-035f-47ab-aca3-7c6fe47413de</GUID>
+          <Name>title</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>22757fd1-86cd-4e6e-98d0-d732a00d6965</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7312e343-a1b6-4e17-a9d7-754cd438fe4b</GUID>
+          <Name>value</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>d44e80d1-cfcd-4ffc-a5ec-f89a7514925d</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[8de3819b-6df6-4370-9157-9e856bf445e2]
+&amp;&amp; [63288c61-bfbf-47e8-af41-f98171b05dac]
+&amp;&amp; [87a9947f-a699-4bbe-a37a-917b322fb498]
+&amp;&amp; [dec3abbc-a1e1-4123-acae-1f9f73f55b89]
+&amp;&amp; [c88bd177-d45d-4171-8a67-3f1306903aac]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>8de3819b-6df6-4370-9157-9e856bf445e2</GUID>
+          <Name>imdb.rating</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>bd55319a-2ac4-45a6-952a-7e7f6b610dd2</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Greater</Operator>
+          <Value1>8</Value1>
+          <FormatRe>N0</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>63288c61-bfbf-47e8-af41-f98171b05dac</GUID>
+          <Name>title</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f735004b-a199-4670-98b9-2137f3d924f1</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>87a9947f-a699-4bbe-a37a-917b322fb498</GUID>
+          <Name>plot</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5cf2ad43-e59b-46d8-961e-0ec6ec3a818c</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>dec3abbc-a1e1-4123-acae-1f9f73f55b89</GUID>
+          <Name>year</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <Format>D</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>824275c2-9fb6-41c0-bfec-2c215904c49d</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <DisplayOrderRE>4</DisplayOrderRE>
+          <FormatRe>D</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>c88bd177-d45d-4171-8a67-3f1306903aac</GUID>
+          <Name>value</Name>
+          <DisplayName />
+          <DisplayOrder>5</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>d44e80d1-cfcd-4ffc-a5ec-f89a7514925d</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>5</DisplayOrderRE>
+          <Value1>John</Value1>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>b5261f11-90c5-440c-a949-3ad50f9d81a4</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>1e5ee935-e3dc-413c-bbac-366f529d3a5d</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>2464f890-adf5-4e78-a8b5-628d1e89a90f</GUID>
+              <Name>Movies</Name>
+              <Views>
+                <ReportView>
+                  <GUID>d907f804-c7de-494b-b96b-60f88535506f</GUID>
+                  <Name>Movies</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>3308132f-0223-4506-afc9-b129becbff15</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>5425fd8c-5d5b-4e7f-90c3-e2db8b967766</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>eaa4f510-de62-43ad-bec3-f5ef5885832f</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>a531f46d-caa6-4c88-b846-ae677dff7358</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>fd17700b-2513-4e35-956f-34a60b4a504e</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>ec2dc4a1-6104-45d1-85e2-3bced02ea6f7</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>bd4d098a-0eb9-4321-9f89-69803d2752cc</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>fb1dbc9d-2643-4b29-a850-efcf52dfa78c</GUID>
+              <Name>Casts</Name>
+              <Views>
+                <ReportView>
+                  <GUID>d37fc88b-c7ee-42cd-84dd-8acc7a728b66</GUID>
+                  <Name>Casts</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>afa91485-2e95-455c-a4c6-999fd431111d</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>1dc796e7-0fba-415b-a0ac-ef3b83e938e8</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>67ff6f26-8874-4e8a-8e9b-74304789b7a9</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>c9a02653-e7a3-454d-9d95-841dae6dfb09</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>1abac121-d70f-4307-a012-aae655b3fc2a</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>f703e6ba-61eb-49b4-ad7b-6505cf278efe</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>df040d40-3c44-425f-a887-2403b407559f</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

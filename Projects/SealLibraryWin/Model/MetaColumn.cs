@@ -141,7 +141,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Is Aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Is aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG."), Id(3, 1)]
 #endif
         public bool IsAggregate { get; set; } = false;
         public bool ShouldSerializeIsAggregate() { return IsAggregate; }
@@ -150,7 +150,7 @@ namespace Seal.Model
         /// Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2').
         /// </summary>
 #if WINDOWS
-        [Category("Display"), DisplayName("Category Name"), Description("Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2')."), Id(2, 2)]
+        [Category("Display"), DisplayName("Category name"), Description("Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2')."), Id(2, 2)]
 #endif
         public string Category { get; set; }
 
@@ -159,7 +159,7 @@ namespace Seal.Model
         /// Tag used to define the security of the Web Report Designer (Columns of the Security Groups defined in the Web Security)
         /// </summary>
 #if WINDOWS
-        [Category("Security"), DisplayName("Security Tag"), Description("Tag used to define the security of the Web Report Designer (Columns of the Security Groups defined in the Web Security)."), Id(2, 2)]
+        [Category("Security"), DisplayName("Security tag"), Description("Tag used to define the security of the Web Report Designer (Columns of the Security Groups defined in the Web Security)."), Id(2, 2)]
 #endif
         public string Tag
         {
@@ -173,7 +173,7 @@ namespace Seal.Model
         /// Name used to display the column in the Report Designer tree view and in the report results
         /// </summary>
 #if WINDOWS
-        [Category("Display"), DisplayName("Display Name"), Description("Name used to display the column in the Report Designer tree view and in the report results."), Id(3, 2)]
+        [Category("Display"), DisplayName("Display name"), Description("Name used to display the column in the Report Designer tree view and in the report results."), Id(3, 2)]
 #endif
         public string DisplayName
         {
@@ -344,7 +344,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Options"), DisplayName("Enumerated List"), Description("If defined, a list of values is proposed when the column is used for restrictions."), Id(4, 3)]
+        [Category("Options"), DisplayName("Enumerated list"), Description("If defined, a list of values is proposed when the column is used for restrictions."), Id(4, 3)]
         [TypeConverter(typeof(MetaEnumConverter))]
 #endif
         public string EnumGUID
