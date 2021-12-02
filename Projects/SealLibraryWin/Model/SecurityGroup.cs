@@ -185,11 +185,11 @@ namespace Seal.Model
         public int Weight { get; set; } = 1;
 
         /// <summary>
-        /// Priority to select the default group when a user belongs to several groups. The options of the group having the highest priority (minimum value) are applied to the user.
+        /// Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.).
         /// </summary>
 #if WINDOWS
         [DefaultValue(true)]
-        [Category("Default Options"), DisplayName("\t\tEdit profile"), Description("If true, the user can edit his profile (default culture and startup report) from the Web Server."), Id(1, 5)]
+        [Category("Default Options"), DisplayName("\t\tEdit profile"), Description("Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.)."), Id(1, 5)]
 #endif
         public bool EditProfile { get; set; } = true;
 
@@ -210,30 +210,30 @@ namespace Seal.Model
 #endif
         public string LogoName { get; set; }
         /// <summary>
-        /// The action to take after the user logs in.
+        /// Web Report Server: The action to take after the user logs in.
         /// </summary>
 #if WINDOWS
         [DefaultValue(StartupOptions.None)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("\tOn startup"), Description("The action to take after the user logs in."), Id(3, 5)]
+        [Category("Default Options"), DisplayName("\tOn startup"), Description("Web Report Server: The action to take after the user logs in."), Id(3, 5)]
 #endif
         public StartupOptions OnStartup { get; set; } = StartupOptions.None;
 
         /// <summary>
-        /// If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex').
+        /// Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex').
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex')."), Id(4, 5)]
+        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex')."), Id(4, 5)]
 #endif
         public string StartupReport { get; set; }
 
         /// <summary>
-        /// Define if reports are executed in a new window or in the same window by default.
+        /// Web Report Server: Define if reports are executed in a new window or in the same window by default.
         /// </summary>
 #if WINDOWS
         [DefaultValue(ExecutionMode.NewWindow)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("Execution mode"), Description("Define if reports are executed in a new window or in the same window by default."), Id(5, 5)]
+        [Category("Default Options"), DisplayName("Execution mode"), Description("Web Report Server: Define if reports are executed in a new window or in the same window by default."), Id(5, 5)]
 #endif
         public ExecutionMode ExecutionMode { get; set; } = ExecutionMode.NewWindow;
     }

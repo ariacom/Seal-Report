@@ -1299,6 +1299,13 @@ namespace SealWebServer.Controllers
             report.SecurityContext = WebUser;
             report.CurrentViewGUID = report.ViewGUID;
 
+            //set connections
+            foreach (var source in report.Sources)
+            {
+                var connection = WebUser.Profile.Connections.FirstOrDefault(i => i.SourceGUID == source.MetaSourceGUID && i.ConnectionGUID != ReportSource.DefaultRepositoryConnectionGUID);
+                if (connection != null) source.ConnectionGUID = connection.ConnectionGUID;
+            }
+
             //Init Pre Input restrictions
             report.PreInputRestrictions.Clear();
             foreach (string key in Request.Form.Keys) report.PreInputRestrictions.Add(key, Request.Form[key]);

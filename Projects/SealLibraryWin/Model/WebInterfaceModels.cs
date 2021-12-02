@@ -26,6 +26,7 @@ namespace Seal.Model
         public string reportname;
         public ExecutionMode executionmode;
         public ExecutionMode groupexecutionmode;
+        public List<SWIMetaSource> sources;
     }
 
     /// <summary>
@@ -248,5 +249,19 @@ namespace Seal.Model
         public string name;
         public string classes = "";
         public List<SWIMenuItem> items = new List<SWIMenuItem>();
+    }
+
+    public class SWIConnection
+    {
+        public string GUID;
+        public string name;
+    }
+
+    public class SWIMetaSource
+    {
+        public string GUID;
+        public string name;
+        public string connectionGUID;
+        public List<SWIConnection> connections = new List<SWIConnection>();
     }
 }

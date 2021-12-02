@@ -5,18 +5,12 @@
   <Connections>
     <MetaConnection>
       <GUID>1285493d-dd2a-414a-be7d-0e0610fa408c</GUID>
-      <Name>connection</Name>
-      <DatabaseType>Standard</DatabaseType>
-      <ConnectionType>OleDb</ConnectionType>
+      <Name>Dummy connection</Name>
       <ConnectionString />
-      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
-      <ClearPassword />
     </MetaConnection>
   </Connections>
   <ConnectionGUID>1285493d-dd2a-414a-be7d-0e0610fa408c</ConnectionGUID>
-  <IsDefault>false</IsDefault>
   <IsNoSQL>true</IsNoSQL>
-  <IgnorePrePostError>false</IgnorePrePostError>
   <MetaData>
     <Tables>
       <MetaTable>
@@ -29,9 +23,7 @@
             <Value>%SEALREPOSITORY%/Databases/Northwind employee objectives.xlsx</Value>
           </Parameter>
         </Parameters>
-        <CacheDuration>0</CacheDuration>
         <DynamicColumns>true</DynamicColumns>
-        <KeepColumnNames>false</KeepColumnNames>
         <Columns>
           <MetaColumn>
             <GUID>58d5b01b-8ea9-4491-81c2-97f2a58c4b9c</GUID>
@@ -39,10 +31,8 @@
             <Type>Numeric</Type>
             <Category>Excel Employee Objectives</Category>
             <DisplayName>Year</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Decimal0</NumericStandardFormat>
             <Format>D0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>757d5af8-0e97-4941-85ec-07d5b35bcd36</GUID>
@@ -51,7 +41,6 @@
             <Category>Excel Employee Objectives</Category>
             <DisplayName>Employee</DisplayName>
             <DisplayOrder>2</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>7b227cde-db1d-41c3-bf66-435598caabf8</GUID>
@@ -61,7 +50,6 @@
             <DisplayName>Objective</DisplayName>
             <DisplayOrder>3</DisplayOrder>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -79,9 +67,7 @@
             <Value>;</Value>
           </Parameter>
         </Parameters>
-        <CacheDuration>0</CacheDuration>
         <DynamicColumns>true</DynamicColumns>
-        <KeepColumnNames>false</KeepColumnNames>
         <Columns>
           <MetaColumn>
             <GUID>dda3817d-aa7e-4549-80ff-c823d6a520b8</GUID>
@@ -89,8 +75,6 @@
             <Type>Text</Type>
             <Category>Seal Translations</Category>
             <DisplayName>Context</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>4bad32bf-d8b9-4690-b1c8-d63c3d4341d5</GUID>
@@ -99,7 +83,6 @@
             <Category>Seal Translations</Category>
             <DisplayName>Reference</DisplayName>
             <DisplayOrder>2</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>123b4648-c418-4dff-a509-a526311df062</GUID>
@@ -108,7 +91,6 @@
             <Category>Seal Translations</Category>
             <DisplayName>En</DisplayName>
             <DisplayOrder>3</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>bd098986-d8e3-4e08-ab05-94247b324f5c</GUID>
@@ -117,7 +99,6 @@
             <Category>Seal Translations</Category>
             <DisplayName>Fr</DisplayName>
             <DisplayOrder>4</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -201,9 +182,7 @@
         throw e;
     }
  }</LoadScript>
-        <CacheDuration>0</CacheDuration>
         <DynamicColumns>true</DynamicColumns>
-        <KeepColumnNames>false</KeepColumnNames>
         <Columns>
           <MetaColumn>
             <GUID>019e22ad-ed86-447e-be89-e7d1f1a58ca4</GUID>
@@ -211,8 +190,6 @@
             <Type>Text</Type>
             <Category>HTTPJSon Reports</Category>
             <DisplayName>Name</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>5cb65c0b-5752-49d5-9f03-a1269132c553</GUID>
@@ -221,7 +198,6 @@
             <Category>HTTPJSon Reports</Category>
             <DisplayName>Path</DisplayName>
             <DisplayOrder>2</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>017b4942-e367-4228-9b09-baaeb85cb86b</GUID>
@@ -230,7 +206,6 @@
             <Category>HTTPJSon Reports</Category>
             <DisplayName>Last Modification</DisplayName>
             <DisplayOrder>3</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -250,9 +225,7 @@
         </Parameters>
         <DefinitionScript />
         <LoadScript />
-        <CacheDuration>0</CacheDuration>
         <DynamicColumns>true</DynamicColumns>
-        <KeepColumnNames>false</KeepColumnNames>
         <Columns>
           <MetaColumn>
             <GUID>764bd519-ef9a-4ad5-9661-20a3e6851f3e</GUID>
@@ -260,8 +233,6 @@
             <Type>Text</Type>
             <Category>XML Northwind Elements</Category>
             <DisplayName>GUID</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>33da27b7-2b6f-450b-892e-46fc12aa7aac</GUID>
@@ -270,7 +241,6 @@
             <Category>XML Northwind Elements</Category>
             <DisplayName>Name</DisplayName>
             <DisplayOrder>2</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>cdcd5155-fc1c-4586-b763-e9b5e3ffcc10</GUID>
@@ -279,7 +249,6 @@
             <Category>XML Northwind Elements</Category>
             <DisplayName>Type</DisplayName>
             <DisplayOrder>3</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>0dfb8e62-6161-412d-95cd-b31ecc1389be</GUID>
@@ -288,7 +257,6 @@
             <Category>XML Northwind Elements</Category>
             <DisplayName>Category</DisplayName>
             <DisplayOrder>4</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>9afe851c-267f-482c-93d9-57add24f878d</GUID>
@@ -297,7 +265,6 @@
             <Category>XML Northwind Elements</Category>
             <DisplayName>Tag</DisplayName>
             <DisplayOrder>5</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>7dd42ae9-83e1-4a1d-b2c8-075fccf25363</GUID>
@@ -306,7 +273,6 @@
             <Category>XML Northwind Elements</Category>
             <DisplayName>Display Name</DisplayName>
             <DisplayOrder>6</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>99034f69-6fb2-4ad4-b366-3e6ab4e3066a</GUID>
@@ -315,7 +281,6 @@
             <Category>XML Northwind Elements</Category>
             <DisplayName>Display Order</DisplayName>
             <DisplayOrder>7</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>95bff8b4-ddd2-4887-8ee2-2aa4fc3fa7a2</GUID>
@@ -324,7 +289,6 @@
             <Category>XML Northwind Elements</Category>
             <DisplayName>Numeric Standard Format</DisplayName>
             <DisplayOrder>8</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>89b7d74d-b24f-45f3-861e-decc7ac48235</GUID>
@@ -333,7 +297,6 @@
             <Category>XML Northwind Elements</Category>
             <DisplayName>Date Time Standard Format</DisplayName>
             <DisplayOrder>9</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -384,9 +347,7 @@
 	}	
     metaTable.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }</LoadScript>
-        <CacheDuration>0</CacheDuration>
         <DynamicColumns>true</DynamicColumns>
-        <KeepColumnNames>false</KeepColumnNames>
         <Columns>
           <MetaColumn>
             <GUID>d79f061b-781d-4671-adce-e74ddb08ca23</GUID>
@@ -394,8 +355,6 @@
             <Type>Text</Type>
             <Category>XML RSS News</Category>
             <DisplayName>Id</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>3a801036-efab-43cf-8a11-5a6a9937aca1</GUID>
@@ -405,7 +364,6 @@
             <DisplayName>Date</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <Format>d</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>10f90359-e151-46ba-bbcc-7ace67f304cb</GUID>
@@ -414,7 +372,6 @@
             <Category>XML RSS News</Category>
             <DisplayName>Title</DisplayName>
             <DisplayOrder>3</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>db183e8a-a333-464c-b8e2-59c0d0c0421a</GUID>
@@ -423,7 +380,6 @@
             <Category>XML RSS News</Category>
             <DisplayName>Summary</DisplayName>
             <DisplayOrder>4</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>0c4d29b5-57d0-4b0a-ac05-ed9fa58de1da</GUID>
@@ -432,7 +388,6 @@
             <Category>XML RSS News</Category>
             <DisplayName>Link</DisplayName>
             <DisplayOrder>5</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>2d38238b-f010-459e-945f-a7f3e15bba0e</GUID>
@@ -441,7 +396,6 @@
             <Category>XML RSS News</Category>
             <DisplayName>Categories</DisplayName>
             <DisplayOrder>6</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>588fb1e2-834b-4e5a-ac53-99bc3dc2607d</GUID>
@@ -450,7 +404,6 @@
             <Category>XML RSS News</Category>
             <DisplayName>Title With Link</DisplayName>
             <DisplayOrder>7</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -494,7 +447,6 @@
         <Clause>new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
 equals 
 new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }</Clause>
-        <JoinType>Inner</JoinType>
         <IsBiDirectional>false</IsBiDirectional>
       </MetaJoin>
     </Joins>

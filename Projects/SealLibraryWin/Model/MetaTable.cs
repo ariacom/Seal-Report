@@ -770,13 +770,15 @@ namespace Seal.Model
             {
                 WithDataLoad = withLoad;
 
+                var definitionInitScript = DefinitionInitScript;
+                if (string.IsNullOrEmpty(definitionInitScript)) definitionInitScript = DefaultDefinitionInitScript;
                 var definitionScript = DefinitionScript;
-                if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;               
+                if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;
 
                 if (!string.IsNullOrEmpty(definitionScript))
                 {
                     MongoStages.Clear();
-                    if (!string.IsNullOrEmpty(DefinitionInitScript)) RazorHelper.CompileExecute(DefinitionInitScript, this);
+                    if (!string.IsNullOrEmpty(definitionInitScript)) RazorHelper.CompileExecute(definitionInitScript, this);
                     if (withLoad && !string.IsNullOrEmpty(LoadInitScript)) RazorHelper.CompileExecute(LoadInitScript, this);
 
                     RazorHelper.CompileExecute(definitionScript, this);

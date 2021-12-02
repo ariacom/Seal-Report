@@ -7,9 +7,8 @@
     table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoRestrictionOperator, Value = "$and", DisplayName = "Restriction operator applied", Description = "Define the operator applied if several restrictions are defined for the table.", Enums = new string[] { "$and","$or"}, UseOnlyEnumValues = false });
     table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoDatabase, Value = "", DisplayName = "Database Name", Description = "The Database name of the Mongo Server." });
     table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoCollection, Value = "", DisplayName = "Mongo Collection Name", Description = "The collection name to load." });
-    table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoArrayName, Value = "", DisplayName = "Array name in the collection", Description = "If set, the table is built with the values of the array specified." });
-    table.Parameters.Add(new Parameter() { Name = "mongo_field_names_add", TextValue = "", DisplayName = "Parent field names to add", Description = "If an array name is specified, defines the field of the parent object to keep as a column in the table. One field name per line." });
-    table.Parameters.Add(new Parameter() { Name = "mongo_field_names_ignore", TextValue = "", DisplayName = "Field names to ignore", Description = "Defines the fields to ignore in the table. One field name per line." });
+    table.Parameters.Add(new Parameter() { Name = MetaTable.ParameterNameMongoArrayName, Value = "", DisplayName = "Array name to unwind in the collection", Description = "If set, the table is built with the values of the array specified using an 'unwind' stage." });
+    table.Parameters.Add(new Parameter() { Name = "mongo_field_names_ignore", TextValue = "", DisplayName = "Field names to ignore", Description = "Defines the fields to ignore in the table. One field name per line. If empty no field is ignored." });
 
     table.DefinitionInitScript = @"@using MongoDB.Bson
 @{
@@ -22,7 +21,7 @@
     var arrayName = metaTable.GetValue(MetaTable.ParameterNameMongoArrayName);
     if (!string.IsNullOrEmpty(arrayName)) {
         //Unwind stage for array
-        metaTable.MongoStages.Add(new BsonDocument(""$unwind"" , Helper.QuoteDouble(arrayName)));
+        metaTable.MongoStages.Add(new BsonDocument(""$unwind"" , ""$""+arrayName));
     }
 };
 ";
@@ -43,9 +42,8 @@
         throw new Exception(""Collection name not found in the database"");
     }
     var collection = database.GetCollection<BsonDocument>(collectionName);
-    var fieldsToAdd = metaTable.GetValue(""mongo_field_names_add"").Replace(""\r\n"",""\n"").Split('\n');
     var fieldsToIgnore = metaTable.GetValue(""mongo_field_names_ignore"").Replace(""\r\n"",""\n"").Split('\n');
-    metaTable.NoSQLTable = DataTableLoader.FromMongoDB(collection.Aggregate<BsonDocument>(metaTable.MongoStages).ToList(), """", fieldsToAdd, fieldsToIgnore);
+    metaTable.NoSQLTable = DataTableLoader.FromMongoDB(collection.Aggregate<BsonDocument>(metaTable.MongoStages).ToList(), fieldsToIgnore);
 }";
 
     table.LoadScript = @"";

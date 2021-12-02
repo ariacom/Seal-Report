@@ -13,7 +13,7 @@
     </MetaConnection>
     <MetaConnection>
       <GUID>164f0017-471d-4741-937c-3df7881ca392</GUID>
-      <Name>Ariacom Demonstration Server</Name>
+      <Name>Demonstration Server</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServer</ConnectionType>
       <ConnectionString />

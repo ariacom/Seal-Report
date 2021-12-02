@@ -171,6 +171,7 @@ Web;Culture;;Culture
 Web;Custom SQL;;SQL Spécifique
 Web;Custom;;Spécifique
 Web;Cut;;Couper
+Web;Data source connections;;Connexions des sources de données
 Web;Days;;Jours
 Web;Days of the week;;Jours de la semaine
 Web;Default body;;Message par défaut
@@ -265,6 +266,7 @@ Web;Report title;;Titre du rapport
 Web;Report title if different from report name;;Titre du rapport si différent du nom
 Web;Reports;;Rapports
 Web;Reports menu;;Menu des rapports
+Web;Repository connection;;Connexion du Repository
 Web;Result as body;;Message HTML
 Web;Rights;;Droits
 Web;Save;;Enregistrer
@@ -302,7 +304,7 @@ WebJS;3 Decimals;;3 Décimales
 WebJS;4 Decimals;;4 Décimales
 WebJS;Actions;;Actions
 WebJS;All selected;;Tout est sélectionné
-WebJS;Allow only execution in a new Window;;Autoriser seulement l'execution dans une nouvelle fenêtre
+WebJS;Allow only execution in a new Window;;Autoriser seulement l'exécution dans une nouvelle fenêtre
 WebJS;and;;et
 WebJS;Ascendant;;Ascendant
 WebJS;Automatic ascendant;;Automatique ascendant

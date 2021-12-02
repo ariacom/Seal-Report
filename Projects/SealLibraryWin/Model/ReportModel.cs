@@ -2589,8 +2589,6 @@ model.ResultTable = query2.CopyToDataTable2();
                         {
                             colNames.Add(colName);
                         }
-                        //Add array name if any
-                        if (!string.IsNullOrEmpty(subTable.GetValue(MetaTable.ParameterNameMongoArrayName))) elementStr += $"{{{Helper.QuoteDouble(subTable.GetValue(MetaTable.ParameterNameMongoArrayName))},1}},\r\n";
                         //Add restriction elements used for LINQ
                         foreach (var colName in (from c in restrs select c.MetaColumn.Name).Distinct())
                         {

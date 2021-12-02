@@ -231,7 +231,12 @@ class SWIMain {
                     }
                     var executionmode = $("#executionmode-select").val();
 
-                    _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, executionmode, function () {
+                    //connections
+                    var connections = [];
+                    _main._profile.sources.forEach(function (source) {
+                        connections.push(source.GUID + "\r" + $("#" + source.GUID).val())
+                    });
+                    _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, executionmode, connections, function () {
                         location.reload();
                     });
                 }
@@ -276,6 +281,19 @@ class SWIMain {
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             }
 
+            const $connections = $("#default-connections");
+            $("#default-connections").empty();
+            _main._profile.sources.forEach(function (source) {
+                const $connectionDiv = $("<div class='row'>");
+                $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
+                const $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
+                source.connections.forEach(function (connection) {
+                    $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
+                });
+                $connectionDiv.append($("<div class='col-sm-8'>").append($connectionSelect));
+                $connections.append($connectionDiv);
+                $connectionSelect.selectpicker('refresh');
+            });
         });
 
         //Disconnect

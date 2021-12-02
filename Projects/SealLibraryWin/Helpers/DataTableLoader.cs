@@ -69,135 +69,83 @@ namespace Seal.Helpers
             return result;
         }
 
-        static void fillFromBsonArray(string prefix, IEnumerable<BsonValue> values, DataTable dt, DataRow refDataRow, string arrayName, string[] keyNames, string[] ignoreNames)
-        {
-            foreach (var doc in values)
-            {
-                BsonDocument bsonDoc;
-                if (!doc.IsBsonDocument)
-                {
-                    //Array of 1 value
-                    bsonDoc = new BsonDocument(new BsonElement("value", doc.AsBsonValue));
-                }
-                else
-                {
-                    //Array of object
-                    bsonDoc = doc.AsBsonDocument;
-                }
-
-                fillFromBsonDocument(prefix, bsonDoc, dt, arrayName, keyNames, ignoreNames, null, refDataRow);
-            }
-        }
-
-
-        static void fillFromBsonDocument(string prefix, BsonDocument doc, DataTable dt, string arrayName, string[] keyNames, string[] ignoreNames, DataRow currentRow = null, DataRow refDataRow = null)
+        static void fillFromBsonDocument(string prefix, BsonDocument doc, DataTable dt, string[] ignoreNames, DataRow currentRow = null, DataRow refDataRow = null)
         {
             var dr = currentRow ?? dt.NewRow();
             if (refDataRow != null) dr.ItemArray = refDataRow.ItemArray;
-            bool processArray = false; //Process array at last to init first values of the row
-            while (true)
+            foreach (BsonElement el in doc.Elements)
             {
-                foreach (BsonElement el in doc.Elements)
+                var colName = prefix + el.Name;
+                if (ignoreNames.Contains(colName)) continue;
+
+                bool isArrayOfDocuments = el.Value.IsBsonArray && el.Value.AsBsonArray.FirstOrDefault() != null && el.Value.AsBsonArray.First().IsBsonDocument; //Is an Array of Document
+                bool isSingleArray = !isArrayOfDocuments && el.Value.IsBsonArray;
+
+                bool process = !isArrayOfDocuments && !isSingleArray;
+
+                if (!dt.Columns.Contains(colName))
                 {
-                    var colName = prefix + el.Name;
-                    if (ignoreNames != null && ignoreNames.Contains(colName)) continue;
+                    bool isDT = true, isDouble = true, isInteger = true;
 
-                    bool isArrayOfDocuments = el.Value.IsBsonArray && el.Value.AsBsonArray.FirstOrDefault() != null && el.Value.AsBsonArray.First().IsBsonDocument; //Is an Array of Document
-                    bool isSingleArray = !isArrayOfDocuments && el.Value.IsBsonArray;
-                    bool isDocumentArray = (arrayName == colName) && el.Value.IsBsonDocument;
-
-                    bool process = !isDocumentArray && !isArrayOfDocuments && !isSingleArray && (string.IsNullOrEmpty(arrayName) || keyNames.Contains(colName));
-
-                    if (string.IsNullOrEmpty(arrayName) && keyNames.Contains(colName))
-                    {
-                        //conflict of the name with a parent (e.g _id), add .
-                        colName = MongoSeparator + el.Name;
-                    }
-
-                    if (!dt.Columns.Contains(colName))
-                    {
-                        bool isDT = true, isDouble = true, isInteger = true;
-
-                        if (el.Value.IsBsonDocument && !isDocumentArray)
-                        {
-                            //Sub-documents
-                            fillFromBsonDocument(colName + MongoSeparator, el.Value.AsBsonDocument, dt, arrayName, keyNames, ignoreNames, dr);
-                            continue;
-                        }
-                        if (processArray && !string.IsNullOrEmpty(arrayName) && (isArrayOfDocuments || isSingleArray || isDocumentArray))
-                        {
-                            //Duplicate rows for each value
-                            var values = isDocumentArray ? el.Value.AsBsonDocument.Values : el.Value.AsBsonArray.Values;
-                            fillFromBsonArray(colName == arrayName ? "" : colName + MongoSeparator, values, dt, dr, colName == arrayName ? "" : arrayName, keyNames, ignoreNames);
-                            continue;
-                        }
-
-                        if (!el.Value.IsValidDateTime) isDT = false;
-                        if (!el.Value.IsDouble) isDouble = false;
-                        if (!el.Value.IsInt32) isInteger = false;
-
-                        var dc = new DataColumn(colName);
-                        if (isDT) dc.DataType = typeof(DateTime);
-                        else if (isDouble) dc.DataType = typeof(double);
-                        else if (isInteger) dc.DataType = typeof(int);
-
-                        if (process) dt.Columns.Add(dc);
-                    }
-
-                    //Values
-                    if (el.Value.IsBsonDocument && process)
+                    if (el.Value.IsBsonDocument)
                     {
                         //Sub-documents
-                        fillFromBsonDocument(colName + MongoSeparator, el.Value.AsBsonDocument, dt, arrayName, keyNames, ignoreNames, dr);
+                        fillFromBsonDocument(colName + MongoSeparator, el.Value.AsBsonDocument, dt, ignoreNames, dr);
                         continue;
                     }
-                    else
+
+                    if (!el.Value.IsValidDateTime) isDT = false;
+                    if (!el.Value.IsDouble) isDouble = false;
+                    if (!el.Value.IsInt32) isInteger = false;
+
+                    var dc = new DataColumn(colName);
+                    if (isDT) dc.DataType = typeof(DateTime);
+                    else if (isDouble) dc.DataType = typeof(double);
+                    else if (isInteger) dc.DataType = typeof(int);
+
+                    if (process) dt.Columns.Add(dc);
+                }
+
+                //Values
+                if (el.Value.IsBsonDocument && process)
+                {
+                    //Sub-documents
+                    fillFromBsonDocument(colName + MongoSeparator, el.Value.AsBsonDocument, dt, ignoreNames, dr);
+                    continue;
+                }
+                else
+                {
+                    if (process)
                     {
-                        if (processArray && !string.IsNullOrEmpty(arrayName) && (isArrayOfDocuments || isSingleArray || isDocumentArray))
+                        try
                         {
-                            //Duplicate rows for each value
-                            var values = isDocumentArray ? el.Value.AsBsonDocument.Values : el.Value.AsBsonArray.Values;
-                            fillFromBsonArray(colName == arrayName ? "" : colName + MongoSeparator, values, dt, dr, colName == arrayName ? "" : arrayName, keyNames, ignoreNames);
-                            continue;
+                            string val = el.Value.ToString();
+                            if (el.Value.IsBsonArray && val.Length > 2) val = val.Substring(1, val.Length - 2);
+
+                            dr[colName] = el.Value;
                         }
-
-                        if (process)
+                        catch
                         {
-                            try
-                            {
-                                string val = el.Value.ToString();
-                                if (el.Value.IsBsonArray && val.Length > 2) val = val.Substring(1, val.Length - 2);
-
-                                dr[colName] = el.Value;
-                            }
-                            catch
-                            {
-                                dr[colName] = DBNull.Value;
-                            }
+                            dr[colName] = DBNull.Value;
                         }
                     }
                 }
-                if (processArray || string.IsNullOrEmpty(arrayName)) break;
-                processArray = true;
             }
 
-            if (currentRow == null && string.IsNullOrEmpty(arrayName)) dt.Rows.Add(dr);
+            if (currentRow == null) dt.Rows.Add(dr);
         }
 
         /// <summary>
-        /// Convert a list of BsonDocument into a DataTable. If arrayName is set, only the Array is loaded in the table. keyNames[] allow to force a property to be loaded (use . as separator to specify sub-objects).
-        /// e.g. 
-        /// new string[] { "account_id" }, "transactions"
-        /// new string[] {"_id","host.host.id"}, "host.host.verifications")
+        /// Convert a list of BsonDocument into a DataTable. ignoreNames allow to skip some columns.
         /// </summary>
-        static public DataTable FromMongoDB(List<BsonDocument> collection, string arrayName = null, string[] keyNames = null, string[] ignoreNames = null)
+        static public DataTable FromMongoDB(List<BsonDocument> collection, string[] ignoreNames = null)
         {
             DataTable dt = new DataTable();
             if (collection.Count == 0) return dt;
 
             foreach (BsonDocument doc in collection)
             {
-                fillFromBsonDocument("", doc, dt, arrayName, keyNames ?? new string[] { }, ignoreNames);
+                fillFromBsonDocument("", doc, dt, ignoreNames ?? new string[] { });
             }
             return dt;
         }

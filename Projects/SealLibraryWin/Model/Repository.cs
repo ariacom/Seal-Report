@@ -977,6 +977,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Translate a Connection
+        /// </summary>
+        public string TranslateConnection(string instance, string reference)
+        {
+            return RepositoryTranslate("Connection", instance, reference);
+        }
+
+        /// <summary>
         /// Translate a full Folder Path
         /// </summary>
         public string TranslateFolderPath(string path)

@@ -135,6 +135,23 @@ namespace SealWebServer.Controllers
                     }
                 }
 
+                //Set connections
+                profile.sources = new List<SWIMetaSource>();
+                foreach (var source in Repository.Sources.Where(i => i.Connections.Count > 0))
+                {
+                    var swiSource = new SWIMetaSource() { GUID =  source.GUID, name = source.Name, connectionGUID = source.ConnectionGUID };
+                    var defaultConnection = WebUser.Profile.Connections.FirstOrDefault(i => i.SourceGUID == source.GUID);
+                    if (defaultConnection != null) swiSource.connectionGUID = defaultConnection.ConnectionGUID;
+                    else swiSource.connectionGUID = ReportSource.DefaultRepositoryConnectionGUID;
+
+                    swiSource.connections.Add(new SWIConnection() { GUID = ReportSource.DefaultRepositoryConnectionGUID, name = $"{Repository.TranslateWeb("Repository connection")} ({Repository.TranslateConnection(source.Name, source.Connection.Name)})" });
+                    
+                    foreach (var connection in source.Connections)
+                    {
+                        swiSource.connections.Add(new SWIConnection() { GUID = connection.GUID, name = Repository.TranslateConnection(source.Name, connection.Name) });
+                    }
+                    profile.sources.Add(swiSource);
+                }
                 return Json(profile); 
             }
             catch (Exception ex)
@@ -692,7 +709,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Set the culture for the logged user.
         /// </summary>
-        public ActionResult SWISetUserProfile(string culture, string onStartup, string startupReport, string startupReportName, string executionMode)
+        public ActionResult SWISetUserProfile(string culture, string onStartup, string startupReport, string startupReportName, string executionMode, string[] connections)
         {
             writeDebug("SWISetUserProfile");
             try
@@ -725,6 +742,13 @@ namespace SealWebServer.Controllers
                     WebUser.Profile.ExecutionMode = execMode;
                 }
 
+                WebUser.Profile.Connections.Clear();
+                foreach(var connection in connections)
+                {
+                    var guids = connection.Split('\r');
+                    if (guids.Length == 2) WebUser.Profile.Connections.Add(new DefaultConnection() { SourceGUID = guids[0], ConnectionGUID = guids[1] });
+
+                }
                 WebUser.SaveProfile();
 
                 return Json(new { });

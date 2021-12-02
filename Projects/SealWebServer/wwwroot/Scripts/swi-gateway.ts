@@ -63,13 +63,14 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public SetUserProfile(culture: string, onstartup: string, startupreport: string, startupreportname: string, executionmode: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public SetUserProfile(culture: string, onstartup: string, startupreport: string, startupreportname: string, executionmode: string, connections: string[], callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWISetUserProfile", {
             culture: culture,
             onstartup: onstartup,
             startupreport: startupreport,
             startupreportname: startupreportname,
-            executionmode: executionmode
+            executionmode: executionmode,
+            connections: connections
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });

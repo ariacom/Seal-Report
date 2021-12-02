@@ -341,6 +341,12 @@ namespace Seal.Forms
                 string separator = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
                 string extraSeparators = initTranslationFile(translations, separator, repository);
 
+                log.Log("Adding elements names in context: Connection\r\n");
+                foreach (var connection in Source.Connections)
+                {
+                    translations.AppendFormat("Connection{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(Source.Name), Helper.QuoteDouble(connection.Name), extraSeparators);
+                }
+
                 log.Log("Adding elements names in context: Element\r\n");
                 foreach (var table in Source.MetaData.Tables)
                 {

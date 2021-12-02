@@ -1,4 +1,6 @@
 ﻿Context;Instance;Reference;en;fr
+Connection;Northwind;Local MS SQL Server;;SQL Server Local
+Connection;Northwind;Demonstration Server;;Serveur de démonstration
 Element;Customers.Customer ID;Customer ID;;ID Client
 Element;Customers.Address;Address;;Adresse
 Element;Customers.City;City;;Ville

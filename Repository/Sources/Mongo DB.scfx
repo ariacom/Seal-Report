@@ -128,14 +128,6 @@
             <DisplayName>Email</DisplayName>
             <DisplayOrder>6</DisplayOrder>
           </MetaColumn>
-          <MetaColumn>
-            <GUID>9d682932-3c3f-462b-a4d9-79af94d70d21</GUID>
-            <Name>active</Name>
-            <Type>Text</Type>
-            <Category>customers</Category>
-            <DisplayName>Active</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
-          </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
@@ -216,10 +208,6 @@
             <Name>mongo_array_name</Name>
             <Value>products</Value>
           </Parameter>
-          <Parameter>
-            <Name>mongo_field_names_add</Name>
-            <Value>account_id</Value>
-          </Parameter>
         </Parameters>
         <Alias>accountsCopy</Alias>
         <DynamicColumns>true</DynamicColumns>
@@ -260,8 +248,11 @@
             <Value>accounts</Value>
           </Parameter>
           <Parameter>
-            <Name>mongo_field_names_add</Name>
-            <Value>_id</Value>
+            <Name>mongo_field_names_ignore</Name>
+            <Value>tier_and_details
+address
+birthdate
+email</Value>
           </Parameter>
         </Parameters>
         <Alias>customersCopy</Alias>
@@ -275,12 +266,28 @@
             <DisplayName>Id</DisplayName>
           </MetaColumn>
           <MetaColumn>
-            <GUID>2f9dba3f-7c89-4fe4-9e5d-9e6c9cf93b07</GUID>
-            <Name>value</Name>
+            <GUID>d3a42f8b-1b2e-4bff-b2d8-09ae32de45b3</GUID>
+            <Name>username</Name>
+            <Type>Text</Type>
+            <Category>customers_accounts</Category>
+            <DisplayName>Username</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f3e2a699-0195-41da-84b9-784b534bd525</GUID>
+            <Name>name</Name>
+            <Type>Text</Type>
+            <Category>customers_accounts</Category>
+            <DisplayName>Name</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>058863f3-7cfa-4e72-86e7-0b7e7e979b31</GUID>
+            <Name>accounts</Name>
             <Type>Numeric</Type>
             <Category>customers_accounts</Category>
-            <DisplayName>Account Id</DisplayName>
-            <DisplayOrder>2</DisplayOrder>
+            <DisplayName>Accounts</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
             <Format>N0</Format>
           </MetaColumn>
         </Columns>
@@ -303,24 +310,35 @@
             <Value>transactions</Value>
           </Parameter>
           <Parameter>
-            <Name>mongo_field_names_add</Name>
-            <Value>account_id</Value>
+            <Name>mongo_field_names_ignore</Name>
+            <Value>_id
+transaction_count
+bucket_start_date
+bucket_end_date</Value>
           </Parameter>
         </Parameters>
+        <DefinitionInitScript>@using MongoDB.Bson
+@{
+    MetaTable metaTable = Model;
+    if (!metaTable.WithDataLoad) {
+        //Add a stage to limit the number of records for the table definition 
+        metaTable.MongoStages.Add(new BsonDocument("$limit" , 100));
+    }
+
+    var arrayName = metaTable.GetValue(MetaTable.ParameterNameMongoArrayName);
+    if (!string.IsNullOrEmpty(arrayName)) {
+        //Unwind stage for array
+        metaTable.MongoStages.Add(new BsonDocument("$unwind" , "$transactions"));
+//        metaTable.MongoStages.Add(new BsonDocument("$unwind" , "$amount"));
+    }
+};
+</DefinitionInitScript>
         <Alias>transactionsCopy</Alias>
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
-            <GUID>fd6d7288-8daf-4948-a5d4-869d8fd026a9</GUID>
-            <Name>account_id</Name>
-            <Type>Numeric</Type>
-            <Category>transactions_transactions</Category>
-            <DisplayName>Account id</DisplayName>
-            <Format>N0</Format>
-          </MetaColumn>
-          <MetaColumn>
-            <GUID>6b17d2be-48eb-4547-a0b3-03f7f84bbd81</GUID>
-            <Name>date</Name>
+            <GUID>2c2ba1a7-ebb1-44a1-8df9-43dad2403f9d</GUID>
+            <Name>transactions.date</Name>
             <Type>DateTime</Type>
             <Category>transactions_transactions</Category>
             <DisplayName>Date</DisplayName>
@@ -328,8 +346,8 @@
             <Format>d</Format>
           </MetaColumn>
           <MetaColumn>
-            <GUID>758d3a35-0725-4ec3-a33c-d1a8e244a6c2</GUID>
-            <Name>amount</Name>
+            <GUID>8a122e7c-573d-4bd4-83c0-a808e193ddbe</GUID>
+            <Name>transactions.amount</Name>
             <Type>Numeric</Type>
             <Category>transactions_transactions</Category>
             <DisplayName>Amount</DisplayName>
@@ -337,36 +355,44 @@
             <Format>N0</Format>
           </MetaColumn>
           <MetaColumn>
-            <GUID>f7e24826-e3be-4741-8ce3-ca62598f1393</GUID>
-            <Name>transaction_code</Name>
+            <GUID>c75c6866-0a1f-4e3c-a818-d556e3ab5caa</GUID>
+            <Name>transactions.transaction_code</Name>
             <Type>Text</Type>
             <Category>transactions_transactions</Category>
             <DisplayName>Transaction code</DisplayName>
             <DisplayOrder>4</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
-            <GUID>719d2b4e-40c8-441c-8acd-a71525b8b277</GUID>
-            <Name>symbol</Name>
-            <Type>Text</Type>
-            <Category>transactions_transactions</Category>
-            <DisplayName>Symbol</DisplayName>
-            <DisplayOrder>5</DisplayOrder>
-          </MetaColumn>
-          <MetaColumn>
-            <GUID>18c778a2-9288-4592-aea2-ebf3c47a381f</GUID>
-            <Name>price</Name>
+            <GUID>007fbda4-54e5-4d02-8abb-eec698c69621</GUID>
+            <Name>transactions.price</Name>
             <Type>Text</Type>
             <Category>transactions_transactions</Category>
             <DisplayName>Price</DisplayName>
             <DisplayOrder>6</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
-            <GUID>2adb4e65-f639-41dc-9ad4-be39379b96b0</GUID>
-            <Name>total</Name>
+            <GUID>589c8783-75bb-41e7-a744-6a0640aadcd3</GUID>
+            <Name>transactions.total</Name>
             <Type>Text</Type>
             <Category>transactions_transactions</Category>
             <DisplayName>Total</DisplayName>
             <DisplayOrder>7</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>774df126-3c76-414c-b08f-cf21ab265ca1</GUID>
+            <Name>account_id</Name>
+            <Type>Numeric</Type>
+            <Category>transactions_transactions</Category>
+            <DisplayName>Account id</DisplayName>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>369c8475-bf7d-4ee6-9ac3-4065193499f3</GUID>
+            <Name>transactions.symbol</Name>
+            <Type>Text</Type>
+            <Category>transactions_transactions</Category>
+            <DisplayName>Symbol</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -689,15 +715,6 @@
             <Name>mongo_array_name</Name>
             <Value>cast</Value>
           </Parameter>
-          <Parameter>
-            <Name>mongo_field_names_add</Name>
-            <Value>_id
-title</Value>
-          </Parameter>
-          <Parameter>
-            <Name>mongo_field_names_ignore</Name>
-            <Value>Plot</Value>
-          </Parameter>
         </Parameters>
         <DefinitionInitScript>@using MongoDB.Bson
 @{
@@ -714,36 +731,9 @@ title</Value>
     }
 };
 </DefinitionInitScript>
-        <DefinitionScript>@using System.Data
-@using MongoDB.Driver
-@using MongoDB.Bson
-@{
-    MetaTable metaTable = Model;
-    MongoClient client = new MongoClient(metaTable.Source.Connection.FullConnectionString);
-    var dbName = metaTable.GetValue(MetaTable.ParameterNameMongoDatabase);
-    var collectionName = metaTable.GetValue(MetaTable.ParameterNameMongoCollection);
-    if (!client.ListDatabaseNames().ToList().Contains(dbName)) {
-        throw new Exception("Database name not found on the server");
-    }
-    var database = client.GetDatabase(dbName);
-    if (!database.ListCollectionNames().ToList().Contains(collectionName)) {
-        throw new Exception("Collection name not found in the database");
-    }
-    var collection = database.GetCollection&lt;BsonDocument&gt;(collectionName);
-    var fieldsToAdd = metaTable.GetValue("mongo_field_names_add").Replace("\r\n","\n").Split('\n');
-    var fieldsToIgnore = metaTable.GetValue("mongo_field_names_ignore").Replace("\r\n","\n").Split('\n');
-    metaTable.NoSQLTable = DataTableLoader.FromMongoDB(collection.Aggregate&lt;BsonDocument&gt;(metaTable.MongoStages).ToList(), "", fieldsToAdd, fieldsToIgnore);
-}</DefinitionScript>
         <Alias>moviesCopy</Alias>
         <DynamicColumns>true</DynamicColumns>
         <Columns>
-          <MetaColumn>
-            <GUID>9bad50d5-a333-4801-9d5c-d312bf18f902</GUID>
-            <Name>._id</Name>
-            <Type>Text</Type>
-            <Category>movies_casts</Category>
-            <DisplayName>. id</DisplayName>
-          </MetaColumn>
           <MetaColumn>
             <GUID>9fdea36a-f83f-4ded-bc78-be785a7a0480</GUID>
             <Name>plot</Name>
@@ -785,14 +775,6 @@ title</Value>
             <Category>movies_casts</Category>
             <DisplayName>Poster</DisplayName>
             <DisplayOrder>6</DisplayOrder>
-          </MetaColumn>
-          <MetaColumn>
-            <GUID>3327d578-e13c-431f-a351-a239f800de3f</GUID>
-            <Name>.title</Name>
-            <Type>Text</Type>
-            <Category>movies_casts</Category>
-            <DisplayName>.title</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>1cc79354-78fc-4fed-98ad-1b4c0ba30fb0</GUID>
@@ -1028,6 +1010,21 @@ title</Value>
             <DisplayName>Tomatoes.box Office</DisplayName>
             <DisplayOrder>34</DisplayOrder>
           </MetaColumn>
+          <MetaColumn>
+            <GUID>de6a4a66-884a-4633-aea4-7b8806a4a9e7</GUID>
+            <Name>_id</Name>
+            <Type>Text</Type>
+            <Category>movies_casts</Category>
+            <DisplayName>Id</DisplayName>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>085e0d3e-ee58-4b4d-9f51-eafbb8bfa3dc</GUID>
+            <Name>title</Name>
+            <Type>Text</Type>
+            <Category>movies_casts</Category>
+            <DisplayName>Title</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+          </MetaColumn>
         </Columns>
       </MetaTable>
     </Tables>
@@ -1044,7 +1041,7 @@ title</Value>
         <Name>accounts - customers_accounts</Name>
         <LeftTableGUID>dc9cc4d8-4077-4e09-b1a2-ffc22b3d03aa</LeftTableGUID>
         <RightTableGUID>715b6c0e-18a6-4ccb-a540-ab51b9fc1766</RightTableGUID>
-        <Clause>Helper.ToString(accounts["account_id"]) equals Helper.ToString(customersaccounts["value"])</Clause>
+        <Clause>Helper.ToString(accounts["account_id"]) equals Helper.ToString(customersaccounts["accounts"])</Clause>
       </MetaJoin>
       <MetaJoin>
         <GUID>3c49e3fb-5cd4-4624-a7f3-a5b1296b6daf</GUID>

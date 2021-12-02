@@ -185,7 +185,12 @@ var SWIMain = /** @class */ (function () {
                         startupreportname = _main._lastReport.name;
                     }
                     var executionmode = $("#executionmode-select").val();
-                    _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, executionmode, function () {
+                    //connections
+                    var connections = [];
+                    _main._profile.sources.forEach(function (source) {
+                        connections.push(source.GUID + "\r" + $("#" + source.GUID).val());
+                    });
+                    _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, executionmode, connections, function () {
                         location.reload();
                     });
                 }
@@ -229,6 +234,19 @@ var SWIMain = /** @class */ (function () {
                 if (SWIUtil.IsMobile())
                     $('.navbar-toggle').click();
             }
+            var $connections = $("#default-connections");
+            $("#default-connections").empty();
+            _main._profile.sources.forEach(function (source) {
+                var $connectionDiv = $("<div class='row'>");
+                $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
+                var $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
+                source.connections.forEach(function (connection) {
+                    $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
+                });
+                $connectionDiv.append($("<div class='col-sm-8'>").append($connectionSelect));
+                $connections.append($connectionDiv);
+                $connectionSelect.selectpicker('refresh');
+            });
         });
         //Disconnect
         $("#disconnect-nav-item").unbind("click").on("click", function () {

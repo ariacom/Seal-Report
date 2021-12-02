@@ -38,6 +38,23 @@ namespace Seal.Model
     }
 
     /// <summary>
+    /// Store default connection of the user
+    /// </summary>
+    public class DefaultConnection
+    {
+        /// <summary>
+        /// GUID of the MetaSource
+        /// </summary>
+        public string SourceGUID { get; set; }
+
+        /// <summary>
+        /// GUID of the connection
+        /// 
+        public string ConnectionGUID { get; set; }
+    }
+
+
+    /// <summary>
     /// Object to store the culture and the recent reports of the user
     /// </summary>
     public class SecurityUserProfile
@@ -83,6 +100,11 @@ namespace Seal.Model
             RecentReports.Insert(0, new RecentFileItem() { Path = path, ViewGUID = viewGUID, OutputGUID = outputGUID, Name = !string.IsNullOrEmpty(report.ExecutionName) ? report.ExecutionName : report.DisplayNameEx });
             if (RecentReports.Count > 9) RecentReports.RemoveAt(RecentReports.Count - 1);
         }
+
+        /// <summary>
+        /// List of default connections for the data sources
+        /// </summary>
+        public List<DefaultConnection> Connections { get; set; } = new List<DefaultConnection>();
 
         /// <summary>
         /// Load the profile from a file path
