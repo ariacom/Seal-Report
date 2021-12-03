@@ -39,6 +39,7 @@
                             <ul class="nav">
                                 <li><a href="#lineNoSQL_nst">No SQL Table</a></li>
                                 <li><a href="#lineNoSQL_jtl">Joins and Table Links</a></li>
+                                <li><a href="#lineNoSQL_mdb">Mongo DB Support</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -426,8 +427,7 @@
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Join Script Sample</h4>
                                 Example of a <code>Join clause</code> between <b>Northwind</b> tables and an <b>Excel Sheet</b> table.
-                                <pre class="brush: csharp">
-new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
+                                <pre class="brush: csharp">new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
 equals 
 new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }
                     </pre>
@@ -441,8 +441,7 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
                                 This source contains several <b>No SQL Tables</b> based on the <b>Table Templates</b> available.<br /><br />
                                 The table <b>XML RSS News</b> shows how to read RSS BBC Feeds to fill the DataTable.<br />
                                 <code>Definition Script</code> property of the table.
-                                <pre class="brush: csharp">
-@@using System.Data
+                                <pre class="brush: csharp">@@using System.Data
 @@{
     MetaTable metaTable = Model;
     DataTable table = new DataTable();
@@ -459,8 +458,7 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
 </pre><br />
 
                                 <code>Load script</code> property of the table.
-                                <pre class="brush: csharp">
-@@using System.Data
+                                <pre class="brush: csharp">@@using System.Data
 @@using System.Text
 @@using System.Collections
 @@using System.Web
@@ -489,6 +487,38 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
     }
     metaTable.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
+                    </pre>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineNoSQL_mdb" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Mongo DB Support</h4>
+                            <p>
+                                Like in SQL, <b>Joins</b> can be defined between tables using a dedicated <code>Join clause</code> coded in C#.<br />
+                                This clause will be used by the engine to generate the LINQ query when several tables are involved.
+                            </p>
+                            <p>
+                                <div class="bs-callout bs-callout-info">
+                                    Defining <b>Table Links</b> and <b>Joins</b> allow to join different <b>Data Sources</b> (<eg>e.g. Performing a report that shows data from a SQL database and an Excel sheet</eg>).
+                                </div>
+                            <p>
+                                In the LINQ Query, elements defined in a <b>No SQL table</b> are named with the <b>Table Name</b> and the <b>Column Name</b> (<eg>e.g. for the objective column of Excel Employee Objective: <i>ExcelEmployeeObjective["objective"]</i></eg>), and elements defined in a <b>Table Link</b> are named using the <b>Data Source Name</b> and the original <b>Column Name</b> (<eg>e.g. for the LastName column of Employees: <i>Northwind["Employees.LastName"]</i></eg>).
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Mongo DB Samples</h4>
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/220 Mongo DB - Customer sales per year</a><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/221 Mongo DB - Customer sales detail</a><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/222 Mongo DB - Movies search</a><br />
+                                These reports demonstrates how to query and aggregate several tables.<br /><br />
+                                <a class="btn btn-primary">Repository Data Source Sample: Mongo DB</a><br />
+                                This source contains several <b>Mongo DB Tables</b> based on the demonstration database.<br /><br />
+                                The table <b>movies</b> defines the <b>sample_mflix.movies</b> collection of the database.<br />
+                                The related table <b>movies_cast</b> is defined to show the <b>cast</b> array of the collection.<br />
+                                A Join clause has been defined between the 2 tables:
+                                <pre class="brush: csharp">Helper.ToString(movies["_id"]) equals Helper.ToString(moviescasts["_id"])
                     </pre>
                             </div>
                         </div>

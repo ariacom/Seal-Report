@@ -177,6 +177,13 @@
             }, 800);
             return false;
         });
+
+        //hack to remove container class on the syntax highlight
+        $(document).ready(function () {
+            setTimeout(function () {
+                $(".syntaxhighlighter table td.code .container").removeClass("container");
+            }, 1000);
+        });
     </script>
 </body>
 </html>
