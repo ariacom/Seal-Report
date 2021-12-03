@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>5409f70ba7ae44cbb0a960b8108ef826</GUID>
+  <ViewGUID>cb20ca89-6d86-4ee6-8581-2f06bb2d7af3</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>4f9389a8-f876-4ecb-ac2f-3763674d3d8c</GUID>
+      <Name>Mongo DB (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData />
+      <MetaSourceGUID>1f7b6741-c62f-4903-90ed-2fe3229190a7</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>f4f62b47-33fb-4f8c-98dd-aaaff38e2b61</GUID>
+      <Name>sales detail</Name>
+      <SourceGUID>4f9389a8-f876-4ecb-ac2f-3763674d3d8c</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>57e31c20-18d1-4e30-a46c-0734ab19dce7</GUID>
+          <Name>transactions</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 03.12.2021 at 16:56:59
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"account_id",1},
+{"transactions.date",1},
+{"transactions.transaction_code",1},
+{"transactions.symbol",1},
+{"price",1},
+{"transactions.amount",1},
+{"total",1},
+            }
+    ));
+
+}</MongoStagesScript>
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>73fc95a7-f884-47fe-b69b-9094e0b3f900</GUID>
+          <Name>account_id</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>1daf7479-14ad-453b-b692-0dfde8ad9a30</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0e7b95a8-0a22-459a-ad45-932f49a58cd3</GUID>
+          <Name>transactions.date</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>93646512-f931-4e71-9a51-44beda8fdc24</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f2b28ce9-c212-4ae3-b9cb-53f997795a0a</GUID>
+          <Name>transactions.transaction_code</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>325c8814-c5ce-43af-9952-34042882a5a1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>76e52282-fc50-4f21-9df5-2c658a506fef</GUID>
+          <Name>transactions.symbol</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da681cf8-723a-4573-8d88-38e80ce36947</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c5dcaf1a-f4eb-4171-9cbd-5de041214f61</GUID>
+          <Name>price</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>ed321ca3-a890-433b-8e6f-938154c34bc5</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>964edff5-394e-43ee-954a-cf27e162ffbd</GUID>
+          <Name>transactions.amount</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>6e51b4b6-058c-4e3e-b084-319c5646f8ad</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ac4108bc-d7aa-4374-9d0b-1d5c1d0656e8</GUID>
+          <Name>total</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>f8bbbcb7-2396-4695-a73b-0d56c247bd7c</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[80ee1b3a-9110-4cae-9296-9ef7717e8669]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>80ee1b3a-9110-4cae-9296-9ef7717e8669</GUID>
+          <Name>name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f63b70c5-26ec-49ce-9635-27fd8cb463e8</MetaColumnGUID>
+          <Prompt>PromptOneValue</Prompt>
+          <Required>true</Required>
+          <FirstSelection>First</FirstSelection>
+          <TriggerExecution>true</TriggerExecution>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>309ac5bb-5c62-4285-a600-fdbbd589c416</GUID>
+      <Name>customer detail</Name>
+      <SourceGUID>4f9389a8-f876-4ecb-ac2f-3763674d3d8c</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>797f81cd-f6ef-40fc-b5fa-0e0fd4425b0f</GUID>
+          <Name>customers</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 03.12.2021 at 15:27:23
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"username",1},
+{"name",1},
+{"address",1},
+{"birthdate",1},
+{"email",1},
+            }
+    ));
+
+}</MongoStagesScript>
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>8e281a9b-ceb8-492a-80e5-cb7a489ec8bc</GUID>
+          <Name>username</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>89ad749c-128f-4a55-809d-b0227c975653</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8bbcbd0f-43d3-472c-859e-b5d60b3f0799</GUID>
+          <Name>name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f63b70c5-26ec-49ce-9635-27fd8cb463e8</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>93152e69-3ed9-4b39-bc21-00fdbca6b6f9</GUID>
+          <Name>address</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>4991af72-9d29-4678-8b61-2955bd3cfbbd</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>31d4fe47-f2b1-4b46-82cb-dd621e1c956b</GUID>
+          <Name>birthdate</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>4b00b520-13c9-4cd1-b368-c1b3ac555531</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>71a3b6d4-e315-43fc-bc9e-15365d65878a</GUID>
+          <Name>email</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5dfdf2da-79e8-4606-9458-6ce829e1f5c2</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[6de005c1-510a-4310-9363-cb8c1143ed8b]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>6de005c1-510a-4310-9363-cb8c1143ed8b</GUID>
+          <Name>name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f63b70c5-26ec-49ce-9635-27fd8cb463e8</MetaColumnGUID>
+          <Prompt>PromptOneValue</Prompt>
+          <Required>true</Required>
+          <FirstSelection>First</FirstSelection>
+          <TriggerExecution>true</TriggerExecution>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>cb20ca89-6d86-4ee6-8581-2f06bb2d7af3</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>03cb1f00-6a54-436c-837e-3cb66baf720b</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;2 Models showing a customer detail and his transactions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>9ce1cd60-3fd5-43ee-91ca-84bbbc98475b</GUID>
+          <Name>Container</Name>
+          <Views>
+            <ReportView>
+              <GUID>81246a7c-34d1-42d4-bf68-30aac0876607</GUID>
+              <Name>sales detail</Name>
+              <Views>
+                <ReportView>
+                  <GUID>6afaf849-7896-4920-aab5-23f1381f2269</GUID>
+                  <Name>Container</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>4e2bc7da-f882-48fc-ab28-30fa38dac9f8</GUID>
+                      <Name>Page Table</Name>
+                      <TemplateName>Page Table</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>4f014c70-cc94-4278-bb8d-10495a2c90b1</GUID>
+                      <Name>Chart JS</Name>
+                      <TemplateName>Chart JS</TemplateName>
+                      <SortOrder>2</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>9065c386-1b4c-4048-9626-4b3e1e36df6f</GUID>
+                      <Name>Chart NVD3</Name>
+                      <TemplateName>Chart NVD3</TemplateName>
+                      <SortOrder>3</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>b7635b1e-23cb-4cb4-87de-09eb94dd7a19</GUID>
+                      <Name>Chart Plotly</Name>
+                      <TemplateName>Chart Plotly</TemplateName>
+                      <SortOrder>4</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>2548083c-e04d-47fa-81c8-c6374b78e805</GUID>
+                      <Name>Data Table</Name>
+                      <TemplateName>Data Table</TemplateName>
+                      <SortOrder>5</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Container</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>f4f62b47-33fb-4f8c-98dd-aaaff38e2b61</ModelGUID>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>d977f242-3d33-4d8f-9c74-aca83f1142a5</GUID>
+              <Name>customer detail</Name>
+              <TemplateName>Model Detail</TemplateName>
+              <ModelGUID>309ac5bb-5c62-4285-a600-fdbbd589c416</ModelGUID>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-3;col-sm-9;</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

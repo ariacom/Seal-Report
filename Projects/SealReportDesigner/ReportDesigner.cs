@@ -171,7 +171,7 @@ namespace Seal
                 {
                     childView.SortOrder = index++;
                     var imageIndex = 8;
-                    if (childView.TemplateName == "Model") imageIndex = 18;
+                    if (childView.TemplateName == "Model" || childView.TemplateName == "Model Detail") imageIndex = 18;
                     else if (childView.TemplateName == "Widget") imageIndex = 19;
                     TreeNode childNode = new TreeNode(childView.Name) { ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
                     childNode.Tag = childView;
@@ -1693,6 +1693,22 @@ namespace Seal
                         //move the parent
                         ReportView parent = sourceNode.Parent.Tag as ReportView;
                         parent.Views.Remove(sourceView);
+
+                        //check if the target view is not a child of the source
+                        var view = targetView;
+                        while (view.ParentView != null)
+                        {
+                            if (view.ParentView == sourceView)
+                            {
+                                sourceView.Views.Remove(view);
+                                parent.Views.Add(view);
+                                view.ParentView = parent;
+                                break;
+                            }
+                            view = view.ParentView;
+                        }
+
+                        sourceView.ParentView = targetView;
                         targetView.Views.Add(sourceView);
                         targetView.InitReferences();
                         SetModified();

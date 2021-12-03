@@ -254,7 +254,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorTableLoadInitScriptTemplate = @"@using System.Data
+        const string razorMongoStagesScriptTemplate = @"@using System.Data
 @{
     MetaTable metaTable = Model;
 }; ";
@@ -1127,7 +1127,7 @@ namespace Seal.Forms
             {
                 var frm = new TemplateTextEditorForm();
 
-                string template = "";
+                string template = "", warning = "";
                 string valueToEdit = (value == null ? "" : value.ToString());
                 if (context.Instance is ReportView)
                 {
@@ -1392,16 +1392,21 @@ namespace Seal.Forms
 
                         if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
                     }
-                    else if (context.PropertyDescriptor.Name == "LoadInitScript")
+                    else if (context.PropertyDescriptor.Name == "MongoStagesScript")
                     {
                         var table = context.Instance as MetaTable;
-                        template = table.TableTemplate != null && table.LoadInitScript != null ? table.LoadInitScript : razorTableLoadInitScriptTemplate;
+                        template = table.TableTemplate != null && table.MongoStagesScript != null ? table.MongoStagesScript : razorMongoStagesScriptTemplate;
 
                         frm.ObjectForCheckSyntax = context.Instance;
-                        frm.Text = "Edit the script executed before the table load execution";
+                        frm.Text = "Edit the script executed for a Mongo DB table before the table load";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
 
                         if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
+
+                        if (table.GetBoolValue(MetaTable.ParameterNameMongoSync, true))
+                        {
+                            warning = "The script will be overwritten when the model is modified.\r\n\r\nSet the 'Generate Mongo DB Stages' parameter to False to keep the modified script.";
+                        }
                     }
                     else if (context.PropertyDescriptor.Name == "LoadScript")
                     {
@@ -1569,6 +1574,8 @@ namespace Seal.Forms
 
                     if (frm.textBox.Text.Trim() != template.Trim() || string.IsNullOrEmpty(template)) value = frm.textBox.Text;
                     else if (frm.textBox.Text.Trim() == template.Trim() && !string.IsNullOrEmpty(template)) value = "";
+
+                    if (!string.IsNullOrEmpty(warning)) MessageBox.Show(warning, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             return value;

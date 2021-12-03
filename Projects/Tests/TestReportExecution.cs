@@ -68,7 +68,7 @@ namespace Test
             report.Models[0].Restrictions.Add(restriction);
             //Set the restriction text
             if (!string.IsNullOrEmpty(report.Models[0].Restriction)) report.Models[0].Restriction = string.Format("({0}) AND ", report.Models[0].Restriction);
-            report.Models[0].Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+            report.Models[0].Restriction += restriction.Pattern;
 
             //Then execute it
             ReportExecution execution = new ReportExecution() { Report = report };

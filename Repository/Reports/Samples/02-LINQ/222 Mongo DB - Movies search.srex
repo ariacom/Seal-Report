@@ -22,6 +22,47 @@
           <GUID>9a38018c-7451-4965-bcdc-659f3bdecd4c</GUID>
           <Name>movies</Name>
           <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 03.12.2021 at 17:50:05
+    MetaTable metaTable = Model;
+
+    //Restrictions
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$match",
+            new BsonDocument("$and",
+                new BsonArray {
+new BsonDocument("imdb.rating", new BsonDocument("$gt", 8)),
+new BsonDocument("cast", new BsonDocument("$in", new BsonArray {new BsonRegularExpression(@"/john/i"),})),
+new BsonDocument("awards.wins", new BsonDocument("$gte", 1)),
+                }
+    )));
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"title",1},
+{"year",1},
+{"type",1},
+{"imdb.rating",1},
+{"imdb.votes",1},
+{"awards.wins",1},
+{"plot",1},
+{"cast",1},
+{"_id",1},
+            }
+    ));
+
+}</MongoStagesScript>
+        </MetaTable>
+        <MetaTable>
+          <GUID>5d7cc165-50df-4ffa-acc9-bf23b6136a10</GUID>
+          <Name>movies_casts</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript />
         </MetaTable>
       </LINQSubTables>
       <Elements>
@@ -65,21 +106,33 @@
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>01ffd19c-67b6-4efa-8565-916f54dabf56</MetaColumnGUID>
         </ReportElement>
+        <ReportElement>
+          <GUID>d37833a5-d332-4e05-97eb-1901ab2746e8</GUID>
+          <Name>awards.wins</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>c26bd2d6-876b-48bd-bdfe-d675a3dbaec1</MetaColumnGUID>
+        </ReportElement>
       </Elements>
       <Restriction>[b938c9c4-daf2-4046-a819-f381c145ca89]
 &amp;&amp; [32717e24-ceaf-4a0c-aff1-6a4d9d956674]
 &amp;&amp; [d46c3085-431f-4032-91ea-a59231f0117e]
-&amp;&amp; [7ca67ccc-707d-4ae2-a755-735a2097371e]</Restriction>
+&amp;&amp; [7ca67ccc-707d-4ae2-a755-735a2097371e]
+&amp;&amp; [583315d0-8949-4965-b674-b57dbbf3d5d0]
+&amp;&amp; [5fca087e-b2a8-4e3a-90f4-922733f4d4d8]</Restriction>
       <Restrictions>
         <ReportRestriction>
           <GUID>b938c9c4-daf2-4046-a819-f381c145ca89</GUID>
           <Name>imdb.rating</Name>
           <DisplayName />
+          <DisplayOrder>10</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>bd55319a-2ac4-45a6-952a-7e7f6b610dd2</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Greater</Operator>
+          <DisplayOrderRE>10</DisplayOrderRE>
           <Value1>8</Value1>
           <FormatRe>N0</FormatRe>
         </ReportRestriction>
@@ -119,6 +172,33 @@
           <DisplayOrderRE>4</DisplayOrderRE>
           <FormatRe>D</FormatRe>
         </ReportRestriction>
+        <ReportRestriction>
+          <GUID>583315d0-8949-4965-b674-b57dbbf3d5d0</GUID>
+          <Name>cast</Name>
+          <DisplayName />
+          <DisplayOrder>5</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e4492fdf-5be5-4faf-abce-74b9a990e3f0</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>5</DisplayOrderRE>
+          <Value1>john</Value1>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>5fca087e-b2a8-4e3a-90f4-922733f4d4d8</GUID>
+          <Name>awards.wins</Name>
+          <DisplayName />
+          <DisplayOrder>6</DisplayOrder>
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>c26bd2d6-876b-48bd-bdfe-d675a3dbaec1</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <DisplayOrderRE>6</DisplayOrderRE>
+          <Value1>1</Value1>
+          <FormatRe>N0</FormatRe>
+        </ReportRestriction>
       </Restrictions>
     </ReportModel>
     <ReportModel>
@@ -130,93 +210,69 @@
           <GUID>5d7cc165-50df-4ffa-acc9-bf23b6136a10</GUID>
           <Name>movies_casts</Name>
           <TemplateName>Mongo DB</TemplateName>
-          <Parameters>
-            <Parameter>
-              <Name>mongo_sync</Name>
-              <Value>False</Value>
-            </Parameter>
-          </Parameters>
-          <LoadInitScript>@using MongoDB.Bson
-@{
-    MetaTable metaTable = Model;
-
-    //Restrictions
-    metaTable.MongoStages.Add(
-        new BsonDocument(
-            "$match",
-            new BsonDocument("$and",
-                new BsonArray {
-new BsonDocument("imdb.rating", new BsonDocument("$gt", 8)),
-new BsonDocument("cast.value", new BsonDocument("$in", new BsonArray {new BsonRegularExpression(@"/John/i"),})),
-
-                }
-            )
-        )
-    );
-
-    //Elements
-    metaTable.MongoStages.Add(
-        new BsonDocument(
-            "$project",
-            new BsonDocument{
-{"cast",1},
-{"title",1},
-{"value",1},
-{"imdb.rating",1},
-{"plot",1},
-{"year",1},
-{"_id",1},
-
-            }
-        )
-    );
-
-}</LoadInitScript>
         </MetaTable>
         <MetaTable>
           <GUID>9a38018c-7451-4965-bcdc-659f3bdecd4c</GUID>
           <Name>movies</Name>
           <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 03.12.2021 at 17:46:12
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"title",1},
+{"_id",1},
+            }
+    ));
+
+}</MongoStagesScript>
         </MetaTable>
       </LINQSubTables>
       <Elements>
         <ReportElement>
-          <GUID>8f22122c-035f-47ab-aca3-7c6fe47413de</GUID>
+          <GUID>7e5f23af-c835-44b8-8ebb-7bbeb9abd392</GUID>
           <Name>title</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>22757fd1-86cd-4e6e-98d0-d732a00d6965</MetaColumnGUID>
+          <MetaColumnGUID>f735004b-a199-4670-98b9-2137f3d924f1</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>7312e343-a1b6-4e17-a9d7-754cd438fe4b</GUID>
-          <Name>value</Name>
+          <GUID>4377ab22-0d86-4919-9c32-71123e624c11</GUID>
+          <Name>cast</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>d44e80d1-cfcd-4ffc-a5ec-f89a7514925d</MetaColumnGUID>
+          <MetaColumnGUID>e4492fdf-5be5-4faf-abce-74b9a990e3f0</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[8de3819b-6df6-4370-9157-9e856bf445e2]
-&amp;&amp; [63288c61-bfbf-47e8-af41-f98171b05dac]
-&amp;&amp; [87a9947f-a699-4bbe-a37a-917b322fb498]
-&amp;&amp; [dec3abbc-a1e1-4123-acae-1f9f73f55b89]
-&amp;&amp; [c88bd177-d45d-4171-8a67-3f1306903aac]</Restriction>
+      <Restriction>[2e00e017-35ca-4574-8fc4-2e9202977ad3]
+&amp;&amp; [eae06c26-9ac8-4a1d-bf03-7d1757bc55fd]
+&amp;&amp; [5484c803-25be-41b4-a1d8-2fb8076d6a3f]
+&amp;&amp; [b5ae0c73-4a0a-458d-bc86-27c25cc315ba]
+&amp;&amp; [f885a64b-f915-45fb-a56c-09c39ec9bede]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>8de3819b-6df6-4370-9157-9e856bf445e2</GUID>
+          <GUID>2e00e017-35ca-4574-8fc4-2e9202977ad3</GUID>
           <Name>imdb.rating</Name>
           <DisplayName />
+          <DisplayOrder>10</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>bd55319a-2ac4-45a6-952a-7e7f6b610dd2</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Greater</Operator>
+          <DisplayOrderRE>10</DisplayOrderRE>
           <Value1>8</Value1>
           <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
-          <GUID>63288c61-bfbf-47e8-af41-f98171b05dac</GUID>
+          <GUID>eae06c26-9ac8-4a1d-bf03-7d1757bc55fd</GUID>
           <Name>title</Name>
           <DisplayName />
           <DisplayOrder>2</DisplayOrder>
@@ -228,7 +284,7 @@ new BsonDocument("cast.value", new BsonDocument("$in", new BsonArray {new BsonRe
           <DisplayOrderRE>2</DisplayOrderRE>
         </ReportRestriction>
         <ReportRestriction>
-          <GUID>87a9947f-a699-4bbe-a37a-917b322fb498</GUID>
+          <GUID>5484c803-25be-41b4-a1d8-2fb8076d6a3f</GUID>
           <Name>plot</Name>
           <DisplayName />
           <DisplayOrder>3</DisplayOrder>
@@ -240,7 +296,7 @@ new BsonDocument("cast.value", new BsonDocument("$in", new BsonArray {new BsonRe
           <DisplayOrderRE>3</DisplayOrderRE>
         </ReportRestriction>
         <ReportRestriction>
-          <GUID>dec3abbc-a1e1-4123-acae-1f9f73f55b89</GUID>
+          <GUID>b5ae0c73-4a0a-458d-bc86-27c25cc315ba</GUID>
           <Name>year</Name>
           <DisplayName />
           <DisplayOrder>4</DisplayOrder>
@@ -252,17 +308,17 @@ new BsonDocument("cast.value", new BsonDocument("$in", new BsonArray {new BsonRe
           <FormatRe>D</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
-          <GUID>c88bd177-d45d-4171-8a67-3f1306903aac</GUID>
-          <Name>value</Name>
+          <GUID>f885a64b-f915-45fb-a56c-09c39ec9bede</GUID>
+          <Name>cast</Name>
           <DisplayName />
           <DisplayOrder>5</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>d44e80d1-cfcd-4ffc-a5ec-f89a7514925d</MetaColumnGUID>
+          <MetaColumnGUID>e4492fdf-5be5-4faf-abce-74b9a990e3f0</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
           <DisplayOrderRE>5</DisplayOrderRE>
-          <Value1>John</Value1>
+          <Value1>john</Value1>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
@@ -392,6 +448,16 @@ new BsonDocument("cast.value", new BsonDocument("$in", new BsonArray {new BsonRe
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>restrictions_per_row</Name>
+          <Value>6</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
       <SortOrder>1</SortOrder>
     </ReportView>
   </Views>

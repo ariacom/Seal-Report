@@ -328,7 +328,7 @@ namespace Seal.Forms
                             restriction.Operator = Operator.Equal;
                             model.Restrictions.Add(restriction);
                             if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction += "\r\nAND ";
-                            model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+                            model.Restriction += restriction.Pattern;
                         }
                         model.InitReferences();
 

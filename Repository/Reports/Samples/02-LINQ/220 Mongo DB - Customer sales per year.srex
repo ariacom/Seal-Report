@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>4e59370b3d8d479199a2f2d67d4d7855</GUID>
+  <ViewGUID>cb20ca89-6d86-4ee6-8581-2f06bb2d7af3</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>4f9389a8-f876-4ecb-ac2f-3763674d3d8c</GUID>
+      <Name>Mongo DB (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData />
+      <MetaSourceGUID>1f7b6741-c62f-4903-90ed-2fe3229190a7</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>f4f62b47-33fb-4f8c-98dd-aaaff38e2b61</GUID>
+      <Name>sales per customer</Name>
+      <SourceGUID>4f9389a8-f876-4ecb-ac2f-3763674d3d8c</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>57e31c20-18d1-4e30-a46c-0734ab19dce7</GUID>
+          <Name>transactions</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 03.12.2021 at 14:57:24
+    MetaTable metaTable = Model;
+
+    //Restrictions
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$match",
+            new BsonDocument("$and",
+                new BsonArray {
+new BsonDocument("transactions.date", new BsonDocument("$gte", new DateTime(2011,1,1,0,0,0))),
+                }
+    )));
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"year",1},
+{"total",1},
+{"transactions.date",1},
+{"_id",1},
+{"account_id",1},
+{"accounts",1},
+            }
+    ));
+
+}</MongoStagesScript>
+        </MetaTable>
+        <MetaTable>
+          <GUID>797f81cd-f6ef-40fc-b5fa-0e0fd4425b0f</GUID>
+          <Name>customers</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 03.12.2021 at 14:57:24
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"name",1},
+{"_id",1},
+{"account_id",1},
+{"accounts",1},
+            }
+    ));
+
+}</MongoStagesScript>
+        </MetaTable>
+        <MetaTable>
+          <GUID>715b6c0e-18a6-4ccb-a540-ab51b9fc1766</GUID>
+          <Name>customers_accounts</Name>
+          <TemplateName>Mongo DB</TemplateName>
+        </MetaTable>
+        <MetaTable>
+          <GUID>dc9cc4d8-4077-4e09-b1a2-ffc22b3d03aa</GUID>
+          <Name>accounts</Name>
+          <TemplateName>Mongo DB</TemplateName>
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>c9ebd7ff-6cf1-49a9-bc96-e95d9315718e</GUID>
+          <Name>year</Name>
+          <DisplayName />
+          <Format>D0</Format>
+          <PivotPosition>Column</PivotPosition>
+          <MetaColumnGUID>9f55edb5-5559-4020-9ca7-721bc1baa093</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>22080bfa-a5f9-492d-bf27-59f1c6213b22</GUID>
+          <Name>name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f63b70c5-26ec-49ce-9635-27fd8cb463e8</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ac4108bc-d7aa-4374-9d0b-1d5c1d0656e8</GUID>
+          <Name>total</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>RowColumn</ShowTotal>
+          <MetaColumnGUID>f8bbbcb7-2396-4695-a73b-0d56c247bd7c</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[94efdc18-2f55-46eb-b841-1404875fd610]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>94efdc18-2f55-46eb-b841-1404875fd610</GUID>
+          <Name>transactions.date</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>93646512-f931-4e71-9a51-44beda8fdc24</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>ThisYear-10Y</Date1Keyword>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction>[64bb5f7c-2c0f-41a0-aec8-ef1fe0177ab7]</AggregateRestriction>
+      <AggregateRestrictions>
+        <ReportRestriction>
+          <GUID>64bb5f7c-2c0f-41a0-aec8-ef1fe0177ab7</GUID>
+          <Name>total</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>f8bbbcb7-2396-4695-a73b-0d56c247bd7c</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Greater</Operator>
+          <Value1>1000000</Value1>
+          <FormatRe>N0</FormatRe>
+        </ReportRestriction>
+      </AggregateRestrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>cb20ca89-6d86-4ee6-8581-2f06bb2d7af3</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>03cb1f00-6a54-436c-837e-3cb66baf720b</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;1 Model showing total sales per customer and year, including filters on date and total amount.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>0</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>81246a7c-34d1-42d4-bf68-30aac0876607</GUID>
+          <Name>sales per customer</Name>
+          <Views>
+            <ReportView>
+              <GUID>6afaf849-7896-4920-aab5-23f1381f2269</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>4e2bc7da-f882-48fc-ab28-30fa38dac9f8</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>4f014c70-cc94-4278-bb8d-10495a2c90b1</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>9065c386-1b4c-4048-9626-4b3e1e36df6f</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>b7635b1e-23cb-4cb4-87de-09eb94dd7a19</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>2548083c-e04d-47fa-81c8-c6374b78e805</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>f4f62b47-33fb-4f8c-98dd-aaaff38e2b61</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

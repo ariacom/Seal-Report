@@ -40,6 +40,7 @@
             this.fileServerDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +86,8 @@
             this.helpToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mainMenuStrip.Name = "mainMenuStrip";
-            this.mainMenuStrip.Size = new System.Drawing.Size(1220, 24);
+            this.mainMenuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.mainMenuStrip.Size = new System.Drawing.Size(1423, 24);
             this.mainMenuStrip.TabIndex = 0;
             this.mainMenuStrip.Text = "mainMenuStrip";
             // 
@@ -95,6 +97,7 @@
             this.newToolStripMenuItem,
             this.openSourceToolStripMenuItem,
             this.openDeviceToolStripMenuItem,
+            this.reloadToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.closeToolStripMenuItem,
@@ -172,6 +175,14 @@
             this.openDeviceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.openDeviceToolStripMenuItem.Text = "Open Output Device";
             // 
+            // reloadToolStripMenuItem
+            // 
+            this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
+            this.reloadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.reloadToolStripMenuItem.Text = "Reload";
+            this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
+            // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
@@ -246,9 +257,10 @@
             this.mainTreeView.ImageIndex = 0;
             this.mainTreeView.ImageList = this.mainImageList;
             this.mainTreeView.Location = new System.Drawing.Point(0, 0);
+            this.mainTreeView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.mainTreeView.Name = "mainTreeView";
             this.mainTreeView.SelectedImageIndex = 0;
-            this.mainTreeView.Size = new System.Drawing.Size(245, 625);
+            this.mainTreeView.Size = new System.Drawing.Size(285, 721);
             this.mainTreeView.TabIndex = 1;
             this.mainTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.mainTreeView_AfterSelect);
             this.mainTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseClick);
@@ -319,6 +331,7 @@
             // 
             // mainImageList
             // 
+            this.mainImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.mainImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("mainImageList.ImageStream")));
             this.mainImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.mainImageList.Images.SetKeyName(0, "database.png");
@@ -339,7 +352,8 @@
             this.mainSplitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.mainSplitContainer.Location = new System.Drawing.Point(0, 52);
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 60);
+            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.mainSplitContainer.Name = "mainSplitContainer";
             // 
             // mainSplitContainer.Panel1
@@ -349,16 +363,18 @@
             // mainSplitContainer.Panel2
             // 
             this.mainSplitContainer.Panel2.Controls.Add(this.mainPropertyGrid);
-            this.mainSplitContainer.Size = new System.Drawing.Size(1220, 625);
-            this.mainSplitContainer.SplitterDistance = 245;
+            this.mainSplitContainer.Size = new System.Drawing.Size(1423, 721);
+            this.mainSplitContainer.SplitterDistance = 285;
+            this.mainSplitContainer.SplitterWidth = 5;
             this.mainSplitContainer.TabIndex = 3;
             // 
             // mainPropertyGrid
             // 
             this.mainPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPropertyGrid.Location = new System.Drawing.Point(0, 0);
+            this.mainPropertyGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.mainPropertyGrid.Name = "mainPropertyGrid";
-            this.mainPropertyGrid.Size = new System.Drawing.Size(971, 625);
+            this.mainPropertyGrid.Size = new System.Drawing.Size(1133, 721);
             this.mainPropertyGrid.TabIndex = 0;
             this.mainPropertyGrid.ToolbarVisible = false;
             this.mainPropertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.mainPropertyGrid_PropertyValueChanged);
@@ -373,7 +389,7 @@
             this.openEventsToolStripButton});
             this.mainToolStrip.Location = new System.Drawing.Point(0, 24);
             this.mainToolStrip.Name = "mainToolStrip";
-            this.mainToolStrip.Size = new System.Drawing.Size(1220, 25);
+            this.mainToolStrip.Size = new System.Drawing.Size(1423, 25);
             this.mainToolStrip.TabIndex = 32;
             // 
             // saveToolStripButton
@@ -422,14 +438,15 @@
             // 
             // ServerManager
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1220, 677);
+            this.ClientSize = new System.Drawing.Size(1423, 781);
             this.Controls.Add(this.mainToolStrip);
             this.Controls.Add(this.mainSplitContainer);
             this.Controls.Add(this.mainMenuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mainMenuStrip;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "ServerManager";
             this.Text = "Seal Server Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ServerManager_FormClosing);
@@ -488,6 +505,7 @@
         private System.Windows.Forms.ToolStripMenuItem sortColumnSQLOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem noSQLdataSourceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileServerDeviceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
     }
 }
 

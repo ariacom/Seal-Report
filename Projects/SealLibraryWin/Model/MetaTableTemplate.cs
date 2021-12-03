@@ -147,6 +147,14 @@ namespace Seal.Model
             }
         }
 
+        public string Error
+        {
+            get
+            {
+                return _table.Error;
+            }
+        }
+
     }
 }
 

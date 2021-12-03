@@ -54,7 +54,7 @@ namespace Seal.Model
                 GetProperty("ParameterValues").SetIsBrowsable(!IsSQL && Parameters.Count > 0);
                 GetProperty("DefinitionInitScript").SetIsBrowsable(!IsSQL);
                 GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL);
-                GetProperty("LoadInitScript").SetIsBrowsable(!IsSQL);
+                GetProperty("MongoStagesScript").SetIsBrowsable(IsSubTable);
                 GetProperty("LoadScript").SetIsBrowsable(!IsSQL);
                 GetProperty("CacheDuration").SetIsBrowsable(!IsSQL);
                 GetProperty("PostSQL").SetIsBrowsable(IsSQL);
@@ -196,6 +196,8 @@ namespace Seal.Model
                     Parameters.Add(parameter);
                     parameter.InitFromConfiguration(configParameter);
                 }
+                //Show Error if any
+                if (!string.IsNullOrEmpty(TableTemplate.Error)) Error = TableTemplate.Error;
 
                 if (string.IsNullOrEmpty(_name)) _name = "Master"; //Force a name for backward compatibility
             }
@@ -253,7 +255,7 @@ namespace Seal.Model
                 string result = null;
                 if (IsSubTable && RootTable != null)
                 {
-                    result = string.IsNullOrEmpty(RootTable.DefinitionScript) ? RootTable.DefaultDefinitionInitScript : RootTable.DefinitionInitScript;
+                    result = string.IsNullOrEmpty(RootTable.DefinitionInitScript) ? RootTable.DefaultDefinitionInitScript : RootTable.DefinitionInitScript;
                 }
                 else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultDefinitionInitScript;
                 return result ?? "";
@@ -314,7 +316,6 @@ namespace Seal.Model
 
             if (DefinitionScript != null && DefinitionScript.Trim().Replace("\r\n", "\n") == DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
             if (LoadScript != null && LoadScript.Trim().Replace("\r\n", "\n") == DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
-            if (IsMongoDb && GetBoolValue(ParameterNameMongoSync, true)) LoadInitScript = null;
         }
 
         /// <summary>
@@ -371,13 +372,13 @@ namespace Seal.Model
         public string DefinitionScript { get; set; }
 
         /// <summary>
-        /// Optional Razor Script executed before the execution of the LoadScript. In particular, this script is used for Mongo DB table to add stages executed on the server. It can be overwritten if the 'Synchronize Restrictions' parameter of the table is set to false. 
+        /// Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false. 
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Load Init Script"), Description("Optional Razor Script executed before the execution of the LoadScript. In particular, this script is used for Mongo DB table to add stages executed on the server. It can be overwritten if the 'Synchronize Restrictions' parameter of the table is set to false."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Mongo DB Stages Script"), Description("Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string LoadInitScript { get; set; }
+        public string MongoStagesScript { get; set; }
 
         /// <summary>
         /// The Default Razor Script used to load the data in the table. This can be overwritten in the model.
@@ -779,7 +780,7 @@ namespace Seal.Model
                 {
                     MongoStages.Clear();
                     if (!string.IsNullOrEmpty(definitionInitScript)) RazorHelper.CompileExecute(definitionInitScript, this);
-                    if (withLoad && !string.IsNullOrEmpty(LoadInitScript)) RazorHelper.CompileExecute(LoadInitScript, this);
+                    if (withLoad && !string.IsNullOrEmpty(MongoStagesScript)) RazorHelper.CompileExecute(MongoStagesScript, this);
 
                     RazorHelper.CompileExecute(definitionScript, this);
                     if (withLoad)

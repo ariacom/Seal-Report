@@ -244,7 +244,7 @@ namespace Seal.Model
             {
                 bool updateModels = (Report != null && _subModelsSetAggr != value);
                 _subModelsSetAggr = value;
-                if (updateModels) BuildQuery(false, true);
+                if (updateModels) BuildQuery(false, true);                
             }
         }
         public bool ShouldSerializeSubModelsSetAggr() { return !_subModelsSetAggr; }
@@ -2397,6 +2397,100 @@ model.ResultTable = query2.CopyToDataTable2();
         [XmlIgnore]
         public Dictionary<string, DataTable> ExecResultTables = null;
 
+        void initMongoStagesScript(MetaTable subTable)
+        {
+            //Mongo stages handling
+            var script = "";
+            //Restrictions = match stage
+            var restrs = Restrictions.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable.HasSameMongoCollection(subTable)).ToList();
+            if (restrs.Count > 0)
+            {
+                var restrStr = "";
+                foreach (var restr in restrs)
+                {
+                    restrStr += restr.MongoText;
+                }
+
+                if (!string.IsNullOrEmpty(restrStr))
+                {
+                    script += @$"
+    //Restrictions
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            ""$match"",
+            new BsonDocument({Helper.QuoteDouble(subTable.GetValue(MetaTable.ParameterNameMongoRestrictionOperator))},
+                new BsonArray {{
+{restrStr}                }}
+    )));
+";
+                }
+            }
+            //Elements = Project stage
+            var elementsToSelect = Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.GUID == subTable.GUID).ToList();
+            if (elementsToSelect.Count > 0)
+            {
+                var elementStr = "";
+                var colNames = new List<string>();
+
+                foreach (var colName in (from c in elementsToSelect select c.MetaColumn.Name).Distinct())
+                {
+                    colNames.Add(colName);
+                }
+                //Add restriction elements used for LINQ
+                foreach (var colName in (from c in restrs select c.MetaColumn.Name).Distinct())
+                {
+                    colNames.Add(colName);
+                }
+                //elements used to perform the LINQ joins: we parse all columns defined in the sources involved
+                foreach (var join in ExecTableJoins)
+                {
+                    var sources = new List<MetaSource>();
+                    if (!sources.Contains(join.LeftTable.Source)) sources.Add(join.LeftTable.Source);
+                    if (!sources.Contains(join.RightTable.Source)) sources.Add(join.RightTable.Source);
+                    foreach (var s in sources)
+                    {
+                        foreach (var t in s.MetaData.Tables)
+                        {
+                            foreach (var col in t.Columns)
+                            {
+                                if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.LINQResultName, Helper.QuoteDouble(col.Name))))
+                                {
+                                    colNames.Add(col.Name);
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach (var colName in colNames.Distinct())
+                {
+                    elementStr += $"{{{Helper.QuoteDouble(colName)},1}},\r\n";
+                }
+
+                if (!string.IsNullOrEmpty(elementStr))
+                {
+                    script += @$"
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            ""$project"",
+            new BsonDocument {{
+{elementStr}            }}
+    ));
+";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(script))
+            {
+                subTable.MongoStagesScript = @$"@using MongoDB.Bson
+@{{
+    //Script generated on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToLongTimeString()}
+    MetaTable metaTable = Model;
+{script}
+}}";
+            }
+        }
+
         void initSubModelsAndTables()
         {
             //Build current sub-models
@@ -2478,36 +2572,50 @@ model.ResultTable = query2.CopyToDataTable2();
                 foreach (var restr in Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))
                 {
                     subModel.addHiddenElement(restr.MetaColumnGUID);
+                }
 
-                    if (SubModelsSetRestr)
+                if (SubModelsSetRestr)
+                {
+                    foreach (var restr in Restrictions.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))
                     {
                         //propagate restrictions
                         var restriction = subModel.Restrictions.FirstOrDefault(i => i.MetaColumnGUID == restr.MetaColumnGUID);
                         if (restriction == null)
                         {
                             restriction = ReportRestriction.CreateReportRestriction();
-                            restriction.PivotPosition = PivotPosition.Row;
                             restriction.MetaColumnGUID = restr.MetaColumnGUID;
                             subModel.Restrictions.Add(restriction);
+                        }
+                        if (!subModel.Restriction.Contains(restriction.Pattern))
+                        {
                             if (!string.IsNullOrEmpty(subModel.Restriction)) subModel.Restriction += "\r\nAND ";
-                            subModel.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+                            subModel.Restriction += restriction.Pattern;
                         }
                         restriction.DisplayNameEl = restr.DisplayNameEl;
-                        restriction.Prompt = restr.Prompt;
-                        restriction.Operator = restr.Operator;
-                        restriction.Value1 = restr.Value1;
-                        restriction.Value2 = restr.Value2;
-                        restriction.Value3 = restr.Value3;
-                        restriction.Value4 = restr.Value4;
-                        restriction.Date1 = restr.Date1;
-                        restriction.Date2 = restr.Date2;
-                        restriction.Date3 = restr.Date3;
-                        restriction.Date4 = restr.Date4;
-                        restriction.Date1Keyword = restr.Date1Keyword;
-                        restriction.Date2Keyword = restr.Date2Keyword;
-                        restriction.Date3Keyword = restr.Date3Keyword;
-                        restriction.Date4Keyword = restr.Date4Keyword;
-                        restriction.EnumValues = restr.EnumValues.ToList();
+                        restriction.PivotPosition = PivotPosition.Row;
+                        restriction.CopyForPrompt(restr);
+                    }
+                }
+                if (SubModelsSetAggr && SubModelsSetRestr)
+                {
+                    foreach (var restr in AggregateRestrictions.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))
+                    {
+                        //propagate restrictions
+                        var restriction = subModel.AggregateRestrictions.FirstOrDefault(i => i.MetaColumnGUID == restr.MetaColumnGUID);
+                        if (restriction == null)
+                        {
+                            restriction = ReportRestriction.CreateReportRestriction();
+                            restriction.MetaColumnGUID = restr.MetaColumnGUID;
+                            subModel.AggregateRestrictions.Add(restriction);
+                        }
+                        if (!subModel.AggregateRestriction.Contains(restriction.Pattern))
+                        {
+                            if (!string.IsNullOrEmpty(subModel.AggregateRestriction)) subModel.AggregateRestriction += "\r\nAND ";
+                            subModel.AggregateRestriction += restriction.Pattern;
+                        }
+                        restriction.DisplayNameEl = restr.DisplayNameEl;
+                        restriction.PivotPosition = restr.PivotPosition;
+                        restriction.CopyForPrompt(restr);
                     }
                 }
 
@@ -2546,103 +2654,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 //Init default parameters
                 subTable.InitParameters();
 
-                //MONGO DB Restrictions
-                if (subTable.IsMongoDb && SubModelsSetRestr  && subTable.GetBoolValue(MetaTable.ParameterNameMongoSync, true))
+                if (subTable.IsMongoDb && SubModelsSetRestr && subTable.GetBoolValue(MetaTable.ParameterNameMongoSync, true))
                 {
-                    //Mongo stages handling
-                    var script = "";
-                    //Restrictions = match stage
-                    var restrs = Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable.HasSameMongoCollection(subTable)).ToList();
-                    if (restrs.Count > 0)
-                    {
-                        var restrStr = "";
-                        foreach (var restr in restrs)
-                        {
-                            restrStr += restr.MongoText;
-                        }
-
-                        if (!string.IsNullOrEmpty(restrStr))
-                        {
-                            script += @$"
-    //Restrictions
-    metaTable.MongoStages.Add(
-        new BsonDocument(
-            ""$match"",
-            new BsonDocument({Helper.QuoteDouble(subTable.GetValue(MetaTable.ParameterNameMongoRestrictionOperator))},
-                new BsonArray {{
-{restrStr}
-                }}
-            )
-        )
-    );
-";
-                        }
-                    }
-                    //Elements = Project stage
-                    var elementsToSelect = Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.GUID == subTable.GUID).ToList();
-                    if (elementsToSelect.Count > 0)
-                    {
-                        var elementStr = "";
-                        var colNames = new List<string>();
-
-                        foreach (var colName in (from c in elementsToSelect select c.MetaColumn.Name).Distinct())
-                        {
-                            colNames.Add(colName);
-                        }
-                        //Add restriction elements used for LINQ
-                        foreach (var colName in (from c in restrs select c.MetaColumn.Name).Distinct())
-                        {
-                            colNames.Add(colName);
-                        }
-                        //elements used to perform the LINQ joins: we parse all columns defined in the sources involved
-                        foreach (var join in ExecTableJoins)
-                        {
-                            var sources = new List<MetaSource>();
-                            if (!sources.Contains(join.LeftTable.Source)) sources.Add(join.LeftTable.Source);
-                            if (!sources.Contains(join.RightTable.Source)) sources.Add(join.RightTable.Source);
-                            foreach (var s in sources)
-                            {
-                                foreach (var t in s.MetaData.Tables)
-                                {
-                                    foreach (var col in t.Columns)
-                                    {
-                                        if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.LINQResultName, Helper.QuoteDouble(col.Name))))
-                                        {
-                                            colNames.Add(col.Name);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        foreach (var colName in colNames.Distinct())
-                        {
-                            elementStr += $"{{{Helper.QuoteDouble(colName)},1}},\r\n";
-                        }
-
-                        if (!string.IsNullOrEmpty(elementStr))
-                        {
-                            script += @$"
-    //Elements
-    metaTable.MongoStages.Add(
-        new BsonDocument(
-            ""$project"",
-            new BsonDocument{{
-{elementStr}
-            }}
-        )
-    );
-";
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(script))
-                    {
-                        subTable.LoadInitScript = @$"@using MongoDB.Bson
-@{{
-    MetaTable metaTable = Model;
-{script}
-}}";
-                    }
+                    initMongoStagesScript(subTable);
                 }
 
                 LINQSubTables.Add(subTable);

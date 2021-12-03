@@ -2103,6 +2103,19 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Retrun the pattern text for the restriction
+        /// </summary>
+        [XmlIgnore]
+        public string Pattern
+        {
+            get
+            {
+                return kStartRestrictionChar + GUID + kStopRestrictionChar;
+            }
+        }
+
+
         string GetHtmlValue(string value, string keyword, DateTime date, bool forEdition)
         {
             string result = "";

@@ -607,6 +607,11 @@ var SWIMain = /** @class */ (function () {
         _main._lastReport.outputGUID = outputGUID;
         _main._lastReport.name = name;
         _main.toggleFoldersReport(true);
+        //clear all timers
+        var maxId = setTimeout(function () { }, 0);
+        for (var i = 0; i < maxId; i += 1) {
+            clearTimeout(i);
+        }
         _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
             $(".navbar-header,#navbar").removeClass("disabled");
             $("#report-body").html(data);

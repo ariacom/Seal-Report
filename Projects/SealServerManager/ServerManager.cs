@@ -469,6 +469,25 @@ namespace Seal
             }
         }
 
+        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_source != null || _device != null)
+            {
+                if (IsModified)
+                {
+                    var itemName = _source != null ? "Data Source" : "Device";
+                    DialogResult dlgResult = MessageBox.Show($"The {itemName} has been modified, are you sure you to reload it ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    if (dlgResult == DialogResult.Cancel) return;
+                }
+
+                string path = _source != null ? _source.FilePath : _device.FilePath;
+                _source = null;
+                IsModified = false;
+                closeToolStripMenuItem_Click(sender, e);
+                if (File.Exists(path)) openFile(path);
+            }
+        }
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (HasEntity)
@@ -678,6 +697,5 @@ namespace Seal
 
 
         #endregion
-
     }
 }

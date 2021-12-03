@@ -228,7 +228,7 @@ namespace Seal.Model
                     if (val == "") restriction.Operator = Operator.IsEmpty;
                     restriction.SetNavigationValue(val);
                     if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) {1} ", model.Restriction, model.IsLINQ ? "&&" : "AND");
-                    model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+                    model.Restriction += restriction.Pattern;
 
                     srcRestriction = restriction.GeNavigationDisplayValue();
 
@@ -265,7 +265,7 @@ namespace Seal.Model
                     foreach (var restr in restrictions)
                     {
                         model.Restrictions.Remove(restr);
-                        model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, model.IsLINQ ? "true" : "1=1");
+                        model.Restriction = model.Restriction.Replace(restr.Pattern, model.IsLINQ ? "true" : "1=1");
                     }
 
                     //Check if parents are involved

@@ -41,7 +41,7 @@ else
                         ResultCell title = page.DataTable[0, i];
                         ResultCell value = page.DataTable[1, i];
                         <tr>
-                            <th @Raw(Helper.AddAttribute("class", title.CellCssPageClass)) @Raw(Helper.AddAttribute("style", title.CellCssPageStyle))>@Raw(title.HTMLValue):</th>
+                            <th @Raw(Helper.AddAttribute("class", title.CellCssPageClass)) @Raw(Helper.AddAttribute("style", title.CellCssPageStyle))>@Raw(title.HTMLValue)</th>
                             <td @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle)) >@Raw(value.HTMLValue)</td>
                         </tr>
                     }
