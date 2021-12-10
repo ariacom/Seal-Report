@@ -37,8 +37,10 @@ namespace Seal.Model
         OleDb,
         [Description("Odbc")]
         Odbc,
-        [Description("MS SQLServer")]
+        [Description("MS SQLServer (System.Data)")]
         MSSQLServer,
+        [Description("MS SQLServer (Microsoft.Data)")]
+        MSSQLServerMicrosoft,
         [Description("Mongo DB")]
         MongoDB,
     }

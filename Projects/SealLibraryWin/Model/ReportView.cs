@@ -775,10 +775,8 @@ namespace Seal.Model
         /// <summary>
         /// The custom partial template texts for the view
         /// </summary>
-#if WINDOWS
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Custom partial template Texts"), Description("The custom partial template texts for the view."), Category("Custom template texts"), Id(5, 3)]
-#endif
         [XmlIgnore]
         public PartialTemplatesEditor PartialTemplatesConfiguration
         {
@@ -821,10 +819,8 @@ namespace Seal.Model
         /// <summary>
         /// The view configuration values for edition.
         /// </summary>
-#if WINDOWS
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Template configuration"), Description("The view configuration values."), Category("View parameters"), Id(3, 4)]
-#endif
         [XmlIgnore]
         public ParametersEditor TemplateConfiguration
         {

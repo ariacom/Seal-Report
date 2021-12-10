@@ -115,7 +115,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(ConnectionType.OleDb)]
-        [DisplayName("Connection type"), Description("The type of the connection object used: OleDbConnection, OdbcConnection, SqlConnection or MongoClient."), Category("Definition"), Id(3, 1)]
+        [DisplayName("Connection type"), Description("The type of the connection object used: OleDbConnection, OdbcConnection, SqlConnection (either from System.Data or Microsoft.Data) or MongoClient (valid only for a LINQ Source)."), Category("Definition"), Id(3, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public ConnectionType ConnectionType
@@ -126,7 +126,7 @@ namespace Seal.Model
             set
             {
                 _connectionType = value;
-                if (_connectionType == ConnectionType.MSSQLServer && DatabaseType != DatabaseType.MSSQLServer) {
+                if ((_connectionType == ConnectionType.MSSQLServer || _connectionType == ConnectionType.MSSQLServerMicrosoft) && DatabaseType != DatabaseType.MSSQLServer) {
                     DatabaseType = DatabaseType.MSSQLServer;
 #if WINDOWS
                     if (_dctd != null) MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -197,7 +197,7 @@ namespace Seal.Model
             get
             {
                 var result = "";
-                if (ConnectionType == ConnectionType.MSSQLServer)
+                if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
                 {
                     result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, UserName, ClearPassword);
 

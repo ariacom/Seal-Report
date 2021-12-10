@@ -244,7 +244,7 @@ namespace Seal.Model
             {
                 bool updateModels = (Report != null && _subModelsSetAggr != value);
                 _subModelsSetAggr = value;
-                if (updateModels) BuildQuery(false, true);                
+                if (updateModels) BuildQuery(false, true);
             }
         }
         public bool ShouldSerializeSubModelsSetAggr() { return !_subModelsSetAggr; }
@@ -2397,7 +2397,7 @@ model.ResultTable = query2.CopyToDataTable2();
         [XmlIgnore]
         public Dictionary<string, DataTable> ExecResultTables = null;
 
-        void initMongoStagesScript(MetaTable subTable)
+        void initMongoStagesScript(MetaTable modelTable, MetaTable subTable)
         {
             //Mongo stages handling
             var script = "";
@@ -2408,6 +2408,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 var restrStr = "";
                 foreach (var restr in restrs)
                 {
+                    //check that the column is defined in the current table
+                    if (!modelTable.Columns.Exists(i => i.Name == restr.MetaColumn.Name)) continue;
+
                     restrStr += restr.MongoText;
                 }
 
@@ -2427,42 +2430,48 @@ model.ResultTable = query2.CopyToDataTable2();
             }
             //Elements = Project stage
             var elementsToSelect = Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.GUID == subTable.GUID).ToList();
+            var colNames = new List<string>();
             if (elementsToSelect.Count > 0)
             {
-                var elementStr = "";
-                var colNames = new List<string>();
 
                 foreach (var colName in (from c in elementsToSelect select c.MetaColumn.Name).Distinct())
                 {
                     colNames.Add(colName);
                 }
-                //Add restriction elements used for LINQ
-                foreach (var colName in (from c in restrs select c.MetaColumn.Name).Distinct())
+            }
+            //Add restriction elements used for LINQ
+            foreach (var colName in (from c in restrs select c.MetaColumn.Name).Distinct())
+            {
+                colNames.Add(colName);
+            }
+            //elements used to perform the LINQ joins: we parse all columns defined in the sources involved
+            foreach (var join in ExecTableJoins)
+            {
+                var sources = new List<MetaSource>();
+                if (!sources.Contains(join.LeftTable.Source)) sources.Add(join.LeftTable.Source);
+                if (!sources.Contains(join.RightTable.Source)) sources.Add(join.RightTable.Source);
+                foreach (var s in sources)
                 {
-                    colNames.Add(colName);
-                }
-                //elements used to perform the LINQ joins: we parse all columns defined in the sources involved
-                foreach (var join in ExecTableJoins)
-                {
-                    var sources = new List<MetaSource>();
-                    if (!sources.Contains(join.LeftTable.Source)) sources.Add(join.LeftTable.Source);
-                    if (!sources.Contains(join.RightTable.Source)) sources.Add(join.RightTable.Source);
-                    foreach (var s in sources)
+                    foreach (var t in s.MetaData.Tables)
                     {
-                        foreach (var t in s.MetaData.Tables)
+                        foreach (var col in t.Columns)
                         {
-                            foreach (var col in t.Columns)
+                            if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.LINQResultName, Helper.QuoteDouble(col.Name))))
                             {
-                                if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.LINQResultName, Helper.QuoteDouble(col.Name))))
-                                {
-                                    colNames.Add(col.Name);
-                                }
+                                colNames.Add(col.Name);
                             }
                         }
                     }
                 }
+            }
+            if (colNames.Count > 0)
+            {
+                var elementStr = "";
                 foreach (var colName in colNames.Distinct())
                 {
+                    //check that the column is defined in the current table
+                    if (!modelTable.Columns.Exists(i => i.Name == colName)) continue;
+
                     elementStr += $"{{{Helper.QuoteDouble(colName)},1}},\r\n";
                 }
 
@@ -2656,7 +2665,7 @@ model.ResultTable = query2.CopyToDataTable2();
 
                 if (subTable.IsMongoDb && SubModelsSetRestr && subTable.GetBoolValue(MetaTable.ParameterNameMongoSync, true))
                 {
-                    initMongoStagesScript(subTable);
+                    initMongoStagesScript(table, subTable);
                 }
 
                 LINQSubTables.Add(subTable);
@@ -2762,6 +2771,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     connection = Connection.GetOpenConnection();
                     if (connection is OdbcConnection) _command = ((OdbcConnection)connection).CreateCommand();
                     else if (connection is SqlConnection) _command = ((SqlConnection)connection).CreateCommand();
+                    else if (connection is Microsoft.Data.SqlClient.SqlConnection) _command = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
                     else _command = ((OleDbConnection)connection).CreateCommand();
 
                     _command.CommandTimeout = 0;
@@ -2781,6 +2791,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     DbDataAdapter adapter = null;
                     if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
                     else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
+                    else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter((Microsoft.Data.SqlClient.SqlCommand)_command);
                     else adapter = new OleDbDataAdapter((OleDbCommand)_command);
                     ResultTable = new DataTable();
                     adapter.Fill(ResultTable);

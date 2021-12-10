@@ -70,6 +70,7 @@ namespace Seal.Controls
             RestrictionGrid.LineColor = SystemColors.ControlLight;
             restrictionsContainer.Panel2.Controls.Add(RestrictionGrid);
             PropertyGridHelper.AddResetMenu(RestrictionGrid);
+            RestrictionGrid.Leave += RestrictionGrid_Leave;
 
             elementTreeView.MouseUp += elementTreeView_MouseUp;
         }
@@ -663,6 +664,11 @@ namespace Seal.Controls
 
             MainForm.IsModified = true;
 
+        }
+
+        private void RestrictionGrid_Leave(object sender, EventArgs e)
+        {
+            UpdateLINQModel();
         }
 
         void RestrictionGrid_SelectedObjectsChanged(object sender, EventArgs e)

@@ -135,9 +135,9 @@ namespace SealWebServer.Controllers
                     }
                 }
 
-                //Set connections
+                //Set default connections if several 
                 profile.sources = new List<SWIMetaSource>();
-                foreach (var source in Repository.Sources.Where(i => i.Connections.Count > 0))
+                foreach (var source in Repository.Sources.Where(i => i.Connections.Count > 1))
                 {
                     var swiSource = new SWIMetaSource() { GUID =  source.GUID, name = source.Name, connectionGUID = source.ConnectionGUID };
                     var defaultConnection = WebUser.Profile.Connections.FirstOrDefault(i => i.SourceGUID == source.GUID);

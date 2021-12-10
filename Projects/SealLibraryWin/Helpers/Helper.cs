@@ -675,6 +675,13 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new SqlDataAdapter(command);
             }
+            else if (connection is Microsoft.Data.SqlClient.SqlConnection)
+            {
+                Microsoft.Data.SqlClient.SqlCommand command = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(command);
+            }
             else
             {
                 OleDbCommand command = ((OleDbConnection)connection).CreateCommand();
@@ -713,6 +720,10 @@ namespace Seal.Helpers
             if (connectionType == ConnectionType.MSSQLServer)
             {
                 connection = new SqlConnection(connectionString);
+            }
+            else if (connectionType == ConnectionType.MSSQLServerMicrosoft)
+            {
+                connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
             }
             else if (connectionType == ConnectionType.Odbc)
             {

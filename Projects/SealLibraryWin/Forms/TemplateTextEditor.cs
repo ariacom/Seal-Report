@@ -1111,7 +1111,7 @@ namespace Seal.Forms
         };
 
 
-        const string sqlConnectionString = @"Server=myServerAddress;Database=myDatabase;Trusted_Connection=True";
+        const string sqlConnectionString = @"Server=myServerAddress;Database=myDatabase;Trusted_Connection=True;TrustServerCertificate=True;";
         const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@myServer";
         const string odbcConnectionString = @"DSN=myDataSourceName;DATABASE=myDatabase";
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)

@@ -54,6 +54,8 @@ namespace Seal
 
         public ServerManager()
         {
+            Repository.IsServerManager = true;
+
             InitializeComponent();
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;

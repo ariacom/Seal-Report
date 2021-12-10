@@ -337,6 +337,11 @@ namespace Seal.Model
                         ((SqlConnection)connection).InfoMessage += new SqlInfoMessageEventHandler(SqlInfoMessage);
                         result = ((SqlConnection)connection).CreateCommand();
                     }
+                    else if (connection is Microsoft.Data.SqlClient.SqlConnection)
+                    {
+                        ((Microsoft.Data.SqlClient.SqlConnection)connection).InfoMessage += new Microsoft.Data.SqlClient.SqlInfoMessageEventHandler(MicrosoftSqlInfoMessage);
+                        result = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
+                    }
                     else
                     {
                         ((OleDbConnection)connection).InfoMessage += new OleDbInfoMessageEventHandler(OleDbInfoMessage);
@@ -432,6 +437,12 @@ namespace Seal.Model
         {
             DbInfoMessage.Append(e.Message);
         }
+
+        void MicrosoftSqlInfoMessage(object sender, Microsoft.Data.SqlClient.SqlInfoMessageEventArgs e)
+        {
+            DbInfoMessage.Append(e.Message);
+        }
+        
 #endregion
     }
 }

@@ -28,75 +28,77 @@ using OfficeOpenXml;
 using Microsoft.AspNetCore.Html;
 using System.Diagnostics;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace Seal.Helpers
 {
     public class RazorHelper
     {
-
-        static HtmlString dummy = null;
-        static DataTable dummy2 = null;
-        static OleDbConnection dummy3 = null;
-        static LdapConnection dummy4 = null;
-        static SyndicationFeed dummy5 = null;
-        static XDocument dummy6 = null;
+        static readonly Object _0 = new Object();
+        static readonly HttpClient _1 = new HttpClient();
+        static readonly HtmlString _2 = new HtmlString("");
+        static readonly DataTable _3 = new DataTable();
+        static readonly OleDbConnection _4 = new OleDbConnection();
+        static readonly LdapConnection _5 = new LdapConnection("");
+        static readonly SyndicationFeed _6 = new SyndicationFeed();
+        static readonly XDocument _7 = new XDocument();
 #if WINDOWS
-        static Control dummy7 = null; 
+        static readonly Control _8 = new Control();
 #endif
-        static PrincipalContext dummy8 = null;
-        static JwtSettings dummy9 = null; 
-        static JObject dummy10 = null;
-        static FastZip dummy11 = null;
-        static OdbcConnection dummy12 = null;
-        static SqlConnection dummy13 = null;
-        static SftpClient dummy14 = null;
-        static FtpClient dummy15 = null;
-        static HttpClient dummy16 = null;
-        static AdomdConnection dummy17 = null;
-        static ExcelPackage dummy18 = null;
-        static EventLogEntryType dummy19 = EventLogEntryType.Information;
-        static MongoClient dummy20 = null;
+        static readonly PrincipalContext _9 = new PrincipalContext(ContextType.Machine);
+        static readonly JwtSettings _10 = JWT.DefaultSettings;
+        static readonly JObject _11 = JObject.Parse("{}");
+        static readonly FastZip _12 = new FastZip();
+        static readonly OdbcConnection _13 = new OdbcConnection();
+        static readonly SqlConnection _14 = new SqlConnection();
+        static readonly Microsoft.Data.SqlClient.SqlConnection _15 = new Microsoft.Data.SqlClient.SqlConnection();
+        static readonly SftpClient _16 = new SftpClient("", "a", "");
+        static readonly FtpClient _17 = new FtpClient();
+        static readonly HttpClient _18 = new HttpClient();
+        static readonly AdomdConnection _19 = new AdomdConnection();
+        static readonly ExcelPackage _20 = new ExcelPackage();
+        static readonly EventLogEntryType _21 = EventLogEntryType.Information;
+        static readonly MongoClient _22 = new MongoClient();
 
-        static bool _loadDone = false;
+        static int _loadTries = 3;
         static public void LoadRazorAssemblies()
         {
-            if (!_loadDone)
+            if (_loadTries > 0)
             {
+                _loadTries--;
                 try
                 {
-                    //Force the load of the assemblies
-                    if (dummy == null) dummy = new HtmlString("");
-                    if (dummy2 == null)
+                    //Load specific assemblies
+
+                    var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+                    var loadedPaths = loadedAssemblies.Where(a => !a.IsDynamic).Select(a => a.Location).ToArray();
+
+                    var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+                    var toLoad = referencedPaths.Where(r => !loadedPaths.Contains(r, StringComparer.InvariantCultureIgnoreCase)).ToList();
+
+                    foreach (var path in toLoad)
                     {
-                        dummy2 = new DataTable();
-                        dummy2.AsEnumerable();
+                        //take only Microsoft.AspNetCore.Http. dlls
+                        if (!Path.GetFileName(path).ToLower().StartsWith("microsoft.aspnetcore.http.")) continue;
+
+                        try
+                        {
+                            loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path)));
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
-                    if (dummy3 == null) dummy3 = new OleDbConnection();
-                    if (dummy4 == null) dummy4 = new LdapConnection("");
-                    if (dummy5 == null) dummy5 = new SyndicationFeed();
-                    if (dummy6 == null) dummy6 = new XDocument();
-#if WINDOWS
-                    if (dummy7 == null) dummy7 = new Control();
-#endif
-                    if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
-                    if (dummy9 == null) dummy9 = JWT.DefaultSettings; 
-                    if (dummy10 == null) dummy10 = JObject.Parse("{}");
-                    if (dummy11 == null) dummy11 = new FastZip();
-                    if (dummy12 == null) dummy12 = new OdbcConnection();
-                    if (dummy13 == null) dummy13 = new SqlConnection();
-                    if (dummy14 == null) dummy14 = new SftpClient("", "a", "");
-                    if (dummy15 == null) dummy15 = new FtpClient();
-                    if (dummy16 == null) dummy16 = new HttpClient();
-                    if (dummy17 == null) dummy17 = new AdomdConnection();
-                    if (dummy18 == null) dummy18 = new ExcelPackage();
-                    dummy19 = EventLogEntryType.Error;
-                    if (dummy20 == null) dummy20 = new MongoClient();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
-                _loadDone = true;
+                _loadTries = 0;
             }
         }
 

@@ -77,8 +77,15 @@ namespace Seal.Model
         /// </summary>
         public static Icon ProductIcon
         {
-            get { return Path.GetFileName(Application.ExecutablePath).ToLower() == SealServerManager.ToLower() ? Properties.Resources.serverManager : Properties.Resources.reportDesigner; }
+            get { return IsServerManager ? Properties.Resources.serverManager : Properties.Resources.reportDesigner; }
         }
+
+
+        /// <summary>
+        /// Is Server Manager
+        /// </summary>
+        public static bool IsServerManager = false;
+
 #endif
 
         private string _licenseText = null;

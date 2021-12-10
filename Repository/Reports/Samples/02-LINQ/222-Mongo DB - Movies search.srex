@@ -11,6 +11,13 @@
       <MetaData />
       <MetaSourceGUID>1f7b6741-c62f-4903-90ed-2fe3229190a7</MetaSourceGUID>
     </ReportSource>
+    <ReportSource>
+      <GUID>ee3795d4-40e6-48af-b3a1-157f3d812405</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
   </Sources>
   <Models>
     <ReportModel>
@@ -57,12 +64,39 @@ new BsonDocument("awards.wins", new BsonDocument("$gte", 1)),
     ));
 
 }</MongoStagesScript>
+          <Alias />
         </MetaTable>
         <MetaTable>
           <GUID>5d7cc165-50df-4ffa-acc9-bf23b6136a10</GUID>
           <Name>movies_casts</Name>
           <TemplateName>Mongo DB</TemplateName>
-          <MongoStagesScript />
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 06.12.2021 at 14:25:31
+    MetaTable metaTable = Model;
+
+    //Restrictions
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$match",
+            new BsonDocument("$and",
+                new BsonArray {
+new BsonDocument("cast", new BsonDocument("$in", new BsonArray {new BsonRegularExpression(@"/john/i"),})),
+                }
+    )));
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"cast",1},
+{"_id",1},
+            }
+    ));
+
+}</MongoStagesScript>
+          <Alias />
         </MetaTable>
       </LINQSubTables>
       <Elements>
@@ -207,11 +241,6 @@ new BsonDocument("awards.wins", new BsonDocument("$gte", 1)),
       <SourceGUID>693d71d0-3d28-41ba-a74c-6c703f2c86ff</SourceGUID>
       <LINQSubTables>
         <MetaTable>
-          <GUID>5d7cc165-50df-4ffa-acc9-bf23b6136a10</GUID>
-          <Name>movies_casts</Name>
-          <TemplateName>Mongo DB</TemplateName>
-        </MetaTable>
-        <MetaTable>
           <GUID>9a38018c-7451-4965-bcdc-659f3bdecd4c</GUID>
           <Name>movies</Name>
           <TemplateName>Mongo DB</TemplateName>
@@ -231,6 +260,39 @@ new BsonDocument("awards.wins", new BsonDocument("$gte", 1)),
     ));
 
 }</MongoStagesScript>
+          <Alias />
+        </MetaTable>
+        <MetaTable>
+          <GUID>5d7cc165-50df-4ffa-acc9-bf23b6136a10</GUID>
+          <Name>movies_casts</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 06.12.2021 at 14:25:50
+    MetaTable metaTable = Model;
+
+    //Restrictions
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$match",
+            new BsonDocument("$and",
+                new BsonArray {
+new BsonDocument("cast", new BsonDocument("$in", new BsonArray {new BsonRegularExpression(@"/john/i"),})),
+                }
+    )));
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"cast",1},
+{"_id",1},
+            }
+    ));
+
+}</MongoStagesScript>
+          <Alias />
         </MetaTable>
       </LINQSubTables>
       <Elements>
@@ -445,6 +507,20 @@ new BsonDocument("awards.wins", new BsonDocument("$gte", 1)),
           </Views>
           <TemplateName>Tab Control</TemplateName>
           <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>dea4e4f2-74c6-4382-b8c2-68d6208f0974</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;2 Models showing a search on the Movies collection and their Casts (Movies array).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>0</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

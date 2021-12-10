@@ -283,17 +283,23 @@ class SWIMain {
 
             const $connections = $("#default-connections");
             $("#default-connections").empty();
-            _main._profile.sources.forEach(function (source) {
-                const $connectionDiv = $("<div class='row'>");
-                $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
-                const $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
-                source.connections.forEach(function (connection) {
-                    $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
+            if (_main._profile.sources.length === 0) {
+                $("#default-connections").parent().hide();
+            }
+            else {
+                $("#default-connections").parent().show();
+                _main._profile.sources.forEach(function (source) {
+                    const $connectionDiv = $("<div class='row'>");
+                    $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
+                    const $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
+                    source.connections.forEach(function (connection) {
+                        $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
+                    });
+                    $connectionDiv.append($("<div class='col-sm-8'>").append($connectionSelect));
+                    $connections.append($connectionDiv);
+                    $connectionSelect.selectpicker('refresh');
                 });
-                $connectionDiv.append($("<div class='col-sm-8'>").append($connectionSelect));
-                $connections.append($connectionDiv);
-                $connectionSelect.selectpicker('refresh');
-            });
+            }
         });
 
         //Disconnect

@@ -521,10 +521,6 @@ metacritic</Value>
         <TemplateName>Mongo DB</TemplateName>
         <Parameters>
           <Parameter>
-            <Name>mongo_sync</Name>
-            <Value>False</Value>
-          </Parameter>
-          <Parameter>
             <Name>mongo_database</Name>
             <Value>sample_mflix</Value>
           </Parameter>
@@ -580,7 +576,74 @@ metacritic</Value>
           </MetaColumn>
         </Columns>
       </MetaTable>
+      <MetaTable>
+        <GUID>d4d2112c-49e5-48cc-b20c-7ff97fe1c879</GUID>
+        <Name>movies_countries</Name>
+        <TemplateName>Mongo DB</TemplateName>
+        <Parameters>
+          <Parameter>
+            <Name>mongo_database</Name>
+            <Value>sample_mflix</Value>
+          </Parameter>
+          <Parameter>
+            <Name>mongo_collection</Name>
+            <Value>movies</Value>
+          </Parameter>
+          <Parameter>
+            <Name>mongo_array_name</Name>
+            <Value>countries</Value>
+          </Parameter>
+        </Parameters>
+        <DefinitionInitScript>@using MongoDB.Bson
+@{
+    MetaTable metaTable = Model;
+    if (!metaTable.WithDataLoad) {
+        //Add a stage to limit the number of records for the table definition 
+        metaTable.MongoStages.Add(new BsonDocument("$limit" , 100));
+    }
+
+    var arrayName = metaTable.GetValue(MetaTable.ParameterNameMongoArrayName);
+    if (!string.IsNullOrEmpty(arrayName)) {
+        //Unwind stage for array
+        metaTable.MongoStages.Add(new BsonDocument("$unwind" , "$"+arrayName));
+    }
+
+    //Add Mongo stages (like $project) here to change the table definition and values (e.g. adding a year column from a date, converting text to numeric, etc.)
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument{
+{"countries", 1},
+    }));
+};
+</DefinitionInitScript>
+        <Alias>moviesCopyCopy</Alias>
+        <DynamicColumns>true</DynamicColumns>
+        <Columns>
+          <MetaColumn>
+            <GUID>b97d8844-74da-450d-aa38-6ac03ef0006a</GUID>
+            <Name>_id</Name>
+            <Type>Text</Type>
+            <Category>movies_countries</Category>
+            <DisplayName>Id</DisplayName>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>04e18913-91e0-4be3-8ef9-b72f6e770795</GUID>
+            <Name>countries</Name>
+            <Type>Text</Type>
+            <Category>movies_countries</Category>
+            <DisplayName>Country</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
     </Tables>
+    <TableLinks>
+      <MetaTableLink>
+        <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+        <TableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</TableGUID>
+      </MetaTableLink>
+    </TableLinks>
     <Joins>
       <MetaJoin>
         <GUID>d0b50879-786c-4421-88fd-56bdeed48d13</GUID>
@@ -609,6 +672,20 @@ metacritic</Value>
         <LeftTableGUID>9a38018c-7451-4965-bcdc-659f3bdecd4c</LeftTableGUID>
         <RightTableGUID>5d7cc165-50df-4ffa-acc9-bf23b6136a10</RightTableGUID>
         <Clause>Helper.ToString(movies["_id"]) equals Helper.ToString(moviescasts["_id"])</Clause>
+      </MetaJoin>
+      <MetaJoin>
+        <GUID>8f9e21d4-472c-4457-8db4-de568a8832e2</GUID>
+        <Name>movies_countries - Customers</Name>
+        <LeftTableGUID>d4d2112c-49e5-48cc-b20c-7ff97fe1c879</LeftTableGUID>
+        <RightTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</RightTableGUID>
+        <Clause>Helper.ToString(moviescountries["countries"]) equals Helper.ToString(Northwind["Customers.Country"])</Clause>
+      </MetaJoin>
+      <MetaJoin>
+        <GUID>2c0bc52d-5b92-49ff-8185-3ef48c52a5ee</GUID>
+        <Name>movies - movies_countries</Name>
+        <LeftTableGUID>9a38018c-7451-4965-bcdc-659f3bdecd4c</LeftTableGUID>
+        <RightTableGUID>d4d2112c-49e5-48cc-b20c-7ff97fe1c879</RightTableGUID>
+        <Clause>Helper.ToString(movies["_id"]) equals Helper.ToString(moviescountries["_id"])</Clause>
       </MetaJoin>
     </Joins>
     <Enums>

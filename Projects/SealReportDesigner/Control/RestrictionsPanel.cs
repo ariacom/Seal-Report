@@ -373,7 +373,7 @@ namespace Seal.Controls
 
         private void restrictionsTextBox_Leave(object sender, EventArgs e)
         {
-         //   if (restrictionsTextBox.Modified) ModelPanel.UpdateLINQModel();
+            if (restrictionsTextBox.Modified) ModelPanel.UpdateLINQModel();
         }
     }
 }

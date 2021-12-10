@@ -316,6 +316,8 @@ namespace Seal.Model
 
             if (DefinitionScript != null && DefinitionScript.Trim().Replace("\r\n", "\n") == DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
             if (LoadScript != null && LoadScript.Trim().Replace("\r\n", "\n") == DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
+
+            if (!IsSQL) Alias = "";
         }
 
         /// <summary>
@@ -372,10 +374,10 @@ namespace Seal.Model
         public string DefinitionScript { get; set; }
 
         /// <summary>
-        /// Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false. 
+        /// Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false. Use the 'Refresh Sub-Models and Sub-Tables' button in the model to generate and view the script. 
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Mongo DB Stages Script"), Description("Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Mongo DB Stages Script"), Description("Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false.  Use the 'Refresh Sub-Models and Sub-Tables' button in the model to generate and view the script."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MongoStagesScript { get; set; }

@@ -68,8 +68,8 @@ namespace Seal.Forms
                     infoTextBox.Text = string.Format(@"This simple helper allows to publish the Web Server application on your Internet Information Server.
 It creates an application under the 'Default Web Site' of IIS using the 'LocalSystem' Windows Account.
 
-IIS must be installed with the following features: 
-Application Development/ASP.Net 5 or greater
+IIS must be installed with the following feature: 
+ASP.Net Core Runtime 5 (Hosting Bundle)
 
 The site can be configured with any user having the following rights:
 Read access to the repository directory ({0}).

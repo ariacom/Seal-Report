@@ -116,9 +116,9 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("Is enabled"), Description("True if the schedule is enabled."), Id(2, 1)]
-        [XmlIgnore]
         [DefaultValue(false)]
 #endif
+        [XmlIgnore]
         public bool SealEnabled
         {
             get
@@ -136,8 +136,8 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("Start date"), Description("Start date and time of the schedule."), Id(3, 1)]
-        [XmlIgnore]
 #endif
+        [XmlIgnore]
         public DateTime SealStart
         {
             get

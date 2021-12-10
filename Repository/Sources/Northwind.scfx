@@ -21,6 +21,14 @@
       <UserName>demo</UserName>
       <Password>jFBdR+/x69+IBwkZSf06Hw==</Password>
     </MetaConnection>
+    <MetaConnection>
+      <GUID>cc91199c-1b51-4e61-8630-feb2eef21466</GUID>
+      <Name>Local MS SQL Server MS</Name>
+      <DatabaseType>MSSQLServer</DatabaseType>
+      <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
+      <ConnectionString />
+      <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True;TrustServerCertificate=True;</MSSqlServerConnectionString>
+    </MetaConnection>
   </Connections>
   <ConnectionGUID>164f0017-471d-4741-937c-3df7881ca392</ConnectionGUID>
   <MetaData>

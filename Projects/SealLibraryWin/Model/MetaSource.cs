@@ -640,7 +640,7 @@ namespace Seal.Model
                     string dbType = "";
                     if (row.Table.Columns.Contains("TYPE_NAME")) dbType = row["TYPE_NAME"].ToString();
                     if (connection is OdbcConnection) column.Type = Helper.ODBCToNetTypeConverter(dbType);
-                    else if (connection is SqlConnection) column.Type = Helper.ODBCToNetTypeConverter(row["DATA_TYPE"].ToString());
+                    else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection) column.Type = Helper.ODBCToNetTypeConverter(row["DATA_TYPE"].ToString());
                     else column.Type = Helper.DatabaseToNetTypeConverter(row["DATA_TYPE"]);
                     column.SetStandardFormat();
                     if (!columns.Exists(i => i.Name == column.Name)) columns.Add(column);

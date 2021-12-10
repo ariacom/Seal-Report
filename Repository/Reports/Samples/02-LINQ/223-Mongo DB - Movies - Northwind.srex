@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>1c2b3e5cc7a54ea98e0ebe714d060a75</GUID>
+  <ViewGUID>b5261f11-90c5-440c-a949-3ad50f9d81a4</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>693d71d0-3d28-41ba-a74c-6c703f2c86ff</GUID>
+      <Name>Mongo DB (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData />
+      <MetaSourceGUID>1f7b6741-c62f-4903-90ed-2fe3229190a7</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>e4a38ad3-27ad-47f2-882e-3ad0ef486d1d</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>bd4d098a-0eb9-4321-9f89-69803d2752cc</GUID>
+      <Name>Customers and Movies</Name>
+      <SourceGUID>693d71d0-3d28-41ba-a74c-6c703f2c86ff</SourceGUID>
+      <LINQSubModels>
+        <ReportModel>
+          <Name>Northwind (Repository)</Name>
+          <SourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</SourceGUID>
+          <Elements>
+            <ReportElement>
+              <GUID>2b85ed19-137a-4869-9ca1-3f2bd5e6f7c5</GUID>
+              <Name>Customers.CompanyName</Name>
+              <PivotPosition>Page</PivotPosition>
+              <SortOrder />
+              <AggregateFunction>Count</AggregateFunction>
+              <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+            </ReportElement>
+            <ReportElement>
+              <GUID>c46d5e67-92ed-422f-95d6-b43cce1b1568</GUID>
+              <Name>Customers.Country</Name>
+              <PivotPosition>Page</PivotPosition>
+              <SortOrder />
+              <AggregateFunction>Count</AggregateFunction>
+              <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+            </ReportElement>
+            <ReportElement>
+              <GUID>834ba6f0-9de7-40d5-8ee4-10167685277f</GUID>
+              <PivotPosition>Hidden</PivotPosition>
+              <SortOrder />
+              <MetaColumnGUID>d937c8fc-64a6-415f-a77f-d3d1914e406d</MetaColumnGUID>
+            </ReportElement>
+          </Elements>
+          <Restriction>[3c45d938-987b-422e-a01f-b421bd770559]
+AND [c9868c09-39af-4e95-b959-a2efecf83357]</Restriction>
+          <Restrictions>
+            <ReportRestriction>
+              <GUID>3c45d938-987b-422e-a01f-b421bd770559</GUID>
+              <DisplayName />
+              <PivotPosition>Row</PivotPosition>
+              <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+              <Prompt>Prompt</Prompt>
+              <EnumValues>
+                <string>Belgium</string>
+              </EnumValues>
+            </ReportRestriction>
+            <ReportRestriction>
+              <GUID>c9868c09-39af-4e95-b959-a2efecf83357</GUID>
+              <DisplayName />
+              <PivotPosition>Row</PivotPosition>
+              <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+              <Prompt>Prompt</Prompt>
+              <Operator>Contains</Operator>
+              <Value1 />
+            </ReportRestriction>
+          </Restrictions>
+        </ReportModel>
+      </LINQSubModels>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>9a38018c-7451-4965-bcdc-659f3bdecd4c</GUID>
+          <Name>movies</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 09.12.2021 at 14:27:08
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"title",1},
+{"year",1},
+{"_id",1},
+            }
+    ));
+
+}</MongoStagesScript>
+          <Alias />
+        </MetaTable>
+        <MetaTable>
+          <GUID>d4d2112c-49e5-48cc-b20c-7ff97fe1c879</GUID>
+          <Name>movies_countries</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 09.12.2021 at 14:27:08
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"countries",1},
+{"_id",1},
+            }
+    ));
+
+}</MongoStagesScript>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>63aa7ddf-82e8-4c57-b650-e6a866af6f48</GUID>
+          <Name>Customers.CompanyName</Name>
+          <DisplayName />
+          <PivotPosition>Page</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>54a316de-4a75-4fd0-8cbf-78036114110f</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Page</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>16656596-c83a-4f5a-bd6f-dd0614c6f216</GUID>
+          <Name>title</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f735004b-a199-4670-98b9-2137f3d924f1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7ac6ed24-7d76-4b36-a370-a95894457103</GUID>
+          <Name>year</Name>
+          <DisplayName />
+          <Format>D</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>824275c2-9fb6-41c0-bfec-2c215904c49d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ab4db4c6-afe4-4dae-8583-ca2489c63fed</GUID>
+          <Name>countries</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>04e18913-91e0-4be3-8ef9-b72f6e770795</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e48f5aaa-96df-43be-ad18-0b3a93c48324</GUID>
+          <PivotPosition>Hidden</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <MetaColumnGUID>d937c8fc-64a6-415f-a77f-d3d1914e406d</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[b571cdb8-c05d-4d11-a948-d3d95b99c726]
+&amp;&amp; [b34343bc-26a8-4d5f-8a79-6f0b08cbc632]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>b571cdb8-c05d-4d11-a948-d3d95b99c726</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <EnumValues>
+            <string>Belgium</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>b34343bc-26a8-4d5f-8a79-6f0b08cbc632</GUID>
+          <Name>Customers.CompanyName</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <OperatorLabel />
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <Value1 />
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>b5261f11-90c5-440c-a949-3ad50f9d81a4</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>d907f804-c7de-494b-b96b-60f88535506f</GUID>
+          <Name>Customers and Movies</Name>
+          <Views>
+            <ReportView>
+              <GUID>3308132f-0223-4506-afc9-b129becbff15</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>5425fd8c-5d5b-4e7f-90c3-e2db8b967766</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>eaa4f510-de62-43ad-bec3-f5ef5885832f</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>a531f46d-caa6-4c88-b846-ae677dff7358</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>fd17700b-2513-4e35-956f-34a60b4a504e</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>ec2dc4a1-6104-45d1-85e2-3bced02ea6f7</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>bd4d098a-0eb9-4321-9f89-69803d2752cc</ModelGUID>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>d2db274b-c5b5-430d-9350-d97d19fc57c6</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;1 Model linking a the Northwind table 'Customer' with the Mongo DB Movies collection (the Join is defined on Customer Country = Movie Country).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>0</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>
