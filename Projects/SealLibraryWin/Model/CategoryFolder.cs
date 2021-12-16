@@ -16,6 +16,8 @@ namespace Seal.Model
     /// </summary>
     public class CategoryFolder : RootComponent
     {
+        public static CategoryFolder Instance = new CategoryFolder();
+
 #if WINDOWS
         #region Editor
 

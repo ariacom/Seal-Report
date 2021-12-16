@@ -178,9 +178,17 @@ namespace SealWebServer.Controllers
             try
             {
                 if (Repository == null) CreateRepository();
-                var model = new MainModel() { Repository = Repository };
+                var model = new WebMainModel() { Repository = Repository };
                 model.ServerPath = WebRootPath;
                 model.BaseURL = Request.PathBase.Value;
+                model.Request = Request;
+
+                //Init script
+                if (!string.IsNullOrEmpty(Repository.Configuration.WebSessionInitScript))
+                {
+                    RazorHelper.CompileExecute(Repository.Configuration.WebSessionInitScript, model);
+                }
+
                 result = View(model);
             }
             catch (Exception ex)

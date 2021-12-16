@@ -16,6 +16,7 @@ _ed.editor.bootstrap.min.js</ScriptFiles>
   <TaskFolderName>Seal Report</TaskFolderName>
   <AuditEnabled>true</AuditEnabled>
   <AuditScript />
+  <WebSessionInitScript />
   <InitScript />
   <PdfServicePassword />
   <PdfWebServiceURL />

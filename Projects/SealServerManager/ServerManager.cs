@@ -61,7 +61,7 @@ namespace Seal
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
             PropertyGridHelper.AddResetMenu(mainPropertyGrid);
 
-            sourceHelper = new TreeViewEditorHelper() { sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, addFromToolStripMenuItem = addFromToolStripMenuItem, addToolStripMenuItem = addToolStripMenuItem, removeToolStripMenuItem = removeToolStripMenuItem, copyToolStripMenuItem = copyToolStripMenuItem, removeRootToolStripMenuItem = removeRootToolStripMenuItem, treeContextMenuStrip = treeContextMenuStrip, mainTreeView = mainTreeView };
+            sourceHelper = new TreeViewEditorHelper() { entityHandler = this, sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, addFromToolStripMenuItem = addFromToolStripMenuItem, addToolStripMenuItem = addToolStripMenuItem, removeToolStripMenuItem = removeToolStripMenuItem, copyToolStripMenuItem = copyToolStripMenuItem, removeRootToolStripMenuItem = removeRootToolStripMenuItem, treeContextMenuStrip = treeContextMenuStrip, mainTreeView = mainTreeView };
             toolStripHelper = new ToolStripEditorHelper() { MainToolStrip = mainToolStrip, MainPropertyGrid = mainPropertyGrid, EntityHandler = this, MainTreeView = mainTreeView };
             toolsHelper = new ToolsHelper() { EntityHandler = this };
             toolsHelper.InitHelpers(toolsToolStripMenuItem, false);
@@ -135,7 +135,7 @@ namespace Seal
                 {
                     Microsoft.Web.Administration.ServerManager serverMgr = new Microsoft.Web.Administration.ServerManager();
                     //try to get default directory...
-                    _repository.Configuration.WebPublicationDirectory = Path.Combine(serverMgr.Sites[0].Applications[0].VirtualDirectories[0].PhysicalPath.Replace("%SystemDrive%\\", Path.GetPathRoot(Environment.SystemDirectory)), _repository.Configuration.WebApplicationName.Replace("/",""));
+                    _repository.Configuration.WebPublicationDirectory = Path.Combine(serverMgr.Sites[0].Applications[0].VirtualDirectories[0].PhysicalPath.Replace("%SystemDrive%\\", Path.GetPathRoot(Environment.SystemDirectory)), _repository.Configuration.WebApplicationName.Replace("/", ""));
                 }
                 catch { }
             }
@@ -261,34 +261,42 @@ namespace Seal
 
         void init(object entityToSelect = null)
         {
-            //build open menus
-            buildOpenMenus();
-
-            mainSplitContainer.Visible = false;
-            if (entityToSelect == null && mainTreeView.SelectedNode != null) entityToSelect = mainTreeView.SelectedNode.Tag;
-            mainTreeView.Nodes.Clear();
-
-            if (_source != null)
+            try
             {
-                mainSplitContainer.Visible = true;
-                sourceHelper.addSource(mainTreeView.Nodes, _source, 9);
-                mainTreeView.Nodes[0].Expand();
+                mainTreeView.BeginUpdate();
+                //build open menus
+                buildOpenMenus();
 
+                mainSplitContainer.Visible = false;
+                if (entityToSelect == null && mainTreeView.SelectedNode != null) entityToSelect = mainTreeView.SelectedNode.Tag;
+                mainTreeView.Nodes.Clear();
+
+                if (_source != null)
+                {
+                    mainSplitContainer.Visible = true;
+                    sourceHelper.addSource(mainTreeView.Nodes, _source, 9);
+                    mainTreeView.Nodes[0].Expand();
+
+                }
+                else if (_device != null)
+                {
+                    mainSplitContainer.Visible = true;
+                    var imageIndex = _device is OutputEmailDevice ? 8 : 10;
+                    TreeNode mainTN = new TreeNode() { Tag = _device, Text = _device.Name, ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
+                    mainTreeView.Nodes.Add(mainTN);
+                    mainTreeView.SelectedNode = mainTN;
+                }
+
+                if (entityToSelect != null) selectNode(entityToSelect);
+                if (mainTreeView.SelectedNode == null && mainTreeView.Nodes.Count > 0) mainTreeView.SelectedNode = mainTreeView.Nodes[0];
+                toolsHelper.Source = _source;
+
+                enableControls();
             }
-            else if (_device != null)
+            finally
             {
-                mainSplitContainer.Visible = true;
-                var imageIndex = _device is OutputEmailDevice ? 8 : 10;
-                TreeNode mainTN = new TreeNode() { Tag = _device, Text = _device.Name, ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
-                mainTreeView.Nodes.Add(mainTN);
-                mainTreeView.SelectedNode = mainTN;
+                mainTreeView.EndUpdate();
             }
-
-            if (entityToSelect != null) selectNode(entityToSelect);
-            if (mainTreeView.SelectedNode == null && mainTreeView.Nodes.Count > 0) mainTreeView.SelectedNode = mainTreeView.Nodes[0];
-            toolsHelper.Source = _source;
-
-            enableControls();
         }
 
         void enableControls()
@@ -442,7 +450,7 @@ namespace Seal
                 _source.IsNoSQL = (sender == noSQLdataSourceToolStripMenuItem);
                 if (_source.IsNoSQL)
                 {
-                    entityToSelect = _source.TableFolder;
+                    entityToSelect = TableFolder.Instance;
                     _source.Connection.ConnectionString = "";
                 }
                 else entityToSelect = _source.Connection;
@@ -576,8 +584,10 @@ namespace Seal
             var entry = Helper.GetGridEntry(mainPropertyGrid, "table parameters");
             if (entry != null) entry.Expanded = true;
 
-
             toolStripHelper.SetHelperButtons(selectedEntity);
+
+            //Force shortcuts
+            treeContextMenuStrip_Opening(sender, null);
         }
 
         #endregion
@@ -586,7 +596,7 @@ namespace Seal
 
         private void treeContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            sourceHelper.treeContextMenuStrip_Opening(sender, e, new EventHandler(addToolStripMenuItem_Click));
+            sourceHelper.initTreeContextMenuStrip(new EventHandler(addToolStripMenuItem_Click));
         }
 
 
@@ -696,8 +706,44 @@ namespace Seal
                 p.Start();
             }
         }
-
-
         #endregion
+
+
+
+        #region Drag and drop
+        private void mainTreeView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            sourceHelper.mainTreeView_ItemDrag(this, sender, e);
+        }
+
+        private void mainTreeView_DragEnter(object sender, DragEventArgs e)
+        {
+            sourceHelper.mainTreeView_DragEnter(sender, e);
+        }
+
+        TreeNode _lastDragOverNode = null;
+        private void mainTreeView_DragDrop(object sender, DragEventArgs e)
+        {
+            _lastDragOverNode = null;
+            sourceHelper.mainTreeView_DragDrop(sender, e);
+        }
+
+        private void mainTreeView_DragOver(object sender, DragEventArgs e)
+        {
+            sourceHelper.mainTreeView_DragOver(sender, e);
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
+            {
+                TreeNode targetNode = ((TreeView)sender).GetNodeAt(((TreeView)sender).PointToClient(new Point(e.X, e.Y)));
+                _lastDragOverNode = null;
+                if (targetNode != null && e.Effect == DragDropEffects.Move)
+                {
+                    _lastDragOverNode = targetNode;
+                    mainTreeView.SelectedNode = targetNode;
+                }
+            }
+        }
+        #endregion
+
+
     }
 }

@@ -108,6 +108,7 @@
     <Compile Include="..\SealLibraryWin\Model\SecurityUserProfile.cs" Link="Model\SecurityUserProfile.cs" />
     <Compile Include="..\SealLibraryWin\Model\SubReport.cs" Link="Model\SubReport.cs" />
     <Compile Include="..\SealLibraryWin\Model\WebInterfaceModels.cs" Link="Model\WebInterfaceModels.cs" />
+    <Compile Include="..\SealLibraryWin\Model\WebMainModel.cs" Link="Model\WebMainModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

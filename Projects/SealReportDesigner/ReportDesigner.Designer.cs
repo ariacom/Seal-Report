@@ -305,7 +305,6 @@
             this.sortColumnSQLOrderToolStripMenuItem});
             this.treeContextMenuStrip.Name = "treeContextMenuStrip";
             this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 158);
-            this.treeContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.treeContextMenuStrip_Opening);
             // 
             // addToolStripMenuItem
             // 
@@ -487,11 +486,11 @@
             this.mainTreeView.TabIndex = 1;
             this.mainTreeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.mainTreeView_BeforeLabelEdit);
             this.mainTreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.mainTreeView_AfterLabelEdit);
-            this.mainTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.mainTreeView_ItemDrag);
             this.mainTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.mainTreeView_BeforeSelect);
             this.mainTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.mainTreeView_AfterSelect);
             this.mainTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseClick);
             this.mainTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseDoubleClick);
+            this.mainTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.mainTreeView_ItemDrag);
             this.mainTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragDrop);
             this.mainTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragEnter);
             this.mainTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragOver);

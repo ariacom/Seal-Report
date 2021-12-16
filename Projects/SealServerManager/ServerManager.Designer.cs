@@ -250,6 +250,7 @@
             // 
             // mainTreeView
             // 
+            this.mainTreeView.AllowDrop = true;
             this.mainTreeView.ContextMenuStrip = this.treeContextMenuStrip;
             this.mainTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTreeView.FullRowSelect = true;
@@ -265,6 +266,10 @@
             this.mainTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.mainTreeView_AfterSelect);
             this.mainTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseClick);
             this.mainTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainTreeView_MouseUp);
+            this.mainTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.mainTreeView_ItemDrag);
+            this.mainTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragDrop);
+            this.mainTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragEnter);
+            this.mainTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragOver);
             // 
             // treeContextMenuStrip
             // 

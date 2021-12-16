@@ -67,7 +67,6 @@ namespace Seal.Model
                 GetProperty("ErrorEmailSendMode").SetIsBrowsable(true);
 
                 //Helpers
-                GetProperty("HelperEditProperties").SetIsBrowsable(!Report.Repository.UseWebScheduler);
                 GetProperty("HelperRunTaskScheduler").SetIsBrowsable(!Report.Repository.UseWebScheduler);
 
                 GetProperty("ErrorMinutesBetweenRetries").SetIsReadOnly(ErrorNumberOfRetries <= 0);

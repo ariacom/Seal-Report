@@ -1,9 +1,11 @@
-﻿namespace Seal.Model
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Seal.Model
 {
     /// <summary>
     /// Main model used for the Web Report Server
     /// </summary>
-    public class MainModel
+    public class WebMainModel
     {
         /// <summary>
         /// Current Repository
@@ -43,5 +45,10 @@
         /// Base URL path of the Web Report Server
         /// </summary>
         public string BaseURL = "";
+
+        /// <summary>
+        /// Current HTTP request
+        /// </summary>
+        public HttpRequest Request;
     }
 }

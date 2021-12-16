@@ -24,19 +24,51 @@ namespace Seal.Forms
         int GetSort();
     }
 
-    public class SourceFolder : ITreeSort { public int GetSort() { return 1; } }
-    public class TasksFolder : ITreeSort { public int GetSort() { return 2; } }
-    public class ModelFolder : ITreeSort { public int GetSort() { return 3; } }
-    public class ViewFolder : ITreeSort { public int GetSort() { return 4; } }
-    public class OutputFolder : ITreeSort { public int GetSort() { return 5; } }
-    public class ScheduleFolder : ITreeSort { public int GetSort() { return 6; } }
+    public class SourceFolder : ITreeSort { 
+        public int GetSort() { return 1; }
+        public static SourceFolder Instance = new SourceFolder();
+    }
+    public class TasksFolder : ITreeSort { 
+        public int GetSort() { return 2; }
+        public static TasksFolder Instance = new TasksFolder();
+    }
+    public class ModelFolder : ITreeSort { 
+        public int GetSort() { return 3; }
+        public static ModelFolder Instance = new ModelFolder();
+    }
+    public class ViewFolder : ITreeSort { 
+        public int GetSort() { return 4; }
+        public static ViewFolder Instance = new ViewFolder();
+    }
+    public class OutputFolder : ITreeSort { 
+        public int GetSort() { return 5; }
+        public static OutputFolder Instance = new OutputFolder();
+    }
+    public class ScheduleFolder : ITreeSort { 
+        public int GetSort() { return 6; }
+        public static ScheduleFolder Instance = new ScheduleFolder();
+    }
 
-    public class ConnectionFolder : ITreeSort { public int GetSort() { return 0; } }
-    public class TableFolder : ITreeSort { public int GetSort() { return 1; } }
-    public class TableLinkFolder { };
-    public class JoinFolder : ITreeSort { public int GetSort() { return 2; } }
-    public class EnumFolder : ITreeSort { public int GetSort() { return 3; } }
-    public class LabelFolder : ITreeSort { public int GetSort() { return 1; } }
+    public class ConnectionFolder : ITreeSort { 
+        public int GetSort() { return 0; }
+        public static ConnectionFolder Instance = new ConnectionFolder();
+    }
+    public class TableFolder : ITreeSort { 
+        public int GetSort() { return 1; }
+        public static TableFolder Instance = new TableFolder();
+    }
+    public class TableLinkFolder {
+        public static TableLinkFolder Instance = new TableLinkFolder();
+    };
+
+    public class JoinFolder : ITreeSort { 
+        public int GetSort() { return 2; }
+        public static JoinFolder Instance = new JoinFolder();
+    }
+    public class EnumFolder : ITreeSort { 
+        public int GetSort() { return 3; }
+        public static EnumFolder Instance = new EnumFolder();
+    }
 
 
     // Create a node sorter that implements the IComparer interface. 
@@ -71,6 +103,7 @@ namespace Seal.Forms
 
     public class TreeViewEditorHelper
     {
+        public IEntityHandler entityHandler;
         public ContextMenuStrip treeContextMenuStrip;
         public TreeView mainTreeView;
         public ToolStripMenuItem addToolStripMenuItem;
@@ -112,7 +145,7 @@ namespace Seal.Forms
             TreeNode mainTN = new TreeNode() { Tag = source, Text = source.Name, ImageIndex = index, SelectedImageIndex = index };
             nodes.Add(mainTN);
 
-            TreeNode sourceConnectionTN = new TreeNode("Connections") { Tag = source.ConnectionFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+            TreeNode sourceConnectionTN = new TreeNode("Connections") { Tag = ConnectionFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
             mainTN.Nodes.Add(sourceConnectionTN);
             foreach (var item in source.Connections.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
             {
@@ -121,7 +154,7 @@ namespace Seal.Forms
             }
             if (!ForReport) sourceConnectionTN.ExpandAll();
 
-            TreeNode sourceTableTN = new TreeNode("Tables") { Tag = source.TableFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+            TreeNode sourceTableTN = new TreeNode("Tables") { Tag = TableFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
             mainTN.Nodes.Add(sourceTableTN);
             foreach (var table in source.MetaData.Tables.OrderByDescending(i => i.IsEditable).ThenBy(i => i.AliasName))
             {
@@ -138,7 +171,7 @@ namespace Seal.Forms
             sourceTableTN.Expand();
 
             //Columns by category
-            TreeNode categoryTN = new TreeNode("Columns by categories") { Tag = source.CategoryFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+            TreeNode categoryTN = new TreeNode("Columns by categories") { Tag = CategoryFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
             sourceTableTN.Nodes.Add(categoryTN);
             TreeViewHelper.InitCategoryTreeNode(categoryTN.Nodes, source.MetaData.Tables);
             categoryTN.Expand();
@@ -146,13 +179,13 @@ namespace Seal.Forms
             if (source.IsNoSQL)
             {
                 //Table links
-                TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = source.TableLinksFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+                TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = TableLinkFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
                 sourceTableTN.Nodes.Add(tableLinksTN);
                 TreeViewHelper.InitTablesLinksTreeNode(tableLinksTN.Nodes, source.MetaData.TableLinks);
             }
 
             //Joins
-            TreeNode sourceJoinTN = new TreeNode("Joins") { Tag = source.JoinFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+            TreeNode sourceJoinTN = new TreeNode("Joins") { Tag = JoinFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
             mainTN.Nodes.Add(sourceJoinTN);
             foreach (var item in source.MetaData.Joins.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
             {
@@ -161,7 +194,7 @@ namespace Seal.Forms
             }
             if (!ForReport) sourceJoinTN.ExpandAll();
 
-            TreeNode sourceEnumTN = new TreeNode("Enumerated Lists") { Tag = source.EnumFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+            TreeNode sourceEnumTN = new TreeNode("Enumerated Lists") { Tag = EnumFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
             mainTN.Nodes.Add(sourceEnumTN);
             foreach (var item in source.MetaData.Enums.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
             {
@@ -306,7 +339,15 @@ namespace Seal.Forms
 
         public object removeRootToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            object newEntity;
             if (mainTreeView.SelectedNode == null) return null;
+
+            var nodes = mainTreeView.SelectedNode.Parent.Nodes;
+            var index = nodes.IndexOf(mainTreeView.SelectedNode) + 1;
+            if (nodes.Count > index) newEntity = nodes[index].Tag;
+            else if (nodes.Count == index && nodes.Count > 1) newEntity = nodes[index - 2].Tag;
+            else newEntity = mainTreeView.SelectedNode.Parent.Tag;
+
             object entity = mainTreeView.SelectedNode.Tag;
             MetaSource source = GetSource(mainTreeView.SelectedNode);
 
@@ -334,7 +375,7 @@ namespace Seal.Forms
             {
                 source.RemoveEnum((MetaEnum)entity);
             }
-            return mainTreeView.SelectedNode.Parent.Tag;
+            return newEntity;
         }
 
         public IList getRemoveSource(ref string displayName)
@@ -515,7 +556,7 @@ namespace Seal.Forms
 
 
 
-        public void treeContextMenuStrip_Opening(object sender, CancelEventArgs e, EventHandler addHandler)
+        public void initTreeContextMenuStrip(EventHandler addHandler)
         {
             string entityName = null, copyEntityName = null;
             object entity = mainTreeView.SelectedNode.Tag;
@@ -542,7 +583,6 @@ namespace Seal.Forms
             {
                 if (((MetaTable)entity).IsSubTable)
                 {
-                    e.Cancel = true;
                     return;
                 }
 
@@ -610,6 +650,7 @@ namespace Seal.Forms
             if (!string.IsNullOrEmpty(copyEntityName))
             {
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                copyToolStripMenuItem.ShortcutKeys = (Keys.Control | Keys.C);
                 copyToolStripMenuItem.Text = string.Format("Copy {0}", Helper.QuoteSingle(copyEntityName));
                 treeContextMenuStrip.Items.Add(copyToolStripMenuItem);
             }
@@ -629,6 +670,7 @@ namespace Seal.Forms
             {
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                 removeRootToolStripMenuItem.Text = string.Format("Remove {0}", Helper.QuoteSingle(copyEntityName));
+                removeRootToolStripMenuItem.ShortcutKeys = Keys.Delete;
                 treeContextMenuStrip.Items.Add(removeRootToolStripMenuItem);
             }
 
@@ -652,6 +694,10 @@ namespace Seal.Forms
                 treeContextMenuStrip.Items.Add(sortColumnAlphaOrderToolStripMenuItem);
                 treeContextMenuStrip.Items.Add(sortColumnSQLOrderToolStripMenuItem);
             }
+            if (entity is MetaColumn&& ((MetaColumn)entity).MetaTable.IsEditable && mainTreeView.SelectedNode.Parent.Tag == ((MetaColumn)entity).MetaTable)
+            {
+                addMoveUpDown(entity);
+            }
 
             if (entity is CategoryFolder && mainTreeView.SelectedNode.Parent != null && mainTreeView.SelectedNode.Parent.Tag is CategoryFolder)
             {
@@ -670,8 +716,6 @@ namespace Seal.Forms
                     treeContextMenuStrip.Items.Add(sortColumnAlphaOrderToolStripMenuItem);
                 }
             }
-
-            e.Cancel = (treeContextMenuStrip.Items.Count == 0);
         }
 
         List<MetaJoin> GetJoins(DbConnection connection, MetaSource source)
@@ -780,7 +824,8 @@ namespace Seal.Forms
                     {
                         if (source.Connection.ConnectionType != ConnectionType.MongoDB || string.IsNullOrEmpty(source.Connection.MongoDBConnectionString))
                         {
-                            throw new Exception("Please configure a Mongo DB Connection first");
+                            MessageBox.Show("Please configure a Mongo DB Connection first", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return false;
                         }
                         MongoClient client = new MongoClient(source.Connection.FullConnectionString);
                         foreach (var dbName in client.ListDatabaseNames().ToList<string>().OrderBy(i => i))
@@ -1161,7 +1206,6 @@ namespace Seal.Forms
                     }
                     else if (propertyName == "DisplayOrder")
                     {
-                        mainTreeView.Sort();
                     }
                 }
                 else if (selectedEntity is CategoryFolder)
@@ -1203,9 +1247,16 @@ namespace Seal.Forms
             }
 
             TreeNode previous = mainTreeView.SelectedNode;
-            mainTreeView.Sort();
-            mainTreeView.SelectedNode = previous;
-
+            try
+            {
+                mainTreeView.BeginUpdate();
+                mainTreeView.Sort();
+                mainTreeView.SelectedNode = previous;
+            }
+            finally
+            {
+                mainTreeView.EndUpdate();
+            }
             return mustInit;
         }
 
@@ -1222,5 +1273,202 @@ namespace Seal.Forms
             }
         }
 
+        public void addMoveUpDown(object tag)
+        {
+            if (mainTreeView.SelectedNode.Parent.Nodes.Count == 1) return;
+
+            ToolStripMenuItem tsFirst = null, tsUp = null, tsDown = null, tsLast = null;
+            if (mainTreeView.SelectedNode.Parent.Nodes[0] != mainTreeView.SelectedNode)
+            {
+                tsFirst = new ToolStripMenuItem() { Text = "Move first", Tag = tag, ShortcutKeys = (Keys.Control | Keys.PageUp) };
+                tsFirst.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
+                tsUp = new ToolStripMenuItem() { Text = "Move up", Tag = tag, ShortcutKeys = (Keys.Control | Keys.Up) };
+                tsUp.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
+            }
+            if (mainTreeView.SelectedNode.Parent.Nodes[mainTreeView.SelectedNode.Parent.Nodes.Count - 1] != mainTreeView.SelectedNode)
+            {
+                tsDown = new ToolStripMenuItem() { Text = "Move down", Tag = tag, ShortcutKeys = (Keys.Control | Keys.Down) };
+                tsDown.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
+                tsLast = new ToolStripMenuItem() { Text = "Move last", Tag = tag, ShortcutKeys = (Keys.Control | Keys.PageDown) };
+                tsLast.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
+            }
+
+
+            if (treeContextMenuStrip.Items.Count > 0 && (tsUp != null || tsDown != null)) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+            if (tsFirst != null) treeContextMenuStrip.Items.Add(tsFirst);
+            if (tsUp != null) treeContextMenuStrip.Items.Add(tsUp);
+            if (tsDown != null) treeContextMenuStrip.Items.Add(tsDown);
+            if (tsLast != null) treeContextMenuStrip.Items.Add(tsLast);
+        }
+
+        private void moveUpDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var increment = 0;
+            var text = ((ToolStripMenuItem)sender).Text.ToLower();
+            if (text.Contains("first")) increment = -10000;
+            else if (text.Contains("last")) increment = 10000;
+            else if (text.Contains("down")) increment = 15;
+            else increment = -15;
+            var selectedEntity = mainTreeView.SelectedNode != null ? mainTreeView.SelectedNode.Tag : null;
+
+            if (selectedEntity is ReportView)
+            {
+                var viewToMove = selectedEntity as ReportView;
+                //move the position
+                List<ReportView> views = (mainTreeView.SelectedNode.Parent.Tag is ReportView) ? ((ReportView)mainTreeView.SelectedNode.Parent.Tag).Views : Report.Views;
+                foreach (var view in views) view.SortOrder = 10 * view.SortOrder;
+                viewToMove.SortOrder += increment;
+                int index = 1;
+                foreach (var view in views.OrderBy(i => i.SortOrder)) view.SortOrder = index++;
+                entityHandler.SetModified();
+                mainTreeView.Sort();
+                TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, viewToMove);
+            }
+            else if (selectedEntity is ReportTask)
+            {
+                var taskToMove = selectedEntity as ReportTask;
+                //move the position
+                List<ReportTask> tasks = Report.Tasks;
+                foreach (var task in tasks) task.SortOrder = 10 * task.SortOrder;
+                taskToMove.SortOrder += increment;
+                int index = 1;
+                foreach (var task in tasks.OrderBy(i => i.SortOrder)) task.SortOrder = index++;
+                entityHandler.SetModified();
+                mainTreeView.Sort();
+                TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, taskToMove);
+            }
+            else if (selectedEntity is MetaColumn)
+            {
+                var colToMove = selectedEntity as MetaColumn;
+                if (!colToMove.MetaTable.IsEditable) return;
+
+                //move the position
+                List<MetaColumn> cols = colToMove.MetaTable.Columns.ToList();
+                foreach (var col in cols) col.DisplayOrder = 10 * col.DisplayOrder;
+                colToMove.DisplayOrder += increment;
+                int index = 1;
+                foreach (var col in cols.OrderBy(i => i.DisplayOrder)) col.DisplayOrder = index++;
+                entityHandler.SetModified();
+                mainTreeView.Sort();
+                TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, colToMove);
+            }
+        }
+
+        #region Drag and drop
+
+        public void mainTreeView_ItemDrag(Control source, object sender, ItemDragEventArgs e)
+        {
+            TreeNode node = e.Item as TreeNode;
+            if (node != null && (node.Tag is ReportView || node.Tag is ReportTask || node.Tag is MetaColumn))
+            {
+                if (node.Tag is MetaColumn && !((MetaColumn)(node.Tag)).MetaTable.IsEditable) return;
+
+                mainTreeView.SelectedNode = node;
+                source.DoDragDrop(e.Item, DragDropEffects.Move);
+            }
+        }
+
+        public void mainTreeView_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.None;
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
+            {
+                Point pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
+                TreeNode targetNode = ((TreeView)sender).GetNodeAt(pt);
+                if (targetNode != null && (targetNode.Tag is ReportView || targetNode.Tag is ReportTask || targetNode.Tag is MetaColumn))
+                {
+                    e.Effect = DragDropEffects.Move;
+                }
+            }
+        }
+
+        public void mainTreeView_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
+            {
+                TreeNode targetNode = ((TreeView)sender).GetNodeAt(((TreeView)sender).PointToClient(new Point(e.X, e.Y)));
+                TreeNode sourceNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
+                if (sourceNode != null && targetNode != null && sourceNode.Tag is MetaColumn && targetNode.Tag is MetaColumn)
+                {
+                    var source = sourceNode.Tag as MetaColumn;
+                    var target = targetNode.Tag as MetaColumn;
+                    //move the position
+                    int index = 1;
+                    foreach (var col in source.MetaTable.Columns.OrderBy(i => i.DisplayOrder))
+                    {
+                        if (col == target)
+                        {
+                            source.DisplayOrder = index++;
+                            target.DisplayOrder = index;
+                            if (index == source.MetaTable.Columns.Count)
+                            {
+                                source.DisplayOrder = index;
+                                target.DisplayOrder = index - 1;
+                            }
+                        }
+                        else if (col != source)
+                        {
+                            col.DisplayOrder = index;
+                        }
+                        index++;
+                    }
+                    entityHandler.SetModified();
+                    try
+                    {
+                        mainTreeView.BeginUpdate();
+                        mainTreeView.Sort();
+                        e.Effect = DragDropEffects.Move;
+                        mainTreeView.SelectedNode = sourceNode;
+                    }
+                    finally
+                    {
+                        mainTreeView.EndUpdate();
+                    }
+                }
+            }
+        }
+
+        public void mainTreeView_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.None;
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
+            {
+                TreeNode targetNode = ((TreeView)sender).GetNodeAt(((TreeView)sender).PointToClient(new Point(e.X, e.Y)));
+                TreeNode sourceNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
+                if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportView && targetNode.Tag is ReportView)
+                {
+                    ReportView sourceView = sourceNode.Tag as ReportView;
+                    ReportView targetView = targetNode.Tag as ReportView;
+                    if (sourceNode.Parent == targetNode.Parent)
+                    {
+                        //move position
+                        e.Effect = DragDropEffects.Move;
+                    }
+                    else if (targetView.ReportViewTemplateChildren.Exists(i => i.Name == sourceView.TemplateName))
+                    {
+                        //move parent, check that the source if not a parent of the target
+                        if (!sourceView.IsAncestorOf(targetView)) e.Effect = DragDropEffects.Move;
+                    }
+                }
+                else if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportTask && targetNode.Tag is ReportTask)
+                {
+                    if (sourceNode.Parent == targetNode.Parent)
+                    {
+                        //move position
+                        e.Effect = DragDropEffects.Move;
+                    }
+                }
+                else if (sourceNode != null && targetNode != null && sourceNode.Tag is MetaColumn && targetNode.Tag is MetaColumn)
+                {
+                    if (sourceNode.Parent == targetNode.Parent)
+                    {
+                        //move position
+                        e.Effect = DragDropEffects.Move;
+                    }
+                }
+            }
+        }
+ 
+        #endregion
     }
 }

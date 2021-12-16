@@ -64,6 +64,7 @@ namespace Seal.Model
                 GetProperty("AuditScript").SetIsBrowsable(!ForPublication);
                 GetProperty("AuditScript").SetIsReadOnly(!AuditEnabled);
 
+                GetProperty("WebSessionInitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("CommonScripts").SetIsBrowsable(!ForPublication);
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
@@ -181,7 +182,7 @@ namespace Seal.Model
         [Category("Server Settings"), DisplayName("CSS Files"), Description("Additional CSS files to be included in the HTML report result. One per line or separated by semi-column."), Id(11, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
-        public string CssFiles { get; set; } = null;
+        public string CssFiles { get; set; } = "" ;
 
         /// <summary>
         /// Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
@@ -254,6 +255,15 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string AuditScript { get; set; } = null;
+
+        /// <summary>
+        /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
+        /// </summary>
+#if WINDOWS
+        [Category("Scripts"), DisplayName("Web Server Session Init Script"), Description("If set, the script is executed when a Web Server Session is started."), Id(3, 4)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string WebSessionInitScript { get; set; } = null;
 
         /// <summary>
         /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.

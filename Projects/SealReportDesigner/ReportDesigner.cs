@@ -75,7 +75,7 @@ namespace Seal
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
             PropertyGridHelper.AddResetMenu(mainPropertyGrid);
 
-            treeViewHelper = new TreeViewEditorHelper() { Report = _report, sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, addFromToolStripMenuItem = addFromToolStripMenuItem, addToolStripMenuItem = addToolStripMenuItem, removeToolStripMenuItem = removeToolStripMenuItem, copyToolStripMenuItem = copyToolStripMenuItem, removeRootToolStripMenuItem = removeRootToolStripMenuItem, treeContextMenuStrip = treeContextMenuStrip, mainTreeView = mainTreeView, ForReport = true };
+            treeViewHelper = new TreeViewEditorHelper() { entityHandler = this, Report = _report, sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, addFromToolStripMenuItem = addFromToolStripMenuItem, addToolStripMenuItem = addToolStripMenuItem, removeToolStripMenuItem = removeToolStripMenuItem, copyToolStripMenuItem = copyToolStripMenuItem, removeRootToolStripMenuItem = removeRootToolStripMenuItem, treeContextMenuStrip = treeContextMenuStrip, mainTreeView = mainTreeView, ForReport = true };
             mainTreeView.AfterSelect += treeViewHelper.AfterSelect;
 
             toolStripHelper = new ToolStripEditorHelper() { MainToolStrip = mainToolStrip, MainPropertyGrid = mainPropertyGrid, EntityHandler = this, MainTreeView = mainTreeView };
@@ -197,93 +197,100 @@ namespace Seal
 
         void init(object entityToSelect = null)
         {
-            if (entityToSelect == null && mainTreeView.SelectedNode != null) entityToSelect = mainTreeView.SelectedNode.Tag;
-
-            treeViewHelper.Report = _report;
-            if (_report == null)
+            try
             {
-                mainSplitContainer.Visible = false;
+                mainTreeView.BeginUpdate();
+                if (entityToSelect == null && mainTreeView.SelectedNode != null) entityToSelect = mainTreeView.SelectedNode.Tag;
+
+                treeViewHelper.Report = _report;
+                if (_report == null)
+                {
+                    mainSplitContainer.Visible = false;
+                }
+                else
+                {
+                    mainSplitContainer.Visible = true;
+                    mainTreeView.Nodes.Clear();
+
+                    _reportTN = new TreeNode("General") { Tag = Report, ImageIndex = 16, SelectedImageIndex = 16 };
+                    mainTreeView.Nodes.Add(_reportTN);
+
+                    _sourceTN = new TreeNode("Sources") { Tag = SourceFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+                    mainTreeView.Nodes.Add(_sourceTN);
+                    foreach (var source in _report.Sources)
+                    {
+                        treeViewHelper.addSource(_sourceTN.Nodes, source, 13);
+                    }
+                    _sourceTN.Expand();
+
+                    TreeNode modelTN = new TreeNode("Models") { Tag = ModelFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+                    mainTreeView.Nodes.Add(modelTN);
+                    foreach (var model in _report.Models)
+                    {
+                        var index = model.IsLINQ ? 17 : (model.IsSQLModel ? 15 : 10);
+                        TreeNode tn = new TreeNode(model.Name) { Tag = model, ImageIndex = index, SelectedImageIndex = index };
+                        tn.Tag = model;
+                        modelTN.Nodes.Add(tn);
+                        UpdateModelNode(tn);
+                    }
+                    modelTN.Expand();
+
+                    _viewTN = new TreeNode("Views") { Tag = ViewFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+                    mainTreeView.Nodes.Add(_viewTN);
+                    foreach (ReportView view in _report.Views)
+                    {
+                        var imageIndex = 8;
+                        if (view.TemplateName == "Model") imageIndex = 18;
+                        else if (view.TemplateName == "Widget") imageIndex = 19;
+                        TreeNode reportViewTN = new TreeNode(view.Name) { ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
+                        reportViewTN.Tag = view;
+                        _viewTN.Nodes.Add(reportViewTN);
+                        initTreeNodeViews(reportViewTN, view);
+                    }
+                    _viewTN.ExpandAll();
+
+                    _tasksTN = new TreeNode("Tasks") { Tag = TasksFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+                    mainTreeView.Nodes.Add(_tasksTN);
+                    foreach (var task in _report.Tasks)
+                    {
+                        var imageIndex = task.Enabled ? 12 : 14;
+                        TreeNode taskTN = new TreeNode(task.Name) { Tag = task, ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
+                        _tasksTN.Nodes.Add(taskTN);
+                    }
+                    _tasksTN.Expand();
+
+                    _outputsTN = new TreeNode("Outputs") { Tag = OutputFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+                    mainTreeView.Nodes.Add(_outputsTN);
+                    foreach (var output in _report.Outputs)
+                    {
+                        TreeNode outputTN = new TreeNode(output.Name) { Tag = output, ImageIndex = 9, SelectedImageIndex = 9 };
+                        _outputsTN.Nodes.Add(outputTN);
+                    }
+                    _outputsTN.Expand();
+
+                    _schedulesTN = new TreeNode("Schedules") { Tag = ScheduleFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+                    mainTreeView.Nodes.Add(_schedulesTN);
+                    foreach (var schedule in _report.Schedules)
+                    {
+                        TreeNode scheduleTN = new TreeNode(schedule.Name) { Tag = schedule, ImageIndex = 11, SelectedImageIndex = 11 };
+                        _schedulesTN.Nodes.Add(scheduleTN);
+                    }
+                    _schedulesTN.Expand();
+
+                    if (mainTreeView.SelectedNode == null)
+                    {
+                        mainTreeView.SelectedNode = _sourceTN;
+                    }
+                }
+                if (entityToSelect != null) selectNode(entityToSelect);
+
+                enableControls();
+                buildMRUMenus();
             }
-            else
+            finally
             {
-                mainSplitContainer.Visible = true;
-
-                mainTreeView.Nodes.Clear();
-
-                _reportTN = new TreeNode("General") { Tag = Report, ImageIndex = 16, SelectedImageIndex = 16 };
-                mainTreeView.Nodes.Add(_reportTN);
-
-                _sourceTN = new TreeNode("Sources") { Tag = new SourceFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(_sourceTN);
-                foreach (var source in _report.Sources)
-                {
-                    treeViewHelper.addSource(_sourceTN.Nodes, source, 13);
-                }
-                _sourceTN.Expand();
-
-                TreeNode modelTN = new TreeNode("Models") { Tag = new ModelFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(modelTN);
-                foreach (var model in _report.Models)
-                {
-                    var index = model.IsLINQ ? 17 : (model.IsSQLModel ? 15 : 10);
-                    TreeNode tn = new TreeNode(model.Name) { Tag = model, ImageIndex = index, SelectedImageIndex = index };
-                    tn.Tag = model;
-                    modelTN.Nodes.Add(tn);
-                    UpdateModelNode(tn);
-                }
-                modelTN.Expand();
-
-                _viewTN = new TreeNode("Views") { Tag = new ViewFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(_viewTN);
-                foreach (ReportView view in _report.Views)
-                {
-                    var imageIndex = 8;
-                    if (view.TemplateName == "Model") imageIndex = 18;
-                    else if (view.TemplateName == "Widget") imageIndex = 19;
-                    TreeNode reportViewTN = new TreeNode(view.Name) { ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
-                    reportViewTN.Tag = view;
-                    _viewTN.Nodes.Add(reportViewTN);
-                    initTreeNodeViews(reportViewTN, view);
-                }
-                _viewTN.ExpandAll();
-
-                _tasksTN = new TreeNode("Tasks") { Tag = new TasksFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(_tasksTN);
-                foreach (var task in _report.Tasks)
-                {
-                    var imageIndex = task.Enabled ? 12 : 14;
-                    TreeNode taskTN = new TreeNode(task.Name) { Tag = task, ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
-                    _tasksTN.Nodes.Add(taskTN);
-                }
-                _tasksTN.Expand();
-
-                _outputsTN = new TreeNode("Outputs") { Tag = new OutputFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(_outputsTN);
-                foreach (var output in _report.Outputs)
-                {
-                    TreeNode outputTN = new TreeNode(output.Name) { Tag = output, ImageIndex = 9, SelectedImageIndex = 9 };
-                    _outputsTN.Nodes.Add(outputTN);
-                }
-                _outputsTN.Expand();
-
-                _schedulesTN = new TreeNode("Schedules") { Tag = new ScheduleFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(_schedulesTN);
-                foreach (var schedule in _report.Schedules)
-                {
-                    TreeNode scheduleTN = new TreeNode(schedule.Name) { Tag = schedule, ImageIndex = 11, SelectedImageIndex = 11 };
-                    _schedulesTN.Nodes.Add(scheduleTN);
-                }
-                _schedulesTN.Expand();
-
-                if (mainTreeView.SelectedNode == null)
-                {
-                    mainTreeView.SelectedNode = _sourceTN;
-                }
+                mainTreeView.EndUpdate();
             }
-            if (entityToSelect != null) selectNode(entityToSelect);
-
-            enableControls();
-            buildMRUMenus();
         }
 
         void enableControls()
@@ -802,6 +809,9 @@ namespace Seal
             if (entry != null) entry.Expanded = true;
 
             toolStripHelper.SetHelperButtons(selectedEntity);
+            //init shortcuts
+            initTreeContextMenuStrip();
+
             enableControls();
         }
 
@@ -879,6 +889,7 @@ namespace Seal
             string displayName = "";
             IList selectSource = treeViewHelper.getRemoveSource(ref displayName);
             removeToolStripMenuItem.Enabled = (selectSource.Count > 0);
+            removeToolStripMenuItem.ShortcutKeys = Keys.Delete;
         }
 
         void addAddItem(string text, object tag, string toolTip = "")
@@ -897,6 +908,7 @@ namespace Seal
             ts.Click += new System.EventHandler(this.removeRootToolStripMenuItem_Click);
             ts.Tag = tag;
             ts.Text = text;
+            ts.ShortcutKeys = Keys.Delete;
             if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
             treeContextMenuStrip.Items.Add(ts);
         }
@@ -907,6 +919,7 @@ namespace Seal
             ts.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             ts.Tag = tag;
             ts.Text = text;
+            ts.ShortcutKeys = (Keys.Control | Keys.C);
             if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
             treeContextMenuStrip.Items.Add(ts);
         }
@@ -919,34 +932,6 @@ namespace Seal
             ts.Text = text;
             if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
             treeContextMenuStrip.Items.Add(ts);
-        }
-
-        void addMoveUpDown(object tag)
-        {
-            if (mainTreeView.SelectedNode.Parent.Nodes.Count == 1) return;
-
-            ToolStripMenuItem tsFirst = null, tsUp = null, tsDown = null, tsLast = null;
-            if (mainTreeView.SelectedNode.Parent.Nodes[0] != mainTreeView.SelectedNode)
-            {
-                tsFirst = new ToolStripMenuItem() { Text = "Move first", Tag = tag };
-                tsFirst.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
-                tsUp = new ToolStripMenuItem() { Text = "Move up", Tag = tag };
-                tsUp.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
-            }
-            if (mainTreeView.SelectedNode.Parent.Nodes[mainTreeView.SelectedNode.Parent.Nodes.Count - 1] != mainTreeView.SelectedNode)
-            {
-                tsDown = new ToolStripMenuItem() { Text = "Move down", Tag = tag };
-                tsDown.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
-                tsLast = new ToolStripMenuItem() { Text = "Move last", Tag = tag };
-                tsLast.Click += new System.EventHandler(this.moveUpDownToolStripMenuItem_Click);
-            }
-
-
-            if (treeContextMenuStrip.Items.Count > 0 && (tsUp != null || tsDown != null)) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
-            if (tsFirst != null) treeContextMenuStrip.Items.Add(tsFirst);
-            if (tsUp != null) treeContextMenuStrip.Items.Add(tsUp);
-            if (tsDown != null) treeContextMenuStrip.Items.Add(tsDown);
-            if (tsLast != null) treeContextMenuStrip.Items.Add(tsLast);
         }
 
         void addExecuteRenderContextItem(string name, string name2 = "")
@@ -970,7 +955,7 @@ namespace Seal
             }
         }
 
-        private void treeContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        private void initTreeContextMenuStrip()
         {
             try
             {
@@ -999,14 +984,14 @@ namespace Seal
                 else if (entity is ReportView)
                 {
                     var view = (ReportView)entity;
-                    foreach (var template in  view.ReportViewTemplateChildren)
+                    foreach (var template in view.ReportViewTemplateChildren)
                     {
                         addAddItem("Add a " + template.Name + " View", template, template.Description);
                     }
                     addRemoveItem("Remove Views...");
                     addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                     addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                    addMoveUpDown(entity);
+                    treeViewHelper.addMoveUpDown(entity);
 
                     if (view.Model != null)
                     {
@@ -1059,7 +1044,6 @@ namespace Seal
                     var reportModel = entity as ReportModel;
                     if (reportModel.MasterModel != null)
                     {
-                        e.Cancel = true;
                         return;
                     }
 
@@ -1094,6 +1078,7 @@ namespace Seal
                     addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                     addSmartCopyItem("Smart copy...", entity);
                     if (((ReportTask)entity).Enabled) addExecuteRenderContextItem(((RootComponent)entity).Name, " (this task only)");
+                    treeViewHelper.addMoveUpDown(entity);
                 }
                 else if (entity is ReportOutput)
                 {
@@ -1159,7 +1144,7 @@ namespace Seal
                 }
                 else
                 {
-                    treeViewHelper.treeContextMenuStrip_Opening(sender, e, new EventHandler(addToolStripMenuItem_Click));
+                    treeViewHelper.initTreeContextMenuStrip(new EventHandler(addToolStripMenuItem_Click));
                 }
             }
             finally
@@ -1422,29 +1407,6 @@ namespace Seal
             }
         }
 
-        private void moveUpDownToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var increment = 0;
-            var text = ((ToolStripMenuItem)sender).Text.ToLower();
-            if (text.Contains("first")) increment = -10000;
-            else if (text.Contains("last")) increment = 10000;
-            else if (text.Contains("down")) increment = 15;
-            else increment = -15;
-            if (selectedEntity is ReportView)
-            {
-                var viewToMove = selectedEntity as ReportView;
-                //move the position
-                List<ReportView> views = (mainTreeView.SelectedNode.Parent.Tag is ReportView) ? ((ReportView)mainTreeView.SelectedNode.Parent.Tag).Views : _report.Views;
-                foreach (var view in views) view.SortOrder = 10 * view.SortOrder;
-                viewToMove.SortOrder += increment;
-                int index = 0;
-                foreach (var view in views.OrderBy(i => i.SortOrder)) view.SortOrder = index++;
-                SetModified();
-                mainTreeView.Sort();
-                selectNode(viewToMove);
-            }
-        }
-
         private void smartCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SmartCopyForm form = null;
@@ -1493,43 +1455,47 @@ namespace Seal
 
         private void removeRootToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            object newEntity = null;
+            object newEntity;
+            var nodes = mainTreeView.SelectedNode.Parent.Nodes;
+            var index = nodes.IndexOf(mainTreeView.SelectedNode) + 1;
+
+            if (nodes.Count > index) newEntity = nodes[index].Tag;
+            else if (nodes.Count == index && nodes.Count > 1) newEntity = nodes[index - 2].Tag;
+            else newEntity = mainTreeView.SelectedNode.Parent.Tag;
+
             if (selectedEntity is ReportModel)
             {
                 _report.RemoveModel((ReportModel)selectedEntity);
-                newEntity = mainTreeView.SelectedNode.Parent.Tag;
             }
             else if (selectedEntity is ReportView)
             {
+                var view = (ReportView)selectedEntity;
+
                 if (mainTreeView.SelectedNode.Parent != null && mainTreeView.SelectedNode.Parent.Tag is ReportView)
                 {
-                    _report.RemoveView((ReportView)mainTreeView.SelectedNode.Parent.Tag, (ReportView)selectedEntity);
+                    _report.RemoveView((ReportView)mainTreeView.SelectedNode.Parent.Tag, view);
                 }
                 else
                 {
-                    _report.RemoveView(null, (ReportView)selectedEntity);
+                    _report.RemoveView(null, view);
                 }
-                newEntity = mainTreeView.SelectedNode.Parent.Tag;
+
             }
             else if (selectedEntity is ReportTask)
             {
                 _report.RemoveTask((ReportTask)selectedEntity);
-                newEntity = mainTreeView.SelectedNode.Parent.Tag;
             }
             else if (selectedEntity is ReportOutput)
             {
                 _report.RemoveOutput((ReportOutput)selectedEntity);
-                newEntity = mainTreeView.SelectedNode.Parent.Tag;
             }
             else if (selectedEntity is ReportSchedule)
             {
                 _report.RemoveSchedule((ReportSchedule)selectedEntity);
-                newEntity = mainTreeView.SelectedNode.Parent.Tag;
             }
             else if (selectedEntity is ReportSource)
             {
                 _report.RemoveSource((ReportSource)selectedEntity);
-                newEntity = mainTreeView.SelectedNode.Parent.Tag;
             }
             else
             {
@@ -1649,173 +1615,6 @@ namespace Seal
             init();
         }
 
-        #endregion
-
-        #region Drag and drop
-        private void mainTreeView_ItemDrag(object sender, ItemDragEventArgs e)
-        {
-            TreeNode node = e.Item as TreeNode;
-            if (node != null && (node.Tag is ReportView || node.Tag is ReportTask))
-            {
-                mainTreeView.SelectedNode = node;
-                DoDragDrop(e.Item, DragDropEffects.Move);
-            }
-        }
-
-        private void mainTreeView_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.None;
-            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
-            {
-                Point pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
-                TreeNode targetNode = ((TreeView)sender).GetNodeAt(pt);
-                if (targetNode != null && (targetNode.Tag is ReportView || targetNode.Tag is ReportTask))
-                {
-                    e.Effect = DragDropEffects.Move;
-                }
-            }
-        }
-
-        TreeNode _lastDragOverNode = null;
-        private void mainTreeView_DragDrop(object sender, DragEventArgs e)
-        {
-            _lastDragOverNode = null;
-            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
-            {
-                TreeNode targetNode = ((TreeView)sender).GetNodeAt(((TreeView)sender).PointToClient(new Point(e.X, e.Y)));
-                TreeNode sourceNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
-                if (sourceNode != null && targetNode != null && sourceNode.Parent != null && sourceNode.Tag is ReportView && targetNode.Tag is ReportView  /*&& (sourceNode.Parent.Tag is ReportView || sourceNode.Parent.Tag is ViewFolder)*/)
-                {
-                    ReportView sourceView = sourceNode.Tag as ReportView;
-                    ReportView targetView = targetNode.Tag as ReportView;
-                    if (targetView.ReportViewTemplateChildren.Exists(i => i.Name == sourceView.TemplateName) && !sourceView.IsAncestorOf(targetView))
-                    {
-                        //move the parent
-                        ReportView parent = sourceNode.Parent.Tag as ReportView;
-                        parent.Views.Remove(sourceView);
-
-                        //check if the target view is not a child of the source
-                        var view = targetView;
-                        while (view.ParentView != null)
-                        {
-                            if (view.ParentView == sourceView)
-                            {
-                                sourceView.Views.Remove(view);
-                                parent.Views.Add(view);
-                                view.ParentView = parent;
-                                break;
-                            }
-                            view = view.ParentView;
-                        }
-
-                        sourceView.ParentView = targetView;
-                        targetView.Views.Add(sourceView);
-                        targetView.InitReferences();
-                        SetModified();
-                        init(sourceView);
-                        e.Effect = DragDropEffects.Move;
-                        mainTreeView.SelectedNode = sourceNode;
-                    }
-                    else if (sourceNode.Parent == targetNode.Parent)
-                    {
-                        //move the position
-                        List<ReportView> views = (targetNode.Parent.Tag is ReportView) ? ((ReportView)targetNode.Parent.Tag).Views : _report.Views;
-                        int index = 0;
-                        foreach (var view in views.OrderBy(i => i.SortOrder))
-                        {
-                            if (view == targetView)
-                            {
-                                sourceView.SortOrder = index++;
-                                targetView.SortOrder = index;
-                                if (index == views.Count)
-                                {
-                                    sourceView.SortOrder = index;
-                                    targetView.SortOrder = index - 1;
-                                }
-                            }
-                            else if (view != sourceView)
-                            {
-                                view.SortOrder = index;
-                            }
-                            index++;
-                        }
-                        SetModified();
-                        mainTreeView.Sort();
-                        e.Effect = DragDropEffects.Move;
-                        mainTreeView.SelectedNode = sourceNode;
-                    }
-                }
-                else if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportTask && targetNode.Tag is ReportTask)
-                {
-                    ReportTask sourceTask = sourceNode.Tag as ReportTask;
-                    ReportTask targetTask = targetNode.Tag as ReportTask;
-                    //move the position
-                    int index = 0;
-                    foreach (var task in Report.Tasks.OrderBy(i => i.SortOrder))
-                    {
-                        if (task == targetTask)
-                        {
-                            sourceTask.SortOrder = index++;
-                            targetTask.SortOrder = index;
-                            if (index == Report.Tasks.Count)
-                            {
-                                sourceTask.SortOrder = index;
-                                targetTask.SortOrder = index - 1;
-                            }
-                        }
-                        else if (task != sourceTask)
-                        {
-                            task.SortOrder = index;
-                        }
-                        index++;
-                    }
-                    SetModified();
-                    mainTreeView.Sort();
-                    e.Effect = DragDropEffects.Move;
-                    mainTreeView.SelectedNode = sourceNode;
-                }
-            }
-        }
-
-        private void mainTreeView_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.None;
-            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
-            {
-                TreeNode targetNode = ((TreeView)sender).GetNodeAt(((TreeView)sender).PointToClient(new Point(e.X, e.Y)));
-                TreeNode sourceNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
-                if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportView && targetNode.Tag is ReportView)
-                {
-                    ReportView sourceView = sourceNode.Tag as ReportView;
-                    ReportView targetView = targetNode.Tag as ReportView;
-                    if (sourceNode.Parent == targetNode.Parent)
-                    {
-                        //move position
-                        e.Effect = DragDropEffects.Move;
-                    }
-                    else if (targetView.ReportViewTemplateChildren.Exists(i => i.Name == sourceView.TemplateName))
-                    {
-                        //move parent, check that the source if not a parent of the target
-                        if (!sourceView.IsAncestorOf(targetView)) e.Effect = DragDropEffects.Move;
-                    }
-                }
-                else if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportTask && targetNode.Tag is ReportTask)
-                {
-                    if (sourceNode.Parent == targetNode.Parent)
-                    {
-                        //move position
-                        e.Effect = DragDropEffects.Move;
-                    }
-                }
-
-                _lastDragOverNode = null;
-                if (targetNode != null && e.Effect == DragDropEffects.Move)
-                {
-                    _lastDragOverNode = targetNode;
-                    mainTreeView.SelectedNode = targetNode;
-                }
-            }
-        }
         private void mainTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (selectedEntity is ReportTask)
@@ -1905,6 +1704,136 @@ namespace Seal
         }
 
         #endregion
+
+        #region Drag and drop
+        private void mainTreeView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            treeViewHelper.mainTreeView_ItemDrag(this, sender, e);
+        }
+
+        private void mainTreeView_DragEnter(object sender, DragEventArgs e)
+        {
+            treeViewHelper.mainTreeView_DragEnter(sender, e);
+        }
+
+        TreeNode _lastDragOverNode = null;
+        private void mainTreeView_DragDrop(object sender, DragEventArgs e)
+        {
+            _lastDragOverNode = null;
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
+            {
+                TreeNode targetNode = ((TreeView)sender).GetNodeAt(((TreeView)sender).PointToClient(new Point(e.X, e.Y)));
+                TreeNode sourceNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
+                if (sourceNode != null && targetNode != null && sourceNode.Parent != null && sourceNode.Tag is ReportView && targetNode.Tag is ReportView)
+                {
+                    ReportView sourceView = sourceNode.Tag as ReportView;
+                    ReportView targetView = targetNode.Tag as ReportView;
+                    if (targetView.ReportViewTemplateChildren.Exists(i => i.Name == sourceView.TemplateName) && !sourceView.IsAncestorOf(targetView))
+                    {
+                        //move the parent
+                        ReportView parent = sourceNode.Parent.Tag as ReportView;
+                        parent.Views.Remove(sourceView);
+
+                        //check if the target view is not a child of the source
+                        var view = targetView;
+                        while (view.ParentView != null)
+                        {
+                            if (view.ParentView == sourceView)
+                            {
+                                sourceView.Views.Remove(view);
+                                parent.Views.Add(view);
+                                view.ParentView = parent;
+                                break;
+                            }
+                            view = view.ParentView;
+                        }
+
+                        sourceView.ParentView = targetView;
+                        targetView.Views.Add(sourceView);
+                        targetView.InitReferences();
+                        SetModified();
+                        init(sourceView);
+                        e.Effect = DragDropEffects.Move;
+                        mainTreeView.SelectedNode = sourceNode;
+                    }
+                    else if (sourceNode.Parent == targetNode.Parent)
+                    {
+                        //move the position
+                        List<ReportView> views = (targetNode.Parent.Tag is ReportView) ? ((ReportView)targetNode.Parent.Tag).Views : _report.Views;
+                        int index = 0;
+                        foreach (var view in views.OrderBy(i => i.SortOrder))
+                        {
+                            if (view == targetView)
+                            {
+                                sourceView.SortOrder = index++;
+                                targetView.SortOrder = index;
+                                if (index == views.Count)
+                                {
+                                    sourceView.SortOrder = index;
+                                    targetView.SortOrder = index - 1;
+                                }
+                            }
+                            else if (view != sourceView)
+                            {
+                                view.SortOrder = index;
+                            }
+                            index++;
+                        }
+                        SetModified();
+                        mainTreeView.Sort();
+                        e.Effect = DragDropEffects.Move;
+                        mainTreeView.SelectedNode = sourceNode;
+                    }
+                }
+                else if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportTask && targetNode.Tag is ReportTask)
+                {
+                    ReportTask sourceTask = sourceNode.Tag as ReportTask;
+                    ReportTask targetTask = targetNode.Tag as ReportTask;
+                    //move the position
+                    int index = 0;
+                    foreach (var task in Report.Tasks.OrderBy(i => i.SortOrder))
+                    {
+                        if (task == targetTask)
+                        {
+                            sourceTask.SortOrder = index++;
+                            targetTask.SortOrder = index;
+                            if (index == Report.Tasks.Count)
+                            {
+                                sourceTask.SortOrder = index;
+                                targetTask.SortOrder = index - 1;
+                            }
+                        }
+                        else if (task != sourceTask)
+                        {
+                            task.SortOrder = index;
+                        }
+                        index++;
+                    }
+                    SetModified();
+                    mainTreeView.Sort();
+                    e.Effect = DragDropEffects.Move;
+                    mainTreeView.SelectedNode = sourceNode;
+                }
+                else treeViewHelper.mainTreeView_DragDrop(sender, e);
+            }
+        }
+
+        private void mainTreeView_DragOver(object sender, DragEventArgs e)
+        {
+            treeViewHelper.mainTreeView_DragOver(sender, e);
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
+            {
+                TreeNode targetNode = ((TreeView)sender).GetNodeAt(((TreeView)sender).PointToClient(new Point(e.X, e.Y)));
+                _lastDragOverNode = null;
+                if (targetNode != null && e.Effect == DragDropEffects.Move)
+                {
+                    _lastDragOverNode = targetNode;
+                    mainTreeView.SelectedNode = targetNode;
+                }
+            }
+        }
+        #endregion
+
     }
 
 }

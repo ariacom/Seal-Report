@@ -15,14 +15,14 @@
     var jwtToken = user.Token; //Token got from SWILogin parameter
     
     //OR token can be get from the header Request with the Bearer keyword:
-    var httpAuthorization = user.Request.ServerVariables.Get(""HTTP_AUTHORIZATION"");
+    var httpAuthorization = user.Request.HttpContext.GetServerVariable(""HTTP_AUTHORIZATION"");
     if (!string.IsNullOrEmpty(httpAuthorization) && httpAuthorization.Contains(""Bearer"")) {
         jwtToken = httpAuthorization.Replace(""Bearer "", """");  
     }
     
 	if (!string.IsNullOrEmpty(jwtToken)) {	
 		// Decoding and validating the token received with the key
-		string json = Jose.JWT.Decode(jwtToken, Encoding.ASCII.GetBytes(user.Security.GetValue(""token_key"")));
+		string json = Jose.JWT.Decode(jwtToken, System.Text.Encoding.ASCII.GetBytes(user.Security.GetValue(""token_key"")));
 		JObject rss = JObject.Parse(json);
 		
 		// Obtaining the current unix time to validate the token expiration
@@ -38,8 +38,6 @@
 			user.Name = (string)rss[""username""];
 			string securityGroup = (string)rss[""securityGroup""];
 			user.AddSecurityGroup(securityGroup);
-			string culture = (string)rss[""culture""];
-			user.SetDefaultCulture(culture);
 		}
 	}
 	else {

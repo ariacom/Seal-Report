@@ -631,6 +631,18 @@ namespace Seal.Forms
 }
 ";
 
+        const string razorConfigurationWebSessionInitScriptTemplate = @"@{
+    WebMainModel model = Model;
+
+    //Script executed when the a Web Server Session is started
+
+    //e.g. to change Web Product Name with the name of the host
+    model.Repository.Configuration.WebProductName = model.Request.Host.Host;
+    //e.g. to add a CSS file based on the name of the host
+    model.Repository.Configuration.CssFiles += ""\r\n"" + model.Request.Host.Host+"".css"";
+}
+";
+
         const string razorConfigurationInitScriptTemplate = @"@using System.Data
 @{
     Report report = Model;
@@ -1503,7 +1515,14 @@ namespace Seal.Forms
                     //use report tag to store current config
                     var report = new Report();
                     report.Tag = context.Instance;
-                    if (context.PropertyDescriptor.Name == "InitScript")
+                    if (context.PropertyDescriptor.Name == "WebSessionInitScript")
+                    {
+                        template = razorConfigurationWebSessionInitScriptTemplate;
+                        frm.ObjectForCheckSyntax = new WebMainModel();
+                        frm.Text = "Edit the Web Server Session init script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "InitScript")
                     {
                         template = razorConfigurationInitScriptTemplate;
                         frm.ObjectForCheckSyntax = report;

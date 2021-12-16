@@ -72,7 +72,7 @@ namespace Seal.Helpers
                 try
                 {
                     //Load specific assemblies
-
+                    
                     var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
                     var loadedPaths = loadedAssemblies.Where(a => !a.IsDynamic).Select(a => a.Location).ToArray();
 

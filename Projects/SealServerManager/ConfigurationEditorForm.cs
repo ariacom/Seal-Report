@@ -174,11 +174,9 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                     {
                         log.Log("Creating Application Pool");
                         pool = serverMgr.ApplicationPools.Add(_configuration.WebApplicationPoolName);
+                        pool.ProcessModel.IdentityType = Microsoft.Web.Administration.ProcessModelIdentityType.LocalSystem;
                     }
                     pool.ManagedRuntimeVersion = "";
-                    if (Marshal.SizeOf(typeof(IntPtr)) != 8) pool.Enable32BitAppOnWin64 = true; //Test if 32bit
-
-                    pool.ProcessModel.IdentityType = Microsoft.Web.Administration.ProcessModelIdentityType.LocalSystem;
 
                     if (string.IsNullOrEmpty(_configuration.WebApplicationName)) _configuration.WebApplicationName = "/";
                     var application = site.Applications.FirstOrDefault(i => i.Path == _configuration.WebApplicationName);

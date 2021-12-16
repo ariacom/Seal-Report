@@ -72,21 +72,6 @@ namespace Seal.Model
             }
         }
 
-#if WINDOWS
-        [XmlIgnore]
-        public ConnectionFolder ConnectionFolder = new ConnectionFolder();
-        [XmlIgnore]
-        public TableFolder TableFolder = new TableFolder();
-        [XmlIgnore]
-        public TableLinkFolder TableLinksFolder = new TableLinkFolder();
-        [XmlIgnore]
-        public CategoryFolder CategoryFolder = new CategoryFolder();
-        [XmlIgnore]
-        public JoinFolder JoinFolder = new JoinFolder();
-        [XmlIgnore]
-        public EnumFolder EnumFolder = new EnumFolder();
-#endif
-
         #endregion
 
 #endif

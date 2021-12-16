@@ -171,9 +171,9 @@
     string restriction = Environment.UserName; //This gives the windows user of the process running the engine
     if (table.Source.Report != null && table.Source.Report.SecurityContext != null)
     {
-        var securityContext = table.Source.Report.SecurityContext; //User is logged through a Web Report Servert and has a context
+        var securityContext = table.Source.Report.SecurityContext; //User is logged through a Web Report Server and has a context
         restriction = securityContext.Name; //Name of the user set during the login
-        restriction = securityContext.WebUserName; //Name got from the login window
+        restriction = securityContext.WebUserName; //Name got from the login window 
         //securityContext.SecurityGroups; //List of security groups set for the user
         if (securityContext.BelongsToGroup("Default Group")) { //Test if the user belongs to a group
             //Special restriction here
