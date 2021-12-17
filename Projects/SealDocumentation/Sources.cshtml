@@ -399,7 +399,7 @@
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Table Templates</h4>
-                                <i>Adomd OLAP MDX, CSV, Excel, HTTPCLient JSON, XML, RSS</i> are template files defined in <i>/Sources/TableTemplates</i> Repository sub-folder.<br />
+                                <i>Mongo DB, Adomd OLAP MDX, CSV, Excel, HTTPCLient JSON, XML, RSS</i> are template files defined in <i>/Sources/TableTemplates</i> Repository sub-folder.<br />
                                 By default use the <i>Generic</i> template.<br />
                                 It is easy to create and add a template in this folder.
                             </div>
@@ -497,21 +497,26 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
                         <div class="col-md-12">
                             <h4>Mongo DB Support</h4>
                             <p>
-                                Like in SQL, <b>Joins</b> can be defined between tables using a dedicated <code>Join clause</code> coded in C#.<br />
-                                This clause will be used by the engine to generate the LINQ query when several tables are involved.
+                                A dedicated <strong>Connection Type</strong> and <code>Connection String</code> has been implemented to handle queries on Mongo DB.
                             </p>
                             <p>
-                                <div class="bs-callout bs-callout-info">
-                                    Defining <b>Table Links</b> and <b>Joins</b> allow to join different <b>Data Sources</b> (<eg>e.g. Performing a report that shows data from a SQL database and an Excel sheet</eg>).
-                                </div>
-                            <p>
-                                In the LINQ Query, elements defined in a <b>No SQL table</b> are named with the <b>Table Name</b> and the <b>Column Name</b> (<eg>e.g. for the objective column of Excel Employee Objective: <i>ExcelEmployeeObjective["objective"]</i></eg>), and elements defined in a <b>Table Link</b> are named using the <b>Data Source Name</b> and the original <b>Column Name</b> (<eg>e.g. for the LastName column of Employees: <i>Northwind["Employees.LastName"]</i></eg>).
+                                Once the connection setup in the <b>LINQ Data Source</b>, Mongo DB tables can be defined using the <b>Mongo DB</b> Table template.<br />
+                                A collection name and several parameters (like array to unwind) allow to define the table.
                             </p>
+                            <p>
+                                If a <b>Mongo DB</b> table is involved in a model, the report engine generates automatically the <code>Mongo DB Stages Script</code> of the table to apply elements to show and restrictions ath the database server level.<br />
+                                This script will be executed before the <code>Load Script</code> and can be customized if the flag <code>Generate Mongo DB Stages</code> is set to <b>False</b>.
+
+                            </p>
+                            <div class="bs-callout bs-callout-danger">
+                                Use a Wizard to start: Right click on the <b>Tables</b> and select the <strong>'Add Tables from Mongo DB Catalog'</strong> menu to browse and add tables using the current connection.
+                            </div>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Mongo DB Samples</h4>
-                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/220 Mongo DB - Customer sales per year</a><br />
-                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/221 Mongo DB - Customer sales detail</a><br />
-                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/222 Mongo DB - Movies search</a><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/220-Mongo DB - Customer sales per year</a><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/221-Mongo DB - Customer sales detail</a><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/222-Mongo DB - Movies search</a><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/223-Mongo DB - Movies - Northwind</a><br />
                                 These reports demonstrates how to query and aggregate several tables.<br /><br />
                                 <a class="btn btn-primary">Repository Data Source Sample: Mongo DB</a><br />
                                 This source contains several <b>Mongo DB Tables</b> based on the demonstration database.<br /><br />
