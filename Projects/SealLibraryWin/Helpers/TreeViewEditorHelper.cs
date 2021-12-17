@@ -949,7 +949,7 @@ namespace Seal.Forms
                                     //Mongo DB Table
                                     string[] names = table.Name.Split('.');
                                     table.Name = names.Last();
-                                    table.TemplateName = "Mongo DB";
+                                    table.TemplateName = MetaTableTemplate.MongoDBName;
                                     table.DynamicColumns = true;
                                     _ = table.TableTemplate;
                                     var param = table.Parameters.FirstOrDefault(i => i.Name == MetaTable.ParameterNameMongoDatabase);

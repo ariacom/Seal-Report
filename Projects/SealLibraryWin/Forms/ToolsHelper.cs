@@ -14,6 +14,7 @@ using System.Threading;
 using System.IO;
 using Microsoft.Win32.TaskScheduler;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace Seal.Forms
 {
@@ -38,6 +39,7 @@ namespace Seal.Forms
         ToolStripMenuItem _refreshEnum = new ToolStripMenuItem() { Text = "Refresh Enumerated lists...", ToolTipText = "Refresh all the dynamic enmerated list values from the database", AutoToolTip = true };
         ToolStripMenuItem _exportSourceTranslations = new ToolStripMenuItem() { Text = "Export Data Source translations in CSV...", ToolTipText = "Export all translations found in the Data Source into a CSV file.", AutoToolTip = true };
         ToolStripMenuItem _exportReportsTranslations = new ToolStripMenuItem() { Text = "Export Folders and Reports translations in CSV...", ToolTipText = "Export all report and folders translations found in the repository into a CSV file.", AutoToolTip = true };
+        ToolStripMenuItem _importSourceObjects = new ToolStripMenuItem() { Text = "Import Objects from another Data Source file...", ToolTipText = "Import Data Source Objects from another Data Source file.", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedules = new ToolStripMenuItem() { Text = "Synchronize Report Schedules...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedulesCurrentUser = new ToolStripMenuItem() { Text = "Synchronize Report Schedules with the logged user...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler using the current logged user", AutoToolTip = true };
         ToolStripMenuItem _executeDesigner = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Report Designer", ToolTipText = "run the Report Designer application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D))), ShowShortcutKeys = true };
@@ -75,6 +77,10 @@ namespace Seal.Forms
 
                 _exportReportsTranslations.Click += tools_Click;
                 toolsMenuItem.DropDownItems.Add(_exportReportsTranslations);
+
+                toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                _importSourceObjects.Click += tools_Click;
+                toolsMenuItem.DropDownItems.Add(_importSourceObjects);
             }
 
             _executeManager.Click += tools_Click;
@@ -123,6 +129,138 @@ namespace Seal.Forms
                 else if (sender == _exportReportsTranslations)
                 {
                     thread = new Thread(delegate (object param) { ExportReportsTranslations((ExecutionLogInterface)param); });
+                }
+                else if (sender == _importSourceObjects)
+                {
+                    OpenFileDialog dlg = new OpenFileDialog();
+                    dlg.Filter = string.Format(Repository.SealRootProductName + " Data Source files (*.{0})|*.{0}|All files (*.*)|*.*", Repository.SealConfigurationFileExtension);
+                    dlg.Title = "Select a Data Source file";
+                    dlg.CheckFileExists = true;
+                    dlg.CheckPathExists = true;
+                    dlg.InitialDirectory = Repository.Instance.SourcesFolder;
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        if (dlg.FileName == Source.FilePath) throw new Exception("Error: This is the same Data Source file.");
+                        var sourceFrom = MetaSource.LoadFromFile(dlg.FileName);
+
+                        List<RootComponent> objects = new List<RootComponent>();
+                        objects.AddRange(sourceFrom.Connections);
+                        if (sourceFrom.IsSQL == Source.IsSQL)
+                        {
+                            objects.AddRange(sourceFrom.MetaData.Tables);
+                            objects.AddRange(sourceFrom.MetaData.Joins);
+                        }
+                        objects.AddRange(sourceFrom.MetaData.Enums);
+
+                        foreach (var obj in objects)
+                        {
+                            if (obj is MetaTable) obj.Name = "TABLE: " + obj.Name;
+                            if (obj is MetaEnum) obj.Name = "ENUM: " + obj.Name;
+                            if (obj is MetaJoin) obj.Name = "JOIN: " + obj.Name;
+                            if (obj is MetaConnection) obj.Name = "CONNECTION: " + obj.Name;
+                        }
+
+                        MultipleSelectForm frm = new MultipleSelectForm("Please select objects to add", objects, "Name");
+                        List<CheckBox> options = new List<CheckBox>();
+                        var changeGUID = new CheckBox() { Text = "Change object identifiers (GUID)", Checked = true, AutoSize = true };
+                        options.Add(changeGUID);
+
+                        int index = 10;
+                        foreach (var checkbox in options)
+                        {
+                            checkbox.Location = new Point(index, 5);
+                            frm.optionPanel.Controls.Add(checkbox);
+                            index += checkbox.Width + 10;
+                            frm.Width = Math.Max(index + 5, frm.Width);
+                        }
+                        frm.optionPanel.Visible = (options.Count > 0);
+
+                        if (frm.ShowDialog() == DialogResult.OK)
+                        {
+                            try
+                            {
+                                Cursor.Current = Cursors.WaitCursor;
+                                EntityHandler.SetModified();
+                                var guids = new Dictionary<string, string>();
+
+                                foreach (var obj in objects)
+                                {
+                                    obj.Name = obj.Name.Substring(obj.Name.IndexOf(':')+2);
+                                }
+
+                                //First enums
+                                foreach (var item in frm.CheckedItems.Where(i => i is MetaEnum))
+                                {
+                                    var en = item as MetaEnum;
+                                    if (changeGUID.Checked)
+                                    {
+                                        var oldGUID = en.GUID;
+                                        en.GUID = Helper.NewGUID();
+                                        guids.Add(oldGUID, en.GUID);
+                                    }
+                                    Source.MetaData.Enums.Add(en);
+                                }
+                                //Then tables
+                                foreach (var item in frm.CheckedItems.Where(i => i is MetaTable))
+                                {
+                                    var table = item as MetaTable;
+                                    if (changeGUID.Checked)
+                                    {
+                                        var oldGUID = table.GUID;
+                                        table.GUID = Helper.NewGUID();
+                                        guids.Add(oldGUID, table.GUID);
+                                        foreach (var col in table.Columns)
+                                        {
+                                            oldGUID = col.GUID;
+                                            col.GUID = Helper.NewGUID();
+                                            guids.Add(oldGUID, col.GUID);
+                                            //Check enum
+                                            if (!string.IsNullOrEmpty(col.EnumGUID) && guids.ContainsKey(col.EnumGUID)) col.EnumGUID = guids[col.EnumGUID];
+
+                                            if (!Source.MetaData.Enums.Exists(i => i.GUID == col.EnumGUID)) col.EnumGUID = null;
+                                        }
+                                    }
+                                    Source.MetaData.Tables.Add(table);
+                                }
+                                //Then joins
+                                foreach (var item in frm.CheckedItems.Where(i => i is MetaJoin))
+                                {
+                                    var join = item as MetaJoin;
+                                    if (changeGUID.Checked)
+                                    {
+                                        var oldGUID = join.GUID;
+                                        join.GUID = Helper.NewGUID();
+                                        guids.Add(oldGUID, join.GUID);
+                                        //Check tables
+                                        if (!string.IsNullOrEmpty(join.LeftTableGUID) && guids.ContainsKey(join.LeftTableGUID)) join.LeftTableGUID = guids[join.LeftTableGUID];
+                                        if (!string.IsNullOrEmpty(join.RightTableGUID) && guids.ContainsKey(join.RightTableGUID)) join.RightTableGUID = guids[join.RightTableGUID];
+                                    }
+                                    Source.MetaData.Joins.Add(join);
+                                }
+                                //Then connections
+                                foreach (var item in frm.CheckedItems.Where(i => i is MetaConnection))
+                                {
+                                    var connection = item as MetaConnection;
+                                    if (changeGUID.Checked)
+                                    {
+                                        var oldGUID = connection.GUID;
+                                        connection.GUID = Helper.NewGUID();
+                                        guids.Add(oldGUID, connection.GUID);
+                                    }
+                                    Source.Connections.Add(connection);
+                                }
+
+
+
+                                Source.InitReferences(Source.Repository);
+                                EntityHandler.InitEntity(Source);
+                            }
+                            finally
+                            {
+                                Cursor.Current = Cursors.Default;
+                            }
+                        }
+                    }
                 }
                 else if (sender == _synchronizeSchedules || sender == _synchronizeSchedulesCurrentUser)
                 {
