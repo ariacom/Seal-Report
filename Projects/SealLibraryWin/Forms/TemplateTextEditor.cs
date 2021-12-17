@@ -1124,6 +1124,7 @@ namespace Seal.Forms
 
 
         const string sqlConnectionString = @"Server=myServerAddress;Database=myDatabase;Trusted_Connection=True;TrustServerCertificate=True;";
+        const string mySqlConnectionString = @"Server=myServerAddress;Port=1234;Database=myDataBase;";
         const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@myServer";
         const string odbcConnectionString = @"DSN=myDataSourceName;DATABASE=myDatabase";
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
@@ -1355,6 +1356,12 @@ namespace Seal.Forms
                     {
                         template = sqlConnectionString;
                         frm.Text = "Edit the MS SQLServer Connection script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    if (context.PropertyDescriptor.Name == "MySQLConnectionString")
+                    {
+                        template = mySqlConnectionString;
+                        frm.Text = "Edit the MySQL Connection script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
                     if (context.PropertyDescriptor.Name == "MongoDBConnectionString")

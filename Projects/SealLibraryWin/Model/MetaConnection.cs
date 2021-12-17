@@ -48,11 +48,13 @@ namespace Seal.Model
                 GetProperty("ConnectionString").SetIsBrowsable(true);
                 GetProperty("OdbcConnectionString").SetIsBrowsable(true);
                 GetProperty("MSSqlServerConnectionString").SetIsBrowsable(true);
+                GetProperty("MySQLConnectionString").SetIsBrowsable(true);
                 GetProperty("MongoDBConnectionString").SetIsBrowsable(Source != null && Source.IsNoSQL);
 
                 GetProperty("ConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("OdbcConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MSSqlServerConnectionString").SetIsReadOnly(!IsEditable);
+                GetProperty("MySQLConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MongoDBConnectionString").SetIsReadOnly(!IsEditable);
 
                 GetProperty("UserName").SetIsBrowsable(true);
@@ -126,15 +128,15 @@ namespace Seal.Model
             set
             {
                 _connectionType = value;
+                if (_connectionType == ConnectionType.MySQL && DatabaseType != DatabaseType.MySQL)
+                {
+                    DatabaseType = DatabaseType.MySQL;
+                }
                 if ((_connectionType == ConnectionType.MSSQLServer || _connectionType == ConnectionType.MSSQLServerMicrosoft) && DatabaseType != DatabaseType.MSSQLServer) {
                     DatabaseType = DatabaseType.MSSQLServer;
 #if WINDOWS
                     if (_dctd != null) MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 #endif
-                }
-                if ((_connectionType == ConnectionType.MySQL) && DatabaseType != DatabaseType.MySQL)
-                {
-                    DatabaseType = DatabaseType.MySQL;
                 }
                 UpdateEditorAttributes();
             }
@@ -226,7 +228,7 @@ namespace Seal.Model
                 }
                 else if (ConnectionType == ConnectionType.MySQL)
                 {
-                    result = Helper.GetMySQLConnectionString(ConnectionString, UserName, ClearPassword);
+                    result = Helper.GetMySQLConnectionString(MySQLConnectionString, UserName, ClearPassword);
                 }
                 else
                 {
