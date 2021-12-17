@@ -138,6 +138,7 @@ namespace Seal.Helpers
                         if (connection is OdbcConnection) adapter = new OdbcDataAdapter(sql, (OdbcConnection)connection);
                         else if (connection is SqlConnection) adapter = new SqlDataAdapter(sql, (SqlConnection)connection);
                         else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
+                        else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else adapter = new OleDbDataAdapter(sql, (OleDbConnection)connection);
                         adapter.SelectCommand.CommandTimeout = SelectTimeout;
                         adapter.Fill(table);
@@ -148,6 +149,7 @@ namespace Seal.Helpers
                         if (connection is OdbcConnection) cmd = new OdbcCommand(sql, (OdbcConnection)connection);
                         else if (connection is SqlConnection) cmd = new SqlCommand(sql, (SqlConnection)connection);
                         else if (connection is Microsoft.Data.SqlClient.SqlConnection) cmd = new Microsoft.Data.SqlClient.SqlCommand(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
+                        else if (connection is MySql.Data.MySqlClient.MySqlConnection) cmd = new MySql.Data.MySqlClient.MySqlCommand(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
                         cmd.CommandTimeout = 0;
                         cmd.CommandType = CommandType.Text;
@@ -282,6 +284,7 @@ namespace Seal.Helpers
             if (connection is OdbcConnection) result = ((OdbcConnection)connection).CreateCommand();
             else if (connection is SqlConnection) result = ((SqlConnection)connection).CreateCommand();
             else if (connection is Microsoft.Data.SqlClient.SqlConnection) result = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
+            else if (connection is MySql.Data.MySqlClient.MySqlConnection) result = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
             else result = ((OleDbConnection)connection).CreateCommand();
             result.CommandTimeout = SelectTimeout;
             return result;

@@ -43,6 +43,8 @@ namespace Seal.Model
         MSSQLServerMicrosoft,
         [Description("Mongo DB")]
         MongoDB,
+        [Description("MySQL")]
+        MySQL,
     }
 
     public enum ColumnType

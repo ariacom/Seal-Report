@@ -342,6 +342,11 @@ namespace Seal.Model
                         ((Microsoft.Data.SqlClient.SqlConnection)connection).InfoMessage += new Microsoft.Data.SqlClient.SqlInfoMessageEventHandler(MicrosoftSqlInfoMessage);
                         result = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
                     }
+                    else if (connection is MySql.Data.MySqlClient.MySqlConnection)
+                    {
+                        ((MySql.Data.MySqlClient.MySqlConnection)connection).InfoMessage += new MySql.Data.MySqlClient.MySqlInfoMessageEventHandler(MySqlInfoMessage);
+                        result = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
+                    }
                     else
                     {
                         ((OleDbConnection)connection).InfoMessage += new OleDbInfoMessageEventHandler(OleDbInfoMessage);
@@ -442,8 +447,13 @@ namespace Seal.Model
         {
             DbInfoMessage.Append(e.Message);
         }
-        
-#endregion
+
+        void MySqlInfoMessage(object sender, MySql.Data.MySqlClient.MySqlInfoMessageEventArgs e)
+        {
+            DbInfoMessage.Append(e.errors);
+        }
+
+        #endregion
     }
 }
 

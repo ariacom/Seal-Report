@@ -729,6 +729,10 @@ namespace Seal.Helpers
             {
                 connection = new OdbcConnection(connectionString);
             }
+            else if (connectionType == ConnectionType.MySQL)
+            {
+                connection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
+            }
             else
             {
                 OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connectionString);
@@ -806,6 +810,13 @@ namespace Seal.Helpers
                 if (result != null && result.Contains("%PASSWORD%")) result = string.Format(result.Replace("%PASSWORD%", "{0}"), password);
             }
             catch { }
+            return result;
+        }
+        static public string GetMySQLConnectionString(string input, string userName, string password)
+        {
+            string result = input;
+            if (input != null && !input.Contains("UID=") && !string.IsNullOrEmpty(userName)) result += string.Format(";UID={0}", userName);
+            if (input != null && !input.Contains("PWD=") && !string.IsNullOrEmpty(password)) result += string.Format(";PWD={0}", password);
             return result;
         }
 
