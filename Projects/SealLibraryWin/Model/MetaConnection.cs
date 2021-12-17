@@ -132,6 +132,10 @@ namespace Seal.Model
                     if (_dctd != null) MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 #endif
                 }
+                if ((_connectionType == ConnectionType.MySQL) && DatabaseType != DatabaseType.MySQL)
+                {
+                    DatabaseType = DatabaseType.MySQL;
+                }
                 UpdateEditorAttributes();
             }
         }
@@ -178,6 +182,16 @@ namespace Seal.Model
         public string MongoDBConnectionString { get; set; }
 
         /// <summary>
+        /// MySQL Connection string used to connect to the database if the connection type is MySQL
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
+        [DisplayName("MySQL Connection string"), Description("MySQL Connection string used to connect to the database if the connection type is MySQL. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(6, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string MySQLConnectionString { get; set; }
+
+        /// <summary>
         /// The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).
         /// </summary>
 #if WINDOWS
@@ -209,6 +223,10 @@ namespace Seal.Model
                 else if (ConnectionType == ConnectionType.MongoDB)
                 {
                     result = Helper.GetMongoConnectionString(MongoDBConnectionString, UserName, ClearPassword);
+                }
+                else if (ConnectionType == ConnectionType.MySQL)
+                {
+                    result = Helper.GetMySQLConnectionString(ConnectionString, UserName, ClearPassword);
                 }
                 else
                 {

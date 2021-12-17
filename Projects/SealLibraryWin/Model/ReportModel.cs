@@ -2772,6 +2772,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (connection is OdbcConnection) _command = ((OdbcConnection)connection).CreateCommand();
                     else if (connection is SqlConnection) _command = ((SqlConnection)connection).CreateCommand();
                     else if (connection is Microsoft.Data.SqlClient.SqlConnection) _command = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
+                    else if (connection is MySql.Data.MySqlClient.MySqlConnection) _command = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
                     else _command = ((OleDbConnection)connection).CreateCommand();
 
                     _command.CommandTimeout = 0;
@@ -2792,6 +2793,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
                     else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
                     else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter((Microsoft.Data.SqlClient.SqlCommand)_command);
+                    else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter((MySql.Data.MySqlClient.MySqlCommand)_command);
                     else adapter = new OleDbDataAdapter((OleDbCommand)_command);
                     ResultTable = new DataTable();
                     adapter.Fill(ResultTable);
