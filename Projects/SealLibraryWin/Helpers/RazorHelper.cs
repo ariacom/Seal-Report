@@ -32,36 +32,38 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using MySql.Data.MySqlClient;
 
 namespace Seal.Helpers
 {
     public class RazorHelper
     {
         static readonly Object _0 = new Object();
-        static readonly HttpClient _1 = new HttpClient();
-        static readonly HtmlString _2 = new HtmlString("");
-        static readonly DataTable _3 = new DataTable();
-        static readonly OleDbConnection _4 = new OleDbConnection();
-        static readonly LdapConnection _5 = new LdapConnection("");
-        static readonly SyndicationFeed _6 = new SyndicationFeed();
-        static readonly XDocument _7 = new XDocument();
+        static HttpClient _1 = null;
+        static HtmlString _2 = null;
+        static DataTable _3 = null;
+        static OleDbConnection _4 = null;
+        static LdapConnection _5 = null;
+        static SyndicationFeed _6 = null;
+        static XDocument _7 = null;
 #if WINDOWS
-        static readonly Control _8 = new Control();
+        static Control _8 = null;
 #endif
-        static readonly PrincipalContext _9 = new PrincipalContext(ContextType.Machine);
-        static readonly JwtSettings _10 = JWT.DefaultSettings;
-        static readonly JObject _11 = JObject.Parse("{}");
-        static readonly FastZip _12 = new FastZip();
-        static readonly OdbcConnection _13 = new OdbcConnection();
-        static readonly SqlConnection _14 = new SqlConnection();
-        static readonly Microsoft.Data.SqlClient.SqlConnection _15 = new Microsoft.Data.SqlClient.SqlConnection();
-        static readonly SftpClient _16 = new SftpClient("", "a", "");
-        static readonly FtpClient _17 = new FtpClient();
-        static readonly HttpClient _18 = new HttpClient();
-        static readonly AdomdConnection _19 = new AdomdConnection();
-        static readonly ExcelPackage _20 = new ExcelPackage();
-        static readonly EventLogEntryType _21 = EventLogEntryType.Information;
-        static readonly MongoClient _22 = new MongoClient();
+        static PrincipalContext _9 = null;
+        static JwtSettings _10 = null;
+        static JObject _11 = null;
+        static FastZip _12 = null;
+        static OdbcConnection _13 = null;
+        static SqlConnection _14 = null;
+        static Microsoft.Data.SqlClient.SqlConnection _15 = null;
+        static SftpClient _16 = null;
+        static FtpClient _17 = null;
+        static HttpClient _18 = null;
+        static AdomdConnection _19 = null;
+        static ExcelPackage _20 = null;
+        static EventLogEntryType _21 = EventLogEntryType.Information;
+        static MongoClient _22 = null;
+        static MySqlConnection _23 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -72,7 +74,6 @@ namespace Seal.Helpers
                 try
                 {
                     //Load specific assemblies
-                    
                     var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
                     var loadedPaths = loadedAssemblies.Where(a => !a.IsDynamic).Select(a => a.Location).ToArray();
 
@@ -81,24 +82,60 @@ namespace Seal.Helpers
 
                     foreach (var path in toLoad)
                     {
-                        //take only Microsoft.AspNetCore.Http. dlls
-                        if (!Path.GetFileName(path).ToLower().StartsWith("microsoft.aspnetcore.http.")) continue;
-
-                        try
+                        //take only 
+                        //Microsoft.AspNetCore.Http.* dlls
+                        //MySql.Data.dll
+                        var fileName = Path.GetFileName(path).ToLower();
+                        if (
+                            fileName.StartsWith("microsoft.aspnetcore.http.")
+                           || fileName == "mysql.data.dll"
+                           )
                         {
-                            loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path)));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
+                            try
+                            {
+                                loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path)));
+                            }
+                            catch (Exception ex)
+                            {
+                                Helper.WriteLogException("LoadRazorAssemblies", ex);
+                            }
                         }
                     }
+
+                    if (_1 == null) _1 = new HttpClient();
+                    if (_2 == null) _2 = new HtmlString("");
+                    if (_3 == null) _3 = new DataTable();
+                    if (_4 == null) _4 = new OleDbConnection();
+                    if (_5 == null) _5 = new LdapConnection("");
+                    if (_6 == null) _6 = new SyndicationFeed();
+                    if (_7 == null) _7 = new XDocument();
+#if WINDOWS
+                    if (_8 == null) _8 = new Control();
+#endif
+                    if (_9 == null) _9 = new PrincipalContext(ContextType.Machine);
+                    if (_10 == null) _10 = JWT.DefaultSettings;
+                    if (_11 == null) _11 = JObject.Parse("{}");
+                    if (_12 == null) _12 = new FastZip();
+                    if (_13 == null) _13 = new OdbcConnection();
+                    if (_14 == null) _14 = new SqlConnection();
+                    if (_15 == null) _15 = new Microsoft.Data.SqlClient.SqlConnection();
+                    if (_16 == null) _16 = new SftpClient("", "a", "");
+                    if (_17 == null) _17 = new FtpClient();
+                    if (_18 == null) _18 = new HttpClient();
+                    if (_19 == null) _19 = new AdomdConnection();
+                    if (_20 == null) _20 = new ExcelPackage();
+                    if (_22 == null) _22 = new MongoClient();
+                    if (_23 == null) _23 = new MySqlConnection();
+
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Helper.WriteLogException("LoadRazorAssemblies", ex);
                 }
-                _loadTries = 0;
+                finally
+                {
+                    _loadTries = 0;
+                }
             }
         }
 

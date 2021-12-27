@@ -212,8 +212,6 @@ namespace Seal
                     mainSplitContainer.Visible = true;
                     mainTreeView.Nodes.Clear();
 
-                    _reportTN = new TreeNode("General") { Tag = Report, ImageIndex = 16, SelectedImageIndex = 16 };
-                    mainTreeView.Nodes.Add(_reportTN);
 
                     _sourceTN = new TreeNode("Sources") { Tag = SourceFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
                     mainTreeView.Nodes.Add(_sourceTN);
@@ -276,6 +274,9 @@ namespace Seal
                         _schedulesTN.Nodes.Add(scheduleTN);
                     }
                     _schedulesTN.Expand();
+
+                    _reportTN = new TreeNode("General") { Tag = Report, ImageIndex = 16, SelectedImageIndex = 16 };
+                    mainTreeView.Nodes.Add(_reportTN);
 
                     if (mainTreeView.SelectedNode == null)
                     {

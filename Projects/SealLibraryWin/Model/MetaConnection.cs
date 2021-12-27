@@ -330,7 +330,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
+                        Helper.WriteLogException("GetOpenConnection", ex);
                     }
                 }
 

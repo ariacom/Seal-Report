@@ -304,7 +304,7 @@ namespace Seal.Forms
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine(ex.Message);
+                                Helper.WriteLogException("EditValue", ex);
                             }
                         }
                         string message = "";

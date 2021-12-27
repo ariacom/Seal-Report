@@ -87,6 +87,7 @@ namespace Seal.Forms
             if (ty.Tag is CategoryFolder) return -1;
             if (tx.Tag is TableLinkFolder) return 1;
             if (ty.Tag is TableLinkFolder) return -1;
+            if (tx.Tag is Report) return 1;
 
             if (tx.Tag is ITreeSort && ty.Tag is ITreeSort)
             {

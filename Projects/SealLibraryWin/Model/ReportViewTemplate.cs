@@ -255,10 +255,12 @@ namespace Seal.Model
             }
             catch (TemplateCompilationException ex)
             {
+                Helper.WriteLogException($"ParseConfiguration for {Name}", ex);
                 Error = Helper.GetExceptionMessage(ex);
             }
             catch (Exception ex)
             {
+                Helper.WriteLogException($"ParseConfiguration for {Name}", ex);
                 Error = string.Format("Unexpected error got when parsing template configuration.\r\n{0}", ex.Message);
             }
         }

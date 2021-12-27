@@ -162,8 +162,14 @@ namespace Seal.Forms
 
                         MultipleSelectForm frm = new MultipleSelectForm("Please select objects to add", objects, "Name");
                         List<CheckBox> options = new List<CheckBox>();
-                        var changeGUID = new CheckBox() { Text = "Change object identifiers (GUID)", Checked = true, AutoSize = true };
+                        var changeGUID = new CheckBox() { Text = "Generate new identifiers (GUID)", Checked = true, AutoSize = true };
                         options.Add(changeGUID);
+                        var overwriteProperties = new CheckBox() { Text = "Overwrite existing table column properties", Checked = true, AutoSize = true, Enabled = false };
+                        changeGUID.CheckStateChanged += new EventHandler(delegate (object sender2, EventArgs e2)
+                        {
+                            overwriteProperties.Enabled = !changeGUID.Checked;
+                        });
+                        options.Add(overwriteProperties);
 
                         int index = 10;
                         foreach (var checkbox in options)
@@ -198,8 +204,13 @@ namespace Seal.Forms
                                         en.GUID = Helper.NewGUID();
                                         guids.Add(oldGUID, en.GUID);
                                     }
+                                    else
+                                    {
+                                        Source.MetaData.Enums.RemoveAll(i => i.GUID == en.GUID);
+                                    }
                                     Source.MetaData.Enums.Add(en);
                                 }
+
                                 //Then tables
                                 foreach (var item in frm.CheckedItems.Where(i => i is MetaTable))
                                 {
@@ -220,6 +231,28 @@ namespace Seal.Forms
                                             if (!Source.MetaData.Enums.Exists(i => i.GUID == col.EnumGUID)) col.EnumGUID = null;
                                         }
                                     }
+                                    else
+                                    {
+                                        var destTable = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == table.GUID);
+                                        if (destTable != null)
+                                        {
+                                            //Handles columns
+                                            foreach(var col in destTable.Columns)
+                                            {
+                                                if (!table.Columns.Exists(i => i.GUID == col.GUID)) table.Columns.Add(col);
+                                                else
+                                                {
+                                                    if (!overwriteProperties.Checked)
+                                                    {
+                                                        //keep column from the source
+                                                        table.Columns.RemoveAll(i => i.GUID == col.GUID);
+                                                        table.Columns.Add(col);
+                                                    }
+                                                }
+                                            }
+                                            Source.MetaData.Tables.Remove(destTable);
+                                        }
+                                    }
                                     Source.MetaData.Tables.Add(table);
                                 }
                                 //Then joins
@@ -235,6 +268,10 @@ namespace Seal.Forms
                                         if (!string.IsNullOrEmpty(join.LeftTableGUID) && guids.ContainsKey(join.LeftTableGUID)) join.LeftTableGUID = guids[join.LeftTableGUID];
                                         if (!string.IsNullOrEmpty(join.RightTableGUID) && guids.ContainsKey(join.RightTableGUID)) join.RightTableGUID = guids[join.RightTableGUID];
                                     }
+                                    else
+                                    {
+                                        Source.MetaData.Joins.RemoveAll(i => i.GUID == join.GUID);
+                                    }
                                     Source.MetaData.Joins.Add(join);
                                 }
                                 //Then connections
@@ -246,6 +283,10 @@ namespace Seal.Forms
                                         var oldGUID = connection.GUID;
                                         connection.GUID = Helper.NewGUID();
                                         guids.Add(oldGUID, connection.GUID);
+                                    }
+                                    else
+                                    {
+                                        Source.Connections.RemoveAll(i => i.GUID == connection.GUID);
                                     }
                                     Source.Connections.Add(connection);
                                 }
@@ -299,6 +340,10 @@ namespace Seal.Forms
             }
         }
 
+        private void ChangeGUID_CheckStateChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         public void CheckDataSources(ExecutionLogInterface log, List<MetaSource> sources)
         {
