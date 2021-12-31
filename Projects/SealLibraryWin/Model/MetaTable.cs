@@ -54,7 +54,7 @@ namespace Seal.Model
                 GetProperty("ParameterValues").SetIsBrowsable(!IsSQL && Parameters.Count > 0);
                 GetProperty("DefinitionInitScript").SetIsBrowsable(!IsSQL);
                 GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL);
-                GetProperty("MongoStagesScript").SetIsBrowsable(IsSubTable);
+                GetProperty("MongoStagesScript").SetIsBrowsable(IsMongoDb);
                 GetProperty("LoadScript").SetIsBrowsable(!IsSQL);
                 GetProperty("CacheDuration").SetIsBrowsable(!IsSQL);
                 GetProperty("PostSQL").SetIsBrowsable(IsSQL);

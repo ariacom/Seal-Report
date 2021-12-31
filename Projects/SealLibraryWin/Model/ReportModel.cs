@@ -1412,7 +1412,7 @@ model.ResultTable = query2.CopyToDataTable2();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Helper.WriteLogException("InitCommonRestrictions", ex);
             }
         }
 

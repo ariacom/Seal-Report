@@ -976,7 +976,7 @@
     <Joins>
       <MetaJoin>
         <GUID>a9008ab3-aece-4d4e-9eb6-547e99e4584e</GUID>
-        <Name>Customers Orders</Name>
+        <Name>Customers - Orders</Name>
         <LeftTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</LeftTableGUID>
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
         <Clause>Customers.CustomerID = Orders.CustomerID
@@ -984,7 +984,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>4e512b9e-fb6e-4b50-8c42-551d8f1e59e6</GUID>
-        <Name>Employees Orders</Name>
+        <Name>Employees - Orders</Name>
         <LeftTableGUID>61152bde-427a-4113-8f7d-322a1280bede</LeftTableGUID>
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
         <Clause>Employees.EmployeeID = Orders.EmployeeID
@@ -992,7 +992,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>c28e50ed-ac67-4f1b-8ec9-58c26b3506d6</GUID>
-        <Name>Shippers Orders</Name>
+        <Name>Shippers - Orders</Name>
         <LeftTableGUID>44179bfc-3a4a-4568-8137-364f06941c23</LeftTableGUID>
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
         <Clause>Shippers.ShipperID = Orders.ShipVia
@@ -1000,7 +1000,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>a5486989-c2b9-4797-9adc-4191d73f073f</GUID>
-        <Name>Suppliers Products</Name>
+        <Name>Suppliers - Products</Name>
         <LeftTableGUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</LeftTableGUID>
         <RightTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</RightTableGUID>
         <Clause>Suppliers.SupplierID = Products.SupplierID
@@ -1008,7 +1008,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>cc460fce-7f59-4d77-a440-953ea8ffd85c</GUID>
-        <Name>Orders [Order Details]</Name>
+        <Name>Orders - [Order Details]</Name>
         <LeftTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</LeftTableGUID>
         <RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID>
         <Clause>Orders.OrderID = [Order Details].OrderID
@@ -1016,7 +1016,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>b493bd23-60d1-409d-84c4-8dab23304c20</GUID>
-        <Name>Products [Order Details]</Name>
+        <Name>Products - [Order Details]</Name>
         <LeftTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</LeftTableGUID>
         <RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID>
         <Clause>Products.ProductID = [Order Details].ProductID

@@ -236,7 +236,7 @@
         </div>
     </div>
 
-    @if (model.HasEditor())
+    @if (model.HasEditor)
     {
         @await Html.PartialAsync("~/Views/Home/MainEditor.cshtml");
     }
@@ -299,7 +299,7 @@
         <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
         }
         var opers = [];
-        @if (model.HasEditor())
+        @if (model.HasEditor)
         {
         foreach (var oper in Enum.GetValues(typeof(Operator)))
         {
@@ -354,7 +354,7 @@
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
 
-        var hasEditor = @Helper.ToJS(model.HasEditor());
+        var hasEditor = @Helper.ToJS(model.HasEditor);
     </script>
 
     @if (!model.HasMinifiedScripts())
@@ -363,7 +363,7 @@
         <script src="~/Scripts/swi-gateway.js"></script>
         <script src="~/Scripts/swi-main.js"></script>
 
-        if (model.HasEditor())
+        if (model.HasEditor)
         {
             <script src="~/Scripts/swi-button-group.js"></script>
             <script src="~/Scripts/swi-editor.js"></script>

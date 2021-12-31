@@ -164,7 +164,7 @@ namespace SealWebServer.Controllers
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Helper.WriteLogException($"getContextDetail", ex);
             }
             return result.ToString();
         }

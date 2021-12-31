@@ -15,14 +15,7 @@ namespace Seal.Model
         /// <summary>
         /// True is the Web Report Designer is used
         /// </summary>
-        public bool HasEditor()
-        {
-#if EDITOR
-            return true;
-#else
-            return false;
-#endif
-        }
+        public bool HasEditor { get; set; }
 
         /// <summary>
         /// True is JavaScripts are minified

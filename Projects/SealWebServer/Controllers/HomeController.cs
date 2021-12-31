@@ -179,6 +179,9 @@ namespace SealWebServer.Controllers
             {
                 if (Repository == null) CreateRepository();
                 var model = new WebMainModel() { Repository = Repository };
+#if EDITOR
+                model.HasEditor = true;
+#endif
                 model.ServerPath = WebRootPath;
                 model.BaseURL = Request.PathBase.Value;
                 model.Request = Request;

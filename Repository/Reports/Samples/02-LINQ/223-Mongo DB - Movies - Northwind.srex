@@ -254,6 +254,12 @@ AND [c9868c09-39af-4e95-b959-a2efecf83357]</Restriction>
           </Views>
           <TemplateName>Model</TemplateName>
           <ModelGUID>bd4d098a-0eb9-4321-9f89-69803d2752cc</ModelGUID>
+          <Parameters>
+            <Parameter>
+              <Name>show_summary_table</Name>
+              <Value>False</Value>
+            </Parameter>
+          </Parameters>
           <SortOrder>2</SortOrder>
         </ReportView>
         <ReportView>

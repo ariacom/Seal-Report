@@ -131,8 +131,8 @@ namespace Seal.Helpers
 
         static public string NewGUID()
         {
-            return Guid.NewGuid().ToString().Replace("-","");
-        } 
+            return Guid.NewGuid().ToString().Replace("-", "");
+        }
 
         static public string QuoteDouble(string input)
         {
@@ -539,6 +539,9 @@ namespace Seal.Helpers
 
         static DateTime NextDailyPuge = DateTime.MinValue;
         const string TaskSchedulerEntry = "Seal Task Scheduler";
+        public const string DailyLogExecutions = "executions";
+        public const string DailyLogEvents = "events";
+        public const string DailyLogSchedules = "schedules";
         public static void WriteDailyLog(string prefix, string logsFolder, int logDays, string message)
         {
             try
@@ -580,6 +583,13 @@ namespace Seal.Helpers
             }
         }
 
+        public static void WriteLogException(string context, Exception ex)
+        {
+            Helper.WriteDailyLog(Helper.DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
+            if (ex.InnerException != null) Helper.WriteDailyLog(Helper.DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
+            Console.WriteLine(ex.Message);
+        }
+
         public static void WriteLogEntry(string source, EventLogEntryType type, string message, params object[] args)
         {
             string msg = message;
@@ -596,7 +606,7 @@ namespace Seal.Helpers
                 Console.WriteLine(msg);
 
                 var fullMessage = string.Format("**********\r\n{0} {1}\r\n{2}\r\n\r\n", DateTime.Now, type.ToString(), msg);
-                Helper.WriteDailyLog(source == TaskSchedulerEntry ? "schedules" : "events", Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
+                Helper.WriteDailyLog(source == TaskSchedulerEntry ? DailyLogSchedules : DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
 
                 if (msg.Length > 25000)
                 {
@@ -1031,7 +1041,7 @@ namespace Seal.Helpers
         static public DateTime? ToDateTime(object obj)
         {
             if (obj != null && obj == DBNull.Value) obj = null;
-            return obj == null ? (DateTime?) null : Convert.ToDateTime(obj, CultureInfo.InvariantCulture);
+            return obj == null ? (DateTime?)null : Convert.ToDateTime(obj, CultureInfo.InvariantCulture);
         }
 
         /// <summary>

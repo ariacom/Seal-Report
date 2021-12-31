@@ -87,6 +87,7 @@ namespace Seal.Forms
             if (ty.Tag is CategoryFolder) return -1;
             if (tx.Tag is TableLinkFolder) return 1;
             if (ty.Tag is TableLinkFolder) return -1;
+            if (tx.Tag is Report) return 1;
 
             if (tx.Tag is ITreeSort && ty.Tag is ITreeSort)
             {
@@ -949,7 +950,7 @@ namespace Seal.Forms
                                     //Mongo DB Table
                                     string[] names = table.Name.Split('.');
                                     table.Name = names.Last();
-                                    table.TemplateName = "Mongo DB";
+                                    table.TemplateName = MetaTableTemplate.MongoDBName;
                                     table.DynamicColumns = true;
                                     _ = table.TableTemplate;
                                     var param = table.Parameters.FirstOrDefault(i => i.Name == MetaTable.ParameterNameMongoDatabase);
