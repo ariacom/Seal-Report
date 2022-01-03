@@ -585,8 +585,8 @@ namespace Seal.Helpers
 
         public static void WriteLogException(string context, Exception ex)
         {
-            Helper.WriteDailyLog(Helper.DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
-            if (ex.InnerException != null) Helper.WriteDailyLog(Helper.DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
+            WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
+            if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
             Console.WriteLine(ex.Message);
         }
 
@@ -606,7 +606,7 @@ namespace Seal.Helpers
                 Console.WriteLine(msg);
 
                 var fullMessage = string.Format("**********\r\n{0} {1}\r\n{2}\r\n\r\n", DateTime.Now, type.ToString(), msg);
-                Helper.WriteDailyLog(source == TaskSchedulerEntry ? DailyLogSchedules : DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
+                WriteDailyLog(source == TaskSchedulerEntry ? DailyLogSchedules : DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
 
                 if (msg.Length > 25000)
                 {
