@@ -11,6 +11,13 @@
       <MetaData />
       <MetaSourceGUID>1f7b6741-c62f-4903-90ed-2fe3229190a7</MetaSourceGUID>
     </ReportSource>
+    <ReportSource>
+      <GUID>e05ee396-b60d-4253-a452-d24689169175</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
   </Sources>
   <Models>
     <ReportModel>
@@ -24,7 +31,7 @@
           <TemplateName>Mongo DB</TemplateName>
           <MongoStagesScript>@using MongoDB.Bson
 @{
-    //Script generated on 03.12.2021 at 16:56:59
+    //Script generated on 04.01.2022 at 12:48:09
     MetaTable metaTable = Model;
 
     //Elements
@@ -39,10 +46,62 @@
 {"price",1},
 {"transactions.amount",1},
 {"total",1},
+{"_id",1},
             }
     ));
 
 }</MongoStagesScript>
+          <Alias />
+        </MetaTable>
+        <MetaTable>
+          <GUID>797f81cd-f6ef-40fc-b5fa-0e0fd4425b0f</GUID>
+          <Name>customers</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 04.01.2022 at 12:48:09
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"name",1},
+{"_id",1},
+            }
+    ));
+
+}</MongoStagesScript>
+          <Alias />
+        </MetaTable>
+        <MetaTable>
+          <GUID>715b6c0e-18a6-4ccb-a540-ab51b9fc1766</GUID>
+          <Name>customers_accounts</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <Alias />
+        </MetaTable>
+        <MetaTable>
+          <GUID>dc9cc4d8-4077-4e09-b1a2-ffc22b3d03aa</GUID>
+          <Name>accounts</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    //Script generated on 04.01.2022 at 12:48:09
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"_id",1},
+{"account_id",1},
+            }
+    ));
+
+}</MongoStagesScript>
+          <Alias />
         </MetaTable>
       </LINQSubTables>
       <Elements>
@@ -84,7 +143,7 @@
           <GUID>c5dcaf1a-f4eb-4171-9cbd-5de041214f61</GUID>
           <Name>price</Name>
           <DisplayName />
-          <Format>N0</Format>
+          <Format>D2</Format>
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>ed321ca3-a890-433b-8e6f-938154c34bc5</MetaColumnGUID>
         </ReportElement>
@@ -134,7 +193,7 @@
           <TemplateName>Mongo DB</TemplateName>
           <MongoStagesScript>@using MongoDB.Bson
 @{
-    //Script generated on 03.12.2021 at 15:27:23
+    //Script generated on 04.01.2022 at 12:47:56
     MetaTable metaTable = Model;
 
     //Elements
@@ -151,6 +210,7 @@
     ));
 
 }</MongoStagesScript>
+          <Alias />
         </MetaTable>
       </LINQSubTables>
       <Elements>
