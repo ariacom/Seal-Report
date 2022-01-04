@@ -1251,7 +1251,10 @@ namespace Seal.Model
                 if (!forEdition && result.Sources.Count > 1)
                 {
                     //Remove sources not involved in execution
-                    result.Sources.RemoveAll(i => !result.Models.Exists(j => j.SourceGUID == i.GUID || j.SourceGUID == i.MetaSourceGUID) && !result.Tasks.Exists(j => j.SourceGUID == i.GUID));
+                    result.Sources.RemoveAll(i => 
+                        !result.Models.Exists(j => j.SourceGUID == i.GUID || j.SourceGUID == i.MetaSourceGUID)
+                        && !result.Models.Exists(j => j.LINQSubModels.Exists(k => k.SourceGUID == i.GUID || k.SourceGUID == i.MetaSourceGUID))
+                        && !result.Tasks.Exists(j => j.SourceGUID == i.GUID));
                 }
 
                 foreach (ReportSource source in result.Sources)
