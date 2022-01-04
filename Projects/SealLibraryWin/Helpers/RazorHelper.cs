@@ -33,6 +33,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using MySql.Data.MySqlClient;
+using System.Web;
 
 namespace Seal.Helpers
 {
@@ -64,6 +65,7 @@ namespace Seal.Helpers
         static EventLogEntryType _21 = EventLogEntryType.Information;
         static MongoClient _22 = null;
         static MySqlConnection _23 = null;
+        static string _24 = "";
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -88,7 +90,6 @@ namespace Seal.Helpers
                         var fileName = Path.GetFileName(path).ToLower();
                         if (
                             fileName.StartsWith("microsoft.aspnetcore.http.")
-                           || fileName == "mysql.data.dll"
                            )
                         {
                             try
@@ -126,6 +127,7 @@ namespace Seal.Helpers
                     if (_20 == null) _20 = new ExcelPackage();
                     if (_22 == null) _22 = new MongoClient();
                     if (_23 == null) _23 = new MySqlConnection();
+                    if (_24 == null) _24 = HttpUtility.HtmlEncode("");
 
                 }
                 catch (Exception ex)

@@ -986,9 +986,9 @@ namespace Seal.Model
         /// <summary>
         /// Translate a Connection
         /// </summary>
-        public string TranslateConnection(string instance, string reference)
+        public string TranslateConnection(MetaConnection connection)
         {
-            return RepositoryTranslate("Connection", instance, reference);
+            return RepositoryTranslate("Connection", connection.Source.Name + '.' + connection.Name, connection.Name);
         }
 
         /// <summary>

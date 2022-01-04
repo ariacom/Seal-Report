@@ -144,11 +144,11 @@ namespace SealWebServer.Controllers
                     if (defaultConnection != null) swiSource.connectionGUID = defaultConnection.ConnectionGUID;
                     else swiSource.connectionGUID = ReportSource.DefaultRepositoryConnectionGUID;
 
-                    swiSource.connections.Add(new SWIConnection() { GUID = ReportSource.DefaultRepositoryConnectionGUID, name = $"{Repository.TranslateWeb("Repository connection")} ({Repository.TranslateConnection(source.Name, source.Connection.Name)})" });
+                    swiSource.connections.Add(new SWIConnection() { GUID = ReportSource.DefaultRepositoryConnectionGUID, name = $"{Repository.TranslateWeb("Repository connection")} ({Repository.TranslateConnection(source.Connection)})" });
                     
                     foreach (var connection in source.Connections)
                     {
-                        swiSource.connections.Add(new SWIConnection() { GUID = connection.GUID, name = Repository.TranslateConnection(source.Name, connection.Name) });
+                        swiSource.connections.Add(new SWIConnection() { GUID = connection.GUID, name = Repository.TranslateConnection(connection) });
                     }
                     profile.sources.Add(swiSource);
                 }

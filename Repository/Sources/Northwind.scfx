@@ -23,7 +23,7 @@
     </MetaConnection>
     <MetaConnection>
       <GUID>cc91199c-1b51-4e61-8630-feb2eef21466</GUID>
-      <Name>Local MS SQL Server MS</Name>
+      <Name>Local MS SQL Server Microsoft</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
       <ConnectionString />
