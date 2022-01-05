@@ -40,6 +40,7 @@ namespace SealWebServer.Controllers
                     WebUser.WebPassword = password;
                     WebUser.Token = token;
                     WebUser.Request = Request;
+                    WebUser.WebHostName = Request.Host.Host;
                     Authenticate();
 
                     if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);

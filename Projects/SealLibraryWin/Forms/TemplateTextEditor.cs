@@ -639,7 +639,9 @@ namespace Seal.Forms
     //e.g. to change Web Product Name with the name of the host
     model.Repository.Configuration.WebProductName = model.Request.Host.Host;
     //e.g. to add a CSS file based on the name of the host
-    model.Repository.Configuration.CssFiles += ""\r\n"" + model.Request.Host.Host+"".css"";
+    if (!model.Repository.Configuration.CssFiles.Contains(model.Request.Host.Host+"".css"")) {
+        model.Repository.Configuration.CssFiles += ""\r\n"" + model.Request.Host.Host+"".css"";
+    }
 }
 ";
 

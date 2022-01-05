@@ -710,10 +710,11 @@ namespace Seal.Model
         /// </summary>
         public string GetPersonalFolder(SecurityUser user)
         {
-            //add hash to the end of the name
             var name = user.GetPersonalFolderName();
-            var hash = Math.Abs(Helper.CalculateHash(name));
-            string result = Path.Combine(PersonalFolder, string.Format("{0}_{1}", FileHelper.CleanFilePath(name), hash));
+            if (Configuration.HostForPersonalFolder && !string.IsNullOrEmpty(user.WebHostName)) name = user.WebHostName + "_" + name;
+            name = FileHelper.CleanFilePath(name, "_");
+            if (string.IsNullOrEmpty(name)) name = "_";
+            string result = Path.Combine(PersonalFolder, name);
             if (!Directory.Exists(result)) Directory.CreateDirectory(result);
             return result;
         }

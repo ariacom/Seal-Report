@@ -122,6 +122,11 @@ namespace Seal.Model
         public string WebPassword = "";
 
         /// <summary>
+        /// Web host name
+        /// </summary>
+        public string WebHostName = "";
+
+        /// <summary>
         /// Current SessionID
         /// </summary>
         public string SessionID = "";

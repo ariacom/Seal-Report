@@ -28,11 +28,9 @@ using OfficeOpenXml;
 using Microsoft.AspNetCore.Html;
 using System.Diagnostics;
 using MongoDB.Driver;
-using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using MySql.Data.MySqlClient;
 using System.Web;
 
 namespace Seal.Helpers
@@ -64,8 +62,7 @@ namespace Seal.Helpers
         static ExcelPackage _20 = null;
         static EventLogEntryType _21 = EventLogEntryType.Information;
         static MongoClient _22 = null;
-        static MySqlConnection _23 = null;
-        static string _24 = "";
+        static string _23 = "";
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -89,7 +86,8 @@ namespace Seal.Helpers
                         //MySql.Data.dll
                         var fileName = Path.GetFileName(path).ToLower();
                         if (
-                            fileName.StartsWith("microsoft.aspnetcore.http.")
+                            fileName.StartsWith("microsoft.aspnetcore.http.") ||
+                            fileName.StartsWith("mysql.data.")
                            )
                         {
                             try
@@ -126,9 +124,7 @@ namespace Seal.Helpers
                     if (_19 == null) _19 = new AdomdConnection();
                     if (_20 == null) _20 = new ExcelPackage();
                     if (_22 == null) _22 = new MongoClient();
-                    if (_23 == null) _23 = new MySqlConnection();
-                    if (_24 == null) _24 = HttpUtility.HtmlEncode("");
-
+                    if (_23 == null) _23 = HttpUtility.HtmlEncode("");
                 }
                 catch (Exception ex)
                 {

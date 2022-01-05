@@ -70,6 +70,7 @@ namespace Seal.Model
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
+                GetProperty("HostForPersonalFolder").SetIsBrowsable(!ForPublication);                
                 GetProperty("FileReplacePatterns").SetIsBrowsable(!ForPublication);
                 GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
@@ -166,10 +167,19 @@ namespace Seal.Model
         public bool IsLocal { get; set; } = true;
 
         /// <summary>
+        /// If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path).
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Use host name to define the Personal Folder name"), Description("If true, the User Personal Folder containing the profile and personal files is built with the host name. This allows multiple Web sites on the same installation."), Id(10, 1)]
+        [DefaultValue(false)]
+#endif
+        public bool HostForPersonalFolder { get; set; } = false;
+
+        /// <summary>
         /// List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS.
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("Patterns to replace in CSS or JScript"), Description("List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS."), Id(10, 1)]
+        [Category("Server Settings"), DisplayName("Patterns to replace in CSS or JScript"), Description("List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS."), Id(11, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<FileReplacePattern> FileReplacePatterns { get; set; } = new List<FileReplacePattern>();
@@ -179,7 +189,7 @@ namespace Seal.Model
         /// Additional CSS files to be included in the HTML report result. One per line or separated by semi-column.
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("CSS Files"), Description("Additional CSS files to be included in the HTML report result. One per line or separated by semi-column."), Id(11, 1)]
+        [Category("Server Settings"), DisplayName("CSS Files"), Description("Additional CSS files to be included in the HTML report result. One per line or separated by semi-column."), Id(12, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string CssFiles { get; set; } = "" ;
@@ -188,7 +198,7 @@ namespace Seal.Model
         /// Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("JavaScript Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(12, 1)]
+        [Category("Server Settings"), DisplayName("JavaScript Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(13, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string ScriptFiles { get; set; } = null;

@@ -830,12 +830,6 @@ namespace Seal.Helpers
             return result;
         }
 
-        public static int CalculateHash(string str)
-        {
-            return string.IsNullOrEmpty(str) ? 0 : str.GetHashCode();
-        }
-
-
         public static string HtmlMakeImageSrcData(string path)
         {
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);

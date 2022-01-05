@@ -423,7 +423,8 @@ var SWIMain = /** @class */ (function () {
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
             //Recent reports
             if (menu.recentreports.length > 0) {
-                parent.append($("<li class='divider menu-reports')>"));
+                if (parent.children().length > 0)
+                    parent.append($("<li class='divider menu-reports')>"));
                 menu.recentreports.forEach(function (value) {
                     _main.addReportMenu(parent, value);
                 });
