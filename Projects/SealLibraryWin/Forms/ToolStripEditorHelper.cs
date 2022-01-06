@@ -106,8 +106,7 @@ namespace Seal.Forms
             {
                 if (!((ReportSchedule)SelectedEntity).Report.Repository.UseWebScheduler)
                 {
-                    AddHelperButton("Task Scheduler", "Run the Task Scheduler Microsoft Management Console", Keys.F9);
-                    AddHelperButton("Edit Schedule", "Edit schedule properties", Keys.F8);
+                    AddHelperButton($"Edit the Schedule in folder '{((ReportSchedule)SelectedEntity).Report.Repository.Configuration.TaskFolderName}'", "Run the Task Scheduler Microsoft Management Console", Keys.F9);
                 }
             }
         }
@@ -326,8 +325,7 @@ namespace Seal.Forms
                     }
                     else if (SelectedEntity is ReportSchedule)
                     {
-                        if (key == Keys.F8) EditProperty("Edit schedule properties");
-                        if (key == Keys.F9) EditProperty("Run Task Scheduler MMC");
+                        if (key == Keys.F9) EditProperty("Edit the Schedule with the MMC Task Scheduler");
                     }
                 }
             }

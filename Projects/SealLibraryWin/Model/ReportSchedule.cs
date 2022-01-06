@@ -788,7 +788,7 @@ namespace Seal.Model
                         taskDefinition.Triggers.Add(new DailyTrigger() { StartBoundary = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 0, 0), Enabled = false });
                         string schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory, Repository.SealTaskScheduler);
 #if DEBUG
-                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\x64\Debug", Repository.SealTaskScheduler);
+                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net5.0", Repository.SealTaskScheduler);
 #endif
                         taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Helper.GetApplicationDirectory()));
                         RegisterTaskDefinition(taskDefinition);
@@ -837,10 +837,10 @@ namespace Seal.Model
         #region Helpers
 
         /// <summary>
-        /// Editor Helper: Run Task Scheduler MMC
+        /// Editor Helper: Edit the Schedule with the MMC Task Scheduler
         /// </summary>
 #if WINDOWS
-        [Category("Helpers"), DisplayName("Run Task Scheduler MMC"), Description("Run the Task Scheduler Microsoft Management Console to manage schedule using the Windows interface."), Id(3, 10)]
+        [Category("Helpers"), DisplayName("Edit the Schedule with the MMC Task Scheduler"), Description("Run the Task Scheduler Microsoft Management Console to manage schedule using the Windows interface."), Id(3, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
 #endif
         public string HelperRunTaskScheduler

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net5.0-windows7.0</TargetFramework>
     <RootNamespace>SealSchedulerService</RootNamespace>
     <AssemblyName>SealSchedulerService</AssemblyName>
     <Product>Seal Report</Product>
@@ -12,6 +12,7 @@
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
     <ApplicationIcon />
     <StartupObject />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
