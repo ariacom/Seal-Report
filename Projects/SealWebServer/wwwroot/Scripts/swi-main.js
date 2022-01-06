@@ -417,14 +417,14 @@ var SWIMain = /** @class */ (function () {
             parent.children(".menu-reports").remove();
             SWIUtil.ShowHideControl($(".divider-menu-reports"), menu.reports.length > 0);
             _main.initMenu(parent, menu.reports);
-            if (menu.reports.length > 0 || menu.recentreports.length > 0)
-                parent.append($("<li id='menu-divider-folders-report' class='divider menu-reports')>"));
+            if (menu.reports.length > 0)
+                parent.append($("<li class='menu-divider-folders-report divider menu-reports')>"));
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
             parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
             //Recent reports
             if (menu.recentreports.length > 0) {
-                if (parent.children().length > 0)
-                    parent.append($("<li class='divider menu-reports')>"));
+                if (menu.reports.length > 0 || ((_main._reportPath != "" || _main._currentView == "report") && _main._profile.showfolders))
+                    parent.append($("<li class='menu-divider-recent-report divider menu-reports')>"));
                 menu.recentreports.forEach(function (value) {
                     _main.addReportMenu(parent, value);
                 });
@@ -533,7 +533,7 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.ShowHideControl($(".reportview"), reportShown);
         SWIUtil.ShowHideControl($(".folderview"), _main._currentView != "report");
         //Dividers
-        SWIUtil.ShowHideControl($("#menu-divider-folders-report"), (_main._reportPath != "" || _main._currentView == "report") && _main._profile.showfolders);
+        SWIUtil.ShowHideControl($(".menu-divider-folders-report"), (_main._reportPath != "" || _main._currentView == "report") && _main._profile.showfolders);
         //title color
         $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d");
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");

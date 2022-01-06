@@ -607,8 +607,8 @@ namespace Seal.Forms
     subMenu.items.Add(new SWIMenuItem() { path = @""\Search - Orders.srex"", viewGUID = null, outputGUID = null, name = ""Search"" });
     reports.Add(subMenu);
     
-    //Clear recent reports
-    user.WebMenu.recentreports.Clear();
+    //e.g. to clear recent reports
+    //user.WebMenu.recentreports.Clear();
 }
 ";
 

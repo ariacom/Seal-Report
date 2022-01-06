@@ -78,7 +78,30 @@
       <PersFolderRight>Reports</PersFolderRight>
       <FoldersScript />
       <FolderDetailScript />
-      <MenuScript />
+      <MenuScript>@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+    //user.ScriptNumber is a number incremented if several scripts are executed
+
+    //Sample to define a menu
+    var reports = user.WebMenu.reports;
+    reports.Clear();
+    var item = new SWIMenuItem() { path = @"\Samples\04-Charts Gallery - Basics.srex", viewGUID = null, outputGUID = null, name = "View Charts" };
+    
+    //extra classes for the menu item
+    //item.classes = "disabled";
+
+  //  reports.Add(item);
+    // subMenu
+    var subMenu = new SWIMenuItem() { name = "A SubMenu" };
+    //subMenu.classes = "disabled label-danger";
+    subMenu.items.Add(new SWIMenuItem() { path = @"\Search - Orders.srex", viewGUID = null, outputGUID = null, name = "Search" });
+    //reports.Add(subMenu);
+    
+    //Clear recent reports
+   // user.WebMenu.recentreports.Clear();
+}
+</MenuScript>
       <SqlModel>true</SqlModel>
       <Weight>1</Weight>
       <Culture />
