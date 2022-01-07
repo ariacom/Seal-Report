@@ -205,10 +205,10 @@ namespace Seal.Model
 
         bool _useSealScheduler = false;
         /// <summary>
-        /// If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check web.config or appsettings.json). This allows schedules for .NETCore or Azure installations.
+        /// If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check appsettings.json). This allows schedules for non-Windows or Azure installations.
         /// </summary>
 #if WINDOWS
-        [Category("Report Scheduler Settings"), DisplayName("Use Seal Report Scheduler"), Description("If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check web.config or appsettings.json). This allows schedules for .NETCore or Azure installations."), Id(1, 2)]
+        [Category("Report Scheduler Settings"), DisplayName("Use Seal Report Scheduler"), Description("If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check appsettings.json). This allows schedules for non-Windows or Azure installations."), Id(1, 2)]
         [DefaultValue(false)]
 #endif
         public bool UseSealScheduler
@@ -345,10 +345,10 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for .NETCore distribution). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
+        /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
         /// </summary>
 #if WINDOWS
-        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for .NETCore or Azure). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services. If the value is modified, restart the Server Manager to update the default PDF Scripts."), Category("PDF Converter: Client Library"), Id(1, 6)]
+        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services. If the value is modified, restart the Server Manager to update the default PDF Scripts."), Category("PDF Converter: Client Library"), Id(1, 6)]
         [DefaultValue(false)]
 #endif
         public bool PdfUseClient { get; set; } = false;

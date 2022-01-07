@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0-windows7.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>SealSchedulerService</RootNamespace>
     <AssemblyName>SealSchedulerService</AssemblyName>
     <Product>Seal Report</Product>
@@ -24,16 +24,19 @@
     <DefineConstants></DefineConstants>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\SealLibrary\SealLibrary.csproj">
-    </ProjectReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Core.System.Configuration.Install" Version="1.1.0" />
-    <PackageReference Include="Core.System.ServiceProcess" Version="1.0.2" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
+    <ProjectReference Include="..\SealLibrary\SealLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
 

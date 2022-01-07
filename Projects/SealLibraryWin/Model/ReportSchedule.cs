@@ -729,16 +729,20 @@ namespace Seal.Model
         /// </summary>
         public Task FindTask()
         {
-            Task result = Report.TaskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source == TaskSource);
-            foreach (var task in Report.TaskFolder.GetTasks())
+            var tasks = Report.TaskFolder.GetTasks().Where(i => i.Definition != null && !string.IsNullOrEmpty(i.Definition.RegistrationInfo.Source)).ToList();
+            Task result = tasks.FirstOrDefault(i => i.Definition.RegistrationInfo.Source == TaskSource);
+            if (result == null)
             {
-                if (!string.IsNullOrEmpty(task.Definition.RegistrationInfo.Source) && task.Definition.RegistrationInfo.Source.ToLower().Trim() == TaskSource.ToLower().Trim()) result = task;
+                foreach (var task in tasks)
+                {
+                    if (task.Definition.RegistrationInfo.Source.ToLower().Trim() == TaskSource.ToLower().Trim()) result = task;
+                }
             }
 
             if (result == null)
             {
                 //check if the task is still existing (typically if the report was moved or renamed)
-                foreach (Task task in Report.TaskFolder.GetTasks().Where(i => i.Name.EndsWith(GUID) && i.Definition.RegistrationInfo.Source.EndsWith(GUID)))
+                foreach (Task task in tasks.Where(i => i.Name.EndsWith(GUID) && i.Definition.RegistrationInfo.Source.EndsWith(GUID)))
                 {
                     bool ok = true;
                     string reportPath = GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);

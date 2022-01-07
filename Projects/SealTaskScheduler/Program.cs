@@ -3,11 +3,10 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using Microsoft.Extensions.Configuration;
-using Seal.Helpers;
-using Seal.Model;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
-using System.Diagnostics;
-using System.Text;
+using System.IO;
 
 namespace SealTaskScheduler
 {
@@ -17,25 +16,29 @@ namespace SealTaskScheduler
         {
             if (args.Length > 0)
             {
-                //Encoding registration
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                //Execute 1 schedule
+                var host = CreateDefaultBuilder().Build();
 
-                try
-                {
-                    //Set repository path
-                    IConfigurationRoot configuration = new ConfigurationBuilder()
-                        .AddJsonFile("appsettings.json")
-                        .Build();
-                    var section = configuration.GetSection(Repository.SealConfigurationSectionKeyword);
-                    if (section != null) Repository.RepositoryConfigurationPath = configuration.GetSection(Repository.SealConfigurationSectionKeyword)[Repository.SealConfigurationRepositoryPathKeyword];
-
-                    ReportExecution.ExecuteReportSchedule(args[0].ToString());
-                }
-                catch (Exception ex)
-                {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
-                }
+                // Invoke Worker
+                using IServiceScope serviceScope = host.Services.CreateScope();
+                IServiceProvider provider = serviceScope.ServiceProvider;
+                var workerInstance = provider.GetRequiredService<Worker>();
+                workerInstance.DoWork(args);
             }
+        }
+
+        static IHostBuilder CreateDefaultBuilder()
+        {
+            return Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration(app =>
+                {
+                    app.AddJsonFile("appsettings.json");
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton<Worker>();
+                });
         }
     }
 }
+

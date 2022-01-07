@@ -612,12 +612,23 @@ namespace Seal.Helpers
                 {
                     msg = msg.Substring(0, 25000) + "\r\n...\r\nMessage truncated, check the event log files in the Logs Repository sub-folder.";
                 }
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, msg, type);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                try
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, ex.Message, EventLogEntryType.Error);
+                }
+                catch { }
+            }
+            finally
+            {
+                try
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, msg, type);
+                }
+                catch { }
             }
         }
 
@@ -839,6 +850,7 @@ namespace Seal.Helpers
             string type;
             if (ext == ".ico") type = "x-icon";
             else type = ext.Replace(".", "");
+            if (type.ToLower() == "svg") type += "+xml";
             return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 
