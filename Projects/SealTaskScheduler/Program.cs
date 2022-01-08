@@ -3,10 +3,13 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Seal.Helpers;
+using Seal.Model;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Text;
 
 namespace SealTaskScheduler
 {
@@ -16,29 +19,28 @@ namespace SealTaskScheduler
         {
             if (args.Length > 0)
             {
-                //Execute 1 schedule
-                var host = CreateDefaultBuilder().Build();
+                //Encoding registration
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-                // Invoke Worker
-                using IServiceScope serviceScope = host.Services.CreateScope();
-                IServiceProvider provider = serviceScope.ServiceProvider;
-                var workerInstance = provider.GetRequiredService<Worker>();
-                workerInstance.DoWork(args);
+                try
+                {
+                    var settingsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "appsettings.json");
+                    if (!File.Exists(settingsPath)) throw new Exception($"Unable to find {settingsPath}.");
+
+                    //Set repository path
+                    IConfigurationRoot configuration = new ConfigurationBuilder()
+                        .AddJsonFile(settingsPath)
+                        .Build();
+                    var section = configuration.GetSection(Repository.SealConfigurationSectionKeyword);
+                    if (section != null) Repository.RepositoryConfigurationPath = configuration.GetSection(Repository.SealConfigurationSectionKeyword)[Repository.SealConfigurationRepositoryPathKeyword];
+
+                    ReportExecution.ExecuteReportSchedule(args[0].ToString());
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
+                }
             }
-        }
-
-        static IHostBuilder CreateDefaultBuilder()
-        {
-            return Host.CreateDefaultBuilder()
-                .ConfigureAppConfiguration(app =>
-                {
-                    app.AddJsonFile("appsettings.json");
-                })
-                .ConfigureServices(services =>
-                {
-                    services.AddSingleton<Worker>();
-                });
         }
     }
 }
-

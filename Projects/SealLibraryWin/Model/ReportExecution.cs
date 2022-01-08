@@ -2064,6 +2064,8 @@ namespace Seal.Model
                 {
                     report = refReport;
                     schedule = refSchedule;
+
+                    if (report == null || schedule == null) throw new Exception("Invalid call: Seal Scheduler is enabled but no schedule in parameter");
                 }
                 else
                 {
