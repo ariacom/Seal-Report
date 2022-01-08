@@ -703,6 +703,13 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(command);
             }
+            else if (connection is MySql.Data.MySqlClient.MySqlConnection)
+            {
+                MySql.Data.MySqlClient.MySqlCommand command = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(command);
+            }
             else
             {
                 OleDbCommand command = ((OleDbConnection)connection).CreateCommand();
