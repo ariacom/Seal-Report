@@ -100,7 +100,7 @@
                             <p>
                                 Setting up a connection is the first thing to do after creating a <strong>Data Source</strong>.<br />
 
-                                A <strong>Connection</strong> defines how to connect to the database to be queried by using an OLEDB, ODBC or MS SQLServer Driver.<br />
+                                A <strong>Connection</strong> defines how to connect to the database to be queried by using an OLEDB, ODBC, MS SQLServer, Mongo DB or MySQL Driver.<br />
                                 A <strong>Data Source</strong> can have one to many Connections (<eg>e.g. dev, test, production, etc.</eg>).
                             </p>
                             <div class="bs-callout bs-callout-danger">
@@ -379,7 +379,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                A <strong>LINQ Data Source</strong> can provide data that cannot be queried from a database engine.<br />
+                                A <strong>LINQ Data Source</strong> can provide data that cannot be queried from a SQL database engine.<br />
                                 The Seal engine generates dynamically a <b>LINQ query</b> including the elements selected, the restrictions and the joins involved.<br />
                                 Depending on the data fetched, it may require advanced C#/.Net skills.
                             </p>
@@ -501,12 +501,11 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
                             </p>
                             <p>
                                 Once the connection setup in the <b>LINQ Data Source</b>, Mongo DB tables can be defined using the <b>Mongo DB</b> Table template.<br />
-                                A collection name and several parameters (like array to unwind) allow to define the table.
+                                A collection name and several parameters (like the name of an array to unwind) allow to define the table.
                             </p>
                             <p>
-                                If a <b>Mongo DB</b> table is involved in a model, the report engine generates automatically the <code>Mongo DB Stages Script</code> of the table to apply elements to show and restrictions ath the database server level.<br />
+                                If a <b>Mongo DB</b> table is involved in a model, the report engine generates automatically the <code>Mongo DB Stages Script</code> of the table to apply elements and restrictions at the database server level.<br />
                                 This script will be executed before the <code>Load Script</code> and can be customized if the flag <code>Generate Mongo DB Stages</code> is set to <b>False</b>.
-
                             </p>
                             <div class="bs-callout bs-callout-danger">
                                 Use a Wizard to start: Right click on the <b>Tables</b> and select the <strong>'Add Tables from Mongo DB Catalog'</strong> menu to browse and add tables using the current connection.

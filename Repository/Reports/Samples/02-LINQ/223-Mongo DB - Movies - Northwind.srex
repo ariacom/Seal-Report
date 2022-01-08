@@ -270,7 +270,7 @@ AND [c9868c09-39af-4e95-b959-a2efecf83357]</Restriction>
           <CustomTemplate>&lt;p&gt;
 &lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
 &lt;ul&gt;
-&lt;li&gt;1 Model linking a the Northwind table 'Customer' with the Mongo DB Movies collection (the Join is defined on Customer Country = Movie Country).&lt;/li&gt;
+&lt;li&gt;1 Model linking the Northwind table 'Customer' and the Mongo DB Movies collection (the Join is defined on Customer Country = Movie Country).&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/p&gt;
 </CustomTemplate>

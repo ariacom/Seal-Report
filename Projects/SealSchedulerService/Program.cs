@@ -2,31 +2,20 @@
 using Seal.Model;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.ServiceProcess;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System.Diagnostics;
 
 namespace SealSchedulerService
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        static void Main()
+        public static void Main(string[] args)
         {
-            //Encoding registration
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
 #if RELEASE
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
-            {
-                new SchedulerService()
-            };
-            ServiceBase.Run(ServicesToRun);
+            CreateHostBuilder(args).Build().Run();
 #else
             try
             {
@@ -37,6 +26,15 @@ namespace SealSchedulerService
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
             }
 #endif
+
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseWindowsService()
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<Worker>();
+                });
     }
 }

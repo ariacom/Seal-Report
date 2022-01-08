@@ -729,16 +729,20 @@ namespace Seal.Model
         /// </summary>
         public Task FindTask()
         {
-            Task result = Report.TaskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source == TaskSource);
-            foreach (var task in Report.TaskFolder.GetTasks())
+            var tasks = Report.TaskFolder.GetTasks().Where(i => i.Definition != null && !string.IsNullOrEmpty(i.Definition.RegistrationInfo.Source)).ToList();
+            Task result = tasks.FirstOrDefault(i => i.Definition.RegistrationInfo.Source == TaskSource);
+            if (result == null)
             {
-                if (!string.IsNullOrEmpty(task.Definition.RegistrationInfo.Source) && task.Definition.RegistrationInfo.Source.ToLower().Trim() == TaskSource.ToLower().Trim()) result = task;
+                foreach (var task in tasks)
+                {
+                    if (task.Definition.RegistrationInfo.Source.ToLower().Trim() == TaskSource.ToLower().Trim()) result = task;
+                }
             }
 
             if (result == null)
             {
                 //check if the task is still existing (typically if the report was moved or renamed)
-                foreach (Task task in Report.TaskFolder.GetTasks().Where(i => i.Name.EndsWith(GUID) && i.Definition.RegistrationInfo.Source.EndsWith(GUID)))
+                foreach (Task task in tasks.Where(i => i.Name.EndsWith(GUID) && i.Definition.RegistrationInfo.Source.EndsWith(GUID)))
                 {
                     bool ok = true;
                     string reportPath = GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);
@@ -788,7 +792,7 @@ namespace Seal.Model
                         taskDefinition.Triggers.Add(new DailyTrigger() { StartBoundary = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 0, 0), Enabled = false });
                         string schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory, Repository.SealTaskScheduler);
 #if DEBUG
-                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\x64\Debug", Repository.SealTaskScheduler);
+                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net5.0", Repository.SealTaskScheduler);
 #endif
                         taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Helper.GetApplicationDirectory()));
                         RegisterTaskDefinition(taskDefinition);
@@ -837,10 +841,10 @@ namespace Seal.Model
         #region Helpers
 
         /// <summary>
-        /// Editor Helper: Run Task Scheduler MMC
+        /// Editor Helper: Edit the Schedule with the MMC Task Scheduler
         /// </summary>
 #if WINDOWS
-        [Category("Helpers"), DisplayName("Run Task Scheduler MMC"), Description("Run the Task Scheduler Microsoft Management Console to manage schedule using the Windows interface."), Id(3, 10)]
+        [Category("Helpers"), DisplayName("Edit the Schedule with the MMC Task Scheduler"), Description("Run the Task Scheduler Microsoft Management Console to manage schedule using the Windows interface."), Id(3, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
 #endif
         public string HelperRunTaskScheduler

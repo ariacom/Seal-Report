@@ -31,6 +31,7 @@
             <Value>accounts</Value>
           </Parameter>
         </Parameters>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -78,6 +79,7 @@
             <Value>tier_and_details</Value>
           </Parameter>
         </Parameters>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -176,7 +178,7 @@
     }));    
 };
 </DefinitionInitScript>
-        <Alias>customersCopy</Alias>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -246,7 +248,7 @@
     );    
 };
 </DefinitionInitScript>
-        <Alias>transactionsCopy</Alias>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -349,6 +351,7 @@
 metacritic</Value>
           </Parameter>
         </Parameters>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -556,7 +559,7 @@ metacritic</Value>
     }));
 };
 </DefinitionInitScript>
-        <Alias>moviesCopy</Alias>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -617,7 +620,7 @@ metacritic</Value>
     }));
 };
 </DefinitionInitScript>
-        <Alias>moviesCopyCopy</Alias>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>

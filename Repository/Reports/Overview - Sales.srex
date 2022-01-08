@@ -2632,7 +2632,7 @@ glyphicon glyphicon-ok</Value>
                               <Parameters>
                                 <Parameter>
                                   <Name>chartjs_contheight</Name>
-                                  <Value>260px</Value>
+                                  <Value>200px</Value>
                                 </Parameter>
                                 <Parameter>
                                   <Name>chartjs_legend_position</Name>

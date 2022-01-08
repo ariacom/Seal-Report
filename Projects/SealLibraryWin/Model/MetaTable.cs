@@ -210,7 +210,9 @@ namespace Seal.Model
         {
             bool result =
                 TemplateName == table.TemplateName &&
+                Helper.CompareTrim(DefinitionInitScript, table.DefinitionInitScript) &&
                 Helper.CompareTrim(DefinitionScript, table.DefinitionScript) &&
+                Helper.CompareTrim(MongoStagesScript, table.MongoStagesScript) &&
                 Helper.CompareTrim(LoadScript, table.LoadScript)
              ;
 

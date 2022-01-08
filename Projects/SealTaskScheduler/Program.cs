@@ -7,6 +7,8 @@ using Seal.Helpers;
 using Seal.Model;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace SealTaskScheduler
@@ -22,9 +24,12 @@ namespace SealTaskScheduler
 
                 try
                 {
+                    var settingsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "appsettings.json");
+                    if (!File.Exists(settingsPath)) throw new Exception($"Unable to find {settingsPath}.");
+
                     //Set repository path
                     IConfigurationRoot configuration = new ConfigurationBuilder()
-                        .AddJsonFile("appsettings.json")
+                        .AddJsonFile(settingsPath)
                         .Build();
                     var section = configuration.GetSection(Repository.SealConfigurationSectionKeyword);
                     if (section != null) Repository.RepositoryConfigurationPath = configuration.GetSection(Repository.SealConfigurationSectionKeyword)[Repository.SealConfigurationRepositoryPathKeyword];

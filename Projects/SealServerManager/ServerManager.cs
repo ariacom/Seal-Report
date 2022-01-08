@@ -708,8 +708,6 @@ namespace Seal
         }
         #endregion
 
-
-
         #region Drag and drop
         private void mainTreeView_ItemDrag(object sender, ItemDragEventArgs e)
         {

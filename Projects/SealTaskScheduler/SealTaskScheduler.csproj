@@ -36,10 +36,6 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-</ItemGroup>
  
   <ItemGroup>
     <ProjectReference Include="..\SealLibrary\SealLibrary.csproj">

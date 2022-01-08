@@ -11,4 +11,5 @@
   </FileReplacePatterns>
   <TaskFolderName>Seal Report</TaskFolderName>
   <AuditEnabled>false</AuditEnabled>
+  <InstallationDirectory />
  </SealServerConfiguration>

@@ -81,16 +81,16 @@ namespace Seal.Helpers
             }
         }
 
-        public static string CleanFilePath(string filePath)
+        public static string CleanFilePath(string filePath, string replace = "")
         {
             string result = filePath;
             foreach (char c in Path.GetInvalidFileNameChars())
             {
-                result = result.Replace(c.ToString(), "");
+                result = result.Replace(c.ToString(), replace);
             }
             foreach (char c in Path.GetInvalidPathChars())
             {
-                result = result.Replace(c.ToString(), "");
+                result = result.Replace(c.ToString(), replace);
             }
             return result;
         }

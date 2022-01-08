@@ -527,7 +527,7 @@ namespace Seal.Forms
                 log.Log("Adding elements names in context: Connection\r\n");
                 foreach (var connection in Source.Connections)
                 {
-                    translations.AppendFormat("Connection{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(Source.Name), Helper.QuoteDouble(connection.Name), extraSeparators);
+                    translations.AppendFormat("Connection{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(Source.Name + '.' + connection.Name), Helper.QuoteDouble(connection.Name), extraSeparators);
                 }
 
                 log.Log("Adding elements names in context: Element\r\n");

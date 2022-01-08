@@ -65,7 +65,7 @@
                                             <b>Dynamic SQL sources</b>: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
                                         </li>
                                         <li>
-                                            <b>LINQ queries</b>: Join and query any Data Sources (SQL, Excel, XML, Olap Cube, HTTP JSon, etc.) with the power of LINQ queries.
+                                            <b>LINQ queries</b>: Join and query any Data Sources (SQL, Excel, XML, Mongo DB, Olap Cube, HTTP JSon, etc.) with the power of LINQ queries.
                                         </li>
                                         <li>
                                             <b>Native Pivot Tables</b>: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
@@ -80,7 +80,7 @@
                                             <b>Fully Responsive and HTML Rendering using Razor engine</b>: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
                                         </li>
                                         <li>
-                                            <b>Web Report Server</b>: Publish and edit your reports on the web (Support of Windows and Linux OS with .NET Core).
+                                            <b>Web Report Server</b>: Publish and edit your reports on the web (Support of Windows and Linux OS with .NET 5).
                                         </li>
                                         <li>
                                             <b>Report scheduler</b>: Schedule your report executions and generate results in folders, FTP, SFTP server or send them by emails (integrated with the Windows Tasks Scheduler or available as a service).
@@ -121,10 +121,9 @@
                             <strong>For use:</strong>
                             <ul>
                                 <li>Windows 7, 2008, Windows 8, 2012, Windows 10 or greater</li>
-                                <li>.Net Framework 4.7.2</li>
-                                <li>Database OLE DB, ODBC or MS SQLServer Drivers</li>
-                                <li>For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater</li>
-                                <li>.NET Core 3.1 for the .NET Core deployment (Web Report Server and the Seal Report Scheduler).</li>
+                                <li>.Net 5.0 (Microsoft Windows Desktop Runtime 5)</li>
+                                <li>Database OLE DB, ODBC, MS SQLServer, Mongo DB or MySQL Drivers</li>
+                                <li>For the Web Report Server: Internet Information Server with ASP.Net Core Runtime 5 (Hosting Bundle) or greater</li>
                             </ul>
                             <strong>For development:</strong>
                             <ul>
@@ -159,7 +158,7 @@
                                 <b>All executables, libraries and configuration files</b> are installed by default in <i>C:\Program Files\Seal Report</i>.<br />
                                 <b>All repository files</b> are installed by default in <i>C:\ProgramData\Seal Report Repository</i>.<br /><br />
                                 <strong>Web Report Server Distribution:</strong><br />
-                                Two sub-folders <i>C:\Program Files\Seal Report\Web.Net</i> and <i>C:\Program Files\Seal Report\NETCore</i> contain the files required to publish the Web Report Server (and the Seal Report Scheduler for .NET Core).
+                                The sub-folder <i>C:\Program Files\Seal Report\Web</i> and <i>C:\Program Files\Seal Report\NETCore</i> contain the files required to publish the Web Report Server.
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 To publish the <b>Web Report Server</b> on IIS, run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Publish Web Site on IIS...</srmenu> to execute the Web Server Publisher wizard.<br /><br />
@@ -172,28 +171,18 @@
                             </p>
                             <ul>
                                 <li><b>SealLibrary:</b> Main library shared by all the executables. This library contains the main classes in the <i>Model</i> sub-folder (like Report, MetaTable, Restriction, Task, etc.) plus some helpers.</li>
-                                <li><b>SealReportDesigner:</b> Report Designer executable.</li>
-                                <li><b>SealServerManager:</b> Server Manager executable.</li>
+                                <li><b>SealLibraryWin:</b> Same library as <i>SealLibrary</i> but compiled for the 2 Windows Forms applications: <i>Report Designer</i> and <i>Server Manager</i>.</li>
+                                <li><b>SealReportDesigner:</b> Report Designer executable (linked with <i>SealLibraryWin</i>).</li>
+                                <li><b>SealServerManager:</b> Server Manager executable (linked with <i>SealLibraryWin</i>).</li>
                                 <li><b>SealTaskScheduler:</b> Console application invoked by the Windows Task Scheduler to execute report in batch.</li>
                                 <li><b>SealWebServer:</b> Asp.Net application for Web Report Server.</li>
                                 <li><b>SealSchedulerService:</b> Seal Report Scheduler executable for the Windows Service.</li>
                                 <li><b>TestsAndSamples:</b> Contains unitary tests and basic samples.</li>
-                                <li><b>Seal.NETCoreSync:</b> Utility to synchronize the code sources of the .NET Core projects.</li>
                                 <li><b>SealDocumentation:</b> sealreport.org Web site.</li>
-                            </ul>
-                            <p>
-                                The <strong>Seal.NETCore.sln</strong> contains projects dedicated to NETCore.<br>
-                                Most of the source code files are overwritten by the previous <b>Seal.NETCoreSync</b> project and <b>should never be edited</b>.<br />
-                                The solution contains the following projects:
-                            </p>
-                            <ul>
-                                <li><b>SealLibrary:</b> Main library shared by all the executables compiled for .NET Core.</li>
-                                <li><b>SealSchedulerService:</b> Seal Report Scheduler executable for the .NET Core Worker Service.</li>
-                                <li><b>SealWebServer.NETCore:</b> Asp.Net Core application for Web Report Server.</li>
                             </ul>
                             <div class="bs-callout bs-callout-info">
                                 <h4>NuGet Packages for SealLibrary</h4>
-                                Two NuGet packages are published to ease the Seal Report integration into your own .Net or .NET Core projects: <b>SealReportLibrary.Net</b> and <b>SealReportLibrary.NETCore</b>.
+                                A NuGet package has been published to ease the Seal Report integration into your own .Net projects: <b>SealReportLibrary.NETCore</b>.
                             </div>
                         </div>
                         <!-- end col -->
@@ -231,7 +220,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><b>Windows<br />.Net</b></td>
+                                            <td><b>Windows</b></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
@@ -241,17 +230,7 @@
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                         </tr>
                                         <tr>
-                                            <td><b>Windows<br />.NET Core</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Linux<br />.NET Core</b></td>
+                                            <td><b>Linux</b></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -261,7 +240,7 @@
                                             <td><span class="glyphicon glyphicon-ok"><sup> 3</sup></td>
                                         </tr>
                                         <tr>
-                                            <td><b>Azure (Windows)<br />.Net</b></td>
+                                            <td><b>Azure (Windows)</b></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -271,7 +250,7 @@
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                         </tr>
                                         <tr>
-                                            <td><b>Azure (Linux)<br />.NET Core</b></td>
+                                            <td><b>Azure (Linux)</b></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -358,7 +337,7 @@
                             <ul>
                                 <li>The <strong>Server Manager</strong> (a Windows application) edits repository Data Sources, Devices and is used to perform administrative tasks (checking sources and reports, publishing web site, configuring the server, editing the security, etc.).</li>
                                 <li>The <strong>Report Designer</strong> (a Windows application) creates, edits and executes reports.</li>
-                                <li>The <strong>Web Report Server</strong> (an ASP.Net or .NET Core Web application) allows the end-users to edit and execute the reports published from the Web.</li>
+                                <li>The <strong>Web Report Server</strong> (an ASP.Net application) allows the end-users to edit and execute the reports published from the Web.</li>
                                 <li>The <strong>Task Scheduler</strong> (a console application) is invoked by the Windows Task Scheduler to schedule report execution on a Device (folder or email).</li>
                                 <li>The <strong>Seal Report Scheduler</strong> (a Windows Service application or .NET Core Worker Service) to execute the report schedules defined in the repository (folder, file server or email).</li>
                             </ul>

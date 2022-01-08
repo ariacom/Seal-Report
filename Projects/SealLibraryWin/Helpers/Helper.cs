@@ -585,8 +585,8 @@ namespace Seal.Helpers
 
         public static void WriteLogException(string context, Exception ex)
         {
-            Helper.WriteDailyLog(Helper.DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
-            if (ex.InnerException != null) Helper.WriteDailyLog(Helper.DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
+            WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
+            if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
             Console.WriteLine(ex.Message);
         }
 
@@ -606,18 +606,29 @@ namespace Seal.Helpers
                 Console.WriteLine(msg);
 
                 var fullMessage = string.Format("**********\r\n{0} {1}\r\n{2}\r\n\r\n", DateTime.Now, type.ToString(), msg);
-                Helper.WriteDailyLog(source == TaskSchedulerEntry ? DailyLogSchedules : DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
+                WriteDailyLog(source == TaskSchedulerEntry ? DailyLogSchedules : DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
 
                 if (msg.Length > 25000)
                 {
                     msg = msg.Substring(0, 25000) + "\r\n...\r\nMessage truncated, check the event log files in the Logs Repository sub-folder.";
                 }
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, msg, type);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                try
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, ex.Message, EventLogEntryType.Error);
+                }
+                catch { }
+            }
+            finally
+            {
+                try
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, msg, type);
+                }
+                catch { }
             }
         }
 
@@ -830,12 +841,6 @@ namespace Seal.Helpers
             return result;
         }
 
-        public static int CalculateHash(string str)
-        {
-            return string.IsNullOrEmpty(str) ? 0 : str.GetHashCode();
-        }
-
-
         public static string HtmlMakeImageSrcData(string path)
         {
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -845,6 +850,7 @@ namespace Seal.Helpers
             string type;
             if (ext == ".ico") type = "x-icon";
             else type = ext.Replace(".", "");
+            if (type.ToLower() == "svg") type += "+xml";
             return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 
