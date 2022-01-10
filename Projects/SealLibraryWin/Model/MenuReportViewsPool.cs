@@ -76,12 +76,16 @@ namespace Seal.Model
                     if (reports.ContainsKey(reportPath) && reports[reportPath] == File.GetLastWriteTime(reportPath)) continue;
 
                     var reportStr = File.ReadAllText(reportPath);
-                    if (!reportStr.Contains("<ShowInMenu>true</ShowInMenu>")) continue;
+                    if (!reportStr.Contains("<ShowInMenu>true</ShowInMenu>"))
+                    {
+                        _menuReportViews.RemoveAll(i => i.Report.FilePath == reportPath);
+                        continue;
+                    }
 
                     Report report = Report.LoadFromFile(reportPath, repository, false);
                     if (string.IsNullOrEmpty(report.LoadErrors))
                     {
-                        //clean previous dashbaoards
+                        //clean previous
                         _menuReportViews.RemoveAll(i => i.Report.FilePath == report.FilePath);
 
                         //then add again

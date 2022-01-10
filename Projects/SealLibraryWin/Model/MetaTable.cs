@@ -858,9 +858,11 @@ namespace Seal.Model
                 DataTable defTable = GetDefinitionTable(sql);
 
                 int position = 1;
+                var sourceAliasName = Source.GetTableName(AliasName);
                 foreach (DataColumn column in defTable.Columns)
                 {
-                    string fullColumnName = (IsSQL && !IsForSQLModel ? Source.GetTableName(AliasName) + "." : "") + (IsSQL ? Source.GetColumnName(column.ColumnName) : column.ColumnName);
+                    string columnName = (IsSQL ? Source.GetColumnName(column.ColumnName) : column.ColumnName);
+                    string fullColumnName = (IsSQL && !IsForSQLModel ? sourceAliasName + "." : "") + columnName;
                     MetaColumn newColumn = Columns.FirstOrDefault(i => i.Name.ToLower() == fullColumnName.ToLower());
                     column.ColumnName = fullColumnName; //Set it here to clear the columns later
                     ColumnType type = Helper.NetTypeConverter(column.DataType);
@@ -868,7 +870,7 @@ namespace Seal.Model
                     {
                         newColumn = MetaColumn.Create(fullColumnName);
                         newColumn.Source = Source;
-                        newColumn.DisplayName = (KeepColumnNames ? column.ColumnName.Trim() : Helper.DBNameToDisplayName(column.ColumnName.Trim()));
+                        newColumn.DisplayName = (KeepColumnNames ? column.ColumnName.Trim() : Helper.DBNameToDisplayName(columnName).Trim());
                         newColumn.Category = AliasName;
                         newColumn.DisplayOrder = GetLastDisplayOrder();
                         Columns.Add(newColumn);
