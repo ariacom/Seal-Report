@@ -47,20 +47,17 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("CurrentParameters").SetIsBrowsable(true);
-                GetProperty("ProviderName").SetIsBrowsable(true);
                 GetProperty("Groups").SetIsBrowsable(true);
-                //GetProperty("ProviderScript").SetIsBrowsable(true);
+                GetProperty("ProviderName").SetIsBrowsable(true);
                 GetProperty("UseCustomScript").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
+                GetProperty("CurrentParameters").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("TestUserName").SetIsBrowsable(true);
                 GetProperty("TestPassword").SetIsBrowsable(true);
                 GetProperty("TestCurrentWindowsUser").SetIsBrowsable(true);
                 GetProperty("HelperSimulateLogin").SetIsBrowsable(true);
 
-                //GetProperty("TestUserName").SetIsReadOnly(!Provider.PromptUserPassword);
-                //GetProperty("TestPassword").SetIsReadOnly(!Provider.PromptUserPassword);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -74,7 +71,7 @@ namespace Seal.Model
         /// The security provider used for the authentication
         /// </summary>
 #if WINDOWS
-        [DisplayName("Security Provider"), Description("The security provider used for the authentication. Security providers are defined in the repository Security\\Providers folder."), Category("Security Provider Definition"), Id(1, 1)]
+        [DisplayName("Security Provider"), Description("The security provider used for the authentication. Security providers are defined in the repository Security\\Providers folder."), Category("Security Provider Definition"), Id(2, 1)]
         [TypeConverter(typeof(SecurityProviderConverter))]
 #endif
         public string ProviderName
@@ -105,7 +102,7 @@ namespace Seal.Model
         /// If true, a custom script can be used for the authentication process
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Use custom Security Script"), Description("If true, a custom script can be used for the authentication process."), Id(1, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Use custom Security Script"), Description("If true, a custom script can be used for the authentication process."), Id(2, 2)]
         [DefaultValue(false)]
 #endif
         public bool UseCustomScript
@@ -122,7 +119,7 @@ namespace Seal.Model
         /// The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined.
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Custom Security Script"), Description("The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined."), Id(2, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Custom Security Script"), Description("The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined."), Id(3, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string Script { get; set; }
@@ -172,7 +169,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(3, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(4, 2)]
 #endif
         [XmlIgnore]
         public List<SecurityParameter> CurrentParameters

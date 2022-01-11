@@ -71,8 +71,9 @@
             this.listPanel.Controls.Add(this.splitContainer);
             this.listPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listPanel.Location = new System.Drawing.Point(0, 0);
+            this.listPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.listPanel.Name = "listPanel";
-            this.listPanel.Size = new System.Drawing.Size(820, 611);
+            this.listPanel.Size = new System.Drawing.Size(1044, 718);
             this.listPanel.TabIndex = 4;
             // 
             // splitContainer
@@ -81,7 +82,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.splitContainer.Location = new System.Drawing.Point(3, 28);
+            this.splitContainer.Location = new System.Drawing.Point(4, 32);
+            this.splitContainer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.splitContainer.Name = "splitContainer";
             this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -99,8 +101,9 @@
             this.splitContainer.Panel2.Controls.Add(this.doItButton);
             this.splitContainer.Panel2.Controls.Add(this.groupBox3);
             this.splitContainer.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer.Size = new System.Drawing.Size(814, 580);
-            this.splitContainer.SplitterDistance = 289;
+            this.splitContainer.Size = new System.Drawing.Size(1037, 682);
+            this.splitContainer.SplitterDistance = 339;
+            this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 3;
             // 
             // panel1
@@ -109,16 +112,18 @@
             this.panel1.Controls.Add(this.updateRadioButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(810, 30);
+            this.panel1.Size = new System.Drawing.Size(1033, 35);
             this.panel1.TabIndex = 9;
             // 
             // addRadioButton
             // 
             this.addRadioButton.AutoSize = true;
-            this.addRadioButton.Location = new System.Drawing.Point(459, 5);
+            this.addRadioButton.Location = new System.Drawing.Point(536, 6);
+            this.addRadioButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.addRadioButton.Name = "addRadioButton";
-            this.addRadioButton.Size = new System.Drawing.Size(255, 17);
+            this.addRadioButton.Size = new System.Drawing.Size(285, 19);
             this.addRadioButton.TabIndex = 5;
             this.addRadioButton.Text = "Add model to the reports selected in Destinations";
             this.addRadioButton.UseVisualStyleBackColor = true;
@@ -128,9 +133,10 @@
             // 
             this.updateRadioButton.AutoSize = true;
             this.updateRadioButton.Checked = true;
-            this.updateRadioButton.Location = new System.Drawing.Point(7, 5);
+            this.updateRadioButton.Location = new System.Drawing.Point(8, 6);
+            this.updateRadioButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.updateRadioButton.Name = "updateRadioButton";
-            this.updateRadioButton.Size = new System.Drawing.Size(446, 17);
+            this.updateRadioButton.Size = new System.Drawing.Size(497, 19);
             this.updateRadioButton.TabIndex = 6;
             this.updateRadioButton.TabStop = true;
             this.updateRadioButton.Text = "Update selected properties, elements or restrictions to the models selected in De" +
@@ -146,9 +152,11 @@
             this.sourcesGroupBox.Controls.Add(this.source3CheckedListBox);
             this.sourcesGroupBox.Controls.Add(this.source2CheckedListBox);
             this.sourcesGroupBox.Controls.Add(this.propertiesCheckedListBox);
-            this.sourcesGroupBox.Location = new System.Drawing.Point(7, 28);
+            this.sourcesGroupBox.Location = new System.Drawing.Point(8, 32);
+            this.sourcesGroupBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.sourcesGroupBox.Name = "sourcesGroupBox";
-            this.sourcesGroupBox.Size = new System.Drawing.Size(800, 257);
+            this.sourcesGroupBox.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.sourcesGroupBox.Size = new System.Drawing.Size(1021, 303);
             this.sourcesGroupBox.TabIndex = 7;
             this.sourcesGroupBox.TabStop = false;
             this.sourcesGroupBox.Text = "Sources";
@@ -158,9 +166,10 @@
             this.source3CheckedListBox.CheckOnClick = true;
             this.source3CheckedListBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.source3CheckedListBox.FormattingEnabled = true;
-            this.source3CheckedListBox.Location = new System.Drawing.Point(534, 16);
+            this.source3CheckedListBox.Location = new System.Drawing.Point(693, 19);
+            this.source3CheckedListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.source3CheckedListBox.Name = "source3CheckedListBox";
-            this.source3CheckedListBox.Size = new System.Drawing.Size(250, 238);
+            this.source3CheckedListBox.Size = new System.Drawing.Size(320, 281);
             this.source3CheckedListBox.TabIndex = 9;
             this.source3CheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.propertiesCheckedListBox_ItemCheck);
             // 
@@ -169,9 +178,10 @@
             this.source2CheckedListBox.CheckOnClick = true;
             this.source2CheckedListBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.source2CheckedListBox.FormattingEnabled = true;
-            this.source2CheckedListBox.Location = new System.Drawing.Point(284, 16);
+            this.source2CheckedListBox.Location = new System.Drawing.Point(373, 19);
+            this.source2CheckedListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.source2CheckedListBox.Name = "source2CheckedListBox";
-            this.source2CheckedListBox.Size = new System.Drawing.Size(250, 238);
+            this.source2CheckedListBox.Size = new System.Drawing.Size(320, 281);
             this.source2CheckedListBox.TabIndex = 8;
             this.source2CheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.propertiesCheckedListBox_ItemCheck);
             // 
@@ -180,18 +190,20 @@
             this.propertiesCheckedListBox.CheckOnClick = true;
             this.propertiesCheckedListBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.propertiesCheckedListBox.FormattingEnabled = true;
-            this.propertiesCheckedListBox.Location = new System.Drawing.Point(3, 16);
+            this.propertiesCheckedListBox.Location = new System.Drawing.Point(4, 19);
+            this.propertiesCheckedListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.propertiesCheckedListBox.Name = "propertiesCheckedListBox";
-            this.propertiesCheckedListBox.Size = new System.Drawing.Size(281, 238);
+            this.propertiesCheckedListBox.Size = new System.Drawing.Size(369, 281);
             this.propertiesCheckedListBox.TabIndex = 7;
             this.propertiesCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.propertiesCheckedListBox_ItemCheck);
             // 
             // filterTextBox
             // 
             this.filterTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.filterTextBox.Location = new System.Drawing.Point(643, 31);
+            this.filterTextBox.Location = new System.Drawing.Point(838, 36);
+            this.filterTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.filterTextBox.Name = "filterTextBox";
-            this.filterTextBox.Size = new System.Drawing.Size(121, 20);
+            this.filterTextBox.Size = new System.Drawing.Size(140, 23);
             this.filterTextBox.TabIndex = 15;
             this.filterTextBox.TextChanged += new System.EventHandler(this.filterTextBox_TextChanged);
             // 
@@ -199,9 +211,10 @@
             // 
             this.filterLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.filterLabel.AutoSize = true;
-            this.filterLabel.Location = new System.Drawing.Point(640, 15);
+            this.filterLabel.Location = new System.Drawing.Point(835, 17);
+            this.filterLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.filterLabel.Name = "filterLabel";
-            this.filterLabel.Size = new System.Drawing.Size(88, 13);
+            this.filterLabel.Size = new System.Drawing.Size(100, 15);
             this.filterLabel.TabIndex = 14;
             this.filterLabel.Text = "Filter destinations";
             // 
@@ -209,9 +222,10 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(640, 229);
+            this.label2.Location = new System.Drawing.Point(835, 270);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(144, 13);
+            this.label2.Size = new System.Drawing.Size(160, 15);
             this.label2.TabIndex = 13;
             this.label2.Text = "and press the button below...";
             // 
@@ -219,19 +233,21 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(640, 213);
+            this.label1.Location = new System.Drawing.Point(835, 252);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(162, 13);
+            this.label1.Size = new System.Drawing.Size(178, 15);
             this.label1.TabIndex = 12;
             this.label1.Text = "Check the copy options selected";
             // 
             // doItButton
             // 
             this.doItButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.doItButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.doItButton.Location = new System.Drawing.Point(653, 253);
+            this.doItButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.doItButton.Location = new System.Drawing.Point(850, 298);
+            this.doItButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.doItButton.Name = "doItButton";
-            this.doItButton.Size = new System.Drawing.Size(138, 23);
+            this.doItButton.Size = new System.Drawing.Size(161, 27);
             this.doItButton.TabIndex = 11;
             this.doItButton.Text = "Copy and Close";
             this.doItButton.UseVisualStyleBackColor = true;
@@ -243,9 +259,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.destinationCheckedListBox);
-            this.groupBox3.Location = new System.Drawing.Point(294, 0);
+            this.groupBox3.Location = new System.Drawing.Point(343, 0);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(340, 283);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.groupBox3.Size = new System.Drawing.Size(485, 333);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Destinations";
@@ -257,9 +275,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.destinationCheckedListBox.CheckOnClick = true;
             this.destinationCheckedListBox.FormattingEnabled = true;
-            this.destinationCheckedListBox.Location = new System.Drawing.Point(6, 20);
+            this.destinationCheckedListBox.Location = new System.Drawing.Point(7, 23);
+            this.destinationCheckedListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.destinationCheckedListBox.Name = "destinationCheckedListBox";
-            this.destinationCheckedListBox.Size = new System.Drawing.Size(328, 259);
+            this.destinationCheckedListBox.Size = new System.Drawing.Size(470, 274);
             this.destinationCheckedListBox.TabIndex = 4;
             this.destinationCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.propertiesCheckedListBox_ItemCheck);
             // 
@@ -269,8 +288,10 @@
             this.groupBox1.Controls.Add(this.addReportButton);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(294, 283);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.groupBox1.Size = new System.Drawing.Size(343, 334);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Current reports list";
@@ -282,10 +303,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.reportsListBox.ContextMenuStrip = this.removeReportContextMenuStrip;
             this.reportsListBox.FormattingEnabled = true;
-            this.reportsListBox.Location = new System.Drawing.Point(4, 41);
+            this.reportsListBox.ItemHeight = 15;
+            this.reportsListBox.Location = new System.Drawing.Point(5, 47);
+            this.reportsListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.reportsListBox.Name = "reportsListBox";
             this.reportsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.reportsListBox.Size = new System.Drawing.Size(284, 238);
+            this.reportsListBox.Size = new System.Drawing.Size(331, 274);
             this.reportsListBox.TabIndex = 5;
             // 
             // removeReportContextMenuStrip
@@ -305,9 +328,10 @@
             // 
             // addReportButton
             // 
-            this.addReportButton.Location = new System.Drawing.Point(4, 15);
+            this.addReportButton.Location = new System.Drawing.Point(5, 17);
+            this.addReportButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.addReportButton.Name = "addReportButton";
-            this.addReportButton.Size = new System.Drawing.Size(95, 23);
+            this.addReportButton.Size = new System.Drawing.Size(111, 27);
             this.addReportButton.TabIndex = 4;
             this.addReportButton.Text = "Add reports...";
             this.addReportButton.UseVisualStyleBackColor = true;
@@ -319,7 +343,7 @@
             this.cancelToolStripButton});
             this.mainToolStrip.Location = new System.Drawing.Point(0, 0);
             this.mainToolStrip.Name = "mainToolStrip";
-            this.mainToolStrip.Size = new System.Drawing.Size(820, 25);
+            this.mainToolStrip.Size = new System.Drawing.Size(1044, 25);
             this.mainToolStrip.TabIndex = 5;
             this.mainToolStrip.Text = "toolStrip1";
             // 
@@ -336,13 +360,14 @@
             // 
             // SmartCopyForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(820, 611);
+            this.ClientSize = new System.Drawing.Size(1044, 718);
             this.Controls.Add(this.mainToolStrip);
             this.Controls.Add(this.listPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(800, 500);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MinimumSize = new System.Drawing.Size(931, 571);
             this.Name = "SmartCopyForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Smart Copy Form";

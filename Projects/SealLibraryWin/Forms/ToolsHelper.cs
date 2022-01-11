@@ -160,7 +160,7 @@ namespace Seal.Forms
                             if (obj is MetaConnection) obj.Name = "CONNECTION: " + obj.Name;
                         }
 
-                        MultipleSelectForm frm = new MultipleSelectForm("Please select objects to add", objects, "Name");
+                        MultipleSelectForm frm = new MultipleSelectForm("Please select objects to add or update", objects, "Name");
                         List<CheckBox> options = new List<CheckBox>();
                         var changeGUID = new CheckBox() { Text = "Generate new identifiers (GUID)", Checked = true, AutoSize = true };
                         options.Add(changeGUID);

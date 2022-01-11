@@ -1699,7 +1699,7 @@ namespace Seal
                 }
                 else
                 {
-                    MessageBox.Show("This report has no Model View", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"This report has no {templateToSearch} View", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }

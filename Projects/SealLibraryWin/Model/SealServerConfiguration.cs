@@ -112,7 +112,7 @@ namespace Seal.Model
         /// The logo file name used by the report templates
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images' and in the \\Images sub-folder of the Web publication directory. If empty, the Web Product Name is used as prefix."), Id(5, 1)]
+        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images' and in the \\Images sub-folder of the Web publication directory. If empty, the Web Product Name is used as prefix."), Id(1, 1)]
         [DefaultValue("logo.png")]
 #endif
         public string LogoName { get; set; } = "logo.png";
@@ -167,10 +167,10 @@ namespace Seal.Model
         public bool IsLocal { get; set; } = true;
 
         /// <summary>
-        /// If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path).
+        /// If true, the User Personal Folder (located in the 'SpecialFolders\\Personal' repository sub-folder) containing the profile and personal files is built with the host name. This allows multiple Web sites on the same installation.
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("Use host name to define the Personal Folder name"), Description("If true, the User Personal Folder containing the profile and personal files is built with the host name. This allows multiple Web sites on the same installation."), Id(10, 1)]
+        [Category("Server Settings"), DisplayName("Use host name to define the Personal Folder name"), Description("If true, the User Personal Folder (located in the 'SpecialFolders\\Personal' repository sub-folder) containing the profile and personal files is built with the host name. This allows multiple Web sites on the same installation."), Id(10, 1)]
         [DefaultValue(false)]
 #endif
         public bool HostForPersonalFolder { get; set; } = false;
@@ -208,7 +208,7 @@ namespace Seal.Model
         /// If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check appsettings.json). This allows schedules for non-Windows or Azure installations.
         /// </summary>
 #if WINDOWS
-        [Category("Report Scheduler Settings"), DisplayName("Use Seal Report Scheduler"), Description("If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check appsettings.json). This allows schedules for non-Windows or Azure installations."), Id(1, 2)]
+        [Category("Report Scheduler Settings"), DisplayName("Use Seal Report Scheduler"), Description("If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check appsettings.json). This allows schedules for non-Windows or Azure installations."), Id(2, 2)]
         [DefaultValue(false)]
 #endif
         public bool UseSealScheduler
@@ -230,7 +230,7 @@ namespace Seal.Model
         /// Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
         /// </summary>
 #if WINDOWS
-        [Category("Report Scheduler Settings"), DisplayName("Task Folder Name"), Description("Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used. Warning: Changing this name will affect all existing schedules !"), Id(2, 2)]
+        [Category("Report Scheduler Settings"), DisplayName("Task Folder Name"), Description("Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used. Warning: Changing this name will affect all existing schedules !"), Id(3, 2)]
 #endif
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
@@ -239,7 +239,7 @@ namespace Seal.Model
         /// If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management.
         /// </summary>
 #if WINDOWS
-        [Category("Audit Settings"), DisplayName("Audit Enabled"), Description("If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management."), Id(1, 3)]
+        [Category("Audit Settings"), DisplayName("Audit Enabled"), Description("If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management."), Id(2, 3)]
         [DefaultValue(false)]
 #endif
         public bool AuditEnabled
@@ -261,7 +261,7 @@ namespace Seal.Model
         /// If set, the script is executed to log events. The default implementation is to insert a record into a database table.
         /// </summary>
 #if WINDOWS
-        [Category("Audit Settings"), DisplayName("Audit Script"), Description("If set, the script is executed to log events. The default implementation is to insert a record into a database table."), Id(2, 3)]
+        [Category("Audit Settings"), DisplayName("Audit Script"), Description("If set, the script is executed to log events. The default implementation is to insert a record into a database table."), Id(3, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string AuditScript { get; set; } = null;
@@ -348,7 +348,7 @@ namespace Seal.Model
         /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
         /// </summary>
 #if WINDOWS
-        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services. If the value is modified, restart the Server Manager to update the default PDF Scripts."), Category("PDF Converter: Client Library"), Id(1, 6)]
+        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services. If the value is modified, restart the Server Manager to update the default PDF Scripts."), Category("PDF Converter: Client Library"), Id(2, 6)]
         [DefaultValue(false)]
 #endif
         public bool PdfUseClient { get; set; } = false;
@@ -357,7 +357,7 @@ namespace Seal.Model
         /// If the client library is used, the HTML to PDF server IP or name.
         /// </summary>
 #if WINDOWS
-        [DisplayName("PDF Server"), Description("If the client library is used, the HTML to PDF server IP or name."), Category("PDF Converter: Client Library"), Id(2, 6)]
+        [DisplayName("PDF Server"), Description("If the client library is used, the HTML to PDF server IP or name."), Category("PDF Converter: Client Library"), Id(3, 6)]
         [DefaultValue("127.0.0.1")]
 #endif
         public string PdfServer { get; set; } = "127.0.0.1";
@@ -366,7 +366,7 @@ namespace Seal.Model
         /// If the client library is used, the HTML to PDF server IP or name.
         /// </summary>
 #if WINDOWS
-        [DisplayName("PDF Server Port"), Description("If the client library is used, the HTML to PDF server port number."), Category("PDF Converter: Client Library"), Id(3, 6)]
+        [DisplayName("PDF Server Port"), Description("If the client library is used, the HTML to PDF server port number."), Category("PDF Converter: Client Library"), Id(4, 6)]
         [DefaultValue(45001)]
 #endif
         public uint PdfServerPort { get; set; } = 45001;
@@ -375,7 +375,7 @@ namespace Seal.Model
         /// If the client library is used, optional HTML to PDF converter service password.
         /// </summary>
 #if WINDOWS
-        [DisplayName("PDF Service Password"), Description("If the client library is used, optional HTML to PDF converter service password."), Category("PDF Converter: Client Library"), Id(4, 6)]
+        [DisplayName("PDF Service Password"), Description("If the client library is used, optional HTML to PDF converter service password."), Category("PDF Converter: Client Library"), Id(5, 6)]
         [DefaultValue(false)]
 #endif
         public string PdfServicePassword { get; set; } = "";
@@ -384,7 +384,7 @@ namespace Seal.Model
         /// If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
         /// </summary>
 #if WINDOWS
-        [DisplayName("Use PDF Web Service"), Description("If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion."), Category("PDF Converter: Client Library"), Id(5, 6)]
+        [DisplayName("Use PDF Web Service"), Description("If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion."), Category("PDF Converter: Client Library"), Id(6, 6)]
         [DefaultValue(false)]
 #endif
         public bool PdfUseWebService { get; set; } = false;
@@ -393,7 +393,7 @@ namespace Seal.Model
         /// If the client library is used, the HTML to PDF web service URL.
         /// </summary>
 #if WINDOWS
-        [DisplayName("PDF Web Service URL"), Description("If the client library is used, the HTML to PDF web service URL."), Category("PDF Converter: Client Library"), Id(6, 6)]
+        [DisplayName("PDF Web Service URL"), Description("If the client library is used, the HTML to PDF web service URL."), Category("PDF Converter: Client Library"), Id(7, 6)]
         [DefaultValue(false)]
 #endif
         public string PdfWebServiceURL { get; set; } = "";
@@ -410,7 +410,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter Configuration"), Id(1, 5)]
+        [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter Configuration"), Id(2, 5)]
 #endif
         [XmlIgnore]
         public SealPdfConverter PdfConverter
@@ -440,7 +440,7 @@ namespace Seal.Model
         /// Editor Helper: Reset PDF configuration values to their default values
         /// </summary>
 #if WINDOWS
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(2, 5)]
+        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(3, 5)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
 #endif
         public string HelperResetPDFConfigurations
@@ -527,7 +527,7 @@ namespace Seal.Model
         /// The name of the culture used when a report is created. If not specified, the current culture of the server is used.
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(1, 3)]
+        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(2, 3)]
         [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
 #endif
         public string DefaultCulture { get; set; } = "";
@@ -536,7 +536,7 @@ namespace Seal.Model
         /// The numeric format used for numeric column having the default format
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format."), Id(2, 3)]
+        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format."), Id(3, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         [DefaultValue("N0")]
 #endif
@@ -546,7 +546,7 @@ namespace Seal.Model
         /// The date time format used for date time column having the default format
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format."), Id(3, 3)]
+        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format."), Id(4, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         [DefaultValue("d")]
 #endif

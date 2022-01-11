@@ -35,7 +35,7 @@ namespace Seal.Forms
             mainPropertyGrid.ToolbarVisible = false;
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
-            mainPropertyGrid.SelectedObject = configuration;
+            mainPropertyGrid.SelectedObject = _configuration;
 
             publish1ToolStripButton.Visible = configuration.ForPublication;
             publish2ToolStripButton.Visible = configuration.ForPublication;
@@ -93,6 +93,8 @@ Application Development/ASP.Net 5 or greater
 New parameter values may require a restart of the Report Designer or the Web Server.";
             }
             Visible = true;
+            //Loose focus of the propertyGrid
+            ActiveControl = mainStatusStrip;
         }
 
 

@@ -34,19 +34,18 @@ namespace Seal.Forms
             mainPropertyGrid.ToolbarVisible = false;
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
-            mainPropertyGrid.SelectedObject = security;
             mainPropertyGrid.PropertyValueChanged += mainPropertyGrid_PropertyValueChanged;
+            mainPropertyGrid.SelectedObject = _security;
 
             Text = Repository.SealRootProductName + " Security Editor";
 
             ShowIcon = true;
-            Icon = Properties.Resources.serverManager; 
+            Icon = Properties.Resources.serverManager;
         }
 
         private void ConfigurationEditorForm_Load(object sender, EventArgs e)
         {
-
-                infoTextBox.Text = @"This editor allows to configure the security used to publish your reports on the Web Server.
+            infoTextBox.Text = @"This editor allows to configure the security used to publish your reports on the Web Server.
 
 Security groups define:
 which repository folders are published,
@@ -74,6 +73,8 @@ Web Report Designer Security
 ";
             
             Visible = true;
+            //Loose focus of the propertyGrid
+            ActiveControl = mainStatusStrip;
         }
 
 

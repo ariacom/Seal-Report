@@ -807,7 +807,7 @@ namespace Seal.Model
             {
                 if (IsSQL)
                 {
-                    DbConnection connection = Source.GetOpenConnection();
+                    DbConnection connection = (Model != null ? Model.Connection.GetOpenConnection() : Source.GetOpenConnection());
 
                     Helper.ExecutePrePostSQL(connection, Model == null ? ReportModel.ClearCommonRestrictions(PreSQL) : Model.ParseCommonRestrictions(PreSQL), this, IgnorePrePostError);
                     finalSQL = Model == null ? ReportModel.ClearCommonRestrictions(sql) : Model.ParseCommonRestrictions(sql);
