@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>SealTaskScheduler</RootNamespace>
     <AssemblyName>SealTaskScheduler</AssemblyName>
     <Configurations>Debug;Release</Configurations>
@@ -36,9 +36,13 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
- 
+
+
   <ItemGroup>
-    <ProjectReference Include="..\SealLibrary\SealLibrary.csproj">
-    </ProjectReference>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SealLibraryWin\SealLibraryWin.csproj" />
   </ItemGroup>  
 </Project>
