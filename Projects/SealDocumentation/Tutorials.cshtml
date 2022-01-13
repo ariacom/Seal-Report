@@ -524,7 +524,7 @@
                     <!-- end row -->
                     <div id="lineScheduler_ws" class="row" style="padding-top:35px">
                         <div class="col-md-12">
-                            <h4>As a Windows Service (.Net, Windows OS)</h4>
+                            <h4>As a Windows Service (Windows OS)</h4>
                             <ol class="sans">
                                 <li>
                                     Edit the file <i>SealSchedulerServiceInstall.bat</i> file located in your installation directory (<eg>e.g. C:\Program Files\Seal Report</eg>).
@@ -545,16 +545,16 @@
                     <!-- end row -->
                     <div id="lineScheduler_workers" class="row" style="padding-top:35px">
                         <div class="col-md-12">
-                            <h4>As a Worker Service (.NET Core, Linux OS)</h4>
+                            <h4>As a Worker Service (Linux OS)</h4>
                             <ol class="sans">
                                 <li>
-                                    We assume that the .NET Core distribution has been already deployed on the Linux OS.<br />
+                                    We assume that the .NET distribution has been already deployed on the Linux OS.<br />
                                     Deploy also the <i>\Settings\Configuration.xml</i> in the remote repository.
                                 </li>
                                 <li>
-                                    From a Linux command prompt, run the <b>Seal Scheduler Service</b> with the command:<br />
+                                    From a Linux command prompt, run the <b>Seal Scheduler Worker</b> with the command:<br />
                                     <pre class="brush: bash">
-                                    sudo dotnet /seal/SealSchedulerService.dll
+                                    sudo dotnet /seal/SealSchedulerWorker.dll
                                     </pre>
                                 </li>
                             </ol>
@@ -567,12 +567,7 @@
                             <h4>As a Worker thread in the Web Report Server</h4>
                             <ol class="sans">
                                 <li>
-                                    Edit the configuration file located in the publication directory of the Web Report Server and set <code>RunScheduler</code> to <b>true</b>:<br />
-                                    For <strong>.Net IIS</strong>, file <i>web.config</i>:<br />
-                                    <pre class="brush: bash">
-                                    &lt;key="RunScheduler" value="true" /&gt;
-                                    </pre>
-                                   For <strong>.NET Core</strong>, file <i>appsettings.json</i>:<br />
+                                    Edit the <i>appsettings.json</i> configuration file located in the publication directory of the Web Report Server and set <code>RunScheduler</code> to <b>true</b>:<br />
                                     <pre class="brush: bash">
                                         "RunScheduler": true
                                         </pre>
