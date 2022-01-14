@@ -284,7 +284,7 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-12 bs-callout bs-callout-info">
-                                    This guide shows how to publish either the .Net or .NET Core distribution as an Azure App Service.<br />
+                                    This guide shows how to publish either the .Net distribution as an Azure App Service.<br />
                                 </div>
                                 <div class="col-md-12 bs-callout bs-callout-danger">
                                     We assume that you have already an Azure account with a valid subscription.
@@ -299,15 +299,15 @@
                                 <li>
                                     Click on <strong>[Add]</strong> and edit the <b>App Service</b> properties.<br />
                                     Select a subscription, resource group.<br /><br />
-                                    <strong>For .NET Core, Linux</strong><br />
+                                    <strong>For .Net, Linux</strong><br />
                                     <code>Instance name</code>: 'sealcore' (.azurewebsites.net)<br />
                                     <code>Publish</code>: 'Code'<br />
-                                    <code>Runtime stack</code>: '.NET Core 3.1'<br />
+                                    <code>Runtime stack</code>: '.NET Version of the Seal Distribution (e.g. .Net 5)'<br />
                                     <code>Operating System</code>: 'Linux'<br /><br />
                                     <strong>For .Net, Windows</strong><br />
                                     <code>Instance name</code>: 'sealnet' (.azurewebsites.net)<br />
                                     <code>Publish</code>: 'Code'<br />
-                                    <code>Runtime stack</code>: '.ASP.Net v4.7'<br />
+                                    <code>Runtime stack</code>: '.NET Version of the Seal Distribution (e.g. .Net 5)'<br />
                                     <code>Operating System</code>: 'Windows'<br />
                                     <br />
                                     Change Sku and Size if necessary<br />
@@ -334,7 +334,7 @@
                                         client = new FtpClient("waws-prod-dm1-163.ftp.azurewebsites.windows.net", @@"sealcore\$sealcore", "password got from the Azure portal"); 
                                     </pre>
                                     Execute the report.<br />
-                                    Set the  <strong>'Web Report Server Distribution'</strong> restriction: Select <b>.NET Core</b> for Linux App and <b>.Net</b> for Windows App.<br />
+                                    Set the  <strong>'Web Report Server Distribution'</strong> restriction: Select <b>.NET</b> distribution.<br />
                                     Re-execute the report to deploy the Web Report Server.<br />
                                     Files are copied from the installation directory <i>'\NETCore'</i> or <i>'\Web.Net'</i> Sub-Folder to the remote directory <i>'/site/wwwroot/'</i>.<br />
                                     Save the report for future publications (Note that this deployment could also be made manually using a standard FTP Client like FileZilla).
@@ -364,7 +364,7 @@
                                     Click on <srmenu>Configuration</srmenu>, then select the <b>General Settings</b> tab.<br />
                                 </li>
                                 <li>
-                                    <strong>For .NET Core, Linux:</strong><br />
+                                    <strong>For .Net, Linux:</strong><br />
                                     Set <code>Startup Command</code> to 'dotnet /home/site/wwwroot/SealWebServer.dll'<br />
                                     <strong>For .Net, Windows:</strong><br />
                                     Depending on your distribution, set the <code>Platform</code> to '32bit' or '64bit'<br />
