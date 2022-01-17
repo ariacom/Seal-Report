@@ -52,8 +52,11 @@ namespace SealWebServer.Controllers
             foreach (var key in keys)
             {
                 //Session is over
-                var user = _sessions[key.Key][SessionUser] as SecurityUser;
-                if (user != null) user.Logout();
+                if (_sessions[key.Key].ContainsKey(SessionUser))
+                {
+                    var user = _sessions[key.Key][SessionUser] as SecurityUser;
+                    if (user != null) user.Logout();
+                }
 
                 lock (_sessions)
                 {
@@ -162,7 +165,7 @@ namespace SealWebServer.Controllers
                     result.AppendFormat("Session: '{0}'\r\n", SessionKey);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Helper.WriteLogException($"getContextDetail", ex);
             }
