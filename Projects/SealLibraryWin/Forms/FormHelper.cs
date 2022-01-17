@@ -104,6 +104,7 @@ namespace Seal.Forms
             {
                 setIndicatorAppearance(textBox, NUM);
                 setIndicatorAppearance2(textBox, NUM2);
+                Line firstErrorLine = null;
                 foreach (var err in ex.CompilerErrors)
                 {
                     var sourceLines = ex.CompilationData.SourceCode.Split('\n');
@@ -117,10 +118,13 @@ namespace Seal.Forms
                             {
                                 textBox.IndicatorCurrent =  (err.IsWarning ? NUM2 : NUM);
                                 setRazorError(textBox, compilationErrors, line, err.Column, (err.IsWarning ? "Warning: " : "Error: ") + err.ErrorText);
+
+                                if (!err.IsWarning) firstErrorLine = line;
                             }
                         }
                     }
                 }
+                if (firstErrorLine != null) firstErrorLine.Goto();
 
                 error = string.Format("Compilation error:\r\n{0}", Helper.GetExceptionMessage(ex));
                 if (ex.InnerException != null) error += "\r\n" + ex.InnerException.Message;

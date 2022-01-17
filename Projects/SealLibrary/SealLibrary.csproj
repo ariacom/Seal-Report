@@ -37,6 +37,7 @@
     <Compile Include="..\SealLibraryWin\Helpers\DataTableLoader.cs" Link="Helpers\DataTableLoader.cs" />
     <Compile Include="..\SealLibraryWin\Helpers\ExcelHelper.cs" Link="Helpers\ExcelHelper.cs" />
     <Compile Include="..\SealLibraryWin\Helpers\FileHelper.cs" Link="Helpers\FileHelper.cs" />
+    <Compile Include="..\SealLibraryWin\Helpers\Impersonator.cs" Link="Helpers\Impersonator.cs" />
     <Compile Include="..\SealLibraryWin\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
     <Compile Include="..\SealLibraryWin\Helpers\RazorHelper.cs" Link="Helpers\RazorHelper.cs" />
     <Compile Include="..\SealLibraryWin\Helpers\TaskDatabaseHelper.cs" Link="Helpers\TaskDatabaseHelper.cs" />

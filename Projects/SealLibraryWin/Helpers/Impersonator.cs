@@ -19,27 +19,15 @@ namespace Seal.Helpers
         protected const int LOGON32_LOGON_INTERACTIVE = 2;
 
         public WindowsIdentity Identity = null;
-        private System.IntPtr m_accessToken;
+        private IntPtr m_accessToken;
 
 
-        [System.Runtime.InteropServices.DllImport("advapi32.dll", SetLastError = true)]
+        [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool LogonUser(string lpszUsername, string lpszDomain,
-        string lpszPassword, int dwLogonType, int dwLogonProvider, ref System.IntPtr phToken);
+        string lpszPassword, int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
 
-        [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
-        private extern static bool CloseHandle(System.IntPtr handle);
-
-
-        // AccessToken ==> this.Identity.AccessToken
-        //public Microsoft.Win32.SafeHandles.SafeAccessTokenHandle AT
-        //{
-        //    get
-        //    {
-        //        var at = new Microsoft.Win32.SafeHandles.SafeAccessTokenHandle(this.m_accessToken);
-        //        return at;
-        //    }
-        //}
-
+        [DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        private extern static bool CloseHandle(IntPtr handle);
 
         public Impersonator()
         {
@@ -64,7 +52,7 @@ namespace Seal.Helpers
 
             try
             {
-                this.m_accessToken = new System.IntPtr(0);
+                this.m_accessToken = new IntPtr(0);
                 Logout();
 
                 this.m_accessToken = System.IntPtr.Zero;
@@ -107,7 +95,7 @@ namespace Seal.Helpers
         } // End Sub Logout 
 
 
-        void System.IDisposable.Dispose()
+        void IDisposable.Dispose()
         {
             Logout();
         } // End Sub Dispose 
