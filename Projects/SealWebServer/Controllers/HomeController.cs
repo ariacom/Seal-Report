@@ -990,7 +990,7 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
                 WebHelper.WriteWebException(ex, detail);
             }
-            return Json(new { error = ex.Message.Replace(Repository.RepositoryPath, ""), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
+            return Json(new { error = (Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
         }
 
         string getFullPath(string path)

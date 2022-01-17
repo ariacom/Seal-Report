@@ -460,9 +460,10 @@ namespace Seal.Model
                             Assembly.LoadFrom(assembly);
                         }
                     }
-                    catch (Exception Exception)
+                    catch (Exception ex)
                     {
-                        Debug.WriteLine(Exception.Message);
+                        Helper.WriteDailyLog(Helper.DailyLogEvents, LogsFolder, Configuration.LogDays, $"Exception got in Repository Init\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
+                        Debug.WriteLine(ex.Message);
                     }
                 }
 

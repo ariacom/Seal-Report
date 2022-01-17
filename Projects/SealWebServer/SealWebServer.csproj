@@ -41,6 +41,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\WebInterfaceAPI.html" />
+    <None Include="wwwroot\WebInterfaceSamples.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.14.0" />
     <PackageReference Include="EPPlus" Version="4.5.3.3" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />

@@ -15,9 +15,12 @@
     var jwtToken = user.Token; //Token got from SWILogin parameter
     
     //OR token can be get from the header Request with the Bearer keyword:
-    var httpAuthorization = user.Request.HttpContext.GetServerVariable(""HTTP_AUTHORIZATION"");
-    if (!string.IsNullOrEmpty(httpAuthorization) && httpAuthorization.Contains(""Bearer"")) {
-        jwtToken = httpAuthorization.Replace(""Bearer "", """");  
+    var svf = user.Request.HttpContext.Features.Get<Microsoft.AspNetCore.Http.Features.IServerVariablesFeature>();
+    if (svf != null) {
+        var httpAuthorization = svf[""HTTP_AUTHORIZATION""];    
+        if (!string.IsNullOrEmpty(httpAuthorization) && httpAuthorization.Contains(""Bearer"")) {
+            jwtToken = httpAuthorization.Replace(""Bearer "", """");  
+        }
     }
     
 	if (!string.IsNullOrEmpty(jwtToken)) {	

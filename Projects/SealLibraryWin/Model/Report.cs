@@ -596,6 +596,7 @@ namespace Seal.Model
                 }
                 catch (Exception ex2)
                 {
+                    Cancel = true;
                     ExecutionErrors += string.Format("Error executing report init script:\r\n{0}\r\n", ex2.Message);
                     ExecutionErrorStackTrace = ex2.StackTrace;
                 }
