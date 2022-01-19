@@ -383,20 +383,7 @@ namespace SealWebServer.Controllers
                 {
                     Report report = execution.Report;
                     Debug.WriteLine(string.Format("Report Status {0}", report.Status));
-                    if (report.IsExecuting)
-                    {
-                        return Json(new
-                        {
-                            progression = report.ExecutionProgression,
-                            progression_message = Helper.ToHtml(report.ExecutionProgressionMessage),
-                            progression_models = report.ExecutionProgressionModels,
-                            progression_models_message = Helper.ToHtml(report.ExecutionProgressionModelsMessage),
-                            progression_tasks = report.ExecutionProgressionTasks,
-                            progression_tasks_message = Helper.ToHtml(report.ExecutionProgressionTasksMessage),
-                            execution_messages = report.ExecutionView.GetValue("messages_mode") != "disabled" ? Helper.ToHtml(report.ExecutionMessages) : null
-                        });
-                    }
-                    else if (execution.IsConvertingToExcel)
+                    if (execution.IsConvertingToExcel)
                     {
                         return Json(new
                         {
@@ -412,6 +399,20 @@ namespace SealWebServer.Controllers
                     else if (!string.IsNullOrEmpty(report.ExecutionErrors))
                     {
                         throw new Exception(report.ExecutionErrors);
+                    }
+                    else
+                    {
+                        //report is Executing
+                        return Json(new
+                        {
+                            progression = report.ExecutionProgression,
+                            progression_message = Helper.ToHtml(report.ExecutionProgressionMessage),
+                            progression_models = report.ExecutionProgressionModels,
+                            progression_models_message = Helper.ToHtml(report.ExecutionProgressionModelsMessage),
+                            progression_tasks = report.ExecutionProgressionTasks,
+                            progression_tasks_message = Helper.ToHtml(report.ExecutionProgressionTasksMessage),
+                            execution_messages = report.ExecutionView.GetValue("messages_mode") != "disabled" ? Helper.ToHtml(report.ExecutionMessages) : null
+                        });
                     }
                 }
                 else
@@ -984,13 +985,24 @@ namespace SealWebServer.Controllers
 
         JsonResult HandleSWIException(Exception ex)
         {
-            if (!(ex is ValidationException) && !(ex is SessionLostException))
+            JsonResult result = null;
+            try
             {
-                var detail = getContextDetail(Request, WebUser);
-                Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
-                WebHelper.WriteWebException(ex, detail);
+                if (!(ex is ValidationException) && !(ex is SessionLostException))
+                {
+                    var detail = getContextDetail(Request, WebUser);
+                    Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
+                    WebHelper.WriteWebException(ex, detail);
+                }
+                result = Json(new { error = (Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
             }
-            return Json(new { error = (Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
+            catch (Exception ex2)
+            {
+                if (ex != null) Helper.WriteLogException("HandleSWIException1", ex);
+                Helper.WriteLogException("HandleSWIException2", ex2);
+                result = Json(new { error = ex2.Message + (ex != null ? ex.Message : "")});
+            }
+            return result;
         }
 
         string getFullPath(string path)
