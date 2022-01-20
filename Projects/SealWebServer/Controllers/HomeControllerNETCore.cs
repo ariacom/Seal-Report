@@ -117,13 +117,14 @@ namespace SealWebServer.Controllers
         private ActionResult getFileResult(string path, Report report)
         {
             FileContentResult result;
+            var bytes = System.IO.File.ReadAllBytes(path);
             if (Path.GetExtension(path) == ".htm" || Path.GetExtension(path) == ".html")
             {
-                result = File(System.IO.File.ReadAllBytes(path), "text/html");
+                result = File(bytes, "text/html");
             }
             else
             {
-                result = File(System.IO.File.ReadAllBytes(path), "application/force-download", path);
+                result = File(bytes, "application/force-download", path);
                 if (report != null) result.FileDownloadName = Helper.CleanFileName(report.DisplayNameEx + Path.GetExtension(path));
                 else result.FileDownloadName = Path.GetFileName(path);
             }

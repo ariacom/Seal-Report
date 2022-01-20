@@ -140,7 +140,10 @@ namespace Seal.Model
 
             try
             {
-                if (Report.Format != ReportFormat.custom) File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                if (Report.Format != ReportFormat.custom)
+                {
+                    File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                }
             }
             catch (Exception ex)
             {
@@ -221,6 +224,7 @@ namespace Seal.Model
         {
             Report.ExecutionMessages = "";
             Report.ExecutionErrors = "";
+            Report.Status = ReportStatus.NotExecuted;
 
             Report.InitForExecution();
             if (Report.HasErrors)

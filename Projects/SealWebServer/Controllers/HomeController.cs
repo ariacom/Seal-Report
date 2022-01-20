@@ -400,7 +400,7 @@ namespace SealWebServer.Controllers
                     {
                         throw new Exception(report.ExecutionErrors);
                     }
-                    else
+                    else if (report.IsExecuting)
                     {
                         //report is Executing
                         return Json(new
@@ -413,6 +413,10 @@ namespace SealWebServer.Controllers
                             progression_tasks_message = Helper.ToHtml(report.ExecutionProgressionTasksMessage),
                             execution_messages = report.ExecutionView.GetValue("messages_mode") != "disabled" ? Helper.ToHtml(report.ExecutionMessages) : null
                         });
+                    }
+                    else
+                    {
+                        return new EmptyResult();
                     }
                 }
                 else

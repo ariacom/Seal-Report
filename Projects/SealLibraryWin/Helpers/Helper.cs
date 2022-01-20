@@ -861,8 +861,12 @@ namespace Seal.Helpers
             return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 
+        public static string HtmlGetFilePath(string path)
+        {
+            return "file:///" + HttpUtility.HtmlEncode(path.Replace(Path.DirectorySeparatorChar.ToString(), "/"));
+        }
 
-        static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
+            static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
         {
             if (formatType.ToString().Contains("Time")) return true;
             return ((formatType == DateTimeStandardFormat.Custom || formatType == DateTimeStandardFormat.Default)
