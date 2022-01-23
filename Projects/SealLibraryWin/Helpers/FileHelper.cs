@@ -162,6 +162,7 @@ namespace Seal.Helpers
                 catch (Exception ex)
                 {
                     if (log != null) log.LogMessage(ex.Message);
+                    else throw;
                     Debug.WriteLine(ex.Message);
                 }
             }
@@ -213,6 +214,7 @@ namespace Seal.Helpers
                 catch (Exception ex)
                 {
                     if (log != null) log.LogMessage("'{0}' Error: '{1}'", file, ex.Message + (ex.InnerException != null ? " " + ex.InnerException.Message : ""));
+                    else throw;
                 }
             }
         }

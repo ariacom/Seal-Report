@@ -28,7 +28,7 @@ namespace SealWebServer.Controllers
 
         //Static sessions collection
         static Dictionary<string, Dictionary<string, object>> _sessions = new Dictionary<string, Dictionary<string, object>>();
-        //LAst request for a session to clear object after a timeout
+        //Last request for a session to clear object after a timeout
         static Dictionary<string, DateTime> _sessionLastRequest = new Dictionary<string, DateTime>();
 
         string SessionKey
@@ -51,20 +51,27 @@ namespace SealWebServer.Controllers
 
             foreach (var key in keys)
             {
-                //Session is over
-                if (_sessions[key.Key].ContainsKey(SessionUser))
+                try
                 {
-                    var user = _sessions[key.Key][SessionUser] as SecurityUser;
-                    if (user != null) user.Logout();
-                }
+                    //Session is over
+                    if (_sessions[key.Key].ContainsKey(SessionUser))
+                    {
+                        var user = _sessions[key.Key][SessionUser] as SecurityUser;
+                        if (user != null) user.Logout();
+                    }
 
-                lock (_sessions)
-                {
-                    _sessions.Remove(key.Key);
+                    lock (_sessions)
+                    {
+                        _sessions.Remove(key.Key);
+                    }
+                    lock (_sessionLastRequest)
+                    {
+                        _sessionLastRequest.Remove(key.Key);
+                    }
                 }
-                lock (_sessionLastRequest)
+                catch (Exception ex)
                 {
-                    _sessionLastRequest.Remove(key.Key);
+                    Helper.WriteLogException("ClearSessions", ex);
                 }
             }
         }
