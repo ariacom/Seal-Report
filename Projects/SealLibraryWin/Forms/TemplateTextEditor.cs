@@ -1024,7 +1024,6 @@ namespace Seal.Forms
 	dbHelper.LoadBurstSize = 0; //number of records to load from the table (to be used with LoadSortColumn), 0 means to load all records in one query, otherwise several queries are performed
 	dbHelper.LoadSortColumn = """"; //name of the column used to sort if LoadBurstSize is specified, 
     dbHelper.UseDbDataAdapter = false; //If true, the DbDataAdapter.Fill() is used instead of the DataReader
-	dbHelper.ExcelOdbcDriver = ""Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}}; DBQ={0}""; //Excel ODBC Driver used to load table from Excel
 	dbHelper.DefaultEncoding = System.Text.Encoding.Default; //encoding used to read the CSV file 
 	dbHelper.TrimText = true; //if true, all texts are trimmed when inserted in the destination table
 	dbHelper.RemoveCrLf = false; //if true, the CrLf are removed from text when inserted in the destination table
@@ -1113,12 +1112,12 @@ namespace Seal.Forms
         return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
     });
 
-    dbHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName, int startRow, int startCol, int endColIndex) {
-        return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
+    dbHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName, int startRow, int startCol, int endCol, int endRow, bool hasHeader) {
+        return ExcelHelper.LoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endCol, endRow, hasHeader);
     });
 
     dbHelper.MyLoadDataTableFromCSV = new CustomLoadDataTableFromCSV(delegate(string csvPath, char? separator) {
-        return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
+        return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, dbHelper.DefaultEncoding);
     });
 "
                 ),
