@@ -31,7 +31,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 
 # Screen shots 
 ## HTML Report Result
-![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult2.png) 
+![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult4.png) 
 
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult3.png) 
 
