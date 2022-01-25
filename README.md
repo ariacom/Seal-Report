@@ -17,6 +17,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **Report Tasks:** Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
 * **NuGet packages** to ease integration into existing projects.
+* Native support of **Mongo DB**.
 
 A **live demonstration** of the <a href="https://sealreport.org/demo" target=_blank>Web Report Server</a> is available.
 
@@ -34,11 +35,6 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult3.png) 
 
-## Report Designer
-![Report Designer](https://ariacom.com/ImagesGITHUB/reportDesigner.png)
-
-## Web Report Server
-![Web Report Server](https://ariacom.com/ImagesGITHUB/webServer2.png)
 
 ## System Requirements
 **For use:**
