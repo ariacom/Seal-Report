@@ -36,10 +36,10 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult3.png) 
 
 ## Report Designer
-![Report Designer](https://ariacom.com/ImagesGITHUB/reportDesigner.png)
+![Report Designer](https://ariacom.com/ImagesGITHUB/reportDesigner2.png)
 
 ## Web Report Server
-![Web Report Server](https://ariacom.com/ImagesGITHUB/webServer2.png)
+![Web Report Server](https://ariacom.com/ImagesGITHUB/webServer3.png)
 
 ## System Requirements
 **For use:**
