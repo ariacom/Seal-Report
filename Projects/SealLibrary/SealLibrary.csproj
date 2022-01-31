@@ -31,6 +31,10 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\_dev\Seal-Report\Projects\SealLibrary\SealLibrary.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\SealLibraryWin\Helpers\ObjectShredder.cs" Link="Helpers\ObjectShredder.cs" />
     <Compile Include="..\SealLibraryWin\Helpers\CryptoHelper.cs" Link="Helpers\CryptoHelper.cs" />

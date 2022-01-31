@@ -28,6 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants></DefineConstants>
     <PlatformTarget>x64</PlatformTarget>
+    <DocumentationFile>C:\_dev\Seal-Report\Projects\SealWebServer\SealWebServer.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
