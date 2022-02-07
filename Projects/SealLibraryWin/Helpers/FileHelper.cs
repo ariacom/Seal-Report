@@ -254,7 +254,7 @@ namespace Seal.Helpers
 
         public static string ConvertOSFilePath(string filePath)
         {
-            return filePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
+            return string.IsNullOrEmpty(filePath) ? "" : filePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
         }
 
         public static void CreateZIP(string inputPath, string entryName, string zipPath, string password)

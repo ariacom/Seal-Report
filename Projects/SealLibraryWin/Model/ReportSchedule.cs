@@ -735,14 +735,18 @@ namespace Seal.Model
             {
                 foreach (var task in tasks)
                 {
-                    if (task.Definition.RegistrationInfo.Source.ToLower().Trim() == TaskSource.ToLower().Trim()) result = task;
+                    if (!string.IsNullOrEmpty(task.Definition.RegistrationInfo.Source) && task.Definition.RegistrationInfo.Source.ToLower().Trim() == TaskSource.ToLower().Trim())
+                    {
+                        result = task;
+                        break;
+                    }
                 }
             }
 
             if (result == null)
             {
                 //check if the task is still existing (typically if the report was moved or renamed)
-                foreach (Task task in tasks.Where(i => i.Name.EndsWith(GUID) && i.Definition.RegistrationInfo.Source.EndsWith(GUID)))
+                foreach (Task task in tasks.Where(i => !string.IsNullOrEmpty(i.Definition.RegistrationInfo.Source) && i.Name.EndsWith(GUID) && i.Definition.RegistrationInfo.Source.EndsWith(GUID)))
                 {
                     bool ok = true;
                     string reportPath = GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);

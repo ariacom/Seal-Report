@@ -1392,7 +1392,7 @@ namespace Seal.Model
                 }
                 else
                 {
-                    foreach (Task task in TaskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.StartsWith(FilePath + "\n")))
+                    foreach (Task task in TaskFolder.GetTasks().Where(i => !string.IsNullOrEmpty(i.Definition.RegistrationInfo.Source) && i.Definition.RegistrationInfo.Source.StartsWith(FilePath + "\n")))
                     {
                         try
                         {

@@ -674,11 +674,11 @@ namespace Seal.Model
             _runningSubTables.Clear();
             var models = GetReportModelsToExecute();
             //Build SQL and Fill Result table
+            var tasks = new List<Task>();
             var sets = (from model in models orderby model.ExecutionSet select model.ExecutionSet).Distinct();
             foreach (var set in sets)
             {
                 Report.LogMessage("Build models of Execution set {0}...", set);
-                var tasks = new List<Task>();
                 foreach (ReportModel model in models.Where(i => i.ExecutionSet == set))
                 {
                     tasks.Add(buildResultTables(model));
@@ -693,6 +693,11 @@ namespace Seal.Model
             //Cancel execution
             if (Report.Cancel)
             {
+                if (tasks.Exists(i => i.Status == TaskStatus.Running))
+                {
+                    Report.LogMessage("Warning: At least a Model Task is still running !\r\n");
+                }
+
                 foreach (ReportModel model in Report.Models)
                 {
                     model.CancelCommand();
@@ -877,6 +882,7 @@ namespace Seal.Model
                     Report.LogMessage("Starting task '{0}'", task.Name);
                     task.Execution = this;
 
+
                     var threadTask = Task.Run(() => TaskExecuteAsync(task));
 
                     while (!Report.Cancel)
@@ -890,6 +896,11 @@ namespace Seal.Model
                         task.Cancel();
                         int cnt = 10; //Wait up to 5 seconds
                         while (--cnt >= 0 && !threadTask.IsCompleted) Thread.Sleep(500);
+                    }
+
+                    if (threadTask.Status == TaskStatus.Running)
+                    {
+                        Report.LogMessage("Warning: Task '{0}' is still running !\r\n", task.Name);
                     }
 
                     if (!string.IsNullOrEmpty(task.DbInfoMessage.ToString()))
