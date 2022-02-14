@@ -37,11 +37,6 @@
     </Content>
   </ItemGroup>
 
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\SealLibraryWin\SealLibraryWin.csproj" />
   </ItemGroup>  
