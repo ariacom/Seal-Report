@@ -772,7 +772,6 @@ namespace Seal.Forms
 
         void addSchemaTables(DataTable schemaTables, List<MetaTable> tables, MetaSource source)
         {
-            //Helper.DisplayDataTable(schemaTables);
             foreach (DataRow row in schemaTables.Rows)
             {
                 //if (row["TABLE_TYPE"].ToString() == "SYSTEM TABLE" || row["TABLE_TYPE"].ToString() == "SYSTEM VIEW") continue;
@@ -783,19 +782,23 @@ namespace Seal.Forms
                 if (schemaTables.Columns.Contains("TABLE_SCHEMA")) schema = row["TABLE_SCHEMA"].ToString();
                 else if (schemaTables.Columns.Contains("TABLE_SCHEM")) schema = row["TABLE_SCHEM"].ToString();
 
+                var tableName = "";
+                if (row.Table.Columns.Contains("TABLE_NAME")) tableName = row["TABLE_NAME"].ToString();
+                else if (row.Table.Columns.Contains("VIEW_NAME")) tableName = row["VIEW_NAME"].ToString();
+
                 if (!string.IsNullOrEmpty(schema) || !string.IsNullOrEmpty(catalog))
                 {
-                    table.Name = catalog + "." + schema + "." + source.GetTableName(row["TABLE_NAME"].ToString());
+                    table.Name = catalog + "." + schema + "." + source.GetTableName(tableName);
 
                 }
                 else
                 {
-                    table.Name = source.GetTableName(row["TABLE_NAME"].ToString());
+                    table.Name = source.GetTableName(tableName);
                 }
 
                 if (schemaTables.Columns.Contains("TABLE_TYPE")) table.Type = row["TABLE_TYPE"].ToString();
                 table.Source = source;
-                tables.Add(table);
+                if (!tables.Exists(i => i.Name == table.Name)) tables.Add(table);
             }
         }
 
@@ -845,11 +848,12 @@ namespace Seal.Forms
                         DbConnection connection = source.GetOpenConnection();
                         DataTable schemaTables = connection.GetSchema("Tables");
                         addSchemaTables(schemaTables, tables, source);
-                        if (connection is OdbcConnection)
+                        try
                         {
-                            //Add views for odbc connections..
+                            //Add views connections if any...
                             addSchemaTables(connection.GetSchema("Views"), tables, source);
                         }
+                        catch { }
                         options.Add(autoCreateJoins);
                     }
                     options.Add(autoCreateColumns);
@@ -888,10 +892,10 @@ namespace Seal.Forms
                 }
                 else if (entity is MetaTable)
                 {
-                    options.Add(autoCreateJoins);
+                    DbConnection connection = source.GetOpenConnection();
+                    if (connection is OleDbConnection) options.Add(autoCreateJoins);
                     autoCreateJoins.Checked = false;
 
-                    DbConnection connection = source.GetOpenConnection();
                     List<MetaColumn> columns = new List<MetaColumn>();
                     source.AddColumnsFromCatalog(columns, connection, ((MetaTable)entity));
                     selectSource = columns.OrderBy(i => i.Name).ToList();
@@ -903,7 +907,7 @@ namespace Seal.Forms
                     List<MetaJoin> joins = GetJoins(connection, source);
                     if (joins.Count == 0)
                     {
-                        MessageBox.Show(connection is OleDbConnection ? "All Joins have been defined for the existing tables" : "Joins cannot be read from the database for 'Microsoft OleDB provider for ODBC drivers'...\r\nIf possible, use another OleDB provider for your connection.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(connection is OleDbConnection ? "All Joins have been defined for the existing tables" : "Joins cannot be read from the database if the connection is not an OleDbConnection.\r\nPlease consider to define an OleDbConnection to create the Joins.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return isModified;
                     }
                     selectSource = joins.OrderBy(i => i.Name).ToList();

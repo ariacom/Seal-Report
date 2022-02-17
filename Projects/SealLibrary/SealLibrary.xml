@@ -500,6 +500,16 @@
             MySQL Connection string used to connect to the database if the connection type is MySQL
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaConnection.OracleConnectionString">
+            <summary>
+            Oracle Connection string used to connect to the database if the connection type is Oracle
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaConnection.ConnectionScript">
+            <summary>
+            If set, script executed to instanciate and open the connection
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaConnection.DateTimeFormat">
             <summary>
             The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).
@@ -530,11 +540,6 @@
             True if the connection is editable
             </summary>
         </member>
-        <member name="F:Seal.Model.MetaConnection.DbConnectionResult">
-            <summary>
-            Result for the database connection script
-            </summary>
-        </member>
         <member name="M:Seal.Model.MetaConnection.GetOpenConnection">
             <summary>
             Returns an open DbConnection object
@@ -548,11 +553,6 @@
         <member name="P:Seal.Model.MetaConnection.HelperCheckConnection">
             <summary>
             Editor Helper: Check the database connection
-            </summary>
-        </member>
-        <member name="P:Seal.Model.MetaConnection.HelperCreateFromExcelAccess">
-            <summary>
-            Editor Helper: Helper to create a connection string to query an Excel workbook or a MS Access database
             </summary>
         </member>
         <member name="P:Seal.Model.MetaConnection.Information">

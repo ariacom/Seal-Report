@@ -8,11 +8,12 @@
     <AssemblyName>SealReportDesigner</AssemblyName>
     <ApplicationIcon>reportDesigner.ico</ApplicationIcon>
     <Product>Seal Report</Product>
-    <Version>6.5.0.0</Version>
-    <FileVersion>6.5.0.0</FileVersion>
+    <Version>6.5.1.0</Version>
+    <FileVersion>6.5.1.0</FileVersion>
     <Description>Seal Report Designer</Description>
     <Authors>Ariacom</Authors>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
+    <AssemblyVersion>6.5.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

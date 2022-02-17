@@ -3,6 +3,9 @@
     <TargetFramework>net5.0</TargetFramework>
     <DefineConstants>$(DefineConstants);RAZOR4</DefineConstants>
     <DefineConstants>$(DefineConstants);NO_APPDOMAIN;NO_CODEDOM;NO_CONFIGURATION;NETCORE</DefineConstants>
+    <Version>6.5.1.0</Version>
+    <FileVersion>6.5.1.0</FileVersion>
+    <AssemblyVersion>6.5.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

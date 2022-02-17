@@ -217,7 +217,7 @@ namespace Seal.Model
         {
             MetaConnection result = MetaConnection.Create(this);
             result.ConnectionString = DefaultConnectionString;
-            result.DatabaseType = Helper.GetDatabaseType(result.ConnectionString); 
+            result.DatabaseType = Helper.GetDatabaseType(result.ConnectionString);
 
             result.Name = Helper.GetUniqueName(result.Name, (from i in Connections select i.Name).ToList());
             Connections.Add(result);
@@ -607,6 +607,19 @@ namespace Seal.Model
             if (names.Length == 3) schemaColumns = connection.GetSchema("Columns", names);
             else if (names.Length == 2) schemaColumns = connection.GetSchema("Columns", new string[] { null, names[0], names[1] });
             else schemaColumns = connection.GetSchema("Columns", new string[] { null, null, name });
+
+            if (schemaColumns.Rows.Count == 0)
+            {
+                name = names.Last();
+                //Try on 1 level upper
+                schemaColumns = connection.GetSchema("Columns", new string[] { null, name });
+            }
+            if (schemaColumns.Rows.Count == 0)
+            {
+                //Try on 1 level upper
+                schemaColumns = connection.GetSchema("Columns", new string[] { name });
+            }
+
             Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(table.PostSQL), table, table.IgnorePrePostError);
 
             foreach (DataRow row in schemaColumns.Rows)
@@ -622,15 +635,22 @@ namespace Seal.Model
                     if (col != null) column.Category = col.Category;
                     else column.Category = !string.IsNullOrEmpty(table.AliasName) ? table.AliasName : Helper.DBNameToDisplayName(table.Name.Trim());
                     column.Source = this;
-                    string dbType = "";
+                    string dbType = "", dataType = "CHAR";
                     if (row.Table.Columns.Contains("TYPE_NAME")) dbType = row["TYPE_NAME"].ToString();
+                    if (row.Table.Columns.Contains("DATA_TYPE")) dataType = row["DATA_TYPE"].ToString();
+                    else if (row.Table.Columns.Contains("DATATYPE")) dataType = row["DATATYPE"].ToString();
+
+
                     if (connection is OdbcConnection) column.Type = Helper.ODBCToNetTypeConverter(dbType);
-                    else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection) column.Type = Helper.ODBCToNetTypeConverter(row["DATA_TYPE"].ToString());
-                    else column.Type = Helper.DatabaseToNetTypeConverter(row["DATA_TYPE"]);
+                    else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection) column.Type = Helper.ODBCToNetTypeConverter(dataType);
+                    else column.Type = Helper.DatabaseToNetTypeConverter(dataType);
                     column.SetStandardFormat();
                     if (!columns.Exists(i => i.Name == column.Name)) columns.Add(column);
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("AddColumnsFromCatalog", ex);
+                }
             }
         }
 
@@ -699,7 +719,7 @@ namespace Seal.Model
         [XmlIgnore]
         public string Error { get; set; }
 
-#endregion
+        #endregion
 
     }
 }

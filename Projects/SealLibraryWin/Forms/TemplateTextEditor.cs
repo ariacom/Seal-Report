@@ -507,10 +507,17 @@ namespace Seal.Forms
     }
     */
 
-    //Set the last value of an enum
-    //var restr = report.GetReportModel(""aModelName"").GetRestrictionByName(""Category"");
-    //restr.EnumValues.Clear();
-    //restr.EnumValues.Add(restr.EnumRE.Values[restr.EnumRE.Values.Count-1].Id);
+    /*Change enum values for a given user
+    if (report.SecurityContext != null) {
+        var anEnum = report.Sources.First(i => i.Name==""A source name"").MetaData.Enums.First(i => i.Name == ""A enum name"");
+        anEnum.Values.Clear();
+        if (report.SecurityContext.Name == ""A name"" || report.SecurityContext.BelongsToGroup(""aGroup"")) {
+            anEnum.Values.Add(new MetaEV() {Id=""1"", Val = ""1 Val""});
+        }
+        //Or change the SQL
+        anEnum.Sql = $""select id, name from aTable where aColumn = {Helper.QuoteSingle(report.SecurityContext.Name)}"";
+        anEnum.RefreshEnum();
+    }*/
 
     //Change view parameter to display the information Tab
     //report.ExecutionView.GetParameter(""information_button"").BoolValue = true;
@@ -973,12 +980,22 @@ namespace Seal.Forms
                 "Query or update the database",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
+
+    //Get a value
     string name = (string) helper.ExecuteScalar(""select LastName from employees"");
     helper.LogMessage(""Name="" + name);
+
+    //Execute a sql statement
     helper.ExecuteNonQuery(
         ""update employees set LastName = '' where 1=0"", //SQL statement to execute 
         false //if true, the statement is executed for all connections defined in the Source
     );
+
+    //Load and parse a table
+    var table = helper.LoadDataTable(""select LastName, FirstName from employees"");
+    foreach (DataRow row in table.Rows) {
+        helper.LogMessage($""{row[0].ToString()} {row[1].ToString()}"");
+    }
 "
                 ),
             new Tuple<string, string>(
@@ -1126,8 +1143,14 @@ namespace Seal.Forms
 
         const string sqlConnectionString = @"Server=myServerAddress;Database=myDatabase;Trusted_Connection=True;TrustServerCertificate=True;";
         const string mySqlConnectionString = @"Server=myServerAddress;Port=1234;Database=myDataBase;";
+        const string oracleConnectionString = @"Data Source=tnsName; /* Configure OracleConfiguration.OracleDataSources in the 'Connection Script' */";
         const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@myServer";
         const string odbcConnectionString = @"DSN=myDataSourceName;DATABASE=myDatabase";
+        const string connectionScript = @"@{
+    MetaConnection connection = Model;
+    connection.DbConnection = Helper.DbConnectionFromConnectionString(connection.ConnectionType, connection.FullConnectionString); ;
+    connection.DbConnection.Open();
+}";
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context != null && context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -1353,29 +1376,62 @@ namespace Seal.Forms
                         frm.Text = "Edit the MS SQLServer Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
-                    if (context.PropertyDescriptor.Name == "MSSqlServerConnectionString")
+                    else if (context.PropertyDescriptor.Name == "MSSqlServerConnectionString")
                     {
                         template = sqlConnectionString;
-                        frm.Text = "Edit the MS SQLServer Connection script";
+                        frm.Text = "Edit the MS SQLServer Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
-                    if (context.PropertyDescriptor.Name == "MySQLConnectionString")
+                    else if (context.PropertyDescriptor.Name == "MySQLConnectionString")
                     {
                         template = mySqlConnectionString;
-                        frm.Text = "Edit the MySQL Connection script";
+                        frm.Text = "Edit the MySQL Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
-                    if (context.PropertyDescriptor.Name == "MongoDBConnectionString")
+                    else if (context.PropertyDescriptor.Name == "OracleConnectionString")
+                    {
+                        template = oracleConnectionString;
+                        frm.Text = "Edit the Oracle Connection string";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "MongoDBConnectionString")
                     {
                         template = mongoConnectionString;
                         frm.Text = "Edit the Mongo DB Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
-                    if (context.PropertyDescriptor.Name == "OdbcConnectionString")
+                    else if (context.PropertyDescriptor.Name == "OdbcConnectionString")
                     {
                         template = odbcConnectionString;
                         frm.Text = "Edit the ODBC Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ConnectionScript")
+                    {
+                        template = connectionScript;
+                        List<string> samples = new List<string>();
+                        samples.Add(@"@using System.Data.SqlClient
+@{
+    //MS SQLServer Connection
+    MetaConnection connection = Model;
+    connection.DbConnection = new SqlConnection(connection.FullConnectionString);
+    connection.DbConnection.Open();
+}|MS SQLServer Connection");
+                        samples.Add(@"@using Oracle.ManagedDataAccess.Client
+@{
+    //Oracle Connection
+    MetaConnection connection = Model;
+    if (OracleConfiguration.OracleDataSources.Count == 0) {
+        OracleConfiguration.OracleDataSources.Add(""tnsName"", ""(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))(CONNECT_DATA = (SERVICE_NAME = ServiceName)(SERVER = dedicated)))"");
+    }
+    connection.DbConnection = new OracleConnection($""Data Source=tnsName;User ID={connection.UserName};Password={connection.ClearPassword}"");
+    connection.DbConnection.Open();
+}|Oracle Connection");
+                        frm.ObjectForCheckSyntax = context.Instance;
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                        frm.Text = "Edit the Connection script";
+
+                        frm.SetSamples(samples);
                     }
                 }
                 else if (context.Instance is SealSecurity)

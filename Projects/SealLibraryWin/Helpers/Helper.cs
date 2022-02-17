@@ -24,6 +24,7 @@ using System.Net.Mail;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Seal.Helpers
 {
@@ -318,9 +319,20 @@ namespace Seal.Helpers
             ColumnType result = ColumnType.Text;
             try
             {
-                OleDbType columnType = (OleDbType)Convert.ToInt32(dbValue);
-                result = Helper.NetTypeConverter(Helper.OleDbToNetTypeConverter(columnType));
-                if (columnType == OleDbType.WChar || columnType == OleDbType.VarWChar || columnType == OleDbType.LongVarWChar) result = ColumnType.UnicodeText;
+                int intValue;
+                if (Int32.TryParse(dbValue.ToString(), out intValue))
+                {
+                    OleDbType columnType = (OleDbType)intValue;
+                    result = Helper.NetTypeConverter(Helper.OleDbToNetTypeConverter(columnType));
+                    if (columnType == OleDbType.WChar || columnType == OleDbType.VarWChar || columnType == OleDbType.LongVarWChar) result = ColumnType.UnicodeText;
+                }
+                else 
+                {
+                    var dbValueString = dbValue.ToString().ToLower();
+                    if (dbValueString.Contains("number")  || dbValueString.Contains("double") || dbValueString.Contains("numeric")) result = ColumnType.Numeric;
+                    else if (dbValueString.Contains("date")) result = ColumnType.DateTime;
+
+                }
             }
             catch (Exception ex)
             {
@@ -710,6 +722,13 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(command);
             }
+            else if (connection is OracleConnection)
+            {
+                OracleCommand command = ((OracleConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new OracleDataAdapter(command);
+            }
             else
             {
                 OleDbCommand command = ((OleDbConnection)connection).CreateCommand();
@@ -760,6 +779,10 @@ namespace Seal.Helpers
             else if (connectionType == ConnectionType.MySQL)
             {
                 connection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
+            }
+            else if (connectionType == ConnectionType.Oracle)
+            {
+                connection = new OracleConnection(connectionString);
             }
             else
             {

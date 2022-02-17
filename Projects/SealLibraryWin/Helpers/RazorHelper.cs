@@ -33,6 +33,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Net.Http.Json;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Seal.Helpers
 {
@@ -65,6 +66,7 @@ namespace Seal.Helpers
         static MongoClient _22 = null;
         static string _23 = "";
         static JsonContent _24 = null;
+        static OracleConnection _25 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -128,6 +130,7 @@ namespace Seal.Helpers
                     if (_22 == null) _22 = new MongoClient();
                     if (_23 == null) _23 = HttpUtility.HtmlEncode("");
                     if (_24 == null) _24 = JsonContent.Create(new { });
+                    if (_25 == null) _25 = new OracleConnection("");
                 }
                 catch (Exception ex)
                 {
