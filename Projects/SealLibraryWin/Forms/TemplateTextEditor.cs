@@ -1141,11 +1141,11 @@ namespace Seal.Forms
         };
 
 
-        const string sqlConnectionString = @"Server=myServerAddress;Database=myDatabase;Trusted_Connection=True;TrustServerCertificate=True;";
-        const string mySqlConnectionString = @"Server=myServerAddress;Port=1234;Database=myDataBase;";
+        const string sqlConnectionString = @"Server=aServer;Database=aDatabase;Trusted_Connection=True;TrustServerCertificate=True;";
+        const string mySqlConnectionString = @"Server=aServer;Port=1234;Database=aDatabase;";
         const string oracleConnectionString = @"Data Source=tnsName; /* Configure OracleConfiguration.OracleDataSources in the 'Connection Script' */";
-        const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@myServer";
-        const string odbcConnectionString = @"DSN=myDataSourceName;DATABASE=myDatabase";
+        const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@aServer";
+        const string odbcConnectionString = @"DSN=aDataSourceName;DATABASE=aDatabase";
         const string connectionScript = @"@{
     MetaConnection connection = Model;
     connection.DbConnection = Helper.DbConnectionFromConnectionString(connection.ConnectionType, connection.FullConnectionString); ;
@@ -1424,7 +1424,8 @@ namespace Seal.Forms
     if (OracleConfiguration.OracleDataSources.Count == 0) {
         OracleConfiguration.OracleDataSources.Add(""tnsName"", ""(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))(CONNECT_DATA = (SERVICE_NAME = ServiceName)(SERVER = dedicated)))"");
     }
-    connection.DbConnection = new OracleConnection($""Data Source=tnsName;User ID={connection.UserName};Password={connection.ClearPassword}"");
+    connection.DbConnection = new OracleConnection(connection.FullConnectionString);
+    //connection.DbConnection = new OracleConnection($""Data Source=tnsName;User ID={connection.UserName};Password={connection.ClearPassword}"");
     connection.DbConnection.Open();
 }|Oracle Connection");
                         frm.ObjectForCheckSyntax = context.Instance;
