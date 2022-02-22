@@ -7,12 +7,12 @@
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealLibraryWin</AssemblyName>
     <Product>Seal Report</Product>
-    <Version>6.5.1.0</Version>
-    <FileVersion>6.5.1.0</FileVersion>
+    <Version>6.5.2.0</Version>
+    <FileVersion>6.5.2.0</FileVersion>
+    <AssemblyVersion>6.5.2.0</AssemblyVersion>
     <Description>Seal Report Library (Windows)</Description>
     <Authors>Ariacom</Authors>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
-    <AssemblyVersion>6.5.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -67,6 +67,8 @@
     <PackageReference Include="System.Data.Odbc" Version="5.0.0" />
     <PackageReference Include="System.Data.OleDb" Version="5.0.0" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="5.0.1" />
+    <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
     <PackageReference Include="System.IO.FileSystem.Primitives">
       <Version>4.3.0</Version>
     </PackageReference>
@@ -80,6 +82,7 @@
     <PackageReference Include="TaskScheduler">
       <Version>2.9.2</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
   </ItemGroup>
 
   <ItemGroup>

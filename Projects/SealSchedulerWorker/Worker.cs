@@ -35,7 +35,7 @@ namespace SealSchedulerService
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
             //Run scheduler
-            Task.Run(() => StartScheduler()); 
+            await Task.Run(() => StartScheduler()); 
 
             await base.StartAsync(cancellationToken);
         }

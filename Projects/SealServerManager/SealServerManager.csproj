@@ -9,12 +9,12 @@
     <AssemblyName>SealServerManager</AssemblyName>
     <ApplicationIcon>serverManager.ico</ApplicationIcon>
     <Product>Seal Report</Product>
-    <Version>6.5.1.0</Version>
-    <FileVersion>6.5.1.0</FileVersion>
+    <Version>6.5.2.0</Version>
+    <FileVersion>6.5.2.0</FileVersion>
+    <AssemblyVersion>6.5.2.0</AssemblyVersion>
     <Description>Seal Server Manager</Description>
     <Authors>Ariacom</Authors>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
-    <AssemblyVersion>6.5.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
   </ItemGroup>
   

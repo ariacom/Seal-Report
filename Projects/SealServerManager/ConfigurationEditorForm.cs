@@ -155,6 +155,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                     //Replace repository path
                     var configText = File.ReadAllText(releaseConfig);
                     configText = configText.Replace("\"RepositoryPath\": \"\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
+                    configText = configText.Replace("\"RepositoryPath\": \"C:\\\\ProgramData\\\\Seal Report Repository\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
                     File.WriteAllText(currentConfig, configText);
                 }
 

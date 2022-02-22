@@ -7,13 +7,13 @@
     <AssemblyName>SealTaskScheduler</AssemblyName>
     <Configurations>Debug;Release</Configurations>
     <Product>Seal Report</Product>
-    <Version>6.5.1.0</Version>
-    <FileVersion>6.5.1.0</FileVersion>
+    <Version>6.5.2.0</Version>
+    <FileVersion>6.5.2.0</FileVersion>
+    <AssemblyVersion>6.5.2.0</AssemblyVersion>
     <Description>Seal Report Task Scheduler</Description>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
     <ApplicationIcon />
     <StartupObject />
-    <AssemblyVersion>6.5.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

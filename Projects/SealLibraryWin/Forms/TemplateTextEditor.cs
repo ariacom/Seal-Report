@@ -1003,6 +1003,28 @@ namespace Seal.Forms
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
     helper.ExecuteProcess(@""executablePath"",""argument"",@""workingDirectory"");
+    /*
+    var proc = new System.Diagnostics.Process
+    {
+        StartInfo = new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = @""executablePath"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true,
+            WorkingDirectory = @""workingDirectory"",
+            Arguments = ""argument""
+        }
+    };
+    proc.Start();
+    string output = proc.StandardOutput.ReadToEnd();
+    string err = proc.StandardError.ReadToEnd();
+    if (!string.IsNullOrEmpty(err))
+    {
+        throw new Exception(err);
+    }
+    */
 "
                 ),
             new Tuple<string, string>(
