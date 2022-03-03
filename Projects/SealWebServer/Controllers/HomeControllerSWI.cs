@@ -11,8 +11,11 @@ using Seal.Model;
 using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Diagnostics;
-using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace SealWebServer.Controllers
 {
@@ -21,6 +24,43 @@ namespace SealWebServer.Controllers
     /// </summary>
     public partial class HomeController : Controller
     {
+        [Authorize]
+        public async Task<IActionResult> Login()
+        {
+            var idToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+
+            // Validating the token expiration
+            try
+            {
+                SetWebUser(default, default, idToken);
+            }
+            catch (Exception ex)
+            {
+
+                return HandleSWIException(ex);
+            }
+
+            return RedirectToAction("Main");
+        }
+
+        private void SetWebUser(string user, string password, string token)
+        {
+            CreateWebUser();
+            WebUser.WebPrincipal = User;
+            WebUser.WebUserName = user;
+            WebUser.WebPassword = password;
+            WebUser.Token = token;
+            WebUser.Request = Request;
+            WebUser.WebHostName = Request.Host.Host;
+            Authenticate();
+
+            if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
+            //Load profile
+            if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
+            checkRecentFiles();
+            WebUser.Profile.Path = WebUser.ProfilePath;
+        }
+
         /// <summary>
         /// Start a session with the Web Report Server using the user name, password, token (may be optional according to the authentication configured on the server) and returns information of the logged user (SWIUserProfile).
         /// </summary>
@@ -34,26 +74,13 @@ namespace SealWebServer.Controllers
                 if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(token) && WebUser.Token != token))
                 {
                     CreateRepository();
-                    CreateWebUser();
-                    WebUser.WebPrincipal = User;
-                    WebUser.WebUserName = user;
-                    WebUser.WebPassword = password;
-                    WebUser.Token = token;
-                    WebUser.Request = Request;
-                    WebUser.WebHostName = Request.Host.Host;
-                    Authenticate();
-
-                    if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
-                    //Load profile
-                    if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
-                    checkRecentFiles();
-                    WebUser.Profile.Path = WebUser.ProfilePath;
+                    SetWebUser(user, password, token);
                     newAuthentication = true;
                 }
 
                 //Audit
-                Audit.LogAudit(AuditType.Login, WebUser);
-                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
+                //Audit.LogAudit(AuditType.Login, WebUser);
+                //Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
                 //Set repository defaults
                 var defaultGroup = WebUser.DefaultGroup;
@@ -64,7 +91,7 @@ namespace SealWebServer.Controllers
                 else if (!string.IsNullOrEmpty(defaultGroup.Culture)) Repository.SetCultureInfo(defaultGroup.Culture);
                 else if (Repository.CultureInfo.EnglishName != Repository.Instance.CultureInfo.EnglishName) Repository.SetCultureInfo(Repository.Instance.CultureInfo.EnglishName);
 
-                string reportToExecute =  "", reportToExecuteName = "";
+                string reportToExecute = "", reportToExecuteName = "";
                 bool executeLast = false;
                 if (defaultGroup.EditProfile && WebUser.Profile.OnStartup != StartupOptions.Default)
                 {
@@ -118,7 +145,8 @@ namespace SealWebServer.Controllers
                     {
                         getFileDetail(profile.startupreport);
                     }
-                    catch {
+                    catch
+                    {
                         profile.startupreport = "";
                         profile.startupreportname = "";
                     }
@@ -140,20 +168,20 @@ namespace SealWebServer.Controllers
                 profile.sources = new List<SWIMetaSource>();
                 foreach (var source in Repository.Sources.Where(i => i.Connections.Count > 1))
                 {
-                    var swiSource = new SWIMetaSource() { GUID =  source.GUID, name = source.Name, connectionGUID = source.ConnectionGUID };
+                    var swiSource = new SWIMetaSource() { GUID = source.GUID, name = source.Name, connectionGUID = source.ConnectionGUID };
                     var defaultConnection = WebUser.Profile.Connections.FirstOrDefault(i => i.SourceGUID == source.GUID);
                     if (defaultConnection != null) swiSource.connectionGUID = defaultConnection.ConnectionGUID;
                     else swiSource.connectionGUID = ReportSource.DefaultRepositoryConnectionGUID;
 
                     swiSource.connections.Add(new SWIConnection() { GUID = ReportSource.DefaultRepositoryConnectionGUID, name = $"{Repository.TranslateWeb("Repository connection")} ({Repository.TranslateConnection(source.Connection)})" });
-                    
+
                     foreach (var connection in source.Connections)
                     {
                         swiSource.connections.Add(new SWIConnection() { GUID = connection.GUID, name = Repository.TranslateConnection(connection) });
                     }
                     profile.sources.Add(swiSource);
                 }
-                return Json(profile); 
+                return Json(profile);
             }
             catch (Exception ex)
             {
@@ -193,10 +221,11 @@ namespace SealWebServer.Controllers
                 var menuNames = view.MenuPath.Split('/').Where(i => !string.IsNullOrEmpty(i)).ToList();
                 if (menuNames.Count > 0)
                 {
-                    var menuItem = new SWIMenuItem() { 
-                        path = view.Report.RelativeFilePath, 
-                        name = view.MenuReportViewName, 
-                        viewGUID = view.GUID 
+                    var menuItem = new SWIMenuItem()
+                    {
+                        path = view.Report.RelativeFilePath,
+                        name = view.MenuReportViewName,
+                        viewGUID = view.GUID
                     };
                     menuNames.RemoveAt(menuNames.Count - 1);
                     if (menuNames.Count > 0)
@@ -646,7 +675,7 @@ namespace SealWebServer.Controllers
                 WebUser.Profile.SetRecentReports(path, report, viewGUID, outputGUID);
                 WebUser.SaveProfile();
 
-                if (fromMenu != null && fromMenu.Value) return Json( System.IO.File.ReadAllText(report.HTMLDisplayFilePath) );
+                if (fromMenu != null && fromMenu.Value) return Json(System.IO.File.ReadAllText(report.HTMLDisplayFilePath));
                 return getFileResult(report.HTMLDisplayFilePath, report);
             }
             catch (Exception ex)
@@ -682,7 +711,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Clear the current user session.
         /// </summary>
-        public ActionResult SWILogout()
+        public async Task<ActionResult> SWILogout()
         {
             writeDebug("SWILogout");
 
@@ -690,8 +719,8 @@ namespace SealWebServer.Controllers
             {
                 if (WebUser != null) WebUser.Logout();
                 //Audit
-                Audit.LogAudit(AuditType.Logout, WebUser);
-                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
+                //Audit.LogAudit(AuditType.Logout, WebUser);
+                //Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
                 //Clear session
                 NavigationContext.Navigations.Clear();
                 setSessionValue(SessionUser, null);
@@ -699,7 +728,7 @@ namespace SealWebServer.Controllers
                 setSessionValue(SessionUploadedFiles, null);
                 CreateWebUser();
 
-                return Json(new { });
+                return SignOut("Cookies", "oidc");
             }
             catch (Exception ex)
             {
@@ -718,7 +747,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 if (!WebUser.DefaultGroup.EditProfile) throw new Exception("No right to change the profile");
 
-               if (string.IsNullOrEmpty(culture))
+                if (string.IsNullOrEmpty(culture))
                 {
                     WebUser.Profile.Culture = "";
                     if (!string.IsNullOrEmpty(WebUser.DefaultGroup.Culture)) Repository.SetCultureInfo(WebUser.DefaultGroup.Culture);
@@ -731,7 +760,8 @@ namespace SealWebServer.Controllers
                 }
 
                 var onStartupVal = StartupOptions.Default;
-                if (Enum.TryParse(onStartup, out onStartupVal)) {
+                if (Enum.TryParse(onStartup, out onStartupVal))
+                {
                     WebUser.Profile.OnStartup = onStartupVal;
                     WebUser.Profile.StartUpReport = startupReport;
                     WebUser.Profile.StartupReportName = startupReportName;
@@ -744,7 +774,7 @@ namespace SealWebServer.Controllers
                 }
 
                 WebUser.Profile.Connections.Clear();
-                foreach(var connection in connections)
+                foreach (var connection in connections)
                 {
                     var guids = connection.Split('\r');
                     if (guids.Length == 2) WebUser.Profile.Connections.Add(new DefaultConnection() { SourceGUID = guids[0], ConnectionGUID = guids[1] });

@@ -1,0 +1,47 @@
+﻿@using Seal.Model;
+@{
+    SecurityProvider provider = Model;
+
+    provider.Script = @"@using Newtonsoft.Json.Linq
+@using System.Text
+@using System.IdentityModel.Tokens.Jwt
+@{
+    //Sample of authentication from a JWT token
+    SecurityUser user = Model;
+    
+    var idToken = user.Token; //Token got from SWILogin parameter
+    
+	if (!string.IsNullOrEmpty(idToken)) {	
+	
+		var handler = new JwtSecurityTokenHandler();
+        var payload = handler.ReadJwtToken(idToken).Payload;
+        var expclaim = payload.Claims.FirstOrDefault(x => x.Type == ""exp"");
+        var foo = DateTime.UtcNow;
+        var unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
+        var dateTime = long.Parse(expclaim.Value);
+		// Validating the token expiration
+		if(unixTime > dateTime) {
+			user.Error = ""Token Expired"";
+		}
+		else {
+			// Inserting data from the token payload
+			var roleclaim = payload.Claims.FirstOrDefault();
+			//var roleclaim = payload.Claims.FirstOrDefault(x => x.Type == ""name"");
+			if(roleclaim!=null) {
+				user.AddSecurityGroup(""Group (Execute)"");
+			}
+		}
+	}
+	else {
+		//No token, an alternate authentication can be done here (just copy code from the other security providers...)
+		if (user.WebUserName == ""userName"" && user.WebPassword == ""password"")
+		{
+			user.AddDefaultSecurityGroup();
+			//user.AddSecurityGroup(""aGroupName"");
+		}
+		else {
+			throw new Exception(""Invalid user name or password"");
+		}		
+	}
+}";
+}

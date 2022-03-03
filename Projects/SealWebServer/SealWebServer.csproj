@@ -43,6 +43,8 @@
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.14.0" />
     <PackageReference Include="EPPlus" Version="4.5.3.3" />
+    <PackageReference Include="IdentityModel" Version="5.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.8" />

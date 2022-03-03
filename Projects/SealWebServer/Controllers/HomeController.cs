@@ -15,6 +15,8 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Collections.Specialized;
+using Microsoft.Extensions.Options;
+using SealWebServer.Models.Configuration;
 
 namespace SealWebServer.Controllers
 {
@@ -41,6 +43,7 @@ namespace SealWebServer.Controllers
                 return Translate("Sorry, this report is not in your session anymore...");
             }
         }
+
 
         Repository Repository
         {
@@ -88,6 +91,8 @@ namespace SealWebServer.Controllers
             user.SessionID = SessionKey;
             return user;
         }
+
+
 
         NavigationContext NavigationContext
         {
@@ -192,6 +197,7 @@ namespace SealWebServer.Controllers
                     RazorHelper.CompileExecute(Repository.Configuration.WebSessionInitScript, model);
                 }
 
+                ViewData["AuthenticationConfig"] = AuthenticationConfig;
                 result = View(model);
             }
             catch (Exception ex)

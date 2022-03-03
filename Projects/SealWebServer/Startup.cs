@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -63,13 +57,42 @@ namespace SealWebServer
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureSessionServices(services, Configuration.GetSection(Repository.SealConfigurationSectionKeyword).Get<SessionConfiguration>());
-            
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+                })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.SignInScheme = "Cookies";
+                    options.Authority = Configuration["Authentication:Id4EndPoint"];//授权服务中心
+                    //令牌保存标识
+                    options.SaveTokens = true;
+                    //options.CallbackPath = PathString.FromUriComponent("/Home/Main");
+                    options.RequireHttpsMetadata = false;
+                    options.ClientId = Configuration["Authentication:ClientId"];//授权服务分配的ClientId
+                    options.ClientSecret = Configuration["Authentication:AccessKeySecret"];
+                    options.ResponseType = "code";
+                    options.Scope.Clear();
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                });
+
+            services.Configure<Authentication>(Configuration.GetSection("Authentication"));
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver(); //Force PascalCase
                 });
+            services.AddCors(option =>
+                option.AddPolicy("cors", policy => policy
+                    .SetIsOriginAllowed(_ => true)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,12 +110,14 @@ namespace SealWebServer
                     ForwardedHeaders = ForwardedHeaders.All
                 });
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
-
             app.UseRouting();
+            app.UseCors("cors");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -101,6 +126,10 @@ namespace SealWebServer
                     name: "default",
                     pattern: "{action=Main}",
                     new { controller = "Home", action = "Main" });
+
+                endpoints.MapControllerRoute(
+                    name: "mvc",
+                    pattern: "{controller=Home}/{action=Main}");
             });
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
 

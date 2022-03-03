@@ -1,9 +1,11 @@
 ﻿@using Seal.Model
 @using Seal.Helpers
 @using SealWebServer.Controllers
+@using SealWebServer.Models.Configuration
 @{
     WebMainModel model = Model as WebMainModel;
     Repository repository = model.Repository;
+    var authenticationConfig = ViewData["AuthenticationConfig"] as Authentication;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -149,6 +151,8 @@
                         <input type="password" class="form-control" id="password" placeholder="@repository.TranslateWeb("Enter password")" />
                     </div>
                     <button id="login-modal-submit" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> @repository.TranslateWeb("Login")</button>
+
+                    @Html.ActionLink(@authenticationConfig?.Name ?? "Login","Login","Home")
                 </div>
                 <div class="modal-footer" style="text-align:left">
                     <span id="login-modal-error" class="label label-danger" style="font-size: 12px;"></span>
@@ -278,7 +282,7 @@
     <script type="text/javascript">
         //server
         var WebApplicationName = '@HomeController.GetWebUrl(Context.Request, Context.Response)';
-
+        
         //formats
         var decimalSeparator = '@Html.Raw(repository.CultureInfo.NumberFormat.NumberDecimalSeparator)';
         var thousandSeparator = '@Html.Raw(Helper.ToJS(repository.CultureInfo.NumberFormat.NumberGroupSeparator))';
