@@ -34,6 +34,7 @@ using System.Reflection;
 using System.Web;
 using System.Net.Http.Json;
 using Oracle.ManagedDataAccess.Client;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Seal.Helpers
 {
@@ -67,6 +68,7 @@ namespace Seal.Helpers
         static string _23 = "";
         static JsonContent _24 = null;
         static OracleConnection _25 = null;
+        static JwtSecurityTokenHandler _26 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -131,6 +133,7 @@ namespace Seal.Helpers
                     if (_23 == null) _23 = HttpUtility.HtmlEncode("");
                     if (_24 == null) _24 = JsonContent.Create(new { });
                     if (_25 == null) _25 = new OracleConnection("");
+                    if (_26 == null) _26 = new JwtSecurityTokenHandler();
                 }
                 catch (Exception ex)
                 {
