@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>SealTaskScheduler</RootNamespace>
     <AssemblyName>SealTaskScheduler</AssemblyName>
     <Configurations>Debug;Release</Configurations>
     <Product>Seal Report</Product>
-    <Version>6.5.0.0</Version>
-    <FileVersion>6.5.0.0</FileVersion>
+    <Version>6.5.2.0</Version>
+    <FileVersion>6.5.2.0</FileVersion>
+    <AssemblyVersion>6.5.2.0</AssemblyVersion>
     <Description>Seal Report Task Scheduler</Description>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
     <ApplicationIcon />
@@ -38,11 +39,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-</ItemGroup>
- 
-  <ItemGroup>
-    <ProjectReference Include="..\SealLibrary\SealLibrary.csproj">
-    </ProjectReference>
+    <ProjectReference Include="..\SealLibraryWin\SealLibraryWin.csproj" />
   </ItemGroup>  
 </Project>

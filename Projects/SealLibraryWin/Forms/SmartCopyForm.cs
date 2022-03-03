@@ -287,7 +287,7 @@ namespace Seal.Forms
             addToDestinationList(_report);
 
             var loadedReports = new List<Report>();
-            foreach (var item in reportsListBox.Items.OfType<PropertyItem>())
+            foreach (var item in reportsListBox.Items.OfType<PropertyItem>().OrderBy(i => i.Name))
             {
                 var report = (Report)item.Object;
                 //Reload report if necessary
@@ -296,7 +296,7 @@ namespace Seal.Forms
                 loadedReports.Add(report);
             }
             reportsListBox.Items.Clear();
-            foreach (var report in loadedReports)
+            foreach (var report in loadedReports.OrderBy(i => i.DisplayNameEx))
             {
                 reportsListBox.Items.Add(new PropertyItem() { Name = report.FilePath, Object = report });
             }
@@ -318,7 +318,7 @@ namespace Seal.Forms
             }
             else if (destinationName.StartsWith(ModelsKeyword))
             {
-                foreach (var item in report.Models.Where(i => i != _source))
+                foreach (var item in report.Models.Where(i => i != _source).OrderBy(i => i.Name))
                 {
                     string name = string.Format("[{0}] {1}", fileName, item.Name);
                     if (_destinationItems.FirstOrDefault(i => i.Name == name) == null)
@@ -329,9 +329,9 @@ namespace Seal.Forms
             }
             else if (destinationName.StartsWith(ElementsKeyword))
             {
-                foreach (var model in report.Models)
+                foreach (var model in report.Models.OrderBy(i => i.Name))
                 {
-                    foreach (var item in model.Elements.Where(i => i != _source))
+                    foreach (var item in model.Elements.Where(i => i != _source).OrderBy(i => i.Name))
                     {
                         string name = string.Format("[{0}/{1}] {2} ", fileName, model.Name, item.DisplayNameEl);
                         if (_destinationItems.FirstOrDefault(i => i.Object == item) == null)
@@ -344,10 +344,10 @@ namespace Seal.Forms
             else if (destinationName.StartsWith(RestrictionsKeyword))
             {
                 bool isAggregate = !((ReportRestriction)_source).Model.Restrictions.Contains(_source);
-                foreach (var model in report.Models)
+                foreach (var model in report.Models.OrderBy(i => i.Name))
                 {
                     var restrictions = (isAggregate ? model.AggregateRestrictions : model.Restrictions);
-                    foreach (var item in restrictions.Where(i => i != _source))
+                    foreach (var item in restrictions.Where(i => i != _source).OrderBy(i => i.Name))
                     {
                         string name = string.Format("[{0}/{1}] {2} ", fileName, model.Name, item.DisplayNameEl);
                         if (_destinationItems.FirstOrDefault(i => i.Object == item) == null)
@@ -365,14 +365,14 @@ namespace Seal.Forms
                 {
                     _destinationItems.Add(new PropertyItem() { Name = reportName, Object = new ReportView() { Report = report } });
                 }
-                foreach (var view in report.Views)
+                foreach (var view in report.Views.OrderBy(i => i.Name))
                 {
                     addViewsToDestinations(view, reportName);
                 }
             }
             else if (destinationName.StartsWith(TasksKeyword))
             {
-                foreach (var item in report.Tasks.Where(i => i != _source))
+                foreach (var item in report.Tasks.Where(i => i != _source).OrderBy(i => i.Name))
                 {
                     string name = string.Format("[{0}] {1} ", fileName, item.Name);
                     if (_destinationItems.FirstOrDefault(i => i.Object == item) == null)
@@ -383,7 +383,7 @@ namespace Seal.Forms
             }
             else if (destinationName.StartsWith(OutputsKeyword))
             {
-                foreach (var item in report.Outputs.Where(i => i != _source))
+                foreach (var item in report.Outputs.Where(i => i != _source).OrderBy(i => i.Name))
                 {
                     string name = string.Format("[{0}] {1} ", fileName, item.Name);
                     if (_destinationItems.FirstOrDefault(i => i.Object == item) == null)
@@ -394,7 +394,7 @@ namespace Seal.Forms
             }
             else if (destinationName.StartsWith(SchedulesKeyword))
             {
-                foreach (var item in report.Schedules.Where(i => i != _source))
+                foreach (var item in report.Schedules.Where(i => i != _source).OrderBy(i => i.Name))
                 {
                     string name = string.Format("[{0}] {1} ", fileName, item.Name);
                     if (_destinationItems.FirstOrDefault(i => i.Object == item) == null)
@@ -425,7 +425,7 @@ namespace Seal.Forms
                         _destinationItems.Add(new PropertyItem() { Name = name, Object = parentView });
                     }
                 }
-                foreach (var view in parentView.Views) addViewsToDestinations(view, name);
+                foreach (var view in parentView.Views.OrderBy(i => i.Name)) addViewsToDestinations(view, name);
             }
         }
 

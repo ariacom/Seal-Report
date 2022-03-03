@@ -1,0 +1,399 @@
+﻿Context,Reference,zh
+NVD3,(right axis),（右轴）
+NVD3,Expanded,扩大
+NVD3,Grouped,分组
+NVD3,Re-scale y-axis,重新缩放Y轴
+NVD3,Stacked,堆积
+NVD3,Stream,流
+Report,!=,！=
+Report,# of % selected,# of % selected
+Report,(filtered from _MAX_),（从最大值处过滤）
+Report,<,<
+Report,<=,<=
+Report,=,=
+Report,>,>
+Report,>=,>=
+Report,A value is required for,需要一个值
+Report,All selected,全部选定
+Report,and,and
+Report,Average of,平均
+Report,Back to top,返回顶部
+Report,Between,Between
+Report,Cancel,取消
+Report,Cancelling report...,正在取消报告…
+Report,Charts,图表
+Report,Contains,包含
+Report,Count of,的计数
+Report,Description,说明
+Report,Drill <,Drill <
+Report,Drill >,Drill >
+Report,Duration (seconds),持续时间（秒）
+Report,Ends with,以结尾
+Report,Execute,执行
+Report,Executing report...,正在执行报告…
+Report,Execution date,执行日期
+Report,Execution duration,执行持续时间
+Report,execution messages,执行消息
+Report,Filter:,过滤器：
+Report,Hide,隐藏
+Report,Invalid date,无效日期
+Report,Invalid numeric value,无效的数值
+Report,Maximum of,最大值
+Report,Minimum of,最小值
+Report,Model,模型
+Report,New report,新建报告
+Report,No records. The report output generation has been cancelled.,没有记录。报告输出生成已取消。
+Report,No reports,没有报告
+Report,No rows,没有行
+Report,Not Between,不介于
+Report,Not Contains,不包含
+Report,Now,现在
+Report,Page,第页
+Report,Page &p; of &P;,第&p；页，共&p；页
+Report,Pages,页
+Report,Processing,处理
+Report,Processing...,处理。。。
+Report,Report,报告
+Report,Model loaded...,模型已加载…
+Report,No records,没有记录
+Report,Task executed...,任务已执行…
+Report,Models loaded...,模型已加载…
+Report,Tasks executed...,任务已执行…
+Report,Results,结果
+Report,Records,记录
+Report,Report has been cancelled,报告已取消
+Report,report information,报告信息
+Report,report restrictions,报告限制
+Report,Report result generated in '{0}',在'{0}'中生成的报告结果
+Report,report result panel,报告结果面板
+Report,Restrictions,限制
+Report,second,秒
+Report,seconds,秒
+Report,Select all,全选
+Report,Show,显示
+Report,Show _MENU_ reports,显示菜单报告
+Report,Show _MENU_ rows,显示菜单行
+Report,Showing _START_ to _END_ of _TOTAL_,Showing _START_ to _END_ of _TOTAL_
+Report,Showing 0 to 0 of 0,显示0到0
+Report,Starting execution...,开始执行…
+Report,Starts with,开始于
+Report,Sum of,总计
+Report,Summary,总结
+Report,The report has been generated.,报告已生成。
+Report,This report has execution errors. Please check details in the Windows Event Viewer...,此报表有执行错误。请检查Windows事件查看器中的详细信息…
+Report,ThisMonth,本月
+Report,ThisWeek,本周
+Report,ThisYear,今年
+Report,Today,今天
+Report,Total,总计
+Report,Use the date format '{0}' or one of the following keywords:,使用日期格式 '{0}'或以下关键字之一：
+Report,View Excel Result,查看Excel结果
+Report,View HTML Result,查看HTML结果
+Report,View PDF Result,查看PDF结果
+Report,View Print Result,查看打印结果
+Report,View CSV Result,查看csv结果
+Report,View report result file,查看报告结果文件
+Report,Equals,等于
+Report,Is between,介于
+Report,Is different from,不同于
+Report,Does not contain,不包含
+Report,Is empty,是空的
+Report,Is greater or equal than,大于或等于
+Report,Is greater than,大于
+Report,Is not between,不是介于
+Report,Is not empty,不是空的
+Report,Is not Null,不为空
+Report,Is Null,为空
+Report,Is smaller or equal than,小于或等于
+Report,Is smaller than,小于
+Report,Auto Scroll enabled,自动滚动已启用
+Report,Export messages...,导出邮件…
+Web,Actions,行动
+Web,Aggregate,集料
+Web,BCC,密件抄送
+Web,Body,正文
+Web,Cancel,取消
+Web,CC,科科斯群岛
+Web,Chart axis,图表坐标轴
+Web,Chart height,图表高度
+Web,Chart title,图表标题
+Web,Chart JS,图表JS
+Web,Chart NVD3,图表NVD3
+Web,Chart Plotly,绘制图表
+Web,Chart width,图表宽度
+Web,Close,关闭
+Web,Connection,连接
+Web,Copy,复制
+Web,Create new folder,创建新文件夹
+Web,Cut,剪切
+Web,Days,天
+Web,Days of the week,一周中的几天
+Web,Default body,默认正文
+Web,Default sender address,默认发送人地址
+Web,Default subject,默认主题
+Web,Delete,删除
+Web,Delete folder,删除文件夹
+Web,Description,说明
+Web,Device,设备
+Web,Disconnect,断开
+Web,Display options,显示选项
+Web,Elements,元素
+Web,End date,结束日期
+Web,End date is before start date,结束日期早于开始日期
+Web,Enter a password to protect the Zip file,输入密码以保护zip文件
+Web,Enter addresses separated by ;,输入地址，以分隔；
+Web,Enter password,输入密码
+Web,Enter the file name without extension,输入不带扩展名的文件名
+Web,Enter user name,输入用户名
+Web,Enter your new file name,输入新文件名
+Web,Error,错误
+Web,Error: This report name exists already.,错误：此报表名称已存在。
+Web,Execute,执行
+Web,Execute now,立即执行
+Web,Edition,版本
+Web,Execution,执行
+Web,File name,文件名
+Web,Folder,文件夹
+Web,Folders,文件夹
+Web,for a duration of,持续时间为
+Web,Format,格式
+Web,From,从
+Web,Grid mode,网格模式
+Web,Inconsistent duration or interval for the schedule. Check your entries.,计划的持续时间或间隔不一致。检查您的输入。
+Web,Invalid user name or password,用户名或密码无效
+Web,Is enabled,已启用
+Web,Is required,是必需的
+Web,Is Multiline,是多行的
+Web,Last,最后一个
+Web,Last modification,上次修改
+Web,Licensed to,授权给
+Web,Login,登录
+Web,Logout,注销
+Web,Logout the user,注销用户
+Web,Manage folders,管理文件夹
+Web,Months,月
+Web,Name,姓名
+Web,New,新建
+Web,New folder name,新文件夹名称
+Web,No Email destination specified in the schedule,计划中未指定电子邮件目的地
+Web,No file name specified in the schedule,计划中未指定文件名
+Web,OK,好啊
+Web,Operator,操作员
+Web,Optional addresses separated by ;,可选地址由分隔；
+Web,Optional title chart,可选标题图表
+Web,Options,选项
+Web,Output,输出
+Web,Password,密码
+Web,Paste,粘贴
+Web,Personal,个人的
+Web,Pivot mode,透视模式
+Web,Please wait,请稍候
+Web,Profile,简况
+Web,Profile information,配置文件信息
+Web,Prompt,提示
+Web,Prompt at run-time,运行时提示
+Web,Recur every,重复间隔
+Web,Refresh,刷新
+Web,Remove,删除
+Web,Remove all,全部删除
+Web,Rename,重命名
+Web,Rename folder,重命名文件夹
+Web,Repeat every,重复间隔
+Web,Report,报告
+Web,Report name,报告名称
+Web,Report title,报告标题
+Web,Report title if different from report name,报告标题（如果与报告名称不同）
+Web,Reports,报告
+Web,Result as body,结果作为正文
+Web,Save,保存
+Web,Schedule,地铁列车时刻表
+Web,Search,搜索
+Web,Show totals,显示汇总
+Web,Show sub-totals,显示小计
+Web,Sort,排序
+Web,Start date,开始日期
+Web,Subject,主题
+Web,The maximum number of users has been reached for your license ({0}). Please try to login later...,您的许可证已达到最大用户数（{0}）。请稍后尝试登录…
+Web,To,至
+Web,Total aggr.,总加总
+Web,Type,类型
+Web,User groups,用户组
+Web,User name,用户名
+Web,Users,用户
+Web,Value,价值
+Web,Values,价值观
+Web,Error: only files (and not reports) can be copied to this folder.,错误：只能将文件（而不是报告）复制到此文件夹。
+Web,Zip attachments,Zip附件
+Web,Zip password,zip密码
+WebJS,Options,选项
+WebJS,No calculation option,无计算选项
+WebJS,% of the row,%一排排的
+WebJS,% of the column,%列的
+WebJS,% of the total,%总数的
+WebJS,# of % selected,#所选百分比
+WebJS,(filtered from _MAX_),（从最大值处过滤）
+WebJS,No Output,无输出
+WebJS,No Schedule,没有时间表
+WebJS,1 Decimal,1位小数
+WebJS,2 Decimals,2位小数
+WebJS,3 Decimals,3位小数
+WebJS,4 Decimals,4位小数
+WebJS,Percentage,百分比
+WebJS,Percentage 1 Dec.,12月1日百分比
+WebJS,Percentage 2 Dec.,12月2日百分比
+WebJS,All selected,全部选定
+WebJS,Ascendant,优势
+WebJS,Automatic ascendant,自动上升
+WebJS,Automatic descendant,自动后代
+WebJS,Average,平均
+WebJS,Average of,平均
+WebJS,Axis,轴线
+WebJS,Bar,酒吧
+WebJS,Contains,包含
+WebJS,Count,计数
+WebJS,Count of,的计数
+WebJS,CSV,csv公司
+WebJS,Data tables responsive,数据表响应
+WebJS,Daily,每日
+WebJS,day,白天
+WebJS,days,天
+WebJS,Decimal,十进制的
+WebJS,Default,违约
+WebJS,Default report connection,默认报表连接
+WebJS,Default repository connection,默认存储库连接
+WebJS,Descendant,后代
+WebJS,Do you really want to delete the reports or files selected ?,是否确实要删除选定的报告或文件？
+WebJS,Does not contain,不包含
+WebJS,Drop your Column elements,删除列元素
+WebJS,Drop your Data,删除您的数据
+WebJS,Drop your Data elements,删除数据元素
+WebJS,Drop your Elements,放下你的元素
+WebJS,Drop your Page elements,删除页面元素
+WebJS,Drop your Restrictions,放弃你的限制
+WebJS,Drop your Row elements,删除行元素
+WebJS,Edit report,编辑报告
+WebJS,Email,电子邮件
+WebJS,Ends with,以结尾
+WebJS,Equals,等于
+WebJS,Error,错误
+WebJS,Error : Unable to connect to the server,错误：无法连接到服务器
+WebJS,Excel,擅长
+WebJS,Filter,过滤器
+WebJS,Folder,文件夹
+WebJS,For rows,对于行
+WebJS,For columns,对于列
+WebJS,For rows and columns,行和列
+WebJS,For rows (total only),行（仅限汇总）
+WebJS,For rows and columns (total only),行和列（仅总计）
+WebJS,Force execution,强制执行
+WebJS,Use full screen width,使用全屏宽度
+WebJS,General,概述
+WebJS,General date long time,常规日期长时间
+WebJS,General date short time,一般日期短时间
+WebJS,Horizontal Bar,水平条
+WebJS,hour,小时
+WebJS,hours,小时
+WebJS,HTML,HTML
+WebJS,HTML Print,HTML打印
+WebJS,Indefinitely,无限期地
+WebJS,Is between,介于
+WebJS,Is different from,不同于
+WebJS,Is empty,是空的
+WebJS,Is greater or equal than,大于或等于
+WebJS,Is greater than,大于
+WebJS,Is not between,不是介于
+WebJS,Is not empty,不是空的
+WebJS,Is not Null,不为空
+WebJS,Is Null,为空
+WebJS,Is smaller or equal than,小于或等于
+WebJS,Is smaller than,小于
+WebJS,Line,线条
+WebJS,Long date,长日期
+WebJS,Maximum,最大
+WebJS,Maximum of,最大值
+WebJS,Minimum,最小值
+WebJS,Minimum of,最小值
+WebJS,minute,分钟
+WebJS,minutes,分钟
+WebJS,Modified,被改进的
+WebJS,Monthly,每月
+WebJS,New Output for,新的输出
+WebJS,New report,新建报告
+WebJS,New Schedule,新计划
+WebJS,No,不
+WebJS,No prompt,没有提示
+WebJS,No report,没有报告
+WebJS,No schedule,没有时间表
+WebJS,No total,没有总数
+WebJS,No (axis values are linear),否（轴值为线性）
+WebJS,None,无
+WebJS,Not sorted,未排序
+WebJS,Number,数字
+WebJS,Number 1 dec.,43800
+WebJS,Number 2 dec.,43801
+WebJS,Number 3 dec.,43802
+WebJS,Number 4 dec.,43803
+WebJS,One time,一次
+WebJS,Output,输出
+WebJS,PDF,PDF格式
+WebJS,PDF Print,PDF打印
+WebJS,Pie,派
+WebJS,Please wait,请稍候
+WebJS,Please note that only schedules can be edited for this report.,请注意，只能为此报告编辑计划。
+WebJS,Scatter,散点图
+WebJS,Polar Area,极地
+WebJS,Radar,雷达
+WebJS,Private (The output cannot be executed by other users),私有（输出不能由其他用户执行）
+WebJS,Private (The output cannot be edited by other users),私有（其他用户无法编辑输出）
+WebJS,Prompt at execution,执行时提示
+WebJS,Prompt only one value,仅提示一个值
+WebJS,Public,公共
+WebJS,Remove,删除
+WebJS,"Report has been modified, do you really want to close ?",报告已被修改，是否确实要关闭？
+WebJS,Report saved,报告已保存
+WebJS,report(s) or file(s) cut in the clipboard,在剪贴板中剪切的报告或文件
+WebJS,report(s) or file(s) have been deleted,报告或文件已被删除
+WebJS,report(s) or file(s) processed,已处理的报告或文件
+WebJS,report(s) or files(s) copied in the clipboard,在剪贴板中复制的报告或文件
+WebJS,Schedule,地铁列车时刻表
+WebJS,Select all,全选
+WebJS,Server Version,服务器版本
+WebJS,Short date,短日期
+WebJS,Show _MENU_ reports,显示菜单报告
+WebJS,Show execution message panel,显示执行消息面板
+WebJS,Show information panel,显示信息面板
+WebJS,Show first header line,显示第一条标题行
+WebJS,Show report result panel,显示报告结果面板
+WebJS,Show restrictions panel,显示限制面板
+WebJS,Showing _START_ to _END_ of _TOTAL_,显示“开始”到“结束”的总数_
+WebJS,Showing 0 to 0 of 0,显示0到0
+WebJS,Splitter,拆分器
+WebJS,Stacked Area,堆积面积
+WebJS,Starts with,开始于
+WebJS,Sum,总和
+WebJS,The folder has been created,文件夹已创建
+WebJS,The folder has been deleted,文件夹已被删除
+WebJS,The folder has been renamed,文件夹已重命名
+WebJS,The folder has been updated,文件夹已更新
+WebJS,The report or file has been renamed,报告或文件已重命名
+WebJS,Use data tables,使用数据表
+WebJS,View,视图
+WebJS,Views and outputs,视图和输出
+WebJS,Warning,警告
+WebJS,Web Interface Version,Web界面版本
+WebJS,Weekly,每周
+WebJS,weeks,周
+WebJS,Yes,是的
+WebJS,Yes (the attachments are zipped),是（附件已压缩）
+WebJS,Yes (the HTML result is the body),是（HTML结果是正文）
+WebJS,Yes (a new line with sub-totals is added when the value changes),是（当值更改时，将添加一个包含小计的新行）
+WebJS,Yes (element values are used for the axis),是（元素值用于轴）
+WebJS,No Sort,没有排序
+WebJS,By point ascending,按点升序
+WebJS,By axis label ascending,按轴标签升序
+WebJS,By point descending,按点降序
+WebJS,By axis label descending,按轴标签降序
+Web,Chart sort,图表排序
+WebJS,Show summary table,显示摘要表
+WebJS,Show page tables,显示页表
+WebJS,Show data tables,显示数据表

@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Seal.Helpers;
 using System.Data.Common;
 using MongoDB.Driver;
+using Oracle.ManagedDataAccess.Client;
 #if WINDOWS
 using System.Drawing.Design;
 using Seal.Forms;
@@ -49,13 +50,17 @@ namespace Seal.Model
                 GetProperty("OdbcConnectionString").SetIsBrowsable(true);
                 GetProperty("MSSqlServerConnectionString").SetIsBrowsable(true);
                 GetProperty("MySQLConnectionString").SetIsBrowsable(true);
+                GetProperty("OracleConnectionString").SetIsBrowsable(true);
                 GetProperty("MongoDBConnectionString").SetIsBrowsable(Source != null && Source.IsNoSQL);
+                GetProperty("ConnectionScript").SetIsBrowsable(true);
 
                 GetProperty("ConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("OdbcConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MSSqlServerConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MySQLConnectionString").SetIsReadOnly(!IsEditable);
+                GetProperty("OracleConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MongoDBConnectionString").SetIsReadOnly(!IsEditable);
+                GetProperty("ConnectionScript").SetIsReadOnly(!IsEditable);
 
                 GetProperty("UserName").SetIsBrowsable(true);
                 if (IsEditable) GetProperty("ClearPassword").SetIsBrowsable(true);
@@ -63,11 +68,6 @@ namespace Seal.Model
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("HelperCheckConnection").SetIsBrowsable(true);
-                if (IsEditable && !Environment.Is64BitProcess)
-                {
-                    GetProperty("HelperCreateFromExcelAccess").SetIsBrowsable(true);
-                    GetProperty("HelperCreateFromExcelAccess").SetIsReadOnly(true);
-                }
                 GetProperty("Information").SetIsReadOnly(true);
                 GetProperty("Error").SetIsReadOnly(true);
                 GetProperty("HelperCheckConnection").SetIsReadOnly(true);
@@ -132,7 +132,11 @@ namespace Seal.Model
                 {
                     DatabaseType = DatabaseType.MySQL;
                 }
-                if ((_connectionType == ConnectionType.MSSQLServer || _connectionType == ConnectionType.MSSQLServerMicrosoft) && DatabaseType != DatabaseType.MSSQLServer) {
+                else if (_connectionType == ConnectionType.Oracle && DatabaseType != DatabaseType.Oracle)
+                {
+                    DatabaseType = DatabaseType.Oracle;
+                }
+                else if ((_connectionType == ConnectionType.MSSQLServer || _connectionType == ConnectionType.MSSQLServerMicrosoft) && DatabaseType != DatabaseType.MSSQLServer) {
                     DatabaseType = DatabaseType.MSSQLServer;
 #if WINDOWS
                     if (_dctd != null) MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -147,7 +151,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [DisplayName("OLE DB Connection string"), Description("OLE DB Connection string used to connect to the database if the connection type is OleDb. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(4, 1)]
+        [DisplayName("OLE DB Connection string"), Description("OLE DB Connection string used to connect to the database if the connection type is OleDb. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ConnectionString { get; set; }
@@ -157,7 +161,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [DisplayName("ODBC Connection string"), Description("ODBC Connection string used to connect to the database if the connection type is ODBC. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(5, 1)]
+        [DisplayName("ODBC Connection string"), Description("ODBC Connection string used to connect to the database if the connection type is ODBC. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(5, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string OdbcConnectionString { get; set; }
@@ -168,7 +172,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [DisplayName("MS SQLServer Connection string"), Description("MS SQLServer Connection string used to connect to the database if the connection type is MS SQLServer. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(6, 1)]
+        [DisplayName("MS SQLServer Connection string"), Description("MS SQLServer Connection string used to connect to the database if the connection type is MS SQLServer. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(6, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MSSqlServerConnectionString { get; set; }
@@ -178,7 +182,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [DisplayName("Mongo DB Connection string"), Description("Mongo DB Connection string used to connect to the database if the connection type is Mongo DB. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder. %USER% for the user name. %PASSWORD% for the password."), Category("Definition"), Id(6, 1)]
+        [DisplayName("Mongo DB Connection string"), Description("Mongo DB Connection string used to connect to the database if the connection type is Mongo DB. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder. %USER% for the user name. %PASSWORD% for the password."), Category("Connection String"), Id(7, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MongoDBConnectionString { get; set; }
@@ -188,17 +192,37 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [DisplayName("MySQL Connection string"), Description("MySQL Connection string used to connect to the database if the connection type is MySQL. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(6, 1)]
+        [DisplayName("MySQL Connection string"), Description("MySQL Connection string used to connect to the database if the connection type is MySQL. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(8, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MySQLConnectionString { get; set; }
+
+        /// <summary>
+        /// Oracle Connection string used to connect to the database if the connection type is Oracle
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
+        [DisplayName("Oracle Connection string"), Description("Oracle Connection string used to connect to the database if the connection type is Oracle. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(9, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string OracleConnectionString { get; set; }
+
+        /// <summary>
+        /// If set, script executed to instanciate and open the connection
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
+        [DisplayName("Connection Script"), Description("If set, script executed to instanciate and open the connection."), Category("Definition"), Id(7, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string ConnectionScript { get; set; }
 
         /// <summary>
         /// The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).
         /// </summary>
 #if WINDOWS
         [DefaultValue("yyyy-MM-dd HH:mm:ss")]
-        [DisplayName("Database Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(7, 1)]
+        [DisplayName("Database Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(10, 1)]
 #endif
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
 
@@ -230,6 +254,10 @@ namespace Seal.Model
                 {
                     result = Helper.GetMySQLConnectionString(MySQLConnectionString, UserName, ClearPassword);
                 }
+                else if (ConnectionType == ConnectionType.Oracle)
+                {
+                    result = Helper.GetOleDbConnectionString(OracleConnectionString, UserName, ClearPassword);
+                }
                 else
                 {
                     result = Helper.GetOleDbConnectionString(ConnectionString, UserName, ClearPassword);
@@ -243,7 +271,7 @@ namespace Seal.Model
         /// User name used to connect to the database
         /// </summary>
 #if WINDOWS
-        [DisplayName("User name"), Description("User name used to connect to the database."), Category("Security"), Id(1, 2)]
+        [DisplayName("User name"), Description("User name used to connect to the database."), Category("Security"), Id(1, 5)]
 #endif
         public string UserName { get; set; }
 
@@ -257,7 +285,7 @@ namespace Seal.Model
         /// Password in clear text
         /// </summary>
 #if WINDOWS
-        [DisplayName("User password"), PasswordPropertyText(true), Description("Password used to connect to the database."), Category("Security"), Id(2, 2)]
+        [DisplayName("User password"), PasswordPropertyText(true), Description("Password used to connect to the database."), Category("Security"), Id(2, 5)]
         [XmlIgnore]
 #endif
         public string ClearPassword
@@ -296,20 +324,9 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsEditable = true;
 
-        /// <summary>
-        /// Result for the database connection script
-        /// </summary>
-        [XmlIgnore]
-        public DbConnection DbConnectionResult;
 
         [XmlIgnore]
-        private DbConnection DbConnection
-        {
-            get
-            {
-                return Helper.DbConnectionFromConnectionString(ConnectionType, FullConnectionString);
-            }
-        }
+        public DbConnection DbConnection;
 
         /// <summary>
         /// Returns an open DbConnection object
@@ -318,13 +335,19 @@ namespace Seal.Model
         {
             try
             {
-                DbConnection connection = DbConnection;
-                connection.Open();
+                if (!string.IsNullOrEmpty(ConnectionScript))
+                {
+                    RazorHelper.CompileExecute(ConnectionScript, this);
+                    return DbConnection;
+                }
+
+                DbConnection = Helper.DbConnectionFromConnectionString(ConnectionType, FullConnectionString); ;
+                DbConnection.Open();
                 if (DatabaseType == DatabaseType.Oracle)
                 {
                     try
                     {
-                        var command = connection.CreateCommand();
+                        var command = DbConnection.CreateCommand();
                         command.CommandText = "alter session set nls_date_format='yyyy-mm-dd hh24:mi:ss'";
                         command.ExecuteNonQuery();
                     }
@@ -334,7 +357,7 @@ namespace Seal.Model
                     }
                 }
 
-                return connection;
+                return DbConnection;
             }
             catch (Exception ex)
             {
@@ -357,9 +380,7 @@ namespace Seal.Model
             {
                 if (ConnectionType != ConnectionType.MongoDB)
                 {
-                    DbConnection connection = DbConnection;
-                    connection.Open();
-                    connection.Close();
+                    GetOpenConnection();
                 }
                 else
                 {
@@ -373,7 +394,17 @@ namespace Seal.Model
             {
                 Error = ex.Message;
                 Information = "Error got when checking the connection.";
+                if (ConnectionType == ConnectionType.Oracle && OracleConfiguration.OracleDataSources.Count == 0)
+                {
+                   Information = "For Oracle, consider to use the 'Connection Script' to configure OracleConfiguration.OracleDataSources";
+                }
+
             }
+            if (DbConnection != null && DbConnection.State == System.Data.ConnectionState.Open) {
+                DbConnection.Close();
+            };
+
+
             Information = Helper.FormatMessage(Information);
 #if WINDOWS
             UpdateEditorAttributes(); 
@@ -392,18 +423,6 @@ namespace Seal.Model
         public string HelperCheckConnection
         {
             get { return "<Click to check database connection>"; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Helper to create a connection string to query an Excel workbook or a MS Access database
-        /// </summary>
-#if WINDOWS
-        [Category("Helpers"), DisplayName("Create connection from Excel or MS Access"), Description("Helper to create a connection string to query an Excel workbook or a MS Access database."), Id(1, 10)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-#endif
-        public string HelperCreateFromExcelAccess
-        {
-            get { return "<Click to create a connection from an Excel or a MS Access file>"; }
         }
 
         /// <summary>

@@ -1,12 +1,13 @@
-using System;
-using System.Diagnostics;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Seal.Helpers;
 using Seal.Model;
+using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace SealSchedulerService
 {
@@ -14,6 +15,7 @@ namespace SealSchedulerService
     {
         public Worker(IConfiguration configuration)
         {
+            //Encoding registration
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             //Set repository path
@@ -35,23 +37,26 @@ namespace SealSchedulerService
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
             //Run scheduler
-            await Task.Run(() => StartScheduler()); 
-
+            StartScheduler();
             await base.StartAsync(cancellationToken);
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            while (SealReportScheduler.Running)
+            SealReportScheduler.Instance.Shutdown();
+            await base.StopAsync(cancellationToken);
+        }
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {            
+            while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(1000, stoppingToken);
             }
         }
 
-        public override async Task StopAsync(CancellationToken stoppingToken)
+        public override void Dispose()
         {
-            SealReportScheduler.Instance.Shutdown();
-            await Task.CompletedTask;
         }
     }
 }

@@ -285,8 +285,7 @@ namespace Seal.Model
                 }
                 path = Path.GetDirectoryName(path);
             }
-
-            if (!Directory.Exists(path) || path == Path.GetPathRoot(path)) path = "";
+            if (!Directory.Exists(path) || (!path.StartsWith(@"\\") && path == Path.GetPathRoot(path))) path = "";
 #endif
             if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
             {
@@ -460,9 +459,10 @@ namespace Seal.Model
                             Assembly.LoadFrom(assembly);
                         }
                     }
-                    catch (Exception Exception)
+                    catch (Exception ex)
                     {
-                        Debug.WriteLine(Exception.Message);
+                        Helper.WriteDailyLog(Helper.DailyLogEvents, LogsFolder, Configuration.LogDays, $"Exception got in Repository Init\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
+                        Debug.WriteLine(ex.Message);
                     }
                 }
 

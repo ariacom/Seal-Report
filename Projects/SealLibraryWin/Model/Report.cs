@@ -400,7 +400,7 @@ namespace Seal.Model
         {
             get
             {
-                if (string.IsNullOrEmpty(_HTMLDisplayFilePath)) _HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, "result.html"));
+                if (string.IsNullOrEmpty(_HTMLDisplayFilePath)) _HTMLDisplayFilePath = Helper.HtmlGetFilePath(FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, "result.html")));
                 return _HTMLDisplayFilePath;
             }
             set { _HTMLDisplayFilePath = value; }
@@ -531,8 +531,8 @@ namespace Seal.Model
                 {
                     //get unique file name in the result folder
                     ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension, true);
-                    //Display path is always an HTML one...
-                    HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
+                    //Display path is always an HTML one...                    
+                    HTMLDisplayFilePath = ResultExtension == "html" ?  ResultFilePath : FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
                     Debug.WriteLine(string.Format("ResultFilePath:{0} HTMLDisplayFilePath:{1} for {2}", ResultFilePath, HTMLDisplayFilePath, OutputToExecute != null ? OutputToExecute.Name : ""));
                 }
 
@@ -596,6 +596,7 @@ namespace Seal.Model
                 }
                 catch (Exception ex2)
                 {
+                    Cancel = true;
                     ExecutionErrors += string.Format("Error executing report init script:\r\n{0}\r\n", ex2.Message);
                     ExecutionErrorStackTrace = ex2.StackTrace;
                 }
@@ -1391,7 +1392,7 @@ namespace Seal.Model
                 }
                 else
                 {
-                    foreach (Task task in TaskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.StartsWith(FilePath + "\n")))
+                    foreach (Task task in TaskFolder.GetTasks().Where(i => !string.IsNullOrEmpty(i.Definition.RegistrationInfo.Source) && i.Definition.RegistrationInfo.Source.StartsWith(FilePath + "\n")))
                     {
                         try
                         {
@@ -1876,9 +1877,7 @@ namespace Seal.Model
             {
                 return string.Format("{0}Images/{1}", WebUrl, fileName);
             }
-
-            string result = Path.Combine(Repository.ViewImagesFolder, fileName);
-            return "file:///" + result.Replace(Path.DirectorySeparatorChar.ToString(), "/");
+            return Helper.HtmlGetFilePath(Path.Combine(Repository.ViewImagesFolder, fileName));
         }
 
         /// <summary>
@@ -1934,7 +1933,7 @@ namespace Seal.Model
                 else
                 {
                     //reference local file
-                    string fileReference = "file:///" + HttpUtility.HtmlEncode(Path.Combine(Repository.ViewScriptsFolder, fileName));
+                    string fileReference = Helper.HtmlGetFilePath(Path.Combine(Repository.ViewScriptsFolder, fileName));
                     return string.Format("<script type='text/javascript' src='{0}'></script>", fileReference);
                 }
             }
@@ -1979,7 +1978,7 @@ namespace Seal.Model
                 else
                 {
                     //reference local file
-                    string fileReference = "file:///" + HttpUtility.HtmlEncode(Path.Combine(Repository.ViewContentFolder, fileName));
+                    string fileReference = Helper.HtmlGetFilePath(Path.Combine(Repository.ViewContentFolder, fileName));
                     return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", fileReference);
                 }
             }

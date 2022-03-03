@@ -23,6 +23,7 @@
             <Value>%SEALREPOSITORY%/Databases/Northwind employee objectives.xlsx</Value>
           </Parameter>
         </Parameters>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -67,6 +68,7 @@
             <Value>;</Value>
           </Parameter>
         </Parameters>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -131,33 +133,39 @@
     List&lt;ReportRestriction&gt; restrictions = (reportModel != null ? reportModel.Restrictions : null);
     
     var client = new HttpClient();
-    client.DefaultRequestHeaders.Accept.Clear();
+//    client.DefaultRequestHeaders.Accept.Clear();
     client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
     try
     {
         //Sample to search reports on https://sealreport.org/demo/  
         string url = "https://sealreport.org/demo/";
-        //url = "http://localhost:17178/seal/";
+       //url = "https://localhost:44398/seal/";
 
         //Get SWIGetVersions
         string response = client.GetStringAsync(url + "SWIGetVersions").Result;    
-        dynamic responseGet = JValue.Parse(response);        
-        metaTable.LogMessage("Version: " + responseGet.SWIVersion);
+        dynamic version = JValue.Parse(response);        
+        if (version.error != null) {
+            throw new Exception(version.error.ToString());
+        };
+        metaTable.LogMessage("Version: " + version.SWIVersion);
              
         //Post SWILogin
-        var json = JsonConvert.SerializeObject(new { user="", password=""} );
-        var data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        var responsePost = client.PostAsync(url+"SWILogin", data).Result;  
+        var responsePost = client.GetAsync(url+"SWILogin?user=&amp;password=").Result;  
         string responseBody = responsePost.Content.ReadAsStringAsync().Result;
         dynamic login = JValue.Parse(responseBody);
+        if (login.error != null) {
+            throw new Exception(login.error.ToString());
+        };
         metaTable.LogMessage("Login '{0}' Group '{1}' ", login.name, login.group);
         
         //Post SWISearch
-        json = JsonConvert.SerializeObject(new { path=@"\", pattern="er"} );
-        data = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        responsePost = client.PostAsync(url+"SWISearch", data).Result;  
-        responseBody = responsePost.Content.ReadAsStringAsync().Result;
+        responsePost = client.GetAsync(url+"SWISearch?path=\\&amp;pattern=er").Result;  
+        responseBody = responsePost.Content.ReadAsStringAsync().Result;         
         dynamic search = JValue.Parse(responseBody);
+        
+        if (search.error != null) {
+            throw new Exception(search.error.ToString());
+        };
         foreach (var file in search.files) {
             table.Rows.Add(
                 System.IO.Path.GetFileName(file.name.ToString()),
@@ -182,6 +190,7 @@
         throw e;
     }
  }</LoadScript>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -225,6 +234,7 @@
         </Parameters>
         <DefinitionScript />
         <LoadScript />
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>
@@ -347,6 +357,7 @@
 	}	
     metaTable.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }</LoadScript>
+        <Alias />
         <DynamicColumns>true</DynamicColumns>
         <Columns>
           <MetaColumn>

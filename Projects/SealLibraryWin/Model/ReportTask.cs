@@ -13,6 +13,7 @@ using System.Threading;
 using System.Data.Odbc;
 using System.Data.OleDb;
 using System.Data.SqlClient;
+using Oracle.ManagedDataAccess.Client;
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.Drawing.Design;
@@ -347,6 +348,11 @@ namespace Seal.Model
                         ((MySql.Data.MySqlClient.MySqlConnection)connection).InfoMessage += new MySql.Data.MySqlClient.MySqlInfoMessageEventHandler(MySqlInfoMessage);
                         result = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
                     }
+                    else if (connection is OracleConnection)
+                    {
+                        ((OracleConnection)connection).InfoMessage += new OracleInfoMessageEventHandler(OracleInfoMessage);
+                        result = ((OracleConnection)connection).CreateCommand();
+                    }
                     else
                     {
                         ((OleDbConnection)connection).InfoMessage += new OleDbInfoMessageEventHandler(OleDbInfoMessage);
@@ -452,7 +458,10 @@ namespace Seal.Model
         {
             DbInfoMessage.Append(e.errors);
         }
-
+        void OracleInfoMessage(object sender, OracleInfoMessageEventArgs e)
+        {
+            DbInfoMessage.Append(e.Errors);
+        }
         #endregion
     }
 }

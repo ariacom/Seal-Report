@@ -175,7 +175,7 @@ namespace Seal.Model
         {
             try
             {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Report Scheduler");
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, $"Starting Report Scheduler (Repository '{Repository.Instance.RepositoryPath}')");
                 Audit.LogEventAudit(AuditType.EventServer, "Starting Report Scheduler");
                 DateTime lastLoad = DateTime.MinValue;
 

@@ -10,8 +10,6 @@
       <ConnectionType>MSSQLServer</ConnectionType>
       <ConnectionString />
       <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True</MSSqlServerConnectionString>
-      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
-      <ClearPassword />
     </MetaConnection>
     <MetaConnection>
       <GUID>164f0017-471d-4741-937c-3df7881ca392</GUID>
@@ -20,10 +18,8 @@
       <ConnectionType>MSSQLServer</ConnectionType>
       <ConnectionString />
       <MSSqlServerConnectionString>Server=ariacom.com;Database=Northwind;</MSSqlServerConnectionString>
-      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
       <UserName>demo</UserName>
       <Password>jFBdR+/x69+IBwkZSf06Hw==</Password>
-      <ClearPassword>Demo!12345</ClearPassword>
     </MetaConnection>
     <MetaConnection>
       <GUID>cc91199c-1b51-4e61-8630-feb2eef21466</GUID>
@@ -32,21 +28,14 @@
       <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
       <ConnectionString />
       <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True;TrustServerCertificate=True;</MSSqlServerConnectionString>
-      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
-      <ClearPassword />
     </MetaConnection>
   </Connections>
   <ConnectionGUID>164f0017-471d-4741-937c-3df7881ca392</ConnectionGUID>
-  <IsDefault>false</IsDefault>
-  <IsNoSQL>false</IsNoSQL>
-  <IgnorePrePostError>false</IgnorePrePostError>
   <MetaData>
     <Tables>
       <MetaTable>
         <GUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</GUID>
         <Name>Customers</Name>
-        <CacheDuration>0</CacheDuration>
-        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <WhereSQL />
         <Columns>
@@ -60,7 +49,6 @@
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</GUID>
@@ -75,7 +63,6 @@
             <DrillChildren>
               <string>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</GUID>
@@ -90,7 +77,6 @@
             <DrillChildren>
               <string>12ce241a-1f80-4b69-a023-66df46152046</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
             <SubReports>
               <SubReport>
                 <Name>Customer Detail</Name>
@@ -111,7 +97,6 @@
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>ecab8418-c406-4837-8fdb-7341c9b45f56</GUID>
@@ -123,7 +108,6 @@
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</GUID>
@@ -139,7 +123,6 @@
             <DrillChildren>
               <string>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>9cdc0eb2-eb64-4b96-8ea9-0405736b4809</GUID>
@@ -151,7 +134,6 @@
             <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>add7d793-5327-4604-997d-cdfeb474b09a</GUID>
@@ -163,7 +145,6 @@
             <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>e24a016c-11d6-4b7c-9319-c1ad5864841c</GUID>
@@ -175,7 +156,6 @@
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>7386da67-f083-4527-a303-aa24de5f7d13</GUID>
@@ -187,7 +167,6 @@
             <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>d937c8fc-64a6-415f-a77f-d3d1914e406d</GUID>
@@ -196,18 +175,14 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Customer ID</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
         <GUID>61152bde-427a-4113-8f7d-322a1280bede</GUID>
         <Name>Employees</Name>
-        <CacheDuration>0</CacheDuration>
-        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <WhereSQL />
         <Columns>
@@ -221,7 +196,6 @@
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</GUID>
@@ -234,7 +208,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</GUID>
@@ -249,7 +222,6 @@
             <DrillChildren>
               <string>da2dbe92-e90c-4415-b354-1bc589839048</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</GUID>
@@ -265,7 +237,6 @@
             <DrillChildren>
               <string>5d08f638-1b78-4850-b6cb-d46b5ce72f94</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>9af39b8d-8b3a-4db2-a093-8abac0fb8e62</GUID>
@@ -277,7 +248,6 @@
             <DisplayOrder>14</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>da2dbe92-e90c-4415-b354-1bc589839048</GUID>
@@ -293,7 +263,6 @@
             <DrillChildren>
               <string>12ce241a-1f80-4b69-a023-66df46152046</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
             <SubReports>
               <SubReport>
                 <Name>Employee Detail</Name>
@@ -315,7 +284,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>9b0f675f-fbb0-4f9c-9dca-9e15039e75ec</GUID>
@@ -327,7 +295,6 @@
             <DisplayOrder>13</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>0a5fef96-fd6b-4d51-bff0-59d458533a57</GUID>
@@ -339,7 +306,6 @@
             <DisplayOrder>16</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</GUID>
@@ -351,7 +317,6 @@
             <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>80720d2a-0ebf-457b-8539-6eb07205c6c9</GUID>
@@ -363,7 +328,6 @@
             <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>a042cb87-8838-46a8-a679-3e49f666a7b7</GUID>
@@ -376,7 +340,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>793c07a5-b7bd-41ae-bdea-506ad244005e</GUID>
@@ -388,7 +351,6 @@
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>4d365f0e-0e2a-4a58-8411-11fd6d8900db</GUID>
@@ -400,7 +362,6 @@
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</GUID>
@@ -409,11 +370,9 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Employee ID</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>adf4d26e-1dc0-4fdd-9de7-c7469cbc9d1a</GUID>
@@ -425,15 +384,12 @@
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
         <GUID>691ae384-bd74-4708-93a7-abea6ed56e55</GUID>
         <Name>Orders</Name>
-        <CacheDuration>0</CacheDuration>
-        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <WhereSQL />
         <Columns>
@@ -448,7 +404,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>4a3f4d69-3781-4679-8797-f425478de0d9</GUID>
@@ -461,7 +416,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>12ce241a-1f80-4b69-a023-66df46152046</GUID>
@@ -470,7 +424,6 @@
             <Category>Orders</Category>
             <Tag>Master</Tag>
             <DisplayName>Order ID</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -496,7 +449,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>2003a407-ab31-4514-bc83-8e9479c42e2d</GUID>
@@ -508,7 +460,6 @@
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>e93c456c-40d9-494e-ba21-711177339870</GUID>
@@ -523,7 +474,6 @@
             <DrillChildren>
               <string>8ccab7ae-77ad-4cb9-9345-d176a463c21b</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</GUID>
@@ -539,7 +489,6 @@
             <DrillChildren>
               <string>e93c456c-40d9-494e-ba21-711177339870</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</GUID>
@@ -554,7 +503,6 @@
             <DrillChildren>
               <string>12ce241a-1f80-4b69-a023-66df46152046</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>ce574340-1504-4bf7-9228-c64f79cf9803</GUID>
@@ -567,7 +515,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</GUID>
@@ -579,7 +526,6 @@
             <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</GUID>
@@ -591,7 +537,6 @@
             <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</GUID>
@@ -604,7 +549,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>64369c69-f298-466f-a241-d7388b2b0e80</GUID>
@@ -619,7 +563,6 @@
             <DrillChildren>
               <string>057c81db-d2c0-4938-9a64-6d6d33668baa</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>057c81db-d2c0-4938-9a64-6d6d33668baa</GUID>
@@ -634,15 +577,12 @@
             <DrillChildren>
               <string>12ce241a-1f80-4b69-a023-66df46152046</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
         <GUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</GUID>
         <Name>Products</Name>
-        <CacheDuration>0</CacheDuration>
-        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
@@ -656,7 +596,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</GUID>
@@ -672,7 +611,6 @@
             <DrillChildren>
               <string>12ce241a-1f80-4b69-a023-66df46152046</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
             <SubReports>
               <SubReport>
                 <Name>Product Detail</Name>
@@ -693,7 +631,6 @@
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>75715efd-6f8a-48ba-8f8e-2297d956d184</GUID>
@@ -706,7 +643,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</GUID>
@@ -719,7 +655,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</GUID>
@@ -732,7 +667,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>6fa87b3b-048f-4680-9516-35679cba84bf</GUID>
@@ -745,7 +679,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID>
@@ -761,7 +694,6 @@
             <DrillChildren>
               <string>087ed2f1-b58b-4407-9291-8329ee5dbfe1</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>d0a693f9-e276-4e6d-9ac2-d4d031610430</GUID>
@@ -770,19 +702,15 @@
             <Category>Products</Category>
             <Tag>Master</Tag>
             <DisplayName>Product ID</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
         <GUID>44179bfc-3a4a-4568-8137-364f06941c23</GUID>
         <Name>Shippers</Name>
-        <CacheDuration>0</CacheDuration>
-        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
@@ -795,7 +723,6 @@
             <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>f1689c68-6619-4c2b-8b1f-5b0b9a66ace7</GUID>
@@ -807,7 +734,6 @@
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>d56fe600-8f12-411b-b4cc-a73152d2e040</GUID>
@@ -816,19 +742,15 @@
             <Category>Shippers</Category>
             <Tag>Master</Tag>
             <DisplayName>Shipper ID</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
         <GUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</GUID>
         <Name>Suppliers</Name>
-        <CacheDuration>0</CacheDuration>
-        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
@@ -841,7 +763,6 @@
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>e2113646-4a55-4077-8d34-a22bdef1354b</GUID>
@@ -856,7 +777,6 @@
             <DrillChildren>
               <string>b5e2a5d1-4885-442c-9a7b-d460234c19e0</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</GUID>
@@ -871,7 +791,6 @@
             <DrillChildren>
               <string>12ce241a-1f80-4b69-a023-66df46152046</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
             <SubReports>
               <SubReport>
                 <Name>Supplier Detail</Name>
@@ -892,7 +811,6 @@
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</GUID>
@@ -904,7 +822,6 @@
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>70328799-b9e4-4e93-b851-88be7514c802</GUID>
@@ -920,7 +837,6 @@
             <DrillChildren>
               <string>e2113646-4a55-4077-8d34-a22bdef1354b</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</GUID>
@@ -932,7 +848,6 @@
             <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</GUID>
@@ -944,7 +859,6 @@
             <DisplayOrder>12</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>41e673d0-7852-43d0-9ef4-c64649f9020a</GUID>
@@ -956,7 +870,6 @@
             <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>addf0212-9876-4747-919d-830cb40d2506</GUID>
@@ -968,7 +881,6 @@
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</GUID>
@@ -980,7 +892,6 @@
             <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</GUID>
@@ -989,19 +900,15 @@
             <Category>Suppliers</Category>
             <Tag>Master</Tag>
             <DisplayName>Supplier ID</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
         <GUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</GUID>
         <Name>[Order Details]</Name>
-        <CacheDuration>0</CacheDuration>
-        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
@@ -1015,7 +922,6 @@
             <NumericStandardFormat>Numeric2</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N2</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>cb20a340-73d5-4e52-b7fc-59dab043c176</GUID>
@@ -1028,7 +934,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</GUID>
@@ -1037,11 +942,9 @@
             <Category>Order Details</Category>
             <Tag>Master</Tag>
             <DisplayName>Unit Price</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric2</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N2</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>067548ce-bc83-48b8-8212-aa359bd12f9b</GUID>
@@ -1054,7 +957,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>a63be915-3593-4377-8155-5ab3a78f45ba</GUID>
@@ -1067,7 +969,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -1080,8 +981,6 @@
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
         <Clause>Customers.CustomerID = Orders.CustomerID
 </Clause>
-        <JoinType>Inner</JoinType>
-        <IsBiDirectional>true</IsBiDirectional>
       </MetaJoin>
       <MetaJoin>
         <GUID>4e512b9e-fb6e-4b50-8c42-551d8f1e59e6</GUID>
@@ -1090,8 +989,6 @@
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
         <Clause>Employees.EmployeeID = Orders.EmployeeID
 </Clause>
-        <JoinType>Inner</JoinType>
-        <IsBiDirectional>true</IsBiDirectional>
       </MetaJoin>
       <MetaJoin>
         <GUID>c28e50ed-ac67-4f1b-8ec9-58c26b3506d6</GUID>
@@ -1100,8 +997,6 @@
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
         <Clause>Shippers.ShipperID = Orders.ShipVia
 </Clause>
-        <JoinType>Inner</JoinType>
-        <IsBiDirectional>true</IsBiDirectional>
       </MetaJoin>
       <MetaJoin>
         <GUID>a5486989-c2b9-4797-9adc-4191d73f073f</GUID>
@@ -1110,8 +1005,6 @@
         <RightTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</RightTableGUID>
         <Clause>Suppliers.SupplierID = Products.SupplierID
 </Clause>
-        <JoinType>Inner</JoinType>
-        <IsBiDirectional>true</IsBiDirectional>
       </MetaJoin>
       <MetaJoin>
         <GUID>cc460fce-7f59-4d77-a440-953ea8ffd85c</GUID>
@@ -1120,8 +1013,6 @@
         <RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID>
         <Clause>Orders.OrderID = [Order Details].OrderID
 </Clause>
-        <JoinType>Inner</JoinType>
-        <IsBiDirectional>true</IsBiDirectional>
       </MetaJoin>
       <MetaJoin>
         <GUID>b493bd23-60d1-409d-84c4-8dab23304c20</GUID>
@@ -1130,8 +1021,6 @@
         <RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID>
         <Clause>Products.ProductID = [Order Details].ProductID
 </Clause>
-        <JoinType>Inner</JoinType>
-        <IsBiDirectional>true</IsBiDirectional>
       </MetaJoin>
     </Joins>
     <Enums>
@@ -1139,13 +1028,10 @@
         <GUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</GUID>
         <Name>Category</Name>
         <IsDynamic>true</IsDynamic>
-        <IsDbRefresh>false</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 CategoryID, CategoryName
 FROM Categories
 ORDER BY 2</Sql>
-        <UsePosition>false</UsePosition>
         <Translate>true</Translate>
         <Values>
           <MetaEV>
@@ -1186,14 +1072,10 @@ ORDER BY 2</Sql>
         <GUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</GUID>
         <Name>Customer Country</Name>
         <IsDynamic>true</IsDynamic>
-        <IsDbRefresh>false</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 Customers.Country 
 FROM Customers 
 ORDER BY 1</Sql>
-        <UsePosition>false</UsePosition>
-        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>Argentina</Id>
@@ -1264,14 +1146,10 @@ ORDER BY 1</Sql>
         <GUID>c94b4e37-2c8a-4f34-965f-004b888f5c66</GUID>
         <Name>Supplier Country</Name>
         <IsDynamic>true</IsDynamic>
-        <IsDbRefresh>false</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 Suppliers.Country 
 FROM Suppliers 
 ORDER BY 1</Sql>
-        <UsePosition>false</UsePosition>
-        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>Australia</Id>
@@ -1327,14 +1205,10 @@ ORDER BY 1</Sql>
         <GUID>f2611e98-b25e-450d-a9cc-6811dda32d94</GUID>
         <Name>Employee Name</Name>
         <IsDynamic>true</IsDynamic>
-        <IsDbRefresh>false</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 Employees.LastName 
 FROM Employees 
 ORDER BY 1</Sql>
-        <UsePosition>false</UsePosition>
-        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>Buchanan</Id>
@@ -1369,14 +1243,10 @@ ORDER BY 1</Sql>
         <GUID>fcf64fca-579d-4b79-be22-3c2059989ec3</GUID>
         <Name>Ship Country</Name>
         <IsDynamic>true</IsDynamic>
-        <IsDbRefresh>false</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 Orders.ShipCountry 
 FROM Orders 
 ORDER BY 1</Sql>
-        <UsePosition>false</UsePosition>
-        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>Argentina</Id>
@@ -1447,14 +1317,10 @@ ORDER BY 1</Sql>
         <GUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</GUID>
         <Name>Employee Country</Name>
         <IsDynamic>true</IsDynamic>
-        <IsDbRefresh>false</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 Employees.Country 
 FROM Employees 
 ORDER BY 1</Sql>
-        <UsePosition>false</UsePosition>
-        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>UK</Id>
@@ -1469,11 +1335,9 @@ ORDER BY 1</Sql>
         <Name>Product Name</Name>
         <IsDynamic>true</IsDynamic>
         <IsDbRefresh>true</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT ProductID, ProductName 
 FROM Products
 ORDER BY ProductName</Sql>
-        <UsePosition>false</UsePosition>
         <Translate>true</Translate>
         <Message>Please select a Category first</Message>
         <SqlDisplay>SELECT ProductID, ProductName 

@@ -359,7 +359,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 var folderDetail = getFolderDetail(path, true);
                 WebUser.Profile.LastFolder = path;
-                WebUser.Profile.SaveToFile();
+                WebUser.SaveProfile();
                 return Json(folderDetail);
             }
             catch (Exception ex)

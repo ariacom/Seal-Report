@@ -24,6 +24,7 @@ using System.Net.Mail;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Seal.Helpers
 {
@@ -318,9 +319,20 @@ namespace Seal.Helpers
             ColumnType result = ColumnType.Text;
             try
             {
-                OleDbType columnType = (OleDbType)Convert.ToInt32(dbValue);
-                result = Helper.NetTypeConverter(Helper.OleDbToNetTypeConverter(columnType));
-                if (columnType == OleDbType.WChar || columnType == OleDbType.VarWChar || columnType == OleDbType.LongVarWChar) result = ColumnType.UnicodeText;
+                int intValue;
+                if (Int32.TryParse(dbValue.ToString(), out intValue))
+                {
+                    OleDbType columnType = (OleDbType)intValue;
+                    result = Helper.NetTypeConverter(Helper.OleDbToNetTypeConverter(columnType));
+                    if (columnType == OleDbType.WChar || columnType == OleDbType.VarWChar || columnType == OleDbType.LongVarWChar) result = ColumnType.UnicodeText;
+                }
+                else 
+                {
+                    var dbValueString = dbValue.ToString().ToLower();
+                    if (dbValueString.Contains("number")  || dbValueString.Contains("double") || dbValueString.Contains("numeric")) result = ColumnType.Numeric;
+                    else if (dbValueString.Contains("date")) result = ColumnType.DateTime;
+
+                }
             }
             catch (Exception ex)
             {
@@ -612,12 +624,23 @@ namespace Seal.Helpers
                 {
                     msg = msg.Substring(0, 25000) + "\r\n...\r\nMessage truncated, check the event log files in the Logs Repository sub-folder.";
                 }
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, msg, type);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                try
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, ex.Message, EventLogEntryType.Error);
+                }
+                catch { }
+            }
+            finally
+            {
+                try
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, msg, type);
+                }
+                catch { }
             }
         }
 
@@ -692,6 +715,20 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(command);
             }
+            else if (connection is MySql.Data.MySqlClient.MySqlConnection)
+            {
+                MySql.Data.MySqlClient.MySqlCommand command = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(command);
+            }
+            else if (connection is OracleConnection)
+            {
+                OracleCommand command = ((OracleConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new OracleDataAdapter(command);
+            }
             else
             {
                 OleDbCommand command = ((OleDbConnection)connection).CreateCommand();
@@ -742,6 +779,10 @@ namespace Seal.Helpers
             else if (connectionType == ConnectionType.MySQL)
             {
                 connection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
+            }
+            else if (connectionType == ConnectionType.Oracle)
+            {
+                connection = new OracleConnection(connectionString);
             }
             else
             {
@@ -839,11 +880,16 @@ namespace Seal.Helpers
             string type;
             if (ext == ".ico") type = "x-icon";
             else type = ext.Replace(".", "");
+            if (type.ToLower() == "svg") type += "+xml";
             return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 
+        public static string HtmlGetFilePath(string path)
+        {
+            return "file:///" + HttpUtility.HtmlEncode(path.Replace(Path.DirectorySeparatorChar.ToString(), "/"));
+        }
 
-        static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
+            static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
         {
             if (formatType.ToString().Contains("Time")) return true;
             return ((formatType == DateTimeStandardFormat.Custom || formatType == DateTimeStandardFormat.Default)

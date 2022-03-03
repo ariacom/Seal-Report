@@ -177,7 +177,7 @@ namespace Seal.Model
         /// </summary>
         public void SaveProfile()
         {
-            Profile.SaveToFile();
+            if (DefaultGroup.EditProfile) Profile.SaveToFile();
         }
 
         private PersonalFolderRight? _persFolderRight = null;

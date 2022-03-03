@@ -470,6 +470,7 @@ namespace Seal.Model
         /// </summary>
         public static int CompareCell(ResultCell a, ResultCell b)
         {
+            if (a == b) return 0;
             if (a.Value == DBNull.Value && b.Value == DBNull.Value) return 0;
             else if (a.Value == DBNull.Value && b.Value != null) return -1;
             else if (a.Value != null && b.Value == DBNull.Value) return 1;
@@ -488,11 +489,17 @@ namespace Seal.Model
             }
             else if (a.Element.IsDateTime)
             {
+                if (a.DateTimeValue == null && b.DateTimeValue == null) return 0;
+                if (a.DateTimeValue != null && b.DateTimeValue == null) return 1;
+                if (a.DateTimeValue == null && b.DateTimeValue != null) return -1;
                 if (a.DateTimeValue == b.DateTimeValue) return 0;
                 return a.DateTimeValue > b.DateTimeValue ? 1 : -1;
             }
             else if (a.Element.IsNumeric)
             {
+                if (a.DoubleValue == null && b.DoubleValue == null) return 0;
+                if (a.DoubleValue != null && b.DoubleValue == null) return 1;
+                if (a.DoubleValue == null && b.DoubleValue != null) return -1;
                 if (a.DoubleValue == b.DoubleValue) return 0;
                 return a.DoubleValue > b.DoubleValue ? 1 : -1;
             }

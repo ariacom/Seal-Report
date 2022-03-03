@@ -45,6 +45,8 @@ namespace Seal.Model
         MongoDB,
         [Description("MySQL")]
         MySQL,
+        [Description("Oracle")]
+        Oracle,
     }
 
     public enum ColumnType

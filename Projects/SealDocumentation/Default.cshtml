@@ -171,18 +171,19 @@
                             </p>
                             <ul>
                                 <li><b>SealLibrary:</b> Main library shared by all the executables. This library contains the main classes in the <i>Model</i> sub-folder (like Report, MetaTable, Restriction, Task, etc.) plus some helpers.</li>
-                                <li><b>SealLibraryWin:</b> Same library as <i>SealLibrary</i> but compiled for the 2 Windows Forms applications: <i>Report Designer</i> and <i>Server Manager</i>.</li>
+                                <li><b>SealLibraryWin:</b> Same library as <i>SealLibrary</i> but compiled for the Windows applications: <i>Report Designer</i> and <i>Server Manager</i>.</li>
                                 <li><b>SealReportDesigner:</b> Report Designer executable (linked with <i>SealLibraryWin</i>).</li>
                                 <li><b>SealServerManager:</b> Server Manager executable (linked with <i>SealLibraryWin</i>).</li>
                                 <li><b>SealTaskScheduler:</b> Console application invoked by the Windows Task Scheduler to execute report in batch.</li>
                                 <li><b>SealWebServer:</b> Asp.Net application for Web Report Server.</li>
                                 <li><b>SealSchedulerService:</b> Seal Report Scheduler executable for the Windows Service.</li>
+                                <li><b>SealSchedulerWorker:</b> Seal Report Scheduler executable as a Worker process (for non-Windows OS).</li>
                                 <li><b>TestsAndSamples:</b> Contains unitary tests and basic samples.</li>
                                 <li><b>SealDocumentation:</b> sealreport.org Web site.</li>
                             </ul>
                             <div class="bs-callout bs-callout-info">
                                 <h4>NuGet Packages for SealLibrary</h4>
-                                A NuGet package has been published to ease the Seal Report integration into your own .Net projects: <b>SealReportLibrary.NETCore</b>.
+                                A NuGet package of <b>SealLibrary</b> has been published to ease the Seal Report integration into your own .Net projects: <b>SealReportLibrary.NETCore</b>.
                             </div>
                         </div>
                         <!-- end col -->
@@ -213,6 +214,7 @@
                                             <th>Report Designer</th>
                                             <th>Task Scheduler</th>
                                             <th>Scheduler Service</th>
+                                            <th>Scheduler Worker</th>
                                             <th>Web Report Server</th>
                                             <th>Web Report Designer<sup>1</sup></th>
                                             <th>PDF and Excel Converter<sup>2</sup></th>
@@ -228,9 +230,11 @@
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
                                         </tr>
                                         <tr>
                                             <td><b>Linux</b></td>
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -245,12 +249,14 @@
                                             <td></td>
                                             <td></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                         </tr>
                                         <tr>
                                             <td><b>Azure (Linux)</b></td>
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -333,13 +339,14 @@
                     <!-- end row -->
                     <div class="row">
                         <div class="col-md-12 left-align">
-                            <p>Seal Report is composed of the <b>Server Manager</b> application, the <b>Report Designer</b> application, the <b>Web Report Server</b>, the <b>Task Scheduler</b> and the <b>Seal Report Scheduler</b>.</p>
+                            <p>Seal Report is made of the following componts:</p>
                             <ul>
                                 <li>The <strong>Server Manager</strong> (a Windows application) edits repository Data Sources, Devices and is used to perform administrative tasks (checking sources and reports, publishing web site, configuring the server, editing the security, etc.).</li>
-                                <li>The <strong>Report Designer</strong> (a Windows application) creates, edits and executes reports.</li>
+                                <li>The <strong>Report Designer</strong> (a Windows application) to create, edit and execute reports.</li>
                                 <li>The <strong>Web Report Server</strong> (an ASP.Net application) allows the end-users to edit and execute the reports published from the Web.</li>
                                 <li>The <strong>Task Scheduler</strong> (a console application) is invoked by the Windows Task Scheduler to schedule report execution on a Device (folder or email).</li>
-                                <li>The <strong>Seal Report Scheduler</strong> (a Windows Service application or .NET Core Worker Service) to execute the report schedules defined in the repository (folder, file server or email).</li>
+                                <li>The <strong>Scheduler Service</strong> (a Windows Service application) to execute the report schedules defined in the repository (folder, file server or email).</li>
+                                <li>The <strong>Scheduler Worker</strong> (a .NET Worker Application) to execute the report schedules defined in the repository (folder, file server or email) on a non-Windows OS.</li>
                             </ul>
                         </div>
                         <!-- end col -->

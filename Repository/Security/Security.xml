@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ProviderName>No Security</ProviderName>
-  <UseCustomScript>true</UseCustomScript>
   <Script>@{
     SecurityUser user = Model;
 	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
@@ -78,30 +77,7 @@
       <PersFolderRight>Reports</PersFolderRight>
       <FoldersScript />
       <FolderDetailScript />
-      <MenuScript>@{
-    SecurityUser user = Model;
-    //Full documentation at https://sealreport.org/Help/Index.html
-    //user.ScriptNumber is a number incremented if several scripts are executed
-
-    //Sample to define a menu
-    var reports = user.WebMenu.reports;
-    reports.Clear();
-    var item = new SWIMenuItem() { path = @"\Samples\04-Charts Gallery - Basics.srex", viewGUID = null, outputGUID = null, name = "View Charts" };
-    
-    //extra classes for the menu item
-    //item.classes = "disabled";
-
-  //  reports.Add(item);
-    // subMenu
-    var subMenu = new SWIMenuItem() { name = "A SubMenu" };
-    //subMenu.classes = "disabled label-danger";
-    subMenu.items.Add(new SWIMenuItem() { path = @"\Search - Orders.srex", viewGUID = null, outputGUID = null, name = "Search" });
-    //reports.Add(subMenu);
-    
-    //Clear recent reports
-   // user.WebMenu.recentreports.Clear();
-}
-</MenuScript>
+      <MenuScript />
       <SqlModel>true</SqlModel>
       <Weight>1</Weight>
       <Culture />

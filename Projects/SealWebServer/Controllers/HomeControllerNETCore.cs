@@ -31,7 +31,7 @@ namespace SealWebServer.Controllers
 
         //Static sessions collection
         static Dictionary<string, Dictionary<string, object>> _sessions = new Dictionary<string, Dictionary<string, object>>();
-        //LAst request for a session to clear object after a timeout
+        //Last request for a session to clear object after a timeout
         static Dictionary<string, DateTime> _sessionLastRequest = new Dictionary<string, DateTime>();
 
         string SessionKey
@@ -54,17 +54,27 @@ namespace SealWebServer.Controllers
 
             foreach (var key in keys)
             {
-                //Session is over
-                var user = _sessions[key.Key][SessionUser] as SecurityUser;
-                if (user != null) user.Logout();
+                try
+                {
+                    //Session is over
+                    if (_sessions[key.Key].ContainsKey(SessionUser))
+                    {
+                        var user = _sessions[key.Key][SessionUser] as SecurityUser;
+                        if (user != null) user.Logout();
+                    }
 
-                lock (_sessions)
-                {
-                    _sessions.Remove(key.Key);
+                    lock (_sessions)
+                    {
+                        _sessions.Remove(key.Key);
+                    }
+                    lock (_sessionLastRequest)
+                    {
+                        _sessionLastRequest.Remove(key.Key);
+                    }
                 }
-                lock (_sessionLastRequest)
+                catch (Exception ex)
                 {
-                    _sessionLastRequest.Remove(key.Key);
+                    Helper.WriteLogException("ClearSessions", ex);
                 }
             }
         }
@@ -117,13 +127,14 @@ namespace SealWebServer.Controllers
         private ActionResult getFileResult(string path, Report report)
         {
             FileContentResult result;
+            var bytes = System.IO.File.ReadAllBytes(path);
             if (Path.GetExtension(path) == ".htm" || Path.GetExtension(path) == ".html")
             {
-                result = File(System.IO.File.ReadAllBytes(path), "text/html");
+                result = File(bytes, "text/html");
             }
             else
             {
-                result = File(System.IO.File.ReadAllBytes(path), "application/force-download", path);
+                result = File(bytes, "application/force-download", path);
                 if (report != null) result.FileDownloadName = Helper.CleanFileName(report.DisplayNameEx + Path.GetExtension(path));
                 else result.FileDownloadName = Path.GetFileName(path);
             }
@@ -165,7 +176,7 @@ namespace SealWebServer.Controllers
                     result.AppendFormat("Session: '{0}'\r\n", SessionKey);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Helper.WriteLogException($"getContextDetail", ex);
             }

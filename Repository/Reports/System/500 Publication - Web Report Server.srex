@@ -127,7 +127,7 @@
     }
         
     //Check config
-    CheckConfigurationFile(Path.Combine(destPath, "appsettings.json"), Path.Combine(sourcePath,"appsettings.Release.json"), report, client);
+    CheckConfigurationFile(Path.Combine(destPath, "appsettings.json"), Path.Combine(sourcePath,"appsettings.Remote.json"), report, client);
     
     if (client != null) { client.Disconnect(); }
 }

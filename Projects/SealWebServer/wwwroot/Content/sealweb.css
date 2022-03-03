@@ -83,8 +83,9 @@ a {
 }
 
 /* jstree */
-.jstree-wholerow-clicked {
+.jstree-clicked {
     background: #d9d9d9 !important;
+    border-radius: 4px !important;
 }
 
 #elements-tree {
@@ -167,7 +168,7 @@ a {
 
 /* editor panels */
 .editor-panel {
-    height: 520px;
+    height: 620px;
 }
 
 /* dataTables */
@@ -178,10 +179,10 @@ table.dataTable {
 #refresh-nav-item {
     font-size: 20px;
 }
-/* spin speed */
-#refresh-nav-item.fa-spin {
-    animation-duration: 1s;
-}
+    /* spin speed */
+    #refresh-nav-item.fa-spin {
+        animation-duration: 1s;
+    }
 
 #nav_button .fa-spin {
     opacity: 0.6;
@@ -233,4 +234,6 @@ table.dataTable {
             border-radius: 6px 0 6px 6px;
         }
 
-.not-dotnet-core { display: none !important; }
+.not-dotnet-core {
+    display: none !important;
+}
