@@ -40,7 +40,11 @@ class SWIGateway {
     }
 
     public Logout(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWILogout")
+        $.post({
+                url: _server + "SWILogout", xhrFields: {
+                    withCredentials: true
+                }
+            })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }

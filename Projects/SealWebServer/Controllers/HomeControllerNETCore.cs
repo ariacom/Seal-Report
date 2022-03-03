@@ -12,18 +12,21 @@ using System.Security.Principal;
 using System.Text;
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
+using SealWebServer.Models.Configuration;
 
 namespace SealWebServer.Controllers
 {
     public partial class HomeController
     {
         private readonly string SessionIdKey = "SessionIdKey";
+        public Authentication AuthenticationConfig { get; set; }
 
         private readonly IWebHostEnvironment _env;
 
-        public HomeController(IWebHostEnvironment env)
+        public HomeController(IWebHostEnvironment env, IOptions<Authentication> options)
         {
             _env = env;
+            AuthenticationConfig = options.Value;
         }
 
         //Static sessions collection
