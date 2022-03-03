@@ -6,5 +6,10 @@
         public string AccessKeySecret { get; set; }
         public string ClientId { get; set; }
         public string Name { get; set; }
+
+        /// <summary>
+        /// Whether to enable the configuration
+        /// </summary>
+        public bool Enabled { get; set; }
     }
 }
