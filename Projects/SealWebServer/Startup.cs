@@ -57,29 +57,33 @@ namespace SealWebServer
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureSessionServices(services, Configuration.GetSection(Repository.SealConfigurationSectionKeyword).Get<SessionConfiguration>());
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultScheme = "Cookies";
-                    options.DefaultChallengeScheme = "oidc";
-                })
-                .AddCookie("Cookies")
-                .AddOpenIdConnect("oidc", options =>
-                {
-                    options.SignInScheme = "Cookies";
-                    options.Authority = Configuration["Authentication:Id4EndPoint"];//授权服务中心
-                    //令牌保存标识
-                    options.SaveTokens = true;
-                    //options.CallbackPath = PathString.FromUriComponent("/Home/Main");
-                    options.RequireHttpsMetadata = false;
-                    options.ClientId = Configuration["Authentication:ClientId"];//授权服务分配的ClientId
-                    options.ClientSecret = Configuration["Authentication:AccessKeySecret"];
-                    options.ResponseType = "code";
-                    options.Scope.Clear();
-                    options.Scope.Add("openid");
-                    options.Scope.Add("profile");
-                });
-
-            services.Configure<Authentication>(Configuration.GetSection("Authentication"));
+            var configureOptions = Configuration.GetSection("Authentication");
+            services.Configure<Authentication>(configureOptions);
+            var authentication = configureOptions.Get<Authentication>();
+            if (authentication.Enabled)
+            {
+                services.AddAuthentication(options =>
+                    {
+                        options.DefaultScheme = "Cookies";
+                        options.DefaultChallengeScheme = "oidc";
+                    })
+                    .AddCookie("Cookies")
+                    .AddOpenIdConnect("oidc", options =>
+                    {
+                        options.SignInScheme = "Cookies";
+                        options.Authority = authentication.Id4EndPoint;//Authorized Service Center
+                        //The token holds the identity
+                        options.SaveTokens = true;
+                        options.RequireHttpsMetadata = false;
+                        options.ClientId = authentication.ClientId;//Authorization service assignment ClientId
+                        options.ClientSecret = authentication.AccessKeySecret;
+                        options.ResponseType = "code";
+                        options.Scope.Clear();
+                        options.Scope.Add("openid");
+                        options.Scope.Add("profile");
+                    });
+            }
+            
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson(options =>

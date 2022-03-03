@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ProviderName>Basic Authentication</ProviderName>
+  <ProviderName>No Security</ProviderName>
   <Script>@{
     SecurityUser user = Model;
 	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
