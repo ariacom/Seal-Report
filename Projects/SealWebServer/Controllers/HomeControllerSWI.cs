@@ -54,6 +54,13 @@ namespace SealWebServer.Controllers
             WebUser.WebHostName = Request.Host.Host;
             Authenticate();
 
+            var handler = new JwtSecurityTokenHandler();
+            var payload = handler.ReadJwtToken(token).Payload;
+            var expclaim = payload.Claims.FirstOrDefault(x => x.Type == "exp");
+            var foo = DateTime.UtcNow;
+            var unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
+            var dateTime = long.Parse(expclaim.Value);
+
             if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
             //Load profile
             if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
@@ -731,7 +738,7 @@ namespace SealWebServer.Controllers
                 //SignOut
                 if (AuthenticationConfig.Enabled)
                 {
-                    return SignOut("Cookies", "oidc");
+                    SignOut("Cookies", "oidc");
                 }
 
                 return Json(new { });
