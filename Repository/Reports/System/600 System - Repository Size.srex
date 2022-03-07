@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>b63ac039-40c2-49c7-a4c2-b286b617c50c</GUID>
+  <ViewGUID>5c1c0d7d-d18f-48e4-9364-45a8136daa75</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>fdecbdea-cfb2-4c02-ab38-f47ccc5a1a90</GUID>
+      <Name>Data Source</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>39e09c77-bc24-406e-a386-08e1cac26da8</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>39e09c77-bc24-406e-a386-08e1cac26da8</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>68a45e26-8cf9-4b2a-98f1-0545596911b1</GUID>
+            <Name>DirectorySizes</Name>
+            <TemplateName>Generic</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+
+    metaTable.NoSQLTable = new DataTable();
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Directory Name", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Size (MB)", typeof(long)));
+
+    metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}</DefinitionScript>
+            <LoadScript>@using System.Data
+@using System.IO
+@{
+    MetaTable metaTable = Model;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    
+    foreach (var d in Directory.GetDirectories(report.Repository.RepositoryPath)) {
+        metaTable.NoSQLTable.Rows.Add(Path.GetFileName(d), FileHelper.GetDirectorySize(new DirectoryInfo(d))/((long)1024 * (long)1024));      
+    }
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>71f1b88c-e6a5-4c43-a9f0-62b0ae120e2c</GUID>
+                <Name>Directory Name</Name>
+                <Type>Text</Type>
+                <Category>DirectorySizes</Category>
+                <DisplayName>Directory Name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>beb32732-5f28-49f5-85a9-35803366cab8</GUID>
+                <Name>Size (MB)</Name>
+                <Type>Numeric</Type>
+                <Category>DirectorySizes</Category>
+                <DisplayName>Size (MB)</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>d9883674-4d88-47d5-ad48-8a17e52b00a8</GUID>
+      <Name>Model</Name>
+      <SourceGUID>fdecbdea-cfb2-4c02-ab38-f47ccc5a1a90</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>68a45e26-8cf9-4b2a-98f1-0545596911b1</GUID>
+          <Name>DirectorySizes</Name>
+          <TemplateName>Generic</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>3bf754c8-3b40-4a65-9d42-91f7febfbf85</GUID>
+          <Name>Directory Name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>71f1b88c-e6a5-4c43-a9f0-62b0ae120e2c</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d695cdd2-7bb6-4c25-a7de-6293b7d41787</GUID>
+          <Name>Size (MB)</Name>
+          <DisplayName />
+          <NumericStandardFormat>Numeric2</NumericStandardFormat>
+          <Format>N2</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>beb32732-5f28-49f5-85a9-35803366cab8</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>5c1c0d7d-d18f-48e4-9364-45a8136daa75</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>b7a0e423-2ff8-48fd-a162-bfaa9c10d459</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>2d2468c3-9337-4da7-b386-7308bf3e1346</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>de0bc5a2-e431-4134-9f52-ef161af09b22</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>fc4c00e7-61ff-44d6-bd70-32217e4d1935</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>74a3b216-e65b-4466-bc6b-4a0f5edd33c9</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>fed98539-1b79-46ac-aeaa-919032ec2084</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>b3bf7f12-bb23-4430-9a2e-38f8f28aad82</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>d9883674-4d88-47d5-ad48-8a17e52b00a8</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

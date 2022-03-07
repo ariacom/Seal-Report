@@ -375,7 +375,14 @@ namespace Seal.Model
             if (!message.IsBodyHtml && !output.EmailSkipAttachments)
             {
                 HandleZipOptions(report);
-                var attachment = new Attachment(report.ResultFilePath);
+                var attachPath = report.ResultFilePath;
+                if (output.Format == ReportFormat.html || output.Format == ReportFormat.print)
+                {
+                    //Copy the file to avoid a lock
+                    attachPath = FileHelper.GetTempUniqueFileName(report.ResultFilePath);
+                    File.Copy(report.ResultFilePath, attachPath);
+                }
+                var attachment = new Attachment(attachPath);
                 attachment.Name = Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath);
                 message.Attachments.Add(attachment);
             }

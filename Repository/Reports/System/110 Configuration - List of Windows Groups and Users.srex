@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>d2401cda-e5e0-404b-b991-232169bfeab7</GUID>
+  <ViewGUID>e032417d-cc9c-4b61-8e7d-84b885989107</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>7f28182e-e5a2-4f50-a895-66235d8dfbe5</GUID>
+      <Name>Data Source</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>37946169-81ee-4c8f-b3d9-0ae86d2f1bc5</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>37946169-81ee-4c8f-b3d9-0ae86d2f1bc5</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>4f247a62-b43a-4c94-84ab-5c7e07e7367c</GUID>
+            <Name>ADTable</Name>
+            <TemplateName>Generic</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+
+    metaTable.NoSQLTable = new DataTable();
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Context", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Group Name", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("User Name", typeof(string)));
+
+    metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.DirectoryServices;
+@using System.DirectoryServices.AccountManagement;
+@using System.Data
+@{
+    MetaTable metaTable = Model;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List&lt;ReportRestriction&gt; restrictions = (reportModel != null ? reportModel.Restrictions : null);
+
+    metaTable.LogMessage("Adding table rows with the default table 'Load Script'...");
+    
+    try {
+        fillTable(metaTable, new PrincipalContext(ContextType.Machine));
+        fillTable(metaTable, new PrincipalContext(ContextType.Domain));
+    }
+    catch(Exception ex) {
+        metaTable.LogMessage(ex.Message);
+    }
+  
+    metaTable.LogMessage("{0} record(s) loaded", metaTable.NoSQLTable.Rows.Count);
+}
+
+@functions {
+    void fillTable(MetaTable metaTable, PrincipalContext context) {
+        GroupPrincipal qbeGroup = new GroupPrincipal(context);
+        PrincipalSearcher srch = new PrincipalSearcher(qbeGroup);
+
+        // find all matches
+        foreach(var gr in srch.FindAll())
+        {
+            metaTable.LogMessage(gr.Name);
+        
+            try {
+                GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, gr.Name);
+                if (groupPrincipal != null) {
+                    foreach (var adUser in groupPrincipal.GetMembers(true)) {
+                        metaTable.NoSQLTable.Rows.Add(context.ContextType.ToString(), gr.Name, adUser.Name);
+                    }
+                }
+            }
+            catch(Exception ex) {
+                metaTable.LogMessage(ex.Message);
+            }
+        }    
+    }
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>148141af-00a6-4e51-85bd-9e89cd56e2ff</GUID>
+                <Name>Group Name</Name>
+                <Type>Text</Type>
+                <Category>ADTable</Category>
+                <DisplayName>Group Name</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>86a0018f-002a-45d0-82f7-b45cdc18a5b2</GUID>
+                <Name>User Name</Name>
+                <Type>Text</Type>
+                <Category>ADTable</Category>
+                <DisplayName>User Name</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>442c9163-6c81-4bf3-aaed-957dea59a4be</GUID>
+                <Name>Context</Name>
+                <Type>Text</Type>
+                <Category>ADTable</Category>
+                <DisplayName>Context</DisplayName>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>d77fd3b9-d7aa-4452-b81f-e45b2b9ed5fa</GUID>
+      <Name>Model</Name>
+      <SourceGUID>7f28182e-e5a2-4f50-a895-66235d8dfbe5</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>4f247a62-b43a-4c94-84ab-5c7e07e7367c</GUID>
+          <Name>ADTable</Name>
+          <TemplateName>Generic</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>b10c41de-b340-450d-9503-2061ccc57a68</GUID>
+          <Name>Context</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>442c9163-6c81-4bf3-aaed-957dea59a4be</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3b00c510-219b-4e30-ba68-69303bda8a49</GUID>
+          <Name>Group Name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>148141af-00a6-4e51-85bd-9e89cd56e2ff</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>313f2ca1-4afc-4b85-87a1-722d1b5cf184</GUID>
+          <Name>User Name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>86a0018f-002a-45d0-82f7-b45cdc18a5b2</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>e032417d-cc9c-4b61-8e7d-84b885989107</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>c8d160a6-2918-45ae-ae22-f4ac8ed4e987</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>510ccf5d-7936-46de-a3a6-50fda2dfb6d8</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>a7d3e700-2fa2-4833-b439-7d588cedba24</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>6f525beb-46a5-4003-a1f5-7eb32476ff08</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>4b8ad53b-9ba1-4be4-8865-991f82fe4675</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>0c79bb32-8e6a-4460-851a-7068fbfe02bf</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>fa3992bf-62ed-4728-a4da-f1f4d2b8c37b</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>d77fd3b9-d7aa-4452-b81f-e45b2b9ed5fa</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshownexec</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

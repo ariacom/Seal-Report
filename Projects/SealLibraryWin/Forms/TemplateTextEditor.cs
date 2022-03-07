@@ -929,12 +929,15 @@ namespace Seal.Forms
                 "Load a table from an Excel file",
 @"ReportTask task = Model;
 	var helper = new TaskHelper(task);
-	helper.LoadTableFromExcel(
+    helper.LoadTableFromExcel(
         @""c:\temp\loadFolder"", //Folder used to store the files processed 
         @""c:\temp\excelFile.xlsx"", //source Excel file path
         ""ExcelTabName"", //source Excel Tab name
         ""DestinationTableName"", //destination table name
-        false //if true, the table is loaded for all connections defined in the Source
+        false, //if true, the table is loaded for all connections defined in the Source
+        1, //startRow = 1, 
+        1, //startColumn = 1, 
+        0, //endColumnIndex, if 0 all columns are taken
     );
 
     //Several Tabs can be loaded using array of strings and LoadTablesFromExcel()
@@ -951,7 +954,7 @@ namespace Seal.Forms
                 "Load a table from a CSV file",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
-	helper.LoadTableFromCSV(
+    helper.LoadTableFromCSV(
         @""c:\temp\loadFolder"", //Folder used to store the files processed 
         @""c:\temp\aCSVFile.csv"", //source CSV file path
         ""DestinationTableName"", //destination table name
@@ -965,7 +968,7 @@ namespace Seal.Forms
                 "Load a table from a source table located in another source defined in the Repository",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
-	helper.LoadTableFromDataSource(
+    helper.LoadTableFromDataSource(
         ""DataSourceName"", //the name of the Report Data Source
         ""SourceSelectStatement"", //SQL Select Statement to get the source table
         ""DestinationTableName"", //destination table name

@@ -341,6 +341,7 @@ namespace Seal.Model
             catch (Exception ex)
             {
                 Report.TemplateParsingErrors = ex.Message;
+                Helper.WriteLogException("ExecuteAsync", ex);
             }
             finally
             {

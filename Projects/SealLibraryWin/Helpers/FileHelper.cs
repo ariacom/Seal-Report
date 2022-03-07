@@ -402,6 +402,25 @@ namespace Seal.Helpers
             }
         }
 
+        public static long GetDirectorySize(DirectoryInfo d)
+        {
+            long size = 0;
+            // Add file sizes.
+            FileInfo[] fis = d.GetFiles();
+            foreach (FileInfo fi in fis)
+            {
+                size += fi.Length;
+            }
+            // Add subdirectory sizes.
+            DirectoryInfo[] dis = d.GetDirectories();
+            foreach (DirectoryInfo di in dis)
+            {
+                size += GetDirectorySize(di);
+            }
+            return size;
+        }
+
+
         #endregion
     }
 }
