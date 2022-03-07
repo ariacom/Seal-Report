@@ -16,5 +16,14 @@
         /// If true, only this authentication is enabled
         /// </summary>
         public bool Unique { get; set; }
+
+        /// <summary>
+        /// Returns True if only this authentication is proposed
+        /// </summary>
+        /// <returns></returns>
+        public bool IsUnique()
+        {
+            return Enabled && Unique;
+        }
     }
 }

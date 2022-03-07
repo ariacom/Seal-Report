@@ -255,5 +255,11 @@
             If true, only this authentication is enabled
             </summary>
         </member>
+        <member name="M:SealWebServer.Models.Configuration.Authentication.IsUnique">
+            <summary>
+            Returns True if only this authentication is proposed
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>

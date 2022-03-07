@@ -60,7 +60,7 @@ namespace SealWebServer
             var configureOptions = Configuration.GetSection("Authentication");
             services.Configure<Authentication>(configureOptions);
             var authentication = configureOptions.Get<Authentication>();
-            if (authentication.Enabled)
+            if (authentication != null && authentication.Enabled)
             {
                 services.AddAuthentication(options =>
                     {

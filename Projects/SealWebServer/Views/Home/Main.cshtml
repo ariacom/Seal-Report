@@ -142,7 +142,7 @@
                     <h4 style="color:white;"><span class="glyphicon glyphicon-lock"></span> @repository.Configuration.WebProductName @repository.TranslateWeb("Login")</h4>
                 </div>
                 <div class="modal-body">
-                    @if (!authenticationConfig?.Unique ?? true)
+                    @if (!(authenticationConfig?.IsUnique() ?? false))
                     {
                         <div class="form-group">
                             <label for="username"><span class="glyphicon glyphicon-user"></span> @repository.TranslateWeb("User name")</label>
