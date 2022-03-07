@@ -7,9 +7,9 @@
     <Configurations>Debug;Release</Configurations>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Product>Seal Report</Product>
-    <Version>6.5.2.0</Version>
-    <FileVersion>6.5.2.0</FileVersion>
-    <AssemblyVersion>6.5.2.0</AssemblyVersion>
+    <Version>6.5.3.0</Version>
+    <FileVersion>6.5.3.0</FileVersion>
+    <AssemblyVersion>6.5.3.0</AssemblyVersion>
     <Description>Seal Report Library</Description>
     <Authors>Ariacom</Authors>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>

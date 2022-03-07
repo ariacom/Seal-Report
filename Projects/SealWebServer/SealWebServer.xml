@@ -245,5 +245,15 @@
             Log a debug message with a detail
             </summary>
         </member>
+        <member name="P:SealWebServer.Models.Configuration.Authentication.Enabled">
+            <summary>
+            Whether to enable the configuration
+            </summary>
+        </member>
+        <member name="P:SealWebServer.Models.Configuration.Authentication.Unique">
+            <summary>
+            If true, only this authentication is enabled
+            </summary>
+        </member>
     </members>
 </doc>
