@@ -108,6 +108,7 @@
     <Compile Include="..\SealLibraryWin\Model\SecurityDevice.cs" Link="Model\SecurityDevice.cs" />
     <Compile Include="..\SealLibraryWin\Model\SecurityFolder.cs" Link="Model\SecurityFolder.cs" />
     <Compile Include="..\SealLibraryWin\Model\SecurityGroup.cs" Link="Model\SecurityGroup.cs" />
+    <Compile Include="..\SealLibraryWin\Model\SecurityLogin.cs" Link="Model\SecurityLogin.cs" />
     <Compile Include="..\SealLibraryWin\Model\SecurityProvider.cs" Link="Model\SecurityProvider.cs" />
     <Compile Include="..\SealLibraryWin\Model\SecuritySource.cs" Link="Model\SecuritySource.cs" />
     <Compile Include="..\SealLibraryWin\Model\SecurityUser.cs" Link="Model\SecurityUser.cs" />
@@ -123,6 +124,7 @@
     <PackageReference Include="FluentFTP" Version="35.0.5" />
     <PackageReference Include="jose-jwt" Version="3.2.0" />
     <PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.26.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="5.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />

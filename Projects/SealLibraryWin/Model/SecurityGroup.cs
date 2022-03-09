@@ -54,13 +54,32 @@ namespace Seal.Model
         #endregion
 
 #endif
+
+        string _name = "Group";
         /// <summary>
         /// The security group name
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("\t\t\t\tName"), Description("The security group name."), Id(1, 1)]
 #endif
-        public string Name { get; set; } = "Group";
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                if (_dctd != null && _name != value)
+                {
+                    //Update group names in Logins
+                    foreach(var login in Repository.Instance.Security.Logins) {
+                        foreach (var group in login.Groups)
+                        {
+                            if (group.Name == _name) group.Name = value;
+                        }
+                    }
+                }
+                _name = value;
+            }
+        }
 
         /// <summary>
         /// The folder configurations for this group used for Web Publication of reports. By default, repository folders have no right.
@@ -105,7 +124,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("\tFolders Script"), Description("Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(10, 1)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))] 
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string FoldersScript { get; set; }
 

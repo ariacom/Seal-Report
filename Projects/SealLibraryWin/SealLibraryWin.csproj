@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.26.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="5.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
@@ -86,6 +87,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\Repository\Security\Providers\Basic Authentication.cshtml" Link="SecurityProviders\Basic Authentication.cshtml" />
+    <None Include="..\..\Repository\Security\Providers\Basic Windows Authentication.cshtml" Link="SecurityProviders\Basic Windows Authentication.cshtml" />
+    <None Include="..\..\Repository\Security\Providers\Database Authentication.cshtml" Link="SecurityProviders\Database Authentication.cshtml" />
+    <None Include="..\..\Repository\Security\Providers\Integrated Windows Authentication.cshtml" Link="SecurityProviders\Integrated Windows Authentication.cshtml" />
+    <None Include="..\..\Repository\Security\Providers\JWT.cshtml" Link="SecurityProviders\JWT.cshtml" />
+    <None Include="..\..\Repository\Security\Providers\LDAP Authentication.cshtml" Link="SecurityProviders\LDAP Authentication.cshtml" />
+    <None Include="..\..\Repository\Security\Providers\No Security.cshtml" Link="SecurityProviders\No Security.cshtml" />
+    <None Include="..\..\Repository\Security\Providers\OpenId.cshtml" Link="SecurityProviders\OpenId.cshtml" />
     <None Include="..\..\Repository\Sources\TableTemplates\Adomd OLAP MDX.cshtml" Link="TableTemplates\Adomd OLAP MDX.cshtml" />
     <None Include="..\..\Repository\Sources\TableTemplates\CSV.cshtml" Link="TableTemplates\CSV.cshtml" />
     <None Include="..\..\Repository\Sources\TableTemplates\Mongo DB.cshtml" Link="TableTemplates\Mongo DB.cshtml" />
@@ -147,6 +156,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="SecurityProviders\" />
     <Folder Include="TableTemplates\" />
     <Folder Include="Views\Content\" />
     <Folder Include="Views\Scripts\" />

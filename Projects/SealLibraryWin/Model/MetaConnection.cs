@@ -227,7 +227,7 @@ namespace Seal.Model
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
 
         /// <summary>
-        /// Full Connection String (Oledb, Odbc or MSSQLServer) with user name and password
+        /// Full Connection String (Oledb, Odbc, MSSQLServer, MongoDB, Oracle, MySQL) with user name and password
         /// </summary>
 #if WINDOWS
         [Browsable(false)]

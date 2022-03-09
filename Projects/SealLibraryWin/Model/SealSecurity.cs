@@ -48,6 +48,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Groups").SetIsBrowsable(true);
+                GetProperty("Logins").SetIsBrowsable(true);
                 GetProperty("ProviderName").SetIsBrowsable(true);
                 GetProperty("UseCustomScript").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
@@ -194,11 +195,21 @@ namespace Seal.Model
         /// The groups defines how are published folders and reports in the Web Report Server. At least one group must exist.
         /// </summary>
 #if WINDOWS
-        [Category("Groups"), DisplayName("Security Groups"), Description("The groups defines how are published folders and reports in the Web Report Server. At least one group must exist."), Id(1, 1)]
+        [Category("Groups and logins"), DisplayName("Security Groups"), Description("The groups defines how are published folders and reports in the Web Report Server. At least one group must exist."), Id(1, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SecurityGroup> Groups { get; set; } = new List<SecurityGroup>();
         public bool ShouldSerializeGroups() { return Groups.Count > 0; }
+
+        /// <summary>
+        /// The groups defines how are published folders and reports in the Web Report Server. At least one group must exist.
+        /// </summary>
+#if WINDOWS
+        [Category("Groups and logins"), DisplayName("Security Logins"), Description("The logins defined in the security. Depending on the Security Provider defined, logins may be used during the authentication process. This is the case for the 'Basic Autentication' Security provider"), Id(2, 1)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+#endif
+        public List<SecurityLogin> Logins { get; set; } = new List<SecurityLogin>();
+        public bool ShouldSerializeLogins() { return Logins.Count > 0; }
 
         /// <summary>
         /// Returns a SecurityFolder from a given name
@@ -243,7 +254,7 @@ namespace Seal.Model
             return result;
         }
 
-        void initSecurity()
+        public void InitSecurity()
         {
             //init at least a security group
             if (Groups.Count == 0)
@@ -251,6 +262,11 @@ namespace Seal.Model
                 SecurityGroup group = new SecurityGroup() { Name = "Default Group" };
                 Groups.Add(group);
                 group.Folders.Add(new SecurityFolder());
+            }
+            //Remove deleted groups in logins
+            foreach (var login in Logins)
+            {
+                login.Groups.RemoveAll(i => !Groups.Exists(j => j.Name == i.Name));
             }
         }
 
@@ -275,13 +291,13 @@ namespace Seal.Model
                 }
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
-                result.initSecurity();
+                result.InitSecurity();
             }
             catch (Exception ex)
             {
                 if (!ignoreException) throw new Exception(string.Format("Unable to read the security file '{0}'.\r\n{1}", path, ex.Message));
                 result = new SealSecurity();
-                result.initSecurity();
+                result.InitSecurity();
             }
             return result;
         }

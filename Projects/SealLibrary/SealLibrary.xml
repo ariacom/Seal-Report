@@ -517,7 +517,7 @@
         </member>
         <member name="P:Seal.Model.MetaConnection.FullConnectionString">
             <summary>
-            Full Connection String (Oledb, Odbc or MSSQLServer) with user name and password
+            Full Connection String (Oledb, Odbc, MSSQLServer, MongoDB, Oracle, MySQL) with user name and password
             </summary>
         </member>
         <member name="P:Seal.Model.MetaConnection.UserName">
@@ -7115,6 +7115,11 @@
             The groups defines how are published folders and reports in the Web Report Server. At least one group must exist.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSecurity.Logins">
+            <summary>
+            The groups defines how are published folders and reports in the Web Report Server. At least one group must exist.
+            </summary>
+        </member>
         <member name="M:Seal.Model.SealSecurity.FindSecurityFolder(System.Collections.Generic.List{Seal.Model.SecurityGroup},System.String)">
             <summary>
             Returns a SecurityFolder from a given name
@@ -7692,6 +7697,46 @@
             Web Report Server: Define if reports are executed in a new window or in the same window by default.
             </summary>
         </member>
+        <member name="T:Seal.Model.SecurityLogin">
+            <summary>
+            A SecurityLogin defines credentials that may be used by security provider during the authentication
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityLogin.Id">
+            <summary>
+            The login identifier (e.g. name, email, etc.).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityLogin.Password">
+            <summary>
+            The password hashed
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityLogin.HashedPassword">
+            <summary>
+            Password in clear text
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityLogin.CheckPassword(System.String)">
+            <summary>
+            Check the hash code of the passwords
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityLogin.Groups">
+            <summary>
+            The security groups of the user.
+            </summary>
+        </member>
+        <member name="T:Seal.Model.SecurityGroupName">
+            <summary>
+            SecurityGroupName defines groups of the SecurityLogin 
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityGroupName.Name">
+            <summary>
+            The security group.
+            </summary>
+        </member>
         <member name="T:Seal.Model.SecurityProvider">
             <summary>
             The SecurityProvider defines how the login is done and the security groups are added to the user
@@ -7985,6 +8030,11 @@
         <member name="M:Seal.Model.SecurityUser.AddWindowsGroupToSecurityGroup(System.Boolean,System.String)">
             <summary>
             Add security groups from the current Windows group of the logged user
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.LoginAuthentication(System.String,System.String)">
+            <summary>
+            Authenticate a login with a password and set his groups
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityUser.AuthenticationSummary">

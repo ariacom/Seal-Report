@@ -94,8 +94,8 @@ namespace Seal.Model
         /// <summary>
         /// List of all SWIFolderDetail of the user. The list is built when the user browse the folders.
         /// </summary>
-        public List<SWIFolderDetail> FolderDetails = new List<SWIFolderDetail>();        
-        
+        public List<SWIFolderDetail> FolderDetails = new List<SWIFolderDetail>();
+
         /// <summary>
         /// Current reports web menu of the user (used for Folder Detail Scripts)
         /// </summary>
@@ -583,6 +583,30 @@ namespace Seal.Model
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Authenticate a login with a password and set his groups
+        /// </summary>
+        public bool LoginAuthentication(string id, string password)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var login = Security.Logins.FirstOrDefault(i => i.Id.ToLower() == id.ToLower());
+                if (login != null)
+                {
+                    if (login.CheckPassword(password))
+                    {
+                        //Add the groups defiend for the login
+                        foreach (var group in login.Groups)
+                        {
+                            AddSecurityGroup(group.Name);
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>

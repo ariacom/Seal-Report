@@ -1,53 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ProviderName>No Security</ProviderName>
+  <ProviderName>Basic Authentication</ProviderName>
+  <UseCustomScript>true</UseCustomScript>
   <Script>@{
     SecurityUser user = Model;
 	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
 	//user.WebUserName -&gt; user name from the login screen
 	//user.WebPassword -&gt; password from the login screen
+
 	user.Name = user.WebUserName; //Display name
-    //security check can be hardcoded
+
 	if (string.IsNullOrEmpty(user.WebUserName)) {
 		user.AddDefaultSecurityGroup();
-	}
-	else if (user.WebUserName == "ex" &amp;&amp; user.WebPassword == "ex")
-	{
-		user.AddSecurityGroup("Group (Execute)");
-	}
-	else if (user.WebUserName == "exo" &amp;&amp; user.WebPassword == "exo")
-	{
-		user.AddSecurityGroup("Group (Execute Output)");
-	}
-	else if (user.WebUserName == "sc" &amp;&amp; user.WebPassword == "sc")
-	{
-		user.AddSecurityGroup("Group (Schedule)");
-	}
-	else if (user.WebUserName == "ed" &amp;&amp; user.WebPassword == "ed")
-	{
-		user.AddSecurityGroup("Group (Edit)");
-	}
-	else if (user.WebUserName == "exed" &amp;&amp; user.WebPassword == "exed")
-	{
-		user.AddSecurityGroup("Group (Execute)");
-		user.AddSecurityGroup("Group (Edit)");
-	}
-	else if (user.WebUserName == "sc1" &amp;&amp; user.WebPassword == "sc1")
-	{
-		user.AddSecurityGroup("Group (Scripts 1)");
-	}
-	else if (user.WebUserName == "sc2" &amp;&amp; user.WebPassword == "sc2")
-	{
-		user.AddSecurityGroup("Group (Scripts 1)");
-		user.AddSecurityGroup("Group (Scripts 2)");
-	}
-	else if (user.WebUserName == "menu" &amp;&amp; user.WebPassword == "menu")
-	{
-		user.AddSecurityGroup("Group (Menu)");
-	}
-	else if (user.WebUserName == "demo" &amp;&amp; user.WebPassword == "demo")
-	{
-		user.AddSecurityGroup("Group (Demo)");
 	}
 	else if (user.WebUserName == "nogroup" &amp;&amp; user.WebPassword == "nogroup")
 	{
@@ -62,6 +26,12 @@
             user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);
         }
 	}
+    else {
+        //Authenticate and set the groups defined in the security login
+        if (!user.LoginAuthentication(user.WebUserName, user.WebPassword)) {
+            throw new Exception("Invalid user name or password");
+        }
+    }
 }</Script>
   <Groups>
     <SecurityGroup>
@@ -275,4 +245,90 @@
       <Weight>1</Weight>
     </SecurityGroup>
   </Groups>
+  <Logins>
+    <SecurityLogin>
+      <Id>ex</Id>
+      <Password>sYKvHw8IOWBXSlFU6qkFnpH6A6vR02MX96jl9QFhMFA=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Execute)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>exo</Id>
+      <Password>DjQEokCcFs8BYYCJNNP8d8/AyZASLBYVN9NbZ7A77AM=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Execute Output)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>sc</Id>
+      <Password>o08w2ec10PBY9ry8ZjdIutgE+oQIONrNXflIb8tqBK4=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Schedule)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>ed</Id>
+      <Password>P8IgYSuK3VxFHW7Jw5kN2/77Syt7baOATREXKAgkUmE=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Edit)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>exed</Id>
+      <Password>DiqjNYG9az+AKx/R4zk0JMD+Ix9oAK1/FsO1di4XZtw=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Execute)</Name>
+        </SecurityGroupName>
+        <SecurityGroupName>
+          <Name>Group (Edit)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>sc1</Id>
+      <Password>pP9lEDHGQBHo1W4Nc9SWAADHT++fGIHQkV5tMo+fboM=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Scripts 1)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>sc2</Id>
+      <Password>SZwuoG5vEpEWgnnM/g56o+TZnyz77P42VzaQCMvMEWU=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Scripts 2)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>menu</Id>
+      <Password>cdMcjpzxz1EgKXOxid3OJO3KkuizN6usRpqFRRN/wNY=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Menu)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>demo</Id>
+      <Password>UyyPOA2CivOUeK1Qqc/t3hx49g09LN2j/Wlt0w8Kr0g=</Password>
+      <Groups>
+        <SecurityGroupName>
+          <Name>Group (Demo)</Name>
+        </SecurityGroupName>
+      </Groups>
+    </SecurityLogin>
+  </Logins>
 </SealSecurity>
