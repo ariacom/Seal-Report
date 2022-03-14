@@ -757,7 +757,7 @@ namespace Seal.Forms
 
                 log.Log("Checking for Orphan schedules\r\n");
 
-                if (repository.UseWebScheduler)
+                if (repository.UseSealScheduler)
                 {
                     SealReportScheduler.Instance.GetSchedules();
                 }

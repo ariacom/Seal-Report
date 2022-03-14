@@ -104,7 +104,7 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is ReportSchedule)
             {
-                if (!((ReportSchedule)SelectedEntity).Report.Repository.UseWebScheduler)
+                if (!((ReportSchedule)SelectedEntity).Report.Repository.UseSealScheduler)
                 {
                     AddHelperButton($"Edit the Schedule in folder '{((ReportSchedule)SelectedEntity).Report.Repository.Configuration.TaskFolderName}'", "Run the Task Scheduler Microsoft Management Console", Keys.F9);
                 }

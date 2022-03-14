@@ -25,6 +25,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Oracle.ManagedDataAccess.Client;
+using System.Xml;
 
 namespace Seal.Helpers
 {
@@ -761,6 +762,21 @@ namespace Seal.Helpers
             return serializer.Deserialize(ms);
         }
 
+        public static void Serialize(string path, object obj, XmlSerializer serializer = null)
+        {
+            if (serializer == null) serializer = new XmlSerializer(obj.GetType());
+
+            using (var tw = new FileStream(path, FileMode.Create))
+            {
+                using (var writer = new XmlTextWriter(tw, null) { Formatting = Formatting.Indented, Indentation = 2 })
+                {
+                    serializer.Serialize(writer, obj);
+                    writer.Close();
+                }
+                tw.Close();
+            }
+        }
+
         public static DbConnection DbConnectionFromConnectionString(ConnectionType connectionType, string connectionString)
         {
             DbConnection connection;
@@ -1044,17 +1060,17 @@ namespace Seal.Helpers
                 str = str.ToLower();
                 if (str.Contains(secStr))
                 {
-                    if (int.TryParse(str.Replace(" ", "").Replace(secStr, "").Replace("s", ""), out val)) result = new TimeSpan(0, 0, val);
+                    if (int.TryParse(str.Replace(" ", "").Replace(secStr, "").Replace("s", "").Replace("e", ""), out val)) result = new TimeSpan(0, 0, val);
                     else throw new Exception("Invalid interval");
                 }
                 else if (str.Contains(minStr))
                 {
-                    if (int.TryParse(str.Replace(" ", "").Replace(minStr, "").Replace("s", ""), out val)) result = new TimeSpan(0, val, 0);
+                    if (int.TryParse(str.Replace(" ", "").Replace(minStr, "").Replace("s", "").Replace("e", ""), out val)) result = new TimeSpan(0, val, 0);
                     else throw new Exception("Invalid interval");
                 }
                 else if (str.Contains(hourStr))
                 {
-                    if (int.TryParse(str.Replace(" ", "").Replace(hourStr, "").Replace("s", ""), out val)) result = new TimeSpan(val, 0, 0);
+                    if (int.TryParse(str.Replace(" ", "").Replace(hourStr, "").Replace("s", "").Replace("e", ""), out val)) result = new TimeSpan(val, 0, 0);
                     else throw new Exception("Invalid interval");
                 }
                 else if (str.Contains(dayStr))

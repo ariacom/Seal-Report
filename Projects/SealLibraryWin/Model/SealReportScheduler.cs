@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace Seal.Model
@@ -14,6 +15,29 @@ namespace Seal.Model
     public class SealReportScheduler
     {
         Dictionary<string, SealSchedule> _schedules = null;
+
+        public static SealSchedule LoadSealSchedule(string scheduleGUID)
+        {
+            foreach (var file in Directory.GetFiles(Repository.Instance.SchedulesFolder, $"*{scheduleGUID}.xml"))
+            {
+                return loadSealSchedule(file);
+            }
+            return null;
+        }
+
+        static SealSchedule loadSealSchedule(string file)
+        {
+            var schedule = SealSchedule.LoadFromFile(file);
+            //Adjust report path if necessary (case of copy between Windows OS to Linux OS)    
+            if (!File.Exists(schedule.ReportPath))
+            {
+                var newReportPath = Repository.Instance.ReportsFolder + schedule.ReportPath;
+                if (Path.DirectorySeparatorChar == '/' && newReportPath.Contains("\\")) newReportPath = newReportPath.Replace("\\", "/");
+                else if (Path.DirectorySeparatorChar == '\\' && newReportPath.Contains("/")) newReportPath = newReportPath.Replace("/", "\\");
+                if (File.Exists(newReportPath)) schedule.ReportPath = newReportPath;
+            }
+            return schedule;
+        }
 
         void loadSchedules()
         {
@@ -27,16 +51,7 @@ namespace Seal.Model
                     {
                         try
                         {
-                            schedule = SealSchedule.LoadFromFile(file);
-                            //Adjust report path if necessary (case of copy between Windows OS to Linux OS)    
-                            if (!File.Exists(schedule.ReportPath))
-                            {
-                                var newReportPath = Repository.Instance.ReportsFolder + schedule.ReportPath;
-                                if (Path.DirectorySeparatorChar == '/' && newReportPath.Contains("\\")) newReportPath = newReportPath.Replace("\\", "/");
-                                else if (Path.DirectorySeparatorChar == '\\' && newReportPath.Contains("/")) newReportPath = newReportPath.Replace("/", "\\");
-                                if (File.Exists(newReportPath)) schedule.ReportPath = newReportPath;
-                            }
-
+                            schedule = loadSealSchedule(file);
                             if (_schedules.ContainsKey(schedule.GUID)) _schedules[schedule.GUID] = schedule;
                             else _schedules.Add(schedule.GUID, schedule);
                         }
@@ -61,6 +76,11 @@ namespace Seal.Model
         /// </summary>
         public static bool Running = true;
 
+        /// <summary>
+        /// Execute schedules in outer process (if the scheduler is a Worker Service or in IIS)
+        /// </summary>
+        public static bool SchedulerOuterProcess = true;
+
         static SealReportScheduler _instance = null;
         /// <summary>
         /// A general static instance of the Scheduler.
@@ -77,7 +97,7 @@ namespace Seal.Model
             }
         }
 
-        Report getScheduledReport(SealSchedule refSchedule)
+        public static Report GetScheduledReport(SealSchedule refSchedule)
         {
             Report report = null;
             var reportPath = refSchedule.ReportPath;
@@ -96,7 +116,12 @@ namespace Seal.Model
                     Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "Report of schedule '{0}' has changed to '{1}'", refSchedule.FilePath, report.FilePath);
                 }
             }
+            return report;
+        }
 
+        Report getScheduledReport(SealSchedule refSchedule)
+        {
+            Report report = GetScheduledReport(refSchedule);
             if (report == null)
             {
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "Report of schedule '{0}' not found, removing all schedules for the report GUID '{1}'", refSchedule.FilePath, refSchedule.ReportGUID);
@@ -111,7 +136,6 @@ namespace Seal.Model
                     }
                 }
             }
-
             return report;
         }
 
@@ -145,7 +169,26 @@ namespace Seal.Model
                     var reportSchedule = getReportSchedule(report, schedule.GUID);
                     if (reportSchedule != null)
                     {
-                        ReportExecution.ExecuteReportSchedule(schedule.GUID, report, reportSchedule);
+                        if (!SchedulerOuterProcess)
+                        {
+                            ReportExecution.ExecuteReportSchedule(schedule.GUID, report);
+                        }
+                        else
+                        {
+                            //Execute using the task scheduler
+                            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Repository.SealTaskScheduler);
+                            if (!File.Exists(path))
+                            {
+                                //Try in the Core distribution
+                                path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + Repository.CoreInstallationSubDirectory, Repository.SealTaskScheduler);
+                            }
+                            if (!File.Exists(path)) throw new Exception($"Unable to execute in Outer Process. {path} was not found.");
+                            var p = Process.Start(path, schedule.GUID);
+                            while (!p.HasExited && Running)
+                            {
+                                Thread.Sleep(1000);
+                            }
+                        }
 
                         if (File.GetLastWriteTime(schedule.FilePath) == schedule.LastModification)
                         {
@@ -164,7 +207,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Unexpected Scheduler Error:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Unexpected Scheduler Error:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 

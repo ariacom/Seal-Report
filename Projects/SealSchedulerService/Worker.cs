@@ -20,6 +20,7 @@ namespace SealSchedulerService
 
             //Set repository path
             Repository.RepositoryConfigurationPath = configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
+            SealReportScheduler.SchedulerOuterProcess = configuration.GetValue<bool>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationSchedulerOuterProcessKeyword}", true);
         }
 
         private void StartScheduler()

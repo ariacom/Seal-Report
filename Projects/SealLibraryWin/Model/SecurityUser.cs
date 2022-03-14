@@ -598,9 +598,9 @@ namespace Seal.Model
                     if (login.CheckPassword(password))
                     {
                         //Add the groups defiend for the login
-                        foreach (var group in login.Groups)
+                        foreach (var group in login.GroupNames)
                         {
-                            AddSecurityGroup(group.Name);
+                            AddSecurityGroup(group);
                         }
                         return true;
                     }

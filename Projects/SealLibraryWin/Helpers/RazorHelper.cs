@@ -35,6 +35,9 @@ using System.Web;
 using System.Net.Http.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.IdentityModel.Tokens.Jwt;
+using System.DirectoryServices;
+using Microsoft.Web.Administration;
+using System.Security.AccessControl;
 
 namespace Seal.Helpers
 {
@@ -69,6 +72,9 @@ namespace Seal.Helpers
         static JsonContent _24 = null;
         static OracleConnection _25 = null;
         static JwtSecurityTokenHandler _26 = null;
+        static DirectoryEntry _27 = null;
+        static ServerManager _28 = null;
+        static FileSystemAccessRule _29 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -134,6 +140,9 @@ namespace Seal.Helpers
                     if (_24 == null) _24 = JsonContent.Create(new { });
                     if (_25 == null) _25 = new OracleConnection("");
                     if (_26 == null) _26 = new JwtSecurityTokenHandler();
+                    if (_27 == null) _27 = new DirectoryEntry();
+                    if (_28 == null) _28 = new ServerManager();
+                    if (_29 == null) _29 = new FileSystemAccessRule("a",FileSystemRights.Read,AccessControlType.Deny);
                 }
                 catch (Exception ex)
                 {

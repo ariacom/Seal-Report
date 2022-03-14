@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ProviderName>Basic Authentication</ProviderName>
   <UseCustomScript>true</UseCustomScript>
@@ -249,86 +249,64 @@
     <SecurityLogin>
       <Id>ex</Id>
       <Password>sYKvHw8IOWBXSlFU6qkFnpH6A6vR02MX96jl9QFhMFA=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Execute)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames>
+        <string>Group (Execute)</string>
+      </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
       <Id>exo</Id>
       <Password>DjQEokCcFs8BYYCJNNP8d8/AyZASLBYVN9NbZ7A77AM=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Execute Output)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames>
+        <string>Group (Execute Output)</string>
+      </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
       <Id>sc</Id>
       <Password>o08w2ec10PBY9ry8ZjdIutgE+oQIONrNXflIb8tqBK4=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Schedule)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames>
+        <string>Group (Schedule)</string>
+      </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
       <Id>ed</Id>
       <Password>P8IgYSuK3VxFHW7Jw5kN2/77Syt7baOATREXKAgkUmE=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Edit)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames>
+        <string>Group (Edit)</string>
+      </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
       <Id>exed</Id>
       <Password>DiqjNYG9az+AKx/R4zk0JMD+Ix9oAK1/FsO1di4XZtw=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Execute)</Name>
-        </SecurityGroupName>
-        <SecurityGroupName>
-          <Name>Group (Edit)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames>
+        <string>Group (Execute)</string>
+        <string>Group (Edit)</string>
+      </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
       <Id>sc1</Id>
       <Password>pP9lEDHGQBHo1W4Nc9SWAADHT++fGIHQkV5tMo+fboM=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Scripts 1)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames>
+        <string>Group (Scripts 1)</string>
+      </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
       <Id>sc2</Id>
       <Password>SZwuoG5vEpEWgnnM/g56o+TZnyz77P42VzaQCMvMEWU=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Scripts 2)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames>
+        <string>Group (Scripts 2)</string>
+      </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
       <Id>menu</Id>
       <Password>cdMcjpzxz1EgKXOxid3OJO3KkuizN6usRpqFRRN/wNY=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Menu)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames />
     </SecurityLogin>
     <SecurityLogin>
       <Id>demo</Id>
       <Password>UyyPOA2CivOUeK1Qqc/t3hx49g09LN2j/Wlt0w8Kr0g=</Password>
-      <Groups>
-        <SecurityGroupName>
-          <Name>Group (Demo)</Name>
-        </SecurityGroupName>
-      </Groups>
+      <GroupNames>
+        <string>Group (Demo)</string>
+      </GroupNames>
     </SecurityLogin>
   </Logins>
 </SealSecurity>

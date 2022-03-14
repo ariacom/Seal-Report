@@ -34,7 +34,7 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("Id").SetIsBrowsable(true);
                 GetProperty("HashedPassword").SetIsBrowsable(true);
-                GetProperty("Groups").SetIsBrowsable(true);
+                GetProperty("GroupNames").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -87,42 +87,10 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Security Groups"), DisplayName("Groups"), Description("The security groups of the user."), Id(1, 2)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
-        public List<SecurityGroupName> Groups { get; set; } = new List<SecurityGroupName>();
-        public bool ShouldSerializeGroups() { return Groups.Count > 0; }
-    }
-
-    /// <summary>
-    /// SecurityGroupName defines groups of the SecurityLogin 
-    /// </summary>
-    public class SecurityGroupName : RootEditor
-    {
-#if WINDOWS
-        #region Editor
-        protected override void UpdateEditorAttributes()
-        {
-            if (_dctd != null)
-            {
-                //Disable all properties
-                foreach (var property in Properties) property.SetIsBrowsable(false);
-                //Then enable
-                GetProperty("Name").SetIsBrowsable(true);
-                TypeDescriptor.Refresh(this);
-            }
-        }
-        #endregion
-
-#endif
-        /// <summary>
-        /// The security group.
-        /// </summary>
-#if WINDOWS
-        [Category("Definition"), DisplayName("Name"), Description("The security group."), Id(1, 1)]
-        [TypeConverter(typeof(SecurityGroupNameConverter))]
-        [DefaultValue("")]
-#endif
-        public string Name { get; set; } = "";
+        public List<string> GroupNames { get; set; } = new List<string>();
+        public bool ShouldSerializeGroups() { return GroupNames.Count > 0; }
     }
 }
 

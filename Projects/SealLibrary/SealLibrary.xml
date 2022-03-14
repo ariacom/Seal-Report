@@ -3333,7 +3333,7 @@
             Return the report of a given schedule GUID
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.ExecuteReportSchedule(System.String,Seal.Model.Report,Seal.Model.ReportSchedule)">
+        <member name="M:Seal.Model.ReportExecution.ExecuteReportSchedule(System.String,Seal.Model.Report)">
             <summary>
             Execute a report schedule
             </summary>
@@ -5788,7 +5788,7 @@
             Current configuration
             </summary>
         </member>
-        <member name="P:Seal.Model.Repository.UseWebScheduler">
+        <member name="P:Seal.Model.Repository.UseSealScheduler">
             <summary>
             True if the Seal Scheduler is used instead of the Windows Tasks Scheduler
             </summary>
@@ -6889,6 +6889,11 @@
             True if the scheduler is running
             </summary>
         </member>
+        <member name="F:Seal.Model.SealReportScheduler.SchedulerOuterProcess">
+            <summary>
+            Execute schedules in outer process (if the scheduler is a Worker Service or in IIS)
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealReportScheduler.Instance">
             <summary>
             A general static instance of the Scheduler.
@@ -7123,6 +7128,11 @@
         <member name="M:Seal.Model.SealSecurity.FindSecurityFolder(System.Collections.Generic.List{Seal.Model.SecurityGroup},System.String)">
             <summary>
             Returns a SecurityFolder from a given name
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.InitSecurity">
+            <summary>
+            Init security defaults and integrities
             </summary>
         </member>
         <member name="F:Seal.Model.SealSecurity.LastModification">
@@ -7722,19 +7732,9 @@
             Check the hash code of the passwords
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityLogin.Groups">
+        <member name="P:Seal.Model.SecurityLogin.GroupNames">
             <summary>
             The security groups of the user.
-            </summary>
-        </member>
-        <member name="T:Seal.Model.SecurityGroupName">
-            <summary>
-            SecurityGroupName defines groups of the SecurityLogin 
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityGroupName.Name">
-            <summary>
-            The security group.
             </summary>
         </member>
         <member name="T:Seal.Model.SecurityProvider">

@@ -498,12 +498,7 @@ namespace Seal.Model
                 foreach (var table in MetaData.Tables) table.BeforeSerialization();
 
                 Name = Path.GetFileNameWithoutExtension(path);
-                XmlSerializer serializer = new XmlSerializer(typeof(MetaSource));
-                using (var tw = new StreamWriter(path))
-                {
-                    serializer.Serialize(tw, this);
-                    tw.Close();
-                }
+                Helper.Serialize(path, this);
                 FilePath = path;
                 LastModification = File.GetLastWriteTime(path);
             }

@@ -9,6 +9,7 @@ using System.ComponentModel;
 using Seal.Helpers;
 using Microsoft.Win32.TaskScheduler;
 using System.IO;
+using System.Diagnostics;
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.Drawing.Design;
@@ -37,22 +38,22 @@ namespace Seal.Model
                 GetProperty("IsTasksSchedule").SetIsBrowsable(IsTasksSchedule);
 
                 //Seal scheduler
-                GetProperty("SealEnabled").SetIsBrowsable(Report.Repository.UseWebScheduler);
-                GetProperty("SealStart").SetIsBrowsable(Report.Repository.UseWebScheduler);
-                GetProperty("SealEnd").SetIsBrowsable(Report.Repository.UseWebScheduler);
-                GetProperty("SealType").SetIsBrowsable(Report.Repository.UseWebScheduler);
-                GetProperty("SealDaysInterval").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Daily);
-                GetProperty("SealWeeksInterval").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Weekly);
-                GetProperty("SealWeekdays").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Weekly);
-                GetProperty("SealMonths").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Monthly);
-                GetProperty("SealDays").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Monthly);
-                GetProperty("SealRepeatInterval").SetIsBrowsable(Report.Repository.UseWebScheduler);
-                GetProperty("SealRepeatDuration").SetIsBrowsable(Report.Repository.UseWebScheduler);
-                GetProperty("SealNextExecution").SetIsBrowsable(Report.Repository.UseWebScheduler);
+                GetProperty("SealEnabled").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealStart").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealEnd").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealType").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealDaysInterval").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Daily);
+                GetProperty("SealWeeksInterval").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Weekly);
+                GetProperty("SealWeekdays").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Weekly);
+                GetProperty("SealMonths").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Monthly);
+                GetProperty("SealDays").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Monthly);
+                GetProperty("SealRepeatInterval").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealRepeatDuration").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealNextExecution").SetIsBrowsable(Report.Repository.UseSealScheduler);
 
-                GetProperty("IsEnabled").SetIsBrowsable(!Report.Repository.UseWebScheduler);
-                GetProperty("LastRunTime").SetIsBrowsable(!Report.Repository.UseWebScheduler);
-                GetProperty("NextRunTime").SetIsBrowsable(!Report.Repository.UseWebScheduler);
+                GetProperty("IsEnabled").SetIsBrowsable(!Report.Repository.UseSealScheduler);
+                GetProperty("LastRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
+                GetProperty("NextRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
 
                 GetProperty("NotificationEmailSubject").SetIsBrowsable(true);
                 GetProperty("NotificationEmailBody").SetIsBrowsable(true);
@@ -67,7 +68,7 @@ namespace Seal.Model
                 GetProperty("ErrorEmailSendMode").SetIsBrowsable(true);
 
                 //Helpers
-                GetProperty("HelperRunTaskScheduler").SetIsBrowsable(!Report.Repository.UseWebScheduler);
+                GetProperty("HelperRunTaskScheduler").SetIsBrowsable(!Report.Repository.UseSealScheduler);
 
                 GetProperty("ErrorMinutesBetweenRetries").SetIsReadOnly(ErrorNumberOfRetries <= 0);
                 GetProperty("ErrorEmailSubject").SetIsReadOnly(string.IsNullOrEmpty(ErrorEmailTo));
@@ -669,7 +670,7 @@ namespace Seal.Model
         /// </summary>
         public void SynchronizeTask()
         {
-            if (Report.Repository.UseWebScheduler)
+            if (Report.Repository.UseSealScheduler)
             {
                 if (File.Exists(SealSchedule.FilePath))
                 {
@@ -794,10 +795,12 @@ namespace Seal.Model
                         //create task
                         TaskDefinition taskDefinition = (new TaskService()).NewTask();
                         taskDefinition.Triggers.Add(new DailyTrigger() { StartBoundary = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 0, 0), Enabled = false });
-                        string schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory, Repository.SealTaskScheduler);
+                        string schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory + "\\" + Repository.CoreInstallationSubDirectory, Repository.SealTaskScheduler);
 #if DEBUG
-                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net5.0", Repository.SealTaskScheduler);
+                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net6.0", Repository.SealTaskScheduler);
 #endif
+                        if (!File.Exists(schedulerPath)) Helper.WriteLogEntryScheduler(EventLogEntryType.Error, $"Unable to find {schedulerPath}.");
+
                         taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Helper.GetApplicationDirectory()));
                         RegisterTaskDefinition(taskDefinition);
                     }

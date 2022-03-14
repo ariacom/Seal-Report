@@ -254,6 +254,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Init security defaults and integrities
+        /// </summary>
         public void InitSecurity()
         {
             //init at least a security group
@@ -266,7 +269,7 @@ namespace Seal.Model
             //Remove deleted groups in logins
             foreach (var login in Logins)
             {
-                login.Groups.RemoveAll(i => !Groups.Exists(j => j.Name == i.Name));
+                login.GroupNames.RemoveAll(i => !Groups.Exists(j => j.Name == i));
             }
         }
 
@@ -326,12 +329,7 @@ namespace Seal.Model
                     throw new Exception("Unable to save the Security file. The file has been modified by another user.");
                 }
             }
-            XmlSerializer serializer = new XmlSerializer(typeof(SealSecurity));
-            using (var tw = new StreamWriter(path))
-            {
-                serializer.Serialize(tw, this);
-                tw.Close();
-            }
+            Helper.Serialize(path, this);
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
         }

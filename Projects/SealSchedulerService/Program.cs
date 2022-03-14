@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics;
+using System.Text;
 
 namespace SealSchedulerService
 {
@@ -14,17 +15,20 @@ namespace SealSchedulerService
     {
         public static void Main(string[] args)
         {
-#if RELEASE
-            CreateHostBuilder(args).Build().Run();
-#else
+#if DEBUG
             try
             {
+                //Configuration
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                SealReportScheduler.SchedulerOuterProcess = true;
                 SealReportScheduler.Instance.Run();
             }
             catch (Exception ex)
             {
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
             }
+#else
+            CreateHostBuilder(args).Build().Run();
 #endif
 
         }

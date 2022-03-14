@@ -663,7 +663,7 @@ namespace Seal.Model
             {
                 ExcelConfigurations = ExcelConverter.GetConfigurations();
             }
-#if !DEBUG 
+#if !DEBUG
             //Set installation path, used by, to define schedules
             var exePath = Assembly.GetExecutingAssembly().Location;
             if (Path.GetFileName(exePath).ToLower() == Repository.SealServerManager.ToLower() || Path.GetFileName(exePath).ToLower() == Repository.SealReportDesigner.ToLower())
@@ -672,12 +672,7 @@ namespace Seal.Model
             }
 #endif
 
-            XmlSerializer serializer = new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides);
-            using (var tw = new StreamWriter(path))
-            {
-                serializer.Serialize(tw, this);
-                tw.Close();
-            }
+            Helper.Serialize(path, this, new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides));
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
         }

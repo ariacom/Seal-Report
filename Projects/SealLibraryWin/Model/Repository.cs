@@ -48,6 +48,10 @@ namespace Seal.Model
         //appsettings.json
         public const string SealConfigurationSectionKeyword = "SealConfiguration";
         public const string SealConfigurationRepositoryPathKeyword = "RepositoryPath";
+        public const string SealConfigurationSchedulerOuterProcessKeyword = "SchedulerOuterProcess";
+
+        //core installation subdirectory
+        public const string CoreInstallationSubDirectory = "core";
 
         public static object PathLock = new object();
 
@@ -211,7 +215,7 @@ namespace Seal.Model
         /// <summary>
         /// True if the Seal Scheduler is used instead of the Windows Tasks Scheduler
         /// </summary>
-        public bool UseWebScheduler
+        public bool UseSealScheduler
         {
             get
             {

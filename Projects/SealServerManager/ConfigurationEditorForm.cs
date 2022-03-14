@@ -69,7 +69,7 @@ namespace Seal.Forms
 It creates an application under the 'Default Web Site' of IIS using the 'LocalSystem' Windows Account.
 
 IIS must be installed with the following feature: 
-ASP.Net Core Runtime 5 (Hosting Bundle)
+ASP.Net Core Runtime 6 (Hosting Bundle)
 
 The site can be configured with any user having the following rights:
 Read access to the repository directory ({0}).
@@ -82,7 +82,7 @@ Note that publishing will stop the current Web Server instance.
                 {
                     infoTextBox.Text = @"No Internet Information Server detected on this machine.
 Please install IIS with the following features: 
-Application Development/ASP.Net 5 or greater
+Application Development/ASP.Net 6 or greater
 ";
                 }
             }
@@ -135,11 +135,11 @@ New parameter values may require a restart of the Report Designer or the Web Ser
             try
             {
                 string publicationDirectory = _configuration.WebPublicationDirectory;
-                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Web");
+                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), Repository.CoreInstallationSubDirectory);
 #if DEBUG
                 FileHelper.CopyDirectory(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\wwwroot", publicationDirectory + @"\wwwroot", true);
                 File.Copy(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\web.config", publicationDirectory + @"\web.config", true);
-                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\bin\Release\net5.0";
+                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\bin\Release\net6.0";
 #endif
 
                 //Copy installation directory

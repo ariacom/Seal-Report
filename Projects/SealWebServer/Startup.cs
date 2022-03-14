@@ -29,6 +29,7 @@ namespace SealWebServer
             Repository.RepositoryConfigurationPath = Configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
             DebugMode = Configuration.GetValue<Boolean>($"{Repository.SealConfigurationSectionKeyword}:DebugMode", false);
             RunScheduler = Configuration.GetValue<Boolean>($"{Repository.SealConfigurationSectionKeyword}:RunScheduler", false);
+            SealReportScheduler.SchedulerOuterProcess = configuration.GetValue<bool>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationSchedulerOuterProcessKeyword}", true);
             SessionTimeout = Configuration.GetValue<int>($"{Repository.SealConfigurationSectionKeyword}:SessionTimeout", 60);
             PathBaseProxy = Configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:PathBaseProxy", null);
             

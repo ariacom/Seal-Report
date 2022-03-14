@@ -1380,7 +1380,7 @@ namespace Seal.Model
                 }
 
                 //Clear unused tasks
-                if (Repository.UseWebScheduler)
+                if (Repository.UseSealScheduler)
                 {
                     foreach (var schedule in SealReportScheduler.Instance.GetSchedules().Where(i => i.ReportGUID == GUID).ToList())
                     {
@@ -1433,7 +1433,7 @@ namespace Seal.Model
                 LastModification = File.GetLastWriteTime(path);
             }
             //Clear and synchronize tasks
-            if (SchedulesModified || Repository.UseWebScheduler) SynchronizeTasks();
+            if (SchedulesModified || Repository.UseSealScheduler) SynchronizeTasks();
             SchedulesModified = false;
         }
 
@@ -1489,13 +1489,7 @@ namespace Seal.Model
 
                     foreach (var table in source.MetaData.Tables) table.BeforeSerialization();
                 }
-
-                XmlSerializer serializer = new XmlSerializer(typeof(Report));
-                using (var tw = new StreamWriter(path))
-                {
-                    serializer.Serialize(tw, this);
-                    tw.Close();
-                }
+                Helper.Serialize(path, this);
             }
             finally
             {

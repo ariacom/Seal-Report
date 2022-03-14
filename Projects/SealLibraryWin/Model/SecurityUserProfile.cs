@@ -146,12 +146,7 @@ namespace Seal.Model
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(SecurityUserProfile));
-                using (var tw = new StreamWriter(path))
-                {
-                    serializer.Serialize(tw, this);
-                    tw.Close();
-                }
+                Helper.Serialize(path, this);
             }
             finally
             {

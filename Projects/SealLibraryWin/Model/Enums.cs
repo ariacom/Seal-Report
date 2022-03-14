@@ -601,5 +601,4 @@ namespace Seal.Model
         [Description("Allow only execution in a new Window")]
         AlwaysNewWindow,
     }
-
 }

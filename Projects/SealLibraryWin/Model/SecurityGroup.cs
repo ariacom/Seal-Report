@@ -71,9 +71,9 @@ namespace Seal.Model
                 {
                     //Update group names in Logins
                     foreach(var login in Repository.Instance.Security.Logins) {
-                        foreach (var group in login.Groups)
+                        for (var i =0; i <login.GroupNames.Count; i++)
                         {
-                            if (group.Name == _name) group.Name = value;
+                            if (login.GroupNames[i] == _name) login.GroupNames[i] = value;
                         }
                     }
                 }

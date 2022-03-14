@@ -315,12 +315,7 @@ namespace Seal.Model
             }
 
             Name = Path.GetFileNameWithoutExtension(path);
-            XmlSerializer serializer = new XmlSerializer(typeof(OutputEmailDevice));
-            using (var tw = new StreamWriter(path))
-            {
-                serializer.Serialize(tw, this);
-                tw.Close();
-            }
+            Helper.Serialize(path, this);
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
         }

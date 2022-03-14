@@ -2069,37 +2069,52 @@ namespace Seal.Model
         /// <summary>
         /// Execute a report schedule
         /// </summary>
-        public static void ExecuteReportSchedule(string scheduleGUID, Report refReport = null, ReportSchedule refSchedule = null)
+        public static void ExecuteReportSchedule(string scheduleGUID, Report refReport = null)
         {
             try
             {
                 Report report;
                 ReportSchedule schedule;
-                bool useSealScheduler = Repository.Instance.UseWebScheduler;
+                bool useSealScheduler = Repository.Instance.UseSealScheduler;
                 if (useSealScheduler)
                 {
+                    if (refReport == null)
+                    {
+                        //outer process, use the GUID to find the schedule
+                        var sealSchedule = SealReportScheduler.LoadSealSchedule(scheduleGUID);
+                        if (sealSchedule == null) throw new Exception($"Unable to find schedule GUID '{scheduleGUID}'");
+                        refReport = SealReportScheduler.GetScheduledReport(sealSchedule);
+                        if (refReport == null) throw new Exception($"Unable to find report for schedule GUID '{scheduleGUID}'");
+                    }
                     report = refReport;
-                    schedule = refSchedule;
-
-                    if (report == null || schedule == null) throw new Exception("Invalid call: Seal Scheduler is enabled but no schedule in parameter");
+                    schedule = refReport.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
+                    if (schedule == null) throw new Exception($"Unable to find schedule for schedule GUID '{scheduleGUID}'");
                 }
                 else
                 {
                     InitReportSchedule(scheduleGUID, out report, out schedule);
                 }
+
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName);
                 int retries = schedule.ErrorNumberOfRetries + 1;
+                bool isFirst = true;
                 while (--retries >= 0)
                 {
-                    if (useSealScheduler)
+                    if (!isFirst)
                     {
-                        report = Report.LoadFromFile(refReport.FilePath, refReport.Repository);
-                        schedule = report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
+                        //reload for a retry
+                        if (useSealScheduler)
+                        {
+                            report = Report.LoadFromFile(refReport.FilePath, Repository.Instance);
+                            schedule = report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
+                        }
+                        else
+                        {
+                            InitReportSchedule(scheduleGUID, out report, out schedule);
+                        }
                     }
-                    else
-                    {
-                        InitReportSchedule(scheduleGUID, out report, out schedule);
-                    }
+                    isFirst = false;
+
                     ReportExecution reportExecution = new ReportExecution() { Report = report };
                     report.ExecutionContext = ReportExecutionContext.TaskScheduler;
                     if (!schedule.IsTasksSchedule)
@@ -2163,7 +2178,7 @@ namespace Seal.Model
                                 if (useSealScheduler && !SealReportScheduler.Running)
                                 {
                                     retries = 0;
-                                    message = string.Format("Schedule '{0}': Cancelling report execution retries...", refSchedule.Name); ;
+                                    message = string.Format("Schedule '{0}': Cancelling report execution retries...", scheduleGUID); ;
                                     break;
                                 }
                                 Thread.Sleep(1000);

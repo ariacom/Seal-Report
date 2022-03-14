@@ -88,13 +88,6 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
-            else if (CollectionItemType == typeof(SecurityGroupName))
-            {
-                frmCollectionEditorForm.Text = "Security Group Names Collection Editor";
-                allowAdd = true;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
             else if (CollectionItemType == typeof(SecurityLogin))
             {
                 frmCollectionEditorForm.Text = "Security Logins Collection Editor";
@@ -246,10 +239,6 @@ namespace Seal.Forms
             {
                 ((MetaEV) instance).MetaEnum = _component as MetaEnum;
             }
-            else if (instance is SecurityGroupName)
-            {
-                if (Repository.Instance.Security.Groups.Count > 0) ((SecurityGroupName)instance).Name = Repository.Instance.Security.Groups.First().Name;
-            }
             return instance;
         }
 
@@ -279,7 +268,6 @@ namespace Seal.Forms
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;
             else if (value is SecurityLogin) result = ((SecurityLogin)value).Id;
             else if (value is SecurityFolder) result = ((SecurityFolder)value).Path;
-            else if (value is SecurityGroupName) result = ((SecurityGroupName)value).Name;
             else if (value is SecurityColumn) result = ((SecurityColumn)value).DisplayName;
             else if (value is SecuritySource) result = ((SecuritySource)value).DisplayName;
             else if (value is SecurityDevice) result = ((SecurityDevice)value).DisplayName;
