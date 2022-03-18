@@ -413,8 +413,11 @@ namespace Seal.Model
         /// </summary>
         static public string GetTaskSourceDetail(string source, int index)
         {
-            string[] sources = source.Split('\n');
-            if (sources.Length > index) return sources[index].Trim();
+            if (!string.IsNullOrEmpty(source))
+            {
+                string[] sources = source.Split('\n');
+                if (sources.Length > index) return sources[index].Trim();
+            }
             return ""; ;
         }
 

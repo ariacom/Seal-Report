@@ -767,7 +767,8 @@ namespace Seal.Forms
                     TaskFolder taskFolder = taskService.RootFolder.SubFolders.FirstOrDefault(i => i.Name == repository.Configuration.TaskFolderName);
                     if (taskFolder != null)
                     {
-                        foreach (Task task in taskFolder.GetTasks())
+                        var tasks = taskFolder.GetTasks().ToList();
+                        foreach (Task task in tasks)
                         {
                             log.Log("Checking task '{0}'", task.Name);
                             try

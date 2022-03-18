@@ -1990,7 +1990,7 @@ namespace Seal.Model
                 if (report == null)
                 {
                     //Remove the schedules of the report
-                    foreach (var oldTask in taskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID)))
+                    foreach (var oldTask in taskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source != null && i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID)))
                     {
                         taskFolder.DeleteTask(oldTask.Name);
                     }
@@ -2009,7 +2009,7 @@ namespace Seal.Model
             if (schedule == null)
             {
                 //Remove the schedule
-                foreach (var oldTask in taskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID)))
+                foreach (var oldTask in taskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source != null && i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID)))
                 {
                     taskFolder.DeleteTask(oldTask.Name);
                 }
