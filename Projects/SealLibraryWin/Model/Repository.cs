@@ -76,7 +76,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// The SealTaskSchheduler full path
+        /// The SealTaskScheduler executable full path
         /// </summary>
         public string SealTaskSchedulerPath
         {

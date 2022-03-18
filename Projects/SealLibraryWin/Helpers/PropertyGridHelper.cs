@@ -69,7 +69,7 @@ namespace Seal.Helpers
                     {
                         const BindingFlags Flags = BindingFlags.Instance | BindingFlags.NonPublic;
                         var field = type.BaseType.GetField("userSized", Flags);
-                        field.SetValue(control, true);
+                        if (field != null) field.SetValue(control, true);
 
                         info = type.GetProperty("Lines");
                         info.SetValue(control, lines, null);

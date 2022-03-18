@@ -144,8 +144,10 @@ namespace Seal.Helpers
                     if (_28 == null) _28 = new ServerManager();
                     if (_29 == null) _29 = new FileSystemAccessRule("a",FileSystemRights.Read,AccessControlType.Deny);
 
+#if !WINDOWS
                     var si = SealInterface.Create();
                     si.Init();
+#endif
                 }
                 catch (Exception ex)
                 {

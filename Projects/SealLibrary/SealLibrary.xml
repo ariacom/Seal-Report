@@ -5758,6 +5758,11 @@
             Product version
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.SealTaskSchedulerPath">
+            <summary>
+            The SealTaskScheduler executable full path
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.LicenseText">
             <summary>
             License text
