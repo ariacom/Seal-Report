@@ -80,6 +80,16 @@
             Convert an objet to a double, handling DBNull value
             </summary>
         </member>
+        <member name="T:Seal.Helpers.ScriptValidator">
+            <summary>
+            Optional script validation before compilation
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ScriptValidator.CheckScript(System.String)">
+            <summary>
+            Check is the script is valid, may be use to control the scripts executed
+            </summary>
+        </member>
         <member name="F:Seal.Helpers.TaskDatabaseHelper.ColumnCharLength">
             <summary>
             0 = means auto size
@@ -5832,6 +5842,11 @@
         <member name="M:Seal.Model.Repository.CreateFast">
             <summary>
             Creates a basic repository: properties are shared or cloned for performance reasons
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Repository.AssembliesLoaded">
+            <summary>
+            True is Assemblies have been loaded. Can be set to true at startup to disable Assemblies load.
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.Init(System.String)">

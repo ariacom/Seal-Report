@@ -143,6 +143,9 @@ namespace Seal.Helpers
                     if (_27 == null) _27 = new DirectoryEntry();
                     if (_28 == null) _28 = new ServerManager();
                     if (_29 == null) _29 = new FileSystemAccessRule("a",FileSystemRights.Read,AccessControlType.Deny);
+
+                    var si = SealInterface.Create();
+                    si.Init();
                 }
                 catch (Exception ex)
                 {
@@ -286,6 +289,8 @@ namespace Seal.Helpers
         static object lockObject = new object();
         static public void Compile(string script, Type modelType, string key)
         {
+            if (Validator != null && !Validator.CheckScript(script)) throw new Exception("Invalid script detected.");
+
             lock (lockObject)
             {
                 if (!string.IsNullOrEmpty(script) && !Engine.Razor.IsTemplateCached(key, modelType))
@@ -295,5 +300,22 @@ namespace Seal.Helpers
                 }
             }
         }
+
+        static public ScriptValidator Validator = null;
+    }
+
+    /// <summary>
+    /// Optional script validation before compilation
+    /// </summary>
+    public class ScriptValidator
+    {
+        /// <summary>
+        /// Check is the script is valid, may be used to control/limit the scripts executed
+        /// </summary>
+        public virtual bool CheckScript(string script)
+        {
+            return true;
+        }
+
     }
 }

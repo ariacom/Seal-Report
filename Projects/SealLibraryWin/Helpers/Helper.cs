@@ -148,6 +148,13 @@ namespace Seal.Helpers
             return string.Format("'{0}'", input.Replace("'", "''"));
         }
 
+        static public string RemoveWhitespace(string input)
+        {
+            return new string(input.ToCharArray()
+                .Where(c => !Char.IsWhiteSpace(c))
+                .ToArray());
+        }
+
         static public string FirstNotEmpty(string str1, string str2 = null, string str3 = null, string str4 = null, string str5 = null)
         {
             if (!string.IsNullOrEmpty(str1)) return str1;

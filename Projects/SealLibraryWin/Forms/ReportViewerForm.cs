@@ -61,19 +61,6 @@ namespace Seal.Forms
             }
         }
 
-        SealInterface _interface = null;
-        SealInterface Interface
-        {
-            get
-            {
-                if (_interface == null)
-                {
-                    _interface = SealInterface.Create(Repository.Instance);
-                }
-                return _interface;
-            }
-        }
-
         string GetFormValue(string id)
         {
             string result = "";
@@ -431,10 +418,6 @@ namespace Seal.Forms
 
                     default:
                         {
-                            if (Interface.ProcessAction(action, webBrowser, _navigation))
-                            {
-                                cancelNavigation = true;
-                            }
                             break;
                         }
                 }

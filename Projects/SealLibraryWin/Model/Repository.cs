@@ -390,7 +390,11 @@ namespace Seal.Model
             return result;
         }
 
-        static bool _assembliesLoaded = false;
+        /// <summary>
+        /// True is Assemblies have been loaded. Can be set to true at startup to disable Assemblies load.
+        /// </summary>
+        public static bool AssembliesLoaded = false;
+
         /// <summary>
         /// Init the repository from a given path
         /// </summary>
@@ -451,7 +455,7 @@ namespace Seal.Model
                 }
             }
 
-            if (!_assembliesLoaded)
+            if (!AssembliesLoaded)
             {
                 //Load extra assemblies defined in Repository
                 var assemblies = Directory.GetFiles(AssembliesFolder, "*.dll");
@@ -474,7 +478,7 @@ namespace Seal.Model
                 AppDomain currentDomain = AppDomain.CurrentDomain;
                 currentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
 
-                _assembliesLoaded = true;
+                AssembliesLoaded = true;
             }
         }
 
