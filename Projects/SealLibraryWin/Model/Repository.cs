@@ -75,6 +75,20 @@ namespace Seal.Model
             get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
         }
 
+        /// <summary>
+        /// The SealTaskSchheduler full path
+        /// </summary>
+        public string SealTaskSchedulerPath
+        {
+            get
+            {
+#if DEBUG
+                return Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net6.0", SealTaskScheduler);
+#endif
+                return Path.Combine(Configuration.InstallationDirectory + "\\" + CoreInstallationSubDirectory, SealTaskScheduler);
+            }
+        }
+
 #if WINDOWS
         /// <summary>
         /// Product icon
@@ -463,7 +477,8 @@ namespace Seal.Model
                 {
                     try
                     {
-                        if (Path.GetFileName(assembly) != Repository.SealConverterDll && Path.GetFileName(assembly) != Repository.SealConverterWinDll) {
+                        if (Path.GetFileName(assembly) != Repository.SealConverterDll && Path.GetFileName(assembly) != Repository.SealConverterWinDll)
+                        {
                             Assembly.LoadFrom(assembly);
                         }
                     }
@@ -662,7 +677,7 @@ namespace Seal.Model
         {
             get
             {
-                return Path.Combine(RepositoryPath, "Assemblies"); 
+                return Path.Combine(RepositoryPath, "Assemblies");
             }
         }
 
@@ -776,7 +791,7 @@ namespace Seal.Model
             return inputFolder.Replace(Repository.SealRepositoryKeyword, RepositoryPath).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
         }
 
-#region Translations and Cultures
+        #region Translations and Cultures
 
         //Translations, one dictionary per context
         Dictionary<string, RepositoryTranslation> _translations = null;
@@ -1095,9 +1110,9 @@ namespace Seal.Model
             return result;
         }
 
-#endregion
+        #endregion
 
-#region Helpers
+        #region Helpers
         //Helpers
         /// <summary>
         /// Find and load report form its identifier
@@ -1136,6 +1151,6 @@ namespace Seal.Model
         }
 
 
-#endregion
+        #endregion
     }
 }

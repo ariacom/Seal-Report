@@ -690,10 +690,24 @@ namespace Seal.Model
                 if (!IsTasksSchedule) description = string.Format("Schedule for the output '{0}'. Report '{1}'", Output.Name, Report.FilePath);
 
                 TaskDefinition definition = Task.Definition;
+                var action = definition.Actions.FirstOrDefault() as ExecAction;
+                if (action != null)
+                {
+                    var path = action.Path.Replace("\"","");
+                    if (!File.Exists(path))
+                    {
+                        //Migration to 6.6 update path if required
+                        action.Path = string.Format("\"{0}\"", Report.Repository.SealTaskSchedulerPath);
+                        action.WorkingDirectory = Path.GetDirectoryName(Report.Repository.SealTaskSchedulerPath);
+                        _task.RegisterChanges();
+                    }
+                }
+
                 if (definition.RegistrationInfo.Source != TaskSource || definition.RegistrationInfo.Description != description || TaskName != Task.Name)
                 {
                     definition.RegistrationInfo.Source = TaskSource;
                     definition.RegistrationInfo.Description = description;
+
                     //If name has changed, we have to delete then insert it again...
                     string oldName = Task.Name;
                     if (!string.IsNullOrEmpty(oldName) && TaskName != oldName)
@@ -795,13 +809,10 @@ namespace Seal.Model
                         //create task
                         TaskDefinition taskDefinition = (new TaskService()).NewTask();
                         taskDefinition.Triggers.Add(new DailyTrigger() { StartBoundary = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 0, 0), Enabled = false });
-                        string schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory + "\\" + Repository.CoreInstallationSubDirectory, Repository.SealTaskScheduler);
-#if DEBUG
-                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net6.0", Repository.SealTaskScheduler);
-#endif
+                        string schedulerPath = Report.Repository.SealTaskSchedulerPath;
                         if (!File.Exists(schedulerPath)) Helper.WriteLogEntryScheduler(EventLogEntryType.Error, $"Unable to find {schedulerPath}.");
 
-                        taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Helper.GetApplicationDirectory()));
+                        taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Path.GetDirectoryName(schedulerPath)));
                         RegisterTaskDefinition(taskDefinition);
                     }
                     SynchronizeTask();

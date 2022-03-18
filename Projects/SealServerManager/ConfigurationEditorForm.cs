@@ -142,12 +142,31 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\bin\Release\net6.0";
 #endif
 
+                Microsoft.Web.Administration.ServerManager serverMgr = new Microsoft.Web.Administration.ServerManager();
+                Microsoft.Web.Administration.ApplicationPool pool = serverMgr.ApplicationPools.FirstOrDefault(i => i.Name == _configuration.WebApplicationPoolName);
+                if (pool != null)
+                {
+                    log.Log($"Recycling {pool.Name}...");
+                    pool.Recycle();
+                    Thread.Sleep(4000);
+                }
+
+                var currentConfig = Path.Combine(publicationDirectory, "appsettings.json");
+                var currentConfigCopy = Path.Combine(publicationDirectory, "appsettings.json.copy");
+                if (File.Exists(currentConfig)) File.Copy(currentConfig, currentConfigCopy, true);
+
                 //Copy installation directory
                 log.Log("Copying files from '{0}' to '{1}'", sourceDirectory, publicationDirectory);
                 FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true);
 
+                if (File.Exists(currentConfigCopy))
+                {
+                    log.Log("Keeping previous Config file.");
+                    File.Copy(currentConfigCopy, currentConfig, true);
+                    File.Delete(currentConfigCopy);
+                }
+
                 //Check config...
-                var currentConfig = Path.Combine(publicationDirectory, "appsettings.json");
                 var releaseConfig = Path.Combine(publicationDirectory, "appsettings.Release.json");
                 if (!File.Exists(currentConfig) && File.Exists(releaseConfig))
                 {
@@ -163,7 +182,6 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 {
                     log.Log("Publishing Site on IIS...");
 
-                    Microsoft.Web.Administration.ServerManager serverMgr = new Microsoft.Web.Administration.ServerManager();
                     Microsoft.Web.Administration.Site site = null;
                     if (serverMgr.Sites.Count == 0)
                     {
@@ -172,7 +190,6 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                     }
                     else site = serverMgr.Sites[0];
 
-                    Microsoft.Web.Administration.ApplicationPool pool = serverMgr.ApplicationPools.FirstOrDefault(i => i.Name == _configuration.WebApplicationPoolName);
                     if (pool == null)
                     {
                         log.Log("Creating Application Pool");

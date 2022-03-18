@@ -87,7 +87,7 @@
         </member>
         <member name="M:Seal.Helpers.ScriptValidator.CheckScript(System.String)">
             <summary>
-            Check is the script is valid, may be use to control the scripts executed
+            Check is the script is valid, may be used to control/limit the scripts executed
             </summary>
         </member>
         <member name="F:Seal.Helpers.TaskDatabaseHelper.ColumnCharLength">
