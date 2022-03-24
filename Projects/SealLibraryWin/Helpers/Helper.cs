@@ -926,13 +926,27 @@ namespace Seal.Helpers
         {
             if (!string.IsNullOrEmpty(input))
             {
-                string[] addresses = input.Replace(";", "\r\n").Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+                var addresses = GetEmailAddresses(input);
                 foreach (string address in addresses)
                 {
-                    if (!string.IsNullOrWhiteSpace(address)) collection.Add(address);
+                    collection.Add(address);
                 }
             }
         }
+
+        /// <summary>
+        /// Add email address to a MailAddressCollection
+        /// </summary>
+        static public string[] GetEmailAddresses(string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                return input.Replace(";", "\r\n").Replace("\r\n", "\n").Replace("\r", "\n").Split('\n').ToList().Where(i => !string.IsNullOrWhiteSpace(i)).ToArray();
+            }
+            return new string[0];
+
+        }
+
 
         //SQL Keywords management
         public static string ClearAllSQLKeywords(string sql, ReportModel model = null)

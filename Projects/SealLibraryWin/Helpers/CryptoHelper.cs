@@ -67,7 +67,7 @@ namespace Seal.Helpers
 
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = Encoding.GetEncoding(1252).GetBytes(key + "3241aa59ceca119ad47042ebf6b91f40d1be897ef3e97d7ce5af97d3a53183dd").Take(aesAlg.KeySize / 8).ToArray();
+                aesAlg.Key = Encoding.GetEncoding(1252).GetBytes(key + "akdjrdskeporndjwk34dkf3241aa59ceca119ad47042ebf6b91").Take(aesAlg.KeySize / 8).ToArray();
                 aesAlg.IV = AESIV;
 
                 // Create a decryptor to perform the stream transform.

@@ -9,6 +9,8 @@ using System.Net.Mail;
 using System.Xml.Serialization;
 using Seal.Helpers;
 using System.Xml;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.ComponentModel.Design;
@@ -24,6 +26,7 @@ namespace Seal.Model
     public class OutputEmailDevice : OutputDevice
     {
         static string PasswordKey = "qdeferlwien?,édl+25.()à,";
+        static string SendGridKeyKey = "1d2fDFsdsdien32345,sadnD";
 
 #if WINDOWS
         #region Editor
@@ -47,6 +50,8 @@ namespace Seal.Model
                 GetProperty("ChangeSender").SetIsBrowsable(true);
                 GetProperty("Timeout").SetIsBrowsable(true);
                 GetProperty("UsedForNotification").SetIsBrowsable(true);
+                GetProperty("UseSendGrid").SetIsBrowsable(true);
+                GetProperty("ClearSendGridKey").SetIsBrowsable(true);
 
                 GetProperty("HelperTestEmail").SetIsBrowsable(true);
                 GetProperty("TestEmailTo").SetIsBrowsable(true);
@@ -89,7 +94,7 @@ namespace Seal.Model
         /// SMTP Email Server name
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SMTP Server"), Description("SMTP Email Server name."), Id(1, 1)]
+        [Category("SMTP Definition"), DisplayName("Server"), Description("SMTP Email Server name."), Id(1, 1)]
 #endif
         public string Server { get; set; }
 
@@ -97,7 +102,7 @@ namespace Seal.Model
         /// SMTP Port used to connect to the server
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SMTP Port"), Description("SMTP Port used to connect to the server."), Id(2, 1)]
+        [Category("SMTP Definition"), DisplayName("Port"), Description("SMTP Port used to connect to the server."), Id(2, 1)]
         [DefaultValue(25)]
 #endif
         public int Port { get; set; } = 25;
@@ -106,7 +111,7 @@ namespace Seal.Model
         /// The user name used to connect to the SMTP server
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SMTP User name"), Description("The user name used to connect to the SMTP server"), Id(3, 1)]
+        [Category("SMTP Definition"), DisplayName("User name"), Description("The user name used to connect to the SMTP server"), Id(3, 1)]
 #endif
         public string UserName { get; set; }
 
@@ -119,7 +124,7 @@ namespace Seal.Model
         /// The clear password used to connect to the SMTP server
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SMTP Password"), Description("The password used to connect to the SMTP server"), PasswordPropertyText(true), Id(4, 1)]
+        [Category("SMTP Definition"), DisplayName("Password"), Description("The password used to connect to the SMTP server"), PasswordPropertyText(true), Id(4, 1)]
         [XmlIgnore]
 #endif
         public string ClearPassword
@@ -153,27 +158,10 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// The sender email address used to send the email
-        /// </summary>
-#if WINDOWS
-        [Category("Definition"), DisplayName("Sender Email"), Description("The sender email address used to send the email."), Id(5, 1)]
-#endif
-        public string SenderEmail { get; set; }
-
-        /// <summary>
-        /// The reply addresses used for the email
-        /// </summary>
-#if WINDOWS
-        [Category("Definition"), DisplayName("Reply addresses"), Description("The reply addresses used for the email."), Id(6, 1)]
-        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-#endif
-        public string ReplyTo { get; set; }
-
-        /// <summary>
         /// Specifies how outgoing email messages will be handled
         /// </summary>
 #if WINDOWS
-        [Category("Advanced"), DisplayName("Delivery Method"), Description("Specifies how outgoing email messages will be handled."), Id(1, 2)]
+        [Category("SMTP Definition"), DisplayName("Delivery Method"), Description("Specifies how outgoing email messages will be handled."), Id(5, 1)]
         [DefaultValue(SmtpDeliveryMethod.Network)]
 #endif
         public SmtpDeliveryMethod DeliveryMethod { get; set; } = SmtpDeliveryMethod.Network;
@@ -182,7 +170,7 @@ namespace Seal.Model
         /// If true, the client uses Secure Socket Layer
         /// </summary>
 #if WINDOWS
-        [Category("Advanced"), DisplayName("Enable SSL"), Description("If true, the client uses Secure Socket Layer."), Id(2, 2)]
+        [Category("SMTP Definition"), DisplayName("Enable SSL"), Description("If true, the client uses Secure Socket Layer."), Id(6, 1)]
         [DefaultValue(false)]
 #endif
         public bool EnableSsl { get; set; } = false;
@@ -191,7 +179,7 @@ namespace Seal.Model
         /// Amount of time in milli-seconds after which the email is not sent
         /// </summary>
 #if WINDOWS
-        [Category("Advanced"), DisplayName("Time out"), Description("Amount of time in milli-seconds after which the email is not sent."), Id(3, 2)]
+        [Category("SMTP Definition"), DisplayName("Time out"), Description("Amount of time in milli-seconds after which the email is not sent."), Id(7, 1)]
         [DefaultValue(100000)]
 #endif
         public int Timeout { get; set; } = 100000;
@@ -200,16 +188,86 @@ namespace Seal.Model
         /// If true, the default credentials are used
         /// </summary>
 #if WINDOWS
-        [Category("Advanced"), DisplayName("Use Default Credentials"), Description("If true, the default credentials are used."), Id(4, 2)]
+        [Category("SMTP Definition"), DisplayName("Use Default Credentials"), Description("If true, the default credentials are used."), Id(8, 1)]
         [DefaultValue(false)]
 #endif
         public bool UseDefaultCredentials { get; set; } = false;
+
+
+        /// <summary>
+        /// If true, the SendGrid client is used instead of the SMTP client
+        /// </summary>
+#if WINDOWS
+        [Category("SendGrid Definition"), DisplayName("Use SendGrid"), Description("If true, the SendGrid client is used instead of the SMTP client."), Id(1, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool UseSendGrid { get; set; } = false;
+
+        /// <summary>
+        /// The API Key for SendGrid
+        /// </summary>
+        public string SendGridKey { get; set; }
+
+        /// <summary>
+        /// The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registrstion (Free plan).
+        /// </summary>
+#if WINDOWS
+        [Category("SendGrid Definition"), DisplayName("API Key"), Description("The API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registrstion (Free plan)."), PasswordPropertyText(true), Id(2, 2)]
+        [XmlIgnore]
+#endif
+        public string ClearSendGridKey
+        {
+            get
+            {
+                try
+                {
+                    return CryptoHelper.DecryptAES(SendGridKey, SendGridKeyKey);
+                }
+                catch (Exception ex)
+                {
+                    Error = "Error during SendGridKey decryption:" + ex.Message;
+                    TypeDescriptor.Refresh(this);
+                    return SendGridKey;
+                }
+            }
+            set
+            {
+                try
+                {
+                    SendGridKey = CryptoHelper.EncryptAES(value, SendGridKeyKey);
+                }
+                catch (Exception ex)
+                {
+                    Error = "Error during SendGridKey encryption:" + ex.Message;
+                    SendGridKey = value;
+                    TypeDescriptor.Refresh(this);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// The sender email address used to send the email
+        /// </summary>
+#if WINDOWS
+        [Category("Addresses"), DisplayName("Sender Email"), Description("The sender email address used to send the email."), Id(1, 3)]
+#endif
+        public string SenderEmail { get; set; }
+
+        /// <summary>
+        /// The reply addresses used for the email
+        /// </summary>
+#if WINDOWS
+        [Category("Addresses"), DisplayName("Reply addresses"), Description("The reply addresses used for the email."), Id(2, 3)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string ReplyTo { get; set; }
 
         /// <summary>
         /// If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)
         /// </summary>
 #if WINDOWS
-        [Category("Advanced"), DisplayName("Used for notification"), Description("If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)"), Id(5, 2)]
+        [Category("Advanced"), DisplayName("Used for notification"), Description("If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)"), Id(1, 5)]
         [DefaultValue(false)]
 #endif
         public bool UsedForNotification { get; set; } = false;
@@ -218,7 +276,7 @@ namespace Seal.Model
         /// If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer
         /// </summary>
 #if WINDOWS
-        [Category("Advanced"), DisplayName("Allow to change Email Sender or Reply Address"), Description("If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer."), Id(6, 2)]
+        [Category("Advanced"), DisplayName("Allow to change Email Sender or Reply Address"), Description("If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer."), Id(2, 5)]
         [DefaultValue(true)]
 #endif
         public bool ChangeSender { get; set; } = true;
@@ -229,7 +287,7 @@ namespace Seal.Model
 #if WINDOWS
         [Category("Helpers"), DisplayName("Email adress for the test"), Description("The destination email address used to send the test email."), Id(1, 10)]
 #endif
-		[XmlIgnore]
+        [XmlIgnore]
         public string TestEmailTo { get; set; }
 
         /// <summary>
@@ -338,51 +396,87 @@ namespace Seal.Model
             ReportOutput output = report.OutputToExecute;
 
             if (string.IsNullOrEmpty(output.EmailTo)) throw new Exception("No email address has been specified in the report output.");
-
-            MailMessage message = new MailMessage();
-            var email = SenderEmail;
-            if (ChangeSender && !string.IsNullOrEmpty(output.EmailFrom)) email = output.EmailFrom;
-            message.From = new MailAddress(email);
-            Helper.AddEmailAddresses(message.To, output.EmailTo);
-            Helper.AddEmailAddresses(message.CC, output.EmailCC);
-            Helper.AddEmailAddresses(message.Bcc, output.EmailBCC);
-            email = ReplyTo;
-            if (ChangeSender && !string.IsNullOrEmpty(output.EmailReplyTo)) email = output.EmailReplyTo;
-            Helper.AddEmailAddresses(message.ReplyToList, email);
-            message.Subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
-
+            var subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
+            var sender = SenderEmail;
+            var replyTo = SenderEmail;
+            if (ChangeSender && !string.IsNullOrEmpty(output.EmailReplyTo)) replyTo = output.EmailReplyTo;
             //Body
+            var body = Helper.IfNullOrEmpty(output.EmailBody, report.Translate("Please find the report '{0}' in attachment.", report.ExecutionName));
             if (output.EmailHtmlBody && (output.Format == ReportFormat.html || output.Format == ReportFormat.print))
             {
-                message.Body = File.ReadAllText(report.ResultFilePath);
-                message.IsBodyHtml = true;
+                body = File.ReadAllText(report.ResultFilePath);
             }
             else if (output.EmailMessagesInBody || output.EmailSkipAttachments)
             {
-                message.Body = string.Format("Execution messages for report '{0}':\r\n\r\n{1}", report.FilePath, report.ExecutionMessages);
+                body = string.Format("Execution messages for report '{0}':\r\n\r\n{1}", report.FilePath, report.ExecutionMessages);
             }
-            else
-            {
-                message.Body = Helper.IfNullOrEmpty(output.EmailBody, report.Translate("Please find the report '{0}' in attachment.", report.ExecutionName));
-            }
-
+            bool isHtmlBody = (output.EmailHtmlBody && (output.Format == ReportFormat.html || output.Format == ReportFormat.print));
             //Attachment
-            if (!message.IsBodyHtml && !output.EmailSkipAttachments)
+            string attachPath = "", attachName = "";
+            if (!isHtmlBody && !output.EmailSkipAttachments)
             {
                 HandleZipOptions(report);
-                var attachPath = report.ResultFilePath;
+                attachPath = report.ResultFilePath;
                 if (output.Format == ReportFormat.html || output.Format == ReportFormat.print)
                 {
                     //Copy the file to avoid a lock
                     attachPath = FileHelper.GetTempUniqueFileName(report.ResultFilePath);
+                    attachName = Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath);
                     File.Copy(report.ResultFilePath, attachPath);
                 }
-                var attachment = new Attachment(attachPath);
-                attachment.Name = Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath);
-                message.Attachments.Add(attachment);
             }
-            SmtpClient client = SmtpClient;
-            client.Send(message);
+
+            if (UseSendGrid)
+            {
+                var sendGridClient = new SendGridClient(SendGridKey);
+                var msg = new SendGridMessage()
+                {
+                    From = new EmailAddress(SenderEmail),
+                    Subject = subject,
+                    PlainTextContent = isHtmlBody ? "" : "This is a test message.",
+                    HtmlContent = !isHtmlBody ? "" : "This is a test message.",
+                    ReplyTo = new EmailAddress(replyTo)
+                };
+                msg.SetSubject(subject);
+                foreach (var addr in Helper.GetEmailAddresses(output.EmailTo)) msg.AddTo(addr);
+                foreach (var addr in Helper.GetEmailAddresses(output.EmailCC)) msg.AddCc(addr);
+                foreach (var addr in Helper.GetEmailAddresses(output.EmailBCC)) msg.AddBcc(addr);
+
+                if (!string.IsNullOrEmpty(attachPath))
+                {
+                    var attachment = new SendGrid.Helpers.Mail.Attachment();
+                    attachment.Filename = attachPath;
+                    msg.AddAttachment(attachment);
+                }
+
+                var response = sendGridClient.SendEmailAsync(msg).Result;
+                if (!response.IsSuccessStatusCode) throw new Exception($"Error sending Email through SendGrid to {output.EmailTo}\r\n{response.Body.ReadAsStringAsync().Result}.");
+            }
+            else
+            {
+                MailMessage message = new MailMessage();
+
+                var email = SenderEmail;
+                if (ChangeSender && !string.IsNullOrEmpty(output.EmailFrom)) email = output.EmailFrom;
+                message.From = new MailAddress(email);
+                Helper.AddEmailAddresses(message.To, output.EmailTo);
+                Helper.AddEmailAddresses(message.CC, output.EmailCC);
+                Helper.AddEmailAddresses(message.Bcc, output.EmailBCC);
+                Helper.AddEmailAddresses(message.ReplyToList, replyTo);
+                message.Subject = subject;
+
+                //Body
+                message.IsBodyHtml = isHtmlBody;
+                message.Body = body;
+
+                //Attachment
+                if (!string.IsNullOrEmpty(attachPath))
+                {
+                    message.Attachments.Add(new System.Net.Mail.Attachment(attachPath, attachName));
+                }
+                SmtpClient client = SmtpClient;
+                client.Send(message);
+            }
             output.Information = report.Translate("Email sent to '{0}'", output.EmailTo.Replace("\r\n", ";"));
             report.LogMessage("Email sent to '{0}'", output.EmailTo.Replace("\r\n", ";"));
         }
@@ -394,13 +488,14 @@ namespace Seal.Model
         {
             get
             {
-                var client = new SmtpClient() { 
-                    Host = Server, 
-                    Port = Port, 
-                    DeliveryMethod = DeliveryMethod, 
-                    EnableSsl = EnableSsl, 
-                    Timeout = Timeout, 
-                    UseDefaultCredentials = UseDefaultCredentials 
+                var client = new SmtpClient()
+                {
+                    Host = Server,
+                    Port = Port,
+                    DeliveryMethod = DeliveryMethod,
+                    EnableSsl = EnableSsl,
+                    Timeout = Timeout,
+                    UseDefaultCredentials = UseDefaultCredentials
                 };
                 if (!string.IsNullOrEmpty(UserName)) client.Credentials = new System.Net.NetworkCredential(UserName, ClearPassword);
                 return client;
@@ -420,14 +515,31 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(TestEmailTo)) throw new Exception("No email address has been specified in the destination email.");
                 if (string.IsNullOrEmpty(SenderEmail)) throw new Exception("No sender email address has been specified.");
 
-                MailMessage message = new MailMessage();
-                message.To.Add(TestEmailTo);
-                message.From = new MailAddress(SenderEmail);
-                Helper.AddEmailAddresses(message.ReplyToList, ReplyTo);
-                message.Subject = "Test email";
-                message.Body = "This is a test message.";
-                SmtpClient.Send(message);
+                if (UseSendGrid)
+                {
+                    var sendGridClient = new SendGridClient(ClearSendGridKey);
+                    var msg = new SendGridMessage()
+                    {
+                        From = new EmailAddress(SenderEmail),
+                        Subject = "Test email",
+                        PlainTextContent = "This is a test message.",
+                        HtmlContent = "This is a test message."
+                    };
+                    msg.AddTo(new EmailAddress(TestEmailTo));
+                    var response = sendGridClient.SendEmailAsync(msg).Result;
+                    if (!response.IsSuccessStatusCode) throw new Exception($"Error sending Email through SendGrid.\r\n{response.Body.ReadAsStringAsync().Result}");
 
+                }
+                else
+                {
+                    MailMessage message = new MailMessage();
+                    message.To.Add(TestEmailTo);
+                    message.From = new MailAddress(SenderEmail);
+                    Helper.AddEmailAddresses(message.ReplyToList, ReplyTo);
+                    message.Subject = "Test email";
+                    message.Body = "This is a test message.";
+                    SmtpClient.Send(message);
+                }
                 Information = string.Format("A test email has been sent successfully to '{0}'. Please check your inbox...", TestEmailTo);
             }
             catch (Exception ex)
