@@ -212,7 +212,7 @@ namespace Seal.Model
         /// The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registrstion (Free plan).
         /// </summary>
 #if WINDOWS
-        [Category("SendGrid Definition"), DisplayName("API Key"), Description("The API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registrstion (Free plan)."), PasswordPropertyText(true), Id(2, 2)]
+        [Category("SendGrid Definition"), DisplayName("API Key"), Description("The API Key used for SendGrid.Get an API Key from https://sendgrid.com/ after registration (Free plan)."), PasswordPropertyText(true), Id(2, 2)]
         [XmlIgnore]
 #endif
         public string ClearSendGridKey
