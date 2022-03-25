@@ -549,6 +549,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the model has elements with EmptyRepeated
+        /// </summary>
+        [XmlIgnore]
+        public bool HasEmptyRepeated
+        {
+            get
+            {
+                return Elements.Exists(i => i.PivotPosition == PivotPosition.Row && i.EmptyRepeated);
+            }
+        }
+
+        /// <summary>
         /// True if the model has a primary axis for a serie
         /// </summary>
         [XmlIgnore]

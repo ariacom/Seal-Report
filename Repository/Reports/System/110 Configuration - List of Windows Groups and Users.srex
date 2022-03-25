@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>d2401cda-e5e0-404b-b991-232169bfeab7</GUID>
   <ViewGUID>e032417d-cc9c-4b61-8e7d-84b885989107</ViewGUID>
@@ -29,6 +29,8 @@
     metaTable.NoSQLTable.Columns.Add(new DataColumn("Context", typeof(string)));
     metaTable.NoSQLTable.Columns.Add(new DataColumn("Group Name", typeof(string)));
     metaTable.NoSQLTable.Columns.Add(new DataColumn("User Name", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Sam Account Name", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("User Principal Name", typeof(string)));
 
     metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
 }
@@ -69,7 +71,7 @@
                 GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, gr.Name);
                 if (groupPrincipal != null) {
                     foreach (var adUser in groupPrincipal.GetMembers(true)) {
-                        metaTable.NoSQLTable.Rows.Add(context.ContextType.ToString(), gr.Name, adUser.Name);
+                        metaTable.NoSQLTable.Rows.Add(context.ContextType.ToString(), gr.Name, adUser.Name, adUser.SamAccountName, adUser.UserPrincipalName);
                     }
                 }
             }
@@ -105,6 +107,22 @@
                 <Type>Text</Type>
                 <Category>ADTable</Category>
                 <DisplayName>Context</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e6ca047d-83f5-40d3-9035-664752eb2394</GUID>
+                <Name>Sam Account Name</Name>
+                <Type>Text</Type>
+                <Category>ADTable</Category>
+                <DisplayName>Sam Account Name</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>773ff358-3925-4b69-b55d-3345ce94b9b0</GUID>
+                <Name>User Principal Name</Name>
+                <Type>Text</Type>
+                <Category>ADTable</Category>
+                <DisplayName>User Principal Name</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
               </MetaColumn>
             </Columns>
           </MetaTable>
@@ -149,6 +167,22 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>86a0018f-002a-45d0-82f7-b45cdc18a5b2</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f6d3f35a-adc4-4767-b188-c1933d6e2586</GUID>
+          <Name>Sam Account Name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e6ca047d-83f5-40d3-9035-664752eb2394</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b74398ae-f26f-4e8d-b9fd-81b190896d76</GUID>
+          <Name>User Principal Name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>773ff358-3925-4b69-b55d-3345ce94b9b0</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>

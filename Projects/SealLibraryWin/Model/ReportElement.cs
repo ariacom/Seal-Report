@@ -59,6 +59,7 @@ namespace Seal.Model
                     GetProperty("SortOrder").SetIsBrowsable(true);
                     GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
                     GetProperty("ShowSubTotals").SetIsBrowsable(PivotPosition == PivotPosition.Row);
+                    GetProperty("EmptyRepeated").SetIsBrowsable(PivotPosition == PivotPosition.Row);
 
                     GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
                     GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
@@ -302,6 +303,16 @@ namespace Seal.Model
                 return _type;
             }
         }
+
+        /// <summary>
+        /// IIf true, column values are not repeated if they have the same values.
+        /// </summary>
+#if WINDOWS
+        [Category("Options"), DisplayName("Empty if repeated"), Description("If true, column values are not repeated if they have the same values."), Id(3, 3)]
+        [DefaultValue(false)]
+#endif
+        public bool EmptyRepeated { get; set; } = false;
+
 
         /// <summary>
         /// Final format of the element

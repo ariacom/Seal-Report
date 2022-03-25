@@ -853,6 +853,8 @@ namespace Seal.Model
                     if (!Report.Cancel) finalSort(model);
                     //Sub-totals
                     if (!Report.Cancel) buildSubTotals(model);
+                    //Empty repeated
+                    if (!Report.Cancel) handleEmptyRepeated(model);
                     //Final script
                     if (!Report.Cancel) handleFinalScript(model);
                     model.Progression = 100; //100% 
@@ -1573,6 +1575,52 @@ namespace Seal.Model
 
             }
             handleCustomScripts(model, null, model.SummaryTable);
+        }
+
+        private void handleEmptyRepeated(ReportModel model)
+        {
+            if (model.HasEmptyRepeated)
+            {
+                foreach (var page in model.Pages)
+                {
+                    var dataTable = page.DataTable;
+                    foreach (var line in page.DataTable.Lines)
+                    {
+                        int i = dataTable.BodyStartRow, cols = dataTable.ColumnCount;
+                        string[] lastValues = new string[dataTable.ColumnCount];
+                        for (int j = 0; j < cols; j++)
+                        {
+                            //init first values
+                            var cell = dataTable[i, j];
+                            if (cell.Element != null && cell.Element.EmptyRepeated)
+                            {
+                                lastValues[j] = cell.DisplayValue;
+                            }
+                        }
+                        i++;
+
+                        while (i < dataTable.BodyEndRow)
+                        {
+                            for (int j = 0; j < cols; j++)
+                            {
+                                var cell = dataTable[i, j];
+                                if (cell.Element != null && cell.Element.EmptyRepeated)
+                                {
+                                    if (lastValues[j] == cell.DisplayValue)
+                                    {
+                                        cell.Value = "";
+                                    }
+                                    else
+                                    {
+                                        lastValues[j] = cell.DisplayValue;
+                                    }
+                                }
+                            }
+                            i++;
+                        }
+                    }
+                }
+            }
         }
 
         private void buildSubTotals(ReportModel model)
