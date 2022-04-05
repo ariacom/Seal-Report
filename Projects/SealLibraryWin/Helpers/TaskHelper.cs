@@ -551,7 +551,6 @@ namespace Seal.Helpers
         /// </summary>
         public void ExecuteMSSQLFile(string filePath, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11, int waitCommands = 20, int waitConnections = 100)
         {
-            //ExecuteMSSQLScripts(Path.GetDirectoryName(filePath), useAllConnections, stopOnError, errorClassLevel, Path.GetFileName(filePath));
             _mssqlError = "";
             _mssqlErrorClassLevel = errorClassLevel;
 
@@ -560,23 +559,38 @@ namespace Seal.Helpers
             {
                 if (_task.CancelReport) break;
 
+                SqlConnection sqlConnection = null;
+                Microsoft.Data.SqlClient.SqlConnection msConnection = null;
+
+
                 string connectionString = connection.FullConnectionString;
-                if (connection.ConnectionType == ConnectionType.OleDb)
+                if (connection.ConnectionType == ConnectionType.MSSQLServer)
                 {
-                    var builder = new OleDbConnectionStringBuilder(connection.FullConnectionString);
-                    connectionString = string.Format("Server={0};Database={1};", builder["Data Source"], builder["Initial Catalog"]);
-                    connectionString += (builder.ContainsKey("User ID") ? string.Format("User Id={0};Password={1};", builder["User ID"], builder["Password"]) : "Trusted_Connection=True;");
+                    sqlConnection = new SqlConnection(connectionString);
                 }
-                else if (connection.ConnectionType == ConnectionType.Odbc)
+                else if (connection.ConnectionType == ConnectionType.MSSQLServerMicrosoft)
                 {
-                    throw new Exception("Odbc connection type not supported");
+                    msConnection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
                 }
-                SqlConnection conn = new SqlConnection(connectionString);
+                else
+                {
+                    throw new Exception("Only MSSQL Connections are supported");
+                }
+
                 try
                 {
-                    conn.FireInfoMessageEventOnUserErrors = true;
-                    conn.InfoMessage += MSSQLConnection_InfoMessage;
-                    conn.Open();
+                    if (sqlConnection != null)
+                    {
+                        sqlConnection.FireInfoMessageEventOnUserErrors = true;
+                        sqlConnection.InfoMessage += MSSQLConnection_InfoMessage;
+                        sqlConnection.Open();
+                    }
+                    if (msConnection != null)
+                    {
+                        msConnection.FireInfoMessageEventOnUserErrors = true;
+                        msConnection.InfoMessage += MicrosoftMSSQLConnection_InfoMessage;
+                        msConnection.Open();
+                    }
                     string script = File.ReadAllText(filePath);
                     // split script on GO command
                     IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
@@ -633,11 +647,23 @@ namespace Seal.Helpers
                         if (!string.IsNullOrEmpty(commandString.Trim()))
                         {
                             DateTime startCommand = DateTime.Now;
-                            using (var command = new SqlCommand("", conn))
+                            if (sqlConnection != null)
                             {
-                                command.CommandTimeout = 0;
-                                command.CommandText = commandString;
-                                command.ExecuteNonQuery();
+                                using (var command = new SqlCommand("", sqlConnection))
+                                {
+                                    command.CommandTimeout = 0;
+                                    command.CommandText = commandString;
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+                            if (msConnection != null)
+                            {
+                                using (var command = new Microsoft.Data.SqlClient.SqlCommand("", msConnection))
+                                {
+                                    command.CommandTimeout = 0;
+                                    command.CommandText = commandString;
+                                    command.ExecuteNonQuery();
+                                }
                             }
                             Thread.Sleep(waitCommands);
                             if (!string.IsNullOrEmpty(_mssqlError) && stopOnError) throw new Exception(_mssqlError);
@@ -647,7 +673,14 @@ namespace Seal.Helpers
                 }
                 finally
                 {
-                    conn.Close();
+                    if (sqlConnection != null)
+                    {
+                        sqlConnection.Close();
+                    }
+                    if (msConnection != null)
+                    {
+                        msConnection.Close();
+                    }
                 }
             }
         }
@@ -681,6 +714,20 @@ CREATE {3} INDEX {0} ON {1}({2})
         }
 
         void MSSQLConnection_InfoMessage(object sender, SqlInfoMessageEventArgs e)
+        {
+            foreach (SqlError err in e.Errors)
+            {
+                if (err.Class >= _mssqlErrorClassLevel)
+                {
+                    _mssqlError = e.Message;
+                    break;
+                }
+            }
+            LogMessage(e.Message);
+            Thread.Sleep(20);
+        }
+
+        void MicrosoftMSSQLConnection_InfoMessage(object sender, Microsoft.Data.SqlClient.SqlInfoMessageEventArgs e)
         {
             foreach (SqlError err in e.Errors)
             {

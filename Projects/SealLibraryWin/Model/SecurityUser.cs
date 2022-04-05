@@ -533,7 +533,7 @@ namespace Seal.Model
                 }
                 else
                 {
-                    Warning += "Error getting groups using WindowsIdentity, try perhaps with the AD option...\r\n" + ex.Message + "\r\n";
+                    Warning += "Error getting groups using WindowsIdentity, try with the AD option...\r\n" + ex.Message + "\r\n";
                 }
             }
             return result;

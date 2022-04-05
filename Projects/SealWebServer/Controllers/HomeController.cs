@@ -585,7 +585,7 @@ namespace SealWebServer.Controllers
         /// </summary>
         public ActionResult HtmlResultFile(string execution_guid)
         {
-            writeDebug("HtmlResultFile {0}");
+            writeDebug("HtmlResultFile");
             try
             {
                 if (!CheckAuthentication()) return _loginContentResult;
@@ -593,7 +593,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
+                    if (!execution.Report.IsNavigating && !execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
 
                     return getFileResult(execution.Report.ResultFilePath, execution.Report);
                 }

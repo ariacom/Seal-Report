@@ -214,11 +214,8 @@ namespace Seal.Helpers
             return result;
         }
 
-
-        static public DataTable LoadDataTableFromCSVVBParser(string csvPath, char? separator, Encoding encoding)
+        static public TextFieldParser InitCSVVBParser(string csvPath, char? separator, Encoding encoding, bool hasFieldsEnclosedInQuotes = true, bool trimWhiteSpace = true)
         {
-            DataTable result = null;
-            bool isHeader = true;
             TextFieldParser csvParser;
             try
             {
@@ -235,8 +232,16 @@ namespace Seal.Helpers
             if (separator == null) separator = ',';
             //csvParser.CommentTokens = new string[] { "#" };
             csvParser.SetDelimiters(new string[] { separator.ToString() });
-            csvParser.HasFieldsEnclosedInQuotes = true;
+            csvParser.HasFieldsEnclosedInQuotes = hasFieldsEnclosedInQuotes;
+            csvParser.TrimWhiteSpace = trimWhiteSpace;
 
+            return csvParser;
+        }
+
+        static public DataTable LoadDataTableFromCSVVBParser(TextFieldParser csvParser)
+        {
+            DataTable result = null;
+            bool isHeader = true;
             while (!csvParser.EndOfData)
             {
                 string[] fields = csvParser.ReadFields();
@@ -264,5 +269,10 @@ namespace Seal.Helpers
             return result;
         }
 
+        static public DataTable LoadDataTableFromCSVVBParser(string csvPath, char? separator, Encoding encoding)
+        {
+            var csvParser = InitCSVVBParser(csvPath, separator, encoding);
+            return LoadDataTableFromCSVVBParser(csvParser);
+        }
     }
 }

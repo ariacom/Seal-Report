@@ -669,29 +669,10 @@ namespace Seal.Forms
 
     // e.g. to change the Thousand Separator or the Decimal Separator
     //report.ExecutionView.CultureInfo.NumberFormat.NumberGroupSeparator = ""'"";
-    //report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ""."";	    
+    //report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ""."";
 
-}
-";
-
-        const string sftpDeviceScriptTemplate = @"@using System.IO
-@using Renci.SshNet
-@{
-    Report report = Model;
-    ReportOutput output = report.OutputToExecute;
-    OutputFileServerDevice device = (OutputFileServerDevice) output.Device;
-    //Create client and connect to the server
-    using (var client = new SftpClient(device.Server, device.Port, device.UserName, device.ClearPassword))
-    {
-        client.Connect();
-        //Change directory and upload the file
-        client.ChangeDirectory(device.Directory);
-        using (var fileStream = new FileStream(report.ResultFilePath, FileMode.Open))
-        {
-            client.BufferSize = 4 * 1024;
-            client.UploadFile(fileStream, report.ResultFileName);
-        }
-    }
+    //e.g. to change a parameter in the default view
+    //report.ExecutionView.SetParameter(Parameter.EnableResultsMenuParameter, false);
 }
 ";
 

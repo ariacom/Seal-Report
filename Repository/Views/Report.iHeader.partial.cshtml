@@ -19,8 +19,9 @@
                 </button>
                 @if (configuration.HasLogo)
                 {
-                    <a href="#" class="navbar-left hidden-xs"  title="@configuration.WebProductName" style="cursor: default">
-                        <img src="@report.AttachImageFile(configuration.LogoName)" width="130" height="50">
+                    var attr = configuration.LogoName.ToLower().EndsWith(".svg") ? "width='130' height='50'" : "";
+                    <a href="#" class="navbar-left hidden-xs"  title="@configuration.WebProductName" style="cursor:default">
+                        <img src="@report.AttachImageFile(configuration.LogoName)" @Raw(attr)>
                     </a>
                 }
                 <a id="nav_button" href="#" class="navbar-brand" style="cursor: default">@report.ExecutionName</a><span id="nav_badge" class="badge navbar-left hidden">@report.Translate("Nav")</span>

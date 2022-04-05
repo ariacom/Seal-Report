@@ -65,6 +65,11 @@
             Add email address to a MailAddressCollection
             </summary>
         </member>
+        <member name="M:Seal.Helpers.Helper.GetEmailAddresses(System.String)">
+            <summary>
+            Add email address to a MailAddressCollection
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.Helper.ToString(System.Object)">
             <summary>
             Convert an objet to a string, handling DBNull value
@@ -1627,16 +1632,6 @@
             The clear password used to connect to the SMTP server
             </summary>
         </member>
-        <member name="P:Seal.Model.OutputEmailDevice.SenderEmail">
-            <summary>
-            The sender email address used to send the email
-            </summary>
-        </member>
-        <member name="P:Seal.Model.OutputEmailDevice.ReplyTo">
-            <summary>
-            The reply addresses used for the email
-            </summary>
-        </member>
         <member name="P:Seal.Model.OutputEmailDevice.DeliveryMethod">
             <summary>
             Specifies how outgoing email messages will be handled
@@ -1655,6 +1650,31 @@
         <member name="P:Seal.Model.OutputEmailDevice.UseDefaultCredentials">
             <summary>
             If true, the default credentials are used
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.UseSendGrid">
+            <summary>
+            If true, the SendGrid client is used instead of the SMTP client
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.SendGridKey">
+            <summary>
+            The API Key for SendGrid
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.ClearSendGridKey">
+            <summary>
+            The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registrstion (Free plan).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.SenderEmail">
+            <summary>
+            The sender email address used to send the email
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.ReplyTo">
+            <summary>
+            The reply addresses used for the email
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.UsedForNotification">
@@ -2973,6 +2993,11 @@
             Final type of the element
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportElement.EmptyRepeated">
+            <summary>
+            IIf true, column values are not repeated if they have the same values.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportElement.FormatEl">
             <summary>
             Final format of the element
@@ -3572,6 +3597,11 @@
         <member name="P:Seal.Model.ReportModel.HasSubTotals">
             <summary>
             True if the model has subtotals
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.HasEmptyRepeated">
+            <summary>
+            True if the model has elements with EmptyRepeated
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.HasPrimaryYAxis">
