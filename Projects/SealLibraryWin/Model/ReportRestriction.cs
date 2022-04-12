@@ -425,7 +425,7 @@ namespace Seal.Model
             if (Source == null) return;
             if (IsNumeric && !string.IsNullOrEmpty(value))
             {
-                foreach (var val in GetVals(value))
+                foreach (var val in Helper.GetVals(value))
                 {
                     double d;
                     if (!Helper.ValidateNumeric(val, out d))
@@ -481,6 +481,15 @@ namespace Seal.Model
                 result.Add(Operator.IsNull);
                 result.Add(Operator.IsNotNull);
                 result.Add(Operator.ValueOnly);
+
+                if (IsText && !IsEnum)
+                {
+                    result.Add(Operator.ContainsAny);
+                    result.Add(Operator.NotContainsAny);
+                    result.Add(Operator.ContainsAll);
+                    result.Add(Operator.NotContainsAll);
+                }
+
                 return result;
             }
         }
@@ -1253,7 +1262,7 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(value)) result = "0";
                 else
                 {
-                    foreach (var val in GetVals(value))
+                    foreach (var val in Helper.GetVals(value))
                     {
                         if (string.IsNullOrEmpty(val)) continue;
                         if (!string.IsNullOrEmpty(result)) result += ";";
@@ -1274,7 +1283,7 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(value)) value = "";
                 else
                 {
-                    foreach (var val in GetVals(value))
+                    foreach (var val in Helper.GetVals(value))
                     {
                         if (string.IsNullOrEmpty(val)) continue;
                         if (!string.IsNullOrEmpty(result)) result += ";";
@@ -1336,7 +1345,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True is the operastor is Greater or Smaller
+        /// True is the operator is Greater or Smaller
         /// </summary>
         public bool IsGreaterSmallerOperator
         {
@@ -1344,11 +1353,19 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True is the operastor is Contain (or Not),Starts, Ends
+        /// True is the operator is Contain (or Not),Starts, Ends
         /// </summary>
         public bool IsContainOperator
         {
-            get { return _operator == Operator.Contains || _operator == Operator.StartsWith || _operator == Operator.EndsWith || _operator == Operator.NotContains; }
+            get { return _operator == Operator.StartsWith || _operator == Operator.EndsWith || _operator == Operator.Contains || _operator == Operator.NotContains || _operator == Operator.ContainsAny || _operator == Operator.NotContainsAny || _operator == Operator.ContainsAll || _operator == Operator.NotContainsAll; }
+        }
+
+        /// <summary>
+        /// True is the operator is Contain All or Any
+        /// </summary>
+        public bool IsContainAllAnyOperator
+        {
+            get { return _operator == Operator.ContainsAny || _operator == Operator.NotContainsAny || _operator == Operator.ContainsAll || _operator == Operator.NotContainsAll; }
         }
 
         /// <summary>
@@ -1411,7 +1428,7 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(value)) result = "0";
                 else
                 {
-                    var vals = GetVals(value);
+                    var vals = Helper.GetVals(value);
                     if (vals.Length > 0)
                     {
                         double d;
@@ -1445,7 +1462,7 @@ namespace Seal.Model
             {
                 string value2 = value;
                 if (string.IsNullOrEmpty(value)) value2 = "";
-                if (op == Operator.Contains || op == Operator.NotContains) value2 = string.Format("%{0}%", value);
+                if (op == Operator.Contains || op == Operator.NotContains || op == Operator.ContainsAny || op == Operator.NotContainsAny || op == Operator.ContainsAll || op == Operator.NotContainsAll) value2 = string.Format("%{0}%", value);
                 else if (op == Operator.StartsWith) value2 = string.Format("{0}%", value);
                 else if (op == Operator.EndsWith) value2 = string.Format("%{0}", value);
                 if (TypeEl == ColumnType.UnicodeText)
@@ -1486,7 +1503,7 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(value)) result = "0";
                 else
                 {
-                    var vals = GetVals(value);
+                    var vals = Helper.GetVals(value);
                     if (vals.Length > 0)
                     {
                         double d;
@@ -1520,7 +1537,7 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(value)) result = "0";
                 else
                 {
-                    var vals = GetVals(value);
+                    var vals = Helper.GetVals(value);
                     if (vals.Length > 0)
                     {
                         double d;
@@ -1541,7 +1558,7 @@ namespace Seal.Model
             {
                 string value2 = value;
                 if (string.IsNullOrEmpty(value)) value2 = "";
-                if (Operator == Operator.Contains || Operator == Operator.StartsWith || Operator == Operator.EndsWith)
+                if (IsContainOperator || Operator == Operator.StartsWith || Operator == Operator.EndsWith)
                 {
                     result = "new BsonRegularExpression(@\"/";
                     if (Operator == Operator.StartsWith) result += "^";
@@ -1558,17 +1575,6 @@ namespace Seal.Model
             return result;
         }
 
-        /// <summary>
-        /// Array of string from a value having CR/LF
-        /// </summary>
-        static public string[] GetVals(string value)
-        {
-            if (string.IsNullOrEmpty(value)) return new string[0];
-            value = value.Trim();
-            if (value.Contains("\n")) return value.Replace("\r", "").Split('\n');
-            else return new string[] { value };
-        }
-
         void addEqualOperator(ref string displayText, ref string displayRestriction, ref string sqlText, string value, DateTime finalDate, string dateKeyword, DateTime date)
         {
             Helper.AddValue(ref displayText, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
@@ -1576,7 +1582,7 @@ namespace Seal.Model
             if (IsDateTime) Helper.AddValue(ref sqlText, ",", GetSQLValue(value, finalDate, _operator));
             else
             {
-                foreach (var val in GetVals(value))
+                foreach (var val in Helper.GetVals(value))
                 {
                     Helper.AddValue(ref sqlText, ",", GetSQLValue(val, finalDate, _operator));
                 }
@@ -1585,13 +1591,14 @@ namespace Seal.Model
 
         void addContainOperator(ref string displayText, ref string displayRestriction, ref string sqlText, string value, DateTime finalDate, string sqlOperator, string dateKeyword, DateTime date)
         {
-            string separator = (_operator == Operator.NotContains ? " AND " : " OR ");
+            string separator = " OR ";
+            if (_operator == Operator.NotContains || _operator == Operator.ContainsAll | _operator == Operator.NotContainsAny) separator = " AND ";
             Helper.AddValue(ref displayText, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
             Helper.AddValue(ref displayRestriction, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
             if (IsDateTime) Helper.AddValue(ref sqlText, separator, string.Format("{0}{1}{2}", SQLColumn, sqlOperator, GetSQLValue(value, finalDate, _operator)));
             else
             {
-                foreach (var val in GetVals(value))
+                foreach (var val in Helper.GetVals(value, IsContainAllAnyOperator))
                 {
                     Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(val, finalDate, _operator)));
                 }
@@ -1600,8 +1607,9 @@ namespace Seal.Model
 
         void addLINQOperator(ref string LINQText, string value, DateTime finalDate, string LINQOperator, string LINQSuffix)
         {
-            string separator = (_operator == Operator.NotContains || _operator == Operator.NotEqual ? " && " : " || ");
-            string prefix = _operator == Operator.NotContains ? "!" : "";
+            string separator = " || ";
+            if (_operator == Operator.NotContains || _operator == Operator.ContainsAll || _operator == Operator.NotContainsAny || _operator == Operator.NotEqual) separator =" && ";
+            string prefix = _operator == Operator.NotContains || _operator == Operator.NotContainsAny || _operator == Operator.NotContainsAll ? "!" : "";
             if (IsDateTime)
             {
                 Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}", LINQColumnName, LINQOperator, GetLINQValue(value, finalDate, _operator)));
@@ -1610,11 +1618,23 @@ namespace Seal.Model
             {
                 var colName = LINQColumnName;
                 if (IsText && !CaseSensitive && string.IsNullOrEmpty(SQL)) colName += ".ToLower()";
-                foreach (var val in GetVals(value))
+                foreach (var val in Helper.GetVals(value, IsContainAllAnyOperator))
                 {
                     Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}{3}{4}", prefix, colName, LINQOperator, GetLINQValue(val, finalDate, _operator), LINQSuffix));
                 }
             }
+        }
+
+        void addMongoOperator(string value, DateTime finalDate)
+        {
+            if (IsText && IsContainOperator)
+            {
+                foreach (var val in Helper.GetVals(value, IsContainAllAnyOperator))
+                {
+                    _MongoText += string.Format("{0},", GetMongoValue(val, finalDate, Operator));
+                }
+            }
+            else _MongoText += string.Format("{0},", GetMongoValue(value, finalDate, Operator));
         }
 
         void BuildTexts()
@@ -1675,7 +1695,7 @@ namespace Seal.Model
                 if (IsContainOperator)
                 {
                     _SQLText = "(";
-                    sqlOperator = (_operator == Operator.NotContains ? "NOT " : "") + "LIKE ";
+                    sqlOperator = (_operator == Operator.NotContains || _operator == Operator.NotContainsAny || _operator == Operator.NotContainsAll ? "NOT " : "") + "LIKE ";
                 }
                 else if (_operator == Operator.Equal || _operator == Operator.NotEqual)
                 {
@@ -1787,12 +1807,7 @@ namespace Seal.Model
             else
             {
                 //Other cases
-                if (_operator == Operator.Contains)
-                {
-                    LINQOperator = ".Contains(";
-                    LINQSuffix = ")";
-                }
-                else if (_operator == Operator.NotContains)
+                if (IsContainOperator)
                 {
                     LINQOperator = ".Contains(";
                     LINQSuffix = ")";
@@ -1867,8 +1882,8 @@ namespace Seal.Model
             else
             {
                 //Other cases
-                if (_operator == Operator.Contains || _operator == Operator.StartsWith || _operator == Operator.EndsWith) MongoOperator = "$in";
-                else if (_operator == Operator.NotContains) MongoOperator = "$nin";
+                if (_operator == Operator.Contains || _operator == Operator.ContainsAny || _operator == Operator.ContainsAll || _operator == Operator.StartsWith || _operator == Operator.EndsWith) MongoOperator = "$in";
+                else if (_operator == Operator.NotContains || _operator == Operator.NotContainsAny || _operator == Operator.NotContainsAll) MongoOperator = "$nin";
                 else if (_operator == Operator.Equal) MongoOperator = "$in";
                 else if (_operator == Operator.NotEqual) MongoOperator = "$nin";
                 else if (_operator == Operator.Smaller) MongoOperator = "$lt";
@@ -1898,10 +1913,10 @@ namespace Seal.Model
                     }
                     else
                     {
-                        if (HasValue1) _MongoText += string.Format("{0},", GetMongoValue(Value1, FinalDate1, Operator));
-                        if (HasValue2) _MongoText += string.Format("{0},", GetMongoValue(Value2, FinalDate2, Operator));
-                        if (HasValue3) _MongoText += string.Format("{0},", GetMongoValue(Value3, FinalDate3, Operator));
-                        if (HasValue4) _MongoText += string.Format("{0},", GetMongoValue(Value4, FinalDate4, Operator));
+                        if (HasValue1) addMongoOperator(Value1, FinalDate1);
+                        if (HasValue2) addMongoOperator(Value2, FinalDate2);
+                        if (HasValue3) addMongoOperator(Value3, FinalDate3);
+                        if (HasValue4) addMongoOperator(Value4, FinalDate4);
                     }
                     _MongoText += "})),\r\n";
                     return;

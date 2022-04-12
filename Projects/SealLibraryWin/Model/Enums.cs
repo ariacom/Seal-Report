@@ -234,6 +234,14 @@ namespace Seal.Model
         IsNotNull,
         [Description("Value only")]
         ValueOnly,
+        [Description("Contains any")]
+        ContainsAny,
+        [Description("Does not contain any")]
+        NotContainsAny,
+        [Description("Contains all")]
+        ContainsAll,
+        [Description("Does not contain all")]
+        NotContainsAll,
     }
 
     public enum DateRestrictionKeyword

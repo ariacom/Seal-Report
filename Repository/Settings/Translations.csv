@@ -25,10 +25,14 @@ Report;Cancel;;Annuler
 Report;Cancelling report...;;Annulation...
 Report;Charts;;Graphes
 Report;Contains;;Contient
+Report;Contains any;;Contient au moins
+Report;Contains all;;Contient tout
 Report;Count of;;Nombre de
 Report;Close;;Fermer
 Report;Description;;Description
 Report;Does not contain;;Ne contient pas
+Report;Does not contain any;;Ne contient pas au moins
+Report;Does not contain all;;Ne contient pas tout
 Report;Drill <;;Navigation <
 Report;Drill >;;Navigation >
 Report;Duration (seconds);;Durée (secondes)
@@ -319,6 +323,8 @@ WebJS;By point ascending;;Par point ascendant
 WebJS;By point descending;;Par point descendant
 WebJS;Cancel;;Annuler
 WebJS;Contains;;Contient
+WebJS;Contains any;;Contient au moins
+WebJS;Contains all;;Contient tout
 WebJS;Copy to;;Copier vers
 WebJS;Count;;Nombre
 WebJS;Count of;;Nombre de
@@ -343,7 +349,9 @@ WebJS;Default startup;;Démarrage par défaut
 WebJS;Descendant;;Descendant
 WebJS;Do not execute report;;Ne pas exécuter de rapport
 WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?
-WebJS;Does not contain;;Ne contient pas
+WebJS;Does not contain;;Ne contient pas au moins
+WebJS;Does not contain any;;Ne contient pas tout
+WebJS;Does not contain all;;Ne contient pas
 WebJS;Drop your Column elements;;Eléments de type Colonne
 WebJS;Drop your Data;;Données
 WebJS;Drop your Data elements;;Eléments de type Donnée

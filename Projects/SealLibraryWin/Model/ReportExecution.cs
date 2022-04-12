@@ -382,7 +382,7 @@ namespace Seal.Model
 
         private static bool validateNumeric(Report report, ReportRestriction restriction, string val)
         {
-            foreach (var v in ReportRestriction.GetVals(val))
+            foreach (var v in Helper.GetVals(val))
             {
                 double d;
                 if (!Helper.ValidateNumeric(v, out d))

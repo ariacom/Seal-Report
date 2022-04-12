@@ -593,8 +593,6 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
-                    if (!execution.Report.IsNavigating && !execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
-
                     return getFileResult(execution.Report.ResultFilePath, execution.Report);
                 }
             }
@@ -620,7 +618,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation if Result Menu is disabled");
 
                     string resultPath = execution.GeneratePrintResult();
                     return getFileResult(resultPath, execution.Report);
@@ -647,7 +645,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation if Result Menu is disabled");
                     if (execution.IsConvertingToPDF) return Content(Translate("Sorry, the conversion is being in progress in another window..."));
 
                     string resultPath = "";
@@ -684,7 +682,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
+                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation if Result Menu is disabled");
                     if (execution.IsConvertingToExcel) return Content(Translate("Sorry, the conversion is being in progress in another window..."));
 
                     string resultPath = "";

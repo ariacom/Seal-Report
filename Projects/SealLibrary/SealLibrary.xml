@@ -60,6 +60,11 @@
             Helper Objects
             </summary>
         </member>
+        <member name="M:Seal.Helpers.Helper.GetVals(System.String,System.Boolean)">
+            <summary>
+            Array of string from a value having CR/LF
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.Helper.AddEmailAddresses(System.Net.Mail.MailAddressCollection,System.String)">
             <summary>
             Add email address to a MailAddressCollection
@@ -4615,12 +4620,17 @@
         </member>
         <member name="P:Seal.Model.ReportRestriction.IsGreaterSmallerOperator">
             <summary>
-            True is the operastor is Greater or Smaller
+            True is the operator is Greater or Smaller
             </summary>
         </member>
         <member name="P:Seal.Model.ReportRestriction.IsContainOperator">
             <summary>
-            True is the operastor is Contain (or Not),Starts, Ends
+            True is the operator is Contain (or Not),Starts, Ends
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportRestriction.IsContainAllAnyOperator">
+            <summary>
+            True is the operator is Contain All or Any
             </summary>
         </member>
         <member name="P:Seal.Model.ReportRestriction.IsBetweenOperator">
@@ -4636,11 +4646,6 @@
         <member name="P:Seal.Model.ReportRestriction.EnumLINQValue">
             <summary>
             String containing the LINQ values of the enum values
-            </summary>
-        </member>
-        <member name="M:Seal.Model.ReportRestriction.GetVals(System.String)">
-            <summary>
-            Array of string from a value having CR/LF
             </summary>
         </member>
         <member name="P:Seal.Model.ReportRestriction.DisplayRestriction">

@@ -166,7 +166,7 @@ namespace Seal.Model
                     if (Element == null) return Value.ToString();
                     if (IsTitle) return Element.Model.Report.TranslateElement(Element, Value.ToString());
                     if (Value is IFormattable) return ((IFormattable)Value).ToString(Element.FormatEl, Element.Model.Report.ExecutionView.CultureInfo);
-                    if (Value is Byte[]) return "********";
+                    if (Value.ToString() == "System.Byte[]") return "********";
                 }
                 catch { }
                 return Value.ToString();

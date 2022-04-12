@@ -228,6 +228,18 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Array of string from a value having CR/LF
+        /// </summary>
+        static public string[] GetVals(string value, bool anyWords = false)
+        {
+            if (string.IsNullOrEmpty(value)) return new string[0];
+            value = value.Trim();
+            if (anyWords) value = value.Replace(" ", "\n");
+            if (value.Contains("\n")) return value.Replace("\r", "").Split('\n');
+            else return new string[] { value };
+        }
+
         static public bool ValidateNumeric(string value, out Double d)
         {
             bool result = false;
