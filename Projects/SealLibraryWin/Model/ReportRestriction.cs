@@ -1558,7 +1558,7 @@ namespace Seal.Model
             {
                 string value2 = value;
                 if (string.IsNullOrEmpty(value)) value2 = "";
-                if (IsContainOperator || Operator == Operator.StartsWith || Operator == Operator.EndsWith)
+                if (IsContainOperator)
                 {
                     result = "new BsonRegularExpression(@\"/";
                     if (Operator == Operator.StartsWith) result += "^";
@@ -1609,7 +1609,7 @@ namespace Seal.Model
         {
             string separator = " || ";
             if (_operator == Operator.NotContains || _operator == Operator.ContainsAll || _operator == Operator.NotContainsAny || _operator == Operator.NotEqual) separator =" && ";
-            string prefix = _operator == Operator.NotContains || _operator == Operator.NotContainsAny || _operator == Operator.NotContainsAll ? "!" : "";
+            string prefix = (_operator == Operator.NotContains || _operator == Operator.NotContainsAny || _operator == Operator.NotContainsAll) ? "!" : "";
             if (IsDateTime)
             {
                 Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}", LINQColumnName, LINQOperator, GetLINQValue(value, finalDate, _operator)));
@@ -1807,12 +1807,7 @@ namespace Seal.Model
             else
             {
                 //Other cases
-                if (IsContainOperator)
-                {
-                    LINQOperator = ".Contains(";
-                    LINQSuffix = ")";
-                }
-                else if (_operator == Operator.StartsWith)
+                if (_operator == Operator.StartsWith)
                 {
                     LINQOperator = ".StartsWith(";
                     LINQSuffix = ")";
@@ -1820,6 +1815,11 @@ namespace Seal.Model
                 else if (_operator == Operator.EndsWith)
                 {
                     LINQOperator = ".EndsWith(";
+                    LINQSuffix = ")";
+                }
+                else if (IsContainOperator)
+                {
+                    LINQOperator = ".Contains(";
                     LINQSuffix = ")";
                 }
                 else if (_operator == Operator.Equal) LINQOperator = "==";
