@@ -1131,7 +1131,7 @@ namespace Seal.Forms
         return result.ToString();
     });
 
-    dbHelper.MyLoadDataTable = new CustomLoadDataTable(delegate(ConnectionType connectionType, string connectionString, string sql) {
+    dbHelper.MyLoadDataTable = new CustomLoadDataTable(delegate(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection) {
         return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
     });
 
@@ -1211,7 +1211,7 @@ namespace Seal.Forms
                     List<string> samples = new List<string>();
                     foreach (var sample in tasksSamples)
                     {
-                        samples.Add("@using System.Data\r\n@{\r\n    //" + sample.Item1 + "\r\n    " + sample.Item2 + "}\r\n|" + sample.Item1);
+                        samples.Add("@using System.Data\r\n@using System.Data.Common\r\n@{\r\n    //" + sample.Item1 + "\r\n    " + sample.Item2 + "}\r\n|" + sample.Item1);
                     }
                     frm.SetSamples(samples);
                 }

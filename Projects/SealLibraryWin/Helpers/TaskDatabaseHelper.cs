@@ -26,7 +26,7 @@ namespace Seal.Helpers
     public delegate string CustomGetTableColumnValues(DataRow row, string dateTimeFormat);
     public delegate string CustomGetTableColumnValue(DataRow row, DataColumn col, string datetimeFormat);
 
-    public delegate DataTable CustomLoadDataTable(ConnectionType connectionType, string connectionString, string sql);
+    public delegate DataTable CustomLoadDataTable(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection = null);
     public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true);
     public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);
 
@@ -122,17 +122,20 @@ namespace Seal.Helpers
             return table;
         }
 
-        public DataTable LoadDataTable(ConnectionType connectionType, string connectionString, string sql)
+        public DataTable LoadDataTable(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection = null)
         {
             DataTable table = new DataTable();
             try
             {
-                if (MyLoadDataTable != null) return MyLoadDataTable(connectionType, connectionString, sql);
-
-                var connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
+                if (MyLoadDataTable != null) return MyLoadDataTable(connectionType, connectionString, sql, openConnection);
+                var connection = openConnection;
                 try
                 {
-                    connection.Open();
+                    if (connection == null)
+                    {
+                        connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
+                        connection.Open();
+                    }
                     if (UseDbDataAdapter)
                     {
                         DbDataAdapter adapter = null;
@@ -165,9 +168,9 @@ namespace Seal.Helpers
                             DataColumn dataColumn = new DataColumn();
                             dataColumn.ColumnName = dataRow["ColumnName"].ToString();
                             dataColumn.DataType = Type.GetType(dataRow["DataType"].ToString());
-                            dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
-                            dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
-                            dataColumn.Unique = (bool)dataRow["IsUnique"];
+                            if (dataRow["IsReadOnly"] is bool) dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
+                            if (dataRow["IsAutoIncrement"] is bool) dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
+                            if (dataRow["IsUnique"] is bool) dataColumn.Unique = (bool)dataRow["IsUnique"];
 
                             for (int i = 0; i < table.Columns.Count; i++)
                             {
@@ -294,12 +297,16 @@ namespace Seal.Helpers
             return result;
         }
 
-        public void ExecuteNonQuery(ConnectionType connectionType, string connectionString, string sql, string commandsSeparator = null)
+        public void ExecuteNonQuery(ConnectionType connectionType, string connectionString, string sql, string commandsSeparator = null, DbConnection openConnection = null)
         {
-            var connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
+            var connection = openConnection;
             try
             {
-                connection.Open();
+                if (connection == null)
+                {
+                    connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
+                    connection.Open();
+                }
                 DbCommand command = GetDbCommand(connection);
                 string[] commandTexts = new string[] { sql };
                 if (!string.IsNullOrEmpty(commandsSeparator))
@@ -318,13 +325,17 @@ namespace Seal.Helpers
             }
         }
 
-        public object ExecuteScalar(ConnectionType connectionType, string connectionString, string sql)
+        public object ExecuteScalar(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection = null)
         {
             object result = null;
-            var connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
+            var connection = openConnection;
             try
             {
-                connection.Open();
+                if (connection == null)
+                {
+                    connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
+                    connection.Open();
+                }
                 DbCommand command = GetDbCommand(connection);
                 command.CommandText = sql;
                 result = command.ExecuteScalar();
@@ -339,17 +350,17 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTable(MetaConnection connection, string sql)
         {
-            return LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql);
+            return LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection());
         }
 
         public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
         {
-            ExecuteNonQuery(connection.ConnectionType, connection.FullConnectionString, sql, commandsSeparator);
+            ExecuteNonQuery(connection.ConnectionType, connection.FullConnectionString, sql, commandsSeparator, connection.GetOpenConnection());
         }
 
         public object ExecuteScalar(MetaConnection connection, string sql)
         {
-            return ExecuteScalar(connection.ConnectionType, connection.FullConnectionString, sql);
+            return ExecuteScalar(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection());
         }
 
 
