@@ -163,7 +163,6 @@ namespace Seal.Controls
             _modelPanel.Model.CheckSortOrders();
         }
 
-
         void onDragOver(object sender, DragEventArgs e)
         {
             if (_modelPanel.Model.IsSubModel) return;

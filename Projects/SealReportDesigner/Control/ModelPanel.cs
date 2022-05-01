@@ -351,6 +351,46 @@ namespace Seal.Controls
                     });
                     menu.Items.Add(item);
 
+                    ElementPanel panel = (ElementPanel)button.Parent;
+                    if (panel != null && panel.Controls.Count > 1)
+                    {
+                        menu.Items.Add(new ToolStripSeparator());
+                        var position = panel.Controls.IndexOf(button);
+                        if (panel.Controls.IndexOf(button) != 0)
+                        {
+                            item = new ToolStripMenuItem("Move first");
+                            item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                            {
+                                movePanelElement(button,0);
+                            });
+                            menu.Items.Add(item);
+
+                            item = new ToolStripMenuItem("Move up");
+                            item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                            {
+                                movePanelElement(button, position-1);
+                            });
+                            menu.Items.Add(item);
+
+                        }
+                        if (position != panel.Controls.Count-1)
+                        {
+                            item = new ToolStripMenuItem("Move down");
+                            item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                            {
+                                movePanelElement(button, position + 1);
+                            });
+                            menu.Items.Add(item);
+
+                            item = new ToolStripMenuItem("Move last");
+                            item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                            {
+                                movePanelElement(button, panel.Controls.Count - 1);
+                            });
+                            menu.Items.Add(item);
+                        }
+                    }
+
                     menu.Items.Add(new ToolStripSeparator());
                     item = new ToolStripMenuItem("Smart copy...");
                     item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
@@ -701,6 +741,21 @@ namespace Seal.Controls
             UpdateLINQModel();
         }
 
+
+        void movePanelElement(Button elementButton, int position)
+        {
+            ElementPanel panel = (ElementPanel)elementButton.Parent;
+            panel.Controls.SetChildIndex(elementButton, position);
+            MainForm.CannotRenderAnymore();
+            PanelsToElements();
+            SelectedButton = null;
+            ElementGrid.SelectedObject = null;
+            panel.RedrawPanel();
+            MainForm.IsModified = true;
+            elementButton.Focus();
+
+            UpdateLINQModel();
+        }
         void copyElementFromPanel(Button elementButton)
         {
             ReportElement element = elementButton.Tag as ReportElement;
