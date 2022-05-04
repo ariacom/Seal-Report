@@ -153,7 +153,14 @@ New parameter values may require a restart of the Report Designer or the Web Ser
 
                 var currentConfig = Path.Combine(publicationDirectory, "appsettings.json");
                 var currentConfigCopy = Path.Combine(publicationDirectory, "appsettings.json.copy");
-                if (File.Exists(currentConfig)) File.Copy(currentConfig, currentConfigCopy, true);
+                if (File.Exists(currentConfig))
+                {
+                    try
+                    {
+                        File.Copy(currentConfig, currentConfigCopy, true);
+                    }
+                    catch { };
+                }
 
                 //Copy installation directory
                 log.Log("Copying files from '{0}' to '{1}'", sourceDirectory, publicationDirectory);

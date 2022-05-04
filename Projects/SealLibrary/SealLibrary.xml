@@ -6019,6 +6019,11 @@
             Translations file name pattern
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.TranslationsExcelPattern">
+            <summary>
+            Translations file name pattern
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.RepositoryTranslationsPath">
             <summary>
             Repository translations file name
@@ -6082,6 +6087,16 @@
         <member name="P:Seal.Model.Repository.RepositoryTranslations">
             <summary>
             Current repository translations
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.ReloadRepositoryTranslations">
+            <summary>
+            Force reload of repository translations
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.FindRepositoryTranslation(System.String,System.String,System.String)">
+            <summary>
+            Find a repository translation from a culture, context, instance and reference
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.RepositoryTranslate(System.String,System.String,System.String,System.String)">
@@ -6186,12 +6201,17 @@
         </member>
         <member name="F:Seal.Model.RepositoryTranslation.Usage">
             <summary>
-            Usgae counter for debug purpose
+            Usage counter for debug purpose
             </summary>
         </member>
         <member name="M:Seal.Model.RepositoryTranslation.InitFromCSV(System.Collections.Generic.Dictionary{System.String,Seal.Model.RepositoryTranslation},System.String,System.Boolean)">
             <summary>
             Init the list of RepositoryTranslation from the CSV file
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RepositoryTranslation.InitFromExcel(System.Collections.Generic.Dictionary{System.String,Seal.Model.RepositoryTranslation},System.String,System.Boolean)">
+            <summary>
+            Init the list of RepositoryTranslation from the Excel file
             </summary>
         </member>
         <member name="T:Seal.Model.ResultCell">

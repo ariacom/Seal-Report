@@ -517,6 +517,7 @@ namespace Seal.Forms
         public void ExportSourceTranslations(ExecutionLogInterface log)
         {
             Repository repository = Repository.Instance.CreateFast();
+            repository.ReloadRepositoryTranslations();
             StringBuilder translations = new StringBuilder();
             try
             {
@@ -527,7 +528,13 @@ namespace Seal.Forms
                 log.Log("Adding elements names in context: Connection\r\n");
                 foreach (var connection in Source.Connections)
                 {
-                    translations.AppendFormat("Connection{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(Source.Name + '.' + connection.Name), Helper.QuoteDouble(connection.Name), extraSeparators);
+                    var context = "Connection";
+                    var instance = Source.Name + '.' + connection.Name;
+                    var reference = connection.Name;
+                    if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                    {
+                        translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                    }
                 }
 
                 log.Log("Adding elements names in context: Element\r\n");
@@ -535,7 +542,13 @@ namespace Seal.Forms
                 {
                     foreach (var element in table.Columns)
                     {
-                        translations.AppendFormat("Element{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(element.Category + '.' + element.DisplayName), Helper.QuoteDouble(element.DisplayName), extraSeparators);
+                        var context = "Element";
+                        var instance = element.Category + '.' + element.DisplayName;
+                        var reference = element.DisplayName;
+                        if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                        {
+                            translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                        }
                     }
                 }
 
@@ -544,7 +557,13 @@ namespace Seal.Forms
                 {
                     if (!string.IsNullOrEmpty(enumList.Message))
                     {
-                        translations.AppendFormat("EnumMessage{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumList.Message), extraSeparators);
+                        var context = "EnumMessage";
+                        var instance = enumList.Name;
+                        var reference = enumList.Message;
+                        if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                        {
+                            translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                        }
                     }
                 }
 
@@ -553,8 +572,22 @@ namespace Seal.Forms
                 {
                     foreach (var enumVal in (from v in enumList.Values select new { v.DisplayValue, v.DisplayRestriction }).Distinct())
                     {
-                        translations.AppendFormat("Enum{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumVal.DisplayValue), extraSeparators);
-                        if (enumVal.DisplayValue != enumVal.DisplayRestriction) translations.AppendFormat("Enum{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumVal.DisplayRestriction), extraSeparators);
+                        var context = "Enum";
+                        var instance = enumList.Name;
+                        var reference = enumVal.DisplayValue;
+                        if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                        {
+                            translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                        }
+
+                        if (enumVal.DisplayValue != enumVal.DisplayRestriction)
+                        {
+                            reference = enumVal.DisplayRestriction;
+                            if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                            {
+                                translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                            }
+                        }
 
                     }
                 }
@@ -566,15 +599,21 @@ namespace Seal.Forms
                     {
                         foreach (var subReport in element.SubReports)
                         {
-                            translations.AppendFormat("SubReport{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(element.Category + '.' + element.DisplayName), subReport.Name, extraSeparators);
+                            var context = "SubReport";
+                            var instance = element.Category + '.' + element.DisplayName;
+                            var reference = subReport.Name;
+                            if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                            {
+                                translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                            }
                         }
                     }
                 }
 
-                string fileName = FileHelper.GetUniqueFileName(Path.Combine(repository.SettingsFolder, Helper.CleanFileName(string.Format("RepositoryTranslations_{0}_WORK.csv", Source.Name))));
+                string fileName = FileHelper.GetUniqueFileName(Path.Combine(repository.SettingsFolder, Helper.CleanFileName(string.Format("RepositoryTranslations_{0}_MISSINGS.csv", Source.Name))));
                 File.WriteAllText(fileName, translations.ToString(), Encoding.UTF8);
 
-                log.Log("\r\nExport of the Data Source translations terminated.\r\n\r\nThe file has been saved to '{0}' and can be re-worked and merged with the repository translations file.\r\n\r\nNote that the effective repository translations file is 'RepositoryTranslations.csv' in the Repository Sub-Folder 'Settings'.", fileName);
+                log.Log("\r\nExport of the missings Data Source translations terminated.\r\n\r\nThe file has been saved to '{0}' and can be re-worked and merged with the repository translations file.\r\n\r\nNote that the effective repository translations file is 'RepositoryTranslations.csv' (or 'RepositoryTranslations.xlsx')' in the Repository Sub-Folder 'Settings'.", fileName);
 
                 var p = new Process();
                 p.StartInfo = new ProcessStartInfo(fileName) { UseShellExecute = true };
@@ -590,7 +629,13 @@ namespace Seal.Forms
         {
             foreach (var fileName in Directory.GetFiles(path))
             {
-                translations.AppendFormat("FileName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(fileName.Substring(len)), Helper.QuoteDouble(Path.GetFileNameWithoutExtension(fileName)), extraSeparators);
+                var context = "FileName";
+                var instance = fileName.Substring(len);
+                var reference = Path.GetFileNameWithoutExtension(fileName);
+                if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                {
+                    translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                }
             }
 
             foreach (string subdir in Directory.GetDirectories(path))
@@ -603,15 +648,31 @@ namespace Seal.Forms
         {
             foreach (string subdir in Directory.GetDirectories(path))
             {
-                translations.AppendFormat("FolderName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(subdir.Substring(len)), Helper.QuoteDouble(Path.GetFileName(subdir)), extraSeparators);
-                translations.AppendFormat("FolderPath{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(subdir.Substring(len)), Helper.QuoteDouble(subdir.Substring(len)), extraSeparators);
+                var context = "FolderName";
+                var instance = subdir.Substring(len);
+                var reference = Path.GetFileName(subdir);
+                if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                {
+                    translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                }
+                reference = subdir.Substring(len);
+                if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                {
+                    translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                }
                 exportFolderNamesTranslations(subdir, translations, separator, extraSeparators, len);
             }
         }
 
         void exportViewsTranslations(ExecutionLogInterface log, ReportView view, Repository repository, StringBuilder translations, string reportPath, string separator, string extraSeparators, int len)
         {
-            translations.AppendFormat("ReportViewName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(reportPath.Substring(len)), Helper.QuoteDouble(view.Name), extraSeparators);
+            var context = "ReportViewName";
+            var instance = reportPath.Substring(len);
+            var reference = view.Name;
+            if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+            {
+                translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+            }
             foreach (var child in view.Views)
             {
                 exportViewsTranslations(log, child, repository, translations, reportPath, separator, extraSeparators, len);
@@ -626,14 +687,25 @@ namespace Seal.Forms
                 {
                     if (log.IsJobCancelled()) return;
                     Report report = Report.LoadFromFile(reportPath, repository);
-                    translations.AppendFormat("ReportDisplayName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(reportPath.Substring(len)), Helper.QuoteDouble(report.ExecutionName), extraSeparators);
+                    var context = "ReportDisplayName";
+                    var instance = reportPath.Substring(len);
+                    var reference = report.ExecutionName;
+                    if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                    {
+                        translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                    }
                     foreach (var view in report.Views)
                     {
                         exportViewsTranslations(log, view, repository, translations, reportPath, separator, extraSeparators, len);
                     }
                     foreach (var output in report.Outputs)
                     {
-                        translations.AppendFormat("ReportOutputName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(reportPath.Substring(len)), Helper.QuoteDouble(output.Name), extraSeparators);
+                        context = "ReportOutputName";
+                        reference = output.Name;
+                        if (Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                        {
+                            translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -653,10 +725,11 @@ namespace Seal.Forms
         public void ExportReportsTranslations(ExecutionLogInterface log)
         {
             Repository repository = Repository.Instance.CreateFast();
+            repository.ReloadRepositoryTranslations();
             StringBuilder translations = new StringBuilder();
             try
             {
-                log.Log("Starting the export of the Folders, Reports and Dasboards translations\r\n");
+                log.Log("Starting the export of the Folders, Reports translations\r\n");
                 string separator = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
                 string extraSeparators = initTranslationFile(translations, separator, repository);
 
@@ -669,10 +742,10 @@ namespace Seal.Forms
                 log.Log("Adding texts in context: ReportExecutionName, ReportViewName, ReportOutputName\r\n");
                 exportReportsTranslations(log, repository.ReportsFolder, repository, translations, separator, extraSeparators, repository.ReportsFolder.Length);
 
-                string fileName = FileHelper.GetUniqueFileName(Path.Combine(repository.SettingsFolder, "FoldersReportsTranslations_WORK.csv"));
+                string fileName = FileHelper.GetUniqueFileName(Path.Combine(repository.SettingsFolder, "FoldersReportsTranslations_MISSINGS.csv"));
                 File.WriteAllText(fileName, translations.ToString(), Encoding.UTF8);
 
-                log.Log("\r\nExport of the Folders and Reports translations terminated.\r\n\r\nThe file has been saved to '{0}' and can be re-worked and merged with the repository translations file.\r\n\r\nNote that the effective repository translations file is 'RepositoryTranslations.csv' in the Repository Sub-Folder 'Settings'.", fileName);
+                log.Log("\r\nExport of the missings Folders and Reports translations terminated.\r\n\r\nThe file has been saved to '{0}' and can be re-worked and merged with the repository translations file.\r\n\r\nNote that the effective repository translations file is 'RepositoryTranslations.csv' (or 'RepositoryTranslations.xlsx') in the Repository Sub-Folder 'Settings'.", fileName);
 
                 var p = new Process();
                 p.StartInfo = new ProcessStartInfo(fileName) { UseShellExecute = true };

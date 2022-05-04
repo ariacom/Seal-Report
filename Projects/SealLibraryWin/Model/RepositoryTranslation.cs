@@ -7,6 +7,7 @@ using System.IO;
 using Seal.Helpers;
 using System.Text.RegularExpressions;
 using System;
+using System.Data;
 
 namespace Seal.Model
 {
@@ -36,7 +37,7 @@ namespace Seal.Model
         public Dictionary<string, string> Translations = new Dictionary<string, string>();
 
         /// <summary>
-        /// Usgae counter for debug purpose
+        /// Usage counter for debug purpose
         /// </summary>
         public int Usage;
 
@@ -61,6 +62,34 @@ namespace Seal.Model
                         initFromCSV(translations, newPath, hasInstance);
                     }
                     catch (Exception ex) {
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Init the list of RepositoryTranslation from the Excel file
+        /// </summary>
+        static public void InitFromExcel(Dictionary<string, RepositoryTranslation> translations, string path, bool hasInstance)
+        {
+            try
+            {
+                initFromExcel(translations, path, hasInstance);
+            }
+            catch
+            {
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        //probably locked with Excel, copy in a temp file to try
+                        string newPath = FileHelper.GetTempUniqueFileName(path);
+                        File.Copy(path, newPath, true);
+                        initFromExcel(translations, newPath, hasInstance);
+                    }
+                    catch (Exception ex)
+                    {
                         System.Diagnostics.Debug.WriteLine(ex.Message);
                     }
                 }
@@ -137,5 +166,59 @@ namespace Seal.Model
                 }
             }
         }
+
+        static private void initFromExcel(Dictionary<string, RepositoryTranslation> translations, string filePath, bool hasInstance)
+        {
+            if (File.Exists(filePath))
+            {
+                var dt = DataTableLoader.FromExcel(filePath);
+                List<string> languages = new List<string>();
+
+                if (dt.Rows.Count > 1)
+                {
+                    int startCol = (hasInstance ? 3 : 2);
+                    for (int i = startCol; i < dt.Columns.Count; i++)
+                    {
+                        languages.Add(ExcelHelper.FromCsv(dt.Columns[i].ColumnName));
+                    }
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        var context = ExcelHelper.FromCsv(dr[0].ToString());
+                        var reference = ExcelHelper.FromCsv(dr[startCol - 1].ToString());
+
+                        RepositoryTranslation translation = null;
+                        var key = context + "\r" + reference;
+                        if (hasInstance)
+                        {
+                            var instance = ExcelHelper.FromCsv(dr[1].ToString());
+                            key += "\r" + instance;
+                            if (!translations.ContainsKey(key))
+                            {
+                                translation = new RepositoryTranslation() { Context = context, Reference = reference, Instance = instance };
+                                translations.Add(key, translation);
+                            }
+                            else translation = translations[key];
+                        }
+                        else
+                        {
+                            if (!translations.ContainsKey(key))
+                            {
+                                translation = new RepositoryTranslation() { Context = context, Reference = reference };
+                                translations.Add(key, translation);
+                            }
+                            else translation = translations[key];
+                        }
+
+                        for (int i = 0; i < languages.Count && i + startCol < dt.Columns.Count; i++)
+                        {
+                            if (string.IsNullOrEmpty(languages[i]) || translation.Translations.ContainsKey(languages[i])) continue;
+                            translation.Translations.Add(languages[i], ExcelHelper.FromCsv(dr[i + startCol].ToString()));
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

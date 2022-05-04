@@ -759,6 +759,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Translations file name pattern
+        /// </summary>
+        public string TranslationsExcelPattern
+        {
+            get { return "Translations*.xlsx"; }
+        }
+
+        /// <summary>
         /// Repository translations file name
         /// </summary>
         public string RepositoryTranslationsPath
@@ -810,7 +818,12 @@ namespace Seal.Model
                         _translations = new Dictionary<string, RepositoryTranslation>();
                         foreach (string path in Directory.GetFiles(SettingsFolder, TranslationsPattern))
                         {
-                            RepositoryTranslation.InitFromCSV(_translations, path, false);
+                            var excelPath = Path.ChangeExtension(path, "xlsx");
+                            if (!File.Exists(excelPath)) RepositoryTranslation.InitFromCSV(_translations, path, false);
+                        }
+                        foreach (string path in Directory.GetFiles(SettingsFolder, TranslationsExcelPattern))
+                        {
+                            RepositoryTranslation.InitFromExcel(_translations, path, false);
                         }
                     }
                 }
@@ -927,6 +940,8 @@ namespace Seal.Model
             return Helper.ToJS(Translate(CultureInfo.TwoLetterISOLanguageName, "Report", reference));
         }
 
+        Dictionary<string, RepositoryTranslation> _repositoryWildCharTranslations = null;
+
         Dictionary<string, RepositoryTranslation> _repositoryTranslations = null;
         /// <summary>
         /// Current repository translations
@@ -940,7 +955,9 @@ namespace Seal.Model
                     lock (this)
                     {
                         _repositoryTranslations = new Dictionary<string, RepositoryTranslation>();
-                        RepositoryTranslation.InitFromCSV(_repositoryTranslations, RepositoryTranslationsPath, true);
+                        var excelPath = Path.ChangeExtension(RepositoryTranslationsPath, "xlsx");
+                        if (File.Exists(excelPath)) RepositoryTranslation.InitFromExcel(_repositoryTranslations, excelPath, true);
+                        else RepositoryTranslation.InitFromCSV(_repositoryTranslations, RepositoryTranslationsPath, true);
                     }
                 }
                 return _repositoryTranslations;
@@ -948,30 +965,82 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Translate a reference text in a repository context
+        /// Force reload of repository translations
         /// </summary>
-        public string RepositoryTranslate(string culture, string context, string instance, string reference)
+        public void ReloadRepositoryTranslations()
         {
-            if (string.IsNullOrEmpty(reference)) return "";
+            _repositoryTranslations = null;
+        }
 
-            string result = reference;
+        /// <summary>
+        /// Find a repository translation from a culture, context, instance and reference
+        /// </summary>
+        public RepositoryTranslation FindRepositoryTranslation(string context, string instance, string reference)
+        {
+            RepositoryTranslation result = null;
+            if (string.IsNullOrEmpty(reference)) return null;
+
             try
             {
                 var key = context + "\r" + reference + "\r" + instance;
-                RepositoryTranslation myTranslation = RepositoryTranslations.ContainsKey(key) ? RepositoryTranslations[key] : null;
-                if (myTranslation != null)
+                result = RepositoryTranslations.ContainsKey(key) ? RepositoryTranslations[key] : null;
+                if (result == null && context.StartsWith("Report") || context == "FileName")
                 {
-                    if (!string.IsNullOrEmpty(culture) && myTranslation.Translations.ContainsKey(culture))
+                    //Wild char management
+                    if (_repositoryWildCharTranslations == null)
                     {
-                        result = myTranslation.Translations[culture];
-                        if (string.IsNullOrEmpty(result)) result = reference;
+                        _repositoryWildCharTranslations = new Dictionary<string, RepositoryTranslation>();
+                        foreach (var k in RepositoryTranslations.Keys.Where(i => i.Contains('*')))
+                        {
+                            _repositoryWildCharTranslations.Add(k, RepositoryTranslations[k]);
+                        }
+                    }
+
+                    foreach (var t in _repositoryWildCharTranslations.Values.Where(i => i.Context == context && i.Reference == reference))
+                    {
+                        if (
+                            (t.Instance.StartsWith('*') && t.Instance.EndsWith('*') && instance.Contains(t.Instance.Substring(1, t.Instance.Length - 2))) ||
+                            (t.Instance.StartsWith('*') && instance.EndsWith(t.Instance.Substring(1, t.Instance.Length - 1))) ||
+                            (t.Instance.EndsWith('*') && instance.StartsWith(t.Instance.Substring(0, t.Instance.Length - 1)))
+                            )
+                        {
+                            result = t;
+                            break;
+                        }
+
                     }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Helper.WriteLogException("FindTranslation", ex);
             }
+            return result;
+        }
+
+        /// <summary>
+        /// Translate a reference text in a repository context
+        /// </summary>
+        public string RepositoryTranslate(string culture, string context, string instance, string reference)
+        {
+            string result = null;
+            try
+            {
+                RepositoryTranslation myTranslation = FindRepositoryTranslation(context, instance, reference);
+                if (!string.IsNullOrEmpty(culture) && myTranslation != null)
+                {
+                    if (myTranslation.Translations.ContainsKey(culture))
+                    {
+                        result = myTranslation.Translations[culture];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("RepositoryTranslate", ex);
+            }
+            if (string.IsNullOrEmpty(result)) result = reference;
+            if (string.IsNullOrEmpty(result)) result = "";
             return result;
         }
 
