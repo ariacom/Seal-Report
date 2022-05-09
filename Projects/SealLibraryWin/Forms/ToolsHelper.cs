@@ -15,6 +15,8 @@ using System.IO;
 using Microsoft.Win32.TaskScheduler;
 using System.Diagnostics;
 using System.Drawing;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace Seal.Forms
 {
@@ -39,6 +41,8 @@ namespace Seal.Forms
         ToolStripMenuItem _refreshEnum = new ToolStripMenuItem() { Text = "Refresh Enumerated lists...", ToolTipText = "Refresh all the dynamic enmerated list values from the database", AutoToolTip = true };
         ToolStripMenuItem _exportSourceTranslations = new ToolStripMenuItem() { Text = "Export Data Source translations in CSV...", ToolTipText = "Export all translations found in the Data Source into a CSV file.", AutoToolTip = true };
         ToolStripMenuItem _exportReportsTranslations = new ToolStripMenuItem() { Text = "Export Folders and Reports translations in CSV...", ToolTipText = "Export all report and folders translations found in the repository into a CSV file.", AutoToolTip = true };
+        ToolStripMenuItem _importSourceObjectsExcel = new ToolStripMenuItem() { Text = "Import Objects from an Excel file...", ToolTipText = "Import Data Source Objects from an Excel file.", AutoToolTip = true };
+        ToolStripMenuItem _exportSourceObjectsExcel = new ToolStripMenuItem() { Text = "Export Objects to an Excel file...", ToolTipText = "Export Data Source  Objects to an Excel file.", AutoToolTip = true };
         ToolStripMenuItem _importSourceObjects = new ToolStripMenuItem() { Text = "Import Objects from another Data Source file...", ToolTipText = "Import Data Source Objects from another Data Source file.", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedules = new ToolStripMenuItem() { Text = "Synchronize Report Schedules...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedulesCurrentUser = new ToolStripMenuItem() { Text = "Synchronize Report Schedules with the logged user...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler using the current logged user", AutoToolTip = true };
@@ -79,6 +83,13 @@ namespace Seal.Forms
                 toolsMenuItem.DropDownItems.Add(_exportReportsTranslations);
 
                 toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
+
+                _exportSourceObjectsExcel.Click += tools_Click;
+                toolsMenuItem.DropDownItems.Add(_exportSourceObjectsExcel);
+
+                _importSourceObjectsExcel.Click += tools_Click;
+                toolsMenuItem.DropDownItems.Add(_importSourceObjectsExcel);
+
                 _importSourceObjects.Click += tools_Click;
                 toolsMenuItem.DropDownItems.Add(_importSourceObjects);
             }
@@ -180,133 +191,70 @@ namespace Seal.Forms
                             frm.Width = Math.Max(index + 5, frm.Width);
                         }
                         frm.optionPanel.Visible = (options.Count > 0);
-
                         if (frm.ShowDialog() == DialogResult.OK)
                         {
-                            try
+                            foreach (var obj in objects) obj.Name = obj.Name.Substring(obj.Name.IndexOf(':') + 2);
+                            EntityHandler.SetModified();
+
+                            thread = new Thread(delegate (object param)
                             {
-                                Cursor.Current = Cursors.WaitCursor;
-                                EntityHandler.SetModified();
-                                var guids = new Dictionary<string, string>();
+                                ImportSourceObjects((ExecutionLogInterface)param, frm.CheckedItems, changeGUID.Checked, overwriteProperties.Checked);
+                            });
+                        }
+                    }
+                }
+                else if (sender == _importSourceObjectsExcel)
+                {
+                    OpenFileDialog dlg = new OpenFileDialog();
+                    dlg.Filter = "Excel Source files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+                    dlg.Title = "Select an Excel Source file";
+                    dlg.CheckFileExists = true;
+                    dlg.CheckPathExists = true;
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        EntityHandler.SetModified();
+                        thread = new Thread(delegate (object param)
+                        {
+                            ImportSourceObjectsExcel((ExecutionLogInterface)param, dlg.FileName);
+                        });
+                    }
+                }
+                else if (sender == _exportSourceObjectsExcel)
+                {
+                    List<RootComponent> objects = new List<RootComponent>();
+                    objects.AddRange(Source.MetaData.Tables);
+                    objects.AddRange(Source.MetaData.Enums);
 
-                                foreach (var obj in objects)
-                                {
-                                    obj.Name = obj.Name.Substring(obj.Name.IndexOf(':')+2);
-                                }
+                    foreach (var obj in objects)
+                    {
+                        if (obj is MetaTable) obj.Name = "TABLES AND COLUMNS: " + obj.Name;
+                        if (obj is MetaEnum) obj.Name = "ENUM VALUES: " + obj.Name;
+                    }
 
-                                //First enums
-                                foreach (var item in frm.CheckedItems.Where(i => i is MetaEnum))
-                                {
-                                    var en = item as MetaEnum;
-                                    if (changeGUID.Checked)
-                                    {
-                                        var oldGUID = en.GUID;
-                                        en.GUID = Helper.NewGUID();
-                                        guids.Add(oldGUID, en.GUID);
-                                    }
-                                    else
-                                    {
-                                        Source.MetaData.Enums.RemoveAll(i => i.GUID == en.GUID);
-                                    }
-                                    Source.MetaData.Enums.Add(en);
-                                }
+                    MultipleSelectForm frm = new MultipleSelectForm("Please select objects to export", objects, "Name");
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (var obj in objects) obj.Name = obj.Name.Substring(obj.Name.IndexOf(':') + 2);
 
-                                //Then tables
-                                foreach (var item in frm.CheckedItems.Where(i => i is MetaTable))
-                                {
-                                    var table = item as MetaTable;
-                                    if (changeGUID.Checked)
-                                    {
-                                        var oldGUID = table.GUID;
-                                        table.GUID = Helper.NewGUID();
-                                        guids.Add(oldGUID, table.GUID);
-                                        foreach (var col in table.Columns)
-                                        {
-                                            oldGUID = col.GUID;
-                                            col.GUID = Helper.NewGUID();
-                                            guids.Add(oldGUID, col.GUID);
-                                            //Check enum
-                                            if (!string.IsNullOrEmpty(col.EnumGUID) && guids.ContainsKey(col.EnumGUID)) col.EnumGUID = guids[col.EnumGUID];
-
-                                            if (!Source.MetaData.Enums.Exists(i => i.GUID == col.EnumGUID)) col.EnumGUID = null;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        var destTable = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == table.GUID);
-                                        if (destTable != null)
-                                        {
-                                            //Handles columns
-                                            foreach(var col in destTable.Columns)
-                                            {
-                                                if (!table.Columns.Exists(i => i.GUID == col.GUID)) table.Columns.Add(col);
-                                                else
-                                                {
-                                                    if (!overwriteProperties.Checked)
-                                                    {
-                                                        //keep column from the source
-                                                        table.Columns.RemoveAll(i => i.GUID == col.GUID);
-                                                        table.Columns.Add(col);
-                                                    }
-                                                }
-                                            }
-                                            Source.MetaData.Tables.Remove(destTable);
-                                        }
-                                    }
-                                    Source.MetaData.Tables.Add(table);
-                                }
-                                //Then joins
-                                foreach (var item in frm.CheckedItems.Where(i => i is MetaJoin))
-                                {
-                                    var join = item as MetaJoin;
-                                    if (changeGUID.Checked)
-                                    {
-                                        var oldGUID = join.GUID;
-                                        join.GUID = Helper.NewGUID();
-                                        guids.Add(oldGUID, join.GUID);
-                                        //Check tables
-                                        if (!string.IsNullOrEmpty(join.LeftTableGUID) && guids.ContainsKey(join.LeftTableGUID)) join.LeftTableGUID = guids[join.LeftTableGUID];
-                                        if (!string.IsNullOrEmpty(join.RightTableGUID) && guids.ContainsKey(join.RightTableGUID)) join.RightTableGUID = guids[join.RightTableGUID];
-                                    }
-                                    else
-                                    {
-                                        Source.MetaData.Joins.RemoveAll(i => i.GUID == join.GUID);
-                                    }
-                                    Source.MetaData.Joins.Add(join);
-                                }
-                                //Then connections
-                                foreach (var item in frm.CheckedItems.Where(i => i is MetaConnection))
-                                {
-                                    var connection = item as MetaConnection;
-                                    if (changeGUID.Checked)
-                                    {
-                                        var oldGUID = connection.GUID;
-                                        connection.GUID = Helper.NewGUID();
-                                        guids.Add(oldGUID, connection.GUID);
-                                    }
-                                    else
-                                    {
-                                        Source.Connections.RemoveAll(i => i.GUID == connection.GUID);
-                                    }
-                                    Source.Connections.Add(connection);
-                                }
-
-
-
-                                Source.InitReferences(Source.Repository);
-                                EntityHandler.InitEntity(Source);
-                            }
-                            finally
+                        SaveFileDialog dlg = new SaveFileDialog();
+                        dlg.Filter = "Excel Source files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+                        dlg.FileName = Source.Name + ".xlsx";
+                        if (dlg.ShowDialog() == DialogResult.OK)
+                        {
+                            thread = new Thread(delegate (object param)
                             {
-                                Cursor.Current = Cursors.Default;
-                            }
+                                ExportsSourceObjectsExcel((ExecutionLogInterface)param, frm.CheckedItems, dlg.FileName);
+                            });
                         }
                     }
                 }
                 else if (sender == _synchronizeSchedules || sender == _synchronizeSchedulesCurrentUser)
                 {
                     if (!Helper.CheckTaskSchedulerOS()) return;
-                    thread = new Thread(delegate (object param) { SynchronizeSchedules((ExecutionLogInterface)param, sender == _synchronizeSchedulesCurrentUser); });
+                    thread = new Thread(delegate (object param)
+                    {
+                        SynchronizeSchedules((ExecutionLogInterface)param, sender == _synchronizeSchedulesCurrentUser);
+                    });
                 }
                 else if (sender == _executeManager || sender == _executeDesigner)
                 {
@@ -332,7 +280,16 @@ namespace Seal.Forms
                     frm.ShowDialog();
                 }
 
-                if (_setModified && EntityHandler != null) EntityHandler.SetModified();
+                if (_setModified && EntityHandler != null)
+                {
+                    EntityHandler.SetModified();
+
+                    if (sender == _importSourceObjectsExcel || sender == _importSourceObjects)
+                    {
+                        Source.InitReferences(Source.Repository);
+                        EntityHandler.InitEntity(Source);
+                    }
+                }
             }
             finally
             {
@@ -719,6 +676,355 @@ namespace Seal.Forms
             {
                 if (log.IsJobCancelled()) return;
                 exportReportsTranslations(log, subFolder, repository, translations, separator, extraSeparators, len);
+            }
+        }
+
+        public void ExportsSourceObjectsExcel(ExecutionLogInterface log, List<object> checkedItems, string path)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                var ep = new ExcelPackage();
+                var items = checkedItems.Where(i => i is MetaTable);
+                if (items.Count() > 0)
+                {
+                    log.Log("Processing tables.");
+                    var ws = ep.Workbook.Worksheets.Add("Tables");
+                    ws.Cells["A1"].Value = "Name";
+                    ws.Cells["B1"].Value = "Column";
+                    ws.Cells["C1"].Value = "Type";
+                    ws.Cells["D1"].Value = "Category";
+                    ws.Cells["E1"].Value = "Display Name";
+                    ws.Cells["F1"].Value = "Display Order";
+                    ws.Cells["G1"].Value = "Enum";
+                    ws.Cells["H1"].Value = "CSS Class";
+                    ws.Cells["I1"].Value = "Is Aggregate";
+                    ws.Cells["J1"].Value = "Numeric Standard Format";
+                    ws.Cells["K1"].Value = "DateTime Standard Format";
+                    ws.Cells["L1"].Value = "Format";
+                    ws.Cells["M1"].Value = "Tag";
+                    ws.Cells["N1"].Value = "GUID";
+                    int index = 2;
+                    foreach (var item in items)
+                    {
+                        var table = item as MetaTable;
+                        foreach (var col in table.Columns)
+                        {
+                            ws.Cells["A" + index].Value = table.Name;
+                            ws.Cells["B" + index].Value = col.Name;
+                            ws.Cells["C" + index].Value = col.Type;
+                            ws.Cells["D" + index].Value = col.Category;
+                            ws.Cells["E" + index].Value = col.DisplayName;
+                            ws.Cells["F" + index].Value = col.DisplayOrder;
+                            ws.Cells["G" + index].Value = col.Enum?.Name;
+                            ws.Cells["H" + index].Value = col.CssClass;
+                            ws.Cells["I" + index].Value = col.IsAggregate;
+                            ws.Cells["J" + index].Value = col.Enum == null && col.Type == ColumnType.Numeric ? col.NumericStandardFormat : "";
+                            ws.Cells["K" + index].Value = col.Enum == null && col.Type == ColumnType.DateTime ? col.DateTimeStandardFormat : "";
+                            ws.Cells["L" + index].Value = col.Format;
+                            ws.Cells["M" + index].Value = col.Tag;
+                            ws.Cells["N" + index].Value = col.GUID;
+                            index++;
+                        }
+
+                    }
+                    ws.Cells["A1:N1"].AutoFilter = true;
+                    ws.Cells["A1:N1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    ws.Cells["A1:N1"].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+                    ws.Cells["A1:N1"].Style.Font.Bold = true;
+                }
+
+                items = checkedItems.Where(i => i is MetaEnum);
+                if (items.Count() > 0)
+                {
+                    log.Log("Processing enumerated lists.");
+                    var ws = ep.Workbook.Worksheets.Add("Enums");
+                    ws.Cells["A1"].Value = "Name";
+                    ws.Cells["B1"].Value = "Id";
+                    ws.Cells["C1"].Value = "Value";
+                    ws.Cells["D1"].Value = "Restriction Value";
+                    ws.Cells["E1"].Value = "CSS";
+                    ws.Cells["F1"].Value = "Class";
+                    ws.Cells["G1"].Value = "GUID";
+                    int index = 2;
+                    foreach (var item in items)
+                    {
+                        var en = item as MetaEnum;
+                        foreach (var ev in en.Values)
+                        {
+                            ws.Cells["A" + index].Value = en.Name.Replace("ENUM VALUES: ", "");
+                            ws.Cells["B" + index].Value = ev.Id;
+                            ws.Cells["C" + index].Value = ev.Val;
+                            ws.Cells["D" + index].Value = ev.ValR;
+                            ws.Cells["E" + index].Value = ev.Css;
+                            ws.Cells["F" + index].Value = ev.Class;
+                            index++;
+                        }
+                    }
+                    ws.Cells["A1:F1"].AutoFilter = true;
+                    ws.Cells["A1:F1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    ws.Cells["A1:F1"].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+                    ws.Cells["A1:F1"].Style.Font.Bold = true;
+                }
+                foreach (ExcelWorksheet sheet in ep.Workbook.Worksheets.Where(i => i.Dimension != null))
+                {
+                    sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+                    sheet.View.FreezePanes(2, 1);
+                }
+                ep.SaveAs(new FileInfo(path));
+                log.Log($"The file '{path}' has been saved.\r\nIt can be modified and re-imported to the Data Source.");
+            }
+            catch (Exception ex)
+            {
+                log.LogRaw("ERROR\r\n");
+                log.Log(ex.Message);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        public void ImportSourceObjectsExcel(ExecutionLogInterface log, string path)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                _setModified = true;
+
+                var ep = new ExcelPackage(new FileInfo(path));
+                foreach (var ws in ep.Workbook.Worksheets)
+                {
+                    if (ws.Name == "Tables")
+                    {
+                        log.Log("Processing tables...");
+                        int index = 2;
+                        while (true)
+                        {
+                            var tableName = ws.Cells["A" + index].Value?.ToString().Trim();
+                            var columnName = ws.Cells["B" + index].Value?.ToString().Trim();
+                            var columnGUID = ws.Cells["N" + index].Value?.ToString();
+
+                            if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(columnName)) break;
+                            log.Log($"Processing {tableName} {columnName}");
+                            var table = Source.MetaData.Tables.FirstOrDefault(i => i.Name == tableName);
+                            if (table == null)
+                            {
+                                log.Log("Creating table: " + tableName);
+                                table = Source.AddTable(false);
+                                table.Name = tableName;
+                            }
+
+                            MetaColumn column = null;
+                            if (!string.IsNullOrEmpty(columnGUID)) column = table.Columns.FirstOrDefault(i => i.GUID.ToLower() == columnGUID.ToLower());
+                            if (column == null) column = table.Columns.FirstOrDefault(i => i.Name.ToLower() == columnName.ToLower());
+                            if (column == null)
+                            {
+                                log.Log("Creating column: " + columnName);
+                                column = Source.AddColumn(table);
+                                column.Name = columnName;
+                            }
+
+                            //properties
+                            Helper.SetPropertyValue(column, "Type", ws.Cells["C" + index].Value?.ToString());
+                            column.Category = ws.Cells["D" + index].Value?.ToString();
+                            column.DisplayName = ws.Cells["E" + index].Value?.ToString();
+                            column.DisplayOrder = int.Parse(ws.Cells["F" + index].Value?.ToString());
+                            //Enum
+                            column.EnumGUID = "";
+                            var en = Source.MetaData.Enums.FirstOrDefault(i => i.Name.ToLower() == ws.Cells["G" + index].Value?.ToString().ToLower());
+                            if (en != null)
+                            {
+                                column.EnumGUID = en.GUID;
+                            }
+
+                            column.CssClass = ws.Cells["H" + index].Value?.ToString();
+                            column.IsAggregate = ws.Cells["I" + index].Value?.ToString().ToLower() == "true";
+                            var format = ws.Cells["J" + index].Value?.ToString();
+                            if (!string.IsNullOrEmpty(format))
+                            {
+                                Helper.SetPropertyValue(column, "NumericStandardFormat", format);
+                            }
+                            format = ws.Cells["K" + index].Value?.ToString();
+                            if (!string.IsNullOrEmpty(format))
+                            {
+                                Helper.SetPropertyValue(column, "DateTimeStandardFormat", format);
+                            }
+                            column.Format = ws.Cells["L" + index].Value?.ToString();
+                            column.Tag = ws.Cells["M" + index].Value?.ToString();
+
+                            column.SetStandardFormat();
+                            index++;
+                        }
+
+                    }
+                    if (ws.Name == "Enums")
+                    {
+                        int index = 2;
+                        log.Log("Processing enumerated lists...");
+                        var cleared = new List<MetaEnum>();
+                        while (true)
+                        {
+                            var enumName = ws.Cells["A" + index].Value?.ToString().Trim();
+                            if (string.IsNullOrEmpty(enumName)) break;
+                            var el = Source.MetaData.Enums.FirstOrDefault(i => i.Name == enumName);
+                            if (el == null)
+                            {
+                                log.Log("Creating enum: " + enumName);
+                                el = Source.AddEnum();
+                                el.Name = enumName;
+                            }
+                            if (!cleared.Contains(el))
+                            {
+                                log.Log("Enum: " + enumName);
+                                el.Values.Clear();
+                                cleared.Add(el);
+                            }
+                            var item = new MetaEV();
+                            item.Id = ws.Cells["B" + index].Value?.ToString();
+                            item.Val = ws.Cells["C" + index].Value?.ToString();
+                            log.Log($"Processing {item.Id} {item.Val}");
+                            item.ValR = ws.Cells["D" + index].Value?.ToString();
+                            item.Css = ws.Cells["E" + index].Value?.ToString();
+                            item.Class = ws.Cells["F" + index].Value?.ToString();
+                            index++;
+                            el.Values.Add(item);
+                        }
+                    }
+                }
+                log.Log("Import has been done.");
+            }
+            catch (Exception ex)
+            {
+                log.LogRaw("ERROR\r\n");
+                log.Log(ex.Message);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        public void ImportSourceObjects(ExecutionLogInterface log, List<object> checkedItems, bool changeGUID, bool overwriteProperties)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                var guids = new Dictionary<string, string>();
+
+                _setModified = true;
+
+                //First enums
+                foreach (var item in checkedItems.Where(i => i is MetaEnum))
+                {
+                    var en = item as MetaEnum;
+                    log.Log("Processing Enum: " + en.Name);
+
+                    if (changeGUID)
+                    {
+                        var oldGUID = en.GUID;
+                        en.GUID = Helper.NewGUID();
+                        guids.Add(oldGUID, en.GUID);
+                    }
+                    else
+                    {
+                        Source.MetaData.Enums.RemoveAll(i => i.GUID == en.GUID);
+                    }
+                    Source.MetaData.Enums.Add(en);
+                }
+
+                //Then tables
+                foreach (var item in checkedItems.Where(i => i is MetaTable))
+                {
+                    var table = item as MetaTable;
+                    log.Log("Processing Table: " + table.Name);
+                    if (changeGUID)
+                    {
+                        var oldGUID = table.GUID;
+                        table.GUID = Helper.NewGUID();
+                        guids.Add(oldGUID, table.GUID);
+                        foreach (var col in table.Columns)
+                        {
+                            oldGUID = col.GUID;
+                            col.GUID = Helper.NewGUID();
+                            guids.Add(oldGUID, col.GUID);
+                            //Check enum
+                            if (!string.IsNullOrEmpty(col.EnumGUID) && guids.ContainsKey(col.EnumGUID)) col.EnumGUID = guids[col.EnumGUID];
+
+                            if (!Source.MetaData.Enums.Exists(i => i.GUID == col.EnumGUID)) col.EnumGUID = null;
+                        }
+                    }
+                    else
+                    {
+                        var destTable = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == table.GUID);
+                        if (destTable != null)
+                        {
+                            //Handles columns
+                            foreach (var col in destTable.Columns)
+                            {
+                                if (!table.Columns.Exists(i => i.GUID == col.GUID)) table.Columns.Add(col);
+                                else
+                                {
+                                    if (!overwriteProperties)
+                                    {
+                                        //keep column from the source
+                                        table.Columns.RemoveAll(i => i.GUID == col.GUID);
+                                        table.Columns.Add(col);
+                                    }
+                                }
+                            }
+                            Source.MetaData.Tables.Remove(destTable);
+                        }
+                    }
+                    Source.MetaData.Tables.Add(table);
+                }
+                //Then joins
+                foreach (var item in checkedItems.Where(i => i is MetaJoin))
+                {
+                    var join = item as MetaJoin;
+                    log.Log("Processing Join: " + join.Name);
+                    if (changeGUID)
+                    {
+                        var oldGUID = join.GUID;
+                        join.GUID = Helper.NewGUID();
+                        guids.Add(oldGUID, join.GUID);
+                        //Check tables
+                        if (!string.IsNullOrEmpty(join.LeftTableGUID) && guids.ContainsKey(join.LeftTableGUID)) join.LeftTableGUID = guids[join.LeftTableGUID];
+                        if (!string.IsNullOrEmpty(join.RightTableGUID) && guids.ContainsKey(join.RightTableGUID)) join.RightTableGUID = guids[join.RightTableGUID];
+                    }
+                    else
+                    {
+                        Source.MetaData.Joins.RemoveAll(i => i.GUID == join.GUID);
+                    }
+                    Source.MetaData.Joins.Add(join);
+                }
+                //Then connections
+                foreach (var item in checkedItems.Where(i => i is MetaConnection))
+                {
+                    var connection = item as MetaConnection;
+                    log.Log("Processing Connection: " + connection.Name);
+                    if (changeGUID)
+                    {
+                        var oldGUID = connection.GUID;
+                        connection.GUID = Helper.NewGUID();
+                        guids.Add(oldGUID, connection.GUID);
+                    }
+                    else
+                    {
+                        Source.Connections.RemoveAll(i => i.GUID == connection.GUID);
+                    }
+                    Source.Connections.Add(connection);
+                }
+                log.Log("Import has been done.");
+            }
+            catch (Exception ex)
+            {
+                log.LogRaw("ERROR\r\n");
+                log.Log(ex.Message);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
         }
 

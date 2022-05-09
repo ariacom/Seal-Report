@@ -146,7 +146,7 @@ namespace Seal.Helpers
             return result;
         }
 
-        public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "*")
+        public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "*", string skipStartsPattern = "")
         {
             if (log != null) log.LogMessage("Copying directory '{0}' to '{1}'", source, destination);
 
@@ -155,6 +155,8 @@ namespace Seal.Helpers
             {
                 try
                 {
+                    if (!string.IsNullOrEmpty(skipStartsPattern) && Path.GetFileName(file).ToLower().StartsWith(skipStartsPattern.ToLower())) continue;
+
                     var destinationFile = Path.Combine(destination, Path.GetFileName(file));
                     if (log != null) log.LogMessage("Copy '{0}' to '{1}'", file, destinationFile);
                     File.Copy(file, destinationFile, true);

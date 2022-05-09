@@ -41,6 +41,7 @@ namespace Seal.Model
                 GetProperty("Tag").SetIsBrowsable(true);
                 GetProperty("DisplayName").SetIsBrowsable(true);
                 GetProperty("DisplayOrder").SetIsBrowsable(true);
+                GetProperty("CssClass").SetIsBrowsable(true);
                 GetProperty("Format").SetIsBrowsable(true);
                 GetProperty("EnumGUID").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetIsBrowsable(true);
@@ -198,6 +199,16 @@ namespace Seal.Model
         {
             return DisplayOrder;
         }
+
+
+        /// <summary>
+        /// Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+        /// </summary>
+#if WINDOWS
+        [Category("Display"), DisplayName("CSS Classes"), Description("Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values."), Id(5, 2)]
+        [TypeConverter(typeof(CssClassConverter))]
+#endif
+        public string CssClass { get; set; }
 
 
         protected NumericStandardFormat _numericStandardFormat = NumericStandardFormat.Default;

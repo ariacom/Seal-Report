@@ -115,3 +115,25 @@ body {
     font-style:italic;
     font-weight: bold;
 }
+
+/* Cells values */
+.cell-text {
+}
+
+.cell-datetime {
+    color: darkgreen;
+}
+
+.cell-numeric {
+    color: darkblue;
+}
+
+.cell-numeric-positive {
+    color: darkblue;
+}
+
+.cell-numeric-negative {
+    color: red;
+}
+
+

@@ -321,6 +321,22 @@ namespace Seal.Model
                     if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssClass : DefaultCellCssClass;
                     else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssClass : DefaultNumericCellCssClass;
                     else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssClass : DefaultDateTimeCellCssClass;
+
+
+                    if (!IsTitle)
+                    {
+                        var finalClass = Element.FinalCssClass;
+                        if (!string.IsNullOrEmpty(Element.FinalCssClass))
+                        {
+                            if (Element.IsNumeric && Element.FinalCssClass == "cell-numeric-DYNAMIC")
+                            {
+                                //Handling of negative value
+                                finalClass = DoubleValue >= 0 ? "cell-numeric-positive" : "cell-numeric-negative";
+                            }
+                            result += (!string.IsNullOrEmpty(result) ? " " : "") + finalClass;
+
+                        }
+                    }
                 }
                 return result;
             }

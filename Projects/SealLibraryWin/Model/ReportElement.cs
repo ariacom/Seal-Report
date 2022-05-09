@@ -68,6 +68,7 @@ namespace Seal.Model
                     GetProperty("NavigationScript").SetIsBrowsable(true);
                     GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("EnumGUIDEL").SetIsBrowsable(true);
+                    GetProperty("CssClassEl").SetIsBrowsable(true);
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum && PivotPosition != PivotPosition.Data);
                     GetProperty("ContainsHtml").SetIsBrowsable(true);
@@ -163,7 +164,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Depending on the element type, set defaut aggreate functions: AggregateFunction, TotalAggregateFunction
+        /// Depending on the element type, set default aggreate functions: AggregateFunction, TotalAggregateFunction
         /// </summary>
         public void SetDefaults()
         {
@@ -761,6 +762,24 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
+        [Category("Advanced"), DisplayName("Css Classes"), Description("Additional CSS Classes applied the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values. If empty, the default value comes from the column."), Id(6, 5)]
+        [TypeConverter(typeof(CssClassConverter))]
+#endif
+        public string CssClassEl
+        {
+            get { return CssClass; }
+            set
+            {
+                CssClass = value;
+                UpdateEditorAttributes();
+            }
+        }
+
+        /// <summary>
         /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is aggregate' is used. This flag impacts the build of the GROUP BY Clause.
         /// </summary>
 #if WINDOWS
@@ -800,6 +819,20 @@ namespace Seal.Model
 #endif
         public bool ContainsHtml { get; set; } = false;
         public bool ShouldSerializeContainsHtml() { return ContainsHtml; }
+
+
+        /// <summary>
+        /// Additional CSS Classes applied to the cell values of the result HTML Table. 
+        /// </summary>
+        public string FinalCssClass
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(CssClassEl)) return CssClassEl;
+                if (MetaColumn != null) return MetaColumn.CssClass;
+                return "";
+            }
+        }
 
 
         /// <summary>

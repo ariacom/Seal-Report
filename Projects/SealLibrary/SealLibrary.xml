@@ -330,6 +330,11 @@
             The display order
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaColumn.CssClass">
+            <summary>
+            Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaColumn.NumericStandardFormat">
             <summary>
             Standard display format applied to the element
@@ -2955,7 +2960,7 @@
         </member>
         <member name="M:Seal.Model.ReportElement.SetDefaults">
             <summary>
-            Depending on the element type, set defaut aggreate functions: AggregateFunction, TotalAggregateFunction
+            Depending on the element type, set default aggreate functions: AggregateFunction, TotalAggregateFunction
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.PivotPosition">
@@ -3153,6 +3158,11 @@
             If defined, the enumerated list is used for the display and for sorting
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportElement.CssClassEl">
+            <summary>
+            Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportElement.ForceAggregate">
             <summary>
             If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is aggregate' is used. This flag impacts the build of the GROUP BY Clause.
@@ -3171,6 +3181,11 @@
         <member name="P:Seal.Model.ReportElement.ContainsHtml">
             <summary>
             If True, the value contains HTML tags.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportElement.FinalCssClass">
+            <summary>
+            Additional CSS Classes applied to the cell values of the result HTML Table. 
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.IsAggregateEl">
