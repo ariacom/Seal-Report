@@ -6151,7 +6151,7 @@
         </member>
         <member name="M:Seal.Model.Repository.TranslateFolderName(System.String)">
             <summary>
-            Translate a Folder^Name
+            Translate a FolderName
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.TranslateFileName(System.String)">

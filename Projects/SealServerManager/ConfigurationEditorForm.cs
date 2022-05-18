@@ -155,7 +155,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
 
                 //Copy installation directory
                 log.Log("Copying files from '{0}' to '{1}'", sourceDirectory, publicationDirectory);
-                FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true, null, "", "appsettings.json");
+                FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true, null, "*", "appsettings.json");
 
                 //Check config...
                 var releaseConfig = Path.Combine(publicationDirectory, "appsettings.Release.json");

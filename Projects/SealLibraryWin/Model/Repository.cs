@@ -681,6 +681,8 @@ namespace Seal.Model
             }
         }
 
+        static public string AlternateConverterFolder;
+
         /// <summary>
         /// SealConverter assembly path
         /// </summary>
@@ -689,9 +691,9 @@ namespace Seal.Model
             get
             {
 #if WINDOWS
-                return Path.Combine(AssembliesFolder, "SealConverterWin.dll");
+                return Path.Combine(AlternateConverterFolder??AssembliesFolder, "SealConverterWin.dll");
 #else
-                return Path.Combine(AssembliesFolder, "SealConverter.dll");
+                return Path.Combine(AlternateConverterFolder??AssembliesFolder, "SealConverter.dll");
 #endif
             }
         }
@@ -1102,7 +1104,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Translate a Folder^Name
+        /// Translate a FolderName
         /// </summary>
         public string TranslateFolderName(string path)
         {
