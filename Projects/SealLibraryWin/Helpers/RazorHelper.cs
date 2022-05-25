@@ -291,7 +291,12 @@ namespace Seal.Helpers
         static object lockObject = new object();
         static public void Compile(string script, Type modelType, string key)
         {
-            if (Validator != null && !Validator.CheckScript(script)) throw new Exception("Invalid script detected.");
+            if (Validator != null && !Validator.CheckScript(script))
+            {
+                var ex = new Exception("Invalid script detected.");
+                Helper.WriteLogException("Compile", ex);
+                throw ex;
+            }
 
             lock (lockObject)
             {

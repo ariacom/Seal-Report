@@ -34,9 +34,10 @@ namespace Seal.Model
                         Assembly.LoadFrom(path);
                         _loaded = true;
                     }
-                    catch (Exception Exception)
+                    catch (Exception ex)
                     {
-                        Debug.WriteLine(Exception.Message);
+                        Helper.WriteLogException("SealInterface.Create1", ex);
+                        Debug.WriteLine(ex.Message);
                     }
                 }
 
@@ -50,7 +51,7 @@ namespace Seal.Model
                 }
                 catch (Exception ex)
                 {
-                    Helper.WriteLogException("SealInterface.Create", ex);
+                    Helper.WriteLogException("SealInterface.Create2", ex);
                 }
             }
 

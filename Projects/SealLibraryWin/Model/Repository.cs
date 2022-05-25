@@ -500,7 +500,7 @@ namespace Seal.Model
         Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string assemblyPath = Path.Combine(AssembliesFolder, new AssemblyName(args.Name).Name + ".dll");
-            if (File.Exists(assemblyPath) == false) return null;
+            if (!File.Exists(assemblyPath)) return null;
             Assembly assembly = Assembly.LoadFrom(assemblyPath);
             return assembly;
         }
@@ -681,8 +681,6 @@ namespace Seal.Model
             }
         }
 
-        static public string AlternateConverterFolder;
-
         /// <summary>
         /// SealConverter assembly path
         /// </summary>
@@ -691,9 +689,9 @@ namespace Seal.Model
             get
             {
 #if WINDOWS
-                return Path.Combine(AlternateConverterFolder??AssembliesFolder, "SealConverterWin.dll");
+                return Path.Combine(AssembliesFolder, "SealConverterWin.dll");
 #else
-                return Path.Combine(AlternateConverterFolder??AssembliesFolder, "SealConverter.dll");
+                return Path.Combine(AssembliesFolder, "SealConverter.dll");
 #endif
             }
         }
