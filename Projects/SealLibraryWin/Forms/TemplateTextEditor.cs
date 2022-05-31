@@ -199,7 +199,7 @@ namespace Seal.Forms
 @"cell.AddNavigationHyperLink(""https://www.google.com"", report.TranslateRepository(""GeneralText"",""CellScript"",""Visit"") + "" Google"");
     cell.AddNavigationHyperLink(cell.Value.ToString(), cell.DisplayValue);
 
-    //File download: this requires an implementation in the 'Navigation Script' of the model
+    //File download: this requires an implementation in the 'Navigation Script' of the Cell
     if (!string.IsNullOrEmpty(cell.DisplayValue)) {
         cell.AddNavigationFileDownload(""Download "" + cell.DisplayValue);
         //An optional tag value (second parameter) can be set to identify the link in the 'Navigation Script', here we set ""2"" in NavigationLink.Tag
