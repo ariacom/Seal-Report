@@ -1,69 +1,69 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Configurations>Debug;Release</Configurations>
-    <RootNamespace>Seal</RootNamespace>
-    <AssemblyName>SealWebServer</AssemblyName>
-    <Product>Seal Report</Product>
-    <Version>6.5.1.0</Version>
-    <FileVersion>6.5.1.0</FileVersion>
-    <Description>Seal Report Web Server</Description>
-    <Authors>Ariacom</Authors>
-    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	  <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-	  <AssemblyVersion>6.5.1.0</AssemblyVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Configurations>Debug;Release</Configurations>
+		<RootNamespace>Seal</RootNamespace>
+		<AssemblyName>SealWebServer</AssemblyName>
+		<Product>Seal Report</Product>
+		<Version>6.5.1.0</Version>
+		<FileVersion>6.5.1.0</FileVersion>
+		<Description>Seal Report Web Server</Description>
+		<Authors>Ariacom</Authors>
+		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<AssemblyVersion>6.5.1.0</AssemblyVersion>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<DefineConstants>DEBUG;TRACE;</DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DefineConstants>MINIFIED</DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<DefineConstants>MINIFIED</DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants></DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-    <DocumentationFile>C:\_dev\Seal-Report\Projects\SealWebServer\SealWebServer.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DefineConstants></DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+		<DocumentationFile>C:\_dev\Seal-Report\Projects\SealWebServer\SealWebServer.xml</DocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Controllers\HomeControllerSWIEditor.cs" />
-    <Compile Remove="Models\SWIReportModels.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Controllers\HomeControllerSWIEditor.cs" />
+		<Compile Remove="Models\SWIReportModels.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="Views\Home\MainEditor.cshtml" />
-    <Content Remove="Views\Home\MenuBig.cshtml" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="Views\Home\MainEditor.cshtml" />
+		<Content Remove="Views\Home\MenuBig.cshtml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\WebInterfaceAPI.html" />
-    <None Include="wwwroot\WebInterfaceSamples.html" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="wwwroot\WebInterfaceAPI.html" />
+		<None Include="wwwroot\WebInterfaceSamples.html" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
-    <PackageReference Include="EPPlus" Version="4.5.3.3" />
-    <PackageReference Include="IdentityModel" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="6.0.3" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.6.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
+		<PackageReference Include="EPPlus" Version="4.5.3.3" />
+		<PackageReference Include="IdentityModel" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="6.0.3" />
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.6.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SealLibrary\SealLibrary.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SealLibrary\SealLibrary.csproj" />
+	</ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>e5462649-f2a7-44f0-ac48-1d8ede9f615d</GUID>
   <ViewGUID>20d37157-fbdf-4220-8574-cf56d81ec9f3</ViewGUID>
@@ -243,7 +243,7 @@
     
     var foldersEnum = report.Sources[0].MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Source Folders");
     if (foldersEnum != null &amp;&amp; foldersEnum.Values.Count == 0) {
-        foldersEnum.Values.Add(new MetaEV() { Id = report.Repository.Configuration.InstallationDirectory + "\\Web", Val = string.Format(".NET ({0})", report.Repository.Configuration.InstallationDirectory  + "\\Web") });
+        foldersEnum.Values.Add(new MetaEV() { Id = report.Repository.Configuration.InstallationDirectory + "\\Core", Val = string.Format(".NET ({0})", report.Repository.Configuration.InstallationDirectory  + "\\Core") });
     }
 }
 </InitScript>

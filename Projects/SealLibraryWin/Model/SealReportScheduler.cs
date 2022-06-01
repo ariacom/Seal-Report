@@ -191,7 +191,19 @@ namespace Seal.Model
                             }
                             else
                             {
-                                var p = Process.Start(path, schedule.GUID);
+                                using var p = new Process
+                                {
+                                    StartInfo = new ProcessStartInfo
+                                    {
+                                        RedirectStandardOutput = true,
+                                        UseShellExecute = false,
+                                        CreateNoWindow = true,
+                                        WindowStyle = ProcessWindowStyle.Hidden,
+                                        FileName = path,
+                                        Arguments = schedule.GUID
+                                    }
+                                };
+                                p.Start();
                                 while (!p.HasExited && Running)
                                 {
                                     Thread.Sleep(1000);
@@ -272,6 +284,7 @@ namespace Seal.Model
             {
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Unexpected Scheduler Error:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
             }
+            Running = false;
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace SealSchedulerService
 
             //Set repository path
             Repository.RepositoryConfigurationPath = configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
-            SealReportScheduler.SchedulerOuterProcess = configuration.GetValue<bool>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationSchedulerOuterProcessKeyword}", true);
+            SealReportScheduler.SchedulerOuterProcess = false; //Not supported by SealSchedulerWorker //configuration.GetValue<bool>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationSchedulerOuterProcessKeyword}", true);
         }
 
         private void StartScheduler()
@@ -32,23 +32,17 @@ namespace SealSchedulerService
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
             }
         }
-
-        public override async Task StartAsync(CancellationToken cancellationToken)
-        {
-            //Run scheduler
-            await Task.Run(() => StartScheduler()); 
-
-            await base.StartAsync(cancellationToken);
-        }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (SealReportScheduler.Running)
+            Thread thread = new Thread(StartScheduler);
+            thread.Start();
+
+            while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(1000, stoppingToken);
             }
         }
-
+        
         public override async Task StopAsync(CancellationToken stoppingToken)
         {
             SealReportScheduler.Instance.Shutdown();

@@ -323,7 +323,7 @@ namespace Seal.Model
         {
             get
             {
-                return Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(typeof(Report).Assembly.Location.Replace("file:///", ""))), "Repository");
+                return "Repository";
             }
         }
 
