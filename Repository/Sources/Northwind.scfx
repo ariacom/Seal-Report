@@ -605,7 +605,7 @@
             <Tag>Master</Tag>
             <DisplayName>Discontinued</DisplayName>
             <DisplayOrder>9</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass />
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -618,7 +618,7 @@
             <Tag>Master</Tag>
             <DisplayName>Product Name</DisplayName>
             <DisplayOrder>2</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass />
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>

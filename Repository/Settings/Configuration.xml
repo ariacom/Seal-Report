@@ -13,6 +13,7 @@
   <ScriptFiles>_ed.common.js
 _ed.dataTables.editor.min.js
 _ed.editor.bootstrap.min.js</ScriptFiles>
+  <UseSealScheduler>true</UseSealScheduler>
   <TaskFolderName>Seal Report</TaskFolderName>
   <AuditEnabled>true</AuditEnabled>
   <AuditScript />

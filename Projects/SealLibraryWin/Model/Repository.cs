@@ -51,7 +51,7 @@ namespace Seal.Model
         public const string SealConfigurationSchedulerOuterProcessKeyword = "SchedulerOuterProcess";
 
         //core installation subdirectory
-        public const string CoreInstallationSubDirectory = "core";
+        public const string CoreInstallationSubDirectory = "Core";
 
         public static object PathLock = new object();
 

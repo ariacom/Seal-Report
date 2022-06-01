@@ -183,10 +183,19 @@ namespace Seal.Model
                                 path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + Repository.CoreInstallationSubDirectory, Repository.SealTaskScheduler);
                             }
                             if (!File.Exists(path)) throw new Exception($"Unable to execute in Outer Process. {path} was not found.");
-                            var p = Process.Start(path, schedule.GUID);
-                            while (!p.HasExited && Running)
+
+                            var sealSchedule = LoadSealSchedule(schedule.GUID);
+                            if (sealSchedule == null)
                             {
-                                Thread.Sleep(1000);
+                                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, $"Schedule {schedule.GUID} was lost in report '{report.FilePath}':\r\nPlease edit the report to fix this.");
+                            }
+                            else
+                            {
+                                var p = Process.Start(path, schedule.GUID);
+                                while (!p.HasExited && Running)
+                                {
+                                    Thread.Sleep(1000);
+                                }
                             }
                         }
 
