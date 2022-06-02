@@ -48,9 +48,11 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("UseSealScheduler").SetIsBrowsable(!ForPublication);
+                GetProperty("SchedulerMode").SetIsBrowsable(!ForPublication);
                 GetProperty("TaskFolderName").SetIsBrowsable(!ForPublication);
-                GetProperty("TaskFolderName").SetIsReadOnly(UseSealScheduler);
+                GetProperty("TaskFolderName").SetIsReadOnly(_schedulerMode != SchedulerMode.Windows);
+                GetProperty("OuterProcess").SetIsBrowsable(!ForPublication);
+                GetProperty("OuterProcess").SetIsReadOnly(_schedulerMode == SchedulerMode.Windows);
 
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
@@ -203,23 +205,24 @@ namespace Seal.Model
 #endif
         public string ScriptFiles { get; set; } = null;
 
-        bool _useSealScheduler = false;
+        SchedulerMode _schedulerMode = SchedulerMode.Windows;
         /// <summary>
-        /// If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check appsettings.json). This allows schedules for non-Windows or Azure installations.
+        /// How the Report Scheduler is started on the server. Windows Task Scheduler (Windows only), Windows Service (Windows only, requires the service installation) or Worker (All platforms), Web Server (All platforms, requires to keep the Web Server up).
         /// </summary>
 #if WINDOWS
-        [Category("Report Scheduler Settings"), DisplayName("Use Seal Report Scheduler"), Description("If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check appsettings.json). This allows schedules for non-Windows or Azure installations."), Id(2, 2)]
-        [DefaultValue(false)]
+        [Category("Report Scheduler Settings"), DisplayName("Report Scheduler Mode"), Description("How the Report Scheduler is started on the server. Windows Task Scheduler (Windows only), Windows Service (Windows only, requires the service installation) or Worker (All platforms), Web Server (All platforms, requires to keep the Web Server up)."), Id(2, 2)]
+        [DefaultValue(SchedulerMode.Windows)]
+        [TypeConverter(typeof(NamedEnumConverter))]
 #endif
-        public bool UseSealScheduler
+        public SchedulerMode SchedulerMode
         {
             get
             {
-                return _useSealScheduler;
+                return _schedulerMode;
             }
             set
             {
-                _useSealScheduler = value;
+                _schedulerMode = value;
 #if WINDOWS
                 UpdateEditor();
 #endif
@@ -227,12 +230,23 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
+        /// Name of the Task Scheduler folder containing the schedules of the reports if the Windows Task Scheduler is used
         /// </summary>
 #if WINDOWS
-        [Category("Report Scheduler Settings"), DisplayName("Task Folder Name"), Description("Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used. Warning: Changing this name will affect all existing schedules !"), Id(3, 2)]
+        [Category("Report Scheduler Settings"), DisplayName("Task Folder Name"), Description("Name of the Task Scheduler folder containing the schedules of the reports if the Windows Task Scheduler is used. Warning: Changing this name will affect all existing schedules !"), Id(3, 2)]
 #endif
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
+
+        /// <summary>
+        /// If true and the scheduler in executed in Service, Worker or Web Server, schedules is executed in an outer process forked by the initiator process. If false, the schedule is executed in a dedicated thread of the initiator.
+        /// </summary>
+#if WINDOWS
+        [Category("Report Scheduler Settings"), DisplayName("Execute in Outer Process"), Description("If true and the scheduler in executed in Service, Worker or Web Server, schedules are executed in an outer process (SealTaskScheduler) forked by the initiator process. If false, the schedule is executed in a dedicated thread of the initiator."), Id(4, 2)]
+        [DefaultValue(true)]
+#endif
+        public bool OuterProcess { get; set; } = true;
+
+
 
         bool _auditEnabled = false;
         /// <summary>

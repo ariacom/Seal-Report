@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Seal.Model
@@ -75,11 +76,6 @@ namespace Seal.Model
         /// True if the scheduler is running
         /// </summary>
         public static bool Running = true;
-
-        /// <summary>
-        /// Execute schedules in outer process (if the scheduler is a Worker Service or in IIS)
-        /// </summary>
-        public static bool SchedulerOuterProcess = true;
 
         static SealReportScheduler _instance = null;
         /// <summary>
@@ -169,7 +165,7 @@ namespace Seal.Model
                     var reportSchedule = getReportSchedule(report, schedule.GUID);
                     if (reportSchedule != null)
                     {
-                        if (!SchedulerOuterProcess)
+                        if (!Repository.Instance.Configuration.OuterProcess)
                         {
                             ReportExecution.ExecuteReportSchedule(schedule.GUID, report);
                         }
@@ -177,12 +173,21 @@ namespace Seal.Model
                         {
                             //Execute using the task scheduler
                             var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Repository.SealTaskScheduler);
+                            var arg = schedule.GUID;
                             if (!File.Exists(path))
                             {
                                 //Try in the Core distribution
                                 path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + Repository.CoreInstallationSubDirectory, Repository.SealTaskScheduler);
                             }
                             if (!File.Exists(path)) throw new Exception($"Unable to execute in Outer Process. {path} was not found.");
+
+                            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            {
+                                //Non-windows
+                                path = "dotnet";
+                                arg = Repository.SealTaskScheduler.Replace(".exe",".dll") + " " + schedule.GUID;
+                            }
+                            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, $"Executing schedule in outer process: {path} {arg}");
 
                             var sealSchedule = LoadSealSchedule(schedule.GUID);
                             if (sealSchedule == null)
@@ -195,12 +200,12 @@ namespace Seal.Model
                                 {
                                     StartInfo = new ProcessStartInfo
                                     {
-                                        RedirectStandardOutput = true,
-                                        UseShellExecute = false,
+                                    //    RedirectStandardOutput = true,
+                                      //  UseShellExecute = false,
                                         CreateNoWindow = true,
                                         WindowStyle = ProcessWindowStyle.Hidden,
                                         FileName = path,
-                                        Arguments = schedule.GUID
+                                        Arguments = arg
                                     }
                                 };
                                 p.Start();
@@ -243,9 +248,9 @@ namespace Seal.Model
                 Audit.LogEventAudit(AuditType.EventServer, "Starting Report Scheduler");
                 DateTime lastLoad = DateTime.MinValue;
 
-                if (!Repository.Instance.Configuration.UseSealScheduler)
+                if (!Repository.Instance.UseSealScheduler)
                 {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "WARNING: The current Server Configuration is not set to 'Use Seal Report Scheduler'. This Scheduler will not run any report. Please check your configuration.");
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "ERROR: The current Server Configuration 'Scheduler Mode' is set to Windows. This Scheduler will not run any report. Please check your configuration.");
                 }
                 else
                 {

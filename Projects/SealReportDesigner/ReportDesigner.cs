@@ -1090,7 +1090,7 @@ namespace Seal
                 }
                 else if (entity is ReportSchedule)
                 {
-                    if (Report.Repository.Configuration.UseSealScheduler)
+                    if (Report.Repository.UseSealScheduler)
                     {
                         addSmartCopyItem("Smart copy...", entity);
                     }

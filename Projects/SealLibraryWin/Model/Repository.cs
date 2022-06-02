@@ -233,7 +233,7 @@ namespace Seal.Model
         {
             get
             {
-                return Configuration.UseSealScheduler;
+                return Configuration.SchedulerMode != SchedulerMode.Windows;
             }
         }
 

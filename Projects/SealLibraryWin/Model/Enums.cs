@@ -609,4 +609,15 @@ namespace Seal.Model
         [Description("Allow only execution in a new Window")]
         AlwaysNewWindow,
     }
+
+    public enum SchedulerMode
+    {
+        [Description("Windows Task Scheduler (Windows only)")]
+        Windows,
+        [Description("Scheduler Service (Windows only) or Worker (All platforms)")]
+        Service,
+        [Description("Web Report Server (All platforms)")]
+        WebServer,
+    }
+
 }

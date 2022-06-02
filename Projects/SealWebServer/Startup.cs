@@ -28,8 +28,6 @@ namespace SealWebServer
             //Set repository path
             Repository.RepositoryConfigurationPath = Configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
             DebugMode = Configuration.GetValue<Boolean>($"{Repository.SealConfigurationSectionKeyword}:DebugMode", false);
-            RunScheduler = Configuration.GetValue<Boolean>($"{Repository.SealConfigurationSectionKeyword}:RunScheduler", false);
-            SealReportScheduler.SchedulerOuterProcess = configuration.GetValue<bool>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationSchedulerOuterProcessKeyword}", true);
             SessionTimeout = Configuration.GetValue<int>($"{Repository.SealConfigurationSectionKeyword}:SessionTimeout", 60);
             PathBaseProxy = Configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:PathBaseProxy", null);
             
@@ -37,7 +35,7 @@ namespace SealWebServer
             Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
 
-            if (RunScheduler && Repository.Instance.Configuration.UseSealScheduler)
+            if (Repository.Instance.Configuration.SchedulerMode == SchedulerMode.WebServer)
             {
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Scheduler from the Web Report Server");
                 //Run scheduler
@@ -51,7 +49,6 @@ namespace SealWebServer
 
         public static int SessionTimeout = 60;
         public static bool DebugMode = false;
-        public static bool RunScheduler = false;
         public static string PathBaseProxy = null;
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -148,7 +145,7 @@ namespace SealWebServer
 
         private void OnShutdown()
         {
-            if (RunScheduler && Repository.Instance.Configuration.UseSealScheduler)
+            if (Repository.Instance.Configuration.SchedulerMode == SchedulerMode.WebServer)
             {
                 SealReportScheduler.Instance.Shutdown();
             }

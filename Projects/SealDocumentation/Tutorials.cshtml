@@ -503,13 +503,14 @@
                         <div class="col-md-12 bs-callout bs-callout-warning">
                             <h4>Server Configuration</h4>
                             Run the <b>Server Manager</b>, menu <srmenu>Configuration->Configure Server...</srmenu>.<br>
-                            Set the property <code>Use Seal Report Scheduler</code> to <b>true</b>
+                            Set the property <code>Scheduler Mode</code> to either <b>Service or Worker</b> or <b>Web Server</b>.
                         </div>
                         <div class="col-md-12 bs-callout bs-callout-info">
                             <h4>Remarks</h4>
                             <ul>
                                 <li>Only <strong>one</strong> instance of scheduler can be executed for one repository.</li>
                                 <li>Check the <b>Seal Report Scheduler</b> messages in the Event Viewer (Windows OS) or in the <i>\Logs</i> Repository Sub-Folder.</li>
+                                <li>By default, schedules are executed in a new process (configuration <b>Outer Process</b> is true), however you may run the schedule in the same process to speed up the start.</li>
                             </ul>
                         </div>
                         <div class="col-md-12 bs-callout bs-callout-demo">
@@ -526,6 +527,9 @@
                         <div class="col-md-12">
                             <h4>As a Windows Service (Windows OS)</h4>
                             <ol class="sans">
+                                <li>
+                                    The property <code>Scheduler Mode</code> has been set to  <b>Service or Worker</b>.
+                                </li>
                                 <li>
                                     Edit the Power Shell file <i>SealSchedulerServiceInstall.ps1</i> file located in your installation directory (<eg>e.g. C:\Program Files\Seal Report</eg>).
                                     Check that the file paths are correct.
@@ -548,6 +552,9 @@
                             <h4>As a Worker Service (Linux OS)</h4>
                             <ol class="sans">
                                 <li>
+                                    The property <code>Scheduler Mode</code> has been set to  <b>Service or Worker</b>.
+                                </li>
+                                <li>
                                     We assume that the .NET distribution has been already deployed on the Linux OS.<br />
                                     Deploy also the <i>\Settings\Configuration.xml</i> in the remote repository.
                                 </li>
@@ -567,13 +574,10 @@
                             <h4>As a Worker thread in the Web Report Server</h4>
                             <ol class="sans">
                                 <li>
-                                    Edit the <i>appsettings.json</i> configuration file located in the publication directory of the Web Report Server and set <code>RunScheduler</code> to <b>true</b>:<br />
-                                    <pre class="brush: bash">
-                                        "RunScheduler": true
-                                        </pre>
+                                    The property <code>Scheduler Mode</code> has been set to  <b>Web Server</b>.
                                 </li>
                                 <li>
-                                    Restart the <b>Web Report Server</b>.
+                                    Restart the <b>Web Report Server</b>. 
                                 </li>
                             </ol>
                         </div>

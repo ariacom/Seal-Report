@@ -18,13 +18,16 @@ namespace SealSchedulerService
 
             //Set repository path
             Repository.RepositoryConfigurationPath = configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
-            SealReportScheduler.SchedulerOuterProcess = false; //Not supported by SealSchedulerWorker //configuration.GetValue<bool>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationSchedulerOuterProcessKeyword}", true);
         }
 
         private void StartScheduler()
         {
             try
             {
+                if (Repository.Instance.Configuration.SchedulerMode != SchedulerMode.Service)
+                {
+                    throw new Exception("The current Server Configuration 'Scheduler Mode' is not set to 'Service or Worker'. This Scheduler will not run any report. Please check your configuration.");
+                }
                 SealReportScheduler.Instance.Run();
             }
             catch (Exception ex)

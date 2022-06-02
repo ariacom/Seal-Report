@@ -6979,11 +6979,6 @@
             True if the scheduler is running
             </summary>
         </member>
-        <member name="F:Seal.Model.SealReportScheduler.SchedulerOuterProcess">
-            <summary>
-            Execute schedules in outer process (if the scheduler is a Worker Service or in IIS)
-            </summary>
-        </member>
         <member name="P:Seal.Model.SealReportScheduler.Instance">
             <summary>
             A general static instance of the Scheduler.
@@ -7376,14 +7371,19 @@
             Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
             </summary>
         </member>
-        <member name="P:Seal.Model.SealServerConfiguration.UseSealScheduler">
+        <member name="P:Seal.Model.SealServerConfiguration.SchedulerMode">
             <summary>
-            If true, the Seal Report Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check appsettings.json). This allows schedules for non-Windows or Azure installations.
+            How the Report Scheduler is started on the server. Windows Task Scheduler (Windows only), Windows Service (Windows only, requires the service installation) or Worker (All platforms), Web Server (All platforms, requires to keep the Web Server up).
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.TaskFolderName">
             <summary>
-            Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
+            Name of the Task Scheduler folder containing the schedules of the reports if the Windows Task Scheduler is used
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.OuterProcess">
+            <summary>
+            If true and the scheduler in executed in Service, Worker or Web Server, schedules is executed in an outer process forked by the initiator process. If false, the schedule is executed in a dedicated thread of the initiator.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.AuditEnabled">
