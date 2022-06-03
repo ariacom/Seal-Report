@@ -44,12 +44,12 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 ## System Requirements
 **For use:**
 * Windows 7, 2008, Windows 8, 2012, Windows 10 or greater
-* .Net 5.0 (Microsoft Windows Desktop Runtime 5)
+* .Net 6.0 (Microsoft Windows Desktop Runtime 6)
 * Database OLE DB, ODBC, MS SQLServer, Mongo DB or MySQL Drivers
-* For the Web Report Server: Internet Information Server with ASP.Net Core Runtime 5 (Hosting Bundle) or greater
+* For the Web Report Server: Internet Information Server with ASP.Net Core Runtime 6 (Hosting Bundle) or greater
 
 **For development:**
-* Visual Studio 2019
+* Visual Studio 2022
 
 ## License
 Seal Report is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
