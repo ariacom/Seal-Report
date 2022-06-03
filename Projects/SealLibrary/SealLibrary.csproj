@@ -5,7 +5,7 @@
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealLibrary</AssemblyName>
     <Configurations>Debug;Release</Configurations>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Product>Seal Report</Product>
     <Version>6.6.0.0</Version>
     <FileVersion>6.6.0.0</FileVersion>
