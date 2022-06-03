@@ -11,7 +11,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **HTML 5 Charts**: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
 * **KPI and Widget Views**: Create and display your Key Performance Indicators in a single report.
 * **Fully Responsive and HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
-* **Web Report Server**: Publish and edit your reports on the web (Support of Windows and Linux OS with .NET 5).
+* **Web Report Server**: Publish and edit your reports on the web (Support of Windows and Linux OS with .Net 6).
 * **Report scheduler**: Schedule your report executions and generate results in folders, FTP, SFTP server or send them by emails (integrated with the Windows Tasks Scheduler or available as a service)
 * **Drill Down navigation and Sub Reports:** Navigate in your report result to drill to a detail or to execute another report.
 * **Report Tasks:** Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
