@@ -51,14 +51,11 @@ namespace Seal.Forms
 
     public class ConnectionFolder : ITreeSort { 
         public int GetSort() { return 0; }
-        public static ConnectionFolder Instance = new ConnectionFolder();
     }
     public class TableFolder : ITreeSort { 
         public int GetSort() { return 1; }
-        public static TableFolder Instance = new TableFolder();
     }
     public class TableLinkFolder {
-        public static TableLinkFolder Instance = new TableLinkFolder();
     };
 
     public class JoinFolder : ITreeSort { 
@@ -146,7 +143,7 @@ namespace Seal.Forms
             TreeNode mainTN = new TreeNode() { Tag = source, Text = source.Name, ImageIndex = index, SelectedImageIndex = index };
             nodes.Add(mainTN);
 
-            TreeNode sourceConnectionTN = new TreeNode("Connections") { Tag = ConnectionFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+            TreeNode sourceConnectionTN = new TreeNode("Connections") { Tag = source.EditorConnectionFolder, ImageIndex = 2, SelectedImageIndex = 2 };
             mainTN.Nodes.Add(sourceConnectionTN);
             foreach (var item in source.Connections.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
             {
@@ -155,7 +152,7 @@ namespace Seal.Forms
             }
             if (!ForReport) sourceConnectionTN.ExpandAll();
 
-            TreeNode sourceTableTN = new TreeNode("Tables") { Tag = TableFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+            TreeNode sourceTableTN = new TreeNode("Tables") { Tag = source.EditorTableFolder, ImageIndex = 2, SelectedImageIndex = 2 };
             mainTN.Nodes.Add(sourceTableTN);
             foreach (var table in source.MetaData.Tables.OrderByDescending(i => i.IsEditable).ThenBy(i => i.AliasName))
             {
@@ -180,7 +177,7 @@ namespace Seal.Forms
             if (source.IsNoSQL)
             {
                 //Table links
-                TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = TableLinkFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
+                TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = source.EditorTableLinkFolder, ImageIndex = 2, SelectedImageIndex = 2 };
                 sourceTableTN.Nodes.Add(tableLinksTN);
                 TreeViewHelper.InitTablesLinksTreeNode(tableLinksTN.Nodes, source.MetaData.TableLinks);
             }

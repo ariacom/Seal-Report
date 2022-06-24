@@ -6,11 +6,12 @@
     <AssemblyName>SealSchedulerWorker</AssemblyName>
     <Configurations>Debug;Release</Configurations>
     <Product>Seal Report</Product>
-    <Version>6.6.0.0</Version>
-    <FileVersion>6.6.0.0</FileVersion>
-    <AssemblyVersion>6.6.0.0</AssemblyVersion>
+    <Version>6.6.1.0</Version>
+    <FileVersion>6.6.1.0</FileVersion>
+    <AssemblyVersion>6.6.1.0</AssemblyVersion>
     <Description>Seal Report Scheduler Worker</Description>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
+	<AssemblyTitle>Seal Report Scheduler Worker</AssemblyTitle>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

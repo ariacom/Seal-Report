@@ -196,6 +196,15 @@ namespace Seal.Model
         [XmlIgnore]
         public object Tag;
 
+#if WINDOWS
+        [XmlIgnore]
+        public ConnectionFolder EditorConnectionFolder = new ConnectionFolder();
+        [XmlIgnore]
+        public TableFolder EditorTableFolder = new TableFolder();
+        [XmlIgnore]
+        public TableLinkFolder EditorTableLinkFolder = new TableLinkFolder();
+#endif
+
         MetaData _metaData = null;
         /// <summary>
         /// MetaData contained in the source 

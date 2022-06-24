@@ -1,61 +1,62 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <RootNamespace>Seal</RootNamespace>
-    <AssemblyName>SealReportDesigner</AssemblyName>
-    <ApplicationIcon>reportDesigner.ico</ApplicationIcon>
-    <Product>Seal Report</Product>
-    <Version>6.6.0.0</Version>
-    <FileVersion>6.6.0.0</FileVersion>
-    <AssemblyVersion>6.6.0.0</AssemblyVersion>
-    <Description>Seal Report Designer</Description>
-    <Authors>Ariacom</Authors>
-    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<RootNamespace>Seal</RootNamespace>
+		<AssemblyName>SealReportDesigner</AssemblyName>
+		<ApplicationIcon>reportDesigner.ico</ApplicationIcon>
+		<Product>Seal Report</Product>
+		<Version>6.6.1.0</Version>
+		<FileVersion>6.6.1.0</FileVersion>
+		<AssemblyVersion>6.6.1.0</AssemblyVersion>
+		<Authors>Ariacom</Authors>
+		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
+		<Description>Seal Report Designer</Description>
+		<AssemblyTitle>Seal Report Designer</AssemblyTitle>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<DefineConstants>DEBUG;TRACE;</DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DefineConstants></DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<DefineConstants></DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\SealLibraryWin\SealLibraryWin.csproj">
-    </ProjectReference>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-  </ItemGroup>  
+	<ItemGroup>
+		<ProjectReference Include="..\SealLibraryWin\SealLibraryWin.csproj">
+		</ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+		</Compile>
+	</ItemGroup>
 </Project>

@@ -187,12 +187,12 @@
         </member>
         <member name="M:Seal.Model.Audit.LogEventAudit(Seal.Model.AuditType,System.String)">
             <summary>
-            Audit an eventn
+            Audit an event
             </summary>
         </member>
         <member name="M:Seal.Model.Audit.LogAudit(Seal.Model.AuditType,Seal.Model.SecurityUser,System.String,System.String,System.String,Seal.Model.Report,Seal.Model.ReportSchedule)">
             <summary>
-            Executes the audit script for a given event
+            Execute the audit script for a given event
             </summary>
         </member>
         <member name="T:Seal.Model.CategoryFolder">
@@ -4978,7 +4978,7 @@
         </member>
         <member name="T:Seal.Model.ReportSource">
             <summary>
-            A ReportSource is a MetaSource dedicated for a report
+            A ReportSource is a MetaSource dedicated for report executions
             </summary>
         </member>
         <member name="P:Seal.Model.ReportSource.MetaSourceGUID">

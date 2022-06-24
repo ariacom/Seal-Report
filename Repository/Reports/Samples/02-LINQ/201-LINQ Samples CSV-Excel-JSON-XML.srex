@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>cb372c51-0d3b-4c58-9a54-e3ce453526ee</GUID>
   <ViewGUID>3197c7f9-4a3f-48b8-a171-6e32e88f0a09</ViewGUID>
@@ -121,6 +121,12 @@
           <GUID>47b9a25e-f31e-4a04-9bde-5e47a673599d</GUID>
           <Name>csv</Name>
           <TemplateName>CSV</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>csv_path</Name>
+              <Value />
+            </Parameter>
+          </Parameters>
           <Alias />
         </MetaTable>
       </LINQSubTables>

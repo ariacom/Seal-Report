@@ -41,6 +41,10 @@ namespace SealWebServer
                 //Run scheduler
                 Task.Run(() => StartScheduler());
             }
+
+            //Limit memory
+            var mws = Configuration.GetValue<double>($"{Repository.SealConfigurationSectionKeyword}:MaxWorkingSet", 0);
+            if (mws > 0) Process.GetCurrentProcess().MaxWorkingSet = new IntPtr(Convert.ToInt64(Math.Max(1, mws) * 1024 * 1024 * 1024));
         }
 
 

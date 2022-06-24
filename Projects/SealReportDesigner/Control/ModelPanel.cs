@@ -10,6 +10,7 @@ using Seal.Model;
 using Seal.Helpers;
 using Seal.Forms;
 using DocumentFormat.OpenXml.Bibliography;
+using System.Linq;
 
 namespace Seal.Controls
 {
@@ -487,6 +488,13 @@ namespace Seal.Controls
                 tableList = new List<MetaTable>();
                 tableList.Add(Model.Table);
             }
+
+            if (elementTreeView.Tag != null)
+            {
+                //Optimize tree view init for same tables
+                if (Enumerable.SequenceEqual(tableList, (List<MetaTable>)elementTreeView.Tag)) return;
+            }
+            elementTreeView.Tag = tableList;
 
             TreeViewHelper.InitCategoryTreeNode(elementTreeView.Nodes, tableList);
             elementTreeView.TreeViewNodeSorter = new NodeSorter();

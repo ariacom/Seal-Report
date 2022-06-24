@@ -14,7 +14,7 @@ using DynamicTypeDescriptor;
 namespace Seal.Model
 {
     /// <summary>
-    /// A ReportSource is a MetaSource dedicated for a report
+    /// A ReportSource is a MetaSource dedicated for report executions
     /// </summary>
     public class ReportSource : MetaSource
     {

@@ -16,11 +16,23 @@ namespace Seal.Helpers
 {
     public class FileHelper
     {
+        public static string TempPath
+        {
+            get
+            {
+                //Try local user temp first
+                var result = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\Temp");
+                if (!Directory.Exists(result)) result = Path.GetTempPath();
+                return result;
+            }
+        }
+
+
         public static string TempApplicationDirectory
         {
             get
             {
-                string result = Path.Combine(Path.GetTempPath(), "_Seal_Report.Temp");
+                string result = Path.Combine(TempPath, "_Seal_Report.Temp");
                 if (!Directory.Exists(result))
                 {
                     try
@@ -40,7 +52,7 @@ namespace Seal.Helpers
         {
             PurgeTempDirectory(TempApplicationDirectory);
             //Purge razor directories
-            foreach (var dir in Directory.GetDirectories(Path.GetTempPath(), "RazorEngine_*"))
+            foreach (var dir in Directory.GetDirectories(TempPath, "RazorEngine_*"))
             {
                 try
                 {
@@ -306,7 +318,6 @@ namespace Seal.Helpers
             using (Stream fsInput = File.OpenRead(archivePath))
             using (ZipFile zf = new ZipFile(fsInput))
             {
-
                 if (!string.IsNullOrEmpty(password))
                 {
                     // AES encrypted entries are handled automatically

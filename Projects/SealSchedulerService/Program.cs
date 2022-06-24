@@ -20,7 +20,6 @@ namespace SealSchedulerService
             {
                 //Configuration
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-                SealReportScheduler.SchedulerOuterProcess = true;
                 SealReportScheduler.Instance.Run();
             }
             catch (Exception ex)

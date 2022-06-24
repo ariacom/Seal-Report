@@ -120,6 +120,10 @@ body {
 .cell-text {
 }
 
+.cell-bold {
+    font-weight: bold;
+}
+
 .cell-datetime {
     color: darkgreen;
 }

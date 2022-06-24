@@ -48,7 +48,7 @@ namespace Seal.Model
         //appsettings.json
         public const string SealConfigurationSectionKeyword = "SealConfiguration";
         public const string SealConfigurationRepositoryPathKeyword = "RepositoryPath";
-        public const string SealConfigurationSchedulerOuterProcessKeyword = "SchedulerOuterProcess";
+        public const string SealConfigurationMaxWorkingSetKeyword = "MaxWorkingSet";
 
         //core installation subdirectory
         public const string CoreInstallationSubDirectory = "Core";

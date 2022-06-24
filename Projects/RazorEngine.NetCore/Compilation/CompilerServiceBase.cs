@@ -101,7 +101,10 @@
                 tried++;
                 try
                 {
-                    tempDirectory = Path.Combine(Path.GetTempPath(), "RazorEngine_" + Path.GetRandomFileName());
+                    //Try local user temp first
+                    var p = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\Temp");
+                    if (!Directory.Exists(p)) p = Path.GetTempPath();
+                    tempDirectory = Path.Combine(p, "RazorEngine_" + Path.GetRandomFileName());
                     if (!Directory.Exists(tempDirectory))
                     {
                         Directory.CreateDirectory(tempDirectory);

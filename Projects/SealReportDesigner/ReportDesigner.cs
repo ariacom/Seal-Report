@@ -818,9 +818,11 @@ namespace Seal
 
         private void mainTreeView_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
+            var selected = mainTreeView.SelectedNode;
             e.CancelEdit = true;
-            if (mainTreeView.SelectedNode == null) return;
-            object entity = mainTreeView.SelectedNode.Tag;
+
+            if (selected == null) return;
+            object entity = selected.Tag;
 
             if (entity is ReportView)
             {
@@ -837,6 +839,7 @@ namespace Seal
         private void mainTreeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             object entity = mainTreeView.SelectedNode.Tag;
+            var selected = e.Node;
             if (!string.IsNullOrEmpty(e.Label))
             {
                 e.CancelEdit = true;
@@ -869,9 +872,20 @@ namespace Seal
                 if (entity is RootComponent)
                 {
                     ((RootComponent)entity).Name = e.Node.Text;
-                    if (!(entity is ReportView)) mainTreeView.Sort();
+                    if (!(entity is ReportView || entity is ReportTask))
+                    {
+                        mainTreeView.SelectedNode = selected.Parent;
+                        //Resort children to avoid full resort
+                        List<TreeNode> l = new List<TreeNode>();
+                        var parent = e.Node.Parent;
+                        foreach (var node in parent.Nodes) l.Add((TreeNode)node);
+                        l.Sort(new NodeSorter().Compare);
+                        parent.Nodes.Clear();
+                        parent.Nodes.AddRange(l.ToArray());
+                    }
                     if (entity is ReportSchedule) ((ReportSchedule)entity).SynchronizeTask();
                     if (entity is ReportModel) updateTreeNodeViewNames(_viewTN);
+
                     SetModified();
                 }
             }

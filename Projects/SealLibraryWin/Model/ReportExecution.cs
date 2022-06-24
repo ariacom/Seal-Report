@@ -939,7 +939,7 @@ namespace Seal.Model
             catch (Exception ex)
             {
                 var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
-                Report.LogMessage("Error in task '{0}': {1}\r\n", task.Name, message);
+                Report.LogMessage("Error in task '{0}': {1}\r\n{2}", task.Name, message, ex.StackTrace);
                 if (!task.IgnoreError)
                 {
                     Report.ExecutionErrors = message;

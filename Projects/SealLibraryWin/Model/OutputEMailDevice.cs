@@ -383,7 +383,7 @@ namespace Seal.Model
         /// </summary>
         public override void Validate()
         {
-            if (string.IsNullOrEmpty(Server)) throw new Exception("The SMTP Server cannot be empty for an Email device.");
+            if (!UseSendGrid && string.IsNullOrEmpty(Server)) throw new Exception("The SMTP Server cannot be empty for an Email device.");
             if (string.IsNullOrEmpty(SenderEmail)) throw new Exception("The Email Sender cannot be empty for an Email device.");
         }
 
@@ -428,13 +428,13 @@ namespace Seal.Model
 
             if (UseSendGrid)
             {
-                var sendGridClient = new SendGridClient(SendGridKey);
+                var sendGridClient = new SendGridClient(ClearSendGridKey);
                 var msg = new SendGridMessage()
                 {
                     From = new EmailAddress(SenderEmail),
                     Subject = subject,
-                    PlainTextContent = isHtmlBody ? "" : "This is a test message.",
-                    HtmlContent = !isHtmlBody ? "" : "This is a test message.",
+                    PlainTextContent = isHtmlBody ? "" : body,
+                    HtmlContent = !isHtmlBody ? "" : body,
                     ReplyTo = new EmailAddress(replyTo)
                 };
                 msg.SetSubject(subject);
@@ -444,9 +444,9 @@ namespace Seal.Model
 
                 if (!string.IsNullOrEmpty(attachPath))
                 {
-                    var attachment = new SendGrid.Helpers.Mail.Attachment();
-                    attachment.Filename = attachPath;
-                    msg.AddAttachment(attachment);
+                    var bytes = File.ReadAllBytes(attachPath);
+                    var file = Convert.ToBase64String(bytes);
+                    msg.AddAttachment(Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath), file);
                 }
 
                 var response = sendGridClient.SendEmailAsync(msg).Result;

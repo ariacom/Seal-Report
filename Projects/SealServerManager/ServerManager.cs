@@ -450,7 +450,7 @@ namespace Seal
                 _source.IsNoSQL = (sender == noSQLdataSourceToolStripMenuItem);
                 if (_source.IsNoSQL)
                 {
-                    entityToSelect = TableFolder.Instance;
+                    entityToSelect = _source.EditorTableFolder;
                     _source.Connection.ConnectionString = "";
                 }
                 else entityToSelect = _source.Connection;

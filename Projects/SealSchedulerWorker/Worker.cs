@@ -18,6 +18,10 @@ namespace SealSchedulerService
 
             //Set repository path
             Repository.RepositoryConfigurationPath = configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
+
+            //Limit memory
+            var mws = configuration.GetValue<double>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationMaxWorkingSetKeyword}", 0);
+            if (mws > 0) Process.GetCurrentProcess().MaxWorkingSet = new IntPtr(Convert.ToInt64(Math.Max(1, mws) * 1024 * 1024 * 1024));
         }
 
         private void StartScheduler()

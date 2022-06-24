@@ -30,6 +30,7 @@ namespace Seal.Forms
                 choices.Add("cell-datetime");
                 choices.Add("cell-enum");
                 choices.Add("cell-numeric");
+                choices.Add("cell-bold");
                 choices.Add("text-right");
                 choices.Add("text-danger");
                 choices.Add("text-info text-center");

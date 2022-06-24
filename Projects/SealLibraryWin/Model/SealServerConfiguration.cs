@@ -205,6 +205,7 @@ namespace Seal.Model
 #endif
         public string ScriptFiles { get; set; } = null;
 
+
         SchedulerMode _schedulerMode = SchedulerMode.Windows;
         /// <summary>
         /// How the Report Scheduler is started on the server. Windows Task Scheduler (Windows only), Windows Service (Windows only, requires the service installation) or Worker (All platforms), Web Server (All platforms, requires to keep the Web Server up).
