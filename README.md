@@ -29,6 +29,8 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 * The <a href="https://ariacom.com/sealweblicense" target=_blank>Web Report Designer</a> to edit reports from any web browser.
 * The <a href="https://ariacom.com/sealconverterlicense" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
 
+**New:** Deploy Seal Report in the Cloud, visit  <a href="https://sealreport.com" target=_blank>sealreport.com</a>, register and start a free trial.
+
 # Screen shots 
 ## HTML Report Result
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult4.png) 
