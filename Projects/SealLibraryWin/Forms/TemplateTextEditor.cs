@@ -813,6 +813,29 @@ namespace Seal.Forms
 "
             ),
             new Tuple<string, string>(
+                "Check that at least a restriction value is set",
+@"ReportTask task = Model;
+    Report report = task.Report;
+	report.LogMessage(""Checking restrictions..."");
+	bool noRestrictions = true;
+	foreach (var restr in report.AllRestrictions.Where (i => i.Prompt != PromptType.None)) {
+		if (restr.HasValue) {
+			noRestrictions = false;
+			break;
+		}
+	}
+
+	if (noRestrictions)
+	{
+		foreach (var restr in report.AllRestrictions.Where (i => i.Prompt != PromptType.None).OrderBy(i => i.DisplayOrder)) {
+			restr.ValidationErrors = report.TranslateRepository(""GeneralText"",""GEN"",""Please enter at least a restriction..."");
+			break;
+		}
+		report.Cancel = true;
+	}
+"
+            ),
+            new Tuple<string, string>(
                 "Set a view parameter value",
 @"ReportTask task = Model;
     Report report = task.Report;

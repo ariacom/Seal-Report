@@ -984,7 +984,7 @@ namespace Seal.Model
             {
                 var key = context + "\r" + reference + "\r" + instance;
                 result = RepositoryTranslations.ContainsKey(key) ? RepositoryTranslations[key] : null;
-                if (result == null && context.StartsWith("Report") || context == "FileName")
+                if (result == null && context.StartsWith("Report") || context == "FileName" || context == "FolderName")
                 {
                     //Wild char management
                     if (_repositoryWildCharTranslations == null)

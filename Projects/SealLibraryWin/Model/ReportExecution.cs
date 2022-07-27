@@ -224,6 +224,7 @@ namespace Seal.Model
         {
             Report.ExecutionMessages = "";
             Report.ExecutionErrors = "";
+            Report.ExecutionErrorStackTrace = "";
             Report.Status = ReportStatus.NotExecuted;
 
             Report.InitForExecution();
@@ -925,7 +926,6 @@ namespace Seal.Model
                 }
 
                 if (task.CancelReport) Report.Cancel = true;
-
                 if (Report.Cancel) break;
             }
         }
@@ -939,7 +939,8 @@ namespace Seal.Model
             catch (Exception ex)
             {
                 var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
-                Report.LogMessage("Error in task '{0}': {1}\r\n{2}", task.Name, message, ex.StackTrace);
+                if (string.IsNullOrEmpty(Report.WebUrl)) Report.LogMessage("Error in task '{0}': {1}\r\n{2}", task.Name, message, ex.StackTrace);
+                else Report.LogMessage("Error got in task '{0}'", task.Name);
                 if (!task.IgnoreError)
                 {
                     Report.ExecutionErrors = message;

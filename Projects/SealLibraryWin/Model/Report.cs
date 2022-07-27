@@ -2656,7 +2656,7 @@ namespace Seal.Model
             {
                 var message = ExecutionMessages;
                 if (!string.IsNullOrEmpty(ExecutionErrors)) message += string.Format("\r\nError Message:\r\n{0}\r\n", ExecutionErrors);
-                if (!Cancel && !string.IsNullOrEmpty(ExecutionErrorStackTrace)) message += string.Format("\r\nError Stack Trace:\r\n{0}\r\n", ExecutionErrorStackTrace);
+                if (!string.IsNullOrEmpty(ExecutionErrorStackTrace)) message += string.Format("\r\nError Stack Trace:\r\n{0}\r\n", ExecutionErrorStackTrace);
                 string log = string.Format("********************\r\nExecution of '{0}' from {1} {2} to {3} {4}\r\n{5}********************\r\n", FilePath, ExecutionStartDate.ToShortDateString(), ExecutionStartDate.ToLongTimeString(), DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
                 Helper.WriteDailyLog(Helper.DailyLogExecutions, Repository.LogsFolder, Repository.Configuration.LogDays, log);
             }

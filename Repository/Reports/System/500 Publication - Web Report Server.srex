@@ -98,6 +98,10 @@
         client.DataConnectionConnectTimeout = 2000;
         client.DataConnectionReadTimeout = 2000;        
         client.Port = 21;
+        
+        //For normal FTPS with implict encryption
+        //client.EncryptionMode = FtpEncryptionMode.Implicit; 
+        //client.Port = 990;
 
         report.LogMessage("Connecting to '{0}'", client.Host);     
         client.Connect();
