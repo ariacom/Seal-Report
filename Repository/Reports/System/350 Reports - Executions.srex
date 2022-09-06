@@ -275,7 +275,6 @@ AND [7cf2a3d8-2f72-454b-98c8-4525f8eecca2]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
           <DisplayOrderRE>3</DisplayOrderRE>
           <EnumValues>
             <string>TaskScheduler</string>

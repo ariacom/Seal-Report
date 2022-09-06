@@ -904,7 +904,7 @@ namespace Seal
             string displayName = "";
             IList selectSource = treeViewHelper.getRemoveSource(ref displayName);
             removeToolStripMenuItem.Enabled = (selectSource.Count > 0);
-            removeToolStripMenuItem.ShortcutKeys = Keys.Delete;
+            removeToolStripMenuItem.ShortcutKeys = (text != "Remove Views..." ? Keys.Delete : Keys.None);
         }
 
         void addAddItem(string text, object tag, string toolTip = "")

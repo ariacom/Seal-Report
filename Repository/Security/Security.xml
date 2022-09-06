@@ -243,6 +243,8 @@
 }
 </MenuScript>
       <Weight>1</Weight>
+      <OnStartup>ExecuteReport</OnStartup>
+      <StartupReport>\work\basic.srex</StartupReport>
     </SecurityGroup>
   </Groups>
   <Logins>
@@ -298,8 +300,10 @@
     </SecurityLogin>
     <SecurityLogin>
       <Id>menu</Id>
-      <Password>cdMcjpzxz1EgKXOxid3OJO3KkuizN6usRpqFRRN/wNY=</Password>
-      <GroupNames />
+      <Password>eybbMk9+pnU9fvpyOqid7xS5TIFJCWQh4xoyYSjFNvc=</Password>
+      <GroupNames>
+        <string>Group (Menu)</string>
+      </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
       <Id>demo</Id>

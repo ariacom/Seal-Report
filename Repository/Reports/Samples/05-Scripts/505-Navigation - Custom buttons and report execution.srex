@@ -1,356 +1,519 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CurrentViewGUID>efe2ad7a-1c7d-4caa-af0e-a9a1e5b85124</CurrentViewGUID><GUID>c4aeb163-eb1b-4a8f-a6d0-790315140193</GUID><ViewGUID>efe2ad7a-1c7d-4caa-af0e-a9a1e5b85124</ViewGUID><Sources><ReportSource><GUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>48e8469c-1eb0-4a9b-9719-11128feb4308</GUID><Name>Employees</Name><SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID><Elements><ReportElement><GUID>a474eb41-4d6c-4e0a-8ad7-5970259a5bea</GUID><Name>Employees.EmployeeID</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID><ContainsHtml>true</ContainsHtml></ReportElement><ReportElement><GUID>62761375-cee1-4b1c-9fa9-73656861541d</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements><Restriction>[71f2065c-2254-4c9a-817c-acf9006b9ee0]</Restriction><Restrictions><ReportRestriction><GUID>71f2065c-2254-4c9a-817c-acf9006b9ee0</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><Prompt>Prompt</Prompt></ReportRestriction></Restrictions></ReportModel></Models><Tasks><ReportTask><GUID>6ea26f3c-dc76-4a06-95ab-70abf10cd943</GUID><Name>Set Checkbox</Name><CancelReport>false</CancelReport><SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID><Step>BeforeRendering</Step><Script>@{&#xD;
-    //Format final result cells before rendering&#xD;
-    ReportTask task = Model;&#xD;
-    Report report = task.Report;   &#xD;
-    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'&#xD;
-    foreach (var model in report.Models) &#xD;
-    {&#xD;
-        foreach (var page in model.Pages) &#xD;
-        {&#xD;
-            foreach (var line in page.DataTable.Lines) &#xD;
-            {&#xD;
-                var cell = line[0];&#xD;
-                cell.FinalCssClass =  "firstcell";&#xD;
-                cell.FinalCssStyle =  "padding-left:10px;width:20px";&#xD;
-                cell.FinalValue = string.Format("&lt;input id='{0}' name='{0}' class='selector' type='checkbox'/&gt;",  cell.IsTitle ? "select_all" : "cb_" + cell.Value.ToString());&#xD;
-            }       &#xD;
-        }&#xD;
-    }&#xD;
-}&#xD;
-</Script><SortOrder>1</SortOrder></ReportTask></Tasks><CommonScripts><CommonScript><Name>GetImageBytesFromOLEField</Name><Script>@using System.IO&#xD;
-&#xD;
-@functions &#xD;
-{&#xD;
-    void test() {&#xD;
-    }&#xD;
-    &#xD;
-&#xD;
-    byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes)&#xD;
-    {&#xD;
-        const string BITMAP_ID_BLOCK = "BM";&#xD;
-        const string JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";&#xD;
-        const string PNG_ID_BLOCK = "\u0089PNG\r\n\u001a\n";&#xD;
-        const string GIF_ID_BLOCK = "GIF8";&#xD;
-        const string TIFF_ID_BLOCK = "II*\u0000";&#xD;
-        byte[] imageBytes;&#xD;
-        // Get a UTF7 Encoded string version&#xD;
-        var u8 = System.Text.Encoding.UTF7;&#xD;
-        string strTemp = u8.GetString(oleFieldBytes);&#xD;
-        // Get the first 300 characters from the string&#xD;
-        string strVTemp = strTemp.Substring(0, 300);&#xD;
-        // Search for the block&#xD;
-        int iPos = -1;&#xD;
-        if (strVTemp.IndexOf(BITMAP_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(BITMAP_ID_BLOCK);&#xD;
-        else if (strVTemp.IndexOf(JPG_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(JPG_ID_BLOCK);&#xD;
-        else if (strVTemp.IndexOf(PNG_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(PNG_ID_BLOCK);&#xD;
-        else if (strVTemp.IndexOf(GIF_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(GIF_ID_BLOCK);&#xD;
-        else if (strVTemp.IndexOf(TIFF_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(TIFF_ID_BLOCK);&#xD;
-        else&#xD;
-            throw new Exception("Unable to determine header size for the OLE Object");&#xD;
-        // From the position above get the new image&#xD;
-        if (iPos == -1) {&#xD;
-            throw new Exception("Unable to determine header size for the OLE Object");&#xD;
-        }&#xD;
-        imageBytes = new byte[oleFieldBytes.LongLength - iPos];&#xD;
-        MemoryStream ms = new MemoryStream();&#xD;
-        ms.Write(oleFieldBytes, iPos, oleFieldBytes.Length - iPos);&#xD;
-        imageBytes = ms.ToArray();&#xD;
-        ms.Close();&#xD;
-        ms.Dispose();&#xD;
-        return imageBytes;&#xD;
-    }&#xD;
-}</Script></CommonScript></CommonScripts><Views><ReportView><GUID>efe2ad7a-1c7d-4caa-af0e-a9a1e5b85124</GUID><Name>View</Name><Views><ReportView><GUID>56ddbaf2-607a-420f-9f96-55a920f81b56</GUID><Name>Model</Name><Views><ReportView><GUID>2ef54e81-dfeb-4e09-bb54-0cd24961fdad</GUID><Name>Model Container</Name><Views><ReportView><GUID>4d0b74d1-273b-4c4b-bdf8-4435ba632947</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>4694d06e-e292-403f-b24b-02f8f098f699</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>9d2f612c-ec9c-4918-930b-240bfd5ae6a1</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>6ec6321e-f5b9-4fce-a404-5f80e3479e8d</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>719a7dbd-14dc-430b-8361-dc99b3386b4e</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><CustomTemplate>@using Seal.Model&#xD;
-@using Seal.Helpers&#xD;
-@{&#xD;
-    Report report = Model;&#xD;
-    ReportView view = report.CurrentView;&#xD;
-    ReportView modelView = report.CurrentModelView;&#xD;
-    ReportModel reportModel = modelView.Model;&#xD;
-    ResultPage page = report.CurrentPage;&#xD;
-    bool enabled = view.GetBoolValue("data_tables_enabled");&#xD;
-    view.IdSuffix = Guid.NewGuid().ToString().Replace("-", "");&#xD;
-&#xD;
-    if (view.GetBoolValue("invert_data_tables") &amp;&amp; modelView.GetBoolValue("show_data_tables") &amp;&amp; !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))&#xD;
-    {&#xD;
-        reportModel.InvertDataTables();&#xD;
-    }&#xD;
-    ResultTable table = page.DataTable;&#xD;
-}&#xD;
-&#xD;
-@if (table != null &amp;&amp; table.RowCount &gt; 0 &amp;&amp; table.ColumnCount &gt; 0 &amp;&amp; modelView.GetBoolValue("show_data_tables"))&#xD;
-{&#xD;
-    &lt;script type="text/javascript"&gt;&#xD;
-    var employeeTable;&#xD;
-    $(document).ready(function () {&#xD;
-        var dt = $('#@("dt_" + view.IdSuffix)');&#xD;
-        try {&#xD;
-            if (dt != null &amp;&amp; @Helper.ToJS(enabled) &amp;&amp; !@Helper.ToJS(report.PrintLayout))&#xD;
-            {&#xD;
-            var dto = dt.DataTable({&#xD;
-            &#xD;
-        columnDefs: [ {&#xD;
-            orderable: false,&#xD;
-            className: 'select-checkbox',&#xD;
-            targets:   0&#xD;
-         }&#xD;
-        ],&#xD;
-        select: {&#xD;
-            style:    'multi',&#xD;
-            selector: 'td:first-child'&#xD;
-        },&#xD;
-        dom: 'Bfrtip',&#xD;
-        buttons: [&#xD;
-            'selectAll',&#xD;
-            'selectNone',&#xD;
-        ],&#xD;
-        responsive: @view.GetBoolValueJS("data_tables_responsive"),&#xD;
-                ordering: @view.GetBoolValueJS("data_tables_sort_enabled"),&#xD;
-                paging: @view.GetBoolValueJS("data_tables_pagination_enabled"),&#xD;
-                lengthMenu: [[2, 25, 50, 100, 500], [2, 25, 50, 100, 500]],&#xD;
-                pageLength: 2,&#xD;
-                info: @view.GetBoolValueJS("data_tables_show_information"),&#xD;
-                searching: @view.GetBoolValueJS("data_tables_filter_enabled"),&#xD;
-                processing: @view.GetBoolValueJS("data_tables_show_processing"),&#xD;
-                order: [@Raw(view.GetValue("data_tables_sort_configuration"))],&#xD;
-                serverSide: @Helper.ToJS(report.IsServerPaginationEnabled &amp;&amp; enabled),&#xD;
-                @Raw(Helper.AddIfNotEmpty("scrollY: '", view.GetValue("data_tables_scrolly"), "',"))&#xD;
-                scrollX: @view.GetBoolValueJS("data_tables_scrollx"),&#xD;
-                scrollCollapse: @view.GetBoolValueJS("data_tables_scrollcollapse"),&#xD;
-                @if (view.GetValue("data_tables_fixcolleft") != "0" || view.GetValue("data_tables_fixcolright") != "0")&#xD;
-                {&lt;text&gt;&#xD;
-                    fixedColumns: {&#xD;
-                        leftColumns: @view.GetValue("data_tables_fixcolleft"),&#xD;
-                        rightColumns: @view.GetValue("data_tables_fixcolright")&#xD;
-                    },&#xD;
-                &lt;/text&gt;}&#xD;
-                @if (view.GetBoolValue("data_tables_fixheader") || view.GetBoolValue("data_tables_fixfooter"))&#xD;
-                {&lt;text&gt;&#xD;
-                    fixedHeader: {&#xD;
-                        header: @view.GetBoolValueJS("data_tables_fixheader"),&#xD;
-                        headerOffset: $("#bar_top").height(),&#xD;
-                        footer: @view.GetBoolValueJS("data_tables_fixfooter"),&#xD;
-                        footerOffset: 5,&#xD;
-                    },&#xD;
-                &lt;/text&gt;}&#xD;
-                @if (view.GetBoolValue("data_tables_scroller"))&#xD;
-                {&lt;text&gt;&#xD;
-                    deferRender: @view.GetBoolValueJS("data_tables_scroller"),&#xD;
-                    scroller: @view.GetBoolValueJS("data_tables_scroller"),&#xD;
-                &lt;/text&gt;}&#xD;
-                @if (report.IsServerPaginationEnabled &amp;&amp; enabled)&#xD;
-                {&lt;text&gt;&#xD;
-                        ajax: function(data, callback, settings) {&#xD;
-                            getTableData($(this), '@report.ExecutionGUID', '@view.ViewId', '@page.PageId', data, callback, settings);&#xD;
-                        }&#xD;
-                &lt;/text&gt;}&#xD;
-                });&#xD;
-                $(".dt-buttons").css({'display':'block'});&#xD;
-                dto.buttons().container().appendTo( '#example_wrapper .col-sm-6:eq(0)' );            &#xD;
-                employeeTable = dto;&#xD;
-        }&#xD;
-    }&#xD;
-    catch (e) { };&#xD;
-    });&#xD;
-    &lt;/script&gt;&#xD;
-&#xD;
-    &lt;table id='@("dt_" + view.IdSuffix)' viewid='@view.ViewId' @Raw(view.AddAttribute("class", "data_table_class")) @Raw(view.AddAttribute("style", "data_table_css"))&gt;&#xD;
-        @if (view.HasValue("data_table_caption"))&#xD;
-        {&#xD;
-            &lt;caption @Raw(view.AddAttribute("style", "data_table_caption_css"))&gt;@Raw(view.GetHtmlValue("data_table_caption"))&lt;/caption&gt;&#xD;
-        }&#xD;
-        &lt;thead&gt;&#xD;
-            @for (int row = 0; row &lt; table.BodyStartRow; row++)&#xD;
-            {&#xD;
-                &lt;tr @Raw(view.AddAttribute("class", "data_table_header_class")) @Raw(view.AddAttribute("style", "data_table_header_css"))&gt;&#xD;
-                    @for (int col = 0; col &lt; table.ColumnCount; col++)&#xD;
-                    {&#xD;
-                        if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }&#xD;
-                        ResultCell cell = table[row, col];&#xD;
-                        &lt;th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))&gt;@Raw(cell.HTMLValue)@Raw(view.GetBoolValue("data_tables_show_navigation") &amp;&amp; table.HasNavigation(row, col) &amp;&amp; report.GenerateHTMLDisplay ? "&lt;span class='navigation_icon glyphicon glyphicon-share'&gt;&lt;/span&gt;" : "")&lt;/th&gt;&#xD;
-                    }&#xD;
-                &lt;/tr&gt;&#xD;
-            }&#xD;
-        &lt;/thead&gt;&#xD;
-        @if (!report.IsServerPaginationEnabled || !enabled)&#xD;
-        {&#xD;
-            &lt;text&gt;&#xD;
-                &lt;tbody&gt;&#xD;
-                    @for (int row = table.BodyStartRow; row &lt; table.BodyEndRow; row++)&#xD;
-                    {&#xD;
-                        &lt;tr @Raw(view.AddAttribute("class", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_class")) @Raw(view.AddAttribute("style", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_css"))&gt;&#xD;
-                            @for (int col = 0; col &lt; table.ColumnCount; col++)&#xD;
-                            {&#xD;
-                                if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }&#xD;
-                                ResultCell cell = table[row, col];&#xD;
-                                &lt;td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))&gt;@Raw(cell.HTMLValue)&lt;/td&gt;&#xD;
-                            }&#xD;
-                        &lt;/tr&gt;&#xD;
-                    }&#xD;
-                &lt;/tbody&gt;&#xD;
-            &lt;/text&gt;&#xD;
-        }&#xD;
-        &lt;tfoot&gt;&#xD;
-            @for (int row = table.BodyEndRow; row &lt; table.RowCount; row++)&#xD;
-            {&#xD;
-                &lt;tr @Raw(view.AddAttribute("class", "data_table_footer_class")) @Raw(view.AddAttribute("style", "data_table_footer_css"))&gt;&#xD;
-                    @for (int col = 0; col &lt; table.ColumnCount; col++)&#xD;
-                    {&#xD;
-                        if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }&#xD;
-                        ResultCell cell = table[row, col];&#xD;
-                        &lt;td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle))&gt;@Raw(cell.HTMLValue)&lt;/td&gt;&#xD;
-                    }&#xD;
-                &lt;/tr&gt;&#xD;
-            }&#xD;
-        &lt;/tfoot&gt;&#xD;
-    &lt;/table&gt;&#xD;
-}</CustomTemplate><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>48e8469c-1eb0-4a9b-9719-11128feb4308</ModelGUID><SortOrder>3</SortOrder></ReportView><ReportView><GUID>69056401-ed07-4117-9fb3-825f95f469ff</GUID><Name>Form Start</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using System.Collections.Specialized;&#xD;
-@{&#xD;
-    Report report = Model;&#xD;
-    ReportView view = report.CurrentView;&#xD;
-    &#xD;
-    //Previous parameter values are saved in the report.Tag object&#xD;
-    if (report.Tag == null) {&#xD;
-        report.Tag = new NameValueCollection();&#xD;
-    }&#xD;
-    var parameters = (NameValueCollection) report.Tag;&#xD;
-    if (parameters.Count == 0) {&#xD;
-        parameters.Add("sort_option", "folder");&#xD;
-    }&#xD;
-    var zipPasswordValue = parameters["zip_password"];&#xD;
-    var sortOptionValue = parameters["sort_option"];&#xD;
-}&#xD;
-&#xD;
-&lt;form id="download_form" method="post" class="form-inline"&gt;&#xD;
-&lt;div class="container-fluid"&gt;&#xD;
-&lt;h4&gt;Download Employee Photos&lt;/h4&gt;&#xD;
-    &lt;div class="form-group"&gt;&#xD;
-        &lt;input type="text" class="form-control download-control" name="zip_password" id="zip_password" placeholder="Optional ZIP Password" value='@(zipPasswordValue != null ? zipPasswordValue : "")'/&gt;&#xD;
-    &lt;/div&gt;&#xD;
-    &lt;div class="form-group"&gt;&#xD;
-        &lt;select id="sort_option" name="sort_option" class="form-control download-control"&gt;&#xD;
-            &lt;option value='root' @(sortOptionValue == "root" ? "selected" : "")&gt;One root folder&lt;/option&gt;&#xD;
-            &lt;option value='folder' @(sortOptionValue == "folder" ? "selected" : "")&gt;One folder per file&lt;/option&gt;&#xD;
-        &lt;/select&gt;  &#xD;
-    &lt;/div&gt;&#xD;
-&#xD;
-    &lt;button type="button" id="custom_download_button" class="btn btn-warning download-control"&gt;@report.Translate("Download")&lt;/button&gt;&#xD;
-    &lt;button type="button" id="custom_html_button" class="btn btn-warning"&gt;Get HTML from Server&lt;/button&gt;&#xD;
-    &lt;br&gt;&#xD;
-    &lt;br&gt;&lt;button type="button" id="custom_report_button" class="btn btn-warning"&gt;Run 'Search Orders'&lt;/button&gt; (Works only with the Web Report Server:)&#xD;
-&lt;hr&gt;&#xD;
-&lt;/div&gt;&#xD;
-&#xD;
-&lt;div id="html_div"&gt;&lt;/div&gt;&#xD;
-&#xD;
-&lt;script&gt;&#xD;
-$(document).ready(function () {&#xD;
-        $("#sort_option").selectpicker({});&#xD;
-&#xD;
-        //Select all handler&#xD;
-        var $cb = $("#select_all");&#xD;
-        $cb.prop("checked", false);&#xD;
-        $cb.unbind("click").bind("click", function () {&#xD;
-            $(".selector").each(function (key, value) {&#xD;
-                var isChecked = $cb.is(':checked');&#xD;
-                $(value).prop("checked", isChecked);&#xD;
-            });&#xD;
-        });&#xD;
-        &#xD;
-        //Download button&#xD;
-        $("#custom_download_button").unbind("click").bind("click", function () {&#xD;
-            if ($(".selector:checked").length == 0) {&#xD;
-                alert('Select at least one employee');&#xD;
-                return;&#xD;
-            }&#xD;
-&#xD;
-            $("#navigation_parameters").val($("#download_form").serialize());  //Form parameters&#xD;
-            $("#navigation_id").val('@report.GetReportNavigationFileDownloadLink("download")'); //Link for file download&#xD;
-            $("#header_form").attr("action", _urlPrefix + "ActionNavigate");&#xD;
-            $("#header_form").submit();&#xD;
-        });&#xD;
-        &#xD;
-        //Html button&#xD;
-        $("#custom_html_button").unbind("click").bind("click", function () {&#xD;
-            $("#navigation_parameters").val($("#download_form").serialize());  //Form parameters&#xD;
-            $("#navigation_id").val('@report.GetReportNavigationScriptLink("html")'); //Link for custom content&#xD;
-            &#xD;
-            if (_urlPrefix != "") { //Web Report Server&#xD;
-                $.post(_urlPrefix + "ActionNavigate", $("#header_form").serialize()).done(function (data) {&#xD;
-                    $("#html_div").html(data);&#xD;
-                });&#xD;
-            }&#xD;
-            else { //Report Designer&#xD;
-                $("#header_form").attr("target", "");&#xD;
-                $("#header_form").attr("action", "ActionNavigate");&#xD;
-                $("#header_form").submit();&#xD;
-                &#xD;
-                $("#html_div").html($("#navigation_result").val());&#xD;
-            }&#xD;
-        });        &#xD;
-        &#xD;
-        //Report button&#xD;
-        $("#custom_report_button").unbind("click").bind("click", function () {&#xD;
-            postForm(_urlPrefix + "SWExecuteReport", "_blank", { path:"\\Search - Orders.srex"});&#xD;
-        });&#xD;
-&#xD;
-        //disable download on operator change&#xD;
-        $("#restrictions_div .form-control").change(function () {&#xD;
-            $('.download-control').prop('disabled', 'true').addClass("disabled");&#xD;
-        });&#xD;
-&#xD;
-        $("#restrictions_div .form-control").keyup(function () {&#xD;
-            $('.download-control').prop('disabled', 'true').addClass("disabled");&#xD;
-        });        &#xD;
-&#xD;
-});&#xD;
-&lt;/script&gt;&#xD;
-</CustomTemplate><SortOrder>2</SortOrder></ReportView><ReportView><GUID>970b6953-60c7-44f7-85c9-ab92dd9b1057</GUID><Name>Highlights</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>&lt;p&gt;&#xD;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;&#xD;
-&lt;ul&gt;&#xD;
-&lt;li&gt;Custom 'Form Start' and 'Form End' views to define the input fields and button, plus event handlers.&lt;/li&gt;&#xD;
-&lt;li&gt;'Report Navigation Script' in General to process the navigation.&lt;/li&gt;&#xD;
-&lt;li&gt;'Set Checkbox' task to converter the employee ID into check box.&lt;/li&gt;&#xD;
-&lt;/ul&gt;&#xD;
-&lt;/p&gt;&#xD;
-</CustomTemplate><SortOrder>1</SortOrder></ReportView><ReportView><GUID>033d9973-6e93-4f48-9bbc-a739490b395a</GUID><Name>Form End</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>&lt;/form&gt;&#xD;
-</CustomTemplate><SortOrder>4</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>force_execution</Name><Value>True</Value></Parameter><Parameter><Name>serverpagination_enabled</Name><Value>False</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><NavigationScript>@using System.Data&#xD;
-@using System.IO&#xD;
-@{&#xD;
-    NavigationLink link = Model;&#xD;
-    Report report = link.Report;&#xD;
-    &#xD;
-    //Save the parameters in the report.Tag&#xD;
-    report.Tag = link.Parameters;&#xD;
-   &#xD;
-    if (link.Text == "download") {    &#xD;
-        //Download button -&gt; result must be a file&#xD;
-        var helper = new TaskDatabaseHelper();&#xD;
-        //Get the photos&#xD;
-        var photos = helper.LoadDataTable(report.Models[0].Connection, "select EmployeeID, LastName, photo from employees");&#xD;
-                &#xD;
-        var files = new Dictionary&lt;string,string&gt;();&#xD;
-        foreach (DataRow row in photos.Rows) {&#xD;
-            if (link.Parameters["cb_" + row["EmployeeID"].ToString()] != null) {&#xD;
-                var employeeName = row["LastName"].ToString(); //Name of the file containing the extension&#xD;
-                var filePath = FileHelper.GetTempUniqueFileName(employeeName+".bmp");&#xD;
-                File.WriteAllBytes(filePath, GetImageBytesFromOLEField((byte[]) row["photo"]));&#xD;
-                files.Add(filePath, (link.Parameters["sort_option"]=="folder" ? employeeName + "\\" : "") + employeeName+".bmp");&#xD;
-            }&#xD;
-        }&#xD;
-&#xD;
-        var zipPath = FileHelper.GetTempUniqueFileName(string.Format("{0}.zip", report.DisplayNameEx));&#xD;
-        FileHelper.CreateZIP(files, zipPath, link.Parameters["zip_password"]);&#xD;
-        &#xD;
-        link.ScriptResult = zipPath;&#xD;
-    }&#xD;
-    else if (link.Text == "html") {    &#xD;
-        //HTML button -&gt; result is a string&#xD;
-        link.ScriptResult = string.Format("&lt;b&gt;This is a custom HTML built in the 'Report Navigation Script' from the server at {0}.&lt;/b&gt;&lt;hr&gt;", DateTime.Now);&#xD;
-    }&#xD;
-}&#xD;
-</NavigationScript><Cancel>false</Cancel></Report>
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CurrentViewGUID>efe2ad7a-1c7d-4caa-af0e-a9a1e5b85124</CurrentViewGUID>
+  <GUID>c4aeb163-eb1b-4a8f-a6d0-790315140193</GUID>
+  <ViewGUID>efe2ad7a-1c7d-4caa-af0e-a9a1e5b85124</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>48e8469c-1eb0-4a9b-9719-11128feb4308</GUID>
+      <Name>Employees</Name>
+      <SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>a474eb41-4d6c-4e0a-8ad7-5970259a5bea</GUID>
+          <Name>Employees.EmployeeID</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID>
+          <ContainsHtml>true</ContainsHtml>
+        </ReportElement>
+        <ReportElement>
+          <GUID>62761375-cee1-4b1c-9fa9-73656861541d</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[71f2065c-2254-4c9a-817c-acf9006b9ee0]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>71f2065c-2254-4c9a-817c-acf9006b9ee0</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>6ea26f3c-dc76-4a06-95ab-70abf10cd943</GUID>
+      <Name>Set Checkbox</Name>
+      <CancelReport>false</CancelReport>
+      <SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID>
+      <Step>BeforeRendering</Step>
+      <Script>@{
+    //Format final result cells before rendering
+    ReportTask task = Model;
+    Report report = task.Report;   
+    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'
+    foreach (var model in report.Models) 
+    {
+        foreach (var page in model.Pages) 
+        {
+            foreach (var line in page.DataTable.Lines) 
+            {
+                var cell = line[0];
+                cell.FinalCssClass =  "firstcell";
+                cell.FinalCssStyle =  "padding-left:10px;width:20px";
+                cell.FinalValue = string.Format("&lt;input id='{0}' name='{0}' class='selector' type='checkbox'/&gt;",  cell.IsTitle ? "select_all" : "cb_" + cell.Value.ToString());
+            }       
+        }
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <CommonScripts>
+    <CommonScript>
+      <Name>GetImageBytesFromOLEField</Name>
+      <Script>@using System.IO
+
+@functions 
+{
+    void test() {
+    }
+    
+
+    byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes)
+    {
+        const string BITMAP_ID_BLOCK = "BM";
+        const string JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";
+        const string PNG_ID_BLOCK = "\u0089PNG\r\n\u001a\n";
+        const string GIF_ID_BLOCK = "GIF8";
+        const string TIFF_ID_BLOCK = "II*\u0000";
+        byte[] imageBytes;
+        // Get a UTF7 Encoded string version
+        var u8 = System.Text.Encoding.UTF7;
+        string strTemp = u8.GetString(oleFieldBytes);
+        // Get the first 300 characters from the string
+        string strVTemp = strTemp.Substring(0, 300);
+        // Search for the block
+        int iPos = -1;
+        if (strVTemp.IndexOf(BITMAP_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(BITMAP_ID_BLOCK);
+        else if (strVTemp.IndexOf(JPG_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(JPG_ID_BLOCK);
+        else if (strVTemp.IndexOf(PNG_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(PNG_ID_BLOCK);
+        else if (strVTemp.IndexOf(GIF_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(GIF_ID_BLOCK);
+        else if (strVTemp.IndexOf(TIFF_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(TIFF_ID_BLOCK);
+        else
+            throw new Exception("Unable to determine header size for the OLE Object");
+        // From the position above get the new image
+        if (iPos == -1) {
+            throw new Exception("Unable to determine header size for the OLE Object");
+        }
+        imageBytes = new byte[oleFieldBytes.LongLength - iPos];
+        MemoryStream ms = new MemoryStream();
+        ms.Write(oleFieldBytes, iPos, oleFieldBytes.Length - iPos);
+        imageBytes = ms.ToArray();
+        ms.Close();
+        ms.Dispose();
+        return imageBytes;
+    }
+}</Script>
+    </CommonScript>
+  </CommonScripts>
+  <Views>
+    <ReportView>
+      <GUID>efe2ad7a-1c7d-4caa-af0e-a9a1e5b85124</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>56ddbaf2-607a-420f-9f96-55a920f81b56</GUID>
+          <Name>Employees</Name>
+          <Views>
+            <ReportView>
+              <GUID>2ef54e81-dfeb-4e09-bb54-0cd24961fdad</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>4d0b74d1-273b-4c4b-bdf8-4435ba632947</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>4694d06e-e292-403f-b24b-02f8f098f699</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>9d2f612c-ec9c-4918-930b-240bfd5ae6a1</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>6ec6321e-f5b9-4fce-a404-5f80e3479e8d</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>719a7dbd-14dc-430b-8361-dc99b3386b4e</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <CustomTemplate>@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = report.CurrentModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    bool enabled = view.GetBoolValue("data_tables_enabled");
+    view.IdSuffix = Guid.NewGuid().ToString().Replace("-", "");
+
+    if (view.GetBoolValue("invert_data_tables") &amp;&amp; modelView.GetBoolValue("show_data_tables") &amp;&amp; !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))
+    {
+        reportModel.InvertDataTables();
+    }
+    ResultTable table = page.DataTable;
+}
+
+@if (table != null &amp;&amp; table.RowCount &gt; 0 &amp;&amp; table.ColumnCount &gt; 0 &amp;&amp; modelView.GetBoolValue("show_data_tables"))
+{
+    &lt;script type="text/javascript"&gt;
+    var employeeTable;
+    $(document).ready(function () {
+        var dt = $('#@("dt_" + view.IdSuffix)');
+        try {
+            if (dt != null &amp;&amp; @Helper.ToJS(enabled) &amp;&amp; !@Helper.ToJS(report.PrintLayout))
+            {
+            var dto = dt.DataTable({
+            
+        columnDefs: [ {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   0
+         }
+        ],
+        select: {
+            style:    'multi',
+            selector: 'td:first-child'
+        },
+        dom: 'Bfrtip',
+        buttons: [
+            'selectAll',
+            'selectNone',
+        ],
+        responsive: @view.GetBoolValueJS("data_tables_responsive"),
+                ordering: @view.GetBoolValueJS("data_tables_sort_enabled"),
+                paging: @view.GetBoolValueJS("data_tables_pagination_enabled"),
+                lengthMenu: [[2, 25, 50, 100, 500], [2, 25, 50, 100, 500]],
+                pageLength: 2,
+                info: @view.GetBoolValueJS("data_tables_show_information"),
+                searching: @view.GetBoolValueJS("data_tables_filter_enabled"),
+                processing: @view.GetBoolValueJS("data_tables_show_processing"),
+                order: [@Raw(view.GetValue("data_tables_sort_configuration"))],
+                serverSide: @Helper.ToJS(report.IsServerPaginationEnabled &amp;&amp; enabled),
+                @Raw(Helper.AddIfNotEmpty("scrollY: '", view.GetValue("data_tables_scrolly"), "',"))
+                scrollX: @view.GetBoolValueJS("data_tables_scrollx"),
+                scrollCollapse: @view.GetBoolValueJS("data_tables_scrollcollapse"),
+                @if (view.GetValue("data_tables_fixcolleft") != "0" || view.GetValue("data_tables_fixcolright") != "0")
+                {&lt;text&gt;
+                    fixedColumns: {
+                        leftColumns: @view.GetValue("data_tables_fixcolleft"),
+                        rightColumns: @view.GetValue("data_tables_fixcolright")
+                    },
+                &lt;/text&gt;}
+                @if (view.GetBoolValue("data_tables_fixheader") || view.GetBoolValue("data_tables_fixfooter"))
+                {&lt;text&gt;
+                    fixedHeader: {
+                        header: @view.GetBoolValueJS("data_tables_fixheader"),
+                        headerOffset: $("#bar_top").height(),
+                        footer: @view.GetBoolValueJS("data_tables_fixfooter"),
+                        footerOffset: 5,
+                    },
+                &lt;/text&gt;}
+                @if (view.GetBoolValue("data_tables_scroller"))
+                {&lt;text&gt;
+                    deferRender: @view.GetBoolValueJS("data_tables_scroller"),
+                    scroller: @view.GetBoolValueJS("data_tables_scroller"),
+                &lt;/text&gt;}
+                @if (report.IsServerPaginationEnabled &amp;&amp; enabled)
+                {&lt;text&gt;
+                        ajax: function(data, callback, settings) {
+                            getTableData($(this), '@report.ExecutionGUID', '@view.ViewId', '@page.PageId', data, callback, settings);
+                        }
+                &lt;/text&gt;}
+                });
+                $(".dt-buttons").css({'display':'block'});
+                dto.buttons().container().appendTo( '#example_wrapper .col-sm-6:eq(0)' );            
+                employeeTable = dto;
+        }
+    }
+    catch (e) { };
+    });
+    &lt;/script&gt;
+
+    &lt;table id='@("dt_" + view.IdSuffix)' viewid='@view.ViewId' @Raw(view.AddAttribute("class", "data_table_class")) @Raw(view.AddAttribute("style", "data_table_css"))&gt;
+        @if (view.HasValue("data_table_caption"))
+        {
+            &lt;caption @Raw(view.AddAttribute("style", "data_table_caption_css"))&gt;@Raw(view.GetHtmlValue("data_table_caption"))&lt;/caption&gt;
+        }
+        &lt;thead&gt;
+            @for (int row = 0; row &lt; table.BodyStartRow; row++)
+            {
+                &lt;tr @Raw(view.AddAttribute("class", "data_table_header_class")) @Raw(view.AddAttribute("style", "data_table_header_css"))&gt;
+                    @for (int col = 0; col &lt; table.ColumnCount; col++)
+                    {
+                        if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
+                        ResultCell cell = table[row, col];
+                        &lt;th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))&gt;@Raw(cell.HTMLValue)@Raw(view.GetBoolValue("data_tables_show_navigation") &amp;&amp; table.HasNavigation(row, col) &amp;&amp; report.GenerateHTMLDisplay ? "&lt;span class='navigation_icon glyphicon glyphicon-share'&gt;&lt;/span&gt;" : "")&lt;/th&gt;
+                    }
+                &lt;/tr&gt;
+            }
+        &lt;/thead&gt;
+        @if (!report.IsServerPaginationEnabled || !enabled)
+        {
+            &lt;text&gt;
+                &lt;tbody&gt;
+                    @for (int row = table.BodyStartRow; row &lt; table.BodyEndRow; row++)
+                    {
+                        &lt;tr @Raw(view.AddAttribute("class", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_class")) @Raw(view.AddAttribute("style", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_css"))&gt;
+                            @for (int col = 0; col &lt; table.ColumnCount; col++)
+                            {
+                                if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
+                                ResultCell cell = table[row, col];
+                                &lt;td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))&gt;@Raw(cell.HTMLValue)&lt;/td&gt;
+                            }
+                        &lt;/tr&gt;
+                    }
+                &lt;/tbody&gt;
+            &lt;/text&gt;
+        }
+        &lt;tfoot&gt;
+            @for (int row = table.BodyEndRow; row &lt; table.RowCount; row++)
+            {
+                &lt;tr @Raw(view.AddAttribute("class", "data_table_footer_class")) @Raw(view.AddAttribute("style", "data_table_footer_css"))&gt;
+                    @for (int col = 0; col &lt; table.ColumnCount; col++)
+                    {
+                        if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
+                        ResultCell cell = table[row, col];
+                        &lt;td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle))&gt;@Raw(cell.HTMLValue)&lt;/td&gt;
+                    }
+                &lt;/tr&gt;
+            }
+        &lt;/tfoot&gt;
+    &lt;/table&gt;
+}</CustomTemplate>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>48e8469c-1eb0-4a9b-9719-11128feb4308</ModelGUID>
+          <SortOrder>3</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>69056401-ed07-4117-9fb3-825f95f469ff</GUID>
+          <Name>Form Start</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>@using System.Collections.Specialized;
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    
+    //Previous parameter values are saved in the report.Tag object
+    if (report.Tag == null) {
+        report.Tag = new NameValueCollection();
+    }
+    var parameters = (NameValueCollection) report.Tag;
+    if (parameters.Count == 0) {
+        parameters.Add("sort_option", "folder");
+    }
+    var zipPasswordValue = parameters["zip_password"];
+    var sortOptionValue = parameters["sort_option"];
+}
+
+&lt;form id="download_form" method="post" class="form-inline"&gt;
+&lt;div class="container-fluid"&gt;
+&lt;h4&gt;Download Employee Photos&lt;/h4&gt;
+    &lt;div class="form-group"&gt;
+        &lt;input type="text" class="form-control download-control" name="zip_password" id="zip_password" placeholder="Optional ZIP Password" value='@(zipPasswordValue != null ? zipPasswordValue : "")'/&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;select id="sort_option" name="sort_option" class="form-control download-control"&gt;
+            &lt;option value='root' @(sortOptionValue == "root" ? "selected" : "")&gt;One root folder&lt;/option&gt;
+            &lt;option value='folder' @(sortOptionValue == "folder" ? "selected" : "")&gt;One folder per file&lt;/option&gt;
+        &lt;/select&gt;  
+    &lt;/div&gt;
+
+    &lt;button type="button" id="custom_download_button" class="btn btn-warning download-control"&gt;@report.Translate("Download")&lt;/button&gt;
+    &lt;button type="button" id="custom_html_button" class="btn btn-warning"&gt;Get HTML from Server&lt;/button&gt;
+    &lt;br&gt;
+    &lt;br&gt;&lt;button type="button" id="custom_report_button" class="btn btn-warning"&gt;Run 'Search Orders'&lt;/button&gt; (Works only with the Web Report Server!)
+&lt;hr&gt;
+&lt;/div&gt;
+
+&lt;div id="html_div"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+$(document).ready(function () {
+        $("#sort_option").selectpicker({});
+
+        //Select all handler
+        var $cb = $("#select_all");
+        $cb.prop("checked", false);
+        $cb.unbind("click").bind("click", function () {
+            $(".selector").each(function (key, value) {
+                var isChecked = $cb.is(':checked');
+                $(value).prop("checked", isChecked);
+            });
+        });
+        
+        //Download button
+        $("#custom_download_button").unbind("click").bind("click", function () {
+            if ($(".selector:checked").length == 0) {
+                alert('Select at least one employee');
+                return;
+            }
+
+            $("#navigation_parameters").val($("#download_form").serialize());  //Form parameters
+            $("#navigation_id").val('@report.GetReportNavigationFileDownloadLink("download")'); //Link for file download
+            $("#header_form").attr("action", _urlPrefix + "ActionNavigate");
+            $("#header_form").submit();
+        });
+        
+        //Html button
+        $("#custom_html_button").unbind("click").bind("click", function () {
+            $("#navigation_parameters").val($("#download_form").serialize());  //Form parameters
+            $("#navigation_id").val('@report.GetReportNavigationScriptLink("html")'); //Link for custom content
+            
+            if (_urlPrefix != "") { //Web Report Server
+                $.post(_urlPrefix + "ActionNavigate", $("#header_form").serialize()).done(function (data) {
+                    $("#html_div").html(data);
+                });
+            }
+            else { //Report Designer
+                $("#header_form").attr("target", "");
+                $("#header_form").attr("action", "ActionNavigate");
+                $("#header_form").submit();
+                
+                $("#html_div").html($("#navigation_result").val());
+            }
+        });        
+        
+        //Report button
+        $("#custom_report_button").unbind("click").bind("click", function () {
+            postForm(_urlPrefix + "SWExecuteReport", "_blank", { path:"\\Search - Orders.srex"});
+        });
+
+        //disable download on operator change
+        $("#restrictions_div .form-control").change(function () {
+            $('.download-control').prop('disabled', 'true').addClass("disabled");
+        });
+
+        $("#restrictions_div .form-control").keyup(function () {
+            $('.download-control').prop('disabled', 'true').addClass("disabled");
+        });        
+
+});
+&lt;/script&gt;
+</CustomTemplate>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>970b6953-60c7-44f7-85c9-ab92dd9b1057</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;Custom 'Form Start' and 'Form End' views to define the input fields and button, plus event handlers.&lt;/li&gt;
+&lt;li&gt;'Report Navigation Script' in General to process the navigation.&lt;/li&gt;
+&lt;li&gt;'Set Checkbox' task to converter the employee ID into check box.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>033d9973-6e93-4f48-9bbc-a739490b395a</GUID>
+          <Name>Form End</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;/form&gt;
+</CustomTemplate>
+          <SortOrder>4</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>serverpagination_enabled</Name>
+          <Value>False</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <NavigationScript>@using System.Data
+@using System.IO
+@{
+    NavigationLink link = Model;
+    Report report = link.Report;
+    
+    //Save the parameters in the report.Tag
+    report.Tag = link.Parameters;
+   
+    if (link.Text == "download") {    
+        //Download button -&gt; result must be a file
+        var helper = new TaskDatabaseHelper();
+        //Get the photos
+        var photos = helper.LoadDataTable(report.Models[0].Connection, "select EmployeeID, LastName, photo from employees");
+                
+        var files = new Dictionary&lt;string,string&gt;();
+        foreach (DataRow row in photos.Rows) {
+            if (link.Parameters["cb_" + row["EmployeeID"].ToString()] != null) {
+                var employeeName = row["LastName"].ToString(); //Name of the file containing the extension
+                var filePath = FileHelper.GetTempUniqueFileName(employeeName+".bmp");
+                File.WriteAllBytes(filePath, GetImageBytesFromOLEField((byte[]) row["photo"]));
+                files.Add(filePath, (link.Parameters["sort_option"]=="folder" ? employeeName + "\\" : "") + employeeName+".bmp");
+            }
+        }
+
+        var zipPath = FileHelper.GetTempUniqueFileName(string.Format("{0}.zip", report.DisplayNameEx));
+        FileHelper.CreateZIP(files, zipPath, link.Parameters["zip_password"]);
+        
+        link.ScriptResult = zipPath;
+    }
+    else if (link.Text == "html") {    
+        //HTML button -&gt; result is a string
+        link.ScriptResult = string.Format("&lt;b&gt;This is a custom HTML built in the 'Report Navigation Script' from the server at {0}.&lt;/b&gt;&lt;hr&gt;", DateTime.Now);
+    }
+}
+</NavigationScript>
+  <Cancel>false</Cancel>
+</Report>
