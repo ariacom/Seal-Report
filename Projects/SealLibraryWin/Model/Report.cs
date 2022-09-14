@@ -1376,7 +1376,9 @@ namespace Seal.Model
                     {
                         schedule.SynchronizeTask();
                     }
-                    catch { }
+                    catch (Exception ex) {
+                        Helper.WriteLogException("SynchronizeTasks", ex);
+                    }
                 }
 
                 //Clear unused tasks

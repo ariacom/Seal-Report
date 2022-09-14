@@ -150,7 +150,7 @@ AND [915d0c94-ce01-4f2f-be3e-b6a277887aa6]</Restriction>
           <DisplayName />
           <Format>G</Format>
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Not sorted</SortOrder>
+          <SortOrder>Automatic Descendant</SortOrder>
           <AggregateFunction>Max</AggregateFunction>
           <TotalAggregateFunction>Max</TotalAggregateFunction>
           <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
