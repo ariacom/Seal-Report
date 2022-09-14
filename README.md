@@ -31,7 +31,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 
 Need a server to deploy <b>Seal Report</b> ?<br>
 <a href="https://sealreport.com" target="_blank">**Seal in the Cloud**</a> offers a full environment to use the power and the flexibity of <b>Seal Report</b> in the Cloud.<br>
-Visit <a href="https://sealreport.com" target="_blank">sealreport.com</a>, register and get your free <b>Trial Instance</b> to upload and execute your reports on a shared server.
+Visit <a href="https://sealreport.com" target="_blank">sealreport.com</a>, register and get your <b>Free Instance</b> to upload and execute your reports on a shared server.
 
 # Screen shots 
 ## HTML Report Result
