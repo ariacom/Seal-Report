@@ -3029,6 +3029,7 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
 
+        const string InternalLink = "<span class='external-navigation glyphicon glyphicon-log-in'></span>";
         const string ExternalLink = "<span class='external-navigation glyphicon glyphicon-new-window'></span>";
         /// <summary>
         /// HTML Navigation for the report result
@@ -3040,9 +3041,26 @@ model.ResultTable = query2.CopyToDataTable2();
             {
                 foreach (var link in cell.GetNavigationLinks(view))
                 {
-                    var externalLink = "";
-                    if (!string.IsNullOrEmpty(Report.WebUrl) && (link.Type == NavigationType.Drill || link.Type == NavigationType.SubReport)) externalLink = ExternalLink;
-                    navigation += string.Format("<li nav='{0}'><a href='#'>{1}{2}</a></li>", link.FullHref, link.Text, externalLink);
+                    var secondLink = "";
+                    bool newWindow = false;
+                    if (Report.SecurityContext != null && !string.IsNullOrEmpty(Report.WebUrl) && (link.Type == NavigationType.Drill || link.Type == NavigationType.SubReport))
+                    {
+                        //Second link for drill or subreport
+                        var profile = Report.SecurityContext.Profile;
+
+                        var executionMode = profile.ExecutionMode;
+                        if (executionMode == ExecutionMode.Default) executionMode = Report.SecurityContext.DefaultGroup.ExecutionMode;
+                        if (executionMode != ExecutionMode.AlwaysNewWindow)
+                        {
+                            secondLink = (executionMode == ExecutionMode.NewWindow ? InternalLink : ExternalLink);
+                            if (executionMode == ExecutionMode.NewWindow) newWindow = true;
+                        }
+                        else
+                        {
+                            newWindow = true;
+                        }
+                    }
+                    navigation += string.Format("<li nav='{0}' nw='{3}'><a href='#'>{1}{2}</a></li>", link.FullHref, link.Text, secondLink, newWindow);
                 }
                 navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", navigation));
             }

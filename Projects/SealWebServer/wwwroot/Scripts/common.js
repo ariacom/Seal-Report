@@ -265,12 +265,15 @@ function showPopupNavMenu(source, content, forChart) {
     $popup.html(content);
     $('#nav_popupmenu li,#nav_popupmenu span').unbind("click").on("click", function (e) {
         var nav = $(this).attr("nav");
-        var target = "";
-        if (!nav) {
+        var newWindow = $(this).attr("nw");
+        var target = (newWindow == "True" ? "_blank" : "");
+        if (!nav) { //Navigation on the second link
             e.stopPropagation();
             nav = $(this).closest("li").attr("nav");
-            target = "_blank";
+            newWindow = $(this).closest("li").attr("nw");
+            target = (newWindow != "True" ? "_blank" : "");
         }
+
         executeReportNavigation(nav, target);
         $popup.hide();
     });

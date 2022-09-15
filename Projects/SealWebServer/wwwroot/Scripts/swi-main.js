@@ -82,7 +82,7 @@ var SWIMain = /** @class */ (function () {
         _main.clearFilesTable();
         _main._newWindow = (_main._profile.executionmode === 1 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 1));
         _main._reportIcon = (_main._newWindow ? "log-in" : "new-window");
-        //disable current window
+        //disable current window, 0=Default, 1=NewWindow, 2=SameWindow, 3=AlwaysNewWindow
         if (_main._profile.executionmode === 3 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 3)) {
             _main._newWindow = true;
             _main._reportIcon = null;

@@ -118,7 +118,7 @@
 
             //Execute if force execution or no restriction
             var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
-            var forceExecution = @Helper.ToJS(view.GetBoolValue(Parameter.ForceExecutionParameter) || report.HasNavigation);
+            var forceExecution = @Helper.ToJS(view.GetBoolValue(Parameter.ForceExecutionParameter));
             if ((forceExecution || !hasRestrictions) && !@Helper.ToJS(report.IsExecuting) && !@Helper.ToJS(report.Cancel)) {
                 executeReport();
             }

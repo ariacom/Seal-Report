@@ -218,7 +218,6 @@ namespace SealWebServer.Controllers
             {
                 if (!CheckAuthentication()) return _loginContentResult;
                 if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
-
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
@@ -377,7 +376,7 @@ namespace SealWebServer.Controllers
         public ActionResult ActionRefreshReport(string execution_guid)
         {
             writeDebug("ActionRefreshReport");
-            string error = "";
+            string error ;
             try
             {
                 var execution = getReportExecution(execution_guid);
@@ -401,10 +400,6 @@ namespace SealWebServer.Controllers
                     else if (report.Status == ReportStatus.Executed)
                     {
                         return Json(new { result_ready = true }); ;
-                    }
-                    else if (!string.IsNullOrEmpty(report.ExecutionErrors))
-                    {
-                        throw new Exception(report.ExecutionErrors);
                     }
                     else if (report.IsExecuting)
                     {

@@ -946,6 +946,7 @@ namespace Seal.Model
                     Report.ExecutionErrors = message;
                     Report.ExecutionErrorStackTrace = ex.StackTrace;
                     task.CancelReport = true;
+                    Report.Cancel = true;
                 }
             }
         }

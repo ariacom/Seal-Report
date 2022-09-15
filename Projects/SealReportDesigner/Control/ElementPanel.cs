@@ -62,7 +62,7 @@ namespace Seal.Controls
                 if (button != null)
                 {
                     ReportElement element = button.Tag as ReportElement;
-                    button.Text = element.DisplayNameEl;
+                    button.Text = element.DisplayNameElTranslated;
                     button.BackColor = System.Drawing.SystemColors.Control;
                     button.UseVisualStyleBackColor = true;
                     if (button == _modelPanel.SelectedButton) button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

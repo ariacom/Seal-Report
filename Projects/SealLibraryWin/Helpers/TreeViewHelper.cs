@@ -24,6 +24,7 @@ namespace Seal.Helpers
 
         public static void InitCategoryTreeNode(TreeNodeCollection categoryNodes, List<MetaTable> tables)
         {
+            var repository = Repository.Instance;
             categoryNodes.Clear();
             if (tables.Count > 0)
             {
@@ -48,13 +49,13 @@ namespace Seal.Helpers
                         categoryNode = getCategoryTreeNode(nodes, category);
                         if (categoryNode == null)
                         {
-                            categoryNode = new TreeNode(category) { Tag = new CategoryFolder() { Name = category, Path = path }, ImageIndex = 2, SelectedImageIndex = 2 };
+                            categoryNode = new TreeNode(repository.TranslateCategory(category, category)) { Tag = new CategoryFolder() { Name = category, Path = path }, ImageIndex = 2, SelectedImageIndex = 2 };
                             nodes.Add(categoryNode);
                         }
                         nodes = categoryNode.Nodes;
                     }
 
-                    var tn = new TreeNode(column.DisplayName) { Tag = column, ImageIndex = 7, SelectedImageIndex = 7 };
+                    var tn = new TreeNode(repository.TranslateColumn(column)) { Tag = column, ImageIndex = 7, SelectedImageIndex = 7 };
                     categoryNode.Nodes.Add(tn);
                 }
             }

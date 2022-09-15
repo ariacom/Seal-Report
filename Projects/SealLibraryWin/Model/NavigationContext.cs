@@ -117,7 +117,9 @@ namespace Seal.Model
 
             newReport.WebUrl = rootReport.WebUrl;
             newReport.IsNavigating = true;
-            newReport.HasNavigation = true;
+            if (!newWindow) newReport.HasNavigation = true;
+            newReport.ExecutionView.InitParameters(false);
+            newReport.ExecutionView.SetParameter(Parameter.ForceExecutionParameter, true);
 
             if (previousNav == null)
             {
