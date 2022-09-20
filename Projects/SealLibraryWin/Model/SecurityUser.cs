@@ -24,6 +24,11 @@ namespace Seal.Model
         public string Name = "";
 
         /// <summary>
+        /// Security login if the authentication using Security Logins is used
+        /// </summary>
+        public SecurityLogin Login = null;
+
+        /// <summary>
         /// Personal folder name
         /// </summary>
         public string PersonalFolderName = "";
@@ -137,6 +142,26 @@ namespace Seal.Model
         public string Token = null;
 
         /// <summary>
+        /// Parameters for authentication: Security code sent by the user for 2FA
+        /// </summary>
+        public string WebSecurityCode = "";
+
+        /// <summary>
+        /// Parameters for authentication: Security code generated for 2FA
+        /// </summary>
+        public string SecurityCode = null;
+
+        /// <summary>
+        /// Parameters for authentication: Security code generation date for 2FA
+        /// </summary>
+        public DateTime SecurityCodeGeneration = DateTime.MinValue;
+
+        /// <summary>
+        /// Number of tries to check the security code for 2FA
+        /// </summary>
+        public int SecurityCodeTries = 0;
+
+        /// <summary>
         /// Parameters for authentication: The Request done for the login
         /// </summary>
         public HttpRequest Request = null;
@@ -161,7 +186,7 @@ namespace Seal.Model
         /// </summary>
         public bool IsAuthenticated
         {
-            get { return SecurityGroups.Count > 0; }
+            get { return string.IsNullOrEmpty(SecurityCode) && SecurityGroups.Count > 0; }
         }
 
         /// <summary>
@@ -291,6 +316,20 @@ namespace Seal.Model
                 }
 
                 if (ex != null)
+                {
+                    SecurityGroups.Clear();
+                    Error = ex.Message;
+                }
+            }
+
+            if (string.IsNullOrEmpty(Error) && !string.IsNullOrEmpty(Security.TwoFAGenerationScript))
+            {
+                script = Security.TwoFAGenerationScript;
+                try
+                {
+                    RazorHelper.CompileExecute(script, this);
+                }
+                catch (Exception ex)
                 {
                     SecurityGroups.Clear();
                     Error = ex.Message;
@@ -602,6 +641,7 @@ namespace Seal.Model
                         {
                             AddSecurityGroup(group);
                         }
+                        Login = login;
                         return true;
                     }
                 }
@@ -619,6 +659,9 @@ namespace Seal.Model
                 string message = IsAuthenticated ? "SUCCESS: User is authenticated\r\n" : "ERROR: Authentication failed\r\n";
                 if (!string.IsNullOrEmpty(WebUserName)) message += string.Format("User login name: {0}\r\n", WebUserName);
                 if (!string.IsNullOrEmpty(Name)) message += string.Format("User display name: {0}\r\n", Name);
+                if (!string.IsNullOrEmpty(SecurityCode)) message += string.Format("Security code generated: {0}\r\n", SecurityCode);
+                if (!string.IsNullOrEmpty(WebSecurityCode)) message += string.Format("Security code: {0}\r\n", WebSecurityCode);
+                if (SecurityCodeTries != 0) message += string.Format("Security code tries: {0}\r\n", SecurityCodeTries);
                 foreach (var group in SecurityGroups)
                 {
                     message += string.Format("Security group: {0}\r\n", group.Name);

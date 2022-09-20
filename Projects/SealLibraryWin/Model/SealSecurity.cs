@@ -52,6 +52,8 @@ namespace Seal.Model
                 GetProperty("ProviderName").SetIsBrowsable(true);
                 GetProperty("UseCustomScript").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
+                GetProperty("TwoFAGenerationScript").SetIsBrowsable(true);
+                GetProperty("TwoFACheckScript").SetIsBrowsable(true);
                 GetProperty("CurrentParameters").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("TestUserName").SetIsBrowsable(true);
@@ -126,6 +128,24 @@ namespace Seal.Model
         public string Script { get; set; }
 
         /// <summary>
+        /// If not empty, the script is executed to generate and send the security code used for a Two-Factor Authentication.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication Generation Script"), Description("If not empty, the script is executed to generate and send the security code used for a Two-Factor Authentication."), Id(4, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string TwoFAGenerationScript { get; set; }
+
+        /// <summary>
+        /// If a 'Two-Factor Authentication Generation Script' is set, the script is executed to check the security code and validate the a Two-Factor Authentication.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication Check Script"), Description("If a 'Two-Factor Authentication Generation Script' is set, the script is executed to check the security code and validate the Two-Factor Authentication."), Id(5, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string TwoFACheckScript { get; set; }
+
+        /// <summary>
         /// Current SecurityProvider
         /// </summary>
         public SecurityProvider Provider
@@ -170,7 +190,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(4, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(5, 2)]
 #endif
         [XmlIgnore]
         public List<SecurityParameter> CurrentParameters
@@ -377,16 +397,16 @@ namespace Seal.Model
         /// Editor Helper: If true, the current user will be use as IPrincipal to test the Integrated Windows authentication
         /// </summary>
 #if WINDOWS
-        [Category("Test a login"), DisplayName("Use current Windows User to test authentication"), Description("If true, the current user will be use as IPrincipal to test the Integrated Windows authentication."), Id(10, 10)]
+        [Category("Test a login"), DisplayName("Use current Windows User to test authentication"), Description("If true, the current user will be use as IPrincipal to test the Integrated Windows authentication."), Id(11, 10)]
 #endif
-		[XmlIgnore]
+        [XmlIgnore]
         public bool TestCurrentWindowsUser { get; set; } = true;
 
         /// <summary>
         /// Editor Helper: Test a login using the test user name and password or the current windows user
         /// </summary>
 #if WINDOWS
-        [Category("Test a login"), DisplayName("Test a login"), Description("Test a login using the test user name and password or the current windows user."), Id(11, 10)]
+        [Category("Test a login"), DisplayName("Test a login"), Description("Test a login using the test user name and password or the current windows user."), Id(12, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
 #endif
         public string HelperSimulateLogin

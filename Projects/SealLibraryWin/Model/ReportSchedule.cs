@@ -594,10 +594,10 @@ namespace Seal.Model
         public string NotificationEmailBody { get; set; }
 
         /// <summary>
-        /// The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address.
+        /// The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP or SendGrid server allows the new address.
         /// </summary>
 #if WINDOWS
-        [Category("Email notification in case of success"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 3)]
+        [Category("Email notification in case of success"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP or SendGrid server allows the new address."), Id(5, 3)]
 #endif
         public string NotificationEmailFrom { get; set; }
 
@@ -661,10 +661,10 @@ namespace Seal.Model
         public string ErrorEmailSubject { get; set; }
 
         /// <summary>
-        /// The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address.
+        /// The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP or SendGrid server allows the new address.
         /// </summary>
 #if WINDOWS
-        [Category("Failover: Email notification in case of error"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 7)]
+        [Category("Failover: Email notification in case of error"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP or SendGrid server allows the new address."), Id(5, 7)]
 #endif
         public string ErrorEmailFrom { get; set; }
 

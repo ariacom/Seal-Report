@@ -39,6 +39,14 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
+    public CheckSecurityCode(code: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWICheckSecurityCode", {
+            code: code
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
+    }
+
     public Logout(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post({
                 url: _server + "SWILogout", xhrFields: {

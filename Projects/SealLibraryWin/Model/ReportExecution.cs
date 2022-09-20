@@ -2088,34 +2088,6 @@ namespace Seal.Model
             if (schedule == null) throw new Exception(string.Format("Unable to find schedule '{0}' in report '{1}'.\r\nSchedule has been deleted", scheduleGUID, report.FilePath));
         }
 
-
-        static void sendEmail(Report report, string to, string from, string subject, string body)
-        {
-            OutputEmailDevice device = report.Repository.Devices.OfType<OutputEmailDevice>().FirstOrDefault(i => i.UsedForNotification);
-            if (device == null) device = report.Repository.Devices.OfType<OutputEmailDevice>().FirstOrDefault();
-            if (device == null)
-            {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "No email device is defined in the repository to send the error. Please use the Server Manager application to define at least an Email Device.");
-            }
-            else
-            {
-                try
-                {
-                    MailMessage message = new MailMessage();
-                    message.From = new MailAddress(Helper.IfNullOrEmpty(from, device.SenderEmail));
-                    Helper.AddEmailAddresses(message.To, to);
-                    message.Subject = subject;
-                    message.Body = body;
-                    SmtpClient client = device.SmtpClient;
-                    client.Send(message);
-                }
-                catch (Exception emailEx)
-                {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : ""));
-                }
-            }
-        }
-
         /// <summary>
         /// Execute a report schedule
         /// </summary>
@@ -2213,7 +2185,7 @@ namespace Seal.Model
                         {
                             //error email
                             string subject = Helper.IfNullOrEmpty(schedule.ErrorEmailSubject, string.Format("Report Execution Error '{0}'", report.ExecutionName));
-                            sendEmail(report, schedule.ErrorEmailTo, schedule.ErrorEmailFrom, subject, errorMessage);
+                            report.Repository.SendNotificationEmail(schedule.ErrorEmailFrom, schedule.ErrorEmailTo, subject, false, errorMessage);
                         }
 
                         if (retries > 0)
@@ -2245,7 +2217,7 @@ namespace Seal.Model
                             //information email
                             string subject = Helper.IfNullOrEmpty(schedule.NotificationEmailSubject, string.Format("Report Execution '{0}'", report.ExecutionName));
                             string body = Helper.IfNullOrEmpty(schedule.NotificationEmailBody, "The report has been executed successfully.");
-                            sendEmail(report, schedule.NotificationEmailTo, schedule.NotificationEmailFrom, subject, body);
+                            report.Repository.SendNotificationEmail(schedule.NotificationEmailFrom, schedule.NotificationEmailTo, subject, false, body);
                         }
                         break;
                     }

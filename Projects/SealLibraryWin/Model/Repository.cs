@@ -751,6 +751,32 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Send an Email using the first Notification Email Device.
+        /// </summary>
+
+        public bool SendNotificationEmail(string from, string to, string subject, bool isHtmlBody, string body)
+        {
+            var device = Devices.OfType<OutputEmailDevice>().FirstOrDefault(i => i.UsedForNotification);
+            if (device == null) device = Devices.OfType<OutputEmailDevice>().FirstOrDefault();
+            if (device == null)
+            {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "No email device is defined in the repository to send notifications. Please use the Server Manager application to define at least an Email Device.");
+            }
+            else
+            {
+                try
+                {
+                    device.SendEmail(from, to, subject, isHtmlBody, body);
+                    return true;
+                }
+                catch (Exception emailEx)
+                {
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : ""));
+                }
+            }
+            return false;
+        }
+        /// <summary>
         /// Translations file name pattern
         /// </summary>
         public string TranslationsPattern

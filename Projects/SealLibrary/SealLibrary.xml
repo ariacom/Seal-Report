@@ -1737,6 +1737,16 @@
             Validate the device
             </summary>
         </member>
+        <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Send an Email either through SMTP or SendGrid
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String)">
+            <summary>
+            Send an Email either through SMTP or SendGrid
+            </summary>
+        </member>
         <member name="M:Seal.Model.OutputEmailDevice.Process(Seal.Model.Report)">
             <summary>
             Send the report result by email using the device configuration
@@ -4908,7 +4918,7 @@
         </member>
         <member name="P:Seal.Model.ReportSchedule.NotificationEmailFrom">
             <summary>
-            The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address.
+            The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP or SendGrid server allows the new address.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportSchedule.ErrorNumberOfRetries">
@@ -4938,7 +4948,7 @@
         </member>
         <member name="P:Seal.Model.ReportSchedule.ErrorEmailFrom">
             <summary>
-            The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address.
+            The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP or SendGrid server allows the new address.
             </summary>
         </member>
         <member name="M:Seal.Model.ReportSchedule.SynchronizeTask">
@@ -6027,6 +6037,11 @@
         <member name="M:Seal.Model.Repository.GetPersonalFolderName(Seal.Model.SecurityUser)">
             <summary>
             Returns the personal folder name of a user
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.SendNotificationEmail(System.String,System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Send an Email using the first Notification Email Device.
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.TranslationsPattern">
@@ -7180,6 +7195,16 @@
             The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSecurity.TwoFAGenerationScript">
+            <summary>
+            If not empty, the script is executed to generate and send the security code used for a Two-Factor Authentication.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.TwoFACheckScript">
+            <summary>
+            If a 'Two-Factor Authentication Generation Script' is set, the script is executed to check the security code and validate the a Two-Factor Authentication.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealSecurity.Provider">
             <summary>
             Current SecurityProvider
@@ -7822,6 +7847,16 @@
             Check the hash code of the passwords
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityLogin.Email">
+            <summary>
+            The login email, may be used for a Two-Factor Authentication
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityLogin.Phone">
+            <summary>
+            The login phone number, may be used for a Two-Factor Authentication
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityLogin.GroupNames">
             <summary>
             The security groups of the user.
@@ -7845,6 +7880,11 @@
         <member name="P:Seal.Model.SecurityProvider.Script">
             <summary>
             Razor script used to perform the login
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityProvider.TwoFAScript">
+            <summary>
+            Razor script for the 2 Factor Authentication, executed after the login script
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityProvider.PromptUserPassword">
@@ -7900,6 +7940,11 @@
         <member name="F:Seal.Model.SecurityUser.Name">
             <summary>
             Name of the user
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.Login">
+            <summary>
+            Security login if the authentication using Security Logins is used
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.PersonalFolderName">
@@ -7990,6 +8035,26 @@
         <member name="F:Seal.Model.SecurityUser.Token">
             <summary>
             Parameters for authentication: Token
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.WebSecurityCode">
+            <summary>
+            Parameters for authentication: Security code sent by the user for 2FA
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.SecurityCode">
+            <summary>
+            Parameters for authentication: Security code generated for 2FA
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.SecurityCodeGeneration">
+            <summary>
+            Parameters for authentication: Security code generation date for 2FA
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.SecurityCodeTries">
+            <summary>
+            Number of tries to check the security code for 2FA
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.Request">

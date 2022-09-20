@@ -6,6 +6,7 @@ var $waitDialog;
 var $editDialog;
 var $folderTree;
 var $loginModal;
+var $securityModal;
 var $outputPanel;
 var $propertiesPanel;
 var $elementDropDown;
@@ -34,6 +35,7 @@ var SWIMain = /** @class */ (function () {
         $editDialog = $("#edit-dialog");
         $folderTree = $("#folder-tree");
         $loginModal = $("#login-modal");
+        $securityModal = $("#security-modal");
         $outputPanel = $("#output-panel");
         $propertiesPanel = $("#properties-panel");
         $elementDropDown = $("#element-dropdown");
@@ -46,21 +48,28 @@ var SWIMain = /** @class */ (function () {
             if ((e.keyCode || e.which) == 13)
                 _main.login();
         });
+        $("#securitycode").keypress(function (e) {
+            if ((e.keyCode || e.which) == 13)
+                _main.checkSecurityCode();
+        });
         $("#login-modal-submit").unbind("click").on("click", function () {
             _main.login();
+        });
+        $("#security-modal-submit").unbind("click").on("click", function () {
+            _main.checkSecurityCode();
         });
         _gateway.GetVersions(function (data) {
             $("#brand-id").attr("title", SWIUtil.tr2("Web Interface Version") + " : " + data.SWIVersion + "\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\n" + data.Info);
             $("#footer-version").text(data.SWIVersion);
         });
         _gateway.GetUserProfile(function (data) {
-            if (data.autenticated) {
-                //User already connected
-                _main.loginSuccess(data);
-            }
-            else {
+            if (data.authenticated != null && data.authenticated == false) {
                 //Try to login without authentication
                 _gateway.Login("", "", function (data) { _main.loginSuccess(data); }, function (data) { _main.loginFailure(data, true); });
+            }
+            else {
+                //User already connected
+                _main.loginSuccess(data);
             }
         });
         //General handlers
@@ -69,6 +78,10 @@ var SWIMain = /** @class */ (function () {
         });
     };
     SWIMain.prototype.loginSuccess = function (data) {
+        if (data.securitycoderequired) {
+            _main.showSecurityCode();
+            return;
+        }
         if (_main._profile && _main._profile.culture && _main._profile.culture != data.culture) {
             $("body").css("opacity", "0.1");
             location.reload();
@@ -94,7 +107,9 @@ var SWIMain = /** @class */ (function () {
         $(".navbar-right").show();
         $("#footer-div").hide();
         $("#password").val("");
+        $("#securitycode").val("");
         $("#login-modal-error").text("");
+        $("#security-modal-error").text("");
         $("#main-container").css("display", "block");
         _main.refreshMenu();
         _main._currentView = "folders";
@@ -485,17 +500,49 @@ var SWIMain = /** @class */ (function () {
         _main.enableControls();
     };
     SWIMain.prototype.showLogin = function () {
+        $waitDialog.modal('hide');
         $("body").children(".modal-backdrop").remove();
         $("#footer-div").show();
         $loginModal.modal();
+    };
+    SWIMain.prototype.showSecurityCode = function () {
+        $waitDialog.modal('hide');
+        $("body").children(".modal-backdrop").remove();
+        $securityModal.show();
+        $securityModal.modal();
     };
     SWIMain.prototype.login = function () {
         $loginModal.modal('hide');
         $waitDialog.modal();
         _gateway.Login($("#username").val(), $("#password").val(), function (data) {
-            _main.loginSuccess(data);
+            $("#password").val("");
+            if (data.securitycoderequired) {
+                _main.showSecurityCode();
+            }
+            else {
+                _main.loginSuccess(data);
+            }
         }, function (data) {
             _main.loginFailure(data, false);
+        });
+    };
+    SWIMain.prototype.checkSecurityCode = function () {
+        $securityModal.modal('hide');
+        $waitDialog.modal();
+        _gateway.CheckSecurityCode($("#securitycode").val(), function (data) {
+            $("#securitycode").val("");
+            $("#security-modal-error").text("");
+            if (data.login) {
+                _main.showLogin();
+            }
+            else {
+                _main.loginSuccess(data);
+            }
+        }, function (data) {
+            $waitDialog.modal('hide');
+            $("#security-modal-error").text(data.error);
+            _main.showSecurityCode();
+            _main.enableControls();
         });
     };
     SWIMain.prototype.resize = function () {

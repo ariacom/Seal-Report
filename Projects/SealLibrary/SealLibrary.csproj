@@ -153,6 +153,7 @@
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
     <PackageReference Include="TaskScheduler" Version="2.10.1" />
     <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
+    <PackageReference Include="Twilio" Version="5.80.0" />
   </ItemGroup>
 
   <ItemGroup>

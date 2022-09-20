@@ -45,7 +45,7 @@
     <div class="container">
 
         <div class="col-lg-12">
-            <h2>Seal Web Interface Version 6.6</h2>
+            <h2>Seal Web Interface Version 6.7</h2>
         </div>
         <div class="col-lg-12">
             <h2>SWIGetVersions</h2>
@@ -105,12 +105,60 @@ $.post("https://sealreport.org/demo/SWILogin", {
                             showfolders (boolean) : true if the user can view the folders<br />
                             editprofile (boolean) : true if the user can edit his profile<br />
                             usertag (string) : custom tag string (e.g. may be used to show a photo of the user)<br />
-                            onstartup : action taken after the login (0=Default, 1=Do not execute report, 2=Execute the last report, 3=Execute a specific report)<br />
-                            startupreport : if onstartup=3, specific report to execute<br />
-                            startupreportname : if onstartup=3, specific report name<br />
-                            report : if set, the report to execute after the login<br />
-                            reportname : if set, the report name to execute after the login<br />
-                            error (string) : if any error, the error description
+                            onstartup (integer): action taken after the login (0=Default, 1=Do not execute report, 2=Execute the last report, 3=Execute a specific report)<br />
+                            startupreport (string): if onstartup=3, specific report to execute<br />
+                            startupreportname (string): if onstartup=3, specific report name<br />
+                            report (string): if set, the last report to execute after the login<br />
+                            reportname (string): if set, the last report name  executed after the login<br />
+                            executionmode (integer): execution mode (0=Default thus from group, 1=New Window , 2=Same Window , 3=Always New Window) <br />
+                            groupexecutionmode (integer): group execution mode<br />
+                            sources ([MetaSource]): array of MetaSource with their connection names and identifiers<br />
+                            error (string) : if any error, the error description<br />
+                            securitycoderequired (boolean): true if the Two-Factor Authentication is enabled
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWICheckSecurityCode</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Check the security code if the Two-Factor Authentication has been enabled.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWICheckSecurityCode", {
+    code: "the security code", // The security code generated in the 'TwoFAGenerationScript' Script after a call to SWILogin()
+})
+.done(function (data) {
+        if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            name (string) : the user name<br />
+                            group (string) :  the user's group names<br />
+                            culture (string) : the user's culture name<br />
+                            folder (string) : the last folder viewed by the user<br />
+                            showfolders (boolean) : true if the user can view the folders<br />
+                            editprofile (boolean) : true if the user can edit his profile<br />
+                            usertag (string) : custom tag string (e.g. may be used to show a photo of the user)<br />
+                            onstartup (integer): action taken after the login (0=Default, 1=Do not execute report, 2=Execute the last report, 3=Execute a specific report)<br />
+                            startupreport (string): if onstartup=3, specific report to execute<br />
+                            startupreportname (string): if onstartup=3, specific report name<br />
+                            report (string): if set, the last report to execute after the login<br />
+                            reportname (string): if set, the last report name  executed after the login<br />
+                            executionmode (integer): execution mode (0=Default thus from group, 1=New Window , 2=Same Window , 3=Always New Window) <br />
+                            groupexecutionmode (integer): group execution mode<br />
+                            sources ([MetaSource]): array of MetaSource with their connection names and identifiers<br />
+                            error (string) : if any error, the error description<br />
+                            login : true if the login has be re-done
                         </td>
                     </tr>
                 </tbody>

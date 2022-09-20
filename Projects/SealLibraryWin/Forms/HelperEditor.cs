@@ -500,6 +500,14 @@ namespace Seal.Forms
                         user.WebPassword = _security.TestPassword;
                         if (_security.TestCurrentWindowsUser) user.WebPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
                         user.Authenticate();
+                        if (!string.IsNullOrEmpty(user.SecurityCode) && string.IsNullOrEmpty(user.Security.TwoFACheckScript)) throw new Exception("The 'Two-Factor Authentication Check Script' is not defined.");
+
+                        if (!string.IsNullOrEmpty(user.SecurityCode))
+                        {
+                            user.WebSecurityCode = user.SecurityCode;
+                            RazorHelper.CompileExecute(user.Security.TwoFACheckScript, user);
+                        }
+
                         try
                         {
                             Cursor.Current = Cursors.WaitCursor;

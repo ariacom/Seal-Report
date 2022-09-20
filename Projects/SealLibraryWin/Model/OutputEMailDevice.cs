@@ -387,6 +387,76 @@ namespace Seal.Model
             if (string.IsNullOrEmpty(SenderEmail)) throw new Exception("The Email Sender cannot be empty for an Email device.");
         }
 
+        /// <summary>
+        /// Send an Email either through SMTP or SendGrid
+        /// </summary>
+        public void SendEmail(string sender, string to, string subject, bool isHtmlBody, string body)
+        {
+            SendEmail(sender, to, "", "", "", subject, isHtmlBody, body, "", "");
+        }
+
+
+        /// <summary>
+        /// Send an Email either through SMTP or SendGrid
+        /// </summary>
+        public void SendEmail(string sender, string to, string replyTo, string cc, string bcc, string subject, bool isHtmlBody, string body, string attachPath, string attachName) 
+        {
+            if (string.IsNullOrEmpty(sender)) sender = SenderEmail;
+            if (string.IsNullOrEmpty(replyTo)) replyTo = sender;
+
+            if (UseSendGrid)
+            {
+                var sendGridClient = new SendGridClient(ClearSendGridKey);
+
+                    var msg = new SendGridMessage()
+                {
+                    From = new EmailAddress(sender),
+                    Subject = subject,
+                    PlainTextContent = isHtmlBody ? "" : body,
+                    HtmlContent = !isHtmlBody ? "" : body,
+                    ReplyTo = new EmailAddress(replyTo)
+                };
+
+
+                msg.SetSubject(subject);
+                foreach (var addr in Helper.GetEmailAddresses(to)) msg.AddTo(addr);
+                foreach (var addr in Helper.GetEmailAddresses(cc)) msg.AddCc(addr);
+                foreach (var addr in Helper.GetEmailAddresses(bcc)) msg.AddBcc(addr);
+
+                if (!string.IsNullOrEmpty(attachPath))
+                {
+                    var bytes = File.ReadAllBytes(attachPath);
+                    var file = Convert.ToBase64String(bytes);
+                    msg.AddAttachment(attachName, file);
+                }
+
+                var response = sendGridClient.SendEmailAsync(msg).Result;
+                if (!response.IsSuccessStatusCode) throw new Exception($"Error sending Email through SendGrid to {to}\r\n{response.Body.ReadAsStringAsync().Result}.");
+            }
+            else
+            {
+                MailMessage message = new MailMessage();
+
+                message.From = new MailAddress(sender);
+                Helper.AddEmailAddresses(message.To, to);
+                Helper.AddEmailAddresses(message.CC, cc);
+                Helper.AddEmailAddresses(message.Bcc, bcc);
+                Helper.AddEmailAddresses(message.ReplyToList, replyTo);
+                message.Subject = subject;
+
+                //Body
+                message.IsBodyHtml = isHtmlBody;
+                message.Body = body;
+
+                //Attachment
+                if (!string.IsNullOrEmpty(attachPath))
+                {
+                    message.Attachments.Add(new System.Net.Mail.Attachment(attachPath, attachName));
+                }
+                SmtpClient client = SmtpClient;
+                client.Send(message);
+            }
+        }
 
         /// <summary>
         /// Send the report result by email using the device configuration
@@ -398,6 +468,7 @@ namespace Seal.Model
             if (string.IsNullOrEmpty(output.EmailTo)) throw new Exception("No email address has been specified in the report output.");
             var subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
             var sender = SenderEmail;
+            if (ChangeSender && !string.IsNullOrEmpty(output.EmailFrom)) sender = output.EmailFrom;
             var replyTo = SenderEmail;
             if (ChangeSender && !string.IsNullOrEmpty(output.EmailReplyTo)) replyTo = output.EmailReplyTo;
             //Body
@@ -426,57 +497,8 @@ namespace Seal.Model
                 }
             }
 
-            if (UseSendGrid)
-            {
-                var sendGridClient = new SendGridClient(ClearSendGridKey);
-                var msg = new SendGridMessage()
-                {
-                    From = new EmailAddress(SenderEmail),
-                    Subject = subject,
-                    PlainTextContent = isHtmlBody ? "" : body,
-                    HtmlContent = !isHtmlBody ? "" : body,
-                    ReplyTo = new EmailAddress(replyTo)
-                };
-                msg.SetSubject(subject);
-                foreach (var addr in Helper.GetEmailAddresses(output.EmailTo)) msg.AddTo(addr);
-                foreach (var addr in Helper.GetEmailAddresses(output.EmailCC)) msg.AddCc(addr);
-                foreach (var addr in Helper.GetEmailAddresses(output.EmailBCC)) msg.AddBcc(addr);
+            SendEmail(sender, output.EmailTo, replyTo, output.EmailCC, output.EmailBCC, subject, isHtmlBody, body, attachPath, attachName);
 
-                if (!string.IsNullOrEmpty(attachPath))
-                {
-                    var bytes = File.ReadAllBytes(attachPath);
-                    var file = Convert.ToBase64String(bytes);
-                    msg.AddAttachment(Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath), file);
-                }
-
-                var response = sendGridClient.SendEmailAsync(msg).Result;
-                if (!response.IsSuccessStatusCode) throw new Exception($"Error sending Email through SendGrid to {output.EmailTo}\r\n{response.Body.ReadAsStringAsync().Result}.");
-            }
-            else
-            {
-                MailMessage message = new MailMessage();
-
-                var email = SenderEmail;
-                if (ChangeSender && !string.IsNullOrEmpty(output.EmailFrom)) email = output.EmailFrom;
-                message.From = new MailAddress(email);
-                Helper.AddEmailAddresses(message.To, output.EmailTo);
-                Helper.AddEmailAddresses(message.CC, output.EmailCC);
-                Helper.AddEmailAddresses(message.Bcc, output.EmailBCC);
-                Helper.AddEmailAddresses(message.ReplyToList, replyTo);
-                message.Subject = subject;
-
-                //Body
-                message.IsBodyHtml = isHtmlBody;
-                message.Body = body;
-
-                //Attachment
-                if (!string.IsNullOrEmpty(attachPath))
-                {
-                    message.Attachments.Add(new System.Net.Mail.Attachment(attachPath, attachName));
-                }
-                SmtpClient client = SmtpClient;
-                client.Send(message);
-            }
             output.Information = report.Translate("Email sent to '{0}'", output.EmailTo.Replace("\r\n", ";"));
             report.LogMessage("Email sent to '{0}'", output.EmailTo.Replace("\r\n", ";"));
         }

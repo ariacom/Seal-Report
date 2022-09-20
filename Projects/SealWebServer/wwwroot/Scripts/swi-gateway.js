@@ -34,6 +34,13 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
+    SWIGateway.prototype.CheckSecurityCode = function (code, callback, errorcb) {
+        $.post(_server + "SWICheckSecurityCode", {
+            code: code
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
+    };
     SWIGateway.prototype.Logout = function (callback, errorcb) {
         $.post({
             url: _server + "SWILogout", xhrFields: {

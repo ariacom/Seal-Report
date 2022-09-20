@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Diagnostics;
 
 namespace SealWebServer.Controllers
 {
@@ -54,11 +55,112 @@ namespace SealWebServer.Controllers
             WebUser.WebHostName = Request.Host.Host;
             Authenticate();
 
-            if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
+            if (WebUser.SecurityGroups.Count == 0) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
             //Load profile
             if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
             checkRecentFiles();
             WebUser.Profile.Path = WebUser.ProfilePath;
+        }
+
+        private SWIUserProfile getUserProfile()
+        {
+            //Set repository defaults
+            var defaultGroup = WebUser.DefaultGroup;
+            if (!string.IsNullOrEmpty(defaultGroup.LogoName)) Repository.Configuration.LogoName = defaultGroup.LogoName;
+
+            string culture = WebUser.Profile.Culture;
+            if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
+            else if (!string.IsNullOrEmpty(defaultGroup.Culture)) Repository.SetCultureInfo(defaultGroup.Culture);
+            else if (Repository.CultureInfo.EnglishName != Repository.Instance.CultureInfo.EnglishName) Repository.SetCultureInfo(Repository.Instance.CultureInfo.EnglishName);
+
+            string reportToExecute = "", reportToExecuteName = "";
+            bool executeLast = false;
+            if (defaultGroup.EditProfile && WebUser.Profile.OnStartup != StartupOptions.Default)
+            {
+                if (WebUser.Profile.OnStartup == StartupOptions.ExecuteLast && WebUser.Profile.RecentReports.Count > 0) executeLast = true;
+                else if (WebUser.Profile.OnStartup == StartupOptions.ExecuteReport)
+                {
+                    reportToExecute = WebUser.Profile.StartUpReport;
+                    reportToExecuteName = WebUser.Profile.StartupReportName;
+                }
+            }
+            else
+            {
+                if (defaultGroup.OnStartup == StartupOptions.ExecuteLast) executeLast = true;
+                else if (defaultGroup.OnStartup == StartupOptions.ExecuteReport)
+                {
+                    reportToExecute = defaultGroup.StartupReport;
+                    reportToExecuteName = Repository.TranslateFileName(defaultGroup.StartupReport);
+                }
+            }
+
+            if (executeLast && WebUser.Profile.RecentReports.Count > 0)
+            {
+                reportToExecute = WebUser.Profile.RecentReports[0].Path;
+                reportToExecuteName = WebUser.Profile.RecentReports[0].Name;
+            }
+
+            var profile = new SWIUserProfile()
+            {
+                name = WebUser.Name,
+                group = WebUser.SecurityGroupsDisplay,
+                culture = culture,
+                folder = WebUser.Profile.LastFolder,
+                showfolders = WebUser.ShowFoldersView,
+                editprofile = defaultGroup.EditProfile,
+                usertag = WebUser.Tag,
+                onstartup = WebUser.Profile.OnStartup,
+                startupreport = WebUser.Profile.StartUpReport,
+                startupreportname = WebUser.Profile.StartupReportName,
+                report = reportToExecute,
+                reportname = reportToExecuteName,
+                executionmode = WebUser.Profile.ExecutionMode,
+                groupexecutionmode = defaultGroup.ExecutionMode
+            };
+
+            if (!string.IsNullOrEmpty(profile.startupreport))
+            {
+                try
+                {
+                    getFileDetail(profile.startupreport);
+                }
+                catch
+                {
+                    profile.startupreport = "";
+                    profile.startupreportname = "";
+                }
+            }
+            if (!string.IsNullOrEmpty(profile.report))
+            {
+                try
+                {
+                    getFileDetail(profile.report);
+                }
+                catch
+                {
+                    profile.report = "";
+                    profile.reportname = "";
+                }
+            }
+
+            //Set default connections if several 
+            profile.sources = new List<SWIMetaSource>();
+            foreach (var source in Repository.Sources.Where(i => i.Connections.Count > 1))
+            {
+                var swiSource = new SWIMetaSource() { GUID = source.GUID, name = source.Name, connectionGUID = source.ConnectionGUID };
+                var defaultConnection = WebUser.Profile.Connections.FirstOrDefault(i => i.SourceGUID == source.GUID);
+                if (defaultConnection != null) swiSource.connectionGUID = defaultConnection.ConnectionGUID;
+                else swiSource.connectionGUID = ReportSource.DefaultRepositoryConnectionGUID;
+
+                swiSource.connections.Add(new SWIConnection() { GUID = ReportSource.DefaultRepositoryConnectionGUID, name = $"{Repository.TranslateWeb("Repository connection")} ({Repository.TranslateConnection(source.Connection)})" });
+
+                foreach (var connection in source.Connections)
+                {
+                    swiSource.connections.Add(new SWIConnection() { GUID = connection.GUID, name = Repository.TranslateConnection(connection) });
+                }
+                profile.sources.Add(swiSource);
+            }
+            return profile;
         }
 
         /// <summary>
@@ -78,113 +180,64 @@ namespace SealWebServer.Controllers
                     newAuthentication = true;
                 }
 
+                if (!string.IsNullOrEmpty(WebUser.SecurityCode))
+                {
+                    //2FA check
+                    return Json(new { securitycoderequired = true });
+                }
+
                 //Audit
                 Audit.LogAudit(AuditType.Login, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
-                //Set repository defaults
-                var defaultGroup = WebUser.DefaultGroup;
-                if (!string.IsNullOrEmpty(defaultGroup.LogoName)) Repository.Configuration.LogoName = defaultGroup.LogoName;
-
-                string culture = WebUser.Profile.Culture;
-                if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
-                else if (!string.IsNullOrEmpty(defaultGroup.Culture)) Repository.SetCultureInfo(defaultGroup.Culture);
-                else if (Repository.CultureInfo.EnglishName != Repository.Instance.CultureInfo.EnglishName) Repository.SetCultureInfo(Repository.Instance.CultureInfo.EnglishName);
-
-                string reportToExecute = "", reportToExecuteName = "";
-                bool executeLast = false;
-                if (defaultGroup.EditProfile && WebUser.Profile.OnStartup != StartupOptions.Default)
-                {
-                    if (WebUser.Profile.OnStartup == StartupOptions.ExecuteLast && WebUser.Profile.RecentReports.Count > 0) executeLast = true;
-                    else if (WebUser.Profile.OnStartup == StartupOptions.ExecuteReport)
-                    {
-                        reportToExecute = WebUser.Profile.StartUpReport;
-                        reportToExecuteName = WebUser.Profile.StartupReportName;
-                    }
-                }
-                else
-                {
-                    if (defaultGroup.OnStartup == StartupOptions.ExecuteLast) executeLast = true;
-                    else if (defaultGroup.OnStartup == StartupOptions.ExecuteReport)
-                    {
-                        reportToExecute = defaultGroup.StartupReport;
-                        reportToExecuteName = Repository.TranslateFileName(defaultGroup.StartupReport);
-                    }
-                }
-
-                if (executeLast && WebUser.Profile.RecentReports.Count > 0)
-                {
-                    reportToExecute = WebUser.Profile.RecentReports[0].Path;
-                    reportToExecuteName = WebUser.Profile.RecentReports[0].Name;
-                }
-
                 //Refresh menu reports
                 if (newAuthentication) MenuReportViewsPool.ForceReload();
 
-                var profile = new SWIUserProfile()
-                {
-                    name = WebUser.Name,
-                    group = WebUser.SecurityGroupsDisplay,
-                    culture = culture,
-                    folder = WebUser.Profile.LastFolder,
-                    showfolders = WebUser.ShowFoldersView,
-                    editprofile = defaultGroup.EditProfile,
-                    usertag = WebUser.Tag,
-                    onstartup = WebUser.Profile.OnStartup,
-                    startupreport = WebUser.Profile.StartUpReport,
-                    startupreportname = WebUser.Profile.StartupReportName,
-                    report = reportToExecute,
-                    reportname = reportToExecuteName,
-                    executionmode = WebUser.Profile.ExecutionMode,
-                    groupexecutionmode = defaultGroup.ExecutionMode
-                };
-
-                if (!string.IsNullOrEmpty(profile.startupreport))
-                {
-                    try
-                    {
-                        getFileDetail(profile.startupreport);
-                    }
-                    catch
-                    {
-                        profile.startupreport = "";
-                        profile.startupreportname = "";
-                    }
-                }
-                if (!string.IsNullOrEmpty(profile.report))
-                {
-                    try
-                    {
-                        getFileDetail(profile.report);
-                    }
-                    catch
-                    {
-                        profile.report = "";
-                        profile.reportname = "";
-                    }
-                }
-
-                //Set default connections if several 
-                profile.sources = new List<SWIMetaSource>();
-                foreach (var source in Repository.Sources.Where(i => i.Connections.Count > 1))
-                {
-                    var swiSource = new SWIMetaSource() { GUID = source.GUID, name = source.Name, connectionGUID = source.ConnectionGUID };
-                    var defaultConnection = WebUser.Profile.Connections.FirstOrDefault(i => i.SourceGUID == source.GUID);
-                    if (defaultConnection != null) swiSource.connectionGUID = defaultConnection.ConnectionGUID;
-                    else swiSource.connectionGUID = ReportSource.DefaultRepositoryConnectionGUID;
-
-                    swiSource.connections.Add(new SWIConnection() { GUID = ReportSource.DefaultRepositoryConnectionGUID, name = $"{Repository.TranslateWeb("Repository connection")} ({Repository.TranslateConnection(source.Connection)})" });
-
-                    foreach (var connection in source.Connections)
-                    {
-                        swiSource.connections.Add(new SWIConnection() { GUID = connection.GUID, name = Repository.TranslateConnection(connection) });
-                    }
-                    profile.sources.Add(swiSource);
-                }
-                return Json(profile);
+                return Json(getUserProfile());
             }
             catch (Exception ex)
             {
+                return HandleSWIException(ex);
+            }
+        }
+
+        public ActionResult SWICheckSecurityCode(string code)
+        {
+            writeDebug("SWICheckSecurityCode");
+
+            try
+            {
+                if (string.IsNullOrEmpty(WebUser.SecurityCode))
+                {
+                    return Json(new { login = true } );
+                }
+
+                if (string.IsNullOrEmpty(WebUser.Security.TwoFACheckScript)) throw new Exception(Translate("The 'Two-Factor Authentication Check Script' is not defined. Please check your configuration."));
+
+                WebUser.WebSecurityCode = code;
+                RazorHelper.CompileExecute(WebUser.Security.TwoFACheckScript, WebUser);
+
+                if (WebUser.SecurityCodeTries == -1) 
+                {
+                    //Force a re-login
+                    CreateWebUser();
+                    return Json(new { login = true });
+                }
+
+                if (!string.IsNullOrEmpty(WebUser.SecurityCode)) throw new Exception(Translate("Invalid code"));
+
+                //Log and Audit
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.SuccessAudit, WebUser.AuthenticationSummary);
+                Audit.LogAudit(AuditType.Login, WebUser);
+                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
+
+                //Refresh menu reports
+                MenuReportViewsPool.ForceReload();
+                return Json(getUserProfile());
+            }
+            catch (Exception ex)
+            {
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
                 return HandleSWIException(ex);
             }
         }
@@ -806,13 +859,7 @@ namespace SealWebServer.Controllers
             {
                 if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
 
-                return Json(new
-                {
-                    authenticated = true,
-                    name = WebUser.Name,
-                    group = WebUser.SecurityGroupsDisplay,
-                    culture = Repository.CultureInfo.EnglishName
-                });
+                return Json(getUserProfile());
             }
             catch
             {

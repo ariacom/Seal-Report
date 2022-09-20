@@ -33,6 +33,8 @@
         }
     }
 }</Script>
+  <TwoFAGenerationScript />
+  <TwoFACheckScript />
   <Groups>
     <SecurityGroup>
       <Name>Default Group</Name>
@@ -251,6 +253,8 @@
     <SecurityLogin>
       <Id>ex</Id>
       <Password>sYKvHw8IOWBXSlFU6qkFnpH6A6vR02MX96jl9QFhMFA=</Password>
+      <Email />
+      <Phone />
       <GroupNames>
         <string>Group (Execute)</string>
       </GroupNames>

@@ -220,12 +220,85 @@ namespace Seal.Forms
                 ),
         };
 
+        const string razorTwoFAGenerationScriptTemplate = @"@using Twilio
+@using Twilio.Rest.Api.V2010.Account
+@{
+    SecurityUser user = Model;
 
+    //Generate the security code
+    Random rnd = new Random();
+    user.SecurityCode = rnd.Next(1, 999999).ToString();     
+    user.SecurityCodeGeneration = DateTime.Now;     
+
+    var message = user.Security.Repository.TranslateReport(""Please find your authentication code"");
+
+    bool sendByEmail = true, sendBySMS = false;
+
+    //Send it by email
+    if (sendByEmail) {
+        var from = """"; //Default of the device will be used
+        var to = user.Login?.Email; //Destination email: could be get from database, LDAP, etc.
+        //to = ""email@company.com""
+        if (string.IsNullOrEmpty(to)) {
+            throw new Exception($""No Email Address for the user {user.WebUserName}.""); 
+        }
+        
+        var subject = ""Seal Report"";
+        var body = $""{message}: <br><b>{user.SecurityCode}</b>"";
+        var isHtml = true;
+        
+        if (!user.Security.Repository.SendNotificationEmail(from, to, subject, isHtml, body)) {
+            throw new Exception(""Unable to send email""); 
+        }
+    }
+    
+    //Send it by SMS using Twilio
+    if (sendBySMS) {
+        var from = ""+1111111""; //My Twilio phone number
+        var to = user.Login?.Phone; //Destination email: could be get from database, LDAP, etc.
+        //to = ""+411111111""
+        if (string.IsNullOrEmpty(to)) {
+            throw new Exception($""No Phone number for the user {user.WebUserName}.""); 
+        }
+ 
+        // Find your Account SID and Auth Token at twilio.com/console
+        TwilioClient.Init(""<Account SID>"" /*SID*/, ""<Account Token>"" /*Token*/);
+
+        MessageResource.Create(
+            body: $""{message}: {user.SecurityCode}"",
+            from: new Twilio.Types.PhoneNumber(from),
+            to: new Twilio.Types.PhoneNumber(to)
+        );    
+    }
+}
+";
+
+        const string razorTwoFACheckScriptTemplate = @"@{
+    SecurityUser user = Model;
+    
+    //Check if the code has been generated in the previous 5 minutes
+    if (string.IsNullOrEmpty(user.SecurityCode) || user.SecurityCodeGeneration > DateTime.Now.AddMinutes(5)) {
+        user.SecurityCodeTries = -1; //Set it to -1 to re-force a login
+    }
+    else {
+        user.SecurityCodeTries++;
+        if (user.SecurityCode != user.WebSecurityCode)
+        {
+            if (user.SecurityCodeTries == 3) user.SecurityCodeTries = -1; //Set it to -1 to re-force a login
+            else throw new Exception(user.Security.Repository.TranslateWeb(""Invalid security code"")); //Allow a retry 
+        }
+        else {
+            user.SecurityCode = """"; //Check is ok
+        }
+    }
+}
+";
 
         const string razorTableDefaultTemplate = @"@using System.Data
 @{
     MetaTable metaTable = Model;
-}; ";
+}
+";
 
 
         const string razorTableDefinitionScriptTemplate = @"@using System.Data
@@ -257,7 +330,8 @@ namespace Seal.Forms
         const string razorMongoStagesScriptTemplate = @"@using System.Data
 @{
     MetaTable metaTable = Model;
-}; ";
+}
+";
 
         const string razorTableLoadScriptTemplate = @"@using System.Data
 @{
@@ -1470,7 +1544,21 @@ namespace Seal.Forms
                     {
                         template = ((SealSecurity)context.Instance).ProviderScript;
                         frm.ObjectForCheckSyntax = new SecurityUser(null);
-                        frm.Text = "Edit security script";
+                        frm.Text = "Edit the Security script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "TwoFAGenerationScript")
+                    {
+                        template = razorTwoFAGenerationScriptTemplate;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Two-Factor Authentication Generation script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "TwoFACheckScript")
+                    {
+                        template = razorTwoFACheckScriptTemplate;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Two-Factor Authentication Check script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

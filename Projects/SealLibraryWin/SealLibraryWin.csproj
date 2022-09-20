@@ -85,6 +85,7 @@
       <Version>2.10.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
+    <PackageReference Include="Twilio" Version="5.80.0" />
   </ItemGroup>
 
   <ItemGroup>

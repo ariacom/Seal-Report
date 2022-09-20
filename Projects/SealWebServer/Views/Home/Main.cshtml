@@ -166,6 +166,28 @@
         </div>
     </div>
 
+    <!-- Security Code Modal -->
+    <div id="security-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="top:50px;z-index:26000;">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header btn-success" style="color:white;text-align:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
+                    <h4 style="color:white;"><span class="glyphicon glyphicon-lock"></span> @repository.Configuration.WebProductName @repository.TranslateWeb("Two-Factor Authentication")</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="securitycode"><span class="glyphicon glyphicon-user"></span> @repository.TranslateWeb("Security code")</label>
+                        <input type="text" class="form-control" id="securitycode" name="securitycode" placeholder="@repository.TranslateWeb("Enter your security code")" />
+                    </div>
+                    <button id="security-modal-submit" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> @repository.TranslateWeb("Login")</button>
+                </div>
+                <div class="modal-footer" style="text-align:left">
+                    <span id="security-modal-error" class="label label-danger" style="font-size: 12px;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Profile Modal -->
     <div id="profile-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -247,7 +269,8 @@
 
     @if (model.HasEditor)
     {
-        @await Html.PartialAsync("~/Views/Home/MainEditor.cshtml");
+        @await Html.PartialAsync("~/Views/Home/MainEditor.cshtml")
+        ;
     }
 
     <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
@@ -303,17 +326,17 @@
 
         //translations
         var tra = [];
-        @foreach(var translation in repository.JSTranslations)
+        @foreach (var translation in repository.JSTranslations)
         {
-        <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
+            <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
         }
         var opers = [];
         @if (model.HasEditor)
         {
-        foreach (var oper in Enum.GetValues(typeof(Operator)))
-        {
-        <text>opers[@((int)oper)] = "@Helper.ToJS(repository.TranslateWebJS(Helper.GetEnumDescription(typeof(Operator), oper)))";</text>
-        }
+            foreach (var oper in Enum.GetValues(typeof(Operator)))
+            {
+                <text>opers[@((int)oper)] = "@Helper.ToJS(repository.TranslateWebJS(Helper.GetEnumDescription(typeof(Operator), oper)))";</text>
+            }
         }
 
         //datatables defaults

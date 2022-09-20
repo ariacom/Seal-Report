@@ -33,6 +33,8 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Id").SetIsBrowsable(true);
+                GetProperty("Email").SetIsBrowsable(true);
+                GetProperty("Phone").SetIsBrowsable(true);
                 GetProperty("HashedPassword").SetIsBrowsable(true);
                 GetProperty("GroupNames").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
@@ -45,7 +47,7 @@ namespace Seal.Model
         /// The login identifier (e.g. name, email, etc.).
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Identifier"), Description("The login identifier (e.g. name, email, etc.)."), Id(1, 1)]
+        [Category("Definition"), DisplayName("\tIdentifier"), Description("The login identifier (e.g. name, email, etc.)."), Id(1, 1)]
 #endif
         public string Id { get; set; }
 
@@ -59,7 +61,7 @@ namespace Seal.Model
         /// Password in clear text
         /// </summary>
 #if WINDOWS
-        [DisplayName("Password"), PasswordPropertyText(true), Description("Password used to connect to the database."), Category("Definition"), Id(2, 1)]
+        [Category("Definition"), DisplayName("\tPassword"), PasswordPropertyText(true), Description("Password used to connect to the database."), Id(2, 1)]
         [XmlIgnore]
 #endif
         public string HashedPassword
@@ -81,6 +83,22 @@ namespace Seal.Model
         {
             return Password == CryptoHelper.Hash(password??"", PasswordSalt);
         }
+
+        /// <summary>
+        /// The login email, may be used for a Two-Factor Authentication
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Email"), Description("The login email, may be used for a Two-Factor Authentication"), Id(3, 1)]
+#endif
+        public string Email { get; set; }
+
+        /// <summary>
+        /// The login phone number, may be used for a Two-Factor Authentication
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Phone Number"), Description("The login phone number, may be used for a Two-Factor Authentication"), Id(4, 1)]
+#endif
+        public string Phone { get; set; }
 
         /// <summary>
         /// The security groups of the user.

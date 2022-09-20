@@ -31,6 +31,11 @@ namespace Seal.Model
         public string Script { get; set; } = "";
 
         /// <summary>
+        /// Razor script for the 2 Factor Authentication, executed after the login script
+        /// </summary>
+        public string TwoFAScript { get; set; } = "";
+
+        /// <summary>
         /// Property not used anymore
         /// </summary>
         public bool PromptUserPassword { get; set; } = false;

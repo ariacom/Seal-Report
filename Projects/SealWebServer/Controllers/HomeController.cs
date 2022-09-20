@@ -160,7 +160,7 @@ namespace SealWebServer.Controllers
         {
             WebUser.WebPrincipal = User;
             WebUser.Authenticate();
-            WebHelper.WriteLogEntryWeb(WebUser.IsAuthenticated ? EventLogEntryType.SuccessAudit : EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
+            if (string.IsNullOrEmpty(WebUser.SecurityCode)) WebHelper.WriteLogEntryWeb(WebUser.IsAuthenticated ? EventLogEntryType.SuccessAudit : EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
         }
 #endif
 
