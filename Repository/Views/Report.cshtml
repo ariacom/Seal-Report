@@ -46,6 +46,7 @@
             @Raw(report.AttachScriptFile("d3-time-format.v2.min.js", "https://d3js.org/d3-time-format.v2.min.js"))
             @Raw(report.AttachScriptFile("d3\\" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
         }
+        @Raw(report.AttachScriptFile("gauge.min.js"))
 
         @Raw(report.AttachScriptFiles(repository.Configuration.ScriptFiles))
 

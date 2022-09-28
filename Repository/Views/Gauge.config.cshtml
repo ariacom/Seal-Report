@@ -1,0 +1,34 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = "Gauge";
+    Template.Description = "Display a Gauge built from a data table result having at least 1 row and 1 column for the value. 3 optionals columns can be used to set minimum, maximum and animation speed. Full description at https://github.com/bernii/gauge.js";
+
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
+    Template.IsModelViewChild = true;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "gauge_class", DisplayName = "CSS class: Container", TextValue = "text-center", Description = "CSS class attribute of the main DIV container.", Enums = new string[] { "text-center;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_css", DisplayName = "CSS style: Container", TextValue = "page-break-inside:avoid", Description = "CSS style attribute of the main DIV container.", Enums = new string[] { "width:250px;", "width:100%;margin:10px;", "padding:10px;", "font-size:10px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "preview_text_class", DisplayName = "CSS class: Preview text", TextValue = "", Description = "CSS class attribute of the preview text DIV container.", Enums = new string[] { "text-center;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "preview_text_css", DisplayName = "CSS style: Preview text", TextValue = "font-size:2em;font-weight:bold;color:black;", Description = "CSS style attribute of the preview text DIV container.", Enums = new string[] { "width:250px;", "width:100%;margin:10px;", "padding:10px;", "font-size:10px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_width", DisplayName = "Gauge width", NumericValue = 200, Description = "The gauge width." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_height", DisplayName = "Gauge height", NumericValue = 200, Description = "The gauge height." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_min", DisplayName = "Minimum value", TextValue = "0", Description = "The minimum value of the gauge. Can be overwritten by the second value of the result table." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_max", DisplayName = "Maximum value", TextValue = "", Description = "The maximum value of the gauge. If empty, the value is used for the maximum. Can be overwritten by the third value of the result table." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_animation", DisplayName = "Animation speed", NumericValue = 32, Description = "The animation speed of the gauge. Can be overwritten by the fourth value of the result table." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_options", DisplayName = "Options", TextValue = "angle:-0.25,\r\nlineWidth:0.2,\r\nradiusScale:0.9,\r\nlimitMax:false,\r\nlimitMin:false,\r\ncolorStart:'#6F6EA0',\r\ncolorStop:'#C0C0DB',\r\nstrokeColor:'#EEEEEE',\r\ngenerateGradient:true,\r\nhighDpiSupport:true,\r\n", Description = "General options for the gauge." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_pointer", DisplayName = "Pointer", TextValue = "length:0.6,\r\nstrokeWidth:0.05,\r\ncolor:'#000000'\r\n", Description = "Configuration of the pointer." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_step", DisplayName = "Step for dynamic ticks and labels", NumericValue = 0, Description = "If set, the step is used to build the {DIVISION} variable (keyword in ticks configuration), and the {LABELS} variable (keyword in the labels configuration). The variable are calculated using the minimum and the maximum values of the Gauge." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_ticks", DisplayName = "Ticks", TextValue = "", Description = "Configuration of the ticks. It may contain the keyword {DIVISION} if the step is used.", TextSamples = new string[] { "divisions:4,\r\ndivWidth:1.1,\r\ndivLength:0.7,\r\ndivColor:'#333333',\r\nsubDivisions:5,\r\nsubLength:0.5,\r\nsubWidth:0.6,\r\nsubColor:'#666666'\r\n", "divisions:{DIVISION},\r\ndivWidth:1.1,\r\ndivLength:0.7,\r\ndivColor:'#333333',\r\nsubDivisions:5,\r\nsubLength:0.5,\r\nsubWidth:0.6,\r\nsubColor:'#666666'\r\n" }});
+    Template.Parameters.Add(new Parameter() { Name = "gauge_staticlabels",  DisplayName = "Static labels", TextValue = "", Description = "Configuration of the static labels of the gauge based on different values. It may contain the keyword {LABELS} if the step is used.", TextSamples = new string[] { "font:'12px sans-serif',\r\nlabels:[0,200,500,2100,2800,3000],\r\nfractionDigits:0\r\n", "font:'12px sans-serif',\r\nlabels:[{LABELS}],\r\nfractionDigits:0\r\n"}});
+    Template.Parameters.Add(new Parameter() { Name = "gauge_percentcolors",  DisplayName = "Percent colors", TextValue = "", Description = "Percentage colors configuration of the gauge to display a color based on the percentage of the value.", TextSamples = new string[] { "[0.0,'#a9d70b'],\r\n[0.50,'#f9c802'],\r\n[1.0,'#ff0000']\r\n"}});
+    Template.Parameters.Add(new Parameter() { Name = "gauge_staticzones",  DisplayName = "Static zones", TextValue = "", Description = "Configuration of the static zones of the gauge based on a minum, maximum, color and heights.", TextSamples = new string[] { "{strokeStyle:'#F03E3E',min:0,max:200,height:1.8},\r\n{strokeStyle:'#FFDD00',min:200,max:500,height:0.},\r\n{strokeStyle:'#30B32D',min:500,max:2100},\r\n{strokeStyle:'#FFDD00',min:2100,max:2800},\r\n{strokeStyle:'#F03E3E',min:2800,max:3000}\r\n"}});
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model", "Container", "Widget", "Tab Page" };
+}
+  

@@ -594,8 +594,10 @@ function mainInit() {
     //tabs buttons
     $(".sr_tab").unbind("click").on("click", function () {
         var buttonId = $(this).attr("id");
-        if (_generateHTMLDisplay) processSubmitViewParameter("information_button", buttonId == "information_button");
-        if ($("#message_button").length) {
+        if (_generateHTMLDisplay && $("#information_button").css("display") != 'none') {
+            processSubmitViewParameter("information_mode", buttonId == "information_button" ? "enabledshown" : "enabled");
+        }
+        if ($("#message_button").css("display") != 'none') {
             var messageMode = "enabled";
             if (buttonId == "message_button") {
                 messageMode = "enabledshown";

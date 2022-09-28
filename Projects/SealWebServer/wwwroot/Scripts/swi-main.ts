@@ -242,7 +242,7 @@ class SWIMain {
                     var startupreport = _main._profile.startupreport;
                     var startupreportname = _main._profile.startupreportname;
                     if (onstartup == "4") {
-                        onstartup = "3";
+                        onstartup = "3"; //Execute report
                         startupreport = _main._lastReport.path;
                         startupreportname = _main._lastReport.name;
                     }
@@ -455,6 +455,10 @@ class SWIMain {
         //Start last report
         if (_main._profile.report) {
             _main.executeReportFromMenu(_main._profile.report, null, null, _main._profile.reportname);
+            $("#brand-id").unbind("click").on("click", function () {
+                if (_main._reportPath == _main._profile.report) _main.toggleFoldersReport(true);
+                else _main.executeReportFromMenu(_main._profile.report, null, null, _main._profile.reportname);                
+            });            
         }
         else {
             _main.toggleFoldersReport(false);
@@ -756,6 +760,7 @@ class SWIMain {
         }
 
         _gateway.ExecuteReportFromMenu(_main._reportPath, viewGUID, outputGUID, function (data) {
+            _main.toggleFoldersReport(true);
             $(".navbar-header,#navbar").removeClass("disabled");
             $("#report-body").html(data);
             initScrollReport();
@@ -763,6 +768,7 @@ class SWIMain {
             $waitDialog.modal('hide');
             setTimeout(function () {
                 _main.refreshMenu();
+                _main._lastReport.name = $("#nav_button").text();
             }, 2000);
         });
     }
@@ -989,8 +995,17 @@ class SWIMain {
         _main.enableControls();
     }
 
-    public toggleFoldersReport(viewreport: boolean) {
+    public toggleFoldersReport(viewreport: boolean, foldertoselect: string = null, hidetreeview: boolean = false) {
         _main._currentView = (viewreport || !_main._profile.showfolders ? "report" : "folders");
+
+        if (foldertoselect) { //Select a folder in the treeview
+            _main._folderpath = foldertoselect;
+            $folderTree.jstree("deselect_all");
+            $folderTree.jstree('select_node', _main._folderpath);
+        }
+
+        if (hidetreeview) $("#file-view").removeClass("col-sm-8").addClass("col-sm-12");
+        else $("#file-view").removeClass("col-sm-12").addClass("col-sm-8");
 
         if (!viewreport) redrawDataTables();
 

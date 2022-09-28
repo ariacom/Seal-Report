@@ -52,7 +52,7 @@
 
     function processReportViews() {
             var showMessages = @Helper.ToJS(report.ShowExecutionMessages);
-            var showInformation = @Helper.ToJS(!report.ShowExecutionMessages && view.GetBoolValue("information_button"));
+            var showInformation = @Helper.ToJS(!report.ShowExecutionMessages && view.GetValue("information_mode") == "enabledshown");
 
             $("#report_button").parent().removeClass("active");
             $("#information_button").parent().removeClass("active");
@@ -243,35 +243,49 @@
 
         //Menu buttons
         if (@Helper.ToJS(report.HasRestrictions)) {
-            $("#restrictions_button").addClass("reportview");
-            $("#restrictions_button").css("display", "inline-block");
+            $("#restrictions_button").addClass("reportview").css("display", "inline-block");
             if (@Helper.ToJS(view.GetBoolValue("restriction_button"))) $("#execute_button").addClass("active");
         }
         else {
-            $("#restrictions_button").removeClass("reportview");
-            $("#restrictions_button").css("display", "none");
+            $("#restrictions_button").removeClass("reportview").css("display", "none");
+        }
+
+        if (@Helper.ToJS(view.GetValue("information_mode") != "disabled")) {
+            $("#information_button").addClass("reportview").css("display", "inline-block");
+        }
+        else {
+            $("#information_button").removeClass("reportview").css("display", "none");
         }
 
         if (@Helper.ToJS(view.GetValue("messages_mode") != "disabled")) {
-            $("#message_button").addClass("reportview");
-            $("#message_button").css("display", "inline-block");
+            $("#message_button").addClass("reportview").css("display", "inline-block");
         }
         else {
-            $("#message_button").removeClass("reportview");
-            $("#message_button").css("display", "none");
+            $("#message_button").removeClass("reportview").css("display", "none");
+        }
+
+        if (@Helper.ToJS(view.GetValue("information_mode") == "disabled") && @Helper.ToJS(view.GetValue("messages_mode") == "disabled")) {
+            $("#report_button").removeClass("reportview").css("display", "none");
+        }
+        else {
+            $("#report_button").addClass("reportview").css("display", "inline-block");
         }
 
         if (@Helper.ToJS(report.GenerateHTMLDisplay && view.GetBoolValue(Parameter.EnableResultsMenuParameter))) {
-            $("#results_menu").addClass("reportview");
-            $("#results_menu").css("display", "inline-block");
+            $("#results_menu").addClass("reportview").css("display", "inline-block");
         }
         else {
-            $("#results_menu").removeClass("reportview");
-            $("#results_menu").css("display", "none");
+            $("#results_menu").removeClass("reportview").css("display", "none");
         }
         $(".converter_item").css("display", @Helper.ToJS(view.GetBoolValue("converter_button")) ? "inline-block" : "none");
 
-        if (@Helper.ToJS(!view.GetBoolValue("execute_button"))) $("#execute_button").css("display", "none");
+        var execButtons = $("#execute_button,#reload-nav-item");
+        if (@Helper.ToJS(view.GetBoolValue("execute_button"))) {
+            execButtons.addClass("reportview").css("display", "inline-block");
+        }
+        else {
+            execButtons.removeClass("reportview").css("display", "none");
+        }
 
         //enables controls if not standalone
         if (typeof _main !== 'undefined') _main.enableControls();

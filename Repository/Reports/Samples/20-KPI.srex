@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>5bea048c-c8cc-4e4e-933c-1becd7c3b96b</GUID>
   <ViewGUID>8c4c00e5-e212-41f9-a64d-ff93225d73b1</ViewGUID>
@@ -21,6 +21,7 @@
           <GUID>f8b795f8-b2cd-41a9-8295-626762297ad1</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
+          <DisplayName />
           <Format>MM/yyyy</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
@@ -734,7 +735,7 @@ glyphicon glyphicon-ok
                         </ReportView>
                         <ReportView>
                           <GUID>56527796-191f-4009-b777-c99cb0404158</GUID>
-                          <Name>footer</Name>
+                          <Name>Footer</Name>
                           <TemplateName>Free</TemplateName>
                           <UseCustomTemplate>true</UseCustomTemplate>
                           <CustomTemplate>&lt;div class="text-center" style="margin-top:10px"&gt;

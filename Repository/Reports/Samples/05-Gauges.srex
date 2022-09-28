@@ -1,0 +1,412 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>0d01090c405745e5ac86de81283dc13f</GUID>
+  <ViewGUID>e67fc7c6-8dab-4f1d-bb40-25ffbcbfd687</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>b7cb5f62-a8f1-44ca-bdc9-974cf484caab</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>2e9d754a-2393-4c9d-9e9d-d247575e59b2</GUID>
+      <Name>Gauge</Name>
+      <SourceGUID>b7cb5f62-a8f1-44ca-bdc9-974cf484caab</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>2202468d-adda-4dfb-9d86-932302c2049c</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7c423e5e-659a-4eef-aa31-c2cefc4e2aed</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Page</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[75406e49-9052-49ff-9dba-c251e5602d46]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>75406e49-9052-49ff-9dba-c251e5602d46</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <Operator>Between</Operator>
+          <Date1>1997-01-01T00:00:00</Date1>
+          <Date2>1997-01-12T00:00:00</Date2>
+          <FormatRe>MM/yyyy</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b001eff3-9103-4335-b0b7-febd225117e1</GUID>
+      <Name>Gauge with min, max, animation</Name>
+      <SourceGUID>b7cb5f62-a8f1-44ca-bdc9-974cf484caab</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>64e07e12-fbcb-48d1-ad6c-9ed23d85f864</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5f36da1f-0c7f-4ce2-a035-009833330f4a</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Page</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>64e07e12-fbcb-48d1-ad6c-9ed23d85f864</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName>Min</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <SQL>0</SQL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>64e07e12-fbcb-48d1-ad6c-9ed23d85f864</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName>Max</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <SQL>50000</SQL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>64e07e12-fbcb-48d1-ad6c-9ed23d85f864</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName>Animation</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <SQL>5</SQL>
+        </ReportElement>
+      </Elements>
+      <Restriction>[d093bb85-0f8e-4861-9bd0-ac641e9541b1]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>d093bb85-0f8e-4861-9bd0-ac641e9541b1</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <Operator>Between</Operator>
+          <Date1>1997-01-01T00:00:00</Date1>
+          <Date2>1997-01-12T00:00:00</Date2>
+          <FormatRe>MM/yyyy</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>e67fc7c6-8dab-4f1d-bb40-25ffbcbfd687</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>08559129-6938-4b1e-8f92-8b7a659966f3</GUID>
+          <Name>Gauge</Name>
+          <Views>
+            <ReportView>
+              <GUID>9b0f1632-3772-4e2c-b8ee-fc067d75f311</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>8aa7fd80-c29a-405f-9c74-868bb362de9b</GUID>
+                  <Name>Gauge labels and zones</Name>
+                  <TemplateName>Gauge</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>preview_text_css</Name>
+                      <Value>font-size:3em;font-weight:bold;color:green;</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_width</Name>
+                      <Value>250</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_max</Name>
+                      <Value>25000</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_animation</Name>
+                      <Value>100</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_ticks</Name>
+                      <Value>divisions:5,
+divWidth:1.1,
+divLength:0.7,
+divColor:'#333333',
+subDivisions:5,
+subLength:0.5,
+subWidth:0.6,
+subColor:'#666666'
+</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_staticlabels</Name>
+                      <Value>font:'12px sans-serif',
+labels:[0,10000,15000,25000],
+fractionDigits:0
+</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_staticzones</Name>
+                      <Value>{strokeStyle:'#30B32D',min:0,max:10000,height:1},
+{strokeStyle:'#FFDD00',min:10000,max:20000,height:1.2},
+{strokeStyle:'#F03E3E',min:20000,max:25000,height:1.4}
+</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>8c63915e-46c5-4b0e-a123-1f72d299f686</GUID>
+                  <Name>Gauge percent</Name>
+                  <TemplateName>Gauge</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>gauge_max</Name>
+                      <Value>25000</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_ticks</Name>
+                      <Value>divisions:4,
+divWidth:1.1,
+divLength:0.7,
+divColor:'#333333',
+subDivisions:5,
+subLength:0.5,
+subWidth:0.6,
+subColor:'#666666'
+</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_percentcolors</Name>
+                      <Value>[0.0,'#a9d70b'],
+[0.50,'#f9c802'],
+[1.0,'#ff0000']
+</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>7c0615e8-15fe-496f-8b03-b0492c83aa77</GUID>
+                  <Name>Gauge</Name>
+                  <TemplateName>Gauge</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>86fde740-ff47-471c-96f3-f0d326ecb033</GUID>
+                  <Name>Text1</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>default Gauge
+</CustomTemplate>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>25018d61-5e09-47a2-9bf1-c75201063cce</GUID>
+                  <Name>Text3</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>Gauge with step for dynamic ticks and labels
+</CustomTemplate>
+                  <SortOrder>7</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>1f647a35-b07b-4e5d-9e49-9b67217177c6</GUID>
+                  <Name>Text2</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>Gauge
+ with ticks and percent colors</CustomTemplate>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>308de1e3-1c3b-420f-9b9f-66a5cfd92b16</GUID>
+                  <Name>Gauge step</Name>
+                  <TemplateName>Gauge</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>gauge_width</Name>
+                      <Value>250</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_max</Name>
+                      <Value>25000</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_step</Name>
+                      <Value>5000</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_ticks</Name>
+                      <Value>divisions:{DIVISION},
+divWidth:1.1,
+divLength:0.7,
+divColor:'#333333',
+subDivisions:5,
+subLength:0.5,
+subWidth:0.6,
+subColor:'#666666'
+</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_staticlabels</Name>
+                      <Value>font:'12px sans-serif',
+labels:[{LABELS}],
+fractionDigits:0
+</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>8aff6912-7271-44b4-bbf1-dc59b7489729</GUID>
+                  <Name>Text4</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>Gauge with ticks, static labels and zones
+</CustomTemplate>
+                  <SortOrder>8</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>grid_layout</Name>
+                  <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;
+col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-center;
+</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>2e9d754a-2393-4c9d-9e9d-d247575e59b2</ModelGUID>
+          <Parameters>
+            <Parameter>
+              <Name>show_summary_table</Name>
+              <Value>False</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>04a649fa-78ab-4a25-8b20-5035a33e89e7</GUID>
+          <Name>Gauge with min, max, animation</Name>
+          <Views>
+            <ReportView>
+              <GUID>628fbc04-2afe-49ff-8958-520a222ab962</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>92ad5feb-c459-40f3-b4db-d88b8ce33433</GUID>
+                  <Name>Gauge</Name>
+                  <TemplateName>Gauge</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>gauge_width</Name>
+                      <Value>300</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_step</Name>
+                      <Value>10000</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_ticks</Name>
+                      <Value>divisions:{DIVISION},
+divWidth:1.1,
+divLength:0.7,
+divColor:'#333333',
+subDivisions:5,
+subLength:0.5,
+subWidth:0.6,
+subColor:'#666666'
+</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_staticlabels</Name>
+                      <Value>font:'12px sans-serif',
+labels:[{LABELS}],
+fractionDigits:0
+</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>7a87c938-d267-4586-b5e1-a2b19e848a13</GUID>
+                  <Name>Text</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>Gauge with min, max and animation coming from the result table of the model</CustomTemplate>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>grid_layout</Name>
+                  <Value>col-sm-6;(col-sm-6)
+col-sm-6 text-center;(col-sm-6)</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>b001eff3-9103-4335-b0b7-febd225117e1</ModelGUID>
+          <Parameters>
+            <Parameter>
+              <Name>show_summary_table</Name>
+              <Value>False</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>3</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>a77df5bd-23bb-4266-afb4-9f73dbc583e8</GUID>
+          <Name>Separator</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;hr&gt;</CustomTemplate>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

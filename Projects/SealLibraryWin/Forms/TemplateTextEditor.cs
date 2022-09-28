@@ -594,7 +594,7 @@ namespace Seal.Forms
     }*/
 
     //Change view parameter to display the information Tab
-    //report.ExecutionView.GetParameter(""information_button"").BoolValue = true;
+    //report.ExecutionView.SetParameter(""information_mode"",""enabledshown"");
 }
 ";
 
@@ -610,9 +610,7 @@ namespace Seal.Forms
    
     //Change view parameter to display the information Tab
 	//report.ExecutionView.InitParameters(false);
-    //var parameter = report.ExecutionView.GetParameter(""information_button"");
-	//if (parameter != null) {
-	//	parameter.BoolValue = true;	
+    //report.ExecutionView.SetParameter(""information_mode"",""enabledshown"");
 	//}	
 }
 ";
