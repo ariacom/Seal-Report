@@ -2822,6 +2822,16 @@
             Helper to update a view parameter
             </summary>
         </member>
+        <member name="M:Seal.Model.Report.CheckOnePromptedValue">
+            <summary>
+            Check that at least one prompted value is not empty for the report. Set validation errors and cancel the report if not.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.CheckAllPromptedValues">
+            <summary>
+            Check that all prompted values are not empty for the report. Set validation errors and cancel the report if not.
+            </summary>
+        </member>
         <member name="F:Seal.Model.Report.Tag">
             <summary>
             Object that can be used at run-time for any purpose
