@@ -776,6 +776,47 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
+                "Check and validate restrictions",
+@"ReportTask task = Model;
+    Report report = task.Report;
+    //check that at least a prompted restriction is set
+    report.CheckOnePromptedValue();
+
+    //or check that all prompted restrictions are set
+    report.CheckAllPromptedValues();
+
+    //or perform your own validation
+    var restr = report.ExecutionPromptedRestrictions.First(i => i.SQLColumn == ""Employees.FirstName"");
+    if (restr.Value1.Length < 3) 
+    {
+        restr.ValidationErrors = ""Please enter 3 characters"";
+        report.Cancel = true;
+    }
+"
+                ),
+            new Tuple<string, string>(
+                "Copy restriction values",
+@"ReportTask task = Model;
+    Report report = task.Report;
+    //get source and destination restrictions
+    var source = report.Models.First(i => i.Name == ""name1"").Restrictions.First(i => i.SQLColumn == ""Orders.OrderDate"");
+    var dest = report.Models.First(i => i.Name == ""name2"").Restrictions.First(i => i.SQLColumn == ""Employees.HireDate"");
+    //copy all values
+    dest.CopyForPrompt(source);
+    dest.Prompt= PromptType.None;
+
+    //or copy te properties
+    dest.Operator = source.Operator;
+    dest.Value1 = source.Value1;
+    dest.Date1 = source.Date1;
+    dest.Date1Keyword = source.Date1Keyword;
+    dest.Value2 = source.Value2;
+    dest.Date2 = source.Date2;
+    dest.Date2Keyword = source.Date2Keyword;
+    dest.EnumValues = source.EnumValues.ToList();
+"
+                ),
+            new Tuple<string, string>(
                 "Format final result cells before rendering",
 @"ReportTask task = Model;
     Report report = task.Report;   

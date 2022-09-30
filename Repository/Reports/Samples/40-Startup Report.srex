@@ -27,79 +27,11 @@
       <SourceGUID>1127fc24-96dd-4868-97e1-efc4d94f17f7</SourceGUID>
     </ReportModel>
   </Models>
-  <Tasks>
-    <ReportTask>
-      <GUID>03fcda55-becb-45c9-8982-20634201ae76</GUID>
-      <Name>Task</Name>
-      <CancelReport>false</CancelReport>
-      <SourceGUID>1127fc24-96dd-4868-97e1-efc4d94f17f7</SourceGUID>
-      <Enabled>false</Enabled>
-      <Script>@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    string result = "1"; //Set result to 0 to cancel the report.
-    //Or cancel report with the flag CancelReport
-    //task.CancelReport = true;
-    //Or disable another task
-    System.Threading.Thread.Sleep(3000);
-}
-@Raw(result)
-</Script>
-      <SortOrder>1</SortOrder>
-    </ReportTask>
-  </Tasks>
   <Views>
     <ReportView>
       <GUID>a71ca875-ea4a-4d99-9f23-b8ef70e87673</GUID>
       <Name>View</Name>
       <Views>
-        <ReportView>
-          <GUID>7de61f01-8dc5-496a-8cc4-b4b5b2437863</GUID>
-          <Name>Buttons</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>@using Seal.Model
-@{
-    Report report = Model;
-    ReportView view = report.CurrentView;
-    var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
-}
-
-&lt;br&gt;&lt;button type="button" id="exec_report_button" class="btn btn-warning"&gt;Run '@searchOrderName'&lt;/button&gt; 
-&lt;br&gt;&lt;button type="button" id="exec_report_nw_button" class="btn btn-warning"&gt;Run '@searchOrderName' in a new window&lt;/button&gt; 
-&lt;br&gt;&lt;button type="button" id="view_treeview_folders_button" class="btn btn-warning"&gt;View 'View Tree view and folders, select '&lt;/button&gt; 
-&lt;br&gt;&lt;button type="button" id="view_folder_button" class="btn btn-warning"&gt;View 'View folder '&lt;/button&gt; 
-&lt;br&gt;Desactiver rapport, information, executer (reprendre le flag existant)
-&lt;br&gt;Exécuter le Startup Report depuis le product name
-&lt;br&gt; pouvoir virer le menu
-
-
-&lt;script&gt;
-$(document).ready(function () {
-    //Report button
-    $("#exec_report_button").unbind("click").bind("click", function () {
-        _main.executeReportFromMenu("\\Search - Orders.srex", "", "", "@searchOrderName");
-    });
-
-    $("#exec_report_nw_button").unbind("click").bind("click", function () {
-        _main.executeReport("\\Search - Orders.srex", "", "");
-    });
-
-    $("#view_treeview_folders_button").unbind("click").bind("click", function () {
-       _main.toggleFoldersReport(false, "\\Samples\\01-Tasks");
-    });
-
-    $("#view_folder_button").unbind("click").bind("click", function () {
-       _main.toggleFoldersReport(false, "\\Samples\\05-Scripts", true);
-    });
-    
-    //Hide execute button
-    
-});
-&lt;/script&gt;</CustomTemplate>
-          <SortOrder>1</SortOrder>
-        </ReportView>
         <ReportView>
           <GUID>d5a778f9-7d63-4c23-87f8-ce47d2639829</GUID>
           <Name>Highlights</Name>
@@ -109,10 +41,77 @@ $(document).ready(function () {
 &lt;p&gt;
 &lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
 &lt;ul&gt;
-&lt;li&gt;Custom buttons to Execute reports or to view a given folder.&lt;b&gt;This works with the Web Report Server only.&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;Sample of a Start-up report after login to the Web Report Server. &lt;b&gt;This works with the Web Report Server only.&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;Custom buttons to Execute reports or to toggle to the Folder View with a given folder.&lt;/li&gt;
+&lt;li&gt;Several options to hide messages, information and execute buttons.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/p&gt;
 </CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>46d62e99-b401-4bee-9efa-a29717b14759</GUID>
+          <Name>Widget</Name>
+          <Views>
+            <ReportView>
+              <GUID>7de61f01-8dc5-496a-8cc4-b4b5b2437863</GUID>
+              <Name>Buttons</Name>
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
+}
+
+&lt;div class="row"&gt;
+&lt;div class="col-sm-6"&gt;
+&lt;br&gt;&lt;button type="button" id="exec_report_button" class="btn btn-warning"&gt;Run '@searchOrderName'&lt;/button&gt; 
+&lt;/div&gt;
+&lt;div class="col-sm-6"&gt;
+&lt;br&gt;&lt;button type="button" id="exec_report_nw_button" class="btn btn-warning"&gt;Run '@searchOrderName' in a new window&lt;/button&gt; 
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="row"&gt;
+&lt;div class="col-sm-6"&gt;
+&lt;br&gt;&lt;button type="button" id="view_treeview_folders_button" class="btn btn-warning"&gt;View 'View Tree view and folders, select '&lt;/button&gt; 
+&lt;/div&gt;
+&lt;div class="col-sm-6"&gt;
+&lt;br&gt;&lt;button type="button" id="view_folder_button" class="btn btn-warning"&gt;View 'View folder '&lt;/button&gt; 
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+$(document).ready(function () {
+    $("#exec_report_button").unbind("click").bind("click", function () {
+        //Execute a report in the current window
+        _main.executeReportFromMenu("\\Search - Orders.srex", "", "", "@searchOrderName");
+    });
+
+    $("#exec_report_nw_button").unbind("click").bind("click", function () {
+        //Execute a report in a new window
+        _main.executeReport("\\Search - Orders.srex", "", "");
+    });
+
+    $("#view_treeview_folders_button").unbind("click").bind("click", function () {
+        //Toggle to folder view and select a given folder
+       _main.toggleFoldersReport(false, "\\Samples\\01-Tasks");
+    });
+
+    $("#view_folder_button").unbind("click").bind("click", function () {
+        //Toggle to folder view, select a given folder and hide the left tree view
+       _main.toggleFoldersReport(false, "\\Samples\\05-Scripts", true);
+    });
+    
+    //Hide execute button
+    
+});
+&lt;/script&gt;</CustomTemplate>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Widget</TemplateName>
           <SortOrder>2</SortOrder>
         </ReportView>
       </Views>

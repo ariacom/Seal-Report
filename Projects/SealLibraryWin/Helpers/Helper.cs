@@ -778,7 +778,9 @@ namespace Seal.Helpers
             MemoryStream ms = new MemoryStream();
             serializer.Serialize(ms, source);
             ms.Position = 0;
-            return serializer.Deserialize(ms);
+            var result = serializer.Deserialize(ms);
+            ms.Close(); 
+            return result;
         }
 
         public static void Serialize(string path, object obj, XmlSerializer serializer = null)

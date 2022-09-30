@@ -532,7 +532,7 @@ namespace Seal.Model
                     //get unique file name in the result folder
                     ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension, true);
                     //Display path is always an HTML one...                    
-                    HTMLDisplayFilePath = ResultExtension == "html" ?  ResultFilePath : FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
+                    HTMLDisplayFilePath = ResultExtension == "html" ? ResultFilePath : FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
                     Debug.WriteLine(string.Format("ResultFilePath:{0} HTMLDisplayFilePath:{1} for {2}", ResultFilePath, HTMLDisplayFilePath, OutputToExecute != null ? OutputToExecute.Name : ""));
                 }
 
@@ -1242,6 +1242,7 @@ namespace Seal.Model
                 using (XmlReader xr = XmlReader.Create(path))
                 {
                     result = (Report)serializer.Deserialize(xr);
+                    xr.Close();
                 }
                 result.FilePath = path;
                 result.Repository = repository;
@@ -1252,7 +1253,7 @@ namespace Seal.Model
                 if (!forEdition && result.Sources.Count > 1)
                 {
                     //Remove sources not involved in execution
-                    result.Sources.RemoveAll(i => 
+                    result.Sources.RemoveAll(i =>
                         !result.Models.Exists(j => j.SourceGUID == i.GUID || j.SourceGUID == i.MetaSourceGUID)
                         && !result.Models.Exists(j => j.LINQSubModels.Exists(k => k.SourceGUID == i.GUID || k.SourceGUID == i.MetaSourceGUID))
                         && !result.Tasks.Exists(j => j.SourceGUID == i.GUID));
@@ -1376,7 +1377,8 @@ namespace Seal.Model
                     {
                         schedule.SynchronizeTask();
                     }
-                    catch (Exception ex) {
+                    catch (Exception ex)
+                    {
                         Helper.WriteLogException("SynchronizeTasks", ex);
                     }
                 }
@@ -2402,6 +2404,34 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Check that at least one prompted value is not empty for the report. Set validation errors and cancel the report if not.
+        /// </summary>
+        public void CheckOnePromptedValue()
+        {
+            if (!ExecutionPromptedRestrictions.Exists(i => i.HasValue))
+            {
+                foreach (var restr in ExecutionPromptedRestrictions.Where(i => !i.HasValue).OrderBy(i => i.SortOrder))
+                {
+                    restr.ValidationErrors = Translate("Please enter at least a value");
+                    break;
+                }
+                Cancel = true;
+            }
+        }
+
+        /// <summary>
+        /// Check that all prompted values are not empty for the report. Set validation errors and cancel the report if not.
+        /// </summary>
+        public void CheckAllPromptedValues()
+        {
+            foreach (var restr in ExecutionPromptedRestrictions.Where(i => !i.HasValue))
+            {
+                restr.ValidationErrors = Translate("Please enter a value");
+                Cancel = true;
+            }
+        }
+
+        /// <summary>
         /// Object that can be used at run-time for any purpose
         /// </summary>
         [XmlIgnore]
@@ -2568,7 +2598,7 @@ namespace Seal.Model
             return Models.FirstOrDefault(i => i.Name == modelName);
         }
 
-#region Translation Helpers
+        #region Translation Helpers
 
         string TranslationFilePath
         {
@@ -2645,9 +2675,9 @@ namespace Seal.Model
         {
             return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "EnumMessage", instance.Name, instance.Message);
         }
-#endregion
+        #endregion
 
-#region Log
+        #region Log
 
         /// <summary>
         /// Log the report execution in the Log repository folder
@@ -2668,6 +2698,6 @@ namespace Seal.Model
             }
         }
 
-#endregion
+        #endregion
     }
 }

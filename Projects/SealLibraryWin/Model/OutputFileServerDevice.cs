@@ -309,6 +309,7 @@ namespace Seal.Model
                 using (XmlReader xr = XmlReader.Create(path))
                 {
                     result = (OutputFileServerDevice)serializer.Deserialize(xr);
+                    xr.Close();
                 }
                 result.Name = Path.GetFileNameWithoutExtension(path);
                 result.FilePath = path;

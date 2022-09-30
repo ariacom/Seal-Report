@@ -200,9 +200,19 @@ namespace Seal.Model
         /// <summary>
         /// Save the user profile
         /// </summary>
-        public void SaveProfile()
+        public bool SaveProfile()
         {
-            if (DefaultGroup.EditProfile) Profile.SaveToFile();
+            try
+            {
+                if (DefaultGroup.EditProfile) Profile.SaveToFile();
+            }
+            catch(Exception ex)
+            {
+                Helper.WriteLogException("SaveProfile", ex);
+                return false;
+            }
+
+            return true;
         }
 
         private PersonalFolderRight? _persFolderRight = null;

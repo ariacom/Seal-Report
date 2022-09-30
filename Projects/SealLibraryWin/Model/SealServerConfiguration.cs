@@ -629,6 +629,7 @@ namespace Seal.Model
                 using (XmlReader xr = XmlReader.Create(path))
                 {
                     result = (SealServerConfiguration)serializer.Deserialize(xr);
+                    xr.Close();
                 }
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);

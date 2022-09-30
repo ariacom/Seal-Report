@@ -121,6 +121,7 @@ namespace Seal.Model
                 using (XmlReader xr = XmlReader.Create(path))
                 {
                     result = (SecurityUserProfile)serializer.Deserialize(xr);
+                    xr.Close();
                 }
                 result.Path = path;
             }

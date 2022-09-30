@@ -1266,6 +1266,7 @@ namespace Seal.Model
                 var message = (ex is TemplateCompilationException ? Helper.GetExceptionMessage((TemplateCompilationException)ex) : ex.Message);
                 Error += string.Format("Error got when {0} the view '{1}({2})':\r\n{3}\r\n", phase, Name, Template.Name, message);
                 if (ex.InnerException != null) Error += "\r\n" + ex.InnerException.Message;
+                Helper.WriteLogException("ReportView.Parse", ex);
             }
             if (!string.IsNullOrEmpty(Error))
             {

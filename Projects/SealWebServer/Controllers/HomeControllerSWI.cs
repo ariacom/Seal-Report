@@ -839,7 +839,7 @@ namespace SealWebServer.Controllers
                     if (guids.Length == 2) WebUser.Profile.Connections.Add(new DefaultConnection() { SourceGUID = guids[0], ConnectionGUID = guids[1] });
 
                 }
-                WebUser.SaveProfile();
+                if (!WebUser.SaveProfile()) throw new Exception("Unable to save Profile. Check logs for detail.");
 
                 return Json(new { });
             }
