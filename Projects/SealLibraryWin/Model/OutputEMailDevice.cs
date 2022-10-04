@@ -452,7 +452,9 @@ namespace Seal.Model
                 //Attachment
                 if (!string.IsNullOrEmpty(attachPath))
                 {
-                    message.Attachments.Add(new System.Net.Mail.Attachment(attachPath, attachName));
+                    var attachment = new System.Net.Mail.Attachment(attachPath);
+                    attachment.Name = attachName;
+                    message.Attachments.Add(attachment);
                 }
                 SmtpClient client = SmtpClient;
                 client.Send(message);
