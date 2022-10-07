@@ -121,7 +121,7 @@
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
     <PackageReference Include="EPPlus" Version="4.5.3.3" />
-    <PackageReference Include="FluentFTP" Version="40.0.0" />
+    <PackageReference Include="FluentFTP" Version="41.0.0" />
     <PackageReference Include="jose-jwt" Version="4.0.1" />
     <PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.49.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.9" />
@@ -153,7 +153,7 @@
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
     <PackageReference Include="TaskScheduler" Version="2.10.1" />
     <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
-    <PackageReference Include="Twilio" Version="5.80.0" />
+    <PackageReference Include="Twilio" Version="5.80.1" />
   </ItemGroup>
 
   <ItemGroup>

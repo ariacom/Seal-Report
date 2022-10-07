@@ -89,10 +89,12 @@ namespace Seal.Model
             }
             catch (TemplateCompilationException ex)
             {
+                Helper.WriteLogException("MetaTableTemplate.ParseConfiguration", ex);
                 table.Error = Helper.GetExceptionMessage(ex);
             }
             catch (Exception ex)
             {
+                Helper.WriteLogException("MetaTableTemplate.ParseConfiguration", ex);
                 table.Error = string.Format("Unexpected error got when parsing table template.\r\n{0}", ex.Message);
             }
         }
