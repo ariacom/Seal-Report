@@ -745,6 +745,7 @@ namespace Seal.Model
 
             if (string.IsNullOrEmpty(Table.Alias)) Table.Alias = "Master";
 
+            Source.LastMetadataModification = DateTime.Now;
             Table.Source = Source;
             if (!string.IsNullOrEmpty(Table.Sql))
             {

@@ -1128,7 +1128,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Translate a FolderName
+        /// Translate a folder name
         /// </summary>
         public string TranslateFolderName(string path)
         {
@@ -1136,11 +1136,19 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Translate a column name
+        /// Translate a file name
         /// </summary>
         public string TranslateFileName(string path)
         {
             return RepositoryTranslate("FileName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileNameWithoutExtension(path));
+        }
+
+        /// <summary>
+        /// Translate a report display name
+        /// </summary>
+        public string TranslateReportDisplayName(string instance, string name)
+        {
+            return RepositoryTranslate("ReportDisplayName", instance, name);
         }
 
 #if DEBUG

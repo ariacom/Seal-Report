@@ -97,12 +97,10 @@ function executeFromTrigger(source /* trigger from a control */, form /* trigger
                     .done(function (data) {
                         //Update each view involved
                         data.forEach(function (value) {
-                            if (form.attr("id") != $(value).attr("id")) {
-                                var viewId = "#" + $(value).attr("id");
-                                $(viewId).html($(value).html());
-                                initRestrictions(viewId);
-                                initWidgetsRestrictions();
-                            }
+                            var viewId = "#" + $(value).attr("id");
+                            $(viewId).html($(value).html());
+                            initRestrictions(viewId);
+                            initWidgetsRestrictions();
                         });
                         form.removeClass("disabled");
                         if (button) button.removeClass("btn-warning").addClass("btn-success");

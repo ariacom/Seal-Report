@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>88d7f58703494555b0848b82a54a91e7</GUID>
+  <DisplayName>@{
+    Report report = Model;
+
+    var result = report.TranslateRepository("GeneralText", "Report", "Welcome");
+    if (report.SecurityContext != null) {
+        result += " '" + report.SecurityContext.Name + "'";
+    }
+}
+@Raw(result)</DisplayName>
+  <ViewGUID>a71ca875-ea4a-4d99-9f23-b8ef70e87673</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>1127fc24-96dd-4868-97e1-efc4d94f17f7</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>cf976d0b-362b-4c24-8600-48ece25a0bf7</GUID>
+      <Name>Model</Name>
+      <SourceGUID>1127fc24-96dd-4868-97e1-efc4d94f17f7</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>a71ca875-ea4a-4d99-9f23-b8ef70e87673</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>7d7a7a2c-9066-442f-a930-8fcc83dd239d</GUID>
+          <Name>Init script</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;script&gt;
+$(document).ready(function () {
+
+    setTimeout(function () {
+        //Hide menu
+        $("#menu-main-button").hide();
+        
+        //Remove toggle click handlers
+        $("#nav_button,#brand-id").css("pointer-events","none");
+        
+        //Hide the left tree view
+        _main.showTreeView(false); 
+        
+        //Toggle to folder view, select a given folder
+       _main.toggleFoldersReport(
+            false, //false=Folder, true=Report 
+            "\\Samples", //Optional folder to select
+        );
+    }, 500);
+
+    
+});
+&lt;/script&gt;</CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>information_mode</Name>
+          <Value>disabled</Value>
+        </Parameter>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>disabled</Value>
+        </Parameter>
+        <Parameter>
+          <Name>execute_button</Name>
+          <Value>False</Value>
+        </Parameter>
+        <Parameter>
+          <Name>resultsmenu_enabled</Name>
+          <Value>False</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

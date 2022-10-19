@@ -6,7 +6,7 @@
 
     var result = report.TranslateRepository("GeneralText", "Report", "Welcome");
     if (report.SecurityContext != null) {
-        result += " " + report.SecurityContext.Name;
+        result += " '" + report.SecurityContext.Name + "'";
     }
 }
 @Raw(result)</DisplayName>
@@ -47,71 +47,223 @@
 &lt;/ul&gt;
 &lt;/p&gt;
 </CustomTemplate>
+          <SortOrder>3</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>7d7a7a2c-9066-442f-a930-8fcc83dd239d</GUID>
+          <Name>Title</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;h1 style='text-align:center'&gt;Welcome to Seal Report&lt;/h1&gt;
+&lt;hr&gt;</CustomTemplate>
           <SortOrder>1</SortOrder>
         </ReportView>
         <ReportView>
-          <GUID>46d62e99-b401-4bee-9efa-a29717b14759</GUID>
-          <Name>Widget</Name>
+          <GUID>9d9c0083-f7eb-4478-ac4a-f3db4dc4ca6f</GUID>
+          <Name>Container</Name>
           <Views>
             <ReportView>
-              <GUID>7de61f01-8dc5-496a-8cc4-b4b5b2437863</GUID>
-              <Name>Buttons</Name>
-              <TemplateName>Free</TemplateName>
-              <UseCustomTemplate>true</UseCustomTemplate>
-              <CustomTemplate>@using Seal.Model
+              <GUID>46d62e99-b401-4bee-9efa-a29717b14759</GUID>
+              <Name>Search</Name>
+              <Views>
+                <ReportView>
+                  <GUID>7de61f01-8dc5-496a-8cc4-b4b5b2437863</GUID>
+                  <Name>Buttons</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>@using Seal.Model
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
     var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
 }
 
-&lt;div class="row"&gt;
-&lt;div class="col-sm-6"&gt;
-&lt;br&gt;&lt;button type="button" id="exec_report_button" class="btn btn-warning"&gt;Run '@searchOrderName'&lt;/button&gt; 
-&lt;/div&gt;
-&lt;div class="col-sm-6"&gt;
-&lt;br&gt;&lt;button type="button" id="exec_report_nw_button" class="btn btn-warning"&gt;Run '@searchOrderName' in a new window&lt;/button&gt; 
-&lt;/div&gt;
-&lt;/div&gt;
+&lt;button type="button" id="exec_report_button" class="btn btn-primary"&gt;@searchOrderName&lt;/button&gt; 
 
-&lt;div class="row"&gt;
-&lt;div class="col-sm-6"&gt;
-&lt;br&gt;&lt;button type="button" id="view_treeview_folders_button" class="btn btn-warning"&gt;View 'View Tree view and folders, select '&lt;/button&gt; 
-&lt;/div&gt;
-&lt;div class="col-sm-6"&gt;
-&lt;br&gt;&lt;button type="button" id="view_folder_button" class="btn btn-warning"&gt;View 'View folder '&lt;/button&gt; 
-&lt;/div&gt;
-&lt;/div&gt;
 &lt;script&gt;
 $(document).ready(function () {
     $("#exec_report_button").unbind("click").bind("click", function () {
         //Execute a report in the current window
         _main.executeReportFromMenu("\\Search - Orders.srex", "", "", "@searchOrderName");
-    });
+    });    
+});
+&lt;/script&gt;</CustomTemplate>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>widget_icon</Name>
+                  <Value>search</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_color</Name>
+                  <Value>info</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_body_css</Name>
+                  <Value>text-align:center</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>67789937-974d-4aab-a42c-d2ff2ccebb89</GUID>
+              <Name>Search</Name>
+              <Views>
+                <ReportView>
+                  <GUID>68c24a4f-d1ce-46b9-b1ed-fa91f6b62c87</GUID>
+                  <Name>Buttons</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
 
+&lt;button type="button" id="exec_report_nw_button" class="btn btn-primary"&gt;Orders - New window&lt;/button&gt; 
+
+&lt;script&gt;
+$(document).ready(function () {
     $("#exec_report_nw_button").unbind("click").bind("click", function () {
         //Execute a report in a new window
         _main.executeReport("\\Search - Orders.srex", "", "");
     });
-
-    $("#view_treeview_folders_button").unbind("click").bind("click", function () {
-        //Toggle to folder view and select a given folder
-       _main.toggleFoldersReport(false, "\\Samples\\01-Tasks");
-    });
-
-    $("#view_folder_button").unbind("click").bind("click", function () {
-        //Toggle to folder view, select a given folder and hide the left tree view
-       _main.toggleFoldersReport(false, "\\Samples\\05-Scripts", true);
-    });
-    
-    //Hide execute button
-    
 });
 &lt;/script&gt;</CustomTemplate>
-              <SortOrder>1</SortOrder>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>widget_icon</Name>
+                  <Value>search</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_color</Name>
+                  <Value>success</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_body_css</Name>
+                  <Value>text-align:center</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>66f0c4bc-4d83-4ceb-8f6c-ca3adf8f85d5</GUID>
+              <Name>Browse</Name>
+              <Views>
+                <ReportView>
+                  <GUID>137aeb5c-ee97-4538-b959-26777da799ca</GUID>
+                  <Name>Buttons</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;button type="button" id="view_treeview_folders_button" class="btn btn-primary"&gt;Tree view - 01-Tasks&lt;/button&gt; 
+
+&lt;script&gt;
+$(document).ready(function () {
+    $("#view_treeview_folders_button").unbind("click").bind("click", function () {
+        //Toggle to folder view and select a given folder
+       _main.toggleFoldersReport(
+            false, //false=Folder, true=Report 
+            "\\Samples\\01-Tasks" //Optional folder to select
+            );
+            
+       _main.showTreeView(true); //Force show tree view in case it was hidden before
+    });
+});
+&lt;/script&gt;</CustomTemplate>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>widget_icon</Name>
+                  <Value>folder-open</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_color</Name>
+                  <Value>warning</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_body_css</Name>
+                  <Value>text-align:center</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>f8c31668-9ed1-44d2-9f6b-5b260e033a61</GUID>
+              <Name>Browse</Name>
+              <Views>
+                <ReportView>
+                  <GUID>00d94be4-b48a-471d-9846-e300a2c7504a</GUID>
+                  <Name>Buttons</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;button type="button" id="view_folder_button" class="btn btn-primary"&gt;Folder - 05-Scripts&lt;/button&gt; 
+
+&lt;script&gt;
+$(document).ready(function () {
+    $("#view_folder_button").unbind("click").bind("click", function () {
+    
+        //Hide the left tree view
+        _main.showTreeView(false); 
+        
+        //Toggle to folder view, select a given folder
+       _main.toggleFoldersReport(
+            false, //false=Folder, true=Report 
+            "\\Samples\\05-Scripts", //Optional folder to select
+        );
+    });
+});
+&lt;/script&gt;</CustomTemplate>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>widget_icon</Name>
+                  <Value>folder-open</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_color</Name>
+                  <Value>danger</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_body_css</Name>
+                  <Value>text-align:center</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>4</SortOrder>
             </ReportView>
           </Views>
-          <TemplateName>Widget</TemplateName>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;
+</Value>
+            </Parameter>
+          </Parameters>
           <SortOrder>2</SortOrder>
         </ReportView>
       </Views>
@@ -124,6 +276,10 @@ $(document).ready(function () {
         <Parameter>
           <Name>messages_mode</Name>
           <Value>disabled</Value>
+        </Parameter>
+        <Parameter>
+          <Name>execute_button</Name>
+          <Value>False</Value>
         </Parameter>
         <Parameter>
           <Name>resultsmenu_enabled</Name>

@@ -992,6 +992,11 @@
             Last modification Date Time
             </summary>
         </member>
+        <member name="F:Seal.Model.MetaSource.LastMetadataModification">
+            <summary>
+            Last modification Date Time of the Metadata (used for optimization)
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaSource.Connection">
             <summary>
             Current MetaConnection
@@ -6176,12 +6181,17 @@
         </member>
         <member name="M:Seal.Model.Repository.TranslateFolderName(System.String)">
             <summary>
-            Translate a FolderName
+            Translate a folder name
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.TranslateFileName(System.String)">
             <summary>
-            Translate a column name
+            Translate a file name
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.TranslateReportDisplayName(System.String,System.String)">
+            <summary>
+            Translate a report display name
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.Translate(System.String,System.String,System.String)">
@@ -7825,6 +7835,11 @@
         <member name="P:Seal.Model.SecurityGroup.StartupReport">
             <summary>
             Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex').
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityGroup.StartupReportName">
+            <summary>
+            Web Report Server: Optional report name when the 'Report executed on startup' is set.).
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.ExecutionMode">

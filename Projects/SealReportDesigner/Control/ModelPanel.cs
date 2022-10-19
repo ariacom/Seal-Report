@@ -489,12 +489,12 @@ namespace Seal.Controls
                 tableList.Add(Model.Table);
             }
 
-            if (elementTreeView.Tag != null)
+            if (elementTreeView.Tag is string)
             {
-                //Optimize tree view init for same tables
-                if (Enumerable.SequenceEqual(tableList, (List<MetaTable>)elementTreeView.Tag)) return;
+                //Optimize tree view init for metadata
+                if ((string)elementTreeView.Tag == Model.Source.GUID + Model.Source.LastMetadataModification.ToUniversalTime()) return;
             }
-            elementTreeView.Tag = tableList;
+            elementTreeView.Tag = Model.Source.GUID + Model.Source.LastMetadataModification.ToUniversalTime();
 
             TreeViewHelper.InitCategoryTreeNode(elementTreeView.Nodes, tableList);
             elementTreeView.TreeViewNodeSorter = new NodeSorter();

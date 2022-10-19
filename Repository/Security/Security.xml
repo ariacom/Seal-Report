@@ -248,6 +248,29 @@
       <OnStartup>ExecuteReport</OnStartup>
       <StartupReport>\work\basic.srex</StartupReport>
     </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Startup Report)</Name>
+      <Weight>10</Weight>
+      <OnStartup>ExecuteReport</OnStartup>
+      <StartupReport>/Samples/40-Startup Report.srex</StartupReport>
+      <StartupReportName>Starting...</StartupReportName>
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Startup one Folder)</Name>
+      <Folders>
+        <SecurityFolder>
+          <Path>\Samples</Path>
+          <UseSubFolders>false</UseSubFolders>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <Weight>10</Weight>
+      <Culture />
+      <OnStartup>ExecuteReport</OnStartup>
+      <StartupReport>/Samples/41-Startup Folder.srex</StartupReport>
+      <StartupReportName>Starting...</StartupReportName>
+      <ExecutionMode>AlwaysNewWindow</ExecutionMode>
+    </SecurityGroup>
   </Groups>
   <Logins>
     <SecurityLogin>
@@ -282,7 +305,7 @@
     </SecurityLogin>
     <SecurityLogin>
       <Id>exed</Id>
-      <Password>DiqjNYG9az+AKx/R4zk0JMD+Ix9oAK1/FsO1di4XZtw=</Password>
+      <Password>dM18ybJITFztO3OM7N3KmnQNYDupfJ7fVM4XnD5scFQ=</Password>
       <GroupNames>
         <string>Group (Execute)</string>
         <string>Group (Edit)</string>
@@ -314,6 +337,21 @@
       <Password>UyyPOA2CivOUeK1Qqc/t3hx49g09LN2j/Wlt0w8Kr0g=</Password>
       <GroupNames>
         <string>Group (Demo)</string>
+      </GroupNames>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>startup</Id>
+      <Password>2v2vwLDXMLjH9VqfB231JJBxb9BH8hJuMyrrEe9qEfU=</Password>
+      <GroupNames>
+        <string>Group (Execute)</string>
+        <string>Group (Startup Report)</string>
+      </GroupNames>
+    </SecurityLogin>
+    <SecurityLogin>
+      <Id>startupfolder</Id>
+      <Password>epqVXebVd3V37EwkPryxWrgI1E6UIX/m/hsWMl/Kvzk=</Password>
+      <GroupNames>
+        <string>Group (Startup one Folder)</string>
       </GroupNames>
     </SecurityLogin>
   </Logins>

@@ -100,6 +100,11 @@ var SWIMain = /** @class */ (function () {
             _main._newWindow = true;
             _main._reportIcon = null;
         }
+        //Reset init state
+        $("#menu-main-button").show();
+        $("#nav_button,#brand-id").css("pointer-events", "");
+        _main.showTreeView(true);
+        $("#reload-nav-item,#execute_button,#restrictions_button").addClass("reportview");
         $("#search-pattern").val("");
         $("body").children(".modal-backdrop").remove();
         $loginModal.modal('hide');
@@ -682,7 +687,7 @@ var SWIMain = /** @class */ (function () {
             setTimeout(function () {
                 _main.refreshMenu();
                 _main._lastReport.name = $("#nav_button").text();
-            }, 2000);
+            }, 1000);
         });
     };
     SWIMain.prototype.clearFilesTable = function () {
@@ -803,6 +808,8 @@ var SWIMain = /** @class */ (function () {
                         button.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
                         $tr.append($("<td>").append(button));
                     }
+                    else
+                        $tr.append($("<td>"));
                     $tr.append($("<td>").html(SWIUtil.tr("View")));
                 }
                 for (var i = 0; i < data.outputs.length; i++) {
@@ -814,6 +821,8 @@ var SWIMain = /** @class */ (function () {
                         button.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
                         $tr.append($("<td>").append(button));
                     }
+                    else
+                        $tr.append($("<td>"));
                     $tr.append($("<td>").html(SWIUtil.tr("Output")));
                 }
                 //adjust position with the final size
@@ -889,19 +898,24 @@ var SWIMain = /** @class */ (function () {
         });
         _main.enableControls();
     };
-    SWIMain.prototype.toggleFoldersReport = function (viewreport, foldertoselect, hidetreeview) {
+    SWIMain.prototype.showTreeView = function (show) {
+        if (!show) {
+            $("#folder-view").hide();
+            $("#file-view").removeClass("col-sm-8").addClass("col-sm-12");
+        }
+        else {
+            $("#folder-view").show();
+            $("#file-view").removeClass("col-sm-12").addClass("col-sm-8");
+        }
+    };
+    SWIMain.prototype.toggleFoldersReport = function (viewreport, foldertoselect) {
         if (foldertoselect === void 0) { foldertoselect = null; }
-        if (hidetreeview === void 0) { hidetreeview = false; }
         _main._currentView = (viewreport || !_main._profile.showfolders ? "report" : "folders");
         if (foldertoselect) { //Select a folder in the treeview
             _main._folderpath = foldertoselect;
             $folderTree.jstree("deselect_all");
             $folderTree.jstree('select_node', _main._folderpath);
         }
-        if (hidetreeview)
-            $("#file-view").removeClass("col-sm-8").addClass("col-sm-12");
-        else
-            $("#file-view").removeClass("col-sm-12").addClass("col-sm-8");
         if (!viewreport)
             redrawDataTables();
         _main.enableControls();
