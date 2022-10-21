@@ -248,7 +248,7 @@ namespace Seal.Forms
         var isHtml = true;
         
         if (!user.Security.Repository.SendNotificationEmail(from, to, subject, isHtml, body)) {
-            throw new Exception(""Unable to send email""); 
+            throw new Exception(""Unable to send email. Check that an Email Device is defined for notification. Restart the 'Server Manager' after changing the configuration.""); 
         }
     }
     

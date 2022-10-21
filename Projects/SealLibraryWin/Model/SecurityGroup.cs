@@ -240,10 +240,10 @@ namespace Seal.Model
         public StartupOptions OnStartup { get; set; } = StartupOptions.None;
 
         /// <summary>
-        /// Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex').
+        /// Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex').
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex')."), Id(4, 5)]
+        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex')."), Id(4, 5)]
 #endif
         public string StartupReport { get; set; }
 
