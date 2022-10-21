@@ -5,7 +5,7 @@
     Report report = Model;
 
     var result = report.TranslateRepository("GeneralText", "Report", "Welcome");
-    if (report.SecurityContext != null) {
+    if (!string.IsNullOrEmpty(report.SecurityContext?.Name)) {
         result += " '" + report.SecurityContext.Name + "'";
     }
 }
@@ -41,13 +41,13 @@
 &lt;p&gt;
 &lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
 &lt;ul&gt;
-&lt;li&gt;Sample of a Start-up report after login to the Web Report Server. &lt;b&gt;This works with the Web Report Server only.&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;Sample of a Start-up report after login to the Web Report Server. &lt;b&gt;This will work only as a Startup Report in the Web Report Server.&lt;/b&gt;&lt;/li&gt;
 &lt;li&gt;Custom buttons to Execute reports or to toggle to the Folder View with a given folder.&lt;/li&gt;
 &lt;li&gt;Several options to hide messages, information and execute buttons.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/p&gt;
 </CustomTemplate>
-          <SortOrder>3</SortOrder>
+          <SortOrder>4</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>7d7a7a2c-9066-442f-a930-8fcc83dd239d</GUID>
@@ -56,7 +56,7 @@
           <UseCustomTemplate>true</UseCustomTemplate>
           <CustomTemplate>&lt;h1 style='text-align:center'&gt;Welcome to Seal Report&lt;/h1&gt;
 &lt;hr&gt;</CustomTemplate>
-          <SortOrder>1</SortOrder>
+          <SortOrder>2</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>9d9c0083-f7eb-4478-ac4a-f3db4dc4ca6f</GUID>
@@ -81,12 +81,12 @@
 &lt;button type="button" id="exec_report_button" class="btn btn-primary"&gt;@searchOrderName&lt;/button&gt; 
 
 &lt;script&gt;
-$(document).ready(function () {
-    $("#exec_report_button").unbind("click").bind("click", function () {
-        //Execute a report in the current window
-        _main.executeReportFromMenu("\\Search - Orders.srex", "", "", "@searchOrderName");
-    });    
-});
+    $(document).ready(function () {
+        $("#exec_report_button").unbind("click").bind("click", function () {
+            //Execute a report in the current window
+            _main.executeReportFromMenu("\\Search - Orders.srex", "", "", "@searchOrderName");
+        });    
+    });
 &lt;/script&gt;</CustomTemplate>
                   <SortOrder>1</SortOrder>
                 </ReportView>
@@ -126,12 +126,12 @@ $(document).ready(function () {
 &lt;button type="button" id="exec_report_nw_button" class="btn btn-primary"&gt;Orders - New window&lt;/button&gt; 
 
 &lt;script&gt;
-$(document).ready(function () {
-    $("#exec_report_nw_button").unbind("click").bind("click", function () {
-        //Execute a report in a new window
-        _main.executeReport("\\Search - Orders.srex", "", "");
+    $(document).ready(function () {
+        $("#exec_report_nw_button").unbind("click").bind("click", function () {
+            //Execute a report in a new window
+            _main.executeReport("\\Search - Orders.srex", "", "");
+        });
     });
-});
 &lt;/script&gt;</CustomTemplate>
                   <SortOrder>1</SortOrder>
                 </ReportView>
@@ -171,17 +171,17 @@ $(document).ready(function () {
 &lt;button type="button" id="view_treeview_folders_button" class="btn btn-primary"&gt;Tree view - 01-Tasks&lt;/button&gt; 
 
 &lt;script&gt;
-$(document).ready(function () {
-    $("#view_treeview_folders_button").unbind("click").bind("click", function () {
-        //Toggle to folder view and select a given folder
-       _main.toggleFoldersReport(
-            false, //false=Folder, true=Report 
-            "\\Samples\\01-Tasks" //Optional folder to select
-            );
-            
-       _main.showTreeView(true); //Force show tree view in case it was hidden before
+    $(document).ready(function () {
+        $("#view_treeview_folders_button").unbind("click").bind("click", function () {
+            //Toggle to folder view and select a given folder
+           _main.toggleFoldersReport(
+                false, //false=Folder, true=Report 
+                "\\Samples\\01-Tasks" //Optional folder to select
+                );
+                
+           _main.showTreeView(true); //Force show tree view in case it was hidden before
+        });
     });
-});
 &lt;/script&gt;</CustomTemplate>
                   <SortOrder>1</SortOrder>
                 </ReportView>
@@ -221,19 +221,19 @@ $(document).ready(function () {
 &lt;button type="button" id="view_folder_button" class="btn btn-primary"&gt;Folder - 05-Scripts&lt;/button&gt; 
 
 &lt;script&gt;
-$(document).ready(function () {
-    $("#view_folder_button").unbind("click").bind("click", function () {
-    
-        //Hide the left tree view
-        _main.showTreeView(false); 
+    $(document).ready(function () {
+        $("#view_folder_button").unbind("click").bind("click", function () {
         
-        //Toggle to folder view, select a given folder
-       _main.toggleFoldersReport(
-            false, //false=Folder, true=Report 
-            "\\Samples\\05-Scripts", //Optional folder to select
-        );
+            //Hide the left tree view
+            _main.showTreeView(false); 
+            
+            //Toggle to folder view, select a given folder
+           _main.toggleFoldersReport(
+                false, //false=Folder, true=Report 
+                "\\Samples\\05-Scripts", //Optional folder to select
+            );
+        });
     });
-});
 &lt;/script&gt;</CustomTemplate>
                   <SortOrder>1</SortOrder>
                 </ReportView>
@@ -264,7 +264,19 @@ $(document).ready(function () {
 </Value>
             </Parameter>
           </Parameters>
-          <SortOrder>2</SortOrder>
+          <SortOrder>3</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>3b4bed5f-3dde-47df-a015-0bb16b812961</GUID>
+          <Name>Check</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;script&gt;
+if (typeof _main == 'undefined') {
+    alert('This will work only as a Startup Report in the Web Report Server');
+}
+&lt;/script&gt;</CustomTemplate>
+          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

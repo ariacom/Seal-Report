@@ -5,7 +5,7 @@
     Report report = Model;
 
     var result = report.TranslateRepository("GeneralText", "Report", "Welcome");
-    if (report.SecurityContext != null) {
+    if (!string.IsNullOrEmpty(report.SecurityContext?.Name)) {
         result += " '" + report.SecurityContext.Name + "'";
     }
 }
@@ -38,27 +38,30 @@
           <TemplateName>Free</TemplateName>
           <UseCustomTemplate>true</UseCustomTemplate>
           <CustomTemplate>&lt;script&gt;
-$(document).ready(function () {
+if (typeof _main == 'undefined') {
+    alert('This will work only as a Startup Report in the Web Report Server');
+}
+else {
+    $(document).ready(function () {
 
-    setTimeout(function () {
-        //Hide menu
-        $("#menu-main-button").hide();
-        
-        //Remove toggle click handlers
-        $("#nav_button,#brand-id").css("pointer-events","none");
-        
-        //Hide the left tree view
-        _main.showTreeView(false); 
-        
-        //Toggle to folder view, select a given folder
-       _main.toggleFoldersReport(
-            false, //false=Folder, true=Report 
-            "\\Samples", //Optional folder to select
-        );
-    }, 500);
-
-    
-});
+        setTimeout(function () {
+            //Hide menu
+            $("#menu-main-button").hide();
+            
+            //Remove toggle click handlers
+            $("#nav_button,#brand-id").css("pointer-events","none");
+            
+            //Hide the left tree view
+            _main.showTreeView(false); 
+            
+            //Toggle to folder view, select a given folder
+           _main.toggleFoldersReport(
+                false, //false=Folder, true=Report 
+                "\\Samples", //Optional folder to select
+            );
+        }, 500);
+    });
+}
 &lt;/script&gt;</CustomTemplate>
           <SortOrder>1</SortOrder>
         </ReportView>

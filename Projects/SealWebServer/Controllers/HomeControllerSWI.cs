@@ -323,6 +323,16 @@ namespace SealWebServer.Controllers
                     reports = getWebMenu().ToList()
                 };
 
+                var profile = WebUser.Profile;
+                var startUpReport = "";
+                if (profile.OnStartup == StartupOptions.Default && WebUser.DefaultGroup.OnStartup == StartupOptions.ExecuteReport) startUpReport = WebUser.DefaultGroup.StartupReport;
+                else if (profile.OnStartup == StartupOptions.ExecuteReport) startUpReport = profile.StartUpReport;
+                if (!string.IsNullOrEmpty(startUpReport))
+                {
+                    //Remove startup report as the link is available in the Product link
+                    WebUser.WebMenu.recentreports.RemoveAll(i => i.path == FileHelper.ConvertOSFilePath(startUpReport));
+                }
+ 
                 //Apply menu scripts
                 WebUser.ScriptNumber = 1;
                 foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.MenuScript)).OrderBy(i => i.Name))

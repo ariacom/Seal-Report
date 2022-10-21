@@ -27,7 +27,6 @@
                             <ul class="nav">
                                 <li><a href="#lineViews_template">Templates</a></li>
                                 <li><a href="#lineViews_rv">Restrictions Views</a></li>
-                                <li><a href="#lineViews_widget">Widget Publication</a></li>
                             </ul>
                         </li>
                         <li>
@@ -305,7 +304,11 @@
                                 <a class="btn btn-primary live-sample">Live Sample: 05-Charts Gallery - Advanced</a><br />
                                 These two reports show different chart definitions with their renderings using the three supported libraries.
                                 <a class="btn btn-primary live-sample">Live Sample: 04-Charts Gallery - Chart JS Labels</a><br />
-                                This report shows how to use the Chart JS Labels.
+                                This report shows how to use the Chart JS Labels.<br />
+                                <a class="btn btn-primary live-sample" style="margin-top:5px">Live Sample: 05-Gauges</a>
+                                <a class="btn btn-primary live-sample" style="margin-top:5px">Live Sample: 20-KPI</a><br />
+                                To show the use of Gauges and Key Performances Indicators (KPI).
+
                             </div>
                         </div>
                         <!-- end col -->
@@ -488,6 +491,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>NVD3 Chart</b>: Render the NVD3 series of the page result</li>
                                 <li><b>Plotly Chart</b>: Render the Plotly series of the page result</li>
                                 <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optional columns to define the goal if the column name has the _GOAL suffix).</li>
+                                <li><b>Gauge</b>: Display a Gauge built from a data table result having at least 1 row and 1 column for the value. 3 optionals columns can be used to set minimum, maximum and animation speed.</li>
                             </ul>
 
                             <div class="bs-callout bs-callout-info">
