@@ -197,7 +197,7 @@ namespace Seal.Helpers
                 }
                 finally
                 {
-                    connection.Close();
+                    connection?.Close();
                 }
             }
             catch (Exception ex)
@@ -321,7 +321,7 @@ namespace Seal.Helpers
             }
             finally
             {
-                connection.Close();
+                connection?.Close();
             }
         }
 
@@ -342,7 +342,7 @@ namespace Seal.Helpers
             }
             finally
             {
-                connection.Close();
+                connection?.Close();
             }
             return result;
         }

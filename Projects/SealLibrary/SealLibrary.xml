@@ -7834,7 +7834,7 @@
         </member>
         <member name="P:Seal.Model.SecurityGroup.StartupReport">
             <summary>
-            Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/04-Charts Gallery - Basics.srex').
+            Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex').
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.StartupReportName">
