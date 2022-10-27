@@ -436,6 +436,13 @@ namespace Seal.Model
                 {
                     RazorHelper.CompileExecute(Script, this);
                 }
+                if (Values.Count == 0)
+                {
+                    //force at least a value
+                    Values.Add(new MetaEV() { Id = "", Val = "" });
+                }
+
+
                 Information = string.Format("List refreshed with {0} value(s).", Values.Count);
             }
             catch (Exception ex)
