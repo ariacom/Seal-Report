@@ -93,6 +93,9 @@ namespace Seal.Model
         /// List of recent reports
         /// </summary>
         public List<RecentFileItem> RecentReports { get; set; } = new List<RecentFileItem>();
+        /// <summary>
+        /// Set a recent report for the user profile
+        /// </summary>
         public void SetRecentReports(string path, Report report, string viewGUID, string outputGUID)
         {
             path = FileHelper.ConvertOSFilePath(path);

@@ -821,6 +821,17 @@ namespace Seal
             var selected = mainTreeView.SelectedNode;
             e.CancelEdit = true;
 
+            //Disable shortcuts
+            foreach (var ts in treeContextMenuStrip.Items)
+            {
+                var ts2 = ts as ToolStripMenuItem;
+                if (ts2 != null)
+                {
+                    if (ts2.ShortcutKeys == (Keys.Control | Keys.C)) ts2.ShortcutKeys = Keys.None;
+                    if (ts2.ShortcutKeys == Keys.Delete) ts2.ShortcutKeys = Keys.None;
+                }
+            }
+
             if (selected == null) return;
             object entity = selected.Tag;
 
@@ -889,6 +900,10 @@ namespace Seal
                     SetModified();
                 }
             }
+
+            //Enable shortcuts
+    //        copyToolStripMenuItem.ShortcutKeys = (Keys.Control | Keys.C);
+      //      removeRootToolStripMenuItem.ShortcutKeys = Keys.Delete;
         }
 
         #endregion

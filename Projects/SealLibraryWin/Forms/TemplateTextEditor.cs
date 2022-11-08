@@ -962,6 +962,21 @@ namespace Seal.Forms
 "
             ),
             new Tuple<string, string>(
+                "Remove a view based on the security",
+@"ReportTask task = Model;
+    Report report = task.Report;
+    
+    if (report.SecurityContext != null && !report.SecurityContext.BelongsToGroup(""Security Group Name"")) {
+        //The user does not belong to the security group, search the parent view
+        var parentView = report.AllViews.FirstOrDefault(i => i.Name == ""Parent View Name"");
+        if (parentView != null) {
+            //Remove the view
+            parentView.Views.RemoveAll(i => i.Name == ""View Name"");
+        }      
+    }  
+"
+            ),
+            new Tuple<string, string>(
                 "Update the navigation link text",
 @"ReportTask task = Model;
     Report report = task.Report;   

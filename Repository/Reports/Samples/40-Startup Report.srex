@@ -47,7 +47,7 @@
 &lt;/ul&gt;
 &lt;/p&gt;
 </CustomTemplate>
-          <SortOrder>4</SortOrder>
+          <SortOrder>7</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>7d7a7a2c-9066-442f-a930-8fcc83dd239d</GUID>
@@ -56,7 +56,7 @@
           <UseCustomTemplate>true</UseCustomTemplate>
           <CustomTemplate>&lt;h1 style='text-align:center'&gt;Welcome to Seal Report&lt;/h1&gt;
 &lt;hr&gt;</CustomTemplate>
-          <SortOrder>2</SortOrder>
+          <SortOrder>3</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>9d9c0083-f7eb-4478-ac4a-f3db4dc4ca6f</GUID>
@@ -71,8 +71,7 @@
                   <Name>Buttons</Name>
                   <TemplateName>Free</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>@using Seal.Model
-@{
+                  <CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
     var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
@@ -117,8 +116,7 @@
                   <Name>Buttons</Name>
                   <TemplateName>Free</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>@using Seal.Model
-@{
+                  <CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
@@ -151,7 +149,7 @@
                   <Value>text-align:center</Value>
                 </Parameter>
               </Parameters>
-              <SortOrder>2</SortOrder>
+              <SortOrder>0</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>66f0c4bc-4d83-4ceb-8f6c-ca3adf8f85d5</GUID>
@@ -162,8 +160,7 @@
                   <Name>Buttons</Name>
                   <TemplateName>Free</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>@using Seal.Model
-@{
+                  <CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
@@ -212,8 +209,7 @@
                   <Name>Buttons</Name>
                   <TemplateName>Free</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>@using Seal.Model
-@{
+                  <CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
@@ -264,7 +260,7 @@
 </Value>
             </Parameter>
           </Parameters>
-          <SortOrder>3</SortOrder>
+          <SortOrder>6</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>3b4bed5f-3dde-47df-a015-0bb16b812961</GUID>
@@ -276,6 +272,212 @@ if (typeof _main == 'undefined') {
     alert('This will work only as a Startup Report in the Web Report Server');
 }
 &lt;/script&gt;</CustomTemplate>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>b6ad7879-3812-41b8-a730-c8c8ef452f08</GUID>
+          <Name>Container</Name>
+          <Views>
+            <ReportView>
+              <GUID>da4bcc44-077e-4b39-a3dc-7facd557ad32</GUID>
+              <Name>Orders</Name>
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@{
+    Report report = Model;
+}
+
+
+&lt;div id='exec_report_search' class="btn_rcorners"&gt;
+
+&lt;span class="glyphicon glyphicon-usd btn_glyphicon text-info"&gt;&lt;/span&gt;
+
+&lt;div class='btn_txt'&gt;
+    &lt;span&gt;Search an Order&lt;br&gt;Same window&lt;/span&gt;
+&lt;/div&gt;
+
+  &lt;span class="glyphicon glyphicon-search btn_glyphicon text-success"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+
+&lt;script&gt;
+    $(document).ready(function () {
+        $("#exec_report_search").unbind("click").bind("click", function () {
+            //Execute a report in the current window
+            _main.executeReportFromMenu("\\Search - Orders.srex", "", "", "Search - Orders");
+        });    
+    });
+&lt;/script&gt;
+</CustomTemplate>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>88a90c60-61eb-4d7f-95ad-30ad7f4af6bb</GUID>
+              <Name>Orders - New window</Name>
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@{
+    Report report = Model;
+    var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
+}
+
+
+&lt;div id='exec_report_search_nw' class="btn_rcorners"&gt;
+
+&lt;span class="glyphicon glyphicon-usd btn_glyphicon text-success"&gt;&lt;/span&gt;
+
+&lt;div class='btn_txt'&gt;
+    &lt;span&gt;Search an Order&lt;br&gt;New window&lt;/span&gt;
+&lt;/div&gt;
+
+  &lt;span class="glyphicon glyphicon-search btn_glyphicon text-success"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+
+&lt;script&gt;
+    $(document).ready(function () {
+        $("#exec_report_search_nw").unbind("click").bind("click", function () {
+            //Execute a report in a new window
+            _main.executeReport("\\Search - Orders.srex", "", "");
+        });
+    });
+&lt;/script&gt;
+</CustomTemplate>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>3d7ac90c-3910-4baa-90ba-5c038cd64904</GUID>
+              <Name>Browse</Name>
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@{
+    Report report = Model;
+    var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
+}
+
+
+&lt;div id='view_treeview_folders' class="btn_rcorners"&gt;
+
+&lt;span class="glyphicon glyphicon-folder-open btn_glyphicon text-warning"&gt;&lt;/span&gt;
+
+&lt;div class='btn_txt'&gt;
+    &lt;span&gt;Open a folder&lt;br&gt;01-Tasks&lt;/span&gt;
+&lt;/div&gt;
+
+  &lt;span class="glyphicon glyphicon-chevron-down btn_glyphicon text-success"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+
+&lt;script&gt;
+        $("#view_treeview_folders").unbind("click").bind("click", function () {
+            //Toggle to folder view and select a given folder
+           _main.toggleFoldersReport(
+                false, //false=Folder, true=Report 
+                "\\Samples\\01-Tasks" //Optional folder to select
+                );
+                
+           _main.showTreeView(true); //Force show tree view in case it was hidden before
+        });
+&lt;/script&gt;
+</CustomTemplate>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>6d59354a-31c6-4e56-9565-16e981c2f2d4</GUID>
+              <Name>Browse</Name>
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@{
+    Report report = Model;
+    var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
+}
+
+
+&lt;div id='view_folder' class="btn_rcorners"&gt;
+
+&lt;span class="glyphicon glyphicon-folder-open btn_glyphicon text-danger"&gt;&lt;/span&gt;
+
+&lt;div class='btn_txt'&gt;
+    &lt;span&gt;Open a folder&lt;br&gt;05-Scripts&lt;/span&gt;
+&lt;/div&gt;
+
+  &lt;span class="glyphicon glyphicon-chevron-down btn_glyphicon text-success"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+
+&lt;script&gt;
+    $(document).ready(function () {
+        $("#view_folder").unbind("click").bind("click", function () {
+        
+            //Hide the left tree view
+            _main.showTreeView(false); 
+            
+            //Toggle to folder view, select a given folder
+           _main.toggleFoldersReport(
+                false, //false=Folder, true=Report 
+                "\\Samples\\05-Scripts", //Optional folder to select
+            );
+        });
+    });
+&lt;/script&gt;
+</CustomTemplate>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>(col-sm-2);col-sm-2;col-sm-2;col-sm-2;col-sm-2;(col-sm-2)
+</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>4</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>360feb7a-03f0-457b-b5fd-a06cc525db39</GUID>
+          <Name>Separator</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;hr&gt;
+Another look:</CustomTemplate>
+          <SortOrder>5</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>6909e023-34ea-42a0-906e-08682bde49b0</GUID>
+          <Name>CSS</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;style type="text/css"&gt;
+
+.btn_rcorners {
+    border-radius: 25px;
+    border: 2px solid grey;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+}
+
+.btn_text {
+    overflow: visible;
+    white-space: nowrap;
+    text-align: center;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(143,143,143,1);
+    margin: 10px 0px;
+}    
+
+.btn_glyphicon {
+    font-size: 40px;
+    margin: 10px;
+}
+
+&lt;/style&gt;</CustomTemplate>
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>

@@ -1,13 +1,394 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CurrentViewGUID>99fce265-13be-480f-92fb-d576cd4b684a</CurrentViewGUID><GUID>688e3e1f-fc85-4050-8483-e268c15bfb0c</GUID><ViewGUID>99fce265-13be-480f-92fb-d576cd4b684a</ViewGUID><Sources><ReportSource><GUID>0c505e97-a0f1-401f-863e-cf22171dfb93</GUID><Name>Audit (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>c37d41c3-9374-4eab-9058-8f494cbb0f53</GUID><Name>Model</Name><SourceGUID>0c505e97-a0f1-401f-863e-cf22171dfb93</SourceGUID><Elements><ReportElement><GUID>f37bed10-772c-49c1-88a1-14b17d8590ef</GUID><Name>sr_audit.event_date</Name><DisplayName /><Format>G</Format><PivotPosition>Row</PivotPosition><SortOrder>Automatic Descendant</SortOrder><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID></ReportElement><ReportElement><GUID>b6bfe7a7-cc4c-43a7-9b18-37621cb0161b</GUID><Name>sr_audit.event_type</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID></ReportElement><ReportElement><GUID>2137d141-0a24-44bd-996f-325c7ec7bb31</GUID><Name>sr_audit.event_path</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID><HtmlEncoded>true</HtmlEncoded></ReportElement><ReportElement><GUID>acdeb19c-e13b-4243-910c-f0aeed92c236</GUID><Name>sr_audit.event_detail</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID></ReportElement><ReportElement><GUID>03e12ee5-fdca-4ccd-a7e0-c59d40b6a66d</GUID><Name>sr_audit.event_error</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>b7995c78-1815-4985-9df9-399438ce4f68</MetaColumnGUID></ReportElement><ReportElement><GUID>5e6bb2be-743c-4859-84f4-f3b6ba41c389</GUID><Name>sr_audit.user_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID></ReportElement><ReportElement><GUID>37a04e39-e1a7-4e1e-9a3c-47dee5a58171</GUID><Name>sr_audit.user_groups</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>963c0203-23ea-4558-be75-ffa167656cab</MetaColumnGUID></ReportElement><ReportElement><GUID>6486ceef-2ab4-4aa7-959f-2fca100e091c</GUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</MetaColumnGUID></ReportElement><ReportElement><GUID>7af63740-a08c-43af-a302-9e96a46437a3</GUID><Name>sr_audit.report_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID></ReportElement><ReportElement><GUID>a46a71fb-5aa7-4435-bd88-4e77e2e09147</GUID><Name>sr_audit.execution_context</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID></ReportElement><ReportElement><GUID>7d0aeae1-8606-44dd-8144-ea121c8684d8</GUID><Name>sr_audit.execution_view</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>a390f265-6761-41ac-b323-56f3ceb45b83</MetaColumnGUID></ReportElement><ReportElement><GUID>cb5fb955-56bc-465d-8740-483b3c5a09b3</GUID><Name>sr_audit.execution_duration</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID></ReportElement><ReportElement><GUID>a2910791-4730-456c-978e-ec93d39eb37f</GUID><Name>sr_audit.output_type</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</MetaColumnGUID></ReportElement><ReportElement><GUID>a98f8ab0-6993-45f9-86ce-fff703e85fc5</GUID><Name>sr_audit.output_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>db1a144e-d051-486c-a668-9926a38b7f73</MetaColumnGUID></ReportElement><ReportElement><GUID>1547e83d-6cce-4b72-914f-49fd01215d25</GUID><Name>sr_audit.output_information</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>db93240e-46a2-43a2-8b0a-079915daee93</MetaColumnGUID></ReportElement><ReportElement><GUID>47a6a567-7567-4d2e-a982-4b765816a5bb</GUID><Name>sr_audit.schedule_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>8457637b-d72b-48bf-8fb1-118adfeef0be</MetaColumnGUID></ReportElement></Elements><Restriction>[70e1c29d-741a-4cdf-9846-a061c9ba3078]&#xD;
-AND [806a8575-2465-4066-96a0-0e8085daf99b]&#xD;
-AND [700118b7-923d-44f8-bbc5-043bb0658347]&#xD;
-AND [0d952662-cb31-4954-8e55-f2dc54a4a349]&#xD;
-AND [c3983df9-1cbf-4b51-ae8d-e1f37135be15]&#xD;
-AND [c432dac2-2543-45e5-8a9f-31d255032b3b]&#xD;
-AND [39dbc5f8-861a-4cca-a183-04711579ac0c]&#xD;
-AND [9009650b-8cf9-46ea-b2c8-b65fc07aa62b]&#xD;
-AND [d741b2d1-4397-4585-83d6-dadd3a59445d]&#xD;
-AND [6a4fa547-c02e-4a1d-973c-2cc4087a2383]&#xD;
-AND [fa7d2251-5369-4bc1-a540-32aa991248f5]&#xD;
-AND [b9fccf9a-c083-4785-a59d-f2bb3d7f0249]&#xD;
-</Restriction><Restrictions><ReportRestriction><GUID>70e1c29d-741a-4cdf-9846-a061c9ba3078</GUID><Name>DateValue(sr_audit.event_date)</Name><DisplayName /><Format>d</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>GreaterEqual</Operator><Date1Keyword>Today-1D</Date1Keyword><Date2Keyword /><Date3Keyword /><Date4Keyword /><FormatRe>d</FormatRe></ReportRestriction><ReportRestriction><GUID>806a8575-2465-4066-96a0-0e8085daf99b</GUID><Name>sr_audit.event_type</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID><Prompt>Prompt</Prompt></ReportRestriction><ReportRestriction><GUID>700118b7-923d-44f8-bbc5-043bb0658347</GUID><Name>sr_audit.user_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>Contains</Operator><Value1 /><Value2 /><Value3 /><Value4 /></ReportRestriction><ReportRestriction><GUID>0d952662-cb31-4954-8e55-f2dc54a4a349</GUID><Name>sr_audit.report_path</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>Contains</Operator><Value1 /><Value2 /><Value3 /><Value4 /></ReportRestriction><ReportRestriction><GUID>c3983df9-1cbf-4b51-ae8d-e1f37135be15</GUID><Name>sr_audit.execution_context</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID><Prompt>Prompt</Prompt></ReportRestriction><ReportRestriction><GUID>c432dac2-2543-45e5-8a9f-31d255032b3b</GUID><Name>sr_audit.execution_duration</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID><Prompt>Prompt</Prompt><Value1 /><Value2 /><Value3 /><Value4 /><FormatRe>N0</FormatRe></ReportRestriction><ReportRestriction><GUID>39dbc5f8-861a-4cca-a183-04711579ac0c</GUID><Name>sr_audit.execution_error</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>b7995c78-1815-4985-9df9-399438ce4f68</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>Contains</Operator><Value1 /><Value2 /><Value3 /><Value4 /></ReportRestriction><ReportRestriction><GUID>9009650b-8cf9-46ea-b2c8-b65fc07aa62b</GUID><Name>sr_audit.output_type</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>Contains</Operator><Value1 /><Value2 /><Value3 /><Value4 /></ReportRestriction><ReportRestriction><GUID>d741b2d1-4397-4585-83d6-dadd3a59445d</GUID><Name>sr_audit.output_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>db1a144e-d051-486c-a668-9926a38b7f73</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>Contains</Operator><Value1 /><Value2 /><Value3 /><Value4 /></ReportRestriction><ReportRestriction><GUID>6a4fa547-c02e-4a1d-973c-2cc4087a2383</GUID><Name>sr_audit.schedule_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>8457637b-d72b-48bf-8fb1-118adfeef0be</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>Contains</Operator><Value1 /><Value2 /><Value3 /><Value4 /></ReportRestriction><ReportRestriction><GUID>fa7d2251-5369-4bc1-a540-32aa991248f5</GUID><Name>sr_audit.user_groups</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>963c0203-23ea-4558-be75-ffa167656cab</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>Contains</Operator><Value1 /><Value2 /><Value3 /><Value4 /></ReportRestriction><ReportRestriction><GUID>b9fccf9a-c083-4785-a59d-f2bb3d7f0249</GUID><Name>sr_audit.output_information</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>db93240e-46a2-43a2-8b0a-079915daee93</MetaColumnGUID><Prompt>Prompt</Prompt><Operator>Contains</Operator><Value1 /><Value2 /><Value3 /><Value4 /></ReportRestriction></Restrictions></ReportModel></Models><Views><ReportView><GUID>99fce265-13be-480f-92fb-d576cd4b684a</GUID><Name>View</Name><Views><ReportView><GUID>1c54bff0-4a25-481b-b54e-42fc0d451717</GUID><Name>Model</Name><Views><ReportView><GUID>365bc851-738f-46fd-8262-50b58b9c383b</GUID><Name>Model Container</Name><Views><ReportView><GUID>fefcc5f9-a7fb-470f-b4b1-2fadb3876877</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>8b49680a-6b1b-4c57-8235-4542fc92c3fa</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>d2fb339c-c684-4f64-bcd4-2d0ad9330095</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>9a650086-915c-4e60-9067-0a39d56b875f</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>0f8b2b50-a725-41fb-899c-10f6450c9958</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>c37d41c3-9374-4eab-9058-8f494cbb0f53</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>restrictions_per_row</Name><Value>6</Value></Parameter><Parameter><Name>force_execution</Name><Value>True</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CurrentViewGUID>99fce265-13be-480f-92fb-d576cd4b684a</CurrentViewGUID>
+  <GUID>688e3e1f-fc85-4050-8483-e268c15bfb0c</GUID>
+  <ViewGUID>99fce265-13be-480f-92fb-d576cd4b684a</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>0c505e97-a0f1-401f-863e-cf22171dfb93</GUID>
+      <Name>Audit (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>c37d41c3-9374-4eab-9058-8f494cbb0f53</GUID>
+      <Name>Model</Name>
+      <SourceGUID>0c505e97-a0f1-401f-863e-cf22171dfb93</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>f37bed10-772c-49c1-88a1-14b17d8590ef</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b6bfe7a7-cc4c-43a7-9b18-37621cb0161b</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2137d141-0a24-44bd-996f-325c7ec7bb31</GUID>
+          <Name>sr_audit.event_path</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>acdeb19c-e13b-4243-910c-f0aeed92c236</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>03e12ee5-fdca-4ccd-a7e0-c59d40b6a66d</GUID>
+          <Name>sr_audit.event_error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b7995c78-1815-4985-9df9-399438ce4f68</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5e6bb2be-743c-4859-84f4-f3b6ba41c389</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>37a04e39-e1a7-4e1e-9a3c-47dee5a58171</GUID>
+          <Name>sr_audit.user_groups</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>963c0203-23ea-4558-be75-ffa167656cab</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6486ceef-2ab4-4aa7-959f-2fca100e091c</GUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7af63740-a08c-43af-a302-9e96a46437a3</GUID>
+          <Name>sr_audit.report_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a46a71fb-5aa7-4435-bd88-4e77e2e09147</GUID>
+          <Name>sr_audit.execution_context</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7d0aeae1-8606-44dd-8144-ea121c8684d8</GUID>
+          <Name>sr_audit.execution_view</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>a390f265-6761-41ac-b323-56f3ceb45b83</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cb5fb955-56bc-465d-8740-483b3c5a09b3</GUID>
+          <Name>sr_audit.execution_duration</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a2910791-4730-456c-978e-ec93d39eb37f</GUID>
+          <Name>sr_audit.output_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a98f8ab0-6993-45f9-86ce-fff703e85fc5</GUID>
+          <Name>sr_audit.output_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>db1a144e-d051-486c-a668-9926a38b7f73</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1547e83d-6cce-4b72-914f-49fd01215d25</GUID>
+          <Name>sr_audit.output_information</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>db93240e-46a2-43a2-8b0a-079915daee93</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>47a6a567-7567-4d2e-a982-4b765816a5bb</GUID>
+          <Name>sr_audit.schedule_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>8457637b-d72b-48bf-8fb1-118adfeef0be</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[70e1c29d-741a-4cdf-9846-a061c9ba3078]
+AND [806a8575-2465-4066-96a0-0e8085daf99b]
+AND [700118b7-923d-44f8-bbc5-043bb0658347]
+AND [0d952662-cb31-4954-8e55-f2dc54a4a349]
+AND [c3983df9-1cbf-4b51-ae8d-e1f37135be15]
+AND [c432dac2-2543-45e5-8a9f-31d255032b3b]
+AND [39dbc5f8-861a-4cca-a183-04711579ac0c]
+AND [d741b2d1-4397-4585-83d6-dadd3a59445d]
+AND [6a4fa547-c02e-4a1d-973c-2cc4087a2383]
+AND [fa7d2251-5369-4bc1-a540-32aa991248f5]
+AND [b9fccf9a-c083-4785-a59d-f2bb3d7f0249]
+AND [afeefdd3-ba2e-4d19-bba4-28fd8e920862]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>70e1c29d-741a-4cdf-9846-a061c9ba3078</GUID>
+          <Name>DateValue(sr_audit.event_date)</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-1D</Date1Keyword>
+          <Date2Keyword />
+          <Date3Keyword />
+          <Date4Keyword />
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>806a8575-2465-4066-96a0-0e8085daf99b</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>700118b7-923d-44f8-bbc5-043bb0658347</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <Value1 />
+          <Value2 />
+          <Value3 />
+          <Value4 />
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>0d952662-cb31-4954-8e55-f2dc54a4a349</GUID>
+          <Name>sr_audit.report_path</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <Value1 />
+          <Value2 />
+          <Value3 />
+          <Value4 />
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>c3983df9-1cbf-4b51-ae8d-e1f37135be15</GUID>
+          <Name>sr_audit.execution_context</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>c432dac2-2543-45e5-8a9f-31d255032b3b</GUID>
+          <Name>sr_audit.execution_duration</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Value1 />
+          <Value2 />
+          <Value3 />
+          <Value4 />
+          <FormatRe>N0</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>39dbc5f8-861a-4cca-a183-04711579ac0c</GUID>
+          <Name>sr_audit.execution_error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b7995c78-1815-4985-9df9-399438ce4f68</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <Value1 />
+          <Value2 />
+          <Value3 />
+          <Value4 />
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>d741b2d1-4397-4585-83d6-dadd3a59445d</GUID>
+          <Name>sr_audit.output_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>db1a144e-d051-486c-a668-9926a38b7f73</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <Value1 />
+          <Value2 />
+          <Value3 />
+          <Value4 />
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>6a4fa547-c02e-4a1d-973c-2cc4087a2383</GUID>
+          <Name>sr_audit.schedule_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>8457637b-d72b-48bf-8fb1-118adfeef0be</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <Value1 />
+          <Value2 />
+          <Value3 />
+          <Value4 />
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>fa7d2251-5369-4bc1-a540-32aa991248f5</GUID>
+          <Name>sr_audit.user_groups</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>963c0203-23ea-4558-be75-ffa167656cab</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <Value1 />
+          <Value2 />
+          <Value3 />
+          <Value4 />
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>b9fccf9a-c083-4785-a59d-f2bb3d7f0249</GUID>
+          <Name>sr_audit.output_information</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>db93240e-46a2-43a2-8b0a-079915daee93</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <Value1 />
+          <Value2 />
+          <Value3 />
+          <Value4 />
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>afeefdd3-ba2e-4d19-bba4-28fd8e920862</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName />
+          <DisplayOrder>13</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>13</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>99fce265-13be-480f-92fb-d576cd4b684a</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>1c54bff0-4a25-481b-b54e-42fc0d451717</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>365bc851-738f-46fd-8262-50b58b9c383b</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>fefcc5f9-a7fb-470f-b4b1-2fadb3876877</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>8b49680a-6b1b-4c57-8235-4542fc92c3fa</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>d2fb339c-c684-4f64-bcd4-2d0ad9330095</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>9a650086-915c-4e60-9067-0a39d56b875f</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>0f8b2b50-a725-41fb-899c-10f6450c9958</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>c37d41c3-9374-4eab-9058-8f494cbb0f53</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>restrictions_per_row</Name>
+          <Value>6</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

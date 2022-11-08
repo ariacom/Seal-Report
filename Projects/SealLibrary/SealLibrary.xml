@@ -8323,6 +8323,11 @@
             List of recent reports
             </summary>
         </member>
+        <member name="M:Seal.Model.SecurityUserProfile.SetRecentReports(System.String,Seal.Model.Report,System.String,System.String)">
+            <summary>
+            Set a recent report for the user profile
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityUserProfile.Connections">
             <summary>
             List of default connections for the data sources
