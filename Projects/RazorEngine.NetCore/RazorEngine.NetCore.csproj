@@ -6,6 +6,18 @@
     <Version>6.7.1.0</Version>
     <FileVersion>6.7.1.0</FileVersion>
     <AssemblyVersion>6.7.1.0</AssemblyVersion>
+	<AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
+	<SignAssembly>true</SignAssembly>
+	<RootNamespace>RazorEngine</RootNamespace>
+	<AssemblyName>RazorEngine.NetCore</AssemblyName>
+	<PackageTags>RazorEngine;aspnetcore;NetCore</PackageTags>
+	<Authors>Connie Yau, HermanHo, Fouad Messaia,Zuliang Liu(China)</Authors>
+	<Description>Fork from https://github.com/hermanho/RazorEngine, But Fixed Bug that Razor string does not support @using and @inherits and @functions and @section, etc. </Description>
+	<RepositoryType>git</RepositoryType>
+	<Copyright>RazorEngine Copyright © RazorEngine Project 2011-2018</Copyright>
+	<Company>RazorEngine</Company>
+	<Product>RazorEngine</Product>
+	<IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -21,21 +33,6 @@
   <PropertyGroup>
     <!-- Do not generate AssemblyInfo because we are doing that with the GenerateAssemblyInfoFile target in dir.targets -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <RootNamespace>RazorEngine</RootNamespace>
-    <AssemblyName>RazorEngine.NetCore</AssemblyName>
-    <PackageTags>RazorEngine;aspnetcore;NetCore</PackageTags>
-    <Authors>Connie Yau, HermanHo, Fouad Messaia,Zuliang Liu(China)</Authors>
-    <Description>Fork from https://github.com/hermanho/RazorEngine, But Fixed Bug that Razor string does not support @using and @inherits and @functions and @section, etc. </Description>
-    <RepositoryType>git</RepositoryType>
-    <Version>2.2.3.6</Version>
-    <Copyright>RazorEngine Copyright © RazorEngine Project 2011-2018</Copyright>
-    <Company>RazorEngine</Company>
-    <Product>RazorEngine</Product>
-    <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>
