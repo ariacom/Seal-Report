@@ -1165,6 +1165,7 @@ namespace SealWebServer.Controllers
         void searchFolder(SWIFolder folder, string pattern, List<SWIFile> files)
         {
             var folderDetail = getFolderDetail(folder.path, true);
+            if (pattern == null) pattern = "";
 
             foreach (var file in (folderDetail.files.Where(i => i.name.ToLower().Contains(pattern.ToLower()))))
             {
