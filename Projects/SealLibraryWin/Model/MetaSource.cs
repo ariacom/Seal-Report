@@ -236,6 +236,7 @@ namespace Seal.Model
 
             result.Name = Helper.GetUniqueName(result.Name, (from i in Connections select i.Name).ToList());
             Connections.Add(result);
+            LastMetadataModification = DateTime.Now;
             return result;
         }
 
@@ -246,6 +247,7 @@ namespace Seal.Model
         {
             if (Connection == item) throw new Exception("This connection is used as the current connection and cannot be removed.");
             Connections.Remove(item);
+            LastMetadataModification = DateTime.Now;
         }
 
         /// <summary>
@@ -259,6 +261,7 @@ namespace Seal.Model
             result.Source = this;
             result.Name = Helper.GetUniqueName(result.Name, (from i in MetaData.Tables select i.Name).ToList());
             MetaData.Tables.Add(result);
+            LastMetadataModification = DateTime.Now;
             return result;
         }
 
@@ -270,6 +273,7 @@ namespace Seal.Model
             //remove joins related
             MetaData.Joins.RemoveAll(i => i.LeftTableGUID == item.GUID || i.RightTableGUID == item.GUID);
             MetaData.Tables.Remove(item);
+            LastMetadataModification = DateTime.Now;
         }
 
         /// <summary>
@@ -278,6 +282,7 @@ namespace Seal.Model
         public void RemoveTableLink(MetaTableLink item)
         {
             MetaData.TableLinks.Remove(item);
+            LastMetadataModification = DateTime.Now;
         }
 
         /// <summary>
@@ -292,6 +297,7 @@ namespace Seal.Model
             else result.Category = !string.IsNullOrEmpty(table.AliasName) ? table.AliasName : Helper.DBNameToDisplayName(table.Name.Trim());
             result.DisplayOrder = table.GetLastDisplayOrder();
             table.Columns.Add(result);
+            LastMetadataModification = DateTime.Now;
             return result;
         }
 
@@ -306,6 +312,7 @@ namespace Seal.Model
             result.Source = this;
             result.IsBiDirectional = true;
             MetaData.Joins.Add(result);
+            LastMetadataModification = DateTime.Now;
             return result;
         }
 
@@ -315,6 +322,7 @@ namespace Seal.Model
         public void RemoveJoin(MetaJoin item)
         {
             MetaData.Joins.Remove(item);
+            LastMetadataModification = DateTime.Now;
         }
 
         /// <summary>
@@ -327,6 +335,7 @@ namespace Seal.Model
             result.Name = Helper.GetUniqueName(result.Name, (from i in MetaData.Enums select i.Name).ToList());
             MetaData.Enums.Add(result);
             result.Source = this;
+            LastMetadataModification = DateTime.Now;
             return result;
         }
 
@@ -385,6 +394,7 @@ namespace Seal.Model
                 }
             }
             MetaData.Enums.Remove(item);
+            LastMetadataModification = DateTime.Now;
         }
 
         /// <summary>

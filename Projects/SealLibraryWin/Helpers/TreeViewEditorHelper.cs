@@ -247,7 +247,6 @@ namespace Seal.Forms
             }
             else if (entity is TableFolder && source != null)
             {
-                source.LastMetadataModification = DateTime.Now;
                 newEntity = source.AddTable(ForReport);
                 var item = sender as ToolStripMenuItem;
                 if (item != null && item.Tag is MetaTableTemplate)
@@ -264,7 +263,6 @@ namespace Seal.Forms
             }
             else if (entity is MetaTable && source != null)
             {
-                source.LastMetadataModification = DateTime.Now;
                 newEntity = source.AddColumn((MetaTable)entity);
             }
             else if (entity is EnumFolder && source != null)
@@ -292,7 +290,6 @@ namespace Seal.Forms
             }
             else if (entity is MetaTable && source != null)
             {
-                source.LastMetadataModification = DateTime.Now;
                 MetaTable table = entity as MetaTable;
                 newEntity = Helper.Clone(entity);
                 source.MetaData.Tables.Add((MetaTable)newEntity);
@@ -313,7 +310,6 @@ namespace Seal.Forms
             }
             else if (entity is MetaColumn && source != null)
             {
-                source.LastMetadataModification = DateTime.Now;
                 newEntity = Helper.Clone(entity);
                 ((MetaColumn)entity).MetaTable.Columns.Add((MetaColumn)newEntity);
                 source.InitReferences(source.Repository);
@@ -359,7 +355,6 @@ namespace Seal.Forms
             }
             else if (entity is MetaTable && source != null)
             {
-                source.LastMetadataModification = DateTime.Now;
                 source.RemoveTable((MetaTable)entity);
             }
             else if (entity is MetaTableLink && source != null)
@@ -1147,6 +1142,8 @@ namespace Seal.Forms
             {
                 MetaSource source = GetSource(mainTreeView.SelectedNode);
                 if (source == null) return mustInit;
+                source.LastMetadataModification = DateTime.Now;
+
                 if (selectedEntity is ReportSource && propertyName == "ConnectionGUID")
                 {
                     ((ReportSource)selectedEntity).RefreshEnumsOnDbConnection();
@@ -1160,7 +1157,6 @@ namespace Seal.Forms
                 else if (selectedEntity is MetaTable)
                 {
                     MetaTable table = (MetaTable)selectedEntity;
-                    source.LastMetadataModification = DateTime.Now;
                     if (propertyName == "Name" && string.IsNullOrEmpty(table.Alias)) table.Name = Helper.GetUniqueName(table.Name, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
                     if (propertyName == "Alias") table.Alias = Helper.GetUniqueName(table.Alias, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
                     mainTreeView.SelectedNode.Text = table.AliasName;
@@ -1199,7 +1195,6 @@ namespace Seal.Forms
                 else if (selectedEntity is MetaColumn)
                 {
                     MetaColumn entity = (MetaColumn)selectedEntity;
-                    source.LastMetadataModification = DateTime.Now;
                     if (propertyName == "DisplayName")
                     {
                         //MetaColumn can be edited in several nodes...
@@ -1223,7 +1218,6 @@ namespace Seal.Forms
                     CategoryFolder entity = (CategoryFolder)selectedEntity;
                     if (propertyName == "Path")
                     {
-                        source.LastMetadataModification = DateTime.Now;
                         int cnt = 0;
                         //Change all categories having this name
                         foreach (MetaTable table in source.MetaData.Tables.Where(i => i.IsEditable))
