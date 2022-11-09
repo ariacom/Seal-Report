@@ -494,7 +494,7 @@ namespace Seal.Controls
                 //Optimize tree view init for metadata
                 if ((string)elementTreeView.Tag == Model.Source.GUID + Model.Source.LastMetadataModification.ToUniversalTime()) return;
             }
-            if (!Model.IsSQLModel) elementTreeView.Tag = Model.Source.GUID + Model.Source.LastMetadataModification.ToUniversalTime();
+            elementTreeView.Tag = !Model.IsSQLModel ? Model.Source.GUID + Model.Source.LastMetadataModification.ToUniversalTime() : "";
 
             TreeViewHelper.InitCategoryTreeNode(elementTreeView.Nodes, tableList);
             elementTreeView.TreeViewNodeSorter = new NodeSorter();
