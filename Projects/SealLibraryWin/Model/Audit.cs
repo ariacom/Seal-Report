@@ -50,38 +50,44 @@ namespace Seal.Model
     var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith(""Audit""));  
     if (auditSource != null) {
         var helper = new TaskDatabaseHelper();
-        var command = helper.GetDbCommand(auditSource.Connection.GetOpenConnection());
+        var connection = auditSource.Connection.GetOpenConnection();
+        try {
+            var command = helper.GetDbCommand(connection);
 
-        //Create audit table if necessary
-        checkTableCreation(command);
-        command.CommandText = @""insert into sr_audit(event_date,event_type,event_path,event_detail,event_error,user_name,user_groups,user_session,execution_name,execution_context,execution_view,execution_duration,output_type,output_name,output_information,schedule_name)"";
-        if (command is OleDbCommand || command is OdbcCommand) {
-            command.CommandText += "" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"";
-        }
-        else {
-            command.CommandText += "" values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16)"";
-        }
+            //Create audit table if necessary
+            checkTableCreation(command);
+            command.CommandText = @""insert into sr_audit(event_date,event_type,event_path,event_detail,event_error,user_name,user_groups,user_session,execution_name,execution_context,execution_view,execution_duration,output_type,output_name,output_information,schedule_name)"";
+            if (command is OleDbCommand || command is OdbcCommand) {
+                command.CommandText += "" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"";
+            }
+            else {
+                command.CommandText += "" values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16)"";
+            }
         
-        var date = DateTime.Now;
-        date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
-        int index=1;
-        addParameter(command, index++, DbType.DateTime, date); //event_date,
-        addParameter(command, index++, DbType.AnsiString, audit.Type.ToString()); //event_type,
-        addParameter(command, index++, DbType.AnsiString, audit.Path); //event_path,
-        addParameter(command, index++, DbType.AnsiString, audit.Detail); //event_detail,
-        addParameter(command, index++, DbType.AnsiString, audit.Error); //event_error,
-        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.Name : null); //user_name,
-        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : null); //user_groups,
-        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SessionID : null); //user_session,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionName : null); //execution_name,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionContext.ToString() : null); //execution_context,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionView.Name : null); //execution_view,
-        addParameter(command, index++, DbType.Int32, audit.Report != null ? Convert.ToInt32(audit.Report.ExecutionFullDuration.TotalSeconds) : (object) DBNull.Value); //execution_duration,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.DeviceName : null); //output_type,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Name : null);//output_name,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Information : null);//output_information,
-        addParameter(command, index++, DbType.AnsiString, audit.Schedule != null ? audit.Schedule.Name : null);//schedule_name
-        command.ExecuteNonQuery();                
+            var date = DateTime.Now;
+            date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+            int index=1;
+            addParameter(command, index++, DbType.DateTime, date); //event_date,
+            addParameter(command, index++, DbType.AnsiString, audit.Type.ToString()); //event_type,
+            addParameter(command, index++, DbType.AnsiString, audit.Path); //event_path,
+            addParameter(command, index++, DbType.AnsiString, audit.Detail); //event_detail,
+            addParameter(command, index++, DbType.AnsiString, audit.Error); //event_error,
+            addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.Name : null); //user_name,
+            addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : null); //user_groups,
+            addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SessionID : null); //user_session,
+            addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionName : null); //execution_name,
+            addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionContext.ToString() : null); //execution_context,
+            addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionView.Name : null); //execution_view,
+            addParameter(command, index++, DbType.Int32, audit.Report != null ? Convert.ToInt32(audit.Report.ExecutionFullDuration.TotalSeconds) : (object) DBNull.Value); //execution_duration,
+            addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.DeviceName : null); //output_type,
+            addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Name : null);//output_name,
+            addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Information : null);//output_information,
+            addParameter(command, index++, DbType.AnsiString, audit.Schedule != null ? audit.Schedule.Name : null);//schedule_name
+            command.ExecuteNonQuery();
+        }
+        finally {
+            connection.Close();
+        }
     }
 
 }
