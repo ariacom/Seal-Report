@@ -488,6 +488,7 @@ namespace Seal.Model
                 result.Name = Path.GetFileNameWithoutExtension(path);
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
+                result.LastMetadataModification = result.LastModification;
             }
             catch (Exception ex)
             {
@@ -527,6 +528,7 @@ namespace Seal.Model
                 Helper.Serialize(path, this);
                 FilePath = path;
                 LastModification = File.GetLastWriteTime(path);
+                LastMetadataModification = LastModification;
             }
             finally
             {

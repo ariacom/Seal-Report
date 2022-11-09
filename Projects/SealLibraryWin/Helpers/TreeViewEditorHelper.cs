@@ -279,6 +279,7 @@ namespace Seal.Forms
             object entity = mainTreeView.SelectedNode.Tag;
             object newEntity = null;
             MetaSource source = GetSource(mainTreeView.SelectedNode);
+            source.LastMetadataModification = DateTime.Now;
 
             if (entity is MetaConnection && source != null)
             {
@@ -930,6 +931,7 @@ namespace Seal.Forms
                     {
                         Cursor.Current = Cursors.WaitCursor;
                         isModified = true;
+                        source.LastMetadataModification = DateTime.Now;
                         foreach (var item in frm.CheckedItems)
                         {
                             if (entity is TableFolder && item is MetaTable)
