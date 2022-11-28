@@ -28,7 +28,8 @@ namespace Seal.Helpers
                     item.PropertyDescriptor.IsReadOnly ||
                     (!(item.PropertyDescriptor is CustomPropertyDescriptor)) ||
                     (item.PropertyDescriptor is CustomPropertyDescriptor && ((CustomPropertyDescriptor)item.PropertyDescriptor).DefaultValue == null) ||
-                    !item.PropertyDescriptor.CanResetValue(grid.SelectedObject)
+                    !item.PropertyDescriptor.CanResetValue(grid.SelectedObject) ||
+                    (grid.SelectedObject != null && grid.SelectedObject is ReportRestriction && (item.PropertyDescriptor.Name == "Operator" || item.PropertyDescriptor.Name == "OperatorLabel")) //Case reset operator for a restriction
                     )
                     {
                         e.Cancel = true;

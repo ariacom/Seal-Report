@@ -666,6 +666,7 @@ namespace Seal.Forms
             if (entity is MetaTableLink && !((MetaTableLink)entity).IsEditable) copyEntityName = null;
             if (entity is MetaJoin && !((MetaJoin)entity).IsEditable) copyEntityName = null;
             if (entity is MetaEnum && !((MetaEnum)entity).IsEditable) copyEntityName = null;
+            if (entity is MetaConnection && !((MetaConnection)entity).IsEditable) copyEntityName = null;
             if (!string.IsNullOrEmpty(copyEntityName))
             {
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());

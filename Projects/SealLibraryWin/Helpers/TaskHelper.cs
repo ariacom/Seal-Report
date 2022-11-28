@@ -729,7 +729,7 @@ CREATE {3} INDEX {0} ON {1}({2})
 
         void MicrosoftMSSQLConnection_InfoMessage(object sender, Microsoft.Data.SqlClient.SqlInfoMessageEventArgs e)
         {
-            foreach (SqlError err in e.Errors)
+            foreach (Microsoft.Data.SqlClient.SqlError err in e.Errors)
             {
                 if (err.Class >= _mssqlErrorClassLevel)
                 {

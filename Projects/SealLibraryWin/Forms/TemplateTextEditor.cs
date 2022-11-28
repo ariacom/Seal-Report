@@ -89,7 +89,7 @@ namespace Seal.Forms
 	cell.FinalCssStyle (type = string) is the final CSS style used for the table cell
 	cell.FinalCssClass (type = string) is the final CSS classes used for the table cell, could be one or many Bootstrap classes
 	*/
-	}
+}
 ";
 
         static readonly Tuple<string, string>[] razorCellScriptSamples =
@@ -805,7 +805,7 @@ namespace Seal.Forms
     dest.CopyForPrompt(source);
     dest.Prompt= PromptType.None;
 
-    //or copy te properties
+    //or copy the properties
     dest.Operator = source.Operator;
     dest.Value1 = source.Value1;
     dest.Date1 = source.Date1;
@@ -1069,7 +1069,7 @@ namespace Seal.Forms
         false, //if true, the table is loaded for all connections defined in the Source
         1, //startRow = 1, 
         1, //startColumn = 1, 
-        0, //endColumnIndex, if 0 all columns are taken
+        0 //endColumnIndex, if 0 all columns are taken
     );
 
     //Several Tabs can be loaded using array of strings and LoadTablesFromExcel()
