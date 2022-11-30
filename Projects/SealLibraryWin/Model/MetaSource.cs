@@ -170,7 +170,7 @@ namespace Seal.Model
         /// Last modification Date Time of the Metadata (used for optimization)
         /// </summary>
         [XmlIgnore]
-        public DateTime LastMetadataModification = DateTime.MinValue;
+        public DateTime LastMetadataModification = DateTime.Now;
 
         /// <summary>
         /// Current MetaConnection
