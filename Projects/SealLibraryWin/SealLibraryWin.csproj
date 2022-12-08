@@ -55,7 +55,7 @@
 		<PackageReference Include="MongoDB.Driver" Version="2.17.1" />
 		<PackageReference Include="MySql.Data" Version="8.0.30" />
 		<PackageReference Include="Newtonsoft.Json">
-			<Version>13.0.1</Version>
+			<Version>13.0.2</Version>
 		</PackageReference>
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.70" />
 		<PackageReference Include="ScintillaNET.Core" Version="3.6.51" />
