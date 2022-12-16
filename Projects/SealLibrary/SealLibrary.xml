@@ -5065,6 +5065,11 @@
             The Razor Script used to execute the task
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportTask.Description">
+            <summary>
+            Description coming from the template
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportTask.ParentTask">
             <summary>
             Current parent task if any
@@ -5148,6 +5153,11 @@
         <member name="P:Seal.Model.ReportTask.BodyScript">
             <summary>
             Body Razor script executed for the Task.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTask.DefaultScript">
+            <summary>
+            Default script coming from the template
             </summary>
         </member>
         <member name="P:Seal.Model.ReportTask.DefaultBodyScript">
@@ -5248,6 +5258,11 @@
         <member name="F:Seal.Model.ReportTask.ExecResult">
             <summary>
             The result of the task
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportTask.ExecLogPrefix">
+            <summary>
+            Prefix for logs
             </summary>
         </member>
         <member name="T:Seal.Model.ReportTaskTemplate">
