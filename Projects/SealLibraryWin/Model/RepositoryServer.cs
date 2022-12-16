@@ -18,10 +18,13 @@ namespace Seal.Model
         private static List<ReportViewTemplate> _viewTemplates = null;
         private static object _viewLock = new object();
         private static List<MetaTableTemplate> _tableTemplates = null;
-        private static object _tableLock = new object();
+        private static List<ReportTaskTemplate> _taskTemplates = null;
+
+        
 
         public static string ViewsFolder = "";
         public static string TableTemplatesFolder = "";
+        public static string TaskTemplatesFolder = "";
 
         public static void PreLoadTemplates()
         {
@@ -145,5 +148,21 @@ namespace Seal.Model
                 return _tableTemplates;
             }
         }
+
+        /// <summary>
+        /// Current list of ReportTaskTemplate
+        /// </summary>
+        public static List<ReportTaskTemplate> TaskTemplates
+        {
+            get
+            {
+                if (_taskTemplates == null)
+                {
+                    _taskTemplates = ReportTaskTemplate.LoadTemplates(TaskTemplatesFolder);
+                }
+                return _taskTemplates;
+            }
+        }
+
     }
 }

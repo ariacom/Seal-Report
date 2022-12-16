@@ -766,7 +766,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Advanced"), DisplayName("Css Classes"), Description("Additional CSS Classes applied the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values. If empty, the default value comes from the column."), Id(6, 5)]
+        [Category("Advanced"), DisplayName("Css classes"), Description("Additional CSS Classes applied the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values. If empty, the default value comes from the column."), Id(6, 5)]
         [TypeConverter(typeof(CssClassConverter))]
 #endif
         public string CssClassEl

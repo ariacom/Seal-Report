@@ -417,7 +417,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Retruns the view templates that can be child of the view
+        /// Returns the view templates that can be child of the view
         /// </summary>
         [XmlIgnore]
         public List<ReportViewTemplate> ReportViewTemplateChildren

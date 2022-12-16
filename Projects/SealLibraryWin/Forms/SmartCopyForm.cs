@@ -372,13 +372,10 @@ namespace Seal.Forms
             }
             else if (destinationName.StartsWith(TasksKeyword))
             {
-                foreach (var item in report.Tasks.Where(i => i != _source).OrderBy(i => i.Name))
+                string reportName = string.Format("[{0}] ", fileName);
+                foreach (var item in report.Tasks.OrderBy(i => i.SortOrder))
                 {
-                    string name = string.Format("[{0}] {1} ", fileName, item.Name);
-                    if (_destinationItems.FirstOrDefault(i => i.Object == item) == null)
-                    {
-                        _destinationItems.Add(new PropertyItem() { Name = name, Object = item });
-                    }
+                    addTasksToDestinations(item, reportName);
                 }
             }
             else if (destinationName.StartsWith(OutputsKeyword))
@@ -427,6 +424,16 @@ namespace Seal.Forms
                 }
                 foreach (var view in parentView.Views.OrderBy(i => i.Name)) addViewsToDestinations(view, name);
             }
+        }
+
+        void addTasksToDestinations(ReportTask parentTask, string prefix)
+        {
+            string name = string.Format("{0}/{1}", prefix, parentTask.Name);
+            if (parentTask != _source)
+            {
+                _destinationItems.Add(new PropertyItem() { Name = name, Object = parentTask });
+            }
+            foreach (var task in parentTask.Tasks.OrderBy(i => i.SortOrder)) addTasksToDestinations(task, name);
         }
 
         public List<object> CheckedItems

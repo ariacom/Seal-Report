@@ -646,7 +646,7 @@ namespace Seal.Model
                 {
                     if (login.CheckPassword(password))
                     {
-                        //Add the groups defiend for the login
+                        //Add the groups defined for the login
                         foreach (var group in login.GroupNames)
                         {
                             AddSecurityGroup(group);

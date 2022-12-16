@@ -2605,7 +2605,7 @@
             Remove an output from the report
             </summary>
         </member>
-        <member name="M:Seal.Model.Report.AddTask">
+        <member name="M:Seal.Model.Report.AddTask(Seal.Model.ReportTask,Seal.Model.ReportTaskTemplate)">
             <summary>
             Add a task to the report
             </summary>
@@ -2614,7 +2614,6 @@
             <summary>
             Remove a task from the report
             </summary>
-            <param name="task"></param>
         </member>
         <member name="M:Seal.Model.Report.AddModelHTMLView">
             <summary>
@@ -5061,6 +5060,56 @@
             Init all references of the task
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportTask.TemplateName">
+            <summary>
+            The Razor Script used to execute the task
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTask.ParentTask">
+            <summary>
+            Current parent task if any
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportTask.Tasks">
+            <summary>
+            Children of the task
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTask.Parameters">
+            <summary>
+            List of Table Parameters
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTask.InitParameters">
+            <summary>
+            Init the  parameters from the template
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTask.BeforeSerialization">
+            <summary>
+            Operations performed before the serialization
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTask.AfterSerialization">
+            <summary>
+            Operations performed after the serialization
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTask.GetValue(System.String)">
+            <summary>
+            Returns the parameter value
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTask.GetBoolValue(System.String,System.Boolean)">
+            <summary>
+            Returns a parameter boolean value with a default if it does not exist
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTask.GetNumericValue(System.String)">
+            <summary>
+            Returns a paramter ineteger value
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportTask.SourceGUID">
             <summary>
             Identifier of the current report source
@@ -5094,6 +5143,16 @@
         <member name="P:Seal.Model.ReportTask.Repository">
             <summary>
             Current Repository
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTask.BodyScript">
+            <summary>
+            Body Razor script executed for the Task.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTask.DefaultBodyScript">
+            <summary>
+            Default body script coming from the template
             </summary>
         </member>
         <member name="P:Seal.Model.ReportTask.SQL">
@@ -5176,11 +5235,50 @@
             Executes the task
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportTask.Execute(Seal.Model.MetaConnection)">
+        <member name="F:Seal.Model.ReportTask.ExecPreviousTask">
             <summary>
-            Executes the task with a given connection
+            The previous Task executed
             </summary>
-            <param name="currentConnection"></param>
+        </member>
+        <member name="F:Seal.Model.ReportTask.ExecInput">
+            <summary>
+            Optional input object for the task
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportTask.ExecResult">
+            <summary>
+            The result of the task
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ReportTaskTemplate">
+            <summary>
+            Template for Report Tasks.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTaskTemplate.Name">
+            <summary>
+            Name 
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTaskTemplate.FilePath">
+            <summary>
+            Current file path
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportTaskTemplate.LastModification">
+            <summary>
+            Last modification date time
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTaskTemplate.Configuration">
+            <summary>
+            Current Configuration
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTaskTemplate.LoadTemplates(System.String)">
+            <summary>
+            List of available Table Templates
+            </summary>
         </member>
         <member name="T:Seal.Model.ReportView">
             <summary>
@@ -5321,7 +5419,7 @@
         </member>
         <member name="P:Seal.Model.ReportView.ReportViewTemplateChildren">
             <summary>
-            Retruns the view templates that can be child of the view
+            Returns the view templates that can be child of the view
             </summary>
         </member>
         <member name="P:Seal.Model.ReportView.IsDrillEnabled">
@@ -5959,6 +6057,11 @@
             Table templates folder
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.TaskTemplatesFolder">
+            <summary>
+            Task templates folder
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.DevicesFolder">
             <summary>
             Devices folder
@@ -6222,6 +6325,11 @@
         <member name="P:Seal.Model.RepositoryServer.TableTemplates">
             <summary>
             Current list of MetaTableTemplate
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RepositoryServer.TaskTemplates">
+            <summary>
+            Current list of ReportTaskTemplate
             </summary>
         </member>
         <member name="T:Seal.Model.RepositoryTranslation">

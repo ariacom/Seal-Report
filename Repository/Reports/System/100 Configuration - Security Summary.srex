@@ -1,426 +1,1710 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CurrentViewGUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</CurrentViewGUID><GUID>d7c4e34a-9fd2-49e0-b8f7-a46d86ab2c28</GUID><ViewGUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</ViewGUID><Sources><ReportSource><GUID>44eb9e66-7078-417e-ba58-c1f32f4d68d0</GUID><Name>Groups</Name><Connections><MetaConnection><GUID>20f30975-765f-4bf2-9c9e-635ced49c1f9</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>20f30975-765f-4bf2-9c9e-635ced49c1f9</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>cba6f036-aa28-49d2-ae48-a22a2f1e95da</GUID><Name>Master</Name><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("group_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("personal_folder", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("show_folders", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("sql_model", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("weight", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("edit_profile", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("culture", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("logo_file_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("startup", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("startup_report", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-    ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
-    foreach (var group in Repository.Instance.Security.Groups) {&#xD;
-        table.Rows.Add(&#xD;
-            group.Name, &#xD;
-            Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight),&#xD;
-            group.ShowFoldersView ? "Yes" : "No",&#xD;
-            group.SqlModel ? "Yes" : "No",&#xD;
-            group.Weight.ToString(),&#xD;
-            group.EditProfile ? "Yes" : "No",&#xD;
-            group.Culture != null ? group.Culture : "",&#xD;
-            group.LogoName != null ? group.LogoName : "",&#xD;
-            Helper.GetEnumDescription(group.OnStartup.GetType(), group.OnStartup),&#xD;
-            group.StartupReport&#xD;
-            );   &#xD;
-    }&#xD;
-    &#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>69506dfc-f77a-4f1a-bc6c-628e07ad29c0</GUID><Name>group_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Group name</DisplayName></MetaColumn><MetaColumn><GUID>f3723c48-5bcc-46f8-bb7a-5f971818e17d</GUID><Name>personal_folder</Name><Type>Text</Type><Category>Master</Category><DisplayName>Personal folder</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>ed64f09a-d380-4c9f-acef-597bdb189801</GUID><Name>sql_model</Name><Type>Text</Type><Category>Master</Category><DisplayName>Sql model</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>5d3b864c-2a95-4cfa-8d6d-9fbc0dd47d71</GUID><Name>culture</Name><Type>Text</Type><Category>Master</Category><DisplayName>Culture</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn><MetaColumn><GUID>b2c85d19-1ee7-4eba-9a2d-954a288962e5</GUID><Name>logo_file_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Logo file name</DisplayName><DisplayOrder>8</DisplayOrder></MetaColumn><MetaColumn><GUID>aaa7ba3d-064c-4681-bbc1-b9b0dd4dd96d</GUID><Name>show_folders</Name><Type>Text</Type><Category>Master</Category><DisplayName>Show folders</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>485be8c2-9957-47ce-bd37-d33b146931eb</GUID><Name>edit_profile</Name><Type>Text</Type><Category>Master</Category><DisplayName>Edit profile</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>b65902f9-a292-43be-8566-df3125defc19</GUID><Name>startup</Name><Type>Text</Type><Category>Master</Category><DisplayName>On startup</DisplayName><DisplayOrder>9</DisplayOrder></MetaColumn><MetaColumn><GUID>9f023e0f-a22e-46a9-9a49-932f3c67e0d0</GUID><Name>startup_report</Name><Type>Text</Type><Category>Master</Category><DisplayName>Startup report</DisplayName><DisplayOrder>10</DisplayOrder></MetaColumn><MetaColumn><GUID>d8deb7a3-6d7f-434b-adda-995e20dd3c5e</GUID><Name>weight</Name><Type>Text</Type><Category>Master</Category><DisplayName>Weight</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>19bcd04c-7e7f-4123-8d57-59dee8ef38bd</GUID><Name>Groups - Folders</Name><Connections><MetaConnection><GUID>75b882b8-4fc1-4531-ab27-f04a44a76aa0</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>75b882b8-4fc1-4531-ab27-f04a44a76aa0</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>6710b710-b368-405c-ba67-3b6d3673d110</GUID><Name>Master</Name><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("group_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("folder", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("use_sub_folders", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("manage_sub_folders", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("folder_right", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("expand_sub_folders", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("files_only", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@using System.IO&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
-    foreach (var group in Repository.Instance.Security.Groups) {&#xD;
-        addRecord(table, group, Repository.Instance.ReportsFolder + Path.DirectorySeparatorChar);&#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-&#xD;
-@functions {&#xD;
-    void addRecord(DataTable table, SecurityGroup group, string folder)&#xD;
-    {&#xD;
-        List&lt;SecurityGroup&gt; groups = new List&lt;SecurityGroup&gt;();&#xD;
-        groups.Add(group);&#xD;
-        string folder2 = folder.Substring(Repository.Instance.ReportsFolder.Length);&#xD;
-        SecurityFolder securityFolder = Repository.Instance.Security.FindSecurityFolder(groups, folder2);&#xD;
-&#xD;
-        if (securityFolder != null) {&#xD;
-            table.Rows.Add(&#xD;
-                group.Name, &#xD;
-                folder2, &#xD;
-                securityFolder.UseSubFolders ? "Yes" : "No",&#xD;
-                securityFolder.ManageFolder ? "Yes" : "No",&#xD;
-                Helper.GetEnumDescription(securityFolder.FolderRight.GetType(), securityFolder.FolderRight),&#xD;
-                securityFolder.ExpandSubFolders ? "Yes" : "No",&#xD;
-                securityFolder.FilesOnly? "Yes" : "No"&#xD;
-                );   &#xD;
-        }&#xD;
-        &#xD;
-        foreach (string subFolder in Directory.GetDirectories(folder))&#xD;
-        {&#xD;
-            addRecord(table, group, subFolder);&#xD;
-        }&#xD;
-    }&#xD;
-}</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>0cb0a2bd-5c08-4a79-94fc-d00174bf013f</GUID><Name>group_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Group name</DisplayName></MetaColumn><MetaColumn><GUID>381c7438-1d07-4064-977c-7b48943fd3ca</GUID><Name>folder</Name><Type>Text</Type><Category>Master</Category><DisplayName>Folder</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>557733e8-211b-4e72-b0a4-9012e82688fa</GUID><Name>use_sub_folders</Name><Type>Text</Type><Category>Master</Category><DisplayName>Use sub folders</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>0efbe7fe-a954-4a4a-9003-08a47c04c976</GUID><Name>manage_sub_folders</Name><Type>Text</Type><Category>Master</Category><DisplayName>Manage sub folders</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>754ce804-f363-49aa-89e2-c43caab6e3b1</GUID><Name>folder_right</Name><Type>Text</Type><Category>Master</Category><DisplayName>Folder right</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>a9b529ed-0844-4648-bcc4-f491114c36b8</GUID><Name>expand_sub_folders</Name><Type>Text</Type><Category>Master</Category><DisplayName>Expand sub folders</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>0a5a611f-a0d2-4c54-9849-b6fbce110aa1</GUID><Name>files_only</Name><Type>Text</Type><Category>Master</Category><DisplayName>Files only</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>dc89ee77-2bd6-41f5-aee6-0943f58a2e0b</GUID><Name>Groups - Editors Rights</Name><Connections><MetaConnection><GUID>ec60fd2a-a3d3-425a-a14b-6f3e6e6e9776</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>ec60fd2a-a3d3-425a-a14b-6f3e6e6e9776</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>d394238d-88c0-4c0a-9af9-aab3589d31fd</GUID><Name>Master</Name><DefinitionScript>
-@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("group_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("editor_type", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("item_type", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("item_definition", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("right", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>
-@using System.Data&#xD;
-@using System.IO&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
-    foreach (var group in Repository.Instance.Security.Groups) {&#xD;
-        foreach (var item in group.Devices) {&#xD;
-            table.Rows.Add(&#xD;
-                group.Name, &#xD;
-                "Web Report Designer", &#xD;
-                "Device", &#xD;
-                item.DisplayName, &#xD;
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)&#xD;
-                );   &#xD;
-        }&#xD;
-        &#xD;
-        foreach (var item in group.Sources) {&#xD;
-            table.Rows.Add(&#xD;
-                group.Name, &#xD;
-                "Web Report Designer", &#xD;
-                "Data Source", &#xD;
-                item.DisplayName, &#xD;
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)&#xD;
-                );   &#xD;
-        }&#xD;
-        &#xD;
-        foreach (var item in group.Connections) {&#xD;
-            table.Rows.Add(&#xD;
-                group.Name, &#xD;
-                "Web Report Designer", &#xD;
-                "Connection", &#xD;
-                item.DisplayName, &#xD;
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)&#xD;
-                );   &#xD;
-        }&#xD;
-        &#xD;
-        foreach (var item in group.Columns) {&#xD;
-            table.Rows.Add(&#xD;
-                group.Name, &#xD;
-                "Web Report Designer", &#xD;
-                "Column", &#xD;
-                item.DisplayName, &#xD;
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)&#xD;
-                );   &#xD;
-        }&#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>12c6c351-8bc9-49e9-9467-3750a7f279e4</GUID><Name>group_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Group name</DisplayName></MetaColumn><MetaColumn><GUID>20433306-f478-45fe-adc1-2c4d4c5419a9</GUID><Name>editor_type</Name><Type>Text</Type><Category>Master</Category><DisplayName>Editor type</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>429046b7-dded-4914-846e-f52ac2d6f22c</GUID><Name>right</Name><Type>Text</Type><Category>Master</Category><DisplayName>Right</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>06f8dc35-634a-42c2-8811-8b8f4e1740f0</GUID><Name>item_type</Name><Type>Text</Type><Category>Master</Category><DisplayName>Item type</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>fae48a1b-1e48-4fec-8d67-3ef090d2cfc7</GUID><Name>item_definition</Name><Type>Text</Type><Category>Master</Category><DisplayName>Item definition</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>36737db2-a3c7-49ac-856a-31862ee6cb66</GUID><Name>Users</Name><Connections><MetaConnection><GUID>c203a539-8504-4553-abd7-994ea309a83b</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>c203a539-8504-4553-abd7-994ea309a83b</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>63e72a45-06a5-4ada-bee4-d1c917a38aad</GUID><Name>Master</Name><DefinitionScript>
-@using System.Data&#xD;
-@{&#xD;
-   MetaTable metaTable = Model;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("user_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("account_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("user_groups", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("personal_folder", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("show_folders", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("sql_model", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("default_group", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@using System.DirectoryServices;&#xD;
-@using System.DirectoryServices.AccountManagement;&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    &#xD;
-    log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
-&#xD;
-    //GetUsers() is defined in Report Common Scripts (General tree node)&#xD;
-    var users = GetUsers();&#xD;
-    foreach (var user in users) {&#xD;
-        table.Rows.Add(&#xD;
-            user.Name, &#xD;
-            user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",&#xD;
-            user.SecurityGroupsDisplay,&#xD;
-            Helper.GetEnumDescription(user.PersonalFolderRight.GetType(), user.PersonalFolderRight),&#xD;
-            user.ShowFoldersView ? "Yes" : "No",&#xD;
-            user.SqlModel ? "Yes" : "No",&#xD;
-            user.DefaultGroup.Name&#xD;
-            );              &#xD;
-    }&#xD;
-    &#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>8771b702-9c06-4ce2-a5d4-06b04dfc6fc4</GUID><Name>user_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>User name</DisplayName></MetaColumn><MetaColumn><GUID>73061aa7-ee19-4db1-9a91-43ef9ed5b6c2</GUID><Name>user_groups</Name><Type>Text</Type><Category>Master</Category><DisplayName>User groups</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>6629cf0c-e9e9-422a-b340-75e746cbe599</GUID><Name>personal_folder</Name><Type>Text</Type><Category>Master</Category><DisplayName>Personal folder</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>193b26f4-0fca-47e5-93fd-b20bebec54e9</GUID><Name>sql_model</Name><Type>Text</Type><Category>Master</Category><DisplayName>Sql model</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>a6283429-c00a-45f2-9674-c184db89e042</GUID><Name>account_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Account name</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>e93f8991-0e0a-41ae-b3bb-7e85c1a64b87</GUID><Name>show_folders</Name><Type>Text</Type><Category>Master</Category><DisplayName>Show folders</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>f770bc8d-63dc-4b0b-860b-4d8a185cb650</GUID><Name>default_group</Name><Type>Text</Type><Category>Master</Category><DisplayName>Default group</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>fa6bf35e-5b63-4612-8c47-8a1c349adb8b</GUID><Name>Users - Folders</Name><Connections><MetaConnection><GUID>990935cc-926e-4136-a1d9-1d09b8a21981</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>990935cc-926e-4136-a1d9-1d09b8a21981</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>2cf5e53f-2688-4e57-8ab0-4f2153607fe8</GUID><Name>Master</Name><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("user_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("account_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("user_groups", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("folder", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("use_sub_folders", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("manage_sub_folders", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("folder_right", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("expand_sub_folders", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("files_only", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@using System.IO&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
-    &#xD;
-    //GetUsers() is defined in Report Common Scripts (General tree node)&#xD;
-    var users = GetUsers();&#xD;
-    foreach (var user in users) {&#xD;
-        addRecord(table, user, Repository.Instance.ReportsFolder + Path.DirectorySeparatorChar);&#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-&#xD;
-@functions {&#xD;
-    void addRecord(DataTable table, SecurityUser user, string folder)&#xD;
-    {&#xD;
-        string folder2 = folder.Substring(Repository.Instance.ReportsFolder.Length);&#xD;
-        SecurityFolder securityFolder = user.FindSecurityFolder(folder2);&#xD;
-&#xD;
-        if (securityFolder != null) {&#xD;
-            table.Rows.Add(&#xD;
-                user.Name,&#xD;
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",&#xD;
-                user.SecurityGroupsDisplay,&#xD;
-                folder2, &#xD;
-                securityFolder.UseSubFolders ? "Yes" : "No",&#xD;
-                securityFolder.ManageFolder ? "Yes" : "No",&#xD;
-                Helper.GetEnumDescription(securityFolder.FolderRight.GetType(), securityFolder.FolderRight),&#xD;
-                securityFolder.ExpandSubFolders ? "Yes" : "No",&#xD;
-                securityFolder.FilesOnly? "Yes" : "No"&#xD;
-                );   &#xD;
-        }&#xD;
-        &#xD;
-        foreach (string subFolder in Directory.GetDirectories(folder))&#xD;
-        {&#xD;
-            addRecord(table, user, subFolder);&#xD;
-        }&#xD;
-    }&#xD;
-}</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>e4f10994-51bf-4e4d-8898-865f7793ae2d</GUID><Name>folder</Name><Type>Text</Type><Category>Master</Category><DisplayName>Folder</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>accb23d8-d0ca-4278-b0ff-5cf08f1e796d</GUID><Name>use_sub_folders</Name><Type>Text</Type><Category>Master</Category><DisplayName>Use sub folders</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>e0a5c447-4673-4bcc-91cc-47e9b8825781</GUID><Name>manage_sub_folders</Name><Type>Text</Type><Category>Master</Category><DisplayName>Manage sub folders</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>d5243175-8859-4ad4-a429-9b4b6fbfc918</GUID><Name>folder_right</Name><Type>Text</Type><Category>Master</Category><DisplayName>Folder right</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn><MetaColumn><GUID>27636036-5461-49ac-98cf-0c887e35d59e</GUID><Name>expand_sub_folders</Name><Type>Text</Type><Category>Master</Category><DisplayName>Expand sub folders</DisplayName><DisplayOrder>8</DisplayOrder></MetaColumn><MetaColumn><GUID>4bfa69dd-333e-490d-beb7-60ac15afc54f</GUID><Name>files_only</Name><Type>Text</Type><Category>Master</Category><DisplayName>Files only</DisplayName><DisplayOrder>9</DisplayOrder></MetaColumn><MetaColumn><GUID>6257d52a-7758-4675-9dc4-6025fe250e39</GUID><Name>user_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>User name</DisplayName></MetaColumn><MetaColumn><GUID>e027a310-0de1-4043-b5cb-2e4b3ab5e2b0</GUID><Name>user_groups</Name><Type>Text</Type><Category>Master</Category><DisplayName>User groups</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>182349de-bd06-49ee-8be2-0f28111fa6cc</GUID><Name>account_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Account name</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>37180be9-2134-4aca-baad-71c935547639</GUID><Name>Users - Editors</Name><Connections><MetaConnection><GUID>8bdbb7ff-2743-434a-b59f-208622cbf3ee</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>8bdbb7ff-2743-434a-b59f-208622cbf3ee</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>aea82665-d950-4db3-a9d0-f67186b62e50</GUID><Name>Master</Name><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("user_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("account_name", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("user_groups", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("editor_type", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("item_type", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("item_definition", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("right", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@using System.IO&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
-    //GetUsers() is defined in Report Common Scripts (General tree node)&#xD;
-    var users = GetUsers();&#xD;
-    foreach (var user in users) {&#xD;
-        foreach (var item in user.ForbiddenDevices) {&#xD;
-            table.Rows.Add(&#xD;
-                user.Name, &#xD;
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",&#xD;
-                user.SecurityGroupsDisplay,&#xD;
-                "Web Report Designer", &#xD;
-                "Device", &#xD;
-                item.DisplayName, &#xD;
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)&#xD;
-                );   &#xD;
-        }&#xD;
-        &#xD;
-        foreach (var item in user.ForbiddenSources) {&#xD;
-            table.Rows.Add(&#xD;
-                user.Name, &#xD;
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",&#xD;
-                user.SecurityGroupsDisplay,&#xD;
-                "Web Report Designer", &#xD;
-                "Data Source", &#xD;
-                item.DisplayName, &#xD;
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)&#xD;
-                );   &#xD;
-        }&#xD;
-        &#xD;
-        foreach (var item in user.ForbiddenConnections) {&#xD;
-            table.Rows.Add(&#xD;
-               user.Name, &#xD;
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",&#xD;
-                user.SecurityGroupsDisplay,&#xD;
-                "Web Report Designer", &#xD;
-                "Connection", &#xD;
-                item.DisplayName, &#xD;
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)&#xD;
-                );   &#xD;
-        }&#xD;
-        &#xD;
-        foreach (var item in user.ForbiddenColumns) {&#xD;
-            table.Rows.Add(&#xD;
-                user.Name, &#xD;
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",&#xD;
-                user.SecurityGroupsDisplay,&#xD;
-                "Web Report Designer", &#xD;
-                "Column", &#xD;
-                item.DisplayName, &#xD;
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)&#xD;
-                );   &#xD;
-        }        &#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>6ec7afc4-8bb9-457c-a5a3-3cd93b0bfa68</GUID><Name>user_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>User name</DisplayName></MetaColumn><MetaColumn><GUID>968690c8-3dc4-4f05-a89b-8dc25b2c96ae</GUID><Name>account_name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Account name</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>9893ee64-186a-4866-bb11-0dbbafa798de</GUID><Name>editor_type</Name><Type>Text</Type><Category>Master</Category><DisplayName>Editor type</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>8dc3cad7-dda3-4013-a381-16d0451d128e</GUID><Name>item_type</Name><Type>Text</Type><Category>Master</Category><DisplayName>Item type</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>c58758ea-4aa9-45dc-9791-d0fcdf60436d</GUID><Name>item_definition</Name><Type>Text</Type><Category>Master</Category><DisplayName>Item definition</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>110f2496-d67a-4964-9d7f-9b76b4c953e3</GUID><Name>right</Name><Type>Text</Type><Category>Master</Category><DisplayName>Right</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn><MetaColumn><GUID>29f0af22-9550-47ae-807b-6fd7e60a2fda</GUID><Name>user_groups</Name><Type>Text</Type><Category>Master</Category><DisplayName>User groups</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource></Sources><Models><ReportModel><GUID>138b9429-70e7-44e3-b606-6f72954519d0</GUID><Name>Groups</Name><SourceGUID>44eb9e66-7078-417e-ba58-c1f32f4d68d0</SourceGUID><LINQSubTables><MetaTable><GUID>cba6f036-aa28-49d2-ae48-a22a2f1e95da</GUID><Name>Master</Name></MetaTable></LINQSubTables><Elements><ReportElement><GUID>0d066d19-88b2-4887-b8ee-443adb74488f</GUID><Name>group_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>69506dfc-f77a-4f1a-bc6c-628e07ad29c0</MetaColumnGUID></ReportElement><ReportElement><GUID>b4e87337-d5f5-4da8-8899-3f604616b817</GUID><Name>personal_folder</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>f3723c48-5bcc-46f8-bb7a-5f971818e17d</MetaColumnGUID></ReportElement><ReportElement><GUID>fcab0631-624d-4707-87aa-c3abefcb248c</GUID><Name>show_folders</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>aaa7ba3d-064c-4681-bbc1-b9b0dd4dd96d</MetaColumnGUID></ReportElement><ReportElement><GUID>7576e409-fd3a-43f1-a892-4553a54d96ac</GUID><Name>sql_model</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>ed64f09a-d380-4c9f-acef-597bdb189801</MetaColumnGUID></ReportElement><ReportElement><GUID>03fea793-7c89-44d5-905c-9f6277338646</GUID><Name>weight</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>d8deb7a3-6d7f-434b-adda-995e20dd3c5e</MetaColumnGUID></ReportElement><ReportElement><GUID>9ea3fff1-304f-4155-833c-966b9f518e5a</GUID><Name>edit_profile</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>485be8c2-9957-47ce-bd37-d33b146931eb</MetaColumnGUID></ReportElement><ReportElement><GUID>3f66d884-02e7-41dd-a9e2-2754ad5673c7</GUID><Name>culture</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>5d3b864c-2a95-4cfa-8d6d-9fbc0dd47d71</MetaColumnGUID></ReportElement><ReportElement><GUID>02d086e1-e7ff-477e-9107-365941fae75e</GUID><Name>logo_file_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>b2c85d19-1ee7-4eba-9a2d-954a288962e5</MetaColumnGUID></ReportElement><ReportElement><GUID>e32b1f1f-c9ba-4336-9a3a-5c816bace87d</GUID><Name>startup</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>b65902f9-a292-43be-8566-df3125defc19</MetaColumnGUID></ReportElement><ReportElement><GUID>0242975e-460e-45aa-aeaf-5c5f39687629</GUID><Name>startup_report</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>9f023e0f-a22e-46a9-9a49-932f3c67e0d0</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>b54bff69-4121-4976-b2f7-8b42d2ac65fd</GUID><Name>Groups Folders</Name><SourceGUID>19bcd04c-7e7f-4123-8d57-59dee8ef38bd</SourceGUID><Elements><ReportElement><GUID>709ff7f8-1157-42a5-9896-a2e5f83aa504</GUID><Name>group_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>0cb0a2bd-5c08-4a79-94fc-d00174bf013f</MetaColumnGUID></ReportElement><ReportElement><GUID>128bf2ab-520f-4311-8ad4-4e804c3863ec</GUID><Name>folder</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>381c7438-1d07-4064-977c-7b48943fd3ca</MetaColumnGUID></ReportElement><ReportElement><GUID>ffb6fbad-0ff3-4ddc-b96a-7ba4c8ec4d33</GUID><Name>use_sub_folders</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>557733e8-211b-4e72-b0a4-9012e82688fa</MetaColumnGUID></ReportElement><ReportElement><GUID>a08c3453-aa26-4964-b73b-15e93df1bf13</GUID><Name>manage_sub_folders</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>0efbe7fe-a954-4a4a-9003-08a47c04c976</MetaColumnGUID></ReportElement><ReportElement><GUID>023f7e78-0487-4f8e-8918-b578f7c8cd84</GUID><Name>folder_right</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>754ce804-f363-49aa-89e2-c43caab6e3b1</MetaColumnGUID></ReportElement><ReportElement><GUID>a81a3045-ecbd-4b2d-a331-c4a8a7454309</GUID><Name>expand_sub_folders</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>a9b529ed-0844-4648-bcc4-f491114c36b8</MetaColumnGUID></ReportElement><ReportElement><GUID>647afacf-2b5b-4a91-bcf7-5c111d746eb7</GUID><Name>files_only</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>0a5a611f-a0d2-4c54-9849-b6fbce110aa1</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>287ece02-ae86-4c09-b384-2d4fb274f9ac</GUID><Name>Groups Editors</Name><SourceGUID>dc89ee77-2bd6-41f5-aee6-0943f58a2e0b</SourceGUID><Elements><ReportElement><GUID>40f19e38-1501-4986-b45b-3b46e2fcef7f</GUID><Name>group_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>12c6c351-8bc9-49e9-9467-3750a7f279e4</MetaColumnGUID></ReportElement><ReportElement><GUID>79786e79-7ccc-4d4e-a036-386c75ced632</GUID><Name>editor_type</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>20433306-f478-45fe-adc1-2c4d4c5419a9</MetaColumnGUID></ReportElement><ReportElement><GUID>e98ff373-218d-44dc-8f80-7d16b183d74a</GUID><Name>item_type</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>06f8dc35-634a-42c2-8811-8b8f4e1740f0</MetaColumnGUID></ReportElement><ReportElement><GUID>cbbd16de-bd4d-4d7b-b781-4ff1c9d407bc</GUID><Name>item_definition</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>fae48a1b-1e48-4fec-8d67-3ef090d2cfc7</MetaColumnGUID></ReportElement><ReportElement><GUID>43b92925-b5d9-4223-90ad-32b00eae01bb</GUID><Name>right</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>429046b7-dded-4914-846e-f52ac2d6f22c</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>7202e488-00c5-4b5d-92b7-0c2e1ca8ad2b</GUID><Name>Users</Name><SourceGUID>36737db2-a3c7-49ac-856a-31862ee6cb66</SourceGUID><LINQSubTables><MetaTable><GUID>63e72a45-06a5-4ada-bee4-d1c917a38aad</GUID><Name>Master</Name></MetaTable></LINQSubTables><Elements><ReportElement><GUID>2f77ead5-55d4-4272-8280-ab958c243ab2</GUID><Name>user_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>8771b702-9c06-4ce2-a5d4-06b04dfc6fc4</MetaColumnGUID></ReportElement><ReportElement><GUID>fe3144c3-68f5-43d8-8548-df692410db43</GUID><Name>account_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>a6283429-c00a-45f2-9674-c184db89e042</MetaColumnGUID></ReportElement><ReportElement><GUID>794e14a5-a984-4a51-a01f-29c2a7c48add</GUID><Name>user_groups</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>73061aa7-ee19-4db1-9a91-43ef9ed5b6c2</MetaColumnGUID></ReportElement><ReportElement><GUID>3a5d59f1-dbca-4ca7-aeff-5086a1743c8f</GUID><Name>personal_folder</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>6629cf0c-e9e9-422a-b340-75e746cbe599</MetaColumnGUID></ReportElement><ReportElement><GUID>7fcf90c3-824c-43a1-952c-0d2e74a4d23d</GUID><Name>show_folders</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>e93f8991-0e0a-41ae-b3bb-7e85c1a64b87</MetaColumnGUID></ReportElement><ReportElement><GUID>ee6d5243-2a44-49f6-b9e3-ea40dcee3107</GUID><Name>sql_model</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>193b26f4-0fca-47e5-93fd-b20bebec54e9</MetaColumnGUID></ReportElement><ReportElement><GUID>869d09aa-79cf-4827-bd66-e07812bc6f2c</GUID><Name>default_group</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>f770bc8d-63dc-4b0b-860b-4d8a185cb650</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>e85c9269-51bb-4adb-a4b6-8ed01bdbd6e5</GUID><Name>Users Folders</Name><SourceGUID>fa6bf35e-5b63-4612-8c47-8a1c349adb8b</SourceGUID><Elements><ReportElement><GUID>39b781d6-fbc9-4a20-913e-3fa630b95b6e</GUID><Name>user_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>6257d52a-7758-4675-9dc4-6025fe250e39</MetaColumnGUID></ReportElement><ReportElement><GUID>81ea7e39-3978-43a6-90ba-42d3f6345682</GUID><Name>account_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>182349de-bd06-49ee-8be2-0f28111fa6cc</MetaColumnGUID></ReportElement><ReportElement><GUID>d487f414-62e7-42cc-8054-95bd1ab8c6f1</GUID><Name>user_groups</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>e027a310-0de1-4043-b5cb-2e4b3ab5e2b0</MetaColumnGUID></ReportElement><ReportElement><GUID>e5fb3e51-f209-4f93-a6df-9938a537b191</GUID><Name>folder</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>e4f10994-51bf-4e4d-8898-865f7793ae2d</MetaColumnGUID></ReportElement><ReportElement><GUID>f4c8f750-7359-4f2d-a74a-19d91c03977f</GUID><Name>use_sub_folders</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>accb23d8-d0ca-4278-b0ff-5cf08f1e796d</MetaColumnGUID></ReportElement><ReportElement><GUID>c97f8e87-d7b0-4bab-bcba-d6e5adea76a5</GUID><Name>manage_sub_folders</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>e0a5c447-4673-4bcc-91cc-47e9b8825781</MetaColumnGUID></ReportElement><ReportElement><GUID>388b2a8a-c3d3-4097-9e25-a66d0e75cf76</GUID><Name>folder_right</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>d5243175-8859-4ad4-a429-9b4b6fbfc918</MetaColumnGUID></ReportElement><ReportElement><GUID>23399542-6c38-4fd7-963a-3b14ad58bc11</GUID><Name>expand_sub_folders</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>27636036-5461-49ac-98cf-0c887e35d59e</MetaColumnGUID></ReportElement><ReportElement><GUID>61b718b4-7aeb-4cdc-9303-4b37c3164e09</GUID><Name>files_only</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>4bfa69dd-333e-490d-beb7-60ac15afc54f</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>dd9f35d9-8b0b-4491-a576-7fa84860d34d</GUID><Name>Users Editors</Name><SourceGUID>37180be9-2134-4aca-baad-71c935547639</SourceGUID><LINQSubTables><MetaTable><GUID>aea82665-d950-4db3-a9d0-f67186b62e50</GUID><Name>Master</Name></MetaTable></LINQSubTables><Elements><ReportElement><GUID>6f0ee73c-6202-4c26-aa7b-4c351f865372</GUID><Name>user_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>6ec7afc4-8bb9-457c-a5a3-3cd93b0bfa68</MetaColumnGUID></ReportElement><ReportElement><GUID>7a7a719b-0683-47d5-a172-91d235089766</GUID><Name>account_name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>968690c8-3dc4-4f05-a89b-8dc25b2c96ae</MetaColumnGUID></ReportElement><ReportElement><GUID>f6e30e3d-0d8f-417f-860f-8bbf58c0c530</GUID><Name>user_groups</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>29f0af22-9550-47ae-807b-6fd7e60a2fda</MetaColumnGUID></ReportElement><ReportElement><GUID>acefdf6c-b105-4c2e-b74a-ac2e918521a2</GUID><Name>editor_type</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>9893ee64-186a-4866-bb11-0dbbafa798de</MetaColumnGUID></ReportElement><ReportElement><GUID>9e310ad6-b7b6-4236-b8e6-3ad0b3657ff6</GUID><Name>item_type</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>8dc3cad7-dda3-4013-a381-16d0451d128e</MetaColumnGUID></ReportElement><ReportElement><GUID>cd1c2daf-9fe5-4d54-b364-27c7868c5e43</GUID><Name>item_definition</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>c58758ea-4aa9-45dc-9791-d0fcdf60436d</MetaColumnGUID></ReportElement><ReportElement><GUID>973864a0-26ef-4cd0-b51b-b999f6e1e590</GUID><Name>right</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>110f2496-d67a-4964-9d7f-9b76b4c953e3</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><CommonScripts><CommonScript><Name>GetUsers</Name><Script>@using System.DirectoryServices;&#xD;
-@using System.DirectoryServices.AccountManagement;&#xD;
-&#xD;
-@functions {&#xD;
-    //Returns the list of common users with their groups, this may be adapted...&#xD;
-    public List&lt;SecurityUser&gt; GetUsers() {&#xD;
-        var result = new List&lt;SecurityUser&gt;();&#xD;
-        &#xD;
-        if (Repository.Instance.Security.ProviderName == "Integrated Windows Authentication") &#xD;
-        {&#xD;
-            //Active Directory&#xD;
-            //Build list of users and their groups from the AD&#xD;
-            foreach (var group in Repository.Instance.Security.Groups) {&#xD;
-                PrincipalContext context = new PrincipalContext(ContextType.Domain);&#xD;
-                GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, group.Name);&#xD;
-                if (groupPrincipal != null) {&#xD;
-                    foreach (var adUser in groupPrincipal.GetMembers(true)) {&#xD;
-                        var user = result.FirstOrDefault(i =&gt; i.Name == adUser.Name); &#xD;
-                        if (user == null) {&#xD;
-                            user = new SecurityUser(Repository.Instance.Security);&#xD;
-                            user.Name = adUser.Name;&#xD;
-                            user.UserPrincipal = (UserPrincipal) adUser;&#xD;
-                            result.Add(user);&#xD;
-                        }&#xD;
-                        user.AddSecurityGroup(group.Name);&#xD;
-                    }        &#xD;
-                }&#xD;
-            }            &#xD;
-        }&#xD;
-        else if (Repository.Instance.Security.ProviderName == "Basic Authentication") &#xD;
-        {&#xD;
-            //Static users...as defined in the Security Provider script used for development...&#xD;
-            var user = new SecurityUser(Repository.Instance.Security) { Name = "" };&#xD;
-            result.Add(user);&#xD;
-            user.AddDefaultSecurityGroup();&#xD;
-&#xD;
-            user = new SecurityUser(Repository.Instance.Security) { Name = "ex" };&#xD;
-            result.Add(user);&#xD;
-            user.AddSecurityGroup("Group (Execute)");&#xD;
-&#xD;
-            user = new SecurityUser(Repository.Instance.Security) { Name = "exed" };&#xD;
-            result.Add(user);&#xD;
-            user.AddSecurityGroup("Group (Execute)");&#xD;
-            user.AddSecurityGroup("Group (Edit)");&#xD;
-        }&#xD;
-        result.RemoveAll(i =&gt; i.SecurityGroups.Count == 0);&#xD;
-&#xD;
-        return result;&#xD;
-    }&#xD;
-}&#xD;
-</Script></CommonScript></CommonScripts><Views><ReportView><GUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</GUID><Name>View</Name><Views><ReportView><GUID>30d96e8b-6853-47d8-ab1d-a59ea375f85a</GUID><Name>Tab Control</Name><Views><ReportView><GUID>6c9a9924-ae96-469e-91f9-00db8e5d008b</GUID><Name>Groups</Name><Views><ReportView><GUID>5fc4d852-8504-48a5-80ed-0f539a378c00</GUID><Name>Groups</Name><Views><ReportView><GUID>f61f11bd-978e-4caf-9ce4-e813de654ba9</GUID><Name>Model Container</Name><Views><ReportView><GUID>d1f63d62-80ce-495f-8467-553715715dad</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>c84b2dab-d30f-4385-a9fc-a3405eef0818</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>028a3f27-67dd-46b4-9c46-a5fa7c184b3c</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>39506065-63c7-4b14-80ec-7b940fc59f5a</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>4640c484-dd81-461b-8572-7d4f27676bcb</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>138b9429-70e7-44e3-b606-6f72954519d0</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>de51d375-fc90-4b95-a9af-8f9b310bc75a</GUID><Name>Groups - Folders</Name><Views><ReportView><GUID>608d4e3c-dc94-4546-945e-56832edc6a8d</GUID><Name>Groups Folders</Name><Views><ReportView><GUID>6d501ec6-b408-4501-8529-8e474c4acdca</GUID><Name>Model Container</Name><Views><ReportView><GUID>f22903d8-b3f0-4e8e-a451-e0ba7693c3c3</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>5f3e2bf1-9e2c-4b28-b74c-a56bca7b5d4d</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>74ed3d61-6e54-44a9-ab55-b92cba8b0273</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>8d818656-be09-4d0d-9e3a-d61f992010e4</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>4475be9b-c2a5-4385-aac2-5cc88fdf634d</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>b54bff69-4121-4976-b2f7-8b42d2ac65fd</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>8c1ed7d3-aaf7-4fbc-924c-38c94be048b2</GUID><Name>Groups - Editors</Name><Views><ReportView><GUID>17f7ba65-a7bb-435b-ac5e-4f32f1456bed</GUID><Name>Editors</Name><Views><ReportView><GUID>83e8535c-a9be-483c-bd5b-eedcabd43d25</GUID><Name>Model Container</Name><Views><ReportView><GUID>858088ac-fea3-4730-8d6a-501461dd6693</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>3405092e-33e7-4c59-af9c-6845fd7ed3cf</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>786e1ed1-3a47-448b-8588-8ac18af854c3</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>ba5faa77-a50f-4fde-bc38-3b60d4d79fe3</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>b023b6e3-e676-4f8a-8424-54e61c48adbf</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>287ece02-ae86-4c09-b384-2d4fb274f9ac</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>7e88abf1-acfa-4fd1-bc14-c21bd7f1f46e</GUID><Name>Users</Name><Views><ReportView><GUID>0f43ef49-3e07-433d-8b4f-d4c1b42de201</GUID><Name>Users</Name><Views><ReportView><GUID>8d525132-98d5-4ce5-8826-319de6be2af7</GUID><Name>Model Container</Name><Views><ReportView><GUID>c7606de7-8e68-4c82-acbd-98b468bdbcb8</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>3abdac5c-e83e-457d-b874-900ac5316329</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>539e454f-c7a0-42cb-80ea-000db61b1842</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>fef6a16d-3941-479a-b9d7-8ff3011322a8</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>14df3a3b-1d85-4865-9190-db081e388522</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>7202e488-00c5-4b5d-92b7-0c2e1ca8ad2b</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>7491c8fc-687f-4d66-a9a9-2bda621b255e</GUID><Name>Users - Folders</Name><Views><ReportView><GUID>eff7b6c9-96c0-4e40-a266-d755cccc6b79</GUID><Name>Users Folders</Name><Views><ReportView><GUID>a4231e33-ed3b-479d-a978-3a169e497877</GUID><Name>Model Container</Name><Views><ReportView><GUID>de856ca6-9c32-4120-9662-8ced1e7ea6a5</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>919a9c95-1aa2-47a6-b516-ed094d2d1d37</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>69618815-9bfe-4abc-b9ee-fe13d0bf1928</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>2b84b14c-ab21-452b-980c-14644aa6f9e0</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>72f311bf-ee4a-42bb-9cdc-65e0a04d305b</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>e85c9269-51bb-4adb-a4b6-8ed01bdbd6e5</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>5</SortOrder></ReportView><ReportView><GUID>fdf8715a-0c66-4b13-9fe6-0e7a249a0e6b</GUID><Name>Users - Editors</Name><Views><ReportView><GUID>da6c052a-a455-48d4-bea6-97721da74b8e</GUID><Name>Users Editors</Name><Views><ReportView><GUID>407984e5-c77f-4bc2-8b3c-a7e071b0ad27</GUID><Name>Model Container</Name><Views><ReportView><GUID>ff1793ac-592e-489a-8b3a-3c24dfbc987b</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>f7876367-c6ff-4240-8fae-a3749e92e4c7</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>dc8518b5-016a-4f9b-8328-8493114f99f2</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>9c41bb11-376f-44dd-b10c-21d8dc40182f</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>2f9c25b7-6047-4c64-be5e-344c3172797f</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>dd9f35d9-8b0b-4491-a576-7fa84860d34d</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>6</SortOrder></ReportView></Views><TemplateName>Tab Control</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>force_execution</Name><Value>True</Value></Parameter></Parameters><SortOrder>1</SortOrder><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
-&lt;SealExcelCfg xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;&#xD;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;&#xD;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;&#xD;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;&#xD;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;&#xD;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;&#xD;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;&#xD;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;&#xD;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;&#xD;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;&#xD;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;&#xD;
-  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;&#xD;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;&#xD;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;&#xD;
-  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;&#xD;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;&#xD;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;&#xD;
-  &lt;RootConfigurationScript /&gt;&#xD;
-  &lt;RootMainScript /&gt;&#xD;
-  &lt;RootHeaderScript /&gt;&#xD;
-  &lt;ConfigurationScript /&gt;&#xD;
-  &lt;MainScript /&gt;&#xD;
-  &lt;HeaderScript /&gt;&#xD;
-  &lt;SummaryScript /&gt;&#xD;
-  &lt;PageScript /&gt;&#xD;
-  &lt;ChartScript /&gt;&#xD;
-  &lt;DataScript /&gt;&#xD;
-&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView></Views><Cancel>false</Cancel></Report>
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CurrentViewGUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</CurrentViewGUID>
+  <GUID>d7c4e34a-9fd2-49e0-b8f7-a46d86ab2c28</GUID>
+  <ViewGUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>44eb9e66-7078-417e-ba58-c1f32f4d68d0</GUID>
+      <Name>Groups</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>20f30975-765f-4bf2-9c9e-635ced49c1f9</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>20f30975-765f-4bf2-9c9e-635ced49c1f9</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>cba6f036-aa28-49d2-ae48-a22a2f1e95da</GUID>
+            <Name>Master</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("group_name", typeof(string)));
+    table.Columns.Add(new DataColumn("personal_folder", typeof(string)));
+    table.Columns.Add(new DataColumn("show_folders", typeof(string)));
+    table.Columns.Add(new DataColumn("sql_model", typeof(string)));
+    table.Columns.Add(new DataColumn("weight", typeof(string)));
+    table.Columns.Add(new DataColumn("edit_profile", typeof(string)));
+    table.Columns.Add(new DataColumn("culture", typeof(string)));
+    table.Columns.Add(new DataColumn("logo_file_name", typeof(string)));
+    table.Columns.Add(new DataColumn("startup", typeof(string)));
+    table.Columns.Add(new DataColumn("startup_report", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportExecutionLog log = metaTable;
+
+    log.LogMessage("Processing " + metaTable.Source.Name);
+    foreach (var group in Repository.Instance.Security.Groups) {
+        table.Rows.Add(
+            group.Name, 
+            Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight),
+            group.ShowFoldersView ? "Yes" : "No",
+            group.SqlModel ? "Yes" : "No",
+            group.Weight.ToString(),
+            group.EditProfile ? "Yes" : "No",
+            group.Culture != null ? group.Culture : "",
+            group.LogoName != null ? group.LogoName : "",
+            Helper.GetEnumDescription(group.OnStartup.GetType(), group.OnStartup),
+            group.StartupReport
+            );   
+    }
+    
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>69506dfc-f77a-4f1a-bc6c-628e07ad29c0</GUID>
+                <Name>group_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Group name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>f3723c48-5bcc-46f8-bb7a-5f971818e17d</GUID>
+                <Name>personal_folder</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Personal folder</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>ed64f09a-d380-4c9f-acef-597bdb189801</GUID>
+                <Name>sql_model</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Sql model</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5d3b864c-2a95-4cfa-8d6d-9fbc0dd47d71</GUID>
+                <Name>culture</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Culture</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b2c85d19-1ee7-4eba-9a2d-954a288962e5</GUID>
+                <Name>logo_file_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Logo file name</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>aaa7ba3d-064c-4681-bbc1-b9b0dd4dd96d</GUID>
+                <Name>show_folders</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Show folders</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>485be8c2-9957-47ce-bd37-d33b146931eb</GUID>
+                <Name>edit_profile</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Edit profile</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b65902f9-a292-43be-8566-df3125defc19</GUID>
+                <Name>startup</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>On startup</DisplayName>
+                <DisplayOrder>9</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9f023e0f-a22e-46a9-9a49-932f3c67e0d0</GUID>
+                <Name>startup_report</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Startup report</DisplayName>
+                <DisplayOrder>10</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>d8deb7a3-6d7f-434b-adda-995e20dd3c5e</GUID>
+                <Name>weight</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Weight</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+    <ReportSource>
+      <GUID>19bcd04c-7e7f-4123-8d57-59dee8ef38bd</GUID>
+      <Name>Groups - Folders</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>75b882b8-4fc1-4531-ab27-f04a44a76aa0</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>75b882b8-4fc1-4531-ab27-f04a44a76aa0</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>6710b710-b368-405c-ba67-3b6d3673d110</GUID>
+            <Name>Master</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+                ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("group_name", typeof(string)));
+    table.Columns.Add(new DataColumn("folder", typeof(string)));
+    table.Columns.Add(new DataColumn("use_sub_folders", typeof(string)));
+    table.Columns.Add(new DataColumn("manage_sub_folders", typeof(string)));
+    table.Columns.Add(new DataColumn("folder_right", typeof(string)));
+    table.Columns.Add(new DataColumn("expand_sub_folders", typeof(string)));
+    table.Columns.Add(new DataColumn("files_only", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using System.IO
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+                ReportExecutionLog log = metaTable;
+
+    log.LogMessage("Processing " + metaTable.Source.Name);
+    foreach (var group in Repository.Instance.Security.Groups) {
+        addRecord(table, group, Repository.Instance.ReportsFolder + Path.DirectorySeparatorChar);
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+
+@functions {
+    void addRecord(DataTable table, SecurityGroup group, string folder)
+    {
+        List&lt;SecurityGroup&gt; groups = new List&lt;SecurityGroup&gt;();
+        groups.Add(group);
+        string folder2 = folder.Substring(Repository.Instance.ReportsFolder.Length);
+        SecurityFolder securityFolder = Repository.Instance.Security.FindSecurityFolder(groups, folder2);
+
+        if (securityFolder != null) {
+            table.Rows.Add(
+                group.Name, 
+                folder2, 
+                securityFolder.UseSubFolders ? "Yes" : "No",
+                securityFolder.ManageFolder ? "Yes" : "No",
+                Helper.GetEnumDescription(securityFolder.FolderRight.GetType(), securityFolder.FolderRight),
+                securityFolder.ExpandSubFolders ? "Yes" : "No",
+                securityFolder.FilesOnly? "Yes" : "No"
+                );   
+        }
+        
+        foreach (string subFolder in Directory.GetDirectories(folder))
+        {
+            addRecord(table, group, subFolder);
+        }
+    }
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>0cb0a2bd-5c08-4a79-94fc-d00174bf013f</GUID>
+                <Name>group_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Group name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>381c7438-1d07-4064-977c-7b48943fd3ca</GUID>
+                <Name>folder</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Folder</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>557733e8-211b-4e72-b0a4-9012e82688fa</GUID>
+                <Name>use_sub_folders</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Use sub folders</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>0efbe7fe-a954-4a4a-9003-08a47c04c976</GUID>
+                <Name>manage_sub_folders</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Manage sub folders</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>754ce804-f363-49aa-89e2-c43caab6e3b1</GUID>
+                <Name>folder_right</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Folder right</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>a9b529ed-0844-4648-bcc4-f491114c36b8</GUID>
+                <Name>expand_sub_folders</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Expand sub folders</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>0a5a611f-a0d2-4c54-9849-b6fbce110aa1</GUID>
+                <Name>files_only</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Files only</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+    <ReportSource>
+      <GUID>dc89ee77-2bd6-41f5-aee6-0943f58a2e0b</GUID>
+      <Name>Groups - Editors Rights</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>ec60fd2a-a3d3-425a-a14b-6f3e6e6e9776</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>ec60fd2a-a3d3-425a-a14b-6f3e6e6e9776</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>d394238d-88c0-4c0a-9af9-aab3589d31fd</GUID>
+            <Name>Master</Name>
+            <DefinitionScript>
+@using System.Data
+@{
+    MetaTable metaTable = Model;
+                ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("group_name", typeof(string)));
+    table.Columns.Add(new DataColumn("editor_type", typeof(string)));
+    table.Columns.Add(new DataColumn("item_type", typeof(string)));
+    table.Columns.Add(new DataColumn("item_definition", typeof(string)));
+    table.Columns.Add(new DataColumn("right", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>
+@using System.Data
+@using System.IO
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+                ReportExecutionLog log = metaTable;
+
+    log.LogMessage("Processing " + metaTable.Source.Name);
+    foreach (var group in Repository.Instance.Security.Groups) {
+        foreach (var item in group.Devices) {
+            table.Rows.Add(
+                group.Name, 
+                "Web Report Designer", 
+                "Device", 
+                item.DisplayName, 
+                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                );   
+        }
+        
+        foreach (var item in group.Sources) {
+            table.Rows.Add(
+                group.Name, 
+                "Web Report Designer", 
+                "Data Source", 
+                item.DisplayName, 
+                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                );   
+        }
+        
+        foreach (var item in group.Connections) {
+            table.Rows.Add(
+                group.Name, 
+                "Web Report Designer", 
+                "Connection", 
+                item.DisplayName, 
+                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                );   
+        }
+        
+        foreach (var item in group.Columns) {
+            table.Rows.Add(
+                group.Name, 
+                "Web Report Designer", 
+                "Column", 
+                item.DisplayName, 
+                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                );   
+        }
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>12c6c351-8bc9-49e9-9467-3750a7f279e4</GUID>
+                <Name>group_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Group name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>20433306-f478-45fe-adc1-2c4d4c5419a9</GUID>
+                <Name>editor_type</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Editor type</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>429046b7-dded-4914-846e-f52ac2d6f22c</GUID>
+                <Name>right</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Right</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>06f8dc35-634a-42c2-8811-8b8f4e1740f0</GUID>
+                <Name>item_type</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Item type</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>fae48a1b-1e48-4fec-8d67-3ef090d2cfc7</GUID>
+                <Name>item_definition</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Item definition</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+    <ReportSource>
+      <GUID>36737db2-a3c7-49ac-856a-31862ee6cb66</GUID>
+      <Name>Users</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>c203a539-8504-4553-abd7-994ea309a83b</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>c203a539-8504-4553-abd7-994ea309a83b</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>63e72a45-06a5-4ada-bee4-d1c917a38aad</GUID>
+            <Name>Master</Name>
+            <DefinitionScript>
+@using System.Data
+@{
+   MetaTable metaTable = Model;
+                ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("user_name", typeof(string)));
+    table.Columns.Add(new DataColumn("account_name", typeof(string)));
+    table.Columns.Add(new DataColumn("user_groups", typeof(string)));
+    table.Columns.Add(new DataColumn("personal_folder", typeof(string)));
+    table.Columns.Add(new DataColumn("show_folders", typeof(string)));
+    table.Columns.Add(new DataColumn("sql_model", typeof(string)));
+    table.Columns.Add(new DataColumn("default_group", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using System.DirectoryServices;
+@using System.DirectoryServices.AccountManagement;
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+                ReportExecutionLog log = metaTable;
+
+    
+    log.LogMessage("Processing " + metaTable.Source.Name);
+
+    //GetUsers() is defined in Report Common Scripts (General tree node)
+    var users = GetUsers();
+    foreach (var user in users) {
+        foreach (var gr in user.SecurityGroupsDisplay.Split(';')) {
+            table.Rows.Add(
+                user.Name, 
+                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                gr,
+                Helper.GetEnumDescription(user.PersonalFolderRight.GetType(), user.PersonalFolderRight),
+                user.ShowFoldersView ? "Yes" : "No",
+                user.SqlModel ? "Yes" : "No",
+                user.DefaultGroup.Name
+                );              
+         }
+    }
+    
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>8771b702-9c06-4ce2-a5d4-06b04dfc6fc4</GUID>
+                <Name>user_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>User name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>73061aa7-ee19-4db1-9a91-43ef9ed5b6c2</GUID>
+                <Name>user_groups</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>User groups</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>6629cf0c-e9e9-422a-b340-75e746cbe599</GUID>
+                <Name>personal_folder</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Personal folder</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>193b26f4-0fca-47e5-93fd-b20bebec54e9</GUID>
+                <Name>sql_model</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Sql model</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>a6283429-c00a-45f2-9674-c184db89e042</GUID>
+                <Name>account_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Account name</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e93f8991-0e0a-41ae-b3bb-7e85c1a64b87</GUID>
+                <Name>show_folders</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Show folders</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>f770bc8d-63dc-4b0b-860b-4d8a185cb650</GUID>
+                <Name>default_group</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Default group</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+    <ReportSource>
+      <GUID>fa6bf35e-5b63-4612-8c47-8a1c349adb8b</GUID>
+      <Name>Users - Folders</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>990935cc-926e-4136-a1d9-1d09b8a21981</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>990935cc-926e-4136-a1d9-1d09b8a21981</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>2cf5e53f-2688-4e57-8ab0-4f2153607fe8</GUID>
+            <Name>Master</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+                ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("user_name", typeof(string)));
+    table.Columns.Add(new DataColumn("account_name", typeof(string)));
+    table.Columns.Add(new DataColumn("user_groups", typeof(string)));
+    table.Columns.Add(new DataColumn("folder", typeof(string)));
+    table.Columns.Add(new DataColumn("use_sub_folders", typeof(string)));
+    table.Columns.Add(new DataColumn("manage_sub_folders", typeof(string)));
+    table.Columns.Add(new DataColumn("folder_right", typeof(string)));
+    table.Columns.Add(new DataColumn("expand_sub_folders", typeof(string)));
+    table.Columns.Add(new DataColumn("files_only", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using System.IO
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+                ReportExecutionLog log = metaTable;
+
+    log.LogMessage("Processing " + metaTable.Source.Name);
+    
+    //GetUsers() is defined in Report Common Scripts (General tree node)
+    var users = GetUsers();
+    foreach (var user in users) {
+        addRecord(table, user, Repository.Instance.ReportsFolder + Path.DirectorySeparatorChar);
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+
+@functions {
+    void addRecord(DataTable table, SecurityUser user, string folder)
+    {
+        string folder2 = folder.Substring(Repository.Instance.ReportsFolder.Length);
+        SecurityFolder securityFolder = user.FindSecurityFolder(folder2);
+
+        if (securityFolder != null) {
+            table.Rows.Add(
+                user.Name,
+                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                user.SecurityGroupsDisplay,
+                folder2, 
+                securityFolder.UseSubFolders ? "Yes" : "No",
+                securityFolder.ManageFolder ? "Yes" : "No",
+                Helper.GetEnumDescription(securityFolder.FolderRight.GetType(), securityFolder.FolderRight),
+                securityFolder.ExpandSubFolders ? "Yes" : "No",
+                securityFolder.FilesOnly? "Yes" : "No"
+                );   
+        }
+        
+        foreach (string subFolder in Directory.GetDirectories(folder))
+        {
+            addRecord(table, user, subFolder);
+        }
+    }
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>e4f10994-51bf-4e4d-8898-865f7793ae2d</GUID>
+                <Name>folder</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Folder</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>accb23d8-d0ca-4278-b0ff-5cf08f1e796d</GUID>
+                <Name>use_sub_folders</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Use sub folders</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e0a5c447-4673-4bcc-91cc-47e9b8825781</GUID>
+                <Name>manage_sub_folders</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Manage sub folders</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>d5243175-8859-4ad4-a429-9b4b6fbfc918</GUID>
+                <Name>folder_right</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Folder right</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>27636036-5461-49ac-98cf-0c887e35d59e</GUID>
+                <Name>expand_sub_folders</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Expand sub folders</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>4bfa69dd-333e-490d-beb7-60ac15afc54f</GUID>
+                <Name>files_only</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Files only</DisplayName>
+                <DisplayOrder>9</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>6257d52a-7758-4675-9dc4-6025fe250e39</GUID>
+                <Name>user_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>User name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e027a310-0de1-4043-b5cb-2e4b3ab5e2b0</GUID>
+                <Name>user_groups</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>User groups</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>182349de-bd06-49ee-8be2-0f28111fa6cc</GUID>
+                <Name>account_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Account name</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+    <ReportSource>
+      <GUID>37180be9-2134-4aca-baad-71c935547639</GUID>
+      <Name>Users - Editors</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>8bdbb7ff-2743-434a-b59f-208622cbf3ee</GUID>
+          <Name>connection</Name>
+          <ConnectionString />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>8bdbb7ff-2743-434a-b59f-208622cbf3ee</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>aea82665-d950-4db3-a9d0-f67186b62e50</GUID>
+            <Name>Master</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+                ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("user_name", typeof(string)));
+    table.Columns.Add(new DataColumn("account_name", typeof(string)));
+    table.Columns.Add(new DataColumn("user_groups", typeof(string)));
+    table.Columns.Add(new DataColumn("editor_type", typeof(string)));
+    table.Columns.Add(new DataColumn("item_type", typeof(string)));
+    table.Columns.Add(new DataColumn("item_definition", typeof(string)));
+    table.Columns.Add(new DataColumn("right", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using System.IO
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+                ReportExecutionLog log = metaTable;
+
+    log.LogMessage("Processing " + metaTable.Source.Name);
+    //GetUsers() is defined in Report Common Scripts (General tree node)
+    var users = GetUsers();
+    foreach (var user in users) {
+        foreach (var item in user.ForbiddenDevices) {
+            table.Rows.Add(
+                user.Name, 
+                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                user.SecurityGroupsDisplay,
+                "Web Report Designer", 
+                "Device", 
+                item.DisplayName, 
+                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                );   
+        }
+        
+        foreach (var item in user.ForbiddenSources) {
+            table.Rows.Add(
+                user.Name, 
+                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                user.SecurityGroupsDisplay,
+                "Web Report Designer", 
+                "Data Source", 
+                item.DisplayName, 
+                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                );   
+        }
+        
+        foreach (var item in user.ForbiddenConnections) {
+            table.Rows.Add(
+               user.Name, 
+                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                user.SecurityGroupsDisplay,
+                "Web Report Designer", 
+                "Connection", 
+                item.DisplayName, 
+                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                );   
+        }
+        
+        foreach (var item in user.ForbiddenColumns) {
+            table.Rows.Add(
+                user.Name, 
+                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                user.SecurityGroupsDisplay,
+                "Web Report Designer", 
+                "Column", 
+                item.DisplayName, 
+                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                );   
+        }        
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>6ec7afc4-8bb9-457c-a5a3-3cd93b0bfa68</GUID>
+                <Name>user_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>User name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>968690c8-3dc4-4f05-a89b-8dc25b2c96ae</GUID>
+                <Name>account_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Account name</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9893ee64-186a-4866-bb11-0dbbafa798de</GUID>
+                <Name>editor_type</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Editor type</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>8dc3cad7-dda3-4013-a381-16d0451d128e</GUID>
+                <Name>item_type</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Item type</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>c58758ea-4aa9-45dc-9791-d0fcdf60436d</GUID>
+                <Name>item_definition</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Item definition</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>110f2496-d67a-4964-9d7f-9b76b4c953e3</GUID>
+                <Name>right</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Right</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>29f0af22-9550-47ae-807b-6fd7e60a2fda</GUID>
+                <Name>user_groups</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>User groups</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>138b9429-70e7-44e3-b606-6f72954519d0</GUID>
+      <Name>Groups</Name>
+      <SourceGUID>44eb9e66-7078-417e-ba58-c1f32f4d68d0</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>cba6f036-aa28-49d2-ae48-a22a2f1e95da</GUID>
+          <Name>Master</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>0d066d19-88b2-4887-b8ee-443adb74488f</GUID>
+          <Name>group_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>69506dfc-f77a-4f1a-bc6c-628e07ad29c0</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b4e87337-d5f5-4da8-8899-3f604616b817</GUID>
+          <Name>personal_folder</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f3723c48-5bcc-46f8-bb7a-5f971818e17d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fcab0631-624d-4707-87aa-c3abefcb248c</GUID>
+          <Name>show_folders</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>aaa7ba3d-064c-4681-bbc1-b9b0dd4dd96d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7576e409-fd3a-43f1-a892-4553a54d96ac</GUID>
+          <Name>sql_model</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>ed64f09a-d380-4c9f-acef-597bdb189801</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>03fea793-7c89-44d5-905c-9f6277338646</GUID>
+          <Name>weight</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>d8deb7a3-6d7f-434b-adda-995e20dd3c5e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9ea3fff1-304f-4155-833c-966b9f518e5a</GUID>
+          <Name>edit_profile</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>485be8c2-9957-47ce-bd37-d33b146931eb</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3f66d884-02e7-41dd-a9e2-2754ad5673c7</GUID>
+          <Name>culture</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5d3b864c-2a95-4cfa-8d6d-9fbc0dd47d71</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>02d086e1-e7ff-477e-9107-365941fae75e</GUID>
+          <Name>logo_file_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b2c85d19-1ee7-4eba-9a2d-954a288962e5</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e32b1f1f-c9ba-4336-9a3a-5c816bace87d</GUID>
+          <Name>startup</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b65902f9-a292-43be-8566-df3125defc19</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0242975e-460e-45aa-aeaf-5c5f39687629</GUID>
+          <Name>startup_report</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>9f023e0f-a22e-46a9-9a49-932f3c67e0d0</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b54bff69-4121-4976-b2f7-8b42d2ac65fd</GUID>
+      <Name>Groups Folders</Name>
+      <SourceGUID>19bcd04c-7e7f-4123-8d57-59dee8ef38bd</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>709ff7f8-1157-42a5-9896-a2e5f83aa504</GUID>
+          <Name>group_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>0cb0a2bd-5c08-4a79-94fc-d00174bf013f</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>128bf2ab-520f-4311-8ad4-4e804c3863ec</GUID>
+          <Name>folder</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>381c7438-1d07-4064-977c-7b48943fd3ca</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ffb6fbad-0ff3-4ddc-b96a-7ba4c8ec4d33</GUID>
+          <Name>use_sub_folders</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>557733e8-211b-4e72-b0a4-9012e82688fa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a08c3453-aa26-4964-b73b-15e93df1bf13</GUID>
+          <Name>manage_sub_folders</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>0efbe7fe-a954-4a4a-9003-08a47c04c976</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>023f7e78-0487-4f8e-8918-b578f7c8cd84</GUID>
+          <Name>folder_right</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>754ce804-f363-49aa-89e2-c43caab6e3b1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a81a3045-ecbd-4b2d-a331-c4a8a7454309</GUID>
+          <Name>expand_sub_folders</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>a9b529ed-0844-4648-bcc4-f491114c36b8</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>647afacf-2b5b-4a91-bcf7-5c111d746eb7</GUID>
+          <Name>files_only</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>0a5a611f-a0d2-4c54-9849-b6fbce110aa1</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>287ece02-ae86-4c09-b384-2d4fb274f9ac</GUID>
+      <Name>Groups Editors</Name>
+      <SourceGUID>dc89ee77-2bd6-41f5-aee6-0943f58a2e0b</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>40f19e38-1501-4986-b45b-3b46e2fcef7f</GUID>
+          <Name>group_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>12c6c351-8bc9-49e9-9467-3750a7f279e4</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>79786e79-7ccc-4d4e-a036-386c75ced632</GUID>
+          <Name>editor_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20433306-f478-45fe-adc1-2c4d4c5419a9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e98ff373-218d-44dc-8f80-7d16b183d74a</GUID>
+          <Name>item_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>06f8dc35-634a-42c2-8811-8b8f4e1740f0</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cbbd16de-bd4d-4d7b-b781-4ff1c9d407bc</GUID>
+          <Name>item_definition</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>fae48a1b-1e48-4fec-8d67-3ef090d2cfc7</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>43b92925-b5d9-4223-90ad-32b00eae01bb</GUID>
+          <Name>right</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>429046b7-dded-4914-846e-f52ac2d6f22c</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>7202e488-00c5-4b5d-92b7-0c2e1ca8ad2b</GUID>
+      <Name>Users</Name>
+      <SourceGUID>36737db2-a3c7-49ac-856a-31862ee6cb66</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>63e72a45-06a5-4ada-bee4-d1c917a38aad</GUID>
+          <Name>Master</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>2f77ead5-55d4-4272-8280-ab958c243ab2</GUID>
+          <Name>user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>8771b702-9c06-4ce2-a5d4-06b04dfc6fc4</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fe3144c3-68f5-43d8-8548-df692410db43</GUID>
+          <Name>account_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>a6283429-c00a-45f2-9674-c184db89e042</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>794e14a5-a984-4a51-a01f-29c2a7c48add</GUID>
+          <Name>user_groups</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>73061aa7-ee19-4db1-9a91-43ef9ed5b6c2</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3a5d59f1-dbca-4ca7-aeff-5086a1743c8f</GUID>
+          <Name>personal_folder</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>6629cf0c-e9e9-422a-b340-75e746cbe599</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7fcf90c3-824c-43a1-952c-0d2e74a4d23d</GUID>
+          <Name>show_folders</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e93f8991-0e0a-41ae-b3bb-7e85c1a64b87</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ee6d5243-2a44-49f6-b9e3-ea40dcee3107</GUID>
+          <Name>sql_model</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>193b26f4-0fca-47e5-93fd-b20bebec54e9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>869d09aa-79cf-4827-bd66-e07812bc6f2c</GUID>
+          <Name>default_group</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f770bc8d-63dc-4b0b-860b-4d8a185cb650</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>e85c9269-51bb-4adb-a4b6-8ed01bdbd6e5</GUID>
+      <Name>Users Folders</Name>
+      <SourceGUID>fa6bf35e-5b63-4612-8c47-8a1c349adb8b</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>39b781d6-fbc9-4a20-913e-3fa630b95b6e</GUID>
+          <Name>user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>6257d52a-7758-4675-9dc4-6025fe250e39</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>81ea7e39-3978-43a6-90ba-42d3f6345682</GUID>
+          <Name>account_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>182349de-bd06-49ee-8be2-0f28111fa6cc</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d487f414-62e7-42cc-8054-95bd1ab8c6f1</GUID>
+          <Name>user_groups</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e027a310-0de1-4043-b5cb-2e4b3ab5e2b0</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e5fb3e51-f209-4f93-a6df-9938a537b191</GUID>
+          <Name>folder</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e4f10994-51bf-4e4d-8898-865f7793ae2d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f4c8f750-7359-4f2d-a74a-19d91c03977f</GUID>
+          <Name>use_sub_folders</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>accb23d8-d0ca-4278-b0ff-5cf08f1e796d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c97f8e87-d7b0-4bab-bcba-d6e5adea76a5</GUID>
+          <Name>manage_sub_folders</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e0a5c447-4673-4bcc-91cc-47e9b8825781</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>388b2a8a-c3d3-4097-9e25-a66d0e75cf76</GUID>
+          <Name>folder_right</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>d5243175-8859-4ad4-a429-9b4b6fbfc918</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>23399542-6c38-4fd7-963a-3b14ad58bc11</GUID>
+          <Name>expand_sub_folders</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>27636036-5461-49ac-98cf-0c887e35d59e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>61b718b4-7aeb-4cdc-9303-4b37c3164e09</GUID>
+          <Name>files_only</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>4bfa69dd-333e-490d-beb7-60ac15afc54f</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>dd9f35d9-8b0b-4491-a576-7fa84860d34d</GUID>
+      <Name>Users Editors</Name>
+      <SourceGUID>37180be9-2134-4aca-baad-71c935547639</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>aea82665-d950-4db3-a9d0-f67186b62e50</GUID>
+          <Name>Master</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>6f0ee73c-6202-4c26-aa7b-4c351f865372</GUID>
+          <Name>user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>6ec7afc4-8bb9-457c-a5a3-3cd93b0bfa68</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7a7a719b-0683-47d5-a172-91d235089766</GUID>
+          <Name>account_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>968690c8-3dc4-4f05-a89b-8dc25b2c96ae</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f6e30e3d-0d8f-417f-860f-8bbf58c0c530</GUID>
+          <Name>user_groups</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>29f0af22-9550-47ae-807b-6fd7e60a2fda</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>acefdf6c-b105-4c2e-b74a-ac2e918521a2</GUID>
+          <Name>editor_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>9893ee64-186a-4866-bb11-0dbbafa798de</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9e310ad6-b7b6-4236-b8e6-3ad0b3657ff6</GUID>
+          <Name>item_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>8dc3cad7-dda3-4013-a381-16d0451d128e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cd1c2daf-9fe5-4d54-b364-27c7868c5e43</GUID>
+          <Name>item_definition</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>c58758ea-4aa9-45dc-9791-d0fcdf60436d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>973864a0-26ef-4cd0-b51b-b999f6e1e590</GUID>
+          <Name>right</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>110f2496-d67a-4964-9d7f-9b76b4c953e3</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <CommonScripts>
+    <CommonScript>
+      <Name>GetUsers</Name>
+      <Script>@using System.DirectoryServices;
+@using System.DirectoryServices.AccountManagement;
+
+@functions {
+    //Returns the list of common users with their groups, this may be adapted...
+    public List&lt;SecurityUser&gt; GetUsers() {
+        var result = new List&lt;SecurityUser&gt;();
+        
+        if (Repository.Instance.Security.ProviderName == "Integrated Windows Authentication") 
+        {
+            //Active Directory
+            //Build list of users and their groups from the AD
+            foreach (var group in Repository.Instance.Security.Groups) {
+                PrincipalContext context = new PrincipalContext(ContextType.Domain);
+                GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, group.Name);
+                if (groupPrincipal != null) {
+                    foreach (var adUser in groupPrincipal.GetMembers(true)) {
+                        var user = result.FirstOrDefault(i =&gt; i.Name == adUser.Name); 
+                        if (user == null) {
+                            user = new SecurityUser(Repository.Instance.Security);
+                            user.Name = adUser.Name;
+                            user.UserPrincipal = (UserPrincipal) adUser;
+                            result.Add(user);
+                        }
+                        user.AddSecurityGroup(group.Name);
+                    }        
+                }
+            }            
+        }
+        else if (Repository.Instance.Security.ProviderName == "Basic Authentication") 
+        {
+            //Static users...use the logins defined
+            foreach (var login in Repository.Instance.Security.Logins)
+            {
+                var user = new SecurityUser(Repository.Instance.Security) { Name = login.Id };
+            
+                //Add the groups defined for the login
+                foreach (var group in login.GroupNames)
+                {
+                    user.AddSecurityGroup(group);
+                }            
+                result.Add(user);
+            }                        
+        }
+        result.RemoveAll(i =&gt; i.SecurityGroups.Count == 0);
+
+        return result;
+    }
+}
+</Script>
+    </CommonScript>
+  </CommonScripts>
+  <Views>
+    <ReportView>
+      <GUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>30d96e8b-6853-47d8-ab1d-a59ea375f85a</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>6c9a9924-ae96-469e-91f9-00db8e5d008b</GUID>
+              <Name>Groups</Name>
+              <Views>
+                <ReportView>
+                  <GUID>5fc4d852-8504-48a5-80ed-0f539a378c00</GUID>
+                  <Name>Groups</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>f61f11bd-978e-4caf-9ce4-e813de654ba9</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>d1f63d62-80ce-495f-8467-553715715dad</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>c84b2dab-d30f-4385-a9fc-a3405eef0818</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>028a3f27-67dd-46b4-9c46-a5fa7c184b3c</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>39506065-63c7-4b14-80ec-7b940fc59f5a</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>4640c484-dd81-461b-8572-7d4f27676bcb</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>138b9429-70e7-44e3-b606-6f72954519d0</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>de51d375-fc90-4b95-a9af-8f9b310bc75a</GUID>
+              <Name>Groups - Folders</Name>
+              <Views>
+                <ReportView>
+                  <GUID>608d4e3c-dc94-4546-945e-56832edc6a8d</GUID>
+                  <Name>Groups Folders</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>6d501ec6-b408-4501-8529-8e474c4acdca</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>f22903d8-b3f0-4e8e-a451-e0ba7693c3c3</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>5f3e2bf1-9e2c-4b28-b74c-a56bca7b5d4d</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>74ed3d61-6e54-44a9-ab55-b92cba8b0273</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>8d818656-be09-4d0d-9e3a-d61f992010e4</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>4475be9b-c2a5-4385-aac2-5cc88fdf634d</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>b54bff69-4121-4976-b2f7-8b42d2ac65fd</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>8c1ed7d3-aaf7-4fbc-924c-38c94be048b2</GUID>
+              <Name>Groups - Editors</Name>
+              <Views>
+                <ReportView>
+                  <GUID>17f7ba65-a7bb-435b-ac5e-4f32f1456bed</GUID>
+                  <Name>Groups Editors</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>83e8535c-a9be-483c-bd5b-eedcabd43d25</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>858088ac-fea3-4730-8d6a-501461dd6693</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>3405092e-33e7-4c59-af9c-6845fd7ed3cf</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>786e1ed1-3a47-448b-8588-8ac18af854c3</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>ba5faa77-a50f-4fde-bc38-3b60d4d79fe3</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b023b6e3-e676-4f8a-8424-54e61c48adbf</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>287ece02-ae86-4c09-b384-2d4fb274f9ac</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>7e88abf1-acfa-4fd1-bc14-c21bd7f1f46e</GUID>
+              <Name>Users</Name>
+              <Views>
+                <ReportView>
+                  <GUID>0f43ef49-3e07-433d-8b4f-d4c1b42de201</GUID>
+                  <Name>Users</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>8d525132-98d5-4ce5-8826-319de6be2af7</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>c7606de7-8e68-4c82-acbd-98b468bdbcb8</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>3abdac5c-e83e-457d-b874-900ac5316329</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>539e454f-c7a0-42cb-80ea-000db61b1842</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>fef6a16d-3941-479a-b9d7-8ff3011322a8</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>14df3a3b-1d85-4865-9190-db081e388522</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>7202e488-00c5-4b5d-92b7-0c2e1ca8ad2b</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>7491c8fc-687f-4d66-a9a9-2bda621b255e</GUID>
+              <Name>Users - Folders</Name>
+              <Views>
+                <ReportView>
+                  <GUID>eff7b6c9-96c0-4e40-a266-d755cccc6b79</GUID>
+                  <Name>Users Folders</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>a4231e33-ed3b-479d-a978-3a169e497877</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>de856ca6-9c32-4120-9662-8ced1e7ea6a5</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>919a9c95-1aa2-47a6-b516-ed094d2d1d37</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>69618815-9bfe-4abc-b9ee-fe13d0bf1928</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>2b84b14c-ab21-452b-980c-14644aa6f9e0</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>72f311bf-ee4a-42bb-9cdc-65e0a04d305b</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>e85c9269-51bb-4adb-a4b6-8ed01bdbd6e5</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>5</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>fdf8715a-0c66-4b13-9fe6-0e7a249a0e6b</GUID>
+              <Name>Users - Editors</Name>
+              <Views>
+                <ReportView>
+                  <GUID>da6c052a-a455-48d4-bea6-97721da74b8e</GUID>
+                  <Name>Users Editors</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>407984e5-c77f-4bc2-8b3c-a7e071b0ad27</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>ff1793ac-592e-489a-8b3a-3c24dfbc987b</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>f7876367-c6ff-4240-8fae-a3749e92e4c7</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>dc8518b5-016a-4f9b-8328-8493114f99f2</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>9c41bb11-376f-44dd-b10c-21d8dc40182f</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>2f9c25b7-6047-4c64-be5e-344c3172797f</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>dd9f35d9-8b0b-4491-a576-7fa84860d34d</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>6</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+      <ExcelConfigurations>
+        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;&lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;&lt;ShowTitle&gt;false&lt;/ShowTitle&gt;&lt;ShowMessage&gt;false&lt;/ShowMessage&gt;&lt;ShowInformation&gt;false&lt;/ShowInformation&gt;&lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;&lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;&lt;FreezePanes&gt;true&lt;/FreezePanes&gt;&lt;SkipModel&gt;false&lt;/SkipModel&gt;&lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;&lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;&lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;&lt;ChartWidth&gt;600&lt;/ChartWidth&gt;&lt;ChartHeight&gt;400&lt;/ChartHeight&gt;&lt;ChartStacked&gt;false&lt;/ChartStacked&gt;&lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;&lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;&lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;&lt;RootConfigurationScript /&gt;&lt;RootMainScript /&gt;&lt;RootHeaderScript /&gt;&lt;ConfigurationScript /&gt;&lt;MainScript /&gt;&lt;HeaderScript /&gt;&lt;SummaryScript /&gt;&lt;PageScript /&gt;&lt;ChartScript /&gt;&lt;DataScript /&gt;&lt;/SealExcelCfg&gt;</string>
+      </ExcelConfigurations>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

@@ -153,7 +153,6 @@ namespace Seal.Model
 #endif
         public string TemplateName { get; set; }
 
-
         private MetaTableTemplate _tableTemplate = null;
         [XmlIgnore]
         public MetaTableTemplate TableTemplate
@@ -416,7 +415,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Dynamic Columns"), Description("If true, columns are generated automatically from the Table Name or the SQL Select Statement by reading the database catalog."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Dynamic columns"), Description("If true, columns are generated automatically from the Table Name or the SQL Select Statement by reading the database catalog."), Id(6, 1)]
 #endif
         public bool DynamicColumns
         {
@@ -434,7 +433,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Keep Column Names"), Description("If true, the display names of the columns are kept when generated from the source SQL."), Id(7, 1)]
+        [Category("Definition"), DisplayName("Keep column names"), Description("If true, the display names of the columns are kept when generated from the source SQL."), Id(7, 1)]
 #endif
         public bool KeepColumnNames { get; set; } = false;
 
@@ -442,7 +441,7 @@ namespace Seal.Model
         /// Type of the table got from database catalog
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Table Type"), Description("Type of the table got from database catalog."), Id(8, 1)]
+        [Category("Definition"), DisplayName("Table type"), Description("Type of the table got from database catalog."), Id(8, 1)]
 #endif
         public string Type { get; set; }
 
@@ -475,7 +474,7 @@ namespace Seal.Model
         /// SQL Statement executed before the query when the table is involved. The statement may contain Razor script if it starts with '@'.
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(2, 2)]
+        [Category("SQL"), DisplayName("Pre SQL statement"), Description("SQL Statement executed before the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(2, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string PreSQL { get; set; }
@@ -484,7 +483,7 @@ namespace Seal.Model
         /// SQL Statement executed after the query when the table is involved. The statement may contain Razor script if it starts with '@'.
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(3, 2)]
+        [Category("SQL"), DisplayName("Post SQL statement"), Description("SQL Statement executed after the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(3, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string PostSQL { get; set; }
@@ -494,7 +493,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(4, 2)]
+        [Category("SQL"), DisplayName("Ignore Pre and Post SQL errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(4, 2)]
 #endif
         public bool IgnorePrePostError { get; set; } = false;
         public bool ShouldSerializeIgnorePrePostError() { return IgnorePrePostError; }
@@ -503,7 +502,7 @@ namespace Seal.Model
         /// Additional SQL added in the WHERE clause when the table is involved in a query. The text may contain Razor script if it starts with '@'.
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Additional WHERE Clause"), Description("Additional SQL added in the WHERE clause when the table is involved in a query. The text may contain Razor script if it starts with '@'."), Id(5, 2)]
+        [Category("SQL"), DisplayName("Additional WHERE clause"), Description("Additional SQL added in the WHERE clause when the table is involved in a query. The text may contain Razor script if it starts with '@'."), Id(5, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string WhereSQL { get; set; }

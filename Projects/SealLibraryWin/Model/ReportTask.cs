@@ -14,6 +14,7 @@ using System.Data.Odbc;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using Oracle.ManagedDataAccess.Client;
+using System.Collections.Generic;
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.Drawing.Design;
@@ -30,6 +31,8 @@ namespace Seal.Model
         , ITreeSort 
 #endif
     {
+        public const string ParentTaskConnectionGUID = "5";
+
 #if WINDOWS
         #region Editor
 
@@ -37,14 +40,21 @@ namespace Seal.Model
         {
             if (_dctd != null)
             {
+                InitParameters();
+
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("SourceGUID").SetIsBrowsable(true);
                 GetProperty("ConnectionGUID").SetIsBrowsable(true);
+                GetProperty("TemplateName").SetIsBrowsable(true);
+                GetProperty("Description").SetIsBrowsable(true);
+
+                GetProperty("ParameterValues").SetIsBrowsable(Parameters.Count > 0);
                 GetProperty("SQL").SetIsBrowsable(true);
                 GetProperty("Enabled").SetIsBrowsable(true);
                 GetProperty("IgnoreError").SetIsBrowsable(true);
+                GetProperty("BodyScript").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
                 GetProperty("ExecuteForEachConnection").SetIsBrowsable(true);
                 GetProperty("Step").SetIsBrowsable(true);
@@ -54,6 +64,7 @@ namespace Seal.Model
                 //GetProperty("Error").SetIsBrowsable(true);
 
                 //Readonly
+                GetProperty("TemplateName").SetIsReadOnly(true);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -76,6 +87,171 @@ namespace Seal.Model
         /// </summary>
         public void InitReferences()
         {
+            if (string.IsNullOrEmpty(TemplateName)) TemplateName = ReportTaskTemplate.DefaultName;
+            foreach (var child in Tasks)
+            {
+                child.Report = Report;
+                child.ParentTask = this;
+                child.InitReferences();
+            }
+        }
+
+        /// <summary>
+        /// The Razor Script used to execute the task
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Template name"), Description("The Template used to define the task."), Id(1, 1)]
+#endif
+        public string TemplateName { get; set; }
+
+        private ReportTaskTemplate _taskTemplate = null;
+        [XmlIgnore]
+        public ReportTaskTemplate TaskTemplate
+        {
+            get
+            {
+                if (_taskTemplate == null)
+                {
+                    if (!string.IsNullOrEmpty(TemplateName)) _taskTemplate = RepositoryServer.TaskTemplates.FirstOrDefault(i => i.Name == TemplateName);
+                    if (_taskTemplate == null) _taskTemplate = RepositoryServer.TaskTemplates.FirstOrDefault(i => i.Name == ReportTaskTemplate.DefaultName);
+
+                    InitParameters();
+                }
+                return _taskTemplate;
+            }
+        }
+
+        /// <summary>
+        /// Description coming from the template
+        /// </summary>
+        [XmlIgnore]
+#if WINDOWS
+        [Category("Definition"), DisplayName("Template description"), Description("Description coming from the template."), Id(2, 1)]
+#endif
+        public string Description
+        {
+            get
+            {
+                string result = TaskTemplate.Description;
+                return result ?? TemplateDescription;
+            }
+        }
+
+        public bool ShouldSerializeViews() { return Tasks.Count > 0; }
+
+        /// <summary>
+        /// Current parent task if any
+        /// </summary>
+        [XmlIgnore]
+        public ReportTask ParentTask { get; set; } = null;
+
+        /// <summary>
+        /// Children of the task
+        /// </summary>
+        public List<ReportTask> Tasks = new List<ReportTask>();
+
+        /// <summary>
+        /// List of Table Parameters
+        /// </summary>
+        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
+        public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
+
+        /// <summary>
+        /// Init the  parameters from the template
+        /// </summary>
+        public void InitParameters()
+        {
+            if (TaskTemplate != null)
+            {
+                var initialParameters = Parameters.ToList();
+                Parameters.Clear();
+
+                var defaultParameters = TaskTemplate.DefaultParameters;
+                foreach (var configParameter in defaultParameters)
+                {
+                    Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
+                    if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
+                    Parameters.Add(parameter);
+                    parameter.InitFromConfiguration(configParameter);
+                }
+                //Show Error if any
+                if (!string.IsNullOrEmpty(TaskTemplate.Error)) Error = TaskTemplate.Error;
+
+                if (string.IsNullOrEmpty(_name)) _name = "Master"; //Force a name for backward compatibility
+            }
+        }
+
+#if WINDOWS
+        /// <summary>
+        /// The parameter values for edition.
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Task parameters"), Description("The task parameter values."), Category("Definition"), Id(10, 1)]
+        [XmlIgnore]
+        public ParametersEditor ParameterValues
+        {
+            get
+            {
+                var editor = new ParametersEditor();
+                editor.Init(Parameters);
+                return editor;
+            }
+        }
+#endif
+
+        //Temporary variables to help for report serialization...
+        private List<Parameter> _tempParameters;
+
+        /// <summary>
+        /// Operations performed before the serialization
+        /// </summary>
+        public void BeforeSerialization()
+        {
+            InitParameters();
+            _tempParameters = Parameters.ToList();
+            //Remove parameters identical to config
+            Parameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
+
+            if (Script != null && Script.Trim().Replace("\r\n", "\n") == DefaultScript.Trim().Replace("\r\n", "\n")) Script = null;
+            if (BodyScript != null && BodyScript.Trim().Replace("\r\n", "\n") == DefaultBodyScript.Trim().Replace("\r\n", "\n")) BodyScript = null;
+
+            foreach (var task in Tasks) task.BeforeSerialization();
+        }
+
+        /// <summary>
+        /// Operations performed after the serialization
+        /// </summary>
+        public void AfterSerialization()
+        {
+            Parameters = _tempParameters;
+            foreach (var task in Tasks) task.AfterSerialization();
+        }
+
+        /// <summary>
+        /// Returns the parameter value
+        /// </summary>
+        public string GetValue(string name)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? "" : (string.IsNullOrEmpty(parameter.Value) ? parameter.ConfigValue : parameter.Value);
+        }
+
+        /// <summary>
+        /// Returns a parameter boolean value with a default if it does not exist
+        /// </summary>
+        public bool GetBoolValue(string name, bool defaultValue)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? defaultValue : parameter.BoolValue;
+        }
+
+        /// <summary>
+        /// Returns a paramter ineteger value
+        /// </summary>
+        public int GetNumericValue(string name)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? 0 : parameter.NumericValue;
         }
 
         /// <summary>
@@ -83,7 +259,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Source"), Description("The source used by the task."), Id(1, 1)]
+        [Category("Definition"), DisplayName("Source"), Description("The source used by the task."), Id(3, 1)]
         [TypeConverter(typeof(MetaSourceConverter))]
 #endif
         public string SourceGUID { get; set; }
@@ -95,14 +271,16 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(ReportSource.DefaultReportConnectionGUID)]
-        [DisplayName("Connection"), Description("The connection used by the task."), Category("Definition"), Id(2, 1)]
+        [DisplayName("Connection"), Description("The connection used by the task."), Category("Definition"), Id(4, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
 #endif
         public string ConnectionGUID
         {
             get
             {
-                if (_connectionGUID != ReportSource.DefaultReportConnectionGUID && _connectionGUID != ReportSource.DefaultRepositoryConnectionGUID)
+                if (_connectionGUID != ReportSource.DefaultReportConnectionGUID 
+                    && _connectionGUID != ReportSource.DefaultRepositoryConnectionGUID
+                    && !(_connectionGUID == ParentTaskConnectionGUID && ParentTask != null))
                 {
                     //reset it if not found in current connections
                     if (Source != null && !Source.Connections.Exists(i => i.GUID == _connectionGUID) && !Source.TempConnections.Exists(i => i.GUID == _connectionGUID)) _connectionGUID = ReportSource.DefaultReportConnectionGUID;
@@ -117,7 +295,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(true)]
-        [Category("Definition"), DisplayName("Is Enabled"), Description("If false, the task is ignored and not executed."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Is enabled"), Description("If false, the task is ignored and not executed."), Id(5, 1)]
 #endif
         public bool Enabled { get; set; } = true;
 
@@ -126,7 +304,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(ExecutionStep.BeforeModel)]
-        [Category("Definition"), DisplayName("Execution Step"), Description("The Report Execution Step to execute the task. By default, tasks are executed before the models generation."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Execution step"), Description("The Report Execution Step to execute the task. By default, tasks are executed before the models generation."), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public ExecutionStep Step { get; set; } = ExecutionStep.BeforeModel;
@@ -142,6 +320,7 @@ namespace Seal.Model
                 MetaConnection result = Source.Connection;
                 if (_connectionGUID == ReportSource.DefaultReportConnectionGUID) result = Source.Connection;
                 else if (_connectionGUID == ReportSource.DefaultRepositoryConnectionGUID) result = Source.RepositoryConnection;
+                else if (_connectionGUID == ParentTaskConnectionGUID && ParentTask != null) result = ParentTask.Connection;
                 else result = Source.Connections.FirstOrDefault(i => i.GUID == _connectionGUID);
                 if (result == null && Source.Connections.Count > 0)
                 {
@@ -184,10 +363,52 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Body Razor script executed for the Task.
+        /// </summary>
+#if WINDOWS
+        [Category("Options"), DisplayName("Body script"), Description("Body Razor script executed for the Task."), Id(1, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string BodyScript { get; set; }
+
+
+        [XmlIgnore]
+        /// <summary>
+        /// Description coming from the template
+        /// </summary>
+        public string TemplateDescription;
+
+        /// <summary>
+        /// Default script coming from the template
+        /// </summary>
+        [XmlIgnore]
+        public string DefaultScript
+        {
+            get
+            {
+                string result = TaskTemplate?.DefaultScript;
+                return result ?? "";
+            }
+        }
+
+        /// <summary>
+        /// Default body script coming from the template
+        /// </summary>
+        [XmlIgnore]
+        public string DefaultBodyScript
+        {
+            get
+            {
+                string result = TaskTemplate?.DefaultBodyScript;
+                return result ?? "";
+            }
+        }
+
+        /// <summary>
         /// SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SQL Statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
+        [Category("Definition"), DisplayName("SQL statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string SQL { get; set; }
@@ -206,7 +427,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Options"), DisplayName("Ignore Errors"), Description("If true, errors occuring during the task execution are ignored and the report execution continues."), Id(2, 2)]
+        [Category("Options"), DisplayName("Ignore errors"), Description("If true, errors occuring during the task execution are ignored and the report execution continues."), Id(2, 2)]
 #endif
         public bool IgnoreError { get; set; } = false;
 
@@ -250,7 +471,7 @@ namespace Seal.Model
         [XmlIgnore]
         public ReportExecution Execution;
 
-#region Helpers
+        #region Helpers
 
         /// <summary>
         /// Last information message
@@ -291,7 +512,7 @@ namespace Seal.Model
         /// </summary>
         public void LogMessage(string message, params object[] args)
         {
-            Report.LogMessage(message, args);
+            Report.LogMessage(ExecLogPrefix + message, args);
         }
 
         /// <summary>
@@ -377,32 +598,48 @@ namespace Seal.Model
         /// </summary>
         public void Execute()
         {
+            if (!Enabled) return;
+
+            InitParameters();
+
             CancelReport = false;
             DbInfoMessage = new StringBuilder();
             //Temp list to avoid change of connections during a task...
             var connections = Source.Connections.Where(i => ExecuteForEachConnection || i.GUID == Connection.GUID).ToList();
-            foreach (var connection in connections)
+            var initialConnectionGUID = ConnectionGUID;
+            try
             {
-                Execute(connection);
+                foreach (var connection in connections)
+                {
+                    if (Report.Cancel) return;
+
+                    ConnectionGUID = connection.GUID;
+                    LogMessage($"Starting task '{Name}' with connection '{Connection.Name}'");
+                    Progression = 0;
+
+                    var bodyScript = string.IsNullOrEmpty(BodyScript) ? DefaultBodyScript : BodyScript;
+                    RazorHelper.CompileExecute(bodyScript, this);
+
+                    LogMessage("Ending task '{0}'", Name);
+                    Progression = 100; //100%
+                }
             }
+            finally
+            {
+                ConnectionGUID = initialConnectionGUID;
+            }
+
         }
 
-        /// <summary>
-        /// Executes the task with a given connection
-        /// </summary>
-        /// <param name="currentConnection"></param>
-        public void Execute(MetaConnection currentConnection)
+        public void ExecuteSQL()
         {
-            LogMessage("Starting task with connection '{0}'", currentConnection.Name);
-            Progression = 0;
-            if (!Report.Cancel && !string.IsNullOrEmpty(SQL))
+            if (!string.IsNullOrEmpty(SQL))
             {
-                _command = GetDbCommand(currentConnection);
+                _command = GetDbCommand(Connection);
                 object sqlResult = null;
                 try
                 {
                     string finalSql = RazorHelper.CompileExecute(SQL, this);
-                    LogMessage("Executing SQL: {0}", finalSql);
                     _command.CommandText = finalSql;
                     sqlResult = _command.ExecuteScalar();
                 }
@@ -421,18 +658,15 @@ namespace Seal.Model
                 }
             }
 
-            if (!Report.Cancel && !string.IsNullOrEmpty(Script))
-            {
-                LogMessage("Executing Script...");
-                string result = RazorHelper.CompileExecute(Script, this);
-                if (result.Trim() == "0")
-                {
-                    LogMessage("Script returns 0, the report is cancelled.");
-                    CancelReport = true;
-                }
-            }
+        }
 
-            Progression = 100; //100%
+        public void ExecuteScript()
+        {
+            var script = string.IsNullOrEmpty(Script) ? DefaultScript : Script;
+            if (!string.IsNullOrEmpty(script))
+            {
+                RazorHelper.CompileExecute(script, this);
+            }
         }
 
         void OleDbInfoMessage(object sender, OleDbInfoMessageEventArgs e)
@@ -463,6 +697,27 @@ namespace Seal.Model
             DbInfoMessage.Append(e.Errors);
         }
         #endregion
+
+        /// <summary>
+        /// The previous Task executed
+        /// </summary>
+        public ReportTask ExecPreviousTask;
+
+        /// <summary>
+        /// Optional input object for the task
+        /// </summary>
+        public object ExecInput;
+
+        /// <summary>
+        /// The result of the task
+        /// </summary>
+        public object ExecResult;
+
+        /// <summary>
+        /// Prefix for logs
+        /// </summary>
+        public string ExecLogPrefix = "";
+
     }
 }
 

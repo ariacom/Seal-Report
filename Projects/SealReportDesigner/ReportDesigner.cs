@@ -181,6 +181,24 @@ namespace Seal
             }
         }
 
+        void initTreeNodeTasks(TreeNode node, ReportTask task)
+        {
+            if (task != null)
+            {
+                int index = 1;
+                foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
+                {
+                    childTask.SortOrder = index++;
+                    var imageIndex = childTask.Enabled ? 12 : 14;
+                    TreeNode childNode = new TreeNode(childTask.Name) { ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
+                    childNode.Tag = childTask;
+                    node.Nodes.Add(childNode);
+                    initTreeNodeTasks(childNode, childTask);
+                }
+                node.Expand();
+            }
+        }
+
         void updateTreeNodeViewNames(TreeNode node)
         {
             var view = node.Tag as ReportView;
@@ -254,6 +272,7 @@ namespace Seal
                         var imageIndex = task.Enabled ? 12 : 14;
                         TreeNode taskTN = new TreeNode(task.Name) { Tag = task, ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
                         _tasksTN.Nodes.Add(taskTN);
+                        initTreeNodeTasks(taskTN, task);
                     }
                     _tasksTN.Expand();
 
@@ -808,6 +827,8 @@ namespace Seal
             if (entry != null) entry.Expanded = true;
             entry = Helper.GetGridEntry(mainPropertyGrid, "table parameters");
             if (entry != null) entry.Expanded = true;
+            entry = Helper.GetGridEntry(mainPropertyGrid, "task parameters");
+            if (entry != null) entry.Expanded = true;
 
             toolStripHelper.SetHelperButtons(selectedEntity);
             //init shortcuts
@@ -868,7 +889,9 @@ namespace Seal
                 }
                 else if (entity is ReportTask)
                 {
-                    e.Node.Text = Helper.GetUniqueName(e.Label, (from i in Report.Tasks select i.Name).ToList());
+                    var task = entity as ReportTask;
+                    var tasks = task.ParentTask == null ? Report.Tasks : task.ParentTask.Tasks;
+                    e.Node.Text = Helper.GetUniqueName(e.Label, (from i in tasks select i.Name).ToList());
                 }
                 else if (entity is ReportOutput)
                 {
@@ -902,8 +925,8 @@ namespace Seal
             }
 
             //Enable shortcuts
-    //        copyToolStripMenuItem.ShortcutKeys = (Keys.Control | Keys.C);
-      //      removeRootToolStripMenuItem.ShortcutKeys = Keys.Delete;
+            //        copyToolStripMenuItem.ShortcutKeys = (Keys.Control | Keys.C);
+            //      removeRootToolStripMenuItem.ShortcutKeys = Keys.Delete;
         }
 
         #endregion
@@ -1038,8 +1061,26 @@ namespace Seal
                 }
                 else if (entity is TasksFolder)
                 {
-                    addAddItem("Add a Task", null);
+                    foreach (var template in RepositoryServer.TaskTemplates)
+                    {
+                        addAddItem("Add a " + template.Name + " Task", template);
+                    }
                     addRemoveItem("Remove Tasks...");
+                }
+                else if (entity is ReportTask)
+                {
+                    var task = (ReportTask)entity;
+                    foreach (var template in RepositoryServer.TaskTemplates)
+                    {
+                        addAddItem("Add a " + template.Name + " Task", template);
+                    }
+
+                    addRemoveItem("Remove Tasks...");
+                    addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addSmartCopyItem("Smart copy...", entity);
+                    if (task.Enabled && task.ParentTask == null) addExecuteRenderContextItem(((RootComponent)entity).Name, " (this task only)");
+                    treeViewHelper.addMoveUpDown(entity);
                 }
                 else if (entity is OutputFolder)
                 {
@@ -1101,14 +1142,6 @@ namespace Seal
                         if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                         treeContextMenuStrip.Items.Add(ts);
                     }
-                }
-                else if (entity is ReportTask)
-                {
-                    addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                    addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                    addSmartCopyItem("Smart copy...", entity);
-                    if (((ReportTask)entity).Enabled) addExecuteRenderContextItem(((RootComponent)entity).Name, " (this task only)");
-                    treeViewHelper.addMoveUpDown(entity);
                 }
                 else if (entity is ReportOutput)
                 {
@@ -1217,10 +1250,10 @@ namespace Seal
             {
                 newEntity = _report.AddChildView((ReportView)selectedEntity, (ReportViewTemplate)((ToolStripMenuItem)sender).Tag);
             }
-            else if (selectedEntity is TasksFolder)
+            else if (selectedEntity is TasksFolder || selectedEntity is ReportTask)
             {
                 ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
-                if (menuItem != null) newEntity = _report.AddTask();
+                newEntity = _report.AddTask(selectedEntity as ReportTask, (ReportTaskTemplate)menuItem.Tag);
             }
             else if (selectedEntity is OutputFolder)
             {
@@ -1400,13 +1433,15 @@ namespace Seal
             }
             else if (selectedEntity is ReportTask)
             {
+                var taskEntity = selectedEntity as ReportTask;
                 newEntity = Helper.Clone(selectedEntity);
-                _report.Tasks.Add((ReportTask)newEntity);
+                var tasks = taskEntity.ParentTask != null ? taskEntity.ParentTask.Tasks : Report.Tasks;
+                tasks.Add((ReportTask)newEntity);
                 _report.InitReferences();
                 ((RootComponent)newEntity).GUID = Guid.NewGuid().ToString();
-                ((RootComponent)newEntity).Name = Helper.GetUniqueName(((RootComponent)selectedEntity).Name + " - Copy", (from i in _report.Tasks select i.Name).ToList());
+                ((RootComponent)newEntity).Name = Helper.GetUniqueName(taskEntity.Name + " - Copy", (from i in tasks select i.Name).ToList());
                 int idx = 1;
-                foreach (var task in _report.Tasks.OrderBy(i => i.SortOrder)) task.SortOrder = idx++;
+                foreach (var task in tasks.OrderBy(i => i.SortOrder)) task.SortOrder = idx++;
             }
             else if (selectedEntity is ReportOutput)
             {
@@ -1815,34 +1850,36 @@ namespace Seal
                         mainTreeView.SelectedNode = sourceNode;
                     }
                 }
-                else if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportTask && targetNode.Tag is ReportTask)
+                else if (sourceNode != null && targetNode != null && sourceNode != targetNode && sourceNode.Tag is ReportTask)
                 {
                     ReportTask sourceTask = sourceNode.Tag as ReportTask;
                     ReportTask targetTask = targetNode.Tag as ReportTask;
+                    var tasks = targetTask == null ? Report.Tasks : targetTask.Tasks;
+
+                    //move the parent
+                    ReportTask parent = sourceNode.Parent.Tag as ReportTask;
+                    if (parent != null) parent.Tasks.Remove(sourceTask);
+                    else Report.Tasks.Remove(sourceTask);
+
+                    //Set new parent
+                    sourceTask.ParentTask = targetTask;
+                    if (targetTask == null && sourceTask.ConnectionGUID == ReportTask.ParentTaskConnectionGUID) sourceTask.ConnectionGUID = ReportSource.DefaultReportConnectionGUID;
+
+                    tasks.Add(sourceTask);
+                    //Set first or last
+                    sourceTask.SortOrder = sourceTask.SortOrder == tasks.Min(i => i.SortOrder) ? tasks.Count + 1 : -1;
+
                     //move the position
                     int index = 0;
-                    foreach (var task in Report.Tasks.OrderBy(i => i.SortOrder))
+                    foreach (var task in tasks.OrderBy(i => i.SortOrder))
                     {
-                        if (task == targetTask)
-                        {
-                            sourceTask.SortOrder = index++;
-                            targetTask.SortOrder = index;
-                            if (index == Report.Tasks.Count)
-                            {
-                                sourceTask.SortOrder = index;
-                                targetTask.SortOrder = index - 1;
-                            }
-                        }
-                        else if (task != sourceTask)
-                        {
-                            task.SortOrder = index;
-                        }
-                        index++;
+                        task.SortOrder = index++;
                     }
                     SetModified();
                     mainTreeView.Sort();
+                    init(_tasksTN);
                     e.Effect = DragDropEffects.Move;
-                    mainTreeView.SelectedNode = sourceNode;
+                    selectNode(sourceTask);
                 }
                 else treeViewHelper.mainTreeView_DragDrop(sender, e);
             }

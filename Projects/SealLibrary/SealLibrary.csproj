@@ -1,174 +1,175 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Seal</RootNamespace>
-    <AssemblyName>SealLibrary</AssemblyName>
-    <Configurations>Debug;Release</Configurations>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Product>Seal Report</Product>
-    <Version>6.7.2.0</Version>
-    <FileVersion>6.7.2.0</FileVersion>
-    <AssemblyVersion>6.7.2.0</AssemblyVersion>
-    <Description>Seal Report Library</Description>
-    <Authors>Ariacom</Authors>
-    <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://sealreport.org</PackageProjectUrl>
-    <PackageId>SealReportLibrary.NETCore</PackageId>
-    <PackageReleaseNotes>Nuget package publication</PackageReleaseNotes>
-    <PackageIcon>sealNugetLogo.png</PackageIcon>
-    <PackageTags>Seal Report SealReport SealLibrary</PackageTags>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>Seal</RootNamespace>
+		<AssemblyName>SealLibrary</AssemblyName>
+		<Configurations>Debug;Release</Configurations>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Product>Seal Report</Product>
+		<Version>6.7.2.0</Version>
+		<FileVersion>6.7.2.0</FileVersion>
+		<AssemblyVersion>6.7.2.0</AssemblyVersion>
+		<Description>Seal Report Library</Description>
+		<Authors>Ariacom</Authors>
+		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageProjectUrl>https://sealreport.org</PackageProjectUrl>
+		<PackageId>SealReportLibrary.NETCore</PackageId>
+		<PackageReleaseNotes>Nuget package publication</PackageReleaseNotes>
+		<PackageIcon>sealNugetLogo.png</PackageIcon>
+		<PackageTags>Seal Report SealReport SealLibrary</PackageTags>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<DefineConstants>DEBUG;TRACE;</DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DefineConstants></DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<DefineConstants></DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\_dev\Seal-Report\Projects\SealLibrary\SealLibrary.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>C:\_dev\Seal-Report\Projects\SealLibrary\SealLibrary.xml</DocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\SealLibraryWin\Helpers\ObjectShredder.cs" Link="Helpers\ObjectShredder.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\CryptoHelper.cs" Link="Helpers\CryptoHelper.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\DataTableLoader.cs" Link="Helpers\DataTableLoader.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\ExcelHelper.cs" Link="Helpers\ExcelHelper.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\FileHelper.cs" Link="Helpers\FileHelper.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\Impersonator.cs" Link="Helpers\Impersonator.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\RazorHelper.cs" Link="Helpers\RazorHelper.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\TaskDatabaseHelper.cs" Link="Helpers\TaskDatabaseHelper.cs" />
-    <Compile Include="..\SealLibraryWin\Helpers\TaskHelper.cs" Link="Helpers\TaskHelper.cs" />
-    <Compile Include="..\SealLibraryWin\Model\Audit.cs" Link="Model\Audit.cs" />
-    <Compile Include="..\SealLibraryWin\Model\CategoryFolder.cs" Link="Model\CategoryFolder.cs" />
-    <Compile Include="..\SealLibraryWin\Model\CommonScript.cs" Link="Model\CommonScript.cs" />
-    <Compile Include="..\SealLibraryWin\Model\EditorTableDefinition.cs" Link="Model\EditorTableDefinition.cs" />
-    <Compile Include="..\SealLibraryWin\Model\Enums.cs" Link="Model\Enums.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ExecutionInterface.cs" Link="Model\ExecutionInterface.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MenuReportViewsPool.cs" Link="Model\MenuReportViewsPool.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaColumn.cs" Link="Model\MetaColumn.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaConnection.cs" Link="Model\MetaConnection.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaData.cs" Link="Model\MetaData.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaEnum.cs" Link="Model\MetaEnum.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaEV.cs" Link="Model\MetaEV.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaJoin.cs" Link="Model\MetaJoin.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaSource.cs" Link="Model\MetaSource.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaTable.cs" Link="Model\MetaTable.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaTableLink.cs" Link="Model\MetaTableLink.cs" />
-    <Compile Include="..\SealLibraryWin\Model\MetaTableTemplate.cs" Link="Model\MetaTableTemplate.cs" />
-    <Compile Include="..\SealLibraryWin\Model\Navigation.cs" Link="Model\Navigation.cs" />
-    <Compile Include="..\SealLibraryWin\Model\NavigationContext.cs" Link="Model\NavigationContext.cs" />
-    <Compile Include="..\SealLibraryWin\Model\NavigationLink.cs" Link="Model\NavigationLink.cs" />
-    <Compile Include="..\SealLibraryWin\Model\OutputDevice.cs" Link="Model\OutputDevice.cs" />
-    <Compile Include="..\SealLibraryWin\Model\OutputEMailDevice.cs" Link="Model\OutputEMailDevice.cs" />
-    <Compile Include="..\SealLibraryWin\Model\OutputFileServerDevice.cs" Link="Model\OutputFileServerDevice.cs" />
-    <Compile Include="..\SealLibraryWin\Model\OutputFolderDevice.cs" Link="Model\OutputFolderDevice.cs" />
-    <Compile Include="..\SealLibraryWin\Model\Parameter.cs" Link="Model\Parameter.cs" />
-    <Compile Include="..\SealLibraryWin\Model\Report.cs" Link="Model\Report.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportComponent.cs" Link="Model\ReportComponent.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportElement.cs" Link="Model\ReportElement.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportExecution.cs" Link="Model\ReportExecution.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportModel.cs" Link="Model\ReportModel.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportOutput.cs" Link="Model\ReportOutput.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportRestriction.cs" Link="Model\ReportRestriction.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportSchedule.cs" Link="Model\ReportSchedule.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportSource.cs" Link="Model\ReportSource.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportTask.cs" Link="Model\ReportTask.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportView.cs" Link="Model\ReportView.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportViewPartialTemplate.cs" Link="Model\ReportViewPartialTemplate.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ReportViewTemplate.cs" Link="Model\ReportViewTemplate.cs" />
-    <Compile Include="..\SealLibraryWin\Model\Repository.cs" Link="Model\Repository.cs" />
-    <Compile Include="..\SealLibraryWin\Model\RepositoryServer.cs" Link="Model\RepositoryServer.cs" />
-    <Compile Include="..\SealLibraryWin\Model\RepositoryTranslation.cs" Link="Model\RepositoryTranslation.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ResultCell.cs" Link="Model\ResultCell.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ResultData.cs" Link="Model\ResultData.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ResultPage.cs" Link="Model\ResultPage.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ResultSerieValue.cs" Link="Model\ResultSerieValue.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ResultTable.cs" Link="Model\ResultTable.cs" />
-    <Compile Include="..\SealLibraryWin\Model\ResultTotalCell.cs" Link="Model\ResultTotalCell.cs" />
-    <Compile Include="..\SealLibraryWin\Model\RootComponent.cs" Link="Model\RootComponent.cs" />
-    <Compile Include="..\SealLibraryWin\Model\RootEditor.cs" Link="Model\RootEditor.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SealExcelConverter.cs" Link="Model\SealExcelConverter.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SealInterface.cs" Link="Model\SealInterface.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SealPdfConverter.cs" Link="Model\SealPdfConverter.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SealReportScheduler.cs" Link="Model\SealReportScheduler.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SealSchedule.cs" Link="Model\SealSchedule.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SealSecurity.cs" Link="Model\SealSecurity.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SealServerConfiguration.cs" Link="Model\SealServerConfiguration.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityColumn.cs" Link="Model\SecurityColumn.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityConnection.cs" Link="Model\SecurityConnection.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityDevice.cs" Link="Model\SecurityDevice.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityFolder.cs" Link="Model\SecurityFolder.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityGroup.cs" Link="Model\SecurityGroup.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityLogin.cs" Link="Model\SecurityLogin.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityProvider.cs" Link="Model\SecurityProvider.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecuritySource.cs" Link="Model\SecuritySource.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityUser.cs" Link="Model\SecurityUser.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SecurityUserProfile.cs" Link="Model\SecurityUserProfile.cs" />
-    <Compile Include="..\SealLibraryWin\Model\SubReport.cs" Link="Model\SubReport.cs" />
-    <Compile Include="..\SealLibraryWin\Model\WebInterfaceModels.cs" Link="Model\WebInterfaceModels.cs" />
-    <Compile Include="..\SealLibraryWin\Model\WebMainModel.cs" Link="Model\WebMainModel.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\SealLibraryWin\Helpers\ObjectShredder.cs" Link="Helpers\ObjectShredder.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\CryptoHelper.cs" Link="Helpers\CryptoHelper.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\DataTableLoader.cs" Link="Helpers\DataTableLoader.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\ExcelHelper.cs" Link="Helpers\ExcelHelper.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\FileHelper.cs" Link="Helpers\FileHelper.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\Impersonator.cs" Link="Helpers\Impersonator.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\RazorHelper.cs" Link="Helpers\RazorHelper.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\TaskDatabaseHelper.cs" Link="Helpers\TaskDatabaseHelper.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\TaskHelper.cs" Link="Helpers\TaskHelper.cs" />
+		<Compile Include="..\SealLibraryWin\Model\Audit.cs" Link="Model\Audit.cs" />
+		<Compile Include="..\SealLibraryWin\Model\CategoryFolder.cs" Link="Model\CategoryFolder.cs" />
+		<Compile Include="..\SealLibraryWin\Model\CommonScript.cs" Link="Model\CommonScript.cs" />
+		<Compile Include="..\SealLibraryWin\Model\EditorTableDefinition.cs" Link="Model\EditorTableDefinition.cs" />
+		<Compile Include="..\SealLibraryWin\Model\Enums.cs" Link="Model\Enums.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ExecutionInterface.cs" Link="Model\ExecutionInterface.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MenuReportViewsPool.cs" Link="Model\MenuReportViewsPool.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaColumn.cs" Link="Model\MetaColumn.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaConnection.cs" Link="Model\MetaConnection.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaData.cs" Link="Model\MetaData.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaEnum.cs" Link="Model\MetaEnum.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaEV.cs" Link="Model\MetaEV.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaJoin.cs" Link="Model\MetaJoin.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaSource.cs" Link="Model\MetaSource.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaTable.cs" Link="Model\MetaTable.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaTableLink.cs" Link="Model\MetaTableLink.cs" />
+		<Compile Include="..\SealLibraryWin\Model\MetaTableTemplate.cs" Link="Model\MetaTableTemplate.cs" />
+		<Compile Include="..\SealLibraryWin\Model\Navigation.cs" Link="Model\Navigation.cs" />
+		<Compile Include="..\SealLibraryWin\Model\NavigationContext.cs" Link="Model\NavigationContext.cs" />
+		<Compile Include="..\SealLibraryWin\Model\NavigationLink.cs" Link="Model\NavigationLink.cs" />
+		<Compile Include="..\SealLibraryWin\Model\OutputDevice.cs" Link="Model\OutputDevice.cs" />
+		<Compile Include="..\SealLibraryWin\Model\OutputEMailDevice.cs" Link="Model\OutputEMailDevice.cs" />
+		<Compile Include="..\SealLibraryWin\Model\OutputFileServerDevice.cs" Link="Model\OutputFileServerDevice.cs" />
+		<Compile Include="..\SealLibraryWin\Model\OutputFolderDevice.cs" Link="Model\OutputFolderDevice.cs" />
+		<Compile Include="..\SealLibraryWin\Model\Parameter.cs" Link="Model\Parameter.cs" />
+		<Compile Include="..\SealLibraryWin\Model\Report.cs" Link="Model\Report.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportComponent.cs" Link="Model\ReportComponent.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportElement.cs" Link="Model\ReportElement.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportExecution.cs" Link="Model\ReportExecution.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportModel.cs" Link="Model\ReportModel.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportOutput.cs" Link="Model\ReportOutput.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportRestriction.cs" Link="Model\ReportRestriction.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportSchedule.cs" Link="Model\ReportSchedule.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportSource.cs" Link="Model\ReportSource.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportTask.cs" Link="Model\ReportTask.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportTaskTemplate.cs" Link="Model\ReportTaskTemplate.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportView.cs" Link="Model\ReportView.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportViewPartialTemplate.cs" Link="Model\ReportViewPartialTemplate.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportViewTemplate.cs" Link="Model\ReportViewTemplate.cs" />
+		<Compile Include="..\SealLibraryWin\Model\Repository.cs" Link="Model\Repository.cs" />
+		<Compile Include="..\SealLibraryWin\Model\RepositoryServer.cs" Link="Model\RepositoryServer.cs" />
+		<Compile Include="..\SealLibraryWin\Model\RepositoryTranslation.cs" Link="Model\RepositoryTranslation.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ResultCell.cs" Link="Model\ResultCell.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ResultData.cs" Link="Model\ResultData.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ResultPage.cs" Link="Model\ResultPage.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ResultSerieValue.cs" Link="Model\ResultSerieValue.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ResultTable.cs" Link="Model\ResultTable.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ResultTotalCell.cs" Link="Model\ResultTotalCell.cs" />
+		<Compile Include="..\SealLibraryWin\Model\RootComponent.cs" Link="Model\RootComponent.cs" />
+		<Compile Include="..\SealLibraryWin\Model\RootEditor.cs" Link="Model\RootEditor.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SealExcelConverter.cs" Link="Model\SealExcelConverter.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SealInterface.cs" Link="Model\SealInterface.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SealPdfConverter.cs" Link="Model\SealPdfConverter.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SealReportScheduler.cs" Link="Model\SealReportScheduler.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SealSchedule.cs" Link="Model\SealSchedule.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SealSecurity.cs" Link="Model\SealSecurity.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SealServerConfiguration.cs" Link="Model\SealServerConfiguration.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityColumn.cs" Link="Model\SecurityColumn.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityConnection.cs" Link="Model\SecurityConnection.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityDevice.cs" Link="Model\SecurityDevice.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityFolder.cs" Link="Model\SecurityFolder.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityGroup.cs" Link="Model\SecurityGroup.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityLogin.cs" Link="Model\SecurityLogin.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityProvider.cs" Link="Model\SecurityProvider.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecuritySource.cs" Link="Model\SecuritySource.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityUser.cs" Link="Model\SecurityUser.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityUserProfile.cs" Link="Model\SecurityUserProfile.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SubReport.cs" Link="Model\SubReport.cs" />
+		<Compile Include="..\SealLibraryWin\Model\WebInterfaceModels.cs" Link="Model\WebInterfaceModels.cs" />
+		<Compile Include="..\SealLibraryWin\Model\WebMainModel.cs" Link="Model\WebMainModel.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
-    <PackageReference Include="EPPlus" Version="4.5.3.3" />
-    <PackageReference Include="FluentFTP" Version="41.0.0" />
-    <PackageReference Include="jose-jwt" Version="4.0.1" />
-    <PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.49.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
-    <PackageReference Include="MySql.Data" Version="8.0.30" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.70" />
-    <PackageReference Include="SendGrid" Version="9.28.1" />
-    <PackageReference Include="SharpZipLib" Version="1.4.0" />
-    <PackageReference Include="SSH.NET" Version="2020.0.2" />
-    <PackageReference Include="System.Data.Odbc" Version="6.0.1" />
-    <PackageReference Include="System.Data.OleDb" Version="6.0.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-    <PackageReference Include="System.Diagnostics.EventLog" Version="6.0.0" />
-    <PackageReference Include="System.DirectoryServices" Version="6.0.0" />
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
-    <PackageReference Include="System.DirectoryServices.Protocols" Version="6.0.1" />
-    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
-    <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
-    <PackageReference Include="TaskScheduler" Version="2.10.1" />
-    <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
-    <PackageReference Include="Twilio" Version="5.80.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
+		<PackageReference Include="EPPlus" Version="4.5.3.3" />
+		<PackageReference Include="FluentFTP" Version="42.1.0" />
+		<PackageReference Include="jose-jwt" Version="4.0.1" />
+		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.49.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
+		<PackageReference Include="MongoDB.Driver" Version="2.17.1" />
+		<PackageReference Include="MySql.Data" Version="8.0.30" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.70" />
+		<PackageReference Include="SendGrid" Version="9.28.1" />
+		<PackageReference Include="SharpZipLib" Version="1.4.0" />
+		<PackageReference Include="SSH.NET" Version="2020.0.2" />
+		<PackageReference Include="System.Data.Odbc" Version="6.0.1" />
+		<PackageReference Include="System.Data.OleDb" Version="6.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+		<PackageReference Include="System.Diagnostics.EventLog" Version="6.0.0" />
+		<PackageReference Include="System.DirectoryServices" Version="6.0.0" />
+		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+		<PackageReference Include="System.DirectoryServices.Protocols" Version="6.0.1" />
+		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+		<PackageReference Include="System.Net.Http" Version="4.3.4" />
+		<PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
+		<PackageReference Include="TaskScheduler" Version="2.10.1" />
+		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
+		<PackageReference Include="Twilio" Version="5.80.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\Projects\SealLibrary\sealNugetLogo.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\Projects\SealLibrary\sealNugetLogo.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Model\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\RazorEngine.NetCore\RazorEngine.NetCore.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RazorEngine.NetCore\RazorEngine.NetCore.csproj" />
+	</ItemGroup>
 
 </Project>

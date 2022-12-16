@@ -871,7 +871,7 @@ namespace Seal.Model
 
         void executeTasks(ExecutionStep step)
         {
-            var tasks = Report.ExecutionTasks.Where(i => i.Step == step && i.Enabled).OrderBy(i => i.SortOrder).ToList();
+            var tasks = Report.ExecutionTasks.Where(i => i.Step == step).OrderBy(i => i.SortOrder).ToList();
             if (tasks.Count > 0)
             {
                 Report.LogMessage("Executing report tasks for step '{0}'...", Helper.GetEnumDescription(typeof(ExecutionStep), step));
@@ -882,8 +882,9 @@ namespace Seal.Model
             {
                 try
                 {
+                    if (!task.Enabled) continue;
+
                     if (Report.TaskToExecute != null && task != Report.TaskToExecute) continue; //Exec only one task
-                    Report.LogMessage("Starting task '{0}'", task.Name);
                     task.Execution = this;
 
 
@@ -911,7 +912,6 @@ namespace Seal.Model
                     {
                         Report.LogMessage("Database information message:\r\n{0}", task.DbInfoMessage.ToString().Trim());
                     }
-                    Report.LogMessage("Ending task '{0}'\r\n", task.Name);
                 }
                 catch (Exception ex)
                 {

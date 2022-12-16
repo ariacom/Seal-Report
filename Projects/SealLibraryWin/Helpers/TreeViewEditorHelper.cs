@@ -385,6 +385,7 @@ namespace Seal.Forms
             object entity = mainTreeView.SelectedNode.Tag;
             MetaSource source = GetSource(mainTreeView.SelectedNode);
             ReportView parentView = null;
+            ReportTask parentTask = null;
 
             if (entity is SourceFolder && Report != null)
             {
@@ -440,6 +441,10 @@ namespace Seal.Forms
                 selectSource = Report.Tasks.OrderBy(i => i.SortOrder).ToList();
                 displayName = "Name";
             }
+            else if (entity is ReportTask)
+            {
+                parentTask = (ReportTask)entity;
+            }
             else if (entity is OutputFolder)
             {
                 selectSource = Report.Outputs.OrderBy(i => i.Name).ToList();
@@ -454,6 +459,11 @@ namespace Seal.Forms
             if (parentView != null)
             {
                 selectSource = parentView.Views.OrderBy(i => i.SortOrder).ToList();
+                displayName = "Name";
+            }
+            if (parentTask != null)
+            {
+                selectSource = parentTask.Tasks.OrderBy(i => i.SortOrder).ToList();
                 displayName = "Name";
             }
 
@@ -1077,6 +1087,7 @@ namespace Seal.Forms
                 var entity = selectedEntity as ReportTask;
                 if (e.OldValue != null && newValue != ReportSource.DefaultRepositoryConnectionGUID &&
                     newValue != ReportSource.DefaultReportConnectionGUID &&
+                    newValue != ReportTask.ParentTaskConnectionGUID &&
                     !entity.Source.Connections.Exists(i => i.GUID == newValue)) entity.ConnectionGUID = e.OldValue.ToString();
             }
             else if (selectedEntity is MetaColumn && propertyName == "EnumGUID")
@@ -1336,7 +1347,7 @@ namespace Seal.Forms
             {
                 var taskToMove = selectedEntity as ReportTask;
                 //move the position
-                List<ReportTask> tasks = Report.Tasks;
+                List<ReportTask> tasks = taskToMove.ParentTask == null ? Report.Tasks : taskToMove.ParentTask.Tasks;
                 foreach (var task in tasks) task.SortOrder = 10 * task.SortOrder;
                 taskToMove.SortOrder += increment;
                 int index = 1;
@@ -1458,13 +1469,10 @@ namespace Seal.Forms
                         if (!sourceView.IsAncestorOf(targetView)) e.Effect = DragDropEffects.Move;
                     }
                 }
-                else if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportTask && targetNode.Tag is ReportTask)
+                else if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportTask && (targetNode.Tag is ReportTask || targetNode.Tag is TasksFolder))
                 {
-                    if (sourceNode.Parent == targetNode.Parent)
-                    {
-                        //move position
-                        e.Effect = DragDropEffects.Move;
-                    }
+                    //move position or parent 
+                    e.Effect = DragDropEffects.Move;
                 }
                 else if (sourceNode != null && targetNode != null && sourceNode.Tag is MetaColumn && targetNode.Tag is MetaColumn)
                 {

@@ -15,6 +15,7 @@ namespace Seal.Forms
     {
         const string DefaultRepositoryStr = "<Default repository connection>";
         const string DefaultReportStr = "<Current connection>";
+        const string ParentTaskStr = "<Connection of parent task>";
 
         MetaSource getSource(ITypeDescriptorContext context)
         {
@@ -41,6 +42,10 @@ namespace Seal.Forms
             if (source != null)
             {
                 List<string> choices2 = (from s in source.Connections select s.Name + (!s.IsEditable ? " (Repository)" : "")).ToList();
+                if (source.Report != null && context.Instance is ReportTask && ((ReportTask)(context.Instance)).ParentTask != null)
+                {
+                    choices2.Insert(0, ParentTaskStr);
+                }
                 if (source.Report != null && (source is ReportSource || context.Instance is ReportView) && !string.IsNullOrEmpty(((ReportSource)source).MetaSourceGUID))
                 {
                     string defaultRepConnectionStr = string.Format("{0} ({1})", DefaultRepositoryStr, ((ReportSource)source).RepositoryConnection.Name);
@@ -53,7 +58,7 @@ namespace Seal.Forms
                 choices = choices2.ToArray();
             }
 
-            return new StandardValuesCollection(choices.OrderBy(i => i).ToList());
+            return new StandardValuesCollection(choices.ToList());
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destType)
@@ -70,6 +75,7 @@ namespace Seal.Forms
                 {
                     if (source is ReportSource && value.ToString() == ReportSource.DefaultRepositoryConnectionGUID) return string.Format("{0} ({1})", DefaultRepositoryStr, ((ReportSource)source).RepositoryConnection.Name);
                     if (value.ToString() == ReportSource.DefaultReportConnectionGUID) return DefaultReportStr;
+                    if (value.ToString() == ReportTask.ParentTaskConnectionGUID) return ParentTaskStr;
                     MetaConnection connection = source.Connections.FirstOrDefault(i => i.GUID == value.ToString());
                     if (connection != null) return connection.Name + (!connection.IsEditable ? " (Repository)" : "");
                 }
@@ -88,7 +94,8 @@ namespace Seal.Forms
             if (source != null)
             {
                 if (source is ReportSource && ((ReportSource)source).RepositoryConnection != null && value.ToString() == string.Format("{0} ({1})", DefaultRepositoryStr, ((ReportSource)source).RepositoryConnection.Name)) return ReportSource.DefaultRepositoryConnectionGUID;
-                if (value.ToString() == ReportSource.DefaultReportConnectionGUID) return DefaultReportStr;
+                if (value.ToString() == DefaultReportStr) return ReportSource.DefaultReportConnectionGUID;
+                if (value.ToString() == ParentTaskStr) return ReportTask.ParentTaskConnectionGUID;
                 MetaConnection connection = source.Connections.FirstOrDefault(i => i.Name + (!i.IsEditable ? " (Repository)" : "") == value.ToString());
                 if (connection != null) return connection.GUID;
             }

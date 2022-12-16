@@ -33,17 +33,6 @@ namespace Seal.Controls
             AutoScroll = true;
         }
 
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // ElementPanel
-            // 
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ElementPanel_Paint);
-            this.ResumeLayout(false);
-
-        }
-
         public void RedrawPanel()
         {
             for (int i = 0; i < Controls.Count; i++)

@@ -42,18 +42,6 @@ namespace Seal.Forms
 }
 @Raw(result)";
 
-        const string razorTaskTemplate = @"@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    string result = ""1""; //Set result to 0 to cancel the report.
-    //Or cancel report with the flag CancelReport
-    //task.CancelReport = true;
-    //Or disable another task
-    //report.Tasks[1].Enabled = false;
-}
-@Raw(result)
-";
 
         const string razorCellScriptTemplate = @"@{
     ResultCell cell = Model;
@@ -1355,16 +1343,24 @@ namespace Seal.Forms
                 }
                 else if (context.Instance is ReportTask)
                 {
-                    template = razorTaskTemplate;
                     frm.ObjectForCheckSyntax = context.Instance;
-                    frm.Text = "Edit task script";
-                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                    List<string> samples = new List<string>();
-                    foreach (var sample in tasksSamples)
+                    if (context.PropertyDescriptor.Name == "BodyScript")
                     {
-                        samples.Add("@using System.Data\r\n@using System.Data.Common\r\n@{\r\n    //" + sample.Item1 + "\r\n    " + sample.Item2 + "}\r\n|" + sample.Item1);
+                        template = (context.Instance as ReportTask).DefaultBodyScript;
+                        frm.Text = "Edit the body script";
                     }
-                    frm.SetSamples(samples);
+                    else if (context.PropertyDescriptor.Name == "Script")
+                    {
+                        List<string> samples = new List<string>();
+                        template = (context.Instance as ReportTask).DefaultScript;
+                        frm.Text = "Edit task script";
+                        foreach (var sample in tasksSamples)
+                        {
+                            samples.Add("@using System.Data\r\n@using System.Data.Common\r\n@{\r\n    //" + sample.Item1 + "\r\n    " + sample.Item2 + "}\r\n|" + sample.Item1);
+                        }
+                        frm.SetSamples(samples);
+                    }
+                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
                 else if (context.Instance is ReportOutput)
                 {

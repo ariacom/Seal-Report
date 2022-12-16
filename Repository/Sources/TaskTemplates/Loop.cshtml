@@ -1,0 +1,114 @@
+﻿@using Seal.Model;
+@{
+    ReportTask task = Model;
+
+    task.TemplateDescription = "Build a list of object and loop either sequentially or in parallel.";
+
+    //Parameters for this task
+    task.Parameters.Add(new Parameter() { Name = "folder", Value = "", DisplayName = "1.List of string: Folder path", Description = "The input folder to build the list (of string). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path." });
+    task.Parameters.Add(new Parameter() { Name = "filter", Value = "*.*", DisplayName = "1.List of string: File filter", Description = "The file filter to build the list." });
+    task.Parameters.Add(new Parameter() { Name = "sql", Value = "", DisplayName = "2.List of DataRow: Select SQL", Description = "The SQL SELECT Statement to build the list (of DataRow)." });
+    task.Parameters.Add(new Parameter() { Name = "excel_path", Value = "", DisplayName = "3.List of DataRow: Excel file Path", Description = "The Excel file path (*.xlsx) to build the list (of DataRow) from a sheet. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Databases/databank.worldbank.org_health_population.xlsx" }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "excel_tab", Value = "", DisplayName = "3.List of DataRow: Excel tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty, the first tab is used." });
+    task.Parameters.Add(new Parameter() { Name = "thread", NumericValue = 1, DisplayName = "Number of threads", Description = "Number of threads used to execute child tasks. A value of 0 means a number of thead equals to the list count." });
+
+    task.Script = @"@using System.IO
+@using System.Threading
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var helper = new TaskHelper(task);
+    
+    var items = new List<object>();
+    var folder = task.Repository.ReplaceRepositoryKeyword(task.GetValue(""folder""));
+    var sql = task.GetValue(""sql"");
+    var thread = task.GetNumericValue(""thread"");
+    var excel = task.Repository.ReplaceRepositoryKeyword(task.GetValue(""excel_path""));
+    
+    //Folder input
+    if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder)) {
+        foreach (var file in Directory.GetFiles(task.GetValue(""folder""), task.GetValue(""filter""))) {
+            items.Add(file);
+        }
+    }
+    //SQL input
+    else if (!string.IsNullOrEmpty(sql)) {
+        var dataTable = helper.LoadDataTable(sql);
+        foreach(var row in dataTable.Rows) {
+            items.Add(row);
+        }
+    }    
+    //Excel input
+    else if (!string.IsNullOrEmpty(excel) && File.Exists(excel)) {
+        var dataTable = DataTableLoader.FromExcel(excel, task.GetValue(""excel_tab""));
+        foreach(var row in dataTable.Rows) {
+            items.Add(row);
+        }
+    }
+    //OR 
+    //   fill the items  collection with any relevant object
+
+    if (thread == 0) {
+        thread = items.Count;
+    }
+    
+    task.LogMessage($""Processing {items.Count} item(s) using {thread} thread(s)"");
+    var tasks = new List<Task>();
+    for (int i=1; i<=thread && !report.Cancel && items.Count>0;i++) {
+        var id = $""[{i:00}]"";
+        tasks.Add(Task.Run(() => AsyncExec(id, items)));
+        Thread.Sleep(100); 
+    }
+    
+    while (!report.Cancel) {
+        Thread.Sleep(100);
+        if (!tasks.Exists(i => !i.IsCompleted)) {
+            break;
+        }    
+    }    
+}
+
+
+@functions {
+    async Task AsyncExec(string id, List<object> results) {
+    	ReportTask task = Model;
+        var report = task.Report;
+        try {
+            task.LogMessage(""Starting Thread: "" + id);
+            Thread.Sleep(100); 
+            
+            while (true) {
+                object item;
+                lock (results) {
+                    item = results.LastOrDefault();
+                    if (item != null) {
+                        results.Remove(item);
+                        report.LogMessage($""{id} Processing item"");
+                    }
+                }
+                if (item == null) break;
+
+                //Execute children
+                foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
+                {                
+                    childTask.ExecLogPrefix = id + "" "";
+                    childTask.ExecInput = item;
+                    childTask.Execute();
+                }            
+            }                
+        }
+        finally {
+            task.LogMessage(""Ending Thread: "" + id);
+        }
+    }
+}
+";
+
+    task.BodyScript =  @"@{
+    ReportTask task = Model;
+
+    //Execute only the Script
+    task.ExecuteScript();
+}
+";
+}

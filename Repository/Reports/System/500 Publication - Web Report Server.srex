@@ -63,7 +63,9 @@
     <ReportTask>
       <GUID>ccb62554-63e2-4cbc-9d18-e59099cb573c</GUID>
       <Name>Publish Web Report Server</Name>
+      <Tasks />
       <CancelReport>false</CancelReport>
+      <TemplateName>Default</TemplateName>
       <SourceGUID>92a001bf-5000-4dfe-b5b6-d86accb65aff</SourceGUID>
       <Script>@using System.IO
 @using FluentFTP
@@ -80,23 +82,25 @@
     //webServerDestination = "/site/wwwroot/"; //FTP root folder (e.g. for Azure)
     
     //Uncomment and configure to deploy on a FTP Server
-    FtpClient client = null; 
-    //client = new FtpClient("Host Name", "User Name", "Password"); 
+    FtpClient client = new FtpClient(); 
+    client.Host = "Host Name";
+    client.Credentials.UserName = "User Name";
+    client.Credentials.Password = "Password";    
     //client = new FtpClient("127.0.0.1", "tester", "password"); 
     //client = new FtpClient("waws-prod-dm1-129.ftp.azurewebsites.windows.net", @"sealcore\$sealcore", "password"); //  (e.g. for Azure)
 
     if (client != null) {
         //Default FTP configuration for Azure
-        client.SslProtocols = SslProtocols.Tls;
-        client.ValidateAnyCertificate = true;
-        client.DataConnectionType = FtpDataConnectionType.PASV;
-        client.DownloadDataType = FtpDataType.Binary;
-        client.RetryAttempts = 5;
-        client.SocketPollInterval = 1000;
-        client.ConnectTimeout = 2000;
-        client.ReadTimeout = 2000;
-        client.DataConnectionConnectTimeout = 2000;
-        client.DataConnectionReadTimeout = 2000;        
+        client.Config.SslProtocols = SslProtocols.Tls;
+        client.Config.ValidateAnyCertificate = true;
+        client.Config.DataConnectionType = FtpDataConnectionType.PASV;
+        client.Config.DownloadDataType = FtpDataType.Binary;
+        client.Config.RetryAttempts = 5;
+        client.Config.SocketPollInterval = 1000;
+        client.Config.ConnectTimeout = 2000;
+        client.Config.ReadTimeout = 2000;
+        client.Config.DataConnectionConnectTimeout = 2000;
+        client.Config.DataConnectionReadTimeout = 2000;        
         client.Port = 21;
         
         //For normal FTPS with implict encryption

@@ -417,6 +417,7 @@ namespace Seal.Model
             RepositoryPath = path;
             RepositoryServer.ViewsFolder = ViewsFolder;
             RepositoryServer.TableTemplatesFolder = TableTemplatesFolder;
+            RepositoryServer.TaskTemplatesFolder = TaskTemplatesFolder;
 
             CheckFolders();
             //Data sources
@@ -581,6 +582,13 @@ namespace Seal.Model
             get { return Path.Combine(SourcesFolder, "TableTemplates"); }
         }
 
+        /// <summary>
+        /// Task templates folder
+        /// </summary>
+        public string TaskTemplatesFolder
+        {
+            get { return Path.Combine(SourcesFolder, "TaskTemplates"); }
+        }
 
         /// <summary>
         /// Devices folder

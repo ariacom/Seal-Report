@@ -205,7 +205,7 @@ namespace Seal.Model
         /// Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
         /// </summary>
 #if WINDOWS
-        [Category("Display"), DisplayName("CSS Classes"), Description("Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values."), Id(5, 2)]
+        [Category("Display"), DisplayName("CSS classes"), Description("Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values."), Id(5, 2)]
         [TypeConverter(typeof(CssClassConverter))]
 #endif
         public string CssClass { get; set; }

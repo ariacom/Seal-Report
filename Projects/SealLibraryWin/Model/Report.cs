@@ -1472,6 +1472,11 @@ namespace Seal.Model
                     output.BeforeSerialization();
                 }
 
+                foreach (var task in Tasks)
+                {
+                    task.BeforeSerialization();
+                }
+
                 foreach (var view in Views)
                 {
                     view.SetAdvancedConfigurations();
@@ -1500,7 +1505,10 @@ namespace Seal.Model
                 foreach (ReportSource source in Sources)
                 {
 
-                    foreach (var table in source.MetaData.Tables) table.AfterSerialization();
+                    foreach (var table in source.MetaData.Tables)
+                    {
+                        table.AfterSerialization();
+                    }
 
                     source.Connections = source.TempConnections;
                     source.MetaData.Tables = source.TempTables;
@@ -1508,6 +1516,12 @@ namespace Seal.Model
                     source.MetaData.Joins = source.TempJoins;
                     source.MetaData.Enums = source.TempEnums;
                 }
+
+                foreach (var task in Tasks)
+                {
+                    task.AfterSerialization();
+                }
+
                 foreach (var view in Views)
                 {
                     view.AfterSerialization();
@@ -1520,7 +1534,10 @@ namespace Seal.Model
 
                 foreach (var model in Models)
                 {
-                    foreach (var table in model.LINQSubTables) table.AfterSerialization();
+                    foreach (var table in model.LINQSubTables)
+                    {
+                        table.AfterSerialization();
+                    }
                 }
             }
         }
@@ -1683,26 +1700,35 @@ namespace Seal.Model
         /// <summary>
         /// Add a task to the report
         /// </summary>
-        public ReportTask AddTask()
+        public ReportTask AddTask(ReportTask parent, ReportTaskTemplate template)
         {
             ReportTask result = ReportTask.Create();
-            result.Name = Helper.GetUniqueName("Task", (from i in Tasks select i.Name).ToList());
             ReportSource source = Sources.FirstOrDefault(i => i.IsDefault);
             if (source == null) source = Sources[0];
             result.SourceGUID = source.GUID;
             result.Report = this;
-            result.SortOrder = Tasks.Count > 0 ? Tasks.Max(i => i.SortOrder) + 1 : 1;
-            Tasks.Add(result);
+
+            var tasks = parent == null ? Tasks : parent.Tasks;
+            result.SortOrder = tasks.Count > 0 ? tasks.Max(i => i.SortOrder) + 1 : 1;
+            result.ParentTask = parent;
+
+            //Apply template
+            template.ParseConfiguration(result);
+            result.TemplateName = template.Name;
+            result.Name = Helper.GetUniqueName(template.Name, (from i in tasks select i.Name).ToList());
+            result.InitParameters();
+
+            tasks.Add(result);
             return result;
         }
 
         /// <summary>
         /// Remove a task from the report
         /// </summary>
-        /// <param name="task"></param>
         public void RemoveTask(ReportTask task)
         {
-            Tasks.Remove(task);
+            var tasks = task.ParentTask == null ? Tasks : task.ParentTask.Tasks;
+            tasks.Remove(task);
         }
 
         /// <summary>
