@@ -106,7 +106,10 @@
 		<None Include="..\..\Repository\Sources\TableTemplates\Xml File.cshtml" Link="TableTemplates\Xml File.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\XmlReader RSS.cshtml" Link="TableTemplates\XmlReader RSS.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Default.cshtml" Link="TaskTemplates\Default.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\Parallel.cshtml" Link="TaskTemplates\Parallel.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Loop.cshtml" Link="TaskTemplates\Loop.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\Load Excel To Database.cshtml" Link="TaskTemplates\Load Excel To Database.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\Load CSV To Database.cshtml" Link="TaskTemplates\Load CSV To Database.cshtml" />
 		<None Include="..\..\Repository\Views\ChartJS.config.cshtml" Link="Views\ChartJS.config.cshtml" />
 		<None Include="..\..\Repository\Views\ChartJS.cshtml" Link="Views\ChartJS.cshtml" />
 		<None Include="..\..\Repository\Views\ChartNVD3.config.cshtml" Link="Views\ChartNVD3.config.cshtml" />

@@ -1,0 +1,58 @@
+﻿@using Seal.Model;
+@{
+    ReportTask task = Model;
+
+    task.TemplateDescription = "Execute the children tasks in parallel (using multiple threads).";
+
+    //Parameters for this task
+    task.Parameters.Add(new Parameter() { Name = "thread", NumericValue = 0, DisplayName = "Number of threads", Description = "Number of threads used to execute child tasks. A value of 0 means that all tasks are executed in parallel." });
+
+    task.Script = @"@using System.IO
+@using System.Threading
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var helper = new TaskHelper(task);
+    
+    var tasks = new List<Task>();
+    int i=1;
+    foreach (var child in task.Tasks.OrderBy(i => i.SortOrder)) {
+        var id = $""[{i:00}]"";
+        tasks.Add(Task.Run(() => AsyncExec(id, child)));
+        Thread.Sleep(10);
+        i++;
+    }
+    
+    while (!report.Cancel) {
+        Thread.Sleep(100);
+        if (!tasks.Exists(i => !i.IsCompleted)) {
+            break;
+        }    
+    }    
+}
+
+
+@functions {
+    async Task AsyncExec(string id, ReportTask child) {
+    	ReportTask task = Model;
+        try {
+            task.LogMessage(""Starting Thread: "" + id);
+            Thread.Sleep(10); 
+            child.ExecLogPrefix += id + "" "";
+            child.Execute();
+        }
+        finally {
+            task.LogMessage(""Ending Thread: "" + id);
+        }
+    }
+}
+";
+
+    task.BodyScript =  @"@{
+    ReportTask task = Model;
+
+    //Execute only the Script
+    task.ExecuteScript();
+}
+";
+}

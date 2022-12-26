@@ -156,14 +156,27 @@ namespace Seal.Helpers
         /// <summary>
         /// Load a table from an Excel tab into the database. A start row, and/or colum can be specified. An end column can be specified. 
         /// </summary>
-        public bool LoadTableFromExcel(string loadFolder, string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0)
+        public bool LoadTableFromExcel(string loadFolder, string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0, int endRowIndex = 0, bool hasHeader = true, bool forceLoad = false)
         {
             bool result = false;
             try
             {
-                if (CheckForNewFileSource(loadFolder, sourceExcelPath))
+                if (!forceLoad)
                 {
-                    LoadTableFromExcel(sourceExcelPath, sourceTabName, destinationTableName, useAllConnections, startRow, startColumn, endColumnIndex);
+                    loadFolder = _task.Repository.ReplaceRepositoryKeyword(loadFolder);
+                    if (string.IsNullOrEmpty(loadFolder)) loadFolder = "Loaded";
+                    if (!Directory.Exists(loadFolder))
+                    {
+                        loadFolder = Path.Combine(Path.GetDirectoryName(sourceExcelPath), loadFolder);
+                        Directory.CreateDirectory(loadFolder);
+                    }
+                    if (!Directory.Exists(loadFolder)) throw new Exception($"Invalid folder '{loadFolder}'");
+
+                    forceLoad = CheckForNewFileSource(loadFolder, sourceExcelPath);
+                }
+                if (forceLoad)
+                {
+                    LoadTableFromExcel(sourceExcelPath, sourceTabName, destinationTableName, useAllConnections, startRow, startColumn, endColumnIndex, endRowIndex, hasHeader);
                     File.Copy(sourceExcelPath, Path.Combine(loadFolder, Path.GetFileName(sourceExcelPath)), true);
                     result = true;
                 }
@@ -179,33 +192,48 @@ namespace Seal.Helpers
             return result;
         }
 
-        public int LoadTableFromExcel(string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0)
+        public int LoadTableFromExcel(string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0, int endRowIndex = 0, bool hasHeader = true)
         {
             int result = 0;
             try
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceExcelPath);
-                LogMessage("Starting Loading Excel Table from '{0}'", sourcePath);
-                DataTable table = DatabaseHelper.LoadDataTableFromExcel(sourcePath, sourceTabName, startRow, startColumn, endColumnIndex);
 
-                table.TableName = destinationTableName;
-                foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
+                if (string.IsNullOrEmpty(destinationTableName) && string.IsNullOrEmpty(sourceTabName))
                 {
-                    if (_task.CancelReport) break;
-                    LogMessage("Importing table for connection '{0}'.", connection.Name);
-                    DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                    var dbCommand = _task.GetDbCommand(connection);
-                    try
+                    //Load all tabs
+                    ExcelPackage package = ExcelHelper.GetExcelPackage(sourcePath);
+                    var workbook = package.Workbook;
+                    var tabs = (from ws in workbook.Worksheets select ws.Name);
+                    foreach (var tab in tabs)
                     {
-                        LogMessage("Dropping and creating table '{0}'", destinationTableName);
-                        DatabaseHelper.CreateTable(dbCommand, table);
-                        LogMessage("Copying {0:N0} rows in '{1}'", table.Rows.Count, destinationTableName);
-                        DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
-                        result = table.Rows.Count;
+                        LoadTableFromExcel(sourcePath, tab, tab, useAllConnections, startRow, startColumn, endColumnIndex, endRowIndex, hasHeader);
                     }
-                    finally
+                }
+                else
+                {
+                    LogMessage("Starting Loading Excel Table from '{0}'", sourcePath);
+                    DataTable table = DatabaseHelper.LoadDataTableFromExcel(sourcePath, sourceTabName, startRow, startColumn, endColumnIndex, endRowIndex, hasHeader);
+
+                    if (!string.IsNullOrEmpty(destinationTableName)) table.TableName = destinationTableName;
+                    foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                     {
-                        dbCommand.Connection.Close();
+                        if (_task.CancelReport) break;
+                        LogMessage("Importing table for connection '{0}'.", connection.Name);
+                        DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
+                        var dbCommand = _task.GetDbCommand(connection);
+                        try
+                        {
+                            LogMessage("Dropping and creating table '{0}'", table.TableName);
+                            DatabaseHelper.CreateTable(dbCommand, table);
+                            LogMessage("Copying {0:N0} rows in '{1}'", table.Rows.Count, table.TableName);
+                            DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
+                            result = table.Rows.Count;
+                        }
+                        finally
+                        {
+                            dbCommand.Connection.Close();
+                        }
                     }
                 }
             }
@@ -228,18 +256,7 @@ namespace Seal.Helpers
                 {
                     if (CheckForNewFileSource(loadFolder, f))
                     {
-                        ExcelPackage package;
-                        try
-                        {
-                            package = new ExcelPackage(new FileInfo(f));
-                        }
-                        catch
-                        {
-                            string newPath = FileHelper.GetTempUniqueFileName(f);
-                            FileHelper.PurgeTempApplicationDirectory();
-                            File.Copy(f, newPath, true);
-                            package = new ExcelPackage(new FileInfo(newPath));
-                        }
+                        ExcelPackage package = ExcelHelper.GetExcelPackage(f);
                         var workbook = package.Workbook;
                         var tabs = (from ws in workbook.Worksheets select ws.Name);                        
                         foreach (var tab in tabs)
@@ -262,14 +279,14 @@ namespace Seal.Helpers
             return result;
         }
 
-        public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = true)
+        public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = true, Encoding encoding = null, bool forceLoad = false)
         {
             bool result = false;
             try
             {
-                if (CheckForNewFileSource(loadFolder, sourceCsvPath))
+                if (forceLoad || CheckForNewFileSource(loadFolder, sourceCsvPath))
                 {
-                    LoadTableFromCSV(sourceCsvPath, destinationTableName, separator, useAllConnections, useVBParser);
+                    LoadTableFromCSV(sourceCsvPath, destinationTableName, separator, useAllConnections, useVBParser, encoding);
                     File.Copy(sourceCsvPath, Path.Combine(loadFolder, Path.GetFileName(sourceCsvPath)), true);
                     result = true;
                 }
@@ -285,13 +302,15 @@ namespace Seal.Helpers
             return result;
         }
 
-        public void LoadTableFromCSV(string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = false)
+        public void LoadTableFromCSV(string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = false, Encoding encoding = null)
         {
             try
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceCsvPath);
                 LogMessage("Starting Loading CSV Table from '{0}'", sourcePath);
-                DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator) : DatabaseHelper.LoadDataTableFromCSVVBParser(sourcePath, separator));
+
+
+                DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator, encoding) : DatabaseHelper.LoadDataTableFromCSVVBParser(sourcePath, separator, encoding));
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {

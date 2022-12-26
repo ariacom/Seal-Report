@@ -1,0 +1,69 @@
+﻿@using Seal.Model;
+@{
+    ReportTask task = Model;
+
+    task.TemplateDescription = "Load a CSV file in a database table.";
+
+    //Parameters for this task
+    task.Parameters.Add(new Parameter() { Name = "csv_folder", Value = "", DisplayName = "Loaded folder", Description = "The folder used to store the loaded CSV files. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path. If empty or single name, a sub-folder named is created having the specified name ('Loaded' by default).", Enums = new string[] { @"%SEALREPOSITORY%/Databases" }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "csv_path", Value = "", DisplayName = "CSV File Path", Description = "The CSV file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Databases/Translations.csv" }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "table_name", Value = "", DisplayName = "Destination table name", Description = "The name of the destination table created in the database. If empty, the name of the tab is used." });
+    task.Parameters.Add(new Parameter() { Name = "csv_sep", Value = "", DisplayName = "Separator", Description = "The separator character of the CSV field. If empty, the default separator is used.", Enums = new string[] { ",", ";", "\\t" }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "csv_encoding", Value = "UTF8", DisplayName = "File encoding", Description = "The CSV File Encoding.", Enums = new string[] { "Default", "UTF8", "Unicode", "ASCII" }, UseOnlyEnumValues = true });
+    task.Parameters.Add(new Parameter() { Name = "csv_vb", BoolValue = true, DisplayName = "Use Microsoft VB Parser", Description = "If true, the Microsoft VB Parser is used instead of the standard parser." });
+    task.Parameters.Add(new Parameter() { Name = "force_load", BoolValue = false, DisplayName = "Force load", Description = "If true, the load is always performed, even if the Excel file was not modified. In this case the 'Loaded folder' parameter is not used. " });
+
+    task.Script = @"@using System.IO
+@{
+    ReportTask task = Model;
+    var helper = new TaskHelper(task);
+    
+    char? separator = null;
+    var sep = task.GetValue(""csv_sep"");
+    if (!string.IsNullOrEmpty(sep)) {
+        separator = (sep == ""\\t"" ? '\t' : task.GetValue(""csv_sep"")[0]);
+    }
+
+    var encoding = System.Text.Encoding.Default;
+    if (task.GetValue(""csv_encoding"")==""UTF8"") {
+        encoding = System.Text.Encoding.UTF8;
+    }
+    else if (task.GetValue(""csv_encoding"")==""Unicode"") {
+        encoding = System.Text.Encoding.Unicode;
+    }
+    else if (task.GetValue(""csv_encoding"")==""ASCII"") {
+        encoding = System.Text.Encoding.ASCII;
+    }
+
+    helper.LoadTableFromCSV(
+        task.GetValue(""csv_folder""), 
+        task.GetValue(""csv_path""), 
+        task.GetValue(""table_name""), 
+        separator, 
+        task.ExecuteForEachConnection, 
+        task.GetBoolValue(""csv_vb"", true),
+        encoding, 
+        task.GetBoolValue(""force_load"", false)
+        );
+}
+";
+
+    task.BodyScript =  @"@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    //Execute SQL
+    task.ExecuteSQL();
+    
+    //Execute Script
+    task.ExecuteScript();
+
+    //Execute children
+    foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
+    {
+        childTask.Execute();
+    }
+}
+";
+
+}

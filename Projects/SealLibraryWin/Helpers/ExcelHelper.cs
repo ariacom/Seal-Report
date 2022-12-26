@@ -47,10 +47,12 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic. 
+        /// Load an Excel Package
         /// </summary>
-        static public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endRow = 0, int endCol = 0, bool hasHeader = true)
+        static public ExcelPackage GetExcelPackage(string excelPath)
         {
+            if (!File.Exists(excelPath)) throw new Exception($"Invalid path: '{excelPath}'");
+
             ExcelPackage package;
             try
             {
@@ -63,6 +65,16 @@ namespace Seal.Helpers
                 File.Copy(excelPath, newPath, true);
                 package = new ExcelPackage(new FileInfo(newPath));
             }
+
+            return package;
+        }
+
+        /// <summary>
+        /// Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic. 
+        /// </summary>
+        static public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true)
+        {
+            ExcelPackage package = GetExcelPackage(excelPath);
             var workbook = package.Workbook;
             ExcelWorksheet worksheet = null;
             if (workbook.Worksheets.Count == 0) throw new Exception("No sheet in the workbook.");
@@ -81,6 +93,8 @@ namespace Seal.Helpers
             else worksheet = workbook.Worksheets.First();
 
             DataTable result = new DataTable();
+            result.TableName = worksheet.Name;
+
             int colTitle = startCol;
             int colCount = 0, index = startCol;
             while ((endCol == 0 && worksheet.Cells[startRow, index + 1].Value != null) || colCount < endCol)

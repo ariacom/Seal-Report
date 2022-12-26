@@ -100,7 +100,7 @@ namespace Seal.Helpers
 
         public string CleanName(string name)
         {
-            return name.Replace("-", "_").Replace(" ", "_").Replace("\"", "_").Replace("'", "_").Replace("[", "_").Replace("]", "_").Replace("/", "_").Replace("%", "_").Replace("(", "_").Replace(")", "_");
+            return name.Replace("-", "_").Replace(" ", "_").Replace("\"", "_").Replace("'", "_").Replace("[", "_").Replace("]", "_").Replace("/", "_").Replace("%", "_").Replace("(", "_").Replace(")", "_").Replace("\r","_").Replace("\n", "_").Replace("\t", "_");
         }
 
         public string GetInsertCommand(string sql)
@@ -230,19 +230,19 @@ namespace Seal.Helpers
         }
 
 
-        public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null)
+        public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null, Encoding encoding = null)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, DefaultEncoding);
+            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding??DefaultEncoding);
         }
 
 
-        public DataTable LoadDataTableFromCSVVBParser(string csvPath, char? separator = null)
+        public DataTable LoadDataTableFromCSVVBParser(string csvPath, char? separator = null, Encoding encoding = null)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            return ExcelHelper.LoadDataTableFromCSVVBParser(csvPath, separator, DefaultEncoding);
+            return ExcelHelper.LoadDataTableFromCSVVBParser(csvPath, separator, encoding??DefaultEncoding);
         }
 
         public DatabaseType DatabaseType = DatabaseType.MSSQLServer;

@@ -1057,7 +1057,9 @@ namespace Seal.Forms
         false, //if true, the table is loaded for all connections defined in the Source
         1, //startRow = 1, 
         1, //startColumn = 1, 
-        0 //endColumnIndex, if 0 all columns are taken
+        0, //endColumnIndex, if 0 all columns are taken
+        0, //endRowIndex, if 0 all rows are taken
+        false //optional, true to force the load, even if the file was not modified
     );
 
     //Several Tabs can be loaded using array of strings and LoadTablesFromExcel()
@@ -1066,7 +1068,8 @@ namespace Seal.Forms
         @""c:\temp\excelFile.xlsx"", //source Excel file path
         new string[] {""ExcelTabName1"", ""ExcelTabName2"", ""ExcelTabName3""}, //array of source Excel Tab Name
         new string[] {""DestinationTableName1"", ""DestinationTableName2"", ""DestinationTableName3""}, //array of destination table name
-        false /* true to load in all connections */);
+        false // true to load in all connections
+    );
     }
 "
                 ),
@@ -1080,7 +1083,9 @@ namespace Seal.Forms
         ""DestinationTableName"", //destination table name
         null, //optional CSV separator (e.g. ',') 
         false, //optional, if true, the table is loaded for all connections defined in the Source
-        true //optional, if true, the MS Visual Basic Parser is used (to be used if values contain new line characters) otherwise the standard parser is used
+        true, //optional, if true, the MS Visual Basic Parser is used (to be used if values contain new line characters) otherwise the standard parser is used
+        System.Text.Encoding.Default, //optional, CSV file encoding
+        false //optional, true to force the load, even if the file was not modified
     );
 "
                 ),

@@ -1686,6 +1686,8 @@ namespace Seal
             {
                 if (!string.IsNullOrEmpty(((ReportTask)selectedEntity).SQL)) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
                 else toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F7));
+
+                mainTreeView.SelectedNode.Expand();
             }
             else if (selectedEntity is ReportModel)
             {
