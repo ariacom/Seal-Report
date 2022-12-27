@@ -2,11 +2,11 @@
 @{
     ReportTask task = Model;
 
-    task.TemplateDescription = "Load a CSV file in a database table.";
+    task.TemplateDescription = "Load a CSV file in a database table. If set, the task Input Object can be used as the CSV file path.";
 
     //Parameters for this task
     task.Parameters.Add(new Parameter() { Name = "csv_folder", Value = "", DisplayName = "Loaded folder", Description = "The folder used to store the loaded CSV files. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path. If empty or single name, a sub-folder named is created having the specified name ('Loaded' by default).", Enums = new string[] { @"%SEALREPOSITORY%/Databases" }, UseOnlyEnumValues = false });
-    task.Parameters.Add(new Parameter() { Name = "csv_path", Value = "", DisplayName = "CSV File Path", Description = "The CSV file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Databases/Translations.csv" }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "csv_path", Value = "", DisplayName = "CSV file path", Description = "The CSV file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Databases/Translations.csv" }, UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "table_name", Value = "", DisplayName = "Destination table name", Description = "The name of the destination table created in the database. If empty, the name of the tab is used." });
     task.Parameters.Add(new Parameter() { Name = "csv_sep", Value = "", DisplayName = "Separator", Description = "The separator character of the CSV field. If empty, the default separator is used.", Enums = new string[] { ",", ";", "\\t" }, UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "csv_encoding", Value = "UTF8", DisplayName = "File encoding", Description = "The CSV File Encoding.", Enums = new string[] { "Default", "UTF8", "Unicode", "ASCII" }, UseOnlyEnumValues = true });
@@ -35,35 +35,24 @@
         encoding = System.Text.Encoding.ASCII;
     }
 
+    var input = task.ExecInput as string; //use input if any
+    var path = input;
+    if (string.IsNullOrEmpty(path)) {
+        path = task.GetValue(""csv_path"");
+    }
+
     helper.LoadTableFromCSV(
         task.GetValue(""csv_folder""), 
-        task.GetValue(""csv_path""), 
+        path, 
         task.GetValue(""table_name""), 
         separator, 
         task.ExecuteForEachConnection, 
         task.GetBoolValue(""csv_vb"", true),
         encoding, 
         task.GetBoolValue(""force_load"", false)
-        );
+    );
 }
 ";
 
-    task.BodyScript =  @"@{
-    ReportTask task = Model;
-    Report report = task.Report;
-
-    //Execute SQL
-    task.ExecuteSQL();
-    
-    //Execute Script
-    task.ExecuteScript();
-
-    //Execute children
-    foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
-    {
-        childTask.Execute();
-    }
-}
-";
-
+    task.BodyScript = ReportTask.BodyScriptTemplate;
 }

@@ -49,7 +49,11 @@ namespace Seal.Model
     if (device.Protocol == FileServerProtocol.FTP)
     {
         //Refer to https://github.com/robinrodricks/FluentFTP
-        using (var client = new FtpClient(device.HostName, device.UserName, device.ClearPassword)) {
+        using (var client = new FtpClient()) {
+            client.Host = device.HostName;
+            client.Credentials.UserName = device.UserName;
+            client.Credentials.Password = device.ClearPassword;
+
             if (device.PortNumber == 0) {
                 client.AutoConnect();
             }

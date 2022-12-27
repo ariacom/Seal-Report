@@ -10,28 +10,12 @@
 
     task.LogMessage($""Executing '{task.Name}'"");
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    //Cancel report
-    //task.Report.Cancel = true;
+    //Cancel task and report
+    //task.Cancel();
     //Or disable another task
     //report.Tasks[1].Enabled = false;
 }
 ";
 
-    task.BodyScript =  @"@{
-    ReportTask task = Model;
-    Report report = task.Report;
-
-    //Execute SQL
-    task.ExecuteSQL();
-    
-    //Execute Script
-    task.ExecuteScript();
-
-    //Execute children
-    foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
-    {
-        childTask.Execute();
-    }
-}
-";
+    task.BodyScript = ReportTask.BodyScriptTemplate;
 }

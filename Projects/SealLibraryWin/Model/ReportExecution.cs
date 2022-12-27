@@ -925,7 +925,6 @@ namespace Seal.Model
                     }
                 }
 
-                if (task.CancelReport) Report.Cancel = true;
                 if (Report.Cancel) break;
             }
         }
@@ -945,8 +944,7 @@ namespace Seal.Model
                 {
                     Report.ExecutionErrors = message;
                     Report.ExecutionErrorStackTrace = ex.StackTrace;
-                    task.CancelReport = true;
-                    Report.Cancel = true;
+                    task.Cancel();
                 }
             }
         }
@@ -1970,16 +1968,11 @@ namespace Seal.Model
                     if (!string.IsNullOrEmpty(output.PreScript))
                     {
                         Report.LogMessage("Executing Pre-Execution script.");
-                        string result = RazorHelper.CompileExecute(output.PreScript, output);
-                        if (result != null && result.Trim() == "0")
+                        RazorHelper.CompileExecute(output.PreScript, output);
+                        if (Report.Cancel)
                         {
-                            output.Information = Report.Translate("Pre-execution script returns 0. The report output generation has been cancelled.");
-                            Report.LogMessage("Pre-execution script returns 0. The report output generation has been cancelled.");
-                            Report.Cancel = true;
-                        }
-                        else if (result != null)
-                        {
-                            Report.LogMessage("The script returns:" + result.Trim());
+                            output.Information = Report.Translate("The report output generation has been cancelled.");
+                            Report.LogMessage("The report output generation has been cancelled.");
                         }
                     }
 

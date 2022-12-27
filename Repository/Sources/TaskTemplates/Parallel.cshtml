@@ -16,7 +16,7 @@
     
     var tasks = new List<Task>();
     int i=1;
-    foreach (var child in task.Tasks.OrderBy(i => i.SortOrder)) {
+    foreach (var child in task.Tasks.Where(i=> i.Enabled).OrderBy(i => i.SortOrder)) {
         var id = $""[{i:00}]"";
         tasks.Add(Task.Run(() => AsyncExec(id, child)));
         Thread.Sleep(10);
@@ -36,23 +36,17 @@
     async Task AsyncExec(string id, ReportTask child) {
     	ReportTask task = Model;
         try {
-            task.LogMessage(""Starting Thread: "" + id);
+            task.LogMessage($""Starting Thread: {id} for task {task.Name}"");
             Thread.Sleep(10); 
             child.ExecLogPrefix += id + "" "";
             child.Execute();
         }
         finally {
-            task.LogMessage(""Ending Thread: "" + id);
+            task.LogMessage($""Ending Thread: {id}"");
         }
     }
 }
 ";
 
-    task.BodyScript =  @"@{
-    ReportTask task = Model;
-
-    //Execute only the Script
-    task.ExecuteScript();
-}
-";
+    task.BodyScript = ReportTask.NoChildrenBodyScriptTemplate;
 }

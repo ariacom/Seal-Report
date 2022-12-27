@@ -133,7 +133,7 @@ namespace Seal.Helpers
                 if (sourceTabNames.Length != destinationTableNames.Length) throw new Exception("The number of Source Tabs number and the number of Destination Tables are different.");
                 if (CheckForNewFileSource(loadFolder, sourceExcelPath))
                 {
-                    for (int i = 0; i < sourceTabNames.Length && !_task.CancelReport; i++)
+                    for (int i = 0; i < sourceTabNames.Length && !_task.Report.Cancel; i++)
                     {
                         LoadTableFromExcel(sourceExcelPath, sourceTabNames[i], destinationTableNames[i], useAllConnections);
                     }
@@ -218,7 +218,7 @@ namespace Seal.Helpers
                     if (!string.IsNullOrEmpty(destinationTableName)) table.TableName = destinationTableName;
                     foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                     {
-                        if (_task.CancelReport) break;
+                        if (_task.Report.Cancel) break;
                         LogMessage("Importing table for connection '{0}'.", connection.Name);
                         DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
                         var dbCommand = _task.GetDbCommand(connection);
@@ -314,7 +314,7 @@ namespace Seal.Helpers
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
-                    if (_task.CancelReport) break;
+                    if (_task.Report.Cancel) break;
                     LogMessage("Importing table for connection '{0}'.", connection.Name);
                     DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
                     var dbCommand = _task.GetDbCommand(connection);
@@ -353,7 +353,7 @@ namespace Seal.Helpers
                 DataTable table = null;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
-                    if (_task.CancelReport) break;
+                    if (_task.Report.Cancel) break;
                     LogMessage("Importing table for connection '{0}'.", connection.Name);
                     bool doIt = true;
                     if (!string.IsNullOrEmpty(sourceCheckSelect) && !string.IsNullOrEmpty(destinationCheckSelect))
@@ -363,9 +363,9 @@ namespace Seal.Helpers
                         try
                         {
                             DataTable checkTable1 = LoadDataTable(sourceConnection, sourceCheckSelect);
-                            if (_task.CancelReport) break;
+                            if (_task.Report.Cancel) break;
                             DataTable checkTable2 = LoadDataTable(connection, destinationCheckSelect);
-                            if (_task.CancelReport) break;
+                            if (_task.Report.Cancel) break;
                             if (!DatabaseHelper.AreTablesIdentical(checkTable1, checkTable2)) doIt = true;
                         }
                         catch
@@ -374,7 +374,7 @@ namespace Seal.Helpers
                         }
                     }
 
-                    if (doIt && !_task.CancelReport)
+                    if (doIt && !_task.Report.Cancel)
                     {
                         result = true;
                         var sourceSelect = _task.Repository.ReplaceRepositoryKeyword(sourceSelectStatement);
@@ -384,7 +384,7 @@ namespace Seal.Helpers
                             int lastIndex = 0;
                             while (true)
                             {
-                                if (_task.CancelReport) break;
+                                if (_task.Report.Cancel) break;
                                 string sql = string.Format("select * from (select ROW_NUMBER() over (order by {0}) rn, a.* from ({1}) a) b where rn > {2} and rn <= {3}", DatabaseHelper.LoadSortColumn, sourceSelect, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
                                 table = LoadDataTable(sourceConnection, sql);
                                 if (table.Rows.Count == 0) break;
@@ -479,7 +479,7 @@ namespace Seal.Helpers
         {
             foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
             {
-                if (_task.CancelReport) break;
+                if (_task.Report.Cancel) break;
                 var command = _task.GetDbCommand(connection);
                 try
                 {
@@ -576,7 +576,7 @@ namespace Seal.Helpers
             LogMessage("Processing file '{0}'", filePath);
             foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
             {
-                if (_task.CancelReport) break;
+                if (_task.Report.Cancel) break;
 
                 SqlConnection sqlConnection = null;
                 Microsoft.Data.SqlClient.SqlConnection msConnection = null;

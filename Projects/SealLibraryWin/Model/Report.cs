@@ -656,6 +656,12 @@ namespace Seal.Model
         public string ExecutionErrorStackTrace;
 
         /// <summary>
+        ///Optional initiator of the execution
+        /// </summary>
+        [XmlIgnore]
+        public Report ExecutionInitiator;
+
+        /// <summary>
         ///Execution errors after execution used by the Web Report Server
         /// </summary>
         [XmlIgnore]
@@ -2593,12 +2599,14 @@ namespace Seal.Model
                 {
                     Debug.WriteLine(message);
                     ExecutionMessages += message;
+                    if (ExecutionInitiator != null) ExecutionInitiator.ExecutionMessages += message;
                 }
                 else
                 {
                     var msg = string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), (args.Length == 0 ? message : string.Format(message, args)));
                     Debug.WriteLine(msg);
                     ExecutionMessages += msg;
+                    if (ExecutionInitiator != null) ExecutionInitiator.ExecutionMessages += msg;
                 }
             }
             catch (Exception ex)

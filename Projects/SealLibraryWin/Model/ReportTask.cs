@@ -371,6 +371,51 @@ namespace Seal.Model
 #endif
         public string BodyScript { get; set; }
 
+        public const string BodyScriptTemplate = @"@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    try {
+        //Execute SQL
+        task.ExecuteSQL();
+    
+        //Execute Script
+        task.ExecuteScript();
+
+        //Execute children
+        foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
+        {
+            childTask.Execute();
+        }
+    }
+    catch (Exception ex)
+    {
+        task.LogMessage($""Exception got in task '{task.Name}'\r\n{ex.Message}"");
+        if (!task.IgnoreError) {
+            task.Cancel();
+        }       
+    }
+}
+";
+
+        public const string NoChildrenBodyScriptTemplate = @"@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    try {
+        //Execute SQL
+        task.ExecuteSQL();
+    
+        //Execute Script
+        task.ExecuteScript();
+    }
+    catch (Exception ex)
+    {
+        task.LogMessage($""Exception got in task '{task.Name}'\r\n{ex.Message}"");
+        if (!task.IgnoreError) {
+            task.Cancel();
+        }       
+    }
+}
+";
 
         [XmlIgnore]
         /// <summary>
@@ -408,7 +453,7 @@ namespace Seal.Model
         /// SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SQL statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
+        [Category("Definition"), DisplayName("SQL statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'."), Id(5, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string SQL { get; set; }
@@ -417,7 +462,7 @@ namespace Seal.Model
         /// Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string Script { get; set; }
@@ -492,7 +537,6 @@ namespace Seal.Model
 #endif
         [XmlIgnore]
         public string Error { get; set; }
-        public bool CancelReport = false;
 
 #endregion
 
@@ -520,8 +564,8 @@ namespace Seal.Model
         /// </summary>
         public void Cancel()
         {
-            CancelReport = true;
             LogMessage("Cancelling task and report...");
+            Report.Cancel = true;
             if (_commandMutex.WaitOne(1000))
             {
                 try
@@ -602,7 +646,6 @@ namespace Seal.Model
 
             InitParameters();
 
-            CancelReport = false;
             DbInfoMessage = new StringBuilder();
             //Temp list to avoid change of connections during a task...
             var connections = Source.Connections.Where(i => ExecuteForEachConnection || i.GUID == Connection.GUID).ToList();
@@ -623,6 +666,11 @@ namespace Seal.Model
                     LogMessage("Ending task '{0}'", Name);
                     Progression = 100; //100%
                 }
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"Exception got in task '{Name}'\r\n{ex.Message}");
+                if (!IgnoreError) Cancel();
             }
             finally
             {
@@ -647,17 +695,7 @@ namespace Seal.Model
                 {
                     _command.Connection.Close();
                 }
-
-                if (sqlResult != null && !(sqlResult is DBNull))
-                {
-                    if (sqlResult.ToString().Trim() == "0")
-                    {
-                        LogMessage("SQL returns 0, the report is cancelled.");
-                        CancelReport = true;
-                    }
-                }
             }
-
         }
 
         public void ExecuteScript()
