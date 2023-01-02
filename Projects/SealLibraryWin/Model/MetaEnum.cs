@@ -340,7 +340,7 @@ namespace Seal.Model
                 {
                     foreach (DataRow row in table.Rows)
                     {
-                        if (!row.IsNull(0)) 
+                        if (!row.IsNull(0))
                         {
                             MetaEV value = new MetaEV();
                             value.Id = row[0].ToString();
@@ -365,17 +365,24 @@ namespace Seal.Model
             if (!string.IsNullOrEmpty(SqlDisplay))
             {
                 DbConnection connection = _source.GetOpenConnection();
-                var finalSQL = RazorHelper.CompileExecute(SqlDisplay, this);
-                if (HasDynamicDisplay) finalSQL = finalSQL.Replace(Repository.EnumFilterKeyword + "}", filter);
-                if (HasDynamicDisplay && dependencies != null)
+                try
                 {
-                    foreach (var d in dependencies.Keys)
+                    var finalSQL = RazorHelper.CompileExecute(SqlDisplay, this);
+                    if (HasDynamicDisplay) finalSQL = finalSQL.Replace(Repository.EnumFilterKeyword + "}", filter);
+                    if (HasDynamicDisplay && dependencies != null)
                     {
-                        finalSQL = finalSQL.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                        foreach (var d in dependencies.Keys)
+                        {
+                            finalSQL = finalSQL.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                        }
                     }
+                    finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
+                    result = getValues(connection, finalSQL);
                 }
-                finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
-                result = getValues(connection, finalSQL);
+                finally
+                {
+                    connection.Close();
+                }
             }
 
             if (!string.IsNullOrEmpty(ScriptDisplay))
@@ -420,15 +427,29 @@ namespace Seal.Model
                         foreach (var metaConnection in _source.Connections)
                         {
                             connection = metaConnection.GetOpenConnection();
-                            var vals = getValues(connection, RazorHelper.CompileExecute(Sql, this));
-                            foreach (var ev in vals) ev.ConnectionGUID = metaConnection.GUID;
-                            Values.AddRange(vals);
+                            try
+                            {
+                                var vals = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                                foreach (var ev in vals) ev.ConnectionGUID = metaConnection.GUID;
+                                Values.AddRange(vals);
+                            }
+                            finally
+                            {
+                                connection.Close();
+                            }
                         }
                     }
                     else
                     {
                         connection = _source.GetOpenConnection();
-                        Values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                        try
+                        {
+                            Values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                        }
+                        finally
+                        {
+                            connection.Close();
+                        }
                     }
                 }
 
@@ -503,7 +524,7 @@ namespace Seal.Model
         public string Error { get; set; }
 
 
-#endregion
+        #endregion
 
 
     }

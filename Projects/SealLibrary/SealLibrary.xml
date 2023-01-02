@@ -44,6 +44,11 @@
             Convert a list of BsonDocument into a DataTable. ignoreNames allow to skip some columns.
             </summary>
         </member>
+        <member name="M:Seal.Helpers.ExcelHelper.GetExcelPackage(System.String)">
+            <summary>
+            Load an Excel Package
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.ExcelHelper.LoadDataTableFromExcel(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
             Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic. 
@@ -140,7 +145,7 @@
             Load tables from Excel tabs (one table per tab)
             </summary>
         </member>
-        <member name="M:Seal.Helpers.TaskHelper.LoadTableFromExcel(System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32)">
+        <member name="M:Seal.Helpers.TaskHelper.LoadTableFromExcel(System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)">
             <summary>
             Load a table from an Excel tab into the database. A start row, and/or colum can be specified. An end column can be specified. 
             </summary>
@@ -2262,6 +2267,11 @@
         <member name="F:Seal.Model.Report.ExecutionErrorStackTrace">
              <summary>
             Execution errors stack trace after execution
+             </summary>
+        </member>
+        <member name="F:Seal.Model.Report.ExecutionInitiator">
+             <summary>
+            Optional initiator of the execution
              </summary>
         </member>
         <member name="P:Seal.Model.Report.WebExecutionErrors">

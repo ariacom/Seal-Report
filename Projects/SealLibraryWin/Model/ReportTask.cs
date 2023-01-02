@@ -556,7 +556,7 @@ namespace Seal.Model
         /// </summary>
         public void LogMessage(string message, params object[] args)
         {
-            Report.LogMessage(ExecLogPrefix + message, args);
+            Report.LogMessage(message, args);
         }
 
         /// <summary>
@@ -750,12 +750,6 @@ namespace Seal.Model
         /// The result of the task
         /// </summary>
         public object ExecResult;
-
-        /// <summary>
-        /// Prefix for logs
-        /// </summary>
-        public string ExecLogPrefix = "";
-
     }
 }
 

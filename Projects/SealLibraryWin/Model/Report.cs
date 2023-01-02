@@ -2595,15 +2595,9 @@ namespace Seal.Model
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(message.Trim()) && args.Length == 0)
+                if (!string.IsNullOrWhiteSpace(message.Trim()) || args.Length != 0)
                 {
-                    Debug.WriteLine(message);
-                    ExecutionMessages += message;
-                    if (ExecutionInitiator != null) ExecutionInitiator.ExecutionMessages += message;
-                }
-                else
-                {
-                    var msg = string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), (args.Length == 0 ? message : string.Format(message, args)));
+                    var msg = string.Format("{0} ({1}) {2}\r\n", DateTime.Now.ToLongTimeString(), Thread.CurrentThread.ManagedThreadId, (args.Length == 0 ? message : string.Format(message, args)));
                     Debug.WriteLine(msg);
                     ExecutionMessages += msg;
                     if (ExecutionInitiator != null) ExecutionInitiator.ExecutionMessages += msg;

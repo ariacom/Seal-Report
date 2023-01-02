@@ -284,6 +284,15 @@ namespace Seal.Helpers
             bool result = false;
             try
             {
+                loadFolder = _task.Repository.ReplaceRepositoryKeyword(loadFolder);
+                if (string.IsNullOrEmpty(loadFolder)) loadFolder = "Loaded";
+                if (!Directory.Exists(loadFolder))
+                {
+                    loadFolder = Path.Combine(Path.GetDirectoryName(sourceCsvPath), loadFolder);
+                    Directory.CreateDirectory(loadFolder);
+                }
+                if (!Directory.Exists(loadFolder)) throw new Exception($"Invalid folder '{loadFolder}'");
+
                 if (forceLoad || CheckForNewFileSource(loadFolder, sourceCsvPath))
                 {
                     LoadTableFromCSV(sourceCsvPath, destinationTableName, separator, useAllConnections, useVBParser, encoding);
@@ -309,9 +318,11 @@ namespace Seal.Helpers
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceCsvPath);
                 LogMessage("Starting Loading CSV Table from '{0}'", sourcePath);
 
+                if (string.IsNullOrEmpty(destinationTableName)) destinationTableName = Path.GetFileNameWithoutExtension(sourceCsvPath);
 
                 DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator, encoding) : DatabaseHelper.LoadDataTableFromCSVVBParser(sourcePath, separator, encoding));
                 table.TableName = destinationTableName;
+
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
                     if (_task.Report.Cancel) break;

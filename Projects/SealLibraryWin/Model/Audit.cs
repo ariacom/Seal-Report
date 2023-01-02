@@ -174,8 +174,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                var message = string.Format("Error executing the Audit Script:\r\n{0}", ex.Message);
-                Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, ex.Message);
+                Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, $"Error executing the Audit Script:\r\n{ex.Message}");
             }
         }
     }

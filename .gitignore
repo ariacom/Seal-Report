@@ -46,6 +46,7 @@ work/
 temp/
 Assemblies/
 Logs/
+Loaded/
 SpecialFolders/
 Projects/SealDocumentation/Help/
 *.pubxml

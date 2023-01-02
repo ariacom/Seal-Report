@@ -5,7 +5,6 @@
     task.TemplateDescription = "Execute the children tasks in parallel (using multiple threads).";
 
     //Parameters for this task
-    task.Parameters.Add(new Parameter() { Name = "thread", NumericValue = 0, DisplayName = "Number of threads", Description = "Number of threads used to execute child tasks. A value of 0 means that all tasks are executed in parallel." });
 
     task.Script = @"@using System.IO
 @using System.Threading
@@ -38,7 +37,6 @@
         try {
             task.LogMessage($""Starting Thread: {id} for task {task.Name}"");
             Thread.Sleep(10); 
-            child.ExecLogPrefix += id + "" "";
             child.Execute();
         }
         finally {

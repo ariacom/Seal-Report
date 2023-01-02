@@ -2782,44 +2782,51 @@ model.ResultTable = query2.CopyToDataTable2();
                     isMaster = true; //This model is the master for the Result table
                     DbConnection connection = null;
                     connection = Connection.GetOpenConnection();
-                    if (connection is OdbcConnection) _command = ((OdbcConnection)connection).CreateCommand();
-                    else if (connection is SqlConnection) _command = ((SqlConnection)connection).CreateCommand();
-                    else if (connection is Microsoft.Data.SqlClient.SqlConnection) _command = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
-                    else if (connection is MySql.Data.MySqlClient.MySqlConnection) _command = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
-                    else if (connection is OracleConnection) _command = ((OracleConnection)connection).CreateCommand();
-                    else _command = ((OleDbConnection)connection).CreateCommand();
 
-                    _command.CommandTimeout = 0;
-                    executePrePostStatement(Source.PreSQL, "Pre", Source.Name, Source.IgnorePrePostError, Source);
-                    executePrePostStatements(true);
-                    executePrePostStatement(PreSQL, "Pre", Name, IgnorePrePostError, this);
-
-                    if (!IsSubModel) Report.LogMessage("Model '{0}': Executing main query...", Name);
-                    else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
-                    _command.CommandText = Sql;
-
-                    if (PrintQuery || Report.PrintQueries)
+                    try
                     {
-                        Report.LogMessage("Model '{0}' SQL Query:\r\n{1}\r\n", Name, Sql);
+                        if (connection is OdbcConnection) _command = ((OdbcConnection)connection).CreateCommand();
+                        else if (connection is SqlConnection) _command = ((SqlConnection)connection).CreateCommand();
+                        else if (connection is Microsoft.Data.SqlClient.SqlConnection) _command = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
+                        else if (connection is MySql.Data.MySqlClient.MySqlConnection) _command = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
+                        else if (connection is OracleConnection) _command = ((OracleConnection)connection).CreateCommand();
+                        else _command = ((OleDbConnection)connection).CreateCommand();
+
+                        _command.CommandTimeout = 0;
+                        executePrePostStatement(Source.PreSQL, "Pre", Source.Name, Source.IgnorePrePostError, Source);
+                        executePrePostStatements(true);
+                        executePrePostStatement(PreSQL, "Pre", Name, IgnorePrePostError, this);
+
+                        if (!IsSubModel) Report.LogMessage("Model '{0}': Executing main query...", Name);
+                        else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
+                        _command.CommandText = Sql;
+
+                        if (PrintQuery || Report.PrintQueries)
+                        {
+                            Report.LogMessage("Model '{0}' SQL Query:\r\n{1}\r\n", Name, Sql);
+                        }
+
+                        DbDataAdapter adapter = null;
+                        if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
+                        else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
+                        else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter((Microsoft.Data.SqlClient.SqlCommand)_command);
+                        else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter((MySql.Data.MySqlClient.MySqlCommand)_command);
+                        else if (connection is OracleConnection) adapter = new OracleDataAdapter((OracleCommand)_command);
+                        else adapter = new OleDbDataAdapter((OleDbCommand)_command);
+                        ResultTable = new DataTable();
+                        adapter.Fill(ResultTable);
+
+                        //Thread.Sleep(3000); //For DEV
+
+                        executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
+                        executePrePostStatements(false);
+                        executePrePostStatement(Source.PostSQL, "Post", Source.Name, Source.IgnorePrePostError, Source);
                     }
-
-                    DbDataAdapter adapter = null;
-                    if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
-                    else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
-                    else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter((Microsoft.Data.SqlClient.SqlCommand)_command);
-                    else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter((MySql.Data.MySqlClient.MySqlCommand)_command);
-                    else if (connection is OracleConnection) adapter = new OracleDataAdapter((OracleCommand)_command);
-                    else adapter = new OleDbDataAdapter((OleDbCommand)_command);
-                    ResultTable = new DataTable();
-                    adapter.Fill(ResultTable);
-
-                    //Thread.Sleep(3000); //For DEV
-
-                    executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
-                    executePrePostStatements(false);
-                    executePrePostStatement(Source.PostSQL, "Post", Source.Name, Source.IgnorePrePostError, Source);
-                    connection.Close();
-                    _command = null;
+                    finally
+                    {
+                        connection.Close();
+                        _command = null;
+                    }
                 }
             }
             catch (Exception ex)
