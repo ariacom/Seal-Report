@@ -54,10 +54,12 @@ namespace Seal.Model
                 GetProperty("SQL").SetIsBrowsable(true);
                 GetProperty("Enabled").SetIsBrowsable(true);
                 GetProperty("IgnoreError").SetIsBrowsable(true);
+                GetProperty("Retries").SetIsBrowsable(true);
+                GetProperty("RetryDuration").SetIsBrowsable(true);
                 GetProperty("BodyScript").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
                 GetProperty("ExecuteForEachConnection").SetIsBrowsable(true);
-                GetProperty("Step").SetIsBrowsable(true);
+                GetProperty("Step").SetIsBrowsable(ParentTask == null);
 
                 //Helpers
                 //GetProperty("Information").SetIsBrowsable(true);
@@ -376,47 +378,29 @@ namespace Seal.Model
 
         public const string BodyScriptTemplate = @"@{
     ReportTask task = Model;
-    Report report = task.Report;
-    try {
-        //Execute SQL
-        task.ExecuteSQL();
-    
-        //Execute Script
-        task.ExecuteScript();
 
-        //Execute children
-        foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
-        {
-            childTask.Execute();
-        }
-    }
-    catch (Exception ex)
+    //Execute SQL
+    task.ExecuteSQL();
+    
+    //Execute Script
+    task.ExecuteScript();
+
+    //Execute children
+    foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
     {
-        task.LogMessage($""Exception got in task '{task.Name}'\r\n{ex.Message}"");
-        if (!task.IgnoreError) {
-            task.Cancel();
-        }       
+        childTask.Execute();
     }
 }
 ";
 
         public const string NoChildrenBodyScriptTemplate = @"@{
     ReportTask task = Model;
-    Report report = task.Report;
-    try {
-        //Execute SQL
-        task.ExecuteSQL();
+
+    //Execute SQL
+    task.ExecuteSQL();
     
-        //Execute Script
-        task.ExecuteScript();
-    }
-    catch (Exception ex)
-    {
-        task.LogMessage($""Exception got in task '{task.Name}'\r\n{ex.Message}"");
-        if (!task.IgnoreError) {
-            task.Cancel();
-        }       
-    }
+    //Execute Script
+    task.ExecuteScript();
 }
 ";
 
@@ -480,11 +464,29 @@ namespace Seal.Model
         public bool IgnoreError { get; set; } = false;
 
         /// <summary>
+        /// Number of retries in case of error
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(0)]
+        [Category("Options"), DisplayName("Retries"), Description("Number of retries in case of error."), Id(3, 2)]
+#endif
+        public int Retries { get; set; } = 0;
+
+        /// <summary>
+        /// Duration in seconds to wait between each retry
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(60)]
+        [Category("Options"), DisplayName("Retry duration"), Description("Duration in seconds to wait between each retry."), Id(4, 2)]
+#endif
+        public int RetryDuration { get; set; } = 60;
+
+        /// <summary>
         /// If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used.
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Options"), DisplayName("Execute for each connection"), Description("If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used."), Id(3, 2)]
+        [Category("Options"), DisplayName("Execute for each connection"), Description("If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used."), Id(5, 2)]
 #endif
         public bool ExecuteForEachConnection { get; set; } = false;
 
@@ -647,39 +649,58 @@ namespace Seal.Model
         {
             if (!Enabled) return;
 
-            InitParameters();
-
-            DbInfoMessage = new StringBuilder();
-            //Temp list to avoid change of connections during a task...
-            var connections = Source.Connections.Where(i => ExecuteForEachConnection || i.GUID == Connection.GUID).ToList();
             var initialConnectionGUID = ConnectionGUID;
-            try
+
+            int tries = Math.Max(0, Retries);
+            while (tries >= 0)
             {
-                foreach (var connection in connections)
+                try
                 {
-                    if (Report.Cancel) return;
+                    InitParameters();
 
-                    ConnectionGUID = connection.GUID;
-                    LogMessage($"Starting task '{Name}' with connection '{Connection.Name}'");
-                    Progression = 0;
+                    DbInfoMessage = new StringBuilder();
+                    //Temp list to avoid change of connections during a task...
+                    var connections = Source.Connections.Where(i => ExecuteForEachConnection || i.GUID == Connection.GUID).ToList();
+                    foreach (var connection in connections)
+                    {
+                        if (Report.Cancel) return;
 
-                    var bodyScript = string.IsNullOrEmpty(BodyScript) ? DefaultBodyScript : BodyScript;
-                    RazorHelper.CompileExecute(bodyScript, this);
+                        ConnectionGUID = connection.GUID;
+                        LogMessage($"Starting task '{Name}' with connection '{Connection.Name}'");
+                        Progression = 0;
 
-                    LogMessage("Ending task '{0}'", Name);
-                    Progression = 100; //100%
+                        var bodyScript = string.IsNullOrEmpty(BodyScript) ? DefaultBodyScript : BodyScript;
+                        RazorHelper.CompileExecute(bodyScript, this);
+
+                        LogMessage("Ending task '{0}'", Name);
+                        Progression = 100; //100%
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                LogMessage($"Exception got in task '{Name}'\r\n{ex.Message}");
-                if (!IgnoreError) Cancel();
-            }
-            finally
-            {
-                ConnectionGUID = initialConnectionGUID;
-            }
+                catch (Exception ex)
+                {
+                    if (tries > 0)
+                    {
+                        var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
+                        if (string.IsNullOrEmpty(Report.WebUrl)) LogMessage("Error in task '{0}': {1}", Name, message);
+                        else LogMessage("Error got in task '{0}'", Name);
 
+                        int cnt = Math.Max(1, RetryDuration);
+                        LogMessage($"Waiting for {cnt} seconds.");
+
+                        while (--cnt >= 0 && !Report.Cancel) Thread.Sleep(1000);
+                        LogMessage($"Retrying execution (try {Retries - tries + 1} of {Retries}).");
+                    }
+                    else
+                    {
+                        HandleException(ex);
+                    }
+                }
+                finally
+                {
+                    ConnectionGUID = initialConnectionGUID;
+                }
+                tries--;
+            }
         }
 
         public void ExecuteSQL()
@@ -713,8 +734,8 @@ namespace Seal.Model
         public void HandleException(Exception ex)
         {
             var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
-            if (string.IsNullOrEmpty(Report.WebUrl)) Report.LogMessage("Error in task '{0}': {1}\r\n{2}", Name, message, ex.StackTrace);
-            else Report.LogMessage("Error got in task '{0}'", Name);
+            if (string.IsNullOrEmpty(Report.WebUrl)) LogMessage("Error in task '{0}': {1}\r\n{2}", Name, message, ex.StackTrace);
+            else LogMessage("Error got in task '{0}'", Name);
             if (!IgnoreError)
             {
                 Report.ExecutionErrors = message;
