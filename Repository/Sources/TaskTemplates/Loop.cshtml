@@ -97,6 +97,9 @@
                 }            
             }                
         }
+        catch (Exception ex) {
+            task.HandleException(ex);
+        }
         finally {
             task.LogMessage($""Ending Thread"");
         }

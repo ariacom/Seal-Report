@@ -35,6 +35,7 @@
             </Parameter>
           </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+          <Script />
           <SortOrder>1</SortOrder>
         </ReportTask>
       </Tasks>
@@ -54,6 +55,7 @@
         </Parameter>
       </Parameters>
       <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <Script />
       <SortOrder>1</SortOrder>
     </ReportTask>
   </Tasks>

@@ -710,6 +710,19 @@ namespace Seal.Model
             }
         }
 
+        public void HandleException(Exception ex)
+        {
+            var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
+            if (string.IsNullOrEmpty(Report.WebUrl)) Report.LogMessage("Error in task '{0}': {1}\r\n{2}", Name, message, ex.StackTrace);
+            else Report.LogMessage("Error got in task '{0}'", Name);
+            if (!IgnoreError)
+            {
+                Report.ExecutionErrors = message;
+                Report.ExecutionErrorStackTrace = ex.StackTrace;
+                Cancel();
+            }
+        }
+
         void OleDbInfoMessage(object sender, OleDbInfoMessageEventArgs e)
         {
             DbInfoMessage.Append(e.Message);

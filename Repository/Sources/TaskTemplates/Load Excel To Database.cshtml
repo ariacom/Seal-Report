@@ -17,6 +17,7 @@
     task.Parameters.Add(new Parameter() { Name = "force_load", BoolValue = false, DisplayName = "Force load", Description = "If true, the load is always performed, even if the Excel file was not modified. In this case the 'Loaded folder' parameter is not used. " });
 
     task.Script = @"@using System.IO
+@using System.Data
 @{
     ReportTask task = Model;
     var helper = new TaskHelper(task);

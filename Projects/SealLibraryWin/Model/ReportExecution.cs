@@ -939,15 +939,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
-                if (string.IsNullOrEmpty(Report.WebUrl)) Report.LogMessage("Error in task '{0}': {1}\r\n{2}", task.Name, message, ex.StackTrace);
-                else Report.LogMessage("Error got in task '{0}'", task.Name);
-                if (!task.IgnoreError)
-                {
-                    Report.ExecutionErrors = message;
-                    Report.ExecutionErrorStackTrace = ex.StackTrace;
-                    task.Cancel();
-                }
+                task.HandleException(ex);
             }
         }
 
