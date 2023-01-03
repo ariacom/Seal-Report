@@ -350,7 +350,8 @@ namespace Seal.Helpers
 
         public bool LoadTableFromDataSource(string reportSourceName, string sourceSelectStatement, string destinationTableName, bool useAllConnections = false, string sourceCheckSelect = "", string destinationCheckSelect = "")
         {
-            var source = _task.Report.GetReportSource(reportSourceName);
+
+            var source = _task.Report.Sources.FirstOrDefault(i => i.Name == reportSourceName);
             if (source == null) throw new Exception(string.Format("Invalid report source name: '{0}'", reportSourceName));
             return LoadTableFromExternalSource(source.Connection, sourceSelectStatement, destinationTableName, useAllConnections, sourceCheckSelect, destinationCheckSelect);
         }

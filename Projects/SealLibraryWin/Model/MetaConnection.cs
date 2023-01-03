@@ -122,7 +122,8 @@ namespace Seal.Model
 #endif
         public ConnectionType ConnectionType
         {
-            get {
+            get
+            {
                 return _connectionType;
             }
             set
@@ -136,7 +137,8 @@ namespace Seal.Model
                 {
                     DatabaseType = DatabaseType.Oracle;
                 }
-                else if ((_connectionType == ConnectionType.MSSQLServer || _connectionType == ConnectionType.MSSQLServerMicrosoft) && DatabaseType != DatabaseType.MSSQLServer) {
+                else if ((_connectionType == ConnectionType.MSSQLServer || _connectionType == ConnectionType.MSSQLServerMicrosoft) && DatabaseType != DatabaseType.MSSQLServer)
+                {
                     DatabaseType = DatabaseType.MSSQLServer;
 #if WINDOWS
                     if (_dctd != null) MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -335,25 +337,28 @@ namespace Seal.Model
         {
             try
             {
-                if (!string.IsNullOrEmpty(ConnectionScript))
+                lock (this) //Protect several connections at the same time
                 {
-                    RazorHelper.CompileExecute(ConnectionScript, this);
-                    return DbConnection;
-                }
-
-                DbConnection = Helper.DbConnectionFromConnectionString(ConnectionType, FullConnectionString); ;
-                DbConnection.Open();
-                if (DatabaseType == DatabaseType.Oracle)
-                {
-                    try
+                    if (!string.IsNullOrEmpty(ConnectionScript))
                     {
-                        var command = DbConnection.CreateCommand();
-                        command.CommandText = "alter session set nls_date_format='yyyy-mm-dd hh24:mi:ss'";
-                        command.ExecuteNonQuery();
+                        RazorHelper.CompileExecute(ConnectionScript, this);
+                        return DbConnection;
                     }
-                    catch (Exception ex)
+
+                    DbConnection = Helper.DbConnectionFromConnectionString(ConnectionType, FullConnectionString); ;
+                    DbConnection.Open();
+                    if (DatabaseType == DatabaseType.Oracle)
                     {
-                        Helper.WriteLogException("GetOpenConnection", ex);
+                        try
+                        {
+                            var command = DbConnection.CreateCommand();
+                            command.CommandText = "alter session set nls_date_format='yyyy-mm-dd hh24:mi:ss'";
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Helper.WriteLogException("GetOpenConnection", ex);
+                        }
                     }
                 }
 
@@ -396,18 +401,19 @@ namespace Seal.Model
                 Information = "Error got when checking the connection.";
                 if (ConnectionType == ConnectionType.Oracle && OracleConfiguration.OracleDataSources.Count == 0)
                 {
-                   Information = "For Oracle, consider to use the 'Connection Script' to configure OracleConfiguration.OracleDataSources";
+                    Information = "For Oracle, consider to use the 'Connection Script' to configure OracleConfiguration.OracleDataSources";
                 }
 
             }
-            if (DbConnection != null && DbConnection.State == System.Data.ConnectionState.Open) {
+            if (DbConnection != null && DbConnection.State == System.Data.ConnectionState.Open)
+            {
                 DbConnection.Close();
             };
 
 
             Information = Helper.FormatMessage(Information);
 #if WINDOWS
-            UpdateEditorAttributes(); 
+            UpdateEditorAttributes();
             Cursor.Current = Cursors.Default;
 #endif
         }

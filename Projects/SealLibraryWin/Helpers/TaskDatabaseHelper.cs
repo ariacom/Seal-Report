@@ -56,7 +56,7 @@ namespace Seal.Helpers
         /// </summary>
         public string LoadSortColumn = "";
         public bool UseDbDataAdapter = false;
-        public int InsertBurstSize = 500;
+        public int InsertBurstSize = 2000;
         /// <summary>
         /// If set, limit the number of decimals for numeric values
         /// </summary>

@@ -252,6 +252,8 @@ namespace Seal.Model
                 Report.Cancel = false;
                 Report.ExecutionStartDate = DateTime.Now;
                 Task.Run(() => ExecuteAsync());
+
+                Thread.Sleep(100);
             }
         }
 

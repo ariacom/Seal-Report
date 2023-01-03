@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>4ded5db7b4934f0bbf80c83de09809e1</GUID>
+  <GUID>2668212724d74fc9ab5fbbb1029311a0</GUID>
   <ViewGUID>5c0ae5cc-8664-4771-8464-e4df51c51891</ViewGUID>
   <Sources>
     <ReportSource>
@@ -9,6 +9,13 @@
       <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
       <MetaData />
       <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>3432b9a9-7ad5-43d4-8e3d-ab6d89c4c447</GUID>
+      <Name>Local MS SQLServer (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>84abac98-6722-4a0b-98a0-00c15042e0a5</MetaSourceGUID>
     </ReportSource>
   </Sources>
   <Models>
@@ -24,18 +31,22 @@
       <Name>Loop</Name>
       <Tasks>
         <ReportTask>
-          <GUID>141ab784-60cd-4991-ae22-2f28ffc6fc3a</GUID>
-          <Name>Execute Report</Name>
+          <GUID>3df0163b-fab1-4de9-a4a2-0d55ccfd1a24</GUID>
+          <Name>Load Table To Database</Name>
           <Tasks />
-          <TemplateName>Execute Report</TemplateName>
+          <TemplateName>Load Table To Database</TemplateName>
           <Parameters>
             <Parameter>
-              <Name>output_directory</Name>
-              <Value>%SEALREPOSITORY%/Databases/Loaded</Value>
+              <Name>source_name</Name>
+              <Value>Local MS SQLServer (Repository)</Value>
+            </Parameter>
+            <Parameter>
+              <Name>table_prefix</Name>
+              <Value>temp_</Value>
             </Parameter>
           </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
-          <BodyScript />
+          <ConnectionGUID>cc91199c-1b51-4e61-8630-feb2eef21466</ConnectionGUID>
           <Script />
           <SortOrder>1</SortOrder>
         </ReportTask>
@@ -43,12 +54,12 @@
       <TemplateName>Loop</TemplateName>
       <Parameters>
         <Parameter>
-          <Name>folder</Name>
-          <Value>%SEALREPOSITORY%/Reports</Value>
+          <Name>filter</Name>
+          <Value />
         </Parameter>
         <Parameter>
-          <Name>filter</Name>
-          <Value>*.srex</Value>
+          <Name>sql</Name>
+          <Value>select name from sys.tables where name not like 'temp%'</Value>
         </Parameter>
         <Parameter>
           <Name>thread</Name>
@@ -56,7 +67,6 @@
         </Parameter>
       </Parameters>
       <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
-      <BodyScript />
       <Script />
       <SortOrder>1</SortOrder>
     </ReportTask>

@@ -27,13 +27,17 @@
           <GUID>02275896-bf2b-4836-a986-8124b5741564</GUID>
           <Name>Load Excel To Database</Name>
           <Tasks />
-          <ExecLogPrefix />
           <TemplateName>Load Excel To Database</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>force_load</Name>
+              <Value>True</Value>
+            </Parameter>
+          </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
           <SortOrder>1</SortOrder>
         </ReportTask>
       </Tasks>
-      <ExecLogPrefix />
       <TemplateName>Loop</TemplateName>
       <Parameters>
         <Parameter>
@@ -43,6 +47,10 @@
         <Parameter>
           <Name>filter</Name>
           <Value>*.xlsx</Value>
+        </Parameter>
+        <Parameter>
+          <Name>thread</Name>
+          <Value>0</Value>
         </Parameter>
       </Parameters>
       <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>

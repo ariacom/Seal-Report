@@ -1212,28 +1212,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Load report sources from their repository sources.
-        /// By default, only report sources involved in models or tasks are loaded.
-        /// </summary>
-        public void LoadSources(bool forceLoadAll = false)
-        {
-            var sourcesToLoad = Sources.ToList();
-            if (!forceLoadAll && Sources.Count > 1)
-            {
-                //Remove sources not involved in execution
-                sourcesToLoad.RemoveAll(i => !Models.Exists(j => j.SourceGUID == i.GUID || j.SourceGUID == i.MetaSourceGUID) && !Tasks.Exists(j => j.SourceGUID == i.GUID));
-            }
-
-            foreach (ReportSource source in sourcesToLoad)
-            {
-                source.Report = this;
-                source.LoadRepositoryMetaSources(Repository);
-            }
-
-            CheckLinkedTablesSources();
-        }
-
-        /// <summary>
         /// Load a report from a file
         /// </summary>
         static public Report LoadFromFile(string path, Repository repository, bool refreshEnums = true, bool forEdition = false, int retries = 0)
@@ -2607,15 +2585,6 @@ namespace Seal.Model
             {
                 ExecutionMessages += string.Format("Error logging {0}\r\n{1}\r\n", message, ex.Message);
             }
-        }
-
-        /// <summary>
-        /// Helper to get a report source from its name
-        /// </summary>
-        public ReportSource GetReportSource(string sourceName)
-        {
-            LoadSources(true);
-            return Sources.FirstOrDefault(i => i.Name == sourceName);
         }
 
         /// <summary>

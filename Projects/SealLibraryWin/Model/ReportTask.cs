@@ -28,7 +28,7 @@ namespace Seal.Model
     /// </summary>
     public class ReportTask : ReportComponent
 #if WINDOWS
-        , ITreeSort 
+        , ITreeSort
 #endif
     {
         public const string ParentTaskConnectionGUID = "5";
@@ -163,21 +163,24 @@ namespace Seal.Model
         {
             if (TaskTemplate != null)
             {
-                var initialParameters = Parameters.ToList();
-                Parameters.Clear();
-
-                var defaultParameters = TaskTemplate.DefaultParameters;
-                foreach (var configParameter in defaultParameters)
+                lock (this)
                 {
-                    Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
-                    if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
-                    Parameters.Add(parameter);
-                    parameter.InitFromConfiguration(configParameter);
-                }
-                //Show Error if any
-                if (!string.IsNullOrEmpty(TaskTemplate.Error)) Error = TaskTemplate.Error;
+                    var initialParameters = Parameters.ToList();
+                    Parameters.Clear();
 
-                if (string.IsNullOrEmpty(_name)) _name = "Master"; //Force a name for backward compatibility
+                    var defaultParameters = TaskTemplate.DefaultParameters;
+                    foreach (var configParameter in defaultParameters)
+                    {
+                        Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
+                        if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
+                        Parameters.Add(parameter);
+                        parameter.InitFromConfiguration(configParameter);
+                    }
+                    //Show Error if any
+                    if (!string.IsNullOrEmpty(TaskTemplate.Error)) Error = TaskTemplate.Error;
+
+                    if (string.IsNullOrEmpty(_name)) _name = "Master"; //Force a name for backward compatibility
+                }
             }
         }
 
@@ -278,7 +281,7 @@ namespace Seal.Model
         {
             get
             {
-                if (_connectionGUID != ReportSource.DefaultReportConnectionGUID 
+                if (_connectionGUID != ReportSource.DefaultReportConnectionGUID
                     && _connectionGUID != ReportSource.DefaultRepositoryConnectionGUID
                     && !(_connectionGUID == ParentTaskConnectionGUID && ParentTask != null))
                 {
@@ -538,9 +541,9 @@ namespace Seal.Model
         [XmlIgnore]
         public string Error { get; set; }
 
-#endregion
+        #endregion
 
-#region Database
+        #region Database
 
         DbCommand _command = null;
         Mutex _commandMutex = new Mutex();
