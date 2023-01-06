@@ -41,6 +41,10 @@
               <Value>Local MS SQLServer (Repository)</Value>
             </Parameter>
             <Parameter>
+              <Name>sql</Name>
+              <Value>select top 10 * from %EXECINPUT%</Value>
+            </Parameter>
+            <Parameter>
               <Name>table_prefix</Name>
               <Value>temp_</Value>
             </Parameter>
@@ -59,7 +63,7 @@
         </Parameter>
         <Parameter>
           <Name>sql</Name>
-          <Value>select name from sys.tables where name not like 'temp%'</Value>
+          <Value>select top 5 name from sys.tables where name not like 'temp%' order by 1</Value>
         </Parameter>
         <Parameter>
           <Name>thread</Name>
