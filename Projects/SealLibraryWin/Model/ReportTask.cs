@@ -15,6 +15,7 @@ using System.Data.OleDb;
 using System.Data.SqlClient;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
+using System.Data;
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.Drawing.Design;
@@ -32,6 +33,10 @@ namespace Seal.Model
 #endif
     {
         public const string ParentTaskConnectionGUID = "5";
+        public const string ExecInputKeyword = "%EXECINPUT%";
+        public const string ParentExecResultKeyword = "%PARENTEXECRESULT%";
+        public const string TranslatedParameterDescription = " The parameter can contain the '%PARENTEXECRESULT%' keyword to specify the result of the parent task, '%EXECINPUT% for an optional input set in the task (e.g. used in Loop).";
+        public const string TranslatedParameterDescriptionFull = " The parameter can contain the '%SEALREPOSITORY%' keyword to specify the repository path, '%PARENTEXECRESULT%' for the result of the parent task, '%EXECINPUT% for an optional input set in the task (e.g. used in Loop).";
 
 #if WINDOWS
         #region Editor
@@ -239,6 +244,29 @@ namespace Seal.Model
         {
             Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
             return parameter == null ? "" : (string.IsNullOrEmpty(parameter.Value) ? parameter.ConfigValue : parameter.Value);
+        }
+
+        /// <summary>
+        /// Returns the parameter value replacing Exec and Repository keywords
+        /// </summary>
+        public string GetValueTranslated(string name)
+        {
+            var result = GetValue(name);
+            if (!string.IsNullOrEmpty(result))
+            {
+                var execInput = "";
+                if (ExecInput is string) execInput = ExecInput as string;
+                else if (ExecInput is DataRow) execInput = ((DataRow)ExecInput)[0].ToString();
+                result = result.Replace(ExecInputKeyword, execInput);
+
+                var parentExecResult = "";
+                if (ParentTask?.ExecResult is string) parentExecResult = ParentTask?.ExecResult as string;
+                else if (ParentTask?.ExecResult is DataRow) parentExecResult = ((DataRow)ParentTask?.ExecResult)[0].ToString();
+                result= result.Replace(ParentExecResultKeyword, parentExecResult);
+
+                result = Repository.ReplaceRepositoryKeyword(result);
+            }
+            return result;
         }
 
         /// <summary>
@@ -468,7 +496,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(0)]
-        [Category("Options"), DisplayName("Retries"), Description("Number of retries in case of error."), Id(3, 2)]
+        [Category("Options"), DisplayName("Retries in case of error"), Description("Number of retries in case of error."), Id(3, 2)]
 #endif
         public int Retries { get; set; } = 0;
 
@@ -477,7 +505,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(60)]
-        [Category("Options"), DisplayName("Retry duration"), Description("Duration in seconds to wait between each retry."), Id(4, 2)]
+        [Category("Options"), DisplayName("Retry delay in seconds"), Description("Number of seconds elapsed before retrying."), Id(4, 2)]
 #endif
         public int RetryDuration { get; set; } = 60;
 
@@ -784,7 +812,7 @@ namespace Seal.Model
         public object ExecInput;
 
         /// <summary>
-        /// The result of the task
+        /// The result of the task, if any
         /// </summary>
         public object ExecResult;
     }

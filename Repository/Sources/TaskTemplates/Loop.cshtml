@@ -5,11 +5,11 @@
     task.TemplateDescription = "Build a list of object and loop for each object either sequentially or in parallel (using multiple threads).";
 
     //Parameters for this task
-    task.Parameters.Add(new Parameter() { Name = "folder", Value = "", DisplayName = "1.List of string: Folder path", Description = "The input folder to build the list (of string). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Reports", @"%SEALREPOSITORY%/Databases" }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "folder", Value = "", DisplayName = "1.List of string: Folder path", Description = "The input folder to build the list (of string)." + ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/Reports", @"%SEALREPOSITORY%/Databases", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "filter", Value = "*.*", DisplayName = "1.List of string: File filter", Description = "The file filter to build the list.", Enums = new string[] { @"*.*", @"*.xlsx", @"*.csv", @"*.txt" }, UseOnlyEnumValues = false });
-    task.Parameters.Add(new Parameter() { Name = "sql", Value = "", DisplayName = "2.List of DataRow: Select SQL", Description = "The SQL SELECT Statement to build the list (of DataRow)." });
-    task.Parameters.Add(new Parameter() { Name = "excel_path", Value = "", DisplayName = "3.List of DataRow: Excel file Path", Description = "The Excel file path (*.xlsx) to build the list (of DataRow) from a sheet. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Databases/databank.worldbank.org_health_population.xlsx" }, UseOnlyEnumValues = false });
-    task.Parameters.Add(new Parameter() { Name = "excel_tab", Value = "", DisplayName = "3.List of DataRow: Excel tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty, the first tab is used." });
+    task.Parameters.Add(new Parameter() { Name = "sql", Value = "", DisplayName = "2.List of DataRow: Select SQL", Description = "The SQL SELECT Statement to build the list (of DataRow)." + ReportTask.TranslatedParameterDescription });
+    task.Parameters.Add(new Parameter() { Name = "excel_path", Value = "", DisplayName = "3.List of DataRow: Excel file Path", Description = "The Excel file path (*.xlsx) to build the list (of DataRow) from a sheet." + ReportTask.TranslatedParameterDescription, Enums = new string[] { @"%SEALREPOSITORY%/Databases/databank.worldbank.org_health_population.xlsx", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "excel_tab", Value = "", DisplayName = "3.List of DataRow: Excel tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty, the first tab is used." + ReportTask.TranslatedParameterDescription });
     task.Parameters.Add(new Parameter() { Name = "thread", NumericValue = 1, DisplayName = "Number of threads", Description = "Number of threads used to execute child tasks. A value of 0 means a number of threads equals to the list count." });
 
     task.Script = @"@using System.IO
@@ -20,10 +20,10 @@
     var helper = new TaskHelper(task);
     
     var items = new List<object>();
-    var folder = task.Repository.ReplaceRepositoryKeyword(task.GetValue(""folder""));
-    var sql = task.GetValue(""sql"");
+    var folder = task.GetValueTranslated(""folder"");
+    var sql = task.GetValueTranslated(""sql"");
     var thread = task.GetNumericValue(""thread"");
-    var excel = task.Repository.ReplaceRepositoryKeyword(task.GetValue(""excel_path""));
+    var excel = task.GetValueTranslated(""excel_path"");
     
     //Folder input
     if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder)) {
@@ -40,7 +40,7 @@
     }    
     //Excel input
     else if (!string.IsNullOrEmpty(excel) && File.Exists(excel)) {
-        var dataTable = DataTableLoader.FromExcel(excel, task.GetValue(""excel_tab""));
+        var dataTable = DataTableLoader.FromExcel(excel, task.GetValueTranslated(""excel_tab""));
         foreach(var row in dataTable.Rows) {
             items.Add(row);
         }

@@ -174,10 +174,15 @@ namespace Seal.Helpers
 
                     forceLoad = CheckForNewFileSource(loadFolder, sourceExcelPath);
                 }
+                else
+                {
+                    loadFolder = "";
+                }
+
                 if (forceLoad)
                 {
                     LoadTableFromExcel(sourceExcelPath, sourceTabName, destinationTableName, useAllConnections, startRow, startColumn, endColumnIndex, endRowIndex, hasHeader);
-                    File.Copy(sourceExcelPath, Path.Combine(loadFolder, Path.GetFileName(sourceExcelPath)), true);
+                    if (!string.IsNullOrEmpty(loadFolder)) File.Copy(sourceExcelPath, Path.Combine(loadFolder, Path.GetFileName(sourceExcelPath)), true);
                     result = true;
                 }
                 else
@@ -284,19 +289,28 @@ namespace Seal.Helpers
             bool result = false;
             try
             {
-                loadFolder = _task.Repository.ReplaceRepositoryKeyword(loadFolder);
-                if (string.IsNullOrEmpty(loadFolder)) loadFolder = "Loaded";
-                if (!Directory.Exists(loadFolder))
+                if (!forceLoad)
                 {
-                    loadFolder = Path.Combine(Path.GetDirectoryName(sourceCsvPath), loadFolder);
-                    Directory.CreateDirectory(loadFolder);
-                }
-                if (!Directory.Exists(loadFolder)) throw new Exception($"Invalid folder '{loadFolder}'");
+                    loadFolder = _task.Repository.ReplaceRepositoryKeyword(loadFolder);
+                    if (string.IsNullOrEmpty(loadFolder)) loadFolder = "Loaded";
+                    if (!Directory.Exists(loadFolder))
+                    {
+                        loadFolder = Path.Combine(Path.GetDirectoryName(sourceCsvPath), loadFolder);
+                        Directory.CreateDirectory(loadFolder);
+                    }
+                    if (!Directory.Exists(loadFolder)) throw new Exception($"Invalid folder '{loadFolder}'");
 
-                if (forceLoad || CheckForNewFileSource(loadFolder, sourceCsvPath))
+                    forceLoad = CheckForNewFileSource(loadFolder, sourceCsvPath);
+                }
+                else
+                {
+                    loadFolder = "";
+                }
+
+                if (forceLoad)
                 {
                     LoadTableFromCSV(sourceCsvPath, destinationTableName, separator, useAllConnections, useVBParser, encoding);
-                    File.Copy(sourceCsvPath, Path.Combine(loadFolder, Path.GetFileName(sourceCsvPath)), true);
+                    if (!string.IsNullOrEmpty(loadFolder)) File.Copy(sourceCsvPath, Path.Combine(loadFolder, Path.GetFileName(sourceCsvPath)), true);
                     result = true;
                 }
                 else

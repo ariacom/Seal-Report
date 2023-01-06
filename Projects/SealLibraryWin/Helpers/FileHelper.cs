@@ -271,6 +271,18 @@ namespace Seal.Helpers
             return string.IsNullOrEmpty(filePath) ? "" : filePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
         }
 
+        public static void CreateZIPFromFolder(string inputFolder, string filter, bool recursive, string zipPath, string password)
+        {
+            var dic = new Dictionary<string, string>();
+            FillZipDictionaryFiles(dic, inputFolder, "", filter, recursive);
+            CreateZIP(dic, zipPath, password);
+        }
+
+        public static void CreateZIPFromFile(string inputPath, string zipPath, string password)
+        {
+            CreateZIP(inputPath, Path.GetFileName(inputPath), zipPath, password);
+        }
+
         public static void CreateZIP(string inputPath, string entryName, string zipPath, string password)
         {
             var dic = new Dictionary<string, string>();
@@ -364,7 +376,7 @@ namespace Seal.Helpers
         /// <summary>
         /// Fill a dictionary of files for CreateZIP
         /// </summary>
-        static void FillZipDictionaryFiles(Dictionary<string, string> files, string dir, string targetDir, string filter, bool recursive)
+        public static void FillZipDictionaryFiles(Dictionary<string, string> files, string dir, string targetDir, string filter, bool recursive)
         {
             foreach (var f in Directory.GetFiles(dir, filter))
             {

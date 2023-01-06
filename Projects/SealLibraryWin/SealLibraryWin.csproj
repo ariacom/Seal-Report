@@ -26,11 +26,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <NoWarn>1701;1702;CA1416</NoWarn>
+	  <NoWarn>1701;1702;CA1416;CS1591</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <NoWarn>1701;1702;CA1416</NoWarn>
+	  <NoWarn>1701;1702;CA1416;CS1591</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -116,6 +116,8 @@
 		<None Include="..\..\Repository\Sources\TaskTemplates\Default.cshtml" Link="TaskTemplates\Default.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Parallel.cshtml" Link="TaskTemplates\Parallel.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Loop.cshtml" Link="TaskTemplates\Loop.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\File Zip Unzip.cshtml" Link="TaskTemplates\File Zip Unzip.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\File Download Upload.cshtml" Link="TaskTemplates\File Download Upload.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load Excel To Database.cshtml" Link="TaskTemplates\Load Excel To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load CSV To Database.cshtml" Link="TaskTemplates\Load CSV To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load Table To Database.cshtml" Link="TaskTemplates\Load Table To Database.cshtml" />

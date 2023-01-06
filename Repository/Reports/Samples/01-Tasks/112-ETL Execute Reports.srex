@@ -30,8 +30,12 @@
           <TemplateName>Execute Report</TemplateName>
           <Parameters>
             <Parameter>
+              <Name>report_path</Name>
+              <Value>%EXECINPUT%</Value>
+            </Parameter>
+            <Parameter>
               <Name>output_directory</Name>
-              <Value>%SEALREPOSITORY%/Databases/Loaded</Value>
+              <Value>%SEALREPOSITORY%/Files/Results</Value>
             </Parameter>
           </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>

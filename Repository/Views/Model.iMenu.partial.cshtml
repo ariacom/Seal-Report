@@ -39,7 +39,7 @@
                 if (!cell.IsTotal)
                 {
                     val += string.IsNullOrEmpty(val) ? "" : ",";
-                    val += cell.ValueNoHTML;
+                    val += cell.DisplayValue;
                 }
             }
             <li class='@(row==1 && !view.GetBoolValue("show_summary_table") ? "active" :"")'>

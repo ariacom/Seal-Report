@@ -2,13 +2,13 @@
 @{
     ReportTask task = Model;
 
-    task.TemplateDescription = "Load an Excel file and save a given tab in a database table. If set, the task Input Object can be used as the 'Excel file path'.";
+    task.TemplateDescription = "Load an Excel file and save a given tab in a database table.";
 
     //Parameters for this task
-    task.Parameters.Add(new Parameter() { Name = "excel_folder", Value = "", DisplayName = "Loaded folder", Description = "The folder used to store the loaded Excel files. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path. If empty or single name, a sub-folder named is created having the specified name ('Loaded' by default).", Enums = new string[] { @"%SEALREPOSITORY%/Databases" }, UseOnlyEnumValues = false });
-    task.Parameters.Add(new Parameter() { Name = "excel_path", Value = "", DisplayName = "Excel file path", Description = "The Excel file path (*.xlsx). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Databases/databank.worldbank.org_health_population.xlsx" }, UseOnlyEnumValues = false });
-    task.Parameters.Add(new Parameter() { Name = "excel_tab", Value = "", DisplayName = "Tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty and the destination table name is empty, all the tabs are loaded." });
-    task.Parameters.Add(new Parameter() { Name = "table_name", Value = "", DisplayName = "Destination table name", Description = "The name of the destination table created in the database. If empty, the name of the tab is used." });
+    task.Parameters.Add(new Parameter() { Name = "excel_folder", Value = "", DisplayName = "Loaded folder", Description = "The folder used to store the loaded Excel files. If empty or single name, a sub-folder named is created having the specified name ('Loaded' by default)." + ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/Files/Loaded", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "excel_path", Value = "", DisplayName = "Excel file path", Description = "The Excel file path (*.xlsx)." + ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/Databases/databank.worldbank.org_health_population.xlsx", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "excel_tab", Value = "", DisplayName = "Tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty and the destination table name is empty, all the tabs are loaded." +  ReportTask.TranslatedParameterDescription });
+    task.Parameters.Add(new Parameter() { Name = "table_name", Value = "", DisplayName = "Destination table name", Description = "The name of the destination table created in the database. If empty, the name of the tab is used." + ReportTask.TranslatedParameterDescription });
     task.Parameters.Add(new Parameter() { Name = "excel_start_row", NumericValue = 1, DisplayName = "Start row", Description = "The start row of the tab to define the table." });
     task.Parameters.Add(new Parameter() { Name = "excel_start_col", NumericValue = 1, DisplayName = "Start column", Description = "The start column of the tab to define the table." });
     task.Parameters.Add(new Parameter() { Name = "excel_end_row", NumericValue = 0, DisplayName = "End row", Description = "The end row to define the table. If 0, rows are taken until an empty row is found." });
@@ -22,25 +22,11 @@
     ReportTask task = Model;
     var helper = new TaskHelper(task);
     
-    string input = """";
-    //use input if any
-    if (task.ExecInput is string) {
-        input = task.ExecInput as string; 
-    }
-    else if (task.ExecInput is DataRow) {
-        input = (task.ExecInput as DataRow)[0].ToString(); 
-    }
-    
-    var path = input;
-    if (string.IsNullOrEmpty(path)) {
-        path = task.GetValue(""excel_path"");
-    }
-
     helper.LoadTableFromExcel(
-        task.GetValue(""excel_folder""), 
-        path, 
-        task.GetValue(""excel_tab""), 
-        task.GetValue(""table_name""), 
+        task.GetValueTranslated(""excel_folder""), 
+        task.GetValueTranslated(""excel_path""), 
+        task.GetValueTranslated(""excel_tab""), 
+        task.GetValueTranslated(""table_name""), 
         task.ExecuteForEachConnection, 
         task.GetNumericValue(""excel_start_row""), 
         task.GetNumericValue(""excel_start_col""), 

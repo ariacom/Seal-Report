@@ -1,0 +1,409 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>74bc077e93d14901b50b8a9687e4ebe3</GUID>
+  <ViewGUID>5c0ae5cc-8664-4771-8464-e4df51c51891</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>3432b9a9-7ad5-43d4-8e3d-ab6d89c4c447</GUID>
+      <Name>Local MS SQLServer (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>84abac98-6722-4a0b-98a0-00c15042e0a5</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>dee2b1be-a8ad-4e20-bf75-75f14040f435</GUID>
+      <Name>Model</Name>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>3368378e-3a56-4dab-a400-be57dec66d0d</GUID>
+      <Name>Get file from FTP</Name>
+      <Tasks>
+        <ReportTask>
+          <GUID>fc1d4fa4-6b2c-467e-9f36-e646e3784524</GUID>
+          <Name>Unzip file to folder</Name>
+          <Tasks />
+          <TemplateName>Default</TemplateName>
+          <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+          <Script>@using System.IO
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var sourceZip = task.ParentTask.ExecResult as string; //@"c:\temp\excel samples.zip";;
+    var password = "";
+    var destinationFolder = @"c:\temp\testzip";
+    
+    task.LogMessage($"Unzipping '{sourceZip}' to {destinationFolder}");
+
+    if (!Directory.Exists(destinationFolder)) {
+        Directory.CreateDirectory(destinationFolder);
+    }
+     FileHelper.ExtractZipFile(sourceZip, password, destinationFolder);
+
+    task.ExecResult = destinationFolder;
+}
+</Script>
+          <SortOrder>1</SortOrder>
+        </ReportTask>
+      </Tasks>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <Enabled>false</Enabled>
+      <Script>@using FluentFTP
+@using Renci.SshNet
+@using System.IO
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var protocol = task.GetValueTranslated("protocol");
+    var hostName = "127.0.0.1";
+    var port = 21;
+    var userName = "test";
+    var password = "";
+    var remoteFile = "/excel samples.zip";
+    var targetFile = @"c:\temp\excel samples.zip";
+
+    task.LogMessage($"Downloading '{remoteFile}' to '{targetFile}'");
+    if (protocol == "FTP")
+    {
+        //Refer to https://github.com/robinrodricks/FluentFTP
+        using (var client = new FtpClient(hostName, userName, password)) {
+            client.Config.EncryptionMode = FtpEncryptionMode.Auto;
+            client.Config.ValidateAnyCertificate = true;
+            if (port == 0) {
+                client.AutoConnect();
+            }
+            else {
+                client.Port = port;
+                //SSL Configuration can be defined here
+                /*
+                client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+                client.Config.SslProtocols = SslProtocols.Tls12;
+                client.ValidateCertificate += new FtpSslValidation(delegate (FluentFTP.Client.BaseClient.BaseFtpClient control, FtpSslValidationEventArgs e)
+                {
+                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None)
+                    {
+                        e.Accept = false;
+                    }
+                    else
+                    {
+                        e.Accept = true;
+                    }
+                });
+                */
+                client.Connect();
+            }
+            
+            client.DownloadFile(targetFile, remoteFile);
+            client.Disconnect();
+        }
+    }
+    else if (protocol == "SFTP")
+    {
+        //Refer to https://github.com/sshnet/SSH.NET
+        using (var sftp = new SftpClient(hostName, port, userName, password))
+        {
+            sftp.Connect();
+            using (Stream fileStream = File.Create(targetFile))
+            {
+                sftp.DownloadFile(remoteFile, fileStream);
+            }
+            sftp.Disconnect();
+        }
+    }
+    else if (protocol == "SCP")
+    {
+        //Refer to https://github.com/sshnet/SSH.NET
+        using (var scp = new ScpClient(hostName, port, userName, password))
+        {
+            scp.Connect();
+            using (Stream fileStream = File.Create(targetFile))
+            {
+                scp.Download(remoteFile, fileStream);
+            }
+            scp.Disconnect();
+        }
+    }
+    //Set result
+    task.ExecResult = targetFile;
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>e53aa19d-c124-4ebd-bb6a-5ee856c4b996</GUID>
+      <Name>File Download From Server</Name>
+      <Tasks>
+        <ReportTask>
+          <GUID>58a3c454-1362-49b5-b499-29f4923908c4</GUID>
+          <Name>File Zip Unzip</Name>
+          <Tasks>
+            <ReportTask>
+              <GUID>dcf91707-2b8d-4191-a477-16fec2fe466a</GUID>
+              <Name>Loop</Name>
+              <Tasks>
+                <ReportTask>
+                  <GUID>e8b8a2c0-4897-464f-ad97-ed4d1e090640</GUID>
+                  <Name>Load Excel To Database</Name>
+                  <Tasks />
+                  <TemplateName>Load Excel To Database</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>excel_path</Name>
+                      <Value>%EXECINPUT%</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>force_load</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+                  <Script />
+                  <SortOrder>1</SortOrder>
+                </ReportTask>
+              </Tasks>
+              <TemplateName>Loop</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>folder</Name>
+                  <Value>%PARENTEXECRESULT%</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>filter</Name>
+                  <Value>*.xlsx</Value>
+                </Parameter>
+              </Parameters>
+              <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+              <Script />
+              <SortOrder>1</SortOrder>
+            </ReportTask>
+          </Tasks>
+          <TemplateName>File Zip Unzip</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>zip_path</Name>
+              <Value>%PARENTEXECRESULT%</Value>
+            </Parameter>
+            <Parameter>
+              <Name>folder</Name>
+              <Value>%SEALREPOSITORY%/Databases/ZipFolder</Value>
+            </Parameter>
+          </Parameters>
+          <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+          <SortOrder>1</SortOrder>
+        </ReportTask>
+      </Tasks>
+      <TemplateName>File Download From Server</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>user_name</Name>
+          <Value>test</Value>
+        </Parameter>
+        <Parameter>
+          <Name>remote_file</Name>
+          <Value>/excel samples.zip</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <Enabled>false</Enabled>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>1babae0b-c35a-4c31-87d9-0f6ea7eb24f8</GUID>
+      <Name>File Zip Unzip</Name>
+      <Tasks />
+      <TemplateName>File Zip Unzip</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>action</Name>
+          <Value>ZIPFILE</Value>
+        </Parameter>
+        <Parameter>
+          <Name>zip_path</Name>
+          <Value>%SEALREPOSITORY%/Databases/excel samples2.zip</Value>
+        </Parameter>
+        <Parameter>
+          <Name>folder</Name>
+          <Value>%SEALREPOSITORY%/Databases/ZipFolder</Value>
+        </Parameter>
+        <Parameter>
+          <Name>source_path</Name>
+          <Value>%SEALREPOSITORY%/Databases/Translations.csv</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <Enabled>false</Enabled>
+      <Script>@using System.IO
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var action = task.GetValueTranslated("action");
+    var zipPath = task.GetValueTranslated("zip_path");
+    var password = task.GetValueTranslated("password");
+    var folder = task.GetValueTranslated("folder");
+    var sourcePath = task.GetValueTranslated("source_path");
+
+    if (action == "UNZIP") {    
+        task.LogMessage($"Unzipping '{zipPath}' to '{folder}'");
+        if (!Directory.Exists(folder)) {
+            Directory.CreateDirectory(folder);
+        }
+         FileHelper.ExtractZipFile(zipPath, password, folder);
+        task.ExecResult = folder;
+    }
+    else if (action == "ZIPFILE") {    
+        task.LogMessage($"Zipping '{sourcePath}' to '{zipPath}'");
+        FileHelper.CreateZIPFromFile(sourcePath, zipPath, password);
+        task.ExecResult = zipPath;
+    }
+    else if (action == "ZIPFOLDER") {    
+        task.LogMessage($"Zipping '{folder}' to '{zipPath}'");
+        FileHelper.CreateZIPFromFolder(folder, task.GetValue("filter"), task.GetBoolValue("recursive", true), zipPath, password);
+        task.ExecResult = zipPath;
+    }
+}
+</Script>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>6098fd05-ab50-4cd0-b22c-73d9d4da544d</GUID>
+      <Name>File Zip Unzip - Copy</Name>
+      <Tasks />
+      <TemplateName>File Zip Unzip</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>action</Name>
+          <Value>ZIPFOLDER</Value>
+        </Parameter>
+        <Parameter>
+          <Name>zip_path</Name>
+          <Value>%SEALREPOSITORY%/Databases/excel samples3.zip</Value>
+        </Parameter>
+        <Parameter>
+          <Name>password</Name>
+          <Value>aa</Value>
+        </Parameter>
+        <Parameter>
+          <Name>folder</Name>
+          <Value>%SEALREPOSITORY%/Databases/ZipFolder</Value>
+        </Parameter>
+        <Parameter>
+          <Name>filter</Name>
+          <Value>*.xlsx</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <Enabled>false</Enabled>
+      <Script>@using System.IO
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var action = task.GetValueTranslated("action");
+    var zipPath = task.GetValueTranslated("zip_path");
+    var password = task.GetValueTranslated("password");
+    var folder = task.GetValueTranslated("folder");
+    var sourcePath = task.GetValueTranslated("source_path");
+
+    if (action == "UNZIP") {    
+        task.LogMessage($"Unzipping '{zipPath}' to '{folder}'");
+        if (!Directory.Exists(folder)) {
+            Directory.CreateDirectory(folder);
+        }
+         FileHelper.ExtractZipFile(zipPath, password, folder);
+        task.ExecResult = folder;
+    }
+    else if (action == "ZIPFILE") {    
+        task.LogMessage($"Zipping '{sourcePath}' to '{zipPath}'");
+        FileHelper.CreateZIPFromFile(sourcePath, zipPath, password);
+        task.ExecResult = zipPath;
+    }
+    else if (action == "ZIPFOLDER") {    
+        task.LogMessage($"Zipping '{folder}' to '{zipPath}'");
+        FileHelper.CreateZIPFromFolder(folder, task.GetValue("filter"), task.GetBoolValue("recursive", true), zipPath, password);
+        task.ExecResult = zipPath;
+    }
+}
+</Script>
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>9936e821-c538-4108-ade3-8019db6a3574</GUID>
+      <Name>File Download From Server2</Name>
+      <Tasks />
+      <TemplateName>File Download From Server</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>user_name</Name>
+          <Value>test</Value>
+        </Parameter>
+        <Parameter>
+          <Name>remote_file</Name>
+          <Value>/excel samples.zip</Value>
+        </Parameter>
+        <Parameter>
+          <Name>local_file</Name>
+          <Value>%SEALREPOSITORY%/Databases/test.zip</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <SortOrder>5</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>ab226f69-10c1-4b7c-a6f3-5674d9f7b2db</GUID>
+      <Name>File Download From Server2 - Copy</Name>
+      <Tasks />
+      <TemplateName>File Download From Server</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>action</Name>
+          <Value>UP</Value>
+        </Parameter>
+        <Parameter>
+          <Name>user_name</Name>
+          <Value>test</Value>
+        </Parameter>
+        <Parameter>
+          <Name>remote_file</Name>
+          <Value>/excel samples2.zip</Value>
+        </Parameter>
+        <Parameter>
+          <Name>local_file</Name>
+          <Value>%SEALREPOSITORY%/Databases/test.zip</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <SortOrder>6</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>5c0ae5cc-8664-4771-8464-e4df51c51891</GUID>
+      <Name>View</Name>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

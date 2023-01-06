@@ -30,6 +30,14 @@
           <TemplateName>Load Excel To Database</TemplateName>
           <Parameters>
             <Parameter>
+              <Name>excel_folder</Name>
+              <Value>%SEALREPOSITORY%/Files/Loaded</Value>
+            </Parameter>
+            <Parameter>
+              <Name>excel_path</Name>
+              <Value>%EXECINPUT%</Value>
+            </Parameter>
+            <Parameter>
               <Name>force_load</Name>
               <Value>True</Value>
             </Parameter>

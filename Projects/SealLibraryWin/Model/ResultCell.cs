@@ -186,16 +186,6 @@ namespace Seal.Model
             }
         }
 
-        /// <summary>
-        /// Deprecated: Kept for compatibility
-        /// </summary>
-        public string ValueNoHTML //Kept for backward compatibility before 5.0
-        {
-            get
-            {
-                return DisplayValue;
-            }
-        }
 
         /// <summary>
         /// Double value of the cell if possible
@@ -620,7 +610,7 @@ namespace Seal.Model
                                     link.Href += string.Format("&dis={0}", HttpUtility.UrlEncode(DisplayValue));
                                 }
                                 link.Href += subReportRestrictions;
-                                link.Text = report.Repository.RepositoryTranslate("SubReport", Element.MetaColumn.Category + '.' + Element.MetaColumn.DisplayName, subreport.Name);
+                                link.Text = HttpUtility.HtmlEncode(report.Repository.RepositoryTranslate("SubReport", Element.MetaColumn.Category + '.' + Element.MetaColumn.DisplayName, subreport.Name) + " " + DisplayValue);
                                 _links.Add(link);
                             }
                         }

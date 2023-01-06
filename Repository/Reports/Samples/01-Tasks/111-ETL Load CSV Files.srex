@@ -27,14 +27,22 @@
           <GUID>df95841f-81cb-40c9-b5d7-1f2f600e52e6</GUID>
           <Name>Load CSV To Database</Name>
           <Tasks />
-          <ExecLogPrefix />
           <TemplateName>Load CSV To Database</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>csv_folder</Name>
+              <Value>%SEALREPOSITORY%/Files/Loaded</Value>
+            </Parameter>
+            <Parameter>
+              <Name>csv_path</Name>
+              <Value>%EXECINPUT%</Value>
+            </Parameter>
+          </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
           <Script />
           <SortOrder>1</SortOrder>
         </ReportTask>
       </Tasks>
-      <ExecLogPrefix />
       <TemplateName>Loop</TemplateName>
       <Parameters>
         <Parameter>

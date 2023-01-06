@@ -6536,11 +6536,6 @@
             Display value of the cell without applying the format or translation
             </summary>
         </member>
-        <member name="P:Seal.Model.ResultCell.ValueNoHTML">
-            <summary>
-            Deprecated: Kept for compatibility
-            </summary>
-        </member>
         <member name="P:Seal.Model.ResultCell.DoubleValue">
             <summary>
             Double value of the cell if possible

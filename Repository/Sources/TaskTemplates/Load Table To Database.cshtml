@@ -2,13 +2,13 @@
 @{
     ReportTask task = Model;
 
-    task.TemplateDescription = "Load a table into the current database. If set, the task Input Object can be used as the 'Source table name'.";
+    task.TemplateDescription = "Load a table from another Data Source into the current database.";
 
     //Parameters for this task
     task.Parameters.Add(new Parameter() { Name = "source_name", Value = "", DisplayName = "Data Source Name", Description = "The name of the DataSource used to perform the SQL Select Statement." });
-    task.Parameters.Add(new Parameter() { Name = "sql", Value = "", DisplayName = "SQL Select Statement", Description = "The Select SQL Statement used to load the table from the source." });
-    task.Parameters.Add(new Parameter() { Name = "source_table", Value = "", DisplayName = "Source table name", Description = "The source table name if the 'Select SQL Statement' is empty " });
-    task.Parameters.Add(new Parameter() { Name = "table_name", Value = "", DisplayName = "Destination table name", Description = "The name of the destination table created in the database. If empty, the source table name is used." });
+    task.Parameters.Add(new Parameter() { Name = "sql", Value = "", DisplayName = "SQL Select Statement", Description = "The Select SQL Statement used to load the table from the source." + ReportTask.TranslatedParameterDescription });
+    task.Parameters.Add(new Parameter() { Name = "source_table", Value = "", DisplayName = "Source table name", Description = "The source table name if the 'Select SQL Statement' is empty."+ ReportTask.TranslatedParameterDescription });
+    task.Parameters.Add(new Parameter() { Name = "table_name", Value = "", DisplayName = "Destination table name", Description = "The name of the destination table created in the database. If empty, the source table name is used."+ ReportTask.TranslatedParameterDescription });
     task.Parameters.Add(new Parameter() { Name = "table_prefix", Value = "", DisplayName = "Table name prefix", Description = "Optional prefix added to the destination table name." });
     task.Parameters.Add(new Parameter() { Name = "sql_source_check", Value = "", DisplayName = "Source SQL Check Select", Description = "Optional SQL Select Statement to load a Check table from the source connection. If both source and destination Check tables are identicals, the table is not loaded." });
     task.Parameters.Add(new Parameter() { Name = "sql_dest_check", Value = "", DisplayName = "Destination SQL Check Select", Description = "Optional SQL Select Statement to load a Check table from current source. If both source and destination Check tables are identicals, the table is not loaded." });
@@ -28,26 +28,13 @@
     helper.DatabaseHelper.InsertBurstSize =  task.GetNumericValue(""insert_burst_size"");
     helper.DatabaseHelper.ColumnCharLength =  task.GetNumericValue(""column_char_len"");
 
-    string input = """";
-    //use input if any
-    if (task.ExecInput is string) {
-        input = task.ExecInput as string; 
-    }
-    else if (task.ExecInput is DataRow) {
-        input = (task.ExecInput as DataRow)[0].ToString(); 
-    }
-    
-    var sourceTable = input;
-    if (string.IsNullOrEmpty(sourceTable)) {
-        sourceTable = task.GetValue(""source_table"");
-    }
-
-    var sql = task.GetValue(""sql"");
+    var sourceTable = task.GetValueTranslated(""source_table"");
+    var sql = task.GetValueTranslated(""sql"");
     if (string.IsNullOrEmpty(sql) && !string.IsNullOrEmpty(sourceTable)) {
         sql = $""select * from {task.Source.GetTableName(sourceTable)}"";
     }
 
-    var destinationTable = task.GetValue(""table_name"");
+    var destinationTable = task.GetValueTranslated(""table_name"");
     if (string.IsNullOrEmpty(destinationTable)) {
         destinationTable = sourceTable;
     }

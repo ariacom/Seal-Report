@@ -624,7 +624,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(10)]
-        [Category("Failover: Retries"), DisplayName("Minutes between each retry"), Description("The number of minutes elapsed between a retry."), Id(3, 5)]
+        [Category("Failover: Retries"), DisplayName("Delay in minutes"), Description("The number of minutes elapsed before retrying."), Id(3, 5)]
 #endif
         public int ErrorMinutesBetweenRetries { get; set; } = 10;
 

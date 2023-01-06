@@ -67,12 +67,10 @@ namespace Seal.Model
                 client.Config.SslProtocols = SslProtocols.Tls12;
                 client.ValidateCertificate += new FtpSslValidation(delegate (FluentFTP.Client.BaseClient.BaseFtpClient control, FtpSslValidationEventArgs e)
                 {
-                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None)
-                    {
+                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None) {
                         e.Accept = false;
                     }
-                    else
-                    {
+                    else {
                         e.Accept = true;
                     }
                 });
@@ -222,7 +220,7 @@ namespace Seal.Model
         /// The user name used to connect to the File Server
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("User name"), Description("The user name used to connect to the derver"), Id(7, 1)]
+        [Category("Definition"), DisplayName("User name"), Description("The user name used to connect to the server"), Id(7, 1)]
 #endif
         public string UserName { get; set; }
 
@@ -235,7 +233,7 @@ namespace Seal.Model
         /// The clear password used to connect to the File Server
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Password"), Description("The password used to connect to the derver"), PasswordPropertyText(true), Id(8, 1)]
+        [Category("Definition"), DisplayName("Password"), Description("The password used to connect to the server"), PasswordPropertyText(true), Id(8, 1)]
         [XmlIgnore]
 #endif
         public string ClearPassword

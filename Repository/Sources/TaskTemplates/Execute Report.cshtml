@@ -2,11 +2,11 @@
 @{
     ReportTask task = Model;
 
-    task.TemplateDescription = "Execute a report. If set, the task Input Object can be used as the 'Report file path'.";
+    task.TemplateDescription = "Execute a report.";
 
     //Parameters for this task
-    task.Parameters.Add(new Parameter() { Name = "report_path", Value = "", DisplayName = "Report file path", Description = "The report file path (*.srex). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Reports/Overview - Sales.srex" }, UseOnlyEnumValues = false });
-    task.Parameters.Add(new Parameter() { Name = "output_directory", Value = "", DisplayName = "Output directory", Description = "If not empty, the report result is saved in the report output directory. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Reports" }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "report_path", Value = "", DisplayName = "Report file path", Description = "The report file path (*.srex). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path." + ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/Reports/Overview - Sales.srex", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "output_directory", Value = "", DisplayName = "Output directory", Description = "If not empty, the report result is saved in the report output directory."  + ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/Files/Results", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
 
     task.Script = @"@using System.Threading
 @using System.IO
@@ -15,22 +15,10 @@
     ReportTask task = Model;
     var repository = task.Repository;
 
-    string input = """";
-    //use input if any
-    if (task.ExecInput is string) {
-        input = task.ExecInput as string; 
-    }
-    else if (task.ExecInput is DataRow) {
-        input = (task.ExecInput as DataRow)[0].ToString(); 
-    }
-    
-    var reportPath = input;
-    if (string.IsNullOrEmpty(reportPath)) {
-        reportPath = repository.ReplaceRepositoryKeyword(task.GetValue(""report_path""));
-    }
-    var outputDirectory = repository.ReplaceRepositoryKeyword(task.GetValue(""output_directory""));
+    var reportPath = task.GetValueTranslated(""report_path"");
+    var outputDirectory = task.GetValueTranslated(""output_directory"");
 
-    Report report = Report.LoadFromFile(reportPath, task.Repository);
+    Report report = Report.LoadFromFile(reportPath, repository);
     report.ExecutionInitiator = task.Report;
     if (!string.IsNullOrEmpty(report.LoadErrors)) {
         task.LogMessage($""Error loading the report {reportPath}: {report.LoadErrors}"");
@@ -38,7 +26,9 @@
         return;
     }
     if (!string.IsNullOrEmpty(outputDirectory)) {
-        Directory.CreateDirectory(outputDirectory);
+        if (!Directory.Exists(outputDirectory)) {
+            Directory.CreateDirectory(outputDirectory);
+        }
 		var folderDevice = repository.Devices.First(i => i is OutputFolderDevice);
 		var output = report.AddOutput(folderDevice);
 		output.FolderPath = outputDirectory;
