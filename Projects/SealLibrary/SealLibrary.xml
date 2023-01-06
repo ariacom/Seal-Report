@@ -2534,12 +2534,6 @@
             Init all references of the report: Sources, Models, Views, Taks, InputValues
             </summary>
         </member>
-        <member name="M:Seal.Model.Report.LoadSources(System.Boolean)">
-            <summary>
-            Load report sources from their repository sources.
-            By default, only report sources involved in models or tasks are loaded.
-            </summary>
-        </member>
         <member name="M:Seal.Model.Report.LoadFromFile(System.String,Seal.Model.Repository,System.Boolean,System.Boolean,System.Int32)">
             <summary>
             Load a report from a file
@@ -2613,6 +2607,11 @@
         <member name="M:Seal.Model.Report.RemoveOutput(Seal.Model.ReportOutput)">
             <summary>
             Remove an output from the report
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.AddTask">
+            <summary>
+            Add a default task to the report
             </summary>
         </member>
         <member name="M:Seal.Model.Report.AddTask(Seal.Model.ReportTask,Seal.Model.ReportTaskTemplate)">
@@ -2894,11 +2893,6 @@
         <member name="M:Seal.Model.Report.LogMessage(System.String,System.Object[])">
             <summary>
             Log Interface implementation
-            </summary>
-        </member>
-        <member name="M:Seal.Model.Report.GetReportSource(System.String)">
-            <summary>
-            Helper to get a report source from its name
             </summary>
         </member>
         <member name="M:Seal.Model.Report.GetReportModel(System.String)">
@@ -5190,6 +5184,16 @@
             If true, errors occuring during the task execution are ignored and the report execution continues
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportTask.Retries">
+            <summary>
+            Number of retries in case of error
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTask.RetryDuration">
+            <summary>
+            Duration in seconds to wait between each retry
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportTask.ExecuteForEachConnection">
             <summary>
             If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used.
@@ -5268,11 +5272,6 @@
         <member name="F:Seal.Model.ReportTask.ExecResult">
             <summary>
             The result of the task
-            </summary>
-        </member>
-        <member name="F:Seal.Model.ReportTask.ExecLogPrefix">
-            <summary>
-            Prefix for logs
             </summary>
         </member>
         <member name="T:Seal.Model.ReportTaskTemplate">

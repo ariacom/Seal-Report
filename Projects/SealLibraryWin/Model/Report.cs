@@ -1682,6 +1682,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Add a default task to the report
+        /// </summary>
+        public ReportTask AddTask()
+        {
+            return AddTask(null, RepositoryServer.TaskTemplates.FirstOrDefault(i => i.Name == ReportTaskTemplate.DefaultName));
+        }
+
+        /// <summary>
         /// Add a task to the report
         /// </summary>
         public ReportTask AddTask(ReportTask parent, ReportTaskTemplate template)

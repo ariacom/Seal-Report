@@ -15,6 +15,7 @@ namespace Seal.Model
         public bool SkipSQL = false;
         public string FinalEditorCol = ""; 
         public string FinalTableCol = "";
+        public string EnumCharSeparator = ""; //For editing multiple enum in same field
 
         public string GetType(ReportElement element)
         {

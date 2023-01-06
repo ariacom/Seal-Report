@@ -54,6 +54,8 @@ namespace Seal.Model
             client.Credentials.UserName = device.UserName;
             client.Credentials.Password = device.ClearPassword;
 
+            client.Config.EncryptionMode = FtpEncryptionMode.Auto;
+            client.Config.ValidateAnyCertificate = true;
             if (device.PortNumber == 0) {
                 client.AutoConnect();
             }
@@ -61,11 +63,18 @@ namespace Seal.Model
                 client.Port = device.PortNumber;
                 //SSL Configuration can be defined here
                 /*
-                client.EncryptionMode = FtpEncryptionMode.Explicit;
-                client.SslProtocols = SslProtocols.Tls12;
-                client.ValidateCertificate += new FtpSslValidation(delegate(FtpClient control, FtpSslValidationEventArgs e) {
-                    // add logic to test if certificate is valid here
-                    e.Accept = true;
+                client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+                client.Config.SslProtocols = SslProtocols.Tls12;
+                client.ValidateCertificate += new FtpSslValidation(delegate (FluentFTP.Client.BaseClient.BaseFtpClient control, FtpSslValidationEventArgs e)
+                {
+                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None)
+                    {
+                        e.Accept = false;
+                    }
+                    else
+                    {
+                        e.Accept = true;
+                    }
                 });
                 */
                 client.Connect();
@@ -86,7 +95,6 @@ namespace Seal.Model
             }
             sftp.Disconnect();
         }
-
     }
     else if (device.Protocol == FileServerProtocol.SCP)
     {
@@ -377,6 +385,8 @@ namespace Seal.Model
                 if (Protocol == FileServerProtocol.FTP)
                 {
                     FtpClient client = new FtpClient(HostName, UserName, ClearPassword);
+                    client.Config.EncryptionMode = FtpEncryptionMode.Auto;
+                    client.Config.ValidateAnyCertificate = true;
 
                     if (PortNumber == 0)
                     {

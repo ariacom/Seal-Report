@@ -200,7 +200,22 @@ namespace Seal.Forms
     cell.AddNavigationReportNavigation(""\\Search - Orders.srex"", ""View Orders"", ""Navigation"");
 "
                 ),
-            new Tuple<string, string>(
+           new Tuple<string, string>(
+                "Display a list of enum values separated by a comma.",
+@"if (!cell.IsTitle)
+    {
+        var newVal = """";
+        foreach (var v in cell.Value.ToString().Split(',')) {
+            if (!string.IsNullOrEmpty(newVal)) {
+                newVal += "","";
+            }
+            newVal += element.MetaEnumValuesEL.FirstOrDefault(i => i.Id == v).DisplayValue;
+        }
+        cell.Value = newVal;
+    }
+"
+                ),
+             new Tuple<string, string>(
                 "Display the cell context",
 @"cell.FinalValue = string.Format(""Row={0} Col={1} Title={2} Summary={3}"", cell.ContextRow, cell.ContextCol, cell.IsTitle, cell.ContextIsSummaryTable);
 "

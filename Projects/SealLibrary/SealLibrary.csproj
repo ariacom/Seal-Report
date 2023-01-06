@@ -122,7 +122,7 @@
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
 		<PackageReference Include="EPPlus" Version="4.5.3.3" />
-		<PackageReference Include="FluentFTP" Version="42.1.0" />
+		<PackageReference Include="FluentFTP" Version="43.0.1" />
 		<PackageReference Include="jose-jwt" Version="4.0.1" />
 		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.49.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.9" />
