@@ -10,9 +10,11 @@
     </FileReplacePattern>
   </FileReplacePatterns>
   <CssFiles>_ed.editor.bootstrap.min.css</CssFiles>
+  <WebCssFiles />
   <ScriptFiles>_ed.common.js
 _ed.dataTables.editor.min.js
 _ed.editor.bootstrap.min.js</ScriptFiles>
+  <WebScriptFiles />
   <TaskFolderName>Seal Report</TaskFolderName>
   <AuditEnabled>true</AuditEnabled>
   <AuditScript />

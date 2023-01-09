@@ -774,7 +774,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Clear the current user session.
         /// </summary>
-        public async Task<ActionResult> SWILogout()
+        public ActionResult SWILogout()
         {
             writeDebug("SWILogout");
 

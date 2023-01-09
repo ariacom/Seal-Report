@@ -146,7 +146,7 @@ namespace Seal.Forms
             if (_thread.IsAlive)
             {
                 LogFromForm("Unable to cancel Job. Terminating job...");
-                _thread.Abort();
+                //_thread.Abort();
                 Thread.Sleep(1000);
             }
 

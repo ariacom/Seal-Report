@@ -76,6 +76,8 @@ namespace Seal.Model
                 GetProperty("FileReplacePatterns").SetIsBrowsable(!ForPublication);
                 GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
+                GetProperty("WebCssFiles").SetIsBrowsable(!ForPublication);
+                GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication);
 
                 GetProperty("PdfServer").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfServerPort").SetIsBrowsable(!ForPublication);
@@ -197,14 +199,31 @@ namespace Seal.Model
         public string CssFiles { get; set; } = "" ;
 
         /// <summary>
+        /// Additional CSS files to be included in the Web Report Server application. One per line or separated by semi-column.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Web CSS Files"), Description("Additional CSS files to be included in the Web Report Server application. One per line or separated by semi-column."), Id(14, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string WebCssFiles { get; set; } = "";
+
+        /// <summary>
         /// Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("JavaScript Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(13, 1)]
+        [Category("Server Settings"), DisplayName("JavaScript Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(15, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string ScriptFiles { get; set; } = null;
 
+        /// <summary>
+        /// Additional JavaScript files to be included in the Web Report Server application. One per line or separated by semi-column.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Web JavaScript Files"), Description("Additional JavaScript files to be included in the Web Report Server application. One per line or separated by semi-column."), Id(16, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string WebScriptFiles { get; set; } = null;
 
         SchedulerMode _schedulerMode = SchedulerMode.Windows;
         /// <summary>

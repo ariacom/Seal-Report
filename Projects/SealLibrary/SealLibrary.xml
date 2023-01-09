@@ -5109,6 +5109,11 @@
             Returns the parameter value
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportTask.GetValueTranslated(System.String)">
+            <summary>
+            Returns the parameter value replacing Exec and Repository keywords
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportTask.GetBoolValue(System.String,System.Boolean)">
             <summary>
             Returns a parameter boolean value with a default if it does not exist
@@ -5271,7 +5276,7 @@
         </member>
         <member name="F:Seal.Model.ReportTask.ExecResult">
             <summary>
-            The result of the task
+            The result of the task, if any
             </summary>
         </member>
         <member name="T:Seal.Model.ReportTaskTemplate">
@@ -7538,9 +7543,19 @@
             Additional CSS files to be included in the HTML report result. One per line or separated by semi-column.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.WebCssFiles">
+            <summary>
+            Additional CSS files to be included in the Web application. One per line or separated by semi-column.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.ScriptFiles">
             <summary>
             Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.WebScriptFiles">
+            <summary>
+            Additional JavaScript files to be included in the Web application. One per line or separated by semi-column.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.SchedulerMode">

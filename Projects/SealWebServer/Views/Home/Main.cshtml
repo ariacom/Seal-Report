@@ -25,6 +25,10 @@
     <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
     <link rel="stylesheet" href="~/Content/sealweb.css" />
     <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
+    @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebCssFiles))
+    {
+        <link rel="stylesheet" href="~/Content/@fileName" />
+    }
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.CssFiles))
     {
         <link rel="stylesheet" href="~/Content/@fileName" />
@@ -303,6 +307,10 @@
         <script src="~/Scripts/@("d3/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
     }
 
+    @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebScriptFiles))
+    {
+        <script type='text/javascript' src='~/Scripts/@fileName'></script>
+    }
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
     {
         <script type='text/javascript' src='~/Scripts/@fileName'></script>

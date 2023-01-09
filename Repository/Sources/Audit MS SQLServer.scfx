@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <MetaSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>3d80412e-03a4-4a96-818a-a2aecef4c813</GUID>
   <Name>Audit MS SQLServer</Name>
@@ -11,22 +11,15 @@
       <ConnectionString />
       <OdbcConnectionString />
       <MSSqlServerConnectionString>Server=localhost;Database=Audit;Trusted_Connection=True</MSSqlServerConnectionString>
-      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
       <UserName />
-      <ClearPassword />
     </MetaConnection>
   </Connections>
   <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>
-  <IsDefault>false</IsDefault>
-  <IsNoSQL>false</IsNoSQL>
-  <IgnorePrePostError>false</IgnorePrePostError>
   <MetaData>
     <Tables>
       <MetaTable>
         <GUID>36ffc9d2-1a1b-4357-8c46-24331e961794</GUID>
         <Name>sr_audit</Name>
-        <CacheDuration>0</CacheDuration>
-        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
@@ -35,10 +28,8 @@
             <Type>DateTime</Type>
             <Category>Audit</Category>
             <DisplayName>Date</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
             <Format>G</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</GUID>
@@ -48,7 +39,6 @@
             <DisplayName>Type</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <EnumGUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</EnumGUID>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>2e05ad38-4028-4c66-858f-396d466443cf</GUID>
@@ -57,7 +47,6 @@
             <Category>Audit</Category>
             <DisplayName>User</DisplayName>
             <DisplayOrder>6</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>963c0203-23ea-4558-be75-ffa167656cab</GUID>
@@ -66,7 +55,6 @@
             <Category>Audit</Category>
             <DisplayName>User groups</DisplayName>
             <DisplayOrder>7</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</GUID>
@@ -75,7 +63,6 @@
             <Category>Audit</Category>
             <DisplayName>Execution name</DisplayName>
             <DisplayOrder>9</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</GUID>
@@ -84,7 +71,6 @@
             <Category>Audit</Category>
             <DisplayName>Path</DisplayName>
             <DisplayOrder>3</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>a390f265-6761-41ac-b323-56f3ceb45b83</GUID>
@@ -93,7 +79,6 @@
             <Category>Audit</Category>
             <DisplayName>Execution view</DisplayName>
             <DisplayOrder>11</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</GUID>
@@ -103,7 +88,6 @@
             <DisplayName>Execution duration</DisplayName>
             <DisplayOrder>12</DisplayOrder>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>b7995c78-1815-4985-9df9-399438ce4f68</GUID>
@@ -112,7 +96,6 @@
             <Category>Audit</Category>
             <DisplayName>Error</DisplayName>
             <DisplayOrder>5</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</GUID>
@@ -121,7 +104,6 @@
             <Category>Audit</Category>
             <DisplayName>Output type</DisplayName>
             <DisplayOrder>13</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>db1a144e-d051-486c-a668-9926a38b7f73</GUID>
@@ -130,7 +112,6 @@
             <Category>Audit</Category>
             <DisplayName>Output name</DisplayName>
             <DisplayOrder>14</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>8457637b-d72b-48bf-8fb1-118adfeef0be</GUID>
@@ -139,7 +120,6 @@
             <Category>Audit</Category>
             <DisplayName>Schedule name</DisplayName>
             <DisplayOrder>16</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>db93240e-46a2-43a2-8b0a-079915daee93</GUID>
@@ -148,7 +128,6 @@
             <Category>Audit</Category>
             <DisplayName>Output information</DisplayName>
             <DisplayOrder>15</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</GUID>
@@ -158,7 +137,6 @@
             <DisplayName>Execution context</DisplayName>
             <DisplayOrder>10</DisplayOrder>
             <EnumGUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</EnumGUID>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>c53bdc07-c591-43e8-9f61-e0ce41709800</GUID>
@@ -172,7 +150,6 @@
             <DrillChildren>
               <string>58078fce-3cac-4279-b274-2f760caa4247</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>58078fce-3cac-4279-b274-2f760caa4247</GUID>
@@ -186,7 +163,6 @@
             <DrillChildren>
               <string>f55cc735-d7e2-4724-9f1a-8c484b6ba251</string>
             </DrillChildren>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</GUID>
@@ -197,7 +173,6 @@
             <DisplayOrder>19</DisplayOrder>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>54acc367-0703-48c9-ad29-f1914dbfa994</GUID>
@@ -206,7 +181,6 @@
             <Category>Audit</Category>
             <DisplayName>Detail</DisplayName>
             <DisplayOrder>4</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</GUID>
@@ -215,7 +189,6 @@
             <Category>Audit</Category>
             <DisplayName>User session</DisplayName>
             <DisplayOrder>8</DisplayOrder>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>8f4337f8-57f0-4d68-91cb-c1b797fbbd81</GUID>
@@ -225,7 +198,6 @@
             <DisplayName>Detail Numeric</DisplayName>
             <DisplayOrder>4</DisplayOrder>
             <Format>N0</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
           <MetaColumn>
             <GUID>04457a7a-d910-40dc-b344-a9b801b18c54</GUID>
@@ -235,7 +207,6 @@
             <DisplayName>Event week</DisplayName>
             <DisplayOrder>18</DisplayOrder>
             <Format>d</Format>
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -244,15 +215,10 @@
       <MetaEnum>
         <GUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</GUID>
         <Name>Event type</Name>
-        <IsDynamic>false</IsDynamic>
-        <IsDbRefresh>false</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 sr_audit.event_type, sr_audit.event_type
 FROM sr_audit 
 ORDER BY 1</Sql>
-        <UsePosition>false</UsePosition>
-        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>EventError</Id>
@@ -319,15 +285,10 @@ ORDER BY 1</Sql>
       <MetaEnum>
         <GUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</GUID>
         <Name>Execution context</Name>
-        <IsDynamic>false</IsDynamic>
-        <IsDbRefresh>false</IsDbRefresh>
-        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 sr_audit.execution_context 
 FROM sr_audit 
 ORDER BY 1</Sql>
-        <UsePosition>false</UsePosition>
-        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>DesignerOutput</Id>
