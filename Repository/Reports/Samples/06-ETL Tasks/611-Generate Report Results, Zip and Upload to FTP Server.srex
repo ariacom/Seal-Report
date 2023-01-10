@@ -35,7 +35,7 @@
             </Parameter>
             <Parameter>
               <Name>output_directory</Name>
-              <Value>%SEALREPOSITORY%/Files/Results</Value>
+              <Value>%SEALREPOSITORY%/TestFiles/Results</Value>
             </Parameter>
           </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
@@ -92,117 +92,6 @@
             </Parameter>
           </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
-          <Script>@using FluentFTP
-@using Renci.SshNet
-@using System.IO
-
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    
-    var download = task.GetValue("action") == "DW";
-    var protocol = task.GetValueTranslated("protocol");
-    var hostName = task.GetValueTranslated("host_name");
-    var port = task.GetNumericValue("port");;
-    var userName = task.GetValueTranslated("user_name");
-    var password = task.GetValueTranslated("password");
-    var remoteFile = task.GetValueTranslated("remote_file");
-    var localFile = task.GetValueTranslated("local_file");
-
-    if (string.IsNullOrEmpty(localFile)) {
-        throw new Exception("Local path is empty.");
-    }
-    if (string.IsNullOrEmpty(remoteFile)) {
-        throw new Exception("Remote path is empty.");
-    }
-
-    if (download) {
-        task.LogMessage($"Downloading '{remoteFile}' to '{localFile}'");
-    }
-    else {
-        if (!File.Exists(localFile)) {
-            throw new Exception("Invalid local path: {localFile}");
-        }
-        task.LogMessage($"Uploading '{localFile}' to '{remoteFile}'");
-    }
-
-    if (protocol == "FTP")
-    {
-        //Refer to https://github.com/robinrodricks/FluentFTP
-        using (var client = new FtpClient(hostName, userName, password)) {
-            client.Config.EncryptionMode = FtpEncryptionMode.Auto;
-            client.Config.ValidateAnyCertificate = true;
-            if (port == 0) {
-                client.AutoConnect();
-            }
-            else {
-                client.Port = port;
-                //SSL Configuration can be defined here
-                /*
-                client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
-                client.Config.SslProtocols = SslProtocols.Tls12;
-                client.ValidateCertificate += new FtpSslValidation(delegate (FluentFTP.Client.BaseClient.BaseFtpClient control, FtpSslValidationEventArgs e)
-                {
-                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None) {
-                        e.Accept = false;
-                    }
-                    else {
-                        e.Accept = true;
-                    }
-                });
-                */
-                client.Connect();
-            }
-            
-            if (download) {            
-                client.DownloadFile(localFile, remoteFile);
-            }
-            else {
-                client.UploadFile(localFile, remoteFile);
-            }
-            client.Disconnect();
-        }
-    }
-    else if (protocol == "SFTP")
-    {
-        //Refer to https://github.com/sshnet/SSH.NET
-        using (var sftp = new SftpClient(hostName, port, userName, password))
-        {
-            sftp.Connect();
-            using (Stream fileStream = File.Create(localFile))
-            {
-                if (download) {            
-                    sftp.DownloadFile(remoteFile, fileStream);
-                }
-                else {
-                   sftp.UploadFile(fileStream, remoteFile);
-                }
-            }
-            sftp.Disconnect();
-        }
-    }
-    else if (protocol == "SCP")
-    {
-        //Refer to https://github.com/sshnet/SSH.NET
-        using (var scp = new ScpClient(hostName, port, userName, password))
-        {
-            scp.Connect();
-            using (Stream fileStream = File.Create(localFile))
-            {
-                if (download) {            
-                    scp.Download(remoteFile, fileStream);
-                }
-                else {
-                    scp.Upload(fileStream, remoteFile);
-                }
-            }
-            scp.Disconnect();
-        }
-    }
-    //Set result
-    task.ExecResult = download ? localFile : remoteFile;
-}
-</Script>
           <SortOrder>1</SortOrder>
         </ReportTask>
       </Tasks>
@@ -214,11 +103,11 @@
         </Parameter>
         <Parameter>
           <Name>zip_path</Name>
-          <Value>%SEALREPOSITORY%/Files/results.zip</Value>
+          <Value>%SEALREPOSITORY%/TestFiles/results.zip</Value>
         </Parameter>
         <Parameter>
           <Name>folder</Name>
-          <Value>%SEALREPOSITORY%/Files/Results</Value>
+          <Value>%SEALREPOSITORY%/TestFiles/Results</Value>
         </Parameter>
       </Parameters>
       <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>

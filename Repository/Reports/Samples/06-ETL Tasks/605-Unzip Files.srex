@@ -38,54 +38,10 @@
         </Parameter>
         <Parameter>
           <Name>folder</Name>
-          <Value>%SEALREPOSITORY%/Files/ZipFolder</Value>
+          <Value>%SEALREPOSITORY%/TestFiles/ZipFolder</Value>
         </Parameter>
       </Parameters>
       <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
-      <Script>@using System.IO
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    
-    var action = task.GetValue("action");
-    var zipPath = task.GetValueTranslated("zip_path");
-    var password = task.GetValueTranslated("password");
-    var folder = task.GetValueTranslated("folder");
-    var sourcePath = task.GetValueTranslated("source_path");
-
-    if (string.IsNullOrEmpty(folder)) {
-        throw new Exception("Folder is empty.");
-    }
-
-    if (action == "UNZIP") {    
-        if (!File.Exists(zipPath)) {
-            throw new Exception("Invalid zip path: {zipPath}");
-        }
-        task.LogMessage($"Unzipping '{zipPath}' to '{folder}'");
-        if (!Directory.Exists(folder)) {
-            Directory.CreateDirectory(folder);
-        }
-         FileHelper.ExtractZipFile(zipPath, password, folder);
-        task.ExecResult = folder;
-    }
-    else if (action == "ZIPFILE") {
-        if (!File.Exists(sourcePath)) {
-            throw new Exception("Invalid source path: {sourcePath}");
-        }
-        task.LogMessage($"Zipping '{sourcePath}' to '{zipPath}'");
-        FileHelper.ExtractZipFile(zipPath, password, folder);
-        task.ExecResult = zipPath;
-    }
-    else if (action == "ZIPFOLDER") {    
-        if (!Directory.Exists(folder)) {
-            throw new Exception("Invalid folder: {folder}");
-        }
-        task.LogMessage($"Zipping '{folder}' to '{zipPath}'");
-        FileHelper.CreateZIPFromFolder(folder, task.GetValue("filter"), task.GetBoolValue("recursive", true), zipPath, password);
-        task.ExecResult = zipPath;
-    }
-}
-</Script>
       <SortOrder>2</SortOrder>
     </ReportTask>
   </Tasks>

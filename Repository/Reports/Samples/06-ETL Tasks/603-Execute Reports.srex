@@ -35,7 +35,7 @@
             </Parameter>
             <Parameter>
               <Name>output_directory</Name>
-              <Value>%SEALREPOSITORY%/Files/Results</Value>
+              <Value>%SEALREPOSITORY%/TestFiles/Results</Value>
             </Parameter>
           </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>

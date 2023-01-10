@@ -31,7 +31,7 @@
           <Parameters>
             <Parameter>
               <Name>csv_folder</Name>
-              <Value>%SEALREPOSITORY%/Files/Loaded</Value>
+              <Value>%SEALREPOSITORY%/TestFiles/Loaded</Value>
             </Parameter>
             <Parameter>
               <Name>csv_path</Name>

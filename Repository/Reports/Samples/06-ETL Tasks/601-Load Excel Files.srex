@@ -31,7 +31,7 @@
           <Parameters>
             <Parameter>
               <Name>excel_folder</Name>
-              <Value>%SEALREPOSITORY%/Files/Loaded</Value>
+              <Value>%SEALREPOSITORY%/TestFiles/Loaded</Value>
             </Parameter>
             <Parameter>
               <Name>excel_path</Name>
