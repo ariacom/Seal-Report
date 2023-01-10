@@ -25,6 +25,10 @@
     var folder = task.GetValueTranslated(""folder"");
     var sourcePath = task.GetValueTranslated(""source_path"");
 
+    if (string.IsNullOrEmpty(folder)) {
+        throw new Exception(""Folder is empty."");
+    }
+
     if (action == ""UNZIP"") {    
         if (!File.Exists(zipPath)) {
             throw new Exception(""Invalid zip path: {zipPath}"");

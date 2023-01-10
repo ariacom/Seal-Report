@@ -48,6 +48,7 @@ namespace Seal.Forms
             textBox.SelectionEnd = textBox.CurrentPosition;
             textBox.Focus();
 
+            if (end == textBox.CurrentPosition && end < textBox.Text.Length-1) end++;
             textBox.IndicatorFillRange(textBox.CurrentPosition, end - textBox.CurrentPosition);
             for (int i = textBox.CurrentPosition; i < end; i++)
             {
@@ -116,7 +117,7 @@ namespace Seal.Forms
                             var line2 = line.Text.Trim();
                             if (line2 == pattern)
                             {
-                                textBox.IndicatorCurrent =  (err.IsWarning ? NUM2 : NUM);
+                                textBox.IndicatorCurrent = (err.IsWarning ? NUM2 : NUM);
                                 setRazorError(textBox, compilationErrors, line, err.Column, (err.IsWarning ? "Warning: " : "Error: ") + err.ErrorText);
 
                                 if (!err.IsWarning) firstErrorLine = line;
@@ -135,6 +136,7 @@ namespace Seal.Forms
                 error = string.Format("Compilation error:\r\n{0}", ex.Message);
                 if (ex.InnerException != null) error += "\r\n" + ex.InnerException.Message;
             }
+
 
             if (!string.IsNullOrEmpty(error)) throw new Exception(error);
         }

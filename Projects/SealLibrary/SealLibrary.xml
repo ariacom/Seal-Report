@@ -7545,7 +7545,7 @@
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebCssFiles">
             <summary>
-            Additional CSS files to be included in the Web application. One per line or separated by semi-column.
+            Additional CSS files to be included in the Web Report Server application. One per line or separated by semi-column.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.ScriptFiles">
@@ -7555,7 +7555,7 @@
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebScriptFiles">
             <summary>
-            Additional JavaScript files to be included in the Web application. One per line or separated by semi-column.
+            Additional JavaScript files to be included in the Web Report Server application. One per line or separated by semi-column.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.SchedulerMode">

@@ -39,6 +39,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+TestFiles/
 
 #specific for Seal Report
 work/

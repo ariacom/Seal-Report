@@ -12,7 +12,7 @@
     task.Parameters.Add(new Parameter() { Name = "user_name", Value = "", DisplayName = "User name", Description = "The user name used to connect to the server."+ ReportTask.TranslatedParameterDescription });
     task.Parameters.Add(new Parameter() { Name = "password", Value = "", DisplayName = "Password", Description = "The password used to connect to the server."+ ReportTask.TranslatedParameterDescription });
     task.Parameters.Add(new Parameter() { Name = "remote_file", Value = "", DisplayName = "Remote file path", Description = "The remote file path to download or upload."+ ReportTask.TranslatedParameterDescription });
-    task.Parameters.Add(new Parameter() { Name = "local_file", Value = "", DisplayName = "Local file path", Description = "The local file path to download or upload."+ ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/Databases/excel samples.zip", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false});
+    task.Parameters.Add(new Parameter() { Name = "local_file", Value = "", DisplayName = "Local file path", Description = "The local file path to download or upload."+ ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] {  @"%SEALREPOSITORY%/Databases/excel samples.zip", @"%SEALREPOSITORY%/Files/Download/excel samples.zip", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false});
 
     task.Script = @"@using FluentFTP
 @using Renci.SshNet
@@ -30,6 +30,13 @@
     var password = task.GetValueTranslated(""password"");
     var remoteFile = task.GetValueTranslated(""remote_file"");
     var localFile = task.GetValueTranslated(""local_file"");
+
+    if (string.IsNullOrEmpty(localFile)) {
+        throw new Exception(""Local path is empty."");
+    }
+    if (string.IsNullOrEmpty(remoteFile)) {
+        throw new Exception(""Remote path is empty."");
+    }
 
     if (download) {
         task.LogMessage($""Downloading '{remoteFile}' to '{localFile}'"");

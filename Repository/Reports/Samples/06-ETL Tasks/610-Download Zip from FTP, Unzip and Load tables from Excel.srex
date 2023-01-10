@@ -27,126 +27,8 @@
   </Models>
   <Tasks>
     <ReportTask>
-      <GUID>3368378e-3a56-4dab-a400-be57dec66d0d</GUID>
-      <Name>Get file from FTP</Name>
-      <Tasks>
-        <ReportTask>
-          <GUID>fc1d4fa4-6b2c-467e-9f36-e646e3784524</GUID>
-          <Name>Unzip file to folder</Name>
-          <Tasks />
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
-          <Script>@using System.IO
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    
-    var sourceZip = task.ParentTask.ExecResult as string; //@"c:\temp\excel samples.zip";;
-    var password = "";
-    var destinationFolder = @"c:\temp\testzip";
-    
-    task.LogMessage($"Unzipping '{sourceZip}' to {destinationFolder}");
-
-    if (!Directory.Exists(destinationFolder)) {
-        Directory.CreateDirectory(destinationFolder);
-    }
-     FileHelper.ExtractZipFile(sourceZip, password, destinationFolder);
-
-    task.ExecResult = destinationFolder;
-}
-</Script>
-          <SortOrder>1</SortOrder>
-        </ReportTask>
-      </Tasks>
-      <TemplateName>Default</TemplateName>
-      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
-      <Enabled>false</Enabled>
-      <Script>@using FluentFTP
-@using Renci.SshNet
-@using System.IO
-
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    
-    var protocol = task.GetValueTranslated("protocol");
-    var hostName = "127.0.0.1";
-    var port = 21;
-    var userName = "test";
-    var password = "";
-    var remoteFile = "/excel samples.zip";
-    var targetFile = @"c:\temp\excel samples.zip";
-
-    task.LogMessage($"Downloading '{remoteFile}' to '{targetFile}'");
-    if (protocol == "FTP")
-    {
-        //Refer to https://github.com/robinrodricks/FluentFTP
-        using (var client = new FtpClient(hostName, userName, password)) {
-            client.Config.EncryptionMode = FtpEncryptionMode.Auto;
-            client.Config.ValidateAnyCertificate = true;
-            if (port == 0) {
-                client.AutoConnect();
-            }
-            else {
-                client.Port = port;
-                //SSL Configuration can be defined here
-                /*
-                client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
-                client.Config.SslProtocols = SslProtocols.Tls12;
-                client.ValidateCertificate += new FtpSslValidation(delegate (FluentFTP.Client.BaseClient.BaseFtpClient control, FtpSslValidationEventArgs e)
-                {
-                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None)
-                    {
-                        e.Accept = false;
-                    }
-                    else
-                    {
-                        e.Accept = true;
-                    }
-                });
-                */
-                client.Connect();
-            }
-            
-            client.DownloadFile(targetFile, remoteFile);
-            client.Disconnect();
-        }
-    }
-    else if (protocol == "SFTP")
-    {
-        //Refer to https://github.com/sshnet/SSH.NET
-        using (var sftp = new SftpClient(hostName, port, userName, password))
-        {
-            sftp.Connect();
-            using (Stream fileStream = File.Create(targetFile))
-            {
-                sftp.DownloadFile(remoteFile, fileStream);
-            }
-            sftp.Disconnect();
-        }
-    }
-    else if (protocol == "SCP")
-    {
-        //Refer to https://github.com/sshnet/SSH.NET
-        using (var scp = new ScpClient(hostName, port, userName, password))
-        {
-            scp.Connect();
-            using (Stream fileStream = File.Create(targetFile))
-            {
-                scp.Download(remoteFile, fileStream);
-            }
-            scp.Disconnect();
-        }
-    }
-    //Set result
-    task.ExecResult = targetFile;
-}
-</Script>
-      <SortOrder>1</SortOrder>
-    </ReportTask>
-    <ReportTask>
       <GUID>e53aa19d-c124-4ebd-bb6a-5ee856c4b996</GUID>
-      <Name>File Download From Server</Name>
+      <Name>File Download from FTP Server</Name>
       <Tasks>
         <ReportTask>
           <GUID>58a3c454-1362-49b5-b499-29f4923908c4</GUID>
@@ -200,14 +82,14 @@
             </Parameter>
             <Parameter>
               <Name>folder</Name>
-              <Value>%SEALREPOSITORY%/Databases/ZipFolder</Value>
+              <Value>%SEALREPOSITORY%/Files/ZipFolder</Value>
             </Parameter>
           </Parameters>
           <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
           <SortOrder>1</SortOrder>
         </ReportTask>
       </Tasks>
-      <TemplateName>File Download From Server</TemplateName>
+      <TemplateName>File Download Upload</TemplateName>
       <Parameters>
         <Parameter>
           <Name>user_name</Name>
@@ -217,9 +99,124 @@
           <Name>remote_file</Name>
           <Value>/excel samples.zip</Value>
         </Parameter>
+        <Parameter>
+          <Name>local_file</Name>
+          <Value>%SEALREPOSITORY%/Files/Download/excel samples.zip</Value>
+        </Parameter>
       </Parameters>
       <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
       <Enabled>false</Enabled>
+      <Script>@using FluentFTP
+@using Renci.SshNet
+@using System.IO
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var download = task.GetValue("action") == "DW";
+    var protocol = task.GetValueTranslated("protocol");
+    var hostName = task.GetValueTranslated("host_name");
+    var port = task.GetNumericValue("port");;
+    var userName = task.GetValueTranslated("user_name");
+    var password = task.GetValueTranslated("password");
+    var remoteFile = task.GetValueTranslated("remote_file");
+    var localFile = task.GetValueTranslated("local_file");
+
+    if (string.IsNullOrEmpty(localFile)) {
+        throw new Exception("Local path is empty.");
+    }
+    if (string.IsNullOrEmpty(remoteFile)) {
+        throw new Exception("Remote path is empty.");
+    }
+
+    if (download) {
+        task.LogMessage($"Downloading '{remoteFile}' to '{localFile}'");
+    }
+    else {
+        if (!File.Exists(localFile)) {
+            throw new Exception("Invalid local path: {localFile}");
+        }
+        task.LogMessage($"Uploading '{localFile}' to '{remoteFile}'");
+    }
+
+    if (protocol == "FTP")
+    {
+        //Refer to https://github.com/robinrodricks/FluentFTP
+        using (var client = new FtpClient(hostName, userName, password)) {
+            client.Config.EncryptionMode = FtpEncryptionMode.Auto;
+            client.Config.ValidateAnyCertificate = true;
+            if (port == 0) {
+                client.AutoConnect();
+            }
+            else {
+                client.Port = port;
+                //SSL Configuration can be defined here
+                /*
+                client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+                client.Config.SslProtocols = SslProtocols.Tls12;
+                client.ValidateCertificate += new FtpSslValidation(delegate (FluentFTP.Client.BaseClient.BaseFtpClient control, FtpSslValidationEventArgs e)
+                {
+                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None) {
+                        e.Accept = false;
+                    }
+                    else {
+                        e.Accept = true;
+                    }
+                });
+                */
+                client.Connect();
+            }
+            
+            if (download) {            
+                client.DownloadFile(localFile, remoteFile);
+            }
+            else {
+                client.UploadFile(localFile, remoteFile);
+            }
+            client.Disconnect();
+        }
+    }
+    else if (protocol == "SFTP")
+    {
+        //Refer to https://github.com/sshnet/SSH.NET
+        using (var sftp = new SftpClient(hostName, port, userName, password))
+        {
+            sftp.Connect();
+            using (Stream fileStream = File.Create(localFile))
+            {
+                if (download) {            
+                    sftp.DownloadFile(remoteFile, fileStream);
+                }
+                else {
+                   sftp.UploadFile(fileStream, remoteFile);
+                }
+            }
+            sftp.Disconnect();
+        }
+    }
+    else if (protocol == "SCP")
+    {
+        //Refer to https://github.com/sshnet/SSH.NET
+        using (var scp = new ScpClient(hostName, port, userName, password))
+        {
+            scp.Connect();
+            using (Stream fileStream = File.Create(localFile))
+            {
+                if (download) {            
+                    scp.Download(remoteFile, fileStream);
+                }
+                else {
+                    scp.Upload(fileStream, remoteFile);
+                }
+            }
+            scp.Disconnect();
+        }
+    }
+    //Set result
+    task.ExecResult = download ? localFile : remoteFile;
+}
+</Script>
       <SortOrder>2</SortOrder>
     </ReportTask>
     <ReportTask>
@@ -347,21 +344,8 @@
       <Name>File Download From Server2</Name>
       <Tasks />
       <TemplateName>File Download From Server</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>user_name</Name>
-          <Value>test</Value>
-        </Parameter>
-        <Parameter>
-          <Name>remote_file</Name>
-          <Value>/excel samples.zip</Value>
-        </Parameter>
-        <Parameter>
-          <Name>local_file</Name>
-          <Value>%SEALREPOSITORY%/Databases/test.zip</Value>
-        </Parameter>
-      </Parameters>
       <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <Enabled>false</Enabled>
       <SortOrder>5</SortOrder>
     </ReportTask>
     <ReportTask>
@@ -369,26 +353,138 @@
       <Name>File Download From Server2 - Copy</Name>
       <Tasks />
       <TemplateName>File Download From Server</TemplateName>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <Enabled>false</Enabled>
+      <SortOrder>6</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c38163d2-9123-49f0-a2c7-9e16cfcb9eae</GUID>
+      <Name>File Upload from FTP Server</Name>
+      <Tasks />
+      <TemplateName>File Download Upload</TemplateName>
       <Parameters>
-        <Parameter>
-          <Name>action</Name>
-          <Value>UP</Value>
-        </Parameter>
         <Parameter>
           <Name>user_name</Name>
           <Value>test</Value>
         </Parameter>
         <Parameter>
-          <Name>remote_file</Name>
-          <Value>/excel samples2.zip</Value>
-        </Parameter>
-        <Parameter>
           <Name>local_file</Name>
-          <Value>%SEALREPOSITORY%/Databases/test.zip</Value>
+          <Value>%SEALREPOSITORY%/Databases/excel samples.zip</Value>
         </Parameter>
       </Parameters>
       <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
-      <SortOrder>6</SortOrder>
+      <Script>@using FluentFTP
+@using Renci.SshNet
+@using System.IO
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var download = task.GetValue("action") == "DW";
+    var protocol = task.GetValueTranslated("protocol");
+    var hostName = task.GetValueTranslated("host_name");
+    var port = task.GetNumericValue("port");;
+    var userName = task.GetValueTranslated("user_name");
+    var password = task.GetValueTranslated("password");
+    var remoteFile = task.GetValueTranslated("remote_file");
+    var localFile = task.GetValueTranslated("local_file");
+
+    if (string.IsNullOrEmpty(localFile)) {
+        throw new Exception("Local path is empty.");
+    }
+    if (string.IsNullOrEmpty(remoteFile)) {
+        throw new Exception("Remote path is empty.");
+    }
+
+    if (download) {
+        task.LogMessage($"Downloading '{remoteFile}' to '{localFile}'");
+    }
+    else {
+        if (!File.Exists(localFile)) {
+            throw new Exception("Invalid local path: {localFile}");
+        }
+        task.LogMessage($"Uploading '{localFile}' to '{remoteFile}'");
+    }
+
+    if (protocol == "FTP")
+    {
+        //Refer to https://github.com/robinrodricks/FluentFTP
+        using (var client = new FtpClient(hostName, userName, password)) {
+            client.Config.EncryptionMode = FtpEncryptionMode.Auto;
+            client.Config.ValidateAnyCertificate = true;
+            if (port == 0) {
+                client.AutoConnect();
+            }
+            else {
+                client.Port = port;
+                //SSL Configuration can be defined here
+                /*
+                client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+                client.Config.SslProtocols = SslProtocols.Tls12;
+                client.ValidateCertificate += new FtpSslValidation(delegate (FluentFTP.Client.BaseClient.BaseFtpClient control, FtpSslValidationEventArgs e)
+                {
+                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None) {
+                        e.Accept = false;
+                    }
+                    else {
+                        e.Accept = true;
+                    }
+                });
+                */
+                client.Connect();
+            }
+            
+            if (download) {            
+                client.DownloadFile(localFile, remoteFile);
+            }
+            else {
+                client.UploadFile(localFile, remoteFile);
+            }
+            client.Disconnect();
+        }
+    }
+    else if (protocol == "SFTP")
+    {
+        //Refer to https://github.com/sshnet/SSH.NET
+        using (var sftp = new SftpClient(hostName, port, userName, password))
+        {
+            sftp.Connect();
+            using (Stream fileStream = File.Create(localFile))
+            {
+                if (download) {            
+                    sftp.DownloadFile(remoteFile, fileStream);
+                }
+                else {
+                   sftp.UploadFile(fileStream, remoteFile);
+                }
+            }
+            sftp.Disconnect();
+        }
+    }
+    else if (protocol == "SCP")
+    {
+        //Refer to https://github.com/sshnet/SSH.NET
+        using (var scp = new ScpClient(hostName, port, userName, password))
+        {
+            scp.Connect();
+            using (Stream fileStream = File.Create(localFile))
+            {
+                if (download) {            
+                    scp.Download(remoteFile, fileStream);
+                }
+                else {
+                    scp.Upload(fileStream, remoteFile);
+                }
+            }
+            scp.Disconnect();
+        }
+    }
+    //Set result
+    task.ExecResult = download ? localFile : remoteFile;
+}
+</Script>
+      <SortOrder>7</SortOrder>
     </ReportTask>
   </Tasks>
   <Views>

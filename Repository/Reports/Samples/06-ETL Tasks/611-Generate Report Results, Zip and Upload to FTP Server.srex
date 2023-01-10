@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>ddc7be44a79f42baad394af63e14393f</GUID>
+  <ViewGUID>5c0ae5cc-8664-4771-8464-e4df51c51891</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>dee2b1be-a8ad-4e20-bf75-75f14040f435</GUID>
+      <Name>Model</Name>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>dcf91707-2b8d-4191-a477-16fec2fe466a</GUID>
+      <Name>Loop</Name>
+      <Tasks>
+        <ReportTask>
+          <GUID>141ab784-60cd-4991-ae22-2f28ffc6fc3a</GUID>
+          <Name>Execute Report</Name>
+          <Tasks />
+          <TemplateName>Execute Report</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>report_path</Name>
+              <Value>%EXECINPUT%</Value>
+            </Parameter>
+            <Parameter>
+              <Name>output_directory</Name>
+              <Value>%SEALREPOSITORY%/Files/Results</Value>
+            </Parameter>
+          </Parameters>
+          <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+          <BodyScript />
+          <Script />
+          <SortOrder>1</SortOrder>
+        </ReportTask>
+      </Tasks>
+      <TemplateName>Loop</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>folder</Name>
+          <Value>%SEALREPOSITORY%/Reports</Value>
+        </Parameter>
+        <Parameter>
+          <Name>filter</Name>
+          <Value>*.srex</Value>
+        </Parameter>
+        <Parameter>
+          <Name>thread</Name>
+          <Value>0</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <BodyScript />
+      <Script />
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>a1c853dd-e2db-469f-b7a3-86065d6dcb3c</GUID>
+      <Name>Zip a folder</Name>
+      <Tasks>
+        <ReportTask>
+          <GUID>f6b61b2b-50f0-44b4-9a44-50ce221aa0e8</GUID>
+          <Name>File Upload</Name>
+          <Tasks />
+          <TemplateName>File Download Upload</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>action</Name>
+              <Value>UP</Value>
+            </Parameter>
+            <Parameter>
+              <Name>user_name</Name>
+              <Value>test</Value>
+            </Parameter>
+            <Parameter>
+              <Name>remote_file</Name>
+              <Value>/results.zip</Value>
+            </Parameter>
+            <Parameter>
+              <Name>local_file</Name>
+              <Value>%PARENTEXECRESULT%</Value>
+            </Parameter>
+          </Parameters>
+          <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+          <Script>@using FluentFTP
+@using Renci.SshNet
+@using System.IO
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var download = task.GetValue("action") == "DW";
+    var protocol = task.GetValueTranslated("protocol");
+    var hostName = task.GetValueTranslated("host_name");
+    var port = task.GetNumericValue("port");;
+    var userName = task.GetValueTranslated("user_name");
+    var password = task.GetValueTranslated("password");
+    var remoteFile = task.GetValueTranslated("remote_file");
+    var localFile = task.GetValueTranslated("local_file");
+
+    if (string.IsNullOrEmpty(localFile)) {
+        throw new Exception("Local path is empty.");
+    }
+    if (string.IsNullOrEmpty(remoteFile)) {
+        throw new Exception("Remote path is empty.");
+    }
+
+    if (download) {
+        task.LogMessage($"Downloading '{remoteFile}' to '{localFile}'");
+    }
+    else {
+        if (!File.Exists(localFile)) {
+            throw new Exception("Invalid local path: {localFile}");
+        }
+        task.LogMessage($"Uploading '{localFile}' to '{remoteFile}'");
+    }
+
+    if (protocol == "FTP")
+    {
+        //Refer to https://github.com/robinrodricks/FluentFTP
+        using (var client = new FtpClient(hostName, userName, password)) {
+            client.Config.EncryptionMode = FtpEncryptionMode.Auto;
+            client.Config.ValidateAnyCertificate = true;
+            if (port == 0) {
+                client.AutoConnect();
+            }
+            else {
+                client.Port = port;
+                //SSL Configuration can be defined here
+                /*
+                client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+                client.Config.SslProtocols = SslProtocols.Tls12;
+                client.ValidateCertificate += new FtpSslValidation(delegate (FluentFTP.Client.BaseClient.BaseFtpClient control, FtpSslValidationEventArgs e)
+                {
+                    if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None) {
+                        e.Accept = false;
+                    }
+                    else {
+                        e.Accept = true;
+                    }
+                });
+                */
+                client.Connect();
+            }
+            
+            if (download) {            
+                client.DownloadFile(localFile, remoteFile);
+            }
+            else {
+                client.UploadFile(localFile, remoteFile);
+            }
+            client.Disconnect();
+        }
+    }
+    else if (protocol == "SFTP")
+    {
+        //Refer to https://github.com/sshnet/SSH.NET
+        using (var sftp = new SftpClient(hostName, port, userName, password))
+        {
+            sftp.Connect();
+            using (Stream fileStream = File.Create(localFile))
+            {
+                if (download) {            
+                    sftp.DownloadFile(remoteFile, fileStream);
+                }
+                else {
+                   sftp.UploadFile(fileStream, remoteFile);
+                }
+            }
+            sftp.Disconnect();
+        }
+    }
+    else if (protocol == "SCP")
+    {
+        //Refer to https://github.com/sshnet/SSH.NET
+        using (var scp = new ScpClient(hostName, port, userName, password))
+        {
+            scp.Connect();
+            using (Stream fileStream = File.Create(localFile))
+            {
+                if (download) {            
+                    scp.Download(remoteFile, fileStream);
+                }
+                else {
+                    scp.Upload(fileStream, remoteFile);
+                }
+            }
+            scp.Disconnect();
+        }
+    }
+    //Set result
+    task.ExecResult = download ? localFile : remoteFile;
+}
+</Script>
+          <SortOrder>1</SortOrder>
+        </ReportTask>
+      </Tasks>
+      <TemplateName>File Zip Unzip</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>action</Name>
+          <Value>ZIPFOLDER</Value>
+        </Parameter>
+        <Parameter>
+          <Name>zip_path</Name>
+          <Value>%SEALREPOSITORY%/Files/results.zip</Value>
+        </Parameter>
+        <Parameter>
+          <Name>folder</Name>
+          <Value>%SEALREPOSITORY%/Files/Results</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>5c0ae5cc-8664-4771-8464-e4df51c51891</GUID>
+      <Name>View</Name>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

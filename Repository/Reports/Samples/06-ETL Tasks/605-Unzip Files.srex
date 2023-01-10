@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>d1ef8f53dec643718c1b96d0d8b9e4d5</GUID>
+  <ViewGUID>5c0ae5cc-8664-4771-8464-e4df51c51891</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>3432b9a9-7ad5-43d4-8e3d-ab6d89c4c447</GUID>
+      <Name>Local MS SQLServer (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>84abac98-6722-4a0b-98a0-00c15042e0a5</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>dee2b1be-a8ad-4e20-bf75-75f14040f435</GUID>
+      <Name>Model</Name>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>33781ed9-6b6f-4d9d-abf6-a972a7a3ce48</GUID>
+      <Name>File Zip Unzip</Name>
+      <Tasks />
+      <TemplateName>File Zip Unzip</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>zip_path</Name>
+          <Value>%SEALREPOSITORY%/Databases/excel samples.zip</Value>
+        </Parameter>
+        <Parameter>
+          <Name>folder</Name>
+          <Value>%SEALREPOSITORY%/Files/ZipFolder</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</SourceGUID>
+      <Script>@using System.IO
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var action = task.GetValue("action");
+    var zipPath = task.GetValueTranslated("zip_path");
+    var password = task.GetValueTranslated("password");
+    var folder = task.GetValueTranslated("folder");
+    var sourcePath = task.GetValueTranslated("source_path");
+
+    if (string.IsNullOrEmpty(folder)) {
+        throw new Exception("Folder is empty.");
+    }
+
+    if (action == "UNZIP") {    
+        if (!File.Exists(zipPath)) {
+            throw new Exception("Invalid zip path: {zipPath}");
+        }
+        task.LogMessage($"Unzipping '{zipPath}' to '{folder}'");
+        if (!Directory.Exists(folder)) {
+            Directory.CreateDirectory(folder);
+        }
+         FileHelper.ExtractZipFile(zipPath, password, folder);
+        task.ExecResult = folder;
+    }
+    else if (action == "ZIPFILE") {
+        if (!File.Exists(sourcePath)) {
+            throw new Exception("Invalid source path: {sourcePath}");
+        }
+        task.LogMessage($"Zipping '{sourcePath}' to '{zipPath}'");
+        FileHelper.ExtractZipFile(zipPath, password, folder);
+        task.ExecResult = zipPath;
+    }
+    else if (action == "ZIPFOLDER") {    
+        if (!Directory.Exists(folder)) {
+            throw new Exception("Invalid folder: {folder}");
+        }
+        task.LogMessage($"Zipping '{folder}' to '{zipPath}'");
+        FileHelper.CreateZIPFromFolder(folder, task.GetValue("filter"), task.GetBoolValue("recursive", true), zipPath, password);
+        task.ExecResult = zipPath;
+    }
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>5c0ae5cc-8664-4771-8464-e4df51c51891</GUID>
+      <Name>View</Name>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>
