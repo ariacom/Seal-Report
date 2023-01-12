@@ -685,12 +685,12 @@ model.ResultTable = query2.CopyToDataTable2();
                         <div class="col-md-12">
                             <p>
                                 A <strong>Report Task</strong> is a SQL or a Razor Script executed at a given step of the report execution.<br />
-                                A task references one <strong>Data Source</strong> and one <strong>Connection</strong> and is instanciated from a template to define defaut scripts and paramters.<br />
+                                A task references one <strong>Data Source</strong> and one <strong>Connection</strong> and is instanciated from a <strong>Task Template</strong> to define default scripts and parameters.<br />
                                 A report can have several tasks executed sequentially from the top to the bottom.<br />
-                                A task can have tasks children that are executed sequentially by the task.<br />
-                                A task can be executed at different <strong>step</strong> of the report generation (<eg>e.g. A task can be executed after the model generation and before the rendering to modify the result tables</eg>)<br />
-                                If a task is a Razor Script, it can stop the report execution by setting the <code>CancelReport</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g. if a given condition fails, the report is cancelled</eg>).<br />
-                                </p>
+                                A task can have tasks children that are executed sequentially by the parent task.<br />
+                                A task can be executed at different <strong>steps</strong> of the report generation (<eg>e.g. A task can be executed after the model generation and before the rendering to modify the result tables</eg>)<br />
+                                If a task is a Razor Script, it can stop the report execution by setting the <code>report.Cancel</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g. if a given condition fails, the report is cancelled</eg>).<br />
+                            </p>
                             <p>
                                 Using the <code>Execute for each connection</code> property, a task can be executed for all connections defined in the <strong>Data Source</strong>.
                                 <br /><br />
@@ -702,6 +702,12 @@ model.ResultTable = query2.CopyToDataTable2();
                                 Several <strong>Task Templates</strong> are dedicated to perform ETL operations: Loading an Excel Sheet to a database table, copying tables between databases, unzipping a file, download from FTP Server, etc.<br /><br />
                                 The task templates <strong>Loop</strong> (to loop over a list of objects) or <strong>Parallel</strong> (to execute children simultaneously) allow to perform several taks in <b>parallel (multi-threading)</b>.
                             </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Task Templates</h4>
+                                <i>Execute Report, File Download Upload, File Zip Unzip, Load Excel To Database, Load CSV To Database, Loop, Parallel, etc.</i> are template files defined in <i>/Sources/TaskTemplates</i> Repository sub-folder.<br />
+                                By default use the <i>Default</i> template.<br />
+                                Just add your own template in this folder.
+                            </div>
                             <div class="bs-callout bs-callout-info">
                                 <h4>Schedule your tasks</h4>
                                 As tasks are part of the report, they can be scheduled as a normal report, even if the model has no element.<br />
