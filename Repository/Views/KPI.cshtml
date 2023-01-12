@@ -59,7 +59,7 @@
                 else { headerValue = table[1, col].HTMLValue; }
 
                 lastValue = lastCell.HTMLValue;
-                var valueEnd = lastCell.DoubleValue;
+                var valueEnd = lastCell.DoubleValue??0;
 
                 double? valueStart = null;
                 int rowStart = table.BodyEndRow - 2;

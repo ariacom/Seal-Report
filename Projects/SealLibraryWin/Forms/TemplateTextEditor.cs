@@ -209,7 +209,8 @@ namespace Seal.Forms
             if (!string.IsNullOrEmpty(newVal)) {
                 newVal += "","";
             }
-            newVal += element.MetaEnumValuesEL.FirstOrDefault(i => i.Id == v).DisplayValue;
+            var enumValue = element.MetaEnumValuesEL.FirstOrDefault(i => i.Id == v);
+            newVal += (enumValue == null ? v : enumValue.DisplayValue);
         }
         cell.Value = newVal;
     }

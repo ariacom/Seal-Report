@@ -34,6 +34,10 @@
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
             <ul class="nav navbar-nav pull-xs-right navbar-right">
                 <li class="nav-item"><a id="profile-nav-item" class="navbar-white fa fa-user" style="font-size:20px" title="@repository.TranslateWeb("Profile")"></a></li>
+                @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
+                {
+                    <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="navbar-white fa fa-info" style="font-size:20px" title="@repository.TranslateWeb("Information")"></a></li>
+                }
                 <li class="nav-item"><a id="disconnect-nav-item" class="navbar-white fa fa-sign-out" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"></a></li>
             </ul>
             <form class="navbar-form navbar-right folderview" style="display:none;">

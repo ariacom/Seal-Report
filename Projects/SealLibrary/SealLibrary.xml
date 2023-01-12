@@ -7518,6 +7518,11 @@
             The name of the product displayed on the Web site
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.WebHelpLink">
+            <summary>
+            Optional Help link for the Web Report Server
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebCultures">
             <summary>
             List of cultures available in the user profile of the Web Report Server. If nothing is selected, the translation cultures installed in the repository are proposed by default.

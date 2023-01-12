@@ -57,6 +57,7 @@ namespace Seal.Model
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
+                GetProperty("WebHelpLink").SetIsBrowsable(!ForPublication);
                 GetProperty("WebCultures").SetIsBrowsable(!ForPublication);
                 GetProperty("LogDays").SetIsBrowsable(!ForPublication);
                 GetProperty("CsvSeparator").SetIsBrowsable(!ForPublication);
@@ -150,6 +151,14 @@ namespace Seal.Model
         [Category("Server Settings"), DisplayName("Web Product Name"), Description("The name of the product displayed on the Web site."), Id(7, 1)]
 #endif
         public string WebProductName { get; set; } = "Seal Report";
+
+        /// <summary>
+        /// Optional Help link for the Web Report Server
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Web Help Link"), Description("Optional Help link for the Web Report Server."), Id(7, 1)]
+#endif
+        public string WebHelpLink { get; set; }
 
         /// <summary>
         /// List of cultures available in the user profile of the Web Report Server. If nothing is selected, the translation cultures installed in the repository are proposed by default.

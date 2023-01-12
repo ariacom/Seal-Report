@@ -36,7 +36,7 @@
                                 <li><a href="#lineOutput_schedule">Schedules</a></li>
                             </ul>
                         </li>
-                        <li><a href="#lineTasks">Tasks</a></li>
+                        <li><a href="#lineTasks">Tasks & ETL</a></li>
                         <li><a href="#lineInputs">Input Values</a></li>
                         <li>
                             <a href="#lineConverter">Converter</a>
@@ -676,7 +676,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 <section id="lineTasks" class="section">
                     <div class="row">
                         <div class="col-md-12 left-align">
-                            <h2 class="dark-text">Tasks <hr></h2>
+                            <h2 class="dark-text">Tasks & ETL<hr></h2>
                         </div>
                         <!-- end col -->
                     </div>
@@ -685,13 +685,22 @@ model.ResultTable = query2.CopyToDataTable2();
                         <div class="col-md-12">
                             <p>
                                 A <strong>Report Task</strong> is a SQL or a Razor Script executed at a given step of the report execution.<br />
-                                A task references one <strong>Data Source</strong> and on <strong>Connection</strong>.<br />
+                                A task references one <strong>Data Source</strong> and one <strong>Connection</strong> and is instanciated from a template to define defaut scripts and paramters.<br />
                                 A report can have several tasks executed sequentially from the top to the bottom.<br />
+                                A task can have tasks children that are executed sequentially by the task.<br />
                                 A task can be executed at different <strong>step</strong> of the report generation (<eg>e.g. A task can be executed after the model generation and before the rendering to modify the result tables</eg>)<br />
                                 If a task is a Razor Script, it can stop the report execution by setting the <code>CancelReport</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g. if a given condition fails, the report is cancelled</eg>).<br />
-                                Using the <code>Execute for each connection</code> property, a task can be executed for all connections defined in the <strong>Data Source</strong>.<br /><br />
+                                </p>
+                            <p>
+                                Using the <code>Execute for each connection</code> property, a task can be executed for all connections defined in the <strong>Data Source</strong>.
+                                <br /><br />
 
                                 As Tasks executes a Razor Script, they can reference, instantiate and use objects from any .Net/.NET Core Assemblies located in the <b>\Assemblies</b> Repository sub-folder.<br />
+                            </p>
+                            <h4>ETL Tasks</h4>
+                            <p>
+                                Several <strong>Task Templates</strong> are dedicated to perform ETL operations: Loading an Excel Sheet to a database table, copying tables between databases, unzipping a file, download from FTP Server, etc.<br /><br />
+                                The task templates <strong>Loop</strong> (to loop over a list of objects) or <strong>Parallel</strong> (to execute children simultaneously) allow to perform several taks in <b>parallel (multi-threading)</b>.
                             </p>
                             <div class="bs-callout bs-callout-info">
                                 <h4>Schedule your tasks</h4>
@@ -701,14 +710,25 @@ model.ResultTable = query2.CopyToDataTable2();
 
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Tasks Samples</h4>
-                                Check the Repository Samples from the <i>\Reports\Samples</i> Repository sub-folder:
+                                Check the Repository Samples from the <i>\Reports\Samples\01-Tasks</i> Repository sub-folder:
                                 <ul>
-                                    <li>30-Task Refresh Enumerated Lists</li>
-                                    <li>31-Task Backup SQLServer Database</li>
-                                    <li>32-Task Load Excel and CSV Table in SQLServer Database</li>
-                                    <li>33-Task Load Table in SQLServer Database</li>
-                                    <li>34-Task Generate several Report Results</li>
-                                    <li>35-Task Update Navigation Link Text</li>
+                                    <li>101-Task Refresh Enumerated Lists</li>
+                                    <li>102-Task Generate several Report Results</li>
+                                    <li>103-Task Update Navigation Link Text</li>
+                                    <li>104-Task Add borders to result tables</li>
+                                </ul>
+                            </div>
+                            <div class="bs-callout bs-callout-danger">
+                                <h4>ETL Tasks Samples</h4>
+                                For ETL features, check the Repository Samples from the <i>\Reports\Samples\06-ETL Tasks</i> Repository sub-folder:
+                                <ul>
+                                    <li>601-Load Excel Files</li>
+                                    <li>602-Load CSV Files</li>
+                                    <li>603-Execute Reports</li>
+                                    <li>604-Copy Tables from a Database</li>
+                                    <li>605-Unzip Files</li>
+                                    <li>610-Download Zip from FTP, Unzip and Load tables from Excel</li>
+                                    <li>611-Generate Report Results, Zip and Upload to FTP Server</li>
                                 </ul>
                             </div>
                         </div>

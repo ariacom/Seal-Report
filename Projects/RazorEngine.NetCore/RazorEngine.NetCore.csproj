@@ -1,76 +1,77 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);RAZOR4</DefineConstants>
-    <DefineConstants>$(DefineConstants);NO_APPDOMAIN;NO_CODEDOM;NO_CONFIGURATION;NETCORE</DefineConstants>
-    <Version>6.8.0.0</Version>
-    <FileVersion>6.8.0.0</FileVersion>
-    <AssemblyVersion>6.8.0.0</AssemblyVersion>
-	<AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
-	<SignAssembly>true</SignAssembly>
-	<RootNamespace>RazorEngine</RootNamespace>
-	<AssemblyName>RazorEngine.NetCore</AssemblyName>
-	<PackageTags>RazorEngine;aspnetcore;NetCore</PackageTags>
-	<Authors>Connie Yau, HermanHo, Fouad Messaia,Zuliang Liu(China)</Authors>
-	<Description>Fork from https://github.com/hermanho/RazorEngine, But Fixed Bug that Razor string does not support @using and @inherits and @functions and @section, etc. </Description>
-	<RepositoryType>git</RepositoryType>
-	<Copyright>RazorEngine Copyright © RazorEngine Project 2011-2018</Copyright>
-	<Company>RazorEngine</Company>
-	<Product>RazorEngine</Product>
-	<IncludeSymbols>True</IncludeSymbols>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<DefineConstants>$(DefineConstants);RAZOR4</DefineConstants>
+		<DefineConstants>$(DefineConstants);NO_APPDOMAIN;NO_CODEDOM;NO_CONFIGURATION;NETCORE</DefineConstants>
+		<Version>6.8.0.0</Version>
+		<FileVersion>6.8.0.0</FileVersion>
+		<AssemblyVersion>6.8.0.0</AssemblyVersion>
+		<AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
+		<SignAssembly>true</SignAssembly>
+		<RootNamespace>RazorEngine</RootNamespace>
+		<AssemblyName>RazorEngine.NetCore</AssemblyName>
+		<Authors>Connie Yau, HermanHo, Fouad Messaia,Zuliang Liu(China)</Authors>
+		<Description>Fork from https://github.com/hermanho/RazorEngine, But Fixed Bug that Razor string does not support @using and @inherits and @functions and @section, etc. </Description>
+		<RepositoryType>git</RepositoryType>
+		<Copyright>RazorEngine Copyright © RazorEngine Project 2011-2018</Copyright>
+		<Company>RazorEngine</Company>
+		<Product>RazorEngine</Product>
+		<IncludeSymbols>True</IncludeSymbols>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<DefineConstants>DEBUG;TRACE;</DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DefineConstants></DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<DefineConstants></DefineConstants>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <!-- Do not generate AssemblyInfo because we are doing that with the GenerateAssemblyInfoFile target in dir.targets -->
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
+	<PropertyGroup>
+		<!-- Do not generate AssemblyInfo because we are doing that with the GenerateAssemblyInfoFile target in dir.targets -->
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageId>SealReportLibrary.RazorEngine.NETCore</PackageId>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;CA1416;CS1591</NoWarn>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>1701;1702;CA1416;CS1591</NoWarn>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;CA1416;CS1591</NoWarn>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<NoWarn>1701;1702;CA1416;CS1591</NoWarn>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.9" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.9" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" />
+		<PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+	</ItemGroup>
 
-  <!-- Exclude components that use System.Configuration -->
-  <ItemGroup Condition="$(DefineConstants.Contains('NO_CONFIGURATION'))">
-    <Compile Remove="Configuration\RazorEngineConfigurationSection.cs" />
-    <Compile Remove="Configuration\Xml\*.cs" />
-  </ItemGroup>
+	<!-- Exclude components that use System.Configuration -->
+	<ItemGroup Condition="$(DefineConstants.Contains('NO_CONFIGURATION'))">
+		<Compile Remove="Configuration\RazorEngineConfigurationSection.cs" />
+		<Compile Remove="Configuration\Xml\*.cs" />
+	</ItemGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains('NO_APPDOMAIN'))">
-    <Compile Remove="Common\CrossAppDomainObject.cs" />
-    <Compile Remove="Compilation\CrossAppDomainCleanUp.cs" />
-    <Compile Remove="Templating\DefaultAppDomainFactory.cs" />
-    <Compile Remove="Templating\IsolatedRazorEngineService.cs" />
-  </ItemGroup>
+	<ItemGroup Condition="$(DefineConstants.Contains('NO_APPDOMAIN'))">
+		<Compile Remove="Common\CrossAppDomainObject.cs" />
+		<Compile Remove="Compilation\CrossAppDomainCleanUp.cs" />
+		<Compile Remove="Templating\DefaultAppDomainFactory.cs" />
+		<Compile Remove="Templating\IsolatedRazorEngineService.cs" />
+	</ItemGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains('NO_CODEDOM'))">
-    <Compile Remove="Compilation\CSharp\CSharpDirectCompilerService.cs" />
-    <Compile Remove="Compilation\DirectCompilerServiceBase.cs" />
+	<ItemGroup Condition="$(DefineConstants.Contains('NO_CODEDOM'))">
+		<Compile Remove="Compilation\CSharp\CSharpDirectCompilerService.cs" />
+		<Compile Remove="Compilation\DirectCompilerServiceBase.cs" />
 
-    <!-- These are legacy components. -->
-    <Compile Remove="Legacy\**\*.cs" />
-    <Compile Remove="Templating\WrapperTemplateManager.cs" />
-  </ItemGroup>
+		<!-- These are legacy components. -->
+		<Compile Remove="Legacy\**\*.cs" />
+		<Compile Remove="Templating\WrapperTemplateManager.cs" />
+	</ItemGroup>
 </Project>

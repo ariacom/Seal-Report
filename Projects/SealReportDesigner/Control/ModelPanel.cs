@@ -352,6 +352,20 @@ namespace Seal.Controls
                     });
                     menu.Items.Add(item);
 
+                    menu.Items.Add(new ToolStripSeparator());
+                    item = new ToolStripMenuItem("Sort first Ascendant");
+                    item.Click += SortItem_Click;
+                    menu.Items.Add(item);
+                    item = new ToolStripMenuItem("Sort first Descendant");
+                    item.Click += SortItem_Click;
+                    menu.Items.Add(item);
+                    item = new ToolStripMenuItem("Sort last Ascendant");
+                    item.Click += SortItem_Click;
+                    menu.Items.Add(item);
+                    item = new ToolStripMenuItem("Sort last Descendant");
+                    item.Click += SortItem_Click;
+                    menu.Items.Add(item);
+
                     ElementPanel panel = (ElementPanel)button.Parent;
                     if (panel != null && panel.Controls.Count > 1)
                     {
@@ -362,19 +376,19 @@ namespace Seal.Controls
                             item = new ToolStripMenuItem("Move first");
                             item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                             {
-                                movePanelElement(button,0);
+                                movePanelElement(button, 0);
                             });
                             menu.Items.Add(item);
 
                             item = new ToolStripMenuItem("Move up");
                             item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                             {
-                                movePanelElement(button, position-1);
+                                movePanelElement(button, position - 1);
                             });
                             menu.Items.Add(item);
 
                         }
-                        if (position != panel.Controls.Count-1)
+                        if (position != panel.Controls.Count - 1)
                         {
                             item = new ToolStripMenuItem("Move down");
                             item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
@@ -411,6 +425,41 @@ namespace Seal.Controls
                 //Display context menu
                 menu.Show(button, e.Location);
             }
+        }
+
+        private void SortItem_Click(object sender, EventArgs e)
+        {
+            Model.UpdateFinalSortOrders();
+            var button = SelectedButton;
+            var element = button.Tag as ReportElement;
+            var text = sender.ToString().ToLower();
+            ElementPanel panel = (ElementPanel)button.Parent;
+            var list = new List<ReportElement>();
+            foreach (var control in panel.Controls)
+            {
+                ReportElement el = ((Button)control).Tag as ReportElement;
+                if (el != null && el != element && el.SortOrder != ReportElement.kNoSortKeyword) list.Add(el);
+            }
+
+            int max = 0;
+            int min = 2;
+            if (list.Count > 0)
+            {
+                max = list.Count;
+                min = (text.Contains("first") ? 2 : 1);
+                int index = min;
+                foreach (var el in list.OrderBy(i => i.FinalSort))
+                {
+                    el.SortOrder = $"{index} " + (el.SortOrder.ToLower().Contains("asc") ? ReportElement.kAscendantSortKeyword : ReportElement.kDescendantSortKeyword);
+                    index++;
+                }
+            }
+            if (text.Contains("first ascendant")) element.SortOrder = $"{min - 1} Ascendant";
+            else if (text.Contains("first descendant")) element.SortOrder = $"{min - 1} Descendant";
+            else if (text.Contains("last ascendant")) element.SortOrder = $"{max + 1} Ascendant";
+            else if (text.Contains("last descendant")) element.SortOrder = $"{max + 1} Descendant";
+            btn_MouseDown(button, null);
+            MainForm.IsModified = true;
         }
 
         void redrawButtons()

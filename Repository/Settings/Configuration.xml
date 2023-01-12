@@ -2,6 +2,7 @@
 <SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LogoName>logo.svg</LogoName>
   <WebProductName>Seal Report</WebProductName>
+  <WebHelpLink>https://sealreport.org</WebHelpLink>
   <FileReplacePatterns>
     <FileReplacePattern>
       <FileName>datatables.min.css</FileName>
