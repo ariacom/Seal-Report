@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <MetaSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>727fca56-c6cc-438f-913e-e1828e91ba14</GUID>
   <Name>LINQ Sources</Name>
@@ -61,7 +61,7 @@
         <Parameters>
           <Parameter>
             <Name>csv_path</Name>
-            <Value>%SEALREPOSITORY%/Settings/Translations.csv</Value>
+            <Value>%SEALREPOSITORY%/Databases/Translations.csv</Value>
           </Parameter>
           <Parameter>
             <Name>csv_sep</Name>
