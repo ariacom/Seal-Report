@@ -4,10 +4,6 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 
 <a href="https://sealreport.org" target=_blank>Seal Report</a> is an Open Source tool for Microsoft .Net entirely written in C#.
 
-Need a server to deploy <b>Seal Report</b> ?<br>
-<a href="https://sealreport.com" target="_blank">**Seal in the Cloud**</a> offers a full environment to use the power and the flexibity of <b>Seal Report</b> in the Cloud.<br>
-Visit <a href="https://sealreport.com" target="_blank">sealreport.com</a>, register and get your <b>Free Instance</b> to upload and execute your reports on a shared server.
-
 ## Main Features
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
 * **LINQ queries**: Join and query any Data Sources (SQL, Excel, XML, OLAP Cube, HTTP JSon, etc.) with the power of LINQ queries.
