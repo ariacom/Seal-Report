@@ -14,7 +14,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **Web Report Server**: Publish and edit your reports on the web (Support of Windows and Linux OS with .Net 6).
 * **Report scheduler**: Schedule your report executions and generate results in folders, FTP, SFTP server or send them by emails (integrated with the Windows Tasks Scheduler or available as a service)
 * **Drill Down navigation and Sub Reports:** Navigate in your report result to drill to a detail or to execute another report.
-* **Report Tasks:** Define tasks to perform your ETL or batch operations (data load, excel load, file download from FTP or SFTP, zip, backup, data processing, etc.) or to trigger procedures from external assemblies.
+* **Report Tasks & ETL:** Define tasks to perform your ETL or batch operations (data load, excel load, file download from FTP or SFTP, zip, backup, data processing, etc.) or to trigger procedures from external assemblies.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
 * **NuGet packages** to ease integration into existing projects.
 * Native support of **Mongo DB**.
