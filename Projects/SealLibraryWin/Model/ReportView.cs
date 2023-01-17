@@ -47,6 +47,7 @@ namespace Seal.Model
                 GetProperty("RestrictionsToSelect").SetIsBrowsable(Template.IsRestrictionsView);
 
                 GetProperty("ReferenceViewGUID").SetIsBrowsable(true);
+                GetProperty("Enabled").SetIsBrowsable(Template.Name != ReportViewTemplate.ReportName);
                 GetProperty("TemplateName").SetIsBrowsable(true);
                 GetProperty("TemplateDescription").SetIsBrowsable(true);
 
@@ -112,7 +113,6 @@ namespace Seal.Model
         /// </summary>
         public void InitReferences()
         {
-            AddDefaultModelViews();
             foreach (var childView in Views)
             {
                 childView.ParentView = this;
@@ -663,6 +663,15 @@ namespace Seal.Model
         public string ReferenceViewGUID { get; set; }
         public bool ShouldSerializeReferenceViewGUID() { return !string.IsNullOrEmpty(ReferenceViewGUID); }
 
+        /// <summary>
+        /// If false, the view is not parsed
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(true)]
+        [Category("Definition"), DisplayName("Is enabled"), Description("If false, the view is not parsed."), Id(9, 1)]
+#endif
+        public bool Enabled { get; set; } = true;
+        public bool ShouldSerializeEnabled() { return !Enabled; }
 
         /// <summary>
         /// Init the partial templates of the view
@@ -1231,6 +1240,8 @@ namespace Seal.Model
             string result = "";
             string phase = "compiling";
             Error = "";
+
+            if (!Enabled) return result;
 
             try
             {

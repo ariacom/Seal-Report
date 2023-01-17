@@ -331,6 +331,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Is enabled"), Description("If false, the task is ignored and not executed."), Id(5, 1)]
 #endif
         public bool Enabled { get; set; } = true;
+        public bool ShouldSerializeEnabled() { return !Enabled; }
 
         /// <summary>
         /// The Report Execution Step to execute the task. By default, tasks are executed before the models generation.

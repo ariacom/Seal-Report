@@ -965,7 +965,7 @@ namespace Seal.Forms
 "
             ),
             new Tuple<string, string>(
-                "Remove a view based on the security",
+                "Disable or remove a view based on the security",
 @"ReportTask task = Model;
     Report report = task.Report;
     
@@ -975,7 +975,12 @@ namespace Seal.Forms
         if (parentView != null) {
             //Remove the view
             parentView.Views.RemoveAll(i => i.Name == ""View Name"");
-        }      
+        }
+        //Or just disable the view
+        foreach (var view in report.AllViews.Where(i => i.Name == ""View Name""))
+        {
+            view.Enabled = false; //The view will no be parsed and shown
+        }
     }  
 "
             ),

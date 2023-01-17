@@ -1152,6 +1152,15 @@ namespace Seal.Forms
                 ReportView entity = (ReportView)selectedEntity;
                 mainTreeView.SelectedNode.Text = entity.Name;
             }
+            else if (selectedEntity is ReportView && propertyName == "Enabled")
+            {
+                ReportView view = (ReportView)selectedEntity;
+                var imageIndex = view.Enabled ? 8 : 20;
+                if (view.TemplateName == "Model") imageIndex = view.Enabled ? 18 : 21;
+                else if (view.TemplateName == "Widget") imageIndex = view.Enabled ? 19 : 22;
+                mainTreeView.SelectedNode.ImageIndex = imageIndex;
+                mainTreeView.SelectedNode.SelectedImageIndex = imageIndex;
+            }
             else
             {
                 MetaSource source = GetSource(mainTreeView.SelectedNode);

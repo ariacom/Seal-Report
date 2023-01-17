@@ -874,7 +874,7 @@ namespace SealWebServer.Controllers
                         execution.Execute();
                         while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
 
-                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0))
+                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0 || i.GetBoolValue(Parameter.ForceRefreshParameter)))
                         {
                             bool parseView = hasInputValue; //Parse all if input value involved
                             if (!parseView) parseView = view.GetBoolValue(Parameter.ForceRefreshParameter);

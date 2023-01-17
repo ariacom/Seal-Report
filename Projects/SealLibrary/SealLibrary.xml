@@ -5521,6 +5521,11 @@
             If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportView.Enabled">
+            <summary>
+            If false, the view is not parsed
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportView.InitPartialTemplates">
             <summary>
             Init the partial templates of the view

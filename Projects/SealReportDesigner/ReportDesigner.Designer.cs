@@ -95,7 +95,8 @@
             this.helpToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mainMenuStrip.Name = "mainMenuStrip";
-            this.mainMenuStrip.Size = new System.Drawing.Size(1220, 24);
+            this.mainMenuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.mainMenuStrip.Size = new System.Drawing.Size(1423, 24);
             this.mainMenuStrip.TabIndex = 0;
             this.mainMenuStrip.Text = "mainMenuStrip";
             // 
@@ -289,7 +290,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -368,7 +369,7 @@
             this.renderViewOutputToolStripButton});
             this.mainToolStrip.Location = new System.Drawing.Point(0, 24);
             this.mainToolStrip.Name = "mainToolStrip";
-            this.mainToolStrip.Size = new System.Drawing.Size(1220, 25);
+            this.mainToolStrip.Size = new System.Drawing.Size(1423, 25);
             this.mainToolStrip.TabIndex = 31;
             // 
             // newToolStripButton
@@ -449,14 +450,16 @@
             this.mainPanel.Controls.Add(this.mainSplitContainer);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(0, 49);
+            this.mainPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(1220, 628);
+            this.mainPanel.Size = new System.Drawing.Size(1423, 732);
             this.mainPanel.TabIndex = 32;
             // 
             // mainSplitContainer
             // 
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.mainSplitContainer.Name = "mainSplitContainer";
             // 
             // mainSplitContainer.Panel1
@@ -466,8 +469,9 @@
             // mainSplitContainer.Panel2
             // 
             this.mainSplitContainer.Panel2.Controls.Add(this.mainPropertyGrid);
-            this.mainSplitContainer.Size = new System.Drawing.Size(1220, 628);
-            this.mainSplitContainer.SplitterDistance = 206;
+            this.mainSplitContainer.Size = new System.Drawing.Size(1423, 732);
+            this.mainSplitContainer.SplitterDistance = 240;
+            this.mainSplitContainer.SplitterWidth = 5;
             this.mainSplitContainer.TabIndex = 4;
             // 
             // mainTreeView
@@ -480,17 +484,18 @@
             this.mainTreeView.ImageList = this.mainImageList;
             this.mainTreeView.LabelEdit = true;
             this.mainTreeView.Location = new System.Drawing.Point(0, 0);
+            this.mainTreeView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.mainTreeView.Name = "mainTreeView";
             this.mainTreeView.SelectedImageIndex = 0;
-            this.mainTreeView.Size = new System.Drawing.Size(206, 628);
+            this.mainTreeView.Size = new System.Drawing.Size(240, 732);
             this.mainTreeView.TabIndex = 1;
             this.mainTreeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.mainTreeView_BeforeLabelEdit);
             this.mainTreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.mainTreeView_AfterLabelEdit);
+            this.mainTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.mainTreeView_ItemDrag);
             this.mainTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.mainTreeView_BeforeSelect);
             this.mainTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.mainTreeView_AfterSelect);
             this.mainTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseClick);
             this.mainTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseDoubleClick);
-            this.mainTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.mainTreeView_ItemDrag);
             this.mainTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragDrop);
             this.mainTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragEnter);
             this.mainTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragOver);
@@ -498,6 +503,7 @@
             // 
             // mainImageList
             // 
+            this.mainImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.mainImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("mainImageList.ImageStream")));
             this.mainImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.mainImageList.Images.SetKeyName(0, "database.png");
@@ -520,13 +526,17 @@
             this.mainImageList.Images.SetKeyName(17, "modelLINQ.png");
             this.mainImageList.Images.SetKeyName(18, "viewModel.png");
             this.mainImageList.Images.SetKeyName(19, "viewWidget.png");
+            this.mainImageList.Images.SetKeyName(20, "view2.png");
+            this.mainImageList.Images.SetKeyName(21, "viewModel2.png");
+            this.mainImageList.Images.SetKeyName(22, "viewWidget2.png");
             // 
             // mainPropertyGrid
             // 
             this.mainPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPropertyGrid.Location = new System.Drawing.Point(0, 0);
+            this.mainPropertyGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.mainPropertyGrid.Name = "mainPropertyGrid";
-            this.mainPropertyGrid.Size = new System.Drawing.Size(1010, 628);
+            this.mainPropertyGrid.Size = new System.Drawing.Size(1178, 732);
             this.mainPropertyGrid.TabIndex = 1;
             this.mainPropertyGrid.ToolbarVisible = false;
             this.mainPropertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.mainPropertyGrid_PropertyValueChanged);
@@ -539,14 +549,15 @@
             // 
             // ReportDesigner
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1220, 677);
+            this.ClientSize = new System.Drawing.Size(1423, 781);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.mainToolStrip);
             this.Controls.Add(this.mainMenuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mainMenuStrip;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "ReportDesigner";
             this.Text = "Seal Report Designer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReportDesigner_FormClosing);
