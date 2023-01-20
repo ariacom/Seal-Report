@@ -11,10 +11,14 @@
     Template.Parameters.Add(new Parameter() { Name = "restrictions_header", DisplayName = "Display: Restrictions header", Description = "Additional HTML added before the restrictions.", Enums = new string[] { "", "<h4>Please enter restriction values</h4>", "<hr>" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "restrictions_footer", DisplayName = "Display: Restrictions footer", Description = "Additional HTML added after the restrictions.", Enums = new string[] { "", "<p>Execute this report to view the result expected...</p>","<hr>" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "button_text", Value = "Refresh", DisplayName = "Button text", Description = "Text of the button.", Enums = new string[] { "Update", "Refresh", "Execute", "Run" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "button_css", Value = "", DisplayName = "Button CSS Style", Description = "CSS style attribute of the button.", Enums = new string[] { "color:red;font-size:15pt;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "button_class", Value = "update_view_restrictions btn btn-success", DisplayName = "Button CSS Class", Description = "CSS class attribute of the button.", Enums = new string[] { "update_view_restrictions btn btn-success", "update_view_restrictions btn btn-danger" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "restrictions_select_size", Value = "auto", DisplayName = "Select size", Description = "Number of items shown in the enumerated list restriction popups.", Enums = new string[] { "auto", "4", "5", "10" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "target_window", DisplayName = "Target window", Description = "If not empty, the report is fully executed in a new window. Use '<view_id>' to force several executions in the same window.", Enums = new string[] { "", "_blank", "<view_id>", "a window name" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "restrictions_exec_view", Type = ViewParameterType.RootReportView, DisplayName = "Target window: View to execute", Description = "If a target window is specified, Root View executed from the Restriction View. If empty, the default report execution view is used." });
-
+    Template.Parameters.Add(new Parameter() { Name = "form_css", Value = "padding-top:5px", DisplayName = "Form CSS Style", Description = "CSS style attribute of the form.", Enums = new string[] { "color:red;font-size:15pt;", "display:flex;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "form_class", Value = "", DisplayName = "Form CSS Class", Description = "CSS class attribute of the form."});
+    
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container", "Widget" };
 }

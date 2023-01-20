@@ -415,9 +415,11 @@ namespace Seal.Model
     task.ExecuteScript();
 
     //Execute children
-    foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
-    {
-        childTask.Execute();
+    if (task.ExecProcessChildren) {
+        foreach (var childTask in task.Tasks.OrderBy(i => i.SortOrder))
+        {
+            childTask.Execute();
+        }
     }
 }
 ";
@@ -803,11 +805,6 @@ namespace Seal.Model
         #endregion
 
         /// <summary>
-        /// The previous Task executed
-        /// </summary>
-        public ReportTask ExecPreviousTask;
-
-        /// <summary>
         /// Optional input object for the task
         /// </summary>
         public object ExecInput;
@@ -816,6 +813,12 @@ namespace Seal.Model
         /// The result of the task, if any
         /// </summary>
         public object ExecResult;
+
+        /// <summary>
+        /// Exec flag to disable children processing
+        /// </summary>
+        public bool ExecProcessChildren = true;
+
     }
 }
 

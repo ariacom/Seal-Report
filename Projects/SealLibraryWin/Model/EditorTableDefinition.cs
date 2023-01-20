@@ -36,6 +36,7 @@ namespace Seal.Model
         public delegate void CustomMainValidator(dynamic editor, dynamic record);
 
         public string PkName = "";
+        public string PkValue = null; //For standalone edit or to force PKValue
         public string AddWhereClause = "";
 
         public string SPInsert = "";

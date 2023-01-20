@@ -5264,11 +5264,6 @@
             Executes the task
             </summary>
         </member>
-        <member name="F:Seal.Model.ReportTask.ExecPreviousTask">
-            <summary>
-            The previous Task executed
-            </summary>
-        </member>
         <member name="F:Seal.Model.ReportTask.ExecInput">
             <summary>
             Optional input object for the task
@@ -5277,6 +5272,11 @@
         <member name="F:Seal.Model.ReportTask.ExecResult">
             <summary>
             The result of the task, if any
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportTask.ExecProcessChildren">
+            <summary>
+            Exec flag to disable children processing
             </summary>
         </member>
         <member name="T:Seal.Model.ReportTaskTemplate">

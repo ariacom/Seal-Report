@@ -6,7 +6,7 @@
 
 @if (report.GenerateHTMLDisplay)
 {
-<form id="form_@view.IdSuffix" execguid="@report.ExecutionGUID" method="post" target_window="@view.GetValue("target_window")" style="padding-top:5px">
+<form id="form_@view.IdSuffix" execguid="@report.ExecutionGUID" method="post" target_window="@view.GetValue("target_window")" @Raw(view.AddAttribute("class", "form_class")) @Raw(view.AddAttribute("style", "form_css"))>
     <input type="hidden" name="execution_guid_trigger" id="execution_guid_trigger" value="@report.ExecutionGUID" />
     <input type="hidden" name="form_id" id="form_id" value="form_@view.IdSuffix" />
     @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
@@ -15,7 +15,7 @@
         <div class="text-right container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")" style="margin-top:-20px">
             <div class="row">
                 <div class="col-sm-12">
-                    <button id="button_@view.IdSuffix" class="update_view_restrictions btn btn-success">@report.Translate(view.GetValue("button_text"))</button>
+                    <button id="button_@view.IdSuffix" @Raw(view.AddAttribute("class", "button_class")) @Raw(view.AddAttribute("style", "button_css"))>@report.Translate(view.GetValue("button_text"))</button>
                 </div>
             </div>
         </div>

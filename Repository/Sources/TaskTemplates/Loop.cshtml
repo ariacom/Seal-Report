@@ -10,6 +10,7 @@
     task.Parameters.Add(new Parameter() { Name = "sql", Value = "", DisplayName = "2.List of DataRow: Select SQL", Description = "The SQL SELECT Statement to build the list (of DataRow)." + ReportTask.TranslatedParameterDescription });
     task.Parameters.Add(new Parameter() { Name = "excel_path", Value = "", DisplayName = "3.List of DataRow: Excel file Path", Description = "The Excel file path (*.xlsx) to build the list (of DataRow) from a sheet." + ReportTask.TranslatedParameterDescription, Enums = new string[] { @"%SEALREPOSITORY%/Databases/databank.worldbank.org_health_population.xlsx", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "excel_tab", Value = "", DisplayName = "3.List of DataRow: Excel tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty, the first tab is used." + ReportTask.TranslatedParameterDescription });
+    task.Parameters.Add(new Parameter() { Name = "input", Value = "", DisplayName = "4.List of  object", Description = "Use an input from another task.", Enums = new string[] { "NONE|", "PARENTEXECRESULT|Use Parent Exec Result", "EXECINPUT|Use Exec Input" }, UseOnlyEnumValues = true });
     task.Parameters.Add(new Parameter() { Name = "thread", NumericValue = 1, DisplayName = "Number of threads", Description = "Number of threads used to execute child tasks. A value of 0 means a number of threads equals to the list count." });
 
     task.Script = @"@using System.IO
@@ -46,7 +47,7 @@
         }
     }
     //OR 
-    //   fill the items  collection with any relevant object
+    //   fill the items collection with any relevant object
 
     if (thread == 0) {
         thread = items.Count;
