@@ -25,7 +25,8 @@ namespace Seal.Model
     /// </summary>
     public class OutputFileServerDevice : OutputDevice
     {
-        static string PasswordKey = "?d_*er)wien?,édl+25.()à,";
+        public const string PasswordKeyName = "Output File Server Device Password";
+        public const string PasswordKeyValue = "?d_*er)wien?,édl+25.()à,";
 
         /// <summary>
         /// Default processing script template
@@ -242,7 +243,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    return CryptoHelper.DecryptTripleDES(Password, PasswordKey);
+                    return Repository.Instance.DecryptValue(Password, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {
@@ -255,7 +256,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    Password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
+                    Password = Repository.Instance.EncryptValue(Password, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {

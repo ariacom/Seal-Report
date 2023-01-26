@@ -312,19 +312,17 @@ namespace Seal.Model
                     else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssClass : DefaultNumericCellCssClass;
                     else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssClass : DefaultDateTimeCellCssClass;
 
-
                     if (!IsTitle)
                     {
                         var finalClass = Element.FinalCssClass;
-                        if (!string.IsNullOrEmpty(Element.FinalCssClass))
+                        if (!string.IsNullOrEmpty(finalClass))
                         {
                             if (Element.IsNumeric && Element.FinalCssClass == "cell-numeric-DYNAMIC")
                             {
                                 //Handling of negative value
                                 finalClass = DoubleValue >= 0 ? "cell-numeric-positive" : "cell-numeric-negative";
                             }
-                            result += (!string.IsNullOrEmpty(result) ? " " : "") + finalClass;
-
+                            result = (!string.IsNullOrEmpty(result) ? " " : "") + finalClass;
                         }
                     }
                 }
@@ -358,6 +356,7 @@ namespace Seal.Model
                     else if (Element.IsNumeric) result = IsTitle ? "" : DefaultNumericCellCssStyle;
                     else if (Element.IsDateTime) result = IsTitle ? "" : DefaultDateTimeCellCssStyle;
                 }
+
                 return result;
             }
         }
@@ -399,7 +398,13 @@ namespace Seal.Model
                     if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssStyle : DefaultCellCssStyle;
                     else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssStyle : DefaultNumericCellCssStyle;
                     else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssStyle : DefaultDateTimeCellCssStyle;
+
+                    if (!IsTitle)
+                    {
+                        if (!string.IsNullOrEmpty(Element.FinalCssStyle)) result = Element.FinalCssStyle;
+                    }
                 }
+
                 return result;
             }
         }

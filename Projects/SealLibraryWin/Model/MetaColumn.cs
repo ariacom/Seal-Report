@@ -42,6 +42,7 @@ namespace Seal.Model
                 GetProperty("DisplayName").SetIsBrowsable(true);
                 GetProperty("DisplayOrder").SetIsBrowsable(true);
                 GetProperty("CssClass").SetIsBrowsable(true);
+                GetProperty("CssStyle").SetIsBrowsable(true);
                 GetProperty("Format").SetIsBrowsable(true);
                 GetProperty("EnumGUID").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetIsBrowsable(true);
@@ -202,14 +203,22 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+        /// CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
         /// </summary>
 #if WINDOWS
-        [Category("Display"), DisplayName("CSS classes"), Description("Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values."), Id(5, 2)]
+        [Category("Display"), DisplayName("CSS classes"), Description("CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values."), Id(5, 2)]
         [TypeConverter(typeof(CssClassConverter))]
 #endif
         public string CssClass { get; set; }
 
+        /// <summary>
+        /// CSS Styles applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+        /// </summary>
+#if WINDOWS
+        [Category("Display"), DisplayName("CSS styles"), Description("CSS Styles applied to the cell values of the result HTML Table."), Id(5, 2)]
+        [TypeConverter(typeof(CssStyleConverter))]
+#endif
+        public string CssStyle { get; set; }
 
         protected NumericStandardFormat _numericStandardFormat = NumericStandardFormat.Default;
         /// <summary>

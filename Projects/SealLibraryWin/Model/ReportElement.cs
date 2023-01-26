@@ -69,6 +69,7 @@ namespace Seal.Model
                     GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("EnumGUIDEL").SetIsBrowsable(true);
                     GetProperty("CssClassEl").SetIsBrowsable(true);
+                    GetProperty("CssStyleEl").SetIsBrowsable(true);
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum && PivotPosition != PivotPosition.Data);
                     GetProperty("ContainsHtml").SetIsBrowsable(true);
@@ -762,7 +763,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+        /// CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
@@ -775,6 +776,24 @@ namespace Seal.Model
             set
             {
                 CssClass = value;
+                UpdateEditorAttributes();
+            }
+        }
+
+        /// <summary>
+        /// CSS Styles applied to the cell values of the result HTML Table.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
+        [Category("Advanced"), DisplayName("Css styles"), Description("Additional CSS Styles applied the cell values of the result HTML Table. If empty, the default value comes from the column."), Id(6, 5)]
+        [TypeConverter(typeof(CssStyleConverter))]
+#endif
+        public string CssStyleEl
+        {
+            get { return CssStyle; }
+            set
+            {
+                CssStyle = value;
                 UpdateEditorAttributes();
             }
         }
@@ -822,7 +841,7 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// Additional CSS Classes applied to the cell values of the result HTML Table. 
+        /// CSS Classes applied to the cell values of the result HTML Table. 
         /// </summary>
         public string FinalCssClass
         {
@@ -834,6 +853,18 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// CSS Style applied to the cell values of the result HTML Table. 
+        /// </summary>
+        public string FinalCssStyle
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(CssStyleEl)) return CssStyleEl;
+                if (MetaColumn != null) return MetaColumn.CssStyle;
+                return "";
+            }
+        }
 
         /// <summary>
         /// True if the element definition contains already the aggregate

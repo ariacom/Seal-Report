@@ -45,6 +45,7 @@ namespace Seal.Model
         public const string SealConverterDll = "SealConverter.dll";
         public const string SealConverterWinDll = "SealConverterWin.dll";
 
+
         //appsettings.json
         public const string SealConfigurationSectionKeyword = "SealConfiguration";
         public const string SealConfigurationRepositoryPathKeyword = "RepositoryPath";
@@ -216,6 +217,7 @@ namespace Seal.Model
                     if (_configuration == null)
                     {
                         _configuration = new SealServerConfiguration();
+                        _configuration.InitDefaultKeyValues();
                     }
                     _configuration.Repository = this;
                 }
@@ -1220,6 +1222,34 @@ namespace Seal.Model
                 Debug.WriteLine(ex.Message);
             }
             return result;
+        }
+
+        #endregion
+
+        #region Encryption keys
+
+        /// <summary>
+        /// Decrypt a value using the key name and the encryption mode
+        /// </summary>
+        public string DecryptValue(string value, string keyName, bool useAES = false)
+        {
+            return Configuration.DecryptValue(value, keyName, useAES);
+        }
+
+        /// <summary>
+        /// Encrypt a value using the key name and the encryption mode
+        /// </summary>
+        public string EncryptValue(string value, string keyName, bool useAES = false)
+        {
+            return Configuration.EncryptValue(value, keyName, useAES);
+        }
+
+        /// <summary>
+        /// Get an application key or password
+        /// </summary>
+        public string GetApplicationKey(string keyName)
+        {
+            return Configuration.GetApplicationKey(keyName);
         }
 
         #endregion

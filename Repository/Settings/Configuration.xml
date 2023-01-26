@@ -21,6 +21,35 @@ _ed.editor.bootstrap.min.js</ScriptFiles>
   <AuditScript />
   <WebSessionInitScript />
   <InitScript />
+  <EncryptionMode>UserRSAContainer</EncryptionMode>
+  <KeyValues>
+    <KeyValue>
+      <Name>Meta Connection Password</Name>
+      <Value>1awéàèüwienyjhdl+256()$$</Value>
+    </KeyValue>
+    <KeyValue>
+      <Name>Output Email Device Password</Name>
+      <Value>qdeferlwien?,édl+25.()à,</Value>
+    </KeyValue>
+    <KeyValue>
+      <Name>Output Email Device SendGrid</Name>
+      <Value>1d2fDFsdsdien32345,sadnD</Value>
+    </KeyValue>
+    <KeyValue>
+      <Name>Application Keys</Name>
+      <Value>1*çéàèüwien42feäöü!???**</Value>
+    </KeyValue>
+  </KeyValues>
+  <ApplicationKeys>
+    <KeyValue>
+      <Name>name1</Name>
+      <Value>uj/DJYbqwo7J2jZmgTCaoiQyZT4bGBVVE3fYTX0+xut4QNCWY808/ckxEERX5C/SpJj3wbo6oTpJQbHXWUnnII4hSi8twlc8bJ1w/qzoAf8V3atyF7gwCiidkeGTJKftT8opX3boaqRfCnFYJg4Y10EBzimUI2pacRRtHiux0hM=</Value>
+    </KeyValue>
+    <KeyValue>
+      <Name>name2</Name>
+      <Value>i3qSBE7R7xJ0Q3LEWYDkEwRD7OSJ22GYrledRsqYshrYkIwqqzTA+TOw582YshB+ZY3YJpCGvDQPqD24IxgQGfQqp6z8eFJLErwkj21YK1zV7Mt+nQZ66jjNh1fUqLANAuhJwtWxWQAmg4S7LxO8ta1yoT4eHIBOoij92AdcIS0=</Value>
+    </KeyValue>
+  </ApplicationKeys>
   <PdfServicePassword />
   <PdfWebServiceURL />
   <DefaultCulture />

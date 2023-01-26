@@ -435,10 +435,10 @@ namespace Seal.Model
 }
 ";
 
-        [XmlIgnore]
         /// <summary>
         /// Description coming from the template
         /// </summary>
+        [XmlIgnore]
         public string TemplateDescription;
 
         /// <summary>

@@ -93,9 +93,9 @@ namespace Seal.Helpers
 
         private static string TripleDESVector = "qOiä+-?$"; //8 chars
 
-        static TripleDESCryptoServiceProvider getCryptoServiceProvider(string key)
+        static TripleDES getCryptoServiceProvider(string key)
         {
-            TripleDESCryptoServiceProvider crypto = new TripleDESCryptoServiceProvider();
+            TripleDES crypto = TripleDES.Create();
             crypto.Key = Encoding.GetEncoding(1252).GetBytes(key + "123456789").Take(crypto.KeySize / 8).ToArray();
             crypto.IV = Encoding.GetEncoding(1252).GetBytes(TripleDESVector + "123456789").Take(crypto.BlockSize / 8).ToArray();
             return crypto;
@@ -134,5 +134,32 @@ namespace Seal.Helpers
             return result;
         }
 
+
+        //RSA Container base helpers
+        public static string EncryptWithRSAContainer(string text, string containerName, bool useMachineKeyStore)
+        {
+            CspParameters csp = new CspParameters();
+            csp.KeyContainerName = containerName;
+            if (useMachineKeyStore) csp.Flags = CspProviderFlags.UseMachineKeyStore;
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(csp);
+            rsa.PersistKeyInCsp = true;
+            byte[] encryptedAsBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(text), true);
+            string encryptedAsBase64 = Convert.ToBase64String(encryptedAsBytes);
+            return encryptedAsBase64;
+        }
+
+        public static string DecryptWithRSAContainer(string text, string containerName, bool useMachineKeyStore)
+
+        {
+            CspParameters csp = new CspParameters();
+            csp.KeyContainerName = containerName;
+            if (useMachineKeyStore) csp.Flags = CspProviderFlags.UseMachineKeyStore;
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(csp);
+            rsa.PersistKeyInCsp = true;
+            
+            byte[] decryptBytes = rsa.Decrypt(Convert.FromBase64String(text), true);
+            string secretMessage = Encoding.Default.GetString(decryptBytes);
+            return secretMessage;
+        }
     }
 }

@@ -29,7 +29,8 @@ namespace Seal.Model
         [XmlIgnore]
         public MetaSource Source = null;
 
-        static string PasswordKey = "1awéàèüwienyjhdl+256()$$";
+        public const string PasswordKeyName = "Meta Connection Password";
+        public const string PasswordKeyValue = "1awéàèüwienyjhdl+256()$$";
 
 #if WINDOWS
         #region Editor
@@ -296,7 +297,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    return CryptoHelper.DecryptTripleDES(Password, PasswordKey);
+                    return Source.Repository.DecryptValue(Password, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {
@@ -309,7 +310,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    Password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
+                    Password = Source.Repository.EncryptValue(value, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {

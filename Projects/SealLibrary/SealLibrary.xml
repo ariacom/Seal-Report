@@ -337,7 +337,12 @@
         </member>
         <member name="P:Seal.Model.MetaColumn.CssClass">
             <summary>
-            Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+            CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaColumn.CssStyle">
+            <summary>
+            CSS Styles applied to the cell values of the result HTML Table. Bootstrap classes may be used.
             </summary>
         </member>
         <member name="P:Seal.Model.MetaColumn.NumericStandardFormat">
@@ -1684,7 +1689,7 @@
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.ClearSendGridKey">
             <summary>
-            The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registrstion (Free plan).
+            The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registration (Free plan).
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.SenderEmail">
@@ -3188,7 +3193,12 @@
         </member>
         <member name="P:Seal.Model.ReportElement.CssClassEl">
             <summary>
-            Additional CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+            CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportElement.CssStyleEl">
+            <summary>
+            CSS Styles applied to the cell values of the result HTML Table.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.ForceAggregate">
@@ -3213,7 +3223,12 @@
         </member>
         <member name="P:Seal.Model.ReportElement.FinalCssClass">
             <summary>
-            Additional CSS Classes applied to the cell values of the result HTML Table. 
+            CSS Classes applied to the cell values of the result HTML Table. 
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportElement.FinalCssStyle">
+            <summary>
+            CSS Style applied to the cell values of the result HTML Table. 
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.IsAggregateEl">
@@ -5164,6 +5179,11 @@
             Body Razor script executed for the Task.
             </summary>
         </member>
+        <member name="F:Seal.Model.ReportTask.TemplateDescription">
+            <summary>
+            Description coming from the template
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportTask.DefaultScript">
             <summary>
             Default script coming from the template
@@ -6334,6 +6354,21 @@
         <member name="M:Seal.Model.Repository.Translate(System.String,System.String,System.String)">
             <summary>
             Translate a reference text
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.DecryptValue(System.String,System.String,System.Boolean)">
+            <summary>
+            Decrypt a value using the key name and the encryption mode
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.EncryptValue(System.String,System.String,System.Boolean)">
+            <summary>
+            Encrypt a value using the key name and the encryption mode
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.GetApplicationKey(System.String)">
+            <summary>
+            Get an application key or password
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.FindReport(System.String,System.String)">
@@ -7623,6 +7658,21 @@
             Returns a common script key form a given name and model
             </summary>      
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.EncryptionMode">
+            <summary>
+            Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If User RSA Container is chosen, only the Windows user will have access to the keys to decrypt the password. Warning: You must retype the used password after changing mode or key values.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.KeyValues">
+            <summary>
+            If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting connection password, SMTP or FTP passwords).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.ApplicationKeys">
+            <summary>
+            Keys or passwords used in the application (report and tasks). Values are encrypted using the encryption mode.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.PdfUseClient">
             <summary>
             If true, the client library is used to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
@@ -7745,7 +7795,7 @@
         </member>
         <member name="F:Seal.Model.SealServerConfiguration.LastModification">
             <summary>
-            Last modifcation date time
+            Last modification date time
             </summary>
         </member>
         <member name="M:Seal.Model.SealServerConfiguration.LoadFromFile(System.String,System.Boolean)">
@@ -7762,11 +7812,40 @@
             <summary>
             Save to a given file path
             </summary>
-            <param name="path"></param>
         </member>
         <member name="M:Seal.Model.SealServerConfiguration.GetAttachedFileContent(System.String)">
             <summary>
             Read the file content and replace the configuration keywords
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.InitApplicationKeys">
+            <summary>
+            Init and decode application keys
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.InitDefaultKeyValues">
+            <summary>
+            Init default encryption keys
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.DecryptValue(System.String,System.String,System.Boolean)">
+            <summary>
+            Decrypt a value using the key name and the encryption mode
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.EncryptValue(System.String,System.String,System.Boolean)">
+            <summary>
+            Encrypt a value using the key name and the encryption mode
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.GetApplicationKey(System.String)">
+            <summary>
+            Get an application key or password
+            </summary>
+        </member>
+        <member name="T:Seal.Model.SealServerConfiguration.KeyValue">
+            <summary>
+            Key name and values used by the application and stored at server level
             </summary>
         </member>
         <member name="T:Seal.Model.SealServerConfiguration.FileReplacePattern">

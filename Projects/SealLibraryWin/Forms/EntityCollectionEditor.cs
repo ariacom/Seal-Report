@@ -155,6 +155,13 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(SealServerConfiguration.KeyValue))
+            {
+                frmCollectionEditorForm.Text = "Key Value Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
             else if (CollectionItemType == typeof(MetaEV))
             {
                 frmCollectionEditorForm.Text = "Enum Values Collection Editor";

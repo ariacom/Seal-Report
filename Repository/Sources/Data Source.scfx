@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<MetaSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c9e85f14-a91b-4da2-bf58-b648193ba2f2</GUID>
+  <Name>Data Source</Name>
+  <Connections>
+    <MetaConnection>
+      <GUID>4c043725-9b72-4b37-9482-0cdb78918aed</GUID>
+      <Name>connection</Name>
+      <ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString>
+      <Password>igxpugHKM68=</Password>
+    </MetaConnection>
+  </Connections>
+  <ConnectionGUID>4c043725-9b72-4b37-9482-0cdb78918aed</ConnectionGUID>
+  <MetaData />
+</MetaSource>

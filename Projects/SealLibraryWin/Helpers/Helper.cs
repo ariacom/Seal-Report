@@ -668,6 +668,14 @@ namespace Seal.Helpers
         {
             WriteLogEntry(TaskSchedulerEntry, type, message, args);
         }
+        public static void WriteEventLogEntry(string source, Exception ex)
+        {
+            try
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, ex.Message, EventLogEntryType.Error);
+            }
+            catch { }
+        }
 
         public static bool IsMachineAdministrator()
         {

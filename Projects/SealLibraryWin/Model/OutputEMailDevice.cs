@@ -25,8 +25,10 @@ namespace Seal.Model
     /// </summary>
     public class OutputEmailDevice : OutputDevice
     {
-        static string PasswordKey = "qdeferlwien?,édl+25.()à,";
-        static string SendGridKeyKey = "1d2fDFsdsdien32345,sadnD";
+        public const string PasswordKeyName = "Output Email Device Password";
+        public const string PasswordKeyValue = "qdeferlwien?,édl+25.()à,";
+        public const string SendGridKeyName = "Output Email Device SendGrid";
+        public const string SendGridKeyValue = "1d2fDFsdsdien32345,sadnD";
 
 #if WINDOWS
         #region Editor
@@ -63,7 +65,6 @@ namespace Seal.Model
         }
 
         #endregion
-
 #endif
         /// <summary>
         /// Create a basic OutputEmailDevice
@@ -133,7 +134,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    return CryptoHelper.DecryptTripleDES(Password, PasswordKey);
+                    return Repository.Instance.DecryptValue(Password, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {
@@ -146,14 +147,14 @@ namespace Seal.Model
             {
                 try
                 {
-                    Password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
+                    Password = Repository.Instance.EncryptValue(value, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {
                     Error = "Error during password encryption:" + ex.Message;
                     Password = value;
                     TypeDescriptor.Refresh(this);
-                }
+                }                 
             }
         }
 
@@ -209,7 +210,7 @@ namespace Seal.Model
         public string SendGridKey { get; set; }
 
         /// <summary>
-        /// The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registrstion (Free plan).
+        /// The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registration (Free plan).
         /// </summary>
 #if WINDOWS
         [Category("SendGrid Definition"), DisplayName("API Key"), Description("The API Key used for SendGrid.Get an API Key from https://sendgrid.com/ after registration (Free plan)."), PasswordPropertyText(true), Id(2, 2)]
@@ -221,7 +222,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    return CryptoHelper.DecryptAES(SendGridKey, SendGridKeyKey);
+                    return Repository.Instance.EncryptValue(SendGridKey, SendGridKeyName, true); 
                 }
                 catch (Exception ex)
                 {
@@ -234,7 +235,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    SendGridKey = CryptoHelper.EncryptAES(value, SendGridKeyKey);
+                    SendGridKey = Repository.Instance.DecryptValue(value, SendGridKeyName, true);
                 }
                 catch (Exception ex)
                 {

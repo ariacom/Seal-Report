@@ -620,4 +620,13 @@ namespace Seal.Model
         WebServer,
     }
 
+    public enum EncryptionMode
+    {
+        [Description("Use the key values defined in the configuration file (default)")]
+        Default,
+        [Description("Use the Machine RSA Key Container (Works only for the current machine)")]
+        MachineRSAContainer,
+        [Description("Use the User RSA Key Container (Works only for the current user)")]
+        UserRSAContainer,
+    }
 }

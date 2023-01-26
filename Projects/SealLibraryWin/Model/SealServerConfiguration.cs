@@ -26,6 +26,9 @@ namespace Seal.Model
     /// </summary>
     public class SealServerConfiguration : RootComponent
     {
+        public const string ApplicationKeysKeyName = "Application Keys";
+        public const string ApplicationKeysKeyValue = "1*çéàèüwien42feäöü!???**";
+
         /// <summary>
         /// Current file path
         /// </summary>
@@ -73,12 +76,16 @@ namespace Seal.Model
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
-                GetProperty("HostForPersonalFolder").SetIsBrowsable(!ForPublication);                
+                GetProperty("HostForPersonalFolder").SetIsBrowsable(!ForPublication);
                 GetProperty("FileReplacePatterns").SetIsBrowsable(!ForPublication);
                 GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("WebCssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication);
+
+                GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
+                GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
+                GetProperty("ApplicationKeys").SetIsBrowsable(!ForPublication);
 
                 GetProperty("PdfServer").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfServerPort").SetIsBrowsable(!ForPublication);
@@ -205,7 +212,7 @@ namespace Seal.Model
         [Category("Server Settings"), DisplayName("CSS Files"), Description("Additional CSS files to be included in the HTML report result. One per line or separated by semi-column."), Id(12, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
-        public string CssFiles { get; set; } = "" ;
+        public string CssFiles { get; set; } = "";
 
         /// <summary>
         /// Additional CSS files to be included in the Web Report Server application. One per line or separated by semi-column.
@@ -385,6 +392,54 @@ namespace Seal.Model
 
             return key;
         }
+
+        EncryptionMode _encryptionMode = EncryptionMode.Default;
+        /// <summary>
+        /// Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows User will have access to the keys. Warning: You must retype the used password after changing mode or key values.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Storage and encryption mode"), Description("Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows user will have access to the keys to decrypt the password. Warning: You must retype the used password after changing mode or key values."), Category("Server Keys"), Id(1, 6)]
+        [DefaultValue(EncryptionMode.Default)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+#endif
+        public EncryptionMode EncryptionMode
+        {
+            get
+            {
+                return _encryptionMode;
+            }
+            set
+            {
+                _encryptionMode = value;
+                UpdateEditorAttributes();
+            }
+        }
+
+        List<KeyValue> _keyValues = new List<KeyValue>();
+        /// <summary>
+        /// If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting connection password, SMTP or FTP passwords).
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Key values"), Description("If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting Connection password, SMTP or FTP passwords)."), Category("Server Keys"), Id(2, 6)]
+        [DefaultValue(false)]
+#endif
+        public List<KeyValue> KeyValues
+        {
+            get
+            {
+                return _keyValues;
+            }
+            set { _keyValues = value; }
+        }
+
+ #if WINDOWS
+        [DisplayName("Application keys and passwords"), Description("Keys or passwords used in the application (e.g. keys used in scripts in reports and tasks using the Repository.GetApplicationKey(\"KeyName\") method). Values are encrypted using the encryption mode defined above."), Category("Server Keys"), Id(3, 6)]
+#endif       
+        /// <summary>
+        /// Keys or passwords used in the application (report and tasks). Values are encrypted using the encryption mode.
+        /// </summary>
+        public List<KeyValue> ApplicationKeys { get; set; } = new List<KeyValue>();
+
 
 
         /// <summary>
@@ -640,7 +695,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Last modifcation date time
+        /// Last modification date time
         /// </summary>
         [XmlIgnore]
         public DateTime LastModification;
@@ -659,6 +714,9 @@ namespace Seal.Model
                     result = (SealServerConfiguration)serializer.Deserialize(xr);
                     xr.Close();
                 }
+
+                result.InitDefaultKeyValues();
+                result.InitApplicationKeys();
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
             }
@@ -680,7 +738,6 @@ namespace Seal.Model
         /// <summary>
         /// Save to a given file path
         /// </summary>
-        /// <param name="path"></param>
         public void SaveToFile(string path)
         {
             //Check last modification
@@ -692,21 +749,37 @@ namespace Seal.Model
                     throw new Exception("Unable to save the Server Configuration file. The file has been modified by another user.");
                 }
             }
-            var xmlOverrides = new XmlAttributeOverrides();
-            XmlAttributes attrs = new XmlAttributes();
-            attrs.XmlIgnore = true;
-            xmlOverrides.Add(typeof(RootComponent), "Name", attrs);
-            xmlOverrides.Add(typeof(RootComponent), "GUID", attrs);
 
-            //Pdf & Excel
-            if (PdfConverterEdited)
+            var originalApplicationsKey = (List<KeyValue>) Helper.Clone(ApplicationKeys);
+            try
             {
-                PdfConfigurations = PdfConverter.GetConfigurations();
-            }
-            if (ExcelConverterEdited)
-            {
-                ExcelConfigurations = ExcelConverter.GetConfigurations();
-            }
+                foreach (var k in ApplicationKeys)
+                {
+                    try
+                    {
+                        k.Value = EncryptValue(k.Value, ApplicationKeysKeyName);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helper.WriteEventLogEntry("SealServerConfiguration", ex);
+                    }
+                }
+
+                var xmlOverrides = new XmlAttributeOverrides();
+                XmlAttributes attrs = new XmlAttributes();
+                attrs.XmlIgnore = true;
+                xmlOverrides.Add(typeof(RootComponent), "Name", attrs);
+                xmlOverrides.Add(typeof(RootComponent), "GUID", attrs);
+
+                //Pdf & Excel
+                if (PdfConverterEdited)
+                {
+                    PdfConfigurations = PdfConverter.GetConfigurations();
+                }
+                if (ExcelConverterEdited)
+                {
+                    ExcelConfigurations = ExcelConverter.GetConfigurations();
+                }
 #if !DEBUG
             //Set installation path, used by, to define schedules
             var exePath = Assembly.GetExecutingAssembly().Location;
@@ -716,9 +789,14 @@ namespace Seal.Model
             }
 #endif
 
-            Helper.Serialize(path, this, new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides));
-            FilePath = path;
-            LastModification = File.GetLastWriteTime(path);
+                Helper.Serialize(path, this, new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides));
+                FilePath = path;
+                LastModification = File.GetLastWriteTime(path);
+            }
+            finally
+            {
+                ApplicationKeys = originalApplicationsKey;
+            }
         }
 
         /// <summary>
@@ -733,6 +811,135 @@ namespace Seal.Model
             }
             return result;
         }
+
+        /// <summary>
+        /// Init and decode application keys
+        /// </summary>
+        public void InitApplicationKeys()
+        {
+            foreach (var key in ApplicationKeys)
+            {
+                try
+                {
+                    key.Value = DecryptValue(key.Value, ApplicationKeysKeyName);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteEventLogEntry("SealServerConfiguration", ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Init default encryption keys
+        /// </summary>
+        public void InitDefaultKeyValues()
+        {
+            lock (_keyValues)
+            {
+                if (!_keyValues.Exists(i => i.Name == MetaConnection.PasswordKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = MetaConnection.PasswordKeyName, Value = MetaConnection.PasswordKeyValue });
+                }
+                if (!_keyValues.Exists(i => i.Name == OutputEmailDevice.PasswordKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = OutputEmailDevice.PasswordKeyName, Value = OutputEmailDevice.PasswordKeyValue });
+                }
+                if (!_keyValues.Exists(i => i.Name == OutputEmailDevice.SendGridKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = OutputEmailDevice.SendGridKeyName, Value = OutputEmailDevice.SendGridKeyValue });
+                }
+                if (!_keyValues.Exists(i => i.Name == ApplicationKeysKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = ApplicationKeysKeyName, Value = ApplicationKeysKeyValue });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Decrypt a value using the key name and the encryption mode
+        /// </summary>
+        public string DecryptValue(string value, string keyName, bool useAES = false)
+        {
+            var key = KeyValues.FirstOrDefault(i => i.Name == keyName);
+            var result = "";
+
+            if (EncryptionMode == EncryptionMode.Default)
+            {
+                result = useAES ? CryptoHelper.DecryptAES(value, key.Value) : CryptoHelper.DecryptTripleDES(value, key.Value);
+            }
+            else if (EncryptionMode == EncryptionMode.MachineRSAContainer)
+            {
+                result = CryptoHelper.DecryptWithRSAContainer(value, keyName, true);
+            }
+            else if (EncryptionMode == EncryptionMode.UserRSAContainer)
+            {
+                result = CryptoHelper.DecryptWithRSAContainer(value, keyName, false);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Encrypt a value using the key name and the encryption mode
+        /// </summary>
+        public string EncryptValue(string value, string keyName, bool useAES = false)
+        {
+            var key = KeyValues.FirstOrDefault(i => i.Name == keyName);
+            var result = "";
+
+            if (key != null)
+            {
+                if (EncryptionMode == EncryptionMode.Default)
+                {
+                    result = useAES ? CryptoHelper.EncryptAES(value, key.Value) : CryptoHelper.EncryptTripleDES(value, key.Value);
+                }
+                else if (EncryptionMode == EncryptionMode.MachineRSAContainer)
+                {
+                    result = CryptoHelper.EncryptWithRSAContainer(value, keyName, true);
+                }
+                else if (EncryptionMode == EncryptionMode.UserRSAContainer)
+                {
+                    result = CryptoHelper.EncryptWithRSAContainer(value, keyName, false);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get an application key or password
+        /// </summary>
+        public string GetApplicationKey(string keyName)
+        {
+            var key = ApplicationKeys.FirstOrDefault(i => i.Name == keyName);
+            var result = "";
+            if (key != null)
+            {
+                result = DecryptValue(key.Value, ApplicationKeysKeyName);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Key name and values used by the application and stored at server level
+        /// </summary>
+        public class KeyValue
+        {
+            public override string ToString()
+            {
+                return Name;
+            }
+
+#if WINDOWS
+            [Category("Definition"), DisplayName("Key name"), Description("The name of the key.")]
+#endif
+            public string Name { get; set; }
+#if WINDOWS
+            [Category("Definition"), DisplayName("Key value"), Description("The value of the key.")]
+#endif
+            public string Value { get; set; }
+        }
+
 
         /// <summary>
         /// Defines a pattern to replace in a file 
