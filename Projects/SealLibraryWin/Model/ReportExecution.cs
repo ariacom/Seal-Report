@@ -226,7 +226,8 @@ namespace Seal.Model
             Report.ExecutionErrors = "";
             Report.ExecutionErrorStackTrace = "";
             Report.Status = ReportStatus.NotExecuted;
-
+            CurrentEnumValues.Clear();
+                
             Report.InitForExecution();
             if (Report.HasErrors)
             {

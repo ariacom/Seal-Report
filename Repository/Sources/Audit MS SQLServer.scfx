@@ -12,7 +12,6 @@
       <OdbcConnectionString />
       <MSSqlServerConnectionString>Server=localhost;Database=Audit;Trusted_Connection=True</MSSqlServerConnectionString>
       <UserName />
-      <Password>docIWzW7k9Q=</Password>
     </MetaConnection>
   </Connections>
   <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>

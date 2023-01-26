@@ -7660,7 +7660,7 @@
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.EncryptionMode">
             <summary>
-            Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If User RSA Container is chosen, only the Windows user will have access to the keys to decrypt the password. Warning: You must retype the used password after changing mode or key values.
+            Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows User will have access to the keys. Warning: You must retype the used password after changing mode or key values.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.KeyValues">
