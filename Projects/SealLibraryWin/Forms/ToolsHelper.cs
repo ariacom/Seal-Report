@@ -730,10 +730,10 @@ namespace Seal.Forms
                         }
 
                     }
-                    ws.Cells["A1:N1"].AutoFilter = true;
-                    ws.Cells["A1:N1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells["A1:N1"].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
-                    ws.Cells["A1:N1"].Style.Font.Bold = true;
+                    ws.Cells["A1:O1"].AutoFilter = true;
+                    ws.Cells["A1:O1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    ws.Cells["A1:O1"].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+                    ws.Cells["A1:O1"].Style.Font.Bold = true;
                 }
 
                 items = checkedItems.Where(i => i is MetaEnum);
@@ -805,7 +805,7 @@ namespace Seal.Forms
                         {
                             var tableName = ws.Cells["A" + index].Value?.ToString().Trim();
                             var columnName = ws.Cells["B" + index].Value?.ToString().Trim();
-                            var columnGUID = ws.Cells["N" + index].Value?.ToString();
+                            var columnGUID = ws.Cells["G" + index].Value?.ToString();
 
                             if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(columnName)) break;
                             log.Log($"Processing {tableName} {columnName}");
@@ -841,19 +841,20 @@ namespace Seal.Forms
                             }
 
                             column.CssClass = ws.Cells["H" + index].Value?.ToString();
-                            column.IsAggregate = ws.Cells["I" + index].Value?.ToString().ToLower() == "true";
-                            var format = ws.Cells["J" + index].Value?.ToString();
+                            column.CssStyle = ws.Cells["I" + index].Value?.ToString();
+                            column.IsAggregate = ws.Cells["J" + index].Value?.ToString().ToLower() == "true";
+                            var format = ws.Cells["K" + index].Value?.ToString();
                             if (!string.IsNullOrEmpty(format))
                             {
                                 Helper.SetPropertyValue(column, "NumericStandardFormat", format);
                             }
-                            format = ws.Cells["K" + index].Value?.ToString();
+                            format = ws.Cells["L" + index].Value?.ToString();
                             if (!string.IsNullOrEmpty(format))
                             {
                                 Helper.SetPropertyValue(column, "DateTimeStandardFormat", format);
                             }
-                            column.Format = ws.Cells["L" + index].Value?.ToString();
-                            column.Tag = ws.Cells["M" + index].Value?.ToString();
+                            column.Format = ws.Cells["M" + index].Value?.ToString();
+                            column.Tag = ws.Cells["N" + index].Value?.ToString();
 
                             column.SetStandardFormat();
                             index++;
