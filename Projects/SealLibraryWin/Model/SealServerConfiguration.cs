@@ -861,6 +861,8 @@ namespace Seal.Model
         /// </summary>
         public string DecryptValue(string value, string keyName, bool useAES = false)
         {
+            if (string.IsNullOrEmpty(value)) return "";
+
             var key = KeyValues.FirstOrDefault(i => i.Name == keyName);
             var result = "";
 
@@ -884,6 +886,8 @@ namespace Seal.Model
         /// </summary>
         public string EncryptValue(string value, string keyName, bool useAES = false)
         {
+            if (string.IsNullOrEmpty(value)) return "";
+
             var key = KeyValues.FirstOrDefault(i => i.Name == keyName);
             var result = "";
 
@@ -913,10 +917,7 @@ namespace Seal.Model
         {
             var key = ApplicationKeys.FirstOrDefault(i => i.Name == keyName);
             var result = "";
-            if (key != null)
-            {
-                result = DecryptValue(key.Value, ApplicationKeysKeyName);
-            }
+            if (key != null) result = key.Value;           
             return result;
         }
 

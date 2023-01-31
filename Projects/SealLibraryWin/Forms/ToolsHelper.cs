@@ -698,12 +698,13 @@ namespace Seal.Forms
                     ws.Cells["F1"].Value = "Display Order";
                     ws.Cells["G1"].Value = "Enum";
                     ws.Cells["H1"].Value = "CSS Class";
-                    ws.Cells["I1"].Value = "Is Aggregate";
-                    ws.Cells["J1"].Value = "Numeric Standard Format";
-                    ws.Cells["K1"].Value = "DateTime Standard Format";
-                    ws.Cells["L1"].Value = "Format";
-                    ws.Cells["M1"].Value = "Tag";
-                    ws.Cells["N1"].Value = "GUID";
+                    ws.Cells["I1"].Value = "CSS Style";
+                    ws.Cells["J1"].Value = "Is Aggregate";
+                    ws.Cells["K1"].Value = "Numeric Standard Format";
+                    ws.Cells["L1"].Value = "DateTime Standard Format";
+                    ws.Cells["M1"].Value = "Format";
+                    ws.Cells["N1"].Value = "Tag";
+                    ws.Cells["O1"].Value = "GUID";
                     int index = 2;
                     foreach (var item in items)
                     {
@@ -718,12 +719,13 @@ namespace Seal.Forms
                             ws.Cells["F" + index].Value = col.DisplayOrder;
                             ws.Cells["G" + index].Value = col.Enum?.Name;
                             ws.Cells["H" + index].Value = col.CssClass;
-                            ws.Cells["I" + index].Value = col.IsAggregate;
-                            ws.Cells["J" + index].Value = col.Enum == null && col.Type == ColumnType.Numeric ? col.NumericStandardFormat : "";
-                            ws.Cells["K" + index].Value = col.Enum == null && col.Type == ColumnType.DateTime ? col.DateTimeStandardFormat : "";
-                            ws.Cells["L" + index].Value = col.Format;
-                            ws.Cells["M" + index].Value = col.Tag;
-                            ws.Cells["N" + index].Value = col.GUID;
+                            ws.Cells["I" + index].Value = col.CssStyle;
+                            ws.Cells["J" + index].Value = col.IsAggregate;
+                            ws.Cells["K" + index].Value = col.Enum == null && col.Type == ColumnType.Numeric ? col.NumericStandardFormat : "";
+                            ws.Cells["L" + index].Value = col.Enum == null && col.Type == ColumnType.DateTime ? col.DateTimeStandardFormat : "";
+                            ws.Cells["M" + index].Value = col.Format;
+                            ws.Cells["N" + index].Value = col.Tag;
+                            ws.Cells["O" + index].Value = col.GUID;
                             index++;
                         }
 
