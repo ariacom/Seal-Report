@@ -28,7 +28,7 @@
     
     //Folder input
     if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder)) {
-        foreach (var file in Directory.GetFiles(folder, task.GetValue(""filter""))) {
+        foreach (var file in Directory.GetFiles(folder, task.GetValue(""filter"")).OrderBy(i => i)) {
             items.Add(file);
         }
     }

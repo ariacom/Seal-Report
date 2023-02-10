@@ -2908,7 +2908,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(string.Format("Got unexpected error when building NoSQL Table:\r\n{0}\r\n", ex.Message));
+                    throw new Exception(string.Format("Got unexpected error when building NoSQL Table:\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
             else if (!string.IsNullOrEmpty(Sql) && !Report.Cancel)

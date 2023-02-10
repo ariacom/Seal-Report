@@ -44,6 +44,9 @@
             report.Cancel = true;
         }
 	}
+
+    if (report.HasErrors) throw new Exception($""Error executing '{reportPath}':\r\n"" + report.ExecutionErrors);
+
 	task.LogMessage($""Report '{reportPath}' has been executed"");
 }
 ";

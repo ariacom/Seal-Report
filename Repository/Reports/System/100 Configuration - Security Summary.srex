@@ -1318,7 +1318,7 @@
                         if (user == null) {
                             user = new SecurityUser(Repository.Instance.Security);
                             user.Name = adUser.Name;
-                            user.UserPrincipal = (UserPrincipal) adUser;
+                            user.UserPrincipal = adUser as UserPrincipal;
                             result.Add(user);
                         }
                         user.AddSecurityGroup(group.Name);
