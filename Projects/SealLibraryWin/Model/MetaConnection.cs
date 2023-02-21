@@ -243,7 +243,6 @@ namespace Seal.Model
                 if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
                 {
                     result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, UserName, ClearPassword);
-
                 }
                 else if (ConnectionType == ConnectionType.Odbc)
                 {

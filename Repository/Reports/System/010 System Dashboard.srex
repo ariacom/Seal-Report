@@ -172,6 +172,7 @@
           <GUID>82fbd491-f4f0-43de-a769-655f420473a8</GUID>
           <Name>sr_audit.event_type</Name>
           <DisplayName>Errors</DisplayName>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Not sorted</SortOrder>
@@ -235,6 +236,7 @@ AND [3d13a079-5104-4fd6-9415-9a5ec4e91e6a]</Restriction>
           <GUID>b6664c0e-2130-4c30-a328-54832e5a7d15</GUID>
           <Name>sr_audit.event_type</Name>
           <DisplayName>Executions</DisplayName>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Not sorted</SortOrder>
@@ -321,6 +323,7 @@ AND [d470def5-af9d-47c6-ad2b-c8e96afc5459]</Restriction>
           <GUID>4deab5c5-b170-4608-b065-877985d7f42d</GUID>
           <Name>sr_audit.event_type</Name>
           <DisplayName>Executions</DisplayName>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Not sorted</SortOrder>
@@ -398,6 +401,7 @@ AND [5bca87bc-78c9-468a-8c37-b3df60bd8b25]</Restriction>
           <GUID>1ae14856-aab0-4c9e-9094-67486920fa2c</GUID>
           <Name>convert(int,sr_audit.event_detail)</Name>
           <DisplayName>Logged users</DisplayName>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Line</ChartJSSerie>
@@ -601,7 +605,9 @@ AND [c6cb14bd-8637-4a91-b562-400f7fa275a5]</Restriction>
     <ReportTask>
       <GUID>07906cfa-790d-43a8-85a8-fb6b58439130</GUID>
       <Name>Fill reports list</Name>
-      <CancelReport>false</CancelReport>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
       <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
       <Script>@using System.IO
 @{

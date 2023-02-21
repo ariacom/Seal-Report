@@ -34,6 +34,7 @@
                 dt.Columns.Add(new DataColumn(el.Name.LocalName, typeof(string)));
             }
         }
+        if (dt.Columns.Count == 0) throw new Exception($""No node found for '{nodeName}'"");
         task.LogMessage(""{0} column(s) defined"", dt.Columns.Count);
         
 		//Load the values in the table
