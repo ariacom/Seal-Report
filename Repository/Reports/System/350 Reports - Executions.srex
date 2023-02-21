@@ -270,7 +270,7 @@ AND [7cf2a3d8-2f72-454b-98c8-4525f8eecca2]</Restriction>
         <ReportRestriction>
           <GUID>7cf2a3d8-2f72-454b-98c8-4525f8eecca2</GUID>
           <Name>sr_audit.execution_context</Name>
-          <DisplayName />
+          <DisplayName>Execution context scheduler</DisplayName>
           <DisplayOrder>3</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
