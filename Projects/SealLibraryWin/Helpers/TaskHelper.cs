@@ -197,6 +197,32 @@ namespace Seal.Helpers
             return result;
         }
 
+
+        public int LoadTable(DataTable table, bool useAllConnections = false)
+        {
+            var result = 0; 
+            foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
+            {
+                if (_task.Report.Cancel) break;
+                LogMessage("Importing table for connection '{0}'.", connection.Name);
+                DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
+                var dbCommand = _task.GetDbCommand(connection);
+                try
+                {
+                    LogMessage("Dropping and creating table '{0}'", table.TableName);
+                    DatabaseHelper.CreateTable(dbCommand, table);
+                    LogMessage("Copying {0:N0} rows in '{1}'", table.Rows.Count, table.TableName);
+                    DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
+                    result = table.Rows.Count;
+                }
+                finally
+                {
+                    dbCommand.Connection.Close();
+                }
+            }
+            return result;
+        }
+
         public int LoadTableFromExcel(string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0, int endRowIndex = 0, bool hasHeader = true)
         {
             int result = 0;
@@ -221,25 +247,7 @@ namespace Seal.Helpers
                     DataTable table = DatabaseHelper.LoadDataTableFromExcel(sourcePath, sourceTabName, startRow, startColumn, endColumnIndex, endRowIndex, hasHeader);
 
                     if (!string.IsNullOrEmpty(destinationTableName)) table.TableName = destinationTableName;
-                    foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
-                    {
-                        if (_task.Report.Cancel) break;
-                        LogMessage("Importing table for connection '{0}'.", connection.Name);
-                        DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                        var dbCommand = _task.GetDbCommand(connection);
-                        try
-                        {
-                            LogMessage("Dropping and creating table '{0}'", table.TableName);
-                            DatabaseHelper.CreateTable(dbCommand, table);
-                            LogMessage("Copying {0:N0} rows in '{1}'", table.Rows.Count, table.TableName);
-                            DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
-                            result = table.Rows.Count;
-                        }
-                        finally
-                        {
-                            dbCommand.Connection.Close();
-                        }
-                    }
+                    result = LoadTable(table, useAllConnections);
                 }
             }
             finally
@@ -337,24 +345,7 @@ namespace Seal.Helpers
                 DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator, encoding) : DatabaseHelper.LoadDataTableFromCSVVBParser(sourcePath, separator, encoding));
                 table.TableName = destinationTableName;
 
-                foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
-                {
-                    if (_task.Report.Cancel) break;
-                    LogMessage("Importing table for connection '{0}'.", connection.Name);
-                    DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                    var dbCommand = _task.GetDbCommand(connection);
-                    try
-                    {
-                        LogMessage("Dropping and creating table '{0}'", destinationTableName);
-                        DatabaseHelper.CreateTable(dbCommand, table);
-                        LogMessage("Copying {0:N0} rows in '{1}'", table.Rows.Count, destinationTableName);
-                        DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
-                    }
-                    finally
-                    {
-                        dbCommand.Connection.Close();
-                    }
-                }
+                LoadTable(table, useAllConnections);
             }
             finally
             {

@@ -27,29 +27,29 @@
         try {
             if (dt != null && @Helper.ToJS(enabled) && !@Helper.ToJS(report.PrintLayout))
             {
-                var dto = dt.DataTable({
-                dom: "@Raw(view.GetValue("data_tables_dom"))",
+               var dto = dt.DataTable({
+               dom: "@Raw(view.GetValue("data_tables_dom"))",
                 responsive: @view.GetBoolValueJS("data_tables_responsive"),
                 ordering: @view.GetBoolValueJS("data_tables_sort_enabled"),
                 paging: @view.GetBoolValueJS("data_tables_pagination_enabled"),
-                lengthMenu: [[5,10,25,50,100,500, -1], [5,10,25,50,100,500, "@report.Translate("All")"]],
-                pageLength: @(view.GetBoolValue("data_tables_pagination_enabled") ? view.GetValue("data_tables_pagination_size") : "-1"),
+               lengthMenu: [[5,10,25,50,100,500, -1], [5,10,25,50,100,500, "@report.Translate("All")"]],
+               pageLength: @(view.GetBoolValue("data_tables_pagination_enabled") ? view.GetValue("data_tables_pagination_size") : "-1"),
                 info: @view.GetBoolValueJS("data_tables_show_information"),
                 searching: @view.GetBoolValueJS("data_tables_filter_enabled"),
                 processing: @view.GetBoolValueJS("data_tables_show_processing"),
                 order: [@Raw(sortConfiguration)],
                 serverSide: @Helper.ToJS(report.IsServerPaginationEnabled && enabled),
-                @Raw(Helper.AddIfNotEmpty("scrollY: '", view.GetValue("data_tables_scrolly"), "',"))
+               @Raw(Helper.AddIfNotEmpty("scrollY: '", view.GetValue("data_tables_scrolly"), "',"))
                 scrollX: @view.GetBoolValueJS("data_tables_scrollx"),
                 scrollCollapse: @view.GetBoolValueJS("data_tables_scrollcollapse"),
-                @if (view.GetValue("data_tables_fixcolleft") != "0" || view.GetValue("data_tables_fixcolright") != "0")
+               @if (view.GetValue("data_tables_fixcolleft") != "0" || view.GetValue("data_tables_fixcolright") != "0")
                 {<text>
                     fixedColumns: {
                         leftColumns: @view.GetValue("data_tables_fixcolleft"),
                         rightColumns: @view.GetValue("data_tables_fixcolright")
                     },
                 </text>}
-                @if (view.GetBoolValue("data_tables_fixheader") || view.GetBoolValue("data_tables_fixfooter"))
+               @if (view.GetBoolValue("data_tables_fixheader") || view.GetBoolValue("data_tables_fixfooter"))
                 {<text>
                     fixedHeader: {
                         header: @view.GetBoolValueJS("data_tables_fixheader"),
@@ -57,19 +57,19 @@
                         footerOffset: 5,
                     },
                 </text>}
-                @if (view.GetBoolValue("data_tables_scroller"))
+               @if (view.GetBoolValue("data_tables_scroller"))
                 {<text>
                     deferRender: @view.GetBoolValueJS("data_tables_scroller"),
                     scroller: @view.GetBoolValueJS("data_tables_scroller"),
                 </text>}
-                @if (report.IsServerPaginationEnabled && enabled)
+               @if (report.IsServerPaginationEnabled && enabled)
                 {<text>
                         ajax: function(data, callback, settings) {
                             getTableData($(this), '@report.ExecutionGUID', '@view.ViewId', '@page.PageId', data, callback, settings);
                         }
                 </text>}
                 });
-                initNavCells('@report.ExecutionGUID', '[viewid="@(view.ViewId)"]');
+               initNavCells('@report.ExecutionGUID', '[viewid="@(view.ViewId)"]');
             }
     }
     catch (e) { };

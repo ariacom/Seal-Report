@@ -222,7 +222,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    return Repository.Instance.EncryptValue(SendGridKey, SendGridKeyName, true); 
+                    return Repository.Instance.DecryptValue(SendGridKey, SendGridKeyName, true);
                 }
                 catch (Exception ex)
                 {
@@ -235,7 +235,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    SendGridKey = Repository.Instance.DecryptValue(value, SendGridKeyName, true);
+                    SendGridKey = Repository.Instance.EncryptValue(value, SendGridKeyName, true);
                 }
                 catch (Exception ex)
                 {
@@ -492,6 +492,7 @@ namespace Seal.Model
             {
                 HandleZipOptions(report);
                 attachPath = report.ResultFilePath;
+                attachName = Path.GetFileName(attachPath);  
                 if (output.Format == ReportFormat.html || output.Format == ReportFormat.print)
                 {
                     //Copy the file to avoid a lock

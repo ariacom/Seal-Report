@@ -120,7 +120,7 @@
 		<None Include="..\..\Repository\Sources\TaskTemplates\File Download Upload.cshtml" Link="TaskTemplates\File Download Upload.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load Excel To Database.cshtml" Link="TaskTemplates\Load Excel To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load CSV To Database.cshtml" Link="TaskTemplates\Load CSV To Database.cshtml" />
-		<None Include="..\..\Repository\Sources\TaskTemplates\Load Table To Database.cshtml" Link="TaskTemplates\Load Table To Database.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\Load XML To Database.cshtml" Link="TaskTemplates\Load XML To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Execute Report.cshtml" Link="TaskTemplates\Execute Report.cshtml" />
 		<None Include="..\..\Repository\Views\ChartJS.config.cshtml" Link="Views\ChartJS.config.cshtml" />
 		<None Include="..\..\Repository\Views\ChartJS.cshtml" Link="Views\ChartJS.cshtml" />

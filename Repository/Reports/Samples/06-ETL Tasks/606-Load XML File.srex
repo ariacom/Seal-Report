@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>d9b7b854-d9d2-49ab-8472-2ac853056f3d</GUID>
+  <ViewGUID>2108cea3-b94d-4b7a-afcc-c9ba22000d1b</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>135832e6-a136-4fa6-af25-20fb1de690d5</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>66b4db56-352c-441f-9f63-f9957767ad82</GUID>
+      <Name>Model</Name>
+      <SourceGUID>135832e6-a136-4fa6-af25-20fb1de690d5</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>87638cc6-17c2-4b5d-b1aa-42b8f2fd0152</GUID>
+      <Name>Load XML To Database</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Load XML To Database</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>xml_path</Name>
+          <Value>%SEALREPOSITORY%/Sources/Northwind.scfx</Value>
+        </Parameter>
+        <Parameter>
+          <Name>xml_node_name</Name>
+          <Value>MetaColumn</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>135832e6-a136-4fa6-af25-20fb1de690d5</SourceGUID>
+      <Script />
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>2108cea3-b94d-4b7a-afcc-c9ba22000d1b</GUID>
+      <Name>View</Name>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

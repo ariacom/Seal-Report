@@ -297,7 +297,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    return Source.Repository.DecryptValue(Password, PasswordKeyName);
+                    return Source?.Repository.DecryptValue(Password, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {
@@ -310,7 +310,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    Password = Source.Repository.EncryptValue(value, PasswordKeyName);
+                    if (Source != null) Password = Source.Repository.EncryptValue(value, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {
