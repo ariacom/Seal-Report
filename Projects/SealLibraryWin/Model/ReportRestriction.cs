@@ -1645,7 +1645,7 @@ namespace Seal.Model
             {
                 if (IsEnum)
                 {
-                    _SQLText = string.Format("({0})", (HasValue ? EnumSQLValue : "NULL"));
+                    _SQLText = string.Format("{0}", (HasValue ? EnumSQLValue : "NULL"));
                     _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue ? EnumDisplayValue : "?");
                     _displayRestriction = _displayText;
                 }
