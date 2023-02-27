@@ -25,5 +25,10 @@
         {
             return Enabled && Unique;
         }
+
+        /// <summary>
+        /// If true, the Login Password fields are hidden (e.g. for Integrated Windows Authentication)
+        /// </summary>
+        public bool HideLoginPassword { get; set; } = false;
     }
 }
