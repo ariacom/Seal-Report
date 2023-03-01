@@ -4783,7 +4783,7 @@
         </member>
         <member name="P:Seal.Model.ReportRestriction.Pattern">
             <summary>
-            Retrun the pattern text for the restriction
+            Return the pattern text for the restriction
             </summary>
         </member>
         <member name="M:Seal.Model.ReportRestriction.GetHtmlValue(System.Int32,System.Boolean)">
@@ -5199,6 +5199,11 @@
             SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed.
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportTask.SQLSeparator">
+            <summary>
+            Separator used in the SQL Statement to split the script in several sub-scripts and executions (e.g. GO or ;). The SQL statement must contain the separator plus a line feed to be detected.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportTask.Script">
             <summary>
             Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed.
@@ -5282,6 +5287,11 @@
         <member name="M:Seal.Model.ReportTask.Execute">
             <summary>
             Executes the task
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTask.SQLStatements">
+            <summary>
+            List of SQL statements to execute
             </summary>
         </member>
         <member name="F:Seal.Model.ReportTask.ExecInput">
@@ -6658,7 +6668,7 @@
         </member>
         <member name="M:Seal.Model.ResultCell.GetNavigationLinks(Seal.Model.ReportView)">
             <summary>
-            Retrun the list of navigation links in the View context
+            Return the list of navigation links in the View context
             </summary>
         </member>
         <member name="M:Seal.Model.ResultCell.AddNavigationFileDownload(System.String,System.String)">

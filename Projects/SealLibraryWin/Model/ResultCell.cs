@@ -625,7 +625,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Retrun the list of navigation links in the View context
+        /// Return the list of navigation links in the View context
         /// </summary>
         public List<NavigationLink> GetNavigationLinks(ReportView view)
         {

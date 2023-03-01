@@ -2119,7 +2119,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Retrun the pattern text for the restriction
+        /// Return the pattern text for the restriction
         /// </summary>
         [XmlIgnore]
         public string Pattern

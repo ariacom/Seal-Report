@@ -926,7 +926,6 @@ namespace SealWebServer.Controllers
             return Json(views);
         }
 
-
         /// <summary>
         /// Execute a report in a new window when triggered from a Restrictions View
         /// </summary>

@@ -478,7 +478,7 @@ namespace Seal.Model
         public string SQL { get; set; }
 
         /// <summary>
-        /// Separator used in the SQL Statement to split the script in several sub-scripts and executions (e.g. GO or ;). The SQL statement must contain the separator plus a carriage retrun line feed to be detected.
+        /// Separator used in the SQL Statement to split the script in several sub-scripts and executions (e.g. GO or ;). The SQL statement must contain the separator plus a line feed to be detected.
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("SQL separator"), Description("Separator used in the SQL Statement to split the script in several sub-scripts (e.g. GO or ;). The SQL statement must contain the separator plus a line feed to be detected."), Id(6, 1)]
