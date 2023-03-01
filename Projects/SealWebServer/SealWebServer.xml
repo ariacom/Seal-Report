@@ -261,5 +261,10 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="P:SealWebServer.Models.Configuration.Authentication.HideLoginPassword">
+            <summary>
+            If true, the Login Password fields are hidden (e.g. for Integrated Windows Authentication)
+            </summary>
+        </member>
     </members>
 </doc>
