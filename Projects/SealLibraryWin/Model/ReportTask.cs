@@ -57,6 +57,7 @@ namespace Seal.Model
 
                 GetProperty("ParameterValues").SetIsBrowsable(Parameters.Count > 0);
                 GetProperty("SQL").SetIsBrowsable(true);
+                GetProperty("SQLSeparator").SetIsBrowsable(true);
                 GetProperty("Enabled").SetIsBrowsable(true);
                 GetProperty("IgnoreError").SetIsBrowsable(true);
                 GetProperty("Retries").SetIsBrowsable(true);
@@ -477,10 +478,19 @@ namespace Seal.Model
         public string SQL { get; set; }
 
         /// <summary>
+        /// Separator used in the SQL Statement to split the script in several sub-scripts and executions (e.g. GO or ;). The SQL statement must contain the separator plus a carriage retrun line feed to be detected.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("SQL separator"), Description("Separator used in the SQL Statement to split the script in several sub-scripts (e.g. GO or ;). The SQL statement must contain the separator plus a line feed to be detected."), Id(6, 1)]
+        [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+#endif
+        public string SQLSeparator { get; set; }
+
+        /// <summary>
         /// Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string Script { get; set; }
@@ -733,18 +743,37 @@ namespace Seal.Model
                 tries--;
             }
         }
+        /// <summary>
+        /// List of SQL statements to execute
+        /// </summary>
+        [XmlIgnore]
+        public List<string> SQLStatements 
+        {
+            get
+            {
+                var result = new List<string>();
+                string finalSql = RazorHelper.CompileExecute(SQL, this);
+                if (!string.IsNullOrEmpty(SQLSeparator)) result = finalSql.Replace("\r\n","\n").Split(SQLSeparator + "\n").ToList();
+                else result.Add(finalSql);
+                return result;
+            }
+        }
 
         public void ExecuteSQL()
         {
             if (!string.IsNullOrEmpty(SQL))
             {
                 _command = GetDbCommand(Connection);
-                object sqlResult = null;
                 try
                 {
-                    string finalSql = RazorHelper.CompileExecute(SQL, this);
-                    _command.CommandText = finalSql;
-                    sqlResult = _command.ExecuteScalar();
+                    foreach( var sql in SQLStatements)
+                    {
+                        if (!string.IsNullOrWhiteSpace(sql))
+                        {
+                            _command.CommandText = sql;
+                            _command.ExecuteScalar();
+                        }
+                    }
                 }
                 finally
                 {

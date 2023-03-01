@@ -233,8 +233,11 @@ namespace Seal.Forms
                 else if (Instance is ReportTask)
                 {
                     ReportTask task = Instance as ReportTask;
-                    if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", task, _compilationErrors);
-                    error = task.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, task), null, null, false);
+                    foreach(var sql in task.SQLStatements)
+                    {
+                        error = task.Source.CheckSQL(RazorHelper.CompileExecute(sql, task), null, null, false);
+                        if (!string.IsNullOrEmpty(error)) break;
+                    }
                 }
             }
             catch (Exception ex)

@@ -702,7 +702,7 @@
           <MetaColumn>
             <GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID>
             <Name>Products.CategoryID</Name>
-            <Type>Text</Type>
+            <Type>Numeric</Type>
             <Category>Products</Category>
             <Tag>Master</Tag>
             <DisplayName>Category</DisplayName>

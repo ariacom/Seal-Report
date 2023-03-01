@@ -195,7 +195,7 @@ namespace Seal.Forms
                     else if (SelectedEntity is ReportTask)
                     {
                         if (key == Keys.F7) EditProperty("Script");
-                        if (key == Keys.F8) EditProperty("SQL Statement");
+                        if (key == Keys.F8) EditProperty("SQL statement");
                     }
                     else if (SelectedEntity is ReportModel)
                     {

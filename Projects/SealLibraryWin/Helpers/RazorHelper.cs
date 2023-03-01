@@ -243,6 +243,15 @@ namespace Seal.Helpers
                 report = ob.GetReport();
                 configuration = (report == null ? Repository.Instance.Configuration : report.Repository.Configuration);
             }
+            else if (model is SecurityUser)
+            {
+                var ob = (SecurityUser)model;
+                configuration = (ob.Security == null ? Repository.Instance.Configuration : ob.Security.Repository.Configuration);
+            }
+            else
+            {
+                configuration = Repository.Instance.Configuration;
+            }
 
             if (!string.IsNullOrEmpty(header)) result += "\r\n" + header;
 
