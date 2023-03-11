@@ -79,7 +79,10 @@
                 object item;
                 lock (items) {
                     item = items.FirstOrDefault();
-                    if (item != null) items.Remove(item);
+                    if (item != null) {
+                        items.Remove(item);
+                        task.LogMessage($""---------------------------------------------- {items.Count} Items left."");
+                    }
                 }
                 if (report.Cancel || item == null) break;
 

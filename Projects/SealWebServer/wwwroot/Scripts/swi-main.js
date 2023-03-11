@@ -718,7 +718,7 @@ var SWIMain = /** @class */ (function () {
             $tr = $("<tr>");
             $tableBody.append($tr);
             if (_main._canEdit)
-                $tr.append($("<td class='hidden-xs'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
+                $tr.append($("<td class='hidden-xs' style='padding:8px'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
             $tr.append($("<td>").append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isreport).text(file.name)));
             var $td = $("<td>").css("text-align", "center").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
             $tr.append($td);

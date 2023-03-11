@@ -484,6 +484,9 @@ namespace Seal.Model
             }
         }
 
+
+        bool _initScriptsExecuted = false;
+
         /// <summary>
         /// Procedure executed before any execution: set default parameters values and executes init scripts.
         /// </summary>
@@ -542,6 +545,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
+                Helper.WriteLogException("InitForExecution, report path", ex);
                 Cancel = true;
                 if (string.IsNullOrEmpty(fileFolder) && OutputToExecute != null && !string.IsNullOrEmpty(OutputToExecute.FolderPath)) fileFolder = OutputToExecute.FolderPath;
                 ExecutionErrors += string.Format("Error initializing report Path, check your report execution or output Path '{0}'\r\n{1}\r\n", Path.Combine(fileFolder, fileName), ex.Message);
@@ -549,57 +553,63 @@ namespace Seal.Model
             }
 
             //Init scripts
-
-            //Load converter assembly
-            if (ExecutionView != null)
+            if (!_initScriptsExecuted)
             {
-                var converter = ExecutionView.PdfConverter;
-            }
-
-            //First config
-            if (!string.IsNullOrEmpty(Repository.Configuration.InitScript))
-            {
-                try
+                //Load converter assembly
+                if (ExecutionView != null)
                 {
-                    RazorHelper.CompileExecute(Repository.Configuration.InitScript, this);
+                    var converter = ExecutionView.PdfConverter;
                 }
-                catch (Exception ex2)
-                {
-                    ExecutionErrors += string.Format("Error executing configuration init script:\r\n{0}\r\n", ex2.Message);
-                    ExecutionErrorStackTrace = ex2.StackTrace;
-                }
-            }
 
-            //Then source
-            foreach (var source in Sources.Where(i => !string.IsNullOrEmpty(i.InitScript)))
-            {
-                if (Models.Exists(i => i.SourceGUID == source.GUID))
+                //First config
+                if (!string.IsNullOrEmpty(Repository.Configuration.InitScript))
                 {
                     try
                     {
-                        RazorHelper.CompileExecute(source.InitScript, source);
+                        RazorHelper.CompileExecute(Repository.Configuration.InitScript, this);
                     }
                     catch (Exception ex2)
                     {
-                        ExecutionErrors += string.Format("Error executing source init script for '{0}'\r\n{1}\r\n", source.Name, ex2.Message);
+                        Helper.WriteLogException("InitForExecution,configuration init script", ex2);
+                        ExecutionErrors += string.Format("Error executing configuration init script:\r\n{0}\r\n", ex2.Message);
                         ExecutionErrorStackTrace = ex2.StackTrace;
                     }
                 }
-            }
 
-            //Finally report
-            if (!string.IsNullOrEmpty(InitScript))
-            {
-                try
+                //Then source
+                foreach (var source in Sources.Where(i => !string.IsNullOrEmpty(i.InitScript)))
                 {
-                    RazorHelper.CompileExecute(InitScript, this);
+                    if (Models.Exists(i => i.SourceGUID == source.GUID))
+                    {
+                        try
+                        {
+                            RazorHelper.CompileExecute(source.InitScript, source);
+                        }
+                        catch (Exception ex2)
+                        {
+                            Helper.WriteLogException("InitForExecution,source init script", ex2);
+                            ExecutionErrors += string.Format("Error executing source init script for '{0}'\r\n{1}\r\n", source.Name, ex2.Message);
+                            ExecutionErrorStackTrace = ex2.StackTrace;
+                        }
+                    }
                 }
-                catch (Exception ex2)
+
+                //Finally report
+                if (!string.IsNullOrEmpty(InitScript))
                 {
-                    Cancel = true;
-                    ExecutionErrors += string.Format("Error executing report init script:\r\n{0}\r\n", ex2.Message);
-                    ExecutionErrorStackTrace = ex2.StackTrace;
+                    try
+                    {
+                        RazorHelper.CompileExecute(InitScript, this);
+                    }
+                    catch (Exception ex2)
+                    {
+                        Helper.WriteLogException("InitForExecution,report init script", ex2);
+                        Cancel = true;
+                        ExecutionErrors += string.Format("Error executing report init script:\r\n{0}\r\n", ex2.Message);
+                        ExecutionErrorStackTrace = ex2.StackTrace;
+                    }
                 }
+                _initScriptsExecuted = true;
             }
 
             //Init enum values

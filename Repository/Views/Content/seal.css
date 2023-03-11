@@ -116,6 +116,7 @@ body {
     font-weight: bold;
 }
 
+
 /* Cells values */
 .cell-text {
 }
@@ -126,18 +127,21 @@ body {
 
 .cell-datetime {
     color: darkgreen;
+	text-align: right;
 }
 
 .cell-numeric {
     color: darkblue;
+	text-align: right;
 }
 
 .cell-numeric-positive {
     color: darkblue;
+	text-align: right;
 }
 
 .cell-numeric-negative {
     color: red;
+	text-align: right;
 }
-
 

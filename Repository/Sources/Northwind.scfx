@@ -193,7 +193,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Address</DisplayName>
-            <DisplayOrder>8</DisplayOrder>
+            <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -217,7 +217,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>City</DisplayName>
-            <DisplayOrder>9</DisplayOrder>
+            <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <DrillChildren>
@@ -231,7 +231,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Country</DisplayName>
-            <DisplayOrder>12</DisplayOrder>
+            <DisplayOrder>13</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <EnumGUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</EnumGUID>
@@ -246,7 +246,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Extension</DisplayName>
-            <DisplayOrder>14</DisplayOrder>
+            <DisplayOrder>15</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -281,7 +281,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Hire Date</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
+            <DisplayOrder>8</DisplayOrder>
             <CssClass>cell-datetime</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
@@ -294,7 +294,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Home Phone</DisplayName>
-            <DisplayOrder>13</DisplayOrder>
+            <DisplayOrder>14</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -316,7 +316,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Postal Code</DisplayName>
-            <DisplayOrder>11</DisplayOrder>
+            <DisplayOrder>12</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -327,7 +327,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Region</DisplayName>
-            <DisplayOrder>10</DisplayOrder>
+            <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -339,7 +339,7 @@
             <Tag>Master</Tag>
             <DisplayName>Reports To</DisplayName>
             <DisplayOrder>17</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass />
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -373,7 +373,7 @@
             <Category>Employees</Category>
             <Tag>Master</Tag>
             <DisplayName>Employee ID</DisplayName>
-            <CssClass>text-primary</CssClass>
+            <CssClass />
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -405,7 +405,7 @@
             <Tag>Master</Tag>
             <DisplayName>Freight</DisplayName>
             <DisplayOrder>6</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -430,7 +430,7 @@
             <Category>Orders</Category>
             <Tag>Master</Tag>
             <DisplayName>Order ID</DisplayName>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -555,7 +555,7 @@
             <Tag>Master</Tag>
             <DisplayName>Ship Via</DisplayName>
             <DisplayOrder>5</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass />
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -655,7 +655,7 @@
             <Tag>Master</Tag>
             <DisplayName>Reorder Level</DisplayName>
             <DisplayOrder>8</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -668,7 +668,7 @@
             <Tag>Master</Tag>
             <DisplayName>Unit Price</DisplayName>
             <DisplayOrder>5</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -681,7 +681,7 @@
             <Tag>Master</Tag>
             <DisplayName>Units In Stock</DisplayName>
             <DisplayOrder>6</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -694,7 +694,7 @@
             <Tag>Master</Tag>
             <DisplayName>Units On Order</DisplayName>
             <DisplayOrder>7</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -721,7 +721,7 @@
             <Category>Products</Category>
             <Tag>Master</Tag>
             <DisplayName>Product ID</DisplayName>
-            <CssClass>text-primary</CssClass>
+            <CssClass />
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -762,7 +762,7 @@
             <Category>Shippers</Category>
             <Tag>Master</Tag>
             <DisplayName>Shipper ID</DisplayName>
-            <CssClass>text-primary</CssClass>
+            <CssClass />
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -921,7 +921,7 @@
             <Category>Suppliers</Category>
             <Tag>Master</Tag>
             <DisplayName>Supplier ID</DisplayName>
-            <CssClass>text-primary</CssClass>
+            <CssClass />
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -941,7 +941,7 @@
             <Tag>Master</Tag>
             <DisplayName>Discount Rate</DisplayName>
             <DisplayOrder>3</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric2</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N2</Format>
@@ -954,7 +954,7 @@
             <Tag>Master</Tag>
             <DisplayName>Quantity</DisplayName>
             <DisplayOrder>2</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -966,7 +966,7 @@
             <Category>Order Details</Category>
             <Tag>Master</Tag>
             <DisplayName>Unit Price</DisplayName>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric2</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N2</Format>
@@ -979,7 +979,7 @@
             <Tag>Master</Tag>
             <DisplayName>Amount</DisplayName>
             <DisplayOrder>4</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -992,7 +992,7 @@
             <Tag>Master</Tag>
             <DisplayName>Discount</DisplayName>
             <DisplayOrder>5</DisplayOrder>
-            <CssClass>text-primary</CssClass>
+            <CssClass>cell-numeric</CssClass>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>

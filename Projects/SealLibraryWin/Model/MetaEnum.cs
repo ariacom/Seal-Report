@@ -526,6 +526,18 @@ namespace Seal.Model
 
         #endregion
 
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag;
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag2;
+
 
     }
 }

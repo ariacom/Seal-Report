@@ -35,7 +35,7 @@ namespace Seal.Forms
                 choices.Add("text-danger");
                 choices.Add("text-info text-center");
                 choices.Add("text-danger lead");
-                choices.Add("text-success text-left");
+                choices.Add("text-success text-right");
                 choices.Add("text-warning h2");
                 choices.Add("text-justify");
                 choices.Add("text-primary small");

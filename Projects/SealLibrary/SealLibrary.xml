@@ -797,6 +797,16 @@
             Last error message
             </summary>
         </member>
+        <member name="F:Seal.Model.MetaEnum.Tag">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.MetaEnum.Tag2">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
         <member name="T:Seal.Model.MetaEV">
             <summary>
             A MetaEV defines a value of an enumerated list

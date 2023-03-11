@@ -716,6 +716,7 @@ namespace Seal.Model
                         LogMessage("Ending task '{0}'", Name);
                         Progression = 100; //100%
                     }
+                    break;
                 }
                 catch (Exception ex)
                 {
