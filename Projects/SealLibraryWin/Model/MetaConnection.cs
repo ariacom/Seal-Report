@@ -355,7 +355,7 @@ namespace Seal.Model
                     {
                         try
                         {
-                            var command = DbConnection.CreateCommand();
+                            var command = result.CreateCommand();
                             command.CommandText = "alter session set nls_date_format='yyyy-mm-dd hh24:mi:ss'";
                             command.ExecuteNonQuery();
                         }
