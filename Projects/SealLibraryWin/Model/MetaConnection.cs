@@ -327,6 +327,9 @@ namespace Seal.Model
         public bool IsEditable = true;
 
 
+        /// <summary>
+        /// Result connection set by the ConnectionScript if any
+        /// </summary>
         [XmlIgnore]
         public DbConnection DbConnection;
 
@@ -337,6 +340,7 @@ namespace Seal.Model
         {
             try
             {
+                DbConnection result = null;
                 lock (this) //Protect several connections at the same time
                 {
                     if (!string.IsNullOrEmpty(ConnectionScript))
@@ -345,8 +349,8 @@ namespace Seal.Model
                         return DbConnection;
                     }
 
-                    DbConnection = Helper.DbConnectionFromConnectionString(ConnectionType, FullConnectionString); ;
-                    DbConnection.Open();
+                    result = Helper.DbConnectionFromConnectionString(ConnectionType, FullConnectionString); ;
+                    result.Open();
                     if (DatabaseType == DatabaseType.Oracle)
                     {
                         try
@@ -362,14 +366,13 @@ namespace Seal.Model
                     }
                 }
 
-                return DbConnection;
+                return result;
             }
             catch (Exception ex)
             {
                 throw new Exception(string.Format("Error opening database connection:\r\n{0}", ex.Message));
             }
         }
-
 
         /// <summary>
         /// Check the current connection

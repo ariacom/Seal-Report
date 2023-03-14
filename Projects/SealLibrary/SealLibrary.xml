@@ -575,6 +575,11 @@
             True if the connection is editable
             </summary>
         </member>
+        <member name="F:Seal.Model.MetaConnection.DbConnection">
+            <summary>
+            Result connection set by the ConnectionScript if any
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaConnection.GetOpenConnection">
             <summary>
             Returns an open DbConnection object
