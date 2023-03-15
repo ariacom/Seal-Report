@@ -2274,6 +2274,11 @@
             After execution, indicates if the report has validation errors
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.InitScriptsExecutionMessages">
+             <summary>
+            Execution messages got after the init scripts executions
+             </summary>
+        </member>
         <member name="F:Seal.Model.Report.ExecutionMessages">
              <summary>
             Execution messages after execution
