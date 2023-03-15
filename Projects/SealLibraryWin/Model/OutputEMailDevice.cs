@@ -154,7 +154,7 @@ namespace Seal.Model
                     Error = "Error during password encryption:" + ex.Message;
                     Password = value;
                     TypeDescriptor.Refresh(this);
-                }                 
+                }
             }
         }
 
@@ -401,7 +401,7 @@ namespace Seal.Model
         /// <summary>
         /// Send an Email either through SMTP or SendGrid
         /// </summary>
-        public void SendEmail(string sender, string to, string replyTo, string cc, string bcc, string subject, bool isHtmlBody, string body, string attachPath, string attachName) 
+        public void SendEmail(string sender, string to, string replyTo, string cc, string bcc, string subject, bool isHtmlBody, string body, string attachPath, string attachName)
         {
             if (string.IsNullOrEmpty(sender)) sender = SenderEmail;
             if (string.IsNullOrEmpty(replyTo)) replyTo = sender;
@@ -410,7 +410,7 @@ namespace Seal.Model
             {
                 var sendGridClient = new SendGridClient(ClearSendGridKey);
 
-                    var msg = new SendGridMessage()
+                var msg = new SendGridMessage()
                 {
                     From = new EmailAddress(sender),
                     Subject = subject,
@@ -492,7 +492,7 @@ namespace Seal.Model
             {
                 HandleZipOptions(report);
                 attachPath = report.ResultFilePath;
-                attachName = Path.GetFileName(attachPath);  
+                attachName = Path.GetFileName(attachPath);
                 if (output.Format == ReportFormat.html || output.Format == ReportFormat.print)
                 {
                     //Copy the file to avoid a lock
@@ -555,7 +555,6 @@ namespace Seal.Model
                     msg.AddTo(new EmailAddress(TestEmailTo));
                     var response = sendGridClient.SendEmailAsync(msg).Result;
                     if (!response.IsSuccessStatusCode) throw new Exception($"Error sending Email through SendGrid.\r\n{response.Body.ReadAsStringAsync().Result}");
-
                 }
                 else
                 {

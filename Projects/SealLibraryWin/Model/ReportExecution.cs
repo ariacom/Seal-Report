@@ -222,7 +222,7 @@ namespace Seal.Model
         /// </summary>
         public void Execute()
         {
-            Report.ExecutionMessages = "";
+            Report.ExecutionMessages = Report.InitScriptsExecutionMessages;
             Report.ExecutionErrors = "";
             Report.ExecutionErrorStackTrace = "";
             Report.Status = ReportStatus.NotExecuted;

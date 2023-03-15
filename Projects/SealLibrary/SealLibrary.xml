@@ -147,7 +147,7 @@
         </member>
         <member name="M:Seal.Helpers.TaskHelper.LoadTableFromExcel(System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)">
             <summary>
-            Load a table from an Excel tab into the database. A start row, and/or colum can be specified. An end column can be specified. 
+            Load a table from an Excel tab into the database. A start row, and/or column can be specified. An end column can be specified. 
             </summary>
         </member>
         <member name="M:Seal.Helpers.TaskHelper.LoadTablesFromExcel(System.String,System.String,System.String,System.Boolean)">

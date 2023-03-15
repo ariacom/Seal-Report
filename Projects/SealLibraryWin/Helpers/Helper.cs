@@ -618,7 +618,7 @@ namespace Seal.Helpers
         public static void WriteLogException(string context, Exception ex)
         {
             var msg = $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}";
-            var fullMessage = string.Format("**********\r\n{0} Exception\r\n{2}\r\n\r\n", DateTime.Now, msg);
+            var fullMessage = string.Format("**********\r\n{0} Exception\r\n{1}\r\n\r\n", DateTime.Now, msg);
             WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
             if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
             Console.WriteLine(ex.Message);

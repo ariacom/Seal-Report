@@ -610,6 +610,7 @@ namespace Seal.Model
                     }
                 }
                 _initScriptsExecuted = true;
+                InitScriptsExecutionMessages = ExecutionMessages;
             }
 
             //Init enum values
@@ -646,6 +647,12 @@ namespace Seal.Model
         {
             get { return AllRestrictions.Exists(i => !string.IsNullOrEmpty(i.ValidationErrors)); }
         }
+
+        /// <summary>
+        ///Execution messages got after the init scripts executions
+        /// </summary>
+        [XmlIgnore]
+        public string InitScriptsExecutionMessages = "";
 
         /// <summary>
         ///Execution messages after execution

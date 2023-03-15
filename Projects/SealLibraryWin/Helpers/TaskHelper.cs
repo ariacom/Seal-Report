@@ -154,7 +154,7 @@ namespace Seal.Helpers
 
 
         /// <summary>
-        /// Load a table from an Excel tab into the database. A start row, and/or colum can be specified. An end column can be specified. 
+        /// Load a table from an Excel tab into the database. A start row, and/or column can be specified. An end column can be specified. 
         /// </summary>
         public bool LoadTableFromExcel(string loadFolder, string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0, int endRowIndex = 0, bool hasHeader = true, bool forceLoad = false)
         {

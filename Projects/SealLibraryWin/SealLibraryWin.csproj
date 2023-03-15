@@ -7,9 +7,9 @@
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibraryWin</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>6.9.2.0</Version>
-		<FileVersion>6.9.2.0</FileVersion>
-		<AssemblyVersion>6.9.2.0</AssemblyVersion>
+		<Version>6.9.3.0</Version>
+		<FileVersion>6.9.3.0</FileVersion>
+		<AssemblyVersion>6.9.3.0</AssemblyVersion>
 		<Description>Seal Report Library (Windows)</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
