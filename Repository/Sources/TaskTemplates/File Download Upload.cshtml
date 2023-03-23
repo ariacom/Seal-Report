@@ -76,13 +76,19 @@
                 client.Connect();
             }
             
-            if (download) {            
-                client.DownloadFile(localFile, remoteFile);
+            try {
+                FtpStatus status;
+                if (download) {            
+                    status = client.DownloadFile(localFile, remoteFile);
+                }
+                else {
+                    status = client.UploadFile(localFile, remoteFile);
+                }
+                if (status != FtpStatus.Success) throw new Exception($""Unable to transfer file '{localFile}','{remoteFile}'"");
             }
-            else {
-                client.UploadFile(localFile, remoteFile);
+            finally {
+                client.Disconnect();
             }
-            client.Disconnect();
         }
     }
     else if (protocol == ""SFTP"")

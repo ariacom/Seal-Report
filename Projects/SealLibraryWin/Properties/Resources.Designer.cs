@@ -139,7 +139,15 @@ namespace Seal.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
-        
+        internal static System.Drawing.Icon reportDesigner2
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("reportDesigner2", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>

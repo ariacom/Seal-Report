@@ -77,7 +77,7 @@
             
             while (true) {
                 object item;
-                lock (items) {
+                lock (task) {
                     item = items.FirstOrDefault();
                     if (item != null) {
                         items.Remove(item);

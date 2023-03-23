@@ -156,6 +156,9 @@ namespace Seal.Forms
 
         void setCurrentExecution()
         {
+            _iconExecuting = true;
+            Icon = Properties.Resources.reportDesigner;
+            if (Owner != null) Owner.Icon = Icon;
             string executionGUID = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
             if (_navigation.Navigations.ContainsKey(executionGUID))
             {
@@ -197,6 +200,7 @@ namespace Seal.Forms
             }
         }
 
+        bool _iconExecuting = true;
         private bool processAction(string action)
         {
             bool cancelNavigation = false;
@@ -206,7 +210,7 @@ namespace Seal.Forms
                 {
                     case ReportExecution.ActionExecuteReport:
                         setCurrentExecution();
-                       cancelNavigation = true;
+                        cancelNavigation = true;
                         _reportDone = false;
                         if (webBrowser.Document != null)
                         {
@@ -218,6 +222,11 @@ namespace Seal.Forms
                         break;
 
                     case ReportExecution.ActionRefreshReport:
+                        Icon = (_iconExecuting ? Properties.Resources.reportDesigner2 : Properties.Resources.reportDesigner);
+                        _iconExecuting = !_iconExecuting;
+
+                        if (Owner != null) Owner.Icon = Icon;
+
                         if (_report.IsExecuting)
                         {
                             cancelNavigation = true;
@@ -243,6 +252,8 @@ namespace Seal.Forms
                         break;
 
                     case ReportExecution.ActionCancelReport:
+                        Icon = Properties.Resources.reportDesigner;
+                        if (Owner != null) Owner.Icon = Icon;
                         _execution.Report.LogMessage(_report.Translate("Cancelling report..."));
                         cancelNavigation = true;
                         _report.Cancel = true;
@@ -314,6 +325,8 @@ namespace Seal.Forms
                         break;
 
                     case ReportExecution.ActionNavigate:
+                        Icon = Properties.Resources.reportDesigner;
+                        if (Owner != null) Owner.Icon = Icon;
                         string nav = webBrowser.Document.All[ReportExecution.HtmlId_navigation_id].GetAttribute("value");
                         var parameters = HttpUtility.ParseQueryString(webBrowser.Document.All[ReportExecution.HtmlId_navigation_parameters].GetAttribute("value"));
 
@@ -351,7 +364,7 @@ namespace Seal.Forms
                         break;
 
                     case ReportExecution.ActionGetNavigationLinks:
-                        cancelNavigation = true;                       
+                        cancelNavigation = true;
                         HtmlElement navMenu = webBrowser.Document.All[ReportExecution.HtmlId_navigation_menu];
                         if (navMenu != null && _execution.RootReport != null) navMenu.SetAttribute("innerHTML", _navigation.GetNavigationLinksHTML(_execution.RootReport));
                         break;
@@ -395,6 +408,8 @@ namespace Seal.Forms
 
                     case ReportExecution.ActionExecuteFromTrigger:
                         {
+                            Icon = Properties.Resources.reportDesigner;
+                            if (Owner != null) Owner.Icon = Icon;
                             setCurrentExecution();
                             cancelNavigation = true;
                             lock (_execution)
@@ -449,6 +464,8 @@ namespace Seal.Forms
 
         private void ReportViewerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Icon = Properties.Resources.reportDesigner;
+            if (Owner != null) Owner.Icon = Icon;
 #if DEBUG
             if (_report != null) _report.Repository.FlushTranslationUsage();
 #endif

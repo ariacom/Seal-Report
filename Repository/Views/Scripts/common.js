@@ -4,6 +4,7 @@ var _refreshTimer = null;
 var _prevScrollpos = window.pageYOffset;
 var _inExecution = false;
 var _popupNavMenuTimeout = -1;
+var _iconExecuting = true;
 
 //Restrictions
 function restrictionSelectChange(source) {
@@ -411,6 +412,8 @@ function executeTimer() {
                         }
                     }
                     else if (data.progression_message != null) {
+                        $("#favicon").attr("href", _urlPrefix + "Images/faviconWebServer" + (_iconExecuting ? "2" : "") + ".ico");
+                        _iconExecuting = !_iconExecuting;
                         setProgressBarMessage("#progress_bar", data.progression, data.progression_message, "progress-bar-success");
                         setProgressBarMessage("#progress_bar_tasks", data.progression_tasks, data.progression_tasks_message, "progress-bar-primary");
                         setProgressBarMessage("#progress_bar_models", data.progression_models, data.progression_models_message, "progress-bar-info");
