@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
@@ -63,7 +63,7 @@
 		<PackageReference Include="Newtonsoft.Json">
 			<Version>13.0.1</Version>
 		</PackageReference>
-		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.70" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.90" />
 		<PackageReference Include="ScintillaNET.Core" Version="3.6.51" />
 		<PackageReference Include="SendGrid" Version="9.28.1" />
 		<PackageReference Include="SharpZipLib">
