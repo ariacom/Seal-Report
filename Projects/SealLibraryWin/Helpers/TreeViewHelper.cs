@@ -49,7 +49,7 @@ namespace Seal.Helpers
                         categoryNode = getCategoryTreeNode(nodes, category);
                         if (categoryNode == null)
                         {
-                            categoryNode = new TreeNode(repository.TranslateCategory(category, category)) { Tag = new CategoryFolder() { Name = category, Path = path }, ImageIndex = 2, SelectedImageIndex = 2 };
+                            categoryNode = new TreeNode(repository.TranslateCategory(path, category)) { Tag = new CategoryFolder() { Name = category, Path = path }, ImageIndex = 2, SelectedImageIndex = 2 };
                             nodes.Add(categoryNode);
                         }
                         nodes = categoryNode.Nodes;

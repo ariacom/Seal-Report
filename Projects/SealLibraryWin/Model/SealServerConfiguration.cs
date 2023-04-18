@@ -75,6 +75,7 @@ namespace Seal.Model
                 GetProperty("CommonScripts").SetIsBrowsable(!ForPublication);
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
+                GetProperty("RepositoryTranslationsScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
                 GetProperty("HostForPersonalFolder").SetIsBrowsable(!ForPublication);
                 GetProperty("FileReplacePatterns").SetIsBrowsable(!ForPublication);
@@ -352,6 +353,16 @@ namespace Seal.Model
 #endif
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
         public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
+
+        /// <summary>
+        /// If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source.
+        /// </summary>
+#if WINDOWS
+        [Category("Scripts"), DisplayName("\tRepository Translations Script"), Description("If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source."), Id(8, 4)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string RepositoryTranslationsScript { get; set; } = null;
+
 
         /// <summary>
         /// Replace the @Include by the common script in the current script

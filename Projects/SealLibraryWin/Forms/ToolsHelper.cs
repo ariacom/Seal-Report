@@ -509,6 +509,33 @@ namespace Seal.Forms
                     }
                 }
 
+                log.Log("Adding elements names in context: Category\r\n");
+                var categories = Source.MetaData.AllColumns.Select(i => i.Category).Distinct().ToList();
+                var categoriesDone = new List<string>();
+                foreach (var category in categories)
+                {
+                    var context = "Category";
+                    var instance = category;
+                    var reference = Path.GetFileName(category);
+                    if (!categoriesDone.Contains(instance) && Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                    {
+                        translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                    }
+                    categoriesDone.Add(category);
+                    //Add subfolders if any
+                    instance = Path.GetDirectoryName(instance).Replace("\\","/");
+                    while (!string.IsNullOrEmpty(instance))
+                    {
+                        reference = Path.GetFileName(instance);
+                        if (!categoriesDone.Contains(instance) && Repository.Instance.FindRepositoryTranslation(context, instance, reference) == null)
+                        {
+                            translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(reference), extraSeparators, context);
+                        }
+                        categoriesDone.Add(instance);
+                        instance = Path.GetDirectoryName(instance).Replace("\\", "/"); ;
+                    }
+                }
+
                 log.Log("Adding enum messages in context: EnumMessage\r\n");
                 foreach (var enumList in Source.MetaData.Enums.Where(i => i.Translate))
                 {

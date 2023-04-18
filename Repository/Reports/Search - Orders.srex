@@ -39,6 +39,7 @@
           <GUID>36208fce-87bc-4b0b-9059-bb6d0998c02e</GUID>
           <Name>Orders.OrderDate</Name>
           <Category>Master</Category>
+          <DisplayName />
           <Format>d</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
@@ -49,6 +50,7 @@
           <GUID>5ec53375-b1ef-4ed7-889b-9903f2d9591e</GUID>
           <Name>Customers.CompanyName</Name>
           <Category>Master</Category>
+          <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -157,14 +159,12 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>d2abc975-9c03-46f5-9d06-0c636bad1366</GUID>

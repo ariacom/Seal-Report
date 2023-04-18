@@ -995,10 +995,24 @@ namespace Seal.Model
                         var excelPath = Path.ChangeExtension(RepositoryTranslationsPath, "xlsx");
                         if (File.Exists(excelPath)) RepositoryTranslation.InitFromExcel(_repositoryTranslations, excelPath, true);
                         else RepositoryTranslation.InitFromCSV(_repositoryTranslations, RepositoryTranslationsPath, true);
+
+                        //Execute script if any
+                        if (!string.IsNullOrEmpty(Configuration.RepositoryTranslationsScript))
+                        {
+                            RazorHelper.CompileExecute(Configuration.RepositoryTranslationsScript, this);
+                        }
                     }
                 }
                 return _repositoryTranslations;
             }
+        }
+
+        /// <summary>
+        /// Load repository translations from a data table having columns: Context,Instance,Reference,en,fr,etc.
+        /// </summary>
+        public void LoadRepositoryTranslationsFromDataTable(DataTable dt)
+        {
+            RepositoryTranslation.InitFromDataTable(RepositoryTranslations, dt, true);        
         }
 
         /// <summary>
@@ -1021,7 +1035,7 @@ namespace Seal.Model
             {
                 var key = context + "\r" + reference + "\r" + instance;
                 result = RepositoryTranslations.ContainsKey(key) ? RepositoryTranslations[key] : null;
-                if (result == null && context.StartsWith("Report") || context == "FileName" || context == "FolderName")
+                if (result == null)
                 {
                     //Wild char management
                     if (_repositoryWildCharTranslations == null)
@@ -1036,6 +1050,7 @@ namespace Seal.Model
                     foreach (var t in _repositoryWildCharTranslations.Values.Where(i => i.Context == context && i.Reference == reference))
                     {
                         if (
+                            t.Instance == "*" ||    
                             (t.Instance.StartsWith('*') && t.Instance.EndsWith('*') && instance.Contains(t.Instance.Substring(1, t.Instance.Length - 2))) ||
                             (t.Instance.StartsWith('*') && instance.EndsWith(t.Instance.Substring(1, t.Instance.Length - 1))) ||
                             (t.Instance.EndsWith('*') && instance.StartsWith(t.Instance.Substring(0, t.Instance.Length - 1)))

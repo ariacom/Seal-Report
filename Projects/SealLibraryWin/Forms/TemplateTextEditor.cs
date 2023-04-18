@@ -618,6 +618,20 @@ namespace Seal.Forms
 }
 ";
 
+        const string razorConfigurationRepositoryTranslationsScriptTemplate = @"@{
+    Repository repository = Model;
+
+    //take the connection from a given source
+    var source = repository.Sources.FirstOrDefault(i => i.Name.StartsWith(""Audit""));  
+    if (source != null) {
+       var helper = new TaskDatabaseHelper();
+       //execute a Select to load the repository translations
+       var sql = ""select 'Element' Context, 'Orders/Shipping.Ship City' Instance, 'Ship City' Reference, 'Ship City2' en, 'Ville de livraison2' fr union select 'Element','*','Order Year', 'Order Year2','Année de la commande2'""; 
+       var dt = helper.LoadDataTable(source.Connection, sql);
+       repository.LoadRepositoryTranslationsFromDataTable(dt);
+    }
+}
+";
         const string foldersScriptTemplate = @"@{
     SecurityUser user = Model;
     //Full documentation at https://sealreport.org/Help/Index.html
@@ -1551,7 +1565,7 @@ namespace Seal.Forms
                         frm.SetSamples(samples);
 
 
-                        frm.Text = "Edit the MS SQLServer Connection string";
+                        frm.Text = "Edit the OLE DB Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
                     else if (context.PropertyDescriptor.Name == "MSSqlServerConnectionString")
@@ -1790,6 +1804,13 @@ namespace Seal.Forms
                     {
                         template = razorConfigurationReportCreationScriptTemplate;
                         frm.ObjectForCheckSyntax = report;
+                        frm.Text = "Edit the script executed when a new report is created";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "RepositoryTranslationsScript")
+                    {
+                        template = razorConfigurationRepositoryTranslationsScriptTemplate;
+                        frm.ObjectForCheckSyntax = Repository.Instance;
                         frm.Text = "Edit the script executed when a new report is created";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }

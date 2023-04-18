@@ -21,6 +21,7 @@ _ed.editor.bootstrap.min.js</ScriptFiles>
   <AuditScript />
   <WebSessionInitScript />
   <InitScript />
+  <RepositoryTranslationsScript />
   <KeyValues>
     <KeyValue>
       <Name>Meta Connection Password</Name>
