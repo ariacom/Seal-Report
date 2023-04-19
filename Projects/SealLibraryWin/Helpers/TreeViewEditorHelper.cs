@@ -79,7 +79,7 @@ namespace Seal.Forms
             TreeNode ty = y as TreeNode;
 
             //Category folder bottom
-            if (tx.Tag is CategoryFolder && ty.Tag is CategoryFolder) return (string.Compare(((CategoryFolder)tx.Tag).Path, ((CategoryFolder)ty.Tag).Path));
+            if (tx.Tag is CategoryFolder && ty.Tag is CategoryFolder) return string.Compare(tx.Text, ty.Text); 
             if (tx.Tag is CategoryFolder) return 1;
             if (ty.Tag is CategoryFolder) return -1;
             if (tx.Tag is TableLinkFolder) return 1;

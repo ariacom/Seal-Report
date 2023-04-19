@@ -6356,6 +6356,11 @@
             Translate a Category
             </summary>
         </member>
+        <member name="M:Seal.Model.Repository.TranslateCategoryPath(System.String)">
+            <summary>
+            Translate a full category path
+            </summary>
+        </member>
         <member name="M:Seal.Model.Repository.TranslateDevice(System.String,System.String)">
             <summary>
             Translate a Device
@@ -7641,6 +7646,11 @@
         <member name="P:Seal.Model.SealServerConfiguration.WebScriptFiles">
             <summary>
             Additional JavaScript files to be included in the Web Report Server application. One per line or separated by semi-column.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.AlternateTempDirectory">
+            <summary>
+            If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.SchedulerMode">

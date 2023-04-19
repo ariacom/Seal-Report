@@ -83,6 +83,7 @@ namespace Seal.Model
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("WebCssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication);
+                GetProperty("AlternateTempDirectory").SetIsBrowsable(!ForPublication);
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
                 GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
@@ -241,6 +242,14 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string WebScriptFiles { get; set; } = null;
+
+        /// <summary>
+        /// If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Alternate Temp Directory"), Description("If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder (e.g. '%SEALREPOSITORY%\\Temp')."), Id(20, 1)]
+#endif
+        public string AlternateTempDirectory { get; set; } = null;
 
         SchedulerMode _schedulerMode = SchedulerMode.Windows;
         /// <summary>

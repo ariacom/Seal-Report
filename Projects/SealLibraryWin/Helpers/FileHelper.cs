@@ -16,11 +16,13 @@ namespace Seal.Helpers
 {
     public class FileHelper
     {
+        public static string AlternateTemporaryDirectory = null;
         public static string TempPath
         {
             get
             {
                 //Try local user temp first
+                if (!string.IsNullOrEmpty(AlternateTemporaryDirectory)) return AlternateTemporaryDirectory;
                 var result = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\Temp");
                 if (!Directory.Exists(result)) result = Path.GetTempPath();
                 return result;

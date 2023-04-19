@@ -29,9 +29,10 @@ namespace RazorEngine.Helpers
             string classBaseType,
             string templateFile = null)
         {
-            string systemPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\Temp");
+            string systemPath = !string.IsNullOrEmpty(Engine.AlternateTemporaryDirectory) ? Engine.AlternateTemporaryDirectory : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\Temp");
             if (!Directory.Exists(systemPath)) systemPath = Path.GetTempPath();
             //?Fix to avoid rights issues...  Directory.GetCurrentDirectory();
+
             string path = null;
             if (string.IsNullOrWhiteSpace(templateFile))
             {

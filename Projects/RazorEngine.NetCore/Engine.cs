@@ -18,6 +18,11 @@ namespace RazorEngine
         private static IRazorEngineService _service;
 
         /// <summary>
+        /// Alternate temporary directory for compiling
+        /// </summary>
+        public static string AlternateTemporaryDirectory = null;
+
+        /// <summary>
         /// Quick access to RazorEngine. See <see cref="IRazorEngineService"/>.
         /// </summary>
         public static IRazorEngineService Razor

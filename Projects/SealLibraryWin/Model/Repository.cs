@@ -481,7 +481,7 @@ namespace Seal.Model
                 {
                     try
                     {
-                        if (Path.GetFileName(assembly) != Repository.SealConverterDll && Path.GetFileName(assembly) != Repository.SealConverterWinDll)
+                        if (Path.GetFileName(assembly) != SealConverterDll && Path.GetFileName(assembly) != SealConverterWinDll)
                         {
                             Assembly.LoadFrom(assembly);
                         }
@@ -498,6 +498,15 @@ namespace Seal.Model
                 currentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
 
                 AssembliesLoaded = true;
+            }
+
+            //Alternate temporary directories
+            if (!string.IsNullOrEmpty(Configuration.AlternateTempDirectory))
+            {
+                var tempDir = ReplaceRepositoryKeyword(Configuration.AlternateTempDirectory);
+                if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+                RazorEngine.Engine.AlternateTemporaryDirectory = tempDir;
+                FileHelper.AlternateTemporaryDirectory = tempDir;
             }
         }
 
@@ -1118,6 +1127,21 @@ namespace Seal.Model
         public string TranslateCategory(string instance, string reference)
         {
             return RepositoryTranslate("Category", instance, reference);
+        }
+
+        /// <summary>
+        /// Translate a full category path
+        /// </summary>
+        public string TranslateCategoryPath(string instance)
+        {
+            string result = "", current = "";
+            string[] categories = instance.Split('/');
+            foreach (var category in categories)
+            {
+                current += (!string.IsNullOrEmpty(current) ? "/" : "") +category;
+                result += (!string.IsNullOrEmpty(result) ? "/" : "") + TranslateCategory(current, category);
+            }
+            return result;
         }
 
         /// <summary>

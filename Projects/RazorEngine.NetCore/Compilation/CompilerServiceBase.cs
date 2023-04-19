@@ -102,7 +102,7 @@
                 try
                 {
                     //Try local user temp first
-                    var p = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\Temp");
+                    var p = !string.IsNullOrEmpty(Engine.AlternateTemporaryDirectory) ? Engine.AlternateTemporaryDirectory : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"AppData\Local\Temp");                    
                     if (!Directory.Exists(p)) p = Path.GetTempPath();
                     tempDirectory = Path.Combine(p, "RazorEngine_" + Path.GetRandomFileName());
                     if (!Directory.Exists(tempDirectory))
@@ -125,6 +125,7 @@
             }
             return tempDirectory;
         }
+
 
         /// <summary>
         /// Returns a new temporary directory ready to be used.

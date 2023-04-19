@@ -46,7 +46,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Address</DisplayName>
-            <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -57,7 +56,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>City</DisplayName>
-            <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <DrillChildren>
@@ -71,7 +69,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Customer</DisplayName>
-            <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <DrillChildren>
@@ -94,7 +91,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Customer Contact</DisplayName>
-            <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -105,7 +101,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Contact Title</DisplayName>
-            <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -116,7 +111,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Customer Country</DisplayName>
-            <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <EnumGUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</EnumGUID>
@@ -131,7 +125,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Fax</DisplayName>
-            <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -142,7 +135,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Phone</DisplayName>
-            <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -153,7 +145,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Postal Code</DisplayName>
-            <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>
@@ -164,7 +155,6 @@
             <Category>Customers</Category>
             <Tag>Master</Tag>
             <DisplayName>Region</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           </MetaColumn>

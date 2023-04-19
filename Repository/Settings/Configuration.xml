@@ -16,6 +16,7 @@
 _ed.dataTables.editor.min.js
 _ed.editor.bootstrap.min.js</ScriptFiles>
   <WebScriptFiles />
+  <AlternateTempDirectory />
   <TaskFolderName>Seal Report</TaskFolderName>
   <AuditEnabled>true</AuditEnabled>
   <AuditScript />

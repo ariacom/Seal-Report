@@ -49,13 +49,17 @@ namespace Seal.Helpers
                         categoryNode = getCategoryTreeNode(nodes, category);
                         if (categoryNode == null)
                         {
-                            categoryNode = new TreeNode(repository.TranslateCategory(path, category)) { Tag = new CategoryFolder() { Name = category, Path = path }, ImageIndex = 2, SelectedImageIndex = 2 };
+                            var cat = category;
+                            if (!Repository.IsServerManager) cat = repository.TranslateCategory(path, category);
+                            categoryNode = new TreeNode(cat) { Tag = new CategoryFolder() { Name = category, Path = path }, ImageIndex = 2, SelectedImageIndex = 2 };
                             nodes.Add(categoryNode);
                         }
                         nodes = categoryNode.Nodes;
                     }
 
-                    var tn = new TreeNode(repository.TranslateColumn(column)) { Tag = column, ImageIndex = 7, SelectedImageIndex = 7 };
+                    var col = column.DisplayName;
+                    if (!Repository.IsServerManager) col = repository.TranslateColumn(column);
+                    var tn = new TreeNode(col) { Tag = column, ImageIndex = 7, SelectedImageIndex = 7 };
                     categoryNode.Nodes.Add(tn);
                 }
             }
