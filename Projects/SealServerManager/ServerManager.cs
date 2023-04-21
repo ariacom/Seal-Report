@@ -61,7 +61,19 @@ namespace Seal
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
             PropertyGridHelper.AddResetMenu(mainPropertyGrid);
 
-            sourceHelper = new TreeViewEditorHelper() { entityHandler = this, sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, addFromToolStripMenuItem = addFromToolStripMenuItem, addToolStripMenuItem = addToolStripMenuItem, removeToolStripMenuItem = removeToolStripMenuItem, copyToolStripMenuItem = copyToolStripMenuItem, removeRootToolStripMenuItem = removeRootToolStripMenuItem, treeContextMenuStrip = treeContextMenuStrip, mainTreeView = mainTreeView };
+            sourceHelper = new TreeViewEditorHelper() { 
+                entityHandler = this, 
+                resetDisplayOrderToolStripMenuItem = resetDisplayOrderToolStripMenuItem,
+                sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, 
+                sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, 
+                addFromToolStripMenuItem = addFromToolStripMenuItem, 
+                addToolStripMenuItem = addToolStripMenuItem, 
+                removeToolStripMenuItem = removeToolStripMenuItem, 
+                copyToolStripMenuItem = copyToolStripMenuItem, 
+                removeRootToolStripMenuItem = removeRootToolStripMenuItem, 
+                treeContextMenuStrip = treeContextMenuStrip, 
+                mainTreeView = mainTreeView 
+            };
             toolStripHelper = new ToolStripEditorHelper() { MainToolStrip = mainToolStrip, MainPropertyGrid = mainPropertyGrid, EntityHandler = this, MainTreeView = mainTreeView };
             toolsHelper = new ToolsHelper() { EntityHandler = this };
             toolsHelper.InitHelpers(toolsToolStripMenuItem, false);
@@ -635,6 +647,20 @@ namespace Seal
             }
         }
 
+        private void resetDisplayOrderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                sourceHelper.resetDisplayOrder_Click(sender, e);
+                IsModified = true;
+                mainTreeView.Sort();
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
 
         private void mainPropertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
@@ -740,8 +766,8 @@ namespace Seal
                 }
             }
         }
-        #endregion
 
+        #endregion
 
     }
 }

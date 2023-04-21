@@ -75,7 +75,21 @@ namespace Seal
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
             PropertyGridHelper.AddResetMenu(mainPropertyGrid);
 
-            treeViewHelper = new TreeViewEditorHelper() { entityHandler = this, Report = _report, sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, addFromToolStripMenuItem = addFromToolStripMenuItem, addToolStripMenuItem = addToolStripMenuItem, removeToolStripMenuItem = removeToolStripMenuItem, copyToolStripMenuItem = copyToolStripMenuItem, removeRootToolStripMenuItem = removeRootToolStripMenuItem, treeContextMenuStrip = treeContextMenuStrip, mainTreeView = mainTreeView, ForReport = true };
+            treeViewHelper = new TreeViewEditorHelper() { 
+                entityHandler = this, 
+                Report = _report, 
+                resetDisplayOrderToolStripMenuItem = resetDisplayOrderToolStripMenuItem, 
+                sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, 
+                sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, 
+                addFromToolStripMenuItem = addFromToolStripMenuItem, 
+                addToolStripMenuItem = addToolStripMenuItem, 
+                removeToolStripMenuItem = removeToolStripMenuItem, 
+                copyToolStripMenuItem = copyToolStripMenuItem, 
+                removeRootToolStripMenuItem = removeRootToolStripMenuItem, 
+                treeContextMenuStrip = treeContextMenuStrip, 
+                mainTreeView = mainTreeView, 
+                ForReport = true             
+            };
             mainTreeView.AfterSelect += treeViewHelper.AfterSelect;
 
             toolStripHelper = new ToolStripEditorHelper() { MainToolStrip = mainToolStrip, MainPropertyGrid = mainPropertyGrid, EntityHandler = this, MainTreeView = mainTreeView };
@@ -1294,6 +1308,21 @@ namespace Seal
             }
         }
 
+        private void resetDisplayOrderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                treeViewHelper.resetDisplayOrder_Click(sender, e);
+                IsModified = true;
+                mainTreeView.Sort();
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
         private void convertModel(object sender, EventArgs e)
         {
             var model = selectedEntity as ReportModel;
@@ -1791,6 +1820,7 @@ namespace Seal
         }
 
         TreeNode _lastDragOverNode = null;
+
         private void mainTreeView_DragDrop(object sender, DragEventArgs e)
         {
             _lastDragOverNode = null;

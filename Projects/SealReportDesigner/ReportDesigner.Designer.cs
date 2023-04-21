@@ -76,6 +76,7 @@
             this.mainImageList = new System.Windows.Forms.ImageList(this.components);
             this.mainPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.mainTimer = new System.Windows.Forms.Timer(this.components);
+            this.resetDisplayOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuStrip.SuspendLayout();
             this.treeContextMenuStrip.SuspendLayout();
             this.mainToolStrip.SuspendLayout();
@@ -303,9 +304,10 @@
             this.copyToolStripMenuItem,
             this.removeRootToolStripMenuItem,
             this.sortColumnAlphaOrderToolStripMenuItem,
-            this.sortColumnSQLOrderToolStripMenuItem});
+            this.sortColumnSQLOrderToolStripMenuItem,
+            this.resetDisplayOrderToolStripMenuItem});
             this.treeContextMenuStrip.Name = "treeContextMenuStrip";
-            this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 158);
+            this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 202);
             // 
             // addToolStripMenuItem
             // 
@@ -547,6 +549,13 @@
             this.mainTimer.Interval = 500;
             this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
             // 
+            // resetDisplayOrderToolStripMenuItem
+            // 
+            this.resetDisplayOrderToolStripMenuItem.Name = "resetDisplayOrderToolStripMenuItem";
+            this.resetDisplayOrderToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.resetDisplayOrderToolStripMenuItem.Text = "Reset Display Order";
+            this.resetDisplayOrderToolStripMenuItem.Click += new System.EventHandler(this.resetDisplayOrderToolStripMenuItem_Click);
+            // 
             // ReportDesigner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -626,6 +635,7 @@
         private System.Windows.Forms.ToolStripMenuItem schedulesWithCurrentUserToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortColumnAlphaOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortColumnSQLOrderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetDisplayOrderToolStripMenuItem;
     }
 }
 

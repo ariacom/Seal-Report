@@ -1448,6 +1448,11 @@
             Sort the table columns either by alphanumeric order or by position
             </summary>
         </member>
+        <member name="M:Seal.Model.MetaTable.ResetDisplayOrder">
+            <summary>
+            Reset the Display Order 
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaTable.CheckTable(Seal.Model.MetaColumn)">
             <summary>
             Check the table. If a MetaColumn is specified, only the column is checked.

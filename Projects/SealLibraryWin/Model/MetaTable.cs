@@ -423,7 +423,7 @@ namespace Seal.Model
             set
             {
                 _dynamicColumns = value;
-                UpdateEditorAttributes();  
+                UpdateEditorAttributes();
             }
         }
         public bool ShouldSerializeDynamicColumns() { return _dynamicColumns; }
@@ -900,7 +900,7 @@ namespace Seal.Model
                 Information = "Error got when refreshing dynamic columns.";
             }
             Information = Helper.FormatMessage(Information);
-            UpdateEditorAttributes(); 
+            UpdateEditorAttributes();
         }
 
         /// <summary>
@@ -950,7 +950,22 @@ namespace Seal.Model
                 Information = "Error got when sorting columns.";
             }
             Information = Helper.FormatMessage(Information);
-            UpdateEditorAttributes();  
+            UpdateEditorAttributes();
+        }
+
+        /// <summary>
+        /// Reset the Display Order 
+        /// </summary>
+        public void ResetDisplayOrder()
+        {
+            if (Source == null) return;
+            Information = "";
+            Error = "";
+
+            foreach (var col in Columns) col.DisplayOrder = 1;
+            Information = "Display Order properties have been reset";
+            Information = Helper.FormatMessage(Information);
+            UpdateEditorAttributes();
         }
 
         /// <summary>
@@ -1015,7 +1030,7 @@ namespace Seal.Model
                 Information = "Error got when checking the table.";
             }
             Information = Helper.FormatMessage(Information);
-            UpdateEditorAttributes();  
+            UpdateEditorAttributes();
         }
 
         /// <summary>

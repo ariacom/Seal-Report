@@ -68,6 +68,7 @@
             this.openFolderToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.openTasksToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.openEventsToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.resetDisplayOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuStrip.SuspendLayout();
             this.treeContextMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
@@ -263,13 +264,13 @@
             this.mainTreeView.SelectedImageIndex = 0;
             this.mainTreeView.Size = new System.Drawing.Size(285, 721);
             this.mainTreeView.TabIndex = 1;
+            this.mainTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.mainTreeView_ItemDrag);
             this.mainTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.mainTreeView_AfterSelect);
             this.mainTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseClick);
-            this.mainTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainTreeView_MouseUp);
-            this.mainTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.mainTreeView_ItemDrag);
             this.mainTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragDrop);
             this.mainTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragEnter);
             this.mainTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragOver);
+            this.mainTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainTreeView_MouseUp);
             // 
             // treeContextMenuStrip
             // 
@@ -280,9 +281,10 @@
             this.copyToolStripMenuItem,
             this.removeRootToolStripMenuItem,
             this.sortColumnAlphaOrderToolStripMenuItem,
-            this.sortColumnSQLOrderToolStripMenuItem});
+            this.sortColumnSQLOrderToolStripMenuItem,
+            this.resetDisplayOrderToolStripMenuItem});
             this.treeContextMenuStrip.Name = "treeContextMenuStrip";
-            this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 158);
+            this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 202);
             this.treeContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.treeContextMenuStrip_Opening);
             // 
             // addToolStripMenuItem
@@ -441,6 +443,13 @@
             this.openEventsToolStripButton.ToolTipText = "Run the Event Viewer Microsoft Management Console";
             this.openEventsToolStripButton.Click += new System.EventHandler(this.openTasksToolStripButton_Click);
             // 
+            // resetDisplayOrderToolStripMenuItem
+            // 
+            this.resetDisplayOrderToolStripMenuItem.Name = "resetDisplayOrderToolStripMenuItem";
+            this.resetDisplayOrderToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.resetDisplayOrderToolStripMenuItem.Text = "Reset Display Order";
+            this.resetDisplayOrderToolStripMenuItem.Click += new System.EventHandler(this.resetDisplayOrderToolStripMenuItem_Click);
+            // 
             // ServerManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -511,6 +520,7 @@
         private System.Windows.Forms.ToolStripMenuItem noSQLdataSourceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileServerDeviceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetDisplayOrderToolStripMenuItem;
     }
 }
 

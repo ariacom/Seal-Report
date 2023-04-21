@@ -111,6 +111,7 @@ namespace Seal.Forms
         public ToolStripMenuItem copyToolStripMenuItem;
         public ToolStripMenuItem sortColumnAlphaOrderToolStripMenuItem;
         public ToolStripMenuItem sortColumnSQLOrderToolStripMenuItem;
+        public ToolStripMenuItem resetDisplayOrderToolStripMenuItem;
         public bool ForReport = false;
         public Report Report = null;
 
@@ -211,6 +212,7 @@ namespace Seal.Forms
             {
                 MetaTable table = mainTreeView.SelectedNode.Tag as MetaTable;
                 table.SortColumns(byPosition);
+
             }
             if (mainTreeView.SelectedNode.Tag is CategoryFolder)
             {
@@ -231,6 +233,34 @@ namespace Seal.Forms
                 }
 
                 folder.SetInformation("Columns have been sorted by Name");
+            }
+        }
+
+        public void resetDisplayOrder_Click(object sender, EventArgs e)
+        {
+            if (mainTreeView.SelectedNode == null) return;
+            if (mainTreeView.SelectedNode.Tag is MetaTable)
+            {
+                MetaTable table = mainTreeView.SelectedNode.Tag as MetaTable;
+                table.ResetDisplayOrder();
+            }
+            if (mainTreeView.SelectedNode.Tag is CategoryFolder)
+            {
+                CategoryFolder folder = mainTreeView.SelectedNode.Tag as CategoryFolder;
+                List<MetaColumn> cols = new List<MetaColumn>();
+                foreach (TreeNode child in mainTreeView.SelectedNode.Nodes)
+                {
+                    if (child.Tag is MetaColumn)
+                    {
+                        cols.Add(child.Tag as MetaColumn);
+                    }
+                }
+                foreach (var col in cols)
+                {
+                    col.DisplayOrder = 1;
+                }
+
+                folder.SetInformation("Display Order properties have been reset");
             }
         }
 
@@ -704,6 +734,7 @@ namespace Seal.Forms
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                 treeContextMenuStrip.Items.Add(sortColumnAlphaOrderToolStripMenuItem);
                 treeContextMenuStrip.Items.Add(sortColumnSQLOrderToolStripMenuItem);
+                treeContextMenuStrip.Items.Add(resetDisplayOrderToolStripMenuItem);
             }
             if (entity is MetaColumn&& ((MetaColumn)entity).MetaTable.IsEditable && mainTreeView.SelectedNode.Parent.Tag == ((MetaColumn)entity).MetaTable)
             {
@@ -725,6 +756,7 @@ namespace Seal.Forms
                 {
                     if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                     treeContextMenuStrip.Items.Add(sortColumnAlphaOrderToolStripMenuItem);
+                    treeContextMenuStrip.Items.Add(resetDisplayOrderToolStripMenuItem);
                 }
             }
         }
