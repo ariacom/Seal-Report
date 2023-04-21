@@ -11,8 +11,6 @@ namespace Seal.Helpers
     /// <summary>
     /// Allows code to be executed under the security context of a specified user account.
     /// </summary>
-    /// <remarks> 
-    ///
     public class Impersonator : IDisposable
     {
         protected const int LOGON32_PROVIDER_DEFAULT = 0;

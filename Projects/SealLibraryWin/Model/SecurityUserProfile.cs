@@ -49,7 +49,7 @@ namespace Seal.Model
 
         /// <summary>
         /// GUID of the connection
-        /// 
+        /// </summary>
         public string ConnectionGUID { get; set; }
     }
 

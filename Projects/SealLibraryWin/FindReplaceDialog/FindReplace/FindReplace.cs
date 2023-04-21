@@ -13,7 +13,7 @@ namespace ScintillaNET_FindReplaceDialog
 	{
 		#region Fields
 
-		private SearchFlags _flags;
+		private SearchFlags _flags = SearchFlags.None;
 		private IncrementalSearcher _incrementalSearcher;
 		private Indicator _indicator;
 		private int _lastReplaceAllOffset = 0;

@@ -59,7 +59,11 @@
             Fill a dictionary of files for CreateZIP
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:Seal.Helpers.Impersonator" -->
+        <member name="T:Seal.Helpers.Impersonator">
+            <summary>
+            Allows code to be executed under the security context of a specified user account.
+            </summary>
+        </member>
         <member name="T:Seal.Helpers.NamespaceDoc">
             <summary>
             Helper Objects
@@ -8573,7 +8577,11 @@
             GUID of the MetaSource
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:Seal.Model.DefaultConnection.ConnectionGUID" -->
+        <member name="P:Seal.Model.DefaultConnection.ConnectionGUID">
+            <summary>
+            GUID of the connection
+            </summary>
+        </member>
         <member name="T:Seal.Model.SecurityUserProfile">
             <summary>
             Object to store the culture and the recent reports of the user
