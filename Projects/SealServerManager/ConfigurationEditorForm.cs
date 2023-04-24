@@ -141,7 +141,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
 #if DEBUG
                 FileHelper.CopyDirectory(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\wwwroot", publicationDirectory + @"\wwwroot", true);
                 File.Copy(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\web.config", publicationDirectory + @"\web.config", true);
-                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\bin\Release\net6.0";
+                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\bin\Release\net7.0";
 #endif
 
                 Microsoft.Web.Administration.ServerManager serverMgr = new Microsoft.Web.Administration.ServerManager();

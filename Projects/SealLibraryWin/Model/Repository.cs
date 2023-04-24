@@ -84,7 +84,7 @@ namespace Seal.Model
             get
             {
 #if DEBUG
-                return Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net6.0", SealTaskScheduler);
+                return Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net7.0", SealTaskScheduler);
 #else
                 return Path.Combine(Configuration.InstallationDirectory + "\\" + CoreInstallationSubDirectory, SealTaskScheduler);
 #endif

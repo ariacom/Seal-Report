@@ -54,7 +54,9 @@
     <ReportTask>
       <GUID>6ea26f3c-dc76-4a06-95ab-70abf10cd943</GUID>
       <Name>Set Checkbox</Name>
-      <CancelReport>false</CancelReport>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
       <SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID>
       <Step>BeforeRendering</Step>
       <Script>@{
@@ -398,7 +400,12 @@ $(document).ready(function () {
             $("#navigation_parameters").val($("#download_form").serialize());  //Form parameters
             $("#navigation_id").val('@report.GetReportNavigationFileDownloadLink("download")'); //Link for file download
             $("#header_form").attr("action", _urlPrefix + "ActionNavigate");
-            $("#header_form").submit();
+            if (_urlPrefix != "") { //Web Report Server
+                $("#header_form").submit();
+            }
+            else { //Report Designer
+                window.chrome.webview.hostObjects.sync.dotnet.Navigate($("#navigation_id").val(), $("#navigation_parameters").val());
+            }
         });
         
         //Html button
@@ -412,11 +419,8 @@ $(document).ready(function () {
                 });
             }
             else { //Report Designer
-                $("#header_form").attr("target", "");
-                $("#header_form").attr("action", "ActionNavigate");
-                $("#header_form").submit();
-                
-                $("#html_div").html($("#navigation_result").val());
+                var result = window.chrome.webview.hostObjects.sync.dotnet.Navigate($("#navigation_id").val(), $("#navigation_parameters").val());
+                $("#html_div").html(result);
             }
         });        
         

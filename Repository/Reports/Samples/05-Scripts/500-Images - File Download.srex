@@ -1,126 +1,264 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID><GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID><ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID><Sources><ReportSource><GUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>d826ff6e-821a-4834-aab8-d50ec18a6024</GUID><Name>model</Name><SourceGUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</SourceGUID><FinalScript>@using System.Data&#xD;
-@{&#xD;
-    ReportModel model = Model;&#xD;
- 	ReportExecutionLog log = model.Report;&#xD;
-&#xD;
-    log.LogMessage("Modifying result values with the 'Final Script'...");&#xD;
-        &#xD;
-    var helper = new TaskDatabaseHelper();&#xD;
-    //Get the photos&#xD;
-    var photos = helper.LoadDataTable(model.Connection.ConnectionType, model.Connection.FullConnectionString, "select employeeID, photo from employees");&#xD;
-&#xD;
-    foreach (ResultPage page in model.Pages)&#xD;
-    {&#xD;
-        ResultTable dataTable = page.DataTable;&#xD;
-        foreach(var line in dataTable.Lines) {&#xD;
-            foreach (DataRow row in photos.Rows) {&#xD;
-                if (row["employeeID"].ToString() == line[0].Value.ToString()) {&#xD;
-                    //Set the final value in the third cell&#xD;
-                    var bytes = GetImageBytesFromOLEField((byte[]) row["photo"]);&#xD;
-                    line[2].FinalValue =  "&lt;img src='data:image/bmp;base64," + Convert.ToBase64String(bytes, Base64FormattingOptions.None) + "' style='width:50px;height=50px' /&gt;";&#xD;
-                    break;&#xD;
-                }&#xD;
-            }&#xD;
-        }&#xD;
-    }&#xD;
-&#xD;
-&#xD;
-}&#xD;
-</FinalScript><Elements><ReportElement><GUID>f1f56c12-6b23-4b68-9b59-667ba5859fbd</GUID><Name>Employees.EmployeeID</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement><ReportElement><GUID>7c2d9e78-6d5e-434e-89eb-ccff16244d60</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><CellScript /></ReportElement><ReportElement><GUID>c377f2bb-2f57-4c03-965b-27ce10707d3d</GUID><Name>Employees.LastName</Name><DisplayName>Photo</DisplayName><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><CellScript>@{&#xD;
-	//Add Hyperlink or File Download navigation&#xD;
-	ResultCell cell=Model;&#xD;
-	ReportElement element = cell.Element;&#xD;
-	ReportModel reportModel = element.Model;&#xD;
-	Report report = reportModel.Report;&#xD;
-&#xD;
-    //File download: this requires an implementation in the 'Navigation Script' of the model&#xD;
-    if (!string.IsNullOrEmpty(cell.DisplayValue)) {&#xD;
-        cell.AddNavigationFileDownload("Download photo of " + cell.DisplayValue);&#xD;
-    }&#xD;
-}&#xD;
-</CellScript><NavigationScript>@using System.Data&#xD;
-@using System.IO&#xD;
-@using System.Text&#xD;
-@{&#xD;
-    NavigationLink link = Model;&#xD;
-    ResultCell cell = link.Cell;&#xD;
-    ReportModel model = cell.ContextModel;&#xD;
-&#xD;
-    //Script executed for a script navigation...&#xD;
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...&#xD;
-&#xD;
-    //Sample to return a file contained in a blob&#xD;
-    var helper = new TaskDatabaseHelper();&#xD;
-    var command = helper.GetDbCommand(model.Connection.GetOpenConnection());&#xD;
-&#xD;
-    //Get employee ID value&#xD;
-    var employeeID = link.Cell.ContextCurrentLine.FirstOrDefault(i =&gt; i.Element.ColumnName.EndsWith("EmployeeID")).Value;&#xD;
-    command.CommandText = string.Format("select photo from employees where employeeID = {0}", employeeID);&#xD;
-    using (var reader = command.ExecuteReader())&#xD;
-    {&#xD;
-        if (reader.Read())&#xD;
-        {&#xD;
-            var employeeName = link.Cell.Value.ToString(); //Name of the file containing the extension&#xD;
-            link.ScriptResult = FileHelper.GetTempUniqueFileName(employeeName+".bmp");&#xD;
-            File.WriteAllBytes(link.ScriptResult, GetImageBytesFromOLEField((byte[]) reader["photo"]));&#xD;
-        }&#xD;
-    }&#xD;
-&#xD;
-    //The script will be executed for cell having the following initialization in a Cell Script: &#xD;
-    //cell.AddNavigationFileDownload("Download" + cell.DisplayValue);&#xD;
-}&#xD;
-&#xD;
-</NavigationScript><ContainsHtml>true</ContainsHtml></ReportElement></Elements></ReportModel></Models><CommonScripts><CommonScript><Name>GetImageBytesFromOLEField</Name><Script>@using System.IO&#xD;
-&#xD;
-@functions &#xD;
-{&#xD;
-    byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes)&#xD;
-    {&#xD;
-        const string BITMAP_ID_BLOCK = "BM";&#xD;
-        const string JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";&#xD;
-        const string PNG_ID_BLOCK = "\u0089PNG\r\n\u001a\n";&#xD;
-        const string GIF_ID_BLOCK = "GIF8";&#xD;
-        const string TIFF_ID_BLOCK = "II*\u0000";&#xD;
-        byte[] imageBytes;&#xD;
-        // Get a UTF7 Encoded string version&#xD;
-        var u8 = System.Text.Encoding.UTF7;&#xD;
-        string strTemp = u8.GetString(oleFieldBytes);&#xD;
-        // Get the first 300 characters from the string&#xD;
-        string strVTemp = strTemp.Substring(0, 300);&#xD;
-        // Search for the block&#xD;
-        int iPos = -1;&#xD;
-        if (strVTemp.IndexOf(BITMAP_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(BITMAP_ID_BLOCK);&#xD;
-        else if (strVTemp.IndexOf(JPG_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(JPG_ID_BLOCK);&#xD;
-        else if (strVTemp.IndexOf(PNG_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(PNG_ID_BLOCK);&#xD;
-        else if (strVTemp.IndexOf(GIF_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(GIF_ID_BLOCK);&#xD;
-        else if (strVTemp.IndexOf(TIFF_ID_BLOCK) != -1)&#xD;
-            iPos = strVTemp.IndexOf(TIFF_ID_BLOCK);&#xD;
-        else&#xD;
-            throw new Exception("Unable to determine header size for the OLE Object");&#xD;
-        // From the position above get the new image&#xD;
-        if (iPos == -1) {&#xD;
-            throw new Exception("Unable to determine header size for the OLE Object");&#xD;
-        }&#xD;
-        imageBytes = new byte[oleFieldBytes.LongLength - iPos];&#xD;
-        MemoryStream ms = new MemoryStream();&#xD;
-        ms.Write(oleFieldBytes, iPos, oleFieldBytes.Length - iPos);&#xD;
-        imageBytes = ms.ToArray();&#xD;
-        ms.Close();&#xD;
-        ms.Dispose();&#xD;
-        return imageBytes;&#xD;
-    }&#xD;
-}</Script></CommonScript></CommonScripts><Views><ReportView><GUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</GUID><Name>view</Name><Views><ReportView><GUID>47c62c87-49e8-40a8-bf64-a4c80562a0ec</GUID><Name>Model HTML View</Name><Views><ReportView><GUID>d5f736e5-d0dd-447b-9ff8-e3f6dbcb43f8</GUID><Name>Model Container</Name><Views><ReportView><GUID>3d58d427-f027-47f6-b399-2514c1d1ae6e</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>5fd4cf1e-24a5-49a8-8d3f-ee982d4da323</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_unit</Name><Value>second</Value></Parameter></Parameters><SortOrder>2</SortOrder></ReportView><ReportView><GUID>1272c3ef-b837-473b-9d1e-f128bc591ae3</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>700f6e09-f5da-4d2a-9a63-ff929d434714</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>362b1be2-611b-4d3b-bf22-b237de48f4e0</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><Parameters><Parameter><Name>columns_hidden</Name><Value>1</Value></Parameter></Parameters><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>d826ff6e-821a-4834-aab8-d50ec18a6024</ModelGUID><SortOrder>2</SortOrder></ReportView><ReportView><GUID>7ddc6c9a-50de-4cd0-8307-500529f0f5e8</GUID><Name>Highlights</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>&lt;p&gt;&#xD;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;&#xD;
-&lt;ul&gt;&#xD;
-&lt;li&gt;Common Script 'GetImageBytesFromOLEField' to get image from an OLE field&lt;/li&gt;&#xD;
-&lt;li&gt;'Final Script' of the model to set the image in the third column.&lt;/li&gt;&#xD;
-&lt;li&gt;'Cell Script' of the 'Photo' element to display the file download.&lt;/li&gt;&#xD;
-&lt;li&gt;'Cell Navigation Script' of the 'Photo' element to download the file created from the Photo column of the table for the employee.&lt;/li&gt;&#xD;
-&lt;li&gt;Property 'Columns to hide' is set to 1 in the Data Table to hide the 'Employee ID' element.&lt;/li&gt;&#xD;
-&lt;/ul&gt;&#xD;
-&lt;/p&gt;&#xD;
-</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>0</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID>
+  <GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID>
+  <ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>d826ff6e-821a-4834-aab8-d50ec18a6024</GUID>
+      <Name>model</Name>
+      <SourceGUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</SourceGUID>
+      <FinalScript>@using System.Data
+@{
+    ReportModel model = Model;
+ 	ReportExecutionLog log = model.Report;
+
+    log.LogMessage("Modifying result values with the 'Final Script'...");
+        
+    var helper = new TaskDatabaseHelper();
+    //Get the photos
+    var photos = helper.LoadDataTable(model.Connection.ConnectionType, model.Connection.FullConnectionString, "select employeeID, photo from employees");
+
+    foreach (ResultPage page in model.Pages)
+    {
+        ResultTable dataTable = page.DataTable;
+        foreach(var line in dataTable.Lines) {
+            foreach (DataRow row in photos.Rows) {
+                if (row["employeeID"].ToString() == line[0].Value.ToString()) {
+                    //Set the final value in the third cell
+                    var bytes = GetImageBytesFromOLEField((byte[]) row["photo"]);
+                    line[2].FinalValue =  "&lt;img src='data:image/bmp;base64," + Convert.ToBase64String(bytes, Base64FormattingOptions.None) + "' style='width:50px;height=50px' /&gt;";
+                    break;
+                }
+            }
+        }
+    }
+
+
+}
+</FinalScript>
+      <Elements>
+        <ReportElement>
+          <GUID>f1f56c12-6b23-4b68-9b59-667ba5859fbd</GUID>
+          <Name>Employees.EmployeeID</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7c2d9e78-6d5e-434e-89eb-ccff16244d60</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <CellScript />
+        </ReportElement>
+        <ReportElement>
+          <GUID>c377f2bb-2f57-4c03-965b-27ce10707d3d</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName>Photo</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <CellScript>@{
+	//Add Hyperlink or File Download navigation
+	ResultCell cell=Model;
+	ReportElement element = cell.Element;
+	ReportModel reportModel = element.Model;
+	Report report = reportModel.Report;
+
+    //File download: this requires an implementation in the 'Navigation Script' of the model
+    if (!string.IsNullOrEmpty(cell.DisplayValue)) {
+        cell.AddNavigationFileDownload("Download photo of " + cell.DisplayValue);
+    }
+    
+	cell.AddNavigationHyperLink("https://www.google.com", report.TranslateRepository("GeneralText","CellScript","Visit") + " Google");    
+}
+</CellScript>
+          <NavigationScript>@using System.Data
+@using System.IO
+@using System.Text
+@{
+    NavigationLink link = Model;
+    ResultCell cell = link.Cell;
+    ReportModel model = cell.ContextModel;
+
+    //Script executed for a script navigation...
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+
+    //Sample to return a file contained in a blob
+    var helper = new TaskDatabaseHelper();
+    var command = helper.GetDbCommand(model.Connection.GetOpenConnection());
+
+    //Get employee ID value
+    var employeeID = link.Cell.ContextCurrentLine.FirstOrDefault(i =&gt; i.Element.ColumnName.EndsWith("EmployeeID")).Value;
+    command.CommandText = string.Format("select photo from employees where employeeID = {0}", employeeID);
+    using (var reader = command.ExecuteReader())
+    {
+        if (reader.Read())
+        {
+            var employeeName = link.Cell.Value.ToString(); //Name of the file containing the extension
+            link.ScriptResult = FileHelper.GetTempUniqueFileName(employeeName+".bmp");
+            File.WriteAllBytes(link.ScriptResult, GetImageBytesFromOLEField((byte[]) reader["photo"]));
+        }
+    }
+
+    //The script will be executed for cell having the following initialization in a Cell Script: 
+    //cell.AddNavigationFileDownload("Download" + cell.DisplayValue);
+}
+
+</NavigationScript>
+          <ContainsHtml>true</ContainsHtml>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <CommonScripts>
+    <CommonScript>
+      <Name>GetImageBytesFromOLEField</Name>
+      <Script>@using System.IO
+
+@functions 
+{
+    byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes)
+    {
+        const string BITMAP_ID_BLOCK = "BM";
+        const string JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";
+        const string PNG_ID_BLOCK = "\u0089PNG\r\n\u001a\n";
+        const string GIF_ID_BLOCK = "GIF8";
+        const string TIFF_ID_BLOCK = "II*\u0000";
+        byte[] imageBytes;
+        // Get a UTF7 Encoded string version
+        var u8 = System.Text.Encoding.UTF7;
+        string strTemp = u8.GetString(oleFieldBytes);
+        // Get the first 300 characters from the string
+        string strVTemp = strTemp.Substring(0, 300);
+        // Search for the block
+        int iPos = -1;
+        if (strVTemp.IndexOf(BITMAP_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(BITMAP_ID_BLOCK);
+        else if (strVTemp.IndexOf(JPG_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(JPG_ID_BLOCK);
+        else if (strVTemp.IndexOf(PNG_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(PNG_ID_BLOCK);
+        else if (strVTemp.IndexOf(GIF_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(GIF_ID_BLOCK);
+        else if (strVTemp.IndexOf(TIFF_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(TIFF_ID_BLOCK);
+        else
+            throw new Exception("Unable to determine header size for the OLE Object");
+        // From the position above get the new image
+        if (iPos == -1) {
+            throw new Exception("Unable to determine header size for the OLE Object");
+        }
+        imageBytes = new byte[oleFieldBytes.LongLength - iPos];
+        MemoryStream ms = new MemoryStream();
+        ms.Write(oleFieldBytes, iPos, oleFieldBytes.Length - iPos);
+        imageBytes = ms.ToArray();
+        ms.Close();
+        ms.Dispose();
+        return imageBytes;
+    }
+}</Script>
+    </CommonScript>
+  </CommonScripts>
+  <Views>
+    <ReportView>
+      <GUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>47c62c87-49e8-40a8-bf64-a4c80562a0ec</GUID>
+          <Name>model</Name>
+          <Views>
+            <ReportView>
+              <GUID>d5f736e5-d0dd-447b-9ff8-e3f6dbcb43f8</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>3d58d427-f027-47f6-b399-2514c1d1ae6e</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>5fd4cf1e-24a5-49a8-8d3f-ee982d4da323</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_unit</Name>
+                      <Value>second</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>1272c3ef-b837-473b-9d1e-f128bc591ae3</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>700f6e09-f5da-4d2a-9a63-ff929d434714</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>362b1be2-611b-4d3b-bf22-b237de48f4e0</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>columns_hidden</Name>
+                      <Value>1</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>d826ff6e-821a-4834-aab8-d50ec18a6024</ModelGUID>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>7ddc6c9a-50de-4cd0-8307-500529f0f5e8</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;Common Script 'GetImageBytesFromOLEField' to get image from an OLE field&lt;/li&gt;
+&lt;li&gt;'Final Script' of the model to set the image in the third column.&lt;/li&gt;
+&lt;li&gt;'Cell Script' of the 'Photo' element to display the file download.&lt;/li&gt;
+&lt;li&gt;'Cell Navigation Script' of the 'Photo' element to download the file created from the Photo column of the table for the employee.&lt;/li&gt;
+&lt;li&gt;Property 'Columns to hide' is set to 1 in the Data Table to hide the 'Employee ID' element.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>0</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

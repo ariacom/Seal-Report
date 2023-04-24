@@ -1,4 +1,6 @@
-﻿namespace Seal.Forms
+﻿using Microsoft.Web.WebView2.Core;
+
+namespace Seal.Forms
 {
     partial class ReportViewerForm
     {
@@ -30,7 +32,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportViewerForm));
             this.mainPanel = new System.Windows.Forms.Panel();
-            this.webBrowser = new System.Windows.Forms.WebBrowser();
+            this.webBrowser = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +53,8 @@
             this.webBrowser.Name = "webBrowser";
             this.webBrowser.Size = new System.Drawing.Size(1008, 730);
             this.webBrowser.TabIndex = 0;
-            this.webBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.webBrowser_Navigating);
+            this.webBrowser.NavigationStarting += WebBrowser_NavigationStarting;
+
             // 
             // ReportViewerForm
             // 
@@ -72,7 +75,7 @@
         #endregion
 
         private System.Windows.Forms.Panel mainPanel;
-        private System.Windows.Forms.WebBrowser webBrowser;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webBrowser;
 
     }
 }

@@ -72,6 +72,7 @@ function executeFromTrigger(source /* trigger from a control */, form /* trigger
     if (_inExecution) return;
 
     var container = null;
+    var action = "ActionExecuteFromTrigger";
     if (source) container = source.closest(".restrictions_group");
     if (container && container.hasClass("main_restriction")) { //Trigger from a restriction in main panel
         executeReport();
@@ -94,7 +95,7 @@ function executeFromTrigger(source /* trigger from a control */, form /* trigger
                     container.addClass("disabled");
                     container.children(".glyphicon").css("display", "inline");
                 }
-                $.post(_urlPrefix + "ActionExecuteFromTrigger", form.serialize() + "&execution_guid=" + form.attr("execguid") + "&form_id=" + form.attr("id"))
+                $.post(_urlPrefix + action, form.serialize() + "&execution_guid=" + form.attr("execguid") + "&form_id=" + form.attr("id"))
                     .done(function (data) {
                         //Update each view involved
                         data.forEach(function (value) {
@@ -116,9 +117,7 @@ function executeFromTrigger(source /* trigger from a control */, form /* trigger
         else {
             if (target) alert('Execution in an new Window is not supported from the Report Designer');
             else {
-                $("#id_load").val(form.attr("id"));
-                $("#header_form").attr("action", "ActionExecuteFromTrigger");
-                $("#header_form").submit();
+                window.chrome.webview.hostObjects.sync.dotnet.ExecuteFromTrigger(form.attr("id"), form.serialize());
             }
         }
     }
@@ -176,10 +175,7 @@ function initRestrictions(parent) {
                         });
                 }
                 else {
-                    $("#id_load").val(id);
-                    $("#values_load").val(ids);
-                    $("#header_form").attr("action", action);
-                    $("#header_form").submit();
+                    window.chrome.webview.hostObjects.sync.dotnet.UpdateEnumValues(enumId, ids);
                 }
             }
         }
@@ -315,11 +311,13 @@ function initNavCells(parentSelector) {
 }
 
 //data tables, server pagination
-function getTableData(datatable, guid, viewid, pageid, data, callback, settings) {
+async function getTableData(datatable, guid, viewid, pageid, data, callback, settings) {
+    var action = "ActionGetTableData";
+
     try {
         var params = data.draw + "§" + settings.aaSorting + "§" + settings.oPreviousSearch.sSearch.replace("<", "&lt;").replace(">", "&gt;") + "§" + settings._iDisplayLength + "§" + settings._iDisplayStart;
         if (_urlPrefix != "") {
-            $.post(_urlPrefix + "ActionGetTableData", { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
+            $.post(_urlPrefix + action, { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
                 .done(function (data) {
                     try {
                         var json = jQuery.parseJSON(data);
@@ -332,14 +330,9 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
                 });
         }
         else {
-            $("#header_form").attr("action", "ActionGetTableData");
-            $("#parameter_tableload").html(params);
-            $("#viewid_tableload").val(viewid);
-            $("#pageid_tableload").val(pageid);
-            $("#header_form").submit();
-            var json = jQuery.parseJSON($("#parameter_tableload").text());
+            var tableData = window.chrome.webview.hostObjects.sync.dotnet.GetTableData(guid, viewid, pageid, params);
+            var json = jQuery.parseJSON(tableData);
             callback(json);
-            $("#parameter_tableload").html("");
             initNavCells();
         }
     }
@@ -348,23 +341,20 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
     }
 }
 
-
 //Enum select picker
 function requestEnumData(filter, forceNoMessage) {
     var result;
-
+    var action = "ActionGetEnumValues";
+    var enumId = $("#id_load").val();
     if (_urlPrefix != "") {
-        $.post(_urlPrefix + "ActionGetEnumValues", { execution_guid: _executionGUID, enum_id: $("#id_load").val(), filter: filter })
+        $.post(_urlPrefix + action, { execution_guid: _executionGUID, enum_id: enumId, filter: filter })
             .done(function (data) {
                 result = jQuery.parseJSON(data);
                 fillEnumSelect(result, forceNoMessage || result.length > 0);
             });
     }
     else {
-        $("#header_form").attr("action", "ActionGetEnumValues");
-        $("#filter_enumload").val(filter);
-        $("#header_form").submit();
-        result = jQuery.parseJSON($("#parameter_enumload").text());
+        result = window.chrome.webview.hostObjects.sync.dotnet.GetEnumValues(enumId, filter);
         fillEnumSelect(result, forceNoMessage || result.length > 0);
     }
     return result;
@@ -431,8 +421,8 @@ function executeTimer() {
                 });
         }
         else {
+            window.chrome.webview.hostObjects.sync.dotnet.RefreshReport();
             $messages.removeClass('hidden');
-            $form.submit();
         }
     }
 }
@@ -458,6 +448,7 @@ function executeReportNavigation(nav, target) {
         return;
     }
 
+
     $("#navigation_id").val(nav);
     $("#navigation_target").val(target);
 
@@ -469,11 +460,15 @@ function executeReportNavigation(nav, target) {
     }
 
     if (nav != null && nav.startsWith("FD:")) { //File download
-        form.attr("action", _urlPrefix + "ActionNavigate");
-        form.submit();
+        if (_urlPrefix != "") {
+            form.attr("action", _urlPrefix + "ActionNavigate");
+            form.submit();
+        }
+        else {
+            window.chrome.webview.hostObjects.sync.dotnet.Navigate($("#navigation_id").val(), $("#navigation_parameters").val());
+        }
         return;
     }
-
     executeReport(nav);
 }
 
@@ -513,8 +508,9 @@ function executeReport(nav) {
         });
     }
     else {
-        form.attr("action", url);
-        form.submit();
+        if (url == _urlPrefix + "ActionCancelReport") window.chrome.webview.hostObjects.sync.dotnet.CancelReport();
+        else if (url == _urlPrefix + "ActionNavigate") window.chrome.webview.hostObjects.sync.dotnet.Navigate($("#navigation_id").val(), $("#navigation_parameters").val());
+        else window.chrome.webview.hostObjects.sync.dotnet.ExecuteReport(form.serialize());
     }
     //spinner
     if ($("#nav_button").children().length == 0) $("#nav_button").append($("<i class='fa fa-spinner fa-spin fa-sm'></i>"));
@@ -625,8 +621,9 @@ function mainInit() {
     //navigation
     if (_hasNavigation) {
         $("#nav_button").unbind("mouseenter").on("mouseenter", function () {
+            var action = "ActionGetNavigationLinks";
             if (_urlPrefix != "") {
-                $.post(_urlPrefix + "ActionGetNavigationLinks", { execution_guid: _executionGUID })
+                $.post(_urlPrefix + action, { execution_guid: _executionGUID })
                     .done(function (data) {
                         if (data.links != null && data.links != "") {
                             initNavMenu();
@@ -655,9 +652,9 @@ function mainInit() {
                     });
             }
             else {
-                $("#header_form").attr("action", "ActionGetNavigationLinks");
+                $("#header_form").attr("action", action);
                 initNavMenu();
-                $("#header_form").submit();
+                $("#nav_menu").html(window.chrome.webview.hostObjects.sync.dotnet.GetNavigationLinks());
                 showNavMenu();
             }
         })

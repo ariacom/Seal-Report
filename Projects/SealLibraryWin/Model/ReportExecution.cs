@@ -52,20 +52,10 @@ namespace Seal.Model
         public const string HtmlId_progress_bar_tasks = "progress_bar_tasks";
         public const string HtmlId_progress_bar_models = "progress_bar_models";
         public const string HtmlId_execution_messages = "execution_messages";
-        public const string HtmlId_parameter_view_id = "parameter_view_id";
-        public const string HtmlId_parameter_view_name = "parameter_view_name";
-        public const string HtmlId_parameter_view_value = "parameter_view_value";
         public const string HtmlId_navigation_id = "navigation_id";
         public const string HtmlId_navigation_parameters = "navigation_parameters";
         public const string HtmlId_execution_guid = "execution_guid";
         public const string HtmlId_navigation_menu = "nav_menu";
-        public const string HtmlId_parameter_tableload = "parameter_tableload";
-        public const string HtmlId_viewid_tableload = "viewid_tableload";
-        public const string HtmlId_pageid_tableload = "pageid_tableload";
-        public const string HtmlId_id_load = "id_load";
-        public const string HtmlId_values_load = "values_load";
-        public const string HtmlId_filter_enumload = "filter_enumload";
-        public const string HtmlId_parameter_enumload = "parameter_enumload";
 
         /// <summary>
         /// Current report being executed
@@ -776,6 +766,7 @@ namespace Seal.Model
             try
             {
                 if (!Report.Cancel && model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call LoadResultTableModel() first...");
+                if (model.ResultTable == null) return;
 
                 model.SetColumnsName();
 

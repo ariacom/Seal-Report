@@ -12,6 +12,16 @@ using System.IO;
 using Seal.Helpers;
 using System.Web;
 using System.Threading;
+using Microsoft.Web.WebView2.Core;
+using System.Threading.Tasks;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
+using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Formats.Asn1;
+using System.Text.Json;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Spreadsheet;
+using static Seal.Forms.ReportViewerForm;
 
 namespace Seal.Forms
 {
@@ -20,6 +30,7 @@ namespace Seal.Forms
         Report _report;
         ReportExecution _execution;
         NavigationContext _navigation = new NavigationContext();
+        BrowserInterop _browserInterop = null;
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
@@ -29,6 +40,7 @@ namespace Seal.Forms
         bool _reportDone = false;
         bool _exitOnClose = false;
         bool _canRender = true;
+        bool _openDevTool = false;
 
         public bool CanRender
         {
@@ -53,23 +65,7 @@ namespace Seal.Forms
             }
         }
 
-        HtmlElement HeaderForm
-        {
-            get
-            {
-                return webBrowser.Document != null ? webBrowser.Document.Forms[ReportExecution.HtmlId_header_form] : null;
-            }
-        }
-
-        string GetFormValue(string id)
-        {
-            string result = "";
-            HtmlElement htmlId = HeaderForm.All[id];
-            if (htmlId != null) result = htmlId.GetAttribute("value");
-            return result;
-        }
-
-        public ReportViewerForm(bool exitOnClose, bool showScriptErrors)
+        public ReportViewerForm(bool exitOnClose, bool openDevTool)
         {
             WebBrowserHelper.FixBrowserVersion();
 
@@ -77,8 +73,7 @@ namespace Seal.Forms
 
             ShowIcon = true;
             Icon = Repository.ProductIcon;
-
-            webBrowser.ScriptErrorsSuppressed = !showScriptErrors;
+            _openDevTool = openDevTool;
             _exitOnClose = exitOnClose;
         }
 
@@ -119,7 +114,7 @@ namespace Seal.Forms
             if (previousReport != null && render)
             {
                 //force execution
-                var parameter = _report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ForceExecutionParameter);
+                var parameter = _report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Seal.Model.Parameter.ForceExecutionParameter);
                 if (parameter != null) parameter.BoolValue = true;
 
                 //set previous data tables and restrictions
@@ -142,7 +137,7 @@ namespace Seal.Forms
             if (_report.HasErrors) _report.Cancel = true;
             _execution.RenderHTMLDisplayForViewer();
             _url = "file:///" + _report.HTMLDisplayFilePath;
-            webBrowser.Navigate(_url);
+            webBrowser.Source = new Uri(_url);
         }
 
         void Execute()
@@ -156,10 +151,9 @@ namespace Seal.Forms
 
         void setCurrentExecution()
         {
-            _iconExecuting = true;
             Icon = Properties.Resources.reportDesigner;
             if (Owner != null) Owner.Icon = Icon;
-            string executionGUID = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
+            string executionGUID = getAttributeValue(ReportExecution.HtmlId_execution_guid, "value").ToString();
             if (_navigation.Navigations.ContainsKey(executionGUID))
             {
                 _execution = _navigation.Navigations[executionGUID].Execution;
@@ -167,298 +161,90 @@ namespace Seal.Forms
             }
         }
 
-        private void setProgressBarInformation(string id, int progression, string message)
+        private async void setProgressBarInformation(string id, int progression, string message, string barClass)
         {
-            HtmlElement progress = webBrowser.Document.All[id];
-            if (progress != null)
-            {
-                progress.SetAttribute("aria-valuenow", progression.ToString());
-                progress.Style = string.Format("width:{0}%;min-width:140px;", progression);
-                progress.SetAttribute("innerHTML", message);
-            }
-
+            await webBrowser.CoreWebView2.ExecuteScriptAsync($"setProgressBarMessage('#{id}',{progression},'{message}','progress-bar-{barClass}');");
         }
 
-        void initFromForm(HtmlElement form)
+        private void initFromForm(string formValues)
         {
             _report.InputRestrictions.Clear();
-            if (form != null)
-            {
-                foreach (HtmlElement element in form.All)
-                {
-                    if (element.Id != null)
-                    {
-                        var tag = element.TagName.ToLower();
-                        var val = element.GetAttribute("value");
-                        if (tag == "option") val = element.GetAttribute("selected"); //Select
-                        else if (tag == "input" && val == element.Id) val = element.GetAttribute("checked"); //Button toggle and check box 
 
-                        _report.InputRestrictions.Add(element.Id, val);
-                        Debug.WriteLine("{0} {1} {2} {3} {4} {5}", element.Id, element.Name, element.TagName, element.GetAttribute("value"), element.GetAttribute("selected"), element.GetAttribute("checked"));
+            var values = HttpUtility.ParseQueryString(formValues);
+            foreach (var key in values.Keys)
+            {
+                string id = key.ToString();
+                string val = values[id];
+
+                if (!string.IsNullOrEmpty(id))
+                {
+                    if (id.EndsWith("_Option_Value"))
+                    {
+                        foreach (string optionValue in val.Split(','))
+                        {
+                            _report.InputRestrictions.Add(optionValue, "true");
+                        }
+                    }
+                    else
+                    {
+                        _report.InputRestrictions.Add(id, val);
                     }
                 }
             }
         }
 
-        bool _iconExecuting = true;
-        private bool processAction(string action)
+        private async Task<string> getAttributeValue(string id, string attribute)
         {
-            bool cancelNavigation = false;
-            try
-            {
-                switch (action)
-                {
-                    case ReportExecution.ActionExecuteReport:
-                        setCurrentExecution();
-                        cancelNavigation = true;
-                        _reportDone = false;
-                        if (webBrowser.Document != null)
-                        {
-                            initFromForm(HeaderForm);
-                        }
-                        _report.ExecutionTriggerView = null;
-                        _report.IsNavigating = false;
-                        Execute();
-                        break;
-
-                    case ReportExecution.ActionRefreshReport:
-                        Icon = (_iconExecuting ? Properties.Resources.reportDesigner2 : Properties.Resources.reportDesigner);
-                        _iconExecuting = !_iconExecuting;
-
-                        if (Owner != null) Owner.Icon = Icon;
-
-                        if (_report.IsExecuting)
-                        {
-                            cancelNavigation = true;
-                            HtmlElement messages = webBrowser.Document.All[ReportExecution.HtmlId_execution_messages];
-                            if (_report.ExecutionView.GetValue("messages_mode") != "disabled" && messages != null)
-                            {
-                                messages.SetAttribute("innerHTML", Helper.ToHtml(_report.ExecutionMessages));
-                                if (_report.ExecutionView.GetBoolValue(Parameter.AutoScrollParameter)) messages.ScrollTop = messages.ScrollRectangle.Height;
-                            }
-                            setProgressBarInformation(ReportExecution.HtmlId_progress_bar, _report.ExecutionProgression, _report.ExecutionProgressionMessage);
-                            setProgressBarInformation(ReportExecution.HtmlId_progress_bar_tasks, _report.ExecutionProgressionTasks, _report.ExecutionProgressionTasksMessage);
-                            setProgressBarInformation(ReportExecution.HtmlId_progress_bar_models, _report.ExecutionProgressionModels, _report.ExecutionProgressionModelsMessage);
-                        }
-                        else if (!_reportDone)
-                        {
-                            _navigation.SetNavigation(_execution);
-                            cancelNavigation = true;
-                            _reportDone = true;
-                            _report.IsNavigating = false;
-                            _url = "file:///" + _report.HTMLDisplayFilePath;
-                            webBrowser.Navigate(_url);
-                        }
-                        break;
-
-                    case ReportExecution.ActionCancelReport:
-                        Icon = Properties.Resources.reportDesigner;
-                        if (Owner != null) Owner.Icon = Icon;
-                        _execution.Report.LogMessage(_report.Translate("Cancelling report..."));
-                        cancelNavigation = true;
-                        _report.Cancel = true;
-                        break;
-
-                    case ReportExecution.ActionUpdateViewParameter:
-                        cancelNavigation = true;
-                        _report.UpdateViewParameter(GetFormValue(ReportExecution.HtmlId_parameter_view_id), GetFormValue(ReportExecution.HtmlId_parameter_view_name), GetFormValue(ReportExecution.HtmlId_parameter_view_value));
-                        break;
-
-                    case ReportExecution.ActionViewHtmlResult:
-                        setCurrentExecution();
-                        string resultPath = _execution.GenerateHTMLResult();
-                        if (File.Exists(resultPath))
-                        {
-                            var p = new Process();
-                            p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
-                            p.Start();
-                        }
-                        cancelNavigation = true;
-                        break;
-
-                    case ReportExecution.ActionViewCSVResult:
-                        setCurrentExecution();
-                        resultPath = _execution.GenerateCSVResult();
-                        if (File.Exists(resultPath))
-                        {
-                            var p = new Process();
-                            p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
-                            p.Start();
-                        }
-                        cancelNavigation = true;
-                        break;
-
-                    case ReportExecution.ActionViewPrintResult:
-                        setCurrentExecution();
-                        resultPath = _execution.GeneratePrintResult();
-                        if (File.Exists(resultPath))
-                        {
-                            var p = new Process();
-                            p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
-                            p.Start();
-                        }
-                        cancelNavigation = true;
-                        break;
-
-                    case ReportExecution.ActionViewPDFResult:
-                        setCurrentExecution();
-                        resultPath = _execution.GeneratePDFResult();
-                        if (File.Exists(resultPath))
-                        {
-                            var p = new Process();
-                            p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
-                            p.Start();
-                        }
-                        cancelNavigation = true;
-                        break;
-
-                    case ReportExecution.ActionViewExcelResult:
-                        setCurrentExecution();
-                        resultPath = _execution.GenerateExcelResult();
-                        if (File.Exists(resultPath))
-                        {
-                            var p = new Process();
-                            p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
-                            p.Start();
-                        }
-                        cancelNavigation = true;
-                        break;
-
-                    case ReportExecution.ActionNavigate:
-                        Icon = Properties.Resources.reportDesigner;
-                        if (Owner != null) Owner.Icon = Icon;
-                        string nav = webBrowser.Document.All[ReportExecution.HtmlId_navigation_id].GetAttribute("value");
-                        var parameters = HttpUtility.ParseQueryString(webBrowser.Document.All[ReportExecution.HtmlId_navigation_parameters].GetAttribute("value"));
-
-                        if (nav.StartsWith(NavigationLink.FileDownloadPrefix)) //File download
-                        {
-                            var filePath = _navigation.NavigateScript(nav, _execution.Report, parameters);
-                            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-                            {
-                                var p = new Process();
-                                p.StartInfo = new ProcessStartInfo(filePath) { UseShellExecute = true };
-                                p.Start();
-                            }
-                            else
-                            {
-                                throw new Exception(string.Format("Invalid file path got from the navigation script: '{0}'", filePath));
-                            }
-                            cancelNavigation = true;
-                        }
-                        else if (nav.StartsWith(NavigationLink.ReportScriptPrefix)) //Report Script
-                        {
-                            HtmlElement dataload = webBrowser.Document.All["navigation_result"];
-                            dataload.InnerText = _navigation.NavigateScript(nav, _execution.Report, parameters);
-                            cancelNavigation = true;
-                        }
-                        else //Drill or SubReport
-                        {
-                            _execution = _navigation.Navigate(nav, _execution, false);
-                            _report = _execution.Report;
-
-                            _canRender = false;
-                            cancelNavigation = true;
-                            _reportDone = false;
-                            Execute();
-                        }
-                        break;
-
-                    case ReportExecution.ActionGetNavigationLinks:
-                        cancelNavigation = true;
-                        HtmlElement navMenu = webBrowser.Document.All[ReportExecution.HtmlId_navigation_menu];
-                        if (navMenu != null && _execution.RootReport != null) navMenu.SetAttribute("innerHTML", _navigation.GetNavigationLinksHTML(_execution.RootReport));
-                        break;
-
-                    case ReportExecution.ActionGetTableData:
-                        cancelNavigation = true;
-                        string guid = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
-                        Report report = _navigation.Navigations.ContainsKey(guid) ? _navigation.Navigations[guid].Execution.Report : _report;
-                        string viewid = webBrowser.Document.All[ReportExecution.HtmlId_viewid_tableload].GetAttribute("value");
-                        string pageid = webBrowser.Document.All[ReportExecution.HtmlId_pageid_tableload].GetAttribute("value");
-                        HtmlElement newLoad = webBrowser.Document.All[ReportExecution.HtmlId_parameter_tableload];
-                        var view = report.ExecutionView.GetView(viewid);
-                        if (view != null && view.ModelView != null)
-                        {
-                            var page = view.ModelView.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
-                            if (page != null)
-                            {
-                                newLoad.InnerText = page.DataTable.GetLoadTableData(view, newLoad.InnerText);
-                            }
-                        }
-                        break;
-
-                    case ReportExecution.ActionUpdateEnumValues:
-                        {
-                            cancelNavigation = true;
-                            string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_load].GetAttribute("value");
-                            string values = webBrowser.Document.All[ReportExecution.HtmlId_values_load].GetAttribute("value");
-                            _execution.UpdateEnumValues(enumId, values);
-                        }
-                        break;
-
-                    case ReportExecution.ActionGetEnumValues:
-                        {
-                            cancelNavigation = true;
-                            string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_load].GetAttribute("value");
-                            string filter = webBrowser.Document.All[ReportExecution.HtmlId_filter_enumload].GetAttribute("value");
-                            HtmlElement enumValues = webBrowser.Document.All[ReportExecution.HtmlId_parameter_enumload];
-                            enumValues.InnerText = _execution.GetEnumValues(enumId, filter);
-                        }
-                        break;
-
-                    case ReportExecution.ActionExecuteFromTrigger:
-                        {
-                            Icon = Properties.Resources.reportDesigner;
-                            if (Owner != null) Owner.Icon = Icon;
-                            setCurrentExecution();
-                            cancelNavigation = true;
-                            lock (_execution)
-                            {
-                                string formId = webBrowser.Document.All[ReportExecution.HtmlId_id_load].GetAttribute("value");
-                                var form = webBrowser.Document.Forms[formId];
-                                initFromForm(form);
-
-                                _report.ExecutionTriggerView = _report.AllViews.FirstOrDefault(i => formId.EndsWith(i.IdSuffix));
-                                _report.IsNavigating = false;
-                                _execution.Execute();
-                                while (_report.IsExecuting && !_report.Cancel) Thread.Sleep(100);
-
-                                _url = "file:///" + _report.HTMLDisplayFilePath;
-                                _navigation.SetNavigation(_execution);
-
-                                webBrowser.Navigate(_url);
-                            }
-                        }
-                        break;
-
-                    default:
-                        {
-                            break;
-                        }
-                }
-            }
-            catch (Exception ex)
-            {
-                cancelNavigation = true;
-                var message = ex.Message;
-                if (ex.InnerException != null) message += "\r\n" + ex.InnerException.Message;
-                MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            return cancelNavigation;
+            var s = await webBrowser.CoreWebView2.ExecuteScriptAsync($"$('#{id}').attr('{attribute}')");
+            return JsonDocument.Parse(s).RootElement.ToString();
         }
 
-        private void closeToolStripButton_Click(object sender, EventArgs e)
+
+        private async void setProperty(string id, string property, string value)
         {
-            Close();
+            await webBrowser.CoreWebView2.ExecuteScriptAsync($"$('#{id}').{property}('{value}')");
         }
 
-        private void webBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        private void WebBrowser_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
-            if (HeaderForm != null)
+            if (_browserInterop == null)
             {
-                //Get action from the form
-                string action = HeaderForm.GetAttribute(ReportExecution.ActionCommand);
-                if (e.Url.AbsolutePath.EndsWith(action)) e.Cancel = processAction(action);
+                _browserInterop = new BrowserInterop() { Container = this };
+                webBrowser.CoreWebView2.AddHostObjectToScript("dotnet", _browserInterop);
+            }
+
+            var resultPath = "";
+            if (e.Uri.EndsWith(ReportExecution.ActionViewHtmlResult))
+            {
+                setCurrentExecution();
+                resultPath = _execution.GenerateHTMLResult();
+            }
+            else if (e.Uri.EndsWith(ReportExecution.ActionViewCSVResult))
+            {
+                setCurrentExecution();
+                resultPath = _execution.GenerateCSVResult();
+            }
+            else if (e.Uri.EndsWith(ReportExecution.ActionViewPrintResult))
+            {
+                setCurrentExecution();
+                resultPath = _execution.GeneratePrintResult();
+            }
+            else if (e.Uri.EndsWith(ReportExecution.ActionViewPDFResult))
+            {
+                setCurrentExecution();
+                resultPath = _execution.GeneratePDFResult();
+            }
+            else if (e.Uri.EndsWith(ReportExecution.ActionViewExcelResult))
+            {
+                setCurrentExecution();
+                resultPath = _execution.GenerateExcelResult();
+            }
+            if (File.Exists(resultPath))
+            {
+                e.Cancel = true;
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
+                p.Start();
             }
         }
 
@@ -492,6 +278,160 @@ namespace Seal.Forms
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape) Close();
+        }
+
+        public class BrowserInterop
+        {
+            public ReportViewerForm Container;
+            bool _iconExecuting = true;
+
+            Report Report {  get { return Container._report; } }
+            ReportExecution Execution { get { return Container._execution; } }
+            NavigationContext Navigation { get { return Container._navigation; } }
+
+            public string GetTableData(string guid, string viewid, string pageid, string parameters)
+            {
+                string result = "";
+                Report report = Navigation.Navigations.ContainsKey(guid) ? Navigation.Navigations[guid].Execution.Report : Report;
+                var view = report.ExecutionView.GetView(viewid);
+                if (view != null && view.ModelView != null)
+                {
+                    var page = view.ModelView.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
+                    if (page != null) result = page.DataTable.GetLoadTableData(view, parameters);
+                }
+                return result;
+            }
+            public string GetNavigationLinks()
+            {
+                string result = "";
+                if (Execution.RootReport != null) result = Navigation.GetNavigationLinksHTML(Execution.RootReport);
+                return result;
+            }
+            public string GetEnumValues(string enumId, string filter)
+            {
+                return Execution.GetEnumValues(enumId, filter);
+            }
+
+            public void UpdateEnumValues(string enumId, string values)
+            {
+                Execution.UpdateEnumValues(enumId, values);
+            }
+
+            public void UpdateViewParameter(string viewId, string parameterName, string parameterValue)
+            {
+                Report.UpdateViewParameter(viewId, parameterName, parameterValue);
+            }
+
+            public void ExecuteReport(string formValues)
+            {
+                _iconExecuting = true;
+                Container.setCurrentExecution();
+                Container.initFromForm(formValues);
+                Report.ExecutionTriggerView = null;
+                Report.IsNavigating = false;
+                Container.Execute();
+                Container._reportDone = false;
+            }
+
+            public void RefreshReport()
+            {
+                Container.Icon = (_iconExecuting ? Properties.Resources.reportDesigner2 : Properties.Resources.reportDesigner);
+                _iconExecuting = !_iconExecuting;
+
+                if (Container.Owner != null) Container.Owner.Icon = Container.Icon;
+
+                if (Report.IsExecuting)
+                {
+                    if (Report.ExecutionView.GetValue("messages_mode") != "disabled")
+                    {
+                        Container.setProperty(ReportExecution.HtmlId_execution_messages, "html", Helper.ToHtml(Report.ExecutionMessages));
+                        Container.webBrowser.CoreWebView2.ExecuteScriptAsync("scrollMessages(false);");
+                    }
+                    Container.setProgressBarInformation(ReportExecution.HtmlId_progress_bar, Report.ExecutionProgression, Report.ExecutionProgressionMessage, "success");
+                    Container.setProgressBarInformation(ReportExecution.HtmlId_progress_bar_tasks, Report.ExecutionProgressionTasks, Report.ExecutionProgressionTasksMessage, "primary");
+                    Container.setProgressBarInformation(ReportExecution.HtmlId_progress_bar_models, Report.ExecutionProgressionModels, Report.ExecutionProgressionModelsMessage, "info");
+                }
+                else if (!Container._reportDone)
+                {
+                    Navigation.SetNavigation(Execution);
+                    Container._reportDone = true;
+                    Report.IsNavigating = false;
+                    Container._url = "file:///" + Report.HTMLDisplayFilePath;
+                    Container.webBrowser.Source = new Uri(Container._url);
+                    if (Container._openDevTool) Container.webBrowser.CoreWebView2.OpenDevToolsWindow();
+                }
+            }
+
+            public void CancelReport()
+            {
+                initIcon();
+
+                Execution.Report.LogMessage(Report.Translate("Cancelling report..."));
+                Report.Cancel = true;
+            }
+
+            public string Navigate(string nav, string parameter)
+            {
+                string result = "";
+                initIcon();
+
+                var parameters = HttpUtility.ParseQueryString(parameter);
+                if (nav.StartsWith(NavigationLink.FileDownloadPrefix)) //File download
+                {
+                    var filePath = Navigation.NavigateScript(nav, Execution.Report, parameters);
+                    if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                    {
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(filePath) { UseShellExecute = true };
+                        p.Start();
+                    }
+                    else
+                    {
+                        throw new Exception(string.Format("Invalid file path got from the navigation script: '{0}'", filePath));
+                    }
+                }
+                else if (nav.StartsWith(NavigationLink.ReportScriptPrefix)) //Report Script
+                {
+                    result = Navigation.NavigateScript(nav, Execution.Report, parameters);
+                }
+                else //Drill or SubReport
+                {
+                    Container._execution = Navigation.Navigate(nav, Execution, false);
+                    Container._report = Execution.Report;
+
+                    Container._canRender = false;
+                    Container._reportDone = false;
+                    Container.Execute();
+                }
+                return result;
+            }
+
+            public void ExecuteFromTrigger(string formId, string formValues)
+            {
+                initIcon();
+                _iconExecuting = true;
+                Container.setCurrentExecution();
+                lock (Execution)
+                {
+                    Container.initFromForm(formValues);
+
+                    Report.ExecutionTriggerView = Report.AllViews.FirstOrDefault(i => formId.EndsWith(i.IdSuffix));
+                    Report.IsNavigating = false;
+                    Execution.Execute();
+                    while (Report.IsExecuting && !Report.Cancel) Thread.Sleep(100);
+
+                    Container._url = "file:///" + Report.HTMLDisplayFilePath;
+                    Navigation.SetNavigation(Execution);
+
+                    Container.webBrowser.Source = new Uri(Container._url);
+                }
+            }
+
+            void initIcon()
+            {
+                Container.Icon = Properties.Resources.reportDesigner;
+                if (Container.Owner != null) Container.Owner.Icon = Container.Icon;
+            }
         }
     }
 }
