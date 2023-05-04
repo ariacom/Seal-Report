@@ -211,6 +211,7 @@ namespace Seal.Forms
             {
                 _browserInterop = new BrowserInterop() { Container = this };
                 webBrowser.CoreWebView2.AddHostObjectToScript("dotnet", _browserInterop);
+                if (_openDevTool) webBrowser.CoreWebView2.OpenDevToolsWindow();
             }
 
             var resultPath = "";
@@ -358,7 +359,6 @@ namespace Seal.Forms
                     Report.IsNavigating = false;
                     Container._url = "file:///" + Report.HTMLDisplayFilePath;
                     Container.webBrowser.Source = new Uri(Container._url);
-                    if (Container._openDevTool) Container.webBrowser.CoreWebView2.OpenDevToolsWindow();
                 }
             }
 

@@ -260,8 +260,8 @@
             this.showScriptErrorsToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.showScriptErrorsToolStripMenuItem.Name = "showScriptErrorsToolStripMenuItem";
             this.showScriptErrorsToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.showScriptErrorsToolStripMenuItem.Text = "Show JavaScript errors";
-            this.showScriptErrorsToolStripMenuItem.ToolTipText = "If checked, JavaScript errors are displayed in the report viewer.";
+            this.showScriptErrorsToolStripMenuItem.Text = "Show Edge DevTools";
+            this.showScriptErrorsToolStripMenuItem.ToolTipText = "If checked, the Edge DevTools Window is shown when a report is executed.";
             this.showScriptErrorsToolStripMenuItem.Click += new System.EventHandler(this.showScriptErrorsToolStripMenuItem_Click);
             // 
             // schedulesWithCurrentUserToolStripMenuItem
