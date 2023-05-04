@@ -201,6 +201,7 @@ namespace Seal.Forms
 
         private async void setProperty(string id, string property, string value)
         {
+            value = value.Replace("\\", "\\\\");
             await webBrowser.CoreWebView2.ExecuteScriptAsync($"$('#{id}').{property}('{value}')");
         }
 
