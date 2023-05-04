@@ -766,7 +766,7 @@ namespace Seal.Model
             try
             {
                 if (!Report.Cancel && model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call LoadResultTableModel() first...");
-                if (model.ResultTable == null) return;
+                //if (model.ResultTable == null) return;
 
                 model.SetColumnsName();
 

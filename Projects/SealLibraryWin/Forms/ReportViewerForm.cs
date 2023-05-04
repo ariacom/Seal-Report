@@ -199,7 +199,6 @@ namespace Seal.Forms
             return JsonDocument.Parse(s).RootElement.ToString();
         }
 
-
         private async void setProperty(string id, string property, string value)
         {
             await webBrowser.CoreWebView2.ExecuteScriptAsync($"$('#{id}').{property}('{value}')");

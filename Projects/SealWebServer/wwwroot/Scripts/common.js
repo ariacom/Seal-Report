@@ -448,6 +448,7 @@ function executeReportNavigation(nav, target) {
         return;
     }
 
+
     $("#navigation_id").val(nav);
     $("#navigation_target").val(target);
 
@@ -459,11 +460,15 @@ function executeReportNavigation(nav, target) {
     }
 
     if (nav != null && nav.startsWith("FD:")) { //File download
-        form.attr("action", _urlPrefix + "ActionNavigate");
-        form.submit();
+        if (_urlPrefix != "") {
+            form.attr("action", _urlPrefix + "ActionNavigate");
+            form.submit();
+        }
+        else {
+            window.chrome.webview.hostObjects.sync.dotnet.Navigate($("#navigation_id").val(), $("#navigation_parameters").val());
+        }
         return;
     }
-
     executeReport(nav);
 }
 

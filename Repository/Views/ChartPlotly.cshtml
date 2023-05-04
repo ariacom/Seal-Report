@@ -147,7 +147,7 @@
                 margins = @Raw(view.GetValue("plotly_margins") != "auto" ? view.GetValue("plotly_margins") : "margins");
                 if (margins) layout.margin = margins;
 
-                Plotly.plot(@chartId,
+                Plotly.newPlot(@chartId,
                     data,
                     layout,
                     { locale: 'fr' }

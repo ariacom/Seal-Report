@@ -1,14 +1,1572 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CurrentViewGUID>5313ce09-1847-4961-817e-a91e52218443</CurrentViewGUID><GUID>0288646d-77e1-4627-8ef0-194bd35a6308</GUID><ViewGUID>5313ce09-1847-4961-817e-a91e52218443</ViewGUID><Sources><ReportSource><GUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</GUID><Name>Northwind (Repository)</Name><Connections><MetaConnection><GUID>bccc4af8-ae77-4fa6-8224-87936ed97658</GUID><Name>connection2345</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>0cf9df92-ffa0-4d8c-96f5-d7123c73dc78</GUID><Name>Model - Pie</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>542d8cf7-6a07-424e-9935-50a17fb50d79</GUID><Name>Products.CategoryID</Name><DisplayName /><EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL></ReportElement><ReportElement><GUID>62dc2de9-2d49-4c27-a9ce-e2cc239b24a4</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Pie</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement></Elements><Restriction>[8f460f68-c6a7-4d14-967e-0536d7a6bd71]</Restriction><Restrictions><ReportRestriction><GUID>8f460f68-c6a7-4d14-967e-0536d7a6bd71</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>d112b12f-a7e4-4336-8858-0753fa1901ab</GUID><Name>Model - Bar</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>de8267d2-f06b-485c-aeb2-d034122eb15a</GUID><Name>Products.CategoryID</Name><DisplayName /><EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL></ReportElement><ReportElement><GUID>17c68154-f56b-4f46-8208-4b2f2b70d181</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Bar</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement><ReportElement><GUID>b8d3696e-ea72-4afc-9b0b-1c0003bfab4b</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements><Restriction>[375ed929-3bc4-4614-a397-7ed24f61469a]</Restriction><Restrictions><ReportRestriction><GUID>375ed929-3bc4-4614-a397-7ed24f61469a</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>c8746503-71e0-41da-a765-6b86e167ba66</GUID><Name>Model - Line</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>05e57190-3dae-410c-8ba9-2060f986ce01</GUID><Name>Products.CategoryID</Name><DisplayName /><EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL></ReportElement><ReportElement><GUID>9b56824d-0d5e-490f-a3bb-c4eb7c1ca57c</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Line</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement><ReportElement><GUID>a98c5852-e9fa-4b65-9592-f239bacfdda2</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements><Restriction>[62cd4514-dd7f-46a7-b7bb-c1e233b81ed2]</Restriction><Restrictions><ReportRestriction><GUID>62cd4514-dd7f-46a7-b7bb-c1e233b81ed2</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>4932cb3a-5f2c-4583-b858-00809a3d3111</GUID><Name>Model - Scatter</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>a4144095-65e3-4ab1-a87b-fc74e22d49e6</GUID><Name>Products.CategoryID</Name><DisplayName /><EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL></ReportElement><ReportElement><GUID>48cd3839-3c7c-4757-9d2b-31dc15b64d7b</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Scatter</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement><ReportElement><GUID>9191da54-ba95-45c6-ab5e-b86bb639f832</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements><Restriction>[92fd294a-fc3e-4d32-9bc8-b771e1786679]&#xD;
-</Restriction><Restrictions><ReportRestriction><GUID>92fd294a-fc3e-4d32-9bc8-b771e1786679</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>c182302e-5da2-461a-9edf-5864b1292a31</GUID><Name>Model - Polar</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>3ffc0453-b5be-4b3a-b95b-e38b3a31b1db</GUID><Name>Products.CategoryID</Name><DisplayName /><EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL></ReportElement><ReportElement><GUID>a8136b94-0843-4ea4-85b1-9fc1151cc534</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>PolarArea</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement></Elements><Restriction>[d8468067-e5d8-4824-9b0a-282c1617359d]</Restriction><Restrictions><ReportRestriction><GUID>d8468067-e5d8-4824-9b0a-282c1617359d</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>ea7537f9-a8a5-43f3-885d-0f389b283eb1</GUID><Name>Model - Radar</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>6825eda7-e342-49ad-9a36-12a81c1d797d</GUID><Name>Products.CategoryID</Name><DisplayName /><EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL></ReportElement><ReportElement><GUID>5f553029-ceb9-4d6c-ab61-caccb4cbfcbb</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Radar</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement><ReportElement><GUID>434b8d8b-79f5-4bac-b0dc-afb17d6da5f9</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements><Restriction>[5b32e8d1-e6e8-419d-9f03-362c31273dd3]&#xD;
-AND [cc37c826-cadc-42ef-b305-f6abb3e52d73]</Restriction><Restrictions><ReportRestriction><GUID>5b32e8d1-e6e8-419d-9f03-362c31273dd3</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string></EnumValues></ReportRestriction><ReportRestriction><GUID>cc37c826-cadc-42ef-b305-f6abb3e52d73</GUID><Name>Products.CategoryID</Name><DisplayName /><DisplayOrder>2</DisplayOrder><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><DisplayOrderRE>2</DisplayOrderRE><EnumValues><string>1</string><string>2</string><string>3</string><string>4</string><string>5</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>0f91c188-ce96-4214-bfb0-5f0ce180c471</GUID><Name>Model - Bar - Time Axis</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>04127793-2edd-45fb-80cb-85737ea73eb4</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement><ReportElement><GUID>d8c00bdb-0256-4b1e-b6f2-1af54ab70573</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name><DisplayName /><Format>MM/yyyy</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID></ReportElement><ReportElement><GUID>21b9d622-f91b-4a4e-a258-c756b451678a</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Bar</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement></Elements><Restriction>[1d52d4c3-df20-4243-a975-f4f7d102afb1]&#xD;
-AND [90f43fa4-5b67-4757-ad7a-670ae3ad10b0]</Restriction><Restrictions><ReportRestriction><GUID>1d52d4c3-df20-4243-a975-f4f7d102afb1</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction><ReportRestriction><GUID>90f43fa4-5b67-4757-ad7a-670ae3ad10b0</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name><DisplayName /><DisplayOrder>2</DisplayOrder><Format>yyyy</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID><DisplayOrderRE>2</DisplayOrderRE><Date1>1998-01-01T00:00:00</Date1><FormatRe>yyyy</FormatRe></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>466b8ffa-7c3d-4d33-a12d-2cc676aaf5fd</GUID><Name>Model - Bar - Time Axis - 2 Y Axis</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>998b5fb9-d89e-4a2a-af76-043e1617a7c5</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name><DisplayName /><Format>MM/yyyy</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID></ReportElement><ReportElement><GUID>801a93c4-3812-4970-9dc0-0b414d442c10</GUID><Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><NumericStandardFormat>Percentage0</NumericStandardFormat><Format>P0</Format><PivotPosition>Data</PivotPosition><CalculationOption>PercentageAll</CalculationOption><ChartJSSerie>Line</ChartJSSerie><YAxisType>Secondary</YAxisType><MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID></ReportElement><ReportElement><GUID>dd6b9666-1b8c-4277-9cb3-d304401faaca</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Bar</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement></Elements><Restriction>[fe3aaf18-210d-4ddd-b679-42d6b0e6e37d]
-AND [4bda1ae5-3940-4068-b53c-21547c6d76ca]</Restriction><Restrictions><ReportRestriction><GUID>fe3aaf18-210d-4ddd-b679-42d6b0e6e37d</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction><ReportRestriction><GUID>4bda1ae5-3940-4068-b53c-21547c6d76ca</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name><DisplayName /><DisplayOrder>2</DisplayOrder><Format>yyyy</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID><DisplayOrderRE>2</DisplayOrderRE><Date1>1998-01-01T00:00:00</Date1><FormatRe>yyyy</FormatRe></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>e5e1adb4-23de-4155-823e-48710b898c93</GUID><Name>Model - Bar - Time Axis - Horizontal</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>398f7845-eb19-42aa-a6ea-23da97a02ff4</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name><DisplayName /><Format>MM/yyyy</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID></ReportElement><ReportElement><GUID>01f13a53-bf63-4cf3-958b-199df9bdb1aa</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Bar</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement><ReportElement><GUID>a9eb319f-44b4-4703-bac1-45e63d46ec2a</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements><Restriction>[10e0a1e8-64f7-453b-b441-b55cab777888]
-AND [824130ca-77eb-4073-98a0-db66c732fc9d]</Restriction><Restrictions><ReportRestriction><GUID>10e0a1e8-64f7-453b-b441-b55cab777888</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction><ReportRestriction><GUID>824130ca-77eb-4073-98a0-db66c732fc9d</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name><DisplayName /><DisplayOrder>2</DisplayOrder><Format>yyyy</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID><DisplayOrderRE>2</DisplayOrderRE><Date1>1998-01-01T00:00:00</Date1><FormatRe>yyyy</FormatRe></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>74851cfd-ec9c-4574-a845-1844fb2c60ab</GUID><Name>Model - Bar - Horizontal</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>cf464999-2010-4cd2-bf37-f9785c6b2f6d</GUID><Name>Products.CategoryID</Name><DisplayName /><EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL></ReportElement><ReportElement><GUID>81eec30a-96bd-4e6d-9c10-2f9f9ee73f15</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Bar</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement><ReportElement><GUID>61f6ae59-7eb0-45ed-9304-07d0011a7ba9</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements><Restriction>[bd56860b-8c67-4856-90b9-99cbf4369a17]&#xD;
-AND [d6520d4a-990c-43ee-b896-705fd8629392]</Restriction><Restrictions><ReportRestriction><GUID>bd56860b-8c67-4856-90b9-99cbf4369a17</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction><ReportRestriction><GUID>d6520d4a-990c-43ee-b896-705fd8629392</GUID><Name>Products.CategoryID</Name><DisplayName /><DisplayOrder>2</DisplayOrder><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><DisplayOrderRE>2</DisplayOrderRE><EnumValues><string>1</string><string>2</string><string>3</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>b286bb97-92e9-42cc-9454-445e5d4f41f7</GUID><Name>Model - Bar - Time Value</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>f9add685-46ec-414a-9995-711e81a661fe</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement><ReportElement><GUID>53ba5b91-4e7f-4654-8332-bac11a8760ef</GUID><Name>Orders.OrderDate</Name><DisplayName /><Format>d</Format><PivotPosition>Data</PivotPosition><AggregateFunction>Max</AggregateFunction><ChartJSSerie>Bar</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID></ReportElement><ReportElement><GUID>37c1f72c-97d3-4c21-94a7-12e3cdb9fa70</GUID><Name>Products.CategoryID</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID></ReportElement><ReportElement><GUID>dd4345a9-247a-4fc0-bd24-58e860cffe7d</GUID><PivotPosition>Hidden</PivotPosition><SortOrder>Not sorted</SortOrder><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement></Elements><Restriction>[9101fa84-b42c-480d-a8c0-f77a3bc6a564]&#xD;
-AND [33b75eaf-ef3b-49d0-b9a6-b59f4ba6bf8c]</Restriction><Restrictions><ReportRestriction><GUID>9101fa84-b42c-480d-a8c0-f77a3bc6a564</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction><ReportRestriction><GUID>33b75eaf-ef3b-49d0-b9a6-b59f4ba6bf8c</GUID><Name>Products.CategoryID</Name><DisplayName /><DisplayOrder>2</DisplayOrder><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><DisplayOrderRE>2</DisplayOrderRE><EnumValues><string>1</string><string>2</string><string>3</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>6486700b-8e9b-46d3-aee1-182159a9e016</GUID><Name>Model - Bar - Numeric Axis</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>05d8af7b-fbaa-417c-9c26-75e10c669108</GUID><Name>Products.UnitsInStock</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID></ReportElement><ReportElement><GUID>7072ca5b-f70f-449e-a36a-65420f81667b</GUID><Name>Products.UnitsOnOrder</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Bar</ChartJSSerie><MetaColumnGUID>6fa87b3b-048f-4680-9516-35679cba84bf</MetaColumnGUID></ReportElement></Elements><Restriction>[202825e8-b636-4c40-97e2-df3875f7dc8a]</Restriction><Restrictions><ReportRestriction><GUID>202825e8-b636-4c40-97e2-df3875f7dc8a</GUID><Name>Products.UnitsInStock</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID><Operator>Smaller</Operator><Value1>30</Value1><FormatRe>N0</FormatRe></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>9be49b25-ba6c-458b-9603-21ae2d64f8b0</GUID><Name>Model - Scatter - Time Value</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>978c1e5f-13ac-4364-a91a-0889bb4fe244</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement><ReportElement><GUID>73da6a5d-fcde-43f3-8e8f-7ce8e22429cc</GUID><Name>Orders.OrderDate</Name><DisplayName /><Format>d</Format><PivotPosition>Data</PivotPosition><AggregateFunction>Max</AggregateFunction><ChartJSSerie>Scatter</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID></ReportElement><ReportElement><GUID>c5859f22-02fb-4d99-8391-a31ec6fc3688</GUID><Name>Products.CategoryID</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID></ReportElement><ReportElement><GUID>368a8e43-d931-4eee-a597-dc8043e881f5</GUID><PivotPosition>Hidden</PivotPosition><SortOrder>Not sorted</SortOrder><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement></Elements><Restriction>[c0a269cf-94f3-4054-a8f9-258d9afaf704]
-AND [724569a8-2afc-4e14-9040-23422f0610d1]</Restriction><Restrictions><ReportRestriction><GUID>c0a269cf-94f3-4054-a8f9-258d9afaf704</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction><ReportRestriction><GUID>724569a8-2afc-4e14-9040-23422f0610d1</GUID><Name>Products.CategoryID</Name><DisplayName /><DisplayOrder>2</DisplayOrder><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><DisplayOrderRE>2</DisplayOrderRE><EnumValues><string>1</string><string>2</string><string>3</string></EnumValues></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>4421c944-c3e9-4dae-b347-c027896dfefe</GUID><Name>Model - Scatter - Time Axis</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>5c555e85-a2d1-42ad-9501-8851fec72eef</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement><ReportElement><GUID>2e0de4f8-3eec-441b-8bff-16ec2a041ab7</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name><DisplayName /><Format>MM/yyyy</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID></ReportElement><ReportElement><GUID>196681fc-ce9b-45a9-bde2-f22b169db9a8</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Scatter</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement></Elements><Restriction>[67bf9089-cd89-498a-870b-57fb047a793a]
-AND [387eba64-d9bb-442e-90b2-5ffd90d66696]</Restriction><Restrictions><ReportRestriction><GUID>67bf9089-cd89-498a-870b-57fb047a793a</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string><string>Davolio</string></EnumValues></ReportRestriction><ReportRestriction><GUID>387eba64-d9bb-442e-90b2-5ffd90d66696</GUID><Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name><DisplayName /><DisplayOrder>2</DisplayOrder><Format>yyyy</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID><DisplayOrderRE>2</DisplayOrderRE><Date1>1998-01-01T00:00:00</Date1><FormatRe>yyyy</FormatRe></ReportRestriction></Restrictions></ReportModel><ReportModel><GUID>d816fc42-888e-4e26-80ff-90b8839eb818</GUID><Name>Model - Bar - 2 Measures</Name><SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID><Elements><ReportElement><GUID>c65aa514-af5f-497d-ada3-9949fe7520b5</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement><ReportElement><GUID>76e52a9e-84de-4d52-9f84-53a3810fbac7</GUID><Name>Products.CategoryID</Name><DisplayName /><EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL></ReportElement><ReportElement><GUID>acad7036-2c22-4f2e-827f-a78a9419ed86</GUID><Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Line</ChartJSSerie><YAxisType>Secondary</YAxisType><MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID></ReportElement><ReportElement><GUID>af270998-a036-46db-99bf-bd82e13e28c1</GUID><Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ChartJSSerie>Bar</ChartJSSerie><SerieSortType>AxisLabel</SerieSortType><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement></Elements><Restriction>[676cd82c-6341-493a-8366-4ce46606b4e9]</Restriction><Restrictions><ReportRestriction><GUID>676cd82c-6341-493a-8366-4ce46606b4e9</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><EnumValues><string>Buchanan</string><string>Callahan</string></EnumValues></ReportRestriction></Restrictions></ReportModel></Models><Views><ReportView><GUID>5313ce09-1847-4961-817e-a91e52218443</GUID><Name>View</Name><Views><ReportView><GUID>e9947fa2-d97e-4234-aef5-efc49f2fc59a</GUID><Name>Container</Name><Views><ReportView><GUID>fdbc10a6-4c16-48b5-b84f-c5a0eeb385f1</GUID><Name>Model - Pie</Name><Views><ReportView><GUID>5156a53a-780c-467f-913d-a88af36c8f40</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>0cf9df92-ffa0-4d8c-96f5-d7123c73dc78</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>0</SortOrder></ReportView><ReportView><GUID>8dd5653f-1661-4f0e-8616-6c3581c13876</GUID><Name>Model - Bar</Name><Views><ReportView><GUID>861e7680-e1ea-4c19-a54e-2725db6d4a63</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_bar_stacked</Name><Value>True</Value></Parameter><Parameter><Name>chartjs_label_display</Name><Value>thr_per</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_tooltip_format</Name><Value>vp</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>d112b12f-a7e4-4336-8858-0753fa1901ab</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>3</SortOrder></ReportView><ReportView><GUID>7cfabcf1-9aac-4bc9-8c52-f51b69699fb1</GUID><Name>Model - Line</Name><Views><ReportView><GUID>50deeaac-8b1a-4f28-a82a-3449fbb79a91</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_label_align</Name><Value>end</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>c8746503-71e0-41da-a765-6b86e167ba66</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>5</SortOrder></ReportView><ReportView><GUID>712eaa9a-343d-4a6d-9527-cc0bca40c94d</GUID><Name>Model - Polar</Name><Views><ReportView><GUID>4e15c2ec-f569-4f8b-b4a4-f380b58f1cb6</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_label_align</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_label_format</Name><Value>per</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>c182302e-5da2-461a-9edf-5864b1292a31</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>2</SortOrder></ReportView><ReportView><GUID>d00aa31b-a408-49f3-98a5-46d8ca7cc245</GUID><Name>Model - Radar</Name><Views><ReportView><GUID>8ef446d0-544f-4cd9-a570-7e779ffe998c</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_label_align</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_label_format</Name><Value>val</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>ea7537f9-a8a5-43f3-885d-0f389b283eb1</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView><ReportView><GUID>c0504bc6-85dd-4358-a6ec-9403f95f2edd</GUID><Name>Model - Scatter</Name><Views><ReportView><GUID>93fc3bbc-3f22-4e6b-8956-d079e0252c5e</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_border</Name><Value>borderColor:'black',borderRadius:1,borderWidth:2</Value></Parameter><Parameter><Name>chartjs_label_font</Name><Value>size:10,style:'italic'</Value></Parameter><Parameter><Name>chartjs_label_color</Name><Value>black</Value></Parameter><Parameter><Name>chartjs_label_back_color</Name><Value>white</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_label_align</Name><Value>end</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>4932cb3a-5f2c-4583-b858-00809a3d3111</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>6</SortOrder></ReportView><ReportView><GUID>4e396cee-0c91-4181-89d8-8165567beaec</GUID><Name>Model - Bar - Time Axis</Name><Views><ReportView><GUID>0fb23c4b-c0f6-4e2f-85e4-e397fff27213</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_unit</Name><Value>month</Value></Parameter><Parameter><Name>chartjs_label_display</Name><Value>thr_val</Value></Parameter><Parameter><Name>chartjs_label_threshold</Name><Value>5000</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>0f91c188-ce96-4214-bfb0-5f0ce180c471</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>7</SortOrder></ReportView><ReportView><GUID>81d9d1f4-1829-41fd-a60b-1f3afb572216</GUID><Name>Model - Bar - Time Axis - 2 Y Axis</Name><Views><ReportView><GUID>a006a9b9-be38-4b99-8c7a-3ea80697a12d</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_unit</Name><Value>month</Value></Parameter><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>466b8ffa-7c3d-4d33-a12d-2cc676aaf5fd</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>8</SortOrder></ReportView><ReportView><GUID>5c573124-90dc-4a04-af6b-33e3abf5a43a</GUID><Name>Model - Bar - Time Axis - Horizontal</Name><Views><ReportView><GUID>e9616c8b-35d3-4c99-8dfe-f0ad371616d7</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_bar_stacked</Name><Value>True</Value></Parameter><Parameter><Name>chartjs_bar_horizontal</Name><Value>True</Value></Parameter><Parameter><Name>chartjs_unit</Name><Value>month</Value></Parameter><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>e5e1adb4-23de-4155-823e-48710b898c93</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>9</SortOrder></ReportView><ReportView><GUID>5a01203b-033e-4d4a-a277-1836940a0e86</GUID><Name>Model - Bar - Horizontal</Name><Views><ReportView><GUID>3da9bb50-fa30-4f42-8a20-5ee99c638125</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_bar_horizontal</Name><Value>True</Value></Parameter><Parameter><Name>chartjs_unit</Name><Value>month</Value></Parameter><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_label_align</Name><Value>right</Value></Parameter><Parameter><Name>chartjs_label_format</Name><Value>per</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>74851cfd-ec9c-4574-a845-1844fb2c60ab</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>10</SortOrder></ReportView><ReportView><GUID>463fcc65-d652-46d3-94ac-e2264606de68</GUID><Name>Model - Bar - Time Value</Name><Views><ReportView><GUID>26b875fa-597d-437a-896c-3d1664860c9e</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_unit</Name><Value>month</Value></Parameter><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>end</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>b286bb97-92e9-42cc-9454-445e5d4f41f7</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>11</SortOrder></ReportView><ReportView><GUID>5095d262-d52d-44de-82a5-cf2b2f1e62c8</GUID><Name>Model - Bar - Numeric Axis</Name><Views><ReportView><GUID>15bfc2bd-bc40-4a63-ae45-33a14be531a9</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_border</Name><Value>borderColor:'black',borderRadius:4,borderWidth:2</Value></Parameter><Parameter><Name>chartjs_label_back_color</Name><Value>black</Value></Parameter><Parameter><Name>chartjs_label_clamp</Name><Value>True</Value></Parameter><Parameter><Name>chartjs_label_clip</Name><Value>True</Value></Parameter><Parameter><Name>chartjs_tooltip_format</Name><Value>vp</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>6486700b-8e9b-46d3-aee1-182159a9e016</ModelGUID><UseModelName>true</UseModelName><SortOrder>12</SortOrder></ReportView><ReportView><GUID>9d7c0669-6a2f-489d-b520-9b8f1a32a528</GUID><Name>Model - Scatter - Time Axis</Name><Views><ReportView><GUID>d19e2551-b0e4-4168-a2c4-45733c33d87d</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_unit</Name><Value>month</Value></Parameter><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_back_color</Name><Value>blue</Value></Parameter><Parameter><Name>chartjs_label_clip</Name><Value>True</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>start</Value></Parameter><Parameter><Name>chartjs_label_align</Name><Value>bottom</Value></Parameter><Parameter><Name>chartjs_tooltip_format</Name><Value>vp</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>4421c944-c3e9-4dae-b347-c027896dfefe</ModelGUID><UseModelName>true</UseModelName><SortOrder>13</SortOrder></ReportView><ReportView><GUID>b6af50d4-e3ac-417a-86a4-415da729360e</GUID><Name>Model - Scatter - Time Value</Name><Views><ReportView><GUID>850eb7f9-00ff-480d-97ba-175e341b72ac</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_label_display</Name><Value>auto</Value></Parameter><Parameter><Name>chartjs_label_border</Name><Value>borderColor:'black',borderRadius:4,borderWidth:2</Value></Parameter><Parameter><Name>chartjs_label_color</Name><Value>black</Value></Parameter><Parameter><Name>chartjs_label_back_color</Name><Value>white</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>start</Value></Parameter><Parameter><Name>chartjs_label_align</Name><Value>bottom</Value></Parameter><Parameter><Name>chartjs_tooltip_format</Name><Value>vp</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>9be49b25-ba6c-458b-9603-21ae2d64f8b0</ModelGUID><UseModelName>true</UseModelName><SortOrder>14</SortOrder></ReportView><ReportView><GUID>34cc669c-c2c9-4f35-8e54-f5dd1dd596c1</GUID><Name>Model - Bar - 2 Measures</Name><Views><ReportView><GUID>593bd93a-fcb8-49e9-b8fe-e07f9ccce6cc</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><Parameters><Parameter><Name>chartjs_bar_stacked</Name><Value>True</Value></Parameter><Parameter><Name>chartjs_label_display</Name><Value>thr_per</Value></Parameter><Parameter><Name>chartjs_label_anchor</Name><Value>end</Value></Parameter><Parameter><Name>chartjs_tooltip_format</Name><Value>vp</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>d816fc42-888e-4e26-80ff-90b8839eb818</ModelGUID><UseModelName>true</UseModelName><Parameters><Parameter><Name>show_data_tables</Name><Value>False</Value></Parameter></Parameters><SortOrder>15</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><Parameters><Parameter><Name>grid_layout</Name><Value>col-sm-4;col-sm-4;col-sm-4;&#xD;
-col-sm-4;col-sm-4;col-sm-4;&#xD;
-col-sm-4;col-sm-4;col-sm-4;&#xD;
-col-sm-4;col-sm-4;col-sm-4;&#xD;
-col-sm-4;col-sm-4;col-sm-4;</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>1</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CurrentViewGUID>5313ce09-1847-4961-817e-a91e52218443</CurrentViewGUID>
+  <GUID>0288646d-77e1-4627-8ef0-194bd35a6308</GUID>
+  <ViewGUID>5313ce09-1847-4961-817e-a91e52218443</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</GUID>
+      <Name>Northwind (Repository)</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>bccc4af8-ae77-4fa6-8224-87936ed97658</GUID>
+          <Name>connection2345</Name>
+          <ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString>
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>0cf9df92-ffa0-4d8c-96f5-d7123c73dc78</GUID>
+      <Name>Model - Pie</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>542d8cf7-6a07-424e-9935-50a17fb50d79</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>62dc2de9-2d49-4c27-a9ce-e2cc239b24a4</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Pie</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[8f460f68-c6a7-4d14-967e-0536d7a6bd71]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>8f460f68-c6a7-4d14-967e-0536d7a6bd71</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>d112b12f-a7e4-4336-8858-0753fa1901ab</GUID>
+      <Name>Model - Bar</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>de8267d2-f06b-485c-aeb2-d034122eb15a</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>17c68154-f56b-4f46-8208-4b2f2b70d181</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b8d3696e-ea72-4afc-9b0b-1c0003bfab4b</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[375ed929-3bc4-4614-a397-7ed24f61469a]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>375ed929-3bc4-4614-a397-7ed24f61469a</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>c8746503-71e0-41da-a765-6b86e167ba66</GUID>
+      <Name>Model - Line</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>05e57190-3dae-410c-8ba9-2060f986ce01</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9b56824d-0d5e-490f-a3bb-c4eb7c1ca57c</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Line</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a98c5852-e9fa-4b65-9592-f239bacfdda2</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[62cd4514-dd7f-46a7-b7bb-c1e233b81ed2]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>62cd4514-dd7f-46a7-b7bb-c1e233b81ed2</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>4932cb3a-5f2c-4583-b858-00809a3d3111</GUID>
+      <Name>Model - Scatter</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>a4144095-65e3-4ab1-a87b-fc74e22d49e6</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>48cd3839-3c7c-4757-9d2b-31dc15b64d7b</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Scatter</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9191da54-ba95-45c6-ab5e-b86bb639f832</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[92fd294a-fc3e-4d32-9bc8-b771e1786679]
+</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>92fd294a-fc3e-4d32-9bc8-b771e1786679</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>c182302e-5da2-461a-9edf-5864b1292a31</GUID>
+      <Name>Model - Polar</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>3ffc0453-b5be-4b3a-b95b-e38b3a31b1db</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a8136b94-0843-4ea4-85b1-9fc1151cc534</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>PolarArea</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[d8468067-e5d8-4824-9b0a-282c1617359d]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>d8468067-e5d8-4824-9b0a-282c1617359d</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>ea7537f9-a8a5-43f3-885d-0f389b283eb1</GUID>
+      <Name>Model - Radar</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>6825eda7-e342-49ad-9a36-12a81c1d797d</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5f553029-ceb9-4d6c-ab61-caccb4cbfcbb</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Radar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>434b8d8b-79f5-4bac-b0dc-afb17d6da5f9</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[5b32e8d1-e6e8-419d-9f03-362c31273dd3]
+AND [cc37c826-cadc-42ef-b305-f6abb3e52d73]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>5b32e8d1-e6e8-419d-9f03-362c31273dd3</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>cc37c826-cadc-42ef-b305-f6abb3e52d73</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <EnumValues>
+            <string>1</string>
+            <string>2</string>
+            <string>3</string>
+            <string>4</string>
+            <string>5</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>0f91c188-ce96-4214-bfb0-5f0ce180c471</GUID>
+      <Name>Model - Bar - Time Axis</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>04127793-2edd-45fb-80cb-85737ea73eb4</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d8c00bdb-0256-4b1e-b6f2-1af54ab70573</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>21b9d622-f91b-4a4e-a258-c756b451678a</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[1d52d4c3-df20-4243-a975-f4f7d102afb1]
+AND [90f43fa4-5b67-4757-ad7a-670ae3ad10b0]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>1d52d4c3-df20-4243-a975-f4f7d102afb1</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>90f43fa4-5b67-4757-ad7a-670ae3ad10b0</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <Format>yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <Date1>1998-01-01T00:00:00</Date1>
+          <FormatRe>yyyy</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>466b8ffa-7c3d-4d33-a12d-2cc676aaf5fd</GUID>
+      <Name>Model - Bar - Time Axis - 2 Y Axis</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>998b5fb9-d89e-4a2a-af76-043e1617a7c5</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>801a93c4-3812-4970-9dc0-0b414d442c10</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <NumericStandardFormat>Percentage0</NumericStandardFormat>
+          <Format>P0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <CalculationOption>PercentageAll</CalculationOption>
+          <ChartJSSerie>Line</ChartJSSerie>
+          <YAxisType>Secondary</YAxisType>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>dd6b9666-1b8c-4277-9cb3-d304401faaca</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[fe3aaf18-210d-4ddd-b679-42d6b0e6e37d]
+AND [4bda1ae5-3940-4068-b53c-21547c6d76ca]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>fe3aaf18-210d-4ddd-b679-42d6b0e6e37d</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>4bda1ae5-3940-4068-b53c-21547c6d76ca</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <Format>yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <Date1>1998-01-01T00:00:00</Date1>
+          <FormatRe>yyyy</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>e5e1adb4-23de-4155-823e-48710b898c93</GUID>
+      <Name>Model - Bar - Time Axis - Horizontal</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>398f7845-eb19-42aa-a6ea-23da97a02ff4</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>01f13a53-bf63-4cf3-958b-199df9bdb1aa</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9eb319f-44b4-4703-bac1-45e63d46ec2a</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[10e0a1e8-64f7-453b-b441-b55cab777888]
+AND [824130ca-77eb-4073-98a0-db66c732fc9d]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>10e0a1e8-64f7-453b-b441-b55cab777888</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>824130ca-77eb-4073-98a0-db66c732fc9d</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <Format>yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <Date1>1998-01-01T00:00:00</Date1>
+          <FormatRe>yyyy</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>74851cfd-ec9c-4574-a845-1844fb2c60ab</GUID>
+      <Name>Model - Bar - Horizontal</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>cf464999-2010-4cd2-bf37-f9785c6b2f6d</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>81eec30a-96bd-4e6d-9c10-2f9f9ee73f15</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>61f6ae59-7eb0-45ed-9304-07d0011a7ba9</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[bd56860b-8c67-4856-90b9-99cbf4369a17]
+AND [d6520d4a-990c-43ee-b896-705fd8629392]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>bd56860b-8c67-4856-90b9-99cbf4369a17</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>d6520d4a-990c-43ee-b896-705fd8629392</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <EnumValues>
+            <string>1</string>
+            <string>2</string>
+            <string>3</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b286bb97-92e9-42cc-9454-445e5d4f41f7</GUID>
+      <Name>Model - Bar - Time Value</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>f9add685-46ec-414a-9995-711e81a661fe</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>53ba5b91-4e7f-4654-8332-bac11a8760ef</GUID>
+          <Name>Orders.OrderDate</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>37c1f72c-97d3-4c21-94a7-12e3cdb9fa70</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>dd4345a9-247a-4fc0-bd24-58e860cffe7d</GUID>
+          <PivotPosition>Hidden</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[9101fa84-b42c-480d-a8c0-f77a3bc6a564]
+AND [33b75eaf-ef3b-49d0-b9a6-b59f4ba6bf8c]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>9101fa84-b42c-480d-a8c0-f77a3bc6a564</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>33b75eaf-ef3b-49d0-b9a6-b59f4ba6bf8c</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <EnumValues>
+            <string>1</string>
+            <string>2</string>
+            <string>3</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>6486700b-8e9b-46d3-aee1-182159a9e016</GUID>
+      <Name>Model - Bar - Numeric Axis</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>05d8af7b-fbaa-417c-9c26-75e10c669108</GUID>
+          <Name>Products.UnitsInStock</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7072ca5b-f70f-449e-a36a-65420f81667b</GUID>
+          <Name>Products.UnitsOnOrder</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <MetaColumnGUID>6fa87b3b-048f-4680-9516-35679cba84bf</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[202825e8-b636-4c40-97e2-df3875f7dc8a]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>202825e8-b636-4c40-97e2-df3875f7dc8a</GUID>
+          <Name>Products.UnitsInStock</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID>
+          <Operator>Smaller</Operator>
+          <Value1>30</Value1>
+          <FormatRe>N0</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>9be49b25-ba6c-458b-9603-21ae2d64f8b0</GUID>
+      <Name>Model - Scatter - Time Value</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>978c1e5f-13ac-4364-a91a-0889bb4fe244</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>73da6a5d-fcde-43f3-8e8f-7ce8e22429cc</GUID>
+          <Name>Orders.OrderDate</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <ChartJSSerie>Scatter</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c5859f22-02fb-4d99-8391-a31ec6fc3688</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>368a8e43-d931-4eee-a597-dc8043e881f5</GUID>
+          <PivotPosition>Hidden</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[c0a269cf-94f3-4054-a8f9-258d9afaf704]
+AND [724569a8-2afc-4e14-9040-23422f0610d1]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>c0a269cf-94f3-4054-a8f9-258d9afaf704</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+            <string>Fuller</string>
+            <string>King</string>
+            <string>Peacock</string>
+            <string>Suyama</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>724569a8-2afc-4e14-9040-23422f0610d1</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <EnumValues>
+            <string>1</string>
+            <string>2</string>
+            <string>3</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>4421c944-c3e9-4dae-b347-c027896dfefe</GUID>
+      <Name>Model - Scatter - Time Axis</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>5c555e85-a2d1-42ad-9501-8851fec72eef</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2e0de4f8-3eec-441b-8bff-16ec2a041ab7</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>196681fc-ce9b-45a9-bde2-f22b169db9a8</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Scatter</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[67bf9089-cd89-498a-870b-57fb047a793a]
+AND [387eba64-d9bb-442e-90b2-5ffd90d66696]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>67bf9089-cd89-498a-870b-57fb047a793a</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>387eba64-d9bb-442e-90b2-5ffd90d66696</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <Format>yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <Date1>1998-01-01T00:00:00</Date1>
+          <FormatRe>yyyy</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>d816fc42-888e-4e26-80ff-90b8839eb818</GUID>
+      <Name>Model - Bar - 2 Measures</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>c65aa514-af5f-497d-ada3-9949fe7520b5</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>76e52a9e-84de-4d52-9f84-53a3810fbac7</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>acad7036-2c22-4f2e-827f-a78a9419ed86</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Line</ChartJSSerie>
+          <YAxisType>Secondary</YAxisType>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>af270998-a036-46db-99bf-bd82e13e28c1</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[676cd82c-6341-493a-8366-4ce46606b4e9]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>676cd82c-6341-493a-8366-4ce46606b4e9</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>5313ce09-1847-4961-817e-a91e52218443</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>e9947fa2-d97e-4234-aef5-efc49f2fc59a</GUID>
+          <Name>Container</Name>
+          <Views>
+            <ReportView>
+              <GUID>fdbc10a6-4c16-48b5-b84f-c5a0eeb385f1</GUID>
+              <Name>Model - Pie</Name>
+              <Views>
+                <ReportView>
+                  <GUID>5156a53a-780c-467f-913d-a88af36c8f40</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>0cf9df92-ffa0-4d8c-96f5-d7123c73dc78</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>8dd5653f-1661-4f0e-8616-6c3581c13876</GUID>
+              <Name>Model - Bar</Name>
+              <Views>
+                <ReportView>
+                  <GUID>861e7680-e1ea-4c19-a54e-2725db6d4a63</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_bar_stacked</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>thr_per</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_tooltip_format</Name>
+                      <Value>vp</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>d112b12f-a7e4-4336-8858-0753fa1901ab</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>7cfabcf1-9aac-4bc9-8c52-f51b69699fb1</GUID>
+              <Name>Model - Line</Name>
+              <Views>
+                <ReportView>
+                  <GUID>50deeaac-8b1a-4f28-a82a-3449fbb79a91</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_align</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>c8746503-71e0-41da-a765-6b86e167ba66</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>5</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>712eaa9a-343d-4a6d-9527-cc0bca40c94d</GUID>
+              <Name>Model - Polar</Name>
+              <Views>
+                <ReportView>
+                  <GUID>4e15c2ec-f569-4f8b-b4a4-f380b58f1cb6</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_align</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_format</Name>
+                      <Value>per</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>c182302e-5da2-461a-9edf-5864b1292a31</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>d00aa31b-a408-49f3-98a5-46d8ca7cc245</GUID>
+              <Name>Model - Radar</Name>
+              <Views>
+                <ReportView>
+                  <GUID>8ef446d0-544f-4cd9-a570-7e779ffe998c</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_align</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_format</Name>
+                      <Value>val</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>ea7537f9-a8a5-43f3-885d-0f389b283eb1</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>c0504bc6-85dd-4358-a6ec-9403f95f2edd</GUID>
+              <Name>Model - Scatter</Name>
+              <Views>
+                <ReportView>
+                  <GUID>93fc3bbc-3f22-4e6b-8956-d079e0252c5e</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_border</Name>
+                      <Value>borderColor:'black',borderRadius:1,borderWidth:2</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_font</Name>
+                      <Value>size:10,style:'italic'</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_color</Name>
+                      <Value>black</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_back_color</Name>
+                      <Value>white</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_align</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>4932cb3a-5f2c-4583-b858-00809a3d3111</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>6</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>4e396cee-0c91-4181-89d8-8165567beaec</GUID>
+              <Name>Model - Bar - Time Axis</Name>
+              <Views>
+                <ReportView>
+                  <GUID>0fb23c4b-c0f6-4e2f-85e4-e397fff27213</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_unit</Name>
+                      <Value>month</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>thr_val</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_threshold</Name>
+                      <Value>5000</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>0f91c188-ce96-4214-bfb0-5f0ce180c471</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>7</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>81d9d1f4-1829-41fd-a60b-1f3afb572216</GUID>
+              <Name>Model - Bar - Time Axis - 2 Y Axis</Name>
+              <Views>
+                <ReportView>
+                  <GUID>a006a9b9-be38-4b99-8c7a-3ea80697a12d</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_unit</Name>
+                      <Value>month</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>466b8ffa-7c3d-4d33-a12d-2cc676aaf5fd</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>8</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>5c573124-90dc-4a04-af6b-33e3abf5a43a</GUID>
+              <Name>Model - Bar - Time Axis - Horizontal</Name>
+              <Views>
+                <ReportView>
+                  <GUID>e9616c8b-35d3-4c99-8dfe-f0ad371616d7</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_bar_stacked</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_bar_horizontal</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_unit</Name>
+                      <Value>month</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>e5e1adb4-23de-4155-823e-48710b898c93</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>9</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>5a01203b-033e-4d4a-a277-1836940a0e86</GUID>
+              <Name>Model - Bar - Horizontal</Name>
+              <Views>
+                <ReportView>
+                  <GUID>3da9bb50-fa30-4f42-8a20-5ee99c638125</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_bar_horizontal</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_unit</Name>
+                      <Value>month</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_align</Name>
+                      <Value>right</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_format</Name>
+                      <Value>per</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>74851cfd-ec9c-4574-a845-1844fb2c60ab</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>10</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>463fcc65-d652-46d3-94ac-e2264606de68</GUID>
+              <Name>Model - Bar - Time Value</Name>
+              <Views>
+                <ReportView>
+                  <GUID>26b875fa-597d-437a-896c-3d1664860c9e</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_yaxis_min</Name>
+                      <Value>'01.01.1998'</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_yaxis_max</Name>
+                      <Value>'06.01.1998'</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_unit</Name>
+                      <Value>month</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>b286bb97-92e9-42cc-9454-445e5d4f41f7</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>11</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>5095d262-d52d-44de-82a5-cf2b2f1e62c8</GUID>
+              <Name>Model - Bar - Numeric Axis</Name>
+              <Views>
+                <ReportView>
+                  <GUID>15bfc2bd-bc40-4a63-ae45-33a14be531a9</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_border</Name>
+                      <Value>borderColor:'black',borderRadius:4,borderWidth:2</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_back_color</Name>
+                      <Value>black</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_clamp</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_clip</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_tooltip_format</Name>
+                      <Value>vp</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>6486700b-8e9b-46d3-aee1-182159a9e016</ModelGUID>
+              <SortOrder>12</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>9d7c0669-6a2f-489d-b520-9b8f1a32a528</GUID>
+              <Name>Model - Scatter - Time Axis</Name>
+              <Views>
+                <ReportView>
+                  <GUID>d19e2551-b0e4-4168-a2c4-45733c33d87d</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_unit</Name>
+                      <Value>month</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_back_color</Name>
+                      <Value>blue</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_clip</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>start</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_align</Name>
+                      <Value>bottom</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_tooltip_format</Name>
+                      <Value>vp</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>4421c944-c3e9-4dae-b347-c027896dfefe</ModelGUID>
+              <SortOrder>13</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>b6af50d4-e3ac-417a-86a4-415da729360e</GUID>
+              <Name>Model - Scatter - Time Value</Name>
+              <Views>
+                <ReportView>
+                  <GUID>850eb7f9-00ff-480d-97ba-175e341b72ac</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_yaxis_min</Name>
+                      <Value>'01.01.1998'</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_yaxis_max</Name>
+                      <Value>'06.01.1998'</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_border</Name>
+                      <Value>borderColor:'black',borderRadius:4,borderWidth:2</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_color</Name>
+                      <Value>black</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_back_color</Name>
+                      <Value>white</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>start</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_align</Name>
+                      <Value>bottom</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_tooltip_format</Name>
+                      <Value>vp</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>9be49b25-ba6c-458b-9603-21ae2d64f8b0</ModelGUID>
+              <SortOrder>14</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>34cc669c-c2c9-4f35-8e54-f5dd1dd596c1</GUID>
+              <Name>Model - Bar - 2 Measures</Name>
+              <Views>
+                <ReportView>
+                  <GUID>593bd93a-fcb8-49e9-b8fe-e07f9ccce6cc</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_bar_stacked</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>thr_per</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_tooltip_format</Name>
+                      <Value>vp</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>d816fc42-888e-4e26-80ff-90b8839eb818</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>15</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-4;col-sm-4;col-sm-4;
+col-sm-4;col-sm-4;col-sm-4;
+col-sm-4;col-sm-4;col-sm-4;
+col-sm-4;col-sm-4;col-sm-4;
+col-sm-4;col-sm-4;col-sm-4;</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

@@ -285,14 +285,6 @@
             <DisplayOrder>6</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
-            <GUID>99034f69-6fb2-4ad4-b366-3e6ab4e3066a</GUID>
-            <Name>DisplayOrder</Name>
-            <Type>Text</Type>
-            <Category>XML Northwind Elements</Category>
-            <DisplayName>Display Order</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
-          </MetaColumn>
-          <MetaColumn>
             <GUID>95bff8b4-ddd2-4887-8ee2-2aa4fc3fa7a2</GUID>
             <Name>NumericStandardFormat</Name>
             <Type>Text</Type>

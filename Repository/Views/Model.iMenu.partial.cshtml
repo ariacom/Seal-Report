@@ -8,6 +8,7 @@
 
 <script>
     $(document).ready(function () {
+        $("#report_body_container").css("display", "block");
         $('#tc_@(view.IdSuffix) li:eq(@view.GetNumericValue("model_menu_index")) a').tab('show');
         $('#tc_@(view.IdSuffix) a').click(function (e) {
             if (@Helper.ToJS(report.GenerateHTMLDisplay)) processSubmitViewParameter("model_menu_index", $($(this).attr('href'), '@view.ViewId').index());
