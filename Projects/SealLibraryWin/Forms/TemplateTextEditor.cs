@@ -1811,7 +1811,7 @@ namespace Seal.Forms
                     {
                         template = razorConfigurationRepositoryTranslationsScriptTemplate;
                         frm.ObjectForCheckSyntax = Repository.Instance;
-                        frm.Text = "Edit the script executed when a new report is created";
+                        frm.Text = "Edit the script executed when the translations are initialized";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                     else if (context.PropertyDescriptor.Name == "AuditScript")
