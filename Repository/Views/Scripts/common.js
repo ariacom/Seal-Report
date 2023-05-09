@@ -401,6 +401,32 @@ function executeTimer() {
                             }
                         }
                     }
+                    else if (data.view_result_ready || data.view_result_cancel) {
+                        //View result
+                        clearInterval(_executionTimer);
+                        _executionTimer = null;
+                        _inExecution = false;
+                        _iconExecuting = false;
+                        $("#favicon").attr("href", _urlPrefix + "Images/faviconWebServer.ico");
+                        var btn = $("#execute_button");
+                        btn.text(btn.attr("label"));
+                        btn.removeClass("btn-warning").addClass("btn-success");
+                        if (data.view_result_ready) {
+                            if (data.new_window) $form.attr("target", "_blank");
+
+                            $form.attr("action", _urlPrefix + "Result");
+                            $form.submit();
+                        }
+                        var error = data.view_result_error;
+                        if (!error) {
+                            $(".progress_all").removeClass('hidden');
+                            $("#progress_panel").addClass('hidden');
+                            $(".progress").addClass('hidden');
+                        }
+                        else {
+                            setProgressBarMessage("#progress_bar", 100, error, "progress-bar-danger");
+                        }
+                    }
                     else if (data.progression_message != null) {
                         $("#favicon").attr("href", _urlPrefix + "Images/faviconWebServer" + (_iconExecuting ? "2" : "") + ".ico");
                         _iconExecuting = !_iconExecuting;
@@ -421,7 +447,24 @@ function executeTimer() {
                 });
         }
         else {
-            window.chrome.webview.hostObjects.sync.dotnet.RefreshReport();
+            if (window.chrome.webview.hostObjects.sync.dotnet.RefreshReport()) {
+                //View result
+                clearInterval(_executionTimer);
+                _executionTimer = null;
+                _inExecution = false;
+                var btn = $("#execute_button");
+                btn.text(btn.attr("label"));
+                btn.removeClass("btn-warning").addClass("btn-success");
+                var error = window.chrome.webview.hostObjects.sync.dotnet.ViewResultError;
+                if (error == "") {
+                    $(".progress_all").removeClass('hidden');
+                    $("#progress_panel").addClass('hidden');
+                    $(".progress").addClass('hidden');
+                }
+                else {
+                    setProgressBarMessage("#progress_bar", 100, error, "progress-bar-danger");
+                }
+            }
             $messages.removeClass('hidden');
         }
     }
@@ -480,24 +523,33 @@ function executeReport(nav) {
     _inExecution = true;
     if (_refreshTimer) clearInterval(_refreshTimer);
 
-    var url = "";
+    var action = "ActionExecuteReport"
+    var resultFormat = $("#result_format").val();
     if (_executionTimer == null) {
-        $("#information_div").html("");
-
-        var messages = $("#execution_messages");
-        if (messages.length) {
-            messages.addClass('hidden');
-            messages.html("");
-        }
-
         processInitProgressBar();
 
-        url = _urlPrefix + (nav == null ? "ActionExecuteReport" : "ActionNavigate");
+        if (nav != null) action = "ActionNavigate";
+        else if (resultFormat) {
+            action = "ActionViewResult";
+            $(".progress_all").addClass('hidden');
+        }
+
+        if (action != "ActionViewResult") {
+            $("#information_div").html("");
+
+            var messages = $("#execution_messages");
+            if (messages.length) {
+                messages.addClass('hidden');
+                messages.html("");
+            }
+        }
+
         if (nav == null || _urlPrefix == "") _executionTimer = setInterval(function () { executeTimer(); }, 1200);
     }
     else {
-        url = _urlPrefix + "ActionCancelReport";
+        action = "ActionCancelReport";
     }
+    var url = _urlPrefix + action;
 
     form.attr("target", "");
     if (_urlPrefix != "") {
@@ -508,17 +560,19 @@ function executeReport(nav) {
         });
     }
     else {
-        if (url == _urlPrefix + "ActionCancelReport") window.chrome.webview.hostObjects.sync.dotnet.CancelReport();
-        else if (url == _urlPrefix + "ActionNavigate") window.chrome.webview.hostObjects.sync.dotnet.Navigate($("#navigation_id").val(), $("#navigation_parameters").val());
+        if (action == "ActionCancelReport") window.chrome.webview.hostObjects.sync.dotnet.CancelReport();
+        else if (action == "ActionNavigate") window.chrome.webview.hostObjects.sync.dotnet.Navigate($("#navigation_id").val(), $("#navigation_parameters").val());
+        else if (action == "ActionViewResult") window.chrome.webview.hostObjects.sync.dotnet.ViewResult(resultFormat);
         else window.chrome.webview.hostObjects.sync.dotnet.ExecuteReport(form.serialize());
     }
     //spinner
     if ($("#nav_button").children().length == 0) $("#nav_button").append($("<i class='fa fa-spinner fa-spin fa-sm'></i>"));
     //disable controls during execution
-    $('#restrictions_div').addClass("disabled");
-    $('.view').css("display", "none");
-    $("#nav_button").attr("disabled", "disabled");
-
+    if (action != "ActionViewResult" && action != "ActionCancelReport") {
+        $('#restrictions_div').addClass("disabled");
+        $('.view').css("display", "none");
+        $("#nav_button").attr("disabled", "disabled");
+    }
     if (!_printLayout) setMessageHeight();
 
     processShowMsgDuringExec();
@@ -537,6 +591,7 @@ function mainInit() {
     });
 
     $("#execute_button").unbind("click").on("click", function () {
+        $("#result_format").val("");
         //Collapse navbar
         if ($('.navbar-toggle').css('display') !== 'none') $('.navbar-toggle').click();
         _inExecution = false;
@@ -610,10 +665,8 @@ function mainInit() {
 
     //result links
     $(".result_item").unbind("click").on("click", function () {
-        var form = $("#header_form");
-        form.attr("target", _urlPrefix != "" ? "_blank" : "");
-        form.attr("action", _urlPrefix + $(this).attr("id"));
-        form.submit();
+        $("#result_format").val($(this).attr("id"));
+        executeReport();
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
     });

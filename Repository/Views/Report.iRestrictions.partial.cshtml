@@ -3,8 +3,9 @@
     ReportView view = Model;
 }
 
-<form id="header_form" method="post" execguid="@view.Report.ExecutionGUID" action="">
+<form id="header_form" method="post" execguid="@view.Report.ExecutionGUID" action="" result_format="">
     <input type="hidden" name="execution_guid" id="execution_guid" value="@view.Report.ExecutionGUID" />
+    <input type="hidden" name="result_format" id="result_format" value="" />
     <input type="hidden" name="navigation_id" id="navigation_id" value="" />
     <input type="hidden" name="navigation_target" id="navigation_target" value="" />
     <input type="hidden" name="navigation_parameters" id="navigation_parameters" value="" />

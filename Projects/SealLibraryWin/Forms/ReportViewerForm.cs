@@ -14,14 +14,7 @@ using System.Web;
 using System.Threading;
 using Microsoft.Web.WebView2.Core;
 using System.Threading.Tasks;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
-using DocumentFormat.OpenXml.Presentation;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using System.Formats.Asn1;
 using System.Text.Json;
-using System.Collections.Generic;
-using DocumentFormat.OpenXml.Spreadsheet;
-using static Seal.Forms.ReportViewerForm;
 
 namespace Seal.Forms
 {
@@ -213,40 +206,6 @@ namespace Seal.Forms
                 webBrowser.CoreWebView2.AddHostObjectToScript("dotnet", _browserInterop);
                 if (_openDevTool) webBrowser.CoreWebView2.OpenDevToolsWindow();
             }
-
-            var resultPath = "";
-            if (e.Uri.EndsWith(ReportExecution.ActionViewHtmlResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GenerateHTMLResult();
-            }
-            else if (e.Uri.EndsWith(ReportExecution.ActionViewCSVResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GenerateCSVResult();
-            }
-            else if (e.Uri.EndsWith(ReportExecution.ActionViewPrintResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GeneratePrintResult();
-            }
-            else if (e.Uri.EndsWith(ReportExecution.ActionViewPDFResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GeneratePDFResult();
-            }
-            else if (e.Uri.EndsWith(ReportExecution.ActionViewExcelResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GenerateExcelResult();
-            }
-            if (File.Exists(resultPath))
-            {
-                e.Cancel = true;
-                var p = new Process();
-                p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
-                p.Start();
-            }
         }
 
         private void ReportViewerForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -269,6 +228,9 @@ namespace Seal.Forms
             if (LastLocation != null) Location = LastLocation.Value;
             this.KeyDown += TextBox_KeyDown;
             this.webBrowser.PreviewKeyDown += WebBrowser_PreviewKeyDown;
+
+            CoreWebView2Environment webView2Environment = CoreWebView2Environment.CreateAsync(null, FileHelper.TempApplicationDirectory).Result;
+            webBrowser.EnsureCoreWebView2Async(webView2Environment);
         }
 
         private void WebBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -286,7 +248,7 @@ namespace Seal.Forms
             public ReportViewerForm Container;
             bool _iconExecuting = true;
 
-            Report Report {  get { return Container._report; } }
+            Report Report { get { return Container._report; } }
             ReportExecution Execution { get { return Container._execution; } }
             NavigationContext Navigation { get { return Container._navigation; } }
 
@@ -334,8 +296,29 @@ namespace Seal.Forms
                 Container._reportDone = false;
             }
 
-            public void RefreshReport()
+            public void ViewResult(string format)
             {
+                _iconExecuting = true;
+                Container.setCurrentExecution();
+                Report.ExecutionTriggerView = null;
+                Report.IsNavigating = false;
+                Execution.IsViewingResult = true;
+                Report.ExecutionViewResultPath = "";
+                Report.ExecutionErrors = "";
+                Report.Cancel = false;
+
+                if (format == "PrintResult") Task.Run(() => Execution.GeneratePrintResult());
+                else if (format == "CSVResult") Task.Run(() => Execution.GenerateCSVResult());
+                else if (format == "PDFResult") Task.Run(() => Execution.GeneratePDFResult());
+                else if (format == "ExcelResult") Task.Run(() => Execution.GenerateExcelResult());
+                else Task.Run(() => Execution.GenerateHTMLResult());
+            }
+
+            public string ViewResultError { get; set; } = "";
+
+            public bool RefreshReport()
+            {
+                var result = false;
                 Container.Icon = (_iconExecuting ? Properties.Resources.reportDesigner2 : Properties.Resources.reportDesigner);
                 _iconExecuting = !_iconExecuting;
 
@@ -352,6 +335,32 @@ namespace Seal.Forms
                     Container.setProgressBarInformation(ReportExecution.HtmlId_progress_bar_tasks, Report.ExecutionProgressionTasks, Report.ExecutionProgressionTasksMessage, "primary");
                     Container.setProgressBarInformation(ReportExecution.HtmlId_progress_bar_models, Report.ExecutionProgressionModels, Report.ExecutionProgressionModelsMessage, "info");
                 }
+                else if (Execution.IsViewingResult)
+                {
+                    ViewResultError = "";
+                    bool cancel = Report.Cancel;
+                    Report.Cancel = false;
+                    if (!string.IsNullOrEmpty(Report.ExecutionViewResultPath))
+                    {
+                        result = true;
+                        Execution.IsViewingResult = false;
+                        var p = new Process();
+                        p.StartInfo = new ProcessStartInfo(Report.ExecutionViewResultPath) { UseShellExecute = true };
+                        p.Start();
+                    }
+                    else if (cancel)
+                    {
+                        Report.ExecutionViewResultPath = "";
+                        Execution.IsViewingResult = false;
+                        if (Report.HasErrors) ViewResultError = Report.ExecutionErrors;
+                        Report.ExecutionErrors = "";
+                        result = true;
+                    }
+                    else
+                    {
+                        Container.setProgressBarInformation(ReportExecution.HtmlId_progress_bar, 100, Report.Translate("Generating result..."), "success");
+                    }
+                }
                 else if (!Container._reportDone)
                 {
                     Navigation.SetNavigation(Execution);
@@ -360,6 +369,7 @@ namespace Seal.Forms
                     Container._url = "file:///" + Report.HTMLDisplayFilePath;
                     Container.webBrowser.Source = new Uri(Container._url);
                 }
+                return result;
             }
 
             public void CancelReport()

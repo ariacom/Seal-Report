@@ -2490,7 +2490,12 @@
         </member>
         <member name="F:Seal.Model.Report.ExecutionViewResultFormat">
             <summary>
-            Current result format generated durin a View Result: html, print, csv, pdf, excel
+            Current result format generated during a View Result: html, print, csv, pdf, excel
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.ExecutionViewResultPath">
+            <summary>
+            Current path of the result generated during a View Result: html, print, csv, pdf, excel
             </summary>
         </member>
         <member name="F:Seal.Model.Report.SecurityContext">
@@ -3410,6 +3415,11 @@
             Execute the current report
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportExecution.ViewResult">
+            <summary>
+            View current result 
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportExecution.SetError(System.String,System.Object[])">
             <summary>
             Add an execution error
@@ -3475,7 +3485,7 @@
             Generate the CSV result of the current execution
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.GeneratePrintResult">
+        <member name="M:Seal.Model.ReportExecution.GeneratePrintResult(System.Boolean)">
             <summary>
             Generate the HTML Print result of the current execution
             </summary>
