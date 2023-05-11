@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Collections;
 using Microsoft.Win32.TaskScheduler;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Seal
 {
@@ -1710,24 +1711,44 @@ namespace Seal
             init();
         }
 
+        private bool _isDoubleClick = false;
+
+        private void mainTreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            if (_isDoubleClick && e.Action == TreeViewAction.Collapse && (selectedEntity is ReportTask || selectedEntity is ReportModel || selectedEntity is ReportView))
+                e.Cancel = true;
+        }
+
+        private void mainTreeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            if (_isDoubleClick && e.Action == TreeViewAction.Expand && (selectedEntity is ReportTask || selectedEntity is ReportModel || selectedEntity is ReportView))
+                e.Cancel = true;
+        }
+
+        private void mainTreeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            _isDoubleClick = e.Clicks > 1;
+        }
+
         private void mainTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (selectedEntity is ReportTask)
             {
                 if (!string.IsNullOrEmpty(((ReportTask)selectedEntity).SQL)) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
                 else toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F7));
-
                 mainTreeView.SelectedNode.Expand();
             }
             else if (selectedEntity is ReportModel)
             {
                 if (((ReportModel)selectedEntity).IsSQLModel) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F7));
                 else if (((ReportModel)selectedEntity).Elements.Count > 0) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+                mainTreeView.SelectedNode.Expand();
             }
             else if (selectedEntity is ReportView)
             {
                 ReportView view = (ReportView)selectedEntity;
-                if (view.UseCustomTemplate) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+                if (view.UseCustomTemplate) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));                
+                else mainTreeView.SelectedNode.Expand();
             }
             else if (selectedEntity is ReportSchedule)
             {

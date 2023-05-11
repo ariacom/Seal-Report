@@ -502,6 +502,9 @@
             this.mainTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragEnter);
             this.mainTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragOver);
             this.mainTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainTreeView_MouseUp);
+            this.mainTreeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(mainTreeView_BeforeCollapse);
+            this.mainTreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(mainTreeView_BeforeExpand);
+            this.mainTreeView.MouseDown += new System.Windows.Forms.MouseEventHandler(mainTreeView_MouseDown); 
             // 
             // mainImageList
             // 
