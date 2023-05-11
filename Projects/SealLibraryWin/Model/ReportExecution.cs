@@ -217,7 +217,7 @@ namespace Seal.Model
             Report.ExecutionErrorStackTrace = "";
             Report.Status = ReportStatus.NotExecuted;
             CurrentEnumValues.Clear();
-
+                
             Report.InitForExecution();
             if (Report.HasErrors)
             {
@@ -243,6 +243,7 @@ namespace Seal.Model
                 Report.Cancel = false;
                 Report.ExecutionStartDate = DateTime.Now;
                 Task.Run(() => ExecuteAsync());
+
                 Thread.Sleep(100);
             }
         }
@@ -349,33 +350,6 @@ namespace Seal.Model
                     //Log files
                     Report.LogExecution();
                 }
-            }
-        }
-
-
-        /// <summary>
-        /// View current result 
-        /// </summary>
-        public void ViewResult()
-        {
-            Task.Run(() => ViewResult2());
-            Thread.Sleep(100);
-        }
-
-        private void ViewResult2()
-        {
-            try
-            {
-                GeneratePDFResult();
-            }
-            catch (Exception ex)
-            {
-                Report.TemplateParsingErrors = ex.Message;
-                Helper.WriteLogException("ViewResultAsync", ex);
-            }
-            finally
-            {
-                Report.Status = ReportStatus.Executed;
             }
         }
 
@@ -2246,7 +2220,6 @@ namespace Seal.Model
             var originalFromMenu = Report.OnlyBody;
             var originalFormat = Report.Format;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"));
-            Report.ExecutionViewResultPath = "";
 
             Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
             bool initialValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
@@ -2260,12 +2233,6 @@ namespace Seal.Model
                 executeTasks(ExecutionStep.BeforeRendering);
                 string result = Render();
                 File.WriteAllText(newPath, result.Trim(), Encoding.UTF8);
-                Report.ExecutionViewResultPath = newPath;
-            }
-            catch (Exception ex)
-            {
-                Report.Cancel = true;
-                Report.ExecutionErrors = ex.Message;
             }
             finally
             {
@@ -2288,7 +2255,6 @@ namespace Seal.Model
             Report.IsNavigating = false;
             var originalFormat = Report.Format;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".csv"));
-            Report.ExecutionViewResultPath = "";
             try
             {
                 Report.Format = ReportFormat.csv;
@@ -2297,12 +2263,6 @@ namespace Seal.Model
                 executeTasks(ExecutionStep.BeforeRendering);
                 string result = Report.ExecutionView.ParseChildren();
                 File.WriteAllText(newPath, result.Trim(), Report.ResultFileEncoding);
-                Report.ExecutionViewResultPath = newPath;
-            }
-            catch (Exception ex)
-            {
-                Report.Cancel = true;
-                Report.ExecutionErrors = ex.Message;
             }
             finally
             {
@@ -2318,13 +2278,12 @@ namespace Seal.Model
         /// <summary>
         /// Generate the HTML Print result of the current execution
         /// </summary>
-        public string GeneratePrintResult(bool skipResultPath = false)
+        public string GeneratePrintResult()
         {
             Report.IsNavigating = false;
             var originalFromMenu = Report.OnlyBody;
             var originalFormat = Report.Format;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
-            Report.ExecutionViewResultPath = "";
             try
             {
                 Report.OnlyBody = false;
@@ -2334,12 +2293,6 @@ namespace Seal.Model
                 executeTasks(ExecutionStep.BeforeRendering);
                 string result = Render();
                 File.WriteAllText(newPath, result.Trim(), Encoding.UTF8);
-                if (!skipResultPath) Report.ExecutionViewResultPath = newPath;
-            }
-            catch (Exception ex)
-            {
-                Report.Cancel = true;
-                Report.ExecutionErrors = ex.Message;
             }
             finally
             {
@@ -2358,22 +2311,15 @@ namespace Seal.Model
         public string GeneratePDFResult()
         {
             string newPath = "";
-            Report.ExecutionViewResultPath = "";
             var originalFormat = Report.Format;
             Report.PdfConversion = true;
             Report.ExecutionViewResultFormat = ReportFormat.pdf.ToString();
             executeTasks(ExecutionStep.BeforeRendering);
             try
             {
-                string source = GeneratePrintResult(true);
+                string source = GeneratePrintResult();
                 newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
                 Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
-                Report.ExecutionViewResultPath = newPath;
-            }
-            catch (Exception ex)
-            {
-                Report.Cancel = true;
-                Report.ExecutionErrors = ex.Message;
             }
             finally
             {
@@ -2390,21 +2336,12 @@ namespace Seal.Model
         public string GenerateExcelResult()
         {
             var result = "";
-            Report.ExecutionViewResultPath = "";
             try
             {
-                throw new Exception("popol");
                 Report.ExecutionViewResultFormat = ReportFormat.excel.ToString();
                 executeTasks(ExecutionStep.BeforeRendering);
                 string path = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)) + ".xlsx");
                 result = Report.ExecutionView.ConvertToExcel(path);
-                Report.ExecutionViewResultPath = result;
-
-            }
-            catch (Exception ex)
-            {
-                Report.Cancel = true;
-                Report.ExecutionErrors = ex.Message;
             }
             finally
             {
@@ -2415,7 +2352,6 @@ namespace Seal.Model
 
         public bool IsConvertingToPDF = false; //If true, do not run conversion again
         public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
-        public bool IsViewingResult = false; //If true, the result is being generated after a view result
 
         /// <summary>
         /// Dynamic enum values selected during the report execution

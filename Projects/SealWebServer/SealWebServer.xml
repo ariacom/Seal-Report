@@ -29,11 +29,6 @@
             Execute a report initiated in a previous execution
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.HomeController.ActionViewResult(System.String,System.String)">
-            <summary>
-            View the result of a report initiated in a previous execution
-            </summary>
-        </member>
         <member name="M:SealWebServer.Controllers.HomeController.ActionNavigate(System.String,System.String)">
             <summary>
             Navigate to a new report execution: Either for Drill or SubReport

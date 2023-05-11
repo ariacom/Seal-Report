@@ -17,7 +17,6 @@ using System.Globalization;
 using System.Collections.Specialized;
 using Microsoft.Extensions.Options;
 using SealWebServer.Models.Configuration;
-using System.Threading.Tasks;
 
 namespace SealWebServer.Controllers
 {
@@ -224,7 +223,6 @@ namespace SealWebServer.Controllers
                 {
                     Report report = execution.Report;
                     WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Information, string.Format("Starting report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
-                    execution.IsViewingResult = false;
                     report.IsNavigating = false;
                     report.ExecutionTriggerView = null;
                     initInputRestrictions(report);
@@ -239,43 +237,6 @@ namespace SealWebServer.Controllers
                 return HandleException(ex);
             }
         }
-
-        /// <summary>
-        /// View the result of a report initiated in a previous execution
-        /// </summary>
-        public ActionResult ActionViewResult(string execution_guid, string result_format)
-        {
-            writeDebug("ActionViewResult");
-            try
-            {
-                if (!CheckAuthentication()) return _loginContentResult;
-                if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
-                var execution = getReportExecution(execution_guid);
-                if (execution != null)
-                {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
-                    Report report = execution.Report;
-                    execution.IsViewingResult = true;
-                    report.ExecutionViewResultPath = "";
-                    report.ExecutionErrors = "";
-                    report.Cancel = false;
-
-                    if (result_format == "PrintResult") Task.Run(() => execution.GeneratePrintResult());
-                    else if (result_format == "CSVResult") Task.Run(() => execution.GenerateCSVResult());
-                    else if (result_format == "PDFResult") Task.Run(() => execution.GeneratePDFResult());
-                    else if (result_format == "ExcelResult") Task.Run(() => execution.GenerateExcelResult());
-                    else Task.Run(() => execution.GenerateHTMLResult());
-                    
-                    return new EmptyResult();
-                }
-                else throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
 
         /// <summary>
         /// Navigate to a new report execution: Either for Drill or SubReport
@@ -436,28 +397,6 @@ namespace SealWebServer.Controllers
                             execution_messages = Helper.ToHtml(report.ExecutionMessages)
                         });
                     }
-                    else if (execution.IsViewingResult)
-                    {
-                        bool cancel = report.Cancel;
-                        report.Cancel = false;
-                        if (!string.IsNullOrEmpty(report.ExecutionViewResultPath))
-                        {
-                            return Json(new { 
-                                view_result_ready = true,
-                                new_window = !(report.ExecutionViewResultFormat == ReportFormat.csv.ToString() || report.ExecutionViewResultFormat == ReportFormat.excel.ToString() || report.ExecutionViewResultFormat == ReportFormat.pdf.ToString()),
-                            }); ;
-                        }
-                        else
-                        {
-                            return Json(new
-                            {
-                                progression = 100,
-                                progression_message = Helper.ToHtml(report.Translate("Generating result...")),
-                                view_result_cancel = cancel,
-                                view_result_error = report.ExecutionErrors,
-                            });
-                        }
-                    }
                     else if (report.Status == ReportStatus.Executed)
                     {
                         return Json(new { result_ready = true }); ;
@@ -514,12 +453,6 @@ namespace SealWebServer.Controllers
                     WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Information, string.Format("Viewing result of report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
                     if (report.HasErrors) WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Error, string.Format("Report '{0}' execution errors:\r\n{1}", report.FilePath, report.ExecutionErrors), getContextDetail(Request, WebUser));
                     string filePath = report.ForOutput || report.HasExternalViewer ? report.HTMLDisplayFilePath : report.ResultFilePath;
-                    if (execution.IsViewingResult)
-                    {
-                        execution.IsViewingResult = false;
-                        filePath = report.ExecutionViewResultPath;
-                    }
-
                     if (!System.IO.File.Exists(filePath)) throw new Exception("Error: Result file path does not exists...");
                     return getFileResult(filePath, report);
                 }

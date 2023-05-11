@@ -1013,16 +1013,10 @@ namespace Seal.Model
         public ReportExecutionContext ExecutionContext = ReportExecutionContext.DesignerReport;
 
         /// <summary>
-        /// Current result format generated during a View Result: html, print, csv, pdf, excel
+        /// Current result format generated durin a View Result: html, print, csv, pdf, excel
         /// </summary>
         [XmlIgnore]
         public string ExecutionViewResultFormat = "";
-
-        /// <summary>
-        /// Current path of the result generated during a View Result: html, print, csv, pdf, excel
-        /// </summary>
-        [XmlIgnore]
-        public string ExecutionViewResultPath;
 
         /// <summary>
         /// Current security user of the report execution

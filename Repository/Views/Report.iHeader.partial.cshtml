@@ -24,13 +24,12 @@
                         <img src="@report.AttachImageFile(configuration.LogoName)" @Raw(attr)>
                     </a>
                 }
-                <a id="nav_button" href="#" class="navbar-brand" style="cursor: default">@report.ExecutionName</a>
-                <span id="nav_badge" class="badge navbar-left hidden">@report.Translate("Nav")</span>
+                <a id="nav_button" href="#" class="navbar-brand" style="cursor: default">@report.ExecutionName</a><span id="nav_badge" class="badge navbar-left hidden">@report.Translate("Nav")</span>
             </div>
             <div id="navbarCollapse" class="collapse navbar-collapse">
                 @if (report.GenerateHTMLDisplay)
                 {
-                    <button id="execute_button" label="@report.Translate("Execute")" class="btn btn-success navbar-btn navbar-right">@report.Translate("Execute")</button>
+                    <button id="execute_button" class="btn btn-success navbar-btn navbar-right">@report.Translate("Execute")</button>
                     <button id="restrictions_button" type="button" class="btn btn-info navbar-btn navbar-right" title="@report.Translate("Show/Hide Restrictions")">
                         <span class="glyphicon glyphicon-filter"></span>
                     </button>
