@@ -616,6 +616,9 @@ function mainInit() {
         form.submit();
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+
+        $("#view_result_message").removeClass('hidden');
+        setTimeout(function () { $("#view_result_message").addClass('hidden'); }, 4000)
     });
 
     //navigation

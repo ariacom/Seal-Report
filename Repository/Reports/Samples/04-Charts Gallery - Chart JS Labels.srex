@@ -1338,14 +1338,6 @@ AND [387eba64-d9bb-442e-90b2-5ffd90d66696]</Restriction>
                   <TemplateName>Chart JS</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>chartjs_yaxis_min</Name>
-                      <Value>'01.01.1998'</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>chartjs_yaxis_max</Name>
-                      <Value>'06.01.1998'</Value>
-                    </Parameter>
-                    <Parameter>
                       <Name>chartjs_unit</Name>
                       <Value>month</Value>
                     </Parameter>
@@ -1466,14 +1458,6 @@ AND [387eba64-d9bb-442e-90b2-5ffd90d66696]</Restriction>
                   <Name>Chart JS</Name>
                   <TemplateName>Chart JS</TemplateName>
                   <Parameters>
-                    <Parameter>
-                      <Name>chartjs_yaxis_min</Name>
-                      <Value>'01.01.1998'</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>chartjs_yaxis_max</Name>
-                      <Value>'06.01.1998'</Value>
-                    </Parameter>
                     <Parameter>
                       <Name>chartjs_label_display</Name>
                       <Value>auto</Value>

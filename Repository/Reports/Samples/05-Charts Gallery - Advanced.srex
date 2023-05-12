@@ -587,10 +587,6 @@
                           <Value>Chart JS</Value>
                         </Parameter>
                         <Parameter>
-                          <Name>chartjs_yaxis_min</Name>
-                          <Value>'1996-07-20'</Value>
-                        </Parameter>
-                        <Parameter>
                           <Name>chartjs_label_display</Name>
                           <Value>auto</Value>
                         </Parameter>

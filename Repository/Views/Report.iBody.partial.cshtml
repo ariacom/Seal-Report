@@ -332,14 +332,13 @@
 
 @if (report.HasChartJSChart)
 {
-    @Raw(report.AttachScriptFile("Chart.min.js", "https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"))
-    @Raw(report.AttachScriptFile("chartjs-plugin-datalabels.min.js", "https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"))
-    @Raw(report.AttachScriptFile("chartjs-adapter-moment.min.js", "https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@%5E1"))
+    @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"))
+    @Raw(report.AttachScriptFile("chartjs-plugin-datalabels.min.js", "https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"))
 }
 
 @if (report.HasPlotlyChart)
 {
-    @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdn.plot.ly/plotly-2.21.0.min.js"))
+    @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdn.plot.ly/plotly-1.48.1.min.js"))
     if (view.CultureInfo.TwoLetterISOLanguageName != "en")
     {
         @Raw(report.AttachScriptFile("plotly\\plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))

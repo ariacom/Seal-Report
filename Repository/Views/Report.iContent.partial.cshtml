@@ -20,6 +20,9 @@
             @Raw(Helper.ToHtml(report.WebExecutionErrors))
         </div>
     }
+    <div id="view_result_message" class='alert alert-warning alert-dismissible hidden' role='alert'>
+        @Raw(Helper.ToHtml(report.Translate("Please wait, the report result is being generated in another window")))...
+    </div>
 </div>
 
 <!--progress-->
