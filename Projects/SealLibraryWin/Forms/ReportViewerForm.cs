@@ -245,7 +245,8 @@ namespace Seal.Forms
                 e.Cancel = true;
                 var p = new Process();
                 p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
-                p.Start();
+
+                Task.Run(() => p.Start());
             }
         }
 
@@ -269,6 +270,9 @@ namespace Seal.Forms
             if (LastLocation != null) Location = LastLocation.Value;
             this.KeyDown += TextBox_KeyDown;
             this.webBrowser.PreviewKeyDown += WebBrowser_PreviewKeyDown;
+
+            CoreWebView2Environment webView2Environment = CoreWebView2Environment.CreateAsync(null, FileHelper.TempApplicationDirectory).Result;
+            webBrowser.EnsureCoreWebView2Async(webView2Environment);
         }
 
         private void WebBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
