@@ -207,46 +207,54 @@ namespace Seal.Forms
 
         private void WebBrowser_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
-            if (_browserInterop == null)
+            try
             {
-                _browserInterop = new BrowserInterop() { Container = this };
-                webBrowser.CoreWebView2.AddHostObjectToScript("dotnet", _browserInterop);
-                if (_openDevTool) webBrowser.CoreWebView2.OpenDevToolsWindow();
-            }
+                if (_browserInterop == null)
+                {
+                    _browserInterop = new BrowserInterop() { Container = this };
+                    webBrowser.CoreWebView2.AddHostObjectToScript("dotnet", _browserInterop);
+                    if (_openDevTool) webBrowser.CoreWebView2.OpenDevToolsWindow();
+                }
 
-            var resultPath = "";
-            if (e.Uri.EndsWith(ReportExecution.ActionViewHtmlResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GenerateHTMLResult();
+                var resultPath = "";
+                if (e.Uri.EndsWith(ReportExecution.ActionViewHtmlResult))
+                {
+                    setCurrentExecution();
+                    resultPath = _execution.GenerateHTMLResult();
+                }
+                else if (e.Uri.EndsWith(ReportExecution.ActionViewCSVResult))
+                {
+                    setCurrentExecution();
+                    resultPath = _execution.GenerateCSVResult();
+                }
+                else if (e.Uri.EndsWith(ReportExecution.ActionViewPrintResult))
+                {
+                    setCurrentExecution();
+                    resultPath = _execution.GeneratePrintResult();
+                }
+                else if (e.Uri.EndsWith(ReportExecution.ActionViewPDFResult))
+                {
+                    setCurrentExecution();
+                    resultPath = _execution.GeneratePDFResult();
+                }
+                else if (e.Uri.EndsWith(ReportExecution.ActionViewExcelResult))
+                {
+                    setCurrentExecution();
+                    resultPath = _execution.GenerateExcelResult();
+                }
+                if (File.Exists(resultPath))
+                {
+                    e.Cancel = true;
+                    var p = new Process();
+                    p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
+
+                    Task.Run(() => p.Start());
+                }
             }
-            else if (e.Uri.EndsWith(ReportExecution.ActionViewCSVResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GenerateCSVResult();
-            }
-            else if (e.Uri.EndsWith(ReportExecution.ActionViewPrintResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GeneratePrintResult();
-            }
-            else if (e.Uri.EndsWith(ReportExecution.ActionViewPDFResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GeneratePDFResult();
-            }
-            else if (e.Uri.EndsWith(ReportExecution.ActionViewExcelResult))
-            {
-                setCurrentExecution();
-                resultPath = _execution.GenerateExcelResult();
-            }
-            if (File.Exists(resultPath))
+            catch(Exception ex)
             {
                 e.Cancel = true;
-                var p = new Process();
-                p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true };
-
-                Task.Run(() => p.Start());
+                Task.Run(() => MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning));
             }
         }
 
