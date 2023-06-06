@@ -1117,7 +1117,7 @@ namespace Seal.Model
                         if (string.IsNullOrEmpty(line[0].FinalCssClass) && string.IsNullOrEmpty(line[0].FinalCssStyle))
                         {
                             line[0].FinalCssClass = "text-left"; //Force left
-                            line[0].FinalCssStyle = "padding-right:25px;";
+                            line[0].FinalCssStyle = "text-align:left;padding-right:25px;";
                         }
                     }
                     for (int i = 0; i < headerColumnValues.Length; i++) line[headerRowValues.Length + i] = headerColumnValues[i];
@@ -1144,7 +1144,7 @@ namespace Seal.Model
                             if (headerDataValues.Length > 0 && string.IsNullOrEmpty(line[index].FinalCssClass) && string.IsNullOrEmpty(line[index].FinalCssStyle))
                             {
                                 line[index].FinalCssClass = "text-right"; //Force right as the column displays an aggregate
-                                line[index].FinalCssStyle = "padding-right:25px;";
+                                line[index].FinalCssStyle = "text-align:right;padding-right:25px;";
                             }
                         }
                     }

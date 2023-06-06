@@ -32,6 +32,7 @@ namespace Seal.Forms
             choices.Add("P2");
             choices.Add("00000");
             choices.Add("#,##0.00");
+            choices.Add("#,0.######");
             choices.Add("00");
             choices.Add("0,0");
             choices.Add("0,0.0");

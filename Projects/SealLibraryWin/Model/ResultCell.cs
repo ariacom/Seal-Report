@@ -124,14 +124,14 @@ namespace Seal.Model
         public static string DefaultTitleCssStyle = "";
 
         /// <summary>
-        /// Default Css Style for a numeric title cell. Default value is 'padding-right:25px;'
+        /// Default Css Style for a numeric title cell. Default value is 'text-align:right;padding-right:25px;'
         /// </summary>
-        public static string DefaultNumericTitleCssStyle = "padding-right:25px;";
+        public static string DefaultNumericTitleCssStyle = "text-align:right;padding-right:25px;";
 
         /// <summary>
-        /// Default Css Style for a datetime title cell. Default value is 'padding-right:25px;'
+        /// Default Css Style for a datetime title cell. Default value is 'text-align:right;padding-right:25px;'
         /// </summary>
-        public static string DefaultDateTimeTitleCssStyle = "padding-right:25px;";
+        public static string DefaultDateTimeTitleCssStyle = "text-align:right;padding-right:25px;";
 
         /// <summary>
         /// HTML value of the cell

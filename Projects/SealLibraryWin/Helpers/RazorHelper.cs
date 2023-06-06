@@ -67,6 +67,7 @@ namespace Seal.Helpers
         static HttpClient _18 = null;
         static AdomdConnection _19 = null;
         static ExcelPackage _20 = null;
+        static EventLogEntryType _21 = EventLogEntryType.Information; //Necessary to compile Security Scripts
         static MongoClient _22 = null;
         static string _23 = "";
         static JsonContent _24 = null;

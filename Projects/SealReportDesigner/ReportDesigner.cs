@@ -76,20 +76,21 @@ namespace Seal
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
             PropertyGridHelper.AddResetMenu(mainPropertyGrid);
 
-            treeViewHelper = new TreeViewEditorHelper() { 
-                entityHandler = this, 
-                Report = _report, 
-                resetDisplayOrderToolStripMenuItem = resetDisplayOrderToolStripMenuItem, 
-                sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, 
-                sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, 
-                addFromToolStripMenuItem = addFromToolStripMenuItem, 
-                addToolStripMenuItem = addToolStripMenuItem, 
-                removeToolStripMenuItem = removeToolStripMenuItem, 
-                copyToolStripMenuItem = copyToolStripMenuItem, 
-                removeRootToolStripMenuItem = removeRootToolStripMenuItem, 
-                treeContextMenuStrip = treeContextMenuStrip, 
-                mainTreeView = mainTreeView, 
-                ForReport = true             
+            treeViewHelper = new TreeViewEditorHelper()
+            {
+                entityHandler = this,
+                Report = _report,
+                resetDisplayOrderToolStripMenuItem = resetDisplayOrderToolStripMenuItem,
+                sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem,
+                sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem,
+                addFromToolStripMenuItem = addFromToolStripMenuItem,
+                addToolStripMenuItem = addToolStripMenuItem,
+                removeToolStripMenuItem = removeToolStripMenuItem,
+                copyToolStripMenuItem = copyToolStripMenuItem,
+                removeRootToolStripMenuItem = removeRootToolStripMenuItem,
+                treeContextMenuStrip = treeContextMenuStrip,
+                mainTreeView = mainTreeView,
+                ForReport = true
             };
             mainTreeView.AfterSelect += treeViewHelper.AfterSelect;
 
@@ -1747,7 +1748,7 @@ namespace Seal
             else if (selectedEntity is ReportView)
             {
                 ReportView view = (ReportView)selectedEntity;
-                if (view.UseCustomTemplate) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));                
+                if (view.UseCustomTemplate) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
                 else mainTreeView.SelectedNode.Expand();
             }
             else if (selectedEntity is ReportSchedule)
@@ -1767,12 +1768,6 @@ namespace Seal
             renderViewOutputToolStripMenuItem.Enabled = renderToolStripMenuItem.Enabled;
             executeViewOutputToolStripButton.Enabled = executeToolStripMenuItem.Enabled;
             renderViewOutputToolStripButton.Enabled = renderToolStripMenuItem.Enabled;
-
-            if (executeToolStripButton.Enabled)
-            {
-                Icon = Properties.Resources.reportDesigner;
-                if (_reportViewer != null) _reportViewer.Icon = Icon;
-            }
         }
 
         private void ReportDesigner_KeyDown(object sender, KeyEventArgs e)
@@ -1799,8 +1794,7 @@ namespace Seal
                 {
                     if (allViews[i].TemplateName == templateToSearch)
                     {
-                        if (i < allViews.Count - 2) nextView = allViews[i];
-                        else nextView = allViews[0];
+                        nextView = allViews[i];
                         break;
                     }
                 }

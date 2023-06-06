@@ -293,6 +293,12 @@ namespace Seal.Forms
             if (e.KeyCode == Keys.Escape) Close();
         }
 
+        public void InitIcon()
+        {
+            Icon = Properties.Resources.reportDesigner;
+            if (Owner != null) Owner.Icon = Icon;
+        }
+
         public class BrowserInterop
         {
             public ReportViewerForm Container;
@@ -372,11 +378,13 @@ namespace Seal.Forms
                     Container._url = "file:///" + Report.HTMLDisplayFilePath;
                     Container.webBrowser.Source = new Uri(Container._url);
                 }
+
+                if (Report.Cancel) Container.InitIcon();
             }
 
             public void CancelReport()
             {
-                initIcon();
+                Container.InitIcon();
 
                 Execution.Report.LogMessage(Report.Translate("Cancelling report..."));
                 Report.Cancel = true;
@@ -385,7 +393,7 @@ namespace Seal.Forms
             public string Navigate(string nav, string parameter)
             {
                 string result = "";
-                initIcon();
+                Container.InitIcon();
 
                 var parameters = HttpUtility.ParseQueryString(parameter);
                 if (nav.StartsWith(NavigationLink.FileDownloadPrefix)) //File download
@@ -420,7 +428,7 @@ namespace Seal.Forms
 
             public void ExecuteFromTrigger(string formId, string formValues)
             {
-                initIcon();
+                Container.InitIcon();
                 _iconExecuting = true;
                 Container.setCurrentExecution();
                 lock (Execution)
@@ -437,12 +445,6 @@ namespace Seal.Forms
 
                     Container.webBrowser.Source = new Uri(Container._url);
                 }
-            }
-
-            void initIcon()
-            {
-                Container.Icon = Properties.Resources.reportDesigner;
-                if (Container.Owner != null) Container.Owner.Icon = Container.Icon;
             }
         }
     }

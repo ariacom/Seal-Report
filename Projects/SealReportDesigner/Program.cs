@@ -78,8 +78,14 @@ namespace Seal
             DialogResult result = DialogResult.Cancel;
             try
             {
-                result = MessageBox.Show(t.Exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Helper.WriteLogEntry("Report Designer", System.Diagnostics.EventLogEntryType.Error, t.Exception.Message + "\r\n" + t.Exception.StackTrace);
+                var message = t.Exception.Message;
+                if (t.Exception.Message.Contains("Webview2"))
+                {
+                    message += "\r\n\r\nCheck that the Microsoft Edge WebView2 Runtime is installed from https://developer.microsoft.com/en-us/microsoft-edge/webview2\r\n";
+                }
+                result = MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Helper.WriteLogEntry("Report Designer", System.Diagnostics.EventLogEntryType.Error, message + "\r\n" + t.Exception.StackTrace);
+
             }
             catch
             {

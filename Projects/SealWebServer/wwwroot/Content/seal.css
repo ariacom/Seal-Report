@@ -1,4 +1,4 @@
-﻿body {
+body {
     min-height: 400px;
 }
 
@@ -127,21 +127,21 @@
 
 .cell-datetime {
     color: darkgreen;
-	text-align: right;
+	text-align: right !important;
 }
 
 .cell-numeric {
     color: darkblue;
-	text-align: right;
+	text-align: right !important;
 }
 
 .cell-numeric-positive {
     color: darkblue;
-	text-align: right;
+	text-align: right !important;
 }
 
 .cell-numeric-negative {
     color: red;
-	text-align: right;
+	text-align: right !important;
 }
 
