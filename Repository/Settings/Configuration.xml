@@ -45,6 +45,10 @@ _ed.editor.bootstrap.min.js</ScriptFiles>
   <PdfServicePassword />
   <PdfWebServiceURL />
   <DefaultCulture />
+  <NumberGroupSeparator />
+  <NumberDecimalSeparator />
+  <DateSeparator />
+  <TimeSeparator />
   <CsvSeparator />
   <WebApplicationName>/Seal</WebApplicationName>
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>

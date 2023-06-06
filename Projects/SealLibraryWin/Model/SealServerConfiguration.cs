@@ -11,6 +11,7 @@ using System.Linq;
 using System.Xml;
 using Seal.Helpers;
 using System.Reflection;
+using System.Globalization;
 #if WINDOWS
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
@@ -58,6 +59,10 @@ namespace Seal.Model
                 GetProperty("OuterProcess").SetIsReadOnly(_schedulerMode == SchedulerMode.Windows);
 
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
+                GetProperty("NumberGroupSeparator").SetIsBrowsable(!ForPublication);
+                GetProperty("NumberDecimalSeparator").SetIsBrowsable(!ForPublication);
+                GetProperty("DateSeparator").SetIsBrowsable(!ForPublication);
+                GetProperty("TimeSeparator").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebHelpLink").SetIsBrowsable(!ForPublication);
@@ -108,6 +113,8 @@ namespace Seal.Model
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
                 GetProperty("WebPublicationDirectory").SetIsBrowsable(ForPublication);
+
+                GetProperty("DefaultCulture").SetDisplayName($"Culture (Default is '{CultureInfo.CurrentCulture.EnglishName}')");
 
                 TypeDescriptor.Refresh(this);
             }
@@ -642,11 +649,11 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// The name of the culture used when a report is created. If not specified, the current culture of the server is used.
+        /// The name of the culture used for the user session. It defines the language and the number and date formats. If not specified, the current culture of the server is used.
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(2, 3)]
-        [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
+        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used for the user session. It defines the language and the number and date formats. If not specified, the current culture of the server is used."), Id(2, 3)]
+        [TypeConverter(typeof(Forms.CultureInfoConverter))]
 #endif
         public string DefaultCulture { get; set; } = "";
 
@@ -671,10 +678,42 @@ namespace Seal.Model
         public string DateTimeFormat { get; set; } = "d";
 
         /// <summary>
+        /// If set, overrides the Group Separator for numbers of the current culture
+        /// </summary>
+#if WINDOWS
+        [Category("Formats"), DisplayName("Number Group Separator"), Description("If set, overrides the Group Separator for numbers of the current culture."), Id(5, 3)]
+#endif
+        public string NumberGroupSeparator { get; set; } = null;
+
+        /// <summary>
+        /// If set, overrides the Decimal Separator for numbers of the current culture
+        /// </summary>
+#if WINDOWS
+        [Category("Formats"), DisplayName("Number Decimal Separator"), Description("If set, overrides the Decimal Separator for numbers of the current culture."), Id(6, 3)]
+#endif
+        public string NumberDecimalSeparator { get; set; } = null;
+
+        /// <summary>
+        /// If set, overrides the Date Separator for dates of the current culture
+        /// </summary>
+#if WINDOWS
+        [Category("Formats"), DisplayName("Date Separator"), Description("If set, overrides the Date Separator for dates of the current culture."), Id(7, 3)]
+#endif
+        public string DateSeparator { get; set; } = null;
+
+        /// <summary>
+        /// If set, overrides the Time Separator for times of the current culture
+        /// </summary>
+#if WINDOWS
+        [Category("Formats"), DisplayName("Time Separator"), Description("If set, overrides the Time Separator for times of the current culture."), Id(8, 3)]
+#endif
+        public string TimeSeparator { get; set; } = null;
+
+        /// <summary>
         /// If not specified in the report, separator used for the CSV template
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(4, 3)]
+        [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(9, 3)]
 #endif
         public string CsvSeparator { get; set; } = "";
 

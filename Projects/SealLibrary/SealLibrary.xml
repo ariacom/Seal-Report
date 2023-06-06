@@ -6607,12 +6607,12 @@
         </member>
         <member name="F:Seal.Model.ResultCell.DefaultNumericTitleCssStyle">
             <summary>
-            Default Css Style for a numeric title cell. Default value is 'padding-right:25px;'
+            Default Css Style for a numeric title cell. Default value is 'text-align:right;padding-right:25px;'
             </summary>
         </member>
         <member name="F:Seal.Model.ResultCell.DefaultDateTimeTitleCssStyle">
             <summary>
-            Default Css Style for a datetime title cell. Default value is 'padding-right:25px;'
+            Default Css Style for a datetime title cell. Default value is 'text-align:right;padding-right:25px;'
             </summary>
         </member>
         <member name="P:Seal.Model.ResultCell.HTMLValue">
@@ -7819,7 +7819,7 @@
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.DefaultCulture">
             <summary>
-            The name of the culture used when a report is created. If not specified, the current culture of the server is used.
+            The name of the culture used for the user session. It defines the language and the number and date formats. If not specified, the current culture of the server is used.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.NumericFormat">
@@ -7830,6 +7830,26 @@
         <member name="P:Seal.Model.SealServerConfiguration.DateTimeFormat">
             <summary>
             The date time format used for date time column having the default format
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.NumberGroupSeparator">
+            <summary>
+            If set, overrides the Group Separator for numbers of the current culture
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.NumberDecimalSeparator">
+            <summary>
+            If set, overrides the Decimal Separator for numbers of the current culture
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.DateSeparator">
+            <summary>
+            If set, overrides the Date Separator for dates of the current culture
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.TimeSeparator">
+            <summary>
+            If set, overrides the Time Separator for times of the current culture
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.CsvSeparator">

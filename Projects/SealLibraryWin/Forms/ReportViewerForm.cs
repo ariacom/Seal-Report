@@ -377,6 +377,7 @@ namespace Seal.Forms
                     Report.IsNavigating = false;
                     Container._url = "file:///" + Report.HTMLDisplayFilePath;
                     Container.webBrowser.Source = new Uri(Container._url);
+                    Container.InitIcon();
                 }
 
                 if (Report.Cancel) Container.InitIcon();

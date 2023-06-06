@@ -137,6 +137,13 @@ namespace Seal.Model
         /// </summary>
         public List<OutputDevice> Devices { get; private set; } = new List<OutputDevice>();
 
+        void initCultureSeparators()
+        {
+            if (!string.IsNullOrEmpty(Configuration.NumberGroupSeparator)) _cultureInfo.NumberFormat.NumberGroupSeparator = Configuration.NumberGroupSeparator;
+            if (!string.IsNullOrEmpty(Configuration.NumberDecimalSeparator)) _cultureInfo.NumberFormat.NumberDecimalSeparator = Configuration.NumberDecimalSeparator;
+            if (!string.IsNullOrEmpty(Configuration.DateSeparator)) _cultureInfo.DateTimeFormat.DateSeparator = Configuration.DateSeparator;
+            if (!string.IsNullOrEmpty(Configuration.TimeSeparator)) _cultureInfo.DateTimeFormat.TimeSeparator = Configuration.TimeSeparator;
+        }
 
         CultureInfo _cultureInfo = null;
         /// <summary>
@@ -146,14 +153,21 @@ namespace Seal.Model
         {
             get
             {
-
-                if (_cultureInfo == null && !string.IsNullOrEmpty(Configuration.DefaultCulture)) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == Configuration.DefaultCulture);
                 if (_cultureInfo == null)
                 {
-                    _cultureInfo = CultureInfo.CurrentCulture;
-                    if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
-                }
+                    if (!string.IsNullOrEmpty(Configuration.DefaultCulture))
+                    {
+                        _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == Configuration.DefaultCulture);
+                    }
+                    if (_cultureInfo == null)
+                    {
+                        _cultureInfo = CultureInfo.CurrentCulture;
+                        if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
+                    }
+                    _cultureInfo = new CultureInfo(_cultureInfo.Name); //Make the instance writable
 
+                    initCultureSeparators();
+                }
                 return _cultureInfo;
             }
         }
@@ -193,9 +207,10 @@ namespace Seal.Model
                 if (newCulture != null)
                 {
                     result = true;
-                    _cultureInfo = newCulture;
+                    _cultureInfo = new CultureInfo(newCulture.Name);
                     _nvd3Translations = null;
                     _jsTranslations = null;
+                    initCultureSeparators();
                 }
             }
             catch { }
@@ -402,7 +417,8 @@ namespace Seal.Model
                 result._configuration = Configuration;
                 result.RepositoryPath = path;
                 //plus defaults...
-                result._cultureInfo = CultureInfo;
+                result._cultureInfo = new CultureInfo(CultureInfo.Name);
+                result.initCultureSeparators();
             }
             return result;
         }

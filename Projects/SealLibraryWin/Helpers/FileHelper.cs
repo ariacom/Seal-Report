@@ -401,7 +401,7 @@ namespace Seal.Helpers
             return Path.GetFileNameWithoutExtension(path) + "_" + Path.GetExtension(path).Replace(".", "");
         }
 
-        public static bool IsSealReportFile(string path)
+        public static bool IsReportFile(string path)
         {
             return path.EndsWith("." + Repository.SealReportFileExtension);
         }
@@ -412,7 +412,7 @@ namespace Seal.Helpers
             return content.Contains("<ReportSchedule>") && content.Contains("</ReportSchedule>");
         }
 
-        public static void DeleteSealFile(string path)
+        public static void DeleteFile(string path)
         {
             if (File.Exists(path))
             {
@@ -420,7 +420,7 @@ namespace Seal.Helpers
             }
         }
 
-        public static void MoveSealFile(string source, string destination, bool copy)
+        public static void MoveFile(string source, string destination, bool copy)
         {
             if (source != destination)
             {

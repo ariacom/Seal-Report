@@ -1096,15 +1096,15 @@ namespace SealWebServer.Controllers
                 foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
                 {
                     //check right on files only
-                    if (folder.files && FileHelper.IsSealReportFile(newPath)) continue;
+                    if (folder.files && FileHelper.IsReportFile(newPath)) continue;
                     if (folder.IsPersonal && newPath.ToLower() == WebUser.ProfilePath.ToLower()) continue;
 
                     files.Add(new SWIFile()
                     {
                         path = FileHelper.ConvertOSFilePath(folder.Combine(Path.GetFileName(newPath))),
-                        name = Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
+                        name = Repository.TranslateFileName(newPath) + (FileHelper.IsReportFile(newPath) ? "" : Path.GetExtension(newPath)),
                         last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                        isreport = FileHelper.IsSealReportFile(newPath),
+                        isreport = FileHelper.IsReportFile(newPath),
                         right = folder.right
                     });
                 }

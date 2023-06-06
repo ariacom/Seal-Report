@@ -573,7 +573,7 @@ namespace SealWebServer.Controllers
                         if ((FolderRight)file.right != FolderRight.Edit) throw new Exception("Error: no right to edit this report or file");
 
                         string fullPath = getFullPath(path);
-                        if (FileHelper.IsSealReportFile(fullPath) && FileHelper.ReportHasSchedule(fullPath))
+                        if (FileHelper.IsReportFile(fullPath) && FileHelper.ReportHasSchedule(fullPath))
                         {
                             //Delete schedules...
                             var report = Report.LoadFromFile(fullPath, Repository, false);
@@ -581,7 +581,7 @@ namespace SealWebServer.Controllers
                             report.SynchronizeTasks();
                         }
 
-                        FileHelper.DeleteSealFile(fullPath);
+                        FileHelper.DeleteFile(fullPath);
 
                         Audit.LogAudit(AuditType.FileDelete, WebUser, path);
 
@@ -620,11 +620,11 @@ namespace SealWebServer.Controllers
                 string sourcePath = getFullPath(source);
                 string destinationPath = getFullPath(destination);
                 if (!System.IO.File.Exists(sourcePath)) throw new Exception("Error: source path is incorrect");
-                if (folderDest.files && FileHelper.IsSealReportFile(sourcePath)) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
+                if (folderDest.files && FileHelper.IsReportFile(sourcePath)) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
                 if (System.IO.File.Exists(destinationPath) && copy) destinationPath = FileHelper.GetUniqueFileName(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + " - Copy" + Path.GetExtension(destinationPath), Path.GetExtension(destinationPath));
 
-                bool hasSchedule = (FileHelper.IsSealReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
-                FileHelper.MoveSealFile(sourcePath, destinationPath, copy);
+                bool hasSchedule = (FileHelper.IsReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
+                FileHelper.MoveFile(sourcePath, destinationPath, copy);
                 if (copy) Audit.LogAudit(AuditType.FileCopy, WebUser, sourcePath, string.Format("Copy to '{0}'", destinationPath));
                 else Audit.LogAudit(AuditType.FileMove, WebUser, sourcePath, string.Format("Move to '{0}'", destinationPath));
                 if (hasSchedule)
