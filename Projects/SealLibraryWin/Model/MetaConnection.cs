@@ -157,7 +157,7 @@ namespace Seal.Model
         [DisplayName("OLE DB Connection string"), Description("OLE DB Connection string used to connect to the database if the connection type is OleDb. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string ConnectionString { get; set; }
+        public string ConnectionString { get; set; } = null;
 
         /// <summary>
         /// ODBC Connection string used to connect to the database if the connection type is ODBC
@@ -167,7 +167,7 @@ namespace Seal.Model
         [DisplayName("ODBC Connection string"), Description("ODBC Connection string used to connect to the database if the connection type is ODBC. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(5, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string OdbcConnectionString { get; set; }
+        public string OdbcConnectionString { get; set; } = null;
 
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Seal.Model
         [DisplayName("MS SQLServer Connection string"), Description("MS SQLServer Connection string used to connect to the database if the connection type is MS SQLServer. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(6, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string MSSqlServerConnectionString { get; set; }
+        public string MSSqlServerConnectionString { get; set; } = null; 
 
         /// <summary>
         /// Mongo DB Connection string used to connect to the database if the connection type is Mongo DB
@@ -188,7 +188,7 @@ namespace Seal.Model
         [DisplayName("Mongo DB Connection string"), Description("Mongo DB Connection string used to connect to the database if the connection type is Mongo DB. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder. %USER% for the user name. %PASSWORD% for the password."), Category("Connection String"), Id(7, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string MongoDBConnectionString { get; set; }
+        public string MongoDBConnectionString { get; set; } = null; 
 
         /// <summary>
         /// MySQL Connection string used to connect to the database if the connection type is MySQL
@@ -198,7 +198,7 @@ namespace Seal.Model
         [DisplayName("MySQL Connection string"), Description("MySQL Connection string used to connect to the database if the connection type is MySQL. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(8, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string MySQLConnectionString { get; set; }
+        public string MySQLConnectionString { get; set; } = null;   
 
         /// <summary>
         /// Oracle Connection string used to connect to the database if the connection type is Oracle
@@ -208,7 +208,7 @@ namespace Seal.Model
         [DisplayName("Oracle Connection string"), Description("Oracle Connection string used to connect to the database if the connection type is Oracle. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(9, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string OracleConnectionString { get; set; }
+        public string OracleConnectionString { get; set; } = null;  
 
         /// <summary>
         /// If set, script executed to instanciate and open the connection
@@ -218,7 +218,7 @@ namespace Seal.Model
         [DisplayName("Connection Script"), Description("If set, script executed to instanciate and open the connection."), Category("Definition"), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string ConnectionScript { get; set; }
+        public string ConnectionScript { get; set; } = null;    
 
         /// <summary>
         /// The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).

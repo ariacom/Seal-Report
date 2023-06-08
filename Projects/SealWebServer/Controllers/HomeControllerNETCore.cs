@@ -50,11 +50,11 @@ namespace SealWebServer.Controllers
 
         void ClearSessions()
         {
-            var keys = _sessionLastRequest.Where(i => i.Value.AddMinutes(Startup.SessionTimeout) < DateTime.Now).ToList();
-
-            foreach (var key in keys)
+            try
             {
-                try
+                var keys = _sessionLastRequest.Where(i => i.Value.AddMinutes(Startup.SessionTimeout) < DateTime.Now).ToList();
+
+                foreach (var key in keys)
                 {
                     //Session is over
                     if (_sessions[key.Key].ContainsKey(SessionUser))
@@ -72,13 +72,12 @@ namespace SealWebServer.Controllers
                         _sessionLastRequest.Remove(key.Key);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Helper.WriteLogException("ClearSessions", ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("ClearSessions", ex);
             }
         }
-
 
         void CheckSession()
         {

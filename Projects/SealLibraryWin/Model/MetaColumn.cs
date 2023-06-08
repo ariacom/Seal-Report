@@ -209,7 +209,7 @@ namespace Seal.Model
         [Category("Display"), DisplayName("CSS classes"), Description("CSS Classes applied to the cell values of the result HTML Table. Bootstrap classes may be used. Use 'cell-numeric-DYNAMIC' to handle numeric negative and positive values."), Id(5, 2)]
         [TypeConverter(typeof(CssClassConverter))]
 #endif
-        public string CssClass { get; set; }
+        public string CssClass { get; set; } = null;
 
         /// <summary>
         /// CSS Styles applied to the cell values of the result HTML Table. Bootstrap classes may be used.
@@ -218,7 +218,7 @@ namespace Seal.Model
         [Category("Display"), DisplayName("CSS styles"), Description("CSS Styles applied to the cell values of the result HTML Table."), Id(5, 2)]
         [TypeConverter(typeof(CssStyleConverter))]
 #endif
-        public string CssStyle { get; set; }
+        public string CssStyle { get; set; } = null;
 
         protected NumericStandardFormat _numericStandardFormat = NumericStandardFormat.Default;
         /// <summary>
@@ -511,6 +511,7 @@ namespace Seal.Model
         [Category("Drill"), DisplayName("Drill Up only if drill down occured."), Description("If true, Drill Up is activated only if a drill down occured."), Id(2, 4)]
 #endif
         public bool DrillUpOnlyIfDD { get; set; } = false;
+        public bool ShouldSerializeDrillUpOnlyIfDD() { return DrillUpOnlyIfDD; }
 
         /// <summary>
         /// Editor Helper: Create automatically a 'Year' column and a 'Month' column to drill down to the date

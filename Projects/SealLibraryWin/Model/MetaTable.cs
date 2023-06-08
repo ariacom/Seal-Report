@@ -505,7 +505,7 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Additional WHERE clause"), Description("Additional SQL added in the WHERE clause when the table is involved in a query. The text may contain Razor script if it starts with '@'."), Id(5, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
-        public string WhereSQL { get; set; }
+        public string WhereSQL { get; set; } = null;
 
         /// <summary>
         /// List of MetColumn defined for the table
