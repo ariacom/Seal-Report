@@ -101,9 +101,10 @@ body {
     padding: 4px 12px;
     margin-left: 10px;
 }
-.external-navigation:hover {
-    background-color: darkgrey;
-}
+
+    .external-navigation:hover {
+        background-color: darkgrey;
+    }
 
 .disabled {
     pointer-events: none;
@@ -111,8 +112,8 @@ body {
 }
 
 .restriction_error {
-    color:red;
-    font-style:italic;
+    color: red;
+    font-style: italic;
     font-weight: bold;
 }
 
@@ -127,21 +128,20 @@ body {
 
 .cell-datetime {
     color: darkgreen;
-	text-align: right !important;
 }
 
 .cell-numeric {
     color: darkblue;
-	text-align: right !important;
 }
 
 .cell-numeric-positive {
     color: darkblue;
-	text-align: right !important;
 }
 
 .cell-numeric-negative {
     color: red;
-	text-align: right !important;
 }
 
+.text-right {
+    text-align: right !important;
+}

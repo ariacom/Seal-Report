@@ -127,21 +127,20 @@ body {
 
 .cell-datetime {
     color: darkgreen;
-	text-align: right !important;
 }
 
 .cell-numeric {
     color: darkblue;
-	text-align: right !important;
 }
 
 .cell-numeric-positive {
     color: darkblue;
-	text-align: right !important;
 }
 
 .cell-numeric-negative {
     color: red;
-	text-align: right !important;
 }
 
+.text-right {
+    text-align: right !important;
+}

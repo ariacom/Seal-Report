@@ -105,7 +105,7 @@
                   <Value>text-align:center</Value>
                 </Parameter>
               </Parameters>
-              <SortOrder>1</SortOrder>
+              <SortOrder>2</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>67789937-974d-4aab-a42c-d2ff2ccebb89</GUID>
@@ -149,7 +149,7 @@
                   <Value>text-align:center</Value>
                 </Parameter>
               </Parameters>
-              <SortOrder>0</SortOrder>
+              <SortOrder>1</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>66f0c4bc-4d83-4ceb-8f6c-ca3adf8f85d5</GUID>
@@ -352,7 +352,6 @@ if (typeof _main == 'undefined') {
               <UseCustomTemplate>true</UseCustomTemplate>
               <CustomTemplate>@{
     Report report = Model;
-    var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
 }
 
 
@@ -389,7 +388,6 @@ if (typeof _main == 'undefined') {
               <UseCustomTemplate>true</UseCustomTemplate>
               <CustomTemplate>@{
     Report report = Model;
-    var searchOrderName = report.TranslateRepository("ReportDisplayName", "Search - Orders.srex", "Search - Orders");
 }
 
 
@@ -453,12 +451,17 @@ Another look:</CustomTemplate>
 .btn_rcorners {
     border-radius: 25px;
     border: 2px solid grey;
+    background: #F5F5F5;
     padding: 20px;
     text-align: center;
     cursor: pointer;
     display: inline-block;
     width: 200px;
     height: 200px;
+}
+
+.btn_rcorners:hover {
+    background : #dcdcdc;
 }
 
 .btn_text {
@@ -476,6 +479,8 @@ Another look:</CustomTemplate>
     font-size: 40px;
     margin: 10px;
 }
+
+
 
 &lt;/style&gt;</CustomTemplate>
           <SortOrder>1</SortOrder>
