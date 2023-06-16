@@ -2630,6 +2630,19 @@ namespace Seal.Model
             }
         }
 
+        TaskHelper _taskHelper = null;
+        /// <summary>
+        /// Default task helper for the report
+        /// </summary>
+        public TaskHelper TaskHelper
+        {
+            get
+            {
+                if (_taskHelper == null) _taskHelper = new TaskHelper(new ReportTask() { Report = this });
+                return _taskHelper;
+            }
+        }
+
         //Helpers for translations
 
         /// <summary>

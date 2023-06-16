@@ -3073,5 +3073,16 @@ model.ResultTable = query2.CopyToDataTable2();
             }
             return navigation;
         }
+
+        /// <summary>
+        /// Return a result table value from a column name
+        /// </summary>
+        public object GetResultTableValue(int row, string columName)
+        {
+            object result = null;
+            var element = Elements.FirstOrDefault(i => i.SQLColumn == columName);
+            if (element != null && ResultTable != null) result = ResultTable.Rows[row][element.SQLColumnName];
+            return result;
+        }
     }
 }

@@ -20,7 +20,7 @@
         </title>
 
         <!--CSS-->
-    @Raw(report.AttachCSSFile("datatables.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://cdn.datatables.net/v/bs-3.3.7/jq-3.6.0/dt-1.13.4/b-2.3.6/fc-4.2.2/fh-3.3.2/r-2.4.1/sc-2.1.1/sl-1.6.2/datatables.min.css"))
+    @Raw(report.AttachCSSFile("datatables.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://cdn.datatables.net/v/bs-3.3.7/jq-3.6.0/dt-1.13.4/b-2.3.6/date-1.4.1/fc-4.2.2/fh-3.3.2/r-2.4.1/sc-2.1.1/sl-1.6.2/datatables.min.css"))
         @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
         @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css"))
 
@@ -28,7 +28,7 @@
         @Raw(report.AttachCSSFile("seal.css"))
 
         <!--Scripts-->
-    @Raw(report.AttachScriptFile("datatables.min.js", "https://cdn.datatables.net/v/bs-3.3.7/jq-3.6.0/dt-1.13.4/b-2.3.6/fc-4.2.2/fh-3.3.2/r-2.4.1/sc-2.1.1/sl-1.6.2/datatables.min.js"))
+    @Raw(report.AttachScriptFile("datatables.min.js", "https://cdn.datatables.net/v/bs-3.3.7/jq-3.6.0/dt-1.13.4/b-2.3.6/date-1.4.1/fc-4.2.2/fh-3.3.2/r-2.4.1/sc-2.1.1/sl-1.6.2/datatables.min.js"))
         @Raw(report.AttachScriptFile("bootstrap-select.min.js", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"))
         @Raw(report.AttachScriptFile("moment.min.js"))
         @if (view.CultureInfo.TwoLetterISOLanguageName != "en")
@@ -58,7 +58,7 @@
         @Include(view.GetPartialTemplateKey("Report.iHeader", view), view)
         @Include(view.GetPartialTemplateKey("Report.iBody", view), view)
     </body>
-</html>
+    </html>
 }
 else
 {

@@ -31,6 +31,7 @@ namespace Seal.Forms
         ReportExecution _execution;
         NavigationContext _navigation = new NavigationContext();
         BrowserInterop _browserInterop = null;
+        public Form ReportDesignerForm = null;
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
@@ -152,7 +153,7 @@ namespace Seal.Forms
         void setCurrentExecution()
         {
             Icon = Properties.Resources.reportDesigner;
-            if (Owner != null) Owner.Icon = Icon;
+            if (ReportDesignerForm != null) ReportDesignerForm.Icon = Icon;
             string executionGUID = getAttributeValue(ReportExecution.HtmlId_execution_guid, "value").ToString();
             if (_navigation.Navigations.ContainsKey(executionGUID))
             {
@@ -261,7 +262,7 @@ namespace Seal.Forms
         private void ReportViewerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Icon = Properties.Resources.reportDesigner;
-            if (Owner != null) Owner.Icon = Icon;
+            if (ReportDesignerForm != null) ReportDesignerForm.Icon = Icon;
 #if DEBUG
             if (_report != null) _report.Repository.FlushTranslationUsage();
 #endif
@@ -296,7 +297,7 @@ namespace Seal.Forms
         public void InitIcon()
         {
             Icon = Properties.Resources.reportDesigner;
-            if (Owner != null) Owner.Icon = Icon;
+            if (ReportDesignerForm != null) ReportDesignerForm.Icon = Icon;
         }
 
         public class BrowserInterop
@@ -357,7 +358,7 @@ namespace Seal.Forms
                 Container.Icon = (_iconExecuting ? Properties.Resources.reportDesigner2 : Properties.Resources.reportDesigner);
                 _iconExecuting = !_iconExecuting;
 
-                if (Container.Owner != null) Container.Owner.Icon = Container.Icon;
+                if (Container.ReportDesignerForm != null) Container.ReportDesignerForm.Icon = Container.Icon;
 
                 if (Report.IsExecuting)
                 {

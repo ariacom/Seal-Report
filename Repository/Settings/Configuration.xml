@@ -12,9 +12,10 @@
   </FileReplacePatterns>
   <CssFiles>_ed.editor.bootstrap.min.css</CssFiles>
   <WebCssFiles />
-  <ScriptFiles>_ed.common.js
-_ed.dataTables.editor.min.js
-_ed.editor.bootstrap.min.js</ScriptFiles>
+  <ScriptFiles>_ed.dataTables.editor.min.js
+_ed.bootstrap.min.js
+_ed.common.js
+</ScriptFiles>
   <WebScriptFiles />
   <AlternateTempDirectory />
   <TaskFolderName>Seal Report</TaskFolderName>

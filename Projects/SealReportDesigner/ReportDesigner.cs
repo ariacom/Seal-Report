@@ -1691,7 +1691,7 @@ namespace Seal
             if (_reportViewer == null || !_reportViewer.Visible)
             {
                 _reportViewer = new ReportViewerForm(false, Properties.Settings.Default.ShowScriptErrors);
-                _reportViewer.Owner = this;
+                _reportViewer.ReportDesignerForm = this;
             }
             _reportViewer.ViewReport(_report.Clone(), render, viewGUID, outputGUID, _report.FilePath, taskGUID);
             _canRender = true;

@@ -2934,6 +2934,11 @@
             Helper to get a report model from its name
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.TaskHelper">
+            <summary>
+            Default task helper for the report
+            </summary>
+        </member>
         <member name="M:Seal.Model.Report.TranslateRepository(System.String,System.String,System.String)">
             <summary>
             Repository Translate using the ReportViewName context
@@ -4114,6 +4119,11 @@
         <member name="M:Seal.Model.ReportModel.GetNavigation(Seal.Model.ReportView,Seal.Model.ResultCell,System.Boolean)">
             <summary>
             HTML Navigation for the report result
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.GetResultTableValue(System.Int32,System.String)">
+            <summary>
+            Return a result table value from a column name
             </summary>
         </member>
         <member name="T:Seal.Model.ReportOutput">
