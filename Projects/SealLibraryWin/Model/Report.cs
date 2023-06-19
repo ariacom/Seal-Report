@@ -2485,6 +2485,24 @@ namespace Seal.Model
         public object Tag3;
 
         /// <summary>
+        /// String that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public string StringTag;
+
+        /// <summary>
+        /// String that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public string StringTag2;
+
+        /// <summary>
+        /// String that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public string StringTag3;
+
+        /// <summary>
         /// Helper to find a view from its identifier
         /// </summary>
         public ReportView FindView(List<ReportView> views, string guid)
