@@ -1336,6 +1336,16 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Helper to add an enum value to the restriction using its string value (Value or Id) 
+        /// </summary>
+        public void AddEnumValue(string val, bool clearFirst = false)
+        {
+            if (clearFirst) EnumValues.Clear();
+            var en = MetaEnumValuesRE.FirstOrDefault(i => i.Val == val || (string.IsNullOrEmpty(i.Val) && i.Id == val));
+            if (en != null) EnumValues.Add(en.Id);
+        }
+
+        /// <summary>
         /// Enum message defined in the MetaData
         /// </summary>
         /// <returns></returns>

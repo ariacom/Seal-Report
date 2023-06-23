@@ -7,7 +7,7 @@
 
 @if (report.IsExecuting && !report.Cancel)
 {
-    List<ReportView> views = view.Views.OrderBy(i => i.SortOrderFull).ToList();
+    List<ReportView> views = view.Views.Where(i => i.Enabled).OrderBy(i => i.SortOrderFull).ToList();
     foreach (ReportView childView in views)
     {
         if (report.PrintLayout && view.GetBoolValue("print_break_after_view") && childView != views[0])
