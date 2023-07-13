@@ -129,9 +129,19 @@ namespace Seal.Model
         public static string DefaultNumericTitleCssStyle = "text-align:right;padding-right:25px;";
 
         /// <summary>
+        /// Default Css Style for a numeric title cell of summary table. Default value is 'text-align:right;'
+        /// </summary>
+        public static string DefaultNumericSummaryTitleCssStyle = "text-align:right;";
+
+        /// <summary>
         /// Default Css Style for a datetime title cell. Default value is 'text-align:right;padding-right:25px;'
         /// </summary>
         public static string DefaultDateTimeTitleCssStyle = "text-align:right;padding-right:25px;";
+
+        /// <summary>
+        /// Default Css Style for a datetime title cell. Default value is 'text-align:right;'
+        /// </summary>
+        public static string DefaultDateTimeSummaryTitleCssStyle = "text-align:right;";
 
         /// <summary>
         /// HTML value of the cell
@@ -258,17 +268,7 @@ namespace Seal.Model
         {
             get
             {
-                updateFinalCssClass();
-                if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
-
-                string result = "";
-                if (Element != null)
-                {
-                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssClass : DefaultCellCssClass;
-                    else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssClass : DefaultNumericCellCssClass;
-                    else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssClass : DefaultDateTimeCellCssClass;
-                }
-                return result;
+                return CellCssClass;
             }
         }
 
@@ -282,15 +282,21 @@ namespace Seal.Model
                 updateFinalCssClass();
                 if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
 
-                string result = "";
-                if (Element != null)
-                {
+                return "";
+            }
+        }
 
-                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssClass : DefaultCellCssClass;
-                    else if (Element.IsNumeric) result = IsTitle ? "" : DefaultNumericCellCssClass;
-                    else if (Element.IsDateTime) result = IsTitle ? "" : DefaultDateTimeCellCssClass;
-                }
-                return result;
+        /// <summary>
+        /// Css cell class for the detail model
+        /// </summary>
+        public string CellCssDetailClass
+        {
+            get
+            {
+                updateFinalCssClass();
+                if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
+
+                return "";
             }
         }
 
@@ -350,11 +356,16 @@ namespace Seal.Model
                 if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
 
                 string result = "";
-                if (Element != null)
+                if (Element != null && string.IsNullOrEmpty(FinalCssClass) /* do not set default if a class is specified */)
                 {
                     if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssStyle : DefaultCellCssStyle;
-                    else if (Element.IsNumeric) result = IsTitle ? "" : DefaultNumericCellCssStyle;
-                    else if (Element.IsDateTime) result = IsTitle ? "" : DefaultDateTimeCellCssStyle;
+                    else if (Element.IsNumeric) result = IsTitle ? DefaultNumericSummaryTitleCssStyle : DefaultNumericCellCssStyle;
+                    else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeSummaryTitleCssStyle : DefaultDateTimeCellCssStyle;
+
+                    if (!IsTitle)
+                    {
+                        if (!string.IsNullOrEmpty(Element.FinalCssStyle)) result = Element.FinalCssStyle;
+                    }
                 }
 
                 return result;
@@ -371,14 +382,20 @@ namespace Seal.Model
                 updateFinalCssStyle();
                 if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
 
-                string result = "";
-                if (Element != null)
-                {
-                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssStyle : DefaultCellCssStyle;
-                    else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssStyle : DefaultNumericCellCssStyle;
-                    else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssStyle : DefaultDateTimeCellCssStyle;
-                }
-                return result;
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Css cell style for detail model
+        /// </summary>
+        public string CellCssDetailStyle
+        {
+            get
+            {
+                updateFinalCssStyle();
+                if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
+                return "";
             }
         }
 
@@ -393,7 +410,7 @@ namespace Seal.Model
                 if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
 
                 string result = "";
-                if (Element != null)
+                if (Element != null && string.IsNullOrEmpty(FinalCssClass) /* do not set default if a class is specified */)
                 {
                     if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssStyle : DefaultCellCssStyle;
                     else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssStyle : DefaultNumericCellCssStyle;

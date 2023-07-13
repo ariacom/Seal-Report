@@ -190,6 +190,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
           <DisplayOrderRE>0</DisplayOrderRE>
+          <PlaceHolder>Type a text to filter</PlaceHolder>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>4f311ba2-965c-478d-8d61-345aa2eb3388</GUID>
@@ -203,6 +204,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
           <DisplayOrderRE>0</DisplayOrderRE>
+          <PlaceHolder>Type a text to filter</PlaceHolder>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>fdfc3118-97a1-4832-afab-5c04ea9fe994</GUID>
@@ -216,6 +218,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
           <DisplayOrderRE>0</DisplayOrderRE>
+          <PlaceHolder>Type a text to filter</PlaceHolder>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>1c9f94f9-3d34-4c18-a13f-2d92c362d595</GUID>
@@ -229,6 +232,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
           <DisplayOrderRE>0</DisplayOrderRE>
+          <PlaceHolder>Type a text to filter</PlaceHolder>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>751aed67-d06d-4c94-95a0-6c494f63a80a</GUID>

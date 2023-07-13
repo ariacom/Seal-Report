@@ -102,7 +102,7 @@
                                     }
                                     else
                                     {
-                                        <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "") @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
+                                            <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "") @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" placeholder="@Raw(report.TranslateRepository("GeneralText","Report",restriction.PlaceHolder))" />
                                     }
                                     if ((restriction.Prompt == PromptType.PromptOneValue) || (restriction.Prompt == PromptType.PromptTwoValues && j == 2))
                                     {

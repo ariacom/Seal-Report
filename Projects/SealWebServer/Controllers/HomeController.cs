@@ -217,7 +217,12 @@ namespace SealWebServer.Controllers
             try
             {
                 if (!CheckAuthentication()) return _loginContentResult;
-                if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
+                if (string.IsNullOrEmpty(execution_guid))
+                {
+                    //check guid from trigger
+                    execution_guid = Request.Form["execution_guid_trigger"];
+                    if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
+                }
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {

@@ -113,8 +113,15 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
+                "Force alignment",
+@"
+    cell.FinalCssClass = ""text-left""; //text-center text-right
+    cell.FinalCssStyle = ""text-align:left;""; //center right
+"
+                ),
+            new Tuple<string, string>(
                 "Display negative values in red and bold",
-@"//For performances reason, consider to process your result table in a dedicated Task with an execution step 'Models generated, before rendering' 
+@"
     if (cell.DoubleValue < 0)
 	{
 		cell.FinalCssStyle = ""font-weight:bold;"";
@@ -124,8 +131,9 @@ namespace Seal.Forms
                 ),
             new Tuple<string, string>(
                 "Hide all cells in the table",
-@"//For performances reason, consider to process your result table in a dedicated Task with an execution step 'Models generated, before rendering' 
-    cell.FinalCssStyle = ""display:none;"";
+@"
+    cell.FinalCssClass = ""hidden"";
+    cell.FinalCssStyle = ""display:none;""; 
 "
                 ),
             new Tuple<string, string>(
@@ -958,7 +966,7 @@ namespace Seal.Forms
 	if (noRestrictions)
 	{
 		foreach (var restr in report.AllRestrictions.Where (i => i.Prompt != PromptType.None).OrderBy(i => i.DisplayOrder)) {
-			restr.ValidationErrors = report.TranslateRepository(""GeneralText"",""GEN"",""Please enter at least a restriction..."");
+			restr.ValidationErrors = report.TranslateRepository(""GeneralText"",""Report"",""Please enter at least a restriction..."");
 			break;
 		}
 		report.Cancel = true;

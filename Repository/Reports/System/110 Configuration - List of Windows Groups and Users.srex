@@ -47,8 +47,8 @@
     metaTable.LogMessage("Adding table rows with the default table 'Load Script'...");
     
     try {
-        fillTable(metaTable, new PrincipalContext(ContextType.Machine));
-        fillTable(metaTable, new PrincipalContext(ContextType.Domain));
+        fillTable(report, metaTable, new PrincipalContext(ContextType.Machine));
+        fillTable(report, metaTable, new PrincipalContext(ContextType.Domain));
     }
     catch(Exception ex) {
         metaTable.LogMessage(ex.Message);
@@ -58,13 +58,15 @@
 }
 
 @functions {
-    void fillTable(MetaTable metaTable, PrincipalContext context) {
+    void fillTable(Report report, MetaTable metaTable, PrincipalContext context) {
         GroupPrincipal qbeGroup = new GroupPrincipal(context);
         PrincipalSearcher srch = new PrincipalSearcher(qbeGroup);
 
         // find all matches
         foreach(var gr in srch.FindAll())
         {
+            if (report.Cancel) return;
+        
             metaTable.LogMessage(gr.Name);
         
             try {

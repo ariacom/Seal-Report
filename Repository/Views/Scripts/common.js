@@ -237,7 +237,8 @@ function initRestrictions(parent) {
         var formId = $(this).attr("id").replace("button_", "form_");
         var form = $("#" + formId);
         var button = $(this);
-        executeFromTrigger(null, form, button);
+        if (button.attr("full_execution") == "true") executeReport(null, "#" + formId);
+        else executeFromTrigger(null, form, button);
         return false;
     });
 }
@@ -472,11 +473,12 @@ function executeReportNavigation(nav, target) {
     executeReport(nav);
 }
 
-function executeReport(nav) {
+function executeReport(nav, formName) {
     //check execution triggers
     if (_inExecution) return;
 
-    var form = $("#header_form");
+    if (!formName) formName = "#header_form";
+    var form = $(formName);
     _inExecution = true;
     if (_refreshTimer) clearInterval(_refreshTimer);
 

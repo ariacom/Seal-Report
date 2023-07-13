@@ -39,6 +39,7 @@ using System.DirectoryServices;
 using Microsoft.Web.Administration;
 using System.Security.AccessControl;
 using Twilio.Rest.Api.V2010.Account;
+using System.Net;
 
 namespace Seal.Helpers
 {
@@ -77,6 +78,7 @@ namespace Seal.Helpers
         static ServerManager _28 = null;
         static FileSystemAccessRule _29 = null;
         static MessageResource.ScheduleTypeEnum _30 = null;
+        static WebProxy _31 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -146,6 +148,8 @@ namespace Seal.Helpers
                     if (_28 == null) _28 = new ServerManager();
                     if (_29 == null) _29 = new FileSystemAccessRule("a",FileSystemRights.Read,AccessControlType.Deny);
                     if (_30 == null) _30 = new MessageResource.ScheduleTypeEnum();
+                    if (_31 == null) _31 = new WebProxy();
+
 
 #if !WINDOWS
                     var si = SealInterface.Create();

@@ -15,7 +15,7 @@
         <div class="text-right container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")" style="margin-top:-20px">
             <div class="row">
                 <div class="col-sm-12">
-                    <button id="button_@view.IdSuffix" @Raw(view.AddAttribute("class", "button_class")) @Raw(view.AddAttribute("style", "button_css"))>@report.Translate(view.GetValue("button_text"))</button>
+                    <button id="button_@view.IdSuffix" @Raw(view.GetBoolValue("restrictions_force_exec")?"full_execution=true":"") @Raw(view.AddAttribute("class", "button_class")) @Raw(view.AddAttribute("style", "button_css"))>@report.Translate(view.GetValue("button_text"))</button>
                 </div>
             </div>
         </div>

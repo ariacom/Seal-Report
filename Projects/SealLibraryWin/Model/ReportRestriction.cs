@@ -64,6 +64,7 @@ namespace Seal.Model
                     GetProperty("EnumGUIDRE").SetIsBrowsable(true);
                     GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
                     GetProperty("DisplayOrderRE").SetIsBrowsable(true);
+                    GetProperty("PlaceHolder").SetIsBrowsable(!IsEnum);
                     GetProperty("TriggerExecution").SetIsBrowsable(true);
                     //Conditional
                     if (IsEnum)
@@ -278,6 +279,16 @@ namespace Seal.Model
             get { return DisplayOrder; }
             set { DisplayOrder = value; }
         }
+
+        /// <summary>
+        /// Short hint that describes the expected value of the input field.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(1)]
+        [Category("Definition"), DisplayName("Place holder"), Description("Short hint that describes the expected value of the input field."), Id(21, 1)]
+#endif
+        public string PlaceHolder { get; set; } = null;
+
 
         /// <summary>
         /// The final enumerated list of the restriction

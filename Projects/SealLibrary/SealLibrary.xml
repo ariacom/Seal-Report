@@ -2894,6 +2894,21 @@
             Object that can be used at run-time for any purpose
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.StringTag">
+            <summary>
+            String that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.StringTag2">
+            <summary>
+            String that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.StringTag3">
+            <summary>
+            String that can be used at run-time for any purpose
+            </summary>
+        </member>
         <member name="M:Seal.Model.Report.FindView(System.Collections.Generic.List{Seal.Model.ReportView},System.String)">
             <summary>
             Helper to find a view from its identifier
@@ -4707,6 +4722,11 @@
         <member name="M:Seal.Model.ReportRestriction.GetEnumDisplayValue(System.String)">
             <summary>
             Helper to return the display value of an enum from its id
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportRestriction.AddEnumValue(System.String,System.Boolean)">
+            <summary>
+            Helper to add an enum value to the restriction using its string value (Value or Id) 
             </summary>
         </member>
         <member name="M:Seal.Model.ReportRestriction.GetEnumMessage">

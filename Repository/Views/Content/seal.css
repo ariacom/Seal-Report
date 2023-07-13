@@ -121,24 +121,44 @@ body {
 .cell-text {
 }
 
+.cell-identifier {
+    color: #4169E1;
+    font-weight: bold;
+}
+
+.cell-identifier-underline {
+    color: #4169E1;
+    font-weight: bold;
+	text-decoration: underline
+}
+
 .cell-bold {
     font-weight: bold;
 }
 
 .cell-datetime {
     color: darkgreen;
+    text-align: right !important;
+}
+
+.cell-datetime-closed {
+    color: red;
+    text-align: right !important;
 }
 
 .cell-numeric {
     color: darkblue;
+    text-align: right !important;
 }
 
 .cell-numeric-positive {
     color: darkblue;
+    text-align: right !important;
 }
 
 .cell-numeric-negative {
     color: red;
+    text-align: right !important;
 }
 
 .text-right {
