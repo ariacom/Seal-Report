@@ -4412,6 +4412,11 @@
             Sort order used for the display of the prompted restrictions when the report is executed.
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportRestriction.PlaceHolder">
+            <summary>
+            Short hint that describes the expected value of the input field.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportRestriction.EnumRE">
             <summary>
             The final enumerated list of the restriction
@@ -6640,9 +6645,19 @@
             Default Css Style for a numeric title cell. Default value is 'text-align:right;padding-right:25px;'
             </summary>
         </member>
+        <member name="F:Seal.Model.ResultCell.DefaultNumericSummaryTitleCssStyle">
+            <summary>
+            Default Css Style for a numeric title cell of summary table. Default value is 'text-align:right;'
+            </summary>
+        </member>
         <member name="F:Seal.Model.ResultCell.DefaultDateTimeTitleCssStyle">
             <summary>
             Default Css Style for a datetime title cell. Default value is 'text-align:right;padding-right:25px;'
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ResultCell.DefaultDateTimeSummaryTitleCssStyle">
+            <summary>
+            Default Css Style for a datetime title cell. Default value is 'text-align:right;'
             </summary>
         </member>
         <member name="P:Seal.Model.ResultCell.HTMLValue">
@@ -6695,6 +6710,11 @@
             Css cell class for the page table
             </summary>
         </member>
+        <member name="P:Seal.Model.ResultCell.CellCssDetailClass">
+            <summary>
+            Css cell class for the detail model
+            </summary>
+        </member>
         <member name="P:Seal.Model.ResultCell.CellCssClass">
             <summary>
             Css cell class
@@ -6708,6 +6728,11 @@
         <member name="P:Seal.Model.ResultCell.CellCssPageStyle">
             <summary>
             Css cell style for page table
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultCell.CellCssDetailStyle">
+            <summary>
+            Css cell style for detail model
             </summary>
         </member>
         <member name="P:Seal.Model.ResultCell.CellCssStyle">
