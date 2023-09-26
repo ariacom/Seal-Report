@@ -136,14 +136,6 @@ function initRestrictions(parent) {
         restrictionSelectChange(this);
     });
 
-    //validation
-    $(parent + ".numeric_input").keyup(function () {
-        var v = this.value;
-        if (!$.isNumeric(v)) {
-            this.value = this.value.slice(0, -1);
-        }
-    });
-
     //Select Picker
     $(parent + ".operator_select").selectpicker('refresh');
 

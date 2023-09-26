@@ -26,6 +26,7 @@ namespace Seal
     {
 
         #region Members
+        public static ReportDesigner Instance { get; private set; }
 
         TreeViewEditorHelper treeViewHelper;
         ToolStripEditorHelper toolStripHelper;
@@ -64,6 +65,7 @@ namespace Seal
 
         public ReportDesigner()
         {
+            Instance = this;
             if (Properties.Settings.Default.CallUpgrade)
             {
                 Properties.Settings.Default.Upgrade();

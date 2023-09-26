@@ -15,6 +15,12 @@ using System.Text;
 
 namespace Seal.Forms
 {
+    public interface ReportTester
+    {
+        public void Execute();
+        void Render();
+    }
+
     public partial class TemplateTextEditorForm : Form
     {
         public object ObjectForCheckSyntax = null;
@@ -22,6 +28,8 @@ namespace Seal.Forms
 
         ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
         ToolStripMenuItem samplesMenuItem2 = new ToolStripMenuItem("Samples (Notepad)");
+        ToolStripMenuItem testExecutionMenuItem = new ToolStripMenuItem("Test Execution...");
+        ToolStripMenuItem testRenderingMenuItem = new ToolStripMenuItem("Test Rendering...");
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
@@ -41,6 +49,16 @@ namespace Seal.Forms
             this.FormClosed += TemplateTextEditorForm_FormClosed;
             this.textBox.KeyDown += TextBox_KeyDown;
             this.KeyDown += TextBox_KeyDown;
+
+            mainToolStrip.Items.Add(testExecutionMenuItem);
+            testExecutionMenuItem.Click += TestExecutionMenuItem_Click;
+            mainToolStrip.Items.Add(testRenderingMenuItem);
+            testRenderingMenuItem.Click += TestExecutionMenuItem_Click;
+        }
+
+        private void TestExecutionMenuItem_Click(object sender, EventArgs e)
+        {
+         //   throw new NotImplementedException();
         }
 
         bool CheckClose()

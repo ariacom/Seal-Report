@@ -209,7 +209,7 @@ namespace Seal.Forms
 "
                 ),
            new Tuple<string, string>(
-                "Display a list of enum values separated by a comma.",
+                "Display a list of enum values separated by a comma",
 @"if (!cell.IsTitle && cell.Value != null)
     {
         var newVal = """";

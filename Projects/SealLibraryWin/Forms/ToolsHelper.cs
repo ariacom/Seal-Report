@@ -109,8 +109,11 @@ namespace Seal.Forms
             _exportSourceTranslations.Enabled = Source != null;
             _checkSource.Enabled = Report != null || Source != null;
             _refreshEnum.Enabled = _checkSource.Enabled;
-        }
 
+            _importSourceObjectsExcel.Enabled = _exportSourceTranslations.Enabled;
+            _exportSourceObjectsExcel.Enabled = _exportSourceTranslations.Enabled;
+            _importSourceObjects.Enabled = _exportSourceTranslations.Enabled;
+        }
 
         bool _setModified = false;
         void tools_Click(object sender, EventArgs e)
@@ -221,9 +224,11 @@ namespace Seal.Forms
                 }
                 else if (sender == _exportSourceObjectsExcel)
                 {
+                    var newSource = MetaSource.LoadFromFile(Source.FilePath);
+                    newSource.InitReferences(Repository.Instance);
                     List<RootComponent> objects = new List<RootComponent>();
-                    objects.AddRange(Source.MetaData.Tables);
-                    objects.AddRange(Source.MetaData.Enums);
+                    objects.AddRange(newSource.MetaData.Tables);
+                    objects.AddRange(newSource.MetaData.Enums);
 
                     foreach (var obj in objects)
                     {
@@ -787,13 +792,14 @@ namespace Seal.Forms
                             ws.Cells["D" + index].Value = ev.ValR;
                             ws.Cells["E" + index].Value = ev.Css;
                             ws.Cells["F" + index].Value = ev.Class;
+                            ws.Cells["G" + index].Value = en.GUID;
                             index++;
                         }
                     }
-                    ws.Cells["A1:F1"].AutoFilter = true;
-                    ws.Cells["A1:F1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells["A1:F1"].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
-                    ws.Cells["A1:F1"].Style.Font.Bold = true;
+                    ws.Cells["A1:G1"].AutoFilter = true;
+                    ws.Cells["A1:G1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    ws.Cells["A1:G1"].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+                    ws.Cells["A1:G1"].Style.Font.Bold = true;
                 }
                 foreach (ExcelWorksheet sheet in ep.Workbook.Worksheets.Where(i => i.Dimension != null))
                 {
