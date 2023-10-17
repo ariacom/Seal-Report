@@ -553,7 +553,10 @@ AND [89c953e8-33e3-42af-aaa8-85ced1e02a91]</Restriction>
       </Elements>
       <Restriction>[5de89b26-b326-49be-a90c-2e3e01541d1f]
 AND [79bcdca5-ef75-430f-a512-0900d3ff7c85]
-AND [c6cb14bd-8637-4a91-b562-400f7fa275a5]</Restriction>
+AND (
+[c6cb14bd-8637-4a91-b562-400f7fa275a5]
+OR
+[89bcdabf-7766-4449-b9e7-68404b6003e3])</Restriction>
       <Restrictions>
         <ReportRestriction>
           <GUID>5de89b26-b326-49be-a90c-2e3e01541d1f</GUID>
@@ -597,6 +600,17 @@ AND [c6cb14bd-8637-4a91-b562-400f7fa275a5]</Restriction>
           <Operator>NotEqual</Operator>
           <DisplayOrderRE>3</DisplayOrderRE>
           <Value1>System Dashboard</Value1>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>89bcdabf-7766-4449-b9e7-68404b6003e3</GUID>
+          <Name>sr_audit.execution_name</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID>
+          <Operator>IsNull</Operator>
+          <DisplayOrderRE>4</DisplayOrderRE>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>

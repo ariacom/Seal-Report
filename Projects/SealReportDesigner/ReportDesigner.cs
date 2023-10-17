@@ -433,6 +433,7 @@ namespace Seal
             if (currentNode == null) return;
 
             var model = currentNode.Tag as ReportModel;
+            if (model == null) return;
 
             var index = model.IsLINQ ? 17 : (model.IsSQLModel ? 15 : 10);
             currentNode.ImageIndex = index;

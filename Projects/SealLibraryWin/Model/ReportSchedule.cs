@@ -726,7 +726,7 @@ namespace Seal.Model
             }
         }
 
-        void RegisterTaskDefinition(TaskDefinition definition)
+        public void RegisterTaskDefinition(TaskDefinition definition)
         {
             if (!Report.SchedulesWithCurrentUser)
             {

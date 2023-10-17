@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Product>Seal Report Library (Windows)</Product>
-    <Version>7.0.0.0</Version>
-    <FileVersion>7.0.0.0</FileVersion>
+    <Version>7.1.0.0</Version>
+    <FileVersion>7.1.0.0</FileVersion>
   </PropertyGroup>
 </Project>

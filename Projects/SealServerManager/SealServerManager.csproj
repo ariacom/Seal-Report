@@ -9,9 +9,9 @@
     <AssemblyName>SealServerManager</AssemblyName>
     <ApplicationIcon>serverManager.ico</ApplicationIcon>
     <Product>Seal Report</Product>
-    <Version>7.0.0.0</Version>
-    <FileVersion>7.0.0.0</FileVersion>
-    <AssemblyVersion>7.0.0.0</AssemblyVersion>
+    <Version>7.1.0.0</Version>
+    <FileVersion>7.1.0.0</FileVersion>
+    <AssemblyVersion>7.1.0.0</AssemblyVersion>
     <Description>Seal Server Manager</Description>
     <Authors>Ariacom</Authors>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.5" />
   </ItemGroup>
   
   <ItemGroup>

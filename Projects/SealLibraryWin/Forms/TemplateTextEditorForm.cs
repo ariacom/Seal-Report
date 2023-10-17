@@ -50,10 +50,10 @@ namespace Seal.Forms
             this.textBox.KeyDown += TextBox_KeyDown;
             this.KeyDown += TextBox_KeyDown;
 
-            mainToolStrip.Items.Add(testExecutionMenuItem);
+            /*mainToolStrip.Items.Add(testExecutionMenuItem);
             testExecutionMenuItem.Click += TestExecutionMenuItem_Click;
             mainToolStrip.Items.Add(testRenderingMenuItem);
-            testRenderingMenuItem.Click += TestExecutionMenuItem_Click;
+            testRenderingMenuItem.Click += TestExecutionMenuItem_Click;*/
         }
 
         private void TestExecutionMenuItem_Click(object sender, EventArgs e)

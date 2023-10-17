@@ -720,6 +720,7 @@ namespace Seal.Model
                 }
                 catch (Exception ex)
                 {
+                    Helper.WriteLogException($"Execute task '{Name}'", ex);
                     if (tries > 0)
                     {
                         var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");

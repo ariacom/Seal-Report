@@ -32,6 +32,7 @@ namespace Seal.Model
 
     public class EditorTableDefinition
     {
+        public delegate object CustomProcess(Report report, string viewid, string pageid, string json, Dictionary<string, byte[]> files);
         public delegate void CustomFieldValidator(dynamic editor, ReportElement element, object value);
         public delegate void CustomMainValidator(dynamic editor, dynamic record);
 
@@ -66,10 +67,11 @@ namespace Seal.Model
             return result;
         }
 
+        public CustomProcess Process = null;
         public CustomFieldValidator FieldValidator = null;
         public CustomMainValidator MainValidator = null;
 
-        void initValidator()
+        void inits()
         {
             FieldValidator = new CustomFieldValidator(delegate (dynamic editor, ReportElement element, object value)
             {
@@ -84,6 +86,10 @@ namespace Seal.Model
             {
             });
 
+            Process = new CustomProcess(delegate (Report report, string viewid, string pageid, string json, Dictionary<string, byte[]> files)
+            {
+                return new object();
+            });
         }
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>4e59370b3d8d479199a2f2d67d4d7855</GUID>
   <ViewGUID>cb20ca89-6d86-4ee6-8581-2f06bb2d7af3</ViewGUID>
@@ -11,12 +11,20 @@
       <MetaData />
       <MetaSourceGUID>1f7b6741-c62f-4903-90ed-2fe3229190a7</MetaSourceGUID>
     </ReportSource>
+    <ReportSource>
+      <GUID>91111d89-c527-49d8-bf7e-c61d50146082</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
   </Sources>
   <Models>
     <ReportModel>
       <GUID>f4f62b47-33fb-4f8c-98dd-aaaff38e2b61</GUID>
       <Name>sales per customer</Name>
       <SourceGUID>4f9389a8-f876-4ecb-ac2f-3763674d3d8c</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
       <LINQSubTables>
         <MetaTable>
           <GUID>57e31c20-18d1-4e30-a46c-0734ab19dce7</GUID>
@@ -52,6 +60,7 @@ new BsonDocument("transactions.date", new BsonDocument("$gte", new DateTime(2011
     ));
 
 }</MongoStagesScript>
+          <Alias />
         </MetaTable>
         <MetaTable>
           <GUID>797f81cd-f6ef-40fc-b5fa-0e0fd4425b0f</GUID>
@@ -75,16 +84,19 @@ new BsonDocument("transactions.date", new BsonDocument("$gte", new DateTime(2011
     ));
 
 }</MongoStagesScript>
+          <Alias />
         </MetaTable>
         <MetaTable>
           <GUID>715b6c0e-18a6-4ccb-a540-ab51b9fc1766</GUID>
           <Name>customers_accounts</Name>
           <TemplateName>Mongo DB</TemplateName>
+          <Alias />
         </MetaTable>
         <MetaTable>
           <GUID>dc9cc4d8-4077-4e09-b1a2-ffc22b3d03aa</GUID>
           <Name>accounts</Name>
           <TemplateName>Mongo DB</TemplateName>
+          <Alias />
         </MetaTable>
       </LINQSubTables>
       <Elements>
@@ -165,7 +177,7 @@ new BsonDocument("transactions.date", new BsonDocument("$gte", new DateTime(2011
 &lt;/ul&gt;
 &lt;/p&gt;
 </CustomTemplate>
-          <SortOrder>0</SortOrder>
+          <SortOrder>1</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>81246a7c-34d1-42d4-bf68-30aac0876607</GUID>
@@ -212,7 +224,7 @@ new BsonDocument("transactions.date", new BsonDocument("$gte", new DateTime(2011
           </Views>
           <TemplateName>Model</TemplateName>
           <ModelGUID>f4f62b47-33fb-4f8c-98dd-aaaff38e2b61</ModelGUID>
-          <SortOrder>1</SortOrder>
+          <SortOrder>2</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

@@ -1306,17 +1306,21 @@ namespace Seal.Forms
                 }
             }
 
-            TreeNode previous = mainTreeView.SelectedNode;
-            try
+            if (propertyName == "Name" || propertyName == "DiplayName" || propertyName == "DisplayOrder")
             {
-                mainTreeView.BeginUpdate();
-                mainTreeView.Sort();
-                mainTreeView.SelectedNode = previous;
+                TreeNode previous = mainTreeView.SelectedNode;
+                try
+                {
+                    mainTreeView.BeginUpdate();
+                    mainTreeView.Sort();
+                    mainTreeView.SelectedNode = previous;
+                }
+                finally
+                {
+                    mainTreeView.EndUpdate();
+                }
             }
-            finally
-            {
-                mainTreeView.EndUpdate();
-            }
+            mainTreeView.SelectedNode.EnsureVisible();
             return mustInit;
         }
 
