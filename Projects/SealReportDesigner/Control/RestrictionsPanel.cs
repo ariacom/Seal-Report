@@ -11,6 +11,7 @@ using Seal.Model;
 using Seal.Helpers;
 using Seal.Forms;
 using ScintillaNET;
+using System.Xml.Linq;
 
 namespace Seal.Controls
 {
@@ -216,7 +217,22 @@ namespace Seal.Controls
                 restrictionsTextBox.SelectionEnd = endPos + 1;
                 restrictionsTextBox.Focus();
 
-                ToolStripMenuItem item = new ToolStripMenuItem("Smart copy...");
+                restrictionsTextBox.ContextMenuStrip = new ContextMenuStrip();
+                var menu = restrictionsTextBox.ContextMenuStrip;
+
+                ToolStripMenuItem item;
+                if (!restriction.Model.IsSQLModel)
+                {
+                    item = new ToolStripMenuItem("Go to the source Column");
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                    {
+                        ModelPanel.MainForm.selectNode(restriction.MetaColumn);
+                    });
+                    menu.Items.Add(item);
+                    menu.Items.Add(new ToolStripSeparator());
+                }
+
+                item = new ToolStripMenuItem("Smart copy...");
                 item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     SmartCopyForm form = new SmartCopyForm("Smart copy of " + restriction.DisplayNameEl, restriction, restriction.Model.Report);
@@ -227,11 +243,7 @@ namespace Seal.Controls
                         ModelPanel.MainForm.CannotRenderAnymore();
                     }
                 });
-
-                restrictionsTextBox.ContextMenuStrip = new ContextMenuStrip();
-                restrictionsTextBox.ContextMenuStrip.Items.Add(item);
-
-
+                menu.Items.Add(item);
             }
             else restrictionsTextBox.ContextMenuStrip = null;
         }

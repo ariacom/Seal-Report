@@ -8,7 +8,6 @@
       <Name>Local MS SQL Server</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServer</ConnectionType>
-      <ConnectionString />
       <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True</MSSqlServerConnectionString>
     </MetaConnection>
     <MetaConnection>
@@ -16,7 +15,6 @@
       <Name>Demonstration Server</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServer</ConnectionType>
-      <ConnectionString />
       <MSSqlServerConnectionString>Server=ariacom.com;Database=Northwind;</MSSqlServerConnectionString>
       <UserName>demo</UserName>
       <Password>jFBdR+/x69+IBwkZSf06Hw==</Password>
@@ -26,7 +24,6 @@
       <Name>Local MS SQL Server Microsoft</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
-      <ConnectionString />
       <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True;TrustServerCertificate=True;</MSSqlServerConnectionString>
     </MetaConnection>
   </Connections>

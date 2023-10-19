@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>9453a514-cd73-4d86-9b98-d06d3786a607</GUID>
   <ViewGUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</ViewGUID>
@@ -85,13 +85,11 @@ AND [80663cd3-e469-46d0-9831-9d956887cc6c]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>03effeb7-e01a-44b1-bd7d-9269268f74c5</GUID>
@@ -127,7 +125,6 @@ AND [80663cd3-e469-46d0-9831-9d956887cc6c]</Restriction>
           <GUID>a8c0411a-2ff5-4129-af5d-81c843cc877b</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Format>N0</Format>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -184,13 +181,11 @@ AND [249521ab-f905-4809-8f23-1dd07a978238]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>865467fb-0165-47e2-bf5e-d1543d044abb</GUID>
@@ -227,7 +222,6 @@ AND [249521ab-f905-4809-8f23-1dd07a978238]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -285,13 +279,11 @@ AND [9942b63a-7850-4360-bab2-c91f4e3a3717]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>416240c0-8eff-41d9-9be4-b19edec266a6</GUID>
@@ -326,7 +318,6 @@ AND [9942b63a-7850-4360-bab2-c91f4e3a3717]</Restriction>
           <GUID>05538f42-a23e-4edd-b101-1fc0697a190d</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Format>N0</Format>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -382,13 +373,11 @@ AND [8c4fa239-6cf9-49bd-b520-23551576d583]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>60cc50db-1ac9-4b79-b807-306d33ac1f4d</GUID>
@@ -479,13 +468,11 @@ AND [069c2def-6c6c-4cec-9e38-775b45d1d0f5]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>cbe78c48-bf3b-43d8-9405-03a6c0f746f2</GUID>
@@ -540,6 +527,29 @@ AND [069c2def-6c6c-4cec-9e38-775b45d1d0f5]</Restriction>
           <ChartJSSerie>Bar</ChartJSSerie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <CellScript>@{
+	ResultCell cell=Model;
+	ReportElement element = cell.Element;
+	ReportModel reportModel = element.Model;
+	Report report = reportModel.Report;
+    
+    //Assign colors
+    var minColor = System.Drawing.ColorTranslator.FromHtml("#CCE5FF");
+    var maxColor = System.Drawing.ColorTranslator.FromHtml("#0080FF");
+    double min, max, totalMin, totalMax;
+
+    if (cell.ContextTable.GetMinMaxValues(element, out min, out max, out totalMin, out totalMax)) {
+        if (!cell.IsTitle &amp;&amp; !cell.IsSubTotal &amp;&amp; !cell.IsTotal &amp;&amp; cell.DoubleValue != null) {
+            var fraction = (cell.DoubleValue.Value - min) / (max - min);
+            byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+            byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+            byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+
+            cell.FinalCssStyle = string.Format("background:#{0:X2}{1:X2}{2:X2}", red, green, blue);
+        }
+    }
+}
+</CellScript>
         </ReportElement>
         <ReportElement>
           <GUID>7771a722-e61e-4177-ac02-85d335f246c8</GUID>
@@ -667,13 +677,11 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>8c7f789b-85a8-4f72-8ef2-519c8453100d</GUID>
@@ -754,13 +762,11 @@ AND [71417a13-8ab3-4299-b0a6-67883cd6eb29]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>8eb79d1b-1b89-4d13-bff6-de0a3a4628d9</GUID>
@@ -906,13 +912,11 @@ AND [ea9144b9-23db-4932-a109-c3e841151c03]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>eaf43afc-4d04-4439-b69c-ca864053a6e0</GUID>
@@ -1078,13 +1082,11 @@ AND [1c8f000b-604f-4dea-9004-b59f35d74634]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>c84fc7fd-fc20-414c-b9da-eb6c70b348ef</GUID>
@@ -1163,13 +1165,11 @@ AND [1de6d80d-7398-45ba-99a9-f64008476c93]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>d472b1d4-31f9-4c9a-b069-83ec5833090a</GUID>
@@ -1262,13 +1262,11 @@ AND [960e193f-2379-48be-bc37-a9dfd64a2242]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>e20910e7-8bfe-42bc-bef9-4b45d5968acf</GUID>
@@ -1331,6 +1329,37 @@ AND [960e193f-2379-48be-bc37-a9dfd64a2242]</Restriction>
           <ChartJSSerie>Bar</ChartJSSerie>
           <SerieSortOrder>Descending</SerieSortOrder>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <CellScript>@{
+	ResultCell cell=Model;
+	ReportElement element = cell.Element;
+	ReportModel reportModel = element.Model;
+	Report report = reportModel.Report;
+    
+    //Assign colors
+    var minColor = System.Drawing.ColorTranslator.FromHtml("#CCE5FF");
+    var maxColor = System.Drawing.ColorTranslator.FromHtml("#0080FF");
+    double min, max, totalMin, totalMax;
+
+    if (cell.ContextTable.GetMinMaxValues(element, out min, out max, out totalMin, out totalMax)) {
+        if (!cell.IsTitle &amp;&amp; !cell.IsSubTotal &amp;&amp; !cell.IsTotal &amp;&amp; cell.DoubleValue != null &amp;&amp; max != min) {
+            var fraction = (cell.DoubleValue.Value - min) / (max - min);
+            byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+            byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+            byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+
+            cell.FinalCssStyle = string.Format("background:#{0:X2}{1:X2}{2:X2}", red, green, blue);
+        }
+        else if (cell.IsTotal &amp;&amp; cell.DoubleValue != null &amp;&amp; totalMax != totalMin) {
+            var fraction = (cell.DoubleValue.Value - totalMin) / (totalMax - totalMin);
+            byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+            byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+            byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+
+            cell.FinalCssStyle = string.Format("background:#{0:X2}{1:X2}{2:X2}", red, green, blue);
+        }
+    }
+}
+</CellScript>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
       </Elements>
@@ -1360,13 +1389,11 @@ AND [b32e5d4a-5936-46c2-bcfc-46de0c96fefa]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>3f0afefc-64d6-4c84-bc77-21940dcdcb25</GUID>
@@ -1502,13 +1529,11 @@ AND [d2f0c0b7-b97d-49d4-a241-d0f7653cce6c]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>6212326e-5f2e-4fe7-8203-c364a85fa108</GUID>

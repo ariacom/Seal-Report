@@ -33,8 +33,8 @@ namespace Seal.Forms
         BrowserInterop _browserInterop = null;
         public Form ReportDesignerForm = null;
 
-        static Size? LastSize = null;
-        static Point? LastLocation = null;
+        public static Size? LastSize = null;
+        public static Point? LastLocation = null;
 
         string _url;
 
@@ -86,6 +86,8 @@ namespace Seal.Forms
             BringToFront();
             TopLevel = true;
             Focus();
+            if (LastSize != null) Size = LastSize.Value;
+            if (LastLocation != null) Location = LastLocation.Value;
 
             Report previousReport = _report;
 
@@ -252,7 +254,7 @@ namespace Seal.Forms
                     Task.Run(() => p.Start());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 e.Cancel = true;
                 Task.Run(() => MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning));
@@ -305,7 +307,7 @@ namespace Seal.Forms
             public ReportViewerForm Container;
             bool _iconExecuting = true;
 
-            Report Report {  get { return Container._report; } }
+            Report Report { get { return Container._report; } }
             ReportExecution Execution { get { return Container._execution; } }
             NavigationContext Navigation { get { return Container._navigation; } }
 

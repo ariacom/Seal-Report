@@ -36,6 +36,7 @@ namespace Seal.Model
                     repository = Repository.ReloadInstance();
                 }
 
+                getMenuReportViews(_reports, repository.PersonalFolder, repository);
                 getMenuReportViews(_reports, repository.ReportsFolder, repository);
                 //Remove reports deleted
                 _menuReportViews.RemoveAll(i => !File.Exists(i.Report.FilePath));

@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Diagnostics;
+using crypto;
 
 namespace SealWebServer.Controllers
 {
@@ -274,9 +275,14 @@ namespace SealWebServer.Controllers
                 var menuNames = view.MenuPath.Split('/').Where(i => !string.IsNullOrEmpty(i)).ToList();
                 if (menuNames.Count > 0)
                 {
+                    var relativePath = "";
+                    var personalFolder = WebUser.Security.Repository.GetPersonalFolder(WebUser);
+                    if (view.Report.FilePath.StartsWith(personalFolder)) relativePath = view.Report.FilePath.Replace(personalFolder, ":");
+                    else relativePath = view.Report.RelativeFilePath;
+
                     var menuItem = new SWIMenuItem()
                     {
-                        path = view.Report.RelativeFilePath,
+                        path = relativePath,
                         name = view.MenuReportViewName,
                         viewGUID = view.GUID
                     };

@@ -11,6 +11,7 @@ using Seal.Helpers;
 using Seal.Forms;
 using DocumentFormat.OpenXml.Bibliography;
 using System.Linq;
+using Org.BouncyCastle.Asn1.IsisMtt.X509;
 
 namespace Seal.Controls
 {
@@ -140,14 +141,16 @@ namespace Seal.Controls
                         });
                         if (!Model.IsSubModel) menu.Items.Add(item);
                     }
-
-                    menu.Items.Add(new ToolStripSeparator());
-                    item = new ToolStripMenuItem("Go to the source Column");
-                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                    if (!Model.IsSQLModel)
                     {
-                        MainForm.selectNode(column);
-                    });
-                    menu.Items.Add(item);
+                        menu.Items.Add(new ToolStripSeparator());
+                        item = new ToolStripMenuItem("Go to the source Column");
+                        item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                        {
+                            MainForm.selectNode(column);
+                        });
+                        menu.Items.Add(item);
+                    }
 
                 }
                 else if (elementTreeView.SelectedNode != null && elementTreeView.SelectedNode.Nodes.Count > 0)
@@ -404,6 +407,17 @@ namespace Seal.Controls
                             });
                             menu.Items.Add(item);
                         }
+                    }
+
+                    if (!element.Model.IsSQLModel)
+                    {
+                        menu.Items.Add(new ToolStripSeparator());
+                        item = new ToolStripMenuItem("Go to the source Column");
+                        item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                        {
+                            MainForm.selectNode(element.MetaColumn);
+                        });
+                        menu.Items.Add(item);
                     }
 
                     menu.Items.Add(new ToolStripSeparator());

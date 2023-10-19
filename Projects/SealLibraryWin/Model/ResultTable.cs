@@ -314,6 +314,30 @@ namespace Seal.Model
             return false;
         }
 
+        public bool GetMinMaxValues(ReportElement element, out double min, out double max, out double totalMin, out double totalMax)
+        {
+            bool result = false;
+            min = double.MaxValue;
+            max = double.MinValue;
+            totalMin = double.MaxValue;
+            totalMax = double.MinValue;
+            for (int row=BodyStartRow; row<BodyEndRow; row++) {
+                for (int col = 0; col < ColumnCount && RowCount > 0; col++)
+                {
+                    var cell = this[row, col];
+                    var val = cell.DoubleValue;
+                    if (cell.Element == element && element.IsNumeric && val != null)
+                    {
+                        result = true;
+                        if (!cell.IsTotal && val.Value < min) min = val.Value;
+                        if (!cell.IsTotal && val.Value > max) max = val.Value;
+                        if (cell.IsTotal && val.Value < totalMin) totalMin = val.Value;
+                        if (cell.IsTotal && val.Value > totalMax) totalMax = val.Value;
+                    }
+                }
+            }
+            return result;
+        }
     }
 
 }

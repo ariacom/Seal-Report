@@ -12,33 +12,42 @@ using ScintillaNET;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
+using System.ComponentModel;
 
 namespace Seal.Forms
 {
-    public interface ReportTester
+    public interface IReportTester
     {
-        public void Execute();
-        void Render();
+        public bool CanExecute();
+        public bool CanRender();
+        public void TestExecute(ITypeDescriptorContext context, string value, bool render);
     }
 
     public partial class TemplateTextEditorForm : Form
     {
         public object ObjectForCheckSyntax = null;
         public string ScriptHeader = null;
+        public ITypeDescriptorContext context = null;
+        public Scintilla textBox = new Scintilla();
 
         ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
         ToolStripMenuItem samplesMenuItem2 = new ToolStripMenuItem("Samples (Notepad)");
-        ToolStripMenuItem testExecutionMenuItem = new ToolStripMenuItem("Test Execution...");
-        ToolStripMenuItem testRenderingMenuItem = new ToolStripMenuItem("Test Rendering...");
+        ToolStripMenuItem copyToolStripButton = new ToolStripMenuItem("Copy to clipboard") { };
+        public ToolStripMenuItem checkSyntaxToolStripButton = new ToolStripMenuItem("F8 Check Syntax") { ShortcutKeys = Keys.F8, ShowShortcutKeys = true };
+        ToolStripMenuItem testExecutionMenuItem = new ToolStripMenuItem("F5 Execute...") { ShortcutKeys = Keys.F5, ShowShortcutKeys = true };
+        ToolStripMenuItem testRenderingMenuItem = new ToolStripMenuItem("F6 Render...") { ShortcutKeys = Keys.F6, ShowShortcutKeys = true };
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
+        public static IReportTester ReportTester = null;
 
         Dictionary<int, string> _compilationErrors = new Dictionary<int, string>();
 
         public TemplateTextEditorForm()
         {
             InitializeComponent();
+            mainPanel.Controls.Add(textBox);
+            textBox.Dock = DockStyle.Fill;
             ScintillaHelper.Init(textBox, Lexer.Html);
             toolStripStatusLabel.Image = null;
             ShowIcon = true;
@@ -50,15 +59,46 @@ namespace Seal.Forms
             this.textBox.KeyDown += TextBox_KeyDown;
             this.KeyDown += TextBox_KeyDown;
 
-            /*mainToolStrip.Items.Add(testExecutionMenuItem);
-            testExecutionMenuItem.Click += TestExecutionMenuItem_Click;
-            mainToolStrip.Items.Add(testRenderingMenuItem);
-            testRenderingMenuItem.Click += TestExecutionMenuItem_Click;*/
+            mainToolStrip.Items.Add(checkSyntaxToolStripButton);
+            checkSyntaxToolStripButton.Click += checkSyntaxToolStripButton_Click;
+            checkSyntaxToolStripButton.Image = global::Seal.Properties.Resources.helper;
+            checkSyntaxToolStripButton.ImageTransparentColor = System.Drawing.Color.White;
+
+            if (ReportTester != null)
+            {
+                mainToolStrip.Items.Add(testExecutionMenuItem);
+                testExecutionMenuItem.Click += TestExecutionMenuItem_Click;
+                testExecutionMenuItem.Image = global::Seal.Properties.Resources.execute;
+                testExecutionMenuItem.ImageTransparentColor = System.Drawing.Color.White;
+                testExecutionMenuItem.Enabled = ReportTester.CanExecute();
+
+                mainToolStrip.Items.Add(testRenderingMenuItem);
+                testRenderingMenuItem.Click += TestExecutionMenuItem_Click;
+                testRenderingMenuItem.Image = global::Seal.Properties.Resources.render;
+                testRenderingMenuItem.ImageTransparentColor = System.Drawing.Color.White;
+                testRenderingMenuItem.Enabled = ReportTester.CanRender();
+            }
+
+            mainToolStrip.Items.Add(copyToolStripButton);
+            copyToolStripButton.Click += copyToolStripButton_Click;
+
         }
 
         private void TestExecutionMenuItem_Click(object sender, EventArgs e)
         {
-         //   throw new NotImplementedException();
+            string error = CheckSyntax();
+            if (!string.IsNullOrEmpty(error))
+            {
+                MessageBox.Show(error, "Check syntax", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                mainTimer.Enabled = false;
+                testRenderingMenuItem.Enabled = false;
+                testExecutionMenuItem.Enabled = false;
+                ReportTester?.TestExecute(context, textBox.Text, sender == testRenderingMenuItem);
+                mainTimer.Enabled = true;
+            }
         }
 
         bool CheckClose()
@@ -140,24 +180,27 @@ namespace Seal.Forms
         public string CheckSyntax()
         {
             string error = "";
-            try
+            if (ObjectForCheckSyntax != null)
             {
-                FormHelper.CheckRazorSyntax(textBox, ScriptHeader, ObjectForCheckSyntax, _compilationErrors);
-            }
-            catch (Exception ex)
-            {
-                error = ex.Message;
-            }
+                try
+                {
+                    FormHelper.CheckRazorSyntax(textBox, ScriptHeader, ObjectForCheckSyntax, _compilationErrors);
+                }
+                catch (Exception ex)
+                {
+                    error = ex.Message;
+                }
 
-            if (!string.IsNullOrEmpty(error))
-            {
-                toolStripStatusLabel.Text = "Compilation error";
-                toolStripStatusLabel.Image = global::Seal.Properties.Resources.error2;
-            }
-            else
-            {
-                toolStripStatusLabel.Text = "Razor Syntax is OK";
-                toolStripStatusLabel.Image = global::Seal.Properties.Resources.checkedGreen;
+                if (!string.IsNullOrEmpty(error))
+                {
+                    toolStripStatusLabel.Text = "Compilation error";
+                    toolStripStatusLabel.Image = global::Seal.Properties.Resources.error2;
+                }
+                else
+                {
+                    toolStripStatusLabel.Text = "Razor Syntax is OK";
+                    toolStripStatusLabel.Image = global::Seal.Properties.Resources.checkedGreen;
+                }
             }
 
             return error;
@@ -235,5 +278,13 @@ namespace Seal.Forms
             }
         }
 
+        private void mainTimer_Tick(object sender, EventArgs e)
+        {
+            if (ReportTester != null)
+            {
+                testExecutionMenuItem.Enabled = ReportTester.CanExecute();
+                testRenderingMenuItem.Enabled = ReportTester.CanRender();
+            }
+        }
     }
 }

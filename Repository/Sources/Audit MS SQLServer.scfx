@@ -8,8 +8,6 @@
       <Name>Local MS SQLServer</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServer</ConnectionType>
-      <ConnectionString />
-      <OdbcConnectionString />
       <MSSqlServerConnectionString>Server=localhost;Database=Audit;Trusted_Connection=True</MSSqlServerConnectionString>
       <UserName />
     </MetaConnection>

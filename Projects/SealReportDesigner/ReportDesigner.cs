@@ -16,13 +16,12 @@ using Seal.Helpers;
 using Seal.Forms;
 using System.Diagnostics;
 using System.Collections;
-using Microsoft.Win32.TaskScheduler;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Twilio.TwiML;
 
 namespace Seal
 {
-    public partial class ReportDesigner : Form, IEntityHandler
+    public partial class ReportDesigner : Form, IEntityHandler, IReportTester
     {
 
         #region Members
@@ -66,6 +65,7 @@ namespace Seal
         public ReportDesigner()
         {
             Instance = this;
+            TemplateTextEditorForm.ReportTester = this;
             if (Properties.Settings.Default.CallUpgrade)
             {
                 Properties.Settings.Default.Upgrade();
@@ -1958,6 +1958,38 @@ namespace Seal
         }
         #endregion
 
+        #region IReportTester
+        public bool CanExecute()
+        {
+            return (_report != null && (_reportViewer == null || (_reportViewer != null && _reportViewer.CanExecute)));
+        }
+
+        public bool CanRender()
+        {
+            return (_canRender && _report != null && _reportViewer != null && _reportViewer.Visible && _reportViewer.CanRender);
+        }
+
+        public void TestExecute(ITypeDescriptorContext context, string value, bool render)
+        {
+            if (_reportViewer != null)
+            {
+                ReportViewerForm.LastSize = _reportViewer.Size;
+                ReportViewerForm.LastLocation = _reportViewer.Location;
+                _reportViewer.Hide();
+            }
+
+            var oriValue = Helper.GetPropertyValue(context.Instance, context.PropertyDescriptor.Name) as string;
+            Helper.SetPropertyValue(context.Instance, context.PropertyDescriptor.Name, value);
+            try
+            {
+                executeToolStripMenuItem_Click(render ? renderToolStripMenuItem : executeToolStripMenuItem, null);
+            }
+            finally
+            {
+                Helper.SetPropertyValue(context.Instance, context.PropertyDescriptor.Name, oriValue);
+            }
+        }
+        #endregion
     }
 
 }

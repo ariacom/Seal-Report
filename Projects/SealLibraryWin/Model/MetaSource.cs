@@ -15,6 +15,7 @@ using System.Data.Odbc;
 using System.Xml;
 using System.Data.SqlClient;
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Packaging;
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -57,6 +58,7 @@ namespace Seal.Model
                 GetProperty("PostSQL").SetIsBrowsable(!IsNoSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!IsNoSQL);
                 GetProperty("IsDefault").SetIsBrowsable(true);
+                GetProperty("ExternalConnections").SetIsBrowsable(true);
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
 
                 GetProperty("InitScript").SetIsBrowsable(true);
@@ -97,6 +99,7 @@ namespace Seal.Model
             set { _connectionGUID = value; }
         }
 
+
         /// <summary>
         /// If true, this source is used as default when a new model is created in a report
         /// </summary>
@@ -107,11 +110,20 @@ namespace Seal.Model
         public bool IsDefault { get; set; } = false;
 
         /// <summary>
+        /// If true, the connections are saved in a XML file located beside the Data Source file.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(false)]
+        [Category("General"), DisplayName("Store Connections in a dedicated file"), Description("If true, the connections are saved in a XML file located beside the Data Source file. This may be useful for deployment."), Id(3, 1)]
+#endif
+        public bool ExternalConnections { get; set; } = false;
+
+        /// <summary>
         /// If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(3, 1)]
+        [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(4, 1)]
 #endif
         public bool IsNoSQL { get; set; } = false;
 
@@ -468,6 +480,11 @@ namespace Seal.Model
             return result;
         }
 
+        static string GetConnectionsFilePath(string path)
+        {
+            return Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "_Connections.xml");
+        }
+
         /// <summary>
         /// Load the MetaSource from a file
         /// </summary>
@@ -485,6 +502,21 @@ namespace Seal.Model
                     result = (MetaSource)serializer.Deserialize(xr);
                     xr.Close();
                 }
+
+                var connectionsPath = GetConnectionsFilePath(path);
+                if (result.ExternalConnections)
+                {
+                    if (File.Exists(connectionsPath))
+                    {
+                        serializer = new XmlSerializer(typeof(List<MetaConnection>));
+                        using (XmlReader xr = XmlReader.Create(connectionsPath))
+                        {
+                            result.Connections = (List<MetaConnection>)serializer.Deserialize(xr);
+                            xr.Close();
+                        }
+                    }
+                }
+
                 result.Name = Path.GetFileNameWithoutExtension(path);
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
@@ -529,6 +561,10 @@ namespace Seal.Model
                 FilePath = path;
                 LastModification = File.GetLastWriteTime(path);
                 LastMetadataModification = LastModification;
+
+                var connectionsPath = GetConnectionsFilePath(path);
+                if (ExternalConnections) Helper.Serialize(connectionsPath, Connections);
+                else if (File.Exists(connectionsPath)) File.Delete(connectionsPath);
             }
             finally
             {

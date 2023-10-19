@@ -31,45 +31,52 @@ namespace Seal.Forms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportViewerForm));
-            this.mainPanel = new System.Windows.Forms.Panel();
-            this.webBrowser = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.mainPanel.SuspendLayout();
-            this.SuspendLayout();
+            mainPanel = new System.Windows.Forms.Panel();
+            webBrowser = new Microsoft.Web.WebView2.WinForms.WebView2();
+            mainPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webBrowser).BeginInit();
+            SuspendLayout();
             // 
             // mainPanel
             // 
-            this.mainPanel.Controls.Add(this.webBrowser);
-            this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainPanel.Location = new System.Drawing.Point(0, 0);
-            this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(1008, 730);
-            this.mainPanel.TabIndex = 1;
+            mainPanel.Controls.Add(webBrowser);
+            mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            mainPanel.Location = new System.Drawing.Point(0, 0);
+            mainPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            mainPanel.Name = "mainPanel";
+            mainPanel.Size = new System.Drawing.Size(1176, 842);
+            mainPanel.TabIndex = 1;
             // 
             // webBrowser
             // 
-            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser.Location = new System.Drawing.Point(0, 0);
-            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(1008, 730);
-            this.webBrowser.TabIndex = 0;
-            this.webBrowser.NavigationStarting += WebBrowser_NavigationStarting;
-
+            webBrowser.AllowExternalDrop = true;
+            webBrowser.CreationProperties = null;
+            webBrowser.DefaultBackgroundColor = System.Drawing.Color.White;
+            webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            webBrowser.Location = new System.Drawing.Point(0, 0);
+            webBrowser.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            webBrowser.MinimumSize = new System.Drawing.Size(23, 23);
+            webBrowser.Name = "webBrowser";
+            webBrowser.Size = new System.Drawing.Size(1176, 842);
+            webBrowser.TabIndex = 0;
+            webBrowser.ZoomFactor = 1D;
+            webBrowser.NavigationStarting += WebBrowser_NavigationStarting;
             // 
             // ReportViewerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 730);
-            this.Controls.Add(this.mainPanel);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ReportViewerForm";
-            this.Text = "Report Viewer";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReportViewerForm_FormClosing);
-            this.Load += new System.EventHandler(this.ReportViewerForm_Load);
-            this.mainPanel.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1176, 842);
+            Controls.Add(mainPanel);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "ReportViewerForm";
+            Text = "Report Viewer";
+            FormClosing += ReportViewerForm_FormClosing;
+            Load += ReportViewerForm_Load;
+            mainPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)webBrowser).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion

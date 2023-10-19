@@ -109,7 +109,25 @@ namespace Seal.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
+
+        internal static System.Drawing.Bitmap execute
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("execute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        internal static System.Drawing.Bitmap render
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("render", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>

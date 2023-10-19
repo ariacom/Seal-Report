@@ -130,6 +130,12 @@ namespace Seal.Helpers
             }
         }
 
+        static public object GetPropertyValue(object item, string propertyName)
+        {
+            PropertyInfo prop = item.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+            if (null != prop) return prop.GetValue(item, null);
+            return null;
+        }
 
         static public string NewGUID()
         {

@@ -1872,6 +1872,7 @@ namespace Seal.Forms
                     frm.cancelToolStripButton.Text = "Close";
                 }
                 frm.checkSyntaxToolStripButton.Visible = (frm.ObjectForCheckSyntax != null);
+                frm.context = context;
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)
                 {
