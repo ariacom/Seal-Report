@@ -152,6 +152,41 @@ AND [80663cd3-e469-46d0-9831-9d956887cc6c]</Restriction>
           <ChartJSSerie>Bar</ChartJSSerie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <CellScript>@{
+	//Change colors of the cells
+	ResultCell cell=Model;
+	ReportElement element = cell.Element;
+	ReportModel reportModel = element.Model;
+	Report report = reportModel.Report;
+	
+    //Assign colors
+    var minColor = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");
+    var maxColor = System.Drawing.ColorTranslator.FromHtml("#3399FF");
+
+    double? fraction = null;
+    var stats = cell.ContextTable.GetStatistics(element);
+    if (stats != null &amp;&amp; cell.IsValue &amp;&amp; cell.DoubleValue != null) {
+        fraction = (stats.Max == stats.Min ? 1 : (cell.DoubleValue.Value - stats.Min) / (stats.Max - stats.Min));
+    }
+    else if (cell.IsTotalTotal &amp;&amp; cell.DoubleValue != null) { //Total of Totals
+        fraction = 1;
+    }
+    else if (stats != null &amp;&amp; cell.IsTotal &amp;&amp; cell.DoubleValue != null) { //Total
+        fraction = (stats.TotalMax == stats.TotalMin ? 1 : (cell.DoubleValue.Value - stats.TotalMin) / (stats.TotalMax - stats.TotalMin));
+    }
+
+    if (fraction != null) {
+        byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+        byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+        byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+        string color = string.Format("#{0:X2}{1:X2}{2:X2}", red, green, blue);
+
+        //Add a colored bar
+        var width = (int) (fraction*70);
+        cell.FinalValue = $"&lt;div style='display:inline-block'&gt;&lt;/div&gt;&lt;div style='display:inline-block;width:{width}px;background:{color};'&gt;&lt;div style='float:right;'&gt;&lt;span&gt;{cell.HTMLValue}&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;";
+    }
+}
+</CellScript>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
       </Elements>
@@ -250,6 +285,41 @@ AND [249521ab-f905-4809-8f23-1dd07a978238]</Restriction>
           <ChartJSSerie>Bar</ChartJSSerie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <CellScript>@{
+	//Change colors of the cells
+	ResultCell cell=Model;
+	ReportElement element = cell.Element;
+	ReportModel reportModel = element.Model;
+	Report report = reportModel.Report;
+	
+    //Assign colors
+    var minColor = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");
+    var maxColor = System.Drawing.ColorTranslator.FromHtml("#3399FF");
+
+    double? fraction = null;
+    var stats = cell.ContextTable.GetStatistics(element);
+    if (stats != null &amp;&amp; cell.IsValue &amp;&amp; cell.DoubleValue != null) {
+        fraction = (stats.Max == stats.Min ? 1 : (cell.DoubleValue.Value - stats.Min) / (stats.Max - stats.Min));
+    }
+    else if (cell.IsTotalTotal &amp;&amp; cell.DoubleValue != null) { //Total of Totals
+        fraction = 1;
+    }
+    else if (stats != null &amp;&amp; cell.IsTotal &amp;&amp; cell.DoubleValue != null) { //Total
+        fraction = (stats.TotalMax == stats.TotalMin ? 1 : (cell.DoubleValue.Value - stats.TotalMin) / (stats.TotalMax - stats.TotalMin));
+    }
+
+    if (fraction != null) {
+        byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+        byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+        byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+        string color = string.Format("#{0:X2}{1:X2}{2:X2}", red, green, blue);
+
+        //Add a colored bar
+        var width = (int) (fraction*70);
+        cell.FinalValue = $"&lt;div style='display:inline-block'&gt;&lt;/div&gt;&lt;div style='display:inline-block;width:{width}px;background:{color};'&gt;&lt;div style='float:right;'&gt;&lt;span&gt;{cell.HTMLValue}&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;";
+    }
+}
+</CellScript>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
       </Elements>
@@ -528,25 +598,36 @@ AND [069c2def-6c6c-4cec-9e38-775b45d1d0f5]</Restriction>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
           <CellScript>@{
+	//Change colors of the cells
 	ResultCell cell=Model;
 	ReportElement element = cell.Element;
 	ReportModel reportModel = element.Model;
 	Report report = reportModel.Report;
-    
+	
     //Assign colors
-    var minColor = System.Drawing.ColorTranslator.FromHtml("#CCE5FF");
-    var maxColor = System.Drawing.ColorTranslator.FromHtml("#0080FF");
-    double min, max, totalMin, totalMax;
+    var minColor = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");
+    var maxColor = System.Drawing.ColorTranslator.FromHtml("#3399FF");
 
-    if (cell.ContextTable.GetMinMaxValues(element, out min, out max, out totalMin, out totalMax)) {
-        if (!cell.IsTitle &amp;&amp; !cell.IsSubTotal &amp;&amp; !cell.IsTotal &amp;&amp; cell.DoubleValue != null) {
-            var fraction = (cell.DoubleValue.Value - min) / (max - min);
-            byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
-            byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
-            byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+    double? fraction = null;
+    var stats = cell.ContextTable.GetStatistics(element);
+    if (stats != null &amp;&amp; cell.IsValue &amp;&amp; cell.DoubleValue != null) {
+        fraction = (stats.Max == stats.Min ? 1 : (cell.DoubleValue.Value - stats.Min) / (stats.Max - stats.Min));
+    }
 
-            cell.FinalCssStyle = string.Format("background:#{0:X2}{1:X2}{2:X2}", red, green, blue);
-        }
+    if (fraction != null) {
+        byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+        byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+        byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+        string color = string.Format("#{0:X2}{1:X2}{2:X2}", red, green, blue);
+
+        //Change the background color      
+        cell.FinalCssStyle = $"background:{color}";
+        //Change the text color      
+        //cell.FinalCssStyle = $"color:{color}";
+        
+        //Add a colored bar
+        //var width = (int) (fraction*90);
+        //cell.FinalValue = $"&lt;div style='width:{100-width}%;display:inline-block'&gt;&lt;/div&gt;&lt;div style='display:inline-block;width:{width}%;background:{color};'&gt;&lt;div style='float:right;'&gt;&lt;span&gt;{cell.HTMLValue}&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;";
     }
 }
 </CellScript>
@@ -576,6 +657,34 @@ AND [069c2def-6c6c-4cec-9e38-775b45d1d0f5]</Restriction>
           <SerieDefinition>NVD3Serie</SerieDefinition>
           <ChartJSSerie>Bar</ChartJSSerie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+          <CellScript>@{
+	//Change colors of the cells
+	ResultCell cell=Model;
+	ReportElement element = cell.Element;
+	ReportModel reportModel = element.Model;
+	Report report = reportModel.Report;
+	
+    //Assign colors
+    var minColor = System.Drawing.ColorTranslator.FromHtml("#FFCC99");
+    var maxColor = System.Drawing.ColorTranslator.FromHtml("#CC6600");
+    
+    double? fraction = null;
+    var stats = cell.ContextTable.GetStatistics(element);
+    if (stats != null &amp;&amp; cell.IsValue &amp;&amp; cell.DoubleValue != null) {
+        fraction = (stats.Max == stats.Min ? 1 : (cell.DoubleValue.Value - stats.Min) / (stats.Max - stats.Min));
+    }
+
+    if (fraction != null) {
+        byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+        byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+        byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+        string color = string.Format("#{0:X2}{1:X2}{2:X2}", red, green, blue);
+
+        //Change the text color      
+        cell.FinalCssStyle = $"color:{color}";        
+    }
+}
+</CellScript>
         </ReportElement>
         <ReportElement>
           <GUID>78eda211-103f-4437-88bc-84a1dc486943</GUID>
@@ -1330,33 +1439,36 @@ AND [960e193f-2379-48be-bc37-a9dfd64a2242]</Restriction>
           <SerieSortOrder>Descending</SerieSortOrder>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
           <CellScript>@{
+	//Change colors of the cells
 	ResultCell cell=Model;
 	ReportElement element = cell.Element;
 	ReportModel reportModel = element.Model;
 	Report report = reportModel.Report;
-    
+	
     //Assign colors
-    var minColor = System.Drawing.ColorTranslator.FromHtml("#CCE5FF");
-    var maxColor = System.Drawing.ColorTranslator.FromHtml("#0080FF");
-    double min, max, totalMin, totalMax;
+    var minColor = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");
+    var maxColor = System.Drawing.ColorTranslator.FromHtml("#C0C0C0");
+    
+    double? fraction = null;
+    var stats = cell.ContextTable.GetStatistics(element);
+    if (stats != null &amp;&amp; cell.IsValue &amp;&amp; cell.DoubleValue != null) {
+        fraction = (stats.Max == stats.Min ? 1 : (cell.DoubleValue.Value - stats.Min) / (stats.Max - stats.Min));
+    }
+    else if (cell.IsTotalTotal &amp;&amp; cell.DoubleValue != null) { //Total of Totals
+        cell.FinalCssStyle = "background:#C0C0C0";
+    }
+    else if (stats != null &amp;&amp; cell.IsTotal &amp;&amp; cell.DoubleValue != null) { //Total
+        fraction = (stats.TotalMax == stats.TotalMin ? 1 : (cell.DoubleValue.Value - stats.TotalMin) / (stats.TotalMax - stats.TotalMin));
+    }
 
-    if (cell.ContextTable.GetMinMaxValues(element, out min, out max, out totalMin, out totalMax)) {
-        if (!cell.IsTitle &amp;&amp; !cell.IsSubTotal &amp;&amp; !cell.IsTotal &amp;&amp; cell.DoubleValue != null &amp;&amp; max != min) {
-            var fraction = (cell.DoubleValue.Value - min) / (max - min);
-            byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
-            byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
-            byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+    if (fraction != null) {
+        byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+        byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+        byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+        string color = string.Format("#{0:X2}{1:X2}{2:X2}", red, green, blue);
 
-            cell.FinalCssStyle = string.Format("background:#{0:X2}{1:X2}{2:X2}", red, green, blue);
-        }
-        else if (cell.IsTotal &amp;&amp; cell.DoubleValue != null &amp;&amp; totalMax != totalMin) {
-            var fraction = (cell.DoubleValue.Value - totalMin) / (totalMax - totalMin);
-            byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
-            byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
-            byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
-
-            cell.FinalCssStyle = string.Format("background:#{0:X2}{1:X2}{2:X2}", red, green, blue);
-        }
+        //Change the background color      
+        cell.FinalCssStyle = $"background:{color}";
     }
 }
 </CellScript>
@@ -1548,6 +1660,105 @@ AND [d2f0c0b7-b97d-49d4-a241-d0f7653cce6c]</Restriction>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>d2f0c0b7-b97d-49d4-a241-d0f7653cce6c</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <DisplayOrderRE>0</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>51ed414c-f691-4bd8-8672-afc5fdaab6aa</GUID>
+      <Name>06 sales category month  KPI</Name>
+      <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>17306282-6a64-4289-b742-0f3d0929a5b2</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d0370c50-2cbd-4eb2-8c7b-4df319458afa</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3d75144e-90bb-41a9-8a06-7ca95aab535f</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>RowColumn</ShowTotal>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>None</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <CellScript />
+          <SetNullToZero>true</SetNullToZero>
+        </ReportElement>
+      </Elements>
+      <Restriction>[549b780d-98b8-4f4f-9d33-37ab094e5e37]
+AND [32a6ffef-a11b-428c-bfb9-f505be994d0d]
+AND [be815c15-0a0a-466a-a764-fd6dbc3657f2]
+AND [8bd6372e-e593-4a7f-bc07-8f363a24992a]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>549b780d-98b8-4f4f-9d33-37ab094e5e37</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Between</Operator>
+          <DisplayOrderRE>0</DisplayOrderRE>
+          <Date1>1997-01-01T00:00:00</Date1>
+          <Date2>1997-12-31T00:00:00</Date2>
+          <FormatRe>MM/yyyy</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>32a6ffef-a11b-428c-bfb9-f505be994d0d</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <DisplayOrderRE>0</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>be815c15-0a0a-466a-a764-fd6dbc3657f2</GUID>
+          <Name>Customers.Country</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <DisplayOrderRE>0</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>8bd6372e-e593-4a7f-bc07-8f363a24992a</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
           <DisplayName />
@@ -2273,12 +2484,13 @@ col-sm-12</Value>
                             </ReportView>
                             <ReportView>
                               <GUID>d84d4da4-c7b6-4561-843d-8a8ab3f5ca61</GUID>
-                              <Name>06 sales category month</Name>
+                              <Name>06 sales category month  KPI</Name>
                               <Views>
                                 <ReportView>
                                   <GUID>2be1eb08-3dec-46f7-8366-e4ca32e27bfc</GUID>
                                   <Name>KPI</Name>
                                   <TemplateName>KPI</TemplateName>
+                                  <UseCustomTemplate>true</UseCustomTemplate>
                                   <Parameters>
                                     <Parameter>
                                       <Name>kpi_button_css</Name>
@@ -2318,7 +2530,7 @@ glyphicon glyphicon-ok</Value>
                                 </ReportView>
                               </Views>
                               <TemplateName>Model</TemplateName>
-                              <ModelGUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</ModelGUID>
+                              <ModelGUID>51ed414c-f691-4bd8-8672-afc5fdaab6aa</ModelGUID>
                               <Parameters>
                                 <Parameter>
                                   <Name>drill_enabled</Name>

@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace Seal.Model
 {
@@ -840,7 +841,7 @@ namespace Seal.Model
                         buildTotals(model);
                     }
                     model.Progression = 85; //85% 
-                                            //Scripts
+                    //Scripts
                     if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
                     //Series 
                     if (!Report.Cancel && model.HasSerie) buildSeries(model);
@@ -1640,7 +1641,7 @@ namespace Seal.Model
                             for (int j = 0; j < cols; j++)
                             {
                                 var sourceCell = dataTable[i, j];
-                                var newCell = new ResultTotalCell() { IsSubTotal = true };
+                                var newCell = new ResultTotalCell() { IsSubTotal = true, IsTotal = sourceCell.IsTotal };
                                 newSubTotalLine[j] = newCell;
                                 if (sourceCell.Element != null && sourceCell.Element.PivotPosition == PivotPosition.Data)
                                 {
@@ -1686,9 +1687,12 @@ namespace Seal.Model
                     dataTable.BodyEndRow++;
                 }
 
+                //Handle cell scripts for sub-totals
                 foreach (ResultPage page in model.Pages)
                 {
                     if (Report.Cancel) break;
+                    //Rebuild statistics with subtotals
+                    page.DataTable.Statistics.Clear();
                     handleCustomScripts(model, page, page.DataTable, true);
                 }
             }

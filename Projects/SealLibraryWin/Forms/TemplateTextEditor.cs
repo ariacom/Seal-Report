@@ -120,6 +120,50 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
+                "Change colors of the cells",
+@"
+    //Assign colors
+    var minColor = System.Drawing.ColorTranslator.FromHtml(""#FFFFFF"");
+    var maxColor = System.Drawing.ColorTranslator.FromHtml(""#3399FF"");
+
+    double? fraction = null;
+    var stats = cell.ContextTable.GetStatistics(element);
+    if (stats != null && cell.IsValue && cell.DoubleValue != null) {
+        fraction = (stats.Max == stats.Min ? 1 : (cell.DoubleValue.Value - stats.Min) / (stats.Max - stats.Min));
+    }
+    else if (cell.IsTotalTotal && cell.DoubleValue != null) { //Total of Totals
+        fraction = 1;
+        //cell.FinalCssStyle = ""background:#DEB887"";
+    }
+    else if (stats != null && cell.IsTotal && cell.DoubleValue != null) { //Total
+        minColor = System.Drawing.ColorTranslator.FromHtml(""#FFF8DC"");
+        maxColor = System.Drawing.ColorTranslator.FromHtml(""#F5DEB3"");
+        fraction = (stats.TotalMax == stats.TotalMin ? 1 : (cell.DoubleValue.Value - stats.TotalMin) / (stats.TotalMax - stats.TotalMin));
+    }
+    else if (stats != null && cell.IsSubTotal && cell.DoubleValue != null) { //SubTotal
+        minColor = System.Drawing.ColorTranslator.FromHtml(""#ccffcc"");
+        maxColor = System.Drawing.ColorTranslator.FromHtml(""#00cc00"");
+        fraction = (stats.SubTotalMax == stats.SubTotalMin ? 1 : (cell.DoubleValue.Value - stats.SubTotalMin) / (stats.SubTotalMax - stats.SubTotalMin));
+    }
+
+    if (fraction != null) {
+        byte red = (byte)(minColor.R + fraction * (maxColor.R - minColor.R));
+        byte green = (byte)(minColor.G + fraction * (maxColor.G - minColor.G));
+        byte blue = (byte)(minColor.B + fraction * (maxColor.B - minColor.B));
+        string color = string.Format(""#{0:X2}{1:X2}{2:X2}"", red, green, blue);
+
+        //Change the background color      
+        cell.FinalCssStyle = $""background:{color}"";
+        //Change the text color      
+        //cell.FinalCssStyle = $""color:{color}"";
+        
+        //Add a colored bar from 0 to 100 pixels
+        //var width = (int) (fraction*100);
+        //cell.FinalValue = $""<div style='display:inline-block'></div><div style='display:inline-block;width:{width}px;background:{color};'><div style='float:right;'><span>{cell.HTMLValue}</span></div></div>"";
+    }
+"
+                ),
+            new Tuple<string, string>(
                 "Display negative values in red and bold",
 @"
     if (cell.DoubleValue < 0)

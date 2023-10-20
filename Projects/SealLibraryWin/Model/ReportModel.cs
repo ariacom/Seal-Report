@@ -2217,8 +2217,8 @@ model.ResultTable = query2.CopyToDataTable2();
                 ReportElement element = elements.ElementAt(i);
                 if (element.SortOrder != ReportElement.kNoSortKeyword)
                 {
-                    if (element.SortOrder == ReportElement.kAutomaticAscSortKeyword) element.FinalSortOrder = string.Format("{0:000} {1}", 999+i, ReportElement.kAscendantSortKeyword);
-                    else if (element.SortOrder == ReportElement.kAutomaticDescSortKeyword) element.FinalSortOrder = string.Format("{0:000} {1}", 999+i, ReportElement.kDescendantSortKeyword);
+                    if (element.SortOrder == ReportElement.kAutomaticAscSortKeyword) element.FinalSortOrder = string.Format("{0:000} {1}", 100+i, ReportElement.kAscendantSortKeyword);
+                    else if (element.SortOrder == ReportElement.kAutomaticDescSortKeyword) element.FinalSortOrder = string.Format("{0:000} {1}", 100+i, ReportElement.kDescendantSortKeyword);
                     else element.FinalSortOrder = element.SortOrder;
                 }
             }

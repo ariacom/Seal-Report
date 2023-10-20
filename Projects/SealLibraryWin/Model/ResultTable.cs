@@ -131,7 +131,8 @@ namespace Seal.Model
                 //Handle hidden columns
                 for (int col = 0; col < refLine.Length; col++)
                 {
-                    if (col <= sortIndex && (view.IsColumnHidden(col) || IsColumnHidden(col))) {
+                    if (col <= sortIndex && (view.IsColumnHidden(col) || IsColumnHidden(col)))
+                    {
                         sortIndex++;
                     }
                 }
@@ -167,7 +168,7 @@ namespace Seal.Model
             var rowBodyStyle = view.GetValue("data_table_body_css");
             var rowSubClass = view.GetValue("data_table_subtotal_class");
             var rowSubStyle = view.GetValue("data_table_subtotal_css");
-            
+
             for (int row = start; row < _filteredLines.Count && row < start + len; row++)
             {
                 ResultCell[] line = _filteredLines[row];
@@ -314,30 +315,60 @@ namespace Seal.Model
             return false;
         }
 
-        public bool GetMinMaxValues(ReportElement element, out double min, out double max, out double totalMin, out double totalMax)
+        public Dictionary<ReportElement, ResultStatistics> Statistics = new Dictionary<ReportElement, ResultStatistics>();
+
+        /// <summary>
+        /// Returns the table statistics for an element
+        /// </summary>
+        public ResultStatistics GetStatistics(ReportElement element)
         {
-            bool result = false;
-            min = double.MaxValue;
-            max = double.MinValue;
-            totalMin = double.MaxValue;
-            totalMax = double.MinValue;
-            for (int row=BodyStartRow; row<BodyEndRow; row++) {
-                for (int col = 0; col < ColumnCount && RowCount > 0; col++)
+            if (!element.IsNumeric) return null;
+            if (!Statistics.ContainsKey(element))
+            {
+                var stat = new ResultStatistics();
+                for (int row = BodyStartRow; row < Lines.Count; row++)
                 {
-                    var cell = this[row, col];
-                    var val = cell.DoubleValue;
-                    if (cell.Element == element && element.IsNumeric && val != null)
+                    for (int col = 0; col < ColumnCount && RowCount > 0; col++)
                     {
-                        result = true;
-                        if (!cell.IsTotal && val.Value < min) min = val.Value;
-                        if (!cell.IsTotal && val.Value > max) max = val.Value;
-                        if (cell.IsTotal && val.Value < totalMin) totalMin = val.Value;
-                        if (cell.IsTotal && val.Value > totalMax) totalMax = val.Value;
+                        var cell = this[row, col];
+                        var val = cell.DoubleValue;
+                        if (cell.Element == element && val != null)
+                        {
+                            if (cell.IsValue)
+                            {
+                                stat.Min = Math.Min(stat.Min, val.Value);
+                                stat.Max = Math.Max(stat.Max, val.Value);
+                            }
+                            else if (cell.IsTotal && !cell.IsTotalTotal)
+                            {
+                                stat.TotalMin = Math.Min(stat.TotalMin, val.Value);
+                                stat.TotalMax = Math.Max(stat.TotalMax, val.Value);
+
+                            }
+                            else if (cell.IsSubTotal)
+                            {
+                                stat.SubTotalMin = Math.Min(stat.SubTotalMin, val.Value);
+                                stat.SubTotalMax = Math.Max(stat.SubTotalMax, val.Value);
+                            }
+                        }
                     }
                 }
+                Statistics.Add(element, stat);
             }
-            return result;
+            return Statistics[element];
         }
     }
 
+    /// <summary>
+    /// ResultStatistics stores statistics for the table per element.
+    /// </summary>
+    public class ResultStatistics
+    {
+        public double Min = double.MaxValue;
+        public double Max = double.MinValue;
+        public double SubTotalMin = double.MaxValue;
+        public double SubTotalMax = double.MinValue;
+        public double TotalMin = double.MaxValue;
+        public double TotalMax = double.MinValue;
+    }
 }

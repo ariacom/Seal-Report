@@ -27,6 +27,17 @@ namespace Seal.Model
         public ReportElement Element;
 
         /// <summary>
+        /// True if the cell is not for a total and not for a title
+        /// </summary>
+        public bool IsValue
+        {
+            get
+            {
+                return !IsTotal && !IsSubTotal && !IsTotalTotal && !IsTitle;
+            }
+        }
+
+        /// <summary>
         /// True if the cell is for a total
         /// </summary>
         public bool IsTotal = false;
