@@ -6550,6 +6550,11 @@
             The ReportElement of the element model
             </summary>
         </member>
+        <member name="P:Seal.Model.ResultCell.IsValue">
+            <summary>
+            True if the cell is not for a total and not for a title
+            </summary>
+        </member>
         <member name="F:Seal.Model.ResultCell.IsTotal">
             <summary>
             True if the cell is for a total
@@ -7143,6 +7148,16 @@
         <member name="M:Seal.Model.ResultTable.HasNavigation(Seal.Model.ReportView,System.Int32,System.Int32)">
             <summary>
             True if the column has cells with navigation links
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ResultTable.GetStatistics(Seal.Model.ReportElement)">
+            <summary>
+            Returns the table statistics for an element
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ResultStatistics">
+            <summary>
+            ResultStatistics stores statistics for the table per element.
             </summary>
         </member>
         <member name="T:Seal.Model.ResultTotalCell">

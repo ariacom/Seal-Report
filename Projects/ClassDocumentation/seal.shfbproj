@@ -18,11 +18,11 @@
     <HtmlHelpName>Documentation</HtmlHelpName>
     <Language>en-US</Language>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\SealLibrary\bin\Debug\Net6.0\SealLibrary.dll" />
+      <DocumentationSource sourceFile="..\SealLibrary\bin\Debug\Net7.0\SealLibrary.dll" />
       <DocumentationSource sourceFile="..\SealLibrary\SealLibrary.xml" />
-      <DocumentationSource sourceFile="..\SealWebServer\bin\Debug\Net6.0\SealWebServer.dll" />
+      <DocumentationSource sourceFile="..\SealWebServer\bin\Debug\Net7.0\SealWebServer.dll" />
       <DocumentationSource sourceFile="..\SealWebServer\SealWebServer.xml" />
-      <DocumentationSource sourceFile="..\..\..\SealAriacom\SealConverter\bin\Debug\Net6.0\SealConverter.dll" />
+      <DocumentationSource sourceFile="..\..\..\SealAriacom\SealConverter\bin\Debug\Net7.0\SealConverter.dll" />
       <DocumentationSource sourceFile="..\..\..\SealAriacom\SealConverter\SealConverter.xml" />
     </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
@@ -212,6 +212,8 @@
         </configuration>
       </PlugInConfig>
     </PlugInConfigurations>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->

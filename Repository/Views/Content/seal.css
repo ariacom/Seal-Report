@@ -122,13 +122,12 @@ body {
 }
 
 .cell-identifier {
-    color: #4169E1;
+    color: #337ab7;
     font-weight: bold;
 }
 
 .cell-identifier-underline {
-    color: #4169E1;
-    font-weight: bold;
+    color: #337ab7;
 	text-decoration: underline
 }
 
