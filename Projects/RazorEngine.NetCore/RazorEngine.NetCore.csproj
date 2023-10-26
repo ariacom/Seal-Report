@@ -3,9 +3,9 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<DefineConstants>$(DefineConstants);RAZOR4</DefineConstants>
 		<DefineConstants>$(DefineConstants);NO_APPDOMAIN;NO_CODEDOM;NO_CONFIGURATION;NETCORE</DefineConstants>
-		<Version>7.1.0.0</Version>
-		<FileVersion>7.1.0.0</FileVersion>
-		<AssemblyVersion>7.1.0.0</AssemblyVersion>
+		<Version>6.8.0.0</Version>
+		<FileVersion>6.8.0.0</FileVersion>
+		<AssemblyVersion>6.8.0.0</AssemblyVersion>
 		<AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<RootNamespace>RazorEngine</RootNamespace>
