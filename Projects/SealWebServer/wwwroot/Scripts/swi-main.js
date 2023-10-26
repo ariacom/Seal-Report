@@ -413,6 +413,7 @@ var SWIMain = /** @class */ (function () {
         var aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
         if (_main._reportIcon !== null)
             aref.append($("<span class='external-navigation glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
+        aref.addClass(value.classes);
         parent.append($("<li class='menu-reports'>").append(aref));
     };
     SWIMain.prototype.initMenu = function (parent, items) {
@@ -425,6 +426,7 @@ var SWIMain = /** @class */ (function () {
                 var label = $("<a href='#' class='dropdown-toggle' data-toggle='dropdown'>").html(value.name);
                 li.append(label);
                 parent.append(li);
+                li.addClass(value.classes);
                 var ul = $("<ul class='dropdown-menu'>");
                 li.append(ul);
                 _main.initMenu(ul, value.items);
@@ -568,9 +570,13 @@ var SWIMain = /** @class */ (function () {
     SWIMain.prototype.enableControls = function () {
         var right = 0; //1 Execute,2 Shedule,3 Edit
         var files = false;
+        var showFolders = false;
         if (_main._folder) {
             right = _main._folder.right;
             files = _main._folder.files;
+        }
+        if (_main._profile) {
+            showFolders = _main._profile.showfolders;
         }
         $outputPanel.hide();
         $('#back-to-top').tooltip('hide');
@@ -586,12 +592,12 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
         //Report or folders view
         var reportShown = _main._reportPath && _main._currentView == "report";
-        SWIUtil.ShowHideControl($("#menu-view-folders"), _main._currentView == "report" && _main._profile.showfolders);
+        SWIUtil.ShowHideControl($("#menu-view-folders"), _main._currentView == "report" && showFolders);
         SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath && _main._currentView != "report");
         SWIUtil.ShowHideControl($(".reportview"), reportShown);
         SWIUtil.ShowHideControl($(".folderview"), _main._currentView != "report");
         //Dividers
-        SWIUtil.ShowHideControl($(".menu-divider-folders-report"), (_main._reportPath != "" || _main._currentView == "report") && _main._profile.showfolders);
+        SWIUtil.ShowHideControl($(".menu-divider-folders-report"), (_main._reportPath != "" || _main._currentView == "report") && showFolders);
         //title color
         $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d");
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");

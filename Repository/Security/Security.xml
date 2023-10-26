@@ -9,7 +9,7 @@
 	//user.WebPassword -&gt; password from the login screen
 
 	user.Name = user.WebUserName; //Display name
-
+        
 	if (string.IsNullOrEmpty(user.WebUserName)) {
 		user.AddDefaultSecurityGroup();
 	}

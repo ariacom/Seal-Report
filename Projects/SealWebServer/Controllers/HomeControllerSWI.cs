@@ -331,7 +331,7 @@ namespace SealWebServer.Controllers
 
                 var profile = WebUser.Profile;
                 var startUpReport = "";
-                if (profile.OnStartup == StartupOptions.Default && WebUser.DefaultGroup.OnStartup == StartupOptions.ExecuteReport) startUpReport = WebUser.DefaultGroup.StartupReport;
+                if (profile.OnStartup == StartupOptions.Default && WebUser.DefaultGroup?.OnStartup == StartupOptions.ExecuteReport) startUpReport = WebUser.DefaultGroup.StartupReport;
                 else if (profile.OnStartup == StartupOptions.ExecuteReport) startUpReport = profile.StartUpReport;
                 if (!string.IsNullOrEmpty(startUpReport))
                 {
