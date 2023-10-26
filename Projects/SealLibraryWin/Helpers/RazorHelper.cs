@@ -40,6 +40,7 @@ using Microsoft.Web.Administration;
 using System.Security.AccessControl;
 using Twilio.Rest.Api.V2010.Account;
 using System.Net;
+using System.Drawing;
 
 namespace Seal.Helpers
 {
@@ -79,6 +80,7 @@ namespace Seal.Helpers
         static FileSystemAccessRule _29 = null;
         static MessageResource.ScheduleTypeEnum _30 = null;
         static WebProxy _31 = null;
+        static Color? _32 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -149,7 +151,7 @@ namespace Seal.Helpers
                     if (_29 == null) _29 = new FileSystemAccessRule("a",FileSystemRights.Read,AccessControlType.Deny);
                     if (_30 == null) _30 = new MessageResource.ScheduleTypeEnum();
                     if (_31 == null) _31 = new WebProxy();
-
+                    if (_32 == null) _32 = ColorTranslator.FromHtml("#00000");
 
 #if !WINDOWS
                     var si = SealInterface.Create();

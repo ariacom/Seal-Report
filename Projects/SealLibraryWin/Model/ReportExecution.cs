@@ -1518,7 +1518,11 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Report.ExecutionMessages += string.Format("Error got when executing Cell script for '{0}' in model '{1}'\r\n{2}\r\n", cell.Element.DisplayNameEl, cell.Element.Model.Name, ex.Message);
+                var header = $"Error got when executing Cell script for '{cell.Element.DisplayNameEl}' in model '{cell.Element.Model.Name}'\r\n";
+                if (!Report.ExecutionMessages.Contains(header))
+                {
+                    Report.ExecutionMessages += $"{header}{ex.Message}\r\n";
+                }
             }
         }
 
