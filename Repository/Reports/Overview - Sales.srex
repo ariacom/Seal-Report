@@ -611,7 +611,7 @@ AND [069c2def-6c6c-4cec-9e38-775b45d1d0f5]</Restriction>
     double? fraction = null;
     var stats = cell.ContextTable.GetStatistics(element);
     if (stats != null &amp;&amp; cell.IsValue &amp;&amp; cell.DoubleValue != null) {
-        fraction = (stats.Max == stats.Min ? 1 : (cell.DoubleValue.Value - stats.Min) / (stats.Max - stats.Min));
+        fraction = (stats.Max == 0 ? 1 : (cell.DoubleValue.Value) / (stats.Max));
     }
 
     if (fraction != null) {
@@ -621,13 +621,13 @@ AND [069c2def-6c6c-4cec-9e38-775b45d1d0f5]</Restriction>
         string color = string.Format("#{0:X2}{1:X2}{2:X2}", red, green, blue);
 
         //Change the background color      
-        cell.FinalCssStyle = $"background:{color}";
+        //cell.FinalCssStyle = $"background:{color}";
         //Change the text color      
         //cell.FinalCssStyle = $"color:{color}";
         
         //Add a colored bar
-        //var width = (int) (fraction*90);
-        //cell.FinalValue = $"&lt;div style='width:{100-width}%;display:inline-block'&gt;&lt;/div&gt;&lt;div style='display:inline-block;width:{width}%;background:{color};'&gt;&lt;div style='float:right;'&gt;&lt;span&gt;{cell.HTMLValue}&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;";
+        var width = (int) (fraction*90);
+        cell.FinalValue = $"&lt;div style='width:{100-width}%;display:inline-block'&gt;&lt;/div&gt;&lt;div style='display:inline-block;width:{width}%;background:{color};'&gt;&lt;div style='float:right;'&gt;&lt;span&gt;{cell.HTMLValue}&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;";
     }
 }
 </CellScript>

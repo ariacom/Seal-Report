@@ -130,6 +130,8 @@ namespace Seal.Forms
     var stats = cell.ContextTable.GetStatistics(element);
     if (stats != null && cell.IsValue && cell.DoubleValue != null) {
         fraction = (stats.Max == stats.Min ? 1 : (cell.DoubleValue.Value - stats.Min) / (stats.Max - stats.Min));
+        //or from 0 to Max
+        //fraction = (stats.Max == 0 ? 1 : cell.DoubleValue.Value / stats.Max); 
     }
     else if (cell.IsTotalTotal && cell.DoubleValue != null) { //Total of Totals
         fraction = 1;
@@ -139,11 +141,15 @@ namespace Seal.Forms
         minColor = System.Drawing.ColorTranslator.FromHtml(""#FFF8DC"");
         maxColor = System.Drawing.ColorTranslator.FromHtml(""#F5DEB3"");
         fraction = (stats.TotalMax == stats.TotalMin ? 1 : (cell.DoubleValue.Value - stats.TotalMin) / (stats.TotalMax - stats.TotalMin));
+        //or from 0 to Max
+        //fraction = (stats.TotalMax == 0 ? 1 : cell.DoubleValue.Value / stats.TotalMax); 
     }
     else if (stats != null && cell.IsSubTotal && cell.DoubleValue != null) { //SubTotal
         minColor = System.Drawing.ColorTranslator.FromHtml(""#ccffcc"");
         maxColor = System.Drawing.ColorTranslator.FromHtml(""#00cc00"");
         fraction = (stats.SubTotalMax == stats.SubTotalMin ? 1 : (cell.DoubleValue.Value - stats.SubTotalMin) / (stats.SubTotalMax - stats.SubTotalMin));
+        //or from 0 to Max
+        //fraction = (stats.SubTotalMax == 0 ? 1 : cell.DoubleValue.Value / stats.SubTotalMax); 
     }
 
     if (fraction != null) {
