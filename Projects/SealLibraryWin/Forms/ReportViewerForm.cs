@@ -66,7 +66,7 @@ namespace Seal.Forms
             }
         }
 
-        public ReportViewerForm(bool exitOnClose, bool openDevTool, Report previousReport = null)
+        public ReportViewerForm(bool exitOnClose, bool openDevTool, ReportViewerForm previousViewer = null)
         {
             WebBrowserHelper.FixBrowserVersion();
 
@@ -76,7 +76,7 @@ namespace Seal.Forms
             Icon = Repository.ProductIcon;
             _openDevTool = openDevTool;
             _exitOnClose = exitOnClose;
-            _report = previousReport;
+            if (previousViewer != null) _report = previousViewer._report;
         }
 
         public void ViewReport(Report report, bool render, string viewGUID, string outputGUID, string originalFilePath, string taskGUID = null)
