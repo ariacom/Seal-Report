@@ -725,6 +725,10 @@ namespace Seal.Model
 
                         if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
                     }
+                    else {
+                        Report.LogMessage("Model '{0}': Rendering only, using previous result table.", model.Name);
+                    }
+
                     model.ExecResultTableLoaded = true;
                 }
             }

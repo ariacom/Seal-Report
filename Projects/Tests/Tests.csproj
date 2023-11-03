@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <Version>7.1.0.0</Version>
-    <FileVersion>7.1.0.0</FileVersion>
-    <AssemblyVersion>7.1.0.0</AssemblyVersion>
+    <Version>7.1.1.1</Version>
+    <FileVersion>7.1.1.1</FileVersion>
+    <AssemblyVersion>7.1.1.1</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
