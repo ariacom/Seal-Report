@@ -73,6 +73,7 @@ namespace Seal.Model
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum && PivotPosition != PivotPosition.Data);
                     GetProperty("ContainsHtml").SetIsBrowsable(true);
+                    GetProperty("InsertPosition").SetIsBrowsable(true);
 
                     GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
                     GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -838,6 +839,17 @@ namespace Seal.Model
 #endif
         public bool ContainsHtml { get; set; } = false;
         public bool ShouldSerializeContainsHtml() { return ContainsHtml; }
+
+
+        /// <summary>
+        /// The position in Page, Row, Column, Data of the element inserted if the model is used as a reference model. A value of 0 means to add the element at the end. A negative value can be specified to indicate the position from the last element (e.g. -1 means the position before the last element).
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(0)]
+        [Category("Advanced"), DisplayName("Insert position"), Description("The position in Page, Row, Column, Data of the element inserted if the model is used as a reference model. A value of 0 means to add the element at the end. A negative value can be specified to indicate the position from the last element (e.g. -1 means the position before the last element)."), Id(10, 5)]
+#endif
+        public int InsertPosition { get; set; } = 0;
+        public bool ShouldSerializeInsertPosition() { return InsertPosition != 0; }
 
 
         /// <summary>

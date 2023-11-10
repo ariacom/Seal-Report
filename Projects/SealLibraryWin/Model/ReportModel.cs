@@ -21,6 +21,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using MySqlX.XDevAPI.Common;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 #if WINDOWS
 using Seal.Forms;
@@ -55,6 +56,7 @@ namespace Seal.Model
 
                 GetProperty("CommonRestrictions").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("ReferenceModelGUID").SetIsBrowsable(true);
                 GetProperty("ExecutionSet").SetIsBrowsable(true);
                 GetProperty("ShareResultTable").SetIsBrowsable(true);
                 GetProperty("PrintQuery").SetIsBrowsable(true);
@@ -63,12 +65,12 @@ namespace Seal.Model
                 GetProperty("FinalScript").SetIsBrowsable(!IsSubModel);
                 if (Source.IsNoSQL)
                 {
-                    GetProperty("LoadScript").SetDisplayName("LINQ Load Script");
+                    GetProperty("LoadScript").SetDisplayName("LINQ load script");
                     GetProperty("LoadScript").SetDescription("The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used.");
                 }
                 else
                 {
-                    GetProperty("LoadScript").SetDisplayName("Post Load Script");
+                    GetProperty("LoadScript").SetDisplayName("Post load script");
                     GetProperty("LoadScript").SetDescription("Optional Razor Script to modify the result table of the model just after the database load.");
                 }
                 GetProperty("ShowFirstLine").SetIsBrowsable(!IsSubModel);
@@ -175,10 +177,35 @@ namespace Seal.Model
         public bool ShouldSerializeCommonRestrictions() { return CommonRestrictions.Count > 0; }
 
         /// <summary>
+        /// If set, restrictions and elements from the reference model are added to the current model. This enables the sharing of restrictions and elements among different models. 
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
+        [Category("Model definition"), DisplayName("Reference model"), Description("If set, restrictions and elements from the reference model are added to the current model. This enables the sharing of restrictions and elements among different models."), Id(4, 1)]
+        [TypeConverter(typeof(ReportModelConverter))]
+#endif
+        public string ReferenceModelGUID { get; set; }
+        public bool ShouldSerializeReferenceModelGUID() { return !string.IsNullOrEmpty(ReferenceModelGUID); }
+
+        /// <summary>
+        /// Current reference model if any
+        /// </summary>
+        [XmlIgnore]
+        public ReportModel ReferenceModel
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ReferenceModelGUID)) return null;
+                return _report.Models.FirstOrDefault(i => i.GUID == ReferenceModelGUID);
+            }
+        }
+
+
+        /// <summary>
         /// Optional Razor Script to modify the result table of the model just before the database load
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("Pre Load Script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(4, 1)]
+        [Category("Model definition"), DisplayName("Pre load script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -188,7 +215,7 @@ namespace Seal.Model
         /// If not empty, overwrites default query script template used to generate the LINQ query
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("LINQ Query Script template"), Description("If not empty, overwrites default query script template used to generate the LINQ query."), Id(5, 1)]
+        [Category("Model definition"), DisplayName("LINQ query script template"), Description("If not empty, overwrites default query script template used to generate the LINQ query."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -198,7 +225,7 @@ namespace Seal.Model
         /// The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used.
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the LINQ Query generated is used."), Id(5, 1)]
+        [Category("Model definition"), DisplayName("Load script"), Description("The Razor Script used to load the data in the table. If empty, the LINQ Query generated is used."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -255,7 +282,7 @@ namespace Seal.Model
         /// Optional Razor Script to modify the model after its generation
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("Final Script"), Description("Optional Razor Script to modify the model after its generation."), Id(6, 1)]
+        [Category("Model definition"), DisplayName("Final script"), Description("Optional Razor Script to modify the model after its generation."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -265,7 +292,7 @@ namespace Seal.Model
         /// During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models.
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("Execution set"), Description("During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models."), Id(7, 1)]
+        [Category("Model definition"), DisplayName("Execution set"), Description("During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models."), Id(10, 1)]
         [DefaultValue(1)]
 #endif
         public int ExecutionSet { get; set; } = 1;
@@ -274,7 +301,7 @@ namespace Seal.Model
         /// If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization).
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("Share result table"), Description("If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization)."), Id(8, 1)]
+        [Category("Model definition"), DisplayName("Share result table"), Description("If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization)."), Id(11, 1)]
         [DefaultValue(true)]
 #endif
         public bool ShareResultTable { get; set; } = true;
@@ -284,7 +311,7 @@ namespace Seal.Model
         /// If true, the query is printed in the report messages (for debug purpose).
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("Print query"), Description("If true, the LINQ or SQL Query is printed in the report messages (for debug purpose)."), Id(9, 1)]
+        [Category("Model definition"), DisplayName("Print query"), Description("If true, the LINQ or SQL Query is printed in the report messages (for debug purpose)."), Id(12, 1)]
         [DefaultValue(false)]
 #endif
         public bool PrintQuery { get; set; } = false;
@@ -294,7 +321,7 @@ namespace Seal.Model
         /// If true and the table has column values, the first line used for titles is generated in the table header
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("Show first header line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(10, 1)]
+        [Category("Model definition"), DisplayName("Show first header line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(13, 1)]
         [DefaultValue(true)]
 #endif
         public bool ShowFirstLine { get; set; } = true;
@@ -783,6 +810,40 @@ namespace Seal.Model
         public bool IsSubModel
         {
             get { return MasterModel != null; }
+        }
+
+        /// <summary>
+        /// Return true if the restrictions are standards (simple list with AND)
+        /// </summary>
+        public bool HasStandardRestrictions
+        {
+            get
+            {
+                var restrictionText = Restriction;
+                foreach (var restr in Restrictions)
+                {
+                    restrictionText = restrictionText.Replace("[" + restr.GUID + "]", "");
+                }
+                restrictionText = restrictionText.Replace((IsLINQ ? "&&" : "AND"), "").Trim();
+                return restrictionText == "";
+            }
+        }
+
+        /// <summary>
+        /// Return true if the aggregate restrictions are standards (simple list with AND)
+        /// </summary>
+        public bool HasStandardAggregateRestrictions
+        {
+            get
+            {
+                var restrictionText = AggregateRestriction;
+                foreach (var restr in AggregateRestrictions)
+                {
+                    restrictionText = restrictionText.Replace("[" + restr.GUID + "]", "");
+                }
+                restrictionText = restrictionText.Replace((IsLINQ ? "&&" : "AND"), "").Trim();
+                return restrictionText == "";
+            }
         }
 
         /// <summary>
@@ -1538,6 +1599,82 @@ model.ResultTable = query2.CopyToDataTable2();
             }
         }
 
+
+
+        /// <summary>
+        /// Initializes the model its reference model
+        /// </summary>
+        public void InitFromReferenceModel()
+        {
+            var refModel = ReferenceModel;
+            if (refModel != null)
+            {
+                //First add elements to add at the end
+                foreach (var element in refModel.Elements.Where(i => i.InsertPosition == 0))
+                {
+                    if (!Elements.Exists(i => element.PivotPosition == i.PivotPosition && element.MetaColumnGUID == i.MetaColumnGUID))
+                    {
+                        Elements.Add(element);
+                    }
+                }
+
+                //Then elements with specified positive position
+                foreach (var element in refModel.Elements.Where(i => i.InsertPosition > 0))
+                {
+                    if (!Elements.Exists(i => element.PivotPosition == i.PivotPosition && element.MetaColumnGUID == i.MetaColumnGUID))
+                    {
+                        //use insert position
+                        var pos = element.InsertPosition -1;
+                        pos = Math.Max(pos,0);
+                        if (pos >= Elements.Count) Elements.Add(element);
+                        else Elements.Insert(pos, element);
+                    }
+                }
+
+                //Then elements with specified negative position
+                foreach (var element in refModel.Elements.Where(i => i.InsertPosition < 0))
+                {
+                    if (!Elements.Exists(i => element.PivotPosition == i.PivotPosition && element.MetaColumnGUID == i.MetaColumnGUID))
+                    {
+                        //use insert position
+                        var pos = Elements.Count + element.InsertPosition - 2;
+                        pos = Math.Max(pos, 0);
+                        if (pos >= Elements.Count) Elements.Add(element);
+                        else Elements.Insert(pos, element);
+                    }
+                }
+
+                if (HasStandardRestrictions)
+                {
+                    foreach (var restriction in refModel.Restrictions)
+                    {
+                        if (!Restrictions.Exists(i => restriction.MetaColumnGUID == i.MetaColumnGUID))
+                        {
+                            Restrictions.Add(restriction);
+                            if (!string.IsNullOrEmpty(Restriction)) Restriction = Restriction.TrimEnd() + "\r\n" + (IsLINQ ? "&&" : "AND") + " ";
+                            Restriction += restriction.Pattern;
+                        }
+                    }
+                }
+
+                if (HasStandardAggregateRestrictions)
+                {
+                    foreach (var restriction in refModel.AggregateRestrictions)
+                    {
+                        if (!AggregateRestrictions.Exists(i => restriction.MetaColumnGUID == i.MetaColumnGUID))
+                        {
+                            AggregateRestrictions.Add(restriction);
+                            if (!string.IsNullOrEmpty(AggregateRestriction)) AggregateRestriction = AggregateRestriction.TrimEnd() + "\r\n" + (IsLINQ ? "&&" : "AND") + " ";
+                            AggregateRestriction += restriction.Pattern;
+                        }
+                    }
+                }
+
+                InitReferences();
+            }
+        }
+
+
         /// <summary>
         /// Build the SQL for the model
         /// </summary>
@@ -2217,8 +2354,8 @@ model.ResultTable = query2.CopyToDataTable2();
                 ReportElement element = elements.ElementAt(i);
                 if (element.SortOrder != ReportElement.kNoSortKeyword)
                 {
-                    if (element.SortOrder == ReportElement.kAutomaticAscSortKeyword) element.FinalSortOrder = string.Format("{0:000} {1}", 100+i, ReportElement.kAscendantSortKeyword);
-                    else if (element.SortOrder == ReportElement.kAutomaticDescSortKeyword) element.FinalSortOrder = string.Format("{0:000} {1}", 100+i, ReportElement.kDescendantSortKeyword);
+                    if (element.SortOrder == ReportElement.kAutomaticAscSortKeyword) element.FinalSortOrder = string.Format("{0:000} {1}", 100 + i, ReportElement.kAscendantSortKeyword);
+                    else if (element.SortOrder == ReportElement.kAutomaticDescSortKeyword) element.FinalSortOrder = string.Format("{0:000} {1}", 100 + i, ReportElement.kDescendantSortKeyword);
                     else element.FinalSortOrder = element.SortOrder;
                 }
             }
@@ -2240,7 +2377,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     var colName = element.SQLColumn + SQLascdesc;
                     if (IsLINQ)
                     {
-                        colName = string.Format("{0}{1}", (!noGroupBy && element.IsNotAggregate ? "g.Key."+ element.SQLColumnName : element.LINQColumnName), LINQascdesc);
+                        colName = string.Format("{0}{1}", (!noGroupBy && element.IsNotAggregate ? "g.Key." + element.SQLColumnName : element.LINQColumnName), LINQascdesc);
                     }
 
                     Helper.AddValue(ref orderClause, ",", colName);
@@ -2924,7 +3061,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 //If enum, set enum values directly in the table, only for master model
                 if (isMaster && !IsSubModel) handleEnums();
 
-                ExecuteLoadScript(LoadScript, "Post Load Script", this);
+                ExecuteLoadScript(LoadScript, "Post load script", this);
                 _resultTableAvailable = true;
             }
 

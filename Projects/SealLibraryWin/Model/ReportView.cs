@@ -653,11 +653,11 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
+        /// If set, the values of the properties of the view may be taken from the reference view. This applies to parameters having their default value (including Excel and PDF configuration) and custom template texts with 'Use custom template text' set to 'false'. 
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [DisplayName("Reference view"), Description("If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(8, 1)]
+        [DisplayName("Reference view"), Description("If set, the values of the properties of the view may be taken from the reference view. This applies to parameters having their default value (including Excel and PDF configuration) and custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(8, 1)]
         [TypeConverter(typeof(ReportViewConverter))]
 #endif
         public string ReferenceViewGUID { get; set; }

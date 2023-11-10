@@ -25,9 +25,16 @@ namespace Seal.Forms
         {
             string[] choices = new string[] { "No Model" };
             ReportView view = context.Instance as ReportView;
+            ReportModel reportModel = context.Instance as ReportModel;
             if (view != null)
             {
                 choices = (from s in view.Report.Models select s.Name).OrderBy(i => i).ToArray();
+            }
+            else if (reportModel != null)
+            {
+                var list = (from s in reportModel.Report.Models where s.GUID != reportModel.GUID && s.SourceGUID == reportModel.SourceGUID && !s.IsSQLModel select s.Name).OrderBy(i => i).ToList();
+                list.Insert(0, "");
+                choices = list.ToArray();
             }
 
             return new StandardValuesCollection(choices);
@@ -43,9 +50,13 @@ namespace Seal.Forms
             if (context != null)
             {
                 ReportView view = context.Instance as ReportView;
-                if (view != null && value != null)
+                ReportModel reportModel = context.Instance as ReportModel;
+                var report = view?.Report;
+                if (report == null) report = reportModel?.Report;
+
+                if (report != null && value != null)
                 {
-                    ReportModel model = view.Report.Models.FirstOrDefault(i => i.GUID == value.ToString());
+                    ReportModel model = report.Models.FirstOrDefault(i => i.GUID == value.ToString());
                     if (model != null) return model.Name;
                 }
             }
@@ -60,9 +71,13 @@ namespace Seal.Forms
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             ReportView view = context.Instance as ReportView;
-            if (view != null && value != null)
+            ReportModel reportModel = context.Instance as ReportModel;
+            var report = view?.Report;
+            if (report == null) report = reportModel?.Report;
+
+            if (report != null && value != null)
             {
-                ReportModel model = view.Report.Models.FirstOrDefault(i => i.Name == value.ToString());
+                ReportModel model = report.Models.FirstOrDefault(i => i.Name == value.ToString());
                 if (model != null) return model.GUID;
             }
             return base.ConvertFrom(context, culture, value);

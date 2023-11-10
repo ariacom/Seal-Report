@@ -503,8 +503,11 @@ namespace Seal.Model
                 view.InitFromReferenceView();
             }
 
+            //Init models
             foreach (var model in Models)
             {
+                model.InitFromReferenceModel();
+
                 model.ExecResultTableLoaded = false;
                 model.ExecResultPagesBuilt = false;
             }

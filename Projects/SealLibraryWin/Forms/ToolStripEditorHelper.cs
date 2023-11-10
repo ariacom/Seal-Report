@@ -78,8 +78,8 @@ namespace Seal.Forms
             {
                 var model = (ReportModel)SelectedEntity;
 
-                if (model.IsLINQ) AddHelperButton("View and Check LINQ", "View the LINQ Query generated for the model", Keys.F8);
-                else AddHelperButton("View and Check SQL", "View and check the SQL generated for the model", Keys.F8);
+                if (model.IsLINQ) AddHelperButton("View and check LINQ", "View the LINQ Query generated for the model", Keys.F8);
+                else AddHelperButton("View and check SQL", "View and check the SQL generated for the model", Keys.F8);
 
                 if (model.IsLINQ) AddHelperButton("View LINQ", "View the LINQ Query generated for the model", Keys.F7);
                 else if (model.IsSQLModel) AddHelperButton("Edit SQL", "Edit the source SQL used for the model", Keys.F7);
@@ -213,104 +213,124 @@ namespace Seal.Forms
                         }
                         else if (key == Keys.F7 || key == Keys.F8)
                         {
-                            if (model.IsLINQ)
+                            var elements = model.Elements.ToList();
+                            var restrictions = model.Restrictions.ToList();
+                            var restriction = model.Restriction;
+                            var aggregateRestrictions = model.AggregateRestrictions.ToList();
+                            var aggregateRestriction = model.AggregateRestriction;
+                            try
                             {
-                                var frm = new TemplateTextEditorForm();
-                                frm.Text = "LINQ Editor" + (!string.IsNullOrEmpty(model.LoadScript) ? " (WARNING: Script got from the 'Load Script' property of the model)" : "");
-                                frm.ObjectForCheckSyntax = model;
-                                ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                                model.InitFromReferenceModel();
 
-                                if (string.IsNullOrEmpty(model.LoadScript))
+                                if (model.IsLINQ)
                                 {
-                                    model.Report.CheckingExecution = true;
-                                    try
-                                    {
-                                        model.BuildQuery();
-                                        frm.textBox.Text = model.LINQLoadScript;
-                                        model.Report.CheckingExecution = false;
-                                        model.BuildQuery();
-                                    }
-                                    finally
-                                    {
-                                        model.Report.CheckingExecution = false;
-                                    }
-                                    if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
+                                    var frm = new TemplateTextEditorForm();
+                                    frm.Text = "LINQ Editor" + (!string.IsNullOrEmpty(model.LoadScript) ? " (WARNING: Script got from the 'Load Script' property of the model)" : "");
+                                    frm.ObjectForCheckSyntax = model;
+                                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
 
-                                    frm.textBox.Text = model.LINQLoadScript;
+                                    if (string.IsNullOrEmpty(model.LoadScript))
+                                    {
+                                        model.Report.CheckingExecution = true;
+                                        try
+                                        {
+                                            model.BuildQuery();
+                                            frm.textBox.Text = model.LINQLoadScript;
+                                            model.Report.CheckingExecution = false;
+                                            model.BuildQuery();
+                                        }
+                                        finally
+                                        {
+                                            model.Report.CheckingExecution = false;
+                                        }
+                                        if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
+
+                                        frm.textBox.Text = model.LINQLoadScript;
+                                    }
+                                    else
+                                    {
+                                        frm.textBox.Text = model.LoadScript;
+                                    }
+
+                                    if (key == Keys.F8) frm.CheckSyntax();
+                                    frm.textBox.ReadOnly = true;
+                                    frm.okToolStripButton.Visible = false;
+                                    frm.cancelToolStripButton.Text = "Close";
+                                    frm.ShowDialog();
                                 }
                                 else
                                 {
-                                    frm.textBox.Text = model.LoadScript;
-                                }
+                                    var frm = new SQLEditorForm();
+                                    frm.Instance = SelectedEntity;
+                                    frm.PropertyName = "";
+                                    frm.InitLexer(Lexer.Sql);
 
-                                if (key == Keys.F8) frm.CheckSyntax();
-                                frm.textBox.ReadOnly = true;
-                                frm.okToolStripButton.Visible = false;
-                                frm.cancelToolStripButton.Text = "Close";
-                                frm.ShowDialog();
-                            }
-                            else
-                            {
-                                var frm = new SQLEditorForm();
-                                frm.Instance = SelectedEntity;
-                                frm.PropertyName = "";
-                                frm.InitLexer(Lexer.Sql);
-
-                                if (model.IsSQLModel && key == Keys.F7)
-                                {
-                                    frm.Text = "SQL Editor: Edit the SQL Select Statement";
-                                    frm.SetSamples(new List<string>() {
+                                    if (model.IsSQLModel && key == Keys.F7)
+                                    {
+                                        frm.Text = "SQL Editor: Edit the SQL Select Statement";
+                                        frm.SetSamples(new List<string>() {
                                     "SELECT * FROM Orders", "SELECT *\r\nFROM Employees\r\nWHERE {CommonRestriction_LastName}",
                                     "SELECT * FROM Orders", "SELECT *\r\nFROM Employees\r\nWHERE EmployeeID > {CommonValue_ID}"
                                 });
 
-                                    frm.WarningOnError = true;
-                                    frm.sqlTextBox.Text = model.Table.Sql;
-                                    if (frm.ShowDialog() == DialogResult.OK)
+                                        frm.WarningOnError = true;
+                                        frm.sqlTextBox.Text = model.Table.Sql;
+                                        if (frm.ShowDialog() == DialogResult.OK)
+                                        {
+                                            try
+                                            {
+                                                Cursor.Current = Cursors.WaitCursor;
+                                                model.Table.Sql = frm.sqlTextBox.Text;
+                                                model.RefreshMetaTable(true);
+                                            }
+                                            finally
+                                            {
+                                                Cursor.Current = Cursors.Default;
+                                            }
+
+                                            if (EntityHandler != null)
+                                            {
+                                                EntityHandler.SetModified();
+                                                EntityHandler.RefreshModelTreeView();
+                                            }
+
+                                            if (!string.IsNullOrEmpty(model.Table.Error)) throw new Exception("Error when building columns from the SQL Select Statement:\r\n" + model.Table.Error);
+                                        }
+                                    }
+                                    else
                                     {
+                                        model.Report.CheckingExecution = true;
                                         try
                                         {
-                                            Cursor.Current = Cursors.WaitCursor;
-                                            model.Table.Sql = frm.sqlTextBox.Text;
-                                            model.RefreshMetaTable(true);
+                                            model.BuildQuery();
+                                            frm.SqlToCheck = model.Sql;
+                                            model.Report.CheckingExecution = false;
+                                            model.BuildQuery();
                                         }
                                         finally
                                         {
-                                            Cursor.Current = Cursors.Default;
+                                            model.Report.CheckingExecution = false;
                                         }
-
-                                        if (EntityHandler != null)
+                                        if (!string.IsNullOrEmpty(model.ExecutionError))
                                         {
-                                            EntityHandler.SetModified();
-                                            EntityHandler.RefreshModelTreeView();
+                                            throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError);
                                         }
-
-                                        if (!string.IsNullOrEmpty(model.Table.Error)) throw new Exception("Error when building columns from the SQL Select Statement:\r\n" + model.Table.Error);
+                                        frm.sqlTextBox.Text = model.Sql;
+                                        frm.SetReadOnly();
+                                        if (key == Keys.F8) frm.checkSQL();
+                                        frm.ShowDialog();
                                     }
                                 }
-                                else
-                                {
-                                    model.Report.CheckingExecution = true;
-                                    try
-                                    {
-                                        model.BuildQuery();
-                                        frm.SqlToCheck = model.Sql;
-                                        model.Report.CheckingExecution = false;
-                                        model.BuildQuery();
-                                    }
-                                    finally
-                                    {
-                                        model.Report.CheckingExecution = false;
-                                    }
-                                    if (!string.IsNullOrEmpty(model.ExecutionError))
-                                    {
-                                        throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError);
-                                    }
-                                    frm.sqlTextBox.Text = model.Sql;
-                                    frm.SetReadOnly();
-                                    if (key == Keys.F8) frm.checkSQL();
-                                    frm.ShowDialog();
-                                }
+                            }
+                            finally
+                            {
+                                //Back to initial values if reference model was used
+                                model.Elements = elements;
+                                model.Restrictions = restrictions;
+                                model.Restriction = restriction;
+                                model.AggregateRestrictions = aggregateRestrictions;
+                                model.AggregateRestriction = aggregateRestriction;
+                                model.InitReferences();
                             }
                         }
                     }
