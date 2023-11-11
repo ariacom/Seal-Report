@@ -177,11 +177,11 @@ namespace Seal.Model
         public bool ShouldSerializeCommonRestrictions() { return CommonRestrictions.Count > 0; }
 
         /// <summary>
-        /// If set, restrictions and elements from the reference model are added to the current model. This enables the sharing of restrictions and elements among different models. 
+        /// If set, restrictions and elements from the reference model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model. 
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Model definition"), DisplayName("Reference model"), Description("If set, restrictions and elements from the reference model are added to the current model. This enables the sharing of restrictions and elements among different models."), Id(4, 1)]
+        [Category("Model definition"), DisplayName("Reference model"), Description("If set, restrictions and elements from the reference model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model."), Id(4, 1)]
         [TypeConverter(typeof(ReportModelConverter))]
 #endif
         public string ReferenceModelGUID { get; set; }
