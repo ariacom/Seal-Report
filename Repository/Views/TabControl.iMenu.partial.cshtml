@@ -1,7 +1,7 @@
 @using Seal.Model
-@{ 
+@{
     ReportView view = Model;
-    Report report = view.Report; 
+    Report report = view.Report;
 }
 
 @if (!report.PrintLayout)
@@ -9,7 +9,22 @@
     <ul id="tc_@(view.IdSuffix)" class="nav nav-@(view.GetValue("tab_style"))s @(view.GetValue("tab_position") != "top" ? "nav-stacked" : "") @(view.GetBoolValue("tab_justified") ? "nav-justified" : "")">
         @foreach (ReportView childView in view.Views.Where(i => i.Enabled).OrderBy(i => i.SortOrderFull))
         {
-            <li><a data-toggle="@(view.GetValue("tab_style"))" href='#@(childView.IdSuffix)_tab_page' @Raw(childView.AddAttribute("style", "tab_page_css"))>@childView.ViewName</a></li>
+            var suffix = "";
+            if (childView.GetBoolValue("tab_show_count"))
+            {
+                var dataTableView = report.FindViewFromTemplate(childView.Views, ReportViewTemplate.DataTableName);
+                if (dataTableView != null)
+                {
+                    var pages = dataTableView.ModelView.Model?.Pages;
+                    if (pages.Count > 0)
+                    {
+                        var table = pages.First().DataTable;
+                        suffix = $" ({table.BodyEndRow - table.BodyStartRow})";
+                    }
+                }
+            }
+
+            <li><a data-toggle="@(view.GetValue("tab_style"))" href='#@(childView.IdSuffix)_tab_page' @Raw(childView.AddAttribute("style", "tab_page_css"))>@Raw(childView.ViewName + suffix)</a></li>
         }
     </ul>
 }

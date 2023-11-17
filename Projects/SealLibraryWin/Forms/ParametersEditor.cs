@@ -545,6 +545,35 @@ namespace Seal.Model
             get { return _bools[15].BoolValue; }
             set { _bools[15].BoolValue = value; }
         }
+        public bool b16
+        {
+            get { return _bools[16].BoolValue; }
+            set { _bools[16].BoolValue = value; }
+        }
+
+        public bool b17
+        {
+            get { return _bools[17].BoolValue; }
+            set { _bools[17].BoolValue = value; }
+        }
+
+        public bool b18
+        {
+            get { return _bools[18].BoolValue; }
+            set { _bools[18].BoolValue = value; }
+        }
+
+        public bool b19
+        {
+            get { return _bools[19].BoolValue; }
+            set { _bools[19].BoolValue = value; }
+        }
+
+        public bool b20
+        {
+            get { return _bools[20].BoolValue; }
+            set { _bools[20].BoolValue = value; }
+        }
 
         public string s0
         {

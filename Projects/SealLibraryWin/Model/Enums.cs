@@ -75,6 +75,8 @@ namespace Seal.Model
         Avg,
         [Description("Count")]
         Count,
+        [Description("Count Distinct")]
+        CountDistinct,
     };
 
     public enum ReportFormat

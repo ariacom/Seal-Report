@@ -84,20 +84,20 @@ namespace Seal.Model
             }
 
             //Total of totals for a count -> we make the sum
-            if (!IsSerie && Element.TotalAggregateFunction == AggregateFunction.Count) Value = IsTotalTotal ? Sum : RealCount;
+            if (!IsSerie && (Element.TotalAggregateFunction == AggregateFunction.Count || Element.TotalAggregateFunction == AggregateFunction.CountDistinct)) Value = IsTotalTotal ? Sum : RealCount;
 
             if (RealCount > 0)
             {
-                AggregateFunction aggregatFunction = IsSerie ? Element.AggregateFunction : Element.TotalAggregateFunction;
-                if (IsSerie && aggregatFunction == AggregateFunction.Count) Value = Sum; //Count aggregat for a serie -> we make the sum
-                else if (IsTotalTotal && Element.AggregateFunction == AggregateFunction.Count && Element.TotalAggregateFunction == AggregateFunction.Sum) Value = Sum; //Count aggregat for totals -> we use the sum
-                else if (Sum != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Sum) Value = Sum;
-                else if (Min != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Min) Value = Min;
-                else if (Max != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Max) Value = Max;
-                else if (Sum != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Avg) Value = Sum / RealCount;
-                else if (DateMin != null && Element.IsDateTime && aggregatFunction == AggregateFunction.Min) Value = DateMin;
-                else if (DateMax != null && Element.IsDateTime && aggregatFunction == AggregateFunction.Max) Value = DateMax;
-                else if (DateSum != null && Element.IsDateTime && aggregatFunction == AggregateFunction.Avg) Value = new DateTime((long)(DateSum.Value * kTickDivider / RealCount));
+                AggregateFunction aggregateFunction = IsSerie ? Element.AggregateFunction : Element.TotalAggregateFunction;
+                if (IsSerie && (aggregateFunction == AggregateFunction.Count || aggregateFunction == AggregateFunction.CountDistinct)) Value = Sum; //Count aggregat for a serie -> we make the sum
+                else if (IsTotalTotal && Element.IsCount && Element.TotalAggregateFunction == AggregateFunction.Sum) Value = Sum; //Count aggregat for totals -> we use the sum
+                else if (Sum != null && Element.IsNumeric && aggregateFunction == AggregateFunction.Sum) Value = Sum;
+                else if (Min != null && Element.IsNumeric && aggregateFunction == AggregateFunction.Min) Value = Min;
+                else if (Max != null && Element.IsNumeric && aggregateFunction == AggregateFunction.Max) Value = Max;
+                else if (Sum != null && Element.IsNumeric && aggregateFunction == AggregateFunction.Avg) Value = Sum / RealCount;
+                else if (DateMin != null && Element.IsDateTime && aggregateFunction == AggregateFunction.Min) Value = DateMin;
+                else if (DateMax != null && Element.IsDateTime && aggregateFunction == AggregateFunction.Max) Value = DateMax;
+                else if (DateSum != null && Element.IsDateTime && aggregateFunction == AggregateFunction.Avg) Value = new DateTime((long)(DateSum.Value * kTickDivider / RealCount));
             }
 
             _done = true;

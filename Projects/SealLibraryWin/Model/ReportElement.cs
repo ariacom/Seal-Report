@@ -124,7 +124,7 @@ namespace Seal.Model
         {
             get
             {
-                if (PivotPosition == PivotPosition.Data && AggregateFunction == AggregateFunction.Count) return false;
+                if (PivotPosition == PivotPosition.Data && IsCount) return false;
                 return (EnumEL != null);
             }
         }
@@ -136,7 +136,7 @@ namespace Seal.Model
         {
             get
             {
-                if (PivotPosition == PivotPosition.Data && AggregateFunction == AggregateFunction.Count) return true;
+                if (PivotPosition == PivotPosition.Data && IsCount) return true;
                 return (TypeEl == ColumnType.Numeric);
             }
         }
@@ -148,7 +148,7 @@ namespace Seal.Model
         {
             get
             {
-                if (PivotPosition == PivotPosition.Data && AggregateFunction == AggregateFunction.Count) return false;
+                if (PivotPosition == PivotPosition.Data && IsCount) return false;
                 return (TypeEl == ColumnType.Text || TypeEl == ColumnType.UnicodeText);
             }
         }
@@ -160,8 +160,19 @@ namespace Seal.Model
         {
             get
             {
-                if (PivotPosition == PivotPosition.Data && AggregateFunction == AggregateFunction.Count) return false;
+                if (PivotPosition == PivotPosition.Data && IsCount) return false;
                 return (TypeEl == ColumnType.DateTime);
+            }
+        }
+
+        /// <summary>
+        /// True if the element has a Count or Count Distinct aggregate
+        /// </summary>
+        public bool IsCount
+        {
+            get
+            {
+                return AggregateFunction == AggregateFunction.Count || AggregateFunction == AggregateFunction.CountDistinct;
             }
         }
 
@@ -705,7 +716,7 @@ namespace Seal.Model
         {
             get
             {
-                if (MetaColumn != null && PivotPosition == PivotPosition.Data && AggregateFunction != AggregateFunction.Sum && !MetaColumn.IsAggregate) return string.Format("{0} {1}", Report.Translate(Helper.GetEnumDescription(typeof(AggregateFunction), AggregateFunction) + " of"), MetaColumn.DisplayName);
+                if (MetaColumn != null && PivotPosition == PivotPosition.Data && AggregateFunction != AggregateFunction.Sum && !MetaColumn.IsAggregate) return string.Format("{0} {1}", Report.Translate(Helper.GetEnumDescription(typeof(AggregateFunction), AggregateFunction) + " of"), _report.Repository.TranslateColumn(MetaColumn));
                 else if (MetaColumn != null) return MetaColumn.DisplayName;
                 return "";
             }
@@ -973,7 +984,7 @@ namespace Seal.Model
                 if (PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate)
                 {
                     //aggregate
-                    result = string.Format("{0}({1})", AggregateFunction, result);
+                    result = (AggregateFunction == AggregateFunction.CountDistinct ? string.Format("Count(Distinct {0})", result) : string.Format("{0}({1})", AggregateFunction, result));
                 }
                 return result;
             }
@@ -1025,6 +1036,7 @@ namespace Seal.Model
                 {
                     //aggregate
                     if (AggregateFunction == AggregateFunction.Count) result = "g.Count()";
+                    else if (AggregateFunction == AggregateFunction.CountDistinct) result = "g.Distinct().Count()";
                     else
                     {
                         string aggr = AggregateFunction == AggregateFunction.Avg ? "Average" : string.Format("{0}", AggregateFunction);

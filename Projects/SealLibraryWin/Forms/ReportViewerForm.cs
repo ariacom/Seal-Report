@@ -81,14 +81,17 @@ namespace Seal.Forms
 
         public void ViewReport(Report report, bool render, string viewGUID, string outputGUID, string originalFilePath, string taskGUID = null)
         {
+            if (LastSize != null) Size = LastSize.Value;
+            if (LastLocation != null) Location = LastLocation.Value;
             Show();
+            ClientSizeChanged += ReportViewerForm_ClientSizeChanged;
+            LocationChanged += ReportViewerForm_ClientSizeChanged;
+
             Text = Path.GetFileNameWithoutExtension(originalFilePath) + " - " + Repository.SealRootProductName + " Report Viewer";
             WindowState = FormWindowState.Normal;
             BringToFront();
             TopLevel = true;
             Focus();
-            if (LastSize != null) Size = LastSize.Value;
-            if (LastLocation != null) Location = LastLocation.Value;
 
             Report previousReport = _report;
 
@@ -274,6 +277,15 @@ namespace Seal.Forms
             LastLocation = Location;
 
             if (_exitOnClose) Application.Exit();
+        }
+
+        private void ReportViewerForm_ClientSizeChanged(object sender, System.EventArgs e)
+        {
+            if (Visible)
+            {
+                LastSize = Size;
+                LastLocation = Location;
+            }
         }
 
         private void ReportViewerForm_Load(object sender, EventArgs e)

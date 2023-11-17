@@ -76,6 +76,7 @@ namespace Seal.Model
                 GetProperty("ShowFirstLine").SetIsBrowsable(!IsSubModel);
 
 
+                GetProperty("UseSelectDistinct").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlSelect").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlFrom").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlGroupBy").SetIsBrowsable(!Source.IsNoSQL);
@@ -363,6 +364,18 @@ namespace Seal.Model
 #endif
         public bool UseRawSQL { get; set; } = false;
         public bool ShouldSerializeUseRawSQL() { return IsSQLModel; }
+
+
+        /// <summary>
+        /// If true, SELECT DISTINCT clause clause is used by default for the model if no aggregate is defined
+        /// </summary>
+#if WINDOWS
+        [Category("SQL"), DisplayName("Use SELECT Distinct"), Description("If true, SELECT DISTINCT clause clause is used by default for the model if no aggregate is defined."), Id(2, 3)]
+        [DefaultValue(true)]
+#endif
+        public bool UseSelectDistinct { get; set; } = true;
+        public bool ShouldSerializeUseSelectDistinct() { return !UseSelectDistinct; }
+
 
         string _sqlSelect;
         /// <summary>
@@ -1828,7 +1841,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (!IsLINQ)
                     {
                         //Get CTE first
-                        execSelect = execGroupByClause.Length > 0 ? "SELECT\r\n" : "SELECT DISTINCT\r\n";
+                        execSelect = (UseSelectDistinct && execGroupByClause.Length == 0) ? "SELECT DISTINCT\r\n" : "SELECT\r\n";
                         execSelect = !string.IsNullOrEmpty(SqlSelect) ? SqlSelect : execSelect;
                         Sql = !string.IsNullOrEmpty(SqlCTE) ? SqlCTE : execCTEClause;
                         Sql += execSelect;

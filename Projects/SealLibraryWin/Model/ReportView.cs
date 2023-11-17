@@ -14,6 +14,7 @@ using RazorEngine.Templating;
 using System.Globalization;
 using System.Web;
 using System.Data;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -470,6 +471,17 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the server pagination for DataTables is enabled for this view
+        /// </summary>
+        [XmlIgnore]
+        public bool IsServerPaginationEnabled
+        {
+            get
+            {
+                return _report.IsServerPaginationEnabled && GetBoolValue(Parameter.ServerPaginationParameter);
+            }
+        }
 
         /// <summary>
         /// The name

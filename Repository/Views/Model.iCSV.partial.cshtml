@@ -6,7 +6,7 @@
     ReportView datatableView = report.FindViewFromTemplate(view.Views, ReportViewTemplate.DataTableName);
 
 
-    if (datatableView != null && datatableView.GetBoolValue("invert_data_tables") && !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))
+    if (datatableView != null && datatableView.GetBoolValue("invert_data_tables") && !view.IsServerPaginationEnabled)
     {
         reportModel.InvertDataTables();
     }

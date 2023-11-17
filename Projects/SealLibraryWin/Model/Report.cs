@@ -137,6 +137,7 @@ namespace Seal.Model
         /// <summary>
         /// GUID of the view to being executed
         /// </summary>
+        [XmlIgnore]
         public string CurrentViewGUID;
 
         /// <summary>
@@ -170,7 +171,6 @@ namespace Seal.Model
         /// List of models of the report
         /// </summary>
         public List<ReportModel> Models { get; set; } = new List<ReportModel>();
-
 
         public bool ShouldSerializeModels() { return Models.Count > 0; }
 

@@ -3045,6 +3045,11 @@
             True if the element is for Date Time values
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportElement.IsCount">
+            <summary>
+            True if the element has a Count or Count Distinct aggregate
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportElement.SetDefaults">
             <summary>
             Depending on the element type, set default aggreate functions: AggregateFunction, TotalAggregateFunction
@@ -3273,6 +3278,11 @@
         <member name="P:Seal.Model.ReportElement.ContainsHtml">
             <summary>
             If True, the value contains HTML tags.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportElement.InsertPosition">
+            <summary>
+            The position in Page, Row, Column, Data of the element inserted if the model is used as a reference model. A value of 0 means to add the element at the end. A negative value can be specified to indicate the position from the last element (e.g. -1 means the position before the last element).
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.FinalCssClass">
@@ -3561,6 +3571,16 @@
             List of common restrictions and values involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount')
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportModel.ReferenceModelGUID">
+            <summary>
+            If set, restrictions and elements from the reference model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model. 
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.ReferenceModel">
+            <summary>
+            Current reference model if any
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportModel.PreLoadScript">
             <summary>
             Optional Razor Script to modify the result table of the model just before the database load
@@ -3624,6 +3644,11 @@
         <member name="P:Seal.Model.ReportModel.UseRawSQL">
             <summary>
             If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.UseSelectDistinct">
+            <summary>
+            If true, SELECT DISTINCT clause clause is used by default for the model if no aggregate is defined
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.SqlSelect">
@@ -3824,6 +3849,16 @@
         <member name="P:Seal.Model.ReportModel.IsSubModel">
             <summary>
             True is it is a Sub-Model used for a LINQ Query
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.HasStandardRestrictions">
+            <summary>
+            Return true if the restrictions are standards (simple list with AND)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.HasStandardAggregateRestrictions">
+            <summary>
+            Return true if the aggregate restrictions are standards (simple list with AND)
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.Sql">
@@ -4084,6 +4119,11 @@
         <member name="F:Seal.Model.ReportModel.JoinPaths">
             <summary>
             Description of the joins chosen to build the SQL
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.InitFromReferenceModel">
+            <summary>
+            Initializes the model its reference model
             </summary>
         </member>
         <member name="M:Seal.Model.ReportModel.BuildQuery(System.Boolean,System.Boolean)">
@@ -5560,6 +5600,11 @@
             True if the sub-reports navigation is enabled
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportView.IsServerPaginationEnabled">
+            <summary>
+            True if the server pagination for DataTables is enabled for this view
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportView.Name">
             <summary>
             The name
@@ -5617,7 +5662,7 @@
         </member>
         <member name="P:Seal.Model.ReportView.ReferenceViewGUID">
             <summary>
-            If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
+            If set, the values of the properties of the view may be taken from the reference view. This applies to parameters having their default value (including Excel and PDF configuration) and custom template texts with 'Use custom template text' set to 'false'. 
             </summary>
         </member>
         <member name="P:Seal.Model.ReportView.Enabled">

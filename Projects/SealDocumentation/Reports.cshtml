@@ -216,6 +216,12 @@
                                 <a class="btn btn-primary live-sample">Live Sample: 05-Scripts/501-Cell Script - Progression and running totals</a><br />
                                 Two columns have been added in the report model with custom Cell script: One to calculate the Progression and the other one to calculate the Running Total.
                             </div>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Sharing elements and restrictions amongst models</h4>
+                                If your report contains several models having the same elements or restrictions, you can configure one model and reference it from the other models using the <code>Reference model</code> property.<br />
+                                <eg>e.g. All models have the same elements or restrictions, etc.</eg><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 14-Sharing Models and Views properties</a><br />
+                            </div>
                         </div>
                         <!-- end col -->
                     </div>
@@ -263,7 +269,9 @@
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Sharing prompted restrictions amongst models</h4>
                                 If several restrictions have the <b>same display name and the same metadata source column</b>, only one restriction will be prompted (the one with the lowest display order) and the values will be dispatched to all model restrictions.<br />
-                                This is also applied for common restrictions (but only the <b>name</b> is used as common restriction does not have source column).
+                                This is also applied for <a href="Sources.cshtml#lineTables_cr" ">Common Restrictions</a> (but only the <b>name</b> is used as common restriction does not have source column).<br />
+                                Another method to share restrictions is demontrated in the report:<br />
+                                <a class="btn btn-primary live-sample">Live Sample: 14-Sharing Models and Views properties</a><br />
                             </div>
                             <p>
                                 <strong>Flags 'Value only'</strong><br />
@@ -498,7 +506,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <h4>Data Tables: Server Pagination</h4>
                                 By default and for performances reason, <b>tables</b> are displayed using server pagination, this means that the cell values of a page are sent to the browser when the user click on a page number.
                                 (<ck>Refer to <a href="https://www.datatables.net/manual/server-side" target="_blank">Data Tables Server Side processing</a> for more information).</ck><br>
-                                For a report, the server pagination can be enabled or disabled using the root view parameter <code>Options: Server Pagination Enabled</code>.
+                                For a report, the server pagination can be enabled or disabled using the root view parameter and the model view <code>Options: Server pagination enabled</code>.
                             </div>
 
                             <div class="bs-callout bs-callout-warning">
@@ -512,7 +520,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 </ul>
                                 Other useful parameters of a <b>Data Table</b> View:
                                 <ul>
-                                    <li><code>Options: Invert data table</code> to swap the columns and rows of the data table from their original presentation. This is valid only if the server pagination parameter is disabled in the root view.</li>
+                                    <li><code>Options: Invert data table</code> to swap the columns and rows of the data table from their original presentation. This is valid only if the server pagination parameter is disabled in the root view and in the related model view.</li>
                                     <li><code>Options: Columns to hide</code> to hide columns in the table (<eg>e.g. the column is only used for a sort or for a calculation</eg>).</li>
                                 </ul>
                             </div>
@@ -520,7 +528,8 @@ model.ResultTable = query2.CopyToDataTable2();
                             <div class="bs-callout bs-callout-info">
                                 <h4>Reference view</h4>
                                 If your report contains several views sharing the same configuration, you can configure one view and reference it from the other views using the <code>Reference view</code> property.<br />
-                                <eg>e.g. All tables of the report have no sort, all JS Charts have the same size, etc.</eg>
+                                <eg>e.g. All tables of the report have no sort, all JS Charts have the same size, etc.</eg><br />
+                                <a class="btn btn-primary live-sample">Live Sample: 14-Sharing Models and Views properties</a><br />
                             </div>
 
                             <div class="bs-callout bs-callout-warning">

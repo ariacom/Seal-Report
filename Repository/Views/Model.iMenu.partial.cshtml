@@ -43,6 +43,8 @@
                     val += cell.DisplayValue;
                 }
             }
+            if (view.GetBoolValue("model_show_count")) val += $" ({page.DataTable.BodyEndRow - page.DataTable.BodyStartRow})";
+
             <li class='@(row==1 && !view.GetBoolValue("show_summary_table") ? "active" :"")'>
                 <a data-toggle="@view.GetValue("model_menu_style")" href='#@(view.IdSuffix + page.PageId)'>@Raw(val)</a>
             </li>

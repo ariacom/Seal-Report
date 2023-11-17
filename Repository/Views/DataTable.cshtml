@@ -10,7 +10,7 @@
     bool enabled = view.GetBoolValue("data_tables_enabled");
     view.IdSuffix = Helper.NewGUID();
 
-    if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables") && !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))
+    if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables") && !modelView.IsServerPaginationEnabled)
     {
         reportModel.InvertDataTables();
     }
@@ -38,7 +38,7 @@
                 searching: @view.GetBoolValueJS("data_tables_filter_enabled"),
                 processing: @view.GetBoolValueJS("data_tables_show_processing"),
                 order: [@Raw(sortConfiguration)],
-                serverSide: @Helper.ToJS(report.IsServerPaginationEnabled && enabled),
+                serverSide: @Helper.ToJS(modelView.IsServerPaginationEnabled && enabled),
                @Raw(Helper.AddIfNotEmpty("scrollY: '", view.GetValue("data_tables_scrolly"), "',"))
                 scrollX: @view.GetBoolValueJS("data_tables_scrollx"),
                 scrollCollapse: @view.GetBoolValueJS("data_tables_scrollcollapse"),
@@ -62,7 +62,7 @@
                     deferRender: @view.GetBoolValueJS("data_tables_scroller"),
                     scroller: @view.GetBoolValueJS("data_tables_scroller"),
                 </text>}
-               @if (report.IsServerPaginationEnabled && enabled)
+               @if (modelView.IsServerPaginationEnabled && enabled)
                 {<text>
                         ajax: function(data, callback, settings) {
                             getTableData($(this), '@report.ExecutionGUID', '@view.ViewId', '@page.PageId', data, callback, settings);
@@ -95,7 +95,7 @@
                 </tr>
             }
         </thead>
-        @if (!report.IsServerPaginationEnabled || !enabled)
+        @if (!modelView.IsServerPaginationEnabled || !enabled)
         {
             <text>
                 <tbody>

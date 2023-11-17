@@ -1,0 +1,370 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>2216f64c4aa14b1d8888a86381760eb4</GUID>
+  <ViewGUID>9341322a-7415-45b1-9b77-28624924cd16</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>22535132-5ed5-46bc-8433-28f9e1b0c77f</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>82e6a24c-a88c-4ae4-aff9-2ba96622e9b3</GUID>
+      <Name>Reference Model</Name>
+      <SourceGUID>22535132-5ed5-46bc-8433-28f9e1b0c77f</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>3febd256-7362-4e36-83e6-b5a06609ce14</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>yyyy</Format>
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0a23805c-a784-4b7f-a8a5-bbbe2b13f488</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <InsertPosition>1</InsertPosition>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c53813fb-88d6-4656-98dd-1e9acc6f56d3</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>RowColumn</ShowTotal>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <SetNullToZero>true</SetNullToZero>
+        </ReportElement>
+      </Elements>
+      <Restriction>[5546d573-43ac-408c-8d7a-baee6ec5a17e]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>5546d573-43ac-408c-8d7a-baee6ec5a17e</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <EnumValues>
+            <string>Argentina</string>
+            <string>Austria</string>
+            <string>Belgium</string>
+            <string>Brazil</string>
+            <string>Canada</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>784e0a2a-0930-438e-9f8a-631a8eece557</GUID>
+      <Name>Model1</Name>
+      <SourceGUID>22535132-5ed5-46bc-8433-28f9e1b0c77f</SourceGUID>
+      <ReferenceModelGUID>82e6a24c-a88c-4ae4-aff9-2ba96622e9b3</ReferenceModelGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>75d27337-7b26-4e18-8569-164f1090220b</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>e3bca268-37ce-4c30-8070-4bc374c66361</GUID>
+      <Name>Model2</Name>
+      <SourceGUID>22535132-5ed5-46bc-8433-28f9e1b0c77f</SourceGUID>
+      <ReferenceModelGUID>82e6a24c-a88c-4ae4-aff9-2ba96622e9b3</ReferenceModelGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>796608f2-13d3-470a-9c0f-ceffb2a6b0e5</GUID>
+          <Name>Customers.Region</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>7386da67-f083-4527-a303-aa24de5f7d13</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>1c51fa80-1e2f-4352-8b51-04cfe2d0f907</GUID>
+      <Name>Model3</Name>
+      <SourceGUID>22535132-5ed5-46bc-8433-28f9e1b0c77f</SourceGUID>
+      <ReferenceModelGUID>82e6a24c-a88c-4ae4-aff9-2ba96622e9b3</ReferenceModelGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>a1fc246c-97e9-46e1-8e78-79789a56aa61</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[cc615729-0cf1-417d-8bf4-3dcb4670ac11]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>cc615729-0cf1-417d-8bf4-3dcb4670ac11</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>9341322a-7415-45b1-9b77-28624924cd16</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>c35b8658-bbc9-4eeb-a2bf-9a432ad81750</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>d8bb6cc3-23bb-4160-ba2b-cb666c0e932e</GUID>
+              <Name>View</Name>
+              <Views>
+                <ReportView>
+                  <GUID>ad09af98-a8e9-41c3-b517-99ca3e1cb38d</GUID>
+                  <Name>Reference Model</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>5ea652a1-5b9d-4ecf-ba4f-7d6d38f3ebe7</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>a7283beb-ce73-43d5-8a2f-b42f3e9f17e8</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>a79a489f-5120-4fb0-b4e2-f5a8d3f5d156</GUID>
+                          <Name>Reference Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>chartjs_bar_horizontal</Name>
+                              <Value>True</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_unit</Name>
+                              <Value>year</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>0e5025f3-57b2-46b0-8520-b216937e7a3e</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>82e6a24c-a88c-4ae4-aff9-2ba96622e9b3</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>a90debb2-602a-4877-b383-224d0ce3dcf4</GUID>
+              <Name>View 1 with Category</Name>
+              <Views>
+                <ReportView>
+                  <GUID>5a8cdae7-5b37-4a73-8921-95fe6bfc414b</GUID>
+                  <Name>Model1</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>8cc65687-f528-42db-82b4-f12dd885682f</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>5cbebe3c-21fe-4380-be4a-f0a34583e65c</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>e2ebc6ce-12a6-4f31-82c3-082407645fdd</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <ReferenceViewGUID>Reference Chart JS</ReferenceViewGUID>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>24a57f40-3603-4ccd-84f8-175bc3f719a3</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>784e0a2a-0930-438e-9f8a-631a8eece557</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <ReferenceViewGUID>ad09af98-a8e9-41c3-b517-99ca3e1cb38d</ReferenceViewGUID>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>4c39244f-ed06-4aac-9fe7-8553444ee667</GUID>
+              <Name>View 3 with Employee</Name>
+              <Views>
+                <ReportView>
+                  <GUID>4be39dbe-4e1e-4e03-be39-a8ea09cf5d3b</GUID>
+                  <Name>Model3</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>e1825980-379f-4b89-bc79-f19929f77665</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>69f2a12e-294f-47f4-8b0d-068783ac2cb7</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>2551b474-54c0-4ce8-a4de-3bd762496bd0</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <ReferenceViewGUID>a79a489f-5120-4fb0-b4e2-f5a8d3f5d156</ReferenceViewGUID>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>7566f155-a359-4a5b-b2cc-e7fa8be2d4e3</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>1c51fa80-1e2f-4352-8b51-04cfe2d0f907</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <ReferenceViewGUID>ad09af98-a8e9-41c3-b517-99ca3e1cb38d</ReferenceViewGUID>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>11538821-f452-4c80-8c13-7e9c83c67ff1</GUID>
+              <Name>View 2 with Region</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b6906921-37c8-4861-9113-3e6a3598b866</GUID>
+                  <Name>Model2</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>9e79cbcd-cedd-4381-8a10-e0f88ddc2de4</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>21048193-bb49-4a49-9e02-1112d0f9cc0d</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>5c149d3e-c12f-4c91-804a-bd6e33968267</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <ReferenceViewGUID>a79a489f-5120-4fb0-b4e2-f5a8d3f5d156</ReferenceViewGUID>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>dc580458-970c-4746-9508-cb63729f54c3</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>e3bca268-37ce-4c30-8070-4bc374c66361</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <ReferenceViewGUID>ad09af98-a8e9-41c3-b517-99ca3e1cb38d</ReferenceViewGUID>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>tab_position</Name>
+              <Value>left</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>0c2d938b-4a88-4346-ba42-7baff49f4175</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;1 Reference Model referenced by 3 other models. Elements and restrictions are copied.&lt;/li&gt;
+&lt;li&gt;'Insert Position' property of the 'Customer Country' element in the Reference Model set to 1 to force the first position.&lt;/li&gt;
+&lt;li&gt;1 Reference Chart  JS View referenced by 3 other Chart JS View&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>
