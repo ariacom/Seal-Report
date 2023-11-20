@@ -2,8 +2,21 @@
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
+
+    var text = view.GetValue("text");
+
 }
 
 <!--
 <h1>@view.Name</h1>
 -->
+
+@if (!string.IsNullOrEmpty(text))
+{
+    <div @Raw(view.AddAttribute("class", "text_class")) @Raw(view.AddAttribute("style", "text_css"))>@Raw(text)</div>
+}
+
+@if (view.GetBoolValue("show_separator"))
+{
+    <hr style="display: block;" />
+}

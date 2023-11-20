@@ -9,6 +9,7 @@ using Seal.Helpers;
 using System.Data.Common;
 using MongoDB.Driver;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 #if WINDOWS
 using System.Drawing.Design;
 using Seal.Forms;
@@ -111,6 +112,25 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public DatabaseType DatabaseType { get; set; } = DatabaseType.Standard;
+
+        public char StartDelimiter
+        {
+            get
+            {
+                if (DatabaseType == DatabaseType.Oracle) return '\"';
+                if (DatabaseType == DatabaseType.MySQL) return '`';
+                return '[';
+            }
+        }
+        public char EndDelimiter
+        {
+            get
+            {
+                if (DatabaseType == DatabaseType.Oracle) return '\"';
+                if (DatabaseType == DatabaseType.MySQL) return '`';
+                return ']';
+            }
+        }
 
         private ConnectionType _connectionType = ConnectionType.OleDb;
         /// <summary>

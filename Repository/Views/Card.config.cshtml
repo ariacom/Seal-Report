@@ -1,0 +1,31 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = "Card";
+    Template.Description = "Card to display a single value of each element for a model.";
+
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = true;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "card_show_name", BoolValue = true, DisplayName = "Show element name", Description = "If true, the element name is displayed in the card." });
+    Template.Parameters.Add(new Parameter() { Name = "container_css", Value = "display:flex; justify-content:center;", DisplayName = "Main container: CSS Style", Description = "CSS style attribute of the main container.", Enums = new string[] { "display:flex;flex-direction: column;", "width:300px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "container_class", Value = "", DisplayName = "Main container: CSS Class", Description = "CSS class attribute of the main container.", Enums = new string[] { "alert alert-info", "alert alert-success", "text-left" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "card_css", Value = "width:300px; background:#F0F0F0; border: 1px solid #A1A1A1; margin:5px", DisplayName = "Card Panel: CSS Style", Description = "CSS style attribute of the card DIV.", Enums = new string[] { "width:300px; height:400px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "card_class", Value = "text-center", DisplayName = "Card panel: CSS Class", Description = "CSS class attribute of the card DIV.", Enums = new string[] { "alert alert-info", "alert alert-success", "text-left" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "card_title", Type = ViewParameterType.Text, DisplayName = "Title", Description = "Title of the card." });
+    Template.Parameters.Add(new Parameter() { Name = "title_css", Value = "padding:5px;", DisplayName = "Title: CSS Style", Description = "CSS style attribute of the title.", Enums = new string[] { "width:400px;height:300px;page-break-inside:avoid;overflow:auto;", "page-break-inside:avoid;overflow:auto" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "title_class", Value = "text-left", DisplayName = "Title: CSS Class", Description = "CSS class attribute of the title.", Enums = new string[] { "alert alert-info", "alert alert-success" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "separator_css", Value = "background:#A1A1A1; height:1px", DisplayName = "Separator: CSS Style", Description = "CSS style attribute of the separator.", Enums = new string[] { "width:400px;height:300px;page-break-inside:avoid;overflow:auto;", "page-break-inside:avoid;overflow:auto" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "separator_class", Value = "", DisplayName = "Separator: CSS Class", Description = "CSS class attribute of the separator.", Enums = new string[] { "alert alert-info", "alert alert-success" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "value_css", Value = "font-size: xx-large", DisplayName = "Element value: CSS Style", Description = "CSS style attribute of the element value.", Enums = new string[] { "width:400px;height:300px;page-break-inside:avoid;overflow:auto;", "page-break-inside:avoid;overflow:auto" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "value_class", Value = "", DisplayName = "Element value: CSS Class", Description = "CSS class attribute of the element value.", Enums = new string[] { "alert alert-info", "alert alert-success" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "name_css", Value = "font-size: large", DisplayName = "Element name: CSS Style", Description = "CSS style attribute of the element name.", Enums = new string[] { "width:400px;height:300px;page-break-inside:avoid;overflow:auto;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "name_class", Value = "", DisplayName = "Element name: CSS Class", Description = "CSS class attribute of the element name.", Enums = new string[] { "alert alert-info", "alert alert-success" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "print_break_after_view", DisplayName = "Print: Force a break after the view", BoolValue = false, Description = "If true, a new page is started after the view is displayed for the print layout." });
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container", "Widget" };
+}

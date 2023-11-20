@@ -9,6 +9,11 @@
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
 
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "text", Type = ViewParameterType.Text, DisplayName = "Text", Description = "Text to display." });
+    Template.Parameters.Add(new Parameter() { Name = "text_css", Value = "font: italic bold xx-large Arial, sans-serif;border: 1px solid #A1A1A1;", DisplayName = "Text box: CSS Style", Description = "CSS style attribute of the text box.", Enums = new string[] { "width:400px;height:300px;page-break-inside:avoid;overflow:auto;", "page-break-inside:avoid;overflow:auto" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "text_class", Value = "text-center", DisplayName = "Text box: CSS Class", Description = "CSS class attribute of the text box.", Enums = new string[] { "alert alert-info", "alert alert-success" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "show_separator", DisplayName = "Display: Show separator", BoolValue = false, Description = "If true, a separator if displayed." });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container", "Model", "Widget" };

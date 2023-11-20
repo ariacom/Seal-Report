@@ -171,6 +171,8 @@
 		<None Include="..\..\Repository\Views\TabPage.cshtml" Link="Views\TabPage.cshtml" />
 		<None Include="..\..\Repository\Views\Widget.config.cshtml" Link="Views\Widget.config.cshtml" />
 		<None Include="..\..\Repository\Views\Widget.cshtml" Link="Views\Widget.cshtml" />
+		<None Include="..\..\Repository\Views\Card.config.cshtml" Link="Views\Card.config.cshtml" />
+		<None Include="..\..\Repository\Views\Card.cshtml" Link="Views\Card.cshtml" />
 	</ItemGroup>
 
 	<ItemGroup>

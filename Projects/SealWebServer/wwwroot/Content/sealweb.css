@@ -166,11 +166,6 @@ a {
     text-align: right;
 }
 
-/* editor panels */
-.editor-panel {
-    height: 620px;
-}
-    
 /* dataTables */
 table.dataTable {
     margin: 0px !important;

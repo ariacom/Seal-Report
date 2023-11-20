@@ -14,6 +14,7 @@ using System.Data.SqlClient;
 using OfficeOpenXml;
 using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
+using MySqlX.XDevAPI.Common;
 
 namespace Seal.Helpers
 {
@@ -98,9 +99,15 @@ namespace Seal.Helpers
         string _defaultInsertStartCommand = "";
         string _defaultInsertEndCommand = "";
 
-        public string CleanName(string name)
+        string GetDatabaseName(string name)
         {
-            return name.Replace("-", "_").Replace(" ", "_").Replace("\"", "_").Replace("'", "_").Replace("[", "_").Replace("]", "_").Replace("/", "_").Replace("%", "_").Replace("(", "_").Replace(")", "_").Replace("\r","_").Replace("\n", "_").Replace("\t", "_");
+            char[] chars = new char[] { '-', '\"', '\'', '[',']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
+            var result = chars.Aggregate(name, (c1, c2) => c1.Replace(c2, '\n'));
+            if (DatabaseType == DatabaseType.MSSQLServer) result = "[" + result + "]";
+            else if (DatabaseType == DatabaseType.Oracle) result = Helper.QuoteDouble(result);
+            else if (DatabaseType == DatabaseType.MySQL) result = "`" + result + "`";
+            else result = result.Replace(" ", "_");
+            return result;
         }
 
         public string GetInsertCommand(string sql)
@@ -368,7 +375,7 @@ namespace Seal.Helpers
         {
             try
             {
-                command.CommandText = string.Format("drop table {0}", CleanName(table.TableName));
+                command.CommandText = string.Format("drop table {0}", GetDatabaseName(table.TableName));
                 ExecuteCommand(command);
             }
             catch { }
@@ -383,7 +390,7 @@ namespace Seal.Helpers
             try
             {
                 command.Transaction = transaction;
-                var tableName = CleanName(table.TableName);
+                var tableName = GetDatabaseName(table.TableName);
                 if (deleteFirst)
                 {
                     command.CommandText = $"delete from {tableName}";
@@ -459,7 +466,7 @@ namespace Seal.Helpers
             try
             {
                 command.Transaction = transaction;
-                tableName = CleanName(tableName);
+                tableName = GetDatabaseName(tableName);
                 if (deleteFirst)
                 {
                     command.CommandText = $"delete from {tableName}";
@@ -537,7 +544,7 @@ namespace Seal.Helpers
                 result.Append(GetTableColumnType(col));
                 result.Append(" NULL");
             }
-            return string.Format("CREATE TABLE {0} ({1})", CleanName(table.TableName), result);
+            return string.Format("CREATE TABLE {0} ({1})", GetDatabaseName(table.TableName), result);
         }
 
 
@@ -566,10 +573,7 @@ namespace Seal.Helpers
 
         public string RootGetTableColumnName(DataColumn col)
         {
-            var result = CleanName(col.ColumnName);
-            if (DatabaseType == DatabaseType.MSSQLServer) return "[" + result + "]";
-            if (DatabaseType == DatabaseType.Oracle) return Helper.QuoteDouble(result);
-            return result;
+            return GetDatabaseName(col.ColumnName);
         }
 
         public string GetTableColumnName(DataColumn col)

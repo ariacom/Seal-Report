@@ -1,0 +1,38 @@
+@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    Repository repository = report.Repository;
+    var table = view.Model.Pages.FirstOrDefault()?.DataTable;
+
+    if (table == null || table.RowCount < 2) return;
+    var title = view.GetValue("card_title");
+}
+
+<div @Raw(view.AddAttribute("class", "container_class")) @Raw(view.AddAttribute("style", "container_css"))>
+@for (int i = 0; i < table.ColumnCount; i++)
+{
+    <div @Raw(view.AddAttribute("class", "card_class")) @Raw(view.AddAttribute("style", "card_css"))>
+        @{
+            ResultCell name = table[0, i];
+            ResultCell value = table[1, i];
+            if (!string.IsNullOrEmpty(title))
+            {
+                <div @Raw(view.AddAttribute("class", "title_class")) @Raw(view.AddAttribute("style", "title_css"))>@Raw(title)</div>
+                <div @Raw(view.AddAttribute("class", "separator_class")) @Raw(view.AddAttribute("style", "separator_css"))></div>
+            }
+            <div @Raw(view.AddAttribute("class", "value_class")) @Raw(view.AddAttribute("style", "value_css"))>@Raw(value.HTMLValue)</div>
+            @if (view.GetBoolValue("card_show_name"))
+            {
+                <div @Raw(view.AddAttribute("class", "name_class")) @Raw(view.AddAttribute("style", "name_css"))>@Raw(name.HTMLValue)</div>
+            }
+        }
+    </div>
+}
+</div>
+@if (report.PrintLayout && view.GetBoolValue("print_break_after_view"))
+{
+    <div style="page-break-after:always;">
+    </div>
+}
