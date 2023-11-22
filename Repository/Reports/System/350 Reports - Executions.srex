@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CurrentViewGUID>9fcedc74-c7c0-4e79-9d09-5bcc17c3c2a4</CurrentViewGUID>
   <GUID>b1080710-8775-4233-b083-54657628a00d</GUID>
   <ViewGUID>9fcedc74-c7c0-4e79-9d09-5bcc17c3c2a4</ViewGUID>
   <Sources>
@@ -96,7 +95,8 @@
       </Elements>
       <Restriction>[77321e57-9284-403b-b492-3541029e0756]
 AND [59167bf7-0f93-463a-87dd-791f9dd6d920]
-AND [915d0c94-ce01-4f2f-be3e-b6a277887aa6]</Restriction>
+AND [915d0c94-ce01-4f2f-be3e-b6a277887aa6]
+AND [a8465e45-327d-44c6-bea0-b9116ff0617c]</Restriction>
       <Restrictions>
         <ReportRestriction>
           <GUID>77321e57-9284-403b-b492-3541029e0756</GUID>
@@ -136,6 +136,18 @@ AND [915d0c94-ce01-4f2f-be3e-b6a277887aa6]</Restriction>
           <MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>a8465e45-327d-44c6-bea0-b9116ff0617c</GUID>
+          <Name>sr_audit.event_path</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>4</DisplayOrderRE>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
@@ -237,7 +249,8 @@ AND [915d0c94-ce01-4f2f-be3e-b6a277887aa6]</Restriction>
       </Elements>
       <Restriction>[ab427ca9-9e73-426f-a0d7-4b4c89c73290]
 AND [417ad491-4e50-449c-9d1c-035783e70c50]
-AND [7cf2a3d8-2f72-454b-98c8-4525f8eecca2]</Restriction>
+AND [7cf2a3d8-2f72-454b-98c8-4525f8eecca2]
+AND [8a0f9284-77ad-49db-b0c0-0193116a8d05]</Restriction>
       <Restrictions>
         <ReportRestriction>
           <GUID>ab427ca9-9e73-426f-a0d7-4b4c89c73290</GUID>
@@ -279,6 +292,18 @@ AND [7cf2a3d8-2f72-454b-98c8-4525f8eecca2]</Restriction>
           <EnumValues>
             <string>TaskScheduler</string>
           </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>8a0f9284-77ad-49db-b0c0-0193116a8d05</GUID>
+          <Name>sr_audit.event_path</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>4</DisplayOrderRE>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
@@ -355,7 +380,8 @@ AND [7cf2a3d8-2f72-454b-98c8-4525f8eecca2]</Restriction>
       </Elements>
       <Restriction>[dcea0eaf-133e-48c8-a4ac-ad268496e354]
 AND [20215564-49b2-452b-bc61-5c9a60bccdb5]
-AND [6b96e6ec-fad0-4b92-b678-f7252b0243df]</Restriction>
+AND [6b96e6ec-fad0-4b92-b678-f7252b0243df]
+AND [917ca226-b404-4579-817b-be6f26f1eb43]</Restriction>
       <Restrictions>
         <ReportRestriction>
           <GUID>dcea0eaf-133e-48c8-a4ac-ad268496e354</GUID>
@@ -398,6 +424,18 @@ AND [6b96e6ec-fad0-4b92-b678-f7252b0243df]</Restriction>
           <DisplayOrderRE>3</DisplayOrderRE>
           <Date1Keyword>ThisMonth-1M</Date1Keyword>
           <FormatRe>G</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>917ca226-b404-4579-817b-be6f26f1eb43</GUID>
+          <Name>sr_audit.event_path</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>4</DisplayOrderRE>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
@@ -444,7 +482,8 @@ AND [6b96e6ec-fad0-4b92-b678-f7252b0243df]</Restriction>
       </Elements>
       <Restriction>[cac83e2d-d641-47e4-95a8-43793ab3acae]
 AND [e656e1e4-6050-4f58-bc13-38813c72adc0]
-AND [32d64b8e-e7b6-4005-95f7-733e6d55eab9]</Restriction>
+AND [32d64b8e-e7b6-4005-95f7-733e6d55eab9]
+AND [6c82fa59-7ac6-4901-abd8-c7054110f191]</Restriction>
       <Restrictions>
         <ReportRestriction>
           <GUID>cac83e2d-d641-47e4-95a8-43793ab3acae</GUID>
@@ -484,6 +523,18 @@ AND [32d64b8e-e7b6-4005-95f7-733e6d55eab9]</Restriction>
           <MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>6c82fa59-7ac6-4901-abd8-c7054110f191</GUID>
+          <Name>sr_audit.event_path</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>4</DisplayOrderRE>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>

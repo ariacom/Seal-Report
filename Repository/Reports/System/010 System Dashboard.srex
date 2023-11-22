@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CurrentViewGUID>123de517-a552-4554-8a69-ac23f0fcdade</CurrentViewGUID>
   <GUID>d143d2b9-45d1-4b21-9a76-d65c72b89e4e</GUID>
   <DisplayName>@{
     Report report = Model;
@@ -23,7 +22,6 @@
         <MetaConnection>
           <GUID>2ca1932c-8d61-41c6-b011-a1340cc77d4a</GUID>
           <Name>connection</Name>
-          <ConnectionString />
         </MetaConnection>
       </Connections>
       <ConnectionGUID>2ca1932c-8d61-41c6-b011-a1340cc77d4a</ConnectionGUID>
