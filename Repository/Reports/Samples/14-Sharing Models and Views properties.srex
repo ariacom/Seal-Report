@@ -363,6 +363,12 @@
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
       <SortOrder>1</SortOrder>
     </ReportView>
   </Views>

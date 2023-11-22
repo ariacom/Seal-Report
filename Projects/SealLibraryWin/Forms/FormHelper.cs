@@ -108,7 +108,7 @@ namespace Seal.Forms
                 Line firstErrorLine = null;
                 foreach (var err in ex.CompilerErrors)
                 {
-                    var sourceLines = ex.CompilationData.SourceCode.Split('\n');
+                    var sourceLines = ex.CompilationData.SourceCode.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
                     if (err.Line > 0 && err.Line < sourceLines.Length)
                     {
                         var pattern = sourceLines[err.Line].Trim();

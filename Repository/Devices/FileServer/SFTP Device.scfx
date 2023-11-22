@@ -1,1 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?><OutputFileServerDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>337a526f-013c-4397-b8fa-e80c42cc7dcc</GUID><Name>SFTP Device</Name><FullName>SFTP Device (File Server)</FullName><Protocol>SFTP</Protocol><HostName>127.0.0.1</HostName><PortNumber>22</PortNumber><Directories>/</Directories><UserName>tester</UserName><Password>fCV+wKfAkmQX5ix1JzYsaQ==</Password><ProcessingScript /></OutputFileServerDevice>
+<?xml version="1.0"?>
+<OutputFileServerDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>337a526f-013c-4397-b8fa-e80c42cc7dcc</GUID>
+  <Name>SFTP Device</Name>
+  <FullName>SFTP Device (File Server)</FullName>
+  <Protocol>SFTP</Protocol>
+  <HostName>127.0.0.1</HostName>
+  <PortNumber>22</PortNumber>
+  <Directories>/</Directories>
+  <UserName>tester</UserName>
+  <Password />
+  <ProcessingScript />
+</OutputFileServerDevice>

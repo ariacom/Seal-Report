@@ -19,7 +19,7 @@
     public string getValueFromRange(string definition, double value)
     {
         var result = "";
-        foreach (var def in definition.Replace("\r\n", "\n").Split('\n'))
+        foreach (var def in definition.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n'))
         {
             if (!string.IsNullOrEmpty(def))
             {

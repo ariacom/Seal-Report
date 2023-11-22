@@ -521,7 +521,7 @@ namespace Seal.Model
                 if (!string.IsNullOrWhiteSpace(OutputToExecute.UserName) || !string.IsNullOrWhiteSpace(OutputToExecute.UserGroups))
                 {
                     SecurityContext = new SecurityUser(Repository.Security) { Name = OutputToExecute.UserName };
-                    string[] groups = OutputToExecute.UserGroups.Replace(";", "\r").Replace("\n", "").Split('\r');
+                    string[] groups = OutputToExecute.UserGroups.Replace(";", "\r").Replace("\r\n", "\r").Replace("\n", "\r").Split('\r');
                     foreach (string group in groups) SecurityContext.AddSecurityGroup(group);
                 }
 
@@ -538,7 +538,7 @@ namespace Seal.Model
                     //get unique file name in the result folder
                     ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension, true);
                     //Display path is always an HTML one...                    
-                    HTMLDisplayFilePath = ResultExtension == "html" ? ResultFilePath : FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
+                    HTMLDisplayFilePath = (ResultExtension == "html" && !ForOutput) ? ResultFilePath : FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
                     Debug.WriteLine(string.Format("ResultFilePath:{0} HTMLDisplayFilePath:{1} for {2}", ResultFilePath, HTMLDisplayFilePath, OutputToExecute != null ? OutputToExecute.Name : ""));
                 }
 

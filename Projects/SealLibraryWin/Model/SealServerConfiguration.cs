@@ -908,6 +908,10 @@ namespace Seal.Model
                 {
                     _keyValues.Add(new KeyValue() { Name = OutputEmailDevice.SendGridKeyName, Value = OutputEmailDevice.SendGridKeyValue });
                 }
+                if (!_keyValues.Exists(i => i.Name == OutputFileServerDevice.PasswordKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = OutputFileServerDevice.PasswordKeyName, Value = OutputFileServerDevice.PasswordKeyValue });
+                }
                 if (!_keyValues.Exists(i => i.Name == ApplicationKeysKeyName))
                 {
                     _keyValues.Add(new KeyValue() { Name = ApplicationKeysKeyName, Value = ApplicationKeysKeyValue });

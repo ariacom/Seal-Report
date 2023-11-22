@@ -415,7 +415,7 @@ namespace Seal.Model
         {
             if (!string.IsNullOrEmpty(source))
             {
-                string[] sources = source.Split('\n');
+                string[] sources = source.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
                 if (sources.Length > index) return sources[index].Trim();
             }
             return ""; ;

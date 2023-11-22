@@ -113,6 +113,21 @@ namespace Seal.Helpers
         }
 
 
+        public static void SelectNode(TreeView mainTreeView, TreeNodeCollection nodes, string fullPath)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                if (node.FullPath == fullPath)
+                {
+                    mainTreeView.SelectedNode = node;
+                    mainTreeView.SelectedNode.Expand();
+                    break;
+                }
+                SelectNode(mainTreeView, node.Nodes, fullPath);
+            }
+        }
+
+
         public static TreeNode GetRootCategoryNode(TreeNode node)
         {
             TreeNode result = node;

@@ -568,7 +568,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 if (string.IsNullOrEmpty(paths)) throw new Exception("Error: paths must be supplied");
 
-                foreach (var path in paths.Split('\n'))
+                foreach (var path in paths.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n'))
                 {
                     if (!string.IsNullOrEmpty(path))
                     {
@@ -851,7 +851,7 @@ namespace SealWebServer.Controllers
                 WebUser.Profile.Connections.Clear();
                 foreach (var connection in connections)
                 {
-                    var guids = connection.Split('\r');
+                    var guids = connection.Replace("\r\n", "\n").Replace("\r", "\n").Split('\r');
                     if (guids.Length == 2) WebUser.Profile.Connections.Add(new DefaultConnection() { SourceGUID = guids[0], ConnectionGUID = guids[1] });
 
                 }

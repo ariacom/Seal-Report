@@ -8,28 +8,64 @@
 
     if (table == null || table.RowCount < 2) return;
     var title = view.GetValue("card_title");
+
+    int titleColumn = view.GetNumericValue("title_column")-1;
+    var columnCount = Math.Min(view.GetNumericValue("card_columns"), table.ColumnCount);
+    if (columnCount <= 0) columnCount = table.ColumnCount;
+    var rowCount = Math.Min(view.GetNumericValue("card_rows") + 1, table.BodyEndRow);
+    if (rowCount <= 1) rowCount = table.BodyEndRow;
+
+    //Build the list of cards
+    var cards = new List<(string title, string name, string value)>();
+    //    if (view.GetBoolValue("card_by_column"))
+    //    {
+    for (int row = table.BodyStartRow; row < rowCount; row++)
+    {
+        if (titleColumn >= 0 && titleColumn < columnCount) title = table[row, titleColumn].HTMLValue;
+
+        for (int col = 0; col < columnCount; col++)
+        {
+            if (col == titleColumn) continue;
+
+            ResultCell name = table[0, col];
+            ResultCell value = table[row, col];
+            cards.Add((title, name.HTMLValue, value.HTMLValue));
+        }
+    }
+            /*    }
+        else if (table.ColumnCount > 1)
+    {
+    //One card by row
+    ResultCell name = table[0, 1];
+    @for (int row = table.BodyStartRow; row < table.BodyEndRow; row++)
+        {
+        ResultCell name2 = table[row, 0];
+        ResultCell value = table[row, 1];
+        cards.Add((string.IsNullOrEmpty(title) ? name.HTMLValue : title, name2.HTMLValue, value.HTMLValue));
+    }
+        }*/
 }
 
 <div @Raw(view.AddAttribute("class", "container_class")) @Raw(view.AddAttribute("style", "container_css"))>
-@for (int i = 0; i < table.ColumnCount; i++)
-{
-    <div @Raw(view.AddAttribute("class", "card_class")) @Raw(view.AddAttribute("style", "card_css"))>
-        @{
-            ResultCell name = table[0, i];
-            ResultCell value = table[1, i];
-            if (!string.IsNullOrEmpty(title))
-            {
-                <div @Raw(view.AddAttribute("class", "title_class")) @Raw(view.AddAttribute("style", "title_css"))>@Raw(title)</div>
-                <div @Raw(view.AddAttribute("class", "separator_class")) @Raw(view.AddAttribute("style", "separator_css"))></div>
+    @foreach (var card in cards)
+    {
+        <div @Raw(view.AddAttribute("class", "card_class")) @Raw(view.AddAttribute("style", "card_css"))>
+            @{
+                var finalTitle = view.GetBoolValue("invert_name_title") ? card.name : card.title;
+                var finalName = !view.GetBoolValue("invert_name_title") ? card.name : card.title;
+                if (view.GetBoolValue("card_show_title") && !string.IsNullOrEmpty(finalTitle))
+                {
+                    <div @Raw(view.AddAttribute("class", "title_class")) @Raw(view.AddAttribute("style", "title_css"))>@Raw(finalTitle)</div>
+                    <div @Raw(view.AddAttribute("class", "separator_class")) @Raw(view.AddAttribute("style", "separator_css"))></div>
+                }
+                <div @Raw(view.AddAttribute("class", "value_class")) @Raw(view.AddAttribute("style", "value_css"))>@Raw(card.value)</div>
+                @if (view.GetBoolValue("card_show_name"))
+                {
+                    <div @Raw(view.AddAttribute("class", "name_class")) @Raw(view.AddAttribute("style", "name_css"))>@Raw(finalName)</div>
+                }
             }
-            <div @Raw(view.AddAttribute("class", "value_class")) @Raw(view.AddAttribute("style", "value_css"))>@Raw(value.HTMLValue)</div>
-            @if (view.GetBoolValue("card_show_name"))
-            {
-                <div @Raw(view.AddAttribute("class", "name_class")) @Raw(view.AddAttribute("style", "name_css"))>@Raw(name.HTMLValue)</div>
-            }
-        }
-    </div>
-}
+        </div>
+    }
 </div>
 @if (report.PrintLayout && view.GetBoolValue("print_break_after_view"))
 {

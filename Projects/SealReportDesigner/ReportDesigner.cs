@@ -30,6 +30,7 @@ namespace Seal
         TreeViewEditorHelper treeViewHelper;
         ToolStripEditorHelper toolStripHelper;
         ToolsHelper toolsHelper;
+        string lastEntityPath;
 
         Report _report = null;
         public Report Report
@@ -581,6 +582,8 @@ namespace Seal
         {
             if (_report != null)
             {
+                lastEntityPath = mainTreeView.SelectedNode?.FullPath;
+
                 if (IsModified)
                 {
                     DialogResult dlgResult = MessageBox.Show("The report has been modified, are you sure you to reload it ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
@@ -598,11 +601,18 @@ namespace Seal
 
         private void selectAfterLoad()
         {
-            if (_report.Models.Count > 0 && _report.Models.OrderBy(i => i.Name).First().Elements.Count > 0) selectNode(_report.Models.OrderBy(i => i.Name).First());
-            else if (_report.Tasks.Count > 0) selectNode(_report.Tasks.OrderBy(i => i.SortOrder).First());
-            else if (_report.Models.Count > 0) selectNode(_report.Models[0]);
-            else if (_report.Sources.Count > 0) selectNode(_report.Sources[0]);
-            else if (_report.Views.Count > 0) selectNode(_report.Views[0]);
+            if (!string.IsNullOrEmpty(lastEntityPath)) {
+                TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, lastEntityPath);
+                lastEntityPath = "";
+            }
+            else
+            {
+                if (_report.Models.Count > 0 && _report.Models.OrderBy(i => i.Name).First().Elements.Count > 0) selectNode(_report.Models.OrderBy(i => i.Name).First());
+                else if (_report.Tasks.Count > 0) selectNode(_report.Tasks.OrderBy(i => i.SortOrder).First());
+                else if (_report.Models.Count > 0) selectNode(_report.Models[0]);
+                else if (_report.Sources.Count > 0) selectNode(_report.Sources[0]);
+                else if (_report.Views.Count > 0) selectNode(_report.Views[0]);
+            }
         }
 
         private void openReport(string path)

@@ -54,7 +54,7 @@
         throw new Exception(""Collection name not found in the database"");
     }
     var collection = database.GetCollection<BsonDocument>(collectionName);
-    var fieldsToIgnore = metaTable.GetValue(""mongo_field_names_ignore"").Replace(""\r\n"",""\n"").Split('\n');
+    var fieldsToIgnore = metaTable.GetValue(""mongo_field_names_ignore"").Replace(""\r\n"",""\n"").Replace(""\r"",""\n"").Split('\n');
     metaTable.NoSQLTable = DataTableLoader.FromMongoDB(collection.Aggregate<BsonDocument>(metaTable.MongoStages).ToList(), fieldsToIgnore);
 }";
 

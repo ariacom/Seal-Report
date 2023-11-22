@@ -1,22 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?><OutputFileServerDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>a29d3e38-0609-4e42-8e0e-e3a637c278f5</GUID><Name>SCP</Name><FullName>SCP (File Server)</FullName><Protocol>SCP</Protocol><HostName>127.0.0.1</HostName><PortNumber>22</PortNumber><Directory>/scp</Directory><UserName>tester</UserName><Password>fCV+wKfAkmQX5ix1JzYsaQ==</Password><SessionScript>@using WinSCP&#xD;
-@{&#xD;
-    //Create and open a WinSCP session &#xD;
-    //Full WinSCP documentation at https://winscp.net/eng/docs/library#classes&#xD;
-    OutputWinSCPDevice device = Model;&#xD;
-    &#xD;
-    //https://winscp.net/eng/docs/library_sessionoptions&#xD;
-    SessionOptions sessionOptions = new SessionOptions&#xD;
-    {&#xD;
-        Protocol = device.Protocol,&#xD;
-        HostName = device.HostName,&#xD;
-        PortNumber = device.PortNumber,&#xD;
-        UserName = device.UserName,&#xD;
-        Password = device.ClearPassword,&#xD;
-        SshHostKeyFingerprint = "ssh-rsa 2048 xqHKhbcKv2D2aH2onlie6yF0cCXwHUanGhVxbimxcXs=", //SFTP, SCP&#xD;
-    };&#xD;
-&#xD;
-    //Create and open the session&#xD;
-    device.Session = new Session();&#xD;
-    device.Session.Open(sessionOptions);    &#xD;
-}&#xD;
-</SessionScript><ProcessingScript /></OutputFileServerDevice>
+<?xml version="1.0"?>
+<OutputFileServerDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>a29d3e38-0609-4e42-8e0e-e3a637c278f5</GUID>
+  <Name>SCP Device</Name>
+  <FullName>SCP Device (File Server)</FullName>
+  <Protocol>SCP</Protocol>
+  <HostName>127.0.0.1</HostName>
+  <PortNumber>22</PortNumber>
+  <Directories>/
+/folder1
+/folder2</Directories>
+  <UserName>tester</UserName>
+  <Password>fCV+wKfAkmQX5ix1JzYsaQ==</Password>
+  <ProcessingScript />
+</OutputFileServerDevice>

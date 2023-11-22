@@ -1329,7 +1329,7 @@ namespace Seal.Model
         public string[] GetGridLayoutRows(string gridLayout)
         {
             if (string.IsNullOrEmpty(gridLayout)) return new string[] { "" };
-            return gridLayout.Replace("\r\n", "\n").Split('\n').Where(i => !string.IsNullOrWhiteSpace(i)).ToArray();
+            return gridLayout.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n').Where(i => !string.IsNullOrWhiteSpace(i)).ToArray();
         }
 
         /// <summary>

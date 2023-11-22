@@ -5,8 +5,9 @@
   <FullName>FTP Device (File Server)</FullName>
   <HostName>127.0.0.1</HostName>
   <Directories>/
-/folder1</Directories>
-  <UserName />
-  <Password />
+/folder1
+/folder2</Directories>
+  <UserName>testusr</UserName>
+  <Password>JdT5qsVmRpI=</Password>
   <ProcessingScript />
 </OutputFileServerDevice>

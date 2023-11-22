@@ -2383,7 +2383,7 @@ namespace Seal.Model
                 //Build the SQL value
                 restriction.EnumValues.Clear();
                 if (values == null) values = "";
-                foreach (var v in values.Split('\n').Where(i => !string.IsNullOrEmpty(i)))
+                foreach (var v in values.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n').Where(i => !string.IsNullOrEmpty(i)))
                 {
                     foreach (var ev in restriction.MetaEnumValuesRE)
                     {

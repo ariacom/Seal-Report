@@ -41,7 +41,7 @@ namespace Seal.Model
     ReportOutput output = report.OutputToExecute;
     OutputFileServerDevice device = (OutputFileServerDevice)output.Device;
 
-    var resultFileName = (output.ZipResult ? Path.GetFileNameWithoutExtension(report.ResultFileName) + "".zip"" : report.ResultFileName);
+    var resultFileName = (output.ZipResult ? Path.GetFileNameWithoutExtension(report.ResultFileName) + "".zip"" : Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath));
     device.HandleZipOptions(report);
 
     //Put file
@@ -213,7 +213,7 @@ namespace Seal.Model
         {
             get
             {
-                return Directories.Trim().Replace("\r\n", "\r").Split('\r');
+                return Directories.Trim().Replace("\r\n", "\r").Replace("\n", "\r").Split('\r');
             }
         }
 
@@ -256,7 +256,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    Password = Repository.Instance.EncryptValue(Password, PasswordKeyName);
+                    Password = Repository.Instance.EncryptValue(value, PasswordKeyName);
                 }
                 catch (Exception ex)
                 {

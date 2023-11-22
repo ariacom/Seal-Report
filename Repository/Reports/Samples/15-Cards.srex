@@ -1,0 +1,464 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>7ab0552d-00a0-4054-a405-1de85f129c37</GUID>
+  <ViewGUID>f3e3f264-e39b-4be5-99d2-7628e286cecc</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>2db8ae20-72d2-4a50-bac9-b3becfe5194d</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>c036954e-485f-4c80-af76-83238f72ec6e</GUID>
+      <Name>Quantity</Name>
+      <SourceGUID>2db8ae20-72d2-4a50-bac9-b3becfe5194d</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>d810a0e6-3c65-447c-85eb-a0f0d7f58ed7</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+          <CellScript>@{
+	//Force alignment
+	ResultCell cell=Model;
+	ReportElement element = cell.Element;
+	ReportModel reportModel = element.Model;
+	Report report = reportModel.Report;
+	
+    cell.FinalCssClass = "text-left"; //text-center text-right
+}
+</CellScript>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>7f847381-8ff4-47af-9f0c-da45bf732d63</GUID>
+      <Name>Employees</Name>
+      <SourceGUID>2db8ae20-72d2-4a50-bac9-b3becfe5194d</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>2594b567-901c-4092-b06d-b21d9af19673</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>610809b0-b64b-4a55-9eb5-2ac901e4e105</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Avg</AggregateFunction>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d9bd7d81-bc18-403c-9692-c7040374f2b2</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[3b8a9721-8d67-42b9-8381-6ad33228c602]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>3b8a9721-8d67-42b9-8381-6ad33228c602</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>e451bfff-4498-44d8-b94d-b44ce8221654</GUID>
+      <Name>Sales</Name>
+      <SourceGUID>2db8ae20-72d2-4a50-bac9-b3becfe5194d</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>2b7e4d97-d85a-407f-b125-fc2a24c935c1</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>dc7b209e-9ef4-48f6-b136-05debec54f7a</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>107ec3c5-557c-40b6-9db2-7ec71e5adaf3</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>f3e3f264-e39b-4be5-99d2-7628e286cecc</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>0d1c81eb-ec35-4590-9772-fd0a21e4dffe</GUID>
+          <Name>Container</Name>
+          <Views>
+            <ReportView>
+              <GUID>c9e6255f-a435-4cea-aa0b-5f08b77a6ecc</GUID>
+              <Name>Quantity</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>card_show_name</Name>
+                  <Value>False</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>card_title</Name>
+                  <Value>Quantity of the year</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>card_css</Name>
+                  <Value>width:200px; border: 1px solid #A1A1A1; margin:5px; background:#73FBFD;</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>title_css</Name>
+                  <Value>padding:5px;color:red;font-size: large</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>title_class</Name>
+                  <Value>text-right</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>0ab3ad49-45be-46d0-8df7-dd9ed9f3bf12</GUID>
+              <Name>Quantity</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>card_show_name</Name>
+                  <Value>False</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>card_css</Name>
+                  <Value>width:300px; margin:5px</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>c80366c1-676b-4079-b48a-a2fdae484057</GUID>
+              <Name>Quantity</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>card_title</Name>
+                  <Value>Title for this value</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>invert_name_title</Name>
+                  <Value>True</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>card_css</Name>
+                  <Value>width:200px; background:#F0F0F0; border: 1px solid #A1A1A1; margin:5px</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>bb9c1298-3f3c-4254-9747-3d6431a21de5</GUID>
+              <Name>Quantity</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>card_css</Name>
+                  <Value>width:300px; margin:5px</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>1851ecfc-c85e-4a66-b0b8-d6216c4f5c3f</GUID>
+              <Name>Employees 3 cards per line</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
+              <UseModelName>false</UseModelName>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>container_css</Name>
+                  <Value>display:flex; flex-wrap: wrap; justify-content:left;width:1000px;</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>5</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>48cd1511-08f2-4ef9-ae35-e7bb1d16afd9</GUID>
+              <Name>Employees 1 row vertical</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
+              <UseModelName>false</UseModelName>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>card_title</Name>
+                  <Value>First customer</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>card_rows</Name>
+                  <Value>1</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>container_css</Name>
+                  <Value>display:flex;flex-direction: column;</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>6</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>172d943d-7a30-4701-8165-ee17fcb15424</GUID>
+              <Name>Employees 2 rows 1 title column</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
+              <UseModelName>false</UseModelName>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>title_column</Name>
+                  <Value>1</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>invert_name_title</Name>
+                  <Value>True</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>card_rows</Name>
+                  <Value>2</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>container_css</Name>
+                  <Value>display:flex; flex-wrap:wrap; justify-left:center;width:650px</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>7</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;
+col-sm-12;
+col-sm-12;
+col-sm-12;</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>4</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>39b246b3-04f6-42d0-b8c5-1944f99fae3b</GUID>
+          <Name>Title</Name>
+          <TemplateName>Free</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>text</Name>
+              <Value>Samples of Cards</Value>
+            </Parameter>
+            <Parameter>
+              <Name>text_css</Name>
+              <Value>font: italic bold xx-large Arial, sans-serif;</Value>
+            </Parameter>
+            <Parameter>
+              <Name>show_separator</Name>
+              <Value>True</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>fc0084b8-39b6-4a2c-bb50-8d015415aa78</GUID>
+          <Name>Container2</Name>
+          <Views>
+            <ReportView>
+              <GUID>dbaf757f-83d7-4210-bd2f-585f17d73bac</GUID>
+              <Name>Source table for quantity</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c6520fd6-92aa-49a7-aa85-c5d6e2e1d2b3</GUID>
+                  <Name>Quantity</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b3f9d9eb-ec07-430b-93d2-4bbeef9ce182</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>45852da1-4da0-4852-b0d2-1f940b236d53</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>52734ddb-1a31-455d-9c91-e83e9a162efb</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>4c8967cc-4865-45c0-a210-d42c239896a2</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>a6280aea-12b5-46cb-8aea-758d1df70148</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>c931984b-c77c-471c-aabc-d14f130016a4</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_enabled</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>6bc0d13b-dc97-4630-9960-cbe52ad5abd1</GUID>
+              <Name>Source table for employees</Name>
+              <Views>
+                <ReportView>
+                  <GUID>9459d2da-2eab-48fd-911e-f62721dc8aba</GUID>
+                  <Name>Employees</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>9ad58064-d720-4da1-8579-eb80ab2ad69d</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>60568745-3c18-45ed-a6dd-cd674aba2924</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>c7a610a1-2528-48c8-b480-bffcbcbbe29f</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>89f165fa-f85c-4030-aff5-fd511be2bb43</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>5483305f-7fab-4361-a671-fae17e36b540</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>c7fa6533-eb63-4af9-af74-157a560a3802</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_enabled</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-6;col-sm-6;</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>e496edfe-972d-4ea0-bfda-4410c8d2fcdf</GUID>
+          <Name>Free</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;hr&gt;</CustomTemplate>
+          <SortOrder>3</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>
