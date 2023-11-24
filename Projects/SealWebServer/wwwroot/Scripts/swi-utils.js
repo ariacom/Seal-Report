@@ -136,7 +136,7 @@ var SWIUtil;
             return SWIUtil.tr2("Average of");
         else if (aggr == 4)
             return SWIUtil.tr2("Count of");
-        else if (aggr == 4)
+        else if (aggr == 5)
             return SWIUtil.tr2("Count distinct of");
         return "";
     }

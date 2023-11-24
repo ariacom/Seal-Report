@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
@@ -129,6 +129,8 @@
 		<None Include="..\..\Repository\Views\ChartPlotly.cshtml" Link="Views\ChartPlotly.cshtml" />
 		<None Include="..\..\Repository\Views\Container.config.cshtml" Link="Views\Container.config.cshtml" />
 		<None Include="..\..\Repository\Views\Container.cshtml" Link="Views\Container.cshtml" />
+		<None Include="..\..\Repository\Views\Container Grid Flex.config.cshtml" Link="Views\Container Grid Flex.config.cshtml" />
+		<None Include="..\..\Repository\Views\Container Grid Flex.cshtml" Link="Views\Container Grid Flex.cshtml" />
 		<None Include="..\..\Repository\Views\DataTable.config.cshtml" Link="Views\DataTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\DataTable.cshtml" Link="Views\DataTable.cshtml" />
 		<None Include="..\..\Repository\Views\Free.config.cshtml" Link="Views\Free.config.cshtml" />

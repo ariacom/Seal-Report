@@ -1,0 +1,21 @@
+﻿@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    int index = 0;
+    var views = view.Views.OrderBy(i => i.SortOrder).ToList();
+    var defaultItemsCSS = view.GetValue("default_item_css");
+    var itemsCSS = view.GetCSSLayoutRows(report.PrintLayout ? view.GetValue("items_css_print") : view.GetValue("items_css"));
+}
+<div id='@("container_flex_" + view.IdSuffix)' @Raw(view.AddAttribute("class", "container_class")) @Raw(view.AddAttribute("style", "container_css"))">
+@foreach (var child in view.Views.OrderBy(i => i.SortOrder))
+{
+    var itemCSS = index < itemsCSS.Length ? itemsCSS[index] : "";
+    if (string.IsNullOrEmpty(itemCSS)) itemCSS = defaultItemsCSS;
+    index++;
+
+        <div style="@itemCSS">
+        @Raw(child.Parse())
+        </div>
+}
+</div>

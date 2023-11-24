@@ -3,8 +3,8 @@
     ReportViewTemplate Template = Model;
 
     //Template Name
-    Template.Name = ReportViewTemplate.Container;
-    Template.Description = "A grid container (refer to Bootstrap 3 grid at https://getbootstrap.com/docs/3.4/css/#grid)";
+    Template.Name = ReportViewTemplate.ContainerName;
+    Template.Description = "A Bootstrap container (refer to Bootstrap 3 grid at https://getbootstrap.com/docs/3.4/css/#grid)";
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
@@ -15,7 +15,7 @@
         Name = "grid_layout",
         Type = ViewParameterType.Text,
         TextValue = "",
-        DisplayName = "Grid layout",
+        DisplayName = "Layout",
         Description = "Defines the rows and the columns used for the child views. It follows the Bootstrap 3 Grid Model (refer to https://getbootstrap.com/docs/3.4/css/#grid). One row is defined per line, columns are separated by semi-column, one child view is used per cell sequentially unless the definition is under brackets '()'.",
         TextSamples = new string[] {
 "col-sm-6;col-sm-6;|Row 1 with 2 columns same width" ,
@@ -35,16 +35,16 @@
         Name = "grid_layout_print",
         Type = ViewParameterType.Text,
         TextValue = "",
-        DisplayName = "Grid layout for the HTML Print result",
-        Description = "Grid layout used when generating the HTML Print result. Typically Restrictions Views may be hidden as they will be empty. It follows the 'Grid layout' definition.",
+        DisplayName = "Layout for the HTML Print result",
+        Description = "Layout used when generating the HTML Print result. Typically Restrictions Views may be hidden as they will be empty. It follows the 'Grid layout' definition.",
         TextSamples = new string[] {
 "col-sm-0;col-sm-12;|Hide the first view if it contains the restrictions"
 }
     });
-    Template.Parameters.Add(new Parameter() { Name = "grid_cell_class", DisplayName = "Grid cell additional CSS Class", Description = "Additional CSS class attribute of a grid cell.", Enums = new string[] { "text-center", "bg-success", "bg-danger" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "grid_cell_css", DisplayName = "Grid cell CSS Style", Description = "CSS style attribute of a grid cell.", Enums = new string[] { "border: 2px solid blue;", "font-size: 10px;" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.ForceRefreshParameter, DisplayName = "View Restrictions: Force refresh", BoolValue = false, Description = "If true, the view be parsed when a View Restriction triggers an execution." });
+    Template.Parameters.Add(new Parameter() { Name = "grid_cell_css", DisplayName = "Cell CSS Style", Description = "CSS style attribute of a cell.", Enums = new string[] { "border: 2px solid blue;", "font-size: 10px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "grid_cell_class", DisplayName = "Cell additional CSS Class", Description = "Additional CSS class attribute of a cell.", Enums = new string[] { "text-center", "bg-success", "bg-danger" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.ForceRefreshParameter, DisplayName = "View Restrictions: Force refresh", BoolValue = false, Description = "If true, the view will be parsed when a View Restriction triggers an execution." });
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>() { "Report", "Model", "Tab Page", "Container", "Widget" };
+    Template.ParentNames = new List<string>() { "Report", "Model", "Tab Page", "Container", "Container Grid Flex", "Widget" };
 }

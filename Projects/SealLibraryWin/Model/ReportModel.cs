@@ -370,7 +370,7 @@ namespace Seal.Model
         /// If true, SELECT DISTINCT clause clause is used by default for the model if no aggregate is defined
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Use SELECT Distinct"), Description("If true, SELECT DISTINCT clause clause is used by default for the model if no aggregate is defined."), Id(2, 3)]
+        [Category("SQL"), DisplayName("Use SELECT Distinct"), Description("If true, SELECT DISTINCT clause is used by default for the model if no aggregate is defined."), Id(2, 3)]
         [DefaultValue(true)]
 #endif
         public bool UseSelectDistinct { get; set; } = true;

@@ -5859,6 +5859,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Seal.Model.ReportView.GetCSSLayoutRows(System.String)">
+            <summary>
+            Helper to return a list of CSS layout rows from the flex layout
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportView.GetGridLayoutRows(System.String)">
             <summary>
             Helper to return a list of layout rows from the grid layout

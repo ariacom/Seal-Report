@@ -119,6 +119,12 @@
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
         </ReportElement>
+        <ReportElement>
+          <GUID>dd2c1e7f-bff1-4915-9298-1f90cd4943d0</GUID>
+          <PivotPosition>Hidden</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID>
+        </ReportElement>
       </Elements>
       <Restriction>[cc615729-0cf1-417d-8bf4-3dcb4670ac11]</Restriction>
       <Restrictions>
@@ -149,7 +155,7 @@
           <Views>
             <ReportView>
               <GUID>d8bb6cc3-23bb-4160-ba2b-cb666c0e932e</GUID>
-              <Name>View</Name>
+              <Name>View: Reference</Name>
               <Views>
                 <ReportView>
                   <GUID>ad09af98-a8e9-41c3-b517-99ca3e1cb38d</GUID>
@@ -160,16 +166,14 @@
                       <Name>Container</Name>
                       <Views>
                         <ReportView>
-                          <GUID>a7283beb-ce73-43d5-8a2f-b42f3e9f17e8</GUID>
-                          <Name>Page Table</Name>
-                          <TemplateName>Page Table</TemplateName>
-                          <SortOrder>1</SortOrder>
-                        </ReportView>
-                        <ReportView>
                           <GUID>a79a489f-5120-4fb0-b4e2-f5a8d3f5d156</GUID>
                           <Name>Reference Chart JS</Name>
                           <TemplateName>Chart JS</TemplateName>
                           <Parameters>
+                            <Parameter>
+                              <Name>chartjs_contheight</Name>
+                              <Value>250px</Value>
+                            </Parameter>
                             <Parameter>
                               <Name>chartjs_bar_horizontal</Name>
                               <Value>True</Value>
@@ -179,13 +183,13 @@
                               <Value>year</Value>
                             </Parameter>
                           </Parameters>
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                         </ReportView>
                         <ReportView>
                           <GUID>0e5025f3-57b2-46b0-8520-b216937e7a3e</GUID>
                           <Name>Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
-                          <SortOrder>3</SortOrder>
+                          <SortOrder>2</SortOrder>
                         </ReportView>
                       </Views>
                       <TemplateName>Container</TemplateName>
@@ -213,23 +217,17 @@
                       <Name>Container</Name>
                       <Views>
                         <ReportView>
-                          <GUID>5cbebe3c-21fe-4380-be4a-f0a34583e65c</GUID>
-                          <Name>Page Table</Name>
-                          <TemplateName>Page Table</TemplateName>
-                          <SortOrder>1</SortOrder>
-                        </ReportView>
-                        <ReportView>
                           <GUID>e2ebc6ce-12a6-4f31-82c3-082407645fdd</GUID>
                           <Name>Chart JS</Name>
                           <TemplateName>Chart JS</TemplateName>
-                          <ReferenceViewGUID>Reference Chart JS</ReferenceViewGUID>
-                          <SortOrder>2</SortOrder>
+                          <ReferenceViewGUID>a79a489f-5120-4fb0-b4e2-f5a8d3f5d156</ReferenceViewGUID>
+                          <SortOrder>1</SortOrder>
                         </ReportView>
                         <ReportView>
                           <GUID>24a57f40-3603-4ccd-84f8-175bc3f719a3</GUID>
                           <Name>Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
-                          <SortOrder>3</SortOrder>
+                          <SortOrder>2</SortOrder>
                         </ReportView>
                       </Views>
                       <TemplateName>Container</TemplateName>
@@ -258,23 +256,17 @@
                       <Name>Container</Name>
                       <Views>
                         <ReportView>
-                          <GUID>69f2a12e-294f-47f4-8b0d-068783ac2cb7</GUID>
-                          <Name>Page Table</Name>
-                          <TemplateName>Page Table</TemplateName>
-                          <SortOrder>1</SortOrder>
-                        </ReportView>
-                        <ReportView>
                           <GUID>2551b474-54c0-4ce8-a4de-3bd762496bd0</GUID>
                           <Name>Chart JS</Name>
                           <TemplateName>Chart JS</TemplateName>
                           <ReferenceViewGUID>a79a489f-5120-4fb0-b4e2-f5a8d3f5d156</ReferenceViewGUID>
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                         </ReportView>
                         <ReportView>
                           <GUID>7566f155-a359-4a5b-b2cc-e7fa8be2d4e3</GUID>
                           <Name>Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
-                          <SortOrder>3</SortOrder>
+                          <SortOrder>2</SortOrder>
                         </ReportView>
                       </Views>
                       <TemplateName>Container</TemplateName>
@@ -303,23 +295,17 @@
                       <Name>Container</Name>
                       <Views>
                         <ReportView>
-                          <GUID>21048193-bb49-4a49-9e02-1112d0f9cc0d</GUID>
-                          <Name>Page Table</Name>
-                          <TemplateName>Page Table</TemplateName>
-                          <SortOrder>1</SortOrder>
-                        </ReportView>
-                        <ReportView>
                           <GUID>5c149d3e-c12f-4c91-804a-bd6e33968267</GUID>
                           <Name>Chart JS</Name>
                           <TemplateName>Chart JS</TemplateName>
                           <ReferenceViewGUID>a79a489f-5120-4fb0-b4e2-f5a8d3f5d156</ReferenceViewGUID>
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                         </ReportView>
                         <ReportView>
                           <GUID>dc580458-970c-4746-9508-cb63729f54c3</GUID>
                           <Name>Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
-                          <SortOrder>3</SortOrder>
+                          <SortOrder>2</SortOrder>
                         </ReportView>
                       </Views>
                       <TemplateName>Container</TemplateName>

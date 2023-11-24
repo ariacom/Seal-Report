@@ -17,7 +17,6 @@ namespace Seal.Model
     {
         public const string ReportName = "Report";
         public const string ModelName = "Model";
-        public const string Container = "Container";
         public const string ModelDetailName = "Model Detail";
         public const string RestrictionsName = "Restrictions";
         public const string WidgetName = "Widget";
@@ -28,6 +27,7 @@ namespace Seal.Model
         public const string ChartJSName = "Chart JS";
         public const string ChartPlotlyName = "Chart Plotly";
         public const string ContainerName = "Container";
+        public const string ContainerGridFlexName = "Container Grid Flex";
 
         public const string D3Colors = "['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf']";
         public const string GoogleColors = "['#3366cc','#dc3912','#ff9900','#109618','#990099','#0099c6','#dd4477','#66aa00','#b82e2e','#316395','#994499','#22aa99','#aaaa11','#6633cc','#e67300','#8b0707','#651067','#329262','#5574a6','#3b3eac']";
@@ -75,7 +75,8 @@ namespace Seal.Model
         /// <summary>
         /// True if the template is for a restrictions view
         /// </summary>
-        public bool IsRestrictionsView { 
+        public bool IsRestrictionsView
+        {
             get
             {
                 return Name == RestrictionsName;
@@ -206,7 +207,7 @@ namespace Seal.Model
         /// <summary>
         /// Flag for optimization, by default the template is not parsed... until it is used
         /// </summary>
-        public bool IsParsed = false; 
+        public bool IsParsed = false;
 
         /// <summary>
         /// Last modification date time
@@ -264,6 +265,29 @@ namespace Seal.Model
                 Error = string.Format("Unexpected error got when parsing template configuration.\r\n{0}", ex.Message);
             }
         }
+
+        public static string[] GridFlexContainerParameterSample = new string[] {
+            "display:grid;\r\ngrid-template-columns:1fr 1fr 1fr;|Grid with 3 columns with the same size",
+            "display:grid;\r\ngrid-template-columns:auto auto;|Grid with 2 columns with automatic size",
+            "display:grid;\r\ngrid-template-columns:40% 30% 30%;|Grid with 3 columns with specific sizes",
+            "display:grid;\r\ngrid-template-areas:'myArea myArea .';|Grid: Areas definition for a 3 columns grid (requires the configuartion of 'grid-area' in the items)",
+            "display:grid;\r\ngrid-template-columns:1fr\r\njustify-content:center;\r\nalign-content:center;|Grid: Full options",
+            "display:flex;\r\nflex-flow:row wrap;|Flex in a single line with wrapping",
+            "display:flex;\r\nflex-flow:column;width:50%;|Flex in a single column of 50%",
+            "display:flex;\r\nflex-flow:row nowrap;\r\njustify-content:flex-start;\r\nalign-items:stretch;\r\nalign-content:stretch;|Flex: Full options", 
+        };
+
+        public static string[] GridFlexItemParameterSample = new string[] {
+            "grid-column: 1 / 5;\r\ngrid-column: 1 / span 3;|Grid: Item1 starts on column 1 and ends before column 5. Item2 starts on column 1 and spans 3 columns.",
+            "grid-row: 1 / 4;\r\ngrid-row: 1 / span 2;|Grid: Item1 starts on row-line 1 and ends on row-line 4. Item2 starts on row 1 and spans 2 rows.",
+            "grid-area: 1 / 2 / 5 / 6;|Grid: Starts on row-line 1 and column-line 2, and ends on row-line 5 and column line 6",
+            "grid-area: 2 / 1 / span 2 / span 3;|Grid: Starts on row-line 2 and column-line 1, and spans 2 rows and 3 columns",
+            "grid-area: myArea;|Grid: Item1 gets the name 'myArea' from the grid-template-areas of the container",
+            "grid-column:1/5; grid-row:1/4; justify-self:center; align-self:start;|Grid: Full options",
+            "flex:2; flex:1;|Flex: If the container is flex-flow:row, Item1 and Item 2 have different sizes",
+            "order:0; flex-grow:0; flex-shrink:1; flex-basis:fit-content align-self:center;|Flex: Full options"
+        };
+
     }
 }
 

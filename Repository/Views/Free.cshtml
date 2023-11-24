@@ -3,13 +3,8 @@
     Report report = Model;
     ReportView view = report.CurrentView;
 
-    var text = view.GetValue("text");
-
+    var text = view.GetBoolValue("use_view_name") ? view.Name : view.GetValue("text");
 }
-
-<!--
-<h1>@view.Name</h1>
--->
 
 @if (!string.IsNullOrEmpty(text))
 {

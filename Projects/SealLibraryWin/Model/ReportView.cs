@@ -1324,6 +1324,15 @@ namespace Seal.Model
 
 
         /// <summary>
+        /// Helper to return a list of CSS layout rows from the flex layout
+        /// </summary>
+        public string[] GetCSSLayoutRows(string cssLayout)
+        {
+            if (string.IsNullOrEmpty(cssLayout)) return new string[] { "" };
+            return cssLayout.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n').ToArray();
+        }
+
+        /// <summary>
         /// Helper to return a list of layout rows from the grid layout
         /// </summary>
         public string[] GetGridLayoutRows(string gridLayout)

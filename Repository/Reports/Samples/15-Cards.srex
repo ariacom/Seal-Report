@@ -125,173 +125,6 @@
       <Name>View</Name>
       <Views>
         <ReportView>
-          <GUID>0d1c81eb-ec35-4590-9772-fd0a21e4dffe</GUID>
-          <Name>Container</Name>
-          <Views>
-            <ReportView>
-              <GUID>c9e6255f-a435-4cea-aa0b-5f08b77a6ecc</GUID>
-              <Name>Quantity</Name>
-              <TemplateName>Card</TemplateName>
-              <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
-              <CustomTemplate />
-              <Parameters>
-                <Parameter>
-                  <Name>card_show_name</Name>
-                  <Value>False</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>card_title</Name>
-                  <Value>Quantity of the year</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>card_css</Name>
-                  <Value>width:200px; border: 1px solid #A1A1A1; margin:5px; background:#73FBFD;</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>title_css</Name>
-                  <Value>padding:5px;color:red;font-size: large</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>title_class</Name>
-                  <Value>text-right</Value>
-                </Parameter>
-              </Parameters>
-              <SortOrder>4</SortOrder>
-            </ReportView>
-            <ReportView>
-              <GUID>0ab3ad49-45be-46d0-8df7-dd9ed9f3bf12</GUID>
-              <Name>Quantity</Name>
-              <TemplateName>Card</TemplateName>
-              <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
-              <UseCustomTemplate>true</UseCustomTemplate>
-              <CustomTemplate />
-              <Parameters>
-                <Parameter>
-                  <Name>card_show_name</Name>
-                  <Value>False</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>card_css</Name>
-                  <Value>width:300px; margin:5px</Value>
-                </Parameter>
-              </Parameters>
-              <SortOrder>1</SortOrder>
-            </ReportView>
-            <ReportView>
-              <GUID>c80366c1-676b-4079-b48a-a2fdae484057</GUID>
-              <Name>Quantity</Name>
-              <TemplateName>Card</TemplateName>
-              <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
-              <CustomTemplate />
-              <Parameters>
-                <Parameter>
-                  <Name>card_title</Name>
-                  <Value>Title for this value</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>invert_name_title</Name>
-                  <Value>True</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>card_css</Name>
-                  <Value>width:200px; background:#F0F0F0; border: 1px solid #A1A1A1; margin:5px</Value>
-                </Parameter>
-              </Parameters>
-              <SortOrder>3</SortOrder>
-            </ReportView>
-            <ReportView>
-              <GUID>bb9c1298-3f3c-4254-9747-3d6431a21de5</GUID>
-              <Name>Quantity</Name>
-              <TemplateName>Card</TemplateName>
-              <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
-              <CustomTemplate />
-              <Parameters>
-                <Parameter>
-                  <Name>card_css</Name>
-                  <Value>width:300px; margin:5px</Value>
-                </Parameter>
-              </Parameters>
-              <SortOrder>2</SortOrder>
-            </ReportView>
-            <ReportView>
-              <GUID>1851ecfc-c85e-4a66-b0b8-d6216c4f5c3f</GUID>
-              <Name>Employees 3 cards per line</Name>
-              <TemplateName>Card</TemplateName>
-              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
-              <UseModelName>false</UseModelName>
-              <CustomTemplate />
-              <Parameters>
-                <Parameter>
-                  <Name>container_css</Name>
-                  <Value>display:flex; flex-wrap: wrap; justify-content:left;width:1000px;</Value>
-                </Parameter>
-              </Parameters>
-              <SortOrder>5</SortOrder>
-            </ReportView>
-            <ReportView>
-              <GUID>48cd1511-08f2-4ef9-ae35-e7bb1d16afd9</GUID>
-              <Name>Employees 1 row vertical</Name>
-              <TemplateName>Card</TemplateName>
-              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
-              <UseModelName>false</UseModelName>
-              <CustomTemplate />
-              <Parameters>
-                <Parameter>
-                  <Name>card_title</Name>
-                  <Value>First customer</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>card_rows</Name>
-                  <Value>1</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>container_css</Name>
-                  <Value>display:flex;flex-direction: column;</Value>
-                </Parameter>
-              </Parameters>
-              <SortOrder>6</SortOrder>
-            </ReportView>
-            <ReportView>
-              <GUID>172d943d-7a30-4701-8165-ee17fcb15424</GUID>
-              <Name>Employees 2 rows 1 title column</Name>
-              <TemplateName>Card</TemplateName>
-              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
-              <UseModelName>false</UseModelName>
-              <CustomTemplate />
-              <Parameters>
-                <Parameter>
-                  <Name>title_column</Name>
-                  <Value>1</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>invert_name_title</Name>
-                  <Value>True</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>card_rows</Name>
-                  <Value>2</Value>
-                </Parameter>
-                <Parameter>
-                  <Name>container_css</Name>
-                  <Value>display:flex; flex-wrap:wrap; justify-left:center;width:650px</Value>
-                </Parameter>
-              </Parameters>
-              <SortOrder>7</SortOrder>
-            </ReportView>
-          </Views>
-          <TemplateName>Container</TemplateName>
-          <Parameters>
-            <Parameter>
-              <Name>grid_layout</Name>
-              <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;
-col-sm-12;
-col-sm-12;
-col-sm-12;</Value>
-            </Parameter>
-          </Parameters>
-          <SortOrder>4</SortOrder>
-        </ReportView>
-        <ReportView>
           <GUID>39b246b3-04f6-42d0-b8c5-1944f99fae3b</GUID>
           <Name>Title</Name>
           <TemplateName>Free</TemplateName>
@@ -313,7 +146,7 @@ col-sm-12;</Value>
         </ReportView>
         <ReportView>
           <GUID>fc0084b8-39b6-4a2c-bb50-8d015415aa78</GUID>
-          <Name>Container2</Name>
+          <Name>Container</Name>
           <Views>
             <ReportView>
               <GUID>dbaf757f-83d7-4210-bd2f-585f17d73bac</GUID>
@@ -454,6 +287,184 @@ col-sm-12;</Value>
           <UseCustomTemplate>true</UseCustomTemplate>
           <CustomTemplate>&lt;hr&gt;</CustomTemplate>
           <SortOrder>3</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>c710ce65-f4b4-48c3-9b6c-779c64495a72</GUID>
+          <Name>Container Grid Flex</Name>
+          <Views>
+            <ReportView>
+              <GUID>1851ecfc-c85e-4a66-b0b8-d6216c4f5c3f</GUID>
+              <Name>Employees 3 cards per line</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
+              <UseModelName>false</UseModelName>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>container_css</Name>
+                  <Value>display:grid;
+grid-template-columns: 1fr 1fr 1fr;
+width:900px;</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>48cd1511-08f2-4ef9-ae35-e7bb1d16afd9</GUID>
+              <Name>Employees 1 row vertical</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
+              <UseModelName>false</UseModelName>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>card_title</Name>
+                  <Value>First customer</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>card_rows</Name>
+                  <Value>1</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>container_css</Name>
+                  <Value>display:flex;
+flex-direction: column;</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>172d943d-7a30-4701-8165-ee17fcb15424</GUID>
+              <Name>Employees 2 rows 1 title column</Name>
+              <TemplateName>Card</TemplateName>
+              <ModelGUID>7f847381-8ff4-47af-9f0c-da45bf732d63</ModelGUID>
+              <UseModelName>false</UseModelName>
+              <CustomTemplate />
+              <Parameters>
+                <Parameter>
+                  <Name>title_column</Name>
+                  <Value>1</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>invert_name_title</Name>
+                  <Value>True</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>card_rows</Name>
+                  <Value>2</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>container_css</Name>
+                  <Value>display:grid;
+grid-template-columns: 1fr 1fr; 
+width:600px;</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>73488dc0-e251-4b02-acda-68f2d2927d32</GUID>
+              <Name>Container Grid Flex</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c80366c1-676b-4079-b48a-a2fdae484057</GUID>
+                  <Name>Quantity</Name>
+                  <TemplateName>Card</TemplateName>
+                  <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+                  <CustomTemplate />
+                  <Parameters>
+                    <Parameter>
+                      <Name>card_title</Name>
+                      <Value>Title for this value</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>invert_name_title</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>card_css</Name>
+                      <Value>width:200px; background:#F0F0F0; border: 1px solid #A1A1A1; margin:5px</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>0ab3ad49-45be-46d0-8df7-dd9ed9f3bf12</GUID>
+                  <Name>Quantity</Name>
+                  <TemplateName>Card</TemplateName>
+                  <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate />
+                  <Parameters>
+                    <Parameter>
+                      <Name>card_show_name</Name>
+                      <Value>False</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>card_css</Name>
+                      <Value>width:300px; margin:5px</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>c9e6255f-a435-4cea-aa0b-5f08b77a6ecc</GUID>
+                  <Name>Quantity</Name>
+                  <TemplateName>Card</TemplateName>
+                  <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+                  <CustomTemplate />
+                  <Parameters>
+                    <Parameter>
+                      <Name>card_show_name</Name>
+                      <Value>False</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>card_title</Name>
+                      <Value>Quantity of the year</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>card_css</Name>
+                      <Value>width:200px; border: 1px solid #A1A1A1; margin:5px; background:#73FBFD;</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>title_css</Name>
+                      <Value>padding:5px;color:red;font-size: large</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>title_class</Name>
+                      <Value>text-right</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>bb9c1298-3f3c-4254-9747-3d6431a21de5</GUID>
+                  <Name>Quantity</Name>
+                  <TemplateName>Card</TemplateName>
+                  <ModelGUID>c036954e-485f-4c80-af76-83238f72ec6e</ModelGUID>
+                  <CustomTemplate />
+                  <Parameters>
+                    <Parameter>
+                      <Name>card_css</Name>
+                      <Value>width:300px; margin:5px</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container Grid Flex</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>container_css</Name>
+                  <Value>display:flex;
+flex-flow:row wrap;</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container Grid Flex</TemplateName>
+          <SortOrder>4</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

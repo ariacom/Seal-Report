@@ -173,7 +173,9 @@ namespace Seal.Helpers
 
         static public string AddAttribute(string name, string value)
         {
-            if (!string.IsNullOrWhiteSpace(value)) return string.Format("{0}='{1}'", name, value);
+            name = name.Replace("\r\n", "_").Replace("\r", "_").Replace("\n", "_");
+            value = value.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ").Replace("'", "\"");
+            if (!string.IsNullOrWhiteSpace(value)) return $"{name}='{value}'";
             return "";
         }
 

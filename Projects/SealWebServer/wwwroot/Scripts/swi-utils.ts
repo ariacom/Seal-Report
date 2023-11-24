@@ -120,7 +120,7 @@ module SWIUtil {
         else if (aggr == 2) return SWIUtil.tr2("Maximum of");
         else if (aggr == 3) return SWIUtil.tr2("Average of");
         else if (aggr == 4) return SWIUtil.tr2("Count of");
-        else if (aggr == 4) return SWIUtil.tr2("Count distinct of");
+        else if (aggr == 5) return SWIUtil.tr2("Count distinct of");
         return "";
     }
 
