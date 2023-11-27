@@ -303,7 +303,7 @@ namespace SealWebServer.Controllers
         void checkRecentFiles()
         {
             //Clean reports
-            WebUser.Profile.RecentReports.RemoveAll(i => !System.IO.File.Exists(getFullPath(i.Path)));
+            WebUser.Profile.RecentReports.RemoveAll(i => i == null || !System.IO.File.Exists(getFullPath(i.Path)));
         }
 
         /// <summary>
