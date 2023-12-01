@@ -221,7 +221,7 @@ grid-column: 1 / span 2;</Value>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <SortOrder>1</SortOrder>
+              <SortOrder>2</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>ee8f6729-82e8-42c2-807f-802acea878af</GUID>
@@ -419,7 +419,181 @@ grid-area:table1</Value>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <SortOrder>2</SortOrder>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>906e56a7-08d4-402f-9101-5488ecaa4e50</GUID>
+              <Name>flew-row</Name>
+              <Views>
+                <ReportView>
+                  <GUID>7beeb849-ed89-40f8-a5d0-441d1927bdfe</GUID>
+                  <Name>Container Grid Flex</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>56516b86-db0c-40f6-84ff-6b61b5038413</GUID>
+                      <Name>Header Center</Name>
+                      <TemplateName>Free</TemplateName>
+                      <CustomTemplate />
+                      <Parameters>
+                        <Parameter>
+                          <Name>use_view_name</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>ba4f4753-8db6-4069-be28-d0d39cf41928</GUID>
+                      <Name>Text 1 Span 2</Name>
+                      <TemplateName>Free</TemplateName>
+                      <CustomTemplate />
+                      <Parameters>
+                        <Parameter>
+                          <Name>use_view_name</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>2</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>3d51dd3c-a50e-4d47-bf52-b70a21e4ef2f</GUID>
+                      <Name>Container Red Border</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>09fe9333-66ea-4194-8898-9d6c83c7ab97</GUID>
+                          <Name>Text 6</Name>
+                          <TemplateName>Free</TemplateName>
+                          <CustomTemplate />
+                          <Parameters>
+                            <Parameter>
+                              <Name>use_view_name</Name>
+                              <Value>True</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>text</Name>
+                              <Value>Text 6</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b60b9647-2aca-48e4-8d8d-dd66b1d89da0</GUID>
+                          <Name>Text 7</Name>
+                          <TemplateName>Free</TemplateName>
+                          <CustomTemplate />
+                          <Parameters>
+                            <Parameter>
+                              <Name>use_view_name</Name>
+                              <Value>True</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>text</Name>
+                              <Value>Text 6</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container Grid Flex</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>container_css</Name>
+                          <Value>display:grid; grid-template-columns:1fr;border: solid red 2px</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>7</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>c178fc92-a071-4063-981f-433f0d7ae0f3</GUID>
+                      <Name>model table</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>e9473d2a-8c0a-47f6-a0aa-57f09c342486</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Model</TemplateName>
+                      <ModelGUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</ModelGUID>
+                      <SortOrder>8</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>14f06bea-3a09-4798-94ff-ef991f4846a4</GUID>
+                      <Name>Text 2</Name>
+                      <TemplateName>Free</TemplateName>
+                      <CustomTemplate />
+                      <Parameters>
+                        <Parameter>
+                          <Name>use_view_name</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>3</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>7f8c725a-ebb8-45ad-8e43-9d33cc01c34b</GUID>
+                      <Name>Text 5</Name>
+                      <TemplateName>Free</TemplateName>
+                      <UseCustomTemplate>true</UseCustomTemplate>
+                      <CustomTemplate />
+                      <Parameters>
+                        <Parameter>
+                          <Name>use_view_name</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>6</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>0ac59624-f482-436e-a2f6-0054669c8e87</GUID>
+                      <Name>Text 4</Name>
+                      <TemplateName>Free</TemplateName>
+                      <CustomTemplate />
+                      <Parameters>
+                        <Parameter>
+                          <Name>use_view_name</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>5</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>8ec11d01-8ce8-426f-aea8-ba9acd1e77e5</GUID>
+                      <Name>Text 3</Name>
+                      <TemplateName>Free</TemplateName>
+                      <CustomTemplate />
+                      <Parameters>
+                        <Parameter>
+                          <Name>use_view_name</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>4</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Container Grid Flex</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>items_css</Name>
+                      <Value>width:100%;height:100px;background-color:lightgrey;
+width:50%;
+width:50%;
+width:50%;
+width:25%;
+width:25%;
+width:50%;
+width:50%;
+
+
+</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>1</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>

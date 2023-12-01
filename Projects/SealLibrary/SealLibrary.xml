@@ -4081,6 +4081,16 @@
             Custom Tag the can be used at execution time to store any object
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportModel.SerializedTag">
+            <summary>
+            Custom string serialized (saved with the report definition)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.SerializedTag2">
+            <summary>
+            Custom string serialized (saved with the report definition)
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportModel.InitReferences">
             <summary>
             Init all model references: Elements, Restrictions, etc.

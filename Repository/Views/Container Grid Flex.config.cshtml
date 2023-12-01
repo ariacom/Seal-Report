@@ -13,9 +13,9 @@
     //order:0; flex-grow:0; flex-shrink:1; flex-basis:fit-content; align-self:center
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "container_css", TextValue = "display:grid;\r\ngrid-template-columns:1fr;", DisplayName = "Container CSS Style", Description = "CSS style attribute of the container.", TextSamples = ReportViewTemplate.GridFlexContainerParameterSample });
+    Template.Parameters.Add(new Parameter() { Name = "container_css", TextValue = "display:flex;\r\nflex-flow:row wrap;", DisplayName = "Container CSS Style", Description = "CSS style attribute of the container.", TextSamples = ReportViewTemplate.GridFlexContainerParameterSample });
     Template.Parameters.Add(new Parameter() { Name = "container_class", DisplayName = "Container CSS Class", Description = "CSS class attribute of the container.", Enums = new string[] { "text-center", "bg-success", "bg-danger" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "default_item_css", Value = "", DisplayName = "Default Items CSS style", Description = "Default CSS style of the items. A style can be overridden using 'Flex items CSS Styles'.", Enums = new string[] { "order:0; flex-grow:0; flex-shrink:1; flex-basis:fit-content; align-self:center;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "default_item_css", Value = "width:100%;", DisplayName = "Default Items CSS style", Description = "Default CSS style of the items. A style can be overridden using 'Flex items CSS Styles'.", Enums = new string[] { "order:0; flex-grow:0; flex-shrink:1; flex-basis:fit-content; align-self:center;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "items_css", Type = ViewParameterType.Text, TextValue = "", DisplayName = "Items CSS Styles", Description = "CSS styles apply to the items. One CSS style per line (line 1 is for item 1, line 2 for item 2, etc.).", TextSamples = ReportViewTemplate.GridFlexItemParameterSample});
     Template.Parameters.Add(new Parameter()
             {

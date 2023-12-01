@@ -267,25 +267,26 @@ namespace Seal.Model
         }
 
         public static string[] GridFlexContainerParameterSample = new string[] {
+            "display:flex;\r\nflex-flow:row wrap;|Flex row in a single line with wrapping.",
+            "display:flex;\r\nflex-flow:column;width:50%;|Flex column in a single column of 50%",
+            "display:flex;\r\nflex-flow:row nowrap;\r\njustify-content:flex-start;\r\nalign-items:stretch;\r\nalign-content:stretch;|Flex: Full options",
             "display:grid;\r\ngrid-template-columns:1fr 1fr 1fr;|Grid with 3 columns with the same size",
             "display:grid;\r\ngrid-template-columns:auto auto;|Grid with 2 columns with automatic size",
             "display:grid;\r\ngrid-template-columns:40% 30% 30%;|Grid with 3 columns with specific sizes",
             "display:grid;\r\ngrid-template-areas:'myArea myArea .';|Grid: Areas definition for a 3 columns grid (requires the configuartion of 'grid-area' in the items)",
             "display:grid;\r\ngrid-template-columns:1fr\r\njustify-content:center;\r\nalign-content:center;|Grid: Full options",
-            "display:flex;\r\nflex-flow:row wrap;|Flex in a single line with wrapping",
-            "display:flex;\r\nflex-flow:column;width:50%;|Flex in a single column of 50%",
-            "display:flex;\r\nflex-flow:row nowrap;\r\njustify-content:flex-start;\r\nalign-items:stretch;\r\nalign-content:stretch;|Flex: Full options", 
         };
 
         public static string[] GridFlexItemParameterSample = new string[] {
-            "grid-column: 1 / 5;\r\ngrid-column: 1 / span 3;|Grid: Item1 starts on column 1 and ends before column 5. Item2 starts on column 1 and spans 3 columns.",
-            "grid-row: 1 / 4;\r\ngrid-row: 1 / span 2;|Grid: Item1 starts on row-line 1 and ends on row-line 4. Item2 starts on row 1 and spans 2 rows.",
+            "width:50%;\r\nwidth:50%;|Flex: If container is flex-flow:row, the view1 and view2 have the same size on the first row",
+            "flex:2;\r\nflex:1;\r\nflex:1;|Flex: If container is flex-flow:row, the view1, view2 and view3 have different sizes on the first row",
+            "order:0; flex-grow:0; flex-shrink:1; flex-basis:fit-content align-self:center;|Flex: Full options",
+            "grid-column: 1 / 5;\r\ngrid-column: 1 / span 3;|Grid: Item1 starts on column 1 and ends before column 5. Item2 starts on column 1 and spans 3 columns",
+            "grid-row: 1 / 4;\r\ngrid-row: 1 / span 2;|Grid: Item1 starts on row-line 1 and ends on row-line 4. Item2 starts on row 1 and spans 2 rows",
             "grid-area: 1 / 2 / 5 / 6;|Grid: Starts on row-line 1 and column-line 2, and ends on row-line 5 and column line 6",
             "grid-area: 2 / 1 / span 2 / span 3;|Grid: Starts on row-line 2 and column-line 1, and spans 2 rows and 3 columns",
             "grid-area: myArea;|Grid: Item1 gets the name 'myArea' from the grid-template-areas of the container",
             "grid-column:1/5; grid-row:1/4; justify-self:center; align-self:start;|Grid: Full options",
-            "flex:2; flex:1;|Flex: If the container is flex-flow:row, Item1 and Item 2 have different sizes",
-            "order:0; flex-grow:0; flex-shrink:1; flex-basis:fit-content align-self:center;|Flex: Full options"
         };
 
     }

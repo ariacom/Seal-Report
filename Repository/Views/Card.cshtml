@@ -17,8 +17,6 @@
 
     //Build the list of cards
     var cards = new List<(string title, string name, string value)>();
-    //    if (view.GetBoolValue("card_by_column"))
-    //    {
     for (int row = table.BodyStartRow; row < rowCount; row++)
     {
         if (titleColumn >= 0 && titleColumn < columnCount) title = table[row, titleColumn].HTMLValue;
@@ -32,18 +30,6 @@
             cards.Add((title, name.HTMLValue, value.HTMLValue));
         }
     }
-            /*    }
-        else if (table.ColumnCount > 1)
-    {
-    //One card by row
-    ResultCell name = table[0, 1];
-    @for (int row = table.BodyStartRow; row < table.BodyEndRow; row++)
-        {
-        ResultCell name2 = table[row, 0];
-        ResultCell value = table[row, 1];
-        cards.Add((string.IsNullOrEmpty(title) ? name.HTMLValue : title, name2.HTMLValue, value.HTMLValue));
-    }
-        }*/
 }
 
 <div @Raw(view.AddAttribute("class", "container_class")) @Raw(view.AddAttribute("style", "container_css"))>
