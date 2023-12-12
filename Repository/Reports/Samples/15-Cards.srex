@@ -457,7 +457,7 @@ width:600px;</Value>
                 <Parameter>
                   <Name>container_css</Name>
                   <Value>display:flex;
-flex-flow:row wrap;</Value>
+flex-flow:row nowrap;</Value>
                 </Parameter>
               </Parameters>
               <SortOrder>1</SortOrder>

@@ -110,7 +110,7 @@
     }
 }
 </Script>
-      <SortOrder>2</SortOrder>
+      <SortOrder>5</SortOrder>
     </ReportTask>
     <ReportTask>
       <GUID>2e78c122-1acd-4f63-a9dc-a68c4162648f</GUID>
@@ -126,28 +126,16 @@
     task.LogMessage($"Executing '{task.Name}'");
     
     //Tag2 has been set in the Navigation Script
-    var link = report.Tag2 as NavigationLink;
-    if (link != null) {    
+    var parameters = report.Tag2 as Dictionary&lt;string, string&gt;;
+    if (parameters != null) {    
         task.LogMessage("***** Task executed from the button ! ****\r\n");
         report.Tag2 = null;
     
-        //Parsing the link parameters or the HttpRequest
-        var parameters = "Parameters and Request:\r\n";
-        if (link.Parameters != null) {
-            foreach (var k in  link.Parameters.AllKeys) {
-                parameters += string.Format("Parameter {0}={1}\r\n", k, link.Parameters[k]);
-            }
+        foreach (var k in  parameters.Keys) {
+            task.LogMessage("Parameter {0}={1}\r\n", k, parameters[k]);
         }
-        
-        if (link.Request != null) {
-            foreach (var k in  link.Request.Form.Keys) {
-                parameters += string.Format("Form {0}={1}\r\n", k, link.Request.Form[k]);
-            }
-            parameters += string.Format("{0} File(s)\r\n", link.Request.Form.Files.Count);
-        }
-        task.LogMessage($"Parameters in the Task:\r\n{parameters}");
      }
-      report.ExecutionView.SetParameter("messages_mode",link != null ? "enabledshown" : "enabled");
+      report.ExecutionView.SetParameter("messages_mode",parameters != null ? "enabledshown" : "enabled");
  }
 
 
@@ -175,7 +163,7 @@
     }
 }
 </Script>
-      <SortOrder>3</SortOrder>
+      <SortOrder>2</SortOrder>
     </ReportTask>
     <ReportTask>
       <GUID>be542359-b592-457b-91f0-c838151c330e</GUID>
@@ -197,7 +185,7 @@
     }
 }
 </Script>
-      <SortOrder>5</SortOrder>
+      <SortOrder>4</SortOrder>
     </ReportTask>
     <ReportTask>
       <GUID>a2319920-f01e-44d9-a46e-4ff2f0773263</GUID>
@@ -219,7 +207,7 @@
     }
 }
 </Script>
-      <SortOrder>4</SortOrder>
+      <SortOrder>3</SortOrder>
     </ReportTask>
   </Tasks>
   <CommonScripts>
@@ -648,6 +636,14 @@ $(document).ready(function () {
                   <Name>button_text</Name>
                   <Value>Execute tasks</Value>
                 </Parameter>
+                <Parameter>
+                  <Name>restrictions_force_exec</Name>
+                  <Value>True</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>form_css</Name>
+                  <Value>padding-top:5px; width:250px;float:right;</Value>
+                </Parameter>
               </Parameters>
               <SortOrder>2</SortOrder>
             </ReportView>
@@ -656,7 +652,7 @@ $(document).ready(function () {
           <Parameters>
             <Parameter>
               <Name>grid_layout</Name>
-              <Value>col-sm-6;col-sm-6;</Value>
+              <Value>col-sm-6;col-sm-6 text;</Value>
             </Parameter>
           </Parameters>
           <SortOrder>1</SortOrder>
@@ -682,9 +678,6 @@ $(document).ready(function () {
     NavigationLink link = Model;
     Report report = link.Report;
     
-    //Save the parameters in the report.Tag
-    report.Tag = link.Parameters;
-   
     if (link.Text == "download") {    
         //Download button -&gt; result must be a file
         var helper = new TaskDatabaseHelper();
@@ -711,8 +704,14 @@ $(document).ready(function () {
         link.ScriptResult = string.Format("&lt;b&gt;This is a custom HTML built in the 'Report Navigation Script' from the server at {0}.&lt;/b&gt;&lt;hr&gt;", DateTime.Now);
     }
     else if (link.Text == "task") {    
-        //save NavigationLink object in a Tag2 and use it in a Task when the report is executed again
-        report.Tag2 = link;
+        //save Parameter values in a Tag2 and use it in a Task when the report is executed again
+        var parameters = new Dictionary&lt;string, string&gt;(); 
+        if (link.Parameters != null) {
+            foreach (var k in  link.Parameters.AllKeys) {
+                parameters.Add(k, link.Parameters[k]);
+            }
+        }
+        report.Tag2 = parameters;                
     }
 }
 </NavigationScript>
