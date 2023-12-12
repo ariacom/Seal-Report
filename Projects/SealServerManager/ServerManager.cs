@@ -61,18 +61,19 @@ namespace Seal
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
             PropertyGridHelper.AddResetMenu(mainPropertyGrid);
 
-            sourceHelper = new TreeViewEditorHelper() { 
-                entityHandler = this, 
+            sourceHelper = new TreeViewEditorHelper()
+            {
+                entityHandler = this,
                 resetDisplayOrderToolStripMenuItem = resetDisplayOrderToolStripMenuItem,
-                sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, 
-                sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, 
-                addFromToolStripMenuItem = addFromToolStripMenuItem, 
-                addToolStripMenuItem = addToolStripMenuItem, 
-                removeToolStripMenuItem = removeToolStripMenuItem, 
-                copyToolStripMenuItem = copyToolStripMenuItem, 
-                removeRootToolStripMenuItem = removeRootToolStripMenuItem, 
-                treeContextMenuStrip = treeContextMenuStrip, 
-                mainTreeView = mainTreeView 
+                sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem,
+                sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem,
+                addFromToolStripMenuItem = addFromToolStripMenuItem,
+                addToolStripMenuItem = addToolStripMenuItem,
+                removeToolStripMenuItem = removeToolStripMenuItem,
+                copyToolStripMenuItem = copyToolStripMenuItem,
+                removeRootToolStripMenuItem = removeRootToolStripMenuItem,
+                treeContextMenuStrip = treeContextMenuStrip,
+                mainTreeView = mainTreeView
             };
             toolStripHelper = new ToolStripEditorHelper() { MainToolStrip = mainToolStrip, MainPropertyGrid = mainPropertyGrid, EntityHandler = this, MainTreeView = mainTreeView };
             toolsHelper = new ToolsHelper() { EntityHandler = this };

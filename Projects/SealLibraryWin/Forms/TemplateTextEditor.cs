@@ -594,6 +594,9 @@ namespace Seal.Forms
     else if (link.Text == ""html"") {
         //Sample 2 to return a custom html
         link.ScriptResult = string.Format(""<b> This is a custom HTML built in the 'Report Navigation Script' from the server at {0}.</b><hr>"", DateTime.Now);
+
+        //or save NavigationLink object in a Tag and use it in a Task if the report is executed again
+        //report.Tag = link;
     }
 
     //Parsing the link parameters or the HttpRequest

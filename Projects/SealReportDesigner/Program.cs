@@ -71,6 +71,8 @@ namespace Seal
             {
                 Application.Run(new ReportDesigner());
             }
+            Application.ExitThread();
+            Environment.Exit(0);
         }
 
         private static void ExceptionHandler(object sender, ThreadExceptionEventArgs t)

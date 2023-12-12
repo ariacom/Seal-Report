@@ -1,14 +1,45 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CurrentViewGUID>efe2ad7a-1c7d-4caa-af0e-a9a1e5b85124</CurrentViewGUID>
   <GUID>c4aeb163-eb1b-4a8f-a6d0-790315140193</GUID>
   <ViewGUID>efe2ad7a-1c7d-4caa-af0e-a9a1e5b85124</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>1d58eba0-2029-4b8e-9551-05253047c94a</GUID>
+      <Type>Text</Type>
+      <DisplayName>Tasks to execute</DisplayName>
+      <EnumGUID>59c75e24-3255-4e3f-b79c-24992f23803f</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>59c75e24-3255-4e3f-b79c-24992f23803f</EnumGUIDEL>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>59c75e24-3255-4e3f-b79c-24992f23803f</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
   <Sources>
     <ReportSource>
       <GUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</GUID>
       <Name>Northwind (Repository)</Name>
       <ConnectionGUID>1</ConnectionGUID>
-      <MetaData />
+      <MetaData>
+        <Enums>
+          <MetaEnum>
+            <GUID>59c75e24-3255-4e3f-b79c-24992f23803f</GUID>
+            <Name>Tasks</Name>
+            <Values>
+              <MetaEV>
+                <Id>Task1</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Task2</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Task3</Id>
+              </MetaEV>
+            </Values>
+          </MetaEnum>
+        </Enums>
+      </MetaData>
       <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
     </ReportSource>
   </Sources>
@@ -79,7 +110,116 @@
     }
 }
 </Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>2e78c122-1acd-4f63-a9dc-a68c4162648f</GUID>
+      <Name>Task executed from the button</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    task.LogMessage($"Executing '{task.Name}'");
+    
+    //Tag2 has been set in the Navigation Script
+    var link = report.Tag2 as NavigationLink;
+    if (link != null) {    
+        task.LogMessage("***** Task executed from the button ! ****\r\n");
+        report.Tag2 = null;
+    
+        //Parsing the link parameters or the HttpRequest
+        var parameters = "Parameters and Request:\r\n";
+        if (link.Parameters != null) {
+            foreach (var k in  link.Parameters.AllKeys) {
+                parameters += string.Format("Parameter {0}={1}\r\n", k, link.Parameters[k]);
+            }
+        }
+        
+        if (link.Request != null) {
+            foreach (var k in  link.Request.Form.Keys) {
+                parameters += string.Format("Form {0}={1}\r\n", k, link.Request.Form[k]);
+            }
+            parameters += string.Format("{0} File(s)\r\n", link.Request.Form.Files.Count);
+        }
+        task.LogMessage($"Parameters in the Task:\r\n{parameters}");
+     }
+      report.ExecutionView.SetParameter("messages_mode",link != null ? "enabledshown" : "enabled");
+ }
+
+
+
+</Script>
       <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>78871dbe-cf14-4fd6-96bd-fec50dd7b914</GUID>
+      <Name>Task1</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID>
+      <Script>@using System.Data
+@using System.Data.Common
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    //Check the tasks input value
+    var tasks = report.InputValues[0];
+    if (tasks.EnumValues.Contains(task.Name)) {
+        report.ExecutionView.SetParameter("messages_mode", "enabledshown");
+        task.LogMessage($"***** Task {task.Name} executed from the button ! ****\r\n");
+    }
+}
+</Script>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>be542359-b592-457b-91f0-c838151c330e</GUID>
+      <Name>Task3</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID>
+      <Script>@using System.Data
+@using System.Data.Common
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    //Check the tasks input value
+    var tasks = report.InputValues[0];
+    if (tasks.EnumValues.Contains(task.Name)) {
+        report.ExecutionView.SetParameter("messages_mode", "enabledshown");
+        task.LogMessage($"***** Task {task.Name} executed from the button ! ****\r\n");
+    }
+}
+</Script>
+      <SortOrder>5</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>a2319920-f01e-44d9-a46e-4ff2f0773263</GUID>
+      <Name>Task2</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>8b56277a-7f4c-4ccb-835e-48c7ba24903b</SourceGUID>
+      <Script>@using System.Data
+@using System.Data.Common
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    //Check the tasks input value
+    var tasks = report.InputValues[0];
+    if (tasks.EnumValues.Contains(task.Name)) {
+        report.ExecutionView.SetParameter("messages_mode", "enabledshown");
+        task.LogMessage($"***** Task {task.Name} executed from the button ! ****\r\n");
+    }
+}
+</Script>
+      <SortOrder>4</SortOrder>
     </ReportTask>
   </Tasks>
   <CommonScripts>
@@ -368,8 +508,10 @@
     &lt;/div&gt;
 
     &lt;button type="button" id="custom_download_button" class="btn btn-warning download-control"&gt;@report.Translate("Download")&lt;/button&gt;
+&lt;hr&gt;
     &lt;button type="button" id="custom_html_button" class="btn btn-warning"&gt;Get HTML from Server&lt;/button&gt;
-    &lt;br&gt;
+    &lt;button type="button" id="task_button" class="btn btn-warning"&gt;Execute the Task&lt;/button&gt;
+&lt;hr&gt;
     &lt;br&gt;&lt;button type="button" id="custom_report_button" class="btn btn-warning"&gt;Run 'Search Orders'&lt;/button&gt; (Works only with the Web Report Server!)
 &lt;hr&gt;
 &lt;/div&gt;
@@ -416,6 +558,9 @@ $(document).ready(function () {
             if (_urlPrefix != "") { //Web Report Server
                 $.post(_urlPrefix + "ActionNavigate", $("#header_form").serialize()).done(function (data) {
                     $("#html_div").html(data);
+                    //or you may want to execute the report
+                    //executeReport();
+                    
                 });
             }
             else { //Report Designer
@@ -424,6 +569,24 @@ $(document).ready(function () {
             }
         });        
         
+        
+        //Task button
+        $("#task_button").unbind("click").bind("click", function () {
+            $("#navigation_parameters").val($("#download_form").serialize());  //Form parameters
+            $("#navigation_id").val('@report.GetReportNavigationScriptLink("task")'); //Link for custom content
+            
+            if (_urlPrefix != "") { //Web Report Server
+                $.post(_urlPrefix + "ActionNavigate", $("#header_form").serialize()).done(function (data) {
+                    executeReport();
+                    
+                });
+            }
+            else { //Report Designer
+                window.chrome.webview.hostObjects.sync.dotnet.Navigate($("#navigation_id").val(), $("#navigation_parameters").val());
+                     executeReport();
+           }
+        });        
+
         //Report button
         $("#custom_report_button").unbind("click").bind("click", function () {
             postForm(_urlPrefix + "SWExecuteReport", "_blank", { path:"\\Search - Orders.srex"});
@@ -444,22 +607,6 @@ $(document).ready(function () {
           <SortOrder>2</SortOrder>
         </ReportView>
         <ReportView>
-          <GUID>970b6953-60c7-44f7-85c9-ab92dd9b1057</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;Custom 'Form Start' and 'Form End' views to define the input fields and button, plus event handlers.&lt;/li&gt;
-&lt;li&gt;'Report Navigation Script' in General to process the navigation.&lt;/li&gt;
-&lt;li&gt;'Set Checkbox' task to converter the employee ID into check box.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
-        </ReportView>
-        <ReportView>
           <GUID>033d9973-6e93-4f48-9bbc-a739490b395a</GUID>
           <Name>Form End</Name>
           <TemplateName>Free</TemplateName>
@@ -467,6 +614,52 @@ $(document).ready(function () {
           <CustomTemplate>&lt;/form&gt;
 </CustomTemplate>
           <SortOrder>4</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>f50fa2bf-75a7-4c14-9ceb-7c8ceb65a13f</GUID>
+          <Name>Container</Name>
+          <Views>
+            <ReportView>
+              <GUID>970b6953-60c7-44f7-85c9-ab92dd9b1057</GUID>
+              <Name>Highlights</Name>
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;Custom 'Form Start' and 'Form End' views to define the input fields and button, plus event handlers.&lt;/li&gt;
+&lt;li&gt;'Report Navigation Script' in General to process the navigation.&lt;/li&gt;
+&lt;li&gt;'Set Checkbox' task to converter the employee ID into check box.&lt;/li&gt;
+&lt;li&gt;A Restriction View to execute Tasks selected from a dedicated Input Value.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>62adcd4f-fa31-4cbb-9bd6-794443ae853b</GUID>
+              <Name>Restrictions</Name>
+              <TemplateName>Restrictions</TemplateName>
+              <RestrictionsGUID>
+                <string>1d58eba0-2029-4b8e-9551-05253047c94a</string>
+              </RestrictionsGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>button_text</Name>
+                  <Value>Execute tasks</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-6;col-sm-6;</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
@@ -516,6 +709,10 @@ $(document).ready(function () {
     else if (link.Text == "html") {    
         //HTML button -&gt; result is a string
         link.ScriptResult = string.Format("&lt;b&gt;This is a custom HTML built in the 'Report Navigation Script' from the server at {0}.&lt;/b&gt;&lt;hr&gt;", DateTime.Now);
+    }
+    else if (link.Text == "task") {    
+        //save NavigationLink object in a Tag2 and use it in a Task when the report is executed again
+        report.Tag2 = link;
     }
 }
 </NavigationScript>
