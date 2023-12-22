@@ -767,7 +767,7 @@ namespace Seal.Model
                     _executionModels = new List<ReportModel>();
                     if (ExecutionView.GetBoolValue(Parameter.ForceModelsLoad))
                     {
-                        _executionModels = Models.ToList();
+                        _executionModels = Models.Where(i => i.Elements.Count > 0).ToList();
                     }
                     else
                     {

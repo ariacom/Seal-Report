@@ -3,15 +3,15 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<DefineConstants>$(DefineConstants);RAZOR4</DefineConstants>
 		<DefineConstants>$(DefineConstants);NO_APPDOMAIN;NO_CODEDOM;NO_CONFIGURATION;NETCORE</DefineConstants>
-		<Version>6.8.0.0</Version>
-		<FileVersion>6.8.0.0</FileVersion>
-		<AssemblyVersion>6.8.0.0</AssemblyVersion>
+		<Version>7.0.0.0</Version>
+		<FileVersion>7.0.0.0</FileVersion>
+		<AssemblyVersion>7.0.0.0</AssemblyVersion>
 		<AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<RootNamespace>RazorEngine</RootNamespace>
 		<AssemblyName>RazorEngine.NetCore</AssemblyName>
-		<Authors>Connie Yau, HermanHo, Fouad Messaia,Zuliang Liu(China)</Authors>
-		<Description>Fork from https://github.com/hermanho/RazorEngine, But Fixed Bug that Razor string does not support @using and @inherits and @functions and @section, etc. </Description>
+		<Authors>Connie Yau, HermanHo, Fouad Messaia,Zuliang Liu(China), Ariacom</Authors>
+		<Description>Fork from https://github.com/hermanho/RazorEngine, But Fixed Bug that Razor string does not support @using and @inherits and @functions and @section, etc. Changes for Seal Report </Description>
 		<RepositoryType>git</RepositoryType>
 		<Copyright>RazorEngine Copyright © RazorEngine Project 2011-2018</Copyright>
 		<Company>RazorEngine</Company>

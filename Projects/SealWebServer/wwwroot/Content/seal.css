@@ -101,9 +101,10 @@ body {
     padding: 4px 12px;
     margin-left: 10px;
 }
-.external-navigation:hover {
-    background-color: darkgrey;
-}
+
+    .external-navigation:hover {
+        background-color: darkgrey;
+    }
 
 .disabled {
     pointer-events: none;
@@ -111,8 +112,8 @@ body {
 }
 
 .restriction_error {
-    color:red;
-    font-style:italic;
+    color: red;
+    font-style: italic;
     font-weight: bold;
 }
 
@@ -128,7 +129,7 @@ body {
 
 .cell-identifier-underline {
     color: #337ab7;
-	text-decoration: underline
+    text-decoration: underline
 }
 
 .cell-bold {
@@ -162,4 +163,12 @@ body {
 
 .text-right {
     text-align: right !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-left {
+    text-align: left !important;
 }

@@ -350,6 +350,20 @@ namespace Seal.Model
         Pie,
     };
 
+    public enum ScottPlotSerieDefinition
+    {
+        [Description("No Serie")]
+        None,
+        [Description("Scatter")]
+        Scatter,
+        [Description("Line")]
+        Line,
+        [Description("Bar")]
+        Bar,
+        [Description("Pie")]
+        Pie,
+    };
+
     public enum SerieSortType
     {
         [Description("No Sort")]

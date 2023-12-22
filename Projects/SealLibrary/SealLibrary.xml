@@ -3175,6 +3175,11 @@
             Definition of the serie for the element in the Chart JS chart
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportElement.ScottPlotSerie">
+            <summary>
+            Definition of the serie for the element in the Chart JS chart
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportElement.Nvd3Serie">
             <summary>
             Definition of the serie for the element in the NVD3 chart
@@ -3258,6 +3263,11 @@
         <member name="P:Seal.Model.ReportElement.CssStyleEl">
             <summary>
             CSS Styles applied to the cell values of the result HTML Table.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportElement.CssTitle">
+            <summary>
+            If True, the CSS Styles and Classes are also applied to the cell titles.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.ForceAggregate">
@@ -3769,6 +3779,11 @@
         <member name="P:Seal.Model.ReportModel.HasPlotlySerie">
             <summary>
             True if the model has a Plotly serie
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.HasChartScottPlotSerie">
+            <summary>
+            True if the model has a Chart ScottPlot serie
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.HasTotals">
@@ -7188,6 +7203,21 @@
         <member name="P:Seal.Model.ResultTable.Item(System.Int32,System.Int32)">
             <summary>
             Helper to access a ResultCell of the table
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultTable.HeaderLines">
+            <summary>
+            Return the header lines of the table
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultTable.BodyLines">
+            <summary>
+            Return the body lines of the table
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultTable.FooterLines">
+            <summary>
+            Return the footer lines of the table
             </summary>
         </member>
         <member name="M:Seal.Model.ResultTable.IsSubTotalRow(System.Int32)">

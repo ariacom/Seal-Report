@@ -134,8 +134,8 @@ var SWIGateway = /** @class */ (function () {
     SWIGateway.prototype.ExecuteReport = function (path, viewGUID, outputGUID) {
         postForm(_server + "SWExecuteReport", "_blank", { path: path, viewGUID: viewGUID, outputGUID: outputGUID });
     };
-    SWIGateway.prototype.ExecuteReportDefinition = function (report, viewGUID, outputGUID) {
-        postForm(_server + "SWExecuteReportDefinition", "_blank", { report: report, viewGUID: viewGUID, outputGUID: outputGUID });
+    SWIGateway.prototype.ExecuteReportDefinition = function (report, viewGUID, outputGUID, render) {
+        postForm(_server + "SWExecuteReportDefinition", "_blank", { report: report, viewGUID: viewGUID, outputGUID: outputGUID, render: render });
     };
     SWIGateway.prototype.ExecuteReportFromMenu = function (path, viewGUID, outputGUID, callback, errorcb) {
         $.post(_server + "SWExecuteReport", {

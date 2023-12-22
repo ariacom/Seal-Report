@@ -40,11 +40,11 @@
             }
 
             <tr>
-            <th @Raw(Helper.AddAttribute("class", header.CellCssPageClass)) @Raw(Helper.AddAttribute("style", header.CellCssPageStyle))>
+                    <th @Raw(Helper.AddAttribute("class", header.CellCssPageClass)) @Raw(Helper.AddAttribute("style", header.CellCssPageStyle.Replace("padding-right:25px;", "padding-right:8px;")))>
             @Raw(header.HTMLValue)
             </th>
 
-                    <td @Raw(i == 0 && report.ExecutionView.GetBoolValue("pdf_toc") && view.GetBoolValue("pdf_toc_items") && report.PdfConversion ? "data-toc-item='true' data-toc-level='2'" : "") @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle))>
+            <td @Raw(i == 0 && report.ExecutionView.GetBoolValue("pdf_toc") && view.GetBoolValue("pdf_toc_items") && report.PdfConversion ? "data-toc-item='true' data-toc-level='2'" : "") @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle))>
             @Raw(value.HTMLValue)
             </td>
 

@@ -19,7 +19,7 @@
                 {
                     ResultCell cell = reportModel.SummaryTable[row, col];
                     if (!view.GetBoolValue("display_summary_totals") && cell.IsTotal) { continue; }
-                    <th @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle)) @Raw(reportModel.GetNavigation(view, cell))>
+                    <th @Raw(Helper.AddAttribute("class", cell.CellCssSummaryClass)) @Raw(Helper.AddAttribute("style", cell.CellCssSummaryStyle.Replace("padding-right:25px;", "padding-right:8px;"))) @Raw(reportModel.GetNavigation(view, cell))>
                         @Raw(cell.HTMLValue)
                     </th>
                 }

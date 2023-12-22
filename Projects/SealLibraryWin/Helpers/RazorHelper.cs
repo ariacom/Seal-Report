@@ -41,6 +41,7 @@ using System.Security.AccessControl;
 using Twilio.Rest.Api.V2010.Account;
 using System.Net;
 using System.Drawing;
+using ScottPlot;
 
 namespace Seal.Helpers
 {
@@ -81,6 +82,7 @@ namespace Seal.Helpers
         static MessageResource.ScheduleTypeEnum _30 = null;
         static WebProxy _31 = null;
         static Color? _32 = null;
+        static Plot _33 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -152,7 +154,7 @@ namespace Seal.Helpers
                     if (_30 == null) _30 = new MessageResource.ScheduleTypeEnum();
                     if (_31 == null) _31 = new WebProxy();
                     if (_32 == null) _32 = ColorTranslator.FromHtml("#00000");
-
+                    if (_33 == null) _33 = new Plot(900, 600);
 #if !WINDOWS
                     var si = SealInterface.Create();
                     si.Init();

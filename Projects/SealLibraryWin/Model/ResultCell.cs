@@ -290,10 +290,7 @@ namespace Seal.Model
         {
             get
             {
-                updateFinalCssClass();
-                if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
-
-                return "";
+                return CellCssClass;
             }
         }
 
@@ -329,7 +326,7 @@ namespace Seal.Model
                     else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssClass : DefaultNumericCellCssClass;
                     else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssClass : DefaultDateTimeCellCssClass;
 
-                    if (!IsTitle)
+                    if (!IsTitle || Element.CssTitle)
                     {
                         var finalClass = Element.FinalCssClass;
                         if (!string.IsNullOrEmpty(finalClass))
@@ -340,6 +337,11 @@ namespace Seal.Model
                                 finalClass = DoubleValue >= 0 ? "cell-numeric-positive" : "cell-numeric-negative";
                             }
                             result = (!string.IsNullOrEmpty(result) ? " " : "") + finalClass;
+                        }
+                        else if (Element.CssTitle)
+                        {
+                            //clear default
+                            result = "";
                         }
                     }
                 }
@@ -363,23 +365,7 @@ namespace Seal.Model
         {
             get
             {
-                updateFinalCssStyle();
-                if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
-
-                string result = "";
-                if (Element != null && string.IsNullOrEmpty(FinalCssClass) /* do not set default if a class is specified */)
-                {
-                    if (Element.IsText || Element.IsEnum) result = IsTitle ? DefaultTitleCssStyle : DefaultCellCssStyle;
-                    else if (Element.IsNumeric) result = IsTitle ? DefaultNumericSummaryTitleCssStyle : DefaultNumericCellCssStyle;
-                    else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeSummaryTitleCssStyle : DefaultDateTimeCellCssStyle;
-
-                    if (!IsTitle)
-                    {
-                        if (!string.IsNullOrEmpty(Element.FinalCssStyle)) result = Element.FinalCssStyle;
-                    }
-                }
-
-                return result;
+                return CellCssStyle;
             }
         }
 
@@ -390,10 +376,7 @@ namespace Seal.Model
         {
             get
             {
-                updateFinalCssStyle();
-                if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
-
-                return "";
+                return CellCssStyle;
             }
         }
 
@@ -427,9 +410,17 @@ namespace Seal.Model
                     else if (Element.IsNumeric) result = IsTitle ? DefaultNumericTitleCssStyle : DefaultNumericCellCssStyle;
                     else if (Element.IsDateTime) result = IsTitle ? DefaultDateTimeTitleCssStyle : DefaultDateTimeCellCssStyle;
 
-                    if (!IsTitle)
+                    if (!IsTitle || Element.CssTitle)
                     {
-                        if (!string.IsNullOrEmpty(Element.FinalCssStyle)) result = Element.FinalCssStyle;
+                        if (!string.IsNullOrEmpty(Element.FinalCssStyle))
+                        {
+                            result = Element.FinalCssStyle;
+                        }
+                        else if (Element.CssTitle)
+                        {
+                            //clear default
+                            result = "";
+                        }
                     }
                 }
 

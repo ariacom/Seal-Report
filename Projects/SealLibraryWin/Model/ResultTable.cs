@@ -246,6 +246,45 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Return the header lines of the table
+        /// </summary>
+        public List<ResultCell[]> HeaderLines
+        {
+            get
+            {
+                var result = new List<ResultCell[]>();
+                for (int row = 0; row < BodyStartRow; row++) result.Add(Lines[row]);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Return the body lines of the table
+        /// </summary>
+        public List<ResultCell[]> BodyLines
+        {
+            get
+            {
+                var result = new List<ResultCell[]>();
+                for (int row = BodyStartRow; row < BodyEndRow; row++) result.Add(Lines[row]);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Return the footer lines of the table
+        /// </summary>
+        public List<ResultCell[]> FooterLines
+        {
+            get
+            {
+                var result = new List<ResultCell[]>();
+                for (int row = BodyEndRow; row < RowCount; row++) result.Add(Lines[row]);
+                return result;
+            }
+        }
+
+        /// <summary>
         /// True if the row is a sub-total
         /// </summary>
         public bool IsSubTotalRow(int row)

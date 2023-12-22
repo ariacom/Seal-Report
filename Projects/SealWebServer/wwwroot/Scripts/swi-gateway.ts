@@ -155,8 +155,8 @@ class SWIGateway {
         postForm(_server + "SWExecuteReport", "_blank", { path: path, viewGUID: viewGUID, outputGUID: outputGUID });
     }
 
-    public ExecuteReportDefinition(report: any, viewGUID: string, outputGUID: string) {
-        postForm(_server + "SWExecuteReportDefinition", "_blank", { report: report, viewGUID: viewGUID, outputGUID: outputGUID });
+    public ExecuteReportDefinition(report: any, viewGUID: string, outputGUID: string, render: boolean) {
+        postForm(_server + "SWExecuteReportDefinition", "_blank", { report: report, viewGUID: viewGUID, outputGUID: outputGUID, render : render });
     }
 
     public ExecuteReportFromMenu(path: string, viewGUID: string, outputGUID: string,  callback: (data: any) => void, errorcb?: (data: any) => void) {

@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealSchedulerWorker", "Seal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorEngine.NetCore", "RazorEngine.NetCore\RazorEngine.NetCore.csproj", "{891C8D77-1999-432D-BD00-4B610A18FB40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestNuget", "TestNuget\TestNuget.csproj", "{13D87A1B-8013-4208-AC39-0EAF84695BE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,14 @@ Global
 		{891C8D77-1999-432D-BD00-4B610A18FB40}.Release|Any CPU.Build.0 = Release|Any CPU
 		{891C8D77-1999-432D-BD00-4B610A18FB40}.Release|x64.ActiveCfg = Release|Any CPU
 		{891C8D77-1999-432D-BD00-4B610A18FB40}.Release|x64.Build.0 = Release|Any CPU
+		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Debug|x64.Build.0 = Debug|Any CPU
+		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Release|x64.ActiveCfg = Release|Any CPU
+		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
