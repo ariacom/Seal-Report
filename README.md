@@ -50,4 +50,5 @@ Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</
 
 ## License
 Seal Report follows a **dual-licensing model** to ensure its maintenance, quality, and support.
+
 More information at <a href="https://sealreport.com" target="_blank">[Dual License](https://sealreport.com)https://sealreport.com</a>
