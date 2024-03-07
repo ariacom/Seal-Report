@@ -169,10 +169,8 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="ScottPlot" Version="5.0.21" />
 		<PackageReference Include="SendGrid" Version="9.29.1" />
 		<PackageReference Include="SharpZipLib" Version="1.4.2" />
-		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.7" />
-		<PackageReference Include="SSH.NET" Version="2023.0.1" />
-		<PackageReference Include="Svg.Skia" Version="1.0.0.13" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+		<PackageReference Include="SSH.NET" Version="2023.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
 		<PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
