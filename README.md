@@ -2,7 +2,7 @@
 
 The product focuses on **easy installation** and **report design**: Once setup, reports can be built and published in a minute. 
 
-<a href="https://sealreport.org" target=_blank>Seal Report & ETL</a> is an Open Source tool for Microsoft .Net entirely written in C#.
+<a href="https://sealreport.org" target=_blank>Seal Report & Task</a> is an Open Source tool for Microsoft .Net entirely written in C#.
 
 ## Main Features
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
