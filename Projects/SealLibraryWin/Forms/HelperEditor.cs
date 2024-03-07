@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ using System.Security.Principal;
 using System.Data.OleDb;
 using System.Data;
 using System.Text;
+using Seal.Renderer;
 
 namespace Seal.Forms
 {
@@ -446,33 +447,9 @@ namespace Seal.Forms
                         _reportView.InitParameters(true);
                         setModified();
                     }
-                    else if (context.PropertyDescriptor.Name == "HelperResetPDFConfigurations")
-                    {
-                        _reportView.PdfConfigurations = _reportView.Report.Repository.Configuration.PdfConfigurations.ToList();
-                        _reportView.PdfConverter = null;
-                        _reportView.Information = Helper.FormatMessage("The PDF configuration values have been reset");
-                        setModified();
-                    }
-                    else if (context.PropertyDescriptor.Name == "HelperResetExcelConfigurations")
-                    {
-                        _reportView.ExcelConfigurations = new List<string>();
-                        _reportView.ExcelConverter = null;
-                        _reportView.Information = Helper.FormatMessage("The Excel configuration values have been reset");
-                        setModified();
-                    }
                 }
                 else if (_configuration != null)
                 {
-                    if (context.PropertyDescriptor.Name == "HelperResetPDFConfigurations")
-                    {
-                        _configuration.PdfConfigurations = new List<string>();
-                        _configuration.PdfConverter = null;
-                    }
-                    else if (context.PropertyDescriptor.Name == "HelperResetExcelConfigurations")
-                    {
-                        _configuration.ExcelConfigurations = new List<string>();
-                        _configuration.ExcelConverter = null;
-                    }
                 }
                 else if (_reportSchedule != null)
                 {

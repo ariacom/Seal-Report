@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Data.OleDb;
@@ -42,6 +42,13 @@ using Twilio.Rest.Api.V2010.Account;
 using System.Net;
 using System.Drawing;
 using ScottPlot;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml;
+using QuestPDF.Infrastructure;
+using Svg.Skia;
+using PuppeteerSharp;
+using System.Collections.Generic;
 
 namespace Seal.Helpers
 {
@@ -56,7 +63,7 @@ namespace Seal.Helpers
         static SyndicationFeed _6 = null;
         static XDocument _7 = null;
 #if WINDOWS
-        static Control _8 = null;
+        static System.Windows.Forms.Control _8 = null;
 #endif
         static PrincipalContext _9 = null;
         static JwtSettings _10 = null;
@@ -81,8 +88,13 @@ namespace Seal.Helpers
         static FileSystemAccessRule _29 = null;
         static MessageResource.ScheduleTypeEnum _30 = null;
         static WebProxy _31 = null;
-        static Color? _32 = null;
+        static System.Drawing.Color? _32 = null;
         static Plot _33 = null;
+        static Workbook _34 = null;
+        static SpreadsheetDocument _35 = null;
+        static LicenseType _36 = LicenseType.Community;
+        static SKSvg _37 = null;
+        static PdfOptions _38 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -101,13 +113,14 @@ namespace Seal.Helpers
 
                     foreach (var path in toLoad)
                     {
-                        //take only 
+                        //Force load
                         //Microsoft.AspNetCore.Http.* dlls
-                        //MySql.Data.dll
+                        //MySql.Data.
                         var fileName = Path.GetFileName(path).ToLower();
                         if (
                             fileName.StartsWith("microsoft.aspnetcore.http.") ||
-                            fileName.StartsWith("mysql.data.")
+                            fileName.StartsWith("mysql.data.") ||
+                            fileName.StartsWith("microsoft.bcl.asyncinterfaces")  //For IAsyncEnumerable                          
                            )
                         {
                             try
@@ -129,7 +142,7 @@ namespace Seal.Helpers
                     if (_6 == null) _6 = new SyndicationFeed();
                     if (_7 == null) _7 = new XDocument();
 #if WINDOWS
-                    if (_8 == null) _8 = new Control();
+                    if (_8 == null) _8 = new System.Windows.Forms.Control();
 #endif
                     if (_9 == null) _9 = new PrincipalContext(ContextType.Machine);
                     if (_10 == null) _10 = JWT.DefaultSettings;
@@ -154,7 +167,11 @@ namespace Seal.Helpers
                     if (_30 == null) _30 = new MessageResource.ScheduleTypeEnum();
                     if (_31 == null) _31 = new WebProxy();
                     if (_32 == null) _32 = ColorTranslator.FromHtml("#00000");
-                    if (_33 == null) _33 = new Plot(900, 600);
+                    if (_33 == null) _33 = new Plot();
+                    if (_34 == null) _34 = new Workbook();
+                    if (_35 == null) _35 = SpreadsheetDocument.Create(FileHelper.GetTempUniqueFileName("dummy.xlsx"), SpreadsheetDocumentType.Workbook);
+                    if (_37 == null) _37 = new SKSvg();
+                    if (_38 == null) _38 = new PdfOptions();
 #if !WINDOWS
                     var si = SealInterface.Create();
                     si.Init();

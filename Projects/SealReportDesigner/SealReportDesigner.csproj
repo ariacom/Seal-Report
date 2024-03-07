@@ -2,15 +2,15 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net7.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealReportDesigner</AssemblyName>
 		<ApplicationIcon>reportDesigner.ico</ApplicationIcon>
 		<Product>Seal Report</Product>
-		<Version>7.2.0.0</Version>
-		<FileVersion>7.2.0.0</FileVersion>
-		<AssemblyVersion>7.2.0.0</AssemblyVersion>
+		<Version>8.0.0.0</Version>
+		<FileVersion>8.0.0.0</FileVersion>
+		<AssemblyVersion>8.0.0.0</AssemblyVersion>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
 		<Description>Seal Report Designer</Description>
@@ -36,7 +36,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.5" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -4,9 +4,10 @@
     ReportView view = Model;
     Report report = view.Report;
     Repository repository = report.Repository;
+    var showForPrint = (report.PrintLayout && view.GetBoolValue("print_information"));
 }
 
-<div id="information_div" class="tab-pane fade @(!report.ShowExecutionMessages && view.GetValue("information_mode") == "enabledshown" && string.IsNullOrEmpty(report.WebExecutionErrors) ? "active in" : "")" style="transition:1s">
+<div id="information_div" class="tab-pane fade @((showForPrint || (!report.ShowExecutionMessages && view.GetValue("information_mode") == "enabledshown")) && string.IsNullOrEmpty(report.WebExecutionErrors) ? "active in" : "")" style="transition:1s">
     <script type="text/javascript">
     $(document).ready(function () {
         var dt = $('#information_table');

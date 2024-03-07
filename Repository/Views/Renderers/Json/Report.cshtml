@@ -1,0 +1,14 @@
+﻿@using Seal.Model
+@using Seal.Renderer
+@using Newtonsoft.Json
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    JsonRenderer renderer = view.JsonRenderer;
+    JsonResult result = new JsonResult(report);
+
+    result.Document.Add(new { ReportName = report.DisplayNameEx, ExecutionDate = report.ExecutionStartDate, ExecutionDuration = report.ExecutionFullDuration });
+    view.ParseChildren();
+}
+@Raw(JsonConvert.SerializeObject(result.Document, Formatting.Indented))

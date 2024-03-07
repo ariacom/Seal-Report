@@ -1,4 +1,5 @@
 ﻿@using Seal.Model
+@using Seal.Helpers
 @{
     ReportView view = Model;
     Report report = view.Report;
@@ -6,57 +7,52 @@
     var configuration = repository.Configuration;
 }
 
-@if (report.GenerateHTMLDisplay || !report.PdfConversion)
-{
-    <nav id="bar_top" class='navbar navbar-default navbar-fixed-top' style='transition:top 0.3s;'>
-        <div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
-            <div class="navbar-header">
-                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-                    <span class="sr-only">@report.Translate("Toggle navigation")</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @if (configuration.HasLogo)
-                {
-                    var attr = configuration.LogoName.ToLower().EndsWith(".svg") ? "width='130' height='50'" : "";
-                    <a href="#" class="navbar-left hidden-xs"  title="@configuration.WebProductName" style="cursor:default">
-                        <img src="@report.AttachImageFile(configuration.LogoName)" @Raw(attr)>
-                    </a>
-                }
-                <a id="nav_button" href="#" class="navbar-brand" style="cursor: default">@report.ExecutionName</a><span id="nav_badge" class="badge navbar-left hidden">@report.Translate("Nav")</span>
-            </div>
-            <div id="navbarCollapse" class="collapse navbar-collapse">
-                @if (report.GenerateHTMLDisplay)
-                {
-                    <button id="execute_button" class="btn btn-success navbar-btn navbar-right">@report.Translate("Execute")</button>
-                    <button id="restrictions_button" type="button" class="btn btn-info navbar-btn navbar-right" title="@report.Translate("Show/Hide Restrictions")">
-                        <span class="glyphicon glyphicon-filter"></span>
-                    </button>
-                }
-                @if (report.GenerateHTMLDisplay || !report.PrintLayout)
-                {
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a id="report_button" class="sr_tab" data-toggle="tab" href="#@(view.ViewId)_div">@report.Translate("Report")</a></li>
-                        <li><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
-                        <li><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
-                        <li id="results_menu" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                @report.Translate("Results")
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a id="HtmlResult" class="result_item" href="#">@report.Translate("View HTML Result")</a></li>
-                                <li><a id="PrintResult" class="result_item" href="#">@report.Translate("View Print Result")</a></li>
-                                <li><a id="CSVResult" class="result_item" href="#">@report.Translate("View CSV Result")</a></li>
-                                <li><a id="PDFResult" class="result_item converter_item" href="#">@report.Translate("View PDF Result")</a></li>
-                                <li><a id="ExcelResult" class="result_item converter_item" href="#">@report.Translate("View Excel Result")</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                }
-            </div>
+<nav id="bar_top" class='navbar navbar-default navbar-fixed-top' style='transition:top 0.3s;'>
+    <div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
+        <div class="navbar-header">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">@report.Translate("Toggle navigation")</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @if (configuration.HasLogo)
+            {
+                var attr = configuration.LogoName.ToLower().EndsWith(".svg") ? "width='130' height='50'" : "";
+                <a href="#" class="navbar-left hidden-xs" title="@configuration.WebProductName" style="cursor:default">
+                    <img src="@report.AttachImageFile(configuration.LogoName)" @Raw(attr)>
+                </a>
+            }
+            <a id="nav_button" href="#" class="navbar-brand" style="cursor: default">@report.ExecutionName</a><span id="nav_badge" class="badge navbar-left hidden">@report.Translate("Nav")</span>
         </div>
-    </nav>
-}
-
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            @if (report.GenerateHTMLDisplay)
+            {
+                <button id="execute_button" class="btn btn-success navbar-btn navbar-right">@report.Translate("Execute")</button>
+                <button id="restrictions_button" type="button" class="btn btn-info navbar-btn navbar-right" title="@report.Translate("Show/Hide Restrictions")">
+                    <span class="glyphicon glyphicon-filter"></span>
+                </button>
+            }
+            @if (report.GenerateHTMLDisplay || !report.PrintLayout)
+            {
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a id="report_button" class="sr_tab" data-toggle="tab" href="#@(view.ViewId)_div">@report.Translate("Report")</a></li>
+                    <li><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
+                    <li><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
+                    <li id="results_menu" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            @report.Translate("Results")
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            @foreach (var format in repository.ResultAllowedFormats)
+                            {
+                                <li><a id="ViewResult" format="@format" class="result_item" href="#">@report.Translate("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            }
+        </div>
+    </div>
+</nav>

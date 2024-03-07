@@ -1,0 +1,8 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "chart_width", NumericValue = 180, DisplayName = "Chart width (millimeter)", Description = "The chart width in millimeter. If 0 the available page size is used." });
+    Template.Parameters.Add(new Parameter() { Name = "chart_height", NumericValue = 120, DisplayName = "Chart height (millimeter)", Description = "The chart height in millimeter. If 0 the available page size is used." });
+}

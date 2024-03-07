@@ -1,4 +1,5 @@
 ﻿@using Seal.Model
+@using Seal.Helpers
 @{
     WebMainModel model = Model as WebMainModel;
     Repository repository = model.Repository;
@@ -65,11 +66,10 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a id="HtmlResult" class="result_item" href="#">@repository.TranslateReport("View HTML Result")</a></li>
-                        <li><a id="PrintResult" class="result_item" href="#">@repository.TranslateReport("View Print Result")</a></li>
-                        <li><a id="CSVResult" class="result_item" href="#">@repository.TranslateReport("View CSV Result")</a></li>
-                        <li><a id="PDFResult" class="result_item converter_item" href="#">@repository.TranslateReport("View PDF Result")</a></li>
-                        <li><a id="ExcelResult" class="result_item converter_item" href="#">@repository.TranslateReport("View Excel Result")</a></li>
+                        @foreach (var format in Enum.GetValues(typeof(ReportFormat)))
+                        {
+                            <li><a id="ViewResult" format="@format" class="result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
+                        }
                     </ul>
                 </li>
                 <li class="nav-item folderview"><a id="refresh-nav-item" class="navbar-white fa fa-refresh" title="@repository.TranslateWeb("Refresh")"></a></li>

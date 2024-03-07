@@ -5,6 +5,7 @@ using Seal.Model;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Seal.Forms
 {
@@ -106,7 +107,7 @@ namespace Seal.Forms
                 setIndicatorAppearance(textBox, NUM);
                 setIndicatorAppearance2(textBox, NUM2);
                 Line firstErrorLine = null;
-                foreach (var err in ex.CompilerErrors)
+                foreach (var err in ex.CompilerErrors.OrderBy(i => i.Line))
                 {
                     var sourceLines = ex.CompilationData.SourceCode.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
                     if (err.Line > 0 && err.Line < sourceLines.Length)
@@ -120,7 +121,7 @@ namespace Seal.Forms
                                 textBox.IndicatorCurrent = (err.IsWarning ? NUM2 : NUM);
                                 setRazorError(textBox, compilationErrors, line, err.Column, (err.IsWarning ? "Warning: " : "Error: ") + err.ErrorText);
 
-                                if (!err.IsWarning) firstErrorLine = line;
+                                if (!err.IsWarning && firstErrorLine == null) firstErrorLine = line;
                             }
                         }
                     }

@@ -167,7 +167,7 @@ function initRestrictions(parent) {
                         });
                 }
                 else {
-                    window.chrome.webview.hostObjects.sync.dotnet.UpdateEnumValues(enumId, ids);
+                    window.chrome.webview.hostObjects.sync.dotnet.UpdateEnumValues(id, ids);
                 }
             }
         }
@@ -347,7 +347,7 @@ function requestEnumData(filter, forceNoMessage) {
             });
     }
     else {
-        result = window.chrome.webview.hostObjects.sync.dotnet.GetEnumValues(enumId, filter);
+        result = JSON.parse(window.chrome.webview.hostObjects.sync.dotnet.GetEnumValues(enumId, filter));
         fillEnumSelect(result, forceNoMessage || result.length > 0);
     }
     return result;
@@ -606,7 +606,7 @@ function mainInit() {
     $(".result_item").unbind("click").on("click", function () {
         var form = $("#header_form");
         form.attr("target", _urlPrefix != "" ? "_blank" : "");
-        form.attr("action", _urlPrefix + $(this).attr("id"));
+        form.attr("action", _urlPrefix + $(this).attr("id") + "?format=" + $(this).attr("format"));
         form.submit();
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
@@ -630,13 +630,13 @@ function mainInit() {
                                     if (_reportStandalone) {
                                         var $form = $("#header_form");
                                         $("#execution_guid").val($(this).attr("execution_guid"));
-                                        $form.attr("action", _urlPrefix + "HtmlResultFile");
+                                        $form.attr("action", _urlPrefix + "ViewResult?format=html");
                                         $form.submit();
                                     }
                                     else {
                                         //Execution from the menu
                                         _main.toggleFoldersReport(true);
-                                        $.post(_urlPrefix + "HtmlResultFile", { execution_guid: $(this).attr("execution_guid") })
+                                        $.post(_urlPrefix + "ViewResult?format=html&execution_guid=" + $(this).attr("execution_guid"))
                                             .done(function (data) {
                                                 $("#report-body").html(data);
                                                 processReportExecuted();

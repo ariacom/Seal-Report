@@ -1,0 +1,116 @@
+﻿@using ScottPlot
+@using Seal.Model
+@{
+    ReportViewTemplate Template = Model;
+    Template.Description = "Render the Chart ScottPlot series of the page result.";
+
+    //If true, the view is a child of a report model view
+    Template.IsModelViewChild = true;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_width", NumericValue = 600, DisplayName = "Chart width", Description = "The chart width in pixels." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_height", NumericValue = 400, DisplayName = "Chart height", Description = "The chart height in pixels." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_title", DisplayName = "Title", Description = "Title of the chart." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_title_size", NumericValue = 12, DisplayName = "Title size", Description = "Size of the title." });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "chartsp_palette",
+                DisplayName = "Color palette",
+                Description = "The palette defines default colors to use for new plottables. Custom colors can be defined with a list of RGB colors separated by comma.",
+                Value = "Category 10",
+                Enums = (from p in Palette.GetPalettes() select p.Name).Union(new string[] { "#e377c2,#7f7f7f,#bcbd22,#17becf,#1f77b4,#ff7f0e,#2ca02c,#d62728,#9467bd" }).ToArray(),
+                UseOnlyEnumValues = false
+            });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_color_mappings", DisplayName = "Color mappings", Description = "If set, list of colors to use for specific label values. The mapping definition is an array of pair label and RGB color).", Value = "", Enums = new string[] { "{\"ok\":\"#00FF00\",\"ko\":\"#FF000\"}", "{\"Amount\":\"#d13053\",\"Quantity\":\"#eff542\"}" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_frameless", BoolValue = false, DisplayName = "Frameless", Description = "If true, give the plot a frameless appearance by hiding all axes." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_grid_enabled", DisplayName = "Grid enabled", BoolValue = true, Description = "If true, the grid is shown." });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "chartsp_legend_position",
+                DisplayName = "Legend visibility and position",
+                Value = "UpperCenter",
+                Description = "Position of the legend in the chart.",
+                EnumType = typeof(Alignment),
+                Enums = new string[] { "|No legend" },
+                UseOnlyEnumValues = true
+            });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_bottom_axis_rotation", NumericValue = 18, DisplayName = "Bottom Axis: Label rotation", Description = "Rotation of the bottom axis labels." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_xaxis_count", DisplayName = "X Axis: Number of values", NumericValue = 0, Description = "Number of X Axis values to display in the chart (e.g. to show the top 10 values). If 0, all the values are shown." });
+
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_xaxis_label", DisplayName = "X Axis: Label", Description = "Label of the bottom axis." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_xaxis_label_bold", BoolValue = false, DisplayName = "X Axis: Label bold", Description = "If true, the label font is bold." });
+
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_yaxis_min", Value="0", DisplayName = "Y Axis: Minimum value or gap", Description = "Minimum value or gap of the axis. Either the absolute value or a % of the (maximum - minimum) of the axis values to calculate a gap with the minimum. For DateTime, the value is the number of days since 1970 (e.g. 36526 for '01.01.2000'')", Enums = new string[] { "10%", "-10%", "20%", "10.45", "-10000", "36526", "36526.5" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_yaxis_max", Value = "5%", DisplayName = "Y Axis: Maximum value or gap", Description = "Maximum value or gap of the axis. Either the absolute value or a % of the (maximum - minimum) of the axis values to calculate a gap with the maximum. For DateTime, the value is the number of days since 1970 (e.g. 36526 for '01.01.2000'')", Enums = new string[] { "10%", "-10%", "20%", "10.45", "-10000", "36526", "36526.5" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_yaxis_label", DisplayName = "Y Axis: Label", Description = "Label of the bottom axis." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_yaxis_label_bold", BoolValue = false, DisplayName = "Y Axis: Label bold", Description = "If true, the label font is bold." });
+
+
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_yaxis2_min", Value = "0", DisplayName = "Secondary Y Axis: Minimum value or gap", Description = "Minimum value of the secondary axis. Either the absolute value or a % of the (maximum - minimum) of the axis values to calculate a gap with the minimum. For DateTime, the value is the number of days since 1970 (e.g. 36526 for '01.01.2000'')", Enums = new string[] { "10%", "-10%", "20%", "10.45", "-10000", "36526", "36526.5" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_yaxis2_max", Value = "5%", DisplayName = "Secondary Y Axis: Maximum value or gap", Description = "Maximum value of the secondary axis. Either the absolute value or a % of the (maximum - minimum) of the axis values to calculate a gap with the maximum. For DateTime, the value is the number of days since 1970 (e.g. 36526 for '01.01.2000'')", Enums = new string[] { "10%", "-10%", "20%", "10.45", "-10000", "36526", "36526.5" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_yaxis2_label", DisplayName = "Secondary Y Axis: Label", Description = "Label of the bottom axis." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_yaxis2_label_bold", BoolValue = false, DisplayName = "Secondary Y Axis: Label bold", Description = "If true, the label font is bold." });
+
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_bar_stacked", DisplayName = "Bar: Is stacked", BoolValue = false, Description = "If true, the Bar in chart are stacked." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_bar_horizontal", DisplayName = "Bar: Horizontals", BoolValue = false, Description = "If true, the bars in the chart are horizontals." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_pie_labels", DisplayName = "Pie: Show labels", BoolValue = false, Description = "If true, labels will be displayed above each slice." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_pie_explode_fraction", DisplayName = "Pie: Explode fraction", DoubleValue = 0, Description = "Fraction value to explode the pie." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_pie_distance", DisplayName = "Pie: Slice label distance", DoubleValue = 1, Description = "Distance of the slice label from the border." });
+
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "chartsp_marker_shape",
+                DisplayName = "Marker: Visibility and shape",
+                Value = "None",
+                Description = "Shape of the marker.",
+                EnumType = typeof(ScottPlot.MarkerShape),
+                Enums = new string[] { },
+                UseOnlyEnumValues = true
+            });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "chartsp_marker_shape_auto",
+                DisplayName = "Marker: Automatic shapes",
+                Value = "auto_serie",
+                Description = "Automatic shape of the marker. The shape changes according to the configuration.",
+                Enums = new string[] { "none|Keep the same marker", "auto_serie|Automatic per serie", "auto_value|Automatic per value" },
+                UseOnlyEnumValues = true
+            });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "chartsp_marker_color",
+                DisplayName = "Marker: Color",
+                Value = "serie",
+                Description = "Color of the marker.",
+                Enums = new string[] { "serie|Color of the serie", "#000000", "#3838d1" },
+                UseOnlyEnumValues = false
+            });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_marker_size", DisplayName = "Marker: Size", NumericValue = 10, Description = "Size of the marker." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_marker_step", DisplayName = "Marker: Step", NumericValue = 5, Description = "Step of X axis values to show the marker." });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "chartsp_marker_text_alignment",
+                DisplayName = "Marker: Text visibility and alignment",
+                Value = "LowerCenter",
+                Description = "Alignment of the marker text.",
+                EnumType = typeof(ScottPlot.Alignment),
+                Enums = new string[] { "|No text" },
+                UseOnlyEnumValues = true
+            });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "chartsp_marker_text_color",
+                DisplayName = "Marker: Text color",
+                Value = "#000000",
+                Description = "Color of the text.",
+                Enums = new string[] { "serie|Color of the serie", "#000000", "#3838d1" },
+                UseOnlyEnumValues = false
+            });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_marker_text_hoffset", DisplayName = "Marker: Text horizonzal offset", DoubleValue = 0, Description = "Horizontal offset (positive or negative) for the text position (in unit of axis)." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_marker_text_voffset", DisplayName = "Marker: Text vertical offset", DoubleValue = 0, Description = "Vertical offset (positive or negative) for the text position (in unit of axis)." });
+
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_marker_legend", DisplayName = "Marker: Show in legend", BoolValue = false, Description = "If true, the marker values are shown in the legend." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_marker_hide_series", DisplayName = "Marker: Hide all series", BoolValue = false, Description = "If true, the series are not displayed, only the markers." });
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model", "Container", "Container Grid Flex", "Widget", "Tab Page" };
+}

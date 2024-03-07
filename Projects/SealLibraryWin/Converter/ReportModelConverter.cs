@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace Seal.Forms
             }
             else if (reportModel != null)
             {
-                var list = (from s in reportModel.Report.Models where s.GUID != reportModel.GUID && s.SourceGUID == reportModel.SourceGUID && !s.IsSQLModel select s.Name).OrderBy(i => i).ToList();
+                var list = (from s in reportModel.Report.Models where s.GUID != reportModel.GUID && (s.SourceGUID == reportModel.SourceGUID || s.SourceGUID == reportModel.Source.MetaSourceGUID) && !s.IsSQLModel select s.Name).OrderBy(i => i).ToList();
                 list.Insert(0, "");
                 choices = list.ToArray();
             }

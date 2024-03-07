@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,8 @@ using System.Globalization;
 using System.Web;
 using System.Data;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Finance;
+using Seal.Renderer;
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -61,10 +63,32 @@ namespace Seal.Model
 
                 GetProperty("TemplateConfiguration").SetIsBrowsable(Parameters.Count > 0);
 
+                GetProperty("ExcelRenderer").SetIsBrowsable(true);
+                ExcelRenderer.InitEditor();
 
+                GetProperty("PDFRenderer").SetIsBrowsable(true);
+                PDFRenderer.InitEditor();
+
+                GetProperty("HTML2PDFRenderer").SetIsBrowsable(true);
+                HTML2PDFRenderer.InitEditor();
+
+                GetProperty("CSVRenderer").SetIsBrowsable(true);
+                CSVRenderer.InitEditor();
+
+                GetProperty("TextRenderer").SetIsBrowsable(true);
+                TextRenderer.InitEditor();
+
+                GetProperty("XMLRenderer").SetIsBrowsable(true);
+                XMLRenderer.InitEditor();
+
+                GetProperty("JsonRenderer").SetIsBrowsable(true);
+                JsonRenderer.InitEditor();
+
+                //Converter
                 GetProperty("PdfConverter").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
                 PdfConverter.InitEditor();
 
+                //Converter
                 GetProperty("ExcelConverter").SetIsBrowsable(true);
                 ExcelConverter.InitEditor();
 
@@ -72,14 +96,11 @@ namespace Seal.Model
 
                 //Read only
                 GetProperty("TemplateName").SetIsReadOnly(true);
-                GetProperty("CustomTemplate").SetIsReadOnly(!UseCustomTemplate);
                 GetProperty("MenuName").SetIsReadOnly(!ShowInMenu);
 
                 //Helpers
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
                 GetProperty("HelperResetParameters").SetIsBrowsable(true);
-                GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
-                GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(true);
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
 
@@ -114,29 +135,13 @@ namespace Seal.Model
         /// </summary>
         public void InitReferences()
         {
+            CSVRenderer.View = this;
+
             foreach (var childView in Views)
             {
                 childView.ParentView = this;
                 childView.Report = Report;
                 childView.InitReferences();
-            }
-        }
-
-        /// <summary>
-        /// Init the view parameters from the configuration
-        /// </summary>
-        public void InitParameters(List<Parameter> configParameters, List<Parameter> parameters, bool resetValues)
-        {
-            var initialParameters = parameters.ToList();
-            parameters.Clear();
-            foreach (var configParameter in configParameters)
-            {
-                Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
-                if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
-
-                parameters.Add(parameter);
-                if (resetValues) parameter.Value = configParameter.Value;
-                parameter.InitFromConfiguration(configParameter);
             }
         }
 
@@ -156,6 +161,14 @@ namespace Seal.Model
             PartialTemplates.RemoveAll(i => string.IsNullOrWhiteSpace(i.Text));
 
             foreach (var view in Views) view.BeforeSerialization();
+
+            CSVRenderer.BeforeSerialization();
+            ExcelRenderer.BeforeSerialization();
+            PDFRenderer.BeforeSerialization();
+            HTML2PDFRenderer.BeforeSerialization();
+            TextRenderer.BeforeSerialization();
+            XMLRenderer.BeforeSerialization();
+            JsonRenderer.BeforeSerialization();
         }
 
         /// <summary>
@@ -167,6 +180,14 @@ namespace Seal.Model
             InitPartialTemplates();
 
             foreach (var view in Views) view.AfterSerialization();
+
+            CSVRenderer.AfterSerialization();
+            ExcelRenderer.AfterSerialization();
+            PDFRenderer.AfterSerialization();
+            HTML2PDFRenderer.AfterSerialization();
+            TextRenderer.AfterSerialization();
+            XMLRenderer.AfterSerialization();
+            JsonRenderer.AfterSerialization();
         }
 
         /// <summary>
@@ -175,7 +196,7 @@ namespace Seal.Model
         public void ReloadConfiguration()
         {
             _template = null;
-            var t = Template;
+            _ = Template;
             Information = "Configuration has been reloaded.";
         }
 
@@ -186,8 +207,24 @@ namespace Seal.Model
         {
             if (Report == null || Template == null) return;
 
-            InitParameters(Template.Parameters, Parameters, resetValues);
+            Template.InitParameters(Parameters, resetValues);
+            ExcelRenderer.InitParameters(false);
+            PDFRenderer.InitParameters(false);
+            HTML2PDFRenderer.InitParameters(false);
+            TextRenderer.InitParameters(false);
+            CSVRenderer.InitParameters(false);
+            XMLRenderer.InitParameters(false);
+            JsonRenderer.InitParameters(false);
+
             Error = Template.Error;
+            if (string.IsNullOrEmpty(Error)) Error = ExcelRenderer.Template.Error;
+            if (string.IsNullOrEmpty(Error)) Error = PDFRenderer.Template.Error;
+            if (string.IsNullOrEmpty(Error)) Error = HTML2PDFRenderer.Template.Error;
+            if (string.IsNullOrEmpty(Error)) Error = TextRenderer.Template.Error;
+            if (string.IsNullOrEmpty(Error)) Error = CSVRenderer.Template.Error;
+            if (string.IsNullOrEmpty(Error)) Error = XMLRenderer.Template.Error;
+            if (string.IsNullOrEmpty(Error)) Error = JsonRenderer.Template.Error;
+
             Information = "";
             if (resetValues) Information += "Values have been reset";
             if (!string.IsNullOrEmpty(Information)) Information = Helper.FormatMessage(Information);
@@ -203,6 +240,7 @@ namespace Seal.Model
                 var containerView = Report.AddChildView(this, ReportViewTemplate.ContainerName);
                 Report.AddChildView(containerView, ReportViewTemplate.PageTableName);
                 Report.AddChildView(containerView, ReportViewTemplate.ChartJSName);
+                Report.AddChildView(containerView, ReportViewTemplate.ChartScottplotName);
                 Report.AddChildView(containerView, ReportViewTemplate.ChartNVD3Name);
                 Report.AddChildView(containerView, ReportViewTemplate.ChartPlotlyName);
                 Report.AddChildView(containerView, ReportViewTemplate.DataTableName);
@@ -258,22 +296,6 @@ namespace Seal.Model
             return Helper.AddAttribute(attrName, GetValue(paramName));
         }
 
-        /// <summary>
-        /// Current chart title
-        /// </summary>
-        public string ChartTitle
-        {
-            get
-            {
-                var view = Report.FindViewFromTemplate(Views, ReportViewTemplate.ChartJSName);
-                if (view != null) return view.GetValue("chartjs_title");
-                view = Report.FindViewFromTemplate(Views, ReportViewTemplate.ChartNVD3Name);
-                if (view != null) return view.GetValue("nvd3_chart_title");
-                view = Report.FindViewFromTemplate(Views, ReportViewTemplate.ChartPlotlyName);
-                if (view != null) return view.GetValue("plotly_title");
-                return "";
-            }
-        }
 
         /// <summary>
         /// Translates a mapped label having keywords %DisplayName%
@@ -281,7 +303,7 @@ namespace Seal.Model
         public string GetTranslatedMappedLabel(string text)
         {
             string result = text;
-            if (!string.IsNullOrEmpty(text) && text.Count(i => i == '%') > 1)
+            if (Model != null && !string.IsNullOrEmpty(text) && text.Count(i => i == '%') > 1)
             {
                 List<ReportElement> values = new List<ReportElement>();
                 foreach (var element in Model.Elements)
@@ -386,12 +408,22 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Returns a paramter ineteger value
+        /// Returns a parameter integer value
         /// </summary>
         public int GetNumericValue(string name)
         {
             Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
             return parameter == null ? 0 : parameter.NumericValue;
+        }
+
+
+        /// <summary>
+        /// Returns a parameter double value
+        /// </summary>
+        public double GetDoubleValue(string name)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? 0 : parameter.DoubleValue;
         }
 
         /// <summary>
@@ -780,6 +812,7 @@ namespace Seal.Model
                 _customTemplate = value;
             }
         }
+        public bool ShouldSerializeCustomTemplate() { return !string.IsNullOrEmpty(CustomTemplate); }
 
         /// <summary>
         /// The custom partial template list for the view
@@ -925,7 +958,7 @@ namespace Seal.Model
             foreach (var view in Views) view.SetAdvancedConfigurations();
         }
 
-#region Web Report Server
+        #region Web Report Server
 
         /// <summary>
         /// For the Web Report Server: If true, the view can be executed from the report list.
@@ -936,7 +969,7 @@ namespace Seal.Model
 #endif
         public bool WebExec { get; set; } = true;
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Current report model if any
@@ -995,8 +1028,190 @@ namespace Seal.Model
             }
         }
 
+        #region Renderer
 
-#region PDF and Excel Converters
+        private ExcelRenderer _excelRenderer = new ExcelRenderer();
+        /// <summary>
+        /// Current Excel renderer
+        /// </summary>
+#if WINDOWS
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Excel Configuration"), Description("Options applied to the generate the Excel result for the view."), Category("View parameters"), Id(7, 4)]
+#endif
+        public ExcelRenderer ExcelRenderer
+        {
+            get
+            {
+                if (_excelRenderer == null) _excelRenderer = new ExcelRenderer();
+                _excelRenderer.View = this;
+                _excelRenderer.InitParameters(false);
+                return _excelRenderer;
+            }
+            set { _excelRenderer = value; }
+        }
+
+        public bool ShouldSerializeExcelRenderer()
+        {
+            var emptyRenderer = new ExcelRenderer();
+            return emptyRenderer.Serialize() != ExcelRenderer.Serialize();
+        }
+
+        private PDFRenderer _PDFRenderer = new PDFRenderer();
+        /// <summary>
+        /// Current PDF renderer
+        /// </summary>
+#if WINDOWS
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("PDF Configuration"), Description("Options applied to the generate the PDF result for the view."), Category("View parameters"), Id(8, 4)]
+#endif
+        public PDFRenderer PDFRenderer
+        {
+            get
+            {
+                if (_PDFRenderer == null) _PDFRenderer = new PDFRenderer();
+                _PDFRenderer.View = this;
+                _PDFRenderer.InitParameters(false);
+                return _PDFRenderer;
+            }
+            set { _PDFRenderer = value; }
+        }
+
+        public bool ShouldSerializePDFRenderer()
+        {
+            var emptyRenderer = new PDFRenderer();
+            return emptyRenderer.Serialize() != PDFRenderer.Serialize();
+        }
+
+        private HTML2PDFRenderer _HTML2PDFRenderer = new HTML2PDFRenderer();
+        /// <summary>
+        /// Current HTML2PDF renderer
+        /// </summary>
+#if WINDOWS
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("HTML to PDF Configuration"), Description("Options applied to the generate the HTML2PDF result for the view."), Category("View parameters"), Id(9, 4)]
+#endif
+        public HTML2PDFRenderer HTML2PDFRenderer
+        {
+            get
+            {
+                if (_HTML2PDFRenderer == null) _HTML2PDFRenderer = new HTML2PDFRenderer();
+                _HTML2PDFRenderer.View = this;
+                _HTML2PDFRenderer.InitParameters(false);
+                return _HTML2PDFRenderer;
+            }
+            set { _HTML2PDFRenderer = value; }
+        }
+
+        public bool ShouldSerializeHTML2PDFRenderer()
+        {
+            var emptyRenderer = new HTML2PDFRenderer();
+            return emptyRenderer.Serialize() != HTML2PDFRenderer.Serialize();
+        }
+
+        private CSVRenderer _csvRenderer;
+        /// <summary>
+        /// Current CSV renderer
+        /// </summary>
+#if WINDOWS
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("CSV Configuration"), Description("Options applied to the generate the CSV result for the view."), Category("View parameters"), Id(10, 4)]
+#endif
+        public CSVRenderer CSVRenderer
+        {
+            get
+            {
+                if (_csvRenderer == null) _csvRenderer = new CSVRenderer();
+                _csvRenderer.View = this;
+                _csvRenderer.InitParameters(false);
+                return _csvRenderer;
+            }
+            set { _csvRenderer = value; }
+        }
+
+        public bool ShouldSerializeCSVRenderer()
+        {
+            return (new CSVRenderer()).Serialize() != CSVRenderer.Serialize();
+        }
+
+        private TextRenderer _textRenderer;
+        /// <summary>
+        /// Current Text renderer
+        /// </summary>
+#if WINDOWS
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Text Configuration"), Description("Options applied to the generate the Text result for the view."), Category("View parameters"), Id(11, 4)]
+#endif
+        public TextRenderer TextRenderer
+        {
+            get
+            {
+                if (_textRenderer == null) _textRenderer = new TextRenderer();
+                _textRenderer.View = this;
+                _textRenderer.InitParameters(false);
+                return _textRenderer;
+            }
+            set { _textRenderer = value; }
+        }
+
+        public bool ShouldSerializeTextRenderer()
+        {
+            return (new TextRenderer()).Serialize() != TextRenderer.Serialize();
+        }
+
+        private XMLRenderer _XMLRenderer;
+        /// <summary>
+        /// Current XML renderer
+        /// </summary>
+#if WINDOWS
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("XML Configuration"), Description("Options applied to the generate the XML result for the view."), Category("View parameters"), Id(12, 4)]
+#endif
+        public XMLRenderer XMLRenderer
+        {
+            get
+            {
+                if (_XMLRenderer == null) _XMLRenderer = new XMLRenderer();
+                _XMLRenderer.View = this;
+                _XMLRenderer.InitParameters(false);
+                return _XMLRenderer;
+            }
+            set { _XMLRenderer = value; }
+        }
+
+        public bool ShouldSerializeXMLRenderer()
+        {
+            return (new XMLRenderer()).Serialize() != XMLRenderer.Serialize();
+        }
+
+        private JsonRenderer _JsonRenderer;
+        /// <summary>
+        /// Current Json renderer
+        /// </summary>
+#if WINDOWS
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Json Configuration"), Description("Options applied to the generate the Json result for the view."), Category("View parameters"), Id(13, 4)]
+#endif
+        public JsonRenderer JsonRenderer
+        {
+            get
+            {
+                if (_JsonRenderer == null) _JsonRenderer = new JsonRenderer();
+                _JsonRenderer.View = this;
+                _JsonRenderer.InitParameters(false);
+                return _JsonRenderer;
+            }
+            set { _JsonRenderer = value; }
+        }
+
+        public bool ShouldSerializeJsonRenderer()
+        {
+            return (new JsonRenderer()).Serialize() != JsonRenderer.Serialize();
+        }
+
+        #endregion
+
+
+        #region PDF and Excel Converters
 
         /// <summary>
         /// The PDF configuration of the view
@@ -1014,7 +1229,7 @@ namespace Seal.Model
         private SealPdfConverter _pdfConverter = null;
 #if WINDOWS
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("PDF Configuration"), Description("All the options applied to the PDF conversion from the HTML result."), Category("View parameters"), Id(7, 4)]
+        [DisplayName("PDF Converter Configuration"), Description("All the options applied to the PDF conversion from the HTML result."), Category("View parameters"), Id(20, 4)]
 #endif
         [XmlIgnore]
         public SealPdfConverter PdfConverter
@@ -1024,7 +1239,6 @@ namespace Seal.Model
                 if (_pdfConverter == null)
                 {
                     _pdfConverter = SealPdfConverter.Create();
-                    if (PdfConfigurations.Count == 0) PdfConfigurations = Repository.Instance.Configuration.PdfConfigurations.ToList();
                     _pdfConverter.SetConfigurations(PdfConfigurations, this);
 #if WINDOWS
                     _pdfConverter.EntityHandler = HelperEditor.HandlerInterface;
@@ -1060,7 +1274,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Excel Configuration"), Description("All the options applied to the Excel conversion from the view."), Category("View parameters"), Id(8, 4)]
+        [DisplayName("Excel Converter Configuration"), Description("All the options applied to the Excel conversion from the view."), Category("View parameters"), Id(21, 4)]
 #endif
         [XmlIgnore]
         public SealExcelConverter ExcelConverter
@@ -1093,16 +1307,14 @@ namespace Seal.Model
         /// <summary>
         /// Convert the view to an Excel Sheet
         /// </summary>
-        /// <param name="destination"></param>
-        /// <returns></returns>
         public string ConvertToExcel(string destination)
         {
             return ExcelConverter.ConvertToExcel(destination);
         }
 
-#endregion
+        #endregion
 
-#region Helpers
+        #region Helpers
 
         /// <summary>
         /// Editor Helper: Load the template configuration file
@@ -1129,50 +1341,26 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Editor Helper: Reset PDF configuration values to their default values
-        /// </summary>
-#if WINDOWS
-        [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(7, 10)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-#endif
-        public string HelperResetPDFConfigurations
-        {
-            get { return "<Click to reset the PDF configuration values to their default values>"; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset Excel configuration values to their default values
-        /// </summary>
-#if WINDOWS
-        [Category("Helpers"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(8, 10)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-#endif
-        public string HelperResetExcelConfigurations
-        {
-            get { return "<Click to reset the Excel configuration values to their default values>"; }
-        }
-
-        /// <summary>
         /// Last information message
         /// </summary>
 #if WINDOWS
-        [Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(9, 10)]
+        [Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(20, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
 #endif
-		[XmlIgnore]
+        [XmlIgnore]
         public string Information { get; set; }
 
         /// <summary>
         /// Last error message
         /// </summary>
 #if WINDOWS
-        [Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(10, 10)]
+        [Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(21, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
 #endif
-		[XmlIgnore]
+        [XmlIgnore]
         public string Error { get; set; }
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Current template text of the view
@@ -1190,6 +1378,7 @@ namespace Seal.Model
                 return Template.Text;
             }
         }
+
         string _viewId = null;
         /// <summary>
         /// Identifier of the view
@@ -1239,15 +1428,35 @@ namespace Seal.Model
                 Error += string.Format("Execution error when compiling the partial view template '{0}({1})':\r\n{2}\r\n", Name, name, message);
                 if (ex.InnerException != null) Error += "\r\n" + ex.InnerException.Message;
                 Report.ExecutionErrors += Error;
-                throw ex;
+                throw;
             }
             return key;
         }
 
         /// <summary>
+        /// Returns the current renderer
+        /// </summary>
+        public RootRenderer Renderer
+        {
+            get
+            {
+                RootRenderer renderer = null;
+                if (Report.Format == ReportFormat.Excel) renderer = ExcelRenderer;
+                else if (Report.Format == ReportFormat.PDF) renderer = PDFRenderer;
+                else if (Report.Format == ReportFormat.HTML2PDF) renderer = HTML2PDFRenderer;
+                else if (Report.Format == ReportFormat.csv) renderer = CSVRenderer;
+                else if (Report.Format == ReportFormat.Text) renderer = TextRenderer;
+                else if (Report.Format == ReportFormat.XML) renderer = XMLRenderer;
+                else if (Report.Format == ReportFormat.Json) renderer = JsonRenderer;
+                return renderer;
+            }
+        }
+
+
+        /// <summary>
         /// Parse the view and returns the result
         /// </summary>
-        public string Parse()
+        public string Parse(bool forceHTML = false)
         {
             string result = "";
             string phase = "compiling";
@@ -1258,31 +1467,52 @@ namespace Seal.Model
             try
             {
                 Report.CurrentView = this;
+                var template = Template;
+                var templateText = ViewTemplateText;
+                //Keep HTML for rendering display
+                RootRenderer renderer = null; 
+                if (Report.Status == ReportStatus.RenderingResult) renderer = Renderer;
+
                 string key = "";
-                if (!UseCustomTemplate || string.IsNullOrWhiteSpace(CustomTemplate))
+                if (forceHTML || renderer == null)
                 {
-                    //template -> file path + last modification
-                    key = Template.CompilationKey;
+                    //HTML
+                    if (!UseCustomTemplate || string.IsNullOrWhiteSpace(CustomTemplate))
+                    {
+                        //template -> file path + last modification
+                        key = Template.CompilationKey;
+                    }
+                    else
+                    {
+                        //view -> report path + last modification
+                        key = string.Format("REP:{0}_{1}_{2}", Report.FilePath, GUID, _lastTemplateModification.ToString("s"));
+                    }
                 }
                 else
                 {
-                    //view -> report path + last modification
-                    key = string.Format("REP:{0}_{1}_{2}", Report.FilePath, GUID, _lastTemplateModification.ToString("s"));
+                    //Renderer
+                    template = renderer.Template;
+                    templateText = renderer.ViewTemplateText;
+                    if (!renderer.UseCustomTemplate || string.IsNullOrWhiteSpace(renderer.CustomTemplate))
+                    {
+                        //template -> file path + last modification
+                        key = template.CompilationKey;
+                    }
+                    else
+                    {
+                        //view -> report path + last modification
+                        key = string.Format("REP:{0}_{1}_{2}_{3}", Report.FilePath, Report.Format, GUID, renderer.LastTemplateModification.ToString("s"));
+                    }
                 }
 
-                if (Template.ForReportModel && Model == null)
+                if (template.ForReportModel && Model == null)
                 {
                     Report.ExecutionMessages += string.Format("Warning for view '{0}': Model has been lost for the view. Switching to the first model of the report...", Name);
                     _modelGUID = Report.Models[0].GUID;
                 }
                 phase = "executing";
-                result = RazorHelper.CompileExecute(ViewTemplateText, Report, key);
+                result = RazorHelper.CompileExecute(templateText, Report, key);
 
-                //For CSV, add just one new line
-                if (Report.Format == ReportFormat.csv)
-                {
-                    result = result.Trim() + "\r\n" + (result.EndsWith("\r\n") ? "\r\n" : "");
-                }
             }
             catch (Exception ex)
             {
@@ -1309,17 +1539,9 @@ namespace Seal.Model
             string result = "";
             foreach (ReportView view in Views.OrderBy(i => i.SortOrder))
             {
-                if (view.Report.Format == ReportFormat.csv && !view.Template.ForReportModel)
-                {
-                    //add result for csv only for model
-                    result += view.ParseChildren();
-                }
-                else
-                {
-                    result += view.Parse();
-                }
+                result += view.Parse();
             }
-            return result;
+            return result.Trim();
         }
 
 
@@ -1373,8 +1595,10 @@ namespace Seal.Model
         public void InitTemplates(ReportView view, ref string errors)
         {
             view.InitParameters(false);
+
             if (!string.IsNullOrEmpty(view.Error)) errors += string.Format("Error in view template '{0}': {1}\r\n", view.Name, view.Error);
             foreach (var child in view.Views) InitTemplates(child, ref errors);
+
         }
 
         /// <summary>
@@ -1555,14 +1779,14 @@ namespace Seal.Model
             page.AxisYPrimaryMaxLen = 0;
             page.AxisYSecondaryMaxLen = 0;
 
-            StringBuilder result = new StringBuilder(), navs = new StringBuilder();
             //Build X labels
+            page.ChartXLabels.Clear();
+            page.ChartNavigations.Clear();
             foreach (var key in page.PrimaryXValues.Keys)
             {
                 ResultCell[] dimensions = key as ResultCell[];
-                if (result.Length != 0) result.Append(",");
                 var xval = (dimensions.Length == 1 ? dimensions[0].DisplayValue : page.PrimaryXValues[key].ToString());
-                result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
+                page.ChartXLabels.Add(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
                 if (xval.Length > page.AxisXLabelMaxLen) page.AxisXLabelMaxLen = xval.Length;
 
                 if (((ResultCell[])key).Length > 0)
@@ -1570,14 +1794,10 @@ namespace Seal.Model
                     var navigation = Model.GetNavigation(this, ((ResultCell[])key)[0], true);
                     if (!string.IsNullOrEmpty(navigation))
                     {
-                        if (navs.Length != 0) navs.Append(",");
-                        navs.AppendFormat("\"{0}\"", navigation);
+                        page.ChartNavigations.Add($"\"{navigation}\"");
                     }
                 }
             }
-
-            page.ChartXLabels = result.ToString();
-            page.ChartNavigations = navs.ToString();
 
             foreach (ResultSerie resultSerie in page.Series)
             {
@@ -1611,8 +1831,8 @@ namespace Seal.Model
 
                     if (Model.ExecChartIsNumericAxis)
                     {
-                        Double db = 0;
-                        if (value == null) Double.TryParse(page.PrimaryXValues[xDimensionKey].ToString(), out db);
+                        double db = 0;
+                        if (value == null) double.TryParse(page.PrimaryXValues[xDimensionKey].ToString(), out db);
                         else if (value.XDimensionValues[0].DoubleValue != null) db = value.XDimensionValues[0].DoubleValue.Value;
                         xValue = db.ToString(CultureInfo.InvariantCulture.NumberFormat);
                     }
@@ -1633,9 +1853,9 @@ namespace Seal.Model
                         TimeSpan diff = yValueDT.ToUniversalTime() - (new DateTime(1970, 1, 1, 0, 0, 0, 0));
                         yValue = string.Format("{0}000", Math.Floor(diff.TotalSeconds));
                     }
-                    else if (yValue is Double)
+                    else if (yValue is double)
                     {
-                        yValue = ((Double)yValue).ToString(CultureInfo.InvariantCulture.NumberFormat);
+                        yValue = ((double)yValue).ToString(CultureInfo.InvariantCulture.NumberFormat);
                     }
 
                     if (yValue == null && GetBoolValue(Parameter.NVD3AddNullPointParameter))
@@ -1667,6 +1887,13 @@ namespace Seal.Model
                             if (chartYDateResult.Length != 0) chartYDateResult.Append(",");
                             chartYDateResult.AppendFormat("\"{0:yyyy-MM-dd HH:mm:ss}\"", yValueDT);
                         }
+
+                        if (value != null)
+                        {
+                            value.Xvalue = xValue;
+                            value.XDateTimeValue = xValueDT;
+                            value.YDateTimeValue = yValueDT;
+                        }
                     }
                 }
                 resultSerie.ChartXYSerieValues = chartXYResult.ToString();
@@ -1693,6 +1920,7 @@ namespace Seal.Model
                         Model.CheckNVD3ChartIntegrity();
                         Model.CheckPlotlyChartIntegrity();
                         Model.CheckChartJSIntegrity();
+                        Model.CheckScottPlotChartIntegrity();
                         buildChartSeries(page);
                     }
                 }
@@ -1811,5 +2039,14 @@ namespace Seal.Model
                 return Report.TranslateDisplayName(names.Length == 0 ? RootView.Name : names[names.Length - 1]);
             }
         }
+
+        /// <summary>
+        /// Helper to find a child view from its template name
+        /// </summary>
+        public ReportView FindViewFromTemplate(string templateName)
+        {
+            return Report.FindViewFromTemplate(Views, templateName);
+        }
+
     }
 }

@@ -1,8 +1,10 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using QuestPDF.Infrastructure;
+using Seal.Model;
 using System;
 using System.IO;
 using System.Linq;
@@ -13,6 +15,9 @@ namespace Seal.Helpers
 {
     public class CryptoHelper
     {
+        public const string AESLicenseKey = "sjedk*+$àWE¨€*2*%ssddè";
+        public const string RSALicensePublicKey = "<RSAKeyValue><Modulus>tOiIckJ3yCHhEHuGFmz2OrumK/GYc49bQNzBrc2aTvQSUWynKD3BiaYlP0biQrCCHxjYcKHvuEcmIug6OELsnQasrId/FzXXtGNH7UnYoZHqOI9xUW57Ycd4eg7VEv8kBPP/q+6YdS2BhTav1JApDgKluGbRpfZtuCCCsIZmhw0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+
         public static string Hash(string text, string salt)
         {
             var bSalt = Encoding.GetEncoding(1252).GetBytes(salt + "47042ebf6b91akdjrdskjwk34dkf3241aa59ceca119ad").Take(128 / 8).ToArray();
@@ -156,10 +161,63 @@ namespace Seal.Helpers
             if (useMachineKeyStore) csp.Flags = CspProviderFlags.UseMachineKeyStore;
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(csp);
             rsa.PersistKeyInCsp = true;
-            
+
             byte[] decryptBytes = rsa.Decrypt(Convert.FromBase64String(text), true);
             string secretMessage = Encoding.Default.GetString(decryptBytes);
             return secretMessage;
+        }
+
+
+        public static string RSAEncrypt(string publicKey, string textToEncrypt)
+        {
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.FromXmlString(publicKey);
+
+                byte[] plainTextBytes = Encoding.UTF8.GetBytes(textToEncrypt);
+                byte[] cipherTextBytes = rsa.Encrypt(plainTextBytes, false);
+
+                return Convert.ToBase64String(cipherTextBytes);
+            }
+        }
+
+        public static string RSADecrypt(string privateKey, string textToDecrypt)
+        {
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.FromXmlString(privateKey);
+
+                byte[] cipherTextBytes = Convert.FromBase64String(textToDecrypt);
+                byte[] decryptedBytes = rsa.Decrypt(cipherTextBytes, false);
+
+                return Encoding.UTF8.GetString(decryptedBytes);
+            }
+        }
+
+        public static string RSASignData(string privateKey, string data)
+        {
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.FromXmlString(privateKey);
+
+                byte[] dataBytes = Encoding.UTF8.GetBytes(data);
+                byte[] signatureBytes = rsa.SignData(dataBytes, SHA256.Create());
+
+                return Convert.ToBase64String(signatureBytes);
+            }
+        }
+
+        public static bool RSAVerifySignature(string publicKey, string data, string signature)
+        {
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.FromXmlString(publicKey);
+
+                byte[] dataBytes = Encoding.UTF8.GetBytes(data);
+                byte[] signatureBytes = Convert.FromBase64String(signature);
+
+                return rsa.VerifyData(dataBytes, SHA256.Create(), signatureBytes);
+            }
         }
     }
 }

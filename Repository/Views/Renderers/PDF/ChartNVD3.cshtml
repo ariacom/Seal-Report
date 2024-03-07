@@ -1,0 +1,67 @@
+﻿@using PuppeteerSharp
+@using PuppeteerSharp.Media
+@using QuestPDF.Fluent
+@using QuestPDF.Infrastructure
+@using System.IO
+@using Seal.Model
+@using Seal.Renderer
+
+
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFResult result = report.PDFResult;
+    ResultPage page = report.CurrentPage;
+
+    var document = result.Document;
+    var container = result.Container;
+
+    try
+    {
+        foreach (var id in page.GetIdentifiers(ResultPageIdentifierType.ChartNVD3Canvas))
+        {
+            string canvasSelector = "#" + id;
+
+            // Get the bounding box of the canvas
+            var boundingBox = await result.Page.EvaluateFunctionAsync<dynamic>(
+             "(selector) => { const element = document.querySelector(selector); var rect = element.getBoundingClientRect(); return { x: rect.x, y : rect.y, width : rect.width, height : rect.height }; }",
+             canvasSelector
+            );
+
+            // Capture screenshot of the canvas element
+            var screenshotOptions = new ScreenshotOptions
+                    {
+                        Clip = new Clip
+                        {
+                            X = boundingBox.x,
+                            Y = boundingBox.y,
+                            Width = boundingBox.width,
+                            Height = boundingBox.height,
+                        },
+                    };
+
+            var image = await result.Page.ScreenshotDataAsync(screenshotOptions);
+
+            container.Column(column =>
+            {
+                var i = column.Item()
+                .AlignCenter()
+                .AlignMiddle();
+                var w = renderer.GetNumericValue("chart_width");
+                if (w > 0) i = i.Width(w, Unit.Millimetre);
+                var h = renderer.GetNumericValue("chart_height");
+                if (h > 0) i = i.Height(h, Unit.Millimetre);
+                i.Image(image).FitArea();
+
+                container = column.Item();
+            });
+        }
+        page.ClearIdentifiers(ResultPageIdentifierType.ChartNVD3Canvas);
+    }
+    catch (Exception ex)
+    {
+        report.LogMessage(ex.Message);
+    }
+}

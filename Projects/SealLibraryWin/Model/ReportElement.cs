@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Linq;
@@ -70,6 +70,7 @@ namespace Seal.Model
                     GetProperty("EnumGUIDEL").SetIsBrowsable(true);
                     GetProperty("CssClassEl").SetIsBrowsable(true);
                     GetProperty("CssStyleEl").SetIsBrowsable(true);
+                    GetProperty("CssTitle").SetIsBrowsable(true);
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum && PivotPosition != PivotPosition.Data);
                     GetProperty("ContainsHtml").SetIsBrowsable(true);
@@ -83,6 +84,7 @@ namespace Seal.Model
                     GetProperty("Nvd3Serie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ChartJSSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("PlotlySerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("ScottPlotSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     //FUTURE GetProperty("XAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column || PivotPosition == PivotPosition.Data);
                     GetProperty("YAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("SerieSortOrder").SetIsBrowsable(PivotPosition == PivotPosition.Data);
@@ -537,7 +539,7 @@ namespace Seal.Model
         /// </summary>
         public bool IsSerie
         {
-            get { return _nvd3Serie != NVD3SerieDefinition.None || _chartJSSerie != ChartJSSerieDefinition.None || _plotlySerie != PlotlySerieDefinition.None; }
+            get { return _nvd3Serie != NVD3SerieDefinition.None || _chartJSSerie != ChartJSSerieDefinition.None || _plotlySerie != PlotlySerieDefinition.None || _scottPlotSerie != ScottPlotSerieDefinition.None; }
         }
 
         /// <summary>
@@ -569,13 +571,33 @@ namespace Seal.Model
             }
         }
 
+
+        ScottPlotSerieDefinition _scottPlotSerie = ScottPlotSerieDefinition.None;
+        /// <summary>
+        /// Definition of the serie for the element in the Chart JS chart
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(ScottPlotSerieDefinition.None)]
+        [Category("Chart"), DisplayName("Scott Plot serie"), Description("Definition of the serie for the element in the Scott Plot chart."), Id(3, 2)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+#endif
+        public ScottPlotSerieDefinition ScottPlotSerie
+        {
+            get { return _scottPlotSerie; }
+            set
+            {
+                _scottPlotSerie = value;
+                UpdateEditorAttributes();
+            }
+        }
+
         NVD3SerieDefinition _nvd3Serie = NVD3SerieDefinition.None;
         /// <summary>
         /// Definition of the serie for the element in the NVD3 chart
         /// </summary>
 #if WINDOWS
         [DefaultValue(NVD3SerieDefinition.None)]
-        [Category("Chart"), DisplayName("NVD3 serie"), Description("Definition of the serie for the element in the NVD3 chart."), Id(3, 2)]
+        [Category("Chart"), DisplayName("NVD3 serie"), Description("Definition of the serie for the element in the NVD3 chart."), Id(4, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public NVD3SerieDefinition Nvd3Serie
@@ -594,7 +616,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(PlotlySerieDefinition.None)]
-        [Category("Chart"), DisplayName("Plotly serie"), Description("Definition of the serie for the element in the Plotly chart."), Id(4, 2)]
+        [Category("Chart"), DisplayName("Plotly serie"), Description("Definition of the serie for the element in the Plotly chart."), Id(5, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public PlotlySerieDefinition PlotlySerie
@@ -613,7 +635,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(SerieSortType.Y)]
-        [Category("Chart"), DisplayName("Sort type"), Description("Defines how the serie is sorted in the chart."), Id(5, 2)]
+        [Category("Chart"), DisplayName("Sort type"), Description("Defines how the serie is sorted in the chart."), Id(6, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public SerieSortType SerieSortType
@@ -631,7 +653,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(PointSortOrder.Ascending)]
-        [Category("Chart"), DisplayName("Sort order"), Description("Defines if the serie is sorted ascending or descending in the chart."), Id(6, 2)]
+        [Category("Chart"), DisplayName("Sort order"), Description("Defines if the serie is sorted ascending or descending in the chart."), Id(7, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public PointSortOrder SerieSortOrder { get; set; } = PointSortOrder.Ascending;
@@ -642,7 +664,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(AxisType.Primary)]
-        [Category("Chart"), DisplayName("X axis type"), Description("Definition of the X axis of the serie (Primary or Secondary)."), Id(7, 2)]
+        [Category("Chart"), DisplayName("X axis type"), Description("Definition of the X axis of the serie (Primary or Secondary)."), Id(8, 2)]
 #endif
         public AxisType XAxisType { get; set; } = AxisType.Primary;
 
@@ -651,7 +673,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(AxisType.Primary)]
-        [Category("Chart"), DisplayName("Y axis type"), Description("Definition of the Y axis of the serie (Primary or Secondary)."), Id(8, 2)]
+        [Category("Chart"), DisplayName("Y axis type"), Description("Definition of the Y axis of the serie (Primary or Secondary)."), Id(9, 2)]
 #endif
         public AxisType YAxisType { get; set; } = AxisType.Primary;
 
@@ -809,6 +831,17 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+
+        /// <summary>
+        /// If True, the CSS Styles and Classes are also applied to the cell titles.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(false)]
+        [Category("Advanced"), DisplayName("Apply Css to title"), Description("If True, the CSS Styles and Classes are also applied to the cell titles"), Id(6, 5)]
+#endif
+        public bool CssTitle { get; set; } = false;
+        public bool ShouldSerializeCssTitle() { return CssTitle; }
+
 
         /// <summary>
         /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is aggregate' is used. This flag impacts the build of the GROUP BY Clause.

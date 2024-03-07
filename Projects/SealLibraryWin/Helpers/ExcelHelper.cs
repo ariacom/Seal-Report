@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 
 using Microsoft.VisualBasic.FileIO;
@@ -165,7 +165,7 @@ namespace Seal.Helpers
         }
 
 
-        static public DataTable LoadDataTableFromCSV(string csvPath, char? separator, Encoding encoding)
+        static public DataTable LoadDataTableFromCSV(string csvPath, char? separator, Encoding encoding, bool noHeader = false)
         {
             DataTable result = null;
             bool isHeader = true;
@@ -205,6 +205,17 @@ namespace Seal.Helpers
                 }
 
                 MatchCollection collection = regexp.Matches(line2);
+                if (noHeader)
+                {
+                    result = new DataTable();
+                    for (int i = 0; i < collection.Count; i++)
+                    {
+                        result.Columns.Add(new DataColumn($"col{i+1}", typeof(string)));
+                    }
+                    noHeader = false;
+                    isHeader = false;
+                }
+
                 if (isHeader)
                 {
                     result = new DataTable();

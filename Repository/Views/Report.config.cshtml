@@ -1,19 +1,20 @@
 @using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = ReportViewTemplate.ReportName;
     Template.Description = "Root view containing all the code necessary for the report execution.";
-
-    //If true, the view can be configured for a report model
-    Template.ForReportModel = false;
 
     //Shared template
     Template.SharedPartialTemplates = new string[] { "Restrictions.iShared" };
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = Parameter.ReportFormatParameter, Value = "html", Enums = new string[] { "html|HTML", "print|HTML Print", "csv|CSV Excel", "pdf|PDF", "excel|Excel", "custom|Custom" }, DisplayName = "Report format", Description = "Format of the report result. If format is Custom, Report.ResultFilePath must be specified in a child script template." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.ReportFormatParameter, 
+        Value = "html", 
+                Enums = new string[] { },
+                EnumType = typeof(ReportFormat),
+                DisplayName = "Report format",
+                Description = "Format of the report result.",
+                UseOnlyEnumValues = true
+            });
     Template.Parameters.Add(new Parameter() { Name = "report_description", DisplayName = "Report description", Description = "Optional report description displayed in the information panel." });
     Template.Parameters.Add(new Parameter() { Name = "restriction_button", DisplayName = "Display: Show restrictions", BoolValue = true, Description = "If true, the restrictions are displayed when the report is initialized (if the report has prompted restrictions)." });
     Template.Parameters.Add(new Parameter() { Name = "information_mode", DisplayName = "Display: Information messages", Description = "Defines if the information messages panel is enabled and if it is shown when the report is initialized.", Value = "enabled", Enums = new string[] { "enabled|Information panel enabled", "enabledshown|Information panel enabled and shown", "disabled|Information panel hidden" } });
@@ -38,8 +39,9 @@
     Template.Parameters.Add(new Parameter() { Name = "additional_js", DisplayName = "Additional JavaScript", Description = "Additional JavaScript inserted at the top of the report result file." });
     Template.Parameters.Add(new Parameter() { Name = "additional_css", DisplayName = "Additional CSS", Description = "Additional CSS inserted at the top of the report result file (after the CSS includes).", Enums = new string[] { "body {font-size: 12px;}", ".dataTable {font-size: 10px;}" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "container_fluid", BoolValue = true, DisplayName = "Bootstrap: Containers are fluid", Description = "If true, the bootstrap containers have a full width, spanning the entire width of the viewport, otherwise the containers have a responsive fixed width." });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.CSVUtf8Parameter, BoolValue = true, DisplayName = "CSV: Encode file in UTF8", Description = "If true, the file generated for a CSV export is encoded in UTF8, otherwise the file encoding is the Default of the machine executing the report." });
-    Template.Parameters.Add(new Parameter() { Name = "pdf_toc", BoolValue = false, DisplayName = "PDF: Generate Table of Contents", Description = "If true, the Table of Contents is enabled and inserted for the PDF conversion, it applies to the Tab Pages (level 1) and Model Pages (level 2)." });
+    Template.Parameters.Add(new Parameter() { Name = "print_body_width", Value = "1200px", DisplayName = "HTML Print: Body width", Description = "The width of the body HTML element in HTML Print format. The HTML Print format is also used for PDF rendering (HTML to PDF, Chart and Gauge images)." });
+    Template.Parameters.Add(new Parameter() { Name = "print_information", DisplayName = "HTML Print: Show report information", BoolValue = true, Description = "If true, report information is displayed at the end of the document." });
+    Template.Parameters.Add(new Parameter() { Name = "print_messages", DisplayName = "HTML Print: Show messages", BoolValue = false, Description = "If true, report execution messages are displayed at the end of the document." });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>();

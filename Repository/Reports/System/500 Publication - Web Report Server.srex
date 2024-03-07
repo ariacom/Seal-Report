@@ -64,7 +64,7 @@
       <GUID>ccb62554-63e2-4cbc-9d18-e59099cb573c</GUID>
       <Name>Publish Web Report Server</Name>
       <Tasks />
-      <CancelReport>false</CancelReport>
+      <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
       <SourceGUID>92a001bf-5000-4dfe-b5b6-d86accb65aff</SourceGUID>
       <Script>@using System.IO
@@ -82,10 +82,11 @@
     //webServerDestination = "/site/wwwroot/"; //FTP root folder (e.g. for Azure)
     
     //Uncomment and configure to deploy on a FTP Server
-    FtpClient client = new FtpClient(); 
-    client.Host = "Host Name";
-    client.Credentials.UserName = "User Name";
-    client.Credentials.Password = "Password";    
+    FtpClient client = null;
+    //client = new FtpClient(); 
+    //client.Host = "Host Name";
+    //client.Credentials.UserName = "User Name";
+    //client.Credentials.Password = "Password";    
     //client = new FtpClient("127.0.0.1", "tester", "password"); 
     //client = new FtpClient("waws-prod-dm1-129.ftp.azurewebsites.windows.net", @"sealcore\$sealcore", "password"); //  (e.g. for Azure)
 

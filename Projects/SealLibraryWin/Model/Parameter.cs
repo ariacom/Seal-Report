@@ -1,11 +1,16 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System.Xml.Serialization;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using Seal.Helpers;
+using MySqlX.XDevAPI.Common;
+using System.Globalization;
+
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -24,7 +29,7 @@ namespace Seal.Model
         public const string DrillAllParameter = "drill_all";
         public const string SubReportsEnabledParameter = "subreports_enabled";
         public const string ServerPaginationParameter = "serverpagination_enabled";
-        public const string EnableResultsMenuParameter = "resultsmenu_enabled";        
+        public const string EnableResultsMenuParameter = "resultsmenu_enabled";
         public const string ForceExecutionParameter = "force_execution";
         public const string ForceRefreshParameter = "force_refresh";
         public const string ForceModelsLoad = "force_models_load";
@@ -52,6 +57,7 @@ namespace Seal.Model
                 GetProperty("BoolValue").SetIsBrowsable(Type == ViewParameterType.Boolean);
                 GetProperty("NumericValue").SetIsBrowsable(Type == ViewParameterType.Numeric);
                 GetProperty("EnumValue").SetIsBrowsable(Type == ViewParameterType.Enum);
+                GetProperty("DoubleValue").SetIsBrowsable(Type == ViewParameterType.Double);
                 GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("HelperResetParameterValue").SetIsBrowsable(true);
 
@@ -65,6 +71,7 @@ namespace Seal.Model
                     GetProperty("TextValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
                     GetProperty("BoolValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
                     GetProperty("NumericValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
+                    GetProperty("DoubleValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
                     GetProperty("EnumValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
                 }
 
@@ -136,7 +143,8 @@ namespace Seal.Model
             get
             {
                 if (string.IsNullOrEmpty(Value) || Type != ViewParameterType.Boolean) return false;
-                return bool.Parse(Value);
+                if (bool.TryParse(Value, out bool boolValue)) return boolValue;
+                return false;
             }
             set
             {
@@ -157,7 +165,8 @@ namespace Seal.Model
             get
             {
                 if (string.IsNullOrEmpty(Value) || Type != ViewParameterType.Numeric) return 0;
-                return int.Parse(Value);
+                if (int.TryParse(Value, out int intValue)) return intValue;
+                return 0;
             }
             set
             {
@@ -167,8 +176,29 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// The text parameter value
+        /// The double parameter value
         /// </summary>
+#if WINDOWS
+        [DisplayName("Value"), Description("The double parameter value."), Category("Definition")]
+#endif
+        [XmlIgnore]
+        public double DoubleValue
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Value) || Type != ViewParameterType.Double) return 0;
+                if (double.TryParse(Value, CultureInfo.InvariantCulture, out double doubleValue)) return doubleValue;
+                return 0;
+            }
+            set
+            {
+                Type = ViewParameterType.Double;
+                Value = value.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+        /// <summary>
+                 /// The text parameter value
+                 /// </summary>
 #if WINDOWS
         [DisplayName("Value"), Description("The text parameter value."), Category("Definition")]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
@@ -195,11 +225,47 @@ namespace Seal.Model
         [XmlIgnore]
         public string[] Enums
         {
-            get { return _enums; }
+            get
+            {
+                if (_enums == null) return null;
+
+                var vals = new List<string>(_enums);
+                if (_enumType != null)
+                {
+                    foreach (var val in _enumType.GetEnumValues())
+                    {
+                        //Add names
+                        var desc = Helper.GetEnumDescription(EnumType, val);
+                        if(desc == val.ToString()) desc = Helper.DBNameToDisplayName(desc);
+                        vals.Add(val.ToString() + "|" + desc);
+                    }
+                }
+
+                return vals.ToArray();
+            }
             set
             {
                 if (value != null) Type = ViewParameterType.Enum;
                 _enums = value;
+            }
+        }
+
+        /// <summary>
+        /// If set, the enum values are taken from the Enum defined
+        /// </summary>
+        Type _enumType = null;
+
+        public Type EnumType
+        {
+            get
+            {
+                return _enumType;
+            }
+            set
+            {
+                if (value != null) Type = ViewParameterType.Enum;
+                _enumType = value;
+
             }
         }
 
@@ -209,12 +275,14 @@ namespace Seal.Model
         [XmlIgnore]
         public string[] EnumValues
         {
-            get {
+            get
+            {
                 List<string> result = new List<string>();
                 foreach (var val in _enums)
                 {
                     result.Add(val.Contains("|") ? val.Split('|')[0] : val);
                 }
+
                 return result.ToArray();
             }
         }
@@ -225,11 +293,12 @@ namespace Seal.Model
         [XmlIgnore]
         public string[] EnumDisplays
         {
-            get {
+            get
+            {
                 List<string> result = new List<string>();
                 foreach (var val in _enums)
                 {
-                    result.Add(val.Contains("|")  ? val.Split('|')[1] : val);
+                    result.Add(val.Contains("|") ? val.Split('|')[1] : val);
                 }
                 return result.ToArray();
             }
@@ -269,15 +338,20 @@ namespace Seal.Model
         {
             get
             {
-                if(Type == ViewParameterType.Boolean)
+                if (Type == ViewParameterType.Boolean)
                 {
                     if (string.IsNullOrEmpty(ConfigValue)) return false;
                     return bool.Parse(ConfigValue);
                 }
-                if(Type == ViewParameterType.Numeric)
+                else if (Type == ViewParameterType.Numeric)
                 {
                     if (string.IsNullOrEmpty(ConfigValue)) return 0;
                     return int.Parse(ConfigValue);
+                }
+                else if (Type == ViewParameterType.Double)
+                {
+                    if (string.IsNullOrEmpty(ConfigValue)) return 0;
+                    return double.Parse(ConfigValue, CultureInfo.InvariantCulture);
                 }
                 return ConfigValue;
             }
@@ -300,7 +374,7 @@ namespace Seal.Model
         /// </summary>
         public string EnumGetDisplayFromValue(string value)
         {
-            int index= EnumValues.ToList().FindIndex(i => i == value);
+            int index = EnumValues.ToList().FindIndex(i => i == value);
             if (index >= 0 && index < EnumDisplays.Length) return EnumDisplays[index];
             return value;
         }

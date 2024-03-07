@@ -1,0 +1,8 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "gauge_width", NumericValue = 60, DisplayName = "Gauge width (millimeter)", Description = "The gauge width in millimeter. If 0 the available page size is used." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_height", NumericValue = 60, DisplayName = "Gauge height (millimeter)", Description = "The gauge height in millimeter. If 0 the available page size is used." });
+}

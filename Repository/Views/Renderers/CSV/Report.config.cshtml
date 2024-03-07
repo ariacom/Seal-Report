@@ -1,0 +1,7 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = Parameter.CSVUtf8Parameter, BoolValue = true, DisplayName = "Encode file in UTF8", Description = "If true, the file generated for a CSV export is encoded in UTF8, otherwise the file encoding is the Default of the machine executing the report." });
+}

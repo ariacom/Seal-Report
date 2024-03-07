@@ -1,22 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<DefineConstants>$(DefineConstants);RAZOR4</DefineConstants>
 		<DefineConstants>$(DefineConstants);NO_APPDOMAIN;NO_CODEDOM;NO_CONFIGURATION;NETCORE</DefineConstants>
-		<Version>7.0.0.0</Version>
-		<FileVersion>7.0.0.0</FileVersion>
-		<AssemblyVersion>7.0.0.0</AssemblyVersion>
+		<Version>8.0.0.0</Version>
+		<FileVersion>8.0.0.0</FileVersion>
+		<AssemblyVersion>8.0.0.0</AssemblyVersion>
 		<AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<RootNamespace>RazorEngine</RootNamespace>
 		<AssemblyName>RazorEngine.NetCore</AssemblyName>
-		<Authors>Connie Yau, HermanHo, Fouad Messaia,Zuliang Liu(China), Ariacom</Authors>
-		<Description>Fork from https://github.com/hermanho/RazorEngine, But Fixed Bug that Razor string does not support @using and @inherits and @functions and @section, etc. Changes for Seal Report </Description>
+		<Authors>Ariacom</Authors>
+		<Description>RazorEngine library used by Seal Report.
+Fork from https://antaris.github.io/RazorEngine/</Description>
 		<RepositoryType>git</RepositoryType>
-		<Copyright>RazorEngine Copyright © RazorEngine Project 2011-2018</Copyright>
-		<Company>RazorEngine</Company>
-		<Product>RazorEngine</Product>
+		<Copyright>Copyright © RazorEngine Project 2011-2018</Copyright>
+		<Company>Ariacom</Company>
+		<Product>Seal Report RazorEngine</Product>
 		<IncludeSymbols>True</IncludeSymbols>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -34,6 +36,9 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageId>SealReportLibrary.RazorEngine.NETCore</PackageId>
+		<Title>Seal Report Library Razor Engine</Title>
+		<RepositoryUrl>https://github.com/ariacom/Seal-Report</RepositoryUrl>
+		<PackageProjectUrl>https://sealreport.org</PackageProjectUrl>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,8 +52,8 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.23" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.26" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
 		<PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>

@@ -1,0 +1,45 @@
+﻿@using QuestPDF.Fluent
+@using QuestPDF.Infrastructure
+@using Colors = QuestPDF.Helpers.Colors
+@using SkiaSharp
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFRenderer modelViewRenderer = modelView.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    var document = result.Document;
+    var container = result.Container;
+
+    //Generate plots
+    page.Plots.Clear();
+    view.Parse(true);
+
+    foreach (var plot in page.Plots)
+    {
+        container.Column(column =>
+        {
+            column.Item()
+            .AlignCenter()
+            .AlignMiddle()
+            .Width(renderer.GetNumericValue("chartsp_width"), Unit.Millimetre)
+            .Height(renderer.GetNumericValue("chartsp_height"), Unit.Millimetre)
+            .Canvas((canvas, space) =>
+            {
+                canvas.Save();
+                canvas.ClipRect(new SKRect(0, 0, space.Width, space.Height));
+                plot.Render(canvas, (int)space.Width, (int)space.Height);
+                canvas.Restore();
+            });
+
+            container = column.Item();
+        });
+    }
+}

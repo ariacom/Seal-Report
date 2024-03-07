@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Drawing;
@@ -22,6 +22,7 @@ using System.Text.Json;
 using System.Collections.Generic;
 using DocumentFormat.OpenXml.Spreadsheet;
 using static Seal.Forms.ReportViewerForm;
+using FluentFTP.Helpers;
 
 namespace Seal.Forms
 {
@@ -224,30 +225,12 @@ namespace Seal.Forms
                 }
 
                 var resultPath = "";
-                if (e.Uri.EndsWith(ReportExecution.ActionViewHtmlResult))
-                {
-                    setCurrentExecution();
-                    resultPath = _execution.GenerateHTMLResult();
-                }
-                else if (e.Uri.EndsWith(ReportExecution.ActionViewCSVResult))
-                {
-                    setCurrentExecution();
-                    resultPath = _execution.GenerateCSVResult();
-                }
-                else if (e.Uri.EndsWith(ReportExecution.ActionViewPrintResult))
-                {
-                    setCurrentExecution();
-                    resultPath = _execution.GeneratePrintResult();
-                }
-                else if (e.Uri.EndsWith(ReportExecution.ActionViewPDFResult))
-                {
-                    setCurrentExecution();
-                    resultPath = _execution.GeneratePDFResult();
-                }
-                else if (e.Uri.EndsWith(ReportExecution.ActionViewExcelResult))
-                {
-                    setCurrentExecution();
-                    resultPath = _execution.GenerateExcelResult();
+                foreach (ReportFormat format in Enum.GetValues(typeof(ReportFormat))) {
+                    if (e.Uri.EndsWith("ViewResult?format=" + format))
+                    {
+                        setCurrentExecution();
+                        resultPath = _execution.GenerateResult(format);
+                    }
                 }
                 if (File.Exists(resultPath))
                 {

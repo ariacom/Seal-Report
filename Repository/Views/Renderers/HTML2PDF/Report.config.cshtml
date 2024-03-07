@@ -1,0 +1,45 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "scale", DisplayName = "Scale", DoubleValue = 1, Description = "Scale of the webpage rendering. Scale amount must be between 0.1 and 2.." });
+    Template.Parameters.Add(new Parameter() { Name = "display_hf", DisplayName = "Display header footer", BoolValue = true, Description = "If true, headers and footers are displayed on the page." });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "header_template",
+                DisplayName = "Header template",
+                Description = "HTML template for the print header. Should be valid HTML markup with following classes used to inject printing values into them: date, title, url, pageNumber, totalPages.",
+                Value = " ",
+                UseOnlyEnumValues = false,
+                Enums = new string[] { " ", "<div style='text-align:center; font-size:14px;width:100%;'><span class='title' style='float:left;margin-left:30px'></span> <span class='pageNumber'></span> / <span class='totalPages'></span> <span class='date' style='float:right;margin-right:30px;'></span></div>", "<span class='pageNumber'></span> / <span class='totalPages'></span> <span class='title'></span> <span class='date'></span> <span class='url'/></span>" }
+            });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "footer_template",
+                DisplayName = "Footer template",
+                Description = "HTML template for the print footer. Should be valid HTML markup with following classes used to inject printing values into them: date, title, url, pageNumber, totalPages.",
+                Value = "<div style='text-align:center; font-size:14px;width:100%;'><span class='title' style='float:left;margin-left:30px'></span> <span class='pageNumber'></span> / <span class='totalPages'></span> <span class='date' style='float:right;margin-right:30px;'></span></div>",
+                UseOnlyEnumValues = false,
+                Enums = new string[] { " ", "<span class='pageNumber'></span> / <span class='totalPages'></span> <span class='title'></span> <span class='date'></span> <span class='url'/></span>" }
+            });
+
+    Template.Parameters.Add(new Parameter() { Name = "print_background", DisplayName = "Print background", BoolValue = false, Description = "If true, print background graphics." });
+    Template.Parameters.Add(new Parameter() { Name = "landscape", DisplayName = "Landscape", BoolValue = false, Description = "If true, paper orientation is landscape." });
+    Template.Parameters.Add(new Parameter() { Name = "page_ranges", DisplayName = "Page ranges", Value = "", Description = "Paper ranges to print, (e.g., 1-5, 8, 11-13). If empty, all pages are printed." });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "format",
+                DisplayName = "Format",
+                Description = "Paper format.",
+                Value = "A4",
+                UseOnlyEnumValues = true,
+                Enums = new string[] { "Letter", "Legal", "Tabloid", "Ledger", "A0", "A1", "A2", "A3", "A4", "A5", "A6" }
+            });
+
+    Template.Parameters.Add(new Parameter() { Name = "margin_bottom", DisplayName = "Margin: bottom", Value = "60px", Description = "Bottom margin of the page." });
+    Template.Parameters.Add(new Parameter() { Name = "margin_top", DisplayName = "Margin: top", Value = "40px", Description = "Top margin of the page." });
+    Template.Parameters.Add(new Parameter() { Name = "margin_left", DisplayName = "Margin: left", Value = "50px", Description = "Left margin of the page." });
+    Template.Parameters.Add(new Parameter() { Name = "margin_right", DisplayName = "Margin: right", Value = "50px", Description = "Right margin of the page." });
+    Template.Parameters.Add(new Parameter() { Name = "omit_background", DisplayName = "Omit background", BoolValue = false, Description = "If true, hides default white background and allows generating pdfs with transparency." });
+}

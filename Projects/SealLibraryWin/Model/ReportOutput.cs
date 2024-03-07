@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -338,16 +338,6 @@ namespace Seal.Model
             }
         }
 
-        /// <summary>
-        /// This property is obsolete. Use ZipResult instead. Will be removed in future version.
-        /// </summary>
-        public bool? EmailZipAttachments { get; set; } = null;
-
-        /// <summary>
-        /// This property is obsolete. Use ZipPassword instead. Will be removed in future version.
-        /// </summary>
-        public string EmailZipPassword { get; set; }
-
         private bool _zipResult = false;
         /// <summary>
         /// If true, the result file will be compressed in a zip file
@@ -366,16 +356,11 @@ namespace Seal.Model
             set
             {
                 _zipResult = value;
-                if (EmailZipAttachments != null)
-                {
-                    _zipResult = EmailZipAttachments.Value;
-                    EmailZipAttachments = null;
-                }
                 UpdateEditorAttributes();  
             }
         }
 
-        private string _zipPassword = "";
+        private string _zipPassword;
         /// <summary>
         /// If not empty, the Zip result file will be protected with the password
         /// </summary>
@@ -391,11 +376,6 @@ namespace Seal.Model
             set
             {
                 _zipPassword = value;
-                if (!string.IsNullOrEmpty(EmailZipPassword) && string.IsNullOrEmpty(_zipPassword))
-                {
-                    _zipPassword = EmailZipPassword;
-                    EmailZipPassword = null;
-                }
             }
         }
 

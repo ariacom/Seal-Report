@@ -16,12 +16,6 @@
             </div>
         }
 
-        if (report.PrintLayout)
-        {
-            <h3 @Raw(report.ExecutionView.GetBoolValue("pdf_toc") && view.GetBoolValue("pdf_toc_items") && report.PdfConversion ? "data-toc-item='true' data-toc-level='1'" : "")>
-                @childView.ViewName
-            </h3>
-        }
         @Raw(childView.Parse())
 
         if (!string.IsNullOrEmpty(childView.Error))

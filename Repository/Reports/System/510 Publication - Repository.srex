@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CurrentViewGUID>838b9ce2-7276-4af0-b250-d336eceaada0</CurrentViewGUID>
-  <GUID>57ce0ee5-6cb4-4ce0-94c8-607fe37d6afb</GUID>
+  <GUID>22ea79fc7ee544c787dfd209e47d315b</GUID>
   <ViewGUID>838b9ce2-7276-4af0-b250-d336eceaada0</ViewGUID>
   <InputValues>
     <ReportRestriction>
@@ -14,6 +13,7 @@
       <EnumGUIDEL>b3a1f4c6-fae8-4a84-b120-9593fb1c2b9c</EnumGUIDEL>
       <Prompt>Prompt</Prompt>
       <OperatorStyle>NotModifiable</OperatorStyle>
+      <FirstSelection>All</FirstSelection>
       <TypeRe>Text</TypeRe>
       <EnumGUIDRE>b3a1f4c6-fae8-4a84-b120-9593fb1c2b9c</EnumGUIDRE>
     </ReportRestriction>
@@ -123,7 +123,7 @@
       <GUID>ccb62554-63e2-4cbc-9d18-e59099cb573c</GUID>
       <Name>Publish Repository Files</Name>
       <Tasks />
-      <CancelReport>false</CancelReport>
+      <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
       <SourceGUID>92a001bf-5000-4dfe-b5b6-d86accb65aff</SourceGUID>
       <Script>@using System.IO
@@ -136,15 +136,15 @@
 
     //Configure the root repository destination folder:
     var repositoryDestination = "";  // TO BE MODIFIED !
-    //repositoryDestination =@"\\wsl$\Ubuntu\seal\Repository"; //For file system (Ubuntu Sub-System)
+    repositoryDestination =@"\\wsl$\Ubuntu-22.04\seal\Repository"; //For file system (Ubuntu Sub-System)
     //repositoryDestination = "/Repository/"; //FTP root folder
     //repositoryDestination = "/site/wwwroot/Repository/"; //FTP root folder (e.g. for Azure)
 
     //Uncomment and configure to deploy on a FTP Server
-    FtpClient client = new FtpClient(); 
-    client.Host = "Host Name";
-    client.Credentials.UserName = "User Name";
-    client.Credentials.Password = "Password";      //client = new FtpClient("127.0.0.1", "tester", "password"); 
+    FtpClient client = null;//new FtpClient(); 
+    //client.Host = "Host Name";
+    //client.Credentials.UserName = "User Name";
+    //client.Credentials.Password = "Password";      //client = new FtpClient("127.0.0.1", "tester", "password"); 
     //client = new FtpClient("waws-prod-dm1-165.ftp.azurewebsites.windows.net", @"sealcore\$sealcore", "password"); //  (e.g. for Azure)
 
     if (client != null) {
@@ -186,10 +186,6 @@
     }
 
     foreach (var folder in repositoryFolders.EnumValues.ToList()) {
-        if (folder.StartsWith("ra:")) {
-            dirs.Add(repository.RepositoryPath, dest);
-            break;
-        }
         if (folder.StartsWith("re:")) {
             var sourcePath = folder.Substring(3);
             var destPath = dest + Path.GetFileName(folder.Substring(3));
@@ -335,7 +331,6 @@
     //Fill repository enum
     var foldersEnum = report.Sources[0].MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Repository Folders");
     if (foldersEnum != null &amp;&amp; foldersEnum.Values.Count == 0) {
-        foldersEnum.Values.Add(new MetaEV() { Id = "ra:", Val = "Repository: Copy All Folders" });
         foreach (var folder in Directory.GetDirectories(report.Repository.RepositoryPath))
         {
             var description = "Repository Folder: " + Path.GetFileName(folder);

@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -49,6 +49,8 @@ namespace Seal.Forms
             mainPanel.Controls.Add(textBox);
             textBox.Dock = DockStyle.Fill;
             ScintillaHelper.Init(textBox, Lexer.Html);
+            textBox.HScrollBar = true;
+            textBox.VScrollBar = true;
             toolStripStatusLabel.Image = null;
             ShowIcon = true;
             Icon = Repository.ProductIcon;
@@ -217,6 +219,7 @@ namespace Seal.Forms
             string error = CheckSyntax();
             if (!string.IsNullOrEmpty(error))
             {
+                if (error.Length > 2000) error = error.Substring(0, 2000) + "...";
                 MessageBox.Show(error, "Check syntax", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

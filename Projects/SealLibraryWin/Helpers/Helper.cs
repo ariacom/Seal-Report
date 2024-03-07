@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -74,7 +74,6 @@ namespace Seal.Helpers
             return result;
         }
 
-
         static public void CopyPropertiesDifferentObjects(object src, object dest)
         {
             var propSource = TypeDescriptor.GetProperties(src);
@@ -134,6 +133,13 @@ namespace Seal.Helpers
         {
             PropertyInfo prop = item.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (null != prop) return prop.GetValue(item, null);
+            return null;
+        }
+
+        static public object GetStaticPropertyValue(Type type, string propertyName)
+        {
+            PropertyInfo prop = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
+            if (null != prop) return prop.GetValue(null, null);
             return null;
         }
 
@@ -354,10 +360,10 @@ namespace Seal.Helpers
                     result = Helper.NetTypeConverter(Helper.OleDbToNetTypeConverter(columnType));
                     if (columnType == OleDbType.WChar || columnType == OleDbType.VarWChar || columnType == OleDbType.LongVarWChar) result = ColumnType.UnicodeText;
                 }
-                else 
+                else
                 {
                     var dbValueString = dbValue.ToString().ToLower();
-                    if (dbValueString.Contains("number")  || dbValueString.Contains("double") || dbValueString.Contains("numeric")) result = ColumnType.Numeric;
+                    if (dbValueString.Contains("number") || dbValueString.Contains("double") || dbValueString.Contains("numeric")) result = ColumnType.Numeric;
                     else if (dbValueString.Contains("date")) result = ColumnType.DateTime;
 
                 }
@@ -797,7 +803,7 @@ namespace Seal.Helpers
             serializer.Serialize(ms, source);
             ms.Position = 0;
             var result = serializer.Deserialize(ms);
-            ms.Close(); 
+            ms.Close();
             return result;
         }
 
@@ -944,7 +950,7 @@ namespace Seal.Helpers
             return "file:///" + HttpUtility.HtmlEncode(path.Replace(Path.DirectorySeparatorChar.ToString(), "/"));
         }
 
-            static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
+        static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
         {
             if (formatType.ToString().Contains("Time")) return true;
             return ((formatType == DateTimeStandardFormat.Custom || formatType == DateTimeStandardFormat.Default)
@@ -1161,5 +1167,48 @@ namespace Seal.Helpers
             if (obj != null && obj == DBNull.Value) obj = null;
             return obj == null ? (double?)null : Convert.ToDouble(obj, CultureInfo.InvariantCulture);
         }
+
+        #region License
+        public static void GetLicense(string text, out DateTime generationDate, out int version, out string serial, out string name, out string type)
+        {
+            string[] texts = CryptoHelper.DecryptAES(text, CryptoHelper.AESLicenseKey).Split('\r');
+            if (texts.Length < 6) throw new Exception("Invalid license1:" + texts.Length.ToString());
+            if (CryptoHelper.RSAVerifySignature(CryptoHelper.RSALicensePublicKey, texts[1] + "\r" + texts[2] + "\r" + texts[3] + "\r" + texts[4] + "\r" + texts[5], texts[0])) throw new Exception("Invalid license2:" + texts.Length.ToString());
+            if (texts[1].Length != 14) throw new Exception("Invalid license3:" + texts[1]);
+            generationDate = new DateTime(int.Parse(texts[1].Substring(0, 4)), int.Parse(texts[1].Substring(4, 2)), int.Parse(texts[1].Substring(6, 2)), int.Parse(texts[1].Substring(8, 2)), int.Parse(texts[1].Substring(10, 2)), int.Parse(texts[1].Substring(12, 2)));
+            version = int.Parse(texts[2]);
+            serial = texts[3];
+            name = texts[4];
+            type = texts[5];
+        }
+
+        public static string GetLicenseText(string licenseFilePath, out bool invalid)
+        {
+            var result = "";
+            invalid = false;
+            try
+            {
+                if (File.Exists(licenseFilePath))
+                {
+                    GetLicense(File.ReadAllText(licenseFilePath, Encoding.UTF8), out DateTime generationDate, out int version, out string serial, out string name, out string type);
+                    var buildDate = SealServerConfiguration.GetBuildDate();
+                    if (generationDate > buildDate.AddYears(1))
+                    {
+                        invalid = true;
+                        result = $"Warning: The license date {generationDate.ToShortDateString()} is invalid for the build date {buildDate.ToShortDateString()}.\r\n";
+                        result += "Please consider to buy a new license to use this version.\r\nThank you.\r\n\r\n";
+                    }
+                    result += $"License type: {type}\r\nSerial number: {serial}\r\nLicense name: {name}\r\nGeneration date: {generationDate.ToShortDateString()}\r\n\r\n";
+                }
+            }
+            catch
+            {
+                result = "";
+            }
+            return result;
+        }
+
+        #endregion
+
     }
 }

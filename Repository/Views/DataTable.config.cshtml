@@ -1,18 +1,13 @@
 ﻿@using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = ReportViewTemplate.DataTableName;
     Template.Description = "Render the Data Table of the page result.";
 
-    //If true, the view can be configured for a report modelbtotals
-
-    Template.ForReportModel = false;
+    //If true, the view is a child of a report model view
     Template.IsModelViewChild = true;
 
     //Parameters for this template
-            Template.Parameters.Add(new Parameter() { Name = "data_table_caption", DisplayName = "Caption", Description = "Optional caption or title displayed at the bottom of the data table." });
+    Template.Parameters.Add(new Parameter() { Name = "data_table_caption", DisplayName = "Caption", Description = "Optional caption or title displayed at the bottom of the data table." });
     Template.Parameters.Add(new Parameter() { Name = "data_table_caption_css", DisplayName = "Caption CSS Style", Value = "text-align:center;", Description = "CSS style attribute of the table caption.", Enums = new string[] { "caption-side:bottom; text-align:center;", "caption-side:top; text-align:right; font-weight:bold;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_enabled", DisplayName = "Data tables: Is enabled", BoolValue = true, Description = "If true, Data Tables feature is enabled to allow pagination, sorting and filtering in tables." });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_scrolly", Value = "", DisplayName = "Data tables: Vertical scrolling", Description = "If set, it constrains the table to the given height, and enable scrolling for any data which overflows the current viewport.", Enums = new string[] { "200px", "300px" }, UseOnlyEnumValues = false });
@@ -20,7 +15,7 @@
     Template.Parameters.Add(new Parameter() { Name = "data_tables_scrollcollapse", DisplayName = "Data tables: Scroll collapse", BoolValue = false, Description = "If true, allows the table to reduce in height when a limited number of rows are shown." });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_responsive", DisplayName = "Data tables: Is responsive", BoolValue = true, Description = "If true, the table layout is optimised for different screen sizes. Hidden columns can be viewed by clicking on the row. The horizontal scrolling must be disabled." });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_sort_enabled", DisplayName = "Data tables: Sort is enabled", BoolValue = true, Description = "If true, the sort feature of the data table is enabled." });
-    Template.Parameters.Add(new Parameter() { Name = "data_tables_sort_configuration", DisplayName = "Data tables: Sort configuration", Description = "If not empty, defines how the columns of the table are sorted (e.g. set \"[1,'desc']' to sort the second column descending). The keyword '{LAST}' can be used to be replaced by the last column index of the table. This may be used to sort the table by 'Total' columns.", Enums = new string[] { "[0,'asc']", "[{LAST},'asc']", "[{LAST}-1,'desc']", "[1,'desc']","[0,'desc'],[2,'asc']", "[0,'desc']", "[2,'desc'],[1,'asc']" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "data_tables_sort_configuration", DisplayName = "Data tables: Sort configuration", Description = "If not empty, defines how the columns of the table are sorted (e.g. set \"[1,'desc']' to sort the second column descending). The keyword '{LAST}' can be used to be replaced by the last column index of the table. This may be used to sort the table by 'Total' columns.", Enums = new string[] { "[0,'asc']", "[{LAST},'asc']", "[{LAST}-1,'desc']", "[1,'desc']", "[0,'desc'],[2,'asc']", "[0,'desc']", "[2,'desc'],[1,'asc']" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_filter_enabled", DisplayName = "Data tables: Filter is enabled", BoolValue = true, Description = "If true, the filter feature of the data table is enabled." });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_pagination_enabled", DisplayName = "Data tables: Pagination is enabled", BoolValue = true, Description = "If true, the pagination feature of the data table is enabled." });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_pagination_size", DisplayName = "Data tables: Pagination size", Value = "25", Enums = new string[] { "5", "10", "25", "50", "100", "500", "-1|All" }, Description = "Number of rows displayed in a page (if pagination is enabled)." });

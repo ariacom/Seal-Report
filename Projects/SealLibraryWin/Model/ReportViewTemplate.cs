@@ -1,12 +1,14 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Seal.Helpers;
 using RazorEngine.Templating;
+using System.Linq;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Seal.Model
 {
@@ -15,8 +17,10 @@ namespace Seal.Model
     /// </summary>
     public class ReportViewTemplate
     {
+        public const string DefaultName = "Default";
         public const string ReportName = "Report";
         public const string ModelName = "Model";
+        public const string TabPageName = "Tab Page";
         public const string ModelDetailName = "Model Detail";
         public const string RestrictionsName = "Restrictions";
         public const string WidgetName = "Widget";
@@ -26,6 +30,8 @@ namespace Seal.Model
         public const string ChartNVD3Name = "Chart NVD3";
         public const string ChartJSName = "Chart JS";
         public const string ChartPlotlyName = "Chart Plotly";
+        public const string ChartScottplotName = "Chart Scottplot";
+        public const string GaugeName = "Gauge";
         public const string ContainerName = "Container";
         public const string ContainerGridFlexName = "Container Grid Flex";
 
@@ -36,6 +42,11 @@ namespace Seal.Model
         /// Name of the view template
         /// </summary>
         public string Name { get; set; } = "";
+
+        /// <summary>
+        /// Renderer type if the template is used for a renderer
+        /// </summary>
+        public string RendererType { get; set; } = "";
 
         /// <summary>
         /// Description
@@ -159,21 +170,46 @@ namespace Seal.Model
         {
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
-            ConfigurationPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".config.cshtml");
+            var rawName = Path.GetFileNameWithoutExtension(path);
+            //Get the name from the file name (Camel case)
+            Name = Helper.DBNameToDisplayName(rawName);
+
+            ConfigurationPath = Path.Combine(Path.GetDirectoryName(path), rawName + ".config.cshtml");
             if (!File.Exists(ConfigurationPath)) return false;
 
             LastConfigModification = File.GetLastWriteTime(ConfigurationPath);
             Configuration = File.ReadAllText(ConfigurationPath);
             //load partial templates related
             PartialTemplatesPath.Clear();
-            foreach (var partialPath in Directory.GetFiles(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".*.partial.cshtml"))
+            foreach (var partialPath in Directory.GetFiles(Path.GetDirectoryName(path), rawName + ".*.partial.cshtml"))
             {
                 PartialTemplatesPath.Add(partialPath);
             }
 
             IsParsed = false;
+            //If no configuration, no need to parse
+            if (string.IsNullOrEmpty(Configuration.Trim())) IsParsed = true;
 
             return true;
+        }
+
+        /// <summary>
+        /// Init the parameters from the configuration
+        /// </summary>
+        public void InitParameters(List<Parameter> parameters, bool resetValues)
+        {
+            var configParameters = Parameters;
+            var initialParameters = parameters.ToList();
+            parameters.Clear();
+            foreach (var configParameter in configParameters)
+            {
+                Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
+                if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
+
+                parameters.Add(parameter);
+                if (resetValues) parameter.Value = configParameter.Value;
+                parameter.InitFromConfiguration(configParameter);
+            }
         }
 
         /// <summary>
@@ -186,10 +222,25 @@ namespace Seal.Model
             foreach (var path in Directory.GetFiles(templateFolder, "*.cshtml"))
             {
                 if (path.EndsWith(".config.cshtml") || path.EndsWith(".partial.cshtml")) continue;
-                if (path.EndsWith("ModelContainer.cshtml")) continue; //backward compatibility before 6.1
                 ReportViewTemplate template = new ReportViewTemplate();
                 if (template.Init(path)) viewTemplates.Add(template);
             }
+            //Renderer Templates
+            var renderersFolder = Path.Combine(templateFolder, "Renderers");
+            var dirs = Directory.GetDirectories(renderersFolder).ToList();
+            dirs.Add(renderersFolder);
+            foreach (var dir in dirs)
+            {
+                foreach (var path in Directory.GetFiles(dir, "*.cshtml"))
+                {
+                    if (path.EndsWith(".config.cshtml") || path.EndsWith(".partial.cshtml")) continue;
+                    ReportViewTemplate template = new ReportViewTemplate();
+                    //Renderer type is directory name, except for the default renderer
+                    template.RendererType = dir == renderersFolder ? "" : Path.GetFileName(dir);
+                    if (template.Init(path)) viewTemplates.Add(template);
+                }
+            }
+
             if (viewTemplates.Count == 0) throw new Exception(string.Format("Unable to find View templates in the repository at {0}.\r\nCheck your installation", templateFolder));
             return viewTemplates;
         }
@@ -215,9 +266,14 @@ namespace Seal.Model
         public DateTime LastModification;
 
         /// <summary>
-        /// Last modfication of the configuration file
+        /// Last modification of the configuration file
         /// </summary>
         public DateTime LastConfigModification;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        DateTime LastCustomModification = DateTime.Now;
 
         /// <summary>
         /// True if the template or its configuration is modified
@@ -256,13 +312,13 @@ namespace Seal.Model
             }
             catch (TemplateCompilationException ex)
             {
-                Helper.WriteLogException($"ParseConfiguration for {Name}", ex);
-                Error = Helper.GetExceptionMessage(ex);
+                Helper.WriteLogException($"ParseConfiguration for {Name} {RendererType}", ex);
+                Error = $"Invalid template configuration for {Name} {RendererType}:" + Helper.GetExceptionMessage(ex);
             }
             catch (Exception ex)
             {
-                Helper.WriteLogException($"ParseConfiguration for {Name}", ex);
-                Error = string.Format("Unexpected error got when parsing template configuration.\r\n{0}", ex.Message);
+                Helper.WriteLogException($"ParseConfiguration for {Name} {RendererType}", ex);
+                Error = $"Invalid template configuration for {Name} {RendererType}:" + string.Format("Unexpected error got when parsing template configuration.\r\n{0}", ex.Message);
             }
         }
 

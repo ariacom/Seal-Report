@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using Seal.Model;
 using System;
@@ -20,6 +20,7 @@ namespace Seal.Forms
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             linkLabel.Text = "Get the last version and free support at https://sealreport.org";
+            linkLicense.Text = "Licensing information at https://sealreport.com";
             ShowIcon = true;
             Icon = Repository.ProductIcon;
         }
@@ -30,7 +31,7 @@ namespace Seal.Forms
         {
             get
             {
-                
+
                 return "Seal Report";
             }
         }
@@ -103,11 +104,24 @@ namespace Seal.Forms
             p.Start();
         }
 
+        private void linkLicense_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo("https://sealreport.com") { UseShellExecute = true };
+            p.Start();
+
+        }
+
         private void AboutBoxForm_Shown(object sender, EventArgs e)
         {
-            var defaultText = "A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n\r\n\r\n";
-            defaultText += "Copyright(c) Seal Report, Ariacom (https://ariacom.com).\r\n\r\n";
-            defaultText += "Seal Report is licensed under the Apache License, Version 2.0.\r\nhttp://www.apache.org/licenses/LICENSE-2.0.";
+            var defaultText = @"A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.
+
+Visit our Web site, take a dive and join the Seal community...
+
+You are using Seal Report MIT Community License.
+
+Please make sure you are eligible to use this free license.
+";
             try
             {
                 string text = "";
@@ -137,5 +151,6 @@ namespace Seal.Forms
             }
             catch { }
         }
+
     }
 }

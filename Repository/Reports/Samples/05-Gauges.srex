@@ -229,7 +229,7 @@ subColor:'#666666'
                   <Name>Text1</Name>
                   <TemplateName>Free</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>default Gauge
+                  <CustomTemplate>Default Gauge
 </CustomTemplate>
                   <SortOrder>5</SortOrder>
                 </ReportView>

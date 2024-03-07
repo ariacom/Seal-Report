@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace Seal.Model
         private static List<MetaTableTemplate> _tableTemplates = null;
         private static List<ReportTaskTemplate> _taskTemplates = null;
 
-        
+
 
         public static string ViewsFolder = "";
         public static string TableTemplatesFolder = "";
@@ -78,39 +78,51 @@ namespace Seal.Model
                 }
             }
 
-            var result = _viewTemplates.FirstOrDefault(i => i.Name == name);
-            if (result == null)
-            {
-                lock (_viewLock)
-                {
-                    //Get the name for configuration text to avoid useless parsing and save time
-                    foreach (var template in _viewTemplates.Where(i => !i.IsParsed))
-                    {
-                        if (template.Configuration.Contains("ReportViewTemplate." + name.Replace(" ","")) || template.Configuration.Contains(string.Format("\"{0}\";", name))) 
-                        {
-                            template.ParseConfiguration();
-                            break;
-                        }
-                    }
-                }
-            }
-            result = _viewTemplates.FirstOrDefault(i => i.Name == name);
-            if (result == null)
-            {
-                System.Diagnostics.Debug.WriteLine("!! Loading all the templates !!");
-
-                lock (_viewLock)
-                {
-                    //Name not found in configuration -> we parse all...
-                    foreach (var template in _viewTemplates.Where(i => !i.IsParsed)) template.ParseConfiguration();
-                }
-                if (name.EndsWith(" HTML")) name = name.Replace(" HTML", ""); //backward compatibility before 5.0
-                if (name == "Model CSV Excel") name = "Model"; //backward compatibility before 5.0
-
-                result = _viewTemplates.FirstOrDefault(i => i.Name == name);
-            }
-
+            var result = _viewTemplates.FirstOrDefault(i => i.Name == name && i.RendererType == "");
             if (result == null) throw new Exception(string.Format("Unable to find view template named '{0}'", name));
+            //Check if the file has changed
+            if (result.IsModified)
+            {
+                lock (_viewLock)
+                {
+                    result.Init(result.FilePath);
+                }
+            }
+
+            //Check if configuration has been parsed
+            if (!result.IsParsed)
+            {
+                lock (_viewLock)
+                {
+                    result.ParseConfiguration();
+                }
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// Returns a ReportViewTemplate from a given name and a given renderer
+        /// </summary>
+        public static ReportViewTemplate GetRendererTemplate(string name, string rendererType)
+        {
+            lock (_viewLock)
+            {
+                if (_viewTemplates == null)
+                {
+                    _viewTemplates = ReportViewTemplate.LoadTemplates(ViewsFolder);
+                }
+            }
+
+            var result = _viewTemplates.FirstOrDefault(i => i.Name == name && i.RendererType == rendererType);
+            if (result == null)
+            {
+                //Get it from default
+                result = _viewTemplates.FirstOrDefault(i => i.Name == ReportViewTemplate.DefaultName && i.RendererType == rendererType);
+                if (result == null) result = _viewTemplates.FirstOrDefault(i => i.Name == ReportViewTemplate.DefaultName && i.RendererType == "");
+            }
+
+            if (result == null) throw new Exception(string.Format("Unable to find view template named '{0}' for renderer '{1}'", name, rendererType));
 
             //Check if the file has changed
             if (result.IsModified)
@@ -129,10 +141,8 @@ namespace Seal.Model
                     result.ParseConfiguration();
                 }
             }
-
             return result;
         }
-
 
         /// <summary>
         /// Current list of MetaTableTemplate

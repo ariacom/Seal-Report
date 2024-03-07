@@ -1,0 +1,14 @@
+﻿@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel model = view.Model;
+
+    ExcelRenderer renderer = view.ExcelRenderer;
+    ExcelResult result = report.ExcelResult;
+
+    if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.Name);@using Seal.Model
+
+    view.ParseChildren();
+}

@@ -31,18 +31,18 @@
 
     if (action == ""UNZIP"") {    
         if (!File.Exists(zipPath)) {
-            throw new Exception(""Invalid zip path: {zipPath}"");
+            throw new Exception($""Invalid zip path: {zipPath}"");
         }
         task.LogMessage($""Unzipping '{zipPath}' to '{folder}'"");
         if (!Directory.Exists(folder)) {
             Directory.CreateDirectory(folder);
         }
-         FileHelper.ExtractZipFile(zipPath, password, folder);
+        FileHelper.ExtractZipFile(zipPath, password, folder);
         task.ExecResult = folder;
     }
     else if (action == ""ZIPFILE"") {
         if (!File.Exists(sourcePath)) {
-            throw new Exception(""Invalid source path: {sourcePath}"");
+            throw new Exception($""Invalid source path: {sourcePath}"");
         }
         task.LogMessage($""Zipping '{sourcePath}' to '{zipPath}'"");
         FileHelper.ExtractZipFile(zipPath, password, folder);
@@ -50,7 +50,7 @@
     }
     else if (action == ""ZIPFOLDER"") {    
         if (!Directory.Exists(folder)) {
-            throw new Exception(""Invalid folder: {folder}"");
+            throw new Exception($""Invalid folder: {folder}"");
         }
         task.LogMessage($""Zipping '{folder}' to '{zipPath}'"");
         FileHelper.CreateZIPFromFolder(folder, task.GetValue(""filter""), task.GetBoolValue(""recursive"", true), zipPath, password);

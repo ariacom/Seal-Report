@@ -1,0 +1,60 @@
+﻿@using QuestPDF.Fluent
+@using QuestPDF.Infrastructure
+@using Colors = QuestPDF.Helpers.Colors
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel model = view.Model;
+    ResultPage page = report.CurrentPage;
+    ResultTable pageTable = page.PageTable;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    var document = result.Document;
+    var container = result.Container;
+
+    var fontSize = renderer.GetNumericValue("font_size");
+
+    if (pageTable != null && pageTable.ColumnCount > 0 && pageTable.RowCount == 2)
+    {
+        container.Column(column =>
+        {
+            if (renderer.GetBoolValue("show_separator"))
+            {
+                column.Item().PaddingVertical(5);
+                column.Item().LineHorizontal(1).LineColor(Colors.Grey.Medium);
+            }
+
+            for (int i = 0; i < pageTable.ColumnCount; i++)
+            {
+                ResultCell header = pageTable[0, i];
+                ResultCell value = pageTable[1, i];
+                column.Item().Row(row =>
+                {
+
+                    row.AutoItem()
+                    .DefaultTextStyle(x => x.SemiBold().FontSize(fontSize))
+                    .Element(CellStyle)
+                    .AlignCell(header)
+                    .PaddingRight(5)
+                    .Text(header.DisplayValue + " :");
+
+                    row.AutoItem()
+                    .DefaultTextStyle(x => x.FontSize(fontSize))
+                    .Element(CellStyle)
+                    .AlignCell(value)
+                    .Text(value.DisplayValue);
+
+
+                    static IContainer CellStyle(IContainer container)
+                    {
+                        return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(4);
+                    }
+                });
+            }
+        });
+    }
+}

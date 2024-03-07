@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -1320,7 +1320,7 @@ namespace Seal.Forms
                     mainTreeView.EndUpdate();
                 }
             }
-            mainTreeView.SelectedNode.EnsureVisible();
+            mainTreeView.SelectedNode?.EnsureVisible();
             return mustInit;
         }
 
@@ -1416,6 +1416,7 @@ namespace Seal.Forms
                 mainTreeView.Sort();
                 TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, colToMove);
             }
+            mainTreeView.SelectedNode?.EnsureVisible();
         }
 
         #region Drag and drop

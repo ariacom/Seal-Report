@@ -1,0 +1,65 @@
+﻿@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel model = view.Model;
+
+    ExcelRenderer renderer = view.ExcelRenderer;
+    ExcelResult result = report.ExcelResult;
+
+    if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.Name);
+
+    //Summary
+    if (model.SummaryTable != null && model.SummaryTable.RowCount > 0 && view.GetBoolValue("show_summary_table", true))
+    {
+        bool displayFormat = renderer.GetBoolValue("use_display_format");
+        bool cellStyles = renderer.GetBoolValue("use_display_format");
+        summaryRows(result, model, 0, 1, displayFormat, cellStyles);
+        summaryRows(result, model, model.SummaryTable.BodyStartRow, model.SummaryTable.BodyEndRow, displayFormat, cellStyles);
+        if (view.GetBoolValue("add_summary_totals_totals") && view.GetBoolValue("display_summary_totals") && model.HasTotals)
+        {
+            summaryRows(result, model, model.SummaryTable.BodyEndRow, model.SummaryTable.RowCount, displayFormat, cellStyles);
+        }
+        result.CurrentRow++;
+    }
+
+    
+    var jsView = view.FindViewFromTemplate(ReportViewTemplate.ChartJSName);
+    if (jsView == null)
+    {
+        //Add a chart JS view for Excel rendering
+        ReportView chartView = view.FindViewFromTemplate(ReportViewTemplate.ChartScottplotName);
+        if (chartView == null) chartView = view.FindViewFromTemplate(ReportViewTemplate.ChartNVD3Name);
+        if (chartView == null) chartView = view.FindViewFromTemplate(ReportViewTemplate.ChartPlotlyName);
+        if (chartView != null) {
+            var newView = report.AddChildView(chartView.ParentView, ReportViewTemplate.ChartJSName);
+            newView.SortOrder = chartView.SortOrder;
+        }
+    }
+
+    foreach (ResultPage page in model.Pages)
+    {
+        if (model.Pages.Count > 1 && renderer.GetBoolValue("new_sheet_page")) result.AddWorksheet(page.PageName);
+
+        report.CurrentPage = page;
+        view.ParseChildren();
+    }
+}
+
+
+@functions {
+    void summaryRows(ExcelResult result, ReportModel model, int rowStart, int rowEnd, bool displayFormat, bool cellStyles)
+    {
+        for (int row = rowStart; row < rowEnd; row++)
+        {
+            result.CurrentCol = 1;
+            for (int col = 0; col < model.SummaryTable.ColumnCount; col++)
+            {
+                result.SetValue(model.SummaryTable[row, col], displayFormat, cellStyles);
+                result.CurrentCol++;
+            }
+            result.CurrentRow++;
+        }
+    }
+}

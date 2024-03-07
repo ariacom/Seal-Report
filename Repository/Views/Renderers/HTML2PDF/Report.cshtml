@@ -1,0 +1,71 @@
+﻿@using System.IO
+@using System.Threading
+@using PuppeteerSharp
+@using PuppeteerSharp.Media
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    HTML2PDFRenderer renderer = view.HTML2PDFRenderer;
+    PDFResult result = new PDFResult(report);
+
+    try
+    {
+        if (!string.IsNullOrEmpty(report.HTMLResultFilePath) && File.Exists(report.HTMLResultFilePath))
+        {
+            //Download browser, save in it Assemblies\Chrome directory by default
+            string chromePath = Directory.GetFiles(report.Repository.AssembliesFolder, "chrome.exe", SearchOption.AllDirectories).FirstOrDefault();
+            if (string.IsNullOrEmpty(chromePath))
+            {
+                var bfOptions = new BrowserFetcherOptions() { Path = report.Repository.AssembliesFolder };
+                await new BrowserFetcher(bfOptions).DownloadAsync();
+                chromePath = Directory.GetFiles(report.Repository.AssembliesFolder, "chrome.exe", SearchOption.AllDirectories).FirstOrDefault();
+                //Try default location
+                if (string.IsNullOrEmpty(chromePath)) await new BrowserFetcher().DownloadAsync();
+            }
+
+            //Options
+            var options = new PdfOptions();
+            options.Scale = Convert.ToDecimal(renderer.GetDoubleValue("scale"));
+            options.DisplayHeaderFooter = renderer.GetBoolValue("display_hf");
+            options.HeaderTemplate = renderer.GetValue("header_template");
+            options.FooterTemplate = renderer.GetValue("footer_template");
+            options.PrintBackground = renderer.GetBoolValue("print_background");
+            options.Landscape = renderer.GetBoolValue("landscape");
+            options.PageRanges = renderer.GetValue("page_ranges");
+
+            var format = renderer.GetValue("format");
+            if (format == "Letter") options.Format = PaperFormat.Letter;
+            else if (format == "Legal") options.Format = PaperFormat.Legal;
+            else if (format == "Tabloid") options.Format = PaperFormat.Tabloid;
+            else if (format == "Ledger") options.Format = PaperFormat.Ledger;
+            else if (format == "A0") options.Format = PaperFormat.A0;
+            else if (format == "A1") options.Format = PaperFormat.A1;
+            else if (format == "A2") options.Format = PaperFormat.A2;
+            else if (format == "A3") options.Format = PaperFormat.A3;
+            else if (format == "A5") options.Format = PaperFormat.A5;
+            else options.Format = PaperFormat.A4;
+
+            options.MarginOptions.Bottom = renderer.GetValue("margin_bottom");
+            options.MarginOptions.Top = renderer.GetValue("margin_top");
+            options.MarginOptions.Left = renderer.GetValue("margin_left");
+            options.MarginOptions.Right = renderer.GetValue("margin_right");
+            options.OmitBackground = renderer.GetBoolValue("omit_background");
+
+            result.Browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, ExecutablePath = chromePath });
+            result.Page = await result.Browser.NewPageAsync();
+            await result.Page.GoToAsync("file:///" + report.HTMLResultFilePath, null, new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle0, WaitUntilNavigation.DOMContentLoaded });
+            Thread.Sleep(200);
+
+            await result.Page.PdfAsync(report.ResultFilePath, options);
+        }
+    }
+    finally
+    {
+        if (result.Page != null) await result.Page.CloseAsync();
+        if (result.Browser != null) await result.Browser.CloseAsync();
+    }
+}

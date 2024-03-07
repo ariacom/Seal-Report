@@ -1,13 +1,7 @@
 @using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = "Free";
     Template.Description = "Empty view that can be used freely to add HTML or text during the rendering.";
-
-    //If true, the view can be configured for a report model
-    Template.ForReportModel = false;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "use_view_name", DisplayName = "Use view name as text", BoolValue = false, Description = "If true, the view name is used for the text." });

@@ -3,12 +3,13 @@
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
-    ReportView modelView = report.CurrentModelView;
+    ReportView modelView = view.ModelView;
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }
 
-    string gaugeId = "g" + Helper.NewGUID(), previewTextId = "pv" + gaugeId;
+    string gaugeId = "g" + Helper.NewGUID(), previewTextId = "pv" + gaugeId, gaugeContainerId = "co" + gaugeId;
+    page.SetIdentifier(ResultPageIdentifierType.GaugeCanvas, gaugeContainerId);
 
     ResultTable table = page.DataTable;
     string value = null, min = null, max = null, animation = null;
@@ -59,7 +60,7 @@
     }
 }
 
-<div class="@Raw(view.GetValue("gauge_class"))" style="@Raw(view.GetValue("gauge_css"))">
+<div id="@gaugeContainerId" class="@Raw(view.GetValue("gauge_class"))" style="@Raw(view.GetValue("gauge_css"))">
       <div id="@previewTextId" class="@Raw(view.GetValue("preview_text_class"))" style="@Raw(view.GetValue("preview_text_css"))"></div>
       <canvas id="@gaugeId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("gauge_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("gauge_height"), "'"))></canvas>
 </div>

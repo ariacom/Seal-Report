@@ -1,25 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibrary</AssemblyName>
 		<Configurations>Debug;Release</Configurations>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Product>Seal Report</Product>
-		<Version>7.2.1.0</Version>
-		<FileVersion>7.2.1.0</FileVersion>
-		<AssemblyVersion>7.2.1.0</AssemblyVersion>
-		<Description>Seal Report Library</Description>
+		<Version>8.0.0.0</Version>
+		<FileVersion>8.0.0.0</FileVersion>
+		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<Description>Provides the objects to create, load and execute reports using the Seal Report framework.
+A full repository file structure must be available on the machine running the program.</Description>
 		<Authors>Ariacom</Authors>
-		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
+		<Copyright>Copyright (c) Seal Report (https://sealreport.com)</Copyright>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageProjectUrl>https://sealreport.org</PackageProjectUrl>
 		<PackageId>SealReportLibrary.NETCore</PackageId>
-		<PackageReleaseNotes>Nuget package publication</PackageReleaseNotes>
+		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>sealNugetLogo.png</PackageIcon>
-		<PackageTags>Seal Report SealReport SealLibrary</PackageTags>
-		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageTags>reporting;sql;linq;tasks;pdf;excel;sqlserver;scheduler,business intelligence;charts;cross tab</PackageTags>
+		<Title>Seal Report Library</Title>
+		<RepositoryUrl>https://github.com/ariacom/Seal-Report</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<Company>Ariacom</Company>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -42,6 +47,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<AssemblyAttribute Include="BuildDateAttribute">
+			<_Parameter1>$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="LICENSE.txt" Pack="true" PackagePath="" />
+		<Compile Include="..\SealLibraryWin\BuildAttributeDate.cs" Link="BuildAttributeDate.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\ObjectShredder.cs" Link="Helpers\ObjectShredder.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\CryptoHelper.cs" Link="Helpers\CryptoHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\DataTableLoader.cs" Link="Helpers\DataTableLoader.cs" />
@@ -122,46 +135,62 @@
 		<Compile Include="..\SealLibraryWin\Model\SubReport.cs" Link="Model\SubReport.cs" />
 		<Compile Include="..\SealLibraryWin\Model\WebInterfaceModels.cs" Link="Model\WebInterfaceModels.cs" />
 		<Compile Include="..\SealLibraryWin\Model\WebMainModel.cs" Link="Model\WebMainModel.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\RootRenderer.cs" Link="Renderers\RootRenderer.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\CSVRenderer.cs" Link="Renderers\CSVRenderer.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\ExcelRenderer.cs" Link="Renderers\ExcelRenderer.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\ExcelResult.cs" Link="Renderers\ExcelResult.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\TextRenderer.cs" Link="Renderers\TextRenderer.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\XMLRenderer.cs" Link="Renderers\XMLRenderer.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\JsonRenderer.cs" Link="Renderers\JsonRenderer.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\JsonResult.cs" Link="Renderers\JsonResult.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\PDFRenderer.cs" Link="Renderers\PDFRenderer.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\HTML2PDFRenderer.cs" Link="Renderers\HTML2PDFRenderer.cs" />
+		<Compile Include="..\SealLibraryWin\Renderers\PDFResult.cs" Link="Renderers\PDFResult.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
+		<PackageReference Include="DocumentFormat.OpenXml" Version="3.0.1" />
 		<PackageReference Include="EPPlus" Version="4.5.3.3" />
-		<PackageReference Include="FluentFTP" Version="48.0.1" />
+		<PackageReference Include="FluentFTP" Version="49.0.2" />
+		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="7.3.0.1" />
 		<PackageReference Include="jose-jwt" Version="4.1.0" />
-		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.69.2.1" />
+		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.76.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
-		<PackageReference Include="MongoDB.Driver" Version="2.22.0" />
-		<PackageReference Include="MySql.Data" Version="8.1.0" />
-		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.120" />
-		<PackageReference Include="ScottPlot" Version="4.1.69" />
-		<PackageReference Include="SendGrid" Version="9.28.1" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
+		<PackageReference Include="MongoDB.Driver" Version="2.23.1" />
+		<PackageReference Include="MySql.Data" Version="8.3.0" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.130" />
+		<PackageReference Include="PuppeteerSharp" Version="14.0.0" />
+		<PackageReference Include="QuestPDF" Version="2023.12.5" />
+		<PackageReference Include="ScottPlot" Version="5.0.21" />
+		<PackageReference Include="SendGrid" Version="9.29.1" />
 		<PackageReference Include="SharpZipLib" Version="1.4.2" />
-		<PackageReference Include="SSH.NET" Version="2023.0.0" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.7" />
+		<PackageReference Include="SSH.NET" Version="2023.0.1" />
+		<PackageReference Include="Svg.Skia" Version="1.0.0.13" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
 		<PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="TaskScheduler" Version="2.10.1" />
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
-		<PackageReference Include="Twilio" Version="6.14.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="7.0.12" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0" />
+		<PackageReference Include="Twilio" Version="6.16.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Data.Odbc" Version="7.0.0" />
-		<PackageReference Include="System.Data.OleDb" Version="7.0.0" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="7.0.0" />
-		<PackageReference Include="System.DirectoryServices" Version="7.0.1" />
-		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="7.0.1" />
-		<PackageReference Include="System.DirectoryServices.Protocols" Version="7.0.1" />
-		<PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
-		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
+		<PackageReference Include="System.Data.Odbc" Version="8.0.0" />
+		<PackageReference Include="System.Data.OleDb" Version="8.0.0" />
+		<PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
+		<PackageReference Include="System.DirectoryServices" Version="8.0.0" />
+		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
+		<PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
+		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -173,6 +202,7 @@
 
 	<ItemGroup>
 		<Folder Include="Model\" />
+		<Folder Include="Renderers\" />
 	</ItemGroup>
 
 	<ItemGroup>

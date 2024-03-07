@@ -1,9 +1,6 @@
 ﻿@using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = ReportViewTemplate.ModelName;
     Template.Description = "Main view to display a model.\r\nIts view children are dedicated to view each part of the model result: Page tables, Data tables, Charts, KPI.";
 
     //If true, the view can be configured for a report model
@@ -43,8 +40,6 @@
     Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Navigation: Sub-Reports enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled for this model if enabled in the root view" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.NVD3AddNullPointParameter, DisplayName = "Chart Series: Add points with Null", BoolValue = true, Description = "If true, a point having an Y value equals to NULL will be inserted in the Serie with a 0 value; otherwise no point is inserted (Warning: missing points may cause JavaScript NVD3 errors for certain chart types like Bar, StackedArea, etc...)." });
     Template.Parameters.Add(new Parameter() { Name = "print_break_after_page", DisplayName = "Print: Force a break after a page", BoolValue = false, Description = "If true, a new page is started after a page is displayed for the print layout." });
-    Template.Parameters.Add(new Parameter() { Name = "csv_separator", DisplayName = "CSV: Separator", Description = "For CSV format, the separator used to generate the CSV file. If empty, the default value of the current culture is used." });
-    Template.Parameters.Add(new Parameter() { Name = "use_display_format", DisplayName = "CSV: Use element format", BoolValue = true, Description = "For CSV format, if true, the display format of the element is applied to the values displayed in the CSV file" });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container", "Container Grid Flex", "Widget" };

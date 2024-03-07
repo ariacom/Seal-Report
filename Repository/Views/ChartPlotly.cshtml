@@ -3,7 +3,7 @@
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
-    ReportView modelView = report.CurrentModelView;
+    ReportView modelView = view.ModelView;
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }
@@ -18,7 +18,8 @@
     string chartId = "cpl" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
-        var xLabels = axisCount > 0 ? string.Join(",", page.ChartXLabels.Split(',').Take(axisCount)) : page.ChartXLabels;
+        page.SetIdentifier(ResultPageIdentifierType.ChartPlotlyCanvas, chartId);
+        var xLabels = string.Join(",", axisCount > 0 ? page.ChartXLabels.Take(axisCount) : page.ChartXLabels);
         <div id="@chartId" style="page-break-inside:avoid; @Helper.AddIfNotEmpty("width:", view.GetValue("plotly_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("plotly_height"), ";")"></div>
 
         <script>
@@ -126,7 +127,7 @@
                         @Raw(Helper.AddIfNotEmpty("",view.GetValue("plotly_legend_position"),","))
                         orientation: "@view.GetValue("plotly_legend_orientation")"
                     },
-                    navigations: [@Raw(page.ChartNavigations)],
+                    navigations: [@Raw(string.Join(",",page.ChartNavigations))],
                     @Raw(view.GetBoolValue("plotly_bar_stacked") ? "barmode: 'stack'," : "")
                 }
 

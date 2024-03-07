@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -18,6 +18,8 @@ using System.Diagnostics;
 using System.Collections;
 using System.Text.RegularExpressions;
 using Twilio.TwiML;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System.Threading;
 
 namespace Seal
 {
@@ -63,8 +65,21 @@ namespace Seal
         ToolStripMenuItem nextWidgetViewMenuItem = new ToolStripMenuItem() { Text = "Go to next Widget View", ToolTipText = "Select the next Widget view in the report", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W))), ShowShortcutKeys = true };
         ToolStripMenuItem nextModelViewMenuItem = new ToolStripMenuItem() { Text = "Go to next Model View", ToolTipText = "Select the next Model view in the report", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G))), ShowShortcutKeys = true };
 
+
+        bool _isInitialized = false;
+        public bool IsInitialized()
+        {
+            return _isInitialized;
+        }
+        public void StartSpashScreen()
+        {
+            Application.Run(new SplashScreen(this));
+        }
+
         public ReportDesigner()
         {
+            new Thread(new ThreadStart(StartSpashScreen)).Start();
+
             Instance = this;
             TemplateTextEditorForm.ReportTester = this;
             if (Properties.Settings.Default.CallUpgrade)
@@ -152,13 +167,21 @@ namespace Seal
                 IsModified = false;
                 init();
             }
+            _isInitialized = true;
+
             if (_repository == null)
             {
                 _repository = new Repository();
                 MessageBox.Show("No repository has been defined or found for this installation. Reports will not be rendered. Please modify the .config file to set a RepositoryPath containing at least a Views subfolder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            InstallHelper.InstallConverter(helpToolStripMenuItem, Repository.Instance.AssembliesFolder);
+            _ = Repository.Instance.LicenseText;
+            BringToFront();
+            if (Repository.Instance.LicenseInvalid)
+            {
+                AboutBoxForm frm = new AboutBoxForm();
+                frm.ShowDialog(this);
+            }
         }
 
         //EntityHandlerInterface
@@ -329,6 +352,7 @@ namespace Seal
             finally
             {
                 mainTreeView.EndUpdate();
+                if (mainTreeView.SelectedNode != null) mainTreeView.SelectedNode.EnsureVisible();
             }
         }
 
@@ -419,6 +443,7 @@ namespace Seal
         public void selectNode(object entity)
         {
             TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, entity);
+            mainTreeView.SelectedNode?.EnsureVisible();
         }
 
         public void RefreshNode()
@@ -426,6 +451,7 @@ namespace Seal
             var currentNode = mainTreeView.SelectedNode;
             mainTreeView.SelectedNode = null;
             mainTreeView.SelectedNode = currentNode;
+            mainTreeView.SelectedNode?.EnsureVisible();
         }
 
         public void UpdateModelNode(TreeNode currentNode = null)
@@ -795,7 +821,17 @@ namespace Seal
         }
 
 
-        bool _pdfExpanded = false, _excelExpanded = false, _configurationExpanded = true;
+        Dictionary<string, bool> _expandedValues = new Dictionary<string, bool>() {
+            { "template configuration", true },
+            { "excel configuration", false },
+            { "pdf configuration", false },
+            { "html to pdf configuration", false },
+            { "csv configuration", false },
+            { "text configuration", false },
+            { "json configuration", false },
+            { "xml configuration", false }
+        };
+
         private void mainTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (_lastDragOverNode != null) return;
@@ -809,13 +845,12 @@ namespace Seal
                 source.Refresh();
             }
 
-            var entry = Helper.GetGridEntry(mainPropertyGrid, "pdf configuration");
-            if (entry != null) _pdfExpanded = entry.Expanded;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "excel configuration");
-            if (entry != null) _excelExpanded = entry.Expanded;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "template configuration");
-            if (entry != null) _configurationExpanded = entry.Expanded;
-
+            foreach (var node in _expandedValues)
+            {
+                var entry = Helper.GetGridEntry(mainPropertyGrid, node.Key);
+                if (entry != null) _expandedValues[node.Key] = entry.Expanded;
+            }
+            mainPropertyGrid.ExpandAllGridItems();
             mainPropertyGrid.SelectedObject = null;
             if (selectedEntity is ReportModel)
             {
@@ -843,21 +878,26 @@ namespace Seal
                 if (selectedEntity is MetaColumn && !((MetaColumn)selectedEntity).MetaTable.IsEditable) entity.SetReadOnly();
                 if (selectedEntity is MetaEnum && !((MetaEnum)selectedEntity).IsEditable) entity.SetReadOnly();
             }
+
             //Set default expanded
-            entry = Helper.GetGridEntry(mainPropertyGrid, "pdf configuration");
-            if (entry != null) entry.Expanded = _pdfExpanded;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "excel configuration");
-            if (entry != null) entry.Expanded = _excelExpanded;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "template configuration");
-            if (entry != null) entry.Expanded = _configurationExpanded;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "custom partial template texts");
-            if (entry != null) entry.Expanded = true;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "schedule definition");
-            if (entry != null) entry.Expanded = true;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "table parameters");
-            if (entry != null) entry.Expanded = true;
-            entry = Helper.GetGridEntry(mainPropertyGrid, "task parameters");
-            if (entry != null) entry.Expanded = true;
+            foreach (var node in _expandedValues)
+            {
+                var entry = Helper.GetGridEntry(mainPropertyGrid, node.Key);
+                if (entry != null)
+                {
+                    entry.Expanded = node.Value;
+                    foreach (GridItem child in entry.GridItems) child.Expanded = true;
+                }
+            }
+
+            var item = Helper.GetGridEntry(mainPropertyGrid, "custom partial template texts");
+            if (item != null) item.Expanded = true;
+            item = Helper.GetGridEntry(mainPropertyGrid, "schedule definition");
+            if (item != null) item.Expanded = true;
+            item = Helper.GetGridEntry(mainPropertyGrid, "table parameters");
+            if (item != null) item.Expanded = true;
+            item = Helper.GetGridEntry(mainPropertyGrid, "task parameters");
+            if (item != null) item.Expanded = true;
 
             toolStripHelper.SetHelperButtons(selectedEntity);
             //init shortcuts
@@ -952,6 +992,7 @@ namespace Seal
                     SetModified();
                 }
             }
+            mainTreeView.SelectedNode?.EnsureVisible();
 
             //Enable shortcuts
             //        copyToolStripMenuItem.ShortcutKeys = (Keys.Control | Keys.C);
@@ -1950,6 +1991,7 @@ namespace Seal
                 }
                 else treeViewHelper.mainTreeView_DragDrop(sender, e);
             }
+            mainTreeView.SelectedNode?.EnsureVisible();
         }
 
         private void mainTreeView_DragOver(object sender, DragEventArgs e)
@@ -1963,6 +2005,7 @@ namespace Seal
                 {
                     _lastDragOverNode = targetNode;
                     mainTreeView.SelectedNode = targetNode;
+                    mainTreeView.SelectedNode?.EnsureVisible();
                 }
             }
         }

@@ -1,0 +1,30 @@
+﻿@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel reportModel = view.Model;
+}
+@foreach (ResultPage page in reportModel.Pages)
+{
+    if (page.PageTable != null && view.GetBoolValue("show_page_tables") && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0)
+    {
+        for (int i = 0; i < page.PageTable.ColumnCount; i++)
+        {
+            ResultCell header = page.PageTable[0,i];
+            ResultCell value = page.PageTable[1,i];
+            @Raw($"{header.DisplayValue} {value.DisplayValue}\r\n")
+        }
+    }
+    if (page.DataTable != null && view.GetBoolValue("show_data_tables"))
+    {
+        for (int row = 0; row < page.DataTable.RowCount; row++)
+        {
+            for (int col = 0; col < page.DataTable.ColumnCount; col++)
+            {
+                @Raw(page.DataTable[row,col].DisplayValue+ " ")
+            }
+            @Raw("\r\n")
+        }
+    }
+    @Raw("\r\n")
+}

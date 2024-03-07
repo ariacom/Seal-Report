@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Diagnostics;
@@ -17,6 +17,7 @@ using System.Globalization;
 using System.Collections.Specialized;
 using Microsoft.Extensions.Options;
 using SealWebServer.Models.Configuration;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace SealWebServer.Controllers
 {
@@ -153,8 +154,6 @@ namespace SealWebServer.Controllers
             return WebUser.IsAuthenticated;
         }
 
-#if !EDITOR
-        public string Info = ""; //Info to display in the Web Report Server
 
         void Authenticate()
         {
@@ -162,7 +161,6 @@ namespace SealWebServer.Controllers
             WebUser.Authenticate();
             if (string.IsNullOrEmpty(WebUser.SecurityCode)) WebHelper.WriteLogEntryWeb(WebUser.IsAuthenticated ? EventLogEntryType.SuccessAudit : EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
         }
-#endif
 
         ContentResult GetContentResult(string filePath)
         {
@@ -231,7 +229,6 @@ namespace SealWebServer.Controllers
                     report.IsNavigating = false;
                     report.ExecutionTriggerView = null;
                     initInputRestrictions(report);
-                    while (execution.IsConvertingToExcel) Thread.Sleep(100);
                     execution.Execute();
                     return new EmptyResult();
                 }
@@ -381,7 +378,7 @@ namespace SealWebServer.Controllers
         public ActionResult ActionRefreshReport(string execution_guid)
         {
             writeDebug("ActionRefreshReport");
-            string error ;
+            string error;
             try
             {
                 var execution = getReportExecution(execution_guid);
@@ -393,16 +390,7 @@ namespace SealWebServer.Controllers
                 {
                     Report report = execution.Report;
                     Debug.WriteLine(string.Format("Report Status {0}", report.Status));
-                    if (execution.IsConvertingToExcel)
-                    {
-                        return Json(new
-                        {
-                            progression = report.ExecutionProgression,
-                            progression_message = Helper.ToHtml(report.Translate("Executing report...")),
-                            execution_messages = Helper.ToHtml(report.ExecutionMessages)
-                        });
-                    }
-                    else if (report.Status == ReportStatus.Executed)
+                    if (report.Status == ReportStatus.Executed)
                     {
                         return Json(new { result_ready = true }); ;
                     }
@@ -553,11 +541,11 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Return the Html result of a report execution
+        /// Return the result of a report execution for a given format
         /// </summary>
-        public ActionResult HtmlResult(string execution_guid)
+        public ActionResult ViewResult(string execution_guid, string format)
         {
-            writeDebug("HtmlResult");
+            writeDebug("ViewResult");
             try
             {
                 if (!CheckAuthentication()) return _loginContentResult;
@@ -567,9 +555,10 @@ namespace SealWebServer.Controllers
                 {
 
                     if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
-
-                    string resultPath = execution.GenerateHTMLResult();
-                    return getFileResult(resultPath, execution.Report);
+                    ReportFormat f;
+                    if (!Enum.TryParse(format, out f)) f = ReportFormat.html;
+                    var fileResult = execution.GenerateResult(f);
+                    return getFileResult(fileResult, execution.Report);
                 }
             }
             catch (Exception ex)
@@ -594,135 +583,6 @@ namespace SealWebServer.Controllers
                 if (execution != null)
                 {
                     return getFileResult(execution.Report.ResultFilePath, execution.Report);
-                }
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-
-            return Content(_noReportFoundMessage);
-        }
-
-
-        /// <summary>
-        /// Return the Print HTML result of a report execution
-        /// </summary>
-        public ActionResult PrintResult(string execution_guid)
-        {
-            writeDebug("PrintResult");
-            try
-            {
-                if (!CheckAuthentication()) return _loginContentResult;
-
-                var execution = getReportExecution(execution_guid);
-                if (execution != null)
-                {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation if Result Menu is disabled");
-
-                    string resultPath = execution.GeneratePrintResult();
-                    return getFileResult(resultPath, execution.Report);
-                }
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-
-            return Content(_noReportFoundMessage);
-        }
-
-        /// <summary>
-        /// Return the PDF result of a report execution
-        /// </summary>
-        public ActionResult PDFResult(string execution_guid)
-        {
-            writeDebug("PDFResult");
-            try
-            {
-                if (!CheckAuthentication()) return _loginContentResult;
-
-                var execution = getReportExecution(execution_guid);
-                if (execution != null)
-                {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation if Result Menu is disabled");
-                    if (execution.IsConvertingToPDF) return Content(Translate("Sorry, the conversion is being in progress in another window..."));
-
-                    string resultPath = "";
-                    try
-                    {
-                        execution.IsConvertingToPDF = true;
-                        resultPath = execution.GeneratePDFResult();
-                    }
-                    finally
-                    {
-                        execution.IsConvertingToPDF = false;
-                    }
-                    return getFileResult(resultPath, execution.Report);
-                }
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-
-            return Content(_noReportFoundMessage);
-        }
-
-        /// <summary>
-        /// Return the Excel result of a report execution
-        /// </summary>
-        public ActionResult ExcelResult(string execution_guid)
-        {
-            writeDebug("ExcelResult");
-            try
-            {
-                if (!CheckAuthentication()) return _loginContentResult;
-
-                var execution = getReportExecution(execution_guid);
-                if (execution != null)
-                {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation if Result Menu is disabled");
-                    if (execution.IsConvertingToExcel) return Content(Translate("Sorry, the conversion is being in progress in another window..."));
-
-                    string resultPath = "";
-                    try
-                    {
-                        execution.IsConvertingToExcel = true;
-                        resultPath = execution.GenerateExcelResult();
-                    }
-                    finally
-                    {
-                        execution.IsConvertingToExcel = false;
-                    }
-                    return getFileResult(resultPath, execution.Report);
-                }
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-
-            return Content(_noReportFoundMessage);
-        }
-
-        /// <summary>
-        /// Return the CSV result of a report execution
-        /// </summary>
-        public ActionResult CSVResult(string execution_guid)
-        {
-            writeDebug("CSVResult");
-            try
-            {
-                if (!CheckAuthentication()) return _loginContentResult;
-
-                var execution = getReportExecution(execution_guid);
-                if (execution != null)
-                {
-                    if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
-                    string resultPath = "";
-                    resultPath = execution.GenerateCSVResult();
-                    return getFileResult(resultPath, execution.Report);
                 }
             }
             catch (Exception ex)
@@ -1007,7 +867,7 @@ namespace SealWebServer.Controllers
             {
                 if (ex != null) Helper.WriteLogException("HandleSWIException1", ex);
                 Helper.WriteLogException("HandleSWIException2", ex2);
-                result = Json(new { error = ex2.Message + (ex != null ? ex.Message : "")});
+                result = Json(new { error = ex2.Message + (ex != null ? ex.Message : "") });
             }
             return result;
         }

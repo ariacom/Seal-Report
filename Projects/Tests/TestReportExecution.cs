@@ -1,6 +1,6 @@
 //
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Seal.Model;
@@ -21,7 +21,7 @@ namespace Test
             ReportExecution execution = new ReportExecution() { Report = report };
             execution.Execute();
             while (report.IsExecuting) System.Threading.Thread.Sleep(100);
-            string result = execution.GenerateHTMLResult();
+            string result = execution.GenerateResult(ReportFormat.html);
             var p = new Process();
             p.StartInfo = new ProcessStartInfo(result) { UseShellExecute = true };
             p.Start();
@@ -74,7 +74,7 @@ namespace Test
             ReportExecution execution = new ReportExecution() { Report = report };
             execution.Execute();
             while (report.IsExecuting) System.Threading.Thread.Sleep(100);
-            string result = execution.GenerateHTMLResult();
+            string result = execution.GenerateResult(ReportFormat.html);
             var p = new Process();
             p.StartInfo = new ProcessStartInfo(result) { UseShellExecute = true };
             p.Start();

@@ -1,0 +1,23 @@
+﻿@using System.IO
+@using System.Data
+@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel reportModel = view.Model;
+
+    if (reportModel.ResultTable != null)
+    {
+        //Set table name and clean column names
+        var tableName = view.Name.Replace(" ", "");
+        var dt = reportModel.ResultTableTranslated;
+        dt.TableName = tableName;
+        foreach (DataColumn col in dt.Columns) col.ColumnName = col.ColumnName.Replace(" ", ""); 
+
+        using (StringWriter sw = new StringWriter())
+        {
+            dt.WriteXml(sw, XmlWriteMode.IgnoreSchema);
+            @Raw(sw.ToString().Trim())
+        }
+    }
+}

@@ -1,13 +1,7 @@
 @using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = "Tab Page";
     Template.Description = "Container for a given page of the parent Tab Control. The name of the view is used for the Tab.";
-
-    //If true, the view can be configured for a report model
-    Template.ForReportModel = false;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "tab_description", Type = ViewParameterType.Text, DisplayName = "Tab page description", Description = "An optional description displayed in the tab page." });

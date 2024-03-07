@@ -1,13 +1,7 @@
 @using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = ReportViewTemplate.ContainerName;
     Template.Description = "A Bootstrap container (refer to Bootstrap 3 grid at https://getbootstrap.com/docs/3.4/css/#grid)";
-
-    //If true, the view can be configured for a report model
-    Template.ForReportModel = false;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter()

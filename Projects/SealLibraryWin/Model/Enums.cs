@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System.ComponentModel;
 
@@ -81,12 +81,28 @@ namespace Seal.Model
 
     public enum ReportFormat
     {
+        [Description("HTML")]
         html,
+        [Description("HTML Print")]
         print,
+        [Description("Excel")]
+        Excel,
+        [Description("PDF")]
+        PDF,
+        [Description("HTML to PDF")]
+        HTML2PDF,
+        [Description("CSV")]
         csv,
-        pdf,
-        excel,
-        custom
+        [Description("Text")]
+        Text,
+        [Description("XML")]
+        XML,
+        [Description("Json")]
+        Json,
+        [Description("Excel Converter")]
+        excel, //converter
+        [Description("PDF Converter")]
+        pdf, //converter 
     }
 
     public enum NumericStandardFormat
@@ -356,8 +372,6 @@ namespace Seal.Model
         None,
         [Description("Scatter")]
         Scatter,
-        [Description("Line")]
-        Line,
         [Description("Bar")]
         Bar,
         [Description("Pie")]
@@ -405,7 +419,8 @@ namespace Seal.Model
         Boolean,
         Enum,
         Text,
-        RootReportView
+        RootReportView,
+        Double,
     }
 
     public enum ReportStatus
@@ -644,5 +659,23 @@ namespace Seal.Model
         MachineRSAContainer,
         [Description("Use the User RSA Key Container (Works only for the current user)")]
         UserRSAContainer,
+    }
+
+    public enum ExcelNewSheetMode
+    {
+        [Description("New Sheet per 'Tab Page' View")]
+        PerTabPage,
+        [Description("New Sheet per 'Model' View")]
+        PerModel,
+        [Description("Keep the current Sheet")]
+        KeepSheet,
+    }
+
+    public enum ResultPageIdentifierType
+    {
+        ChartJSCanvas,
+        ChartNVD3Canvas,
+        ChartPlotlyCanvas,
+        GaugeCanvas,
     }
 }

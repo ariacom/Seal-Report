@@ -24,7 +24,7 @@
         <member name="M:Seal.Helpers.DataTableLoader.FromExcel(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic. 
         </member>
-        <member name="M:Seal.Helpers.DataTableLoader.FromCSV(System.String,System.Nullable{System.Char},System.Text.Encoding)">
+        <member name="M:Seal.Helpers.DataTableLoader.FromCSV(System.String,System.Nullable{System.Char},System.Text.Encoding,System.Boolean)">
             <summary>
             Returns a DataTable from a CSV file
             </summary>
@@ -554,6 +554,11 @@
             The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaConnection.CommandTimeout">
+            <summary>
+            "Default Timeout in seconds for the SQL Statements executed. 0 means no Timeout.
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaConnection.FullConnectionString">
             <summary>
             Full Connection String (Oledb, Odbc, MSSQLServer, MongoDB, Oracle, MySQL) with user name and password
@@ -737,7 +742,7 @@
         </member>
         <member name="P:Seal.Model.MetaEnum.ScriptDisplay">
             <summary>
-            Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution.
+            Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution. It can contain either the '{EnumFilter}' and/or '{EnumValues_&lt;Name>}' keywords where &lt;Name> is the name of another prompted enumerated list.
             </summary>
         </member>
         <member name="P:Seal.Model.MetaEnum.HasDependencies">
@@ -775,7 +780,7 @@
             True if the source is a standard SQL source
             </summary>
         </member>
-        <member name="M:Seal.Model.MetaEnum.GetSubSetValues(System.String,System.Collections.Generic.Dictionary{Seal.Model.MetaEnum,System.String})">
+        <member name="M:Seal.Model.MetaEnum.GetSubSetValues(System.String,System.Collections.Generic.Dictionary{Seal.Model.MetaEnum,System.Collections.Generic.List{System.String}})">
             <summary>
             Returns the list of the enum values to display after applying filter and depencies
             </summary>
@@ -1279,7 +1284,12 @@
         </member>
         <member name="M:Seal.Model.MetaTable.GetNumericValue(System.String)">
             <summary>
-            Returns a paramter ineteger value
+            Returns a parameter integer value
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaTable.GetDoubleValue(System.String)">
+            <summary>
+            Returns a parameter double value
             </summary>
         </member>
         <member name="P:Seal.Model.MetaTable.DefinitionInitScript">
@@ -2011,6 +2021,11 @@
             The numeric parameter value
             </summary>
         </member>
+        <member name="P:Seal.Model.Parameter.DoubleValue">
+            <summary>
+            The double parameter value
+            </summary>
+        </member>
         <member name="P:Seal.Model.Parameter.TextValue">
             <summary>
             The text parameter value
@@ -2019,6 +2034,11 @@
         <member name="P:Seal.Model.Parameter.Enums">
             <summary>
             List of string values if the parameter is an enum. Each enum can have an id and an optional display. 
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Parameter._enumType">
+            <summary>
+            If set, the enum values are taken from the Enum defined
             </summary>
         </member>
         <member name="P:Seal.Model.Parameter.EnumValues">
@@ -2251,6 +2271,11 @@
         <member name="P:Seal.Model.Report.HTMLDisplayFilePath">
             <summary>
             Path of the HTML intermediate result file
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.HTMLResultFilePath">
+            <summary>
+            Path of the result file in HTML after a report execution (set only for PDF conversions)
             </summary>
         </member>
         <member name="P:Seal.Model.Report.OutputFolderDeviceResultFolder">
@@ -2493,11 +2518,6 @@
             Context of the execution:  DesignerReport, DesignerOutput, TaskScheduler, WebReport, WebOutput
             </summary>
         </member>
-        <member name="F:Seal.Model.Report.ExecutionViewResultFormat">
-            <summary>
-            Current result format generated durin a View Result: html, print, csv, pdf, excel
-            </summary>
-        </member>
         <member name="F:Seal.Model.Report.SecurityContext">
             <summary>
             Current security user of the report execution
@@ -2561,6 +2581,11 @@
         <member name="P:Seal.Model.Report.HasPlotlyChart">
             <summary>
             True if the report has Plotly chart
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.HasScottPlotChart">
+            <summary>
+            True if the report has ScottPlot chart
             </summary>
         </member>
         <member name="P:Seal.Model.Report.ResultFileEncoding">
@@ -2789,6 +2814,21 @@
             Current page used when parsing
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.ExcelResult">
+            <summary>
+            Current Excel objects used by the ExcelRenderer
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.PDFResult">
+            <summary>
+            Current PDF objects used by the PDFRenderer
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.JsonResult">
+            <summary>
+            Current Json objects used by the JsonRenderer
+            </summary>
+        </member>
         <member name="M:Seal.Model.Report.Translate(System.String)">
             <summary>
             Translate a reference text from the Report context
@@ -2831,7 +2871,7 @@
         </member>
         <member name="P:Seal.Model.Report.HasExternalViewer">
             <summary>
-            True if the report result has an external viewer (for PDF, CSV or Excel)
+            True if the report result has an external viewer (different from HTML)
             </summary>
         </member>
         <member name="P:Seal.Model.Report.IsServerPaginationEnabled">
@@ -2839,14 +2879,14 @@
             True if the server pagination for DataTables is enabled
             </summary>
         </member>
-        <member name="F:Seal.Model.Report.PdfConversion">
-            <summary>
-            True if a PDF conversion will be done after the HTML generation
-            </summary>
-        </member>
         <member name="P:Seal.Model.Report.Format">
             <summary>
             Report format
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.Renderer">
+            <summary>
+            Current renderer (if any) used for the execution
             </summary>
         </member>
         <member name="P:Seal.Model.Report.ResultExtension">
@@ -3437,7 +3477,7 @@
         </member>
         <member name="M:Seal.Model.ReportExecution.RenderResult">
             <summary>
-            Render the report result and convert it if necessary in Excel or PDF format
+            Render the report result
             </summary>
         </member>
         <member name="M:Seal.Model.ReportExecution.RenderHTMLDisplay">
@@ -3510,14 +3550,9 @@
             Execute a report schedule
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.GenerateHTMLResult">
+        <member name="M:Seal.Model.ReportExecution.GenerateHTMLResult(System.Boolean)">
             <summary>
             Generate the HTML result of the current execution
-            </summary>
-        </member>
-        <member name="M:Seal.Model.ReportExecution.GenerateCSVResult">
-            <summary>
-            Generate the CSV result of the current execution
             </summary>
         </member>
         <member name="M:Seal.Model.ReportExecution.GeneratePrintResult">
@@ -3525,12 +3560,17 @@
             Generate the HTML Print result of the current execution
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.GeneratePDFResult">
+        <member name="M:Seal.Model.ReportExecution.GenerateResult(Seal.Model.ReportFormat)">
+            <summary>
+            Generate the report in a given format and retruns the file path
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportExecution.ConvertToPDFResult">
             <summary>
             Generate the PDF result of the current execution
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.GenerateExcelResult">
+        <member name="M:Seal.Model.ReportExecution.ConvertToExcelResult">
             <summary>
             Generate the Excel result of the current execution
             </summary>
@@ -3583,7 +3623,7 @@
         </member>
         <member name="P:Seal.Model.ReportModel.ReferenceModelGUID">
             <summary>
-            If set, restrictions and elements from the reference model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model. 
+            If set, restrictions and elements from the referenced model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model. 
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.ReferenceModel">
@@ -3701,6 +3741,11 @@
             If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportModel.CommandTimeout">
+            <summary>
+            "Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportModel.BuildTimeout">
             <summary>
             Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
@@ -3781,7 +3826,7 @@
             True if the model has a Plotly serie
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportModel.HasChartScottPlotSerie">
+        <member name="P:Seal.Model.ReportModel.HasScottPlotSerie">
             <summary>
             True if the model has a Chart ScottPlot serie
             </summary>
@@ -3916,6 +3961,11 @@
             Result DataTable got from the SQL query
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportModel.ResultTableTranslated">
+            <summary>
+            Result DataTable got from the SQL query with the original column names and without hidden columns
+            </summary>
+        </member>
         <member name="F:Seal.Model.ReportModel.Progression">
             <summary>
             Progression in percentage of the model processing
@@ -4014,6 +4064,11 @@
         <member name="M:Seal.Model.ReportModel.CheckChartJSIntegrity">
             <summary>
             Check ChartJS and set the ExecChartJSType property
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.CheckScottPlotChartIntegrity">
+            <summary>
+            Check ScottPlot and set the ExecScottPlotChartType property
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.ExecutionRestrictions">
@@ -4319,16 +4374,6 @@
         <member name="P:Seal.Model.ReportOutput.EmailSkipAttachments">
             <summary>
             If true, the email sent will have no attachement. This may be useful if the report has only tasks.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportOutput.EmailZipAttachments">
-            <summary>
-            This property is obsolete. Use ZipResult instead. Will be removed in future version.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportOutput.EmailZipPassword">
-            <summary>
-            This property is obsolete. Use ZipPassword instead. Will be removed in future version.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportOutput.ZipResult">
@@ -5168,6 +5213,11 @@
             Name
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportSource.ForceLoad">
+            <summary>
+            For performance reasons, the source is not loaded during execution if it is not involved in the report (in models, tasks, etc.). Set this flag to true to force the load anyway and use the source in scripts.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportSource.RepositoryConnection">
             <summary>
             Reference to the default repository connection
@@ -5270,7 +5320,12 @@
         </member>
         <member name="M:Seal.Model.ReportTask.GetNumericValue(System.String)">
             <summary>
-            Returns a paramter ineteger value
+            Returns a parameter integer value
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTask.GetDoubleValue(System.String)">
+            <summary>
+            Returns a parameter double value
             </summary>
         </member>
         <member name="P:Seal.Model.ReportTask.SourceGUID">
@@ -5490,11 +5545,6 @@
             Init all references
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportView.InitParameters(System.Collections.Generic.List{Seal.Model.Parameter},System.Collections.Generic.List{Seal.Model.Parameter},System.Boolean)">
-            <summary>
-            Init the view parameters from the configuration
-            </summary>
-        </member>
         <member name="M:Seal.Model.ReportView.BeforeSerialization">
             <summary>
             Operations performed before the serialization
@@ -5545,11 +5595,6 @@
             Helper to create an HTTP attribute from a parameter value
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportView.ChartTitle">
-            <summary>
-            Current chart title
-            </summary>
-        </member>
         <member name="M:Seal.Model.ReportView.GetTranslatedMappedLabel(System.String)">
             <summary>
             Translates a mapped label having keywords %DisplayName%
@@ -5597,7 +5642,12 @@
         </member>
         <member name="M:Seal.Model.ReportView.GetNumericValue(System.String)">
             <summary>
-            Returns a paramter ineteger value
+            Returns a parameter integer value
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportView.GetDoubleValue(System.String)">
+            <summary>
+            Returns a parameter double value
             </summary>
         </member>
         <member name="P:Seal.Model.ReportView.IsRootView">
@@ -5791,6 +5841,41 @@
             Unique identifier for execution used to build JS identifier (e.g. for datatables)
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportView.ExcelRenderer">
+            <summary>
+            Current Excel renderer
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportView.PDFRenderer">
+            <summary>
+            Current PDF renderer
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportView.HTML2PDFRenderer">
+            <summary>
+            Current HTML2PDF renderer
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportView.CSVRenderer">
+            <summary>
+            Current CSV renderer
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportView.TextRenderer">
+            <summary>
+            Current Text renderer
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportView.XMLRenderer">
+            <summary>
+            Current XML renderer
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportView.JsonRenderer">
+            <summary>
+            Current Json renderer
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportView.PdfConfigurations">
             <summary>
             The PDF configuration of the view
@@ -5825,8 +5910,6 @@
             <summary>
             Convert the view to an Excel Sheet
             </summary>
-            <param name="destination"></param>
-            <returns></returns>
         </member>
         <member name="P:Seal.Model.ReportView.HelperReloadConfiguration">
             <summary>
@@ -5836,16 +5919,6 @@
         <member name="P:Seal.Model.ReportView.HelperResetParameters">
             <summary>
             Editor Helper: Reset all template parameters to their default values
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.HelperResetPDFConfigurations">
-            <summary>
-            Editor Helper: Reset PDF configuration values to their default values
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.HelperResetExcelConfigurations">
-            <summary>
-            Editor Helper: Reset Excel configuration values to their default values
             </summary>
         </member>
         <member name="P:Seal.Model.ReportView.Information">
@@ -5873,7 +5946,12 @@
             Returns a partial template key form a given name and model
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportView.Parse">
+        <member name="P:Seal.Model.ReportView.Renderer">
+            <summary>
+            Returns the current renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportView.Parse(System.Boolean)">
             <summary>
             Parse the view and returns the result
             </summary>
@@ -5959,6 +6037,11 @@
             Name of the report in the menu
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportView.FindViewFromTemplate(System.String)">
+            <summary>
+            Helper to find a child view from its template name
+            </summary>
+        </member>
         <member name="T:Seal.Model.ReportViewPartialTemplate">
             <summary>
             A ReportViewPartialTemplate is a partial template of a report view template.
@@ -5992,6 +6075,11 @@
         <member name="P:Seal.Model.ReportViewTemplate.Name">
             <summary>
             Name of the view template
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportViewTemplate.RendererType">
+            <summary>
+            Renderer type if the template is used for a renderer
             </summary>
         </member>
         <member name="P:Seal.Model.ReportViewTemplate.Description">
@@ -6079,6 +6167,11 @@
             Initialize the template from a file
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportViewTemplate.InitParameters(System.Collections.Generic.List{Seal.Model.Parameter},System.Boolean)">
+            <summary>
+            Init the parameters from the configuration
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportViewTemplate.LoadTemplates(System.String)">
             <summary>
             Returns a list of ReportViewTemplate from a given folder
@@ -6101,7 +6194,12 @@
         </member>
         <member name="F:Seal.Model.ReportViewTemplate.LastConfigModification">
             <summary>
-            Last modfication of the configuration file
+            Last modification of the configuration file
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportViewTemplate.LastCustomModification">
+            <summary>
+            
             </summary>
         </member>
         <member name="P:Seal.Model.ReportViewTemplate.IsModified">
@@ -6400,6 +6498,16 @@
             Replace the repository keywords in a string
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.ResultAllFormats">
+            <summary>
+            All report formats available
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.ResultAllowedFormats">
+            <summary>
+            Result report formats allowed by the configuration
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.Translations">
             <summary>
             Current translations
@@ -6553,6 +6661,11 @@
         <member name="M:Seal.Model.RepositoryServer.GetViewTemplate(System.String)">
             <summary>
             Returns a ReportViewTemplate from a given name
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RepositoryServer.GetRendererTemplate(System.String,System.String)">
+            <summary>
+            Returns a ReportViewTemplate from a given name and a given renderer
             </summary>
         </member>
         <member name="P:Seal.Model.RepositoryServer.TableTemplates">
@@ -6785,6 +6898,11 @@
             Date time value of the cell if possible
             </summary>
         </member>
+        <member name="P:Seal.Model.ResultCell.DateTimeOAValue">
+            <summary>
+            Date time value of the cell if possible
+            </summary>
+        </member>
         <member name="P:Seal.Model.ResultCell.CellCssSummaryClass">
             <summary>
             Css cell class for the summary table
@@ -6997,7 +7115,7 @@
         </member>
         <member name="F:Seal.Model.ResultPage.PrimaryXValues">
             <summary>
-            Valus used for the secondary X axis of the chart
+            Values used for the primary X axis of the chart
             </summary>
         </member>
         <member name="F:Seal.Model.ResultPage.SecondaryXValues">
@@ -7060,6 +7178,22 @@
             Custom Tag the can be used at execution time to store any object
             </summary>
         </member>
+        <member name="F:Seal.Model.ResultPage.Plots">
+            <summary>
+            Plot charts generated
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultPage.PageName">
+            <summary>
+            Returns the current page name
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ResultPage.Identifiers">
+            <summary>
+            Dictionary to store the identifiers generated during the page rendering.
+            Used for storing JavaScript Charts Canvas Id
+            </summary>
+        </member>
         <member name="T:Seal.Model.ResultSerieComparer">
             <summary>
             Class to sort the result series when rendering in the view
@@ -7113,6 +7247,21 @@
         <member name="T:Seal.Model.ResultSerieValue">
             <summary>
             Defines a serie value (One to several X values, one Y value)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ResultSerieValue.Xvalue">
+            <summary>
+            X Value as a string
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ResultSerieValue.XDateTimeValue">
+            <summary>
+            X Value as a DateTime
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ResultSerieValue.YDateTimeValue">
+            <summary>
+            Y Value as a DateTime
             </summary>
         </member>
         <member name="F:Seal.Model.ResultSerieValue.XDimensionValues">
@@ -7722,6 +7871,11 @@
             Parameter numeric value of a given name
             </summary>
         </member>
+        <member name="M:Seal.Model.SealSecurity.GetDoubleValue(System.String)">
+            <summary>
+            Returns a parameter double value
+            </summary>
+        </member>
         <member name="F:Seal.Model.SealSecurity.LoggedUsers">
             <summary>
             List of logged users
@@ -7765,6 +7919,11 @@
         <member name="P:Seal.Model.SealServerConfiguration.HasLogo">
             <summary>
             True if a logo is defined and exists
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.LogoFilePath">
+            <summary>
+            Logo file path from the repository
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.LogDays">
@@ -7825,6 +7984,11 @@
         <member name="P:Seal.Model.SealServerConfiguration.AlternateTempDirectory">
             <summary>
             If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.ReportFormats">
+            <summary>
+            List of report format allowed in view result. If empty, all formats are taken.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.SchedulerMode">
@@ -7930,46 +8094,6 @@
         <member name="P:Seal.Model.SealServerConfiguration.PdfWebServiceURL">
             <summary>
             If the client library is used, the HTML to PDF web service URL.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfConfigurations">
-            <summary>
-            Current default configuration values for Pdf converter
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfConverter">
-            <summary>
-            Editor Helper: All the default options applied to the PDF conversion from the HTML result.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfConverterEdited">
-            <summary>
-            True if the Pdf configurations were edited
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.HelperResetPDFConfigurations">
-            <summary>
-            Editor Helper: Reset PDF configuration values to their default values
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.ExcelConfigurations">
-            <summary>
-            Current default configuration values for Excel converter
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.ExcelConverter">
-            <summary>
-            Editor Helper: All the default options applied to the Excel conversion from the view
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.ExcelConverterEdited">
-            <summary>
-            True if the Excel configurations were edited
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.HelperResetExcelConfigurations">
-            <summary>
-            Editor Helper: Reset Excel configuration values to their default values
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.CommonScriptsHeader">
@@ -8090,6 +8214,11 @@
         <member name="M:Seal.Model.SealServerConfiguration.GetApplicationKey(System.String)">
             <summary>
             Get an application key or password
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.GetBuildDate">
+            <summary>
+            Retruns the build date of the assembly
             </summary>
         </member>
         <member name="T:Seal.Model.SealServerConfiguration.KeyValue">
@@ -9023,6 +9152,202 @@
         <member name="F:Seal.Model.WebMainModel.Request">
             <summary>
             Current HTTP request
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.Serialize">
+            <summary>
+            Default serialization
+            </summary>
+        </member>
+        <member name="F:Seal.Renderer.RootRenderer.View">
+            <summary>
+            Report view of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.GetRenderType">
+            <summary>
+            Type name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.GetRenderDisplayType">
+            <summary>
+            Type display name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.GetFileExtension">
+            <summary>
+            File name extension of the generated result
+            </summary>
+        </member>
+        <member name="P:Seal.Renderer.RootRenderer.Report">
+            <summary>
+            Report of the renderer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Seal.Renderer.RootRenderer.UseCustomTemplate">
+            <summary>
+            If true, the template text can be modified
+            </summary>
+        </member>
+        <member name="P:Seal.Renderer.RootRenderer.CustomTemplate">
+            <summary>
+            The custom template text used instead of the template defined by the template name
+            </summary>
+        </member>
+        <member name="P:Seal.Renderer.RootRenderer.Parameters">
+            <summary>
+            The renderer parameters
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.BeforeSerialization">
+            <summary>
+            Operations performed before the serialization
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.InitParameters(System.Boolean)">
+            <summary>
+            Init all parameters with an option to reset their values
+            </summary>
+        </member>
+        <member name="P:Seal.Renderer.RootRenderer.Template">
+            <summary>
+            Current ReportViewTemplate
+            </summary>
+        </member>
+        <member name="P:Seal.Renderer.RootRenderer.ViewTemplateText">
+            <summary>
+            Current template text of the view
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.GetValue(System.String)">
+            <summary>
+            Returns the parameter value
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.GetBoolValue(System.String)">
+            <summary>
+            Returns a parameter boolean value
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.GetBoolValue(System.String,System.Boolean)">
+            <summary>
+            Returns a parameter boolean value with a default if it does not exist
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.GetNumericValue(System.String)">
+            <summary>
+            Returns a parameter integer value
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.GetDoubleValue(System.String)">
+            <summary>
+            Returns a parameter double value
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.CSVRenderer.GetRenderType">
+            <summary>
+            Type name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.CSVRenderer.GetFileExtension">
+            <summary>
+            File name extension of the generated result
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelRenderer.GetRenderType">
+            <summary>
+            Type name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelRenderer.GetFileExtension">
+            <summary>
+            File name extension of the generated result
+            </summary>
+        </member>
+        <member name="P:Seal.Renderer.ExcelRenderer.Result">
+            <summary>
+            Current result objects used by the Renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.SetValue(OfficeOpenXml.ExcelRange,Seal.Model.ResultCell,System.Boolean,System.Boolean)">
+            <summary>
+            Set a ResultCell value in an Excel cell
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.CleanWorkbook">
+            <summary>
+            Clean the current Workbook
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.AddWorksheet(System.String)">
+            <summary>
+            Add a Worksheet to the current Workbook
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.TextRenderer.GetRenderType">
+            <summary>
+            Type name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.TextRenderer.GetFileExtension">
+            <summary>
+            File name extension of the generated result
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.XMLRenderer.GetRenderType">
+            <summary>
+            Type name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.XMLRenderer.GetFileExtension">
+            <summary>
+            File name extension of the generated result
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.JsonRenderer.GetRenderType">
+            <summary>
+            Type name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.JsonRenderer.GetFileExtension">
+            <summary>
+            File name extension of the generated result
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.PDFRenderer.GetRenderType">
+            <summary>
+            Type name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.PDFRenderer.GetFileExtension">
+            <summary>
+            File name extension of the generated result
+            </summary>
+        </member>
+        <member name="P:Seal.Renderer.PDFRenderer.Result">
+            <summary>
+            Current result objects used by the Renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HTML2PDFRenderer.GetRenderType">
+            <summary>
+            Type name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HTML2PDFRenderer.GetRenderDisplayType">
+            <summary>
+            Type display name of the renderer
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HTML2PDFRenderer.GetFileExtension">
+            <summary>
+            File name extension of the generated result
+            </summary>
+        </member>
+        <member name="P:Seal.Renderer.HTML2PDFRenderer.Result">
+            <summary>
+            Current result objects used by the Renderer
             </summary>
         </member>
     </members>

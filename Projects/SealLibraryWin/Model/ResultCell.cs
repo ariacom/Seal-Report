@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -261,6 +261,19 @@ namespace Seal.Model
                 return (DateTime)Value;
             }
         }
+
+        /// <summary>
+        /// Date time value of the cell if possible
+        /// </summary>
+        public double? DateTimeOAValue
+        {
+            get
+            {
+                if (Value == null || string.IsNullOrEmpty(Value.ToString()) || !(Value is DateTime)) return null;
+                return ((DateTime)Value).ToOADate();
+            }
+        }
+
 
         void updateFinalCssClass()
         {

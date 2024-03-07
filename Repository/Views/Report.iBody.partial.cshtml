@@ -246,14 +246,14 @@
             $("#restrictions_button").removeClass("reportview").css("display","none");
         }
 
-        if (@Helper.ToJS(view.GetValue("information_mode") != "disabled")) {
+        if (@Helper.ToJS(view.GetValue("information_mode") != "disabled" && !report.PrintLayout)) {
             $("#information_button").addClass("reportview").css("display","inline-block");
         }
         else {
             $("#information_button").removeClass("reportview").css("display","none");
         }
 
-        if (@Helper.ToJS(view.GetValue("messages_mode") != "disabled")) {
+        if (@Helper.ToJS(view.GetValue("messages_mode") != "disabled" && !report.PrintLayout)) {
             $("#message_button").addClass("reportview").css("display","inline-block");
         }
         else {
@@ -296,7 +296,7 @@
 <style>
         @Raw(view.GetValue("additional_css"))
 </style>
-<div id="report_body_container" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")" style="display:none;padding-top:65px;">
+<div id="report_body_container" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")" style="display:none;padding-top:65px;@(report.PrintLayout ? ("width:"+view.GetValue("print_body_width")) : "")">
     @if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "right")
     {
         <div class="row">

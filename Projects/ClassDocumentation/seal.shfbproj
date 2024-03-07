@@ -18,12 +18,10 @@
     <HtmlHelpName>Documentation</HtmlHelpName>
     <Language>en-US</Language>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\SealLibrary\bin\Debug\Net7.0\SealLibrary.dll" />
+      <DocumentationSource sourceFile="..\SealLibrary\bin\Debug\Net8.0\SealLibrary.dll" />
       <DocumentationSource sourceFile="..\SealLibrary\SealLibrary.xml" />
-      <DocumentationSource sourceFile="..\SealWebServer\bin\Debug\Net7.0\SealWebServer.dll" />
+      <DocumentationSource sourceFile="..\SealWebServer\bin\Debug\Net8.0\SealWebServer.dll" />
       <DocumentationSource sourceFile="..\SealWebServer\SealWebServer.xml" />
-      <DocumentationSource sourceFile="..\..\..\SealAriacom\SealConverter\bin\Debug\Net7.0\SealConverter.dll" />
-      <DocumentationSource sourceFile="..\..\..\SealAriacom\SealConverter\SealConverter.xml" />
     </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>C#</SyntaxFilters>
@@ -199,6 +197,12 @@
             <assemblyIdentity name="MongoDB.Bson" />
             <assemblyIdentity name="MySql.Data" />
             <assemblyIdentity name="EPPlus" />
+            <assemblyIdentity name="QuestPDF" />
+            <assemblyIdentity name="PuppeteerSharp" />
+            <assemblyIdentity name="Svg.Skia" />
+            <assemblyIdentity name="SkiaSharp" />
+            <assemblyIdentity name="ScottPlot" />
+            <assemblyIdentity name="DocumentFormat.OpenXml" />
             <assemblyIdentity name="FluentFTP" />
             <assemblyIdentity name="System.ServiceModel.Syndication" />
             <assemblyIdentity name="jose-jwt" />

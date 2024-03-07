@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -12,10 +12,8 @@ using System.Threading;
 using RazorEngine.Templating;
 using System.Diagnostics;
 using System.Globalization;
-using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace Seal.Model
 {
@@ -31,12 +29,6 @@ namespace Seal.Model
         public const string ActionRefreshReport = "ActionRefreshReport";
         public const string ActionCancelReport = "ActionCancelReport";
         public const string ActionUpdateViewParameter = "ActionUpdateViewParameter";
-        public const string ActionViewHtmlResult = "HtmlResult";
-        public const string ActionViewHtmlResultFile = "HtmlResultFile";
-        public const string ActionViewPrintResult = "PrintResult";
-        public const string ActionViewPDFResult = "PDFResult";
-        public const string ActionViewExcelResult = "ExcelResult";
-        public const string ActionViewCSVResult = "CSVResult";
         public const string ActionNavigate = "ActionNavigate";
         public const string ActionLogin = "ActionLogin";
         public const string ActionLogout = "ActionLogout";
@@ -105,33 +97,57 @@ namespace Seal.Model
             return result;
         }
 
+        void checkHTMLPrintResult()
+        {
+            var generatePrintResult = false;
+
+            //Check if JavaScript charts are involved, if so render the HTML first, so it can be used in the renderers (HTMLResultFilePath)
+            if (Report.Format == ReportFormat.PDF &&
+                (Report.HasNVD3Chart || Report.HasChartJSChart || Report.HasPlotlyChart || Report.AllViews.Exists(i => i.TemplateName == ReportViewTemplate.GaugeName))
+                ) generatePrintResult = true;
+
+            //PDF conversion requires Print Result
+            if (Report.Format == ReportFormat.HTML2PDF) generatePrintResult = true;
+
+            if (generatePrintResult) 
+            {
+                var orignalFormat = Report.Format;
+                try
+                {
+                    string htmlPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"));
+
+                    //Reset identifiers
+                    foreach (var page in Report.Models.SelectMany(i => i.Pages)) page.Identifiers.Clear();
+
+                    Report.Format = ReportFormat.print;
+                    Report.OnlyBody = false;
+                    Report.Status = ReportStatus.RenderingResult;
+                    string html = Render();
+                    File.WriteAllText(htmlPath, html.Trim(), Encoding.UTF8);
+                    Report.HTMLResultFilePath = htmlPath;
+                }
+                finally
+                {
+                    Report.Format = orignalFormat;
+                }
+            }
+        }
+
+
         /// <summary>
-        /// Render the report result and convert it if necessary in Excel or PDF format
+        /// Render the report result
         /// </summary>
         public void RenderResult()
         {
-            Report.PdfConversion = (Report.Format == ReportFormat.pdf);
-
             Report.Status = ReportStatus.RenderingResult;
-            string result = "";
-            if (Report.HasExternalViewer && Report.Format != ReportFormat.pdf)
-            {
-                //use the children to render in a new extension file
-                result = Report.ExecutionView.ParseChildren();
-                if (Report.Format == ReportFormat.custom && !File.Exists(Report.ResultFilePath))
-                {
-                    File.WriteAllText(Report.ResultFilePath, "Error using Custom format: Report.ResultFilePath must be set in a custom view script.", Encoding.UTF8);
-                }
-            }
-            else
-            {
-                //normal result rendering
-                result = Render();
-            }
 
+            checkHTMLPrintResult();
+
+            string result = Render();
             try
             {
-                if (Report.Format != ReportFormat.custom)
+                //Check that the file has not been done by the Renderer
+                if (Report.Renderer == null || string.IsNullOrEmpty(File.ReadAllText(Report.ResultFilePath).Trim()))
                 {
                     File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
                 }
@@ -163,7 +179,6 @@ namespace Seal.Model
                     Report.ExecutionErrors = ex.Message;
                     if (ex.InnerException != null) Report.ExecutionErrors += "\r\n" + ex.InnerException.Message;
                 }
-                Report.PdfConversion = false;
             }
             else if (Report.Format == ReportFormat.excel)
             {
@@ -218,7 +233,7 @@ namespace Seal.Model
             Report.ExecutionErrorStackTrace = "";
             Report.Status = ReportStatus.NotExecuted;
             CurrentEnumValues.Clear();
-                
+
             Report.InitForExecution();
             if (Report.HasErrors)
             {
@@ -725,7 +740,8 @@ namespace Seal.Model
 
                         if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
                     }
-                    else {
+                    else
+                    {
                         Report.LogMessage("Model '{0}': Rendering only, using previous result table.", model.Name);
                     }
 
@@ -920,7 +936,7 @@ namespace Seal.Model
                     }
                     else
                     {
-                        throw ex;
+                        throw;
                     }
                 }
 
@@ -2225,7 +2241,7 @@ namespace Seal.Model
         /// <summary>
         /// Generate the HTML result of the current execution
         /// </summary>
-        public string GenerateHTMLResult()
+        public string GenerateHTMLResult(bool isPrint = false)
         {
             Report.IsNavigating = false;
 
@@ -2237,18 +2253,16 @@ namespace Seal.Model
             bool initialValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
             try
             {
-                Report.Format = ReportFormat.html;
+                Report.Format = isPrint ? ReportFormat.print : ReportFormat.html;
                 Report.OnlyBody = false;
                 if (paginationParameter != null) paginationParameter.BoolValue = false;
                 Report.Status = ReportStatus.RenderingResult;
-                Report.ExecutionViewResultFormat = ReportFormat.html.ToString();
                 executeTasks(ExecutionStep.BeforeRendering);
                 string result = Render();
                 File.WriteAllText(newPath, result.Trim(), Encoding.UTF8);
             }
             finally
             {
-                Report.ExecutionViewResultFormat = "";
                 Report.OnlyBody = originalFromMenu;
                 Report.Format = originalFormat;
                 if (paginationParameter != null) paginationParameter.BoolValue = initialValue;
@@ -2256,34 +2270,7 @@ namespace Seal.Model
                 Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1}", Report.Status, Report.ExecutionGUID));
             }
 
-            return newPath;
-        }
-
-        /// <summary>
-        /// Generate the CSV result of the current execution
-        /// </summary>
-        public string GenerateCSVResult()
-        {
-            Report.IsNavigating = false;
-            var originalFormat = Report.Format;
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".csv"));
-            try
-            {
-                Report.Format = ReportFormat.csv;
-                Report.Status = ReportStatus.RenderingResult;
-                Report.ExecutionViewResultFormat = ReportFormat.csv.ToString();
-                executeTasks(ExecutionStep.BeforeRendering);
-                string result = Report.ExecutionView.ParseChildren();
-                File.WriteAllText(newPath, result.Trim(), Report.ResultFileEncoding);
-            }
-            finally
-            {
-                Report.ExecutionViewResultFormat = "";
-                Report.Format = originalFormat;
-                Report.Status = ReportStatus.Executed;
-                Debug.WriteLine(string.Format("GenerateCSVResult {0} {1}", Report.Status, Report.ExecutionGUID));
-            }
-
+            Report.HTMLResultFilePath = newPath;
             return newPath;
         }
 
@@ -2292,40 +2279,60 @@ namespace Seal.Model
         /// </summary>
         public string GeneratePrintResult()
         {
+            return GenerateHTMLResult(true);
+        }
+
+        private Task<string> GenerateResultAsync(ReportFormat format)
+        {
+            if (format == ReportFormat.html) return Task.FromResult(GenerateHTMLResult(false));
+            else if (format == ReportFormat.print) return Task.FromResult(GenerateHTMLResult(true));
+            else if (format == ReportFormat.excel) return Task.FromResult(ConvertToExcelResult()); //Converter
+            else if (format == ReportFormat.pdf) return Task.FromResult(ConvertToPDFResult()); //Converter
+
             Report.IsNavigating = false;
-            var originalFromMenu = Report.OnlyBody;
             var originalFormat = Report.Format;
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
             try
             {
-                Report.OnlyBody = false;
-                Report.Format = ReportFormat.print;
+                Report.Format = format;
+                Report.ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)), "." + Report.ResultExtension, true);
                 Report.Status = ReportStatus.RenderingResult;
-                Report.ExecutionViewResultFormat = ReportFormat.print.ToString();
                 executeTasks(ExecutionStep.BeforeRendering);
-                string result = Render();
-                File.WriteAllText(newPath, result.Trim(), Encoding.UTF8);
+
+                checkHTMLPrintResult();
+
+                string result = Report.ExecutionView.Parse();
+                //Check that the file has not been done by the Renderer
+                if (Report.Renderer == null || string.IsNullOrEmpty(File.ReadAllText(Report.ResultFilePath).Trim()))
+                {
+                    File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                }
             }
             finally
             {
-                Report.OnlyBody = originalFromMenu;
-                Report.ExecutionViewResultFormat = "";
                 Report.Format = originalFormat;
                 Report.Status = ReportStatus.Executed;
-                Debug.WriteLine(string.Format("GeneratePrintResult {0} {1}", Report.Status, Report.ExecutionGUID));
+                Debug.WriteLine(string.Format("ExportResult {0} {1}", Report.Status, Report.ExecutionGUID));
             }
-            return newPath;
+
+            return Task.FromResult(Report.ResultFilePath);
+        }
+
+        /// <summary>
+        /// Generate the report in a given format and retruns the file path
+        /// </summary>
+        public string GenerateResult(ReportFormat format)
+        {
+            var result = Task.Run(() => GenerateResultAsync(format));
+            return result.Result;
         }
 
         /// <summary>
         /// Generate the PDF result of the current execution
         /// </summary>
-        public string GeneratePDFResult()
+        public string ConvertToPDFResult()
         {
             string newPath = "";
             var originalFormat = Report.Format;
-            Report.PdfConversion = true;
-            Report.ExecutionViewResultFormat = ReportFormat.pdf.ToString();
             executeTasks(ExecutionStep.BeforeRendering);
             try
             {
@@ -2335,8 +2342,6 @@ namespace Seal.Model
             }
             finally
             {
-                Report.ExecutionViewResultFormat = "";
-                Report.PdfConversion = false;
                 Report.Format = originalFormat;
             }
             return newPath;
@@ -2345,30 +2350,25 @@ namespace Seal.Model
         /// <summary>
         /// Generate the Excel result of the current execution
         /// </summary>
-        public string GenerateExcelResult()
+        public string ConvertToExcelResult()
         {
             var result = "";
             try
             {
-                Report.ExecutionViewResultFormat = ReportFormat.excel.ToString();
                 executeTasks(ExecutionStep.BeforeRendering);
                 string path = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)) + ".xlsx");
                 result = Report.ExecutionView.ConvertToExcel(path);
             }
             finally
             {
-                Report.ExecutionViewResultFormat = "";
             }
             return result;
         }
 
-        public bool IsConvertingToPDF = false; //If true, do not run conversion again
-        public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
-
         /// <summary>
         /// Dynamic enum values selected during the report execution
         /// </summary>
-        public Dictionary<MetaEnum, string> CurrentEnumValues = new Dictionary<MetaEnum, string>();
+        public Dictionary<MetaEnum, List<string>> CurrentEnumValues = new Dictionary<MetaEnum, List<string>>();
 
         /// <summary>
         /// Update the current selected enum values during the report execution
@@ -2390,7 +2390,8 @@ namespace Seal.Model
                         if (restriction.OptionHtmlId + ev.HtmlId == v) restriction.EnumValues.Add(ev.Id);
                     }
                 }
-                CurrentEnumValues[restriction.EnumRE] = restriction.IsSQL ? restriction.EnumSQLValue : restriction.EnumLINQValue;
+                //First: SQL, Second: Script for list for Script dependencies
+                CurrentEnumValues[restriction.EnumRE] = new List<string> { restriction.EnumSQLValue, restriction.EnumLINQValue };
             }
             return restriction;
         }
@@ -2414,7 +2415,8 @@ namespace Seal.Model
                     if (!CurrentEnumValues.ContainsKey(r.EnumRE))
                     {
                         CurrentEnumValues.Add(r.EnumRE, null);
-                        CurrentEnumValues[r.EnumRE] = r.IsSQL ? r.EnumSQLValue : r.EnumLINQValue;
+                        //First: SQL, Second: Script for list for Script dependencies
+                        CurrentEnumValues[r.EnumRE] = new List<string> { restriction.EnumSQLValue, restriction.EnumLINQValue };
                     }
                 }
 

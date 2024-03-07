@@ -1,0 +1,483 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@using ScottPlot
+@using ScottPlot.Plottables
+@using System.Globalization
+
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    if (page == null) { return; }
+    var series = page.Series.Where(i => i.Element.ScottPlotSerie != ScottPlotSerieDefinition.None).OrderBy(i => i, new ResultSerieComparer()).ToArray();
+
+    bool isStacked = false;
+    bool isHorizontal = false;
+
+    //Documentation at https://scottplot.net/
+}
+
+
+@if (reportModel.HasScottPlotSerie && series.Count() > 0 && modelView.GetBoolValue("show_charts"))
+{
+    bool chartOk = false;
+    if (modelView.InitPageChart(page))
+    {
+        var plt = new Plot();
+        page.Plots.Add(plt);
+
+        //Layout
+        if (view.GetBoolValue("chartsp_frameless")) plt.Layout.Frameless();
+        if (!view.GetBoolValue("chartsp_grid_enabled")) plt.HideGrid();
+
+        //Title
+        if (!string.IsNullOrEmpty(view.GetValue("chartsp_title"))) plt.Title(modelView.GetTranslatedMappedLabel(view.GetValue("chartsp_title")), view.GetNumericValue("chartsp_title_size"));
+
+        //Palette
+        var paletteDef = view.GetValue("chartsp_palette");
+        IPalette palette = null;
+        if (paletteDef.Contains(",")) palette = new MyPalette() { HexColors = paletteDef.Split(",") };
+        else palette = Palette.GetPalettes().FirstOrDefault(i => i.Name == view.GetValue("chartsp_palette"));
+
+        if (palette != null) plt.Add.Palette = palette;
+        else palette = new ScottPlot.Palettes.Category10();
+
+        var colorsMapping = new Dictionary<string, string>();
+        var colorsMappingDef = view.GetValue("chartsp_color_mappings");
+        if (!string.IsNullOrEmpty(colorsMappingDef)) colorsMapping = (Dictionary<string, string>)System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(colorsMappingDef);
+
+        var axisCount = view.GetNumericValue("chartsp_xaxis_count");
+        //Build X values
+        double[] x = null;
+        if (reportModel.ExecChartIsDateTimeAxis)
+        {
+            x = (from i in series.First().ChartXDateTimeSerieValues.Split(",")
+                 select DateTime.ParseExact(i.Replace("\"", ""), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToOADate()
+                ).ToArray();
+        }
+        else
+        {
+            x = (from i in series.First().ChartXSerieValues.Split(",")
+                 select double.Parse(i, NumberStyles.Any, CultureInfo.InvariantCulture)
+                ).ToArray();
+        }
+        if (axisCount > 0) x = x.Take(axisCount).ToArray();
+
+        var xLabels = (from i in page.ChartXLabels select i.Substring(1, i.Length - 2)).ToArray();
+        if (axisCount > 0) xLabels = xLabels.Take(axisCount).ToArray();
+
+        var yValues = new List<double[]>();
+        var primaryYAxisValues = new List<double>();
+        var secondaryYAxisValues = new List<double>();
+        var markers = new List<MarkerDefinition>();
+        var hasXAxisValue = reportModel.ExecChartIsNumericAxis || reportModel.ExecChartIsDateTimeAxis;
+        var hasPie = false;
+        var legendItems = new List<LegendItem>();
+        var ticks = new List<Tick>();
+
+        //Bar series first
+        var barSeries = series.Where(i => i.Element.ScottPlotSerie == ScottPlotSerieDefinition.Bar).ToList();
+        if (barSeries.Count > 0)
+        {
+            isStacked = view.GetBoolValue("chartsp_bar_stacked");
+            isHorizontal = view.GetBoolValue("chartsp_bar_horizontal");
+
+            int index = 1;
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                int group = 0;
+                double valueBase = 0;
+                foreach (var serie in barSeries)
+                {
+                    double[] y = getY(serie, view);
+                    if (i >= y.Length) continue;
+
+                    var color = palette.GetColor(group);
+                    if (colorsMapping.ContainsKey(serie.SerieDisplayName)) color = Color.FromHex(colorsMapping[serie.SerieDisplayName]);
+
+                    BarPlot bar = null;
+
+                    var position = hasXAxisValue ? x[i] : index;
+                    if (isStacked)
+                    {
+                        bar = plt.Add.Bar(new Bar() { Position = position, ValueBase = valueBase, Value = valueBase + y[i], FillColor = color });
+                        valueBase += y[i];
+                        //Adjust Max
+                        if (serie.Element.YAxisType == AxisType.Primary) primaryYAxisValues.Add(valueBase);
+                        else secondaryYAxisValues.Add(valueBase);
+                    }
+                    else
+                    {
+                        bar = plt.Add.Bar(new Bar() { Position = position, Value = y[i], FillColor = color });
+                        index++;
+                    }
+                    bar.Label = serie.SerieDisplayName;
+                    if (isHorizontal) bar.Horizontal = true;
+
+                    //secondary y axis
+                    if (serie.Element.YAxisType == AxisType.Secondary && !isHorizontal)
+                    {
+                        //isHorizontal Not supported ? bar.Axes.YAxis = plt.Axes.Top;
+                        bar.Axes.YAxis = plt.Axes.Right;
+                    }
+
+                    //Legend item
+                    if (i == 0) legendItems.Add(new LegendItem() { Label = serie.SerieDisplayName, LineColor = color, MarkerColor = color });
+
+                    //Marker
+                    if (serie.Element.YAxisType == AxisType.Primary)
+                    {
+                        addMarker(markers, position, x[i], y[i], serie, isHorizontal, color);
+                    }
+
+                    group++;
+                }
+
+                //Tick is the center of the group
+                ticks.Add(new Tick(isStacked ? index : index - barSeries.Count + (group - 1) / 2.0, xLabels[i]));
+                index++;
+            }
+            //Legend
+            plt.ShowLegend(legendItems.ToArray());
+
+            //Set new x values
+            x = (from t in ticks select t.Position).ToArray();
+        }
+
+        var colorIndex = barSeries.Count;
+        foreach (var serie in series)
+        {
+            //build y
+            double[] y = getY(serie, view);
+            if (axisCount > 0) y = y.Take(axisCount).ToArray();
+            yValues.Add(y);
+            if (serie.Element.YAxisType == AxisType.Primary) primaryYAxisValues.AddRange(y);
+            else secondaryYAxisValues.AddRange(y);
+
+            //Scatter
+            if (serie.Element.ScottPlotSerie == ScottPlotSerieDefinition.Scatter)
+            {
+                var color = palette.GetColor(colorIndex++);
+                if (colorsMapping.ContainsKey(serie.SerieDisplayName)) color = Color.FromHex(colorsMapping[serie.SerieDisplayName]);
+
+                var scatter = plt.Add.Scatter(x, y, color);
+                scatter.Label = serie.SerieDisplayName;
+                if (serie.Element.YAxisType == AxisType.Secondary) scatter.Axes.YAxis = plt.Axes.Right;
+
+                //Marker
+                addMarkers(markers, x, y, serie, isHorizontal, color, view.GetNumericValue("chartsp_marker_step"));
+
+                //Legend item
+                legendItems.Add(new LegendItem() { Label = serie.SerieDisplayName, LineColor = color, MarkerColor = color });
+            }
+            //Pie
+            else if (serie.Element.ScottPlotSerie == ScottPlotSerieDefinition.Pie)
+            {
+                hasPie = true;
+                var slices = new List<PieSlice>();
+                for (int i = 0; i < x.Length; i++)
+                {
+                    var color = palette.GetColor(i);
+                    if (colorsMapping.ContainsKey(xLabels[i])) color = Color.FromHex(colorsMapping[xLabels[i]]);
+                    slices.Add(new PieSlice { Value = y[i], Label = xLabels[i], FillColor = color });
+                }
+                plt.Layout.Frameless();
+                plt.HideGrid();
+
+                var pie = plt.Add.Pie(slices);
+
+                pie.ExplodeFraction = view.GetDoubleValue("chartsp_pie_explode_fraction");
+                pie.ShowSliceLabels = view.GetBoolValue("chartsp_pie_labels");
+                pie.SliceLabelDistance = view.GetDoubleValue("chartsp_pie_distance");
+            }
+        }
+
+        //Calculate X Ticks
+        if (ticks.Count == 0 || hasXAxisValue)
+        {
+            ticks.Clear();
+            for (int i = 0; i < x.Length; i++)
+            {
+                ticks.Add(new Tick(x[i], xLabels[i]));
+            }
+        }
+
+        //Axis configuration
+        var finalXAxis = isHorizontal ? (IAxis)plt.Axes.Left : (IAxis)plt.Axes.Bottom;
+        var finalYAxis = isHorizontal ? (IAxis)plt.Axes.Bottom : (IAxis)plt.Axes.Left;
+        var finalYAxis2 = isHorizontal ? (IAxis)plt.Axes.Top : (IAxis)plt.Axes.Right;
+
+        //X Axis
+        if (hasXAxisValue)
+        {
+            //Set X format if numeric or datetime, take the first element
+            if (page.PrimaryXDimensions.Count > 0)
+            {
+                var el = page.PrimaryXDimensions.First().First().Element;
+                if (reportModel.ExecChartIsNumericAxis)
+                {
+                    finalXAxis.TickGenerator = new NumericTickGenerator(el);  //ScottPlot.TickGenerators.NumericAutomatic();
+                }
+                else
+                {
+                    finalXAxis.TickGenerator = new ScottPlot.TickGenerators.DateTimeAutomatic();
+
+                    //Format
+                    plt.RenderManager.RenderStarting += (s, e) =>
+                    {
+                        Tick[] ticks = finalXAxis.TickGenerator.Ticks;
+                        for (int i = 0; i < ticks.Length; i++)
+                        {
+                            DateTime dt = DateTime.FromOADate(ticks[i].Position);
+                            string label = dt.ToString(el.FormatEl, report.ExecutionView.CultureInfo); ;
+                            ticks[i] = new Tick(ticks[i].Position, label);
+                        }
+                    };
+                }
+            }
+        }
+        else
+        {
+            //Ticks for X
+            finalXAxis.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks.ToArray());
+        }
+        plt.Axes.Bottom.TickLabelStyle.Rotation = -1 * view.GetNumericValue("chartsp_bottom_axis_rotation");
+        if (plt.Axes.Bottom.TickLabelStyle.Rotation < -10)
+        {
+            plt.Axes.Bottom.TickLabelStyle.OffsetY = -10;
+            plt.Axes.Bottom.TickLabelStyle.Alignment = Alignment.MiddleRight;
+        }
+        plt.Axes.AutoScale();
+
+        if (!hasPie)
+        {
+            finalXAxis.Label.Text = view.GetValue("chartsp_xaxis_label");
+            finalXAxis.Label.Bold = view.GetBoolValue("chartsp_xaxis_label_bold");
+
+            //Y Axis
+            var primaryAxisElement = series.FirstOrDefault(i => i.Element.YAxisType == AxisType.Primary)?.Element;
+            var secondaryAxisElement = series.FirstOrDefault(i => i.Element.YAxisType == AxisType.Secondary)?.Element;
+            if (primaryAxisElement != null)
+            {
+                if (primaryAxisElement.IsDateTime) finalYAxis.TickGenerator = new ScottPlot.TickGenerators.DateTimeAutomatic();
+                else finalYAxis.TickGenerator = new NumericTickGenerator(primaryAxisElement);
+
+                finalYAxis.Label.Text = view.GetValue("chartsp_yaxis_label");
+                finalYAxis.Label.Bold = view.GetBoolValue("chartsp_yaxis_label_bold");
+            }
+            if (secondaryAxisElement != null)
+            {
+                if (secondaryAxisElement.IsDateTime) finalYAxis2.TickGenerator = new ScottPlot.TickGenerators.DateTimeAutomatic();
+                else finalYAxis2.TickGenerator = new NumericTickGenerator(secondaryAxisElement);
+
+                finalYAxis2.Label.Text = view.GetValue("chartsp_yaxis2_label");
+                finalYAxis2.Label.Bold = view.GetBoolValue("chartsp_yaxis2_label_bold");
+            }
+            // adjust axis limits
+            if (primaryYAxisValues.Count > 0)
+            {
+                var min = primaryYAxisValues.Min();
+                var max = primaryYAxisValues.Max();
+                double val = 0;
+                if (getAxisValue(view.GetValue("chartsp_yaxis_min"), min, max, true, out val)) min = val;
+                if (getAxisValue(view.GetValue("chartsp_yaxis_max"), min, max, false, out val)) max = val;
+
+                if (finalYAxis is IYAxis) plt.Axes.SetLimitsY(min, max, (IYAxis)finalYAxis);
+                else plt.Axes.SetLimitsX(min, max, (IXAxis)finalYAxis);
+            }
+            finalYAxis.TickLabelStyle.IsVisible = false;
+
+            if (secondaryYAxisValues.Count > 0)
+            {
+                var min = secondaryYAxisValues.Min();
+                var max = secondaryYAxisValues.Max();
+
+                double val = 0;
+                if (getAxisValue(view.GetValue("chartsp_yaxis2_min"), min, max, true, out val)) min = val;
+                if (getAxisValue(view.GetValue("chartsp_yaxis2_max"), min, max, false, out val)) max = val;
+
+                if (finalYAxis2 is IYAxis) plt.Axes.SetLimitsY(min, max, (IYAxis)finalYAxis2);
+                else plt.Axes.SetLimitsX(min, max, (IXAxis)finalYAxis2);
+            }
+
+            //Markers
+            var shape = (MarkerShape)Enum.Parse(typeof(MarkerShape), view.GetValue("chartsp_marker_shape"));
+            if (shape != MarkerShape.None)
+            {
+                var shapes = Enum.GetValues(typeof(MarkerShape));
+                var autoshape = view.GetValue("chartsp_marker_shape_auto");
+                int index = 0;
+                foreach (var m in markers)
+                {
+                    MarkerShape markerShape;
+                    var shapeIndex = index % shapes.Length;
+                    if (shapeIndex == 0) index = 1;
+                    if (autoshape == "auto_serie") markerShape = (MarkerShape)shapes.GetValue(1 + series.ToList().IndexOf(m.serie) % shapes.Length);
+                    else if (autoshape == "auto_value") markerShape = (MarkerShape)shapes.GetValue(index++ % shapes.Length);
+                    else markerShape = shape;
+
+                    var markerColor = view.GetValue("chartsp_marker_color");
+                    var marker = plt.Add.Marker(
+                        x: m.x,
+                        y: m.y,
+                        size: view.GetNumericValue("chartsp_marker_size"),
+                        shape: markerShape,
+                        color: markerColor == "serie" ? m.color : Color.FromHex(markerColor)
+                    );
+                    marker.IsVisible = true;
+                    if (view.GetBoolValue("chartsp_marker_legend")) marker.Label = m.value.Yvalue.DisplayValue;
+                    var textAlignment = view.GetValue("chartsp_marker_text_alignment");
+                    if (!string.IsNullOrEmpty(textAlignment))
+                    {
+                        var hoffset = view.GetDoubleValue("chartsp_marker_text_hoffset");
+                        var voffset = view.GetDoubleValue("chartsp_marker_text_voffset");
+                        var textColor = view.GetValue("chartsp_marker_text_color");
+                        var text = plt.Add.Text(m.value.Yvalue.DisplayValue, m.x + hoffset, m.y + voffset);
+                        text.Color = textColor == "serie" ? m.color : Color.FromHex(textColor);
+                        text.Label.Alignment = (Alignment)Enum.Parse(typeof(Alignment), textAlignment);
+                    }
+                }
+                if (view.GetBoolValue("chartsp_marker_hide_series"))
+                {
+                    foreach (var p in plt.GetPlottables().Where(i => i is BarPlot || i is Scatter)) p.IsVisible = false;
+                    //Force legend
+                    plt.ShowLegend(legendItems.ToArray());
+                }
+            }
+        }
+
+        //Legend
+        var legendPosition = view.GetValue("chartsp_legend_position");
+        if (!string.IsNullOrEmpty(legendPosition))
+        {
+            plt.Legend.IsVisible = true;
+            plt.Legend.Location = (Alignment)Enum.Parse(typeof(Alignment), legendPosition);
+        }
+
+        <div>
+            @Raw(plt.GetImageHtml(view.GetNumericValue("chartsp_width"), view.GetNumericValue("chartsp_height")))
+        </div>
+        chartOk = true;
+    }
+
+    if (!chartOk)
+    {
+        <div class="alert alert-danger" role="alert">
+            @Raw(Helper.ToHtml(view.Error))
+        </div>
+        view.Error = "";
+    }
+}
+
+@functions {
+    public class NumericTickGenerator : ScottPlot.TickGenerators.NumericAutomatic
+    {
+        ReportElement _element;
+
+        public NumericTickGenerator(ReportElement element)
+        {
+            _element = element;
+            LabelFormatter = ElementLabelFormatter;
+        }
+
+        public string ElementLabelFormatter(double value)
+        {
+            return value.ToString(_element.FormatEl, _element.Model.Report.ExecutionView.CultureInfo);
+        }
+    }
+
+
+    public class MyPalette : IPalette
+    {
+        public string Name { get; } = "MyPalette";
+        public string Description { get; } = string.Empty;
+        public Color[] Colors
+        {
+            get
+            {
+                return Color.FromHex(HexColors);
+            }
+        }
+        public string[] HexColors;
+
+        public Color GetColor(int index)
+        {
+            return Colors[index % Colors.Length];
+        }
+    }
+
+    public class MarkerDefinition
+    {
+        public double x;
+        public double y;
+        public ResultSerie serie;
+        public ResultSerieValue value;
+        public Color color;
+    }
+
+    void addMarkers(List<MarkerDefinition> markers, double[] x, double[] y, ResultSerie serie, bool isHorizontal, Color color, int step)
+    {
+        if (step <= 0) step = 1;
+        if (serie.Element.YAxisType == AxisType.Primary)
+        {
+            for (int i = 0; i < x.Length; i += step)
+            {
+                addMarker(markers, null, x[i], y[i], serie, isHorizontal, color);
+            }
+        }
+    }
+
+    void addMarker(List<MarkerDefinition> markers, double? position, double x, double y, ResultSerie serie, bool isHorizontal, Color color)
+    {
+        {
+            var value = serie.Values.FirstOrDefault(s => s.Xvalue == x.ToString(CultureInfo.InvariantCulture.NumberFormat));
+            if (value != null)
+                if (isHorizontal) markers.Add(new MarkerDefinition() { x = y, y = position ?? x, serie = serie, value = value, color = color });
+                else markers.Add(new MarkerDefinition() { x = position ?? x, y = y, serie = serie, value = value, color = color });
+        }
+    }
+
+    double[] getY(ResultSerie serie, ReportView view)
+    {
+        //build y
+        double[] y = null;
+        if (serie.Element.IsDateTime)
+        {
+            y = (from i in serie.ChartYDateSerieValues.Split(",")
+                 select DateTime.ParseExact(i.Replace("\"", ""), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToOADate()
+            ).ToArray();
+        }
+        else
+        {
+            y = (from i in serie.ChartYSerieValues.Split(",")
+                 select double.Parse(i, NumberStyles.Any, CultureInfo.InvariantCulture)
+            ).ToArray();
+        }
+        return y;
+    }
+
+    bool getAxisValue(string parameter, double min, double max, bool forMin, out double val)
+    {
+        var result = false;
+        val = 0;
+        if (parameter.Contains("%"))
+        {
+            int gap;
+            if (int.TryParse(parameter.Replace("%", ""), out gap))
+            {
+                result = true;
+                if (forMin) val = min - (max - min) * gap / 100;
+                else val = max + (max - min) * gap / 100; ;
+            }
+        }
+        else if (double.TryParse(parameter, out val))
+        {
+            result = true;
+        }
+        return result;
+    }
+}
+

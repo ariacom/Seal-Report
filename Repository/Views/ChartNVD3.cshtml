@@ -3,7 +3,7 @@
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
-    ReportView modelView = report.CurrentModelView;
+    ReportView modelView = view.ModelView;
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }
@@ -18,7 +18,8 @@
     string chartId = "cnv" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
-        var xLabels = axisCount > 0 ? string.Join(",", page.ChartXLabels.Split(',').Take(axisCount)) : page.ChartXLabels;
+        page.SetIdentifier(ResultPageIdentifierType.ChartNVD3Canvas, chartId);
+        var xLabels = string.Join(",", axisCount > 0 ? page.ChartXLabels.Take(axisCount) : page.ChartXLabels);
         <div id='@chartId' style="page-break-inside:avoid; position: relative; @Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_contheight"), ";")">
             <svg style="@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_height"), ";")" />
         </div>
@@ -29,7 +30,12 @@
                     @foreach (ResultSerie serie in series)
                     {
                         string multiChartOption = (reportModel.ExecNVD3ChartType == "multiChart" ? string.Format(",type:'{0}',yAxis:{1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
-                        var data = axisCount > 0 ? string.Join("},{", serie.ChartXYSerieValues.Split(new string[] { "},{" }, StringSplitOptions.None).Take(axisCount)) + "}" : serie.ChartXYSerieValues;
+                        var data = serie.ChartXYSerieValues;
+                        if (axisCount > 0)
+                        {
+                            var datas = data.Split(new string[] { "},{" }, StringSplitOptions.None);
+                            if (datas.Length > axisCount) data = string.Join("},{", datas.Take(axisCount)) + "}";
+                        }
 
                         <text>
                             series.push({ key: '@Raw(Helper.ToJS(serie.SerieDisplayName))', values: [@Raw(data)] @Raw(multiChartOption) });
@@ -128,7 +134,7 @@
                     //if ((@chartId).isArea != null) (@chartId).isArea(true); //for Line
                     //(@chartId).xAxis.showMaxMin(false);
 
-                    (@chartId).navigations = [@Raw(page.ChartNavigations)];
+                    (@chartId).navigations = [@Raw(string.Join(",",page.ChartNavigations))];
 
                     //pie chart
                     if (chartType == 'pieChart') {

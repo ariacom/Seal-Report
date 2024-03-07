@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>bb1ad652-5159-41f4-974f-52739118a848</GUID>
   <DisplayName>@{
@@ -45,7 +45,6 @@
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <AxisUseValues>false</AxisUseValues>
@@ -109,7 +108,6 @@
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
-          <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
@@ -120,7 +118,6 @@
             <string>7</string>
             <string>8</string>
           </EnumValues>
-          <FormatRe>N0</FormatRe>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
@@ -135,8 +132,6 @@
       <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
       <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
       <FileName>%SEALREPORTDISPLAYNAME%</FileName>
-      <EmailZipAttachments xsi:nil="true" />
-      <EmailZipPassword />
       <ZipPassword />
       <UserName />
       <UserGroups />
@@ -151,8 +146,6 @@
       <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
       <EmailTo>IamBarking@sealreport.org</EmailTo>
       <EmailBody />
-      <EmailZipAttachments xsi:nil="true" />
-      <EmailZipPassword />
       <ZipPassword />
       <UserName />
       <UserGroups />
@@ -174,8 +167,48 @@
       <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
       <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
       <FileName>%SEALREPORTDISPLAYNAME%</FileName>
-      <EmailZipAttachments xsi:nil="true" />
-      <EmailZipPassword />
+      <ZipPassword />
+      <UserName />
+      <UserGroups />
+      <UserCulture />
+    </ReportOutput>
+    <ReportOutput>
+      <GUID>8bdb5ace-8e69-42b2-aeca-55dcd6a57f04</GUID>
+      <Name>PDF File (Folder Device)</Name>
+      <OutputDeviceGUID>c428a6ba-061b-4a47-b9bc-f3f02442ab4b</OutputDeviceGUID>
+      <PreScript />
+      <PostScript />
+      <ViewParameters>
+        <OutputParameter>
+          <Name>report_format</Name>
+          <Value>PDF</Value>
+          <CustomValue>true</CustomValue>
+        </OutputParameter>
+      </ViewParameters>
+      <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
+      <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
+      <FileName>%SEALREPORTDISPLAYNAME%</FileName>
+      <ZipPassword />
+      <UserName />
+      <UserGroups />
+      <UserCulture />
+    </ReportOutput>
+    <ReportOutput>
+      <GUID>47ed6e45-a533-468c-ba1f-caf9099eb1f9</GUID>
+      <Name>Excel File (Folder Device)</Name>
+      <OutputDeviceGUID>c428a6ba-061b-4a47-b9bc-f3f02442ab4b</OutputDeviceGUID>
+      <PreScript />
+      <PostScript />
+      <ViewParameters>
+        <OutputParameter>
+          <Name>report_format</Name>
+          <Value>Excel</Value>
+          <CustomValue>true</CustomValue>
+        </OutputParameter>
+      </ViewParameters>
+      <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
+      <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
+      <FileName>%SEALREPORTDISPLAYNAME%</FileName>
       <ZipPassword />
       <UserName />
       <UserGroups />
@@ -223,7 +256,6 @@
                   <GUID>e0520871-12fb-45bd-ac94-01064d859efa</GUID>
                   <Name>Data Table</Name>
                   <TemplateName>Data Table</TemplateName>
-                  <CustomTemplate />
                   <SortOrder>5</SortOrder>
                 </ReportView>
               </Views>
@@ -233,16 +265,22 @@
           </Views>
           <TemplateName>Model</TemplateName>
           <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
-          <CustomTemplate />
           <SortOrder>1</SortOrder>
+          <PDFRenderer>
+            <Parameters>
+              <Parameter>
+                <Name>page_break_values</Name>
+                <Value>all</Value>
+              </Parameter>
+            </Parameters>
+          </PDFRenderer>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
-      <CustomTemplate />
       <Parameters>
         <Parameter>
           <Name>report_description</Name>
-          <Value>3 simple outputs and 2 schedules to generate the reports daily at 9:00</Value>
+          <Value>5 simple outputs and 2 schedules to generate the reports daily at 9:00</Value>
         </Parameter>
         <Parameter>
           <Name>force_execution</Name>
@@ -250,6 +288,14 @@
         </Parameter>
       </Parameters>
       <SortOrder>0</SortOrder>
+      <PDFRenderer>
+        <Parameters>
+          <Parameter>
+            <Name>page_orientation</Name>
+            <Value>landscape</Value>
+          </Parameter>
+        </Parameters>
+      </PDFRenderer>
     </ReportView>
     <ReportView>
       <GUID>02b6abf5-cd7c-4cbd-8da2-35f3b9d06ffe</GUID>

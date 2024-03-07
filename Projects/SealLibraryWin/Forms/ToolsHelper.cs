@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -49,6 +49,7 @@ namespace Seal.Forms
         ToolStripMenuItem _executeDesigner = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Report Designer", ToolTipText = "run the Report Designer application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D))), ShowShortcutKeys = true };
         ToolStripMenuItem _executeManager = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Server Manager", ToolTipText = "run the Server Manager application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M))), ShowShortcutKeys = true };
         ToolStripMenuItem _openReportFolder = new ToolStripMenuItem() { Text = "Open Repository Reports Folder", ToolTipText = "open the Reports repository folder in Windows Explorer", AutoToolTip = true };
+        ToolStripMenuItem _openTempFolder = new ToolStripMenuItem() { Text = "Open Temporary Report Results Folder", ToolTipText = "open the folder where are generated report results in Windows Explorer", AutoToolTip = true };
 
         public void InitHelpers(ToolStripMenuItem toolsMenuItem, bool forDesigner)
         {
@@ -97,11 +98,13 @@ namespace Seal.Forms
             _executeManager.Click += tools_Click;
             _executeDesigner.Click += tools_Click;
             _openReportFolder.Click += tools_Click;
+            _openTempFolder.Click += tools_Click;
 
             toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
             toolsMenuItem.DropDownItems.Add(forDesigner ? _executeManager : _executeDesigner);
             toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
             toolsMenuItem.DropDownItems.Add(_openReportFolder);
+            toolsMenuItem.DropDownItems.Add(_openTempFolder);
         }
 
         public void EnableControls()
@@ -276,6 +279,12 @@ namespace Seal.Forms
                 {
                     var p = new Process();
                     p.StartInfo = new ProcessStartInfo(Repository.Instance.ReportsFolder) { UseShellExecute = true };
+                    p.Start();
+                }
+                else if (sender == _openTempFolder)
+                {
+                    var p = new Process();
+                    p.StartInfo = new ProcessStartInfo(FileHelper.TempApplicationDirectory) { UseShellExecute = true };
                     p.Start();
                 }
 

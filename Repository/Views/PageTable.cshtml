@@ -12,23 +12,10 @@
 
 @if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0 && modelView.GetBoolValue("show_page_tables"))
 {
-    if (report.ExecutionView.GetBoolValue("pdf_toc") && view.GetBoolValue("pdf_toc_items") && report.PdfConversion && page.PageTable.ColumnCount > 1)
-    {
-        var tocValue = "";
-        for (int i = 0; i < page.PageTable.ColumnCount; i++)
-        {
-            ResultCell header = page.PageTable[0, i];
-            ResultCell value = page.PageTable[1, i];
-            Helper.AddValue(ref tocValue, ", ", header.HTMLValue + ": " + value.HTMLValue);
-        }
-        <h3 data-toc-item='true' data-toc-level='2'>@Raw(tocValue)</h3>
-    }
-    else
-    {
-        <table @Raw(view.AddAttribute("class", "page_table_class")) @Raw(view.AddAttribute("style", "page_table_css")) >
+    <table @Raw(view.AddAttribute("class", "page_table_class")) @Raw(view.AddAttribute("style", "page_table_css"))>
         @if (view.HasValue("page_table_caption"))
         {
-            <caption @Raw(view.AddAttribute("style", "page_table_caption_css")) > @Raw(view.GetHtmlValue("page_table_caption")) </caption>
+            <caption @Raw(view.AddAttribute("style", "page_table_caption_css"))> @Raw(view.GetHtmlValue("page_table_caption")) </caption>
         }
         @for (int i = 0; i < page.PageTable.ColumnCount; i++)
         {
@@ -40,16 +27,15 @@
             }
 
             <tr>
-                    <th @Raw(Helper.AddAttribute("class", header.CellCssPageClass)) @Raw(Helper.AddAttribute("style", header.CellCssPageStyle.Replace("padding-right:25px;", "padding-right:8px;")))>
-            @Raw(header.HTMLValue)
-            </th>
+                <th @Raw(Helper.AddAttribute("class", header.CellCssPageClass)) @Raw(Helper.AddAttribute("style", header.CellCssPageStyle.Replace("padding-right:25px;", "padding-right:8px;")))>
+                    @Raw(header.HTMLValue)
+                </th>
 
-            <td @Raw(i == 0 && report.ExecutionView.GetBoolValue("pdf_toc") && view.GetBoolValue("pdf_toc_items") && report.PdfConversion ? "data-toc-item='true' data-toc-level='2'" : "") @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle))>
-            @Raw(value.HTMLValue)
-            </td>
+                <td @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle))>
+                    @Raw(value.HTMLValue)
+                </td>
 
             </tr>
         }
-        </table>
-    }
+    </table>
 }

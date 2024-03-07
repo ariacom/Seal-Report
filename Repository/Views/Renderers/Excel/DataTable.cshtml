@@ -1,0 +1,52 @@
+﻿@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    ResultTable dataTable = page.DataTable;
+
+    ExcelRenderer renderer = view.ExcelRenderer;
+    ExcelRenderer modelViewRenderer = modelView.ExcelRenderer;
+    ExcelResult result = report.ExcelResult;
+
+    if (modelView.GetBoolValue("invert_data_tables") && !modelView.IsServerPaginationEnabled)
+    {
+        reportModel.InvertDataTables();
+    }
+
+    if (dataTable != null && modelView.GetBoolValue("show_data_tables", true))
+    {
+        var initialRow = result.CurrentRow;
+        var initialCol = 1;
+        //Display the table
+        for (int row = 0; row < page.DataTable.RowCount && !view.Report.Cancel; row++)
+        {
+            result.CurrentCol = initialCol;
+            for (int col = 0; col < page.DataTable.ColumnCount; col++)
+            {
+                if ((view.IsColumnHidden(col)) || dataTable.IsColumnHidden(col)) { continue; }
+                result.SetValue(page.DataTable[row, col], modelViewRenderer.GetBoolValue("use_display_format"), modelViewRenderer.GetBoolValue("use_cell_styles"));
+                result.CurrentCol++;
+            }
+            result.CurrentRow++;
+        }
+        result.CurrentRow++;
+
+        //Handle auto filter and freeze panes
+        if (dataTable.RowCount > 0 && dataTable.ColumnCount > 0)
+        {
+            if (modelViewRenderer.GetBoolValue("auto_filters"))
+            {
+                result.Worksheet.Cells[initialRow, initialCol, initialRow, initialCol + page.DataTable.ColumnCount - 1].AutoFilter = true;
+            }
+
+            if (modelViewRenderer.GetBoolValue("freeze_panes") && initialRow < 14)
+            {
+                result.Worksheet.View.FreezePanes(initialRow + page.DataTable.BodyStartRow, 1);
+            }
+        }
+    }
+}

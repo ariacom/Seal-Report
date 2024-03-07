@@ -1,0 +1,10 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "new_sheet", DisplayName = "New sheet for the chart", BoolValue = false, Description = "If true, a new Sheet is created for the chart." });
+    Template.Parameters.Add(new Parameter() { Name = "chart_width", DisplayName = "Chart width", NumericValue = 600, Description = "The chart width in pixels." });
+    Template.Parameters.Add(new Parameter() { Name = "chart_height", DisplayName = "Chart height", NumericValue = 400, Description = "The chart height in pixels." });
+    Template.Parameters.Add(new Parameter() { Name = "show_totals", DisplayName = "Show totals", BoolValue = true, Description = "If true, a total line and a total column are added to the chart values table." });
+}

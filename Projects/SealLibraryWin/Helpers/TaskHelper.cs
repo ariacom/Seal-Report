@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -37,6 +37,14 @@ namespace Seal.Helpers
             get { return _task.Report; }
         }
 
+
+        public ReportTask Task
+        {
+            get
+            {
+                return _task;
+            }
+        }
 
         public MetaConnection TaskConnection
         {
@@ -687,7 +695,7 @@ namespace Seal.Helpers
                             {
                                 using (var command = new SqlCommand("", sqlConnection))
                                 {
-                                    command.CommandTimeout = 0;
+                                    command.CommandTimeout = DatabaseHelper.ExecuteTimeout;
                                     command.CommandText = commandString;
                                     command.ExecuteNonQuery();
                                 }
@@ -696,7 +704,7 @@ namespace Seal.Helpers
                             {
                                 using (var command = new Microsoft.Data.SqlClient.SqlCommand("", msConnection))
                                 {
-                                    command.CommandTimeout = 0;
+                                    command.CommandTimeout = DatabaseHelper.ExecuteTimeout;
                                     command.CommandText = commandString;
                                     command.ExecuteNonQuery();
                                 }

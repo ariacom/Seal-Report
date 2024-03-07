@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -69,7 +69,7 @@ namespace Seal.Forms
 It creates an application under the 'Default Web Site' of IIS using the 'LocalSystem' Windows Account.
 
 IIS must be installed with the following feature: 
-ASP.Net Core Runtime 6 (Hosting Bundle)
+ASP.Net Core Runtime 8 (Hosting Bundle)
 
 The site can be configured with any user having the following rights:
 Read access to the repository directory ({0}).
@@ -81,8 +81,8 @@ Note that publishing will stop the current Web Server instance.
                 else
                 {
                     infoTextBox.Text = @"No Internet Information Server detected on this machine.
-Please install IIS with the following features: 
-Application Development/ASP.Net 6 or greater
+Please install IIS first with the following feature: 
+ASP.Net Core Runtime 8 (Hosting Bundle).
 ";
                 }
             }

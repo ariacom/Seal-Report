@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Drawing.Design;
@@ -11,6 +11,7 @@ using System.ComponentModel.Design;
 using System.Reflection;
 using System.Drawing;
 using System.Linq;
+using Seal.Renderer;
 
 namespace Seal.Forms
 {
@@ -55,7 +56,7 @@ namespace Seal.Forms
             frmCollectionEditorForm.Text = "Collection Editor";
             if (CollectionItemType == typeof(ReportRestriction))
             {
-                frmCollectionEditorForm.Text = "Restrictions Collection Editor";
+                frmCollectionEditorForm.Text = "Restriction Collection Editor";
                 if (Context.Instance is ReportModel)
                 {
                     var model = Context.Instance as ReportModel;
@@ -65,7 +66,7 @@ namespace Seal.Forms
                 {
                     allowAdd = true;
                     allowRemove = true;
-                    frmCollectionEditorForm.Text = "Report Input Values Collection Editor";
+                    frmCollectionEditorForm.Text = "Report Input Value Collection Editor";
                 }
             }
             else if (CollectionItemType == typeof(OutputParameter))
@@ -74,71 +75,71 @@ namespace Seal.Forms
             }
             else if (CollectionItemType == typeof(SecurityParameter))
             {
-                frmCollectionEditorForm.Text = "Security Parameters Collection Editor";
+                frmCollectionEditorForm.Text = "Security Parameter Collection Editor";
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(Parameter))
             {
-                frmCollectionEditorForm.Text = "Template Parameters Collection Editor";
+                frmCollectionEditorForm.Text = "Template Parameter Collection Editor";
             }
             else if (CollectionItemType == typeof(SecurityGroup))
             {
-                frmCollectionEditorForm.Text = "Security Groups Collection Editor";
+                frmCollectionEditorForm.Text = "Security Group Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(SecurityLogin))
             {
-                frmCollectionEditorForm.Text = "Security Logins Collection Editor";
+                frmCollectionEditorForm.Text = "Security Login Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(SecurityFolder))
             {
-                frmCollectionEditorForm.Text = "Security Folders Collection Editor";
+                frmCollectionEditorForm.Text = "Security Folder Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(SecurityColumn))
             {
-                frmCollectionEditorForm.Text = "Security Columns Collection Editor";
+                frmCollectionEditorForm.Text = "Security Column Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(SecuritySource))
             {
-                frmCollectionEditorForm.Text = "Security Data Sources Collection Editor";
+                frmCollectionEditorForm.Text = "Security Data Source Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(SecurityDevice))
             {
-                frmCollectionEditorForm.Text = "Security Devices Collection Editor";
+                frmCollectionEditorForm.Text = "Security Device Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(SecurityConnection))
             {
-                frmCollectionEditorForm.Text = "Security Connections Collection Editor";
+                frmCollectionEditorForm.Text = "Security Connection Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(SubReport))
             {
-                frmCollectionEditorForm.Text = "Sub-Reports Collection Editor";
+                frmCollectionEditorForm.Text = "Sub-Report Collection Editor";
                 allowRemove = true;
                 _useHandlerInterface = true;
             }
             else if (CollectionItemType == typeof(ReportViewPartialTemplate))
             {
-                frmCollectionEditorForm.Text = "Partial Templates Collection Editor";
+                frmCollectionEditorForm.Text = "Partial Template Collection Editor";
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(CommonScript))
@@ -150,7 +151,7 @@ namespace Seal.Forms
             }
             else if (CollectionItemType == typeof(SealServerConfiguration.FileReplacePattern))
             {
-                frmCollectionEditorForm.Text = "File Patterns Collection Editor";
+                frmCollectionEditorForm.Text = "File Pattern Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
@@ -164,7 +165,7 @@ namespace Seal.Forms
             }
             else if (CollectionItemType == typeof(MetaEV))
             {
-                frmCollectionEditorForm.Text = "Enum Values Collection Editor";
+                frmCollectionEditorForm.Text = "Enum Value Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 //Set reference

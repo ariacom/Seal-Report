@@ -1,0 +1,110 @@
+﻿@using QuestPDF.Fluent
+@using QuestPDF.Infrastructure
+@using Colors = QuestPDF.Helpers.Colors
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    ResultTable dataTable = page.DataTable;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFRenderer modelViewRenderer = modelView.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    var document = result.Document;
+    var container = result.Container;
+
+    if (modelView.GetBoolValue("invert_data_tables") && !modelView.IsServerPaginationEnabled)
+    {
+        reportModel.InvertDataTables();
+    }
+
+    if (dataTable != null && dataTable.RowCount > 0 && modelView.GetBoolValue("show_data_tables", true))
+    {
+        container.Column(column =>
+        {
+            ComposeDataTable(column.Item(), dataTable, renderer.GetNumericValue("font_size"));
+        });
+    }
+}
+
+
+@functions
+{
+    void ComposeDataTable(IContainer container, ResultTable dataTable, int fontSize)
+    {
+        container.Table(table =>
+        {
+            //Column definition
+            var firstLine = dataTable.Lines.First();
+            table.ColumnsDefinition(columns =>
+            {
+                foreach (var col in firstLine)
+                {
+                    columns.RelativeColumn();
+                }
+            });
+
+            //Header
+            foreach (var headerLine in dataTable.HeaderLines)
+            {
+                table.Header(header =>
+                {
+                    foreach (var cell in headerLine)
+                    {
+                        header.Cell()
+                        .DefaultTextStyle(x => x.SemiBold().FontSize(fontSize))
+                        .PaddingVertical(5)
+                        .BorderTop(1)
+                        .BorderBottom(1)
+                        .BorderColor(Colors.Grey.Darken1)
+                        .Background(Colors.Grey.Lighten3)
+                        .AlignCell(cell)
+                        .PaddingHorizontal(1)
+                        .Text(cell.DisplayValue);
+                    }
+                });
+            }
+
+            //Body
+            foreach (var bodyLine in dataTable.BodyLines)
+            {
+                foreach (var cell in bodyLine)
+                {
+                    table.Cell()
+                    .DefaultTextStyle(x => x.FontSize(fontSize))
+                    .BorderBottom(1)
+                    .BorderColor(Colors.Grey.Lighten2)
+                    .PaddingVertical(5)
+                    .AlignCell(cell)
+                    .PaddingHorizontal(1)
+                    .Text(cell.DisplayValue);
+                }
+            }
+
+            //Footer
+            table.Footer(footer =>
+            {
+                foreach (var footerLine in dataTable.FooterLines)
+                {
+                    foreach (var cell in footerLine)
+                    {
+                        footer.Cell()
+                        .DefaultTextStyle(x => x.SemiBold().FontSize(fontSize))
+                        .PaddingVertical(5)
+                        .BorderBottom(1)
+                        .BorderColor(Colors.Grey.Darken2)
+                        .AlignCell(cell)
+                        .PaddingHorizontal(1)
+                        .Text(cell.DisplayValue);
+                    }
+                }
+            });
+
+        });
+    }
+}

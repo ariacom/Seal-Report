@@ -1,9 +1,6 @@
 ﻿@using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = ReportViewTemplate.ModelDetailName;
     Template.Description = "Show a model as a detailed record.\r\nThis view works for a model result having a single record.";
 
     //If true, the view can be configured for a report model
@@ -14,8 +11,6 @@
     Template.Parameters.Add(new Parameter() { Name = "modeldetail_css", Value = "margin-top:5px;", DisplayName = "Model: CSS Style", Description = "CSS style attribute of the main model DIV.", Enums = new string[] { "margin:10px;", "padding:10px;", "margin-top:5px;border:solid 1px grey;border-radius:5px;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "pagetable_css", Value = "", DisplayName = "Page table: CSS Style", Description = "CSS style attribute of the Page table.", Enums = new string[] { "width:600px;", "padding:10px;", "margin-top:5px;border:solid 1px grey;border-radius:5px;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "datatable_css", Value = "", DisplayName = "Data table: CSS Style", Description = "CSS style attribute of the Data table.", Enums = new string[] { "width:600px;", "padding:10px;", "margin-top:5px;border:solid 1px grey;border-radius:5px;" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "csv_separator", DisplayName = "CSV: Separator", Description = "For CSV format, the separator used to generate the CSV file. If empty, the default value of the current culture is used." });
-    Template.Parameters.Add(new Parameter() { Name = "use_display_format", DisplayName = "CSV: Use element format", BoolValue = true, Description = "For CSV format, if true, the display format of the element is applied to the values displayed in the CSV file" });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container", "Container Grid Flex", "Widget" };

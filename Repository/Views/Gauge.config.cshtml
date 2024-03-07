@@ -1,13 +1,9 @@
 ﻿@using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = "Gauge";
     Template.Description = "Display a Gauge built from a data table result having at least 1 row and 1 column for the value. 3 optionals columns can be used to set minimum, maximum and animation speed. Full description at https://github.com/bernii/gauge.js";
 
-    //If true, the view can be configured for a report model
-    Template.ForReportModel = false;
+    //If true, the view is a child of a report model view
     Template.IsModelViewChild = true;
 
     //Parameters for this template

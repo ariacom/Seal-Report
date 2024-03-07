@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,8 @@ using ScintillaNET;
 using System.Data.OleDb;
 using System.Data;
 using System.Diagnostics;
+using Seal.Renderer;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Seal.Forms
 {
@@ -477,7 +479,10 @@ namespace Seal.Forms
 ";
 
         const string scriptEnumTemplate = @"@{
-    var enumList = Model;
+    MetaEnum enumList = Model;
+    ReportSource source = enumList.Source as ReportSource;
+    Report report = source?.Report;
+
     enumList.Values.Clear();
     //Add enum values
     enumList.Values.Add(new MetaEV() {Id=""id1""});
@@ -487,7 +492,9 @@ namespace Seal.Forms
 ";
 
         const string scriptDisplayEnumTemplate = @"@{
-    var enumList = Model;
+    MetaEnum enumList = Model;
+    ReportSource source = enumList.Source as ReportSource;
+    Report report = source?.Report;
 
     //NewValues is the list of values available
     enumList.NewValues.Clear();
@@ -1305,7 +1312,7 @@ namespace Seal.Forms
     dbHelper.MyGetTableCreateCommand = new CustomGetTableCreateCommand(delegate(DataTable table) {
         //return RootGetTableCreateCommand(table);
         //Root implementation may be the following...
-        var result = new System.Text.StringBuilder();
+        StringBuilder result = new StringBuilder();
         foreach (DataColumn col in table.Columns)
         {
             if (result.Length > 0) result.Append(',');
@@ -1313,7 +1320,7 @@ namespace Seal.Forms
             result.Append(dbHelper.GetTableColumnType(col));
             result.Append("" NULL"");
         }
-        return string.Format(""CREATE TABLE {0} ({1})"", dbHelper.CleanName(table.TableName), result);
+        return string.Format(""CREATE TABLE {0} ({1})"", dbHelper.GetDatabaseName(table.TableName), result);
     });
 
     dbHelper.MyGetTableColumnNames = new CustomGetTableColumnNames(delegate(DataTable table) {
@@ -1331,8 +1338,7 @@ namespace Seal.Forms
     dbHelper.MyGetTableColumnName = new CustomGetTableColumnName(delegate(DataColumn col) {
         //return dbHelper.RootGetTableColumnName(col);
         //Root implementation may be the following...
-        var result = dbHelper.CleanName(col.ColumnName);
-        return (dbHelper.DatabaseType == DatabaseType.MSSQLServer) ? ""["" + result + ""]"" : result;
+        return dbHelper.GetDatabaseName(col.ColumnName);
     });
 
     dbHelper.MyGetTableColumnType = new CustomGetTableColumnType(delegate(DataColumn col) {
@@ -1411,6 +1417,8 @@ namespace Seal.Forms
 
                 string template = "", warning = "";
                 string valueToEdit = (value == null ? "" : value.ToString());
+                bool isReadOnly = context.PropertyDescriptor.IsReadOnly;
+
                 if (context.Instance is ReportView)
                 {
                     var view = context.Instance as ReportView;
@@ -1420,6 +1428,7 @@ namespace Seal.Forms
                         template = view.Template.Text.Trim();
                         frm.Text = "Edit custom template";
                         frm.ObjectForCheckSyntax = view.Report;
+                        isReadOnly = !view.UseCustomTemplate;
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                     else if (context.PropertyDescriptor.Name == "CustomConfiguration")
@@ -1440,6 +1449,19 @@ namespace Seal.Forms
                     frm.Text = "Edit custom partial template";
                     frm.ObjectForCheckSyntax = pt.View;
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                }
+                if (context.Instance is RootRenderer)
+                {
+                    var renderer = context.Instance as RootRenderer;
+                    if (context.PropertyDescriptor.Name == "CustomTemplate")
+                    {
+                        if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = renderer.ViewTemplateText;
+                        template = renderer.Template.Text.Trim();
+                        frm.Text = "Edit custom template";
+                        frm.ObjectForCheckSyntax = renderer.Report;
+                        isReadOnly = !renderer.UseCustomTemplate;
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
                 }
                 else if (context.Instance is ReportTask)
                 {
@@ -1722,8 +1744,6 @@ namespace Seal.Forms
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script executed before the table definition execution";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-
-                        if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
                     }
                     else if (context.PropertyDescriptor.Name == "DefinitionScript")
                     {
@@ -1733,8 +1753,6 @@ namespace Seal.Forms
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script to define the table";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-
-                        if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
                     }
                     else if (context.PropertyDescriptor.Name == "MongoStagesScript")
                     {
@@ -1744,9 +1762,6 @@ namespace Seal.Forms
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script executed for a Mongo DB table before the table load";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-
-                        if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
-
                         if (table.GetBoolValue(MetaTable.ParameterNameMongoSync, true))
                         {
                             warning = "The script will be overwritten when the model is modified.\r\n\r\nSet the 'Generate Mongo DB Stages' parameter to False to keep the modified script.";
@@ -1760,8 +1775,6 @@ namespace Seal.Forms
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the default script to load the table";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-
-                        if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
                     }
                 }
                 else if (context.Instance is ReportModel)
@@ -1908,17 +1921,17 @@ namespace Seal.Forms
                     }
                 }
 
-                if (!string.IsNullOrEmpty(template) && string.IsNullOrWhiteSpace(valueToEdit) && !context.PropertyDescriptor.IsReadOnly)
+                if (!string.IsNullOrEmpty(template) && string.IsNullOrWhiteSpace(valueToEdit) && !isReadOnly)
                 {
                     valueToEdit = template;
                 }
 
                 //Reset button
-                if (!string.IsNullOrEmpty(template) && !context.PropertyDescriptor.IsReadOnly) frm.SetResetText(template);
+                if (!string.IsNullOrEmpty(template) && !isReadOnly) frm.SetResetText(template);
 
                 frm.textBox.Text = valueToEdit.ToString();
 
-                if (context.PropertyDescriptor.IsReadOnly)
+                if (isReadOnly)
                 {
                     frm.textBox.ReadOnly = true;
                     frm.okToolStripButton.Visible = false;

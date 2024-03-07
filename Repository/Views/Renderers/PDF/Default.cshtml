@@ -1,0 +1,19 @@
+﻿@using QuestPDF.Fluent
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    result.Container.Column(column =>
+    {
+        foreach (ReportView childView in view.Views.OrderBy(i => i.SortOrder))
+        {
+            result.Container = column.Item();
+            childView.Parse();
+        }
+    });
+}

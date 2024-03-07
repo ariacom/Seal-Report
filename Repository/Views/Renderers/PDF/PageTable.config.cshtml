@@ -1,0 +1,8 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "show_separator", DisplayName = "Show separator", BoolValue = true, Description = "If true, a separator line is inserted before the table." });
+    Template.Parameters.Add(new Parameter() { Name = "font_size", DisplayName = "Font size", NumericValue = 12, Description = "Font size of the table texts." });
+}

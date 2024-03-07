@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using Seal.Forms;
 using System;
@@ -42,6 +42,7 @@ namespace Seal.Model
         List<Parameter> _numerics;
         List<Parameter> _bools;
         List<Parameter> _views;
+        List<Parameter> _doubles;
 
         void initList(List<Parameter> list, string prefix)
         {
@@ -78,6 +79,7 @@ namespace Seal.Model
             _numerics = parameters.Where(i => i.Type == ViewParameterType.Numeric).OrderBy(i => i.DisplayName).ToList();
             _bools = parameters.Where(i => i.Type == ViewParameterType.Boolean).OrderBy(i => i.DisplayName).ToList();
             _views = parameters.Where(i => i.Type == ViewParameterType.RootReportView).OrderBy(i => i.DisplayName).ToList();
+            _doubles = parameters.Where(i => i.Type == ViewParameterType.Double).OrderBy(i => i.DisplayName).ToList();
 
             Init();
             foreach (var property in Properties) property.SetIsBrowsable(false);
@@ -88,6 +90,7 @@ namespace Seal.Model
             initList(_numerics, "n");
             initList(_bools, "b");
             initList(_views, "v");
+            initList(_doubles, "d");
 
             InitDefaultValues();
 
@@ -105,6 +108,7 @@ namespace Seal.Model
                 if (propertyName[0] == 'e') list = _enums;
                 if (propertyName[0] == 'b') list = _bools;
                 if (propertyName[0] == 'n') list = _numerics;
+                if (propertyName[0] == 'd') list = _doubles;
 
                 if (index < list.Count)
                 {
@@ -367,6 +371,36 @@ namespace Seal.Model
             get { return _enums[20].Value; }
             set { _enums[20].Value = value; }
         }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e21
+        {
+            get { return _enums[21].Value; }
+            set { _enums[21].Value = value; }
+        }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e22
+        {
+            get { return _enums[22].Value; }
+            set { _enums[22].Value = value; }
+        }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e23
+        {
+            get { return _enums[23].Value; }
+            set { _enums[23].Value = value; }
+        }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e24
+        {
+            get { return _enums[24].Value; }
+            set { _enums[24].Value = value; }
+        }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e25
+        {
+            get { return _enums[25].Value; }
+            set { _enums[25].Value = value; }
+        }
 
         public int n0
         {
@@ -575,6 +609,35 @@ namespace Seal.Model
             set { _bools[20].BoolValue = value; }
         }
 
+        public bool b21
+        {
+            get { return _bools[21].BoolValue; }
+            set { _bools[21].BoolValue = value; }
+        }
+
+        public bool b22
+        {
+            get { return _bools[22].BoolValue; }
+            set { _bools[22].BoolValue = value; }
+        }
+
+        public bool b23
+        {
+            get { return _bools[23].BoolValue; }
+            set { _bools[23].BoolValue = value; }
+        }
+
+        public bool b24
+        {
+            get { return _bools[24].BoolValue; }
+            set { _bools[24].BoolValue = value; }
+        }
+
+        public bool b25
+        {
+            get { return _bools[25].BoolValue; }
+            set { _bools[25].BoolValue = value; }
+        }
         public string s0
         {
             get { return _strings[0].Value; }
@@ -680,6 +743,66 @@ namespace Seal.Model
         {
             get { return _strings[20].Value; }
             set { _strings[20].Value = value; }
+        }
+
+        public double d0
+        {
+            get { return _doubles[0].DoubleValue; }
+            set { _doubles[0].DoubleValue = value; }
+        }
+
+        public double d1
+        {
+            get { return _doubles[1].DoubleValue; }
+            set { _doubles[1].DoubleValue = value; }
+        }
+
+        public double d2
+        {
+            get { return _doubles[2].DoubleValue; }
+            set { _doubles[2].DoubleValue = value; }
+        }
+
+        public double d3
+        {
+            get { return _doubles[3].DoubleValue; }
+            set { _doubles[3].DoubleValue = value; }
+        }
+
+        public double d4
+        {
+            get { return _doubles[4].DoubleValue; }
+            set { _doubles[4].DoubleValue = value; }
+        }
+
+        public double d5
+        {
+            get { return _doubles[5].DoubleValue; }
+            set { _doubles[5].DoubleValue = value; }
+        }
+
+        public double d6
+        {
+            get { return _doubles[6].DoubleValue; }
+            set { _doubles[6].DoubleValue = value; }
+        }
+
+        public double d7
+        {
+            get { return _doubles[7].DoubleValue; }
+            set { _doubles[7].DoubleValue = value; }
+        }
+
+        public double d8
+        {
+            get { return _doubles[8].DoubleValue; }
+            set { _doubles[8].DoubleValue = value; }
+        }
+
+        public double d9
+        {
+            get { return _doubles[9].DoubleValue; }
+            set { _doubles[9].DoubleValue = value; }
         }
     }
 }

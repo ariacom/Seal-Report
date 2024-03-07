@@ -68,6 +68,7 @@ DataTableEditor*.cshtml
 _ed.*.css
 _ed.*.js
 *.slc
+*.srl
 
 # =========================
 # Operating System Files

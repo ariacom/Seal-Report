@@ -3,7 +3,7 @@
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
-    ReportView modelView = report.CurrentModelView;
+    ReportView modelView = view.ModelView;
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }

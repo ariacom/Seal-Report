@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.IO;
@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Diagnostics;
-using crypto;
 
 namespace SealWebServer.Controllers
 {
@@ -694,11 +693,9 @@ namespace SealWebServer.Controllers
                 {
                     string fileResult = "";
                     if (string.IsNullOrEmpty(format)) format = "html";
-                    if (format.ToLower() == "print") fileResult = execution.GeneratePrintResult();
-                    else if (format.ToLower() == "pdf") fileResult = execution.GeneratePDFResult();
-                    else if (format.ToLower() == "excel") fileResult = execution.GenerateExcelResult();
-                    else if (format.ToLower() == "csv") fileResult = execution.GenerateCSVResult();
-                    else fileResult = execution.GenerateHTMLResult();
+                    ReportFormat f;
+                    if (!Enum.TryParse(format, out f)) f = ReportFormat.html;
+                    fileResult = execution.GenerateResult(f);
                     result = getFileResult(fileResult, report);
                 }
                 report.PreInputRestrictions.Clear();
@@ -950,7 +947,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWIGetVersions");
             try
             {
-                return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Info });
+                return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Repository.Instance.LicenseText });
             }
             catch (Exception ex)
             {

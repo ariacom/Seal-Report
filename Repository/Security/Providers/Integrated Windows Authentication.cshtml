@@ -33,13 +33,15 @@
 		
         //User name may be changed from UserPrincipal
         //if (user.UserPrincipal != null) {
+        //    user.Name = user.UserPrincipal.Name;
         //    user.WebUserName = user.UserPrincipal.Name;
         //}
         //Or get display name from another AD
         //using (var ctx = new PrincipalContext(ContextType.Domain, ""yourdomain"")) {
         //    var adUser = UserPrincipal.FindByIdentity(ctx, user.Name);
         //    if (adUser != null) {
-        //        user.WebUserName = adUser.DisplayName;                   
+        //        user.Name = adUser.DisplayName;
+        //        user.WebUserName = adUser.DisplayName;
         //    }
         //}
 

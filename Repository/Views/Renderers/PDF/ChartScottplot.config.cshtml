@@ -1,0 +1,8 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_width", NumericValue = 180, DisplayName = "Chart width (millimeter)", Description = "The chart width in millimeter." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_height", NumericValue = 120, DisplayName = "Chart height (millimeter)", Description = "The chart height in millimeter." });
+}

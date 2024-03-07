@@ -1,0 +1,29 @@
+﻿@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    ResultTable pageTable = page.PageTable;
+
+    ExcelRenderer renderer = view.ExcelRenderer;
+    ExcelRenderer modelViewRenderer = modelView.ExcelRenderer;
+    ExcelResult result = report.ExcelResult;
+
+    if (pageTable != null && modelView.GetBoolValue("show_page_tables") && pageTable.RowCount == 2 && pageTable.ColumnCount > 0)
+    {
+        for (int i = 0; i < pageTable.ColumnCount; i++)
+        {
+            ResultCell header = pageTable[0, i];
+            ResultCell value = pageTable[1, i];
+            if (!view.GetBoolValue("display_page_totals", true) && header.IsTotal) break;
+
+            result.SetValue(result.CurrentRow, 1, header, modelViewRenderer.GetBoolValue("use_display_format"), modelViewRenderer.GetBoolValue("use_cell_styles"));
+            result.SetValue(result.CurrentRow, 2, value, modelViewRenderer.GetBoolValue("use_display_format"), modelViewRenderer.GetBoolValue("use_cell_styles"));
+            result.CurrentRow++;
+        }
+        result.CurrentRow++;
+    }
+}

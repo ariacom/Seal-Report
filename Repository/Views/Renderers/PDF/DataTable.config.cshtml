@@ -1,0 +1,7 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "font_size", DisplayName = "Font size", NumericValue = 10, Description = "Font size of the table texts." });
+}

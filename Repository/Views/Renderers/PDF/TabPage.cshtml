@@ -1,0 +1,36 @@
+﻿@using QuestPDF.Infrastructure
+@using QuestPDF.Fluent
+@using QuestPDF.Helpers
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    var title = report.TranslateViewName(view.Name);
+
+    result.Container.Column(column =>
+    {
+        var page = column.Item();
+        if (report.ExecutionView.Renderer.GetBoolValue("tabpage_show_entire")) page = page.ShowEntire();
+        page.Column(col =>
+        {
+            var fontColor = report.ExecutionView.Renderer.GetValue("title_font_color");
+            col.Item()
+                .Padding(5)
+                .BorderBottom(1)
+                .BorderColor(fontColor)
+                .Text(title)
+                .Style(TextStyle.Default.FontSize(14).SemiBold().FontColor(fontColor));
+
+            foreach (ReportView childView in view.Views.OrderBy(i => i.SortOrder))
+            {
+                result.Container = col.Item();
+                childView.Parse();
+            }
+        });
+    });
+}

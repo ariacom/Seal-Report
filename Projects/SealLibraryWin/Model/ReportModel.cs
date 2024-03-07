@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 
 using System;
@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using MySqlX.XDevAPI.Common;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.EMMA;
 
 #if WINDOWS
 using Seal.Forms;
@@ -89,6 +90,7 @@ namespace Seal.Model
                 GetProperty("PreSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PostSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("CommandTimeout").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("BuildTimeout").SetIsBrowsable(!IsSQLModel);
 
                 GetProperty("Alias").SetIsBrowsable(IsSQLModel);
@@ -178,11 +180,11 @@ namespace Seal.Model
         public bool ShouldSerializeCommonRestrictions() { return CommonRestrictions.Count > 0; }
 
         /// <summary>
-        /// If set, restrictions and elements from the reference model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model. 
+        /// If set, restrictions and elements from the referenced model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model. 
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Model definition"), DisplayName("Reference model"), Description("If set, restrictions and elements from the reference model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model."), Id(4, 1)]
+        [Category("Model definition"), DisplayName("Reference model"), Description("If set, restrictions and elements from the referenced model are inserted to the current model. This enables the sharing of restrictions and elements among different models. The position of the element inserted can be specified in the element property 'Insert position' in the referenced model."), Id(4, 1)]
         [TypeConverter(typeof(ReportModelConverter))]
 #endif
         public string ReferenceModelGUID { get; set; }
@@ -483,6 +485,16 @@ namespace Seal.Model
         public bool IgnorePrePostError { get; set; } = false;
 
         /// <summary>
+        /// "Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(-1)]
+        [Category("SQL"), DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout."), Id(11, 3)]
+#endif
+        public int CommandTimeout { get; set; } = -1;
+        public bool ShouldSerializeCommandTimeout() { return CommandTimeout != -1; }
+
+        /// <summary>
         /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
         /// </summary>
 #if WINDOWS
@@ -658,6 +670,18 @@ namespace Seal.Model
             get
             {
                 return Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PivotPosition == PivotPosition.Data);
+            }
+        }
+
+        /// <summary>
+        /// True if the model has a Chart ScottPlot serie
+        /// </summary>
+        [XmlIgnore]
+        public bool HasScottPlotSerie
+        {
+            get
+            {
+                return Elements.Exists(i => i.ScottPlotSerie != ScottPlotSerieDefinition.None && i.PivotPosition == PivotPosition.Data);
             }
         }
 
@@ -931,6 +955,40 @@ model.ResultTable = query2.CopyToDataTable2();
         public DataTable ResultTable;
 
         /// <summary>
+        /// Result DataTable got from the SQL query with the original column names and without hidden columns
+        /// </summary>
+        [XmlIgnore]
+        public DataTable ResultTableTranslated
+        {
+            get
+            {
+                DataTable result = null;
+                if (ResultTable != null)
+                {
+                    int cnt = 0;
+                    result = ResultTable.Copy();
+                    foreach (var el in Elements)
+                    {
+                        if (el.IsForNavigation) result.Columns.Remove(el.SQLColumnName);
+                        else
+                        {
+                            var col = result.Columns[el.SQLColumnName];
+                            if (col != null)
+                            {
+                                var colNames = new List<string>();
+                                foreach (DataColumn c in result.Columns) colNames.Add(c.ColumnName);
+
+                                col.ColumnName = Helper.GetUniqueName(el.DisplayNameElTranslated, colNames);
+                                col.SetOrdinal(cnt++);
+                            }
+                        }
+                    }
+                    result.TableName = Name;
+                }
+                return result;
+            }
+        }
+        /// <summary>
         /// Progression in percentage of the model processing
         /// </summary>
         [XmlIgnore]
@@ -1166,6 +1224,35 @@ model.ResultTable = query2.CopyToDataTable2();
             else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.ChartJSSerie == ChartJSSerieDefinition.Line))
             {
                 ExecChartJSType = "line";
+            }
+        }
+
+        /// <summary>
+        /// Check ScottPlot and set the ExecScottPlotChartType property
+        /// </summary>
+        public void CheckScottPlotChartIntegrity()
+        {
+            bool hasValueAxis = false;
+            foreach (var element in Elements.Where(i => (i.PivotPosition == PivotPosition.Row || i.PivotPosition == PivotPosition.Column) && i.IsSerie))
+            {
+                if (element.AxisUseValues)
+                {
+                    if (element.IsNumeric || element.IsDateTime)
+                    {
+                        hasValueAxis = true;
+                        break;
+                    }
+                }
+            }
+
+            //Do not mix scatter and bar if the axis is used as value with 2 different axis
+            if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.ScottPlotSerie == ScottPlotSerieDefinition.Bar)
+                && Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.ScottPlotSerie == ScottPlotSerieDefinition.Scatter)
+                && hasValueAxis
+                )
+            {
+                Report.LogMessage("Chart ScottPlot: Setting all elements to scatter");
+                foreach (var element in Elements.Where(i => i.PivotPosition == PivotPosition.Data && i.ScottPlotSerie == ScottPlotSerieDefinition.Bar)) element.ScottPlotSerie = ScottPlotSerieDefinition.Scatter;
             }
         }
 
@@ -1647,8 +1734,8 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (!Elements.Exists(i => element.PivotPosition == i.PivotPosition && element.MetaColumnGUID == i.MetaColumnGUID))
                     {
                         //use insert position
-                        var pos = element.InsertPosition -1;
-                        pos = Math.Max(pos,0);
+                        var pos = element.InsertPosition - 1;
+                        pos = Math.Max(pos, 0);
                         if (pos >= Elements.Count) Elements.Add(element);
                         else Elements.Insert(pos, element);
                     }
@@ -2953,7 +3040,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         else if (connection is OracleConnection) _command = ((OracleConnection)connection).CreateCommand();
                         else _command = ((OleDbConnection)connection).CreateCommand();
 
-                        _command.CommandTimeout = 0;
+                        _command.CommandTimeout = (CommandTimeout == -1 ? Connection.CommandTimeout : CommandTimeout);
                         executePrePostStatement(Source.PreSQL, "Pre", Source.Name, Source.IgnorePrePostError, Source);
                         executePrePostStatements(true);
                         executePrePostStatement(PreSQL, "Pre", Name, IgnorePrePostError, this);
@@ -2976,8 +3063,6 @@ model.ResultTable = query2.CopyToDataTable2();
                         else adapter = new OleDbDataAdapter((OleDbCommand)_command);
                         ResultTable = new DataTable();
                         adapter.Fill(ResultTable);
-
-                        //Thread.Sleep(3000); //For DEV
 
                         executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
                         executePrePostStatements(false);

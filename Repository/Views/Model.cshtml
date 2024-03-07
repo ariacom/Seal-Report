@@ -7,41 +7,34 @@
     report.CurrentModelView = view;
 }
 
-@if (report.Format == ReportFormat.csv)
-{
-    @Include(view.GetPartialTemplateKey("Model.iCSV", view), view)
-}
-else
-{
-    <div id='@("model_" + view.IdSuffix)' @Raw(view.AddAttribute("class", "model_class")) @Raw(view.AddAttribute("style", "model_css"))>
-        @if (viewModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "right")
-        {
-            <div class="row">
-                <div class="tab-content col-md-@(12 - view.GetNumericValue("model_menu_width"))">
-                    @Include(view.GetPartialTemplateKey("Model.iPages", view), view)
-                </div>
-                <div class="col-md-@view.GetNumericValue("model_menu_width")">
-                    @Include(view.GetPartialTemplateKey("Model.iMenu", view), view)
-                </div>
-            </div>
-        }
-        else if (viewModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "left")
-        {
-            <div class="row">
-                <div class="col-md-@view.GetNumericValue("model_menu_width")">
-                    @Include(view.GetPartialTemplateKey("Model.iMenu", view), view)
-                </div>
-                <div class="tab-content col-md-@(12 - view.GetNumericValue("model_menu_width"))">
-                    @Include(view.GetPartialTemplateKey("Model.iPages", view), view)
-                </div>
-            </div>
-        }
-        else
-        {
-            @Include(view.GetPartialTemplateKey("Model.iMenu", view), view)
-            <div class="tab-content">
+<div id='@("model_" + view.IdSuffix)' @Raw(view.AddAttribute("class", "model_class")) @Raw(view.AddAttribute("style", "model_css"))>
+    @if (viewModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "right")
+    {
+        <div class="row">
+            <div class="tab-content col-md-@(12 - view.GetNumericValue("model_menu_width"))">
                 @Include(view.GetPartialTemplateKey("Model.iPages", view), view)
             </div>
-        }
-    </div>
-}
+            <div class="col-md-@view.GetNumericValue("model_menu_width")">
+                @Include(view.GetPartialTemplateKey("Model.iMenu", view), view)
+            </div>
+        </div>
+    }
+    else if (viewModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "left")
+    {
+        <div class="row">
+            <div class="col-md-@view.GetNumericValue("model_menu_width")">
+                @Include(view.GetPartialTemplateKey("Model.iMenu", view), view)
+            </div>
+            <div class="tab-content col-md-@(12 - view.GetNumericValue("model_menu_width"))">
+                @Include(view.GetPartialTemplateKey("Model.iPages", view), view)
+            </div>
+        </div>
+    }
+    else
+    {
+        @Include(view.GetPartialTemplateKey("Model.iMenu", view), view)
+        <div class="tab-content">
+            @Include(view.GetPartialTemplateKey("Model.iPages", view), view)
+        </div>
+    }
+</div>

@@ -1,7 +1,8 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
+using System;
 using System.Collections.Generic;
 
 namespace Seal.Model
@@ -121,6 +122,21 @@ namespace Seal.Model
     /// </summary>
     public class ResultSerieValue
     {
+        /// <summary>
+        /// X Value as a string
+        /// </summary>
+        public string Xvalue;
+
+        /// <summary>
+        /// X Value as a DateTime
+        /// </summary>
+        public DateTime XDateTimeValue;
+
+        /// <summary>
+        /// Y Value as a DateTime
+        /// </summary>
+        public DateTime YDateTimeValue;
+
         /// <summary>
         /// X Values
         /// </summary>

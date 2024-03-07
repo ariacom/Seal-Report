@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -39,6 +39,7 @@ namespace Seal.Model
                 GetProperty("PostSQL").SetIsBrowsable(!IsNoSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!IsNoSQL);
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
+                GetProperty("ForceLoad").SetIsBrowsable(true);
 
                 GetProperty("InitScript").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
@@ -83,6 +84,16 @@ namespace Seal.Model
                 return _metaSourceName;
             }
         }
+
+        /// <summary>
+        /// For performance reasons, the source is not loaded during execution if it is not involved in the report (in models, tasks, etc.). Set this flag to true to force the load anyway and use the source in scripts.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(false)]
+        [Category("General"), DisplayName("Force load"), Description("For performance reasons, the source is not loaded during execution if it is not involved in the report (in models, tasks, etc.). Set this flag to true to force the load anyway and use the source in scripts."), Id(5, 1)]
+#endif
+        public bool ForceLoad { get; set; } = false;
+   //     public bool ShouldSerializeForceLoad() { return !ForceLoad; }
 
         /// <summary>
         /// Reference to the default repository connection

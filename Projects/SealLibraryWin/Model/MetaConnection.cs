@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.ComponentModel;
@@ -46,6 +46,7 @@ namespace Seal.Model
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("DatabaseType").SetIsBrowsable(true);
                 GetProperty("DateTimeFormat").SetIsBrowsable(true);
+                GetProperty("CommandTimeout").SetIsBrowsable(true);
 
                 GetProperty("ConnectionType").SetIsBrowsable(true);
                 GetProperty("ConnectionString").SetIsBrowsable(true);
@@ -62,7 +63,7 @@ namespace Seal.Model
                 GetProperty("MySQLConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("OracleConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MongoDBConnectionString").SetIsReadOnly(!IsEditable);
-                GetProperty("ConnectionScript").SetIsReadOnly(!IsEditable);
+                GetProperty("CommandTimeout").SetIsReadOnly(!IsEditable);
 
                 GetProperty("UserName").SetIsBrowsable(true);
                 if (IsEditable) GetProperty("ClearPassword").SetIsBrowsable(true);
@@ -255,6 +256,16 @@ namespace Seal.Model
         [DisplayName("Database Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(10, 1)]
 #endif
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
+
+        /// <summary>
+        /// "Default Timeout in seconds for the SQL Statements executed. 0 means no Timeout.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(0)]
+        [DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed. 0 means no Timeout."), Category("Definition"), Id(11, 1)]
+#endif
+        public int CommandTimeout { get; set; } = 0;
+        public bool ShouldSerializeCommandTimeout() { return CommandTimeout != 0; }
 
         /// <summary>
         /// Full Connection String (Oledb, Odbc, MSSQLServer, MongoDB, Oracle, MySQL) with user name and password

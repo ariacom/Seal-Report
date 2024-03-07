@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using Amazon.Runtime.Internal.Transform;
+using System.Text;
 #if WINDOWS
 using System.Windows.Forms;
 using System.Drawing;
@@ -84,7 +87,7 @@ namespace Seal.Model
             get
             {
 #if DEBUG
-                return Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net7.0", SealTaskScheduler);
+                return Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net8.0", SealTaskScheduler);
 #else
                 return Path.Combine(Configuration.InstallationDirectory + "\\" + CoreInstallationSubDirectory, SealTaskScheduler);
 #endif
@@ -108,6 +111,8 @@ namespace Seal.Model
 
 #endif
 
+        public bool LicenseInvalid = false;
+
         private string _licenseText = null;
         /// <summary>
         /// License text
@@ -118,11 +123,20 @@ namespace Seal.Model
             {
                 if (_licenseText == null)
                 {
-                    var converter = SealPdfConverter.Create();
-                    _licenseText = converter.GetLicenseText();
-                }
+                    _licenseText = "";
+                    //Get current licenses
+                    string licensePath = Path.Combine(Repository.Instance.SettingsFolder, "License.srl");
+                    _licenseText = Helper.GetLicenseText(licensePath, out bool licenseInvalid);
+                    LicenseInvalid = licenseInvalid;
 
-                if (_licenseText == null) _licenseText = "";
+                    var converter = SealPdfConverter.Create();
+                    var converterLicenseText = converter.GetLicenseText();
+                    if (!string.IsNullOrEmpty(converterLicenseText))
+                    {
+                        _licenseText += converter.GetLicenseText();
+                    }
+
+                }
                 return _licenseText;
             }
         }
@@ -807,7 +821,17 @@ namespace Seal.Model
                 }
                 catch (Exception emailEx)
                 {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : ""));
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Try 1: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : ""));
+                    try
+                    {
+                        if (body.Length > 10000) body = body.Substring(1, 10000); //Body is perhaps too big
+                        device.SendEmail(from, to, subject, isHtmlBody, body);
+                        return true;
+                    }
+                    catch (Exception emailEx2)
+                    {
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Try 2: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx2.Message + (emailEx2.InnerException != null ? "\r\n" + emailEx2.InnerException.Message : ""));
+                    }
                 }
             }
             return false;
@@ -859,6 +883,35 @@ namespace Seal.Model
         {
             if (string.IsNullOrEmpty(inputFolder)) return "";
             return inputFolder.Replace(Repository.SealRepositoryKeyword, RepositoryPath).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
+        }
+
+        /// <summary>
+        /// All report formats available
+        /// </summary>
+        public List<ReportFormat> ResultAllFormats
+        {
+            get {
+                bool hasConverter = File.Exists(SealConverterPath);
+                var result = new List<ReportFormat>();
+                foreach (ReportFormat format in Enum.GetValues(typeof(ReportFormat)))
+                {
+                    if ((format == ReportFormat.pdf || format == ReportFormat.excel) && !hasConverter) continue;
+                    result.Add(format);
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Result report formats allowed by the configuration
+        /// </summary>
+        public List<ReportFormat> ResultAllowedFormats
+        {
+            get
+            {
+                if (Configuration.ReportFormats.Count == 0) return ResultAllFormats;
+                return (from f in Configuration.ReportFormats select (ReportFormat) Enum.Parse(typeof(ReportFormat), f)).ToList();
+            }
         }
 
         #region Translations and Cultures

@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.ComponentModel;
@@ -11,6 +11,7 @@ using System.IO;
 using Seal.Helpers;
 using Seal.Forms;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Seal
 {
@@ -52,8 +53,20 @@ namespace Seal
 
         Repository _repository;
 
+        bool _isInitialized = false;
+        public bool IsInitialized()
+        {
+            return _isInitialized;
+        }
+        public void StartSpashScreen()
+        {
+            Application.Run(new SplashScreen(this));
+        }
+
         public ServerManager()
         {
+            new Thread(new ThreadStart(StartSpashScreen)).Start();
+
             Repository.IsServerManager = true;
 
             InitializeComponent();
@@ -235,6 +248,7 @@ namespace Seal
         void selectNode(object entity)
         {
             TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, entity);
+            mainTreeView.SelectedNode?.EnsureVisible();
         }
 
         void initTreeNodeViews(TreeNode node, ReportView view)
@@ -304,6 +318,7 @@ namespace Seal
                 if (mainTreeView.SelectedNode == null && mainTreeView.Nodes.Count > 0) mainTreeView.SelectedNode = mainTreeView.Nodes[0];
                 toolsHelper.Source = _source;
 
+                mainTreeView.SelectedNode?.EnsureVisible();
                 enableControls();
             }
             finally
@@ -393,7 +408,15 @@ namespace Seal
         {
             KeyPreview = true;
 
-            InstallHelper.InstallConverter(helpToolStripMenuItem, Repository.Instance.AssembliesFolder);
+            _isInitialized = true;
+
+            _ = Repository.Instance.LicenseText;
+            BringToFront();
+            if (Repository.Instance.LicenseInvalid)
+            {
+                AboutBoxForm frm = new AboutBoxForm();
+                frm.ShowDialog(this);
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -764,6 +787,7 @@ namespace Seal
                 {
                     _lastDragOverNode = targetNode;
                     mainTreeView.SelectedNode = targetNode;
+                    mainTreeView.SelectedNode?.EnsureVisible();
                 }
             }
         }

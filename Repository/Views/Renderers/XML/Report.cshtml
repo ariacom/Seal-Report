@@ -1,0 +1,8 @@
+﻿@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+<ReportModels>
+@Raw(view.ParseChildren())
+</ReportModels>

@@ -1,0 +1,467 @@
+﻿@page
+@{
+    ViewData["Title"] = "Server";
+}
+
+<div id="wrapper">
+    <div class="container">
+        <section id="top" class="section docs-heading"></section>
+        <!-- end section -->
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation">
+                    <ul class="nav">
+                        <li><a href="#lineConfiguration">Server Configuration</a></li>
+                        <li><a href="#lineTools">Server Tools</a></li>
+                        <li>
+                            <a href="#lineSecurity">Web Security</a>
+                            <ul class="nav">
+                                <li><a href="#lineSecurity_provider">Providers</a></li>
+                                <li><a href="#lineSecurity_group">Groups</a></li>
+                                <li><a href="#lineSecurity_pub">Custom Publications</a></li>
+                                <li><a href="#lineSecurity_sta">Startup Report</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#lineSWI">Seal Web Interface</a></li>
+                    </ul>
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <p style="margin-left:20px;">
+                        <strong><a href="#feed">Feed the Seal ?</a></strong><br />
+                        <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <section class="welcome">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Server <hr></h2>
+                            <div class="row">
+                                <div class="col-md-12 full">
+                                    <div>
+                                        <p>
+                                            Seal Report includes a <b>Web Report Server</b> to publish your reports on the Web.<br /><br />
+                                            On <strong>Windows OS</strong>, the server must have Internet Information Server (IIS) installed with the current <b>ASP.Net Core Runtime (Hosting Bundle)</b>.<br /><br />
+                                            On <strong>Linux OS</strong>, the server must have ASP .NET Core installed (Refer to <a href="https://docs.microsoft.com/en-us/dotnet/core/install/" target="_blank">https://docs.microsoft.com/en-us/dotnet/core/install/</a>).
+                                        </p>
+                                        <p>
+                                            Note that the Web Report Server may also act as a <b>Report Scheduler</b> if necessary.<br />
+                                            <ck>Check <a href="~/Reports#lineOutput_schedule">Report Schedules</a> for more information</ck>.
+                                        </p>
+                                    </div>
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h4>Web Report Server Publication Wizard (IIS)</h4>
+                                        To publish the <b>Web Report Server</b>, run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Publish Web Site on IIS...</srmenu> to execute the Web Server Publisher wizard.<br />
+                                        If the site was previously published, use the button <b>Publish only files</b> to update the current site.
+                                    </div>
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h4>Web Report Server Publication on Linux or Azure</h4>
+                                        <ck>Check dedicated deployment <a href="~/Tutorials">tutorials</a></ck>.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                </section>
+                <section id="lineConfiguration" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Server Configuration <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Use the <srmenu>Configuration->Configure Server...</srmenu> menu of the <strong>Server Manager</strong> to configure global parameters for the product.<br />
+                                The server configuration has various properties (<eg>e.g. you can configure your default culture, formats and CSV separator using the <code>Format</code> properties.</eg>).<br />
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Server Scripts</h4>
+                                Configure the <code>Audit Script</code> to log the following events in a database: Login, Logout, Report Execution.<br />
+                                Dedicated audit Data Sources and reports are provided and may be adapted to query your audit database.<br />
+                                <br />
+                                Use the <code>Report Creation Script</code> to change the default report object when it is created (<eg>e.g. adding a specific view or changing a default view parameter</eg>), or <code>Report Execution Init Script</code> to modify the report before the execution (<eg>e.g. changing a default format</eg>).<br />
+                                <code>Common Scripts</code> collection can be used to share functions amongst all scripts used in the product.
+                            </div>
+                            <div class="bs-callout bs-callout-info">
+                                Be sure that the <code>Server is local (No internet)</code> property equals <b>true</b> if your server has no access to the internet.<br />
+                                In this case all the Java Scripts and CSS files used in the report result will be loaded from the server.
+                            </div>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>ASP Session Storage (<a href="https://github.com/ariacom/Seal-Report/pull/46" target="_blank">Pull Request 46</a>)</h4>
+                                <h5>Session management options</h5>
+                                <div>Seal Report Web Server has two options to manage the ASP session:</div>
+                                <ul>
+                                    <li>In memory - stored individually in memory not shared between nodes (default)</li>
+                                    <li>In SQL Server - stored in database, in one table, shared between the nodes.</li>
+                                </ul>
+                                <div>To store the session in SQL Server, change the configuration in appsettings.json file:</div>
+                                <pre class="brush: csharp;">
+                                    "SealConfiguration": {
+                                        "SessionProvider": {
+                                            "SqlServer": {
+                                                "ConnectionString": "Server=localhost;Database=Audit;Trusted_Connection=True;TrustServerCertificate=True;",
+                                                "SchemaName": "dbo",
+                                                "TableName": "CacheSessions"
+                                            }
+                                        }
+                                    }
+                                </pre>
+                                <h5>SQL Server session storage</h5>
+                                <div>To use SQL Server option, besides the configuration, the session table has to be created in the database using the following the .net core tool:</div>
+                                <pre class="brush: bash;">
+                                    dotnet  tool  install --global  dotnet-sql-cache
+                                </pre>
+                                <div>When the tool is installed, run the command according to the CLI:</div>
+                                <pre class="brush: bash;">
+                                    Usage: dotnet sql-cache create [arguments] [options]
+                                    Arguments:                                    
+                                    [connectionString] The connection string to connect to the database.
+                                    [schemaName] Name of the table schema.
+                                    [tableName] Name of the table to be created.
+                                </pre>
+
+
+                                <div>Or create directly the table in the database:</div>
+                                <pre class="brush: sql;">
+                                     SET ANSI_NULLS ON
+                                    GO
+                                    SET QUOTED_IDENTIFIER ON
+                                    GO
+                                    CREATE TABLE [dbo].CacheSessions(
+	                                    [Id] [nvarchar](449) NOT NULL,
+	                                    [Value] [varbinary](max) NOT NULL,
+	                                    [ExpiresAtTime] [datetimeoffset](7) NOT NULL,
+	                                    [SlidingExpirationInSeconds] [bigint] NULL,
+	                                    [AbsoluteExpiration] [datetimeoffset](7) NULL,
+                                    PRIMARY KEY CLUSTERED 
+                                    (
+	                                    [Id] ASC
+                                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, 
+	                                    IGNORE_DUP_KEY = OFF, 
+	                                    ALLOW_ROW_LOCKS = ON, 
+	                                    ALLOW_PAGE_LOCKS = ON, 
+	                                    OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+                                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+                                    GO
+                               </pre>
+
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineTools" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Server Tools <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                The <b>Server Manager</b> has also <srmenu>Tools</srmenu> menu to check the server <strong>Data Sources</strong> and <strong>Reports</strong>.
+                            </p>
+                            <ul>
+                                <li>
+                                    <b>Check Data Sources</b> checks the current <strong>Data Source</strong> amongst the database (tables, joins and enumerated lists).
+                                </li>
+                                <li>
+                                    <b>Refresh Enumerated Lists</b> updates all the values of dynamic enumerated lists. The <strong>Data Source</strong> must then be saved.
+                                </li>
+                                <li>
+                                    <b>Synchronize Report Schedules</b> checks all the schedule of the reports in the repository and synchronize them in the Windows Task Scheduler. The schedule is defined with <i>SYSTEM</i> user.
+                                </li>
+                                <li>
+                                    <b>Synchronize Report Schedules with the logged user</b> performs the same but the schedule is defined with the user running the <b>Server Manager</b>.
+                                </li>
+                            </ul>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>System Reports</h4>
+                                Several useful reports are available in the <i>Reports/System</i> Repository sub-folder to show the current <b>security implementation</b>, to <b>inventory the reports</b>, to <b> check the reports executions</b>, to <b> query the audit database</b>, etc.<br />
+                                <a class="btn btn-primary live-system">System: 100 Configuration - Security Summary</a>
+                                <a class="btn btn-primary live-system">System: 200 Audit - Search</a>
+                                <a class="btn btn-primary live-system">System: 300 Reports - Inventory</a>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineSecurity" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Web Security <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Use the <srmenu>Configuration->Configure Web Security...</srmenu> menu of the <strong>Server Manager</strong> to configure the security (stored in the <i>Security.xml</i> file).
+                            </p>
+                            <p>
+                                The <strong>Web Security</strong> defines the login process to the <b>Web Report Server</b> through <strong>Security Provider</strong> and all the user rights through the <strong>Security Groups</strong>.
+                            </p>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+                    </div>
+                    <div id="lineSecurity_provider" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Security Provider</h4>
+                            <p>
+                                The <strong>Security Provider</strong> defines how the authentication is done when a user wants to login.<br />
+                                All the default <strong>Security Providers</strong> are defined in *.cshtml files in the <i>/Security/Providers</i> Repository sub-folder.<br />
+
+
+                                A <code>Security Script</code> is executed to define the name and the groups of the user. If the user has no group, the authentication has failed.<br />
+
+                                Depending on his type, a security provider may have parameters (<eg>e.g. to configure the LDAP Server name for the LDAP Authentication Provider</eg>).
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                The following <strong>Security Providers</strong> are available and can be easily modified.<br />
+                                Check the <code>Security Script</code> to have more information.
+                                <ul>
+                                    <li>
+                                        <b>Basic Authentication</b> shows a simple user/password authentication from the user name and password of the login window.
+                                    </li>
+                                    <li>
+                                        <b>Basic Windows Authentication</b> use Windows authentication to validate the user name and password, and define the groups: Windows group names must match group names defined in the security.
+                                    </li>
+                                    <li>
+                                        <b>Database Authentication</b> shows a sample of querying the database to authenticate and get the groups.
+                                    </li>
+                                    <li>
+                                        <b>Integrated Windows Authentication</b> is the same as Basic Windows Authentication but relies on the integrated authentication provided by IIS.
+                                    </li>
+                                    <li>
+                                        <b>LDAP Authentication</b> shows a sample of using the LdapConnection object to authenticate and get the groups.
+                                    </li>
+                                    <li>
+                                        <b>JWT</b> shows how to authenticate a user having a JSON Web Token (JWT) generated by another server sharing a secret key.
+                                    </li>
+                                    <li>
+                                        <b>OpenID</b> shows the use of the OpenID authentication.
+                                    </li>
+                                    <li>
+                                        <b>No Security</b> just adds a security group to the user.
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <p>
+                                Two scripts are also available to handle a <strong>Two-Factor Authentication</strong>:<br />One <code>Generation Script</code> to generate the code sent by Email or SMS, one <code>Check Script</code> to validate the code.
+                            </p>
+
+                            <div class="bs-callout bs-callout-demo">
+                                Script sample for the Basic Authentication Provider:
+                                <pre class="brush: csharp;">
+@@{
+    SecurityUser user = Model;
+	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
+	//user.WebUserName -> user name from the login screen
+	//user.WebPassword -> password from the login screen
+
+	user.Name = user.WebUserName; //Display name
+
+	if (string.IsNullOrEmpty(user.WebUserName)) {
+		user.AddDefaultSecurityGroup();
+	}
+	else if (user.WebUserName == "userName" && user.WebPassword == "password")
+    {
+        user.AddSecurityGroup("aGroupName");
+    }
+    else {
+        //Authenticate and set the groups defined in the security login
+        if (!user.LoginAuthentication(user.WebUserName, user.WebPassword)) {
+            throw new Exception("Invalid user name or password");
+        }
+    }
+}                            </pre>
+                            </div>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Test your security provider</h4>
+                                Once your <strong>Security Provider</strong> is configured, user the helper <code>Test a login</code> to fully test a login process with given name and password.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineSecurity_group" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Security Group</h4>
+                            <p>
+                                After a successful authentication process, the user belongs to one or several <code>Security Groups</code>.<br /><br />
+
+                                A <strong>Security Group</strong> allows to configure:<br />
+                                - which repository folders are published for the user,<br />
+                                - if the user can view reports,<br />
+                                - if the user has personal folders,<br />
+                                - if a Startup report is executed at login,<br />
+
+                                A <strong>Security Group</strong> has a collection of repository <code>Folders</code>, each folder has a given relative path and right (from <b>No Right</b> to <b>Edit Reports</b>).
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                If a user belongs to several groups, the following rules are applied:<br /><br />
+                                For the <b>Reports</b> folders<br />
+                                <ul>
+                                    <li>
+                                        <b>Folders</b>: The highest right is used (No right, Execute reports / View files, Execute reports and outputs / View files, Edit schedules / View files, Edit reports / Manage files).
+                                    </li>
+                                    <li>
+                                        <b>Personal folder</b>: The highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files).
+                                    </li>
+                                    <li>
+                                        <b>Show all folders</b>: True if one group has this flag set to true.
+                                    </li>
+                                    <li>
+                                        <b>Folders, Folder Detail and Menu Scripts</b> are executed sequentially sorted by group name.
+                                    </li>
+                                </ul>
+
+                                For <b>Default values</b><br />
+                                <ul>
+                                    <li>
+                                        The options (Edit Profile, Culture, Logo, Startup, Execution mode) are taken from the group having the highest <code>Weight</code>.
+                                    </li>
+                                </ul>
+                            </div>
+                            <p>
+                                A <b>Meta Column</b> may have a <code>Security tag</code> property. This text can be used to define rights for the designers.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>List the current right definitions</h4>
+                                The System Report <b>'100 Configuration - Security Summary'</b> generates also a full security summary.<br />
+                                To display rights per user, it may be adapted to match the security provider used.<br />
+                                <a class="btn btn-primary live-system">System: 100 Configuration - Security Summary</a>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="caption">
+                                <b>Security Objects</b>
+                            </div>
+                            <img src="images/CD-Security.png" alt="" class="img-thumbnail img-rounded">
+                            <div>
+                                <ck>Check also <a href="~/Help/Index.html" target="_blank">Seal Report Library (Seal.Model namespace)</a> for more information</ck>.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+
+
+                    <div id="lineSecurity_pub" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Custom Publications</h4>
+                            <p>
+                                In addition to the security applied on report folders, dedicated scripts (properties of a <b>Security Group</b>) allow to modify the reports published to the logged user.<br />
+                                <ul>
+                                    <li>
+                                        <code>Folder Script</code>: Optional script executed to define/modify the folders published in the <b>Web Report Server</b>.
+                                    </li>
+                                    <li>
+                                        <code>Folder Detail Script</code>: Optional script executed to define/modify the reports published in the <b>Web Report Server</b> for a given folder.
+                                    </li>
+                                    <li>
+                                        <code>Menu Script</code>: Optional script executed to define/modify the reports of the logged user.
+                                    </li>
+                                </ul>
+                            </p>
+                            <p>
+                                If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <code>Folder Detail Script</code> sample to filter 'Charts' reports in the <b>/Samples</b> folder:
+                                <pre class="brush: csharp; highlight: [5]">
+@@{
+    SecurityUser user = Model;
+     if (user.FolderDetail.folder.path == @@"\Samples") {
+        //Sample to filter reports
+        user.FolderDetail.files = user.FolderDetail.files.Where(i => i.name.Contains("Charts")).ToList(); 
+    }
+}
+                            </pre>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+
+                    <div id="lineSecurity_sta" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Startup Report</h4>
+                            <p>
+                                Once logged with the <strong>Web Report Server</strong>, a startup report defined in the <code>Report executed on startup</code> property of a <b>Security Group</b> can be executed automatically.
+                            </p>
+                            <p>
+                                This allows to fully customize the login page for given users.
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>
+                                    Check the following sample Startup Reports
+                                </h4>
+                                <ul>
+                                    <li>
+                                        <strong>40-Startup Report</strong>: Defines a Welcome page with several options to execute reports and to browse specific folders.
+                                    </li>
+                                    <li>
+                                        <strong>41-Startup Folder</strong>: Forces a specific folder after the login and disable most of navigation and execution links.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineSWI" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Seal Web Interface <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Once installed, the <b>Web Report Server</b> offers a simple interface to ease the integration of <b>Seal Report</b> into existing web sites.<br>
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                Check the API Description and Samples at <a href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">https://sealreport.org/demo/WebInterfaceAPI.html</a>.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+            </div>
+            <!-- // end .col -->
+        </div>
+    </div>
+    <!-- // end container -->
+</div>
+<!-- end wrapper -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#server_nav").addClass("active");
+        });
+    </script>
+}

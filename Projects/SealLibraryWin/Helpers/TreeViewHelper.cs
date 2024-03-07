@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System.Collections.Generic;
 using System.Linq;
@@ -82,13 +82,14 @@ namespace Seal.Helpers
         public static void SelectNode(TreeView mainTreeView, TreeNodeCollection nodes, object entity)
         {
             if (mainTreeView.SelectedNode != null && mainTreeView.SelectedNode.Tag == entity) return;
-
+            
             foreach (TreeNode node in nodes)
             {
                 if (node.Tag == entity)
                 {
                     mainTreeView.SelectedNode = node;
                     mainTreeView.SelectedNode.Expand();
+                    mainTreeView.SelectedNode.EnsureVisible();
                     break;
                 }
                 SelectNode(mainTreeView, node.Nodes, entity);

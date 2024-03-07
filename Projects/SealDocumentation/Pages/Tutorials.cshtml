@@ -1,0 +1,630 @@
+﻿@page
+@{
+    ViewData["Title"] = "Tutorials";
+}
+
+<div id="wrapper">
+    <div class="container">
+        <section id="top" class="section docs-heading"></section>
+        <!-- end section -->
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation" style="padding-left:0">
+                    <ul class="nav">
+                        <li><a href="#lineTutorials_1">Report from a SQL Select</a></li>
+                        <li><a href="#lineTutorials_2">First Data Source and Report</a></li>
+                        <li><a href="#lineInstall_ubuntu">Publication on Linux Ubuntu</a></li>
+                        <li><a href="#lineInstall_azure">Publication on Azure</a></li>
+                        <li><a href="#lineInstall_auditdb">Audit database in Azure</a></li>
+                        <li>
+                            <a href="#lineScheduler">Seal Report Scheduler</a>
+                            <ul class="nav">
+                                <li><a href="#lineScheduler_ws">As Windows Service</a></li>
+                                <li><a href="#lineScheduler_workers">As Worker Service</a></li>
+                                <li><a href="#lineScheduler_workert">As Worker thread</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <p style="margin-left:20px;">
+                        <strong><a href="#feed">Feed the Seal ?</a></strong><br />
+                        <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <section class="welcome">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Seal Report Tutorials <hr></h2>
+                            <div class="row">
+                                <div class="col-md-12 full">
+                                    <div>
+                                        <p>
+                                            This page contain several useful <b>Seal Report</b> tutorials.<br />
+                                        </p>
+                                    </div>
+                                    <div class="bs-callout bs-callout-danger">
+                                        We assume that <b>Seal Report</b> is already installed (Check <a href="Default.cshtml#lineCompilation">Installation</a>).
+                                    </div>
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h4>Add your Tutorial</h4>
+                                        Do you have a new tutorial to share ?<br />
+                                        As the site for the documentation is part of the solution, <strong>you are welcome to Pull a Request at <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a>.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                </section>
+                <section id="lineTutorials_1" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Report from a SQL Select <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Build a report from a simple SQL statement (2 minutes)</h4>
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    This guide shows how to create and execute a report from a simple SQL statement and a database connection.
+                                </div>
+                            </div>
+                            <ol class="sans">
+                                <li>
+                                    In the Start menu, point to <srmenu>Programs->Seal Report</srmenu> and then click <b>Report Designer</b>.
+                                </li>
+                                <li>
+                                    Click on New (top-left in the toolbar)
+                                </li>
+                                <li>
+                                    In the left tree view, right-click on the root node named <i>"Sources"</i> and select <strong>[Add a new SQL Data Source]</strong> in the contextual menu.<br />A new source is created and the source connection is displayed.
+                                </li>
+                                <li>
+                                    Edit the <code>Connection String</code> property with the OLE DB Wizard and verify the connection is working using the <strong>[Check Connection]</strong> helper or <strong>[F7]</strong>.
+                                </li>
+                                <li>
+                                    In the left tree view, right-click on the root node named <i>"Models"</i> and select <strong>[Add a SQL Model]</strong> in the contextual menu.<br />A new SQL Model named "Model2" is created and the SQL Editor is displayed. Click <strong>[Cancel]</strong> to close the dialog.
+                                </li>
+                                <li>
+                                    In the model definition, set the <code>Source</code> property to a the Data Source called <i>"Data Source"</i> that you have previously created.
+                                </li>
+                                <li>
+                                    In the text box, type your SQL statement (e.g. "select * from products") and click <strong>[OK]</strong>. The Source tree view displays the columns of the Select.
+                                </li>
+                                <li>
+                                    In the elements tree view, drag and drop the elements you want to see in the Row panel.
+                                </li>
+                                <li>
+                                    If necessary, drag and drop elements in the restrictions panel to filter data.
+                                </li>
+                                <li>
+                                    In the left tree view, click on the view node named <i>"Views\View\Model"</i> and set the <code>Current Model</code> property to "Model2".
+                                </li>
+                                <li>
+                                    Click <strong>[Execute]</strong> or press <strong>[F5]</strong>.<br />The report is executed.
+                                </li>
+                                <li>
+                                    Click <strong>[Close]</strong> then <strong>[Save]</strong> to save the report in the repository.
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+                <!-- end section -->
+                <section id="lineTutorials_2" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">First Data Source and Report <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Build a repository Data Source and Reports based on your database schema (5 minutes)</h4>
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    This guide shows how to create a first Data Source describing your database metadata. Based on this Data Source, reports can be easily built and executed using dynamic SQL generation.
+                                </div>
+                            </div>
+
+                            <h3><strong>Step 1:</strong> Create your first Data Source.</h3>
+                            <ol class="sans">
+                                <li>
+                                    In the Start menu, point to <srmenu>Programs->Seal Report</srmenu> and then click <b>Server Manager</b>.
+                                </li>
+                                <li>
+                                    On the File menu, click <srmenu>New->Data Source</srmenu>.<br />A new Data Source is created and the connection is selected.
+                                </li>
+                                <li>
+                                    Edit the <code>Connection String</code> property with the OLE DB Wizard and check the connection configured using the <strong>[Check Connection]</strong> helper or <strong>[F7]</strong>.
+                                </li>
+                                <li>
+                                    In the left tree view, right-click on the root node called <i>"Tables"</i> and select <strong>[Add Tables from Catalog...]</strong> in the contextual menu.<br />A dialog box appears.
+                                </li>
+                                <li>
+                                    Select the tables in your Data Source and click <strong>[OK]</strong>.<br />Tables, columns and joins have been automatically added.
+                                </li>
+                                <li>
+                                    Click <strong>[Save]</strong> to save the Data Source in the repository.
+                                </li>
+                            </ol>
+                            <h3><strong>Step 2:</strong> Create, execute and store your first reports.</h3>
+                            <ol class="sans">
+                                <li>
+                                    On the Start menu, point to <srmenu>Programs->Seal Report</srmenu> and then click <b>Report Designer</b>.
+                                </li>
+                                <li>
+                                    Click on <strong>[New]</strong> (top-left in the toolbar).
+                                </li>
+                                <li>
+                                    In the left tree view, click on the Model node called <i>"Model"</i>.<br />The model is displayed.
+                                </li>
+                                <li>
+                                    In the model definition, select the Data Source you have previously created.
+                                </li>
+                                <li>
+                                    In the elements tree view, expand the nodes with the table names, then drag and drop the elements you want to see in the Row panel.
+                                </li>
+                                <li>
+                                    If necessary, drag and drop elements in the restrictions panel to filter data.
+                                </li>
+                                <li>
+                                    Click <strong>[Execute]</strong> or press <strong>[F5]</strong>.<br />The report is executed.
+                                </li>
+                                <li>
+                                    Click <strong>[Close]</strong> then <strong>[Save]</strong> to save the report in the repository.
+                                </li>
+                            </ol>
+
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineInstall_ubuntu" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Publication on Linux Ubuntu <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    This guide shows how to publish the .NET Core distribution to a Linux Ubuntu System.
+                                </div>
+                            </div>
+
+                            <h3><strong>Step 1:</strong> Create an configure an Ubuntu Sub-System.</h3>
+                            <ol class="sans">
+                                <li>
+                                    From the <a href="https://www.microsoft.com/fr-fr/store/apps/windows" target="_blank">Windows Store</a>, download and create an Ubuntu Sub-System.<br />
+                                    Enter a user name and password for the super user.
+                                </li>
+                                <li>
+                                    Configure the Linux System to install .NET Core: follow the procedure as described in:<br /><a href="https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1604" target="_blank">https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1604</a>
+                                </li>
+                                <li>
+                                    From the <b>Ubuntu Command Prompt</b>, install the following packages for Excel results (<b>EPPlus</b>):
+                                    <pre class="brush: bash">
+                                    sudo apt update
+                                    sudo apt install libgdiplus
+                                    </pre>
+                                </li>
+                                <li>
+                                    From the <b>Ubuntu Command Prompt</b>, install the following packages for <b>ScottPlot</b> charts:
+                                    <pre class="brush: bash">
+                                    sudo apt update
+                                    sudo apt install libgdiplus
+                                    sudo apt install -y libfreetype6
+                                    sudo apt install -y libfontconfig1
+                                    sudo apt install -y fontconfig
+                                    sudo apt install -y libnss3
+                                    </pre>
+                                </li>
+                                <li>
+                                    For <b>HTML to PDF</b> results (<b>Puppeteer</b>), follow the procedure:<br /><a href=https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#recommended-enable-user-namespace-cloning" target="_blank">Running Puppeteer on WSL (Windows subsystem for Linux)</a>
+                                </li>
+                                <li>
+                                    From the <b>Ubuntu Command Prompt</b>, create the <i>/seal</i> installation folder:
+                                    <pre class="brush: bash">
+                                    cd /
+                                    sudo mkdir seal
+                                    chmod ugo+rwx /seal
+                                    </pre>
+                                </li>
+                            </ol>
+                            <h3><strong>Step 2:</strong> Deploy files to the Ubuntu Sub-System.</h3>
+                            <ol class="sans">
+                                <li>
+                                    From your Windows computer, run the <b>Report Designer</b> and edit the report <i>System\500 Publication - Web Report Server</i><br />
+                                    Modify the task script <code>'Publish Web Report Server'</code> to configure the Destination Directory to <i>'\\wsl$\Ubuntu\seal'</i>:
+                                    <pre class="brush: csharp">
+                                        webServerDestination = @@"\\wsl$\Ubuntu\seal";
+                                    </pre>
+                                    Execute the report, check <strong>'Web Report Server Distribution'</strong> restriction, then re-execute the report to deploy the Web Report Server.<br />
+                                    Files are copied from the installation directory <i>'\Web'</i> Sub-Folder to <i>'\\wsl$\Ubuntu\seal'</i> (<i>'/seal'</i> on Ubuntu).<br />
+                                    Save the report for future publications (Note that this deployment could also be made manually using the Windows Explorer).
+                                </li>
+                                <li>
+                                    Using the <b>Report Designer</b>, open and edit the report <i>System\510 Publication - Repository</i><br />
+                                    Modify the task script <code>'Publish Repository Files'</code> to configure the Destination Directory to <i>'\\wsl$\Ubuntu\seal\Repository'</i>:
+                                    <pre class="brush: csharp">
+                                        repositoryDestination = @@"\\wsl$\Ubuntu\seal\Repository";
+                                    </pre>
+                                    Execute the report.<br />
+                                    Check the restriction <strong>'Repository Source Folder'</strong>.<br />
+                                    Re-execute the report.<br />
+                                    Repository Files are copied to <i>'\\wsl$\Ubuntu\seal\Repository'</i> (<i>'/seal/Repository'</i> on Ubuntu).<br />
+                                    Save the report for future publications (Note that this deployment could also be made manually using the Windows Explorer).
+                                </li>
+                            </ol>
+                            <h3><strong>Step 3:</strong> Run the Web Report Server on Ubuntu.</h3>
+                            <ol class="sans">
+                                <li>
+                                    From the <b>Ubuntu Command Prompt</b>, run the following commands:
+                                    <pre class="brush: bash">
+                                        sudo chown -R $USER:$USER /seal
+                                        cd /seal
+                                        dotnet /seal/SealWebServer.dll
+                                    </pre>
+                                    The <b>Web Report Server</b> should be listening at http://localhost:5000<br />
+                                </li>
+                                <li>
+                                    Browse to http://localhost:5000, execute and check the report <i>System\100 Configuration - Security Summary</i>.
+                                </li>
+                            </ol>
+                            <h3><strong>Troubleshooting</strong></h3>
+                            <ol class="sans">
+                                <li>
+                                    From your Windows computer, run the <b>Report Designer</b> and execute the report <i>System\510 Publication - Repository</i> to view the current remote log file content.
+                                </li>
+                                <li>
+                                    Using Windows explorer, check the Logs files in the <i>'\\wsl$\Ubuntu\seal\Repository\Logs'</i> remote folder (<i>'/seal/Repository/Logs'</i> on Ubuntu).
+                                </li>
+                            </ol>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineInstall_azure" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Publication on Azure <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    This guide shows how to publish either the .Net distribution as an Azure App Service.<br />
+                                </div>
+                                <div class="col-md-12 bs-callout bs-callout-danger">
+                                    We assume that you have already an Azure account with a valid subscription.
+                                </div>
+                            </div>
+
+                            <h3><strong>Step 1:</strong> Create the Azure App Service.</h3>
+                            <ol class="sans">
+                                <li>
+                                    Login to the Azure Portal, go to to <srmenu>Home > App Services</srmenu>
+                                </li>
+                                <li>
+                                    Click on <strong>[Create > Web App]</strong> and edit the <b>App Service</b> properties.<br />
+                                    Select a subscription, resource group.<br /><br />
+                                    <strong>For .Net, Linux</strong><br />
+                                    <code>Instance name</code>: 'sealcore' (.azurewebsites.net)<br />
+                                    <code>Publish</code>: 'Code'<br />
+                                    <code>Runtime stack</code>: '.NET Version of the Seal Distribution (e.g. .Net 8 (LTS))'<br />
+                                    <code>Operating System</code>: 'Linux'<br /><br />
+                                    <strong>For .Net, Windows</strong><br />
+                                    <code>Instance name</code>: 'sealnet' (.azurewebsites.net)<br />
+                                    <code>Publish</code>: 'Code'<br />
+                                    <code>Runtime stack</code>: '.NET Version of the Seal Distribution (e.g. .Net 8 (LTS))'<br />
+                                    <code>Operating System</code>: 'Windows'<br />
+                                    <br />
+                                    Change Sku and Size if necessary<br />
+                                    Review and create the <b>App Service</b>.
+                                </li>
+                            </ol>
+                            <h3><strong>Step 2:</strong> Deploy files to the Azure App Service.</h3>
+                            <ol class="sans">
+                                <li>
+                                    From the Azure Portal, open the <b>APP Service</b> created.<br />
+                                    Click on <srmenu>Configuration</srmenu>, select <b>[General Settings]</b>, set <b>"SCM Basic Auth Publishing"</b> and <b>"FTP Basic Auth Publishing Credentials"</b> to <b>On</b>.<br />
+                                    Click on <srmenu>Deployment Center</srmenu>, then select <b>[FTP credentials]</b>.<br />
+                                    Copy the FTPS Endpoint string, User Name and Password.
+                                </li>
+                                <li>
+                                    From your Windows computer, run the <b>Report Designer</b> and edit the report <i>System\500 Publication - Web Report Server</i><br />
+                                    Modify the task script <code>'Publish Web Report Server'</code> to configure the Destination Directory to <i>'/site/wwwroot/'</i>:
+                                    <pre class="brush: csharp">
+                                        webServerDestination = @@"/site/wwwroot/";
+                                    </pre>
+                                    Modify the script to configure the FTP Client (Host Name, User Name, Password) using the information got in the previous step.
+                                    <pre class="brush: csharp">
+                                        //e.g. for FTPS Endpoint: ftps://waws-prod-dm1-163.ftp.azurewebsites.windows.net/site/wwwroot    
+                                        client = new FtpClient("waws-prod-dm1-163.ftp.azurewebsites.windows.net", @@"sealcore\$sealcore", "password got from the Azure portal"); 
+                                    </pre>
+                                    Execute the report.<br />
+                                    Set the  <strong>'Web Report Server Distribution'</strong> restriction: Select <b>.NET</b> distribution.<br />
+                                    Re-execute the report to deploy the Web Report Server.<br />
+                                    Files are copied from the installation directory <i>'\NETCore'</i> or <i>'\Web.Net'</i> Sub-Folder to the remote directory <i>'/site/wwwroot/'</i>.<br />
+                                    Save the report for future publications (Note that this deployment could also be made manually using a standard FTP Client like FileZilla).
+                                </li>
+                                <li>
+                                    Edit the report <i>System\510 Publication - Repository</i><br />
+                                    Modify the task script <code>'Publish Repository Files'</code> to configure the Destination Directory to <i>'/site/wwwroot/'</i>:
+                                    <pre class="brush: csharp">
+                                        repositoryDestination = @@"/site/wwwroot/";
+                                    </pre>
+                                    Modify the script to configure the FTP Client (Host Name, User Name, Password) using the information got in the previous step.
+                                    <pre class="brush: csharp">
+                                        //e.g. for FTPS Endpoint: ftps://waws-prod-dm1-163.ftp.azurewebsites.windows.net/site/wwwroot    
+                                        client = new FtpClient("waws-prod-dm1-163.ftp.azurewebsites.windows.net", @@"sealcore\$sealcore", "password got from the Azure portal"); 
+                                    </pre>
+                                    Execute the report.<br />
+                                    Set the restriction <strong>'Repository Source Folder'</strong> to <b>'Repository: Copy All Folders'</b>.<br />
+                                    Re-execute the report.<br />
+                                    Repository Files are copied to the remote directory <i>'/site/wwwroot/Repository/'</i>.<br />
+                                    Save the report for future publications (Note that this deployment could also be made manually using a standard FTP Client like FileZilla).
+                                </li>
+                            </ol>
+                            <h3><strong>Step 3:</strong> Configure the App Service.</h3>
+                            <ol class="sans">
+                                <li>
+                                    From the Azure Portal, open the <b>APP Service</b> created.<br />
+                                    Click on <srmenu>Configuration</srmenu>, then select the <b>General Settings</b> tab.<br />
+                                </li>
+                                <li>
+                                    <strong>For .Net, Linux:</strong><br />
+                                    Set <code>Startup Command</code> to 'apt-get update && apt-get install -y apt-utils libgdiplus libfreetype6 libfontconfig1 fontconfig libnss3 && dotnet /home/site/wwwroot/SealWebServer.dll'<br />
+                                    <strong>For .Net, Windows:</strong><br />
+                                    Set the <code>Platform</code> '64bit' (This may require a minimum App Service Plan B1)<br />
+                                </li>
+                                <li>
+                                    Go back to <srmenu>Overview</srmenu> and click <b>[Browse]</b> to test the site.<br />
+                                    Check a report execution: 'System/100 Configuration - Security Summary'
+                                </li>
+                            </ol>
+                            <h3><strong>Troubleshooting</strong></h3>
+                            <ol class="sans">
+                                <li>
+                                    From your Windows computer, run the <b>Report Designer</b> and execute the report <i>System\510 Publication - Repository</i> to view the current remote log file content.
+                                </li>
+                                <li>
+                                    Using a standard FTP Client like FileZilla, check the Logs files in the <i>'/site/wwwroot/Repository/Logs'</i> remote folder.
+                                </li>
+                                <li>
+                                    HTML and JavaScript for PDF support: As PuppeteerSharp requires a chrome install on the server, to host in azure you need to use azure docker support.
+                                    Rebuild your app as a docker image and host as a web app or azure function as required.
+                                </li>
+                            </ol>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineInstall_auditdb" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Audit database in Azure <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    After the publication of the Web Report Server on Azure, this guide shows how to create an Audit MS SQLServer database in Azure to store the Seal Report audit events.<br />
+                                </div>
+                                <div class="col-md-12 bs-callout bs-callout-danger">
+                                    We assume that you have already an Azure account with a valid subscription and that the previous tutorial has been achieved successfully.
+                                </div>
+                            </div>
+
+                            <h3><strong>Step 1:</strong> Create the Azure Database.</h3>
+                            <ol class="sans">
+                                <li>
+                                    Login to the Azure Portal, go to to <srmenu>Home > SQL databases</srmenu>
+                                </li>
+                                <li>
+                                    Click on <strong>[Add]</strong> and edit the <b>Database</b> properties.<br />
+                                    <code>Database name</code>: 'sealdb'<br />
+                                    <code>Server name</code>: 'sealsqlserver'<br />
+                                    Plus an Administrator <code>Username</code> and <code>Password</code>.
+                                    <br />
+                                    Change the database size if necessary.<br />
+                                    Review and create the <b>SQL Database</b>.
+                                </li>
+                            </ol>
+                            <h3><strong>Step 2:</strong> Edit the <b>Audit</b> Data Source connection.</h3>
+                            <ol class="sans">
+                                <li>
+                                    From the Azure Portal, open the SQL Database created.<br />
+                                    Click on <srmenu>Properties</srmenu>, then select <b>Show database connection strings</b>.<br />
+                                    Copy the connection string.
+                                </li>
+                                <li>
+                                    From your Windows computer, run the <b>Server Manager</b> and open the <b>Audit</b> Data Source.<br />
+                                    Select the main connection.<br />
+                                    Set <code>Database type</code> to 'MS SQLServer' and <code>Connection Type</code> to 'MS SQLServer'.<br />
+                                    Edit the <code>MS SQLServer Connection String</code> and copy the connection string got in the previous step.<br />
+                                    Remove the 'User Id' and 'Password' and set them in the related connection properties. The final connection string should be:<br />
+                                    <pre class="brush: sql">
+                                    Server=tcp:sealsqlserver.database.windows.net,1433;Initial Catalog=sealdb;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+                                    </pre>
+
+                                    Click <b>F7 Check Connection</b> to test the connection.<br />
+                                    <strong>If it fails because of the Azure Firewall</strong>:<br />
+                                    Go to the <b>SQL Database</b> created in the Azure Portal, click on the top button <b>[Set server firewall]</b><br />
+                                    Add a rule to accept the Client IP address proposed. Save the configuration.<br />
+                                    From the <b>Server Manager</b>, check again the connection and save the <b>Data Source</b>.<br />
+                                </li>
+                                <li>
+                                    Click on the menu <srmenu>Configuration->Server Configuration...</srmenu>.<br />
+                                    Set <code>Audit Enabled</code> to 'true' and click <b>[OK]</b> to save the configuration.
+                                </li>
+                            </ol>
+                            <h3><strong>Step 3:</strong> Deploy and test the <b>Audit</b> Data Source on a previous Azure deployment.</h3>
+                            <ol class="sans">
+                                <li>
+                                    From your Windows computer, run the report <i>System\510 Publication - Repository</i><br />
+                                    <strong>Warning</strong>: We assume that the FTP Configuration has already be made in the previous tutorial.<br />
+                                    Set the restriction <strong>'Repository Source Folder'</strong> to <b>'Repository Folder: Settings'</b> and <b>'Repository Folder: Sources'</b>.<br />
+                                    Re-execute the report.<br />
+                                    The files <i>'\Settings\Configuration.xml'</i> and <i>'\Sources\Audit.scfx'</i> are copied to the Azure remote repository <i>'/site/wwwroot/Repository/'</i>
+                                </li>
+                                <li>
+                                    From the Azure Portal, open the <b>SQL Database</b> created.<br />
+                                    Click on the top button <b>[Set server firewall]</b><br />
+                                    Set <code>Allow Azure services and resources to access this server</code> to 'true'.<br />
+                                    Save the configuration.
+                                </li>
+                            </ol>
+                            <h3><strong>Step 4:</strong> Test Audit reports.</h3>
+                            <ol class="sans">
+                                <li>
+                                    Browse to the the <b>Web Report Server</b> site previously published on Azure.<br />
+                                    Disconnect and reconnect to reload the Data Sources.<br />
+                                </li>
+                                <li>
+                                    Run the report <i>System\400 Sources - Check Sources</i> and check the Audit Data Source.<br />
+                                    The first time the report is executed, an error 'Table sr_audit does not exist' is raised.<br />
+                                    Re-execute the check.<br />
+                                    The second execution, the checks should be ok as the sr_audit table has been created by the default audit script.<br />
+                                </li>
+                                <li>
+                                    Run the report <i>System\200 Audit - Search</i> and check that the sr_audit table has new records.<br />
+                                </li>
+                            </ol>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineScheduler" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Run the Seal Report Scheduler<hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12 bs-callout bs-callout-info">
+                            This topics shows the different ways to install and run the <b>Seal Report Scheduler</b> instead of using the standard <b>Windows Task Scheduler</b>.<br />
+                        </div>
+                        <div class="col-md-12 bs-callout bs-callout-warning">
+                            <h4>Server Configuration</h4>
+                            Run the <b>Server Manager</b>, menu <srmenu>Configuration->Configure Server...</srmenu>.<br>
+                            Set the property <code>Scheduler Mode</code> to either <b>Service or Worker</b> or <b>Web Server</b>.
+                        </div>
+                        <div class="col-md-12 bs-callout bs-callout-info">
+                            <h4>Remarks</h4>
+                            <ul>
+                                <li>Only <strong>one</strong> instance of scheduler can be executed for one repository.</li>
+                                <li>Check the <b>Seal Report Scheduler</b> messages in the Event Viewer (Windows OS) or in the <i>\Logs</i> Repository Sub-Folder.</li>
+                                <li>By default, schedules are executed in a new process (configuration <b>Outer Process</b> is true), however you may run the schedule in the same process to speed up the start.</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-12 bs-callout bs-callout-demo">
+                            <h4>System Reports for Schedules</h4>
+                            Use dedicated schedule reports from the <i>\Reports\System</i> Repository sub-folder:
+                            <ul>
+                                <li>320 Reports - Web Server Schedule Definitions</li>
+                                <li>360 Reports - Last Schedules Executions (only valid if the Audit database is enabled)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div id="lineScheduler_ws" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>As a Windows Service (Windows OS)</h4>
+                            <ol class="sans">
+                                <li>
+                                    The property <code>Scheduler Mode</code> has been set to  <b>Service or Worker</b>.
+                                </li>
+                                <li>
+                                    Edit the Power Shell file <i>SealSchedulerServiceInstall.ps1</i> file located in your installation directory (<eg>e.g. C:\Program Files\Seal Report</eg>).
+                                    Check that the file paths are correct.
+                                </li>
+                                <li>
+                                    Right click on <i>SealSchedulerServiceInstall.ps1</i> and execute it as <b>Administrator</b>.<br />
+                                    The <b>Seal Report Scheduler</b> is installed as a Windows Service.
+                                </li>
+                                <li>
+                                    Run the <b>MMC Service Manager</b> to edit the service properties (Startup mode, Identity, etc.).<br />
+                                    Start the service.
+                                </li>
+                            </ol>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineScheduler_workers" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>As a Worker Service (Linux OS)</h4>
+                            <ol class="sans">
+                                <li>
+                                    The property <code>Scheduler Mode</code> has been set to  <b>Service or Worker</b>.
+                                </li>
+                                <li>
+                                    We assume that the .NET distribution has been already deployed on the Linux OS.<br />
+                                    Deploy also the <i>\Settings\Configuration.xml</i> in the remote repository.
+                                </li>
+                                <li>
+                                    From a Linux command prompt, run the <b>Seal Scheduler Worker</b> with the command:<br />
+                                    <pre class="brush: bash">
+                                    dotnet /seal/SealSchedulerWorker.dll
+                                    </pre>
+                                </li>
+                            </ol>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineScheduler_workert" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>As a Worker thread in the Web Report Server</h4>
+                            <ol class="sans">
+                                <li>
+                                    The property <code>Scheduler Mode</code> has been set to  <b>Web Server</b>.
+                                </li>
+                                <li>
+                                    Restart the <b>Web Report Server</b>.
+                                </li>
+                            </ol>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+
+            </div>
+            <!-- // end .col -->
+        </div>
+    </div>
+    <!-- // end container -->
+</div>
+<!-- end wrapper -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#tutorials_nav").addClass("active");
+        });
+    </script>
+}

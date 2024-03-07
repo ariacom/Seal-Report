@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using Seal.Helpers;
 using System;
@@ -46,7 +46,7 @@ namespace Seal.Model
                     File.WriteAllText(rootReport.ResultFilePath, html, System.Text.Encoding.UTF8);
                     rootReport.IsNavigating = true;
                     rootReport.HasNavigation = true;
-                    Navigations.First(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID).Value.Link.Href = rootReport.ExecutionGUID; // !string.IsNullOrEmpty(rootReport.WebUrl) ? ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + rootReport.ExecutionGUID : rootReport.ResultFilePath;
+                    Navigations.First(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID).Value.Link.Href = rootReport.ExecutionGUID;
                 }
             }
 

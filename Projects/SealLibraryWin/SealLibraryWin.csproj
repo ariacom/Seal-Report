@@ -2,14 +2,14 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<TargetFramework>net7.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibraryWin</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>7.2.0.0</Version>
-		<FileVersion>7.2.0.0</FileVersion>
-		<AssemblyVersion>7.2.0.0</AssemblyVersion>
+		<Version>8.0.0.0</Version>
+		<FileVersion>8.0.0.0</FileVersion>
+		<AssemblyVersion>8.0.0.0</AssemblyVersion>
 		<Description>Seal Report Library (Windows)</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -34,21 +34,27 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<AssemblyAttribute Include="BuildDateAttribute">
+			<_Parameter1>$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
 		<Content Include="..\..\Repository\Views\Content\seal.css" Link="Views\Content\seal.css" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentFTP" Version="48.0.1" />
-		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.69.2.1" />
+		<PackageReference Include="FluentFTP" Version="49.0.2" />
+		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.76.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
 		<PackageReference Include="DocumentFormat.OpenXml">
-			<Version>2.20.0</Version>
+			<Version>3.0.1</Version>
 		</PackageReference>
 		<PackageReference Include="EPPlus">
 			<Version>4.5.3.3</Version>
@@ -56,18 +62,22 @@
 		<PackageReference Include="jose-jwt">
 			<Version>4.1.0</Version>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2045.28" />
-		<PackageReference Include="MongoDB.Driver" Version="2.22.0" />
-		<PackageReference Include="MySql.Data" Version="8.1.0" />
-		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.120" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2277.86" />
+		<PackageReference Include="MongoDB.Driver" Version="2.23.1" />
+		<PackageReference Include="MySql.Data" Version="8.3.0" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.130" />
+		<PackageReference Include="PuppeteerSharp" Version="14.0.0" />
+		<PackageReference Include="QuestPDF" Version="2023.12.5" />
 		<PackageReference Include="ScintillaNET.Core" Version="3.6.51" />
-		<PackageReference Include="SendGrid" Version="9.28.1" />
+		<PackageReference Include="ScottPlot" Version="5.0.21" />
+		<PackageReference Include="SendGrid" Version="9.29.1" />
 		<PackageReference Include="SharpZipLib">
 			<Version>1.4.2</Version>
 		</PackageReference>
 		<PackageReference Include="SSH.NET">
-			<Version>2023.0.0</Version>
+			<Version>2023.0.1</Version>
 		</PackageReference>
+		<PackageReference Include="Svg.Skia" Version="1.0.0.13" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.IO.FileSystem.Primitives">
 			<Version>4.3.0</Version>
@@ -82,15 +92,15 @@
 			<Version>2.10.1</Version>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
-		<PackageReference Include="Twilio" Version="6.14.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="7.0.12" />
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.5" />
+		<PackageReference Include="Twilio" Version="6.16.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Data.Odbc" Version="7.0.0" />
-		<PackageReference Include="System.Data.OleDb" Version="7.0.0" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="7.0.0" />
-		<PackageReference Include="System.DirectoryServices" Version="7.0.1" />
-		<PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
+		<PackageReference Include="System.Data.Odbc" Version="8.0.0" />
+		<PackageReference Include="System.Data.OleDb" Version="8.0.0" />
+		<PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
+		<PackageReference Include="System.DirectoryServices" Version="8.0.0" />
+		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -109,7 +119,7 @@
 		<None Include="..\..\Repository\Sources\TableTemplates\Default.cshtml" Link="TableTemplates\Default.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Excel.cshtml" Link="TableTemplates\Excel.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Generic.cshtml" Link="TableTemplates\Generic.cshtml" />
-		<None Include="..\..\Repository\Sources\TableTemplates\HTTPClient JSON.cshtml" Link="TableTemplates\HTTPClient JSON.cshtml" />
+		<None Include="..\..\Repository\Sources\TableTemplates\HTTPClient Json.cshtml" Link="TableTemplates\HTTPClient Json.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Xml File.cshtml" Link="TableTemplates\Xml File.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\XmlReader RSS.cshtml" Link="TableTemplates\XmlReader RSS.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Default.cshtml" Link="TaskTemplates\Default.cshtml" />
@@ -127,10 +137,12 @@
 		<None Include="..\..\Repository\Views\ChartNVD3.cshtml" Link="Views\ChartNVD3.cshtml" />
 		<None Include="..\..\Repository\Views\ChartPlotly.config.cshtml" Link="Views\ChartPlotly.config.cshtml" />
 		<None Include="..\..\Repository\Views\ChartPlotly.cshtml" Link="Views\ChartPlotly.cshtml" />
+		<None Include="..\..\Repository\Views\ChartScottplot.config.cshtml" Link="Views\ChartScottplot.config.cshtml" />
+		<None Include="..\..\Repository\Views\ChartScottplot.cshtml" Link="Views\ChartScottplot.cshtml" />
 		<None Include="..\..\Repository\Views\Container.config.cshtml" Link="Views\Container.config.cshtml" />
 		<None Include="..\..\Repository\Views\Container.cshtml" Link="Views\Container.cshtml" />
-		<None Include="..\..\Repository\Views\Container Grid Flex.config.cshtml" Link="Views\Container Grid Flex.config.cshtml" />
-		<None Include="..\..\Repository\Views\Container Grid Flex.cshtml" Link="Views\Container Grid Flex.cshtml" />
+		<None Include="..\..\Repository\Views\ContainerGridFlex.config.cshtml" Link="Views\ContainerGridFlex.config.cshtml" />
+		<None Include="..\..\Repository\Views\ContainerGridFlex.cshtml" Link="Views\ContainerGridFlex.cshtml" />
 		<None Include="..\..\Repository\Views\DataTable.config.cshtml" Link="Views\DataTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\DataTable.cshtml" Link="Views\DataTable.cshtml" />
 		<None Include="..\..\Repository\Views\Free.config.cshtml" Link="Views\Free.config.cshtml" />
@@ -141,13 +153,11 @@
 		<None Include="..\..\Repository\Views\Gauge.cshtml" Link="Views\Gauge.cshtml" />
 		<None Include="..\..\Repository\Views\Model.config.cshtml" Link="Views\Model.config.cshtml" />
 		<None Include="..\..\Repository\Views\Model.cshtml" Link="Views\Model.cshtml" />
-		<None Include="..\..\Repository\Views\Model.iCSV.partial.cshtml" Link="Views\Model.iCSV.partial.cshtml" />
 		<None Include="..\..\Repository\Views\Model.iMenu.partial.cshtml" Link="Views\Model.iMenu.partial.cshtml" />
 		<None Include="..\..\Repository\Views\Model.iPages.partial.cshtml" Link="Views\Model.iPages.partial.cshtml" />
 		<None Include="..\..\Repository\Views\Model.iSummaryTable.partial.cshtml" Link="Views\Model.iSummaryTable.partial.cshtml" />
 		<None Include="..\..\Repository\Views\ModelDetail.config.cshtml" Link="Views\ModelDetail.config.cshtml" />
 		<None Include="..\..\Repository\Views\ModelDetail.cshtml" Link="Views\ModelDetail.cshtml" />
-		<None Include="..\..\Repository\Views\ModelDetail.iCSV.partial.cshtml" Link="Views\ModelDetail.iCSV.partial.cshtml" />
 		<None Include="..\..\Repository\Views\PageTable.config.cshtml" Link="Views\PageTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\PageTable.cshtml" Link="Views\PageTable.cshtml" />
 		<None Include="..\..\Repository\Views\Report.config.cshtml" Link="Views\Report.config.cshtml" />
@@ -175,12 +185,69 @@
 		<None Include="..\..\Repository\Views\Widget.cshtml" Link="Views\Widget.cshtml" />
 		<None Include="..\..\Repository\Views\Card.config.cshtml" Link="Views\Card.config.cshtml" />
 		<None Include="..\..\Repository\Views\Card.cshtml" Link="Views\Card.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Default.config.cshtml" Link="Views\Renderers\Default.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Default.cshtml" Link="Views\Renderers\Default.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\CSV\Model.config.cshtml" Link="Views\Renderers\CSV\Model.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\CSV\Model.cshtml" Link="Views\Renderers\CSV\Model.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\CSV\Report.config.cshtml" Link="Views\Renderers\CSV\Report.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\CSV\Report.cshtml" Link="Views\Renderers\CSV\Report.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\Report.config.cshtml" Link="Views\Renderers\Excel\Report.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\Report.cshtml" Link="Views\Renderers\Excel\Report.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\Model.config.cshtml" Link="Views\Renderers\Excel\Model.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\Model.cshtml" Link="Views\Renderers\Excel\Model.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\PageTable.config.cshtml" Link="Views\Renderers\Excel\PageTable.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\PageTable.cshtml" Link="Views\Renderers\Excel\PageTable.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\DataTable.config.cshtml" Link="Views\Renderers\Excel\DataTable.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\DataTable.cshtml" Link="Views\Renderers\Excel\DataTable.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\TabPage.config.cshtml" Link="Views\Renderers\Excel\TabPage.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\TabPage.cshtml" Link="Views\Renderers\Excel\TabPage.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\Widget.config.cshtml" Link="Views\Renderers\Excel\Widget.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\Widget.cshtml" Link="Views\Renderers\Excel\Widget.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\ChartJS.config.cshtml" Link="Views\Renderers\Excel\ChartJS.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\ChartJS.cshtml" Link="Views\Renderers\Excel\ChartJS.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\XML\Report.config.cshtml" Link="Views\Renderers\XML\Report.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\XML\Report.cshtml" Link="Views\Renderers\XML\Report.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\XML\Model.config.cshtml" Link="Views\Renderers\XML\Model.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\XML\Model.cshtml" Link="Views\Renderers\XML\Model.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Json\Report.config.cshtml" Link="Views\Renderers\Json\Report.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Json\Report.cshtml" Link="Views\Renderers\Json\Report.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Json\Model.config.cshtml" Link="Views\Renderers\Json\Model.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Json\Model.cshtml" Link="Views\Renderers\Json\Model.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Text\Model.config.cshtml" Link="Views\Renderers\Text\Model.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Text\Model.cshtml" Link="Views\Renderers\Text\Model.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Report.config.cshtml" Link="Views\Renderers\PDF\Report.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Report.cshtml" Link="Views\Renderers\PDF\Report.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Model.config.cshtml" Link="Views\Renderers\PDF\Model.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Model.cshtml" Link="Views\Renderers\PDF\Model.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\PageTable.config.cshtml" Link="Views\Renderers\PDF\PageTable.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\PageTable.cshtml" Link="Views\Renderers\PDF\PageTable.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\DataTable.config.cshtml" Link="Views\Renderers\PDF\DataTable.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\DataTable.cshtml" Link="Views\Renderers\PDF\DataTable.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Default.config.cshtml" Link="Views\Renderers\PDF\Default.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Default.cshtml" Link="Views\Renderers\PDF\Default.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartScottplot.config.cshtml" Link="Views\Renderers\PDF\ChartScottplot.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartScottplot.cshtml" Link="Views\Renderers\PDF\ChartScottplot.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\TabPage.config.cshtml" Link="Views\Renderers\PDF\TabPage.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\TabPage.cshtml" Link="Views\Renderers\PDF\TabPage.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Widget.config.cshtml" Link="Views\Renderers\PDF\Widget.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Widget.cshtml" Link="Views\Renderers\PDF\Widget.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartJS.config.cshtml" Link="Views\Renderers\PDF\ChartJS.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartJS.cshtml" Link="Views\Renderers\PDF\ChartJS.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartNVD3.config.cshtml" Link="Views\Renderers\PDF\ChartNVD3.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartNVD3.cshtml" Link="Views\Renderers\PDF\ChartNVD3.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartPlotly.config.cshtml" Link="Views\Renderers\PDF\ChartPlotly.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartPlotly.cshtml" Link="Views\Renderers\PDF\ChartPlotly.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Gauge.config.cshtml" Link="Views\Renderers\PDF\Gauge.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\Gauge.cshtml" Link="Views\Renderers\PDF\Gauge.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\HTML2PDF\Report.config.cshtml" Link="Views\Renderers\HTML2PDF\Report.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\HTML2PDF\Report.cshtml" Link="Views\Renderers\HTML2PDF\Report.cshtml" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="SecurityProviders\" />
 		<Folder Include="TableTemplates\" />
 		<Folder Include="Views\Content\" />
+		<Folder Include="Views\Renderers\" />
 		<Folder Include="Views\Scripts\" />
 	</ItemGroup>
 

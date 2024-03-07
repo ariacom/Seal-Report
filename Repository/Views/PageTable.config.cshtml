@@ -1,13 +1,9 @@
 ﻿@using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = ReportViewTemplate.PageTableName;
     Template.Description = "Render the Page Table of the page result.";
 
-    //If true, the view can be configured for a report model
-    Template.ForReportModel = false;
+    //If true, the view is a child of a report model view
     Template.IsModelViewChild = true;
 
     //Parameters for this template
@@ -16,8 +12,6 @@
     Template.Parameters.Add(new Parameter() { Name = "page_table_class", Value = "table table-striped table-hover table-bordered", DisplayName = "Table CSS Class", Description = "CSS class attribute of the table.", Enums = new string[] { "table table-striped table-hover table-bordered table-responsive table-condensed" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "page_table_css", Value = "margin-top:5px;width:auto;", DisplayName = "Table CSS Style", Description = "CSS style attribute of the table.", Enums = new string[] { "margin: 10px;", "padding: 10px;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "display_page_totals", DisplayName = "Display totals", BoolValue = true, Description = "If true, the totals are displayed in the page table." });
-    Template.Parameters.Add(new Parameter() { Name = "pdf_toc_items", DisplayName = "PDF: Generate TOC Items", BoolValue = true, Description = "If true, table of contents items are generated for the PDF conversion." });
-
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Model", "Container", "Container Grid Flex", "Widget", "Tab Page" };

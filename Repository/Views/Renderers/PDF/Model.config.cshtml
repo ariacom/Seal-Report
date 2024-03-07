@@ -1,0 +1,16 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "page_break", DisplayName = "Page break", BoolValue = false, Description = "If true, a page break is inserted before the model." });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "page_break_values",
+                DisplayName = "Page breaks for page values",
+                Description = "Define the Page Breaks for the page values of the model.",
+                Value = "none",
+                UseOnlyEnumValues = true,
+                Enums = new string[] { "none|No page break.", "all|Insert a page break for each new page values.", "second|Insert a page break for each new page values except for the first value." }
+    });
+}

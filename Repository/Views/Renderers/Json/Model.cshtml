@@ -1,0 +1,19 @@
+﻿@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel reportModel = view.Model;
+
+    JsonRenderer renderer = view.JsonRenderer;
+    JsonResult result = report.JsonResult;
+
+    if (reportModel.ResultTable != null)
+    {
+        var dt = reportModel.ResultTableTranslated;
+        dt.TableName = view.Name;
+        var model = new { ModelName = view.Name, DataTable = dt };
+
+        result.Document.Add(model);
+    }
+}

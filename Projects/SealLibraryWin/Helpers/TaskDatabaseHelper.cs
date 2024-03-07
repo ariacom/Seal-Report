@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using Seal.Model;
 using System;
@@ -77,6 +77,7 @@ namespace Seal.Helpers
         public bool DebugMode = false;
         public StringBuilder DebugLog = new StringBuilder();
         public int SelectTimeout = 0;
+        public int ExecuteTimeout = 0;
 
         public CustomGetTableCreateCommand MyGetTableCreateCommand = null;
 
@@ -99,7 +100,7 @@ namespace Seal.Helpers
         string _defaultInsertStartCommand = "";
         string _defaultInsertEndCommand = "";
 
-        string GetDatabaseName(string name)
+        public string GetDatabaseName(string name)
         {
             char[] chars = new char[] { '-', '\"', '\'', '[',']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
             var result = chars.Aggregate(name, (c1, c2) => c1.Replace(c2, '\n'));
@@ -164,7 +165,7 @@ namespace Seal.Helpers
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) cmd = new MySql.Data.MySqlClient.MySqlCommand(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else if (connection is OracleConnection) cmd = new OracleCommand(sql, (OracleConnection)connection);
                         else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
-                        cmd.CommandTimeout = 0;
+                        cmd.CommandTimeout = SelectTimeout;
                         cmd.CommandType = CommandType.Text;
 
                         DbDataReader dr = cmd.ExecuteReader();
@@ -237,11 +238,11 @@ namespace Seal.Helpers
         }
 
 
-        public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null, Encoding encoding = null)
+        public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null, Encoding encoding = null, bool noHeader = false)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding??DefaultEncoding);
+            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding??DefaultEncoding, noHeader);
         }
 
 

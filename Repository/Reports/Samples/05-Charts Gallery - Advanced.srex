@@ -43,6 +43,7 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <ScottPlotSerie>Bar</ScottPlotSerie>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <PlotlySerie>Bar</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -57,6 +58,7 @@
           <PivotPosition>Data</PivotPosition>
           <CalculationOption>PercentageAll</CalculationOption>
           <ChartJSSerie>Line</ChartJSSerie>
+          <ScottPlotSerie>Scatter</ScottPlotSerie>
           <Nvd3Serie>Line</Nvd3Serie>
           <PlotlySerie>Scatter</PlotlySerie>
           <YAxisType>Secondary</YAxisType>
@@ -187,6 +189,7 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Line</ChartJSSerie>
+          <ScottPlotSerie>Scatter</ScottPlotSerie>
           <Nvd3Serie>Line</Nvd3Serie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
@@ -199,6 +202,7 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <ScottPlotSerie>Bar</ScottPlotSerie>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <PlotlySerie>Bar</PlotlySerie>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
@@ -238,6 +242,7 @@
           <AggregateFunction>Min</AggregateFunction>
           <TotalAggregateFunction>Max</TotalAggregateFunction>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <ScottPlotSerie>Bar</ScottPlotSerie>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <PlotlySerie>Bar</PlotlySerie>
           <MetaColumnGUID>ab168a45-6852-44b7-8eff-378968669f14</MetaColumnGUID>
@@ -277,6 +282,7 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Line</ChartJSSerie>
+          <ScottPlotSerie>Scatter</ScottPlotSerie>
           <Nvd3Serie>Line</Nvd3Serie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -288,6 +294,7 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Line</ChartJSSerie>
+          <ScottPlotSerie>Scatter</ScottPlotSerie>
           <Nvd3Serie>Line</Nvd3Serie>
           <PlotlySerie>Scatter</PlotlySerie>
           <YAxisType>Secondary</YAxisType>
@@ -316,6 +323,7 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Scatter</ChartJSSerie>
+          <ScottPlotSerie>Scatter</ScottPlotSerie>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>6fa87b3b-048f-4680-9516-35679cba84bf</MetaColumnGUID>
@@ -342,26 +350,28 @@
       <SourceGUID>37d5a3f0-cd71-4032-99b9-a2b2834ef7bc</SourceGUID>
       <Elements>
         <ReportElement>
-          <GUID>fb958ae4-d143-4e9c-bcac-69b3c713489e</GUID>
-          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <DisplayName />
-          <Format>N0</Format>
-          <PivotPosition>Data</PivotPosition>
-          <ChartJSSerie>Pie</ChartJSSerie>
-          <Nvd3Serie>PieChart</Nvd3Serie>
-          <PlotlySerie>Pie</PlotlySerie>
-          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>7aac38b7-3446-4273-9294-8f471c96c55f</GUID>
           <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <DisplayName />
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Pie</ChartJSSerie>
+          <ScottPlotSerie>Pie</ScottPlotSerie>
           <Nvd3Serie>PieChart</Nvd3Serie>
           <PlotlySerie>Pie</PlotlySerie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fb958ae4-d143-4e9c-bcac-69b3c713489e</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Pie</ChartJSSerie>
+          <ScottPlotSerie>Pie</ScottPlotSerie>
+          <Nvd3Serie>PieChart</Nvd3Serie>
+          <PlotlySerie>Pie</PlotlySerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>
@@ -377,6 +387,7 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <ScottPlotSerie>Bar</ScottPlotSerie>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <PlotlySerie>Bar</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -388,9 +399,37 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <ScottPlotSerie>Bar</ScottPlotSerie>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <PlotlySerie>Bar</PlotlySerie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>d40f9cbe-00d1-4042-9497-84f8c4049e6a</GUID>
+      <Name>MARKERS</Name>
+      <SourceGUID>37d5a3f0-cd71-4032-99b9-a2b2834ef7bc</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>c0c6d1e2-4c46-4942-af84-501d2e8b8cbd</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>99d8c452-68b1-4143-92a6-de9db0226036</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ScottPlotSerie>Scatter</ScottPlotSerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>
@@ -445,7 +484,6 @@
                   <GUID>b26d81c1-7d75-4b72-8e6d-3bb2e630f33c</GUID>
                   <Name>Chart JS</Name>
                   <TemplateName>Chart JS</TemplateName>
-                  <CustomTemplate />
                   <Parameters>
                     <Parameter>
                       <Name>chartjs_title</Name>
@@ -495,14 +533,36 @@
                       <GUID>94f3021b-369c-455a-a8fc-38bd3974378d</GUID>
                       <Name>Chart Plotly</Name>
                       <TemplateName>Chart Plotly</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>plotly_title</Name>
+                          <Value>Chart Plotly</Value>
+                        </Parameter>
+                      </Parameters>
                       <SortOrder>3</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>5f0e81cf-7a8f-47ad-9899-df048d817705</GUID>
+                      <Name>Chart ScottPlot</Name>
+                      <TemplateName>Chart Scottplot</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartsp_width</Name>
+                          <Value>400</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_title</Name>
+                          <Value>Chart ScotPlot</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>4</SortOrder>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
-                      <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                      <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
@@ -510,7 +570,7 @@
               </Views>
               <TemplateName>Model</TemplateName>
               <ModelGUID>71316244-baf5-44cb-88fc-0e5f66b77f14</ModelGUID>
-              <SortOrder>3</SortOrder>
+              <SortOrder>5</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>36cd878b-678a-42dc-9b2b-2c4e58524587</GUID>
@@ -552,14 +612,36 @@
                       <GUID>6441618f-02f3-4efb-b560-de1969402d08</GUID>
                       <Name>Chart Plotly</Name>
                       <TemplateName>Chart Plotly</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>plotly_title</Name>
+                          <Value>Chart Plotly</Value>
+                        </Parameter>
+                      </Parameters>
                       <SortOrder>3</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>77369ef1-0dfa-476a-920c-6fc6562e1e3d</GUID>
+                      <Name>Chart Scottplot</Name>
+                      <TemplateName>Chart Scottplot</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartsp_width</Name>
+                          <Value>400</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_title</Name>
+                          <Value>Chart ScotPlot</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>4</SortOrder>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
-                      <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                      <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
@@ -567,7 +649,7 @@
               </Views>
               <TemplateName>Model</TemplateName>
               <ModelGUID>980463f9-50f4-4eac-afa8-f8a025f6d6fd</ModelGUID>
-              <SortOrder>4</SortOrder>
+              <SortOrder>6</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>10039725-d822-4117-b43e-287a412fa571</GUID>
@@ -627,18 +709,42 @@
                       <TemplateName>Chart Plotly</TemplateName>
                       <Parameters>
                         <Parameter>
+                          <Name>plotly_title</Name>
+                          <Value>Chart Plotly</Value>
+                        </Parameter>
+                        <Parameter>
                           <Name>plotly_legend_position</Name>
                           <Value>x:0,y:1</Value>
                         </Parameter>
                       </Parameters>
                       <SortOrder>3</SortOrder>
                     </ReportView>
+                    <ReportView>
+                      <GUID>3eac9acd-bddc-425e-aa20-38e7abe89432</GUID>
+                      <Name>Chart Scottplot</Name>
+                      <TemplateName>Chart Scottplot</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartsp_width</Name>
+                          <Value>400</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_title</Name>
+                          <Value>Chart ScotPlot</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_yaxis_min</Name>
+                          <Value>5%</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>4</SortOrder>
+                    </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
-                      <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                      <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
@@ -646,7 +752,7 @@
               </Views>
               <TemplateName>Model</TemplateName>
               <ModelGUID>0fee8d57-372a-447d-b991-bb9cff944b71</ModelGUID>
-              <SortOrder>5</SortOrder>
+              <SortOrder>7</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>d42c34fe-aeb6-45f1-8cc8-03af15601007</GUID>
@@ -691,18 +797,42 @@
                       <TemplateName>Chart Plotly</TemplateName>
                       <Parameters>
                         <Parameter>
+                          <Name>plotly_title</Name>
+                          <Value>Chart Plotly</Value>
+                        </Parameter>
+                        <Parameter>
                           <Name>plotly_scatter_mode</Name>
                           <Value>lines+markers</Value>
                         </Parameter>
                       </Parameters>
                       <SortOrder>3</SortOrder>
                     </ReportView>
+                    <ReportView>
+                      <GUID>e10dee15-1994-468d-8775-b3fa6656f9c4</GUID>
+                      <Name>Chart Scottplot</Name>
+                      <TemplateName>Chart Scottplot</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartsp_width</Name>
+                          <Value>400</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_title</Name>
+                          <Value>Chart ScotPlot</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_yaxis_min</Name>
+                          <Value>5%</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>4</SortOrder>
+                    </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
-                      <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                      <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
@@ -710,7 +840,7 @@
               </Views>
               <TemplateName>Model</TemplateName>
               <ModelGUID>eaf152ba-d35b-4f2c-ba12-2545c2a8d6ac</ModelGUID>
-              <SortOrder>6</SortOrder>
+              <SortOrder>8</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>e8abb30b-3b1b-46e6-99c0-9da81e59338c</GUID>
@@ -750,6 +880,10 @@
                       <TemplateName>Chart Plotly</TemplateName>
                       <Parameters>
                         <Parameter>
+                          <Name>plotly_title</Name>
+                          <Value>Chart Plotly</Value>
+                        </Parameter>
+                        <Parameter>
                           <Name>plotly_legend_position</Name>
                           <Value>x:0,y:1</Value>
                         </Parameter>
@@ -760,12 +894,52 @@
                       </Parameters>
                       <SortOrder>3</SortOrder>
                     </ReportView>
+                    <ReportView>
+                      <GUID>3a15941b-ee7a-46ca-8074-cb7e6c6d9695</GUID>
+                      <Name>Chart Scottplot</Name>
+                      <TemplateName>Chart Scottplot</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartsp_width</Name>
+                          <Value>400</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_title</Name>
+                          <Value>Chart Scottplot</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_bottom_axis_rotation</Name>
+                          <Value>0</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_marker_shape</Name>
+                          <Value>FilledCircle</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_marker_size</Name>
+                          <Value>5</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_marker_step</Name>
+                          <Value>1</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_marker_text_voffset</Name>
+                          <Value>2</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_marker_hide_series</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>4</SortOrder>
+                    </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
-                      <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                      <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
@@ -773,7 +947,7 @@
               </Views>
               <TemplateName>Model</TemplateName>
               <ModelGUID>39ae46b9-3dd6-427a-a333-6e4d6d41fc0f</ModelGUID>
-              <SortOrder>7</SortOrder>
+              <SortOrder>9</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>27efd001-477d-4a1f-865c-3c53f3717be8</GUID>
@@ -821,14 +995,40 @@
                       <GUID>5b13cea0-cfc8-4ef9-aae4-d4c6916e3829</GUID>
                       <Name>Chart Plotly</Name>
                       <TemplateName>Chart Plotly</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>plotly_title</Name>
+                          <Value>Chart Plotly</Value>
+                        </Parameter>
+                      </Parameters>
                       <SortOrder>3</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>58ae3a2a-d082-4ded-99de-5358a7f105fb</GUID>
+                      <Name>Chart Scottplot</Name>
+                      <TemplateName>Chart Scottplot</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartsp_width</Name>
+                          <Value>400</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_title</Name>
+                          <Value>Chart Scottplot</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_yaxis_min</Name>
+                          <Value>5%</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>4</SortOrder>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
-                      <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                      <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
@@ -836,7 +1036,7 @@
               </Views>
               <TemplateName>Model</TemplateName>
               <ModelGUID>d9ddf122-c6f4-4579-ac07-13f3e6fdcc60</ModelGUID>
-              <SortOrder>8</SortOrder>
+              <SortOrder>10</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>6e079b29-7484-40d5-aaaf-8f15a82cdc57</GUID>
@@ -872,14 +1072,40 @@
                       <GUID>a2319f3e-04bd-4cf2-8c5d-a955024ccdb9</GUID>
                       <Name>Chart Plotly</Name>
                       <TemplateName>Chart Plotly</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>plotly_title</Name>
+                          <Value>Chart Plotly</Value>
+                        </Parameter>
+                      </Parameters>
                       <SortOrder>3</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>cbdaea13-59f2-40d7-bbc2-b8f76b19d9a2</GUID>
+                      <Name>Chart Scottplot</Name>
+                      <TemplateName>Chart Scottplot</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartsp_width</Name>
+                          <Value>400</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_title</Name>
+                          <Value>Chart Scottplot</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartsp_yaxis_min</Name>
+                          <Value>5%</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>4</SortOrder>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
-                      <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                      <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
@@ -887,21 +1113,82 @@
               </Views>
               <TemplateName>Model</TemplateName>
               <ModelGUID>48a43195-b2c5-4ae7-983f-d9f201d766fb</ModelGUID>
-              <SortOrder>9</SortOrder>
+              <SortOrder>11</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>80ac567a-51d6-40b8-8eb5-ae9293b2f6fc</GUID>
+              <Name>MARKERS</Name>
+              <Views>
+                <ReportView>
+                  <GUID>285c3efe-e950-4d33-b0fb-fcd1e29cc04a</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartsp_width</Name>
+                      <Value>400</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartsp_title</Name>
+                      <Value>Chart Scottplot: Markers</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartsp_legend_position</Name>
+                      <Value>UpperLeft</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartsp_yaxis_min</Name>
+                      <Value>80000</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartsp_marker_shape</Name>
+                      <Value>VerticalBar</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartsp_marker_shape_auto</Name>
+                      <Value>auto_value</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartsp_marker_step</Name>
+                      <Value>1</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartsp_marker_legend</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>d40f9cbe-00d1-4042-9497-84f8c4049e6a</ModelGUID>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>afaef1b6-4cc4-4015-9604-5a97d39ba4e2</GUID>
+              <Name>MARKERS</Name>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>d40f9cbe-00d1-4042-9497-84f8c4049e6a</ModelGUID>
+              <SortOrder>4</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Container</TemplateName>
-          <CustomTemplate />
           <Parameters>
             <Parameter>
               <Name>grid_layout</Name>
-              <Value>col-sm-6;col-sm-6;</Value>
+              <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
             </Parameter>
           </Parameters>
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>print_body_width</Name>
+          <Value>1800px</Value>
+        </Parameter>
+      </Parameters>
       <SortOrder>1</SortOrder>
     </ReportView>
   </Views>

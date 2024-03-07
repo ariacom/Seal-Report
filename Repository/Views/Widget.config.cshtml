@@ -1,13 +1,7 @@
 @using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = "Widget";
     Template.Description = "Container having a Widget look: Icon, color, title and links to other views or reports.";
-
-    //If true, the view can be configured for a report model
-    Template.ForReportModel = false;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "widget_name_as_title", BoolValue = true, DisplayName = "Title: Use view name as title", Description = "If true, the view name is displayed in Widget header as a title." });

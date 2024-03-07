@@ -1,0 +1,170 @@
+﻿@using OfficeOpenXml.Drawing.Chart
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    ResultTable pageTable = page.PageTable;
+
+    ExcelRenderer renderer = view.ExcelRenderer;
+    ExcelRenderer modelViewRenderer = modelView.ExcelRenderer;
+    ExcelResult result = report.ExcelResult;
+
+    if (reportModel.HasSerie && page.Series.Count > 0 && modelView.GetBoolValue("show_charts", true))
+    {
+        if (modelView.InitPageChart(page))
+        {
+            if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(modelView.Name + " " + view.Report.Repository.TranslateReport("Charts"));
+            result.CurrentCol = 1;
+            int rowStart = result.CurrentRow;
+            int colStart = result.CurrentCol;
+            //Target sheet can be changed here
+            var sheet = result.Worksheet;
+
+            int serieIndex = 1;
+            var firstSerie = page.Series.OrderBy(i => i.Element.YAxisType).First(); //Take primary axis first
+
+            eChartType chartType = getChartType(firstSerie.Element, modelView);
+            ExcelChart chart = sheet.Drawings.AddChart(view.GetValue("chartjs_title") + "_" + Guid.NewGuid().ToString(), chartType);
+            chart.SetPosition(rowStart - 1, 0, colStart - 1, 0);
+            chart.SetSize(renderer.GetNumericValue("chart_width"), renderer.GetNumericValue("chart_height"));
+            chart.Title.Text = modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_title"));
+            rowStart = chart.To.Row + 1;
+            var currentChart = chart;
+
+            //Series Y values
+            int colIndex = 0;
+            ResultCell lastValueCell = null;
+            foreach (var serie in page.Series.OrderBy(i => i, new ResultSerieComparer()))
+            {
+                var chartType2 = getChartType(serie.Element, modelView);
+                var axis2 = (serie.Element.YAxisType == AxisType.Secondary);
+                if (chartType != chartType2 || chart.UseSecondaryAxis != axis2)
+                {
+                    //New chart type
+                    currentChart = chart.PlotArea.ChartTypes.Add(chartType2);
+                    currentChart.UseSecondaryAxis = axis2;
+                }
+
+                colIndex = 0;
+                sheet.Cells[rowStart + serieIndex, colStart + colIndex].Value = serie.SerieDisplayName;
+                colIndex++;
+                foreach (var xDimensionKey in page.PrimaryXValues.Keys)
+                {
+                    //Find the corresponding serie value...
+                    var value = serie.Values.FirstOrDefault(i => i.XDimensionValues == xDimensionKey);
+                    if (value != null)
+                    {
+                        result.SetValue(rowStart + serieIndex, colStart + colIndex, value.Yvalue, true, true);
+                        lastValueCell = value.Yvalue;
+                    }
+                    colIndex++;
+                }
+
+                var valuesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart + serieIndex, colStart + 1, rowStart + serieIndex, colStart + page.PrimaryXValues.Keys.Count);
+                var namesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart, colStart + 1, rowStart, colStart + page.PrimaryXValues.Keys.Count);
+                var chartSerie = currentChart.Series.Add(valuesRange, namesRange);
+                chartSerie.Header = serie.SerieDisplayName;
+
+                if (renderer.GetBoolValue("show_totals") && lastValueCell != null)
+                {
+                    //Add a total column
+                    result.SetValue(rowStart + serieIndex, colStart + colIndex, lastValueCell, true, true);
+                    sheet.Cells[rowStart + serieIndex, colStart + colIndex].Formula = "SUM(" + valuesRange + ")";
+                }
+
+                serieIndex++;
+            }
+
+            //Series X Values
+            colIndex = 1;
+            foreach (var xValues in page.PrimaryXValues.Keys)
+            {
+                var xVals = (ResultCell[])xValues;
+                if (xVals.Length == 1)
+                {
+                    result.SetValue(rowStart, colStart + colIndex, xVals[0], true, true);
+                }
+                else
+                { //Several values for an axis, we force the string without the format
+                    sheet.Cells[rowStart, colStart + colIndex].Value = page.PrimaryXValues[xValues];
+                }
+                colIndex++;
+            }
+
+            if (renderer.GetBoolValue("show_totals"))
+            {
+                sheet.Cells[rowStart, colStart + colIndex].Value = report.Translate("Total");
+                if (lastValueCell != null && page.Series.Count > 1)
+                {
+                    //Add total row
+                    sheet.Cells[rowStart + serieIndex, colStart].Value = report.Translate("Total");
+                    for (colIndex = 1; colIndex <= page.PrimaryXValues.Keys.Count + 1; colIndex++)
+                    {
+                        var valuesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart + 1, colStart + colIndex, rowStart + serieIndex - 1, colStart + colIndex);
+                        result.SetValue(rowStart + serieIndex, colStart + colIndex, lastValueCell, true, true);
+                        sheet.Cells[rowStart + serieIndex, colStart + colIndex].Formula = "SUM(" + valuesRange + ")";
+                    }
+                }
+            }
+            result.CurrentRow = rowStart;
+            result.CurrentCol = colStart;
+            result.CurrentRow += serieIndex + 2;
+        }
+    }
+}
+
+@functions {
+    eChartType getChartType(ReportElement element, ReportView modelView)
+    {
+        //Create chart type and configuration from existing definitions for Excel chart
+        var view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartJSName);
+        var def = element.ChartJSSerie;
+        var horizontal = view.GetBoolValue("chartjs_bar_horizontal");
+        var stacked = view.GetBoolValue("chartjs_bar_stacked");
+
+        if (def == ChartJSSerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
+        if (def == ChartJSSerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
+        if (def == ChartJSSerieDefinition.Line) return eChartType.Line;
+        if (def == ChartJSSerieDefinition.Scatter) return eChartType.XYScatter;
+        if (def == ChartJSSerieDefinition.Pie) return eChartType.Pie;
+        if (def == ChartJSSerieDefinition.PolarArea) return eChartType.Pie;
+        if (def == ChartJSSerieDefinition.Radar) return eChartType.Radar;
+
+        view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartScottplotName);
+        var def2 = element.ScottPlotSerie;
+        horizontal = view.GetBoolValue("chartsp_bar_horizontal");
+        stacked = view.GetBoolValue("chartsp_bar_stacked");
+        if (def2 == ScottPlotSerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
+        if (def2 == ScottPlotSerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
+        if (def2 == ScottPlotSerieDefinition.Scatter) return eChartType.XYScatter;
+        if (def2 == ScottPlotSerieDefinition.Pie) return eChartType.Pie;
+
+        view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartNVD3Name);
+        var def3 = element.Nvd3Serie;
+        stacked = view.GetBoolValue("nvd3_bar_stacked");
+        if (def3 == NVD3SerieDefinition.ScatterChart) return eChartType.XYScatter;
+        if (def3 == NVD3SerieDefinition.PieChart) return eChartType.Pie;
+        if (def3 == NVD3SerieDefinition.Line) return eChartType.Line;
+        if (def3 == NVD3SerieDefinition.MultiBarChart) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
+        if (def3 == NVD3SerieDefinition.StackedAreaChart) return eChartType.AreaStacked;
+        if (def3 == NVD3SerieDefinition.MultiBarHorizontalChart) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
+        if (def3 == NVD3SerieDefinition.LineWithFocusChart) return eChartType.Line;
+        if (def3 == NVD3SerieDefinition.CumulativeLineChart) return eChartType.LineStacked;
+        if (def3 == NVD3SerieDefinition.DiscreteBarChart) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
+
+        view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartPlotlyName);
+        var def4 = element.PlotlySerie;
+        horizontal = view.GetValue("plotly_bar_orientation") == "h";
+        stacked = view.GetBoolValue("plotly_bar_stacked");
+        if (def4 == PlotlySerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
+        if (def4 == PlotlySerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
+        if (def4 == PlotlySerieDefinition.Scatter) return eChartType.XYScatter;
+        if (def4 == PlotlySerieDefinition.Pie) return eChartType.Pie;
+
+        return eChartType.XYScatter;
+    }
+}

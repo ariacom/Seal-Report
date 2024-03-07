@@ -1,0 +1,31 @@
+﻿@using OfficeOpenXml
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "show_information", DisplayName = "Show report information", BoolValue = true, Description = "If true, report information is displayed in a dedicated sheet." });
+    Template.Parameters.Add(new Parameter() { Name = "show_messages", DisplayName = "Show messages", BoolValue = false, Description = "If true, report execution messages are displayed in a dedicated sheet." });
+    Template.Parameters.Add(new Parameter() { Name = "auto_fit_columns", DisplayName = "Auto Fit columns", BoolValue = true, Description = "If true, columns widths are ajusted with the cell content." });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "printer_paper_size",
+                DisplayName = "Printer paper size",
+                Description = "Define the size of the paper when pprinting the document.",
+                Value = "A4",
+                UseOnlyEnumValues = true,
+                Enums = new string[] { },
+                EnumType = typeof(ePaperSize)
+            });
+    Template.Parameters.Add(new Parameter()
+            {
+                Name = "printer_orientation",
+                DisplayName = "Printer orientation",
+                Description = "Define the printer orientation.",
+                Value = "Portrait",
+                UseOnlyEnumValues = true,
+                Enums = new string[] { },
+                EnumType = typeof(eOrientation)
+            });
+    Template.Parameters.Add(new Parameter() { Name = "printer_fit_page", DisplayName = "Printer fit to page", BoolValue = true, Description = "If true, the pages are adapted to the paper size when printing." });
+}

@@ -1,0 +1,7 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "new_sheet", DisplayName = "New sheet for the widget", BoolValue = true, Description = "If true, a new Sheet is created for the widget." });
+}

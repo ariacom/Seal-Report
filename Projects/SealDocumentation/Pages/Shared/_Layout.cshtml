@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Seal Report | @ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="css/stroke.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="scripts/syntax-highlighter/styles/shCore.css" media="all">
+    <link rel="stylesheet" type="text/css" href="scripts/syntax-highlighter/styles/shThemeRDark.css" media="all">
+    <!-- CUSTOM -->
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+
+
+    <meta name="viewport" content="width=device-width" />
+
+    <style>
+        body {
+            position: relative;
+        }
+
+        ul.nav-pills {
+            top: 65px;
+            position: fixed;
+        }
+
+        div.col-sm-9 div {
+            height: 250px;
+            padding-top: 50px;
+        }
+
+
+        .back-to-top {
+            cursor: pointer;
+            position: fixed;
+            bottom: 0;
+            right: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav id="bar_top" class='navbar navbar-default navbar-fixed-top navbar-inverse'>
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a id="nav_button" href="~/" class="navbar-brand">Seal Report</a>
+            </div>
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="default_nav"><a href="~/">Getting Started</a></li>
+                    <li id="sources_nav"><a href="~/Sources">Data Sources</a></li>
+                    <li id="reports_nav"><a href="~/Reports">Reports</a></li>
+                    <li id="server_nav"><a href="~/Server">Server</a></li>
+                    <li id="tutorials_nav"><a href="~/Tutorials">Tutorials</a></li>
+                    <li id="recipes_nav"><a href="~/Recipes">Recipes</a></li>
+                    <li><a href="~/Help/Index.html" target="_blank">Seal Library</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Web Resources<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="https://sealreport.org/demo" target="_blank">Live Demo</a></li>
+                            <li><a href="https://sealreport.org/forum" target="_blank">Seal Report Forum</a></li>
+                            <li><a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub Repository</a></li>
+                            <li><a href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">Seal Web Interface</a></li>
+                            <li><a href="https://sealreport.com" target="_blank">Seal Report License</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="body">
+        <section class="content-wrapper main-content clear-fix">
+            @RenderBody()
+            <section id="feed" class="section">
+                <div class="container" style="padding-bottom: 200px;">
+                    <div class="row">
+                        <div class="col-md-3 left-align">
+                        </div>
+                        <div class="col-md-9 left-align">
+                            <h2 class="dark-text">Contribute to Seal Report<hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-3 left-align">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="bs-callout bs-callout-danger">
+                                <h4>Enhance the documentation and samples</h4>
+                                Want to share your experience or to add a new topic ? Something is not clear in the documentation ? Do you have an interesting recipe ? <br />
+                                As the site for the documentation is part of the solution, <strong>you are welcome to Pull a Request at <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a>.</strong>
+                            </div>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Add translation files</h4>
+                                Do you have a translation file not yet supported by Seal Report ?<br />
+                                <ck>Check first the recipe <a href="Recipes.cshtml#lineTranslations">Adding translation files</a></ck>.<br />
+                                As the translations are part of the project, <strong>feel free to Pull a Request at <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a>.</strong>
+                            </div>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4 style="font-style:normal;font-size:21px;font-weight:normal">Sponsor the project</h4>
+                                If you are using <b>Seal Report</b> in a business application, please consider to sponsor the product to ensure its maintenance, quality and independence.<br />
+                                Please check <a href="~/Index#lineSupport">Support and Sponsor</a>.
+                            </div>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>And more...</h4>
+                                You are also welcome to help us in several different areas:
+                                <ul style="padding:0px 20px;">
+                                    <li>Beta testing.</li>
+                                    <li>Libraries of Data Sources and Reports on standard databases.</li>
+                                    <li>Additional View templates.</li>
+                                    <li>New features development.</li>
+                                </ul>
+                                Please feel free to contact us at <a href="https://ariacom.com/Contact" target="_blank">Ariacom </a>or use <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a> if you are interested in contributing to Seal Report.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </div>
+            </section>
+        </section>
+    </div>
+    <footer>
+        <div class="content-wrapper">
+            <div class="float-left">
+            </div>
+        </div>
+    </footer>
+
+    <!--back to top-->
+    <a id="back-to-top" href="#" class="btn btn-warning btn-lg back-to-top" role="button" title="Back to top" data-toggle="tooltip" data-placement="top">
+        <span>&#916;</span>
+    </a>
+
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/retina.js"></script>
+    <script src="scripts/jquery.fitvids.js"></script>
+    <script src="scripts/wow.js"></script>
+    <!-- CUSTOM PLUGINS -->
+    <script src="scripts/custom.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/syntax-highlighter/scripts/shCore.js"></script>
+    <script src="scripts/syntax-highlighter/scripts/shBrushXml.js"></script>
+    <script src="scripts/syntax-highlighter/scripts/shBrushCss.js"></script>
+    <script src="scripts/syntax-highlighter/scripts/shBrushJScript.js"></script>
+    <script src="scripts/syntax-highlighter/scripts/shBrushCSharp.js"></script>
+    <script src="scripts/syntax-highlighter/scripts/shBrushSql.js"></script>
+    <script src="scripts/syntax-highlighter/scripts/shBrushBash.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        //back to top
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
+            else $('#back-to-top').fadeOut();
+        });
+
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+
+        //hack to remove container class on the syntax highlight
+        $(document).ready(function () {
+            setTimeout(function () {
+                $(".syntaxhighlighter table td.code .container").removeClass("container");
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

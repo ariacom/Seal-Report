@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -241,10 +241,10 @@ namespace Seal.Model
         public string SqlDisplay { get; set; }
 
         /// <summary>
-        /// Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution.
+        /// Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution. It can contain either the '{EnumFilter}' and/or '{EnumValues_&lt;Name>}' keywords where &lt;Name> is the name of another prompted enumerated list.
         /// </summary>
 #if WINDOWS
-        [Category("Dynamic display"), DisplayName("Script for prompted restriction"), Description("Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution."), Id(4, 2)]
+        [Category("Dynamic display"), DisplayName("Script for prompted restriction"), Description("Optional Script used to build the values displayed in a prompted restriction. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. The Script is used only if the list is dynamic, refreshed before report execution."), Id(4, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ScriptDisplay { get; set; }
@@ -359,7 +359,7 @@ namespace Seal.Model
         /// <summary>
         /// Returns the list of the enum values to display after applying filter and depencies
         /// </summary>
-        public List<MetaEV> GetSubSetValues(string filter, Dictionary<MetaEnum, string> dependencies)
+        public List<MetaEV> GetSubSetValues(string filter, Dictionary<MetaEnum, List<string>> dependencies)
         {
             var result = new List<MetaEV>();
             if (!string.IsNullOrEmpty(SqlDisplay))
@@ -373,7 +373,8 @@ namespace Seal.Model
                     {
                         foreach (var d in dependencies.Keys)
                         {
-                            finalSQL = finalSQL.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                            //First of list for SQL dependencies
+                            finalSQL = finalSQL.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d][0]);
                         }
                     }
                     finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
@@ -393,11 +394,20 @@ namespace Seal.Model
                 {
                     foreach (var d in dependencies.Keys)
                     {
-                        finalScript = finalScript.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                        //Second of list for Script dependencies
+                        finalScript = finalScript.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d][1]);
                     }
                 }
                 finalScript = Helper.ClearAllLINQKeywords(finalScript);
-                RazorHelper.CompileExecute(finalScript, this);
+                try
+                {
+                    RazorHelper.CompileExecute(finalScript, this);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("GetSubSetValues", ex);
+                    throw;
+                }
                 result = NewValues.ToList();
             }
 

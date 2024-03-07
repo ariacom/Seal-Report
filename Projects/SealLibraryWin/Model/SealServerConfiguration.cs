@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -89,6 +89,7 @@ namespace Seal.Model
                 GetProperty("WebCssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("AlternateTempDirectory").SetIsBrowsable(!ForPublication);
+                GetProperty("ReportFormats").SetIsBrowsable(!ForPublication);
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
                 GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
@@ -100,15 +101,6 @@ namespace Seal.Model
                 GetProperty("PdfServicePassword").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfWebServiceURL").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfUseWebService").SetIsBrowsable(!ForPublication);
-                GetProperty("ExcelConverter").SetIsBrowsable(!ForPublication);
-                GetProperty("PdfConverter").SetIsBrowsable(!ForPublication);
-                GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(!ForPublication);
-                GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(!ForPublication);
-                if (!ForPublication)
-                {
-                    ExcelConverter.InitEditor();
-                    PdfConverter.InitEditor();
-                }
 
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
@@ -134,9 +126,9 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images' and in the \\Images sub-folder of the Web publication directory. If empty, the Web Product Name is used as prefix."), Id(1, 1)]
-        [DefaultValue("logo.png")]
+        [DefaultValue("logo.svg")]
 #endif
-        public string LogoName { get; set; } = "logo.png";
+        public string LogoName { get; set; } = "logo.svg";
 
         /// <summary>
         /// True if a logo is defined and exists
@@ -147,7 +139,19 @@ namespace Seal.Model
             get
             {
                 if (string.IsNullOrEmpty(LogoName)) return false;
-                return File.Exists(Path.Combine(Repository.ViewImagesFolder, LogoName));
+                return File.Exists(LogoFilePath);
+            }
+        }
+
+        /// <summary>
+        /// Logo file path from the repository
+        /// </summary>
+        [XmlIgnore]
+        public string LogoFilePath
+        {
+            get
+            {
+                return Path.Combine(Repository.ViewImagesFolder, LogoName);
             }
         }
 
@@ -181,7 +185,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Server Settings"), DisplayName("Web Cultures"), Description("List of cultures available in the user profile of the Web Report Server. If nothing is selected, the translation cultures installed in the repository are proposed by default."), Id(8, 1)]
-        [Editor(typeof(CultureCollectionEditor), typeof(UITypeEditor))]
+        [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         public List<string> WebCultures { get; set; } = new List<string>();
         public bool ShouldSerializeWebCultures() { return WebCultures.Count > 0; }
@@ -257,6 +261,18 @@ namespace Seal.Model
         [Category("Server Settings"), DisplayName("Alternate Temp Directory"), Description("If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder (e.g. '%SEALREPOSITORY%\\Temp')."), Id(20, 1)]
 #endif
         public string AlternateTempDirectory { get; set; } = null;
+
+
+        /// <summary>
+        /// List of report format allowed in view result. If empty, all formats are taken.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Result Report Formats"), Description("List of report format allowed in view result. If empty, all formats are taken."), Id(21, 1)]
+        [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
+#endif
+        public List<string> ReportFormats { get; set; } = new List<string>();
+        public bool ShouldSerializeReportFormats() { return ReportFormats.Count > 0; }
+
 
         SchedulerMode _schedulerMode = SchedulerMode.Windows;
         /// <summary>
@@ -524,107 +540,6 @@ namespace Seal.Model
         public string PdfWebServiceURL { get; set; } = "";
 
         /// <summary>
-        /// Current default configuration values for Pdf converter
-        /// </summary>
-        public List<string> PdfConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializePdfConfigurations() { return PdfConfigurations.Count > 0; }
-
-        private SealPdfConverter _pdfConverter = null;
-        /// <summary>
-        /// Editor Helper: All the default options applied to the PDF conversion from the HTML result.
-        /// </summary>
-#if WINDOWS
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter Configuration"), Id(2, 5)]
-#endif
-        [XmlIgnore]
-        public SealPdfConverter PdfConverter
-        {
-            get
-            {
-                if (_pdfConverter == null)
-                {
-                    _pdfConverter = SealPdfConverter.Create();
-                    _pdfConverter.SetConfigurations(PdfConfigurations, new ReportView());
-                    UpdateEditorAttributes();
-                }
-                return _pdfConverter;
-            }
-            set { _pdfConverter = value; }
-        }
-
-        /// <summary>
-        /// True if the Pdf configurations were edited
-        /// </summary>
-        public bool PdfConverterEdited
-        {
-            get { return _pdfConverter != null; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset PDF configuration values to their default values
-        /// </summary>
-#if WINDOWS
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(3, 5)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-#endif
-        public string HelperResetPDFConfigurations
-        {
-            get { return "<Click to reset the PDF configuration values to their default values>"; }
-        }
-
-        /// <summary>
-        /// Current default configuration values for Excel converter
-        /// </summary>
-        public List<string> ExcelConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializeExcelConfigurations() { return ExcelConfigurations.Count > 0; }
-
-        private SealExcelConverter _excelConverter = null;
-        /// <summary>
-        /// Editor Helper: All the default options applied to the Excel conversion from the view
-        /// </summary>
-#if WINDOWS
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter Configuration"), Id(9, 5)]
-#endif
-        [XmlIgnore]
-        public SealExcelConverter ExcelConverter
-        {
-            get
-            {
-                if (_excelConverter == null)
-                {
-                    _excelConverter = SealExcelConverter.Create();
-                    _excelConverter.SetConfigurations(ExcelConfigurations, null);
-                    UpdateEditorAttributes();
-                }
-                return _excelConverter;
-            }
-            set { _excelConverter = value; }
-        }
-
-        /// <summary>
-        /// True if the Excel configurations were edited
-        /// </summary>
-        public bool ExcelConverterEdited
-        {
-            get { return _excelConverter != null; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset Excel configuration values to their default values
-        /// </summary>
-#if WINDOWS
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(10, 5)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-#endif
-        public string HelperResetExcelConfigurations
-        {
-            get { return "<Click to reset the Excel configuration values to their default values>"; }
-        }
-
-
-        /// <summary>
         /// All common scripts
         /// </summary>
         [XmlIgnore]
@@ -830,15 +745,6 @@ namespace Seal.Model
                 xmlOverrides.Add(typeof(RootComponent), "Name", attrs);
                 xmlOverrides.Add(typeof(RootComponent), "GUID", attrs);
 
-                //Pdf & Excel
-                if (PdfConverterEdited)
-                {
-                    PdfConfigurations = PdfConverter.GetConfigurations();
-                }
-                if (ExcelConverterEdited)
-                {
-                    ExcelConfigurations = ExcelConverter.GetConfigurations();
-                }
 #if !DEBUG
             //Set installation path, used by, to define schedules
             var exePath = Assembly.GetExecutingAssembly().Location;
@@ -983,6 +889,17 @@ namespace Seal.Model
             if (key != null) result = key.Value;           
             return result;
         }
+
+        /// <summary>
+        /// Retruns the build date of the assembly
+        /// </summary>
+        public static DateTime GetBuildDate()
+        {
+            var assembly = Assembly.GetAssembly(typeof(SealServerConfiguration));
+            var attribute = assembly.GetCustomAttribute<BuildDateAttribute>();
+            return attribute?.DateTime ?? default(DateTime);
+        }
+
 
         /// <summary>
         /// Key name and values used by the application and stored at server level

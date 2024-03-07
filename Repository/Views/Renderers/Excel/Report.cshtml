@@ -1,0 +1,115 @@
+﻿@using DocumentFormat.OpenXml
+@using OfficeOpenXml
+@using System.IO
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    ExcelRenderer renderer = view.ExcelRenderer;
+    ExcelResult result = new ExcelResult(report);
+
+    //Init Excel Result
+    using (result.Package = new ExcelPackage())
+    {
+        result.Workbook = result.Package.Workbook;
+        result.Worksheet = result.Workbook.Worksheets.Add(report.ExecutionName);
+
+        //Define default styles for value, title and total
+        var style = result.Workbook.Styles.CreateNamedStyle(ExcelResult.CellValueStyle);
+        style = result.Workbook.Styles.CreateNamedStyle(ExcelResult.CellTitleStyle);
+        style.Style.Font.Bold = true;
+        style = result.Workbook.Styles.CreateNamedStyle(ExcelResult.CellValueTotalStyle);
+        style.Style.Font.Bold = true;
+        style.Style.Font.Italic = true;
+        //style.Style.Font.UnderLine = true;
+        //style.Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+
+        view.ParseChildren();
+
+        result.CleanWorkbook();
+
+        //Final options
+        foreach (ExcelWorksheet sheet in result.Workbook.Worksheets.Where(i => i.Dimension != null))
+        {
+            //Auto fit
+            if (renderer.GetBoolValue("auto_fit_columns")) sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+
+            //Printer
+            sheet.PrinterSettings.PaperSize = (ePaperSize)Enum.Parse(typeof(ePaperSize), renderer.GetValue("printer_paper_size"));
+            sheet.PrinterSettings.Orientation = (eOrientation)Enum.Parse(typeof(eOrientation), renderer.GetValue("printer_orientation"));
+            sheet.PrinterSettings.FitToPage = renderer.GetBoolValue("printer_fit_page");
+        }
+
+        //Report information
+        if (renderer.GetBoolValue("show_information"))
+        {
+            result.AddWorksheet(report.Translate("Information"));
+            showInformation(renderer);
+        }
+
+        //Messages
+        if (renderer.GetBoolValue("show_messages"))
+        {
+            result.AddWorksheet(report.Translate("Messages"));
+            showMessages(result);
+        }
+
+        result.Package.SaveAs(new FileInfo(report.ResultFilePath));
+    }
+}
+
+@functions {
+    void showInformation(ExcelRenderer renderer)
+    {
+        ExcelResult result = renderer.Result;
+        Report report = result.Report;
+        var sheet = result.Worksheet;
+        int rowStart = 1, colStart = 1;
+        sheet.Cells[rowStart, 1].Value = report.DisplayNameEx;
+        sheet.Cells[rowStart, 1, rowStart, 1].StyleName = ExcelResult.CellTitleStyle;
+        rowStart += 2;
+
+        sheet.Cells[rowStart, 1].Value = report.Translate("Execution date");
+        sheet.Cells[rowStart, 2].Value = report.ExecutionStartDate;
+        sheet.Cells[rowStart, 2].Style.Numberformat.Format = report.CultureInfo.DateTimeFormat.ShortDatePattern + " " + report.CultureInfo.DateTimeFormat.LongTimePattern;
+        rowStart++;
+        sheet.Cells[rowStart, 1].Value = report.Translate("Execution duration");
+        sheet.Cells[rowStart, 2].Value = Math.Floor(report.ExecutionModelDuration.TotalSeconds);
+        sheet.Cells[rowStart - 1, 1, rowStart, 1].StyleName = ExcelResult.CellTitleStyle;
+
+        rowStart += 2;
+        sheet.Cells[rowStart, colStart++].Value = report.Translate("Model");
+        sheet.Cells[rowStart, colStart++].Value = report.Translate("Records");
+        sheet.Cells[rowStart, colStart++].Value = report.Translate("Pages");
+        sheet.Cells[rowStart, colStart++].Value = report.Translate("Duration (seconds)");
+        sheet.Cells[rowStart, colStart++].Value = report.Translate("Restrictions");
+        sheet.Cells[rowStart, colStart - 5, rowStart, colStart].StyleName = ExcelResult.CellTitleStyle;
+        rowStart++;
+        foreach (var item in report.Models.Where(i => i.ResultTable != null && i.Pages != null))
+        {
+            colStart = result.CurrentCol;
+            sheet.Cells[rowStart, colStart++].Value = item.Name + "(" + item.Connection.Name + ")";
+            sheet.Cells[rowStart, colStart++].Value = item.ResultTable.Rows.Count;
+            sheet.Cells[rowStart, colStart++].Value = item.Pages.Count;
+            sheet.Cells[rowStart, colStart++].Value = item.ExecutionDuration;
+            sheet.Cells[rowStart, colStart].Value = item.RestrictionText;
+            sheet.Cells[rowStart, colStart++].Style.WrapText = true;
+            rowStart++;
+        }
+
+        sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+        sheet.Column(5).Width = 80;
+    }
+
+    void showMessages(ExcelResult result)
+    {
+        Report report = result.Report;
+        var sheet = result.Worksheet;
+        sheet.Cells[result.CurrentRow, result.CurrentCol].Value = report.ExecutionMessages.Trim();
+        sheet.Cells[result.CurrentRow, result.CurrentCol].Style.WrapText = true;
+        sheet.Column(result.CurrentCol).Width = 80;
+    }
+}
+

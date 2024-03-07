@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,9 @@ using System.Diagnostics;
 using System.Xml;
 using RazorEngine.Templating;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Configuration;
+using Seal.Renderer;
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -123,6 +126,7 @@ namespace Seal.Model
                 return _displayNameEx;
             }
         }
+
 
         /// <summary>
         /// The view used by default to execute the report.
@@ -241,7 +245,7 @@ namespace Seal.Model
                 var message = (ex is TemplateCompilationException ? Helper.GetExceptionMessage((TemplateCompilationException)ex) : ex.Message);
                 ExecutionErrors += string.Format("Execution error when compiling the common script '{0}':\r\n{1}\r\n", name, message);
                 if (ex.InnerException != null) ExecutionErrors += "\r\n" + ex.InnerException.Message;
-                throw ex;
+                throw;
             }
             return key;
         }
@@ -407,6 +411,13 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Path of the result file in HTML after a report execution (set only for PDF conversions)
+        /// </summary>
+        [XmlIgnore]
+        public string HTMLResultFilePath;
+
+
+        /// <summary>
         /// Path of the folder when executed to an output device
         /// </summary>
         [XmlIgnore]
@@ -536,9 +547,10 @@ namespace Seal.Model
                 lock (Repository.PathLock)
                 {
                     //get unique file name in the result folder
-                    ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension, true);
+                    var extension = ResultExtension;
+                    ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + extension, true);
                     //Display path is always an HTML one...                    
-                    HTMLDisplayFilePath = (ResultExtension == "html" && !ForOutput) ? ResultFilePath : FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
+                    HTMLDisplayFilePath = (extension == "html" && !ForOutput) ? ResultFilePath : FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
                     Debug.WriteLine(string.Format("ResultFilePath:{0} HTMLDisplayFilePath:{1} for {2}", ResultFilePath, HTMLDisplayFilePath, OutputToExecute != null ? OutputToExecute.Name : ""));
                 }
 
@@ -1016,12 +1028,6 @@ namespace Seal.Model
         public ReportExecutionContext ExecutionContext = ReportExecutionContext.DesignerReport;
 
         /// <summary>
-        /// Current result format generated durin a View Result: html, print, csv, pdf, excel
-        /// </summary>
-        [XmlIgnore]
-        public string ExecutionViewResultFormat = "";
-
-        /// <summary>
         /// Current security user of the report execution
         /// </summary>
         [XmlIgnore]
@@ -1052,7 +1058,7 @@ namespace Seal.Model
         [XmlIgnore]
         public TimeSpan ExecutionFullDuration
         {
-            get { return (ExecutionEndDate - ExecutionStartDate); }
+            get { return ((ExecutionEndDate < ExecutionStartDate ? DateTime.Now : ExecutionEndDate) - ExecutionStartDate); }
         }
 
         /// <summary>
@@ -1118,7 +1124,7 @@ namespace Seal.Model
         [XmlIgnore]
         public bool HasChart
         {
-            get { return HasNVD3Chart || HasChartJSChart || HasPlotlyChart; }
+            get { return HasNVD3Chart || HasChartJSChart || HasPlotlyChart || HasScottPlotChart; }
         }
 
         /// <summary>
@@ -1149,6 +1155,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the report has ScottPlot chart
+        /// </summary>
+        [XmlIgnore]
+        public bool HasScottPlotChart
+        {
+            get { return Models.Exists(i => i.HasScottPlotSerie); }
+        }
+
+        /// <summary>
         /// Encoding of the result file
         /// </summary>
         [XmlIgnore]
@@ -1157,7 +1172,7 @@ namespace Seal.Model
             get
             {
                 //Utf8 by default, except for CSV if specified
-                return (Format == ReportFormat.csv && !ExecutionView.GetBoolValue(Parameter.CSVUtf8Parameter)) ? Encoding.Default : Encoding.UTF8;
+                return (Format == ReportFormat.csv && !ExecutionView.CSVRenderer.GetBoolValue(Parameter.CSVUtf8Parameter)) ? Encoding.Default : Encoding.UTF8;
             }
         }
 
@@ -1257,7 +1272,7 @@ namespace Seal.Model
                 if (!forEdition && result.Sources.Count > 1)
                 {
                     //Remove sources not involved in execution
-                    result.Sources.RemoveAll(i =>
+                    result.Sources.RemoveAll(i => !i.ForceLoad &&
                         !result.Models.Exists(j => j.SourceGUID == i.GUID || j.SourceGUID == i.MetaSourceGUID)
                         && !result.Models.Exists(j => j.LINQSubModels.Exists(k => k.SourceGUID == i.GUID || k.SourceGUID == i.MetaSourceGUID))
                         && !result.Tasks.Exists(j => j.SourceGUID == i.GUID));
@@ -2253,6 +2268,24 @@ namespace Seal.Model
         public ResultPage CurrentPage;
 
         /// <summary>
+        /// Current Excel objects used by the ExcelRenderer
+        /// </summary>
+        [XmlIgnore]
+        public ExcelResult ExcelResult;
+
+        /// <summary>
+        /// Current PDF objects used by the PDFRenderer
+        /// </summary>
+        [XmlIgnore]
+        public PDFResult PDFResult;
+
+        /// <summary>
+        /// Current Json objects used by the JsonRenderer
+        /// </summary>
+        [XmlIgnore]
+        public JsonResult JsonResult;
+
+        /// <summary>
         /// Translate a reference text from the Report context
         /// </summary>
         public string Translate(string reference)
@@ -2346,14 +2379,14 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the report result has an external viewer (for PDF, CSV or Excel)
+        /// True if the report result has an external viewer (different from HTML)
         /// </summary>
         [XmlIgnore]
         public bool HasExternalViewer
         {
             get
             {
-                return Format == ReportFormat.pdf || Format == ReportFormat.excel || Format == ReportFormat.csv || Format == ReportFormat.custom;
+                return Format != ReportFormat.html && Format != ReportFormat.print;
             }
         }
 
@@ -2370,12 +2403,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if a PDF conversion will be done after the HTML generation
-        /// </summary>
-        [XmlIgnore]
-        public bool PdfConversion = false;
-
-        /// <summary>
         /// Report format
         /// </summary>
         [XmlIgnore]
@@ -2386,6 +2413,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Current renderer (if any) used for the execution
+        /// </summary>
+        public RootRenderer Renderer 
+        {
+            get { return ExecutionView.Renderer; }
+        }
+
+
+        /// <summary>
         /// File extension of the result file
         /// </summary>
         [XmlIgnore]
@@ -2393,11 +2429,8 @@ namespace Seal.Model
         {
             get
             {
-                var format = Format;
-                if (format == ReportFormat.csv) return "csv";
-                if (format == ReportFormat.excel) return "xlsx";
-                if (format == ReportFormat.pdf) return "html"; //converter to pdf 
-                return "html";
+
+                return (Renderer?.GetFileExtension())??"html";
             }
         }
 
@@ -2405,10 +2438,12 @@ namespace Seal.Model
         /// True if the print layout should be used for the HTML generation 
         /// </summary>
         [XmlIgnore]
-        //Indicates if we use the print layout
         public bool PrintLayout
         {
-            get { return Format == ReportFormat.print || Format == ReportFormat.pdf; }
+            get {
+                if ((Status == ReportStatus.RenderingDisplay || Status == ReportStatus.NotExecuted)  && ForOutput) return false;
+                return (Format == ReportFormat.print || Format == ReportFormat.pdf); 
+            }
         }
 
         /// <summary>

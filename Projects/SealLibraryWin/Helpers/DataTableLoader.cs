@@ -25,10 +25,10 @@ namespace Seal.Helpers
         /// <summary>
         /// Returns a DataTable from a CSV file
         /// </summary>
-        static public DataTable FromCSV(string csvPath, char? separator = null, Encoding encoding = null)
+        static public DataTable FromCSV(string csvPath, char? separator = null, Encoding encoding = null, bool noHeader = false)
         {
             if (encoding == null) encoding = Encoding.Default;
-            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding);
+            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding, noHeader);
         }
 
         /// <summary>

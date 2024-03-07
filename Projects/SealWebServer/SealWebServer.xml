@@ -64,34 +64,14 @@
             Update the value of a view parameter of a report execution
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.HomeController.HtmlResult(System.String)">
+        <member name="M:SealWebServer.Controllers.HomeController.ViewResult(System.String,System.String)">
             <summary>
-            Return the Html result of a report execution
+            Return the result of a report execution for a given format
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.HtmlResultFile(System.String)">
             <summary>
             Return the Html result of a report execution as a file
-            </summary>
-        </member>
-        <member name="M:SealWebServer.Controllers.HomeController.PrintResult(System.String)">
-            <summary>
-            Return the Print HTML result of a report execution
-            </summary>
-        </member>
-        <member name="M:SealWebServer.Controllers.HomeController.PDFResult(System.String)">
-            <summary>
-            Return the PDF result of a report execution
-            </summary>
-        </member>
-        <member name="M:SealWebServer.Controllers.HomeController.ExcelResult(System.String)">
-            <summary>
-            Return the Excel result of a report execution
-            </summary>
-        </member>
-        <member name="M:SealWebServer.Controllers.HomeController.CSVResult(System.String)">
-            <summary>
-            Return the CSV result of a report execution
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.ActionGetTableData(System.String,System.String,System.String,System.String)">

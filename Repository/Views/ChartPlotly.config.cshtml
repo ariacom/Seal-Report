@@ -1,13 +1,9 @@
 ﻿@using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-
-    //Template Name
-    Template.Name = ReportViewTemplate.ChartPlotlyName;
     Template.Description = "Render the Plotly series of the page result.";
 
-    //If true, the view can be configured for a report model
-    Template.ForReportModel = false;
+    //If true, the view is a child of a report model view
     Template.IsModelViewChild = true;
 
     //Parameters for this template

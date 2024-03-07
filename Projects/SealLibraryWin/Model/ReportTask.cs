@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Linq;
@@ -280,12 +280,21 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Returns a paramter ineteger value
+        /// Returns a parameter integer value
         /// </summary>
         public int GetNumericValue(string name)
         {
             Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
             return parameter == null ? 0 : parameter.NumericValue;
+        }
+
+        /// <summary>
+        /// Returns a parameter double value
+        /// </summary>
+        public double GetDoubleValue(string name)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? 0 : parameter.DoubleValue;
         }
 
         /// <summary>

@@ -1830,39 +1830,6 @@ AND [8bd6372e-e593-4a7f-bc07-8f363a24992a]</Restriction>
                         </Parameter>
                       </Parameters>
                       <SortOrder>1</SortOrder>
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;true&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>be6792ac-8a2c-4db7-ab5e-7cdd1f3cd920</GUID>
@@ -2008,39 +1975,6 @@ col-sm-12</Value>
                         </Parameter>
                       </Parameters>
                       <SortOrder>1</SortOrder>
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>d19e1403-04c3-459c-997d-befbd3a29ddd</GUID>
@@ -2160,7 +2094,6 @@ col-sm-12</Value>
                               <GUID>ee57fd9f-04e5-49eb-8ab1-c6dc7fbb208d</GUID>
                               <Name>Chart JS</Name>
                               <TemplateName>Chart JS</TemplateName>
-                              <CustomTemplate />
                               <Parameters>
                                 <Parameter>
                                   <Name>chartjs_contheight</Name>
@@ -2199,39 +2132,6 @@ col-sm-12</Value>
                             </Parameter>
                           </Parameters>
                           <SortOrder>1</SortOrder>
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;false&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Widget</TemplateName>
@@ -2293,39 +2193,6 @@ col-sm-12</Value>
                             </Parameter>
                           </Parameters>
                           <SortOrder>1</SortOrder>
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;true&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Widget</TemplateName>
@@ -2379,39 +2246,6 @@ col-sm-12</Value>
                             </Parameter>
                           </Parameters>
                           <SortOrder>1</SortOrder>
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;false&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Widget</TemplateName>
@@ -2776,39 +2610,6 @@ glyphicon glyphicon-ok</Value>
                             </Parameter>
                           </Parameters>
                           <SortOrder>1</SortOrder>
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;true&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Widget</TemplateName>
@@ -2840,11 +2641,10 @@ glyphicon glyphicon-ok</Value>
                               <GUID>1df459fb-c4f9-48a6-b8b0-f3dfe141f1b5</GUID>
                               <Name>KPI</Name>
                               <TemplateName>KPI</TemplateName>
-                              <CustomTemplate />
                               <Parameters>
                                 <Parameter>
                                   <Name>kpi_css</Name>
-                                  <Value>width:450px;</Value>
+                                  <Value>width:450px;padding-bottom:5px;</Value>
                                 </Parameter>
                                 <Parameter>
                                   <Name>kpi_trend_color</Name>
@@ -2920,39 +2720,6 @@ glyphicon glyphicon-ok</Value>
                             </Parameter>
                           </Parameters>
                           <SortOrder>1</SortOrder>
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;false&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Widget</TemplateName>
@@ -3034,39 +2801,6 @@ glyphicon glyphicon-ok</Value>
                             </Parameter>
                           </Parameters>
                           <SortOrder>1</SortOrder>
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Widget</TemplateName>
@@ -3107,7 +2841,6 @@ col-sm-8;</Value>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <CustomTemplate />
               <SortOrder>1</SortOrder>
             </ReportView>
             <ReportView>
@@ -3122,7 +2855,6 @@ col-sm-8;</Value>
                       <GUID>a813f31c-ee49-481e-aeca-8dc85bd0a9cf</GUID>
                       <Name>Data Table</Name>
                       <TemplateName>Data Table</TemplateName>
-                      <CustomTemplate />
                       <SortOrder>3</SortOrder>
                     </ReportView>
                     <ReportView>
@@ -3149,39 +2881,6 @@ col-sm-8;</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;false&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -3195,7 +2894,6 @@ col-sm-8;</Value>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>
-          <CustomTemplate />
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
@@ -3212,183 +2910,22 @@ col-sm-8;</Value>
         </Parameter>
       </Parameters>
       <SortOrder>0</SortOrder>
-      <PdfConfigurations>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;HtmlToPdfConverter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;HtmlViewerWidth&gt;1024&lt;/HtmlViewerWidth&gt;
-  &lt;HtmlViewerHeight&gt;0&lt;/HtmlViewerHeight&gt;
-  &lt;HtmlViewerZoom&gt;100&lt;/HtmlViewerZoom&gt;
-  &lt;ClipHtmlView&gt;false&lt;/ClipHtmlView&gt;
-  &lt;LicenseKey /&gt;
-  &lt;JavaScriptEnabled&gt;true&lt;/JavaScriptEnabled&gt;
-  &lt;Enable3DTransformations&gt;false&lt;/Enable3DTransformations&gt;
-  &lt;EnableWebGL&gt;false&lt;/EnableWebGL&gt;
-  &lt;EnableAccelerated2DCanvas&gt;false&lt;/EnableAccelerated2DCanvas&gt;
-  &lt;EnablePersistentStorage&gt;false&lt;/EnablePersistentStorage&gt;
-  &lt;LocalFilesAccessEnabled&gt;true&lt;/LocalFilesAccessEnabled&gt;
-  &lt;SvgFontsEnabled&gt;false&lt;/SvgFontsEnabled&gt;
-  &lt;WebFontsEnabled&gt;true&lt;/WebFontsEnabled&gt;
-  &lt;EnableHttp2&gt;false&lt;/EnableHttp2&gt;
-  &lt;PostScriptFontsEnabled&gt;true&lt;/PostScriptFontsEnabled&gt;
-  &lt;ExtensionsEnabled&gt;false&lt;/ExtensionsEnabled&gt;
-  &lt;DownloadAllResources&gt;false&lt;/DownloadAllResources&gt;
-  &lt;PrerenderEnabled&gt;false&lt;/PrerenderEnabled&gt;
-  &lt;InterruptSlowJavaScript&gt;false&lt;/InterruptSlowJavaScript&gt;
-  &lt;MaxHtmlViewerHeight&gt;0&lt;/MaxHtmlViewerHeight&gt;
-  &lt;MinHtmlViewerHeight&gt;0&lt;/MinHtmlViewerHeight&gt;
-  &lt;InitialHtmlViewerHeight&gt;0&lt;/InitialHtmlViewerHeight&gt;
-  &lt;DefaultHtmlEncoding /&gt;
-  &lt;ImagePartSize&gt;32000&lt;/ImagePartSize&gt;
-  &lt;TriggeringMode&gt;ConversionDelay&lt;/TriggeringMode&gt;
-  &lt;ConversionDelay&gt;5&lt;/ConversionDelay&gt;
-  &lt;ManualTriggeringConversionDelay&gt;2&lt;/ManualTriggeringConversionDelay&gt;
-  &lt;NavigationTimeout&gt;60&lt;/NavigationTimeout&gt;
-  &lt;PersistentHttpRequestHeaders&gt;true&lt;/PersistentHttpRequestHeaders&gt;
-  &lt;XPSupplementalLanguages&gt;false&lt;/XPSupplementalLanguages&gt;
-&lt;/HtmlToPdfConverter&gt;</string>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PdfDocumentOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;AutoCloseExternalDocs&gt;true&lt;/AutoCloseExternalDocs&gt;
-  &lt;LeftMargin&gt;10&lt;/LeftMargin&gt;
-  &lt;RightMargin&gt;10&lt;/RightMargin&gt;
-  &lt;TopMargin&gt;10&lt;/TopMargin&gt;
-  &lt;BottomMargin&gt;10&lt;/BottomMargin&gt;
-  &lt;X&gt;0&lt;/X&gt;
-  &lt;Y&gt;0&lt;/Y&gt;
-  &lt;Width&gt;-1&lt;/Width&gt;
-  &lt;Height&gt;-1&lt;/Height&gt;
-  &lt;TopSpacing&gt;0&lt;/TopSpacing&gt;
-  &lt;BottomSpacing&gt;0&lt;/BottomSpacing&gt;
-  &lt;BackColor /&gt;
-  &lt;PdfCompressionLevel&gt;Normal&lt;/PdfCompressionLevel&gt;
-  &lt;JpegCompressionEnabled&gt;true&lt;/JpegCompressionEnabled&gt;
-  &lt;JpegCompressionLevel&gt;10&lt;/JpegCompressionLevel&gt;
-  &lt;CompressCrossReference&gt;false&lt;/CompressCrossReference&gt;
-  &lt;PdfPageSize&gt;
-    &lt;Width&gt;595&lt;/Width&gt;
-    &lt;Height&gt;842&lt;/Height&gt;
-  &lt;/PdfPageSize&gt;
-  &lt;PdfStandardSubset&gt;Full&lt;/PdfStandardSubset&gt;
-  &lt;ColorSpace&gt;RGB&lt;/ColorSpace&gt;
-  &lt;ColorProfile&gt;Custom&lt;/ColorProfile&gt;
-  &lt;FitWidth&gt;true&lt;/FitWidth&gt;
-  &lt;FitHeight&gt;false&lt;/FitHeight&gt;
-  &lt;StretchToFit&gt;false&lt;/StretchToFit&gt;
-  &lt;SinglePage&gt;false&lt;/SinglePage&gt;
-  &lt;AutoSizePdfPage&gt;true&lt;/AutoSizePdfPage&gt;
-  &lt;AvoidTextBreak&gt;true&lt;/AvoidTextBreak&gt;
-  &lt;AvoidImageBreak&gt;false&lt;/AvoidImageBreak&gt;
-  &lt;PdfPageOrientation&gt;Landscape&lt;/PdfPageOrientation&gt;
-  &lt;ShowHeader&gt;false&lt;/ShowHeader&gt;
-  &lt;ShowFooter&gt;false&lt;/ShowFooter&gt;
-  &lt;EmbedFonts&gt;true&lt;/EmbedFonts&gt;
-  &lt;LiveUrlsEnabled&gt;true&lt;/LiveUrlsEnabled&gt;
-  &lt;InteractiveHiddenElements&gt;false&lt;/InteractiveHiddenElements&gt;
-  &lt;InternalLinksEnabled&gt;true&lt;/InternalLinksEnabled&gt;
-  &lt;TiledRenderingEnabled&gt;true&lt;/TiledRenderingEnabled&gt;
-  &lt;EnhancedGraphicsQuality&gt;true&lt;/EnhancedGraphicsQuality&gt;
-  &lt;TransparentImagesEnabled&gt;true&lt;/TransparentImagesEnabled&gt;
-  &lt;ImagesScalingEnabled&gt;false&lt;/ImagesScalingEnabled&gt;
-  &lt;NoSizeElementsEnabled&gt;false&lt;/NoSizeElementsEnabled&gt;
-  &lt;TransparencyEnabled&gt;true&lt;/TransparencyEnabled&gt;
-  &lt;TableHeaderRepeatEnabled&gt;true&lt;/TableHeaderRepeatEnabled&gt;
-  &lt;TableFooterRepeatEnabled&gt;true&lt;/TableFooterRepeatEnabled&gt;
-  &lt;StackRepeatedTableHeaders&gt;true&lt;/StackRepeatedTableHeaders&gt;
-  &lt;StackRepeatedTableFooters&gt;true&lt;/StackRepeatedTableFooters&gt;
-&lt;/PdfDocumentOptions&gt;</string>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PdfSecurityOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;CanAssembleDocument&gt;true&lt;/CanAssembleDocument&gt;
-  &lt;CanCopyContent&gt;true&lt;/CanCopyContent&gt;
-  &lt;CanCopyAccessibilityContent&gt;true&lt;/CanCopyAccessibilityContent&gt;
-  &lt;CanEditAnnotations&gt;true&lt;/CanEditAnnotations&gt;
-  &lt;CanEditContent&gt;true&lt;/CanEditContent&gt;
-  &lt;CanFillFormFields&gt;true&lt;/CanFillFormFields&gt;
-  &lt;CanPrint&gt;true&lt;/CanPrint&gt;
-  &lt;CanPrintHighResolution&gt;true&lt;/CanPrintHighResolution&gt;
-  &lt;KeySize&gt;EncryptKey128Bit&lt;/KeySize&gt;
-  &lt;EncryptionAlgorithm&gt;RC4&lt;/EncryptionAlgorithm&gt;
-  &lt;OwnerPassword /&gt;
-  &lt;UserPassword /&gt;
-&lt;/PdfSecurityOptions&gt;</string>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PdfHeaderOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;HeaderBackColor /&gt;
-  &lt;HeaderHeight&gt;40&lt;/HeaderHeight&gt;
-  &lt;PageNumberingStartIndex&gt;0&lt;/PageNumberingStartIndex&gt;
-  &lt;PageNumberingPageCountIncrement&gt;0&lt;/PageNumberingPageCountIncrement&gt;
-&lt;/PdfHeaderOptions&gt;</string>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PdfFooterOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;FooterBackColor /&gt;
-  &lt;FooterHeight&gt;20&lt;/FooterHeight&gt;
-  &lt;PageNumberingStartIndex&gt;0&lt;/PageNumberingStartIndex&gt;
-  &lt;PageNumberingPageCountIncrement&gt;0&lt;/PageNumberingPageCountIncrement&gt;
-&lt;/PdfFooterOptions&gt;</string>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PdfDocumentInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;CreatedDate&gt;0001-01-01T00:00:00&lt;/CreatedDate&gt;
-&lt;/PdfDocumentInfo&gt;</string>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;PdfBookmarkOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;AutoBookmarksEnabled&gt;false&lt;/AutoBookmarksEnabled&gt;
-  &lt;HierarchicalBookmarks&gt;true&lt;/HierarchicalBookmarks&gt;
-  &lt;AllowDefaultTitle&gt;true&lt;/AllowDefaultTitle&gt;
-  &lt;DefaultTitle&gt;Bookmark&lt;/DefaultTitle&gt;
-  &lt;MaxTitleLength&gt;-1&lt;/MaxTitleLength&gt;
-&lt;/PdfBookmarkOptions&gt;</string>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ViewerPreferences xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;HideToolbar&gt;false&lt;/HideToolbar&gt;
-  &lt;HideMenuBar&gt;false&lt;/HideMenuBar&gt;
-  &lt;HideWindowUI&gt;false&lt;/HideWindowUI&gt;
-  &lt;FitWindow&gt;false&lt;/FitWindow&gt;
-  &lt;CenterWindow&gt;false&lt;/CenterWindow&gt;
-  &lt;DisplayDocTitle&gt;false&lt;/DisplayDocTitle&gt;
-  &lt;NonFullScreenPageMode&gt;UseNone&lt;/NonFullScreenPageMode&gt;
-  &lt;Direction&gt;L2R&lt;/Direction&gt;
-  &lt;PageMode&gt;UseNone&lt;/PageMode&gt;
-  &lt;PageLayout&gt;OneColumn&lt;/PageLayout&gt;
-&lt;/ViewerPreferences&gt;</string>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealPdfCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConverterScript /&gt;
-  &lt;DocumentScript /&gt;
-&lt;/SealPdfCfg&gt;</string>
-      </PdfConfigurations>
-      <ExcelConfigurations>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;false&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;true&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-      </ExcelConfigurations>
+      <PDFRenderer>
+        <Parameters>
+          <Parameter>
+            <Name>page_orientation</Name>
+            <Value>landscape</Value>
+          </Parameter>
+        </Parameters>
+      </PDFRenderer>
+      <HTML2PDFRenderer>
+        <Parameters>
+          <Parameter>
+            <Name>landscape</Name>
+            <Value>True</Value>
+          </Parameter>
+        </Parameters>
+      </HTML2PDFRenderer>
     </ReportView>
     <ReportView>
       <GUID>13b5dbfb-4650-47d1-84fb-3580df6bec03</GUID>

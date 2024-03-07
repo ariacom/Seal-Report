@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>SealSchedulerService</RootNamespace>
     <AssemblyName>SealSchedulerService</AssemblyName>
     <Product>Seal Report</Product>
-    <Version>7.2.0.0</Version>
-    <FileVersion>7.2.0.0</FileVersion>
-    <AssemblyVersion>7.2.0.0</AssemblyVersion>
+    <Version>8.0.0.0</Version>
+    <FileVersion>8.0.0.0</FileVersion>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <Description>Seal Report Scheduler Service</Description>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
     <ApplicationIcon />
@@ -37,7 +37,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
