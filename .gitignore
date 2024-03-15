@@ -43,6 +43,7 @@ TestFiles/
 
 #specific for Seal Report
 work/
+Repository/Sources/_*.scfx
 [Pp]ackages/
 temp/
 Assemblies/
@@ -69,6 +70,7 @@ _ed.*.css
 _ed.*.js
 *.slc
 *.srl
+Sources/_*.scfx
 
 # =========================
 # Operating System Files

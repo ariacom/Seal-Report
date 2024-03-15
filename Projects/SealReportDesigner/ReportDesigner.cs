@@ -1444,7 +1444,7 @@ namespace Seal
                 metaSource.Connections.AddRange(source.Connections);
                 metaSource.MetaData.Joins.AddRange(source.MetaData.Joins);
                 metaSource.MetaData.Tables.Clear();
-                metaSource.MetaData.Tables.AddRange(source.MetaData.Tables.Where(i => source.IsNoSQL));
+                metaSource.MetaData.Tables.AddRange(source.MetaData.Tables);
                 metaSource.MetaData.Enums.AddRange(source.MetaData.Enums);
                 metaSource.ConnectionGUID = source.ConnectionGUID;
                 metaSource.PreSQL = source.PreSQL;
@@ -1461,6 +1461,7 @@ namespace Seal
                 source.MetaData.Tables.Clear();
                 source.MetaData.Enums.Clear();
                 source.Name += " (Repository)";
+                source.Loaded = false;
                 source.LoadRepositoryMetaSources(_repository);
                 IsModified = true;
                 init(source);

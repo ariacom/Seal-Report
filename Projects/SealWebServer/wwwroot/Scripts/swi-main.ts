@@ -319,7 +319,7 @@ class SWIMain {
                     source.connections.forEach(function (connection) {
                         $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
                     });
-                    $connectionDiv.append($("<div class='col-sm-8'>").append($connectionSelect));
+                    $connectionDiv.append($("<div class='col-sm-8' style='padding-bottom:5px;'>").append($connectionSelect));
                     $connections.append($connectionDiv);
                     $connectionSelect.selectpicker('refresh');
                 });

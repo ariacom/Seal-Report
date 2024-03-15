@@ -126,8 +126,8 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("SMTP Definition"), DisplayName("Password"), Description("The password used to connect to the SMTP server"), PasswordPropertyText(true), Id(4, 1)]
-        [XmlIgnore]
 #endif
+        [XmlIgnore]
         public string ClearPassword
         {
             get

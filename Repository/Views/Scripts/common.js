@@ -630,13 +630,13 @@ function mainInit() {
                                     if (_reportStandalone) {
                                         var $form = $("#header_form");
                                         $("#execution_guid").val($(this).attr("execution_guid"));
-                                        $form.attr("action", _urlPrefix + "ViewResult?format=html");
+                                        $form.attr("action", _urlPrefix + "HtmlResultFile");
                                         $form.submit();
                                     }
                                     else {
                                         //Execution from the menu
                                         _main.toggleFoldersReport(true);
-                                        $.post(_urlPrefix + "ViewResult?format=html&execution_guid=" + $(this).attr("execution_guid"))
+                                        $.post(_urlPrefix + "HtmlResultFile", { execution_guid: $(this).attr("execution_guid") })
                                             .done(function (data) {
                                                 $("#report-body").html(data);
                                                 processReportExecuted();

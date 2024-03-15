@@ -235,8 +235,8 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("Password"), Description("The password used to connect to the server"), PasswordPropertyText(true), Id(8, 1)]
-        [XmlIgnore]
 #endif
+        [XmlIgnore]
         public string ClearPassword
         {
             get
