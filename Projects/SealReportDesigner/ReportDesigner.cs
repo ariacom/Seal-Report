@@ -20,6 +20,10 @@ using System.Text.RegularExpressions;
 using Twilio.TwiML;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Threading;
+using ScintillaNET;
+using DocumentFormat.OpenXml.InkML;
+using Mysqlx.Notice;
+using Seal.Renderer;
 
 namespace Seal
 {
@@ -1802,9 +1806,44 @@ namespace Seal
             }
             else if (selectedEntity is ReportView)
             {
+                RootRenderer renderer = null;
                 ReportView view = (ReportView)selectedEntity;
                 if (view.UseCustomTemplate) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+                else if (view.ExcelRenderer.UseCustomTemplate) renderer = view.ExcelRenderer;
+                else if (view.PDFRenderer.UseCustomTemplate) renderer = view.PDFRenderer;
+                else if (view.HTML2PDFRenderer.UseCustomTemplate) renderer = view.HTML2PDFRenderer;
+                else if (view.CSVRenderer.UseCustomTemplate) renderer = view.CSVRenderer;
+                else if (view.JsonRenderer.UseCustomTemplate) renderer = view.JsonRenderer;
+                else if (view.TextRenderer.UseCustomTemplate) renderer = view.TextRenderer;
+                else if (view.XMLRenderer.UseCustomTemplate) renderer = view.XMLRenderer;
                 else mainTreeView.SelectedNode.Expand();
+
+                if (renderer != null)
+                {
+                    var frm = new TemplateTextEditorForm();
+                    var template = renderer.Template.Text.Trim();
+                    frm.Text = "Edit custom template";
+                    frm.ObjectForCheckSyntax = renderer.Report;
+                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    frm.Text = "Edit custom template";
+                    frm.ObjectForCheckSyntax = view.Report;
+                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    //Reset button
+                    frm.SetResetText(renderer.Template.Text.Trim());
+                    frm.ContextInstance = renderer;
+                    frm.ContextPropertyName = "CustomTemplate";
+
+                    frm.textBox.Text = view.PDFRenderer.CustomTemplate;
+                    if (string.IsNullOrEmpty(frm.textBox.Text)) frm.textBox.Text = template;
+                    frm.checkSyntaxToolStripButton.Visible = true;
+
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        IsModified = true;
+                        if (frm.textBox.Text.Trim() != template.Trim() || string.IsNullOrEmpty(template)) renderer.CustomTemplate = frm.textBox.Text;
+                        else if (frm.textBox.Text.Trim() == template.Trim() && !string.IsNullOrEmpty(template)) renderer.CustomTemplate = "";
+                    }
+                }
             }
             else if (selectedEntity is ReportSchedule)
             {
@@ -2023,7 +2062,7 @@ namespace Seal
             return (_canRender && _report != null && _reportViewer != null && _reportViewer.Visible && _reportViewer.CanRender);
         }
 
-        public void TestExecute(ITypeDescriptorContext context, string value, bool render)
+        public void TestExecute(object instance, string propertyName, string value, bool render)
         {
             if (_reportViewer != null)
             {
@@ -2032,15 +2071,15 @@ namespace Seal
                 _reportViewer.Hide();
             }
 
-            var oriValue = Helper.GetPropertyValue(context.Instance, context.PropertyDescriptor.Name) as string;
-            Helper.SetPropertyValue(context.Instance, context.PropertyDescriptor.Name, value);
+            var oriValue = Helper.GetPropertyValue(instance, propertyName) as string;
+            Helper.SetPropertyValue(instance, propertyName, value);
             try
             {
                 executeToolStripMenuItem_Click(render ? renderToolStripMenuItem : executeToolStripMenuItem, null);
             }
             finally
             {
-                Helper.SetPropertyValue(context.Instance, context.PropertyDescriptor.Name, oriValue);
+                Helper.SetPropertyValue(instance, propertyName, oriValue);
             }
         }
         #endregion

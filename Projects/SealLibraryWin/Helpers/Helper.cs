@@ -334,6 +334,20 @@ namespace Seal.Helpers
             }
             return result;
         }
+        static public string GetUniqueNameCaseInsensitive(string name, List<string> entities)
+        {
+            string result;
+            int i = 1;
+            while (true)
+            {
+                result = name;
+                if (i != 1) result += i.ToString();
+                if (!entities.Exists(i => i.ToLower() == result.ToLower() )) break;
+                i++;
+            }
+            return result;
+        }
+
 
         static public string DBNameToDisplayName(string name)
         {

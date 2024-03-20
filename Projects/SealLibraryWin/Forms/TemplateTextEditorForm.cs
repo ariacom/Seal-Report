@@ -20,14 +20,17 @@ namespace Seal.Forms
     {
         public bool CanExecute();
         public bool CanRender();
-        public void TestExecute(ITypeDescriptorContext context, string value, bool render);
+        public void TestExecute(object instance, string propertyName, string value, bool render);
     }
 
     public partial class TemplateTextEditorForm : Form
     {
         public object ObjectForCheckSyntax = null;
         public string ScriptHeader = null;
-        public ITypeDescriptorContext context = null;
+
+        public object ContextInstance = null;
+        public string ContextPropertyName = null;
+
         public Scintilla textBox = new Scintilla();
 
         ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
@@ -98,7 +101,7 @@ namespace Seal.Forms
                 mainTimer.Enabled = false;
                 testRenderingMenuItem.Enabled = false;
                 testExecutionMenuItem.Enabled = false;
-                ReportTester?.TestExecute(context, textBox.Text, sender == testRenderingMenuItem);
+                if (ContextInstance != null) ReportTester?.TestExecute(ContextInstance, ContextPropertyName, textBox.Text, sender == testRenderingMenuItem);
                 mainTimer.Enabled = true;
             }
         }

@@ -1,0 +1,435 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>7d35e1fa-133a-4f6e-a52b-e06c07eeaf70</GUID>
+  <DisplayName>Invoice</DisplayName>
+  <ViewGUID>6fa7193d-c06c-491e-8d25-14db1682e191</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>ea4b87d7-eca3-4324-816a-1a00fd7472f4</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>981ee677-06f7-4373-89b1-85963a67df4d</GUID>
+      <Name>00 Common</Name>
+      <SourceGUID>ea4b87d7-eca3-4324-816a-1a00fd7472f4</SourceGUID>
+      <Restriction>[2a2c2df1-065f-4ca2-9d63-f672d53135ef]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>2a2c2df1-065f-4ca2-9d63-f672d53135ef</GUID>
+          <Name>Orders.OrderID</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+          <Prompt>PromptOneValue</Prompt>
+          <Value1>10400</Value1>
+          <FormatRe>N0</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>240b2d14-6d0e-4543-ae23-83a329a18830</GUID>
+      <Name>01 Client</Name>
+      <SourceGUID>ea4b87d7-eca3-4324-816a-1a00fd7472f4</SourceGUID>
+      <ReferenceModelGUID>981ee677-06f7-4373-89b1-85963a67df4d</ReferenceModelGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>6d32f630-81c9-45dd-99fa-cb205499a9fe</GUID>
+          <Name>Customers.CompanyName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9c441e0c-66f6-4468-9e9b-960fe5bc52f3</GUID>
+          <Name>Customers.Address</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e39285bf-1ca4-4059-a72a-73c90cc168dd</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>dc1de5f0-6538-44dd-b783-a2c6b4dac545</GUID>
+          <Name>Customers.PostalCode</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e24a016c-11d6-4b7c-9319-c1ad5864841c</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>95216cb2-8e55-42d8-bb34-609cb3c10f2d</GUID>
+          <Name>Customers.City</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>16056c82-caed-465a-bf0e-f98b336e456f</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9ce20c18-3ea3-4af9-ad3c-c1363575a285</GUID>
+          <Name>Orders.ShipAddress</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2003a407-ab31-4514-bc83-8e9479c42e2d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ab50c4c6-fa9a-414c-b06d-a40e225a2937</GUID>
+          <Name>Orders.ShipPostalCode</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9e859bb1-cbb3-45df-9324-427f27e3b9bb</GUID>
+          <Name>Orders.ShipCity</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e93c456c-40d9-494e-ba21-711177339870</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fd98ada1-8cde-41db-bcea-cb1a513f9be5</GUID>
+          <Name>Orders.ShipCountry</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>84e1279e-88c2-4b8e-b71b-7bf39bb98386</GUID>
+      <Name>02 Order</Name>
+      <SourceGUID>ea4b87d7-eca3-4324-816a-1a00fd7472f4</SourceGUID>
+      <ReferenceModelGUID>981ee677-06f7-4373-89b1-85963a67df4d</ReferenceModelGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>97963953-a39d-427a-bd51-9537f7471126</GUID>
+          <Name>Orders.OrderID</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7c1a86b7-7629-4415-9dfb-230321128afc</GUID>
+          <Name>Orders.OrderDate</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>f977a6c6-c913-4864-b07e-1295aab43cec</GUID>
+      <Name>03 Detail</Name>
+      <SourceGUID>ea4b87d7-eca3-4324-816a-1a00fd7472f4</SourceGUID>
+      <ReferenceModelGUID>981ee677-06f7-4373-89b1-85963a67df4d</ReferenceModelGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>2c53ec3d-d5b8-404b-8b87-d31a7dabe482</GUID>
+          <Name>Products.ProductID</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>58463786-cb5f-4323-bbd7-c1ebc2ef48c4</GUID>
+          <Name>[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N2</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>25c54c7b-119b-408a-89f5-8c04cdf835d9</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>585610d7-bc6b-42af-80f0-9e8dd8d78802</GUID>
+          <Name>100*[Order Details].Discount</Name>
+          <DisplayName />
+          <Format>N2</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f2cf72ab-afdc-4d0e-ba73-80c3d6f47eea</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>551334cd-0565-4ba8-9a94-800f89719091</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>07b78025-3d79-4b31-b42e-d134edbecae3</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>6fa7193d-c06c-491e-8d25-14db1682e191</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>24b90e78-d7bc-4230-a9cd-c17560c7d413</GUID>
+          <Name>01 Client</Name>
+          <Views>
+            <ReportView>
+              <GUID>50b7abab-6c7c-4bf0-bcca-3a9f92ce9586</GUID>
+              <Name>Data Table</Name>
+              <TemplateName>Data Table</TemplateName>
+              <SortOrder>1</SortOrder>
+              <PDFRenderer>
+                <UseCustomTemplate>true</UseCustomTemplate>
+                <CustomTemplate>@using QuestPDF.Fluent
+@using QuestPDF.Infrastructure
+@using Colors = QuestPDF.Helpers.Colors
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    ResultTable datatable = page.DataTable;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFRenderer modelViewRenderer = modelView.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    var document = result.Document;
+    var container = result.Container;
+    
+    
+    var northwindName = "Northwind";
+    var northwindAddress = "123 Main Street";
+    var northwindPostal = "10001";
+    var northwindCity = "New York";
+    var northwindCountry = "USA";
+    var northwindPhone = "+1 234567789";
+    
+    var client = datatable[1, 0].DisplayValue;
+    var clientAddress = datatable[1, 1].DisplayValue;
+    var clientPostal  = datatable[1, 2].DisplayValue;
+    var clientCity = datatable[1, 3].DisplayValue;
+    var clientCountry= datatable[1, 4].DisplayValue;
+    
+    var shipAddress = datatable[1, 5].DisplayValue;
+    var shipPostal  = datatable[1, 6].DisplayValue;
+    var shipCity = datatable[1, 7].DisplayValue;
+    var shipCountry= datatable[1, 8].DisplayValue;
+    container
+    .DefaultTextStyle(x =&gt; x.FontSize(10))
+    .Column(column =&gt;
+    {
+        column.Item().PaddingBottom(10).LineHorizontal(1).LineColor(Colors.Grey.Medium);
+    
+        //First block
+        column.Item().Row(row =&gt;
+        {
+            //First column
+            row.RelativeItem().Grid(grid =&gt;
+            {
+                grid.Columns(1);
+                
+                grid.Item(1).BorderBottom(0.0F).Height(30).Padding(1).Text(northwindName).FontSize(14).SemiBold();
+                grid.Item(1).Padding(2).Text(northwindAddress);
+                grid.Item(1).Padding(2).Text(northwindPostal + " " + northwindCity);
+                grid.Item(1).Padding(2).Text(northwindCountry);
+                
+                grid.Item(1).Padding(2).Text("Phone: " + northwindPhone);
+            });
+            
+            //Second column
+            row.RelativeItem(2).PaddingTop(50).Border(0.4F).Grid(grid =&gt;
+            {
+                grid.Columns(2);
+                
+                grid.Item(2).Height(20).PaddingLeft(5).Text("Bill To").FontSize(10);
+                grid.Item(2).BorderBottom(0.5F).Height(25).PaddingLeft(5).Text(client).FontSize(14).SemiBold();
+                grid.Item(1).Padding(2).Text("Billing address:").FontSize(10);
+                grid.Item(1).BorderLeft(0.5F).Padding(2).Text("Shipping address:").FontSize(10);
+                grid.Item(1).Padding(2).Text(clientAddress);
+                grid.Item(1).BorderLeft(0.5F).Padding(2).Text(shipAddress);
+                grid.Item(1).Padding(2).Text(clientPostal + " " + clientCity);
+                grid.Item(1).BorderLeft(0.5F).Padding(2).Text(shipPostal + " " + shipCity);
+                grid.Item(1).Padding(2).Text(clientCountry);
+                grid.Item(1).BorderLeft(0.5F).Padding(2).Text(shipCountry);
+            });
+        });    
+    });    
+}
+
+</CustomTemplate>
+              </PDFRenderer>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>240b2d14-6d0e-4543-ae23-83a329a18830</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>f04435cb-942a-47e5-b910-098de5cef9fa</GUID>
+          <Name>02 Order</Name>
+          <Views>
+            <ReportView>
+              <GUID>4474ade4-9081-42c4-98da-1e892832f191</GUID>
+              <Name>Data Table </Name>
+              <TemplateName>Data Table</TemplateName>
+              <SortOrder>1</SortOrder>
+              <PDFRenderer>
+                <UseCustomTemplate>true</UseCustomTemplate>
+                <CustomTemplate>@using QuestPDF.Fluent
+@using QuestPDF.Infrastructure
+@using Colors = QuestPDF.Helpers.Colors
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    ResultTable datatable = page.DataTable;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFRenderer modelViewRenderer = modelView.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    var document = result.Document;
+    var container = result.Container;
+    
+    
+    var orderId = datatable[1, 0].DisplayValue;
+    var orderDate = datatable[1, 1].DisplayValue;
+    
+    container
+    .DefaultTextStyle(x =&gt; x.FontSize(10))
+    .Column(col =&gt;
+    {
+        col.Item().PaddingTop(20).Row(row =&gt; 
+        {
+            row.ConstantItem(60).Text("Order No");
+            row.RelativeItem().Text(orderId).SemiBold();
+        });
+        
+        col.Item().PaddingBottom(20).PaddingTop(5).Row(row =&gt; 
+        {
+            row.ConstantItem(60).Text("Order Date");
+            row.RelativeItem().Text(orderDate).SemiBold();
+        });        
+    });    
+}
+
+</CustomTemplate>
+              </PDFRenderer>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>84e1279e-88c2-4b8e-b71b-7bf39bb98386</ModelGUID>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>bb9537bc-10d2-4d9d-ba07-92073e56564c</GUID>
+          <Name>03 Detail</Name>
+          <Views>
+            <ReportView>
+              <GUID>526ee0f7-4d71-4978-8620-98e91ecbc706</GUID>
+              <Name>Data Table</Name>
+              <TemplateName>Data Table</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>f977a6c6-c913-4864-b07e-1295aab43cec</ModelGUID>
+          <SortOrder>3</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>b0e7d256-caf4-4467-a9fa-f8d552da2203</GUID>
+          <Name>Footer</Name>
+          <TemplateName>Free</TemplateName>
+          <SortOrder>4</SortOrder>
+          <PDFRenderer>
+            <UseCustomTemplate>true</UseCustomTemplate>
+            <CustomTemplate>@using QuestPDF.Fluent
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    result.Container
+    .DefaultTextStyle(x =&gt; x.FontSize(10))
+    .Column(col =&gt; 
+    {
+        col.Item().PaddingTop(20).Text("Payment terms: 30 days net.");
+    });
+}</CustomTemplate>
+          </PDFRenderer>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>report_format</Name>
+          <Value>PDF</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_models_load</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+      <PDFRenderer>
+        <UseCustomTemplate>true</UseCustomTemplate>
+        <Parameters>
+          <Parameter>
+            <Name>show_information</Name>
+            <Value>False</Value>
+          </Parameter>
+        </Parameters>
+      </PDFRenderer>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

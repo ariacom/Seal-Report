@@ -1938,7 +1938,8 @@ namespace Seal.Forms
                     frm.cancelToolStripButton.Text = "Close";
                 }
                 frm.checkSyntaxToolStripButton.Visible = (frm.ObjectForCheckSyntax != null);
-                frm.context = context;
+                frm.ContextInstance = context.Instance;
+                frm.ContextPropertyName = context.PropertyDescriptor.Name;
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)
                 {

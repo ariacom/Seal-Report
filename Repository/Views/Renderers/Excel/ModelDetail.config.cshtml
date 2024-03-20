@@ -1,0 +1,9 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "use_display_format", DisplayName = "Use element format", BoolValue = true, Description = "If true, the display format of the element is applied to the values displayed in the Excel file." });
+    Template.Parameters.Add(new Parameter() { Name = "use_cell_styles", DisplayName = "Use cell styles", BoolValue = true, Description = "If true, the default styles are applied on the cells." });
+    Template.Parameters.Add(new Parameter() { Name = "new_sheet", DisplayName = "New sheet for the model", BoolValue = false, Description = "If true, a new Sheet is created for the model." });
+}

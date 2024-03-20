@@ -126,7 +126,7 @@ namespace Seal.Renderer
             if (string.IsNullOrEmpty(name)) name = "Sheet1";
 
             if (name.Length > 31) name = name.Substring(0, 30);
-            name = Helper.GetUniqueName(name, (from w in Workbook.Worksheets.ToList() select w.Name).ToList());
+            name = Helper.GetUniqueNameCaseInsensitive(name, (from w in Workbook.Worksheets.ToList() select w.Name).ToList());
             Worksheet = Workbook.Worksheets.Add(name);
             CurrentRow = 1;
             CurrentCol = 1;

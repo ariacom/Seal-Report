@@ -1,0 +1,44 @@
+﻿@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel model = view.Model;
+
+    ExcelRenderer renderer = view.ExcelRenderer;
+    ExcelResult result = report.ExcelResult;
+
+    if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.Name);
+
+    foreach (ResultPage page in model.Pages)
+    {
+        var pageTable = page.PageTable;
+        if (pageTable != null && pageTable.RowCount == 2 && pageTable.ColumnCount > 0)
+        {
+            for (int i = 0; i < pageTable.ColumnCount; i++)
+            {
+                ResultCell value = pageTable[1, i];
+                var cell = result.Worksheet.Cells[result.CurrentRow, result.CurrentCol + i];
+                result.SetValue(cell, value, renderer.GetBoolValue("use_display_format"), false);
+                cell.StyleName = ExcelResult.CellTitleStyle;
+            }
+            result.CurrentRow+=2;
+        }
+
+        var dataTable = page.DataTable;
+        if (dataTable != null && dataTable.ColumnCount > 0 && dataTable.RowCount == 2)
+        {
+            for (int i = 0; i < dataTable.ColumnCount; i++)
+            {
+                ResultCell header = dataTable[0, i];
+                ResultCell value = dataTable[1, i];
+
+                result.SetValue(result.CurrentRow, 1, header, renderer.GetBoolValue("use_display_format"), renderer.GetBoolValue("use_cell_styles"));
+                result.SetValue(result.CurrentRow, 2, value, renderer.GetBoolValue("use_display_format"), renderer.GetBoolValue("use_cell_styles"));
+                result.CurrentRow++;
+            }
+            result.CurrentRow++;
+
+        }
+    }
+}

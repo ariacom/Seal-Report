@@ -7,9 +7,9 @@
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibraryWin</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>8.0.0.0</Version>
-		<FileVersion>8.0.0.0</FileVersion>
-		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<Version>8.0.1.0</Version>
+		<FileVersion>8.0.1.0</FileVersion>
+		<AssemblyVersion>8.0.1.0</AssemblyVersion>
 		<Description>Seal Report Library (Windows)</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -196,7 +196,9 @@
 		<None Include="..\..\Repository\Views\Renderers\Excel\Report.cshtml" Link="Views\Renderers\Excel\Report.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\Model.config.cshtml" Link="Views\Renderers\Excel\Model.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\Model.cshtml" Link="Views\Renderers\Excel\Model.cshtml" />
-		<None Include="..\..\Repository\Views\Renderers\Excel\PageTable.config.cshtml" Link="Views\Renderers\Excel\PageTable.config.cshtml" />
+    <None Include="..\..\Repository\Views\Renderers\Excel\ModelDetail.config.cshtml" Link="Views\Renderers\Excel\ModelDetail.config.cshtml" />
+    <None Include="..\..\Repository\Views\Renderers\Excel\ModelDetail.cshtml" Link="Views\Renderers\Excel\ModelDetail.cshtml" />
+    <None Include="..\..\Repository\Views\Renderers\Excel\PageTable.config.cshtml" Link="Views\Renderers\Excel\PageTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\PageTable.cshtml" Link="Views\Renderers\Excel\PageTable.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\DataTable.config.cshtml" Link="Views\Renderers\Excel\DataTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\DataTable.cshtml" Link="Views\Renderers\Excel\DataTable.cshtml" />
@@ -220,7 +222,9 @@
 		<None Include="..\..\Repository\Views\Renderers\PDF\Report.cshtml" Link="Views\Renderers\PDF\Report.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\Model.config.cshtml" Link="Views\Renderers\PDF\Model.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\Model.cshtml" Link="Views\Renderers\PDF\Model.cshtml" />
-		<None Include="..\..\Repository\Views\Renderers\PDF\PageTable.config.cshtml" Link="Views\Renderers\PDF\PageTable.config.cshtml" />
+    <None Include="..\..\Repository\Views\Renderers\PDF\ModelDetail.config.cshtml" Link="Views\Renderers\PDF\ModelDetail.config.cshtml" />
+    <None Include="..\..\Repository\Views\Renderers\PDF\ModelDetail.cshtml" Link="Views\Renderers\PDF\ModelDetail.cshtml" />
+    <None Include="..\..\Repository\Views\Renderers\PDF\PageTable.config.cshtml" Link="Views\Renderers\PDF\PageTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\PageTable.cshtml" Link="Views\Renderers\PDF\PageTable.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\DataTable.config.cshtml" Link="Views\Renderers\PDF\DataTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\DataTable.cshtml" Link="Views\Renderers\PDF\DataTable.cshtml" />

@@ -20,7 +20,8 @@
         {
             var fontColor = report.ExecutionView.Renderer.GetValue("title_font_color");
             col.Item()
-                .Padding(5)
+                .PaddingTop(5)
+                .PaddingBottom(5)
                 .BorderBottom(1)
                 .BorderColor(fontColor)
                 .Text(title)

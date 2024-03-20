@@ -1,0 +1,81 @@
+﻿@using QuestPDF.Infrastructure
+@using QuestPDF.Fluent
+@using Colors = QuestPDF.Helpers.Colors
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel model = view.Model;
+
+    PDFRenderer renderer = view.PDFRenderer;
+    PDFResult result = report.PDFResult;
+
+    var document = result.Document;
+    var container = result.Container;
+
+    foreach (ResultPage page in model.Pages)
+    {
+        container.Column(column =>
+        {
+            var pageTable = page.PageTable;
+            if (pageTable != null && pageTable.ColumnCount > 0 && pageTable.RowCount == 2)
+            {
+                column.Item().Row(row =>
+                {
+                    for (int i = 0; i < pageTable.ColumnCount; i++)
+                    {
+                        ResultCell value = pageTable[1, i];
+                        row.AutoItem()
+                        .DefaultTextStyle(x => x.SemiBold().FontSize(14))
+                        .PaddingVertical(5)
+                        .AlignLeft()
+                        .PaddingHorizontal(1)
+                        .Text(value.DisplayValue);
+                    }
+                });
+            }
+
+
+            var dataTable = page.DataTable;
+            if (dataTable != null && dataTable.ColumnCount > 0 && dataTable.RowCount == 2)
+            {
+                column.Item().PaddingVertical(5);
+                column.Item().LineHorizontal(1).LineColor(Colors.Grey.Medium);
+
+                column.Item().Table(table =>
+                {
+                    table.ColumnsDefinition(columns =>
+                    {
+                        columns.RelativeColumn();
+                        columns.RelativeColumn(2);
+                    });
+
+                    for (int i = 0; i < dataTable.ColumnCount; i++)
+                    {
+                        ResultCell header = dataTable[0, i];
+                        ResultCell value = dataTable[1, i];
+                        table.Cell()
+                        .DefaultTextStyle(x => x.FontSize(12))
+                        .BorderBottom(1)
+                        .BorderColor(Colors.Grey.Lighten2)
+                        .PaddingVertical(5)
+                        .AlignLeft()
+                        .PaddingHorizontal(1)
+                        .Text(header.DisplayValue);
+
+                        table.Cell()
+                        .DefaultTextStyle(x => x.FontSize(12))
+                        .BorderBottom(1)
+                        .BorderColor(Colors.Grey.Lighten2)
+                        .PaddingVertical(5)
+                        .AlignLeft()
+                        .PaddingHorizontal(1)
+                        .Text(value.DisplayValue);
+
+                    }
+                });
+            }
+        });
+    }
+}

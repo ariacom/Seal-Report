@@ -37,6 +37,8 @@
 {
     void ComposeDataTable(IContainer container, ResultTable dataTable, int fontSize)
     {
+        if (dataTable.ColumnCount == 0) return;
+
         container.Table(table =>
         {
             //Column definition
