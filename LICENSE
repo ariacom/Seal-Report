@@ -1,18 +1,21 @@
-Seal Report Dual-License version 1.0
+Seal Report Dual-License version 1.1
 
 1. License
 Non-profit Usage
-If you represent a non-profit organization, or if you are using Seal Report for educational purposes or training courses, 
-you can use Seal Report under the MIT license.
+If you represent a non-profit organization, or if you are using Seal Report for educational purposes or training courses,
+you can install and use Seal Report in your own production environment under the Community MIT license.
 
 Small Businesses
-For companies generating less than $1 million USD in annual gross revenue, 
-you can use Seal Report under the MIT license.
+For companies generating less than $1 million USD in annual gross revenue,
+you can install and use Seal Report in your own production environment under the Community MIT license.
 
 Larger Businesses
-Companies with an annual gross revenue exceeding $1 million USD are required to purchase a commercial license at https://sealreport.com 
-The type of license you need depends on the usage of Seal Report in your production environment.
-   
+Companies with an annual gross revenue exceeding $1 million USD are required to purchase a Commercial License.
+The type of license needed depends on the usage of Seal Report in your production environment.
+
+Customer Deployment
+Companies deploying Seal Report at their customer sites are required to purchase a Commercial License.
+The type of license needed depends on the usage of Seal Report in the production environments.   
    
 2. MIT License
 Permission is hereby granted, free of charge, to any person obtaining a copy
