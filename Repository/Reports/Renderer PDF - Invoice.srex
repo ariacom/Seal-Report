@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>7d35e1fa-133a-4f6e-a52b-e06c07eeaf70</GUID>
-  <DisplayName>Invoice</DisplayName>
+  <DisplayName>@{
+    Report report = Model;
+    var result = "Invoice";
+    var restriction = report.AllRestrictions.FirstOrDefault(i =&gt; i.SQLColumn == "Orders.OrderID");
+    if (restriction != null) result += " " + restriction.FirstStringValue;
+}
+@Raw(result)</DisplayName>
   <ViewGUID>6fa7193d-c06c-491e-8d25-14db1682e191</ViewGUID>
   <Sources>
     <ReportSource>

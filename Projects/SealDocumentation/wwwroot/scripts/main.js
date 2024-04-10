@@ -19,6 +19,10 @@ $(document).ready(function () {
     SyntaxHighlighter.defaults['toolbar'] = false;
     SyntaxHighlighter.all();
 
+    $(".live-sample-root").unbind('click').on("click", function (e) {
+        executeReport($(this).text().replace("Live Sample: ", "/") + ".srex");
+    });
+
     $(".live-sample").unbind('click').on("click", function (e) {
         executeReport($(this).text().replace("Live Sample: ", "/Samples/") + ".srex");
     });
