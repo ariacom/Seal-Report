@@ -24,7 +24,7 @@ A **live demonstration** of the <a href="https://sealreport.org/demo" target=_bl
 
 **Quick start guides**  for building reports are available at the <a href="https://sealreport.org" target=_blank>Seal Report</a> Web site.
 
-Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product.
+Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</a> and <a href="https://github.com/ariacom/Seal-Report/discussions" target=_blank>Github Discussions</a> to get free support, information and hints on the product.
 
 # Screen shots 
 ## HTML Report Result
