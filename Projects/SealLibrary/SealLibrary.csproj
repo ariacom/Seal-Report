@@ -191,7 +191,8 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
 		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
-	</ItemGroup>
+    <PackageReference Include="AngleSharp" Version="1.1.2" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\..\Projects\SealLibrary\sealNugetLogo.png">

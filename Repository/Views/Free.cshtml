@@ -3,7 +3,7 @@
     Report report = Model;
     ReportView view = report.CurrentView;
 
-    var text = view.GetBoolValue("use_view_name") ? view.Name : view.GetValue("text");
+    var text = view.GetBoolValue("use_view_name") ? view.ViewName : view.GetValue("text");
 }
 
 @if (!string.IsNullOrEmpty(text))

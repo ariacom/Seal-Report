@@ -1092,6 +1092,7 @@ namespace Seal.Forms
 
                 log.Log("Adding texts in context: ReportExecutionName, ReportViewName, ReportOutputName\r\n");
                 exportReportsTranslations(log, repository.ReportsFolder, repository, translations, separator, extraSeparators, repository.ReportsFolder.Length);
+                exportReportsTranslations(log, repository.SubReportsFolder, repository, translations, separator, extraSeparators, repository.SubReportsFolder.Length);
 
                 string fileName = FileHelper.GetUniqueFileName(Path.Combine(repository.SettingsFolder, "FoldersReportsTranslations_MISSINGS.csv"));
                 File.WriteAllText(fileName, translations.ToString(), Encoding.UTF8);

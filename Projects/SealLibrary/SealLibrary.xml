@@ -2784,6 +2784,11 @@
             List of all view restrictions prompted at execution
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.AllElements">
+            <summary>
+            List of all elements of all models of the report
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.AllRestrictions">
             <summary>
             List of all restrictions of all models of the report, plus the input values

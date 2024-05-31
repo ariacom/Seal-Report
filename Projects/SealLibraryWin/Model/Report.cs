@@ -2194,6 +2194,28 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// List of all elements of all models of the report
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportElement> AllElements
+        {
+            get
+            {
+                var result = new List<ReportElement>();
+                foreach (ReportModel model in Models)
+                {
+                    result.AddRange(model.Elements);
+                    foreach (var subModel in model.LINQSubModels)
+                    {
+                        result.AddRange(subModel.Elements);
+                    }
+                }
+                return result;
+            }
+        }
+
+
+        /// <summary>
         /// List of all restrictions of all models of the report, plus the input values
         /// </summary>
         [XmlIgnore]
@@ -2201,7 +2223,7 @@ namespace Seal.Model
         {
             get
             {
-                List<ReportRestriction> result = new List<ReportRestriction>();
+                var result = new List<ReportRestriction>();
                 result.AddRange(InputValues);
                 foreach (ReportModel model in Models)
                 {

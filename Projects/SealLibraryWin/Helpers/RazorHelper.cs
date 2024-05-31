@@ -95,6 +95,7 @@ namespace Seal.Helpers
         static LicenseType _36 = LicenseType.Community;
         static SKSvg _37 = null;
         static PdfOptions _38 = null;
+        static AngleSharp.IConfiguration _39 = null;
 
         static int _loadTries = 3;
         static public void LoadRazorAssemblies()
@@ -172,6 +173,7 @@ namespace Seal.Helpers
                     if (_35 == null) _35 = SpreadsheetDocument.Create(FileHelper.GetTempUniqueFileName("dummy.xlsx"), SpreadsheetDocumentType.Workbook);
                     if (_37 == null) _37 = new SKSvg();
                     if (_38 == null) _38 = new PdfOptions();
+                    if (_39 == null) _39 = AngleSharp.Configuration.Default;
 #if !WINDOWS
                     var si = SealInterface.Create();
                     si.Init();

@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealTaskScheduler", "SealTa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealWebServer", "SealWebServer\SealWebServer.csproj", "{4E1489D9-4D02-4566-9B22-635A2A1881F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealDocumentation", "SealDocumentation\SealDocumentation.csproj", "{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealDocumentation", "SealDocumentation\SealDocumentation.csproj", "{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealSchedulerService", "SealSchedulerService\SealSchedulerService.csproj", "{F4F80028-673D-4431-92C7-5246AE7EF056}"
 EndProject
@@ -28,7 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealSchedulerWorker", "Seal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorEngine.NetCore", "RazorEngine.NetCore\RazorEngine.NetCore.csproj", "{891C8D77-1999-432D-BD00-4B610A18FB40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestNuget", "TestNuget\TestNuget.csproj", "{13D87A1B-8013-4208-AC39-0EAF84695BE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestNuget", "TestNuget\TestNuget.csproj", "{13D87A1B-8013-4208-AC39-0EAF84695BE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebApplication", "testWebApplication\TestWebApplication.csproj", "{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,6 +136,14 @@ Global
 		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Release|x64.ActiveCfg = Release|Any CPU
 		{13D87A1B-8013-4208-AC39-0EAF84695BE4}.Release|x64.Build.0 = Release|Any CPU
+		{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}.Debug|x64.Build.0 = Debug|Any CPU
+		{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}.Release|x64.ActiveCfg = Release|Any CPU
+		{EA56992B-589B-4DAF-9D76-41E44D0EA3DA}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

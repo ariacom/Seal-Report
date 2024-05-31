@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace SealWebServer.Controllers
 {
@@ -115,7 +116,8 @@ namespace SealWebServer.Controllers
                 report = reportToExecute,
                 reportname = reportToExecuteName,
                 executionmode = WebUser.Profile.ExecutionMode,
-                groupexecutionmode = defaultGroup.ExecutionMode
+                groupexecutionmode = defaultGroup.ExecutionMode,
+                sessionId = HttpContext.Session.GetString(SessionIdKey)
             };
 
             if (!string.IsNullOrEmpty(profile.startupreport))
@@ -209,7 +211,7 @@ namespace SealWebServer.Controllers
             {
                 if (string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
-                    return Json(new { login = true } );
+                    return Json(new { login = true });
                 }
 
                 if (string.IsNullOrEmpty(WebUser.Security.TwoFACheckScript)) throw new Exception(Translate("The 'Two-Factor Authentication Check Script' is not defined. Please check your configuration."));
@@ -217,7 +219,7 @@ namespace SealWebServer.Controllers
                 WebUser.WebSecurityCode = code;
                 RazorHelper.CompileExecute(WebUser.Security.TwoFACheckScript, WebUser);
 
-                if (WebUser.SecurityCodeTries == -1) 
+                if (WebUser.SecurityCodeTries == -1)
                 {
                     //Force a re-login
                     CreateWebUser();
@@ -308,11 +310,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the menu of the logged user.
         /// </summary>
-        public ActionResult SWIGetRootMenu()
+        public ActionResult SWIGetRootMenu(string sessionId)
         {
             writeDebug("SWIGetRootMenu");
             try
             {
+                SetSessionId(sessionId);
                 checkSWIAuthentication();
                 WebUser.WebMenu = new SWIWebMenu()
                 {
@@ -337,7 +340,7 @@ namespace SealWebServer.Controllers
                     //Remove startup report as the link is available in the Product link
                     WebUser.WebMenu.recentreports.RemoveAll(i => i.path == FileHelper.ConvertOSFilePath(startUpReport));
                 }
- 
+
                 //Apply menu scripts
                 WebUser.ScriptNumber = 1;
                 foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.MenuScript)).OrderBy(i => i.Name))
@@ -373,11 +376,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns all the folders of the user (including Personal folders).
         /// </summary>
-        public ActionResult SWIGetRootFolders()
+        public ActionResult SWIGetRootFolders(string sessionId)
         {
             writeDebug("SWIGetRootFolders");
             try
             {
+                SetSessionId(sessionId);
                 checkSWIAuthentication();
                 List<SWIFolder> result = new List<SWIFolder>();
                 //Personal
@@ -419,11 +423,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the list of file names and details contained in a folder.
         /// </summary>
-        public ActionResult SWIGetFolderDetail(string path)
+        public ActionResult SWIGetFolderDetail(string path, string sessionId)
         {
             writeDebug("SWIGetFolderDetail");
             try
             {
+                SetSessionId(sessionId);
                 checkSWIAuthentication();
                 var folderDetail = getFolderDetail(path, true);
                 WebUser.Profile.LastFolder = path;
@@ -439,11 +444,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the list of file names and details matching a search in the repository.
         /// </summary>
-        public ActionResult SWISearch(string path, string pattern)
+        public ActionResult SWISearch(string path, string pattern, string sessionId)
         {
             writeDebug("SWISearch");
             try
             {
+                SetSessionId(sessionId);
                 checkSWIAuthentication();
                 SWIFolder folder = getFolder(path);
                 var files = new List<SWIFile>();
@@ -461,11 +467,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Delete a sub-folder in the repository. The folder must be empty.
         /// </summary>
-        public ActionResult SWIDeleteFolder(string path)
+        public ActionResult SWIDeleteFolder(string path, string sessionId)
         {
             writeDebug("SWIDeleteFolder");
             try
             {
+                SetSessionId(sessionId);
                 SWIFolder folder = getFolder(path);
                 if (folder.manage != 2) throw new Exception("Error: no right to delete this folder");
                 Directory.Delete(folder.GetFullPath());
@@ -481,11 +488,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Create a sub-folder in the repository.
         /// </summary>
-        public ActionResult SWICreateFolder(string path)
+        public ActionResult SWICreateFolder(string path, string sessionId)
         {
             writeDebug("SWICreateFolder");
             try
             {
+                SetSessionId(sessionId);
                 SWIFolder folder = getFolder(path);
                 if (folder.manage == 0) throw new Exception("Error: no right to create in this folder");
                 Directory.CreateDirectory(folder.GetFullPath());
@@ -501,11 +509,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Rename a sub-folder in the repository.
         /// </summary>
-        public ActionResult SWIRenameFolder(string source, string destination)
+        public ActionResult SWIRenameFolder(string source, string destination, string sessionId)
         {
             writeDebug("SWIRenameFolder");
             try
             {
+                SetSessionId(sessionId);
                 SWIFolder folderSource = getFolder(source);
                 SWIFolder folderDest = getFolder(destination);
                 if (folderSource.manage != 2 || folderDest.manage != 2) throw new Exception("Error: no right to rename this folder");
@@ -527,11 +536,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the views and outputs of a report.
         /// </summary>
-        public ActionResult SWIGetReportDetail(string path)
+        public ActionResult SWIGetReportDetail(string path, string sessionId)
         {
             writeDebug("SWIGetReportDetail");
             try
             {
+                SetSessionId(sessionId);
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
 
@@ -559,11 +569,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Delete files or reports from the repository.
         /// </summary>
-        public ActionResult SWIDeleteFiles(string paths)
+        public ActionResult SWIDeleteFiles(string paths, string sessionId)
         {
             writeDebug("SWIDeleteFiles");
             try
             {
+                SetSessionId(sessionId);
                 checkSWIAuthentication();
                 if (string.IsNullOrEmpty(paths)) throw new Exception("Error: paths must be supplied");
 
@@ -605,11 +616,13 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Move a file or a report in the repository.
         /// </summary>
-        public ActionResult SWIMoveFile(string source, string destination, bool copy)
+        public ActionResult SWIMoveFile(string source, string destination, bool copy, string sessionId)
         {
             writeDebug("SWIMoveFile");
             try
             {
+                SetSessionId(sessionId);
+
                 SWIFolder folderSource = getParentFolder(source);
                 if (folderSource.right == 0) throw new Exception("Error: no right on this folder");
                 if (!copy && (FolderRight)folderSource.right != FolderRight.Edit) throw new Exception("Error: no edit right on this folder");
@@ -660,11 +673,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Execute a report into a report result and returns the result. Check API of Seal Web Interface for more information.
         /// </summary>
-        public ActionResult SWExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
+        public ActionResult SWExecuteReportToResult(string path, string viewGUID, string outputGUID, string format, string sessionId)
         {
             writeDebug("SWExecuteReportToResult");
             try
             {
+                SetSessionId(sessionId);
                 if (!CheckAuthentication()) return Content(_loginContent);
 
                 SWIFolder folder = getParentFolder(path);
@@ -711,11 +725,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Execute a report and returns the report html display result content (e.g. html with prompted restrictions). Check API of Seal Web Interface for more information.
         /// </summary>
-        public ActionResult SWExecuteReport(string path, string viewGUID, string outputGUID, bool? fromMenu)
+        public ActionResult SWExecuteReport(string path, string viewGUID, string outputGUID, bool? fromMenu, string sessionId)
         {
             writeDebug("SWExecuteReport");
             try
             {
+                SetSessionId(sessionId);
                 if (!CheckAuthentication()) return Content(_loginContent);
 
                 Report report = null;
@@ -753,11 +768,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// View a file published in the repository.
         /// </summary>
-        public ActionResult SWViewFile(string path)
+        public ActionResult SWViewFile(string path, string sessionId)
         {
             writeDebug("SWViewFile");
             try
             {
+                SetSessionId(sessionId);
                 if (!CheckAuthentication()) return Content(_loginContent);
 
                 SWIFolder folder = getParentFolder(path);
@@ -777,12 +793,13 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Clear the current user session.
         /// </summary>
-        public ActionResult SWILogout()
+        public ActionResult SWILogout(string sessionId)
         {
             writeDebug("SWILogout");
 
             try
             {
+                SetSessionId(sessionId);
                 if (WebUser != null) WebUser.Logout();
                 //Audit
                 Audit.LogAudit(AuditType.Logout, WebUser);
@@ -811,11 +828,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Set the culture for the logged user.
         /// </summary>
-        public ActionResult SWISetUserProfile(string culture, string onStartup, string startupReport, string startupReportName, string executionMode, string[] connections)
+        public ActionResult SWISetUserProfile(string culture, string onStartup, string startupReport, string startupReportName, string executionMode, string[] connections, string sessionId)
         {
             writeDebug("SWISetUserProfile");
             try
             {
+                SetSessionId(sessionId);
                 checkSWIAuthentication();
                 if (!WebUser.DefaultGroup.EditProfile) throw new Exception("No right to change the profile");
 
@@ -865,11 +883,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the profile information of the logged user.
         /// </summary>
-        public ActionResult SWIGetUserProfile()
+        public ActionResult SWIGetUserProfile(string sessionId)
         {
             writeDebug("SWIGetUserProfile");
             try
             {
+                SetSessionId(sessionId);
                 if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
 
                 return Json(getUserProfile());

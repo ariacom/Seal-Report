@@ -360,6 +360,10 @@ namespace Seal.Helpers
         {
             return LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection());
         }
+        public List<string> LoadStringList(MetaConnection connection, string sql)
+        {
+            return (from r in LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection()).AsEnumerable() select r[0].ToString()).ToList();
+        }
 
         public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
         {

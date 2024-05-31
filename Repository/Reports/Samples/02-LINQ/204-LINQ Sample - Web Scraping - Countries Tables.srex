@@ -1,0 +1,275 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>5748b371ff83481287b53764e3096318</GUID>
+  <ViewGUID>3197c7f9-4a3f-48b8-a171-6e32e88f0a09</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>ed9d1e1d-b5be-4958-90f8-e2de09132183</GUID>
+      <Name>LINQ Sources (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>4b293c8d-8805-4d4d-a581-3a188a523fbe</GUID>
+            <Name>HTML World GDP</Name>
+            <TemplateName>HTML</TemplateName>
+            <Parameters>
+              <Parameter>
+                <Name>html_url</Name>
+                <Value>https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)</Value>
+              </Parameter>
+              <Parameter>
+                <Name>data_start_row</Name>
+                <Value>3</Value>
+              </Parameter>
+              <Parameter>
+                <Name>numeric_cols</Name>
+                <Value>IMF[1][13];World Bank[14];United Nations[15]</Value>
+              </Parameter>
+            </Parameters>
+            <DefinitionScript />
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>12f3eb22-0694-4e86-9d7e-ad44eb0a3085</GUID>
+                <Name>Country/Territory</Name>
+                <Type>Text</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>Country / Territory</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>90b03f8a-c6d0-421f-a723-aa1cfe9f1f5f</GUID>
+                <Name>UN region</Name>
+                <Type>Text</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>UN region</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>08b32d4a-4d98-4da7-afaa-fa99b06337e6</GUID>
+                <Name>IMF[1][13]</Name>
+                <Type>Numeric</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>IMF GDP (USD Million)</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>76ec2b34-df0d-453d-8b90-c00587728c0a</GUID>
+                <Name>IMF[1][13]3</Name>
+                <Type>Text</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>IMF Year</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>cc53c113-0761-4506-a1e8-4f2135aba208</GUID>
+                <Name>World Bank[14]</Name>
+                <Type>Numeric</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>World Bank GDP (USD Million)</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>25d7d04f-3f32-4a6d-9bdc-143663bdd0b8</GUID>
+                <Name>World Bank[14]5</Name>
+                <Type>Text</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>World Bank Year</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>6380f11e-cf66-498e-b0c5-d670ab2c2073</GUID>
+                <Name>United Nations[15]</Name>
+                <Type>Numeric</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>United Nations GDP (USD Million)</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>a7a75046-f55b-458f-8d1a-1e2a87615505</GUID>
+                <Name>United Nations[15]7</Name>
+                <Type>Text</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>United Nations Year</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+        <Joins>
+          <MetaJoin>
+            <GUID>7b30c4f9-1c07-4318-8b66-15ee67555b52</GUID>
+            <Name>HTML World Population - HTML World GDP</Name>
+            <LeftTableGUID>025bf826-ff90-45f1-b19f-692ed3638714</LeftTableGUID>
+            <RightTableGUID>4b293c8d-8805-4d4d-a581-3a188a523fbe</RightTableGUID>
+            <Clause>Helper.ToString(HTMLWorldPopulation["Location"]) equals Helper.ToString(HTMLWorldGDP["Country/Territory"])</Clause>
+          </MetaJoin>
+        </Joins>
+      </MetaData>
+      <MetaSourceGUID>727fca56-c6cc-438f-913e-e1828e91ba14</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>2d6ce16b-2e24-40ff-8c5a-3c4a6c7085c4</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>d4fca67e-3100-4237-9285-3c0ae761a7a0</GUID>
+      <Name>HTML Population and GDP</Name>
+      <SourceGUID>ed9d1e1d-b5be-4958-90f8-e2de09132183</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>4b293c8d-8805-4d4d-a581-3a188a523fbe</GUID>
+          <Name>HTML World GDP</Name>
+          <TemplateName>HTML</TemplateName>
+          <Alias />
+        </MetaTable>
+        <MetaTable>
+          <GUID>025bf826-ff90-45f1-b19f-692ed3638714</GUID>
+          <Name>HTML World Population</Name>
+          <TemplateName>HTML</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>data_start_row</Name>
+              <Value>3</Value>
+            </Parameter>
+          </Parameters>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>6eb0dc23-e806-4a0b-b2bc-52e1425ed101</GUID>
+          <Name>Country/Territory</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>12f3eb22-0694-4e86-9d7e-ad44eb0a3085</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1717be66-2191-4464-a9e3-7919f7dcb187</GUID>
+          <Name>UN region</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>90b03f8a-c6d0-421f-a723-aa1cfe9f1f5f</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7edef5a4-020e-4055-ab71-3eb7b5475902</GUID>
+          <Name>United Nations[15]</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>6380f11e-cf66-498e-b0c5-d670ab2c2073</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7edef5a4-020e-4055-ab71-3eb7b5475902</GUID>
+          <Name>United Nations[15]</Name>
+          <DisplayName>%</DisplayName>
+          <NumericStandardFormat>Percentage0</NumericStandardFormat>
+          <Format>P0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <CalculationOption>PercentageColumn</CalculationOption>
+          <MetaColumnGUID>6380f11e-cf66-498e-b0c5-d670ab2c2073</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7306bc69-5189-49bc-bee1-3f635b8405f0</GUID>
+          <Name>Population</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>241a981a-3d01-44f1-9699-149a9dec9940</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7306bc69-5189-49bc-bee1-3f635b8405f0</GUID>
+          <Name>Population</Name>
+          <DisplayName>%</DisplayName>
+          <NumericStandardFormat>Percentage0</NumericStandardFormat>
+          <Format>P0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <CalculationOption>PercentageColumn</CalculationOption>
+          <MetaColumnGUID>241a981a-3d01-44f1-9699-149a9dec9940</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>3197c7f9-4a3f-48b8-a171-6e32e88f0a09</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>857bd65d-26d2-497b-b60b-d1cfbbf974bb</GUID>
+          <Name>HTML Population and GDP</Name>
+          <Views>
+            <ReportView>
+              <GUID>9b12cd96-6537-458a-b671-716afa14cd4a</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>60eb22a0-e694-453a-b071-7f8411324599</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>ccc95a49-b856-4684-ae79-3d25f57986e2</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>96cb08ec-0a5d-4677-aba3-b7a9f094cdad</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>aeb01297-6744-4f12-acb8-1f7622e9dfc0</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>665d8c3a-b5af-4280-8d7a-f5c607c42afc</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>e8411b81-97fc-48d3-a742-95a205d41b7f</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>d4fca67e-3100-4237-9285-3c0ae761a7a0</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

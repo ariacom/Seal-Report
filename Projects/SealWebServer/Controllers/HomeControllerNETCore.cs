@@ -48,6 +48,17 @@ namespace SealWebServer.Controllers
             }
         }
 
+
+        void SetSessionId(string sessionId)
+        {
+            if (!string.IsNullOrEmpty(sessionId))
+            {
+                ClearSessions();
+                HttpContext.Session.SetString(SessionIdKey, sessionId);
+            }
+        }
+
+
         void ClearSessions()
         {
             try
@@ -104,6 +115,7 @@ namespace SealWebServer.Controllers
         }
         object getSessionValue(string key)
         {
+
             CheckSession();
             return _sessions[SessionKey].ContainsKey(key) ? _sessions[SessionKey][key] : null;
         }

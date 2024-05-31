@@ -221,7 +221,7 @@ namespace Seal.Helpers
                     result = new DataTable();
                     for (int i = 0; i < collection.Count; i++)
                     {
-                        result.Columns.Add(new DataColumn(ExcelHelper.FromCsv(collection[i].Value), typeof(string)));
+                        result.Columns.Add(new DataColumn(ExcelHelper.FromCsv(collection[i].Value.Replace("-","_")), typeof(string)));
                     }
                     isHeader = false;
                 }

@@ -102,7 +102,8 @@
 		<PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
 		<PackageReference Include="System.DirectoryServices" Version="8.0.0" />
 		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
-	</ItemGroup>
+    <PackageReference Include="AngleSharp" Version="1.1.2" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\..\Repository\Security\Providers\Basic Authentication.cshtml" Link="SecurityProviders\Basic Authentication.cshtml" />
@@ -117,7 +118,8 @@
 		<None Include="..\..\Repository\Sources\TableTemplates\CSV.cshtml" Link="TableTemplates\CSV.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Mongo DB.cshtml" Link="TableTemplates\Mongo DB.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Database.cshtml" Link="TableTemplates\Database.cshtml" />
-		<None Include="..\..\Repository\Sources\TableTemplates\Default.cshtml" Link="TableTemplates\Default.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\HTML.cshtml" Link="TableTemplates\HTML.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\Default.cshtml" Link="TableTemplates\Default.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Excel.cshtml" Link="TableTemplates\Excel.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Generic.cshtml" Link="TableTemplates\Generic.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\HTTPClient Json.cshtml" Link="TableTemplates\HTTPClient Json.cshtml" />

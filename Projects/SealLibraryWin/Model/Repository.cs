@@ -335,7 +335,7 @@ namespace Seal.Model
                 }
                 path = Path.GetDirectoryName(path);
             }
-            if (!Directory.Exists(path) || (!path.StartsWith(@"\\") && path == Path.GetPathRoot(path))) path = "";
+            if (!Directory.Exists(path) || (!path.StartsWith(@"\\") && path == Path.GetPathRoot(path))) path = RepositoryConfigurationPath;
 #endif
             if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
             {
