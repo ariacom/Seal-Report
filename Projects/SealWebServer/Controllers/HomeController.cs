@@ -175,13 +175,15 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Main entry of the Controller
         /// </summary>
-        public ActionResult Main()
+        public ActionResult Main(string sessionId)
         {
             ActionResult result;
             try
             {
                 if (Repository == null) CreateRepository();
                 var model = new WebMainModel() { Repository = Repository };
+                SetSessionId(sessionId);
+
 #if EDITOR
                 model.HasEditor = true;
 #endif

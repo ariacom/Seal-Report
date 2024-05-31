@@ -943,11 +943,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Translate a text either from the public translations or the repository translations. If the optional parameter instance is not empty, the repository translations are used.
         /// </summary>
-        public ActionResult SWITranslate(string context, string instance, string reference)
+        public ActionResult SWITranslate(string context, string instance, string reference, string sessionId)
         {
             writeDebug("SWITranslate");
             try
             {
+                SetSessionId(sessionId);
                 checkSWIAuthentication();
                 if (!string.IsNullOrEmpty(instance)) return Json(new { text = Repository.RepositoryTranslate(context, instance, reference) });
                 return Json(new { text = Repository.Translate(context, reference) });
