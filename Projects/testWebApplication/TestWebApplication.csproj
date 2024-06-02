@@ -5,9 +5,4 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SealReportLibrary.NETCore" Version="8.0.1" />
-  </ItemGroup>
-
 </Project>

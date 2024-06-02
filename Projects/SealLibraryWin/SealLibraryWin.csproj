@@ -7,9 +7,9 @@
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibraryWin</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>8.0.1.0</Version>
-		<FileVersion>8.0.1.0</FileVersion>
-		<AssemblyVersion>8.0.1.0</AssemblyVersion>
+		<Version>8.1.0.0</Version>
+		<FileVersion>8.1.0.0</FileVersion>
+		<AssemblyVersion>8.1.0.0</AssemblyVersion>
 		<Description>Seal Report Library (Windows)</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -44,33 +44,33 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentFTP" Version="49.0.2" />
-		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.76.0" />
+		<PackageReference Include="FluentFTP" Version="50.0.1" />
+		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.80.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.6" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
 		<PackageReference Include="DocumentFormat.OpenXml">
-			<Version>3.0.1</Version>
+			<Version>3.0.2</Version>
 		</PackageReference>
 		<PackageReference Include="EPPlus">
 			<Version>4.5.3.3</Version>
 		</PackageReference>
 		<PackageReference Include="jose-jwt">
-			<Version>4.1.0</Version>
+			<Version>5.0.0</Version>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2277.86" />
-		<PackageReference Include="MongoDB.Driver" Version="2.23.1" />
-		<PackageReference Include="MySql.Data" Version="8.3.0" />
-		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.130" />
-		<PackageReference Include="PuppeteerSharp" Version="14.0.0" />
-		<PackageReference Include="QuestPDF" Version="2023.12.5" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2535.41" />
+		<PackageReference Include="MongoDB.Driver" Version="2.25.0" />
+		<PackageReference Include="MySql.Data" Version="8.4.0" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.4.0" />
+		<PackageReference Include="PuppeteerSharp" Version="18.0.0" />
+		<PackageReference Include="QuestPDF" Version="2024.3.10" />
 		<PackageReference Include="ScintillaNET.Core" Version="3.6.51" />
-		<PackageReference Include="ScottPlot" Version="5.0.21" />
-		<PackageReference Include="SendGrid" Version="9.29.1" />
+		<PackageReference Include="ScottPlot" Version="5.0.34" />
+		<PackageReference Include="SendGrid" Version="9.29.3" />
 		<PackageReference Include="SharpZipLib">
 			<Version>1.4.2</Version>
 		</PackageReference>
@@ -78,7 +78,7 @@
 		<PackageReference Include="SSH.NET">
 			<Version>2024.0.0</Version>
 		</PackageReference>
-		<PackageReference Include="Svg.Skia" Version="1.0.0.14" />
+		<PackageReference Include="Svg.Skia" Version="1.0.0.18" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.IO.FileSystem.Primitives">
 			<Version>4.3.0</Version>
@@ -90,12 +90,12 @@
 			<Version>4.3.0</Version>
 		</PackageReference>
 		<PackageReference Include="TaskScheduler">
-			<Version>2.10.1</Version>
+			<Version>2.11.0</Version>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
-		<PackageReference Include="Twilio" Version="6.16.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.1" />
+		<PackageReference Include="Twilio" Version="7.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.6" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.6" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Data.Odbc" Version="8.0.0" />
 		<PackageReference Include="System.Data.OleDb" Version="8.0.0" />

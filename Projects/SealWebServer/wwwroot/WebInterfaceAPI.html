@@ -113,6 +113,7 @@ $.post("https://sealreport.org/demo/SWILogin", {
                             executionmode (integer): execution mode (0=Default thus from group, 1=New Window , 2=Same Window , 3=Always New Window) <br />
                             groupexecutionmode (integer): group execution mode<br />
                             sources ([MetaSource]): array of MetaSource with their connection names and identifiers<br />
+                            sessionId (string): the identifier of the user's session'<br />
                             error (string) : if any error, the error description<br />
                             securitycoderequired (boolean): true if the Two-Factor Authentication is enabled
                         </td>
@@ -157,6 +158,7 @@ $.post("https://sealreport.org/demo/SWICheckSecurityCode", {
                             executionmode (integer): execution mode (0=Default thus from group, 1=New Window , 2=Same Window , 3=Always New Window) <br />
                             groupexecutionmode (integer): group execution mode<br />
                             sources ([MetaSource]): array of MetaSource with their connection names and identifiers<br />
+                            sessionId (string): the identifier of the user's session'<br />
                             error (string) : if any error, the error description<br />
                             login : true if the login has be re-done
                         </td>
@@ -233,9 +235,10 @@ $.post("https://sealreport.org/demo/SWIGetRootFolders", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWIGetFolderDetail", {
-    path: "\\" // The path of the folder
+    path: "\\", // The path of the folder
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -273,10 +276,11 @@ $.post("https://sealreport.org/demo/SWIGetFolderDetail", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWISearch", {
     path: "\\", // The path of the folder to start the search
-    pattern: "re" // Pattern contained in the file name of the files returned
+    pattern: "re", // Pattern contained in the file name of the files returned
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -313,9 +317,10 @@ $.post("https://sealreport.org/demo/SWISearch", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWIGetReportDetail", {
-    path: "\\" // The path of the report
+    path: "\\", // The path of the report
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -493,7 +498,8 @@ $.post("https://sealreport.org/demo/SWISetUserProfile", {
             onStartup: 3, //action taken after the login (0=Default, 1=Do not execute report, 2=Execute the last report, 3=Execute a specific report)
             startupReport: "/Overview - Sales.srex", // if onStartup=3, the report to execute
             startupReportName: "Overview - Sales", // if onStartup=3, the report name to execute
-            executionMode: 0 //(0=Default, 1=Execute by default in a new Window, 2=Execute in the same Window, 3=Execute always in a new Window)
+            executionMode: 0, //(0=Default, 1=Execute by default in a new Window, 2=Execute in the same Window, 3=Execute always in a new Window)
+            sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
         if (!data.error) { /* Do your job here */ }
@@ -519,11 +525,12 @@ $.post("https://sealreport.org/demo/SWISetUserProfile", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWITranslate", {
     context: "Element", // translation context as defined in Translations.csv or RepositoryTranslations.csv
     instance: "Customers.City",  //optional, translation instance as defined in RepositoryTranslations.csv
-    reference: "City" // reference text to translate
+    reference: "City", // reference text to translate
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
         if (!data.error) { /* Do your job here */ }
@@ -548,9 +555,10 @@ $.post("https://sealreport.org/demo/SWITranslate", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWIDeleteFiles", {
-    paths: "\\report1.srex\n\\report2.srex" // The paths of the files to delete separated by \n
+    paths: "\\report1.srex\n\\report2.srex", // The paths of the files to delete separated by \n
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -576,11 +584,12 @@ $.post("https://sealreport.org/demo/SWIDeleteFiles", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWIMoveFile", {
     source: "\\report.srex", // The path of the report to copy or move
     destination: "\\newname.srex", // The destination path 
-    copy: true //true to copy, false to move
+    copy: true, //true to copy, false to move
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -606,9 +615,10 @@ $.post("https://sealreport.org/demo/SWIMoveFile", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWIViewFile", {
-    path: "\\report.htm" // The path of the file to view
+    path: "\\report.htm", // The path of the file to view
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -635,9 +645,10 @@ $.post("https://sealreport.org/demo/SWIViewFile", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWICreateFolder", {
-    path: "\\Samples\\SubFolder" // The path of the folder to create
+    path: "\\Samples\\SubFolder", // The path of the folder to create
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -663,9 +674,10 @@ $.post("https://sealreport.org/demo/SWICreateFolder", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWIDeleteFolder", {
-    path: "\\Samples\\SubFolder" // The path of the folder to delete
+    path: "\\Samples\\SubFolder", // The path of the folder to delete
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -691,10 +703,11 @@ $.post("https://sealreport.org/demo/SWIDeleteFolder", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
-$.post("https://sealreport.org/demo/SWIDeleteFolder", {
+                            <pre>
+$.post("https://sealreport.org/demo/SWIRenameFolder", {
     source: "\\Samples\\SubFolder", // The path of the folder to rename
-    destination: "\\Samples\\NewSubFolder" // The path of the folder to rename
+    destination: "\\Samples\\NewSubFolder", // The path of the folder to rename
+    sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
@@ -706,125 +719,6 @@ $.post("https://sealreport.org/demo/SWIDeleteFolder", {
                         <th>Returns</th>
                         <td>
                             error (string): if any error, the error description
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        <div class="col-lg-12">
-            <h2>SWINewReportDefinition</h2><i>(Web Report Designer only)</i>
-            <table class="table table-striped">
-                <tbody>
-                    <tr><th>Description</th><td>Init a returns the definition of a new report in a repository.</td></tr>
-                    <tr>
-                        <th>Call</th>
-                        <td>
-<pre>
-$.post("https://sealreport.org/demo/SWIGetReportDefinition", {
-    path: "\\New Report.srex" // The path of the report
-})
-.done(function (data) {
-    if (!data.error) { /* Do your job here */ }
-})
-</pre>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Returns</th>
-                        <td>
-                            report (SWIReport): the definition of the new report (refer to SWIReport class in the source code SWIReportModels.cs)<br />
-                            error (string): if any error, the error description
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-lg-12">
-            <h2>SWIGetReportDefinition</h2><i>(Web Report Designer only)</i>
-            <table class="table table-striped">
-                <tbody>
-                    <tr><th>Description</th><td>Returns the definition of an existing report.</td></tr>
-                    <tr>
-                        <th>Call</th>
-                        <td>
-<pre>
-$.post("https://sealreport.org/demo/SWIGetReportDefinition", {
-    path: "\\New Report.srex" // The path of the report
-})
-.done(function (data) {
-    if (!data.error) { /* Do your job here */ }
-})
-</pre>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Returns</th>
-                        <td>
-                            report (SWIReport): the report definition (refer to SWIReport class in the source code SWIReportModels.cs)<br />
-                            error (string): if any error, the error description
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-lg-12">
-            <h2>SWISaveReportDefinition</h2><i>(Web Report Designer only)</i>
-            <table class="table table-striped">
-                <tbody>
-                    <tr><th>Description</th><td>Save a report.</td></tr>
-                    <tr>
-                        <th>Call</th>
-                        <td>
-<pre>
-$.post("https://sealreport.org/demo/SWISaveReportDefinition", {
-    path: "\\a report.srex", // The path of the report
-    check: true, //If true, the save check that the report does not exists
-    report: report //the report definition (refer to SWIReport class in the source code SWIReportModels.cs)
-})
-.done(function (data) {
-    if (!data.error) { /* Do your job here */ }
-})
-</pre>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Returns</th>
-                        <td>
-                            error (string): if any error, the error description
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-lg-12">
-            <h2>SWExecuteReportDefinition</h2><i>(Web Report Designer only)</i>
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <th>Description</th>
-                        <td>
-                            Execute a report from its definition and returns the report html display result content (e.g. html with prompted restrictions).<br />
-                            Custom restriction values can be set for the execution if they are prompted in the report as described for SWExecuteReportToResult.<br />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Call</th>
-                        <td>
-<pre>
-    var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
-    f.attr('action', sealServer + "SWIExecuteReportDefinition");
-    f.append($('&lt;input />').attr('name', 'path').attr('value', path));  //the report path, if empty the report definition must be specified
-    f.append($('&lt;input />').attr('name', 'render').attr('value', JSON.stringify(render))); //true if the report can be rendered (this option is used only if report definition is specified)
-    f.append($('&lt;input />').attr('name', 'viewGUID').attr('value', viewGUID)); //optional, the view GUID to execute in the report
-    f.append($('&lt;input />').attr('name', 'outputGUID').attr('value', outputGUID)); //optional, the output GUID to execute in the report
-    f.children('input').attr('type', 'hidden');
-    f.submit();
-</pre>
                         </td>
                     </tr>
                 </tbody>
