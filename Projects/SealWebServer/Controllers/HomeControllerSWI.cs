@@ -678,8 +678,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWExecuteReportToResult");
             try
             {
-                SetSessionId(sessionId);
-                if (!CheckAuthentication()) return Content(_loginContent);
+                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
@@ -730,8 +729,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWExecuteReport");
             try
             {
-                SetSessionId(sessionId);
-                if (!CheckAuthentication()) return Content(_loginContent);
+                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
 
                 Report report = null;
                 Repository repository = null;
@@ -773,8 +771,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWViewFile");
             try
             {
-                SetSessionId(sessionId);
-                if (!CheckAuthentication()) return Content(_loginContent);
+                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
