@@ -165,7 +165,7 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="MySql.Data" Version="8.4.0" />
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.4.0" />
 		<PackageReference Include="PuppeteerSharp" Version="18.0.0" />
-		<PackageReference Include="QuestPDF" Version="2024.3.10" />
+		<PackageReference Include="QuestPDF" Version="2023.12.5" />
 		<PackageReference Include="ScottPlot" Version="5.0.34" />
 		<PackageReference Include="SendGrid" Version="9.29.3" />
 		<PackageReference Include="SharpZipLib" Version="1.4.2" />

@@ -58,5 +58,19 @@ namespace Seal.Renderer
             return container.AlignLeft();
         }
     }
+
+    public static class SvgExtensions
+    {
+        public static void Svg(this IContainer container, SKSvg svg)
+        {
+            container
+                .AlignCenter()
+                .AlignMiddle()
+                .ScaleToFit()
+                .Width(svg.Picture.CullRect.Width)
+                .Height(svg.Picture.CullRect.Height)
+                .Canvas((canvas, space) => canvas.DrawPicture(svg.Picture));
+        }
+    }
 }
 
