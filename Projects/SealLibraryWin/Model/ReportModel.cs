@@ -75,7 +75,7 @@ namespace Seal.Model
                     GetProperty("LoadScript").SetDescription("Optional Razor Script to modify the result table of the model just after the database load.");
                 }
                 GetProperty("ShowFirstLine").SetIsBrowsable(!IsSubModel);
-
+                GetProperty("MaxNumberOfRecords").SetIsBrowsable(!IsSubModel);
 
                 GetProperty("UseSelectDistinct").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlSelect").SetIsBrowsable(!Source.IsNoSQL);
@@ -330,6 +330,7 @@ namespace Seal.Model
         public bool ShowFirstLine { get; set; } = true;
         public bool ShouldSerializeShowFirstLine() { return !ShowFirstLine; }
 
+
         /// <summary>
         /// Alias name used for the table defining the select
         /// </summary>
@@ -378,13 +379,22 @@ namespace Seal.Model
         public bool UseSelectDistinct { get; set; } = true;
         public bool ShouldSerializeUseSelectDistinct() { return !UseSelectDistinct; }
 
+        /// <summary>
+        /// Limit the number of records loaded for the model. A value of 0 means no limitation. The implementation at server side is only done for MS SQLServer, Oracle and MYSQL
+        /// </summary>
+#if WINDOWS
+        [Category("SQL"), DisplayName("Maximum number of records"), Description("Limit the number of records loaded for the model. A value of 0 means no limitation. The implementation at server side is only done for MS SQLServer, Oracle and MYSQL."), Id(3, 3)]
+        [DefaultValue(0)]
+#endif
+        public int MaxNumberOfRecords { get; set; } = 0;
+        public bool ShouldSerializeMaxNumberOfRecords() { return MaxNumberOfRecords != 0; }
 
         string _sqlSelect;
         /// <summary>
         /// If not empty, overwrite the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrites the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')."), Id(3, 3)]
+        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrites the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')."), Id(4, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -399,7 +409,7 @@ namespace Seal.Model
         /// If not empty, overwrite the FROM clause in the generated SQL statement
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrites the FROM clause in the generated SQL statement."), Id(4, 3)]
+        [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrites the FROM clause in the generated SQL statement."), Id(5, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -414,7 +424,7 @@ namespace Seal.Model
         /// If not empty, overwrite the GROUP BY clause in the generated SQL statement
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrites the GROUP BY clause in the generated SQL statement."), Id(5, 3)]
+        [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrites the GROUP BY clause in the generated SQL statement."), Id(6, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -430,7 +440,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrites the ORDER BY clause in the generated SQL statement."), Id(6, 3)]
+        [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrites the ORDER BY clause in the generated SQL statement."), Id(7, 3)]
         [DefaultValue("")]
 #endif
         public string SqlOrderBy
@@ -444,7 +454,7 @@ namespace Seal.Model
         /// If not empty, overwrite the CTE (Common Table Expressions) clause in the generated SQL statement
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Common Table Expressions Clause"), Description("If not empty, overwrites the CTE (Common Table Expressions) clause in the generated SQL statement."), Id(7, 3)]
+        [Category("SQL"), DisplayName("Common Table Expressions Clause"), Description("If not empty, overwrites the CTE (Common Table Expressions) clause in the generated SQL statement."), Id(8, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -459,7 +469,7 @@ namespace Seal.Model
         /// SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'.
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(8, 3)]
+        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(9, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -469,7 +479,7 @@ namespace Seal.Model
         /// SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'.
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(9, 3)]
+        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(10, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
@@ -479,7 +489,7 @@ namespace Seal.Model
         /// If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues
         /// </summary>
 #if WINDOWS
-        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(10, 3)]
+        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(11, 3)]
         [DefaultValue(false)]
 #endif
         public bool IgnorePrePostError { get; set; } = false;
@@ -489,7 +499,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(-1)]
-        [Category("SQL"), DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout."), Id(11, 3)]
+        [Category("SQL"), DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout."), Id(12, 3)]
 #endif
         public int CommandTimeout { get; set; } = -1;
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != -1; }
@@ -1938,16 +1948,31 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (!IsLINQ)
                     {
                         //Get CTE first
-                        execSelect = (UseSelectDistinct && execGroupByClause.Length == 0) ? "SELECT DISTINCT\r\n" : "SELECT\r\n";
+                        var topClause = (Connection.ConnectionType == ConnectionType.MSSQLServer && MaxNumberOfRecords > 0) ? $" TOP {MaxNumberOfRecords}" : "";
+                        var distinctClause = (UseSelectDistinct && execGroupByClause.Length == 0) ? " DISTINCT" : "";
+                        execSelect = $"SELECT{distinctClause}{topClause}\r\n";
                         execSelect = !string.IsNullOrEmpty(SqlSelect) ? SqlSelect : execSelect;
                         Sql = !string.IsNullOrEmpty(SqlCTE) ? SqlCTE : execCTEClause;
                         Sql += execSelect;
                         Sql += string.Format("{0}\r\n", execSelectClause);
                         Sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
-                        if (execWhereClause.Length > 0) Sql += string.Format("WHERE {0}\r\n", execWhereClause);
+
+                        var whereClause = execWhereClause.ToString();
+                        //Limit Max number of records for Oracle
+                        if (Connection.ConnectionType == ConnectionType.Oracle && MaxNumberOfRecords > 0)
+                        {
+                            whereClause = $"rownum <= {MaxNumberOfRecords}";
+                            if (execWhereClause.Length > 0) whereClause += $" AND ({execWhereClause})";
+                        }
+
+                        if (whereClause.Length > 0) Sql += string.Format("WHERE {0}\r\n", whereClause);
+
                         if (execGroupByClause.Length > 0 || !string.IsNullOrEmpty(SqlGroupBy)) Sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
                         if (execHavingClause.Length > 0) Sql += string.Format("HAVING {0}\r\n", execHavingClause);
                         if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) Sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
+
+                        //Limit Max number of records for MySQL
+                        if (Connection.ConnectionType == ConnectionType.MySQL && MaxNumberOfRecords > 0) Sql += $"LIMIT {MaxNumberOfRecords}\r\n";
 
                         //Finally inject common restriction values
                         if (!forConversion) Sql = ParseCommonRestrictions(Sql);
@@ -3165,6 +3190,12 @@ model.ResultTable = query2.CopyToDataTable2();
                 var isMaster = fillResultTableFromDatabase(runningModels);
 
                 if (Report.Cancel) return;
+
+                //Check maximum number of records
+                if (MaxNumberOfRecords > 0 && ResultTable.Rows.Count > MaxNumberOfRecords)
+                {
+                    while (ResultTable.Rows.Count > MaxNumberOfRecords) ResultTable.Rows.RemoveAt(MaxNumberOfRecords);
+                }
 
                 //If enum, set enum values directly in the table, only for master model
                 if (isMaster && !IsSubModel) handleEnums();

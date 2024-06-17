@@ -114,10 +114,7 @@
                     var logoContainer = row.ConstantItem(80).Height(40);
                     if (configuration.LogoFilePath.EndsWith("svg"))
                     {
-                        var svg = new SKSvg();
-                        svg.Load(configuration.LogoFilePath);
-                        logoContainer.Svg(svg);
-                        //FUTURE logoContainer.Svg(SvgImage.FromFile(configuration.LogoFilePath)).FitArea();
+                        logoContainer.Svg(SvgImage.FromFile(configuration.LogoFilePath)).FitArea();
                     }
                     else
                     {

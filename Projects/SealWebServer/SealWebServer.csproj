@@ -58,7 +58,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="8.0.6" />
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.4">
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
