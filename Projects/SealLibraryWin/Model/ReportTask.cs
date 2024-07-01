@@ -64,6 +64,7 @@ namespace Seal.Model
                 GetProperty("RetryDuration").SetIsBrowsable(true);
                 GetProperty("BodyScript").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
+                GetProperty("Functions").SetIsBrowsable(hasFunctions());
                 GetProperty("ExecuteForEachConnection").SetIsBrowsable(true);
                 GetProperty("Step").SetIsBrowsable(ParentTask == null);
 
@@ -192,6 +193,30 @@ namespace Seal.Model
             }
         }
 
+        bool hasFunctions()
+        {
+            return !string.IsNullOrEmpty(Script) && Script.Contains("@functions"); 
+        }
+
+#if WINDOWS
+        /// <summary>
+        /// The functions got for edition.
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Script functions"), Description("The task functions got from the main script."), Category("Definition"), Id(8, 1)]
+        [XmlIgnore]
+        public FunctionsEditor Functions
+        {
+            get
+            {
+                var editor = new FunctionsEditor();
+                editor.Init(_script, this);
+                return editor;
+            }
+        }
+#endif
+
+
 #if WINDOWS
         /// <summary>
         /// The parameter values for edition.
@@ -263,7 +288,7 @@ namespace Seal.Model
                 var parentExecResult = "";
                 if (ParentTask?.ExecResult is string) parentExecResult = ParentTask?.ExecResult as string;
                 else if (ParentTask?.ExecResult is DataRow) parentExecResult = ((DataRow)ParentTask?.ExecResult)[0].ToString();
-                result= result.Replace(ParentExecResultKeyword, parentExecResult);
+                result = result.Replace(ParentExecResultKeyword, parentExecResult);
 
                 result = Repository.ReplaceRepositoryKeyword(result);
             }
@@ -495,14 +520,26 @@ namespace Seal.Model
 #endif
         public string SQLSeparator { get; set; }
 
+        string _script;
         /// <summary>
-        /// Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed.
+        /// Razor script executed for the Task. It may be empty if the SQL Script is defined.
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string Script { get; set; }
+        public string Script
+        {
+            get
+            {
+                return _script;
+            }
+            set
+            {
+                _script = value;
+                UpdateEditor();
+            }
+        }
 
         /// <summary>
         /// If true, errors occuring during the task execution are ignored and the report execution continues
@@ -758,13 +795,13 @@ namespace Seal.Model
         /// List of SQL statements to execute
         /// </summary>
         [XmlIgnore]
-        public List<string> SQLStatements 
+        public List<string> SQLStatements
         {
             get
             {
                 var result = new List<string>();
                 string finalSql = RazorHelper.CompileExecute(SQL, this);
-                if (!string.IsNullOrEmpty(SQLSeparator)) result = finalSql.Replace("\r\n","\n").Split(SQLSeparator + "\n").ToList();
+                if (!string.IsNullOrEmpty(SQLSeparator)) result = finalSql.Replace("\r\n", "\n").Split(SQLSeparator + "\n").ToList();
                 else result.Add(finalSql);
                 return result;
             }
@@ -777,7 +814,7 @@ namespace Seal.Model
                 _command = GetDbCommand(Connection);
                 try
                 {
-                    foreach( var sql in SQLStatements)
+                    foreach (var sql in SQLStatements)
                     {
                         if (!string.IsNullOrWhiteSpace(sql))
                         {

@@ -5405,7 +5405,7 @@
         </member>
         <member name="P:Seal.Model.ReportTask.Script">
             <summary>
-            Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed.
+            Razor script executed for the Task. It may be empty if the SQL Script is defined.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportTask.IgnoreError">

@@ -900,6 +900,8 @@ namespace Seal
             if (item != null) item.Expanded = true;
             item = Helper.GetGridEntry(mainPropertyGrid, "table parameters");
             if (item != null) item.Expanded = true;
+            item = Helper.GetGridEntry(mainPropertyGrid, "script functions");
+            if (item != null) item.Expanded = true;
             item = Helper.GetGridEntry(mainPropertyGrid, "task parameters");
             if (item != null) item.Expanded = true;
 
