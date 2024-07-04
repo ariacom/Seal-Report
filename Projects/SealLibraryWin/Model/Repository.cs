@@ -21,6 +21,8 @@ using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis;
 using SharpCompress.Common;
 using System.Runtime.Loader;
+using Microsoft.CodeAnalysis.Text;
+
 
 
 
@@ -517,98 +519,101 @@ namespace Seal.Model
                 }
             }
 
-            if (!AssembliesLoaded)
+            lock (PathLock)
             {
-                //Load extra assemblies defined in Repository
-                var assemblies = Directory.GetFiles(AssembliesFolder, "*.dll");
-                foreach (var assembly in assemblies)
+                if (!AssembliesLoaded)
                 {
-                    try
+                    //Load extra assemblies defined in Repository
+                    var assemblies = Directory.GetFiles(AssembliesFolder, "*.dll");
+                    foreach (var assembly in assemblies)
                     {
-                        if (Path.GetFileName(assembly) != SealConverterDll && Path.GetFileName(assembly) != SealConverterWinDll)
+                        try
                         {
-                            Assembly.LoadFrom(assembly);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Helper.WriteLogException("Assemblies", ex);
-                    }
-                }
-
-                //Add this assembly resolve necessary when executing Razor scripts
-                AppDomain currentDomain = AppDomain.CurrentDomain;
-                currentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
-
-                AssembliesLoaded = true;
-            }
-
-            if (!DynamicAssembliesLoaded)
-            {
-                //Load extra dynamic assemblies
-                var csFiles = Directory.GetFiles(DynamicsFolder, "*.cs");
-                foreach (var csFile in csFiles)
-                {
-                    try
-                    {
-                        var dllPath = Path.Combine(DynamicsFolder, Path.GetFileNameWithoutExtension(csFile) + ".dll");
-                        if (File.GetLastWriteTime(csFile) > File.GetLastWriteTime(dllPath))
-                        {
-                            //Compile the file and save the dll
-                            var code = File.ReadAllText(csFile);
-                            // Compile the code
-                            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                            var references = AppDomain.CurrentDomain.GetAssemblies()
-                                .Where(a => !a.IsDynamic && a.Location != dllPath)
-                                .Select(a => MetadataReference.CreateFromFile(a.Location))
-                                .Cast<MetadataReference>();
-
-                            var compilation = CSharpCompilation.Create(
-                                Path.GetFileNameWithoutExtension(csFile),
-                                new[] { syntaxTree },
-                                references,
-                                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                            );
-
-                            EmitResult result = compilation.Emit(dllPath);
-                            if (!result.Success)
+                            if (Path.GetFileName(assembly) != SealConverterDll && Path.GetFileName(assembly) != SealConverterWinDll)
                             {
-                                var diag = "";
-                                foreach (var diagnostic in result.Diagnostics)
-                                {
-                                    diag += diagnostic.ToString() + "\r\n";
-                                }
-                                if (File.Exists(dllPath)) File.Delete(dllPath);
-
-                                throw new Exception($"Error compiling '{csFile}':\r\n{diag}");
+                                Assembly.LoadFrom(assembly);
                             }
-
                         }
-                        var loadContext = new AssemblyLoadContext(Path.GetFileNameWithoutExtension(csFile));
-                        loadContext.LoadFromAssemblyPath(dllPath);
+                        catch (Exception ex)
+                        {
+                            Helper.WriteLogException("Assemblies", ex);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Helper.WriteLogException("DynamicAssemblies", ex);
-                    }
+
+                    //Add this assembly resolve necessary when executing Razor scripts
+                    AppDomain currentDomain = AppDomain.CurrentDomain;
+                    currentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
+
+                    AssembliesLoaded = true;
                 }
 
-                DynamicAssembliesLoaded = true;
-            }
+                if (!DynamicAssembliesLoaded)
+                {
+                    //Load extra dynamic assemblies
+                    var csFiles = Directory.GetFiles(DynamicsFolder, "*.cs");
+                    foreach (var csFile in csFiles)
+                    {
+                        try
+                        {
+                            var dllPath = Path.Combine(DynamicsFolder, Path.GetFileNameWithoutExtension(csFile) + ".dll");
+                            if (File.GetLastWriteTime(csFile) > File.GetLastWriteTime(dllPath))
+                            {
+                                //Compile the file and save the dll
+                                var code = File.ReadAllText(csFile);
+                                // Compile the code
+                                var syntaxTree = CSharpSyntaxTree.ParseText(code);
+                                var references = AppDomain.CurrentDomain.GetAssemblies()
+                                    .Where(a => !a.IsDynamic && a.Location != dllPath)
+                                    .Select(a => MetadataReference.CreateFromFile(a.Location))
+                                    .Cast<MetadataReference>();
 
-            //Alternate temporary directories
-            if (!string.IsNullOrEmpty(Configuration.AlternateTempDirectory))
-            {
-                var tempDir = ReplaceRepositoryKeyword(Configuration.AlternateTempDirectory);
-                if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
-                RazorEngine.Engine.AlternateTemporaryDirectory = tempDir;
-                FileHelper.AlternateTemporaryDirectory = tempDir;
+                                var compilation = CSharpCompilation.Create(
+                                    Path.GetFileNameWithoutExtension(csFile),
+                                    new[] { syntaxTree },
+                                    references,
+                                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                                );
+
+                                var symbolsPath = Path.ChangeExtension(dllPath, "pdb");
+                                EmitResult result = compilation.Emit(dllPath, symbolsPath);
+                                if (!result.Success)
+                                {
+                                    var diag = "";
+                                    foreach (var diagnostic in result.Diagnostics)
+                                    {
+                                        diag += diagnostic.ToString() + "\r\n";
+                                    }
+                                    if (File.Exists(dllPath)) File.Delete(dllPath);
+
+                                    throw new Exception($"Error compiling '{csFile}':\r\n{diag}");
+                                }
+                            }
+                            Assembly.LoadFrom(dllPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Helper.WriteLogException("DynamicAssemblies", ex);
+                        }
+                    }
+
+                    DynamicAssembliesLoaded = true;
+                }
+
+                //Alternate temporary directories
+                if (!string.IsNullOrEmpty(Configuration.AlternateTempDirectory))
+                {
+                    var tempDir = ReplaceRepositoryKeyword(Configuration.AlternateTempDirectory);
+                    if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+                    RazorEngine.Engine.AlternateTemporaryDirectory = tempDir;
+                    FileHelper.AlternateTemporaryDirectory = tempDir;
+                }
             }
         }
 
         Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string assemblyPath = Path.Combine(AssembliesFolder, new AssemblyName(args.Name).Name + ".dll");
+            if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(DynamicsFolder, new AssemblyName(args.Name).Name + ".dll");
             if (!File.Exists(assemblyPath)) return null;
             Assembly assembly = Assembly.LoadFrom(assemblyPath);
             return assembly;
