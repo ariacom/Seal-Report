@@ -15,6 +15,15 @@ using Microsoft.Extensions.Configuration;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Amazon.Runtime.Internal.Transform;
 using System.Text;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+
+using Microsoft.CodeAnalysis;
+using SharpCompress.Common;
+using System.Runtime.Loader;
+
+
+
 #if WINDOWS
 using System.Windows.Forms;
 using System.Drawing;
@@ -443,6 +452,11 @@ namespace Seal.Model
         public static bool AssembliesLoaded = false;
 
         /// <summary>
+        /// True is Dynamic Assemblies have been loaded. Can be set to true at startup to disable Dynamic Assemblies load.
+        /// </summary>
+        public static bool DynamicAssembliesLoaded = false;
+
+        /// <summary>
         /// Init the repository from a given path
         /// </summary>
         public void Init(string path)
@@ -518,8 +532,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        Helper.WriteDailyLog(Helper.DailyLogEvents, LogsFolder, Configuration.LogDays, $"Exception got in Repository Init\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
-                        Debug.WriteLine(ex.Message);
+                        Helper.WriteLogException("Assemblies", ex);
                     }
                 }
 
@@ -528,6 +541,59 @@ namespace Seal.Model
                 currentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
 
                 AssembliesLoaded = true;
+            }
+
+            if (!DynamicAssembliesLoaded)
+            {
+                //Load extra dynamic assemblies
+                var csFiles = Directory.GetFiles(DynamicsFolder, "*.cs");
+                foreach (var csFile in csFiles)
+                {
+                    try
+                    {
+                        var dllPath = Path.Combine(DynamicsFolder, Path.GetFileNameWithoutExtension(csFile) + ".dll");
+                        if (File.GetLastWriteTime(csFile) > File.GetLastWriteTime(dllPath))
+                        {
+                            //Compile the file and save the dll
+                            var code = File.ReadAllText(csFile);
+                            // Compile the code
+                            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+                            var references = AppDomain.CurrentDomain.GetAssemblies()
+                                .Where(a => !a.IsDynamic && a.Location != dllPath)
+                                .Select(a => MetadataReference.CreateFromFile(a.Location))
+                                .Cast<MetadataReference>();
+
+                            var compilation = CSharpCompilation.Create(
+                                Path.GetFileNameWithoutExtension(csFile),
+                                new[] { syntaxTree },
+                                references,
+                                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                            );
+
+                            EmitResult result = compilation.Emit(dllPath);
+                            if (!result.Success)
+                            {
+                                var diag = "";
+                                foreach (var diagnostic in result.Diagnostics)
+                                {
+                                    diag += diagnostic.ToString() + "\r\n";
+                                }
+                                if (File.Exists(dllPath)) File.Delete(dllPath);
+
+                                throw new Exception($"Error compiling '{csFile}':\r\n{diag}");
+                            }
+
+                        }
+                        var loadContext = new AssemblyLoadContext(Path.GetFileNameWithoutExtension(csFile));
+                        loadContext.LoadFromAssemblyPath(dllPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helper.WriteLogException("DynamicAssemblies", ex);
+                    }
+                }
+
+                DynamicAssembliesLoaded = true;
             }
 
             //Alternate temporary directories
@@ -592,6 +658,7 @@ namespace Seal.Model
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
                 if (!Directory.Exists(AssembliesFolder)) Directory.CreateDirectory(AssembliesFolder);
+                if (!Directory.Exists(DynamicsFolder)) Directory.CreateDirectory(DynamicsFolder);
                 if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
                 if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
                 if (!Directory.Exists(PersonalFolder)) Directory.CreateDirectory(PersonalFolder);
@@ -728,6 +795,17 @@ namespace Seal.Model
             get
             {
                 return Path.Combine(RepositoryPath, "Assemblies");
+            }
+        }
+
+        /// <summary>
+        /// Dynamic assemblies folder
+        /// </summary>
+        public string DynamicsFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "Dynamics");
             }
         }
 

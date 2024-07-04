@@ -71,7 +71,7 @@ namespace Seal.Forms
             }
         }
 
-        public static void CheckRazorSyntax(Scintilla textBox, string header, object objectForCheckSyntax, Dictionary<int, string> compilationErrors, string finalScript = "")
+        public static void CheckRazorSyntax(Scintilla textBox, object objectForCheckSyntax, Dictionary<int, string> compilationErrors, string finalScript = "")
         {
             string error = "";
             const int NUM = 18;
@@ -86,7 +86,7 @@ namespace Seal.Forms
             compilationErrors.Clear();
             try
             {
-                var script = RazorHelper.GetFullScript(!string.IsNullOrEmpty(finalScript) ? finalScript : textBox.Text, objectForCheckSyntax, header);
+                var script = RazorHelper.GetFullScript(!string.IsNullOrEmpty(finalScript) ? finalScript : textBox.Text);
                 if (objectForCheckSyntax is MetaEnum) script = Helper.ClearAllLINQKeywords(script);
 
                 RazorHelper.Compile(script, objectForCheckSyntax.GetType(), Guid.NewGuid().ToString());

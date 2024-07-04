@@ -99,6 +99,16 @@
             Convert an objet to a double, handling DBNull value
             </summary>
         </member>
+        <member name="M:Seal.Helpers.RazorHelper.LoadRazorAssemblies">
+            <summary>
+            Force the load of the assemblies
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorHelper.LoadDynamicAssemblies">
+            <summary>
+            Compile and load CS code from Assemblies\Dynamics folder
+            </summary>
+        </member>
         <member name="T:Seal.Helpers.ScriptValidator">
             <summary>
             Optional script validation before compilation
@@ -6436,6 +6446,11 @@
         <member name="P:Seal.Model.Repository.AssembliesFolder">
             <summary>
             Assemblies folder
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.DynamicsFolder">
+            <summary>
+            Dynamic assemblies folder
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.SealConverterPath">

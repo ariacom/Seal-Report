@@ -1853,11 +1853,6 @@ namespace Seal.Forms
                     {
                         //common script from configuration, nothing to include, we rely on @Include
                     }
-                    if (CurrentEntity is Report)
-                    {
-                        //common script from report
-                        frm.ScriptHeader = ((Report)CurrentEntity).GetCommonScriptsHeader((CommonScript)context.Instance);
-                    }
                     frm.ObjectForCheckSyntax = CurrentEntity;
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }

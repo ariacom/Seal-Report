@@ -118,6 +118,15 @@ namespace Seal.Model
             }
         }
 
+        public ExecutionStep DefaultExecutionStep
+        {
+            get
+            {
+                InitDefaultScripts();
+                return _task.Step;
+            }
+        }
+
         public string DefaultScript
         {
             get

@@ -27,7 +27,6 @@ namespace Seal.Forms
     public partial class TemplateTextEditorForm : Form
     {
         public object ObjectForCheckSyntax = null;
-        public string ScriptHeader = null;
 
         public object ContextInstance = null;
         public PropertyDescriptor ContextPropertyDescriptor = null;
@@ -202,7 +201,7 @@ namespace Seal.Forms
                         finalScript = editor.ReplaceFunction(script, ContextPropertyDescriptor.DisplayName, textBox.Text);
                     }
 
-                    FormHelper.CheckRazorSyntax(textBox, ScriptHeader, ObjectForCheckSyntax, _compilationErrors, finalScript);
+                    FormHelper.CheckRazorSyntax(textBox, ObjectForCheckSyntax, _compilationErrors, finalScript);
                 }
                 catch (Exception ex)
                 {

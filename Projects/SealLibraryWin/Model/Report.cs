@@ -73,10 +73,8 @@ namespace Seal.Model
                 GetProperty("InputValues").SetIsBrowsable(true);
                 GetProperty("PrintQueries").SetIsBrowsable(true);
 
-                GetProperty("CommonScripts").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsBrowsable(true);
                 GetProperty("NavigationScript").SetIsBrowsable(true);
-                //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (Report.CommonScripts.Count == 0 ? "None" : Report.CommonScripts.Count.ToString() + " Items(s)"));
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -191,63 +189,6 @@ namespace Seal.Model
         public bool ShouldSerializeTasks()
         {
             return Tasks.Count > 0;
-        }
-
-        /// <summary>
-        /// List of scripts added to all scripts executed for the report (including tasks). This may be useful to defined common functions for the report.
-        /// </summary>
-#if WINDOWS
-        [Category("Scripts"), DisplayName("Common Scripts"), Description("List of scripts added to all scripts executed for the report (including tasks). This may be useful to defined common functions for the report."), Id(1, 2)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-#endif
-        public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
-        public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
-
-        /// <summary>
-        /// The header to include in razor scripts executed for this report
-        /// </summary>
-        [XmlIgnore]
-        public string CommonScriptsHeader
-        {
-            get
-            {
-                var result = "";
-                foreach (var script in CommonScripts) result += script.Script + "\r\n";
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// The header to include in razor scripts executed for this report, except the one being edited
-        /// </summary>
-        public string GetCommonScriptsHeader(CommonScript scriptBeingEdited)
-        {
-            var result = "";
-            foreach (var script in CommonScripts.Where(i => i != scriptBeingEdited)) result += script.Script + "\r\n";
-            return result;
-        }
-
-        /// <summary>
-        /// Returns a common script key from a given name and model
-        /// </summary>      
-        public string GetReportCommonScriptKey(string name, object model)
-        {
-            var script = CommonScripts.FirstOrDefault(i => i.Name == name);
-            if (script == null) throw new Exception(string.Format("Unable to find a report common script  named '{0}'...", name));
-
-            string key = string.Format("REPCS:{0}_{1}_{2}_{3}", FilePath, GUID, name, File.GetLastWriteTime(FilePath).ToString("s"));
-            try
-            {
-                RazorHelper.Compile(script.Script, model.GetType(), key);
-            }
-            catch (Exception ex)
-            {
-                var message = (ex is TemplateCompilationException ? Helper.GetExceptionMessage((TemplateCompilationException)ex) : ex.Message);
-                ExecutionErrors += string.Format("Execution error when compiling the common script '{0}':\r\n{1}\r\n", name, message);
-                if (ex.InnerException != null) ExecutionErrors += "\r\n" + ex.InnerException.Message;
-                throw;
-            }
-            return key;
         }
 
         /// <summary>
@@ -1742,6 +1683,7 @@ namespace Seal.Model
             //Apply template
             template.ParseConfiguration(result);
             result.TemplateName = template.Name;
+            result.Step = template.DefaultExecutionStep;
             result.Name = Helper.GetUniqueName(template.Name, (from i in tasks select i.Name).ToList());
             result.InitParameters();
 

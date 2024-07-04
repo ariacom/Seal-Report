@@ -147,7 +147,7 @@ namespace Seal.Forms
                     ReportModel model = Instance as ReportModel;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", model, _compilationErrors);
+                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, model, _compilationErrors);
                         error = model.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, model), null, model, true);
                     }
                     else
@@ -162,7 +162,7 @@ namespace Seal.Forms
                 if (Instance is MetaEnum)
                 {
                     MetaEnum anEnum = Instance as MetaEnum;
-                    if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", anEnum, _compilationErrors);
+                    if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, anEnum, _compilationErrors);
                     error = anEnum.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, anEnum), null, null, false);
                 }
                 else if (Instance is MetaSource)
@@ -170,7 +170,7 @@ namespace Seal.Forms
                     MetaSource source = Instance as MetaSource;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", source, _compilationErrors);
+                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, source, _compilationErrors);
                         error = source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, source), null, null, true);
                     }
                 }
@@ -179,7 +179,7 @@ namespace Seal.Forms
                     MetaTable table = Instance as MetaTable;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", table, _compilationErrors);
+                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, table, _compilationErrors);
                         error = table.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, table), null, null, true);
                     }
                     else
@@ -187,7 +187,7 @@ namespace Seal.Forms
                         if (PropertyName == "WhereSQL")
                         {
                             initialSQL = table.WhereSQL;
-                            if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", table, _compilationErrors);
+                            if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, table, _compilationErrors);
                             table.WhereSQL = RazorHelper.CompileExecute(sqlTextBox.Text, table);
                         }
                         else

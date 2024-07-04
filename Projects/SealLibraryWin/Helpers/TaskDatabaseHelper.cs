@@ -103,7 +103,7 @@ namespace Seal.Helpers
         public string GetDatabaseName(string name)
         {
             char[] chars = new char[] { '-', '\"', '\'', '[',']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
-            var result = chars.Aggregate(name, (c1, c2) => c1.Replace(c2, '\n'));
+            var result = chars.Aggregate(name, (c1, c2) => c1.Replace(c2, '_'));
             if (DatabaseType == DatabaseType.MSSQLServer) result = "[" + result + "]";
             else if (DatabaseType == DatabaseType.Oracle) result = Helper.QuoteDouble(result);
             else if (DatabaseType == DatabaseType.MySQL) result = "`" + result + "`";
