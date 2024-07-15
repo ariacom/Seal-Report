@@ -1394,6 +1394,7 @@ namespace Seal.Forms
 
         const string sqlConnectionString = @"Server=aServer;Database=aDatabase;Trusted_Connection=True;TrustServerCertificate=True;";
         const string mySqlConnectionString = @"Server=aServer;Port=1234;Database=aDatabase;";
+        const string postgreSQLConnectionString = @"Server=aServer;Port=5432;Database=aDatabase;";
         const string oracleConnectionString = @"Data Source=tnsName; /* Configure OracleConfiguration.OracleDataSources in the 'Connection Script' */";
         const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@aServer";
         const string odbcConnectionString = @"DSN=aDataSourceName;DATABASE=aDatabase";
@@ -1640,7 +1641,7 @@ namespace Seal.Forms
                                 }
                             }
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             Debug.WriteLine(ex.Message);
                             samples.Add("Provider=SQLNCLI11;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=Northwind;Data Source=localhost;|SQLServer Native Client");
@@ -1667,6 +1668,12 @@ namespace Seal.Forms
                     {
                         template = oracleConnectionString;
                         frm.Text = "Edit the Oracle Connection string";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "PostgreSQLConnectionString")
+                    {
+                        template = postgreSQLConnectionString;
+                        frm.Text = "Edit the PostgreSQL Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
                     else if (context.PropertyDescriptor.Name == "MongoDBConnectionString")

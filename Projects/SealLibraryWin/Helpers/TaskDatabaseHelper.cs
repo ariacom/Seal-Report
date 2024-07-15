@@ -15,6 +15,7 @@ using OfficeOpenXml;
 using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
 using MySqlX.XDevAPI.Common;
+using Npgsql;
 
 namespace Seal.Helpers
 {
@@ -102,10 +103,11 @@ namespace Seal.Helpers
 
         public string GetDatabaseName(string name)
         {
-            char[] chars = new char[] { '-', '\"', '\'', '[',']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
+            char[] chars = new char[] { '-', '\"', '\'', '[', ']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
             var result = chars.Aggregate(name, (c1, c2) => c1.Replace(c2, '\n'));
             if (DatabaseType == DatabaseType.MSSQLServer) result = "[" + result + "]";
             else if (DatabaseType == DatabaseType.Oracle) result = Helper.QuoteDouble(result);
+            else if (DatabaseType == DatabaseType.PostgreSQL) result = Helper.QuoteDouble(result);
             else if (DatabaseType == DatabaseType.MySQL) result = "`" + result + "`";
             else result = result.Replace(" ", "_");
             return result;
@@ -152,6 +154,7 @@ namespace Seal.Helpers
                         else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else if (connection is OracleConnection) adapter = new OracleDataAdapter(sql, (OracleConnection)connection);
+                        else if (connection is NpgsqlConnection) adapter = new NpgsqlDataAdapter(sql, (NpgsqlConnection)connection);
                         else adapter = new OleDbDataAdapter(sql, (OleDbConnection)connection);
                         adapter.SelectCommand.CommandTimeout = SelectTimeout;
                         adapter.Fill(table);
@@ -164,6 +167,7 @@ namespace Seal.Helpers
                         else if (connection is Microsoft.Data.SqlClient.SqlConnection) cmd = new Microsoft.Data.SqlClient.SqlCommand(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) cmd = new MySql.Data.MySqlClient.MySqlCommand(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else if (connection is OracleConnection) cmd = new OracleCommand(sql, (OracleConnection)connection);
+                        else if (connection is NpgsqlConnection) cmd = new NpgsqlCommand(sql, (NpgsqlConnection)connection);
                         else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
                         cmd.CommandTimeout = SelectTimeout;
                         cmd.CommandType = CommandType.Text;
@@ -242,7 +246,7 @@ namespace Seal.Helpers
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding??DefaultEncoding, noHeader);
+            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding ?? DefaultEncoding, noHeader);
         }
 
 
@@ -250,7 +254,7 @@ namespace Seal.Helpers
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            return ExcelHelper.LoadDataTableFromCSVVBParser(csvPath, separator, encoding??DefaultEncoding);
+            return ExcelHelper.LoadDataTableFromCSVVBParser(csvPath, separator, encoding ?? DefaultEncoding);
         }
 
         public DatabaseType DatabaseType = DatabaseType.MSSQLServer;
@@ -265,6 +269,16 @@ namespace Seal.Helpers
                 _defaultColumnDateTimeType = "date";
                 _defaultInsertStartCommand = "begin";
                 _defaultInsertEndCommand = "end;";
+            }
+            else if (type == DatabaseType.PostgreSQL)
+            {
+                //Default, tested on SQLServer...
+                _defaultColumnCharType = "varchar";
+                _defaultColumnNumericType = "numeric(18,5)";
+                _defaultColumnIntegerType = "integer";
+                _defaultColumnDateTimeType = "timestamp";
+                _defaultInsertStartCommand = "";
+                _defaultInsertEndCommand = "";
             }
             else
             {
@@ -300,6 +314,7 @@ namespace Seal.Helpers
             else if (connection is Microsoft.Data.SqlClient.SqlConnection) result = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
             else if (connection is MySql.Data.MySqlClient.MySqlConnection) result = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
             else if (connection is OracleConnection) result = ((OracleConnection)connection).CreateCommand();
+            else if (connection is NpgsqlConnection) result = ((NpgsqlConnection)connection).CreateCommand();
             else result = ((OleDbConnection)connection).CreateCommand();
             result.CommandTimeout = SelectTimeout;
             return result;
@@ -431,7 +446,7 @@ namespace Seal.Helpers
                 else
                 {
                     //insert for standard SQL
-                    sqlTemplate = string.Format("insert into {0} {1} ({2})",tableName, InsertTableHints, GetTableColumnNames(table)) + " values ({0});\r\n";
+                    sqlTemplate = string.Format("insert into {0} {1} ({2})", tableName, InsertTableHints, GetTableColumnNames(table)) + " values ({0});\r\n";
                     foreach (DataRow row in table.Rows)
                     {
                         sql.AppendFormat(sqlTemplate, GetTableColumnValues(row, dateTimeFormat));

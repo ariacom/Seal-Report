@@ -57,7 +57,7 @@ namespace Seal.Model
                 GetProperty("HelperCheckColumn").SetIsBrowsable(IsSQL);
                 GetProperty("HelperCreateEnum").SetIsBrowsable(true);
                 GetProperty("HelperShowValues").SetIsBrowsable(true);
-                GetProperty("HelperCreateDrillDates").SetIsBrowsable(Type == ColumnType.DateTime && (Source.Connection.DatabaseType == DatabaseType.MSAccess || Source.Connection.DatabaseType == DatabaseType.Oracle || Source.Connection.DatabaseType == DatabaseType.MSSQLServer));
+                GetProperty("HelperCreateDrillDates").SetIsBrowsable(Type == ColumnType.DateTime && (Source.Connection.DatabaseType == DatabaseType.MSAccess || Source.Connection.DatabaseType == DatabaseType.Oracle || Source.Connection.DatabaseType == DatabaseType.PostgreSQL ||Source.Connection.DatabaseType == DatabaseType.MSSQLServer));
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
 
