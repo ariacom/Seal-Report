@@ -266,14 +266,6 @@
           <MetaColumnGUID>7dd42ae9-83e1-4a1d-b2c8-075fccf25363</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>4677807d-0247-4a71-8792-130f3f75c5ef</GUID>
-          <Name>DisplayOrder</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>99034f69-6fb2-4ad4-b366-3e6ab4e3066a</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>55213dc3-72ec-4935-9efa-951a75a6db5d</GUID>
           <Name>NumericStandardFormat</Name>
           <DisplayName />
@@ -330,6 +322,48 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>db183e8a-a333-464c-b8e2-59c0d0c0421a</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>d4fca67e-3100-4237-9285-3c0ae761a7a0</GUID>
+      <Name>HTML Table Population</Name>
+      <SourceGUID>ed9d1e1d-b5be-4958-90f8-e2de09132183</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>025bf826-ff90-45f1-b19f-692ed3638714</GUID>
+          <Name>HTML World Population</Name>
+          <TemplateName>HTML</TemplateName>
+          <DefinitionScript />
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>96566fcd-3e8c-442a-832a-b9ae4b82874a</GUID>
+          <Name>Location</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2d44b925-2110-405d-9063-dae9541bbb1a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>75e11947-a960-4a8d-835a-f3b66645ac5e</GUID>
+          <Name>Population</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <MetaColumnGUID>241a981a-3d01-44f1-9699-149a9dec9940</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fd840045-c6ad-465c-974d-1fc15e96b1e6</GUID>
+          <Name>% ofworld</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>c1aa1f76-1a1c-4aab-b4a6-5f1568f59750</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>
@@ -558,7 +592,7 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <SortOrder>3</SortOrder>
+              <SortOrder>4</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>e211f62a-a336-4320-be45-66ab6b401fda</GUID>
@@ -627,7 +661,7 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <SortOrder>4</SortOrder>
+              <SortOrder>5</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>ece90f88-4d9d-4223-ad23-e3f9a1b01eee</GUID>
@@ -696,7 +730,76 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <SortOrder>5</SortOrder>
+              <SortOrder>6</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>f602ef54-01c6-40f7-87fe-b9c9f4bc581a</GUID>
+              <Name>HTML Table Population</Name>
+              <Views>
+                <ReportView>
+                  <GUID>89769082-f66d-4d8a-980c-7455dd3b8d01</GUID>
+                  <Name>HTML Table Population</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>0c7c164b-4f3a-4fdf-9d73-b0ed094421f7</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>2c56ede0-ebaf-4b8b-a0fd-cbab1a70542e</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>8548e671-0ef2-400a-8030-5638f570ad93</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>bcb22741-35a1-4402-a47e-db01a7e8e9d7</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>53f08f31-573c-4372-9971-d6f1ac9e766c</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>433443eb-4998-4194-a42b-ace920089cfe</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>d4fca67e-3100-4237-9285-3c0ae761a7a0</ModelGUID>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>abdbdc0b-ace8-4db1-a353-d938fc5f072b</GUID>
+                  <Name>Highlights</Name>
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;Table got from the Wikipedia World Population page.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>3</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>

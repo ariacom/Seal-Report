@@ -99,6 +99,16 @@
             Convert an objet to a double, handling DBNull value
             </summary>
         </member>
+        <member name="M:Seal.Helpers.RazorHelper.LoadRazorAssemblies">
+            <summary>
+            Force the load of the assemblies
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorHelper.LoadDynamicAssemblies">
+            <summary>
+            Compile and load CS code from Assemblies\Dynamics folder
+            </summary>
+        </member>
         <member name="T:Seal.Helpers.ScriptValidator">
             <summary>
             Optional script validation before compilation
@@ -2784,6 +2794,11 @@
             List of all view restrictions prompted at execution
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.AllElements">
+            <summary>
+            List of all elements of all models of the report
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.AllRestrictions">
             <summary>
             List of all restrictions of all models of the report, plus the input values
@@ -3699,6 +3714,11 @@
         <member name="P:Seal.Model.ReportModel.UseSelectDistinct">
             <summary>
             If true, SELECT DISTINCT clause clause is used by default for the model if no aggregate is defined
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.MaxNumberOfRecords">
+            <summary>
+            Limit the number of records loaded for the model. A value of 0 means no limitation. The implementation at server side is only done for MS SQLServer, Oracle and MYSQL
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.SqlSelect">
@@ -5395,7 +5415,7 @@
         </member>
         <member name="P:Seal.Model.ReportTask.Script">
             <summary>
-            Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed.
+            Razor script executed for the Task. It may be empty if the SQL Script is defined.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportTask.IgnoreError">
@@ -6426,6 +6446,11 @@
         <member name="P:Seal.Model.Repository.AssembliesFolder">
             <summary>
             Assemblies folder
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.DynamicsFolder">
+            <summary>
+            Dynamic assemblies folder
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.SealConverterPath">

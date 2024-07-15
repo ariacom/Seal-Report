@@ -8,9 +8,9 @@
 		<AssemblyName>SealReportDesigner</AssemblyName>
 		<ApplicationIcon>reportDesigner.ico</ApplicationIcon>
 		<Product>Seal Report</Product>
-		<Version>8.0.1.0</Version>
-		<FileVersion>8.0.1.0</FileVersion>
-		<AssemblyVersion>8.0.1.0</AssemblyVersion>
+		<Version>8.1.0.0</Version>
+		<FileVersion>8.1.0.0</FileVersion>
+		<AssemblyVersion>8.1.0.0</AssemblyVersion>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
 		<Description>Seal Report Designer</Description>
@@ -36,7 +36,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.6" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,0 +1,117 @@
+﻿@using Seal.Model;
+@{
+    MetaTable table = Model;
+
+    //Parameters for this table
+    table.Parameters.Add(new Parameter() { Name = "html_url", Value = "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population", DisplayName = "Web page", Description = "Web page to get the HTML source containing the HTML table" });
+    table.Parameters.Add(new Parameter() { Name = "selector", Value = "table.wikitable", DisplayName = "CSS Path selector of the table", Description = "Selector of the the table" });
+    table.Parameters.Add(new Parameter() { Name = "header_row", NumericValue = 0, DisplayName = "Header row", Description = "Index of the header row of the table used to name the columns. If -1, default naming is used." });
+    table.Parameters.Add(new Parameter() { Name = "data_start_row", NumericValue = 1, DisplayName = "Data start row", Description = "Start row of the table for data." });
+    table.Parameters.Add(new Parameter() { Name = "numeric_cols", Value = "Population;% ofworld", DisplayName = "Numeric column names", Description = "Column names defined as numeric. Several columns can be specified if separated by semi-column (e.g. 'Amount;Quantity')." });
+    table.Parameters.Add(new Parameter() { Name = "decimal_separator", Value = ".", DisplayName = "Decimal separator", Description = "Decimal separator for numeric columns." });
+
+    table.DefinitionScript = @"@using AngleSharp.Dom;
+@using AngleSharp;
+@using AngleSharp.Html.Dom;
+@using System.Data;
+@using System.Globalization;
+
+@{
+    MetaTable metaTable = Model;
+	var table = new DataTable();
+
+    var url = metaTable.GetValue(""html_url"");
+    var selector = metaTable.GetValue(""selector"");
+    // Create a new browsing context
+    var config = Configuration.Default.WithDefaultLoader();
+    var context = BrowsingContext.New(config);
+
+    // Load the document
+    var document = context.OpenAsync(url).Result;
+
+    // Find the table element
+    var docTable = document.QuerySelectorAll(selector).FirstOrDefault() as IHtmlTableElement;
+
+    metaTable.NoSQLTable = ConvertHtmlTableToDataTable(docTable, metaTable.GetNumericValue(""header_row""), metaTable.GetNumericValue(""data_start_row""), metaTable.GetValue(""numeric_cols""), metaTable.GetValue(""decimal_separator""));
+}
+
+@functions {
+    string RemoveExtraText(string value, string decimalSeparator=""."")
+    {
+        var allowedChars = ""01234567890"" + decimalSeparator;
+        return new string(value.Where(c => allowedChars.Contains(c)).ToArray());
+    }
+
+    DataTable ConvertHtmlTableToDataTable(IHtmlTableElement docTable, int headerRow = 0, int dataStartRow = 1, string numericCols = """", string decimalSeparator=""."")
+    {
+        var table = new DataTable();
+        var rowSpans = new int[0];
+        var numericColumns = new string[0];
+        if (!string.IsNullOrEmpty(numericCols)) {
+            numericColumns = numericCols.Split("";"");
+        }
+
+        // Extract data from the table
+        foreach (var row in docTable.Rows)
+        {
+            var cells = row.Cells;
+            if (row.Index() == headerRow)
+            {
+                //Add columns
+                foreach (var cell in cells)
+                {
+                    var colspan = cell.GetAttribute(""colspan"");
+                    int colspanValue = string.IsNullOrEmpty(colspan) ? 1 : int.Parse(colspan);
+                    for (int i=0; i< colspanValue; i++) {
+                        var columnName = cell.TextContent.Trim();
+                        if (string.IsNullOrEmpty(columnName)) columnName = ""Column"" + table.Columns.Count.ToString();
+                        if (table.Columns.Contains(columnName)) columnName += table.Columns.Count.ToString();
+                        table.Columns.Add(columnName, numericColumns.Contains(columnName) ? typeof(double) : typeof(string));
+                    }
+                }
+                rowSpans = new int[table.Columns.Count];
+                for (int i=0; i<rowSpans.Length; i++) rowSpans[i]=1;
+
+            }
+            else if (row.Index() >= dataStartRow)
+            {
+                //Add row data
+                var newRow = table.NewRow();
+                int cellIndex = 0;
+                for (var i = 0; i < table.Columns.Count; i++)
+                {
+                    if (rowSpans[i] > 1)
+                    {
+                        //Handle row span from previous line
+                        rowSpans[i] = rowSpans[i]-1;
+                    }
+                    else
+                    {
+                        var cell = cells[cellIndex];
+
+                        var rowspan = cell.GetAttribute(""rowspan"");
+                        var colspan = cell.GetAttribute(""colspan"");
+                        rowSpans[i] = string.IsNullOrEmpty(rowspan) ? 1 : int.Parse(rowspan);
+                        int colspanValue = string.IsNullOrEmpty(colspan) ? 1 : int.Parse(colspan);
+
+                        var value = cell.TextContent.Trim();
+                        if (numericColumns.Contains(table.Columns[i].ColumnName)) {
+                            value = RemoveExtraText(value, decimalSeparator);
+                            if (!string.IsNullOrEmpty(value)) newRow[i] = double.Parse(value, CultureInfo.InvariantCulture);
+                        }
+                        else newRow[i] = value;
+
+
+                        i += colspanValue - 1;
+                        cellIndex++;
+                    }
+                }
+                table.Rows.Add(newRow);
+            }
+        }
+
+        return table;
+    }
+}
+    ";
+}

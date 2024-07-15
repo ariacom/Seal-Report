@@ -56,6 +56,7 @@ namespace Seal.Model
                 GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL);
                 GetProperty("MongoStagesScript").SetIsBrowsable(IsMongoDb);
                 GetProperty("LoadScript").SetIsBrowsable(!IsSQL);
+                GetProperty("Functions").SetIsBrowsable(hasFunctions());
                 GetProperty("CacheDuration").SetIsBrowsable(!IsSQL);
                 GetProperty("PostSQL").SetIsBrowsable(IsSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(IsSQL);
@@ -400,6 +401,29 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string LoadScript { get; set; }
+
+        bool hasFunctions()
+        {
+            return !string.IsNullOrEmpty(LoadScript) && LoadScript.Contains("@functions");
+        }
+
+#if WINDOWS
+        /// <summary>
+        /// The functions got for edition.
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Script functions"), Description("The task functions got from the main script."), Category("Definition"), Id(5, 1)]
+        [XmlIgnore]
+        public FunctionsEditor Functions
+        {
+            get
+            {
+                var editor = new FunctionsEditor();
+                editor.Init(LoadScript, this);
+                return editor;
+            }
+        }
+#endif
 
         /// <summary>
         /// Duration in seconds to keep the result DataTable in cache after a load. If 0, the table is always reloaded.

@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
@@ -103,8 +103,8 @@ namespace Seal.Helpers
 
         public string GetDatabaseName(string name)
         {
-            char[] chars = new char[] { '-', '\"', '\'', '[', ']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
-            var result = chars.Aggregate(name, (c1, c2) => c1.Replace(c2, '\n'));
+            char[] chars = new char[] { '-', '\"', '\'', '[',']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
+            var result = chars.Aggregate(name, (c1, c2) => c1.Replace(c2, '_'));
             if (DatabaseType == DatabaseType.MSSQLServer) result = "[" + result + "]";
             else if (DatabaseType == DatabaseType.Oracle) result = Helper.QuoteDouble(result);
             else if (DatabaseType == DatabaseType.PostgreSQL) result = Helper.QuoteDouble(result);
@@ -374,6 +374,10 @@ namespace Seal.Helpers
         public DataTable LoadDataTable(MetaConnection connection, string sql)
         {
             return LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection());
+        }
+        public List<string> LoadStringList(MetaConnection connection, string sql)
+        {
+            return (from r in LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection()).AsEnumerable() select r[0].ToString()).ToList();
         }
 
         public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)

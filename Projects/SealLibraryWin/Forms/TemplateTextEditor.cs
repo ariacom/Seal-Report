@@ -1485,6 +1485,12 @@ namespace Seal.Forms
                     }
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
+                else if (context.Instance is FunctionsEditor)
+                {
+                    frm.ObjectForCheckSyntax = ((FunctionsEditor)context.Instance).SourceObject;
+                    frm.Text = "Edit a function";
+                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                }
                 else if (context.Instance is ReportOutput)
                 {
                     if (context.PropertyDescriptor.Name == "PreScript") template = razorPreOutputTemplate;
@@ -1854,11 +1860,6 @@ namespace Seal.Forms
                     {
                         //common script from configuration, nothing to include, we rely on @Include
                     }
-                    if (CurrentEntity is Report)
-                    {
-                        //common script from report
-                        frm.ScriptHeader = ((Report)CurrentEntity).GetCommonScriptsHeader((CommonScript)context.Instance);
-                    }
                     frm.ObjectForCheckSyntax = CurrentEntity;
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
@@ -1946,7 +1947,7 @@ namespace Seal.Forms
                 }
                 frm.checkSyntaxToolStripButton.Visible = (frm.ObjectForCheckSyntax != null);
                 frm.ContextInstance = context.Instance;
-                frm.ContextPropertyName = context.PropertyDescriptor.Name;
+                frm.ContextPropertyDescriptor = context.PropertyDescriptor;
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)
                 {
@@ -1954,6 +1955,22 @@ namespace Seal.Forms
 
                     if (frm.textBox.Text.Trim() != template.Trim() || string.IsNullOrEmpty(template)) value = frm.textBox.Text;
                     else if (frm.textBox.Text.Trim() == template.Trim() && !string.IsNullOrEmpty(template)) value = "";
+
+                    if (context.Instance is FunctionsEditor)
+                    {
+                        if (frm.ObjectForCheckSyntax is ReportTask)
+                        {
+                            //Save in the Task Script
+                            var task = (ReportTask)frm.ObjectForCheckSyntax;
+                            task.Script = ((FunctionsEditor)context.Instance).ReplaceFunction(task.Script, context.PropertyDescriptor.DisplayName, value.ToString());
+                        }
+                        else if (frm.ObjectForCheckSyntax is MetaTable)
+                        {
+                            //Save in the MetaTable Load Script
+                            var metaTable = (MetaTable)frm.ObjectForCheckSyntax;
+                            metaTable.LoadScript = ((FunctionsEditor)context.Instance).ReplaceFunction(metaTable.LoadScript, context.PropertyDescriptor.DisplayName, value.ToString());
+                        }
+                    }
 
                     if (!string.IsNullOrEmpty(warning)) MessageBox.Show(warning, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }

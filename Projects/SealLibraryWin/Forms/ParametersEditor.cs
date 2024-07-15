@@ -22,10 +22,6 @@ namespace Seal.Model
         {
             if (_dctd != null)
             {
-                //Disable all properties
-                //     foreach (var property in Properties) property.SetIsBrowsable(false);
-                //Then enable
-
                 TypeDescriptor.Refresh(this);
             }
         }

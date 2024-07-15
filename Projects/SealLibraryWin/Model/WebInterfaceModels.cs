@@ -27,6 +27,7 @@ namespace Seal.Model
         public ExecutionMode executionmode;
         public ExecutionMode groupexecutionmode;
         public List<SWIMetaSource> sources;
+        public string sessionId;
     }
 
     /// <summary>

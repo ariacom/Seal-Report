@@ -50,6 +50,12 @@ using Svg.Skia;
 using PuppeteerSharp;
 using System.Collections.Generic;
 using Npgsql;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis;
+using System.Runtime.Loader;
+using System.Threading;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 
 namespace Seal.Helpers
 {
@@ -97,8 +103,12 @@ namespace Seal.Helpers
         static SKSvg _37 = null;
         static PdfOptions _38 = null;
         static NpgsqlConnection _39 = null;
+        static AngleSharp.IConfiguration _40 = null;
 
         static int _loadTries = 3;
+        /// <summary>
+        /// Force the load of the assemblies
+        /// </summary>
         static public void LoadRazorAssemblies()
         {
             if (_loadTries > 0)
@@ -165,7 +175,7 @@ namespace Seal.Helpers
                     if (_26 == null) _26 = new JwtSecurityTokenHandler();
                     if (_27 == null) _27 = new DirectoryEntry();
                     if (_28 == null) _28 = new ServerManager();
-                    if (_29 == null) _29 = new FileSystemAccessRule("a",FileSystemRights.Read,AccessControlType.Deny);
+                    if (_29 == null) _29 = new FileSystemAccessRule("a", FileSystemRights.Read, AccessControlType.Deny);
                     if (_30 == null) _30 = new MessageResource.ScheduleTypeEnum();
                     if (_31 == null) _31 = new WebProxy();
                     if (_32 == null) _32 = ColorTranslator.FromHtml("#00000");
@@ -175,6 +185,7 @@ namespace Seal.Helpers
                     if (_37 == null) _37 = new SKSvg();
                     if (_38 == null) _38 = new PdfOptions();
                     if (_39 == null) _39 = new NpgsqlConnection("");
+                    if (_40 == null) _40 = AngleSharp.Configuration.Default;
 #if !WINDOWS
                     var si = SealInterface.Create();
                     si.Init();
@@ -191,108 +202,9 @@ namespace Seal.Helpers
             }
         }
 
-        static public string GetFullScript(string script, object model, string header = null)
+        static public string GetFullScript(string script)
         {
             var result = (script == null ? "" : script);
-            Report report = null;
-            SealServerConfiguration configuration = null;
-            if (model is SealServerConfiguration)
-            {
-                configuration = (SealServerConfiguration)model;
-            }
-            else if (model is Report)
-            {
-                var ob = (Report)model;
-                report = ob;
-                if (ob.Repository != null) configuration = ob.Repository.Configuration;
-                else if (ob.Tag != null && ob.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Tag;
-            }
-            else if (model is ReportComponent)
-            {
-                var ob = (ReportComponent)model;
-                if (ob.Report != null)
-                {
-                    report = ob.Report;
-                    if (report.Repository != null) configuration = report.Repository.Configuration;
-                    else if (report.Tag != null && report.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Report.Tag;
-                }
-            }
-            else if (model is NavigationLink)
-            {
-                var ob = (NavigationLink)model;
-                if (ob.Report != null)
-                {
-                    report = ob.Report;
-                    if (report.Repository != null) configuration = report.Repository.Configuration;
-                }
-            }
-            else if (model is ResultCell)
-            {
-                var ob = (ResultCell)model;
-                report = ob.Element.Report;
-                if (report.Repository != null) configuration = report.Repository.Configuration;
-            }
-            else if (model is MetaEnum)
-            {
-                var ob = (MetaEnum)model;
-                if (ob.Source != null)
-                {
-                    report = ob.Source.Report;
-                    configuration = ob.Source.Repository.Configuration;
-                }
-            }
-            else if (model is MetaTable)
-            {
-                var ob = (MetaTable)model;
-                if (ob.Source != null)
-                {
-                    report = ob.Source.Report;
-                    configuration = ob.Source.Repository.Configuration;
-                }
-            }
-            else if (model is MetaConnection)
-            {
-                var ob = (MetaConnection)model;
-                if (ob.Source != null)
-                {
-                    report = ob.Source.Report;
-                    configuration = ob.Source.Repository.Configuration;
-                }
-            }
-            else if (model is SealExcelConverter)
-            {
-                var ob = (SealExcelConverter)model;
-                report = ob.GetReport();
-                configuration = (report == null ? Repository.Instance.Configuration : report.Repository.Configuration);
-            }
-            else if (model is SealPdfConverter)
-            {
-                var ob = (SealPdfConverter)model;
-                report = ob.GetReport();
-                configuration = (report == null ? Repository.Instance.Configuration : report.Repository.Configuration);
-            }
-            else if (model is SecurityUser)
-            {
-                var ob = (SecurityUser)model;
-                configuration = (ob.Security == null ? Repository.Instance.Configuration : ob.Security.Repository.Configuration);
-            }
-            else
-            {
-                configuration = Repository.Instance.Configuration;
-            }
-
-            if (!string.IsNullOrEmpty(header)) result += "\r\n" + header;
-
-            if (report != null && header == null)
-            {
-                if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result = result + "\r\n" + report.CommonScriptsHeader;
-            }
-
-            if (configuration != null)
-            {
-                result = configuration.SetConfigurationCommonScripts(result);
-            }
-
             if (!string.IsNullOrEmpty(result))
             {
                 //Add default using
@@ -310,7 +222,7 @@ namespace Seal.Helpers
                 {
                     if (model != null)
                     {
-                        key = model.GetType().ToString() + "_" + GetFullScript(script, model);
+                        key = model.GetType().ToString() + "_" + GetFullScript(script);
                     }
                     else
                     {
@@ -320,7 +232,7 @@ namespace Seal.Helpers
 
                 if (!(Engine.Razor.IsTemplateCached(key, model.GetType())))
                 {
-                    Compile(GetFullScript(script, model), model.GetType(), key);
+                    Compile(GetFullScript(script), model.GetType(), key);
                 }
                 string result = Engine.Razor.Run(key, model.GetType(), model);
                 return string.IsNullOrEmpty(result) ? "" : result;

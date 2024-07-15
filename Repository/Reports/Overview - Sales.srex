@@ -7,15 +7,7 @@
       <GUID>db41093d-d76c-4e64-849a-27a024e52816</GUID>
       <Name>Northwind (Repository)</Name>
       <ConnectionGUID>1</ConnectionGUID>
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>ccbe986e-aa30-4f5d-87aa-7c43e874a4df</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-          </MetaTable>
-        </Tables>
-      </MetaData>
+      <MetaData />
       <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
     </ReportSource>
   </Sources>

@@ -21,6 +21,15 @@
 
 @if (table != null && table.RowCount > 0 && table.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
 {
+
+    if (view.GetBoolValue("data_warning_show") && reportModel.ResultTable != null && reportModel.MaxNumberOfRecords > 0 && reportModel.ResultTable.Rows.Count >= reportModel.MaxNumberOfRecords)
+    {
+        var warningText = report.Translate("Warning: The maximum number of records is reached");
+       warningText += $" ({reportModel.MaxNumberOfRecords})";
+        <div @Raw(view.AddAttribute("class", "data_warning_class")) @Raw(view.AddAttribute("style", "data_warning_css"))>@Raw(warningText)</div>
+    }
+
+
     <script type="text/javascript">
     $(document).ready(function () {
         var dt = $('#@("dt_" + view.IdSuffix)');

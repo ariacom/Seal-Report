@@ -77,8 +77,6 @@ namespace Seal.Model
 
                 GetProperty("WebSessionInitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
-                GetProperty("CommonScripts").SetIsBrowsable(!ForPublication);
-                //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("RepositoryTranslationsScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
@@ -377,16 +375,6 @@ namespace Seal.Model
         public string ReportCreationScript { get; set; } = null;
 
         /// <summary>
-        /// List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the reports. To include the script, an @Include("common script name") directive must be inserted at the beginning of the script.
-        /// </summary>
-#if WINDOWS
-        [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the reports. To include the script, an @Include(\"< script name >\") directive must be inserted at the beginning of the script."), Id(7, 4)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-#endif
-        public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
-        public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
-
-        /// <summary>
         /// If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source.
         /// </summary>
 #if WINDOWS
@@ -394,47 +382,6 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string RepositoryTranslationsScript { get; set; } = null;
-
-
-        /// <summary>
-        /// Replace the @Include by the common script in the current script
-        /// </summary>
-        public string SetConfigurationCommonScripts(string script)
-        {
-            var result = script;
-            bool checkResult = true;
-            while (checkResult)
-            {
-                checkResult = false;
-                foreach (var cs in CommonScripts)
-                {
-                    var pattern = string.Format("@Include(\"{0}\")", cs.Name);
-                    var index = result.IndexOf(pattern);
-                    if (index >= 0)
-                    {
-                        checkResult = true;
-                        result = result.Replace(pattern, "");
-                        result = result + "\r\n" + cs.Script;
-                    }
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Returns a common script key form a given name and model
-        /// </summary>      
-        public string GetConfigurationCommonScriptKey(string name, object model)
-        {
-            var script = CommonScripts.FirstOrDefault(i => i.Name == name);
-
-            if (script == null) throw new Exception(string.Format("Unable to find a configuration common script  named '{0}'...", name));
-
-            string key = string.Format("CFGCS:{0}_{1}_{2}_{3}", FilePath, GUID, name, File.GetLastWriteTime(FilePath).ToString("s"));
-            RazorHelper.Compile(script.Script, model.GetType(), key);
-
-            return key;
-        }
 
         EncryptionMode _encryptionMode = EncryptionMode.Default;
         /// <summary>
@@ -538,30 +485,6 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public string PdfWebServiceURL { get; set; } = "";
-
-        /// <summary>
-        /// All common scripts
-        /// </summary>
-        [XmlIgnore]
-        public string CommonScriptsHeader
-        {
-            get
-            {
-                var result = "";
-                foreach (var script in CommonScripts) result += script.Script + "\r\n";
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Returns all common scripts not being edited
-        /// </summary>
-        public string GetCommonScriptsHeader(CommonScript scriptBeingEdited)
-        {
-            var result = "";
-            foreach (var script in CommonScripts.Where(i => i != scriptBeingEdited)) result += script.Script + "\r\n";
-            return result;
-        }
 
         /// <summary>
         /// The name of the culture used for the user session. It defines the language and the number and date formats. If not specified, the current culture of the server is used.

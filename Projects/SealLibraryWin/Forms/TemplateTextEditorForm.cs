@@ -13,6 +13,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 using System.ComponentModel;
+using DocumentFormat.OpenXml.InkML;
 
 namespace Seal.Forms
 {
@@ -26,9 +27,9 @@ namespace Seal.Forms
     public partial class TemplateTextEditorForm : Form
     {
         public object ObjectForCheckSyntax = null;
-        public string ScriptHeader = null;
 
         public object ContextInstance = null;
+        public PropertyDescriptor ContextPropertyDescriptor = null;
         public string ContextPropertyName = null;
 
         public Scintilla textBox = new Scintilla();
@@ -101,7 +102,7 @@ namespace Seal.Forms
                 mainTimer.Enabled = false;
                 testRenderingMenuItem.Enabled = false;
                 testExecutionMenuItem.Enabled = false;
-                if (ContextInstance != null) ReportTester?.TestExecute(ContextInstance, ContextPropertyName, textBox.Text, sender == testRenderingMenuItem);
+                if (ContextInstance != null) ReportTester?.TestExecute(ContextInstance, !string.IsNullOrEmpty(ContextPropertyName) ? ContextPropertyName : ContextPropertyDescriptor.Name, textBox.Text, sender == testRenderingMenuItem);
                 mainTimer.Enabled = true;
             }
         }
@@ -189,7 +190,18 @@ namespace Seal.Forms
             {
                 try
                 {
-                    FormHelper.CheckRazorSyntax(textBox, ScriptHeader, ObjectForCheckSyntax, _compilationErrors);
+                    var finalScript = "";
+                    if (ContextInstance is FunctionsEditor)
+                    {
+                        var editor = (FunctionsEditor) ContextInstance;
+                        var script = "";
+                        if (ObjectForCheckSyntax is ReportTask) script = ((ReportTask) ObjectForCheckSyntax).Script;
+                        if (ObjectForCheckSyntax is MetaTable) script = ((MetaTable)ObjectForCheckSyntax).LoadScript;
+
+                        finalScript = editor.ReplaceFunction(script, ContextPropertyDescriptor.DisplayName, textBox.Text);
+                    }
+
+                    FormHelper.CheckRazorSyntax(textBox, ObjectForCheckSyntax, _compilationErrors, finalScript);
                 }
                 catch (Exception ex)
                 {

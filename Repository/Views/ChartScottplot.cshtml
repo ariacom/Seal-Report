@@ -114,7 +114,7 @@
                         bar = plt.Add.Bar(new Bar() { Position = position, Value = y[i], FillColor = color });
                         index++;
                     }
-                    bar.Label = serie.SerieDisplayName;
+                    bar.LegendText = serie.SerieDisplayName;
                     if (isHorizontal) bar.Horizontal = true;
 
                     //secondary y axis
@@ -125,7 +125,7 @@
                     }
 
                     //Legend item
-                    if (i == 0) legendItems.Add(new LegendItem() { Label = serie.SerieDisplayName, LineColor = color, MarkerColor = color });
+                    if (i == 0) legendItems.Add(new LegendItem() { LabelText = serie.SerieDisplayName, LineColor = color, MarkerColor = color });
 
                     //Marker
                     if (serie.Element.YAxisType == AxisType.Primary)
@@ -164,14 +164,14 @@
                 if (colorsMapping.ContainsKey(serie.SerieDisplayName)) color = Color.FromHex(colorsMapping[serie.SerieDisplayName]);
 
                 var scatter = plt.Add.Scatter(x, y, color);
-                scatter.Label = serie.SerieDisplayName;
+                scatter.LegendText = serie.SerieDisplayName;
                 if (serie.Element.YAxisType == AxisType.Secondary) scatter.Axes.YAxis = plt.Axes.Right;
 
                 //Marker
                 addMarkers(markers, x, y, serie, isHorizontal, color, view.GetNumericValue("chartsp_marker_step"));
 
                 //Legend item
-                legendItems.Add(new LegendItem() { Label = serie.SerieDisplayName, LineColor = color, MarkerColor = color });
+                legendItems.Add(new LegendItem() { LabelText = serie.SerieDisplayName, LineColor = color, MarkerColor = color });
             }
             //Pie
             else if (serie.Element.ScottPlotSerie == ScottPlotSerieDefinition.Pie)
@@ -328,7 +328,7 @@
                         color: markerColor == "serie" ? m.color : Color.FromHex(markerColor)
                     );
                     marker.IsVisible = true;
-                    if (view.GetBoolValue("chartsp_marker_legend")) marker.Label = m.value.Yvalue.DisplayValue;
+                    if (view.GetBoolValue("chartsp_marker_legend")) marker.LegendText = m.value.Yvalue.DisplayValue;
                     var textAlignment = view.GetValue("chartsp_marker_text_alignment");
                     if (!string.IsNullOrEmpty(textAlignment))
                     {
@@ -336,8 +336,8 @@
                         var voffset = view.GetDoubleValue("chartsp_marker_text_voffset");
                         var textColor = view.GetValue("chartsp_marker_text_color");
                         var text = plt.Add.Text(m.value.Yvalue.DisplayValue, m.x + hoffset, m.y + voffset);
-                        text.Color = textColor == "serie" ? m.color : Color.FromHex(textColor);
-                        text.Label.Alignment = (Alignment)Enum.Parse(typeof(Alignment), textAlignment);
+                        text.LabelFontColor = textColor == "serie" ? m.color : Color.FromHex(textColor);
+                        text.LabelStyle.Alignment = (Alignment)Enum.Parse(typeof(Alignment), textAlignment);
                     }
                 }
                 if (view.GetBoolValue("chartsp_marker_hide_series"))
@@ -354,7 +354,7 @@
         if (!string.IsNullOrEmpty(legendPosition))
         {
             plt.Legend.IsVisible = true;
-            plt.Legend.Location = (Alignment)Enum.Parse(typeof(Alignment), legendPosition);
+            plt.Legend.Alignment = (Alignment)Enum.Parse(typeof(Alignment), legendPosition);
         }
 
         <div>

@@ -10,7 +10,6 @@
         <MetaConnection>
           <GUID>37946169-81ee-4c8f-b3d9-0ae86d2f1bc5</GUID>
           <Name>connection</Name>
-          <ConnectionString />
         </MetaConnection>
       </Connections>
       <ConnectionGUID>37946169-81ee-4c8f-b3d9-0ae86d2f1bc5</ConnectionGUID>

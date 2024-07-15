@@ -25,6 +25,7 @@
     var sql = task.GetValueTranslated(""sql"");
     var thread = task.GetNumericValue(""thread"");
     var excel = task.GetValueTranslated(""excel_path"");
+    var input = task.GetValue(""input"");
     
     //Folder input
     if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder)) {
@@ -45,6 +46,13 @@
         foreach(var row in dataTable.Rows) {
             items.Add(row);
         }
+    }
+    //Other input
+    else if (input == ""PARENTEXECRESULT"" && task.ParentTask.ExecResult != null) {
+        items = task.ParentTask.ExecResult as List<object>;
+    }
+    else if (input == ""EXECINPUT"" && task.ExecInput != null) {
+        items = task.ExecInput as List<object>;
     }
     //OR 
     //   fill the items collection with any relevant object

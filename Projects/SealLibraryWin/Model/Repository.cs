@@ -15,6 +15,17 @@ using Microsoft.Extensions.Configuration;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Amazon.Runtime.Internal.Transform;
 using System.Text;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+
+using Microsoft.CodeAnalysis;
+using SharpCompress.Common;
+using System.Runtime.Loader;
+using Microsoft.CodeAnalysis.Text;
+
+
+
+
 #if WINDOWS
 using System.Windows.Forms;
 using System.Drawing;
@@ -335,7 +346,7 @@ namespace Seal.Model
                 }
                 path = Path.GetDirectoryName(path);
             }
-            if (!Directory.Exists(path) || (!path.StartsWith(@"\\") && path == Path.GetPathRoot(path))) path = "";
+            if (!Directory.Exists(path) || (!path.StartsWith(@"\\") && path == Path.GetPathRoot(path))) path = RepositoryConfigurationPath;
 #endif
             if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
             {
@@ -443,6 +454,11 @@ namespace Seal.Model
         public static bool AssembliesLoaded = false;
 
         /// <summary>
+        /// True is Dynamic Assemblies have been loaded. Can be set to true at startup to disable Dynamic Assemblies load.
+        /// </summary>
+        public static bool DynamicAssembliesLoaded = false;
+
+        /// <summary>
         /// Init the repository from a given path
         /// </summary>
         public void Init(string path)
@@ -503,46 +519,101 @@ namespace Seal.Model
                 }
             }
 
-            if (!AssembliesLoaded)
+            lock (PathLock)
             {
-                //Load extra assemblies defined in Repository
-                var assemblies = Directory.GetFiles(AssembliesFolder, "*.dll");
-                foreach (var assembly in assemblies)
+                if (!AssembliesLoaded)
                 {
-                    try
+                    //Load extra assemblies defined in Repository
+                    var assemblies = Directory.GetFiles(AssembliesFolder, "*.dll");
+                    foreach (var assembly in assemblies)
                     {
-                        if (Path.GetFileName(assembly) != SealConverterDll && Path.GetFileName(assembly) != SealConverterWinDll)
+                        try
                         {
-                            Assembly.LoadFrom(assembly);
+                            if (Path.GetFileName(assembly) != SealConverterDll && Path.GetFileName(assembly) != SealConverterWinDll)
+                            {
+                                Assembly.LoadFrom(assembly);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Helper.WriteLogException("Assemblies", ex);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Helper.WriteDailyLog(Helper.DailyLogEvents, LogsFolder, Configuration.LogDays, $"Exception got in Repository Init\r\n{ex.Message}\r\n{ex.StackTrace}\r\n");
-                        Debug.WriteLine(ex.Message);
-                    }
+
+                    //Add this assembly resolve necessary when executing Razor scripts
+                    AppDomain currentDomain = AppDomain.CurrentDomain;
+                    currentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
+
+                    AssembliesLoaded = true;
                 }
 
-                //Add this assembly resolve necessary when executing Razor scripts
-                AppDomain currentDomain = AppDomain.CurrentDomain;
-                currentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
+                if (!DynamicAssembliesLoaded)
+                {
+                    //Load extra dynamic assemblies
+                    var csFiles = Directory.GetFiles(DynamicsFolder, "*.cs");
+                    foreach (var csFile in csFiles)
+                    {
+                        try
+                        {
+                            var dllPath = Path.Combine(DynamicsFolder, Path.GetFileNameWithoutExtension(csFile) + ".dll");
+                            if (File.GetLastWriteTime(csFile) > File.GetLastWriteTime(dllPath))
+                            {
+                                //Compile the file and save the dll
+                                var code = File.ReadAllText(csFile);
+                                // Compile the code
+                                var syntaxTree = CSharpSyntaxTree.ParseText(code);
+                                var references = AppDomain.CurrentDomain.GetAssemblies()
+                                    .Where(a => !a.IsDynamic && a.Location != dllPath)
+                                    .Select(a => MetadataReference.CreateFromFile(a.Location))
+                                    .Cast<MetadataReference>();
 
-                AssembliesLoaded = true;
-            }
+                                var compilation = CSharpCompilation.Create(
+                                    Path.GetFileNameWithoutExtension(csFile),
+                                    new[] { syntaxTree },
+                                    references,
+                                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                                );
 
-            //Alternate temporary directories
-            if (!string.IsNullOrEmpty(Configuration.AlternateTempDirectory))
-            {
-                var tempDir = ReplaceRepositoryKeyword(Configuration.AlternateTempDirectory);
-                if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
-                RazorEngine.Engine.AlternateTemporaryDirectory = tempDir;
-                FileHelper.AlternateTemporaryDirectory = tempDir;
+                                var symbolsPath = Path.ChangeExtension(dllPath, "pdb");
+                                EmitResult result = compilation.Emit(dllPath, symbolsPath);
+                                if (!result.Success)
+                                {
+                                    var diag = "";
+                                    foreach (var diagnostic in result.Diagnostics)
+                                    {
+                                        diag += diagnostic.ToString() + "\r\n";
+                                    }
+                                    if (File.Exists(dllPath)) File.Delete(dllPath);
+
+                                    throw new Exception($"Error compiling '{csFile}':\r\n{diag}");
+                                }
+                            }
+                            Assembly.LoadFrom(dllPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Helper.WriteLogException("DynamicAssemblies", ex);
+                        }
+                    }
+
+                    DynamicAssembliesLoaded = true;
+                }
+
+                //Alternate temporary directories
+                if (!string.IsNullOrEmpty(Configuration.AlternateTempDirectory))
+                {
+                    var tempDir = ReplaceRepositoryKeyword(Configuration.AlternateTempDirectory);
+                    if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+                    RazorEngine.Engine.AlternateTemporaryDirectory = tempDir;
+                    FileHelper.AlternateTemporaryDirectory = tempDir;
+                }
             }
         }
 
         Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string assemblyPath = Path.Combine(AssembliesFolder, new AssemblyName(args.Name).Name + ".dll");
+            if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(DynamicsFolder, new AssemblyName(args.Name).Name + ".dll");
             if (!File.Exists(assemblyPath)) return null;
             Assembly assembly = Assembly.LoadFrom(assemblyPath);
             return assembly;
@@ -592,6 +663,7 @@ namespace Seal.Model
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
                 if (!Directory.Exists(AssembliesFolder)) Directory.CreateDirectory(AssembliesFolder);
+                if (!Directory.Exists(DynamicsFolder)) Directory.CreateDirectory(DynamicsFolder);
                 if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
                 if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
                 if (!Directory.Exists(PersonalFolder)) Directory.CreateDirectory(PersonalFolder);
@@ -728,6 +800,17 @@ namespace Seal.Model
             get
             {
                 return Path.Combine(RepositoryPath, "Assemblies");
+            }
+        }
+
+        /// <summary>
+        /// Dynamic assemblies folder
+        /// </summary>
+        public string DynamicsFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "Dynamics");
             }
         }
 

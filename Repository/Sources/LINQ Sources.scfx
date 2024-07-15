@@ -6,7 +6,6 @@
     <MetaConnection>
       <GUID>1285493d-dd2a-414a-be7d-0e0610fa408c</GUID>
       <Name>Dummy connection</Name>
-      <ConnectionString />
     </MetaConnection>
   </Connections>
   <ConnectionGUID>1285493d-dd2a-414a-be7d-0e0610fa408c</ConnectionGUID>
@@ -406,6 +405,73 @@
             <Type>Text</Type>
             <Category>XML RSS News</Category>
             <DisplayName>Title With Link</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>025bf826-ff90-45f1-b19f-692ed3638714</GUID>
+        <Name>HTML World Population</Name>
+        <TemplateName>HTML</TemplateName>
+        <DefinitionScript />
+        <Alias />
+        <DynamicColumns>true</DynamicColumns>
+        <Columns>
+          <MetaColumn>
+            <GUID>8d1989a3-badd-4ab7-872d-3e30e200f9af</GUID>
+            <Name>Column1</Name>
+            <Type>Text</Type>
+            <Category>HTML World Population</Category>
+            <DisplayName>Position</DisplayName>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2d44b925-2110-405d-9063-dae9541bbb1a</GUID>
+            <Name>Location</Name>
+            <Type>Text</Type>
+            <Category>HTML World Population</Category>
+            <DisplayName>Location</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>241a981a-3d01-44f1-9699-149a9dec9940</GUID>
+            <Name>Population</Name>
+            <Type>Numeric</Type>
+            <Category>HTML World Population</Category>
+            <DisplayName>Population</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>c1aa1f76-1a1c-4aab-b4a6-5f1568f59750</GUID>
+            <Name>% ofworld</Name>
+            <Type>Numeric</Type>
+            <Category>HTML World Population</Category>
+            <DisplayName>% of world</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8df2fe8a-552c-40bc-817b-945658d04ca0</GUID>
+            <Name>Date</Name>
+            <Type>Text</Type>
+            <Category>HTML World Population</Category>
+            <DisplayName>Date</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>07981f93-122e-440f-8f04-35e0d579176a</GUID>
+            <Name>Source (official or fromthe United Nations)</Name>
+            <Type>Text</Type>
+            <Category>HTML World Population</Category>
+            <DisplayName>Source (official or fromthe United Nations )</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>cd596e2c-fb1b-4bb5-8b0e-bb7e8ed40d18</GUID>
+            <Name>Column2</Name>
+            <Type>Text</Type>
+            <Category>HTML World Population</Category>
+            <DisplayName>Column 2</DisplayName>
             <DisplayOrder>7</DisplayOrder>
           </MetaColumn>
         </Columns>

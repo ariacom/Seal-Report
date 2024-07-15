@@ -538,6 +538,21 @@ namespace Seal.Helpers
             return result;
         }
 
+        public List<string> LoadStringList(string sql)
+        {
+            var connection = _task.Source.Connections.FirstOrDefault(i => i.GUID == _task.Connection.GUID);
+            if (connection != null)
+            {
+                return LoadStringList(connection, sql);
+            }
+            return null;
+        }
+
+        public List<string> LoadStringList(MetaConnection connection, string sql)
+        {
+            return DatabaseHelper.LoadStringList(connection, sql);
+        }
+
         public DataTable LoadDataTable(string sql)
         {
             var connection = _task.Source.Connections.FirstOrDefault(i => i.GUID == _task.Connection.GUID);
