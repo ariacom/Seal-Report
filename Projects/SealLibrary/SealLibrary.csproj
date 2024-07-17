@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -43,7 +43,7 @@ A full repository file structure must be available on the machine running the pr
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <NoWarn>1701;1702;CA1416;CS1591</NoWarn>
+		<NoWarn>1701;1702;CA1416;CS1591</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -164,11 +164,13 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="MongoDB.Driver" Version="2.26.0" />
 		<PackageReference Include="MySql.Data" Version="8.4.0" />
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.4.0" />
+		<PackageReference Include="Npgsql" Version="8.0.3" />
 		<PackageReference Include="PuppeteerSharp" Version="18.0.1" />
 		<PackageReference Include="QuestPDF" Version="2024.6.1" />
 		<PackageReference Include="ScottPlot" Version="5.0.35" />
 		<PackageReference Include="SendGrid" Version="9.29.3" />
 		<PackageReference Include="SharpZipLib" Version="1.4.2" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.8" />
 		<PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
 		<PackageReference Include="SSH.NET" Version="2024.0.0" />
 		<PackageReference Include="Svg.Skia" Version="1.0.0.18" />

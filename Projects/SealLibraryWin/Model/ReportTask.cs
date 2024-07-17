@@ -16,6 +16,7 @@ using System.Data.SqlClient;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Data;
+using Npgsql;
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.Drawing.Design;
@@ -709,6 +710,10 @@ namespace Seal.Model
                     {
                         ((OracleConnection)connection).InfoMessage += new OracleInfoMessageEventHandler(OracleInfoMessage);
                         result = ((OracleConnection)connection).CreateCommand();
+                    }
+                      else if (connection is NpgsqlConnection n)
+                    {                        
+                        result = ((NpgsqlConnection)connection).CreateCommand();
                     }
                     else
                     {

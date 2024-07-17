@@ -54,6 +54,7 @@ namespace Seal.Model
                 GetProperty("MSSqlServerConnectionString").SetIsBrowsable(true);
                 GetProperty("MySQLConnectionString").SetIsBrowsable(true);
                 GetProperty("OracleConnectionString").SetIsBrowsable(true);
+                GetProperty("PostgreSQLConnectionString").SetIsBrowsable(true);
                 GetProperty("MongoDBConnectionString").SetIsBrowsable(Source != null && Source.IsNoSQL);
                 GetProperty("ConnectionScript").SetIsBrowsable(true);
 
@@ -62,6 +63,7 @@ namespace Seal.Model
                 GetProperty("MSSqlServerConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MySQLConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("OracleConnectionString").SetIsReadOnly(!IsEditable);
+                GetProperty("PostgreSQLConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MongoDBConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("CommandTimeout").SetIsReadOnly(!IsEditable);
 
@@ -120,6 +122,7 @@ namespace Seal.Model
             {
                 if (DatabaseType == DatabaseType.Oracle) return '\"';
                 if (DatabaseType == DatabaseType.MySQL) return '`';
+                if (DatabaseType == DatabaseType.PostgreSQL) return '\"';
                 return '[';
             }
         }
@@ -129,6 +132,7 @@ namespace Seal.Model
             {
                 if (DatabaseType == DatabaseType.Oracle) return '\"';
                 if (DatabaseType == DatabaseType.MySQL) return '`';
+                if (DatabaseType == DatabaseType.PostgreSQL) return '\"';
                 return ']';
             }
         }
@@ -158,6 +162,10 @@ namespace Seal.Model
                 else if (_connectionType == ConnectionType.Oracle && DatabaseType != DatabaseType.Oracle)
                 {
                     DatabaseType = DatabaseType.Oracle;
+                }
+                else if (_connectionType == ConnectionType.PostgreSQL && DatabaseType != DatabaseType.PostgreSQL)
+                {
+                    DatabaseType = DatabaseType.PostgreSQL;
                 }
                 else if ((_connectionType == ConnectionType.MSSQLServer || _connectionType == ConnectionType.MSSQLServerMicrosoft) && DatabaseType != DatabaseType.MSSQLServer)
                 {
@@ -237,6 +245,14 @@ namespace Seal.Model
         public string OracleConnectionString { get; set; } = null;
         public bool ShouldSerializeOracleConnectionString() { return !string.IsNullOrEmpty(OracleConnectionString); }
 
+#if WINDOWS
+        [DefaultValue(null)]
+        [DisplayName("PostgreSQL Connection string"), Description("PostgreSQL Connection string used to connect to the database if the connection type is PostgreSQL. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(10, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string PostgreSQLConnectionString { get; set; } = null;
+        public bool ShouldSerializePostgreSQLConnectionString() { return !string.IsNullOrEmpty(PostgreSQLConnectionString); }
+
         /// <summary>
         /// If set, script executed to instanciate and open the connection
         /// </summary>
@@ -297,6 +313,10 @@ namespace Seal.Model
                 else if (ConnectionType == ConnectionType.Oracle)
                 {
                     result = Helper.GetOleDbConnectionString(OracleConnectionString, UserName, ClearPassword);
+                }
+                else if (ConnectionType == ConnectionType.PostgreSQL)
+                {
+                    result = Helper.GetOleDbConnectionString(PostgreSQLConnectionString, UserName, ClearPassword);
                 }
                 else
                 {

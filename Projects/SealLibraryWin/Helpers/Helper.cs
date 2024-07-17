@@ -26,6 +26,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Oracle.ManagedDataAccess.Client;
 using System.Xml;
+using Npgsql;
 
 namespace Seal.Helpers
 {
@@ -342,7 +343,7 @@ namespace Seal.Helpers
             {
                 result = name;
                 if (i != 1) result += i.ToString();
-                if (!entities.Exists(i => i.ToLower() == result.ToLower() )) break;
+                if (!entities.Exists(i => i.ToLower() == result.ToLower())) break;
                 i++;
             }
             return result;
@@ -787,6 +788,13 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new OracleDataAdapter(command);
             }
+            else if (connection is NpgsqlConnection)
+            {
+                NpgsqlCommand command = ((NpgsqlConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new NpgsqlDataAdapter(command);
+            }
             else
             {
                 OleDbCommand command = ((OleDbConnection)connection).CreateCommand();
@@ -859,6 +867,10 @@ namespace Seal.Helpers
             {
                 connection = new OracleConnection(connectionString);
             }
+            else if (connectionType == ConnectionType.PostgreSQL)
+            {
+                connection = new NpgsqlConnection(connectionString);
+            }
             else
             {
                 OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connectionString);
@@ -906,6 +918,10 @@ namespace Seal.Helpers
             else if (connectionString.ToLower().Contains("sqlncli"))
             {
                 result = DatabaseType.MSSQLServer;
+            }
+            else if (connectionString.ToLower().Contains("postgres"))
+            {
+                result = DatabaseType.PostgreSQL;
             }
 
             return result;

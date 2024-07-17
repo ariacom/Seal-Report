@@ -29,6 +29,8 @@ namespace Seal.Model
         MSSQLServer,
         [Description("MySQL")]
         MySQL,
+        [Description("PostgreSQL")]
+        PostgreSQL
     }
 
     public enum ConnectionType
@@ -47,6 +49,8 @@ namespace Seal.Model
         MySQL,
         [Description("Oracle")]
         Oracle,
+        [Description("PostgreSQL")]
+        PostgreSQL,        
     }
 
     public enum ColumnType

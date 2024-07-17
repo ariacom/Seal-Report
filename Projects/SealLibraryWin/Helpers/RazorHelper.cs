@@ -49,6 +49,7 @@ using QuestPDF.Infrastructure;
 using Svg.Skia;
 using PuppeteerSharp;
 using System.Collections.Generic;
+using Npgsql;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis;
@@ -102,7 +103,8 @@ namespace Seal.Helpers
         static LicenseType _36 = LicenseType.Community;
         static SKSvg _37 = null;
         static PdfOptions _38 = null;
-        static AngleSharp.IConfiguration _39 = null;
+        static NpgsqlConnection _39 = null;
+        static AngleSharp.IConfiguration _40 = null;
 
         public static string RazorCacheDirectory = "";
 
@@ -185,7 +187,8 @@ namespace Seal.Helpers
                     if (_35 == null) _35 = SpreadsheetDocument.Create(FileHelper.GetTempUniqueFileName("dummy.xlsx"), SpreadsheetDocumentType.Workbook);
                     if (_37 == null) _37 = new SKSvg();
                     if (_38 == null) _38 = new PdfOptions();
-                    if (_39 == null) _39 = AngleSharp.Configuration.Default;
+                    if (_39 == null) _39 = new NpgsqlConnection("");
+                    if (_40 == null) _40 = AngleSharp.Configuration.Default;
 #if !WINDOWS
                     var si = SealInterface.Create();
                     si.Init();
