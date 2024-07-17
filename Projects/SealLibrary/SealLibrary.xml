@@ -104,11 +104,6 @@
             Force the load of the assemblies
             </summary>
         </member>
-        <member name="M:Seal.Helpers.RazorHelper.LoadDynamicAssemblies">
-            <summary>
-            Compile and load CS code from Assemblies\Dynamics folder
-            </summary>
-        </member>
         <member name="T:Seal.Helpers.ScriptValidator">
             <summary>
             Optional script validation before compilation
@@ -2187,26 +2182,6 @@
             <summary>
             List of tasks of the report
             </summary>
-        </member>
-        <member name="P:Seal.Model.Report.CommonScripts">
-            <summary>
-            List of scripts added to all scripts executed for the report (including tasks). This may be useful to defined common functions for the report.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.Report.CommonScriptsHeader">
-            <summary>
-            The header to include in razor scripts executed for this report
-            </summary>
-        </member>
-        <member name="M:Seal.Model.Report.GetCommonScriptsHeader(Seal.Model.CommonScript)">
-            <summary>
-            The header to include in razor scripts executed for this report, except the one being edited
-            </summary>
-        </member>
-        <member name="M:Seal.Model.Report.GetReportCommonScriptKey(System.String,System.Object)">
-            <summary>
-            Returns a common script key from a given name and model
-            </summary>      
         </member>
         <member name="M:Seal.Model.Report.GetInputValueByName(System.String)">
             <summary>
@@ -6227,11 +6202,6 @@
             True if the template or its configuration is modified
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportViewTemplate.CompilationKey">
-            <summary>
-            Compilation key for the template
-            </summary>
-        </member>
         <member name="M:Seal.Model.ReportViewTemplate.ParseConfiguration">
             <summary>
             Parse the current configuration and initialize the parameters
@@ -6353,6 +6323,11 @@
             True is Assemblies have been loaded. Can be set to true at startup to disable Assemblies load.
             </summary>
         </member>
+        <member name="F:Seal.Model.Repository.DynamicAssembliesLoaded">
+            <summary>
+            True is Dynamic Assemblies have been loaded. Can be set to true at startup to disable Dynamic Assemblies load.
+            </summary>
+        </member>
         <member name="M:Seal.Model.Repository.Init(System.String)">
             <summary>
             Init the repository from a given path
@@ -6451,6 +6426,16 @@
         <member name="P:Seal.Model.Repository.DynamicsFolder">
             <summary>
             Dynamic assemblies folder
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.RazorCacheFolder">
+            <summary>
+            Razor cache folder for compiled assemblies
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.RazorCacheWinFolder">
+            <summary>
+            Razor cache folder for compiled assemblies for Windows applications
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.SealConverterPath">
@@ -8011,6 +7996,11 @@
             If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.EnableRazorCache">
+            <summary>
+            If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.ReportFormats">
             <summary>
             List of report format allowed in view result. If empty, all formats are taken.
@@ -8056,25 +8046,10 @@
             If set, the script is executed when a new report is created. Default values for report creation can be set here.
             </summary>
         </member>
-        <member name="P:Seal.Model.SealServerConfiguration.CommonScripts">
-            <summary>
-            List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the reports. To include the script, an @Include("common script name") directive must be inserted at the beginning of the script.
-            </summary>
-        </member>
         <member name="P:Seal.Model.SealServerConfiguration.RepositoryTranslationsScript">
             <summary>
             If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source.
             </summary>
-        </member>
-        <member name="M:Seal.Model.SealServerConfiguration.SetConfigurationCommonScripts(System.String)">
-            <summary>
-            Replace the @Include by the common script in the current script
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealServerConfiguration.GetConfigurationCommonScriptKey(System.String,System.Object)">
-            <summary>
-            Returns a common script key form a given name and model
-            </summary>      
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.EncryptionMode">
             <summary>
@@ -8119,16 +8094,6 @@
         <member name="P:Seal.Model.SealServerConfiguration.PdfWebServiceURL">
             <summary>
             If the client library is used, the HTML to PDF web service URL.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.CommonScriptsHeader">
-            <summary>
-            All common scripts
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealServerConfiguration.GetCommonScriptsHeader(Seal.Model.CommonScript)">
-            <summary>
-            Returns all common scripts not being edited
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.DefaultCulture">
@@ -8209,6 +8174,11 @@
         <member name="M:Seal.Model.SealServerConfiguration.SaveToFile(System.String)">
             <summary>
             Save to a given file path
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.IsUsingSealLibraryWin">
+            <summary>
+            True if the executable is using Windows libraries (ReportDesigner and ServerManager)
             </summary>
         </member>
         <member name="M:Seal.Model.SealServerConfiguration.GetAttachedFileContent(System.String)">
@@ -8534,6 +8504,11 @@
         <member name="P:Seal.Model.SecurityProvider.FilePath">
             <summary>
             Current file path
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityProvider.LastModification">
+            <summary>
+            Last modification date time
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityProvider.Script">

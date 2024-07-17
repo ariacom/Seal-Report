@@ -25,6 +25,11 @@
         ITemplateKey GetKey(string name, ResolveType resolveType = ResolveType.Global, ITemplateKey context = null);
 
         /// <summary>
+        /// Retruns a template
+        /// </summary>
+        ICompiledTemplate GetTemplate(ITemplateKey key, Type modelType);
+
+        /// <summary>
         /// Checks if a given template is already cached.
         /// </summary>
         /// <param name="key"></param>

@@ -196,8 +196,17 @@ namespace RazorEngine.Roslyn.CSharp
         /// <param name="context"></param>
         /// <returns></returns>
         [SecurityCritical]
-        public override Tuple<Type, CompilationData> CompileType(TypeContext context)
+        public override Tuple<Type, CompilationData> CompileType(TypeContext context, string keyName)
         {
+            if (!string.IsNullOrEmpty(keyName) && File.Exists(keyName))
+            {
+                //Use global cache if keyname is a dll
+                var assembly2 = Assembly.LoadFrom(keyName);
+                var type2 = assembly2.GetType(DynamicTemplateNamespace + "." + context.ClassName);
+                if (type2 == null) throw new Exception($"Inconsistent cache assemblies: Clean-up the folder '{Path.GetDirectoryName(keyName)}' and restart the application..");
+                return Tuple.Create(type2, new CompilationData("", ""));
+            }
+
             var sourceCode = GetCodeCompileUnit(context);
             var assemblyName = GetAssemblyName(context);
 

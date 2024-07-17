@@ -242,7 +242,7 @@
 
                             //Logout
                             $.post(sealServer + "SWILogout", {
-                                sessionId: sessionId
+                                sessionId: mySessionId
                             })
                                 .done(function (data) {
                                     if (!data.error) {

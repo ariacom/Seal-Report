@@ -83,7 +83,13 @@ However you can just use 'dynamic' (modelType == null) and we try to make it wor
             }
             return result;
         }
-        
+
+        public ICompiledTemplate GetTemplate(ITemplateKey key, Type modelType)
+        {
+            CheckModelType(modelType);
+            return _origin.GetTemplate(key, modelType);
+        }
+
         public bool IsTemplateCached(ITemplateKey key, Type modelType)
         {
             CheckModelType(modelType);

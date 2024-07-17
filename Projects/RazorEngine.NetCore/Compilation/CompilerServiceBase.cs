@@ -152,7 +152,7 @@
         /// <param name="context">The type context which defines the type to compile.</param>
         /// <returns>The compiled type.</returns>
         [SecurityCritical]
-        public abstract Tuple<Type, CompilationData> CompileType(TypeContext context);
+        public abstract Tuple<Type, CompilationData> CompileType(TypeContext context, string keyName);
 
         /// <summary>
         /// Creates a <see cref="RazorEngineHost"/> used for class generation.

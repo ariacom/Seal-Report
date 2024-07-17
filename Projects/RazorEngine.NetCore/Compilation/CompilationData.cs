@@ -52,7 +52,7 @@ namespace RazorEngine.Compilation
         public void DeleteAll()
         {
             new PermissionSet(PermissionState.Unrestricted).Assert();
-            if (tmpFolder != null)
+            if (!string.IsNullOrEmpty(tmpFolder))
             {
                 try
                 {

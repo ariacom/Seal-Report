@@ -469,6 +469,22 @@ namespace Seal.Model
             RepositoryServer.TaskTemplatesFolder = TaskTemplatesFolder;
 
             CheckFolders();
+
+            //Alternate temporary directories
+            if (!string.IsNullOrEmpty(Configuration.AlternateTempDirectory))
+            {
+                var tempDir = ReplaceRepositoryKeyword(Configuration.AlternateTempDirectory);
+                if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+                RazorEngine.Engine.AlternateTemporaryDirectory = tempDir;
+                FileHelper.AlternateTemporaryDirectory = tempDir;
+            }
+
+            //Razor cache directory
+            if (Configuration.EnableRazorCache)
+            {
+                RazorHelper.RazorCacheDirectory = Configuration.IsUsingSealLibraryWin ? RazorCacheWinFolder : RazorCacheFolder;
+            }
+
             //Data sources
             if (Sources.Count == 0)
             {
@@ -598,15 +614,6 @@ namespace Seal.Model
 
                     DynamicAssembliesLoaded = true;
                 }
-
-                //Alternate temporary directories
-                if (!string.IsNullOrEmpty(Configuration.AlternateTempDirectory))
-                {
-                    var tempDir = ReplaceRepositoryKeyword(Configuration.AlternateTempDirectory);
-                    if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
-                    RazorEngine.Engine.AlternateTemporaryDirectory = tempDir;
-                    FileHelper.AlternateTemporaryDirectory = tempDir;
-                }
             }
         }
 
@@ -664,6 +671,8 @@ namespace Seal.Model
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
                 if (!Directory.Exists(AssembliesFolder)) Directory.CreateDirectory(AssembliesFolder);
                 if (!Directory.Exists(DynamicsFolder)) Directory.CreateDirectory(DynamicsFolder);
+                if (!Directory.Exists(RazorCacheFolder)) Directory.CreateDirectory(RazorCacheFolder);
+                if (!Directory.Exists(RazorCacheWinFolder)) Directory.CreateDirectory(RazorCacheWinFolder);
                 if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
                 if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
                 if (!Directory.Exists(PersonalFolder)) Directory.CreateDirectory(PersonalFolder);
@@ -811,6 +820,28 @@ namespace Seal.Model
             get
             {
                 return Path.Combine(AssembliesFolder, "Dynamics");
+            }
+        }
+
+        /// <summary>
+        /// Razor cache folder for compiled assemblies
+        /// </summary>
+        public string RazorCacheFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "RazorCache");
+            }
+        }
+
+        /// <summary>
+        /// Razor cache folder for compiled assemblies for Windows applications
+        /// </summary>
+        public string RazorCacheWinFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "RazorCache\\Win");
             }
         }
 

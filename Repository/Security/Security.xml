@@ -10,14 +10,14 @@
 
 	user.Name = user.WebUserName; //Display name
         
-/*	if (string.IsNullOrEmpty(user.WebUserName)) {
-//		user.AddDefaultSecurityGroup();
+	if (string.IsNullOrEmpty(user.WebUserName)) {
+		user.AddDefaultSecurityGroup();
 	}
 	else if (user.WebUserName == "nogroup" &amp;&amp; user.WebPassword == "nogroup")
 	{
         throw new Exception("This user has no group");
 	}
-	else*/ if (user.WebUserName == "ben" &amp;&amp; user.WebPassword == "ben")
+	else if (user.WebUserName == "ben" &amp;&amp; user.WebPassword == "ben")
 	{
         user.Name = "Benjaminto Seal";
 		user.AddDefaultSecurityGroup();

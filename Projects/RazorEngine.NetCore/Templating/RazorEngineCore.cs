@@ -11,6 +11,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using RazorEngine.Compilation.ReferenceResolver;
+    using System.IO;
 
     internal class RazorEngineCore : IDisposable
     {
@@ -67,7 +68,7 @@
         {
             Contract.Requires(key != null);
             var source = Resolve(key);
-            var result = CreateTemplateType(source, modelType);
+            var result = CreateTemplateType(source, modelType, key.Name);
             return new CompiledTemplate(result.Item2, key, source, result.Item1, modelType);
         }
         
@@ -102,7 +103,7 @@
         /// <param name="modelType">The model type or NULL if no model exists.</param>
         /// <returns>An instance of <see cref="Type"/>.</returns>
         [Pure][SecuritySafeCritical] // This should not be SecuritySafeCritical (make the template classes SecurityCritical instead)
-        public virtual Tuple<Type, CompilationData> CreateTemplateType(ITemplateSource razorTemplate, Type modelType)
+        public virtual Tuple<Type, CompilationData> CreateTemplateType(ITemplateSource razorTemplate, Type modelType, string keyName)
         {
             var context = new TypeContext(_references.AddReferences)
             {
@@ -110,6 +111,12 @@
                 TemplateContent = razorTemplate,
                 TemplateType = (_config.BaseTemplateType) ?? typeof(TemplateBase<>)
             };
+            if (!string.IsNullOrEmpty(keyName) && File.Exists(keyName))
+            {
+                //Use global cache if keyname is a dll
+                context.ClassName = "RazorEngine_" + Path.GetFileNameWithoutExtension(keyName).Split("_").Last();
+            }
+
 
             foreach (string ns in _config.Namespaces)
                 context.Namespaces.Add(ns);
@@ -125,7 +132,7 @@
 #endif
                 service.ReferenceResolver = _config.ReferenceResolver ?? new UseCurrentAssembliesReferenceResolver();
                 
-                var result = service.CompileType(context);
+                var result = service.CompileType(context, keyName);
 
                 return result;
             }
