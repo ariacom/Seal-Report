@@ -339,6 +339,11 @@ namespace Seal
                 }
             }
 
+            if (string.IsNullOrEmpty(Repository.Instance.LicenseText))
+            {
+                Text += " - Free MIT Community License (For non-profit usage or small businesses)";
+            }
+
             saveToolStripMenuItem.Enabled = HasEntity;
             saveToolStripButton.Enabled = HasEntity;
             saveAsToolStripMenuItem.Enabled = HasEntity;

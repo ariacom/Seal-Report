@@ -136,7 +136,7 @@ namespace Seal.Model
                 {
                     _licenseText = "";
                     //Get current licenses
-                    string licensePath = Path.Combine(Repository.Instance.SettingsFolder, "License.srl");
+                    string licensePath = Path.Combine(Instance.SettingsFolder, "License.srl");
                     _licenseText = Helper.GetLicenseText(licensePath, out bool licenseInvalid);
                     LicenseInvalid = licenseInvalid;
 
