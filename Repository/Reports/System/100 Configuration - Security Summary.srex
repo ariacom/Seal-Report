@@ -1,26 +1,24 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CurrentViewGUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</CurrentViewGUID>
-  <GUID>d7c4e34a-9fd2-49e0-b8f7-a46d86ab2c28</GUID>
+  <GUID>c1641262c79a4c6482880732e9ec665d</GUID>
   <ViewGUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</ViewGUID>
   <Sources>
     <ReportSource>
-      <GUID>44eb9e66-7078-417e-ba58-c1f32f4d68d0</GUID>
-      <Name>Groups</Name>
+      <GUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</GUID>
+      <Name>Data Source</Name>
       <Connections>
         <MetaConnection>
-          <GUID>20f30975-765f-4bf2-9c9e-635ced49c1f9</GUID>
+          <GUID>368617af-03d0-4b03-b642-db48392e932f</GUID>
           <Name>connection</Name>
-          <ConnectionString />
         </MetaConnection>
       </Connections>
-      <ConnectionGUID>20f30975-765f-4bf2-9c9e-635ced49c1f9</ConnectionGUID>
+      <ConnectionGUID>368617af-03d0-4b03-b642-db48392e932f</ConnectionGUID>
       <IsNoSQL>true</IsNoSQL>
       <MetaData>
         <Tables>
           <MetaTable>
             <GUID>cba6f036-aa28-49d2-ae48-a22a2f1e95da</GUID>
-            <Name>Master</Name>
+            <Name>Groups</Name>
             <DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -47,7 +45,7 @@
     DataTable table = metaTable.NoSQLTable;
     ReportExecutionLog log = metaTable;
 
-    log.LogMessage("Processing " + metaTable.Source.Name);
+    log.LogMessage("Processing " + metaTable.Name);
     foreach (var group in Repository.Instance.Security.Groups) {
         table.Rows.Add(
             group.Name, 
@@ -150,26 +148,9 @@
               </MetaColumn>
             </Columns>
           </MetaTable>
-        </Tables>
-      </MetaData>
-    </ReportSource>
-    <ReportSource>
-      <GUID>19bcd04c-7e7f-4123-8d57-59dee8ef38bd</GUID>
-      <Name>Groups - Folders</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>75b882b8-4fc1-4531-ab27-f04a44a76aa0</GUID>
-          <Name>connection</Name>
-          <ConnectionString />
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>75b882b8-4fc1-4531-ab27-f04a44a76aa0</ConnectionGUID>
-      <IsNoSQL>true</IsNoSQL>
-      <MetaData>
-        <Tables>
           <MetaTable>
             <GUID>6710b710-b368-405c-ba67-3b6d3673d110</GUID>
-            <Name>Master</Name>
+            <Name>Folder</Name>
             <DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -192,9 +173,9 @@
 @{
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
-                ReportExecutionLog log = metaTable;
+    ReportExecutionLog log = metaTable;
 
-    log.LogMessage("Processing " + metaTable.Source.Name);
+    log.LogMessage("Processing " + metaTable.Name);
     foreach (var group in Repository.Instance.Security.Groups) {
         addRecord(table, group, Repository.Instance.ReportsFolder + Path.DirectorySeparatorChar);
     }
@@ -287,26 +268,9 @@
               </MetaColumn>
             </Columns>
           </MetaTable>
-        </Tables>
-      </MetaData>
-    </ReportSource>
-    <ReportSource>
-      <GUID>dc89ee77-2bd6-41f5-aee6-0943f58a2e0b</GUID>
-      <Name>Groups - Editors Rights</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>ec60fd2a-a3d3-425a-a14b-6f3e6e6e9776</GUID>
-          <Name>connection</Name>
-          <ConnectionString />
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>ec60fd2a-a3d3-425a-a14b-6f3e6e6e9776</ConnectionGUID>
-      <IsNoSQL>true</IsNoSQL>
-      <MetaData>
-        <Tables>
           <MetaTable>
             <GUID>d394238d-88c0-4c0a-9af9-aab3589d31fd</GUID>
-            <Name>Master</Name>
+            <Name>Groups - Editors Rights</Name>
             <DefinitionScript>
 @using System.Data
 @{
@@ -323,15 +287,14 @@
     log.LogMessage("{0} column(s) defined", table.Columns.Count);
 }
 </DefinitionScript>
-            <LoadScript>
-@using System.Data
+            <LoadScript>@using System.Data
 @using System.IO
 @{
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
-                ReportExecutionLog log = metaTable;
+    ReportExecutionLog log = metaTable;
 
-    log.LogMessage("Processing " + metaTable.Source.Name);
+    log.LogMessage("Processing " + metaTable.Name);
     foreach (var group in Repository.Instance.Security.Groups) {
         foreach (var item in group.Devices) {
             table.Rows.Add(
@@ -420,26 +383,9 @@
               </MetaColumn>
             </Columns>
           </MetaTable>
-        </Tables>
-      </MetaData>
-    </ReportSource>
-    <ReportSource>
-      <GUID>36737db2-a3c7-49ac-856a-31862ee6cb66</GUID>
-      <Name>Users</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>c203a539-8504-4553-abd7-994ea309a83b</GUID>
-          <Name>connection</Name>
-          <ConnectionString />
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>c203a539-8504-4553-abd7-994ea309a83b</ConnectionGUID>
-      <IsNoSQL>true</IsNoSQL>
-      <MetaData>
-        <Tables>
           <MetaTable>
             <GUID>63e72a45-06a5-4ada-bee4-d1c917a38aad</GUID>
-            <Name>Master</Name>
+            <Name>Users</Name>
             <DefinitionScript>
 @using System.Data
 @{
@@ -464,27 +410,31 @@
 @{
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
-                ReportExecutionLog log = metaTable;
-
+    ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
     
-    log.LogMessage("Processing " + metaTable.Source.Name);
+    log.LogMessage("Processing " + metaTable.Name);
 
-    //GetUsers() is defined in Report Common Scripts (General tree node)
-    var users = GetUsers();
-    foreach (var user in users) {
-        foreach (var gr in user.SecurityGroupsDisplay.Split(';')) {
-            table.Rows.Add(
-                user.Name, 
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                gr,
-                Helper.GetEnumDescription(user.PersonalFolderRight.GetType(), user.PersonalFolderRight),
-                user.ShowFoldersView ? "Yes" : "No",
-                user.SqlModel ? "Yes" : "No",
-                user.DefaultGroup.Name
-                );              
-         }
+    //List of users has been built in a task
+    if (report != null) {
+        var users = report.Tag as List&lt;SecurityUser&gt;;
+        if (users != null) {
+            foreach (var user in users) {
+                foreach (var gr in user.SecurityGroupsDisplay.Split(';')) {
+                    table.Rows.Add(
+                        user.Name, 
+                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                        gr,
+                        Helper.GetEnumDescription(user.PersonalFolderRight.GetType(), user.PersonalFolderRight),
+                        user.ShowFoldersView ? "Yes" : "No",
+                        user.SqlModel ? "Yes" : "No",
+                        user.DefaultGroup.Name
+                        );              
+                 }
+            }
+        }
     }
-    
     log.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
 </LoadScript>
@@ -548,26 +498,9 @@
               </MetaColumn>
             </Columns>
           </MetaTable>
-        </Tables>
-      </MetaData>
-    </ReportSource>
-    <ReportSource>
-      <GUID>fa6bf35e-5b63-4612-8c47-8a1c349adb8b</GUID>
-      <Name>Users - Folders</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>990935cc-926e-4136-a1d9-1d09b8a21981</GUID>
-          <Name>connection</Name>
-          <ConnectionString />
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>990935cc-926e-4136-a1d9-1d09b8a21981</ConnectionGUID>
-      <IsNoSQL>true</IsNoSQL>
-      <MetaData>
-        <Tables>
           <MetaTable>
             <GUID>2cf5e53f-2688-4e57-8ab0-4f2153607fe8</GUID>
-            <Name>Master</Name>
+            <Name>Users - Folders</Name>
             <DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -592,14 +525,20 @@
 @{
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
-                ReportExecutionLog log = metaTable;
-
-    log.LogMessage("Processing " + metaTable.Source.Name);
+    ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
     
-    //GetUsers() is defined in Report Common Scripts (General tree node)
-    var users = GetUsers();
-    foreach (var user in users) {
-        addRecord(table, user, Repository.Instance.ReportsFolder + Path.DirectorySeparatorChar);
+    log.LogMessage("Processing " + metaTable.Name);
+
+    //List of users has been built in a task
+    if (report != null) {
+        var users = report.Tag as List&lt;SecurityUser&gt;;
+        if (users != null) {
+            foreach (var user in users) {
+                addRecord(table, user, Repository.Instance.ReportsFolder + Path.DirectorySeparatorChar);
+            }
+        }
     }
     log.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
@@ -706,26 +645,9 @@
               </MetaColumn>
             </Columns>
           </MetaTable>
-        </Tables>
-      </MetaData>
-    </ReportSource>
-    <ReportSource>
-      <GUID>37180be9-2134-4aca-baad-71c935547639</GUID>
-      <Name>Users - Editors</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>8bdbb7ff-2743-434a-b59f-208622cbf3ee</GUID>
-          <Name>connection</Name>
-          <ConnectionString />
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>8bdbb7ff-2743-434a-b59f-208622cbf3ee</ConnectionGUID>
-      <IsNoSQL>true</IsNoSQL>
-      <MetaData>
-        <Tables>
           <MetaTable>
             <GUID>aea82665-d950-4db3-a9d0-f67186b62e50</GUID>
-            <Name>Master</Name>
+            <Name>Users - Editors</Name>
             <DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -748,59 +670,66 @@
 @{
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
-                ReportExecutionLog log = metaTable;
+    ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    
+    log.LogMessage("Processing " + metaTable.Name);
 
-    log.LogMessage("Processing " + metaTable.Source.Name);
-    //GetUsers() is defined in Report Common Scripts (General tree node)
-    var users = GetUsers();
-    foreach (var user in users) {
-        foreach (var item in user.ForbiddenDevices) {
-            table.Rows.Add(
-                user.Name, 
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                user.SecurityGroupsDisplay,
-                "Web Report Designer", 
-                "Device", 
-                item.DisplayName, 
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                );   
+    //List of users has been built in a task
+    if (report != null) {
+        var users = report.Tag as List&lt;SecurityUser&gt;;
+        if (users != null) {
+            foreach (var user in users) {
+                foreach (var item in user.ForbiddenDevices) {
+                    table.Rows.Add(
+                        user.Name, 
+                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                        user.SecurityGroupsDisplay,
+                        "Web Report Designer", 
+                        "Device", 
+                        item.DisplayName, 
+                        Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                        );   
+                }
+                
+                foreach (var item in user.ForbiddenSources) {
+                    table.Rows.Add(
+                        user.Name, 
+                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                        user.SecurityGroupsDisplay,
+                        "Web Report Designer", 
+                        "Data Source", 
+                        item.DisplayName, 
+                        Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                        );   
+                }
+                
+                foreach (var item in user.ForbiddenConnections) {
+                    table.Rows.Add(
+                       user.Name, 
+                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                        user.SecurityGroupsDisplay,
+                        "Web Report Designer", 
+                        "Connection", 
+                        item.DisplayName, 
+                        Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                        );   
+                }
+                
+                foreach (var item in user.ForbiddenColumns) {
+                    table.Rows.Add(
+                        user.Name, 
+                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
+                        user.SecurityGroupsDisplay,
+                        "Web Report Designer", 
+                        "Column", 
+                        item.DisplayName, 
+                        Helper.GetEnumDescription(item.Right.GetType(), item.Right)
+                        );   
+                }        
+            }
         }
-        
-        foreach (var item in user.ForbiddenSources) {
-            table.Rows.Add(
-                user.Name, 
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                user.SecurityGroupsDisplay,
-                "Web Report Designer", 
-                "Data Source", 
-                item.DisplayName, 
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                );   
-        }
-        
-        foreach (var item in user.ForbiddenConnections) {
-            table.Rows.Add(
-               user.Name, 
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                user.SecurityGroupsDisplay,
-                "Web Report Designer", 
-                "Connection", 
-                item.DisplayName, 
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                );   
-        }
-        
-        foreach (var item in user.ForbiddenColumns) {
-            table.Rows.Add(
-                user.Name, 
-                user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                user.SecurityGroupsDisplay,
-                "Web Report Designer", 
-                "Column", 
-                item.DisplayName, 
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                );   
-        }        
     }
     log.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
@@ -873,7 +802,7 @@
     <ReportModel>
       <GUID>138b9429-70e7-44e3-b606-6f72954519d0</GUID>
       <Name>Groups</Name>
-      <SourceGUID>44eb9e66-7078-417e-ba58-c1f32f4d68d0</SourceGUID>
+      <SourceGUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</SourceGUID>
       <LINQSubTables>
         <MetaTable>
           <GUID>cba6f036-aa28-49d2-ae48-a22a2f1e95da</GUID>
@@ -967,7 +896,14 @@
     <ReportModel>
       <GUID>b54bff69-4121-4976-b2f7-8b42d2ac65fd</GUID>
       <Name>Groups Folders</Name>
-      <SourceGUID>19bcd04c-7e7f-4123-8d57-59dee8ef38bd</SourceGUID>
+      <SourceGUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>6710b710-b368-405c-ba67-3b6d3673d110</GUID>
+          <Name>Master</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
       <Elements>
         <ReportElement>
           <GUID>709ff7f8-1157-42a5-9896-a2e5f83aa504</GUID>
@@ -1030,7 +966,14 @@
     <ReportModel>
       <GUID>287ece02-ae86-4c09-b384-2d4fb274f9ac</GUID>
       <Name>Groups Editors</Name>
-      <SourceGUID>dc89ee77-2bd6-41f5-aee6-0943f58a2e0b</SourceGUID>
+      <SourceGUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>d394238d-88c0-4c0a-9af9-aab3589d31fd</GUID>
+          <Name>Master</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
       <Elements>
         <ReportElement>
           <GUID>40f19e38-1501-4986-b45b-3b46e2fcef7f</GUID>
@@ -1077,7 +1020,7 @@
     <ReportModel>
       <GUID>7202e488-00c5-4b5d-92b7-0c2e1ca8ad2b</GUID>
       <Name>Users</Name>
-      <SourceGUID>36737db2-a3c7-49ac-856a-31862ee6cb66</SourceGUID>
+      <SourceGUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</SourceGUID>
       <LINQSubTables>
         <MetaTable>
           <GUID>63e72a45-06a5-4ada-bee4-d1c917a38aad</GUID>
@@ -1147,7 +1090,14 @@
     <ReportModel>
       <GUID>e85c9269-51bb-4adb-a4b6-8ed01bdbd6e5</GUID>
       <Name>Users Folders</Name>
-      <SourceGUID>fa6bf35e-5b63-4612-8c47-8a1c349adb8b</SourceGUID>
+      <SourceGUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>2cf5e53f-2688-4e57-8ab0-4f2153607fe8</GUID>
+          <Name>Users - Folders</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
       <Elements>
         <ReportElement>
           <GUID>39b781d6-fbc9-4a20-913e-3fa630b95b6e</GUID>
@@ -1226,7 +1176,7 @@
     <ReportModel>
       <GUID>dd9f35d9-8b0b-4491-a576-7fa84860d34d</GUID>
       <Name>Users Editors</Name>
-      <SourceGUID>37180be9-2134-4aca-baad-71c935547639</SourceGUID>
+      <SourceGUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</SourceGUID>
       <LINQSubTables>
         <MetaTable>
           <GUID>aea82665-d950-4db3-a9d0-f67186b62e50</GUID>
@@ -1294,61 +1244,69 @@
       </Elements>
     </ReportModel>
   </Models>
-  <CommonScripts>
-    <CommonScript>
-      <Name>GetUsers</Name>
-      <Script>@using System.DirectoryServices;
-@using System.DirectoryServices.AccountManagement;
+  <Tasks>
+    <ReportTask>
+      <GUID>c599eb13-e3a3-483f-94a2-1e6a88789ef2</GUID>
+      <Name>Init user list</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</SourceGUID>
+      <Script>@using System.DirectoryServices
+@using System.DirectoryServices.AccountManagement
 
-@functions {
-    //Returns the list of common users with their groups, this may be adapted...
-    public List&lt;SecurityUser&gt; GetUsers() {
-        var result = new List&lt;SecurityUser&gt;();
-        
-        if (Repository.Instance.Security.ProviderName == "Integrated Windows Authentication") 
-        {
-            //Active Directory
-            //Build list of users and their groups from the AD
-            foreach (var group in Repository.Instance.Security.Groups) {
-                PrincipalContext context = new PrincipalContext(ContextType.Domain);
-                GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, group.Name);
-                if (groupPrincipal != null) {
-                    foreach (var adUser in groupPrincipal.GetMembers(true)) {
-                        var user = result.FirstOrDefault(i =&gt; i.Name == adUser.Name); 
-                        if (user == null) {
-                            user = new SecurityUser(Repository.Instance.Security);
-                            user.Name = adUser.Name;
-                            user.UserPrincipal = adUser as UserPrincipal;
-                            result.Add(user);
-                        }
-                        user.AddSecurityGroup(group.Name);
-                    }        
-                }
-            }            
-        }
-        else if (Repository.Instance.Security.ProviderName == "Basic Authentication") 
-        {
-            //Static users...use the logins defined
-            foreach (var login in Repository.Instance.Security.Logins)
-            {
-                var user = new SecurityUser(Repository.Instance.Security) { Name = login.Id };
-            
-                //Add the groups defined for the login
-                foreach (var group in login.GroupNames)
-                {
-                    user.AddSecurityGroup(group);
-                }            
-                result.Add(user);
-            }                        
-        }
-        result.RemoveAll(i =&gt; i.SecurityGroups.Count == 0);
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
 
-        return result;
+    task.LogMessage($"Executing '{task.Name}'");
+    var result = new List&lt;SecurityUser&gt;();
+    
+    if (Repository.Instance.Security.ProviderName == "Integrated Windows Authentication") 
+    {
+        //Active Directory
+        //Build list of users and their groups from the AD
+        foreach (var group in Repository.Instance.Security.Groups) {
+            PrincipalContext context = new PrincipalContext(ContextType.Domain);
+            GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, group.Name);
+            if (groupPrincipal != null) {
+                foreach (var adUser in groupPrincipal.GetMembers(true)) {
+                    var user = result.FirstOrDefault(i =&gt; i.Name == adUser.Name); 
+                    if (user == null) {
+                        user = new SecurityUser(Repository.Instance.Security);
+                        user.Name = adUser.Name;
+                        user.UserPrincipal = adUser as UserPrincipal;
+                        result.Add(user);
+                    }
+                    user.AddSecurityGroup(group.Name);
+                }        
+            }
+        }            
     }
+    else if (Repository.Instance.Security.ProviderName == "Basic Authentication") 
+    {
+        //Static users...use the logins defined
+        foreach (var login in Repository.Instance.Security.Logins)
+        {
+            var user = new SecurityUser(Repository.Instance.Security) { Name = login.Id };
+        
+            //Add the groups defined for the login
+            foreach (var group in login.GroupNames)
+            {
+                user.AddSecurityGroup(group);
+            }            
+            result.Add(user);
+        }                        
+    }
+    result.RemoveAll(i =&gt; i.SecurityGroups.Count == 0);
+
+    //Save in Tag
+    report.Tag= result;
 }
 </Script>
-    </CommonScript>
-  </CommonScripts>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
   <Views>
     <ReportView>
       <GUID>90c9019e-6c34-4af5-a9cf-87e82a5f5720</GUID>
@@ -1702,7 +1660,37 @@
       </Parameters>
       <SortOrder>1</SortOrder>
       <ExcelConfigurations>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;&lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;&lt;ShowTitle&gt;false&lt;/ShowTitle&gt;&lt;ShowMessage&gt;false&lt;/ShowMessage&gt;&lt;ShowInformation&gt;false&lt;/ShowInformation&gt;&lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;&lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;&lt;FreezePanes&gt;true&lt;/FreezePanes&gt;&lt;SkipModel&gt;false&lt;/SkipModel&gt;&lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;&lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;&lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;&lt;ChartWidth&gt;600&lt;/ChartWidth&gt;&lt;ChartHeight&gt;400&lt;/ChartHeight&gt;&lt;ChartStacked&gt;false&lt;/ChartStacked&gt;&lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;&lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;&lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;&lt;RootConfigurationScript /&gt;&lt;RootMainScript /&gt;&lt;RootHeaderScript /&gt;&lt;ConfigurationScript /&gt;&lt;MainScript /&gt;&lt;HeaderScript /&gt;&lt;SummaryScript /&gt;&lt;PageScript /&gt;&lt;ChartScript /&gt;&lt;DataScript /&gt;&lt;/SealExcelCfg&gt;</string>
+        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
+  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
       </ExcelConfigurations>
     </ReportView>
   </Views>

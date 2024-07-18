@@ -1,208 +1,797 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>f519ae4f-e032-4ada-9e2f-c89fd61abab3</GUID><ViewGUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</ViewGUID><InputValues><ReportRestriction><GUID>42575294-3a31-41e7-8462-6f00fd7a6687</GUID><Type>Text</Type><DisplayName>Data Source</DisplayName><EnumGUID>d19c1021-441b-4497-b113-0e0f33d0e643</EnumGUID><PivotPosition>Row</PivotPosition><TypeEd>Text</TypeEd><EnumGUIDEL>d19c1021-441b-4497-b113-0e0f33d0e643</EnumGUIDEL><Prompt>Prompt</Prompt><TypeRe>Text</TypeRe><ChangeOperator>false</ChangeOperator><EnumGUIDRE>d19c1021-441b-4497-b113-0e0f33d0e643</EnumGUIDRE></ReportRestriction></InputValues><Sources><ReportSource><GUID>6f0b50b7-a67c-4aa2-8264-c60cbb9669dd</GUID><Name>Enums</Name><Connections><MetaConnection><GUID>545c7f2f-4693-4ffc-a62d-d8d8d5d8be96</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>545c7f2f-4693-4ffc-a62d-d8d8d5d8be96</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>f045914d-5e02-4790-b78b-101926a6538e</GUID><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-	ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("source", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("enum", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("error", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-    ReportExecutionLog log = metaTable;&#xD;
-    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
-    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
-&#xD;
-    if (report != null &amp;&amp; report.Tag != null) {&#xD;
-        foreach (var item in ((List&lt;MetaSource&gt;) report.Tag)) {&#xD;
-            foreach (var en in item.MetaData.Enums) {&#xD;
-                table.Rows.Add(&#xD;
-                    item.Name, &#xD;
-                    en.Name,&#xD;
-                    en.Error&#xD;
-                    );                       &#xD;
-            }&#xD;
-        }&#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>f6c668e0-e696-423f-a871-94e7227c696b</GUID><Name>enum</Name><Type>Text</Type><Category>Master</Category><DisplayName>Enum</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>3c70a848-3979-496c-bcda-36c8705042c2</GUID><Name>source</Name><Type>Text</Type><Category>Master</Category><DisplayName>Source</DisplayName><DisplayOrder>1</DisplayOrder></MetaColumn><MetaColumn><GUID>b15839f5-18a0-4d85-aa35-e93238968803</GUID><Name>error</Name><Type>Text</Type><Category>Master</Category><DisplayName>Error</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn></Columns></MetaTable></Tables><Enums><MetaEnum><GUID>d19c1021-441b-4497-b113-0e0f33d0e643</GUID><Name>Sources</Name></MetaEnum></Enums></MetaData></ReportSource><ReportSource><GUID>ba1f090b-84bf-483b-b0d1-7b8acbae3172</GUID><Name>Connections</Name><Connections><MetaConnection><GUID>974d8a1c-d2c5-4fe5-885b-ac33a1f33f65</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>974d8a1c-d2c5-4fe5-885b-ac33a1f33f65</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>57812635-6c55-47c8-a4aa-3dc03d7a2985</GUID><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-	ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("source", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("connection", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("error", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-    ReportExecutionLog log = metaTable;&#xD;
-    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
-    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
-&#xD;
-    if (report != null &amp;&amp; report.Tag != null) {&#xD;
-        foreach (var item in ((List&lt;MetaSource&gt;) report.Tag)) {&#xD;
-            foreach (var co in item.Connections) {&#xD;
-                table.Rows.Add(&#xD;
-                    item.Name, &#xD;
-                    co.Name,&#xD;
-                    co.Error&#xD;
-                    );                       &#xD;
-            }&#xD;
-        }&#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>e399dae6-22b6-45f6-8371-6bd4182db6d0</GUID><Name>source</Name><Type>Text</Type><Category>Master</Category><DisplayName>Source</DisplayName><DisplayOrder>1</DisplayOrder></MetaColumn><MetaColumn><GUID>dafee175-4950-4eaf-8827-34e47a50ec1f</GUID><Name>connection</Name><Type>Text</Type><Category>Master</Category><DisplayName>Connection</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>1b8b8d6b-0784-4723-9ff5-e4081654db12</GUID><Name>error</Name><Type>Text</Type><Category>Master</Category><DisplayName>Error</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>1a77d38b-5f1e-416b-b2b5-b34e60100a6d</GUID><Name>Tables</Name><Connections><MetaConnection><GUID>da6583d6-2b41-4a9b-a7be-599b0a9e5b15</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>da6583d6-2b41-4a9b-a7be-599b0a9e5b15</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>fa42925a-8294-44f7-b6b1-2b2d43a13334</GUID><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-	ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("source", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("table", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("error", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-    ReportExecutionLog log = metaTable;&#xD;
-    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
-    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
-&#xD;
-    if (report != null &amp;&amp; report.Tag != null) {&#xD;
-        foreach (var item in ((List&lt;MetaSource&gt;) report.Tag)) {&#xD;
-            foreach (var en in item.MetaData.Tables) {&#xD;
-                table.Rows.Add(&#xD;
-                    item.Name, &#xD;
-                    en.Name,&#xD;
-                    en.Error&#xD;
-                    );                       &#xD;
-            }&#xD;
-        }&#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>da143030-308c-46c6-aa34-1a64b6be9e83</GUID><Name>source</Name><Type>Text</Type><Category>Master</Category><DisplayName>Source</DisplayName><DisplayOrder>1</DisplayOrder></MetaColumn><MetaColumn><GUID>f8f8eef7-87cd-4049-9be9-7fc58b1e1a79</GUID><Name>table</Name><Type>Text</Type><Category>Master</Category><DisplayName>Table</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>41a71692-62db-4e4d-8ed7-8aa1525220b2</GUID><Name>error</Name><Type>Text</Type><Category>Master</Category><DisplayName>Error</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>07ca3181-d263-43be-926e-d027a6d95dc7</GUID><Name>Joins</Name><Connections><MetaConnection><GUID>4eec6a56-912f-4b69-8df0-acebdf23b3a0</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>4eec6a56-912f-4b69-8df0-acebdf23b3a0</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>c8788065-8717-4e8e-b712-0f716b8b78dc</GUID><DefinitionScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-	ReportExecutionLog log = metaTable;&#xD;
-&#xD;
-    DataTable table = new DataTable();&#xD;
-    table.Columns.Add(new DataColumn("source", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("join", typeof(string)));&#xD;
-    table.Columns.Add(new DataColumn("error", typeof(string)));&#xD;
-    metaTable.NoSQLTable = table;&#xD;
-    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
-}&#xD;
-</DefinitionScript><LoadScript>@using System.Data&#xD;
-@{&#xD;
-    MetaTable metaTable = Model;&#xD;
-    DataTable table = metaTable.NoSQLTable;&#xD;
-    ReportExecutionLog log = metaTable;&#xD;
-    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
-    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
-&#xD;
-    if (report != null &amp;&amp; report.Tag != null) {&#xD;
-        foreach (var item in ((List&lt;MetaSource&gt;) report.Tag)) {&#xD;
-            foreach (var en in item.MetaData.Joins) {&#xD;
-                table.Rows.Add(&#xD;
-                    item.Name, &#xD;
-                    en.Name,&#xD;
-                    en.Error&#xD;
-                    );                       &#xD;
-            }&#xD;
-        }&#xD;
-    }&#xD;
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
-}&#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>53b9053c-766b-42cb-83fd-bfab80d043fe</GUID><Name>source</Name><Type>Text</Type><Category>Master</Category><DisplayName>Source</DisplayName><DisplayOrder>1</DisplayOrder></MetaColumn><MetaColumn><GUID>987add6a-98d1-452d-9f89-30e0f3c71b67</GUID><Name>join</Name><Type>Text</Type><Category>Master</Category><DisplayName>Join</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>9a709529-3953-46f4-9b68-6991af9d8068</GUID><Name>error</Name><Type>Text</Type><Category>Master</Category><DisplayName>Error</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource></Sources><Models><ReportModel><GUID>6c0f99ec-acaf-4e1c-ab7c-1c57af205a1a</GUID><Name>Enums</Name><SourceGUID>6f0b50b7-a67c-4aa2-8264-c60cbb9669dd</SourceGUID><Elements><ReportElement><GUID>d7fb40b1-3ae6-4fa2-9e8d-caf94248ba3b</GUID><Name>source</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>3c70a848-3979-496c-bcda-36c8705042c2</MetaColumnGUID></ReportElement><ReportElement><GUID>3b0d8672-21de-4aa0-a79d-eaaf5d8330a0</GUID><Name>enum</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>f6c668e0-e696-423f-a871-94e7227c696b</MetaColumnGUID></ReportElement><ReportElement><GUID>6d691a30-8056-4788-86b8-e031334185b1</GUID><Name>error</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>b15839f5-18a0-4d85-aa35-e93238968803</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>e1f83504-a1a4-4a57-8d23-c69f4cf91079</GUID><Name>Connections</Name><SourceGUID>ba1f090b-84bf-483b-b0d1-7b8acbae3172</SourceGUID><Elements><ReportElement><GUID>1d3fffb0-dd0f-4a5a-b57a-df19318e39e9</GUID><Name>source</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>e399dae6-22b6-45f6-8371-6bd4182db6d0</MetaColumnGUID></ReportElement><ReportElement><GUID>f2569b09-7799-47b4-8808-652b33d1f130</GUID><Name>connection</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>dafee175-4950-4eaf-8827-34e47a50ec1f</MetaColumnGUID></ReportElement><ReportElement><GUID>bb50d087-4063-4674-be4a-f6a16dd258cf</GUID><Name>error</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>1b8b8d6b-0784-4723-9ff5-e4081654db12</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>ac82b89a-99e9-49f2-9d72-d4c804ba6969</GUID><Name>Tables</Name><SourceGUID>1a77d38b-5f1e-416b-b2b5-b34e60100a6d</SourceGUID><Elements><ReportElement><GUID>1c0d98cf-2945-45b1-a9ef-4767314cfd6d</GUID><Name>source</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da143030-308c-46c6-aa34-1a64b6be9e83</MetaColumnGUID></ReportElement><ReportElement><GUID>5b6700c2-0454-4e09-8b84-248ab7357873</GUID><Name>table</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>f8f8eef7-87cd-4049-9be9-7fc58b1e1a79</MetaColumnGUID></ReportElement><ReportElement><GUID>d52a50e9-b041-4bc3-b99b-5905a94faaf1</GUID><Name>error</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>41a71692-62db-4e4d-8ed7-8aa1525220b2</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>97984f41-177f-49c9-b964-32cfbd37ef7d</GUID><Name>Joins</Name><SourceGUID>07ca3181-d263-43be-926e-d027a6d95dc7</SourceGUID><Elements><ReportElement><GUID>5d36a92b-2166-429f-925e-af647a9af572</GUID><Name>source</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>53b9053c-766b-42cb-83fd-bfab80d043fe</MetaColumnGUID></ReportElement><ReportElement><GUID>6b54fa5c-d607-4566-999f-eeba5d12c4bd</GUID><Name>join</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>987add6a-98d1-452d-9f89-30e0f3c71b67</MetaColumnGUID></ReportElement><ReportElement><GUID>960b8c86-8980-4a2a-829d-3c1bfc957a92</GUID><Name>error</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>9a709529-3953-46f4-9b68-6991af9d8068</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Tasks><ReportTask><GUID>27bcb127-6bb1-431a-a9aa-f8ff5d319473</GUID><Name>Check Sources</Name><CancelReport>false</CancelReport><SourceGUID>6f0b50b7-a67c-4aa2-8264-c60cbb9669dd</SourceGUID><Script>@{
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>a511ae06d321493b8a2dc31bad26ea39</GUID>
+  <ViewGUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>42575294-3a31-41e7-8462-6f00fd7a6687</GUID>
+      <Type>Text</Type>
+      <DisplayName>Data Source</DisplayName>
+      <EnumGUID>d19c1021-441b-4497-b113-0e0f33d0e643</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>d19c1021-441b-4497-b113-0e0f33d0e643</EnumGUIDEL>
+      <Prompt>Prompt</Prompt>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>d19c1021-441b-4497-b113-0e0f33d0e643</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>cf9790b8-0614-4fb7-b751-aa862ce9989e</GUID>
+      <Name>Data Source</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>205d36fe-fca3-4d57-ba1f-32233186cc0e</GUID>
+          <Name>connection</Name>
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>205d36fe-fca3-4d57-ba1f-32233186cc0e</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>f045914d-5e02-4790-b78b-101926a6538e</GUID>
+            <Name>Enums</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+	ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("source", typeof(string)));
+    table.Columns.Add(new DataColumn("enum", typeof(string)));
+    table.Columns.Add(new DataColumn("error", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+
+    if (report != null &amp;&amp; report.Tag != null) {
+        foreach (var item in ((List&lt;MetaSource&gt;) report.Tag)) {
+            foreach (var en in item.MetaData.Enums) {
+                table.Rows.Add(
+                    item.Name, 
+                    en.Name,
+                    en.Error
+                    );                       
+            }
+        }
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>f6c668e0-e696-423f-a871-94e7227c696b</GUID>
+                <Name>enum</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Enum</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>3c70a848-3979-496c-bcda-36c8705042c2</GUID>
+                <Name>source</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Source</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b15839f5-18a0-4d85-aa35-e93238968803</GUID>
+                <Name>error</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Error</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>57812635-6c55-47c8-a4aa-3dc03d7a2985</GUID>
+            <Name>Connections</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+	ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("source", typeof(string)));
+    table.Columns.Add(new DataColumn("connection", typeof(string)));
+    table.Columns.Add(new DataColumn("error", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+
+    if (report != null &amp;&amp; report.Tag != null) {
+        foreach (var item in ((List&lt;MetaSource&gt;) report.Tag)) {
+            foreach (var co in item.Connections) {
+                table.Rows.Add(
+                    item.Name, 
+                    co.Name,
+                    co.Error
+                    );                       
+            }
+        }
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>e399dae6-22b6-45f6-8371-6bd4182db6d0</GUID>
+                <Name>source</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Source</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>dafee175-4950-4eaf-8827-34e47a50ec1f</GUID>
+                <Name>connection</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Connection</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>1b8b8d6b-0784-4723-9ff5-e4081654db12</GUID>
+                <Name>error</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Error</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>fa42925a-8294-44f7-b6b1-2b2d43a13334</GUID>
+            <Name>Tables</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+	ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("source", typeof(string)));
+    table.Columns.Add(new DataColumn("table", typeof(string)));
+    table.Columns.Add(new DataColumn("error", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+
+    if (report != null &amp;&amp; report.Tag != null) {
+        foreach (var item in ((List&lt;MetaSource&gt;) report.Tag)) {
+            foreach (var en in item.MetaData.Tables) {
+                table.Rows.Add(
+                    item.Name, 
+                    en.Name,
+                    en.Error
+                    );                       
+            }
+        }
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>da143030-308c-46c6-aa34-1a64b6be9e83</GUID>
+                <Name>source</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Source</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>f8f8eef7-87cd-4049-9be9-7fc58b1e1a79</GUID>
+                <Name>table</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Table</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>41a71692-62db-4e4d-8ed7-8aa1525220b2</GUID>
+                <Name>error</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Error</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>c8788065-8717-4e8e-b712-0f716b8b78dc</GUID>
+            <Name>Joins</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+	ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("source", typeof(string)));
+    table.Columns.Add(new DataColumn("join", typeof(string)));
+    table.Columns.Add(new DataColumn("error", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+
+    if (report != null &amp;&amp; report.Tag != null) {
+        foreach (var item in ((List&lt;MetaSource&gt;) report.Tag)) {
+            foreach (var en in item.MetaData.Joins) {
+                table.Rows.Add(
+                    item.Name, 
+                    en.Name,
+                    en.Error
+                    );                       
+            }
+        }
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>53b9053c-766b-42cb-83fd-bfab80d043fe</GUID>
+                <Name>source</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Source</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>987add6a-98d1-452d-9f89-30e0f3c71b67</GUID>
+                <Name>join</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Join</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9a709529-3953-46f4-9b68-6991af9d8068</GUID>
+                <Name>error</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Error</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+        <Enums>
+          <MetaEnum>
+            <GUID>d19c1021-441b-4497-b113-0e0f33d0e643</GUID>
+            <Name>Sources</Name>
+          </MetaEnum>
+        </Enums>
+      </MetaData>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>6c0f99ec-acaf-4e1c-ab7c-1c57af205a1a</GUID>
+      <Name>Enums</Name>
+      <SourceGUID>cf9790b8-0614-4fb7-b751-aa862ce9989e</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>d7fb40b1-3ae6-4fa2-9e8d-caf94248ba3b</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>3c70a848-3979-496c-bcda-36c8705042c2</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3b0d8672-21de-4aa0-a79d-eaaf5d8330a0</GUID>
+          <Name>enum</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f6c668e0-e696-423f-a871-94e7227c696b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6d691a30-8056-4788-86b8-e031334185b1</GUID>
+          <Name>error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b15839f5-18a0-4d85-aa35-e93238968803</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>e1f83504-a1a4-4a57-8d23-c69f4cf91079</GUID>
+      <Name>Connections</Name>
+      <SourceGUID>cf9790b8-0614-4fb7-b751-aa862ce9989e</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>57812635-6c55-47c8-a4aa-3dc03d7a2985</GUID>
+          <Name>Master</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>1d3fffb0-dd0f-4a5a-b57a-df19318e39e9</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e399dae6-22b6-45f6-8371-6bd4182db6d0</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f2569b09-7799-47b4-8808-652b33d1f130</GUID>
+          <Name>connection</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>dafee175-4950-4eaf-8827-34e47a50ec1f</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>bb50d087-4063-4674-be4a-f6a16dd258cf</GUID>
+          <Name>error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>1b8b8d6b-0784-4723-9ff5-e4081654db12</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>ac82b89a-99e9-49f2-9d72-d4c804ba6969</GUID>
+      <Name>Tables</Name>
+      <SourceGUID>cf9790b8-0614-4fb7-b751-aa862ce9989e</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>1c0d98cf-2945-45b1-a9ef-4767314cfd6d</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da143030-308c-46c6-aa34-1a64b6be9e83</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5b6700c2-0454-4e09-8b84-248ab7357873</GUID>
+          <Name>table</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f8f8eef7-87cd-4049-9be9-7fc58b1e1a79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d52a50e9-b041-4bc3-b99b-5905a94faaf1</GUID>
+          <Name>error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>41a71692-62db-4e4d-8ed7-8aa1525220b2</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>97984f41-177f-49c9-b964-32cfbd37ef7d</GUID>
+      <Name>Joins</Name>
+      <SourceGUID>cf9790b8-0614-4fb7-b751-aa862ce9989e</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>5d36a92b-2166-429f-925e-af647a9af572</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>53b9053c-766b-42cb-83fd-bfab80d043fe</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6b54fa5c-d607-4566-999f-eeba5d12c4bd</GUID>
+          <Name>join</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>987add6a-98d1-452d-9f89-30e0f3c71b67</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>960b8c86-8980-4a2a-829d-3c1bfc957a92</GUID>
+          <Name>error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>9a709529-3953-46f4-9b68-6991af9d8068</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>27bcb127-6bb1-431a-a9aa-f8ff5d319473</GUID>
+      <Name>Check Sources</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>cf9790b8-0614-4fb7-b751-aa862ce9989e</SourceGUID>
+      <Script>@{
 	//Refresh Data Sources enumerated lists
 	//Useful to schedule this task (for example once a day) if your enumerated values have changed.. 
-	ReportTask task = Model;&#xD;
-    Report report = task.Report;&#xD;
-	var helper = new TaskHelper(task);&#xD;
-    &#xD;
-    //Stores all sources in the Tag&#xD;
-    report.Tag = new List&lt;MetaSource&gt;();&#xD;
-    &#xD;
-    var sources = report.InputValues.FirstOrDefault(i =&gt; i.DisplayNameEl.StartsWith("Data Source"));&#xD;
-    foreach (var sourceName in sources.EnumValues.ToList()) {&#xD;
-        var source = Repository.Instance.Sources.OrderBy(i =&gt; i.Name).FirstOrDefault(i =&gt; i.Name == sourceName);&#xD;
-        if (!report.Cancel &amp;&amp; source != null) {&#xD;
-            ((List&lt;MetaSource&gt;) report.Tag).Add(source);&#xD;
-            string errors = "";&#xD;
-            try&#xD;
-            {&#xD;
-                report.LogMessage("Processing data source '{0}'", source.Name);&#xD;
-                foreach (MetaConnection item in source.Connections.OrderBy(i =&gt; i.Name))&#xD;
-                {&#xD;
-                    if (report.Cancel) { break; }                &#xD;
-                    if (source.IsNoSQL &amp;&amp; !item.ConnectionString.ToLower().Contains("provider=")) {&#xD;
-                        continue;&#xD;
-                    }&#xD;
-                    report.LogMessage("Checking connection '{0}':", item.Name);&#xD;
-                    item.CheckConnection();&#xD;
-                }                &#xD;
-                &#xD;
-                foreach (MetaTable item in source.MetaData.Tables.OrderBy(i =&gt; i.Name))&#xD;
-                {&#xD;
-                    if (report.Cancel) { break; }                &#xD;
-                    report.LogMessage("Checking table '{0}':", item.DisplayName);&#xD;
-                    item.CheckTable(null);&#xD;
-                }&#xD;
-&#xD;
-                foreach (MetaJoin item in source.MetaData.Joins.OrderBy(i =&gt; i.Name))&#xD;
-                {&#xD;
-                    if (report.Cancel) { break; }                &#xD;
-                    report.LogMessage("Checking Join '{0}':", item.Name);&#xD;
-                    item.CheckJoin();&#xD;
-                }&#xD;
-                foreach (MetaEnum enumItem in source.MetaData.Enums.Where(i =&gt; i.IsDynamic).OrderBy(i =&gt; i.Name))&#xD;
-                {&#xD;
-                    if (report.Cancel) { break; }&#xD;
-&#xD;
-                    report.LogMessage("Checking Enum '{0}'", enumItem.Name);&#xD;
-                    enumItem.RefreshEnum(false);&#xD;
-                }&#xD;
-            }&#xD;
-            catch (Exception ex)&#xD;
-            {&#xD;
-                report.LogMessage("\r\n[UNEXPECTED ERROR RECEIVED]\r\n{0}\r\n", ex.Message);&#xD;
-                errors += ex.Message + "\r\n";&#xD;
-            }&#xD;
-            &#xD;
-            //Save errors in source Tag&#xD;
-            source.Tag = errors;&#xD;
-        }&#xD;
+	ReportTask task = Model;
+    Report report = task.Report;
+	var helper = new TaskHelper(task);
+    
+    //Stores all sources in the Tag
+    report.Tag = new List&lt;MetaSource&gt;();
+    
+    var sources = report.InputValues.FirstOrDefault(i =&gt; i.DisplayNameEl.StartsWith("Data Source"));
+    foreach (var sourceName in sources.EnumValues.ToList()) {
+        var source = Repository.Instance.Sources.OrderBy(i =&gt; i.Name).FirstOrDefault(i =&gt; i.Name == sourceName);
+        if (!report.Cancel &amp;&amp; source != null) {
+            ((List&lt;MetaSource&gt;) report.Tag).Add(source);
+            string errors = "";
+            try
+            {
+                report.LogMessage("Processing data source '{0}'", source.Name);
+                foreach (MetaConnection item in source.Connections.OrderBy(i =&gt; i.Name))
+                {
+                    if (report.Cancel) { break; }                
+                    if (source.IsNoSQL &amp;&amp; !item.ConnectionString.ToLower().Contains("provider=")) {
+                        continue;
+                    }
+                    report.LogMessage("Checking connection '{0}':", item.Name);
+                    item.CheckConnection();
+                }                
+                
+                foreach (MetaTable item in source.MetaData.Tables.OrderBy(i =&gt; i.Name))
+                {
+                    if (report.Cancel) { break; }                
+                    report.LogMessage("Checking table '{0}':", item.DisplayName);
+                    item.CheckTable(null);
+                }
+
+                foreach (MetaJoin item in source.MetaData.Joins.OrderBy(i =&gt; i.Name))
+                {
+                    if (report.Cancel) { break; }                
+                    report.LogMessage("Checking Join '{0}':", item.Name);
+                    item.CheckJoin();
+                }
+                foreach (MetaEnum enumItem in source.MetaData.Enums.Where(i =&gt; i.IsDynamic).OrderBy(i =&gt; i.Name))
+                {
+                    if (report.Cancel) { break; }
+
+                    report.LogMessage("Checking Enum '{0}'", enumItem.Name);
+                    enumItem.RefreshEnum(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                report.LogMessage("\r\n[UNEXPECTED ERROR RECEIVED]\r\n{0}\r\n", ex.Message);
+                errors += ex.Message + "\r\n";
+            }
+            
+            //Save errors in source Tag
+            source.Tag = errors;
+        }
     }    
-}</Script><SortOrder>1</SortOrder></ReportTask></Tasks><Views><ReportView><GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID><Name>view</Name><Views><ReportView><GUID>e4ece981-39fc-4900-aae7-f2df6e705328</GUID><Name>Tab Control</Name><Views><ReportView><GUID>0275dafc-cf90-4c4f-a78a-3c71efda678c</GUID><Name>Connections</Name><Views><ReportView><GUID>5dbd46f0-06b1-40c7-998e-4608e33c268d</GUID><Name>Model</Name><Views><ReportView><GUID>90b8bb31-d0e6-4855-8ef6-435cdccda330</GUID><Name>Model Container</Name><Views><ReportView><GUID>b752bc9e-bcf8-47d3-9d22-e9881cb8c16d</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>f8a3ae2f-d184-4377-9b4b-dde16e30d603</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>c67109c7-4a86-490b-ab5d-d9603c8c5f06</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>a9f4a561-b1b4-41a4-829e-4d76354306e2</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>d83f5a26-f892-4620-8452-c9ebf5798035</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><Parameters><Parameter><Name>data_tables_responsive</Name><Value>False</Value></Parameter></Parameters><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>e1f83504-a1a4-4a57-8d23-c69f4cf91079</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>5e03e720-3e7c-4dd3-9a4a-e9bec7c78ff3</GUID><Name>Tables</Name><Views><ReportView><GUID>b2f8e90d-f671-4098-b187-3733b8e419bf</GUID><Name>Model</Name><Views><ReportView><GUID>b61c684b-b535-4168-815d-d8db2705dc6b</GUID><Name>Model Container</Name><Views><ReportView><GUID>11044e31-1dc1-4965-b140-b587d4eda26c</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>651e1c4f-97cd-44d4-bca1-080ea962c19c</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>7b19915c-7079-4bc0-97f4-d56e27d64c50</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>43db18a9-ff15-4d43-9323-d818de5d28eb</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>8dc8adbe-aabf-408f-8a5b-e5e3185b60b4</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><Parameters><Parameter><Name>data_tables_responsive</Name><Value>False</Value></Parameter></Parameters><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>ac82b89a-99e9-49f2-9d72-d4c804ba6969</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>1920bc65-fd3f-494c-8ce0-216e3bc25f4b</GUID><Name>Joins</Name><Views><ReportView><GUID>6d24dba4-99e1-444f-a0b4-7e9bf040f74c</GUID><Name>Model</Name><Views><ReportView><GUID>8031fdb4-f9e6-4c62-b972-7300e6e915ee</GUID><Name>Model Container</Name><Views><ReportView><GUID>e9c40d15-62d2-456d-82a7-6fc2dbed63e8</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>b5afb872-eecf-41fa-90c5-891b6ad90d59</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>b6c80cef-4a34-4373-bfa6-64077fb1cca5</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>db2eea3c-2ec4-43d2-ac26-dc919d516524</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>0a49dd59-d490-4153-8753-2c8604a17e44</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><Parameters><Parameter><Name>data_tables_responsive</Name><Value>False</Value></Parameter></Parameters><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>97984f41-177f-49c9-b964-32cfbd37ef7d</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>eab1d6d5-506f-4b72-97cb-27bbd849ce3c</GUID><Name>Enums</Name><Views><ReportView><GUID>bc58a6ba-2e2d-4c2e-ab14-2a57b31f5d61</GUID><Name>Model</Name><Views><ReportView><GUID>f5618523-ff8f-497b-819e-d6fc5ec21e3e</GUID><Name>Model Container</Name><Views><ReportView><GUID>8ee921f8-922d-4094-8bec-b47039567f55</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>9b97bb7a-ab30-467b-8238-c4d565f543c6</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>7ac065fb-8990-4173-9490-402029798864</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>620da91a-2a89-4061-b5e2-35af877bb51e</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>cd4cc89c-3635-4a80-a8d1-21faa5b9c1a3</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><Parameters><Parameter><Name>data_tables_responsive</Name><Value>False</Value></Parameter></Parameters><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>6c0f99ec-acaf-4e1c-ab7c-1c57af205a1a</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>4</SortOrder></ReportView></Views><TemplateName>Tab Control</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>messages_mode</Name><Value>enabledshownexec</Value></Parameter></Parameters><SortOrder>0</SortOrder></ReportView></Views><InitScript>@{&#xD;
-    Report report = Model;&#xD;
-	ReportExecutionLog log = report;&#xD;
-&#xD;
-    log.LogMessage("Executing Init Script");&#xD;
-&#xD;
-    //Fill folders enum&#xD;
-    var sourcesEnum = report.Sources[0].MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Sources");&#xD;
-    if (sourcesEnum.Values.Count == 0) {&#xD;
-        //Init the sources enums&#xD;
-        foreach (var source in Repository.Instance.Sources) {&#xD;
-            sourcesEnum.Values.Add(new MetaEV() { Id = source.Name, });&#xD;
-        }&#xD;
-     }&#xD;
- }&#xD;
-</InitScript></Report>
+}</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>e4ece981-39fc-4900-aae7-f2df6e705328</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>0275dafc-cf90-4c4f-a78a-3c71efda678c</GUID>
+              <Name>Connections</Name>
+              <Views>
+                <ReportView>
+                  <GUID>5dbd46f0-06b1-40c7-998e-4608e33c268d</GUID>
+                  <Name>Connections</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>90b8bb31-d0e6-4855-8ef6-435cdccda330</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b752bc9e-bcf8-47d3-9d22-e9881cb8c16d</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>f8a3ae2f-d184-4377-9b4b-dde16e30d603</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>c67109c7-4a86-490b-ab5d-d9603c8c5f06</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>a9f4a561-b1b4-41a4-829e-4d76354306e2</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>d83f5a26-f892-4620-8452-c9ebf5798035</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>e1f83504-a1a4-4a57-8d23-c69f4cf91079</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>5e03e720-3e7c-4dd3-9a4a-e9bec7c78ff3</GUID>
+              <Name>Tables</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b2f8e90d-f671-4098-b187-3733b8e419bf</GUID>
+                  <Name>Tables</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b61c684b-b535-4168-815d-d8db2705dc6b</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>11044e31-1dc1-4965-b140-b587d4eda26c</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>651e1c4f-97cd-44d4-bca1-080ea962c19c</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>7b19915c-7079-4bc0-97f4-d56e27d64c50</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>43db18a9-ff15-4d43-9323-d818de5d28eb</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>8dc8adbe-aabf-408f-8a5b-e5e3185b60b4</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>ac82b89a-99e9-49f2-9d72-d4c804ba6969</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>1920bc65-fd3f-494c-8ce0-216e3bc25f4b</GUID>
+              <Name>Joins</Name>
+              <Views>
+                <ReportView>
+                  <GUID>6d24dba4-99e1-444f-a0b4-7e9bf040f74c</GUID>
+                  <Name>Joins</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>8031fdb4-f9e6-4c62-b972-7300e6e915ee</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>e9c40d15-62d2-456d-82a7-6fc2dbed63e8</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b5afb872-eecf-41fa-90c5-891b6ad90d59</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b6c80cef-4a34-4373-bfa6-64077fb1cca5</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>db2eea3c-2ec4-43d2-ac26-dc919d516524</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>0a49dd59-d490-4153-8753-2c8604a17e44</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>97984f41-177f-49c9-b964-32cfbd37ef7d</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>eab1d6d5-506f-4b72-97cb-27bbd849ce3c</GUID>
+              <Name>Enums</Name>
+              <Views>
+                <ReportView>
+                  <GUID>bc58a6ba-2e2d-4c2e-ab14-2a57b31f5d61</GUID>
+                  <Name>Enums</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>f5618523-ff8f-497b-819e-d6fc5ec21e3e</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>8ee921f8-922d-4094-8bec-b47039567f55</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>9b97bb7a-ab30-467b-8238-c4d565f543c6</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>7ac065fb-8990-4173-9490-402029798864</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>620da91a-2a89-4061-b5e2-35af877bb51e</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>cd4cc89c-3635-4a80-a8d1-21faa5b9c1a3</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>6c0f99ec-acaf-4e1c-ab7c-1c57af205a1a</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshownexec</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>0</SortOrder>
+    </ReportView>
+  </Views>
+  <InitScript>@{
+    Report report = Model;
+	ReportExecutionLog log = report;
+
+    log.LogMessage("Executing Init Script");
+
+    //Fill folders enum
+    var sourcesEnum = report.Sources.First().MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Sources");
+    if (sourcesEnum.Values.Count == 0) {
+        //Init the sources enums
+        foreach (var source in Repository.Instance.Sources) {
+            sourcesEnum.Values.Add(new MetaEV() { Id = source.Name, });
+        }
+     }
+ }
+</InitScript>
+  <Cancel>false</Cancel>
+</Report>

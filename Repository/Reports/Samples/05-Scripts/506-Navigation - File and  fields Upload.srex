@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID>
   <GUID>0ef51e095206405688b9eb8f10202003</GUID>
   <ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID>
   <Sources>
@@ -18,6 +17,7 @@
       <Name>model</Name>
       <SourceGUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</SourceGUID>
       <FinalScript>@using System.Data
+@using System.IO
 @{
     ReportModel model = Model;
  	ReportExecutionLog log = model.Report;
@@ -45,6 +45,50 @@
 
 
 }
+
+@functions 
+{
+    byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes)
+    {
+        const string BITMAP_ID_BLOCK = "BM";
+        const string JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";
+        const string PNG_ID_BLOCK = "\u0089PNG\r\n\u001a\n";
+        const string GIF_ID_BLOCK = "GIF8";
+        const string TIFF_ID_BLOCK = "II*\u0000";
+        byte[] imageBytes;
+        // Get a UTF7 Encoded string version
+        var u8 = System.Text.Encoding.UTF7;
+        string strTemp = u8.GetString(oleFieldBytes);
+        // Get the first 300 characters from the string
+        string strVTemp = strTemp.Substring(0, 300);
+        // Search for the block
+        int iPos = -1;
+        if (strVTemp.IndexOf(BITMAP_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(BITMAP_ID_BLOCK);
+        else if (strVTemp.IndexOf(JPG_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(JPG_ID_BLOCK);
+        else if (strVTemp.IndexOf(PNG_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(PNG_ID_BLOCK);
+        else if (strVTemp.IndexOf(GIF_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(GIF_ID_BLOCK);
+        else if (strVTemp.IndexOf(TIFF_ID_BLOCK) != -1)
+            iPos = strVTemp.IndexOf(TIFF_ID_BLOCK);
+        else
+            throw new Exception("Unable to determine header size for the OLE Object");
+        // From the position above get the new image
+        if (iPos == -1) {
+            throw new Exception("Unable to determine header size for the OLE Object");
+        }
+        imageBytes = new byte[oleFieldBytes.LongLength - iPos];
+        MemoryStream ms = new MemoryStream();
+        ms.Write(oleFieldBytes, iPos, oleFieldBytes.Length - iPos);
+        imageBytes = ms.ToArray();
+        ms.Close();
+        ms.Dispose();
+        return imageBytes;
+    }
+}
+
 </FinalScript>
       <Elements>
         <ReportElement>
@@ -92,56 +136,6 @@ AND [06a2ff61-513e-4d8d-add5-88d2eb62d401]</Restriction>
       </Restrictions>
     </ReportModel>
   </Models>
-  <CommonScripts>
-    <CommonScript>
-      <Name>GetImageBytesFromOLEField</Name>
-      <Script>@using System
-@using System.IO
-
-@functions 
-{
-    byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes)
-    {
-        const string BITMAP_ID_BLOCK = "BM";
-        const string JPG_ID_BLOCK = "\u00FF\u00D8\u00FF";
-        const string PNG_ID_BLOCK = "\u0089PNG\r\n\u001a\n";
-        const string GIF_ID_BLOCK = "GIF8";
-        const string TIFF_ID_BLOCK = "II*\u0000";
-        byte[] imageBytes;
-        // Get a UTF7 Encoded string version
-        var u8 = System.Text.Encoding.UTF8;
-        string strTemp = u8.GetString(oleFieldBytes);
-        // Get the first 300 characters from the string
-        string strVTemp = strTemp.Substring(0, 300);
-        // Search for the block
-        int iPos = -1;
-        if (strVTemp.IndexOf(BITMAP_ID_BLOCK) != -1)
-            iPos = strVTemp.IndexOf(BITMAP_ID_BLOCK);
-        else if (strVTemp.IndexOf(JPG_ID_BLOCK) != -1)
-            iPos = strVTemp.IndexOf(JPG_ID_BLOCK);
-        else if (strVTemp.IndexOf(PNG_ID_BLOCK) != -1)
-            iPos = strVTemp.IndexOf(PNG_ID_BLOCK);
-        else if (strVTemp.IndexOf(GIF_ID_BLOCK) != -1)
-            iPos = strVTemp.IndexOf(GIF_ID_BLOCK);
-        else if (strVTemp.IndexOf(TIFF_ID_BLOCK) != -1)
-            iPos = strVTemp.IndexOf(TIFF_ID_BLOCK);
-        else
-            throw new Exception("Unable to determine header size for the OLE Object");
-        // From the position above get the new image
-        if (iPos == -1) {
-            throw new Exception("Unable to determine header size for the OLE Object");
-        }
-        imageBytes = new byte[oleFieldBytes.LongLength - iPos];
-        MemoryStream ms = new MemoryStream();
-        ms.Write(oleFieldBytes, iPos, oleFieldBytes.Length - iPos);
-        imageBytes = ms.ToArray();
-        ms.Close();
-        ms.Dispose();
-        return imageBytes;
-    }
-}</Script>
-    </CommonScript>
-  </CommonScripts>
   <Views>
     <ReportView>
       <GUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</GUID>

@@ -81,6 +81,16 @@
       <Value1>120</Value1>
       <TypeRe>Numeric</TypeRe>
     </ReportRestriction>
+    <ReportRestriction>
+      <GUID>6ceac826-ad18-43df-8912-cccb95e018ba</GUID>
+      <Type>Text</Type>
+      <DisplayName>Path contains</DisplayName>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <TypeRe>Text</TypeRe>
+    </ReportRestriction>
   </InputValues>
   <Sources>
     <ReportSource>
@@ -278,19 +288,6 @@
           <MetaColumnGUID>b1701622-aa3c-4879-9944-2d57a1f8cb4d</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[c912aaf1-418f-45ca-bd37-5289721aa00d]</Restriction>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>c912aaf1-418f-45ca-bd37-5289721aa00d</GUID>
-          <Name>has_error</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>b1701622-aa3c-4879-9944-2d57a1f8cb4d</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <OperatorStyle>NotModifiable</OperatorStyle>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>ef7b732c-c9d7-4327-8f4c-b5a4ec8bc3de</GUID>
@@ -321,19 +318,8 @@
           <MetaColumnGUID>84beb0c8-b118-47ea-9adc-4a55ec3e00de</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[966b0934-567c-4ce0-936b-0b760db8032f]
-&amp;&amp; [19f7471b-3ee7-4745-b712-b9f2c8f2e713]</Restriction>
+      <Restriction>[19f7471b-3ee7-4745-b712-b9f2c8f2e713]</Restriction>
       <Restrictions>
-        <ReportRestriction>
-          <GUID>966b0934-567c-4ce0-936b-0b760db8032f</GUID>
-          <Name>has_error</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>b1701622-aa3c-4879-9944-2d57a1f8cb4d</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <OperatorStyle>NotModifiable</OperatorStyle>
-        </ReportRestriction>
         <ReportRestriction>
           <GUID>19f7471b-3ee7-4745-b712-b9f2c8f2e713</GUID>
           <Name>messages</Name>
@@ -384,19 +370,8 @@
           <MetaColumnGUID>312aef12-f0e6-45fa-8207-fe9aae877309</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[5a27e3e3-26b0-40c1-9098-ffc59fe1d7d8]
-&amp;&amp; [3f5b1047-6130-4d34-84f9-248148fbb695]</Restriction>
+      <Restriction>[3f5b1047-6130-4d34-84f9-248148fbb695]</Restriction>
       <Restrictions>
-        <ReportRestriction>
-          <GUID>5a27e3e3-26b0-40c1-9098-ffc59fe1d7d8</GUID>
-          <Name>has_error</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>b1701622-aa3c-4879-9944-2d57a1f8cb4d</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <OperatorStyle>NotModifiable</OperatorStyle>
-        </ReportRestriction>
         <ReportRestriction>
           <GUID>3f5b1047-6130-4d34-84f9-248148fbb695</GUID>
           <Name>errors</Name>
@@ -483,50 +458,49 @@
         var execAllViews = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Execute all views"));
         var execTasks = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Execute tasks"));
         var execTimeout = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Execution timeout"));
+        var pathContains = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Path contains")).FirstStringValue;
 
         foreach (string reportPath in Directory.GetFiles(folder, "*.srex"))
         {
             string scriptName = "";
             try
             {
+                if (!string.IsNullOrEmpty(pathContains) &amp;&amp; !reportPath.ToLower().Contains(pathContains.ToLower())) continue;
+            
                 if (rootReport.Cancel) return;
                 rootReport.LogMessage("Checking report '{0}'", reportPath);
                 Report report = Report.LoadFromFile(reportPath, repository);
                 if (string.IsNullOrEmpty(report.LoadErrors)) {
                     //check script compilations
                     scriptName = "Report Init Script";
-                    RazorHelper.Compile(RazorHelper.GetFullScript(report.InitScript, report), report.GetType(), Guid.NewGuid().ToString());
+                    RazorHelper.Compile(RazorHelper.GetFullScript(report.InitScript), report.GetType(), Guid.NewGuid().ToString());
                     scriptName = "Report Navigation Script";
-                    RazorHelper.Compile(RazorHelper.GetFullScript(report.NavigationScript, new NavigationLink() { Report=report }), typeof(NavigationLink), Guid.NewGuid().ToString());
-                    foreach (CommonScript script in report.CommonScripts) {
-                        scriptName = string.Format("Report Common Script '{0}'", script.Name);
-                        RazorHelper.Compile(RazorHelper.GetFullScript(report.GetCommonScriptsHeader(script), script), script.GetType(), Guid.NewGuid().ToString());
-                    }
+                    RazorHelper.Compile(RazorHelper.GetFullScript(report.NavigationScript), typeof(NavigationLink), Guid.NewGuid().ToString());
                     foreach (ReportTask task in report.Tasks) {
                         scriptName = string.Format("Report Task Script '{0}'", task.Name);                    
-                        RazorHelper.Compile(RazorHelper.GetFullScript(task.Script, task), task.GetType(), Guid.NewGuid().ToString());
+                        RazorHelper.Compile(RazorHelper.GetFullScript(task.Script), task.GetType(), Guid.NewGuid().ToString());
                     }
                     foreach (ReportModel model in report.Models) {
                         scriptName = string.Format("Report Model Pre Load Script '{0}'", model.Name);                    
-                        RazorHelper.Compile(RazorHelper.GetFullScript(model.PreLoadScript, model), model.GetType(), Guid.NewGuid().ToString());
+                        RazorHelper.Compile(RazorHelper.GetFullScript(model.PreLoadScript), model.GetType(), Guid.NewGuid().ToString());
                         scriptName = string.Format("Report Model Load Script '{0}'", model.Name);                    
-                        RazorHelper.Compile(RazorHelper.GetFullScript(model.LoadScript, model), model.GetType(), Guid.NewGuid().ToString());
+                        RazorHelper.Compile(RazorHelper.GetFullScript(model.LoadScript), model.GetType(), Guid.NewGuid().ToString());
                         scriptName = string.Format("Report Model Final Script '{0}'", model.Name);                    
-                        RazorHelper.Compile(RazorHelper.GetFullScript(model.FinalScript, model), model.GetType(), Guid.NewGuid().ToString());
+                        RazorHelper.Compile(RazorHelper.GetFullScript(model.FinalScript), model.GetType(), Guid.NewGuid().ToString());
                         
                         foreach (ReportElement element in model.Elements) {
                             scriptName = string.Format("Report Model '{0}' Element Cell Script '{1}'", model.Name, element.Name);                    
-                            RazorHelper.Compile(RazorHelper.GetFullScript(element.CellScript, new ResultCell() { Element=element }), typeof(ResultCell), Guid.NewGuid().ToString());
+                            RazorHelper.Compile(RazorHelper.GetFullScript(element.CellScript), typeof(ResultCell), Guid.NewGuid().ToString());
                             scriptName = string.Format("Report Model '{0}' Element Navigation Script '{1}'", model.Name, element.Name);                    
-                            RazorHelper.Compile(RazorHelper.GetFullScript(element.NavigationScript, new NavigationLink() { Report=report }), typeof(NavigationLink), Guid.NewGuid().ToString());
+                            RazorHelper.Compile(RazorHelper.GetFullScript(element.NavigationScript), typeof(NavigationLink), Guid.NewGuid().ToString());
                         }
                     }
                     
                     foreach (ReportOutput output in report.Outputs) {
                         scriptName = string.Format("Report Output '{0}' Pre Script '{0}'", output.Name);                    
-                        RazorHelper.Compile(RazorHelper.GetFullScript(output.PreScript, output), output.GetType(), Guid.NewGuid().ToString());
+                        RazorHelper.Compile(RazorHelper.GetFullScript(output.PreScript), output.GetType(), Guid.NewGuid().ToString());
                         scriptName = string.Format("Report Output '{0}' Post Script '{0}'", output.Name);                    
-                        RazorHelper.Compile(RazorHelper.GetFullScript(output.PostScript, output), output.GetType(), Guid.NewGuid().ToString());
+                        RazorHelper.Compile(RazorHelper.GetFullScript(output.PostScript), output.GetType(), Guid.NewGuid().ToString());
                     }
                     
                     report.CheckingExecution = true;
@@ -544,7 +518,6 @@
                         ReportExecution reportExecution = new ReportExecution() { Report = report };
                         ((List&lt;ReportExecution&gt;) rootReport.Tag).Add(reportExecution);
                         reportExecution.Tag = view;
-                        var errors = "";
                         if (rootReport.Cancel) return;
                         rootReport.LogMessage("Running report with view '{0}'", view.Name);
                         try
