@@ -17,6 +17,14 @@ using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Data;
 using Npgsql;
+using Npgsql.Internal;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Office2021.DocumentTasks;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
+
+using System.Runtime.InteropServices;
+
+
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.Drawing.Design;
@@ -53,6 +61,7 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("SourceGUID").SetIsBrowsable(true);
                 GetProperty("ConnectionGUID").SetIsBrowsable(true);
+                GetProperty("ReferenceTaskGUID").SetIsBrowsable(true);
                 GetProperty("TemplateName").SetIsBrowsable(true);
                 GetProperty("Description").SetIsBrowsable(true);
 
@@ -359,12 +368,38 @@ namespace Seal.Model
             set { _connectionGUID = value; }
         }
 
+
+        /// <summary>
+        /// If set, the values of the properties of the task may be taken from the reference task. This applies to Script, SQL and Parameters having their default value. This enables the sharing of property values among different tasks. 
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
+        [Category("Definition"), DisplayName("Reference task"), Description("If set, the values of the properties of the task may be taken from the reference task.This applies to Script, SQL and Parameters having their default value.This enables the sharing of property values among different tasks."), Id(5, 1)]
+        [TypeConverter(typeof(ReportTaskConverter))]
+#endif
+        public string ReferenceTaskGUID { get; set; }
+        public bool ShouldSerializeReferenceTaskGUID() { return !string.IsNullOrEmpty(ReferenceTaskGUID); }
+
+        /// <summary>
+        /// Current reference task if any
+        /// </summary>
+        [XmlIgnore]
+        public ReportTask ReferenceTask
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ReferenceTaskGUID)) return null;
+                return _report.Tasks.FirstOrDefault(i => i.GUID == ReferenceTaskGUID);
+            }
+        }
+
+
         /// <summary>
         /// If false, the task is ignored and not executed
         /// </summary>
 #if WINDOWS
         [DefaultValue(true)]
-        [Category("Definition"), DisplayName("Is enabled"), Description("If false, the task is ignored and not executed."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Is enabled"), Description("If false, the task is ignored and not executed."), Id(6, 1)]
 #endif
         public bool Enabled { get; set; } = true;
         public bool ShouldSerializeEnabled() { return !Enabled; }
@@ -608,6 +643,31 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public ReportExecution Execution;
+
+
+        /// <summary>
+        /// Initializes the task properties from its reference task
+        /// </summary>
+        public void InitFromReferenceTask()
+        {
+            var refTask = ReferenceTask;
+            if (refTask != null)
+            {
+                if (string.IsNullOrEmpty(Script)) Script = refTask.Script;
+                if (string.IsNullOrEmpty(SQL)) SQL = refTask.SQL;
+
+
+                //Parameters that have a default value
+                foreach (var parameter in Parameters.Where(i => i.Value == i.ConfigValue))
+                {
+                    var refParameter = refTask.Parameters.FirstOrDefault(i => i.Name == parameter.Name);
+                    if (refParameter != null)
+                    {
+                        parameter.Value = refParameter.Value;
+                    }
+                }
+            }
+        }
 
         #region Helpers
 

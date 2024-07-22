@@ -449,8 +449,14 @@ namespace Seal.Model
             //Init all execution view parameters...
             foreach (var view in Views) view.InitParameters(false);
 
+            //Copy values from reference tasks
+            foreach (var task in Tasks.Where(i => i.ReferenceTask != null).OrderBy(i => i.SortOrder))
+            {
+                task.InitFromReferenceTask();
+            }
+
             //Copy values from reference views
-            foreach (var view in AllViews.Where(i => i.ReferenceView != null))
+            foreach (var view in AllViews.Where(i => i.ReferenceView != null).OrderBy(i => i.SortOrder))
             {
                 view.InitFromReferenceView();
             }
