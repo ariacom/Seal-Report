@@ -5333,6 +5333,16 @@
             The connection identifier used by the task
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportTask.ReferenceTaskGUID">
+            <summary>
+            If set, the values of the properties of the task may be taken from the reference task. This applies to Script, SQL and Parameters having their default value. This enables the sharing of property values among different tasks. 
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportTask.ReferenceTask">
+            <summary>
+            Current reference task if any
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportTask.Enabled">
             <summary>
             If false, the task is ignored and not executed
@@ -5436,6 +5446,11 @@
         <member name="F:Seal.Model.ReportTask.Execution">
             <summary>
             The current report execution executing the task
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportTask.InitFromReferenceTask">
+            <summary>
+            Initializes the task properties from its reference task
             </summary>
         </member>
         <member name="P:Seal.Model.ReportTask.Information">

@@ -1241,17 +1241,11 @@ namespace Seal.Model
 
                     foreach (var t in _repositoryWildCharTranslations.Values.Where(i => i.Context == context && i.Reference == reference))
                     {
-                        if (
-                            t.Instance == "*" ||    
-                            (t.Instance.StartsWith('*') && t.Instance.EndsWith('*') && instance.Contains(t.Instance.Substring(1, t.Instance.Length - 2))) ||
-                            (t.Instance.StartsWith('*') && instance.EndsWith(t.Instance.Substring(1, t.Instance.Length - 1))) ||
-                            (t.Instance.EndsWith('*') && instance.StartsWith(t.Instance.Substring(0, t.Instance.Length - 1)))
-                            )
+                        if (Helper.IsMatchWildcard(instance, t.Instance))
                         {
                             result = t;
                             break;
                         }
-
                     }
                 }
             }

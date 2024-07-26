@@ -243,6 +243,12 @@ namespace Seal.Helpers
             return result;
         }
 
+        static public bool IsMatchWildcard(string input, string pattern)
+        {
+            var regexPattern = "^" + Regex.Escape(pattern).Replace(@"\*", ".*") + "$";
+            return Regex.IsMatch(input, regexPattern);
+        }
+
         /// <summary>
         /// Array of string from a value having CR/LF
         /// </summary>
