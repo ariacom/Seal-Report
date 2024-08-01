@@ -287,17 +287,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Compilation key for the template
-        /// </summary>
-        public string CompilationKey
-        {
-            get
-            {
-                return string.Format("TPL:{0}_{1}", FilePath, File.GetLastWriteTime(FilePath).ToString("s"));
-            }
-        }
-
-        /// <summary>
         /// Parse the current configuration and initialize the parameters
         /// </summary>
         public void ParseConfiguration()
@@ -307,7 +296,10 @@ namespace Seal.Model
             {
                 Error = "";
                 ClearConfiguration();
-                RazorHelper.CompileExecute(Configuration, this);
+                var keyName = GetType().Name;
+                keyName += "_" + (!string.IsNullOrEmpty(RendererType) ? RendererType : "Main");
+                keyName += "_" + Name;
+                RazorHelper.CompileExecute(Configuration, this, keyName, LastModification);
                 IsParsed = true;
             }
             catch (TemplateCompilationException ex)

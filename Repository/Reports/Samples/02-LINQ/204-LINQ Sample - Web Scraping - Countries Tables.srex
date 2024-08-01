@@ -40,29 +40,13 @@
                 <DisplayName>Country / Territory</DisplayName>
               </MetaColumn>
               <MetaColumn>
-                <GUID>90b03f8a-c6d0-421f-a723-aa1cfe9f1f5f</GUID>
-                <Name>UN region</Name>
-                <Type>Text</Type>
-                <Category>HTML World GDP</Category>
-                <DisplayName>UN region</DisplayName>
-                <DisplayOrder>2</DisplayOrder>
-              </MetaColumn>
-              <MetaColumn>
                 <GUID>08b32d4a-4d98-4da7-afaa-fa99b06337e6</GUID>
                 <Name>IMF[1][13]</Name>
                 <Type>Numeric</Type>
                 <Category>HTML World GDP</Category>
                 <DisplayName>IMF GDP (USD Million)</DisplayName>
-                <DisplayOrder>3</DisplayOrder>
+                <DisplayOrder>2</DisplayOrder>
                 <Format>N0</Format>
-              </MetaColumn>
-              <MetaColumn>
-                <GUID>76ec2b34-df0d-453d-8b90-c00587728c0a</GUID>
-                <Name>IMF[1][13]3</Name>
-                <Type>Text</Type>
-                <Category>HTML World GDP</Category>
-                <DisplayName>IMF Year</DisplayName>
-                <DisplayOrder>4</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>cc53c113-0761-4506-a1e8-4f2135aba208</GUID>
@@ -70,16 +54,8 @@
                 <Type>Numeric</Type>
                 <Category>HTML World GDP</Category>
                 <DisplayName>World Bank GDP (USD Million)</DisplayName>
-                <DisplayOrder>5</DisplayOrder>
+                <DisplayOrder>4</DisplayOrder>
                 <Format>N0</Format>
-              </MetaColumn>
-              <MetaColumn>
-                <GUID>25d7d04f-3f32-4a6d-9bdc-143663bdd0b8</GUID>
-                <Name>World Bank[14]5</Name>
-                <Type>Text</Type>
-                <Category>HTML World GDP</Category>
-                <DisplayName>World Bank Year</DisplayName>
-                <DisplayOrder>6</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>6380f11e-cf66-498e-b0c5-d670ab2c2073</GUID>
@@ -87,16 +63,32 @@
                 <Type>Numeric</Type>
                 <Category>HTML World GDP</Category>
                 <DisplayName>United Nations GDP (USD Million)</DisplayName>
-                <DisplayOrder>7</DisplayOrder>
+                <DisplayOrder>6</DisplayOrder>
                 <Format>N0</Format>
               </MetaColumn>
               <MetaColumn>
-                <GUID>a7a75046-f55b-458f-8d1a-1e2a87615505</GUID>
-                <Name>United Nations[15]7</Name>
+                <GUID>8b1cf689-39b9-4fba-8667-8f332aa97794</GUID>
+                <Name>IMF[1][13]2</Name>
                 <Type>Text</Type>
                 <Category>HTML World GDP</Category>
-                <DisplayName>United Nations Year</DisplayName>
-                <DisplayOrder>8</DisplayOrder>
+                <DisplayName>IMF[1][13]2</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>fad8995d-b109-40c8-9ff7-0a5be32ded9a</GUID>
+                <Name>World Bank[14]4</Name>
+                <Type>Text</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>World Bank [14]4</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e8b511fa-4840-4293-86c5-2b99512df7f5</GUID>
+                <Name>United Nations[15]6</Name>
+                <Type>Text</Type>
+                <Category>HTML World GDP</Category>
+                <DisplayName>United Nations [15]6</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
               </MetaColumn>
             </Columns>
           </MetaTable>

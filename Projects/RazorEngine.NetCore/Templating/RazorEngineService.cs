@@ -108,6 +108,16 @@ namespace RazorEngine.Templating
         #region Methods
 
 
+        public ICompiledTemplate GetTemplate(ITemplateKey key, Type modelType)
+        {
+            ICompiledTemplate template;
+            if (Configuration.CachingProvider.TryRetrieveTemplate(key, modelType, out template))
+            {
+                return template;
+            }
+            return null;
+        }
+
         /// <summary>
         /// Checks if a given template is already cached in the <see cref="ICachingProvider"/>.
         /// </summary>

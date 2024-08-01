@@ -15,6 +15,15 @@ namespace RazorEngine.Templating
     public static class RazorEngineServiceExtensions
     {
         /// <summary>
+        /// Retruns a chached template
+        /// </summary>
+        public static ICompiledTemplate GetTemplate(this IRazorEngineService service, string name, Type modelType)
+        {
+            var key = service.GetKey(name);
+            return service.GetTemplate(key, modelType);
+        }
+
+        /// <summary>
         /// Checks if a given template is already cached.
         /// </summary>
         /// <param name="service"></param>

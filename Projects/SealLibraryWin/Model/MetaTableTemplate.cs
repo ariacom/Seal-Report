@@ -85,7 +85,7 @@ namespace Seal.Model
             try
             {
                 table.Parameters.Clear();
-                RazorHelper.CompileExecute(Configuration, table);
+                RazorHelper.CompileExecute(Configuration, table, GetType().Name+"_"+Name, LastModification);
             }
             catch (TemplateCompilationException ex)
             {

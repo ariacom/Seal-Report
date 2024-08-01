@@ -26,6 +26,11 @@ namespace Seal.Model
         public string FilePath { get; set; }
 
         /// <summary>
+        /// Last modification date time
+        /// </summary>
+        public DateTime LastModification;
+
+        /// <summary>
         /// Razor script used to perform the login
         /// </summary>
         public string Script { get; set; } = "";
@@ -58,6 +63,7 @@ namespace Seal.Model
                     StreamReader sr = new StreamReader(FilePath);
                     result = sr.ReadToEnd();
                     sr.Close();
+                    LastModification = File.GetLastWriteTime(FilePath);
                 }
                 catch (Exception ex)
                 {
@@ -104,7 +110,7 @@ namespace Seal.Model
                 if (configuration.Replace("\r\n", "\n") != _lastConfiguration.Replace("\r\n", "\n"))
                 {
                     ClearConfiguration();
-                    RazorHelper.CompileExecute(configuration, this);
+                    RazorHelper.CompileExecute(configuration, this, GetType().Name + "_" + Name, LastModification);
                     _lastConfiguration = configuration;
                 }
             }

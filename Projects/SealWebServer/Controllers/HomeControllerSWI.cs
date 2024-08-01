@@ -964,7 +964,11 @@ namespace SealWebServer.Controllers
             writeDebug("SWIGetVersions");
             try
             {
-                return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Repository.Instance.LicenseText });
+                return Json(new { 
+                    SWIVersion = Repository.ProductVersion, 
+                    SRVersion = Repository.ProductVersion, 
+                    Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "Free MIT Community License (For non-profit usage or small businesses)" : Repository.Instance.LicenseText
+                });
             }
             catch (Exception ex)
             {

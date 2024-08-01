@@ -26,27 +26,6 @@ namespace Seal.Model
         public static string TableTemplatesFolder = "";
         public static string TaskTemplatesFolder = "";
 
-        public static void PreLoadTemplates()
-        {
-            lock (_viewLock)
-            {
-                var templates = ViewTemplates;
-                foreach (var template in templates)
-                {
-                    if (!template.IsParsed) template.ParseConfiguration();
-                    RazorHelper.Compile(template.Text, typeof(Report), template.CompilationKey);
-
-                    //Create a view to compile partial templates
-                    ReportView view = ReportView.Create(template);
-                    view.InitPartialTemplates();
-                    foreach (var partialTemplate in view.PartialTemplates)
-                    {
-                        view.GetPartialTemplateKey(partialTemplate.Name, view);
-                    }
-
-                }
-            }
-        }
 
         /// <summary>
         /// Current list of ReportViewTemplate

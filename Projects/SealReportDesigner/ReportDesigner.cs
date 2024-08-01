@@ -369,6 +369,11 @@ namespace Seal
                 Text = Path.GetFileNameWithoutExtension(_report.FilePath) + (IsModified ? "*" : "") + " - " + Text;
             }
 
+            if (string.IsNullOrEmpty(Repository.Instance.LicenseText))
+            {
+                Text += " - Free MIT Community License (For non-profit usage or small businesses)";
+            }
+
             saveToolStripMenuItem.Enabled = (_report != null);
             saveToolStripButton.Enabled = saveToolStripMenuItem.Enabled;
             saveAsToolStripMenuItem.Enabled = (_report != null);

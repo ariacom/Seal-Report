@@ -56,6 +56,7 @@ using Microsoft.CodeAnalysis;
 using System.Runtime.Loader;
 using System.Threading;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace Seal.Helpers
 {
@@ -104,6 +105,8 @@ namespace Seal.Helpers
         static PdfOptions _38 = null;
         static NpgsqlConnection _39 = null;
         static AngleSharp.IConfiguration _40 = null;
+
+        public static string RazorCacheDirectory = "";
 
         static int _loadTries = 3;
         /// <summary>
@@ -214,26 +217,98 @@ namespace Seal.Helpers
             return result;
         }
 
-        static public string CompileExecute(string script, object model, string key = null)
+        static public string GetGlobalAssemblyCache(string key, DateTime lastModification)
         {
-            if (model != null && script != null && script.Trim().StartsWith("@"))
+            //Find a global assembly for this key
+            var result = "";
+            if (!string.IsNullOrEmpty(RazorCacheDirectory))
             {
-                if (string.IsNullOrEmpty(key))
+                foreach (var f in Directory.GetFiles(RazorCacheDirectory, key + "*.dll"))
                 {
-                    if (model != null)
+                    if (lastModification > File.GetLastWriteTime(f))
                     {
-                        key = model.GetType().ToString() + "_" + GetFullScript(script);
+                        try
+                        {
+                            File.Delete(f);
+                        }
+                        catch { }
                     }
                     else
                     {
-                        key = script;
+                        result = f;
                     }
                 }
+            }
+            return result;
+        }
+
+
+        static public bool GetFinalKey(string script, object model, ref string key, DateTime? lastModification)
+        {
+            bool saveAssemblyCache = false;
+            if (!string.IsNullOrEmpty(key) && lastModification != null)
+            {
+                //Set the dll path in the keyName if exists
+                key = GetGlobalAssemblyCache(key, lastModification.Value);
+                saveAssemblyCache = string.IsNullOrEmpty(key);
+            }
+
+            if (string.IsNullOrEmpty(key))
+            {
+                if (model != null)
+                {
+                    key = model.GetType().ToString() + "_" + GetFullScript(script);
+                }
+                else
+                {
+                    key = script;
+                }
+            }
+
+            return saveAssemblyCache;
+        }
+
+        static public void SaveAssemblyInCache(string initialKey, object model, string key)
+        {
+            //Save the dll in global cache
+            var template = Engine.Razor.GetTemplate(key, model.GetType());
+            if (template != null)
+            {
+                try
+                {
+                    var dll = template.TemplateAssembly.Location;
+                    var className = Path.GetFileNameWithoutExtension(dll).Split("_").Last();
+                    if (File.Exists(dll))
+                    {
+                        File.Copy(dll, Path.Combine(RazorCacheDirectory, initialKey + "_" + className + ".dll"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("CompileExecute", ex);
+                }
+            }
+
+        }
+
+
+        static public string CompileExecute(string script, object model, string key = null, DateTime? lastModification = null)
+        {
+            if (model != null && script != null && script.Trim().StartsWith("@"))
+            {
+                var initialKey = key;
+                bool saveAssemblyCache = GetFinalKey(script, model, ref key, lastModification);
 
                 if (!(Engine.Razor.IsTemplateCached(key, model.GetType())))
                 {
                     Compile(GetFullScript(script), model.GetType(), key);
+
+                    if (!string.IsNullOrEmpty(RazorCacheDirectory) && saveAssemblyCache)
+                    {
+                        SaveAssemblyInCache(initialKey, model, key);
+                    }
                 }
+
                 string result = Engine.Razor.Run(key, model.GetType(), model);
                 return string.IsNullOrEmpty(result) ? "" : result;
             }
@@ -258,6 +333,26 @@ namespace Seal.Helpers
                     Engine.Razor.Compile(script, key, modelType);
                 }
             }
+        }
+
+        static public string CompilePartial(string script, object model, string key, DateTime? lastModification)
+        {
+            if (model != null && script != null && script.Trim().StartsWith("@"))
+            {
+                var initialKey = key;
+                bool saveAssemblyCache = GetFinalKey(script, model, ref key, lastModification);
+                if (!(Engine.Razor.IsTemplateCached(key, model.GetType())))
+                {
+                    Compile(script, model.GetType(), key);
+
+                    if (saveAssemblyCache)
+                    {
+                        SaveAssemblyInCache(initialKey, model, key);
+                    }
+                }
+            }
+
+            return key;
         }
 
         static public ScriptValidator Validator = null;

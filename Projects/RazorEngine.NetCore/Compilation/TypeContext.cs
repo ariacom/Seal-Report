@@ -42,7 +42,7 @@
         /// <summary>
         /// Gets the class name.
         /// </summary>
-        public string ClassName { get; private set; }
+        public string ClassName { get; set; }
 
         /// <summary>
         /// Gets or sets the model type.

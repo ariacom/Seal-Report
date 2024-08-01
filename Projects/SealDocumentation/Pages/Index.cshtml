@@ -125,7 +125,7 @@
                             <strong>For use:</strong>
                             <ul>
                                 <li>Windows .Net 8.0 (Microsoft Windows Desktop Runtime 8)</li>
-                                <li>Database OLE DB, ODBC, MS SQLServer, Mongo DB or MySQL Drivers</li>
+                                <li>Database OLE DB, ODBC, MS SQLServer, Mongo DB, MySQL or PostgreSQL Drivers</li>
                                 <li>For the Report Designer: Microsoft Edge WebView2</li>
                                 <li>For the Web Report Server: ASP.Net Core Runtime 8 (Hosting Bundle) or greater</li>
                             </ul>
@@ -187,8 +187,9 @@
                                 <li><b>SealWebServer:</b> Asp.Net application for Web Report Server.</li>
                                 <li><b>SealSchedulerService:</b> Seal Report Scheduler executable for the Windows Service.</li>
                                 <li><b>SealSchedulerWorker:</b> Seal Report Scheduler executable as a Worker process (for non-Windows OS).</li>
-                                <li><b>Tests:</b> Contains unitary tests and basic samples.</li>
                                 <li><b>TestNuget:</b> Test of the current SealReportLibrary.NETCore Nuget package.</li>
+                                <li><b>Tests:</b> Contains unitary tests and basic samples.</li>
+                                <li><b>TestWebApplication:</b> A basic web application using the Seal Web Interface API.</li>
                                 <li><b>SealDocumentation:</b> sealreport.org Web site.</li>
                             </ul>
                             <div class="bs-callout bs-callout-info">
@@ -364,6 +365,15 @@
                                     <strong>Assemblies:</strong> additional DLL (*.dll) that can be referenced in all Razor scripts. You can add your own assemblies in this folder and call them from any script compiled and executed during a report execution (e.g. in a Task).
                                 </li>
                                 <li>
+                                    <strong>Assemblies\Dynamics:</strong> additional source code files (*.cs) to be compiled and loaded. You can then reference the <b>Classes</b> compiled from any script (e.g. in a Task).
+                                </li>
+                                <li>
+                                    <strong>Assemblies\RazorCache:</strong> Cache folder to store the assemblies compiled from static template files (Views, Tables and Tasks).
+                                </li>
+                                <li>
+                                    <strong>Assemblies\RazorCache\Win:</strong> Cache folder to store the assemblies compiled from static template files (Views, Tables and Tasks) for SealLibraryWin (Windows applications).
+                                </li>
+                                <li>
                                     <strong>Databases:</strong> dedicated folder for local database files (e.g. an MS Access file, an Excel file).
                                 </li>
                                 <li>
@@ -379,7 +389,7 @@
                                     <strong>Security:</strong> the security defined for the <b>Web Report Server</b> (Security.xml) and a sub-folder containing the security providers (*.cshtml) available.
                                 </li>
                                 <li>
-                                    <strong>Settings:</strong> the Server configuration (Configuration.xml) and the translation files (*.csv).
+                                    <strong>Settings:</strong> the Server configuration (Configuration.xml) and the translation files (*.xlsx or *.csv).
                                 </li>
                                 <li>
                                     <strong>Sources:</strong> the data source files (*.scfx) available for the reports. These data sources are shared amongst all the reports.

@@ -212,6 +212,9 @@ namespace Seal.Model
             //First remove hidden elements
             model.Elements.RemoveAll(i => i.PivotPosition == PivotPosition.Hidden);
 
+            //Clear max number of records
+            model.MaxNumberOfRecords = 0;
+
             foreach (var element in model.Elements.Where(i => i.MetaColumnGUID == src).ToList())
             {
                 var els = new Dictionary<ReportElement, string>();

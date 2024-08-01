@@ -1406,6 +1406,7 @@ namespace Seal.Model
             }
 
             string key, text = null;
+            DateTime? lastModification = null;
             if (partial.UseCustom && !string.IsNullOrWhiteSpace(partial.Text))
             {
                 //custom template
@@ -1414,13 +1415,14 @@ namespace Seal.Model
             }
             else
             {
-                key = string.Format("TPL:{0}_{1}", path, File.GetLastWriteTime(path).ToString("s"));
+                key = $"{GetType().Name}_Partial.{name}";
+                lastModification = File.GetLastWriteTime(path);
             }
 
             try
             {
                 if (string.IsNullOrEmpty(text)) text = Template.GetPartialTemplateText(name);
-                RazorHelper.Compile(text, model.GetType(), key);
+                key = RazorHelper.CompilePartial(text, model, key, lastModification);
             }
             catch (Exception ex)
             {
@@ -1470,17 +1472,19 @@ namespace Seal.Model
                 var template = Template;
                 var templateText = ViewTemplateText;
                 //Keep HTML for rendering display
-                RootRenderer renderer = null; 
+                RootRenderer renderer = null;
                 if (Report.Status == ReportStatus.RenderingResult) renderer = Renderer;
 
                 string key = "";
+                DateTime? lastModification = null;
                 if (forceHTML || renderer == null)
                 {
                     //HTML
                     if (!UseCustomTemplate || string.IsNullOrWhiteSpace(CustomTemplate))
                     {
-                        //template -> file path + last modification
-                        key = Template.CompilationKey;
+                        //template
+                        key = $"{GetType().Name}_Main_{Template.Name}";
+                        lastModification = Template.LastModification;
                     }
                     else
                     {
@@ -1495,8 +1499,9 @@ namespace Seal.Model
                     templateText = renderer.ViewTemplateText;
                     if (!renderer.UseCustomTemplate || string.IsNullOrWhiteSpace(renderer.CustomTemplate))
                     {
-                        //template -> file path + last modification
-                        key = template.CompilationKey;
+                        //template
+                        key = $"{GetType().Name}_{renderer.Template.RendererType}_{Template.Name}";
+                        lastModification = Template.LastModification;
                     }
                     else
                     {
@@ -1511,7 +1516,7 @@ namespace Seal.Model
                     _modelGUID = Report.Models[0].GUID;
                 }
                 phase = "executing";
-                result = RazorHelper.CompileExecute(templateText, Report, key);
+                result = RazorHelper.CompileExecute(templateText, Report, key, lastModification);
 
             }
             catch (Exception ex)

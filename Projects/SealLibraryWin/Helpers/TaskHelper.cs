@@ -16,6 +16,7 @@ using System.Threading;
 using System.Data.Common;
 using System.Data.OleDb;
 using OfficeOpenXml;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 namespace Seal.Helpers
 {
@@ -208,7 +209,7 @@ namespace Seal.Helpers
 
         public int LoadTable(DataTable table, bool useAllConnections = false)
         {
-            var result = 0; 
+            var result = 0;
             foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
             {
                 if (_task.Report.Cancel) break;
@@ -238,7 +239,7 @@ namespace Seal.Helpers
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceExcelPath);
 
-                if (string.IsNullOrEmpty(destinationTableName) && string.IsNullOrEmpty(sourceTabName))
+                if (string.IsNullOrEmpty(sourceTabName) || sourceTabName.Contains("*"))
                 {
                     //Load all tabs
                     ExcelPackage package = ExcelHelper.GetExcelPackage(sourcePath);
@@ -246,7 +247,14 @@ namespace Seal.Helpers
                     var tabs = (from ws in workbook.Worksheets select ws.Name);
                     foreach (var tab in tabs)
                     {
-                        LoadTableFromExcel(sourcePath, tab, tab, useAllConnections, startRow, startColumn, endColumnIndex, endRowIndex, hasHeader);
+                        if (
+                            string.IsNullOrEmpty(sourceTabName) ||
+                            Helper.IsMatchWildcard(tab, sourceTabName)
+                        )
+                        {
+                            var tableName = (destinationTableName ?? "") + tab;
+                            LoadTableFromExcel(sourcePath, tab, tableName, useAllConnections, startRow, startColumn, endColumnIndex, endRowIndex, hasHeader);
+                        }
                     }
                 }
                 else
@@ -273,13 +281,13 @@ namespace Seal.Helpers
             bool result = false;
             try
             {
-                foreach(var f in Directory.GetFiles(sourceExcelDirectory, searchPattern))
+                foreach (var f in Directory.GetFiles(sourceExcelDirectory, searchPattern))
                 {
                     if (CheckForNewFileSource(loadFolder, f))
                     {
                         ExcelPackage package = ExcelHelper.GetExcelPackage(f);
                         var workbook = package.Workbook;
-                        var tabs = (from ws in workbook.Worksheets select ws.Name);                        
+                        var tabs = (from ws in workbook.Worksheets select ws.Name);
                         foreach (var tab in tabs)
                         {
                             LoadTableFromExcel(f, tab, tab, useAllConnections);
