@@ -198,12 +198,11 @@ var SWIMain = /** @class */ (function () {
                 if (_main._profile.editprofile) {
                     var onstartup = $("#onstartup-select").val();
                     var startupreport = _main._profile.startupreport;
-                    var startupreportname = _main._profile.startupreportname;
                     if (onstartup == "4") {
                         onstartup = "3"; //Execute report
                         startupreport = _main._lastReport.path;
-                        startupreportname = _main._lastReport.name;
                     }
+                    var startupreportname = $("#onstartup-reportname").val();
                     var executionmode = $("#executionmode-select").val();
                     //connections
                     var connections = [];
@@ -227,6 +226,7 @@ var SWIMain = /** @class */ (function () {
             if (_main._lastReport.name && _main._lastReport.name != _main._profile.startupreportname)
                 $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.name + "'", _main._profile.onstartup));
             $select.selectpicker('refresh');
+            $("#onstartup-reportname").val(_main._profile.startupreportname);
             $select = $("#executionmode-select");
             $select.empty();
             $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default mode"), _main._profile.executionmode));
