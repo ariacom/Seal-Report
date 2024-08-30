@@ -3,6 +3,7 @@
 @using ScottPlot
 @using ScottPlot.Plottables
 @using System.Globalization
+@using SkiaSharp
 
 @{
     Report report = Model;
@@ -244,10 +245,21 @@
         plt.Axes.Bottom.TickLabelStyle.Rotation = -1 * view.GetNumericValue("chartsp_bottom_axis_rotation");
         if (plt.Axes.Bottom.TickLabelStyle.Rotation < -10)
         {
-            plt.Axes.Bottom.TickLabelStyle.OffsetY = -10;
+            plt.Axes.Bottom.TickLabelStyle.OffsetY = 0;
             plt.Axes.Bottom.TickLabelStyle.Alignment = Alignment.MiddleRight;
         }
         plt.Axes.AutoScale();
+        // determine the width of the largest tick label
+        float largestLabelWidth = 0;
+        using SKPaint paint = new();
+        foreach (Tick tick in ticks)
+        {
+            PixelSize size = plt.Axes.Bottom.TickLabelStyle.Measure(tick.Label, paint).Size;
+            largestLabelWidth = Math.Max(largestLabelWidth, size.Width);
+        }
+
+        // ensure axis panels do not get smaller than the largest label
+        plt.Axes.Bottom.MinimumSize = largestLabelWidth;
 
         if (!hasPie)
         {
