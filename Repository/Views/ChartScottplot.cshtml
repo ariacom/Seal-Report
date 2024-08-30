@@ -114,7 +114,6 @@
                         bar = plt.Add.Bar(new Bar() { Position = position, Value = y[i], FillColor = color });
                         index++;
                     }
-                    bar.LegendText = serie.SerieDisplayName;
                     if (isHorizontal) bar.Horizontal = true;
 
                     //secondary y axis
@@ -125,7 +124,7 @@
                     }
 
                     //Legend item
-                    if (i == 0) legendItems.Add(new LegendItem() { LabelText = serie.SerieDisplayName, LineColor = color, MarkerColor = color });
+                    if (i == 0) plt.Legend.ManualItems.Add(new LegendItem() { LabelText = serie.SerieDisplayName, FillColor = color, LineColor = color, MarkerColor = color });
 
                     //Marker
                     if (serie.Element.YAxisType == AxisType.Primary)
@@ -140,8 +139,6 @@
                 ticks.Add(new Tick(isStacked ? index : index - barSeries.Count + (group - 1) / 2.0, xLabels[i]));
                 index++;
             }
-            //Legend
-            plt.ShowLegend(legendItems.ToArray());
 
             //Set new x values
             x = (from t in ticks select t.Position).ToArray();

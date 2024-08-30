@@ -309,7 +309,7 @@ class SWIMain {
 
             const $connections = $("#default-connections");
             $("#default-connections").empty();
-            if (_main._profile.sources.length === 0) {
+            if (_main._profile.sources.length === 0 || !_main._profile.editprofile) {
                 $("#default-connections").parent().hide();
             }
             else {
