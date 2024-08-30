@@ -10,7 +10,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
 * **HTML 5 and ScottPlot Charts**: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3, Plotly, ScottPlot and Gauges libraries).
 * **Fully Responsive and HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
-* **Excel and PDF**: Have a full control of your report result in Excel (use of EPPLus library) or PDF (use of QuestPDF library). Several other formats are available (XML, Json, Text, CSV) or can be easily customized.
+* **Excel and PDF**: Have a full control of your report result in Excel (use of EPPlus library) or PDF (use of QuestPDF library). Several other formats are available (XML, Json, Text, CSV) or can be easily customized.
 * **KPI and Widget Views**: Create and display your Key Performance Indicators in a single report.
 * **Web Report Server**: Publish your reports on the web (Support of Windows and Linux OS with .Net Core).
 * **Report scheduler**: Schedule your report executions and generate results in folders, FTP, SFTP server or send them by emails (integrated with the Windows Tasks Scheduler or available as a service)
