@@ -36,12 +36,12 @@
     <script>
         var sealServer = "/demo/";
         //sealServer = "https://localhost:44398/seal/";
-        var connected = false;
         var name = "";
+        var sessionId = "";
 
         function enableControls() {
-            $("button").prop("disabled", !connected);
-            $("#login_button").prop("disabled", connected);
+            $("button").prop("disabled", sessionId == "");
+            $("#login_button, #login_execute_button").prop("disabled", sessionId != "");
             $("#version_button").prop("disabled", false);
         }
 
@@ -58,7 +58,7 @@
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                connected = true;
+                                sessionId = data.sessionId;
                                 name = data.name;
                                 $("#login_label").html("SWILogin Done:'" + data.name + "'<br>" + JSON.stringify(data));
                                 $("#logout_label").text("");
@@ -72,12 +72,17 @@
 
             $("#open_button")
                 .click(function () {
-                    window.open(sealServer + "Main");
+                    var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                    form.attr('action', sealServer + "Main");
+                    form.append($('<input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', sessionId));
+                    form.submit();
                 });
 
             $("#folders_button")
                 .click(function () {
-                    $.post(sealServer + "SWIGetRootFolders")
+                    $.post(sealServer + "SWIGetRootFolders", {
+                        sessionId: sessionId
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 $("#folders_label").html("SWIGetRootFolders Done: " + data.length + " subfolders<br>" + JSON.stringify(data));
@@ -93,7 +98,8 @@
             $("#folder_detail_button")
                 .click(function () {
                     $.post(sealServer + "SWIGetFolderDetail", {
-                        path: "\\"
+                        path: "\\",
+                        sessionId: sessionId
                     })
                         .done(function (data) {
                             if (!data.error) {
@@ -109,7 +115,8 @@
             $("#report_detail_button")
                 .click(function () {
                     $.post(sealServer + "SWIGetReportDetail", {
-                        path: "\\Samples\\07-Outputs and schedules.srex"
+                        path: "\\Samples\\07-Outputs and schedules.srex",
+                        sessionId: sessionId
                     })
                         .done(function (data) {
                             if (!data.error) {
@@ -127,7 +134,8 @@
                 .click(function () {
                     $.post(sealServer + "SWISearch", {
                         path: "\\Samples",
-                        pattern: "02-"
+                        pattern: "02-",
+                        sessionId: sessionId
                     })
                         .done(function (data) {
                             if (!data.error) {
@@ -147,6 +155,7 @@
                     var form = $('<form method="post" target="_blank"/>').appendTo('body');
                     form.attr('action', sealServer + "SWExecuteReport");
                     form.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', "\\Search - Orders.srex"));
+                    form.append($('<input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', sessionId));
                     form.submit();
                 });
 
@@ -172,6 +181,7 @@
                     form.append($('<input />').attr('name', 'r3_operator').attr('value', "Contains"));
                     form.append($('<input />').attr('name', 'r3_value_1').attr('value', "ar"));
                     form.append($('<input />').attr('name', 'use_default_restrictions').attr('value', "true"));
+                    form.append($('<input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', sessionId));
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
@@ -183,6 +193,7 @@
                     form.attr('action', sealServer + "SWExecuteReport");
                     form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
                     form.append($('<input />').attr('name', 'viewGUID').attr('value', "02b6abf5-cd7c-4cbd-8da2-35f3b9d06ffe"));
+                    form.append($('<input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', sessionId));
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
@@ -194,9 +205,68 @@
                     form.attr('action', sealServer + "SWExecuteReport");
                     form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
                     form.append($('<input />').attr('name', 'outputGUID').attr('value', "cac770ed-3039-4af8-93d3-e197ac94d808"));
+                    form.append($('<input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', sessionId));
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
+
+
+            $("#login_execute_button")
+                .click(function () {
+                    $("#login_label").html("Connecting...<br>");
+                    $.post(sealServer + "SWILogin", {
+                        user: $("#user_name").val(),
+                        password: $("#password").val()
+                    })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#login_label").html("SWILogin done, Executing report...");
+
+                                var mySessionId = data.sessionId;
+                                var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                                form.attr('action', sealServer + "SWExecuteReport");
+                                form.append($('<input />').attr('name', 'path').attr('value', "\\Search - Orders.srex"));
+                                form.append($('<input />').attr('name', 'r0_name').attr('value', "Quantity"));
+                                form.append($('<input />').attr('name', 'r0_operator').attr('value', "Between"));
+                                form.append($('<input />').attr('name', 'r0_value_1').attr('value', "34"));
+                                form.append($('<input />').attr('name', 'r0_value_2').attr('value', "123"));
+                                form.append($('<input />').attr('name', 'r1_name').attr('value', "Category"));
+                                form.append($('<input />').attr('name', 'r1_operator').attr('value', "Equal"));
+                                form.append($('<input />').attr('name', 'r1_enum_values').attr('value', "2,3,4,7"));
+                                form.append($('<input />').attr('name', 'r2_name').attr('value', "Order Date"));
+                                form.append($('<input />').attr('name', 'r2_operator').attr('value', "Equal"));
+                                form.append($('<input />').attr('name', 'r2_value_1').attr('value', "19960709 00:00:00"));
+                                form.append($('<input />').attr('name', 'r2_value_2').attr('value', "19961121 00:00:00"));
+                                form.append($('<input />').attr('name', 'r2_value_3').attr('value', "19970314 00:00:00"));
+                                form.append($('<input />').attr('name', 'r3_name').attr('value', "Customer Contact"));
+                                form.append($('<input />').attr('name', 'r3_operator').attr('value', "Contains"));
+                                form.append($('<input />').attr('name', 'r3_value_1').attr('value', "ar"));
+                                form.append($('<input />').attr('name', 'use_default_restrictions').attr('value', "true"));
+                                form.append($('<input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', mySessionId));
+                                form.children('input').attr('type', 'hidden');
+                                form.submit();
+
+                                //Logout
+                                $.post(sealServer + "SWILogout", {
+                                    sessionId: mySessionId
+                                })
+                                    .done(function (data) {
+                                        if (!data.error) {
+                                            $("#login_label").html("SWILogin done, SWExecute report done, SWILogout done.");
+                                        }
+                                        else {
+                                            $("#login_label").text("Error: " + data.error);
+                                        }
+                                        enableControls();
+                                    });
+                            }
+                            else {
+                                $("#login_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
 
             $("#generate_button")
                 .click(function () {
@@ -221,6 +291,7 @@
                     form.append($('<input />').attr('name', 'r3_name').attr('value', "Customer Contact"));
                     form.append($('<input />').attr('name', 'r3_operator').attr('value', "Contains"));
                     form.append($('<input />').attr('name', 'r3_value_1').attr('value', "ar"));
+                    form.append($('<input />').attr('name', 'sessionId').attr('value', sessionId));
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
@@ -232,6 +303,7 @@
                     form.attr('action', sealServer + "SWExecuteReportToResult");
                     form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
                     form.append($('<input />').attr('name', 'outputGUID').attr('value', "cac770ed-3039-4af8-93d3-e197ac94d808"));
+                    form.append($('<input />').attr('name', 'sessionId').attr('value', sessionId));
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
@@ -242,32 +314,38 @@
                     var form = $('<form method="post" target="_blank"/>').appendTo('body');
                     form.attr('action', sealServer + "SWExecuteReportToResult");
                     form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
-                    form.append($('<input />').attr('name', 'format').attr('value', "excel"));/* print, csv, pdf or excel with the converter */
+                    form.append($('<input />').attr('name', 'format').attr('value', "Excel"));/* html by default, print, Excel, PDF, csv, text, XML, Json, etc. */
+                    form.append($('<input />').attr('name', 'sessionId').attr('value', sessionId));
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
 
-                $("#set_up_button")
-                    .click(function () {
-                        if (!name) {
-                            alert('This user cannot change the profile');
-                        }
-                        else {
-                            $.post(sealServer + "SWISetUserProfile", { culture: "fr-FR" })
-                                .done(function (data) {
-                                    if (!data.error) {
-                                        $("#set_up_label").html("SWISetUserProfile Done: culture set to French (France).");
-                                    }
-                                    else {
-                                        $("#set_up_label").text("Error: " + data.error);
-                                    }
-                                })
-                        }
-                    });
+            $("#set_up_button")
+                .click(function () {
+                    if (!name) {
+                        alert('This user cannot change the profile');
+                    }
+                    else {
+                        $.post(sealServer + "SWISetUserProfile", {
+                            culture: "fr-FR",
+                            sessionId: sessionId
+                        })
+                            .done(function (data) {
+                                if (!data.error) {
+                                    $("#set_up_label").html("SWISetUserProfile Done: culture set to French (France).");
+                                }
+                                else {
+                                    $("#set_up_label").text("Error: " + data.error);
+                                }
+                            })
+                    }
+                });
 
             $("#get_up_button")
                 .click(function () {
-                    $.post(sealServer + "SWIGetUserProfile")
+                    $.post(sealServer + "SWIGetUserProfile", {
+                        sessionId: sessionId
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 $("#get_up_label").html("SWIGetUserProfile Done.<br>" + JSON.stringify(data));
@@ -280,7 +358,11 @@
 
             $("#translate_button")
                 .click(function () {
-                    $.post(sealServer + "SWITranslate", { context: "Report", reference: "report restrictions" })
+                    $.post(sealServer + "SWITranslate", {
+                        context: "Report",
+                        reference: "report restrictions",
+                        sessionId: sessionId
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 $("#translate_label").html("SWITranslate Done: 'report restrictions'->" + data.text + "<br>" + JSON.stringify(data));
@@ -293,7 +375,12 @@
 
             $("#repository_translate_button")
                 .click(function () {
-                    $.post(sealServer + "SWITranslate", { context: "Element", instance: "Customers.City", reference: "City" })
+                    $.post(sealServer + "SWITranslate", {
+                        context: "Element",
+                        instance: "Customers.City",
+                        reference: "City",
+                        sessionId: sessionId
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 $("#repository_translate_label").html("SWITranslate Done: 'City'->" + data.text + "<br>" + JSON.stringify(data));
@@ -306,12 +393,14 @@
 
             $("#logout_button")
                 .click(function () {
-                    $.post(sealServer + "SWILogout")
+                    $.post(sealServer + "SWILogout", {
+                        sessionId: sessionId
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 $("#connect_label").text("");
                                 $("#logout_label").text("Disconnected");
-                                connected = false;
+                                sessionId = "";
                                 name = "";
                             }
                             else {
@@ -320,6 +409,7 @@
                             enableControls();
                         })
                 });
+
 
             $("#version_button")
                 .click(function () {
