@@ -149,15 +149,6 @@
           <MetaColumnGUID>12f3eb22-0694-4e86-9d7e-ad44eb0a3085</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>1717be66-2191-4464-a9e3-7919f7dcb187</GUID>
-          <Name>UN region</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>Not sorted</SortOrder>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>90b03f8a-c6d0-421f-a723-aa1cfe9f1f5f</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>7edef5a4-020e-4055-ab71-3eb7b5475902</GUID>
           <Name>United Nations[15]</Name>
           <DisplayName />
@@ -256,6 +247,22 @@
           </Views>
           <TemplateName>Model</TemplateName>
           <ModelGUID>d4fca67e-3100-4237-9285-3c0ae761a7a0</ModelGUID>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>b6a8d5bd-e3cb-4e4a-8c71-c711de2526f1</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;2 HTML Tables getting data from wiki web sites in the LINQ Source.&lt;/li&gt;
+&lt;li&gt;1 New join 'HTML World Population - HTML World GDP'.&lt;/li&gt;
+&lt;li&gt;1 model based on the 2 tables to show the GDP and population per country.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
