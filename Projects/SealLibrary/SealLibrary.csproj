@@ -67,7 +67,6 @@ A full repository file structure must be available on the machine running the pr
 		<Compile Include="..\SealLibraryWin\Helpers\TaskHelper.cs" Link="Helpers\TaskHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Audit.cs" Link="Model\Audit.cs" />
 		<Compile Include="..\SealLibraryWin\Model\CategoryFolder.cs" Link="Model\CategoryFolder.cs" />
-		<Compile Include="..\SealLibraryWin\Model\CommonScript.cs" Link="Model\CommonScript.cs" />
 		<Compile Include="..\SealLibraryWin\Model\EditorTableDefinition.cs" Link="Model\EditorTableDefinition.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Enums.cs" Link="Model\Enums.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ExecutionInterface.cs" Link="Model\ExecutionInterface.cs" />

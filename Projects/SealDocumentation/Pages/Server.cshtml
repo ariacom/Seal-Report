@@ -83,7 +83,28 @@
                                 Dedicated audit Data Sources and reports are provided and may be adapted to query your audit database.<br />
                                 <br />
                                 Use the <code>Report Creation Script</code> to change the default report object when it is created (<eg>e.g. adding a specific view or changing a default view parameter</eg>), or <code>Report Execution Init Script</code> to modify the report before the execution (<eg>e.g. changing a default format</eg>).<br />
-                                <code>Common Scripts</code> collection can be used to share functions amongst all scripts used in the product.
+                            </div>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Server source code and dynamic assemblies</h4>
+                                Share source code amongst your report scripts by saving .cs files in the repository folder <b>Assemblies\Dynamics</b>.<br />
+                                The file will be compiled into a .dll assembly that will be loaded automatically.<br />
+                                Sample of .cs source code:<br />
+                                <pre class="brush: csharp;">
+using Seal;
+using Seal.Model;
+namespace MyNamespace
+{
+    public class MyClass
+    {
+        public static int MyInt = 2;
+        public static void MyMethod(Report report) 
+        {
+            string message = "this is a test";
+            System.Diagnostics.Debugger.Break();  //To use debugger in Visual Studio
+            report.LogMessage(message);  
+        }
+    }
+}                                </pre>
                             </div>
                             <div class="bs-callout bs-callout-info">
                                 Be sure that the <code>Server is local (No internet)</code> property equals <b>true</b> if your server has no access to the internet.<br />

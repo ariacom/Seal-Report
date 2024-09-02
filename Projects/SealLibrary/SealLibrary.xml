@@ -219,26 +219,6 @@
             The full path of the of the category. This can be modified to change globally all the category names of the columns. The category path can be specified using the '/' character (e.g. '/Master/Name1/Name2')
             </summary>
         </member>
-        <member name="T:Seal.Model.CommonScript">
-            <summary>
-            Common script that are added at the end of all scripts executed
-            </summary>
-        </member>
-        <member name="F:Seal.Model.CommonScript.RazorTemplate">
-            <summary>
-            Sample
-            </summary>
-        </member>
-        <member name="P:Seal.Model.CommonScript.Name">
-            <summary>
-            The script name
-            </summary>
-        </member>
-        <member name="P:Seal.Model.CommonScript.Script">
-            <summary>
-            A Razor script that will be included in all executed scripts
-            </summary>
-        </member>
         <member name="T:Seal.Model.ExecutionLogInterface">
             <summary>
             Log interface used during the report execution

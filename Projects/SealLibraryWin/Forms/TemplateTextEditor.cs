@@ -1852,17 +1852,6 @@ namespace Seal.Forms
                     frm.Text = "Edit the script executed when the output is processed";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
-                else if (context.Instance is CommonScript)
-                {
-                    template = CommonScript.RazorTemplate;
-                    frm.Text = "Edit the script that will be added to all scripts executed for the report.";
-                    if (CurrentEntity is SealServerConfiguration)
-                    {
-                        //common script from configuration, nothing to include, we rely on @Include
-                    }
-                    frm.ObjectForCheckSyntax = CurrentEntity;
-                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                }
                 else if (context.Instance is SealServerConfiguration)
                 {
                     //use report tag to store current config
