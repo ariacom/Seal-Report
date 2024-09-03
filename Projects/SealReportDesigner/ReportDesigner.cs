@@ -86,13 +86,6 @@ namespace Seal
 
             Instance = this;
             TemplateTextEditorForm.ReportTester = this;
-            if (Properties.Settings.Default.CallUpgrade)
-            {
-                Properties.Settings.Default.Upgrade();
-                Properties.Settings.Default.CallUpgrade = false;
-                Properties.Settings.Default.Save();
-            }
-
             InitializeComponent();
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
@@ -180,7 +173,27 @@ namespace Seal
             }
 
             _ = Repository.Instance.LicenseText;
+
+            if (Properties.Settings.Default.FormSize.Width > 0 && Properties.Settings.Default.FormSize.Height > 0)
+            {
+                this.StartPosition = FormStartPosition.Manual; // Prevents overriding by Windows' default behavior
+                this.Location = Properties.Settings.Default.FormLocation;
+                this.Size = Properties.Settings.Default.FormSize;
+                // Restore the window state
+                FormWindowState state;
+                if (Enum.TryParse(Properties.Settings.Default.FormState, out state))
+                {
+                    this.WindowState = state;
+                }
+            }
+            //Viewer form
+            ReportViewerForm.LastLocation = Properties.Settings.Default.ViewerFormLocation;
+            ReportViewerForm.LastSize = Properties.Settings.Default.ViewerFormSize;
+            ReportViewerForm.LastState = Properties.Settings.Default.ViewerFormState;
+
             BringToFront();
+            Activate();
+
             if (Repository.Instance.LicenseInvalid)
             {
                 AboutBoxForm frm = new AboutBoxForm();
@@ -559,6 +572,30 @@ namespace Seal
 #if DEBUG
             if (_repository != null) _repository.FlushTranslationUsage();
 #endif
+
+            //Save form location and size 
+            if (WindowState == FormWindowState.Normal)
+            {
+                Properties.Settings.Default.FormLocation = this.Location;
+                Properties.Settings.Default.FormSize = this.Size;
+            }
+            else
+            {
+                Properties.Settings.Default.FormLocation = this.RestoreBounds.Location;
+                Properties.Settings.Default.FormSize = this.RestoreBounds.Size;
+            }
+            // Save the form state as a string
+            Properties.Settings.Default.FormState = this.WindowState.ToString();
+
+            //Viewer form
+            if (_reportViewer != null) _reportViewer.SaveWindowState();
+            Properties.Settings.Default.ViewerFormLocation = ReportViewerForm.LastLocation;
+            Properties.Settings.Default.ViewerFormSize = ReportViewerForm.LastSize;
+            Properties.Settings.Default.ViewerFormState = ReportViewerForm.LastState;
+
+
+            Properties.Settings.Default.Save();
+
             Properties.Settings.Default.Save();
             if (!checkModified()) e.Cancel = true;
             if (!checkRunning()) e.Cancel = true;
@@ -636,7 +673,8 @@ namespace Seal
 
         private void selectAfterLoad()
         {
-            if (!string.IsNullOrEmpty(lastEntityPath)) {
+            if (!string.IsNullOrEmpty(lastEntityPath))
+            {
                 TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, lastEntityPath);
                 lastEntityPath = "";
             }
@@ -1759,6 +1797,11 @@ namespace Seal
                 _reportViewer = new ReportViewerForm(false, Properties.Settings.Default.ShowScriptErrors, _reportViewer);
                 _reportViewer.ReportDesignerForm = this;
             }
+            else
+            {
+                if (_reportViewer != null) _reportViewer.SaveWindowState();
+            }
+
             _reportViewer.ViewReport(_report.Clone(), render, viewGUID, outputGUID, _report.FilePath, taskGUID);
             _canRender = true;
             FileHelper.PurgeTempApplicationDirectory();
@@ -2075,7 +2118,7 @@ namespace Seal
             {
                 ReportViewerForm.LastSize = _reportViewer.Size;
                 ReportViewerForm.LastLocation = _reportViewer.Location;
-                _reportViewer.Hide();
+                ReportViewerForm.LastState = _reportViewer.WindowState.ToString();
             }
 
             var oriValue = Helper.GetPropertyValue(instance, propertyName) as string;

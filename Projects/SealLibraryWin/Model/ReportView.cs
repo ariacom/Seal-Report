@@ -1529,7 +1529,7 @@ namespace Seal.Model
             if (!string.IsNullOrEmpty(Error))
             {
                 Report.ExecutionErrors += Error;
-                result = Helper.ToHtml(Error);
+                if (Renderer == null) result = Helper.ToHtml(Error);
             }
 
             return result;

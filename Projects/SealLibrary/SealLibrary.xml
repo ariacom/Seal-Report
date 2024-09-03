@@ -9325,6 +9325,11 @@
             Current result objects used by the Renderer
             </summary>
         </member>
+        <member name="T:Seal.Renderer.SkiaSharpHelpers">
+            <summary>
+            Helpers for image rendering
+            </summary>
+        </member>
         <member name="M:Seal.Renderer.HTML2PDFRenderer.GetRenderType">
             <summary>
             Type name of the renderer

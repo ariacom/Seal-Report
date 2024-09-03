@@ -416,7 +416,23 @@ namespace Seal
             _isInitialized = true;
 
             _ = Repository.Instance.LicenseText;
+
+            if (Properties.Settings.Default.FormSize.Width > 0 && Properties.Settings.Default.FormSize.Height > 0)
+            {
+                this.StartPosition = FormStartPosition.Manual; // Prevents overriding by Windows' default behavior
+                this.Location = Properties.Settings.Default.FormLocation;
+                this.Size = Properties.Settings.Default.FormSize;
+                // Restore the window state
+                FormWindowState state;
+                if (Enum.TryParse(Properties.Settings.Default.FormState, out state))
+                {
+                    this.WindowState = state;
+                }
+            }
+
             BringToFront();
+            Activate();
+
             if (Repository.Instance.LicenseInvalid)
             {
                 AboutBoxForm frm = new AboutBoxForm();
@@ -432,6 +448,21 @@ namespace Seal
         private void ServerManager_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!checkModified()) e.Cancel = true;
+
+            //Save form location and size 
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                Properties.Settings.Default.FormLocation = this.Location;
+                Properties.Settings.Default.FormSize = this.Size;
+            }
+            else
+            {
+                Properties.Settings.Default.FormLocation = this.RestoreBounds.Location;
+                Properties.Settings.Default.FormSize = this.RestoreBounds.Size;
+            }
+            // Save the form state as a string
+            Properties.Settings.Default.FormState = this.WindowState.ToString();
+
             Properties.Settings.Default.Save();
         }
 
