@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SealReportLibrary.NETCore" Version="8.1.0" />
+    <PackageReference Include="SealReportLibrary.NETCore" Version="8.1.1" />
   </ItemGroup>
 
 </Project>
