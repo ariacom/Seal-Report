@@ -283,9 +283,9 @@ class SWIMain {
             $select = $("#executionmode-select");
             $select.empty();
             $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default mode"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute report in a new Window"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute report in the current Window"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Allow only execution in a new Window"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute report in a new window"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute report in the current window"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Allow only execution in a new window"), _main._profile.executionmode));
             $select.selectpicker('refresh');
 
             $select = $("#culture-select");
@@ -823,7 +823,7 @@ class SWIMain {
             $tr.append($td);
             if (file.isreport) {
                 if (_main._reportIcon !== null) {
-                    var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current Window" : "Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
+                    var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current window" : "Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
                     iconButton.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
                     $td.append(iconButton);
                 }

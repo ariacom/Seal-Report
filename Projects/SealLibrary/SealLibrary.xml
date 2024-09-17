@@ -3535,16 +3535,6 @@
             Generate the report in a given format and retruns the file path
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.ConvertToPDFResult">
-            <summary>
-            Generate the PDF result of the current execution
-            </summary>
-        </member>
-        <member name="M:Seal.Model.ReportExecution.ConvertToExcelResult">
-            <summary>
-            Generate the Excel result of the current execution
-            </summary>
-        </member>
         <member name="F:Seal.Model.ReportExecution.CurrentEnumValues">
             <summary>
             Dynamic enum values selected during the report execution
@@ -5796,11 +5786,6 @@
             Current CultureInfo
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportView.SetAdvancedConfigurations">
-            <summary>
-            Set configurations for Excel or PDF converter
-            </summary>
-        </member>
         <member name="P:Seal.Model.ReportView.WebExec">
             <summary>
             For the Web Report Server: If true, the view can be executed from the report list.
@@ -5864,41 +5849,6 @@
         <member name="P:Seal.Model.ReportView.JsonRenderer">
             <summary>
             Current Json renderer
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.PdfConfigurations">
-            <summary>
-            The PDF configuration of the view
-            </summary>
-        </member>
-        <member name="F:Seal.Model.ReportView._pdfConverter">
-            <summary>
-            Current SealPdfConverter
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.PdfConverterEdited">
-            <summary>
-            True if the PDF Converter was edited
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.ExcelConfigurations">
-            <summary>
-            The Excel configuration of the view
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.ExcelConverter">
-            <summary>
-            Current Excel converter
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.ExcelConverterEdited">
-            <summary>
-            True if the Excel converter was edited
-            </summary>
-        </member>
-        <member name="M:Seal.Model.ReportView.ConvertToExcel(System.String)">
-            <summary>
-            Convert the view to an Excel Sheet
             </summary>
         </member>
         <member name="P:Seal.Model.ReportView.HelperReloadConfiguration">
@@ -7504,51 +7454,6 @@
             Init the default values
             </summary>
         </member>
-        <member name="T:Seal.Model.SealExcelConverter">
-            <summary>
-            Base class for the Excel Converter
-            </summary>
-        </member>
-        <member name="F:Seal.Model.SealExcelConverter.SourceFormat">
-            <summary>
-            Optional source format
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealExcelConverter.Create">
-            <summary>
-            Creates a basic SealExcelConverter
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealExcelConverter.ToString">
-            <summary>
-            Not implemented
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealExcelConverter.ConvertToExcel(System.String)">
-            <summary>
-            Convert to Excel and save the result to a destination path
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealExcelConverter.ShouldSerialize">
-            <summary>
-            True if the configuration should be serialized
-            </summary>
-        </member>
-        <member name="T:Seal.Model.SealInterface">
-            <summary>
-            Virtual class for SealInterface implementation
-            </summary>
-        </member>
-        <member name="T:Seal.Model.SealPdfConverter">
-            <summary>
-            Base class for the Pdf Converter
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealPdfConverter.ShouldSerialize">
-            <summary>
-            True if the configuration should be serialized
-            </summary>
-        </member>
         <member name="T:Seal.Model.SealReportScheduler">
             <summary>
             Main Scheduler to execute the report schedules defined in a repository.
@@ -8059,36 +7964,6 @@
         <member name="P:Seal.Model.SealServerConfiguration.ApplicationKeys">
             <summary>
             Keys or passwords used in the application (report and tasks). Values are encrypted using the encryption mode.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfUseClient">
-            <summary>
-            If true, the client library is used to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfServer">
-            <summary>
-            If the client library is used, the HTML to PDF server IP or name.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfServerPort">
-            <summary>
-            If the client library is used, the HTML to PDF server IP or name.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfServicePassword">
-            <summary>
-            If the client library is used, optional HTML to PDF converter service password.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfUseWebService">
-            <summary>
-            If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfWebServiceURL">
-            <summary>
-            If the client library is used, the HTML to PDF web service URL.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.DefaultCulture">
@@ -9238,6 +9113,16 @@
         <member name="M:Seal.Renderer.RootRenderer.GetDoubleValue(System.String)">
             <summary>
             Returns a parameter double value
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.SetParameter(System.String,System.String)">
+            <summary>
+            Set a parameter value
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.SetParameter(System.String,System.Boolean)">
+            <summary>
+            Set a parameter boolean value
             </summary>
         </member>
         <member name="M:Seal.Renderer.CSVRenderer.GetRenderType">

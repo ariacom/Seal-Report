@@ -84,14 +84,6 @@ namespace Seal.Model
                 GetProperty("JsonRenderer").SetIsBrowsable(true);
                 JsonRenderer.InitEditor();
 
-                //Converter
-                GetProperty("PdfConverter").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
-                PdfConverter.InitEditor();
-
-                //Converter
-                GetProperty("ExcelConverter").SetIsBrowsable(true);
-                ExcelConverter.InitEditor();
-
                 GetProperty("WebExec").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
 
                 //Read only
@@ -940,24 +932,6 @@ namespace Seal.Model
             }
         }
 
-        /// <summary>
-        /// Set configurations for Excel or PDF converter
-        /// </summary>
-        public void SetAdvancedConfigurations()
-        {
-            //Pdf & Excel
-            if (PdfConverterEdited)
-            {
-                PdfConfigurations = PdfConverter.GetConfigurations();
-            }
-            if (ExcelConverterEdited)
-            {
-                ExcelConfigurations = ExcelConverter.GetConfigurations();
-            }
-
-            foreach (var view in Views) view.SetAdvancedConfigurations();
-        }
-
         #region Web Report Server
 
         /// <summary>
@@ -1206,110 +1180,6 @@ namespace Seal.Model
         public bool ShouldSerializeJsonRenderer()
         {
             return (new JsonRenderer()).Serialize() != JsonRenderer.Serialize();
-        }
-
-        #endregion
-
-
-        #region PDF and Excel Converters
-
-        /// <summary>
-        /// The PDF configuration of the view
-        /// </summary>
-        public List<string> PdfConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializePdfConfigurations()
-        {
-            if (TemplateName != ReportViewTemplate.ReportName) return false;
-            return PdfConverter.ShouldSerialize();
-        }
-
-        /// <summary>
-        /// Current SealPdfConverter
-        /// </summary>
-        private SealPdfConverter _pdfConverter = null;
-#if WINDOWS
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("PDF Converter Configuration"), Description("All the options applied to the PDF conversion from the HTML result."), Category("View parameters"), Id(20, 4)]
-#endif
-        [XmlIgnore]
-        public SealPdfConverter PdfConverter
-        {
-            get
-            {
-                if (_pdfConverter == null)
-                {
-                    _pdfConverter = SealPdfConverter.Create();
-                    _pdfConverter.SetConfigurations(PdfConfigurations, this);
-#if WINDOWS
-                    _pdfConverter.EntityHandler = HelperEditor.HandlerInterface;
-#endif
-                    UpdateEditorAttributes();
-                }
-                return _pdfConverter;
-            }
-            set { _pdfConverter = value; }
-        }
-
-        /// <summary>
-        /// True if the PDF Converter was edited
-        /// </summary>
-        [XmlIgnore]
-        public bool PdfConverterEdited
-        {
-            get { return _pdfConverter != null; }
-        }
-
-        /// <summary>
-        /// The Excel configuration of the view
-        /// </summary>
-        public List<string> ExcelConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializeExcelConfigurations()
-        {
-            return ExcelConverter.ShouldSerialize();
-        }
-
-        private SealExcelConverter _excelConverter = null;
-        /// <summary>
-        /// Current Excel converter
-        /// </summary>
-#if WINDOWS
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Excel Converter Configuration"), Description("All the options applied to the Excel conversion from the view."), Category("View parameters"), Id(21, 4)]
-#endif
-        [XmlIgnore]
-        public SealExcelConverter ExcelConverter
-        {
-            get
-            {
-                if (_excelConverter == null)
-                {
-                    _excelConverter = SealExcelConverter.Create();
-                    _excelConverter.SetConfigurations(ExcelConfigurations, this);
-#if WINDOWS
-                    _excelConverter.EntityHandler = HelperEditor.HandlerInterface;
-#endif
-                    UpdateEditorAttributes();
-                }
-                return _excelConverter;
-            }
-            set { _excelConverter = value; }
-        }
-
-        /// <summary>
-        /// True if the Excel converter was edited
-        /// </summary>
-        [XmlIgnore]
-        public bool ExcelConverterEdited
-        {
-            get { return _excelConverter != null; }
-        }
-
-        /// <summary>
-        /// Convert the view to an Excel Sheet
-        /// </summary>
-        public string ConvertToExcel(string destination)
-        {
-            return ExcelConverter.ConvertToExcel(destination);
         }
 
         #endregion
@@ -1645,18 +1515,6 @@ namespace Seal.Model
                     {
                         parameter.Value = refParameter.Value;
                     }
-                }
-
-                //Excel
-                if (ExcelConverter != null && refView.ExcelConverter != null)
-                {
-                    ExcelConverter.InitFromReferenceView(refView);
-                }
-
-                //Pdf
-                if (PdfConverter != null && refView.PdfConverter != null)
-                {
-                    PdfConverter.InitFromReferenceView(refView);
                 }
             }
         }

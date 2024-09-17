@@ -27,6 +27,9 @@ using System.Runtime.InteropServices;
 using Oracle.ManagedDataAccess.Client;
 using System.Xml;
 using Npgsql;
+using DocumentFormat.OpenXml.Bibliography;
+using Azure.Identity;
+using Azure.Storage.Blobs;
 
 namespace Seal.Helpers
 {
@@ -654,8 +657,17 @@ namespace Seal.Helpers
         {
             var msg = $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}";
             var fullMessage = string.Format("**********\r\n{0} Exception\r\n{1}\r\n\r\n", DateTime.Now, msg);
-            WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
-            if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
+            if (Repository.IsInstanceCreated)
+            {
+                WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
+                if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
+            }
+            try
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", ex.Message, EventLogEntryType.Error);
+            }
+            catch { }
+
             Console.WriteLine(ex.Message);
         }
 

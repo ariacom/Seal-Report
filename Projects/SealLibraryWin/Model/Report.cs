@@ -517,12 +517,6 @@ namespace Seal.Model
             //Init scripts
             if (!_initScriptsExecuted)
             {
-                //Load converter assembly
-                if (ExecutionView != null)
-                {
-                    var converter = ExecutionView.PdfConverter;
-                }
-
                 //First config
                 if (!string.IsNullOrEmpty(Repository.Configuration.InitScript))
                 {
@@ -1412,10 +1406,6 @@ namespace Seal.Model
         /// </summary>
         public Report Clone()
         {
-            foreach (var view in Views)
-            {
-                view.SetAdvancedConfigurations();
-            }
             Report report = (Report)Helper.Clone(this);
             report.Repository = Repository;
             report.InitReferences();
@@ -1445,7 +1435,6 @@ namespace Seal.Model
 
                 foreach (var view in Views)
                 {
-                    view.SetAdvancedConfigurations();
                     view.BeforeSerialization();
                 }
                 //serialize only not readonly metadata
@@ -2411,8 +2400,8 @@ namespace Seal.Model
         public bool PrintLayout
         {
             get {
-                if ((Status == ReportStatus.RenderingDisplay || Status == ReportStatus.NotExecuted)  && ForOutput) return false;
-                return (Format == ReportFormat.print || Format == ReportFormat.pdf); 
+                if ((Status == ReportStatus.RenderingDisplay || Status == ReportStatus.NotExecuted) && ForOutput) return false;
+                return (Format == ReportFormat.print); 
             }
         }
 

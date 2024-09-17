@@ -103,10 +103,6 @@ namespace Seal.Model
         XML,
         [Description("Json")]
         Json,
-        [Description("Excel Converter")]
-        excel, //converter
-        [Description("PDF Converter")]
-        pdf, //converter 
     }
 
     public enum NumericStandardFormat

@@ -124,19 +124,7 @@ Please make sure you are eligible to use this free license.
 ";
             try
             {
-                string text = "";
-                try
-                {
-                    var si = SealInterface.Create(Repository.Instance);
-                    si.Init();
-                    text = Repository.Instance.LicenseText + "\r\n\r\n" + si.Text();
-                    text = text.Trim();
-                }
-                catch
-                {
-                    text = Repository.Instance.LicenseText;
-                }
-
+                string text = Repository.Instance.LicenseText;
                 if (string.IsNullOrWhiteSpace(text))
                 {
                     this.textBoxDescription.Text = defaultText;

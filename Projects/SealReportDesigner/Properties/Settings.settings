@@ -15,7 +15,7 @@
       <Value Profile="(Default)">C:\ProgramData\Seal Report Repository</Value>
     </Setting>
     <Setting Name="FormLocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">100, 100</Value>
+      <Value Profile="(Default)">140, 140</Value>
     </Setting>
     <Setting Name="FormSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">1400, 800</Value>

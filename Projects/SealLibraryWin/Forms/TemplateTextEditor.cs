@@ -1510,20 +1510,6 @@ namespace Seal.Forms
                         if (parameter.TextSamples != null) frm.SetSamples(parameter.TextSamples.ToList());
                     }
                 }
-                else if (context.Instance.GetType().ToString() == "Seal.Converter.PdfConverter")
-                {
-                    string language = "cs";
-                    SealPdfConverter converter = (SealPdfConverter)context.Instance;
-                    converter.ConfigureTemplateEditor(frm, context.PropertyDescriptor.Name, ref template, ref language);
-                    ScintillaHelper.Init(frm.textBox, language);
-                }
-                else if (context.Instance.GetType().ToString() == "Seal.Converter.ExcelConverter")
-                {
-                    string language = "cs";
-                    SealExcelConverter converter = (SealExcelConverter)context.Instance;
-                    converter.ConfigureTemplateEditor(frm, context.PropertyDescriptor.Name, ref template, ref language);
-                    ScintillaHelper.Init(frm.textBox, language);
-                }
                 else if (context.Instance is Report)
                 {
                     if (context.PropertyDescriptor.Name == "DisplayName")

@@ -164,36 +164,6 @@ namespace Seal.Model
                     File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
                 }
             }
-
-            if (Report.Format == ReportFormat.pdf)
-            {
-                try
-                {
-                    string folder = Path.GetDirectoryName(Report.ResultFilePath);
-                    string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".pdf";
-                    Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(Report.ResultFilePath, newPath);
-                    Report.ResultFilePath = newPath;
-                }
-                catch (Exception ex)
-                {
-                    Report.ExecutionErrors = ex.Message;
-                    if (ex.InnerException != null) Report.ExecutionErrors += "\r\n" + ex.InnerException.Message;
-                }
-            }
-            else if (Report.Format == ReportFormat.excel)
-            {
-                try
-                {
-                    string folder = Path.GetDirectoryName(Report.ResultFilePath);
-                    string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".xlsx";
-                    Report.ResultFilePath = Report.ExecutionView.ConvertToExcel(newPath);
-                }
-                catch (Exception ex)
-                {
-                    Report.ExecutionErrors = ex.Message;
-                    if (ex.InnerException != null) Report.ExecutionErrors += "\r\n" + ex.InnerException.Message;
-                }
-            }
         }
 
         /// <summary>
@@ -2286,8 +2256,6 @@ namespace Seal.Model
         {
             if (format == ReportFormat.html) return Task.FromResult(GenerateHTMLResult(false));
             else if (format == ReportFormat.print) return Task.FromResult(GenerateHTMLResult(true));
-            else if (format == ReportFormat.excel) return Task.FromResult(ConvertToExcelResult()); //Converter
-            else if (format == ReportFormat.pdf) return Task.FromResult(ConvertToPDFResult()); //Converter
 
             Report.IsNavigating = false;
             var originalFormat = Report.Format;
@@ -2324,45 +2292,6 @@ namespace Seal.Model
         {
             var result = Task.Run(() => GenerateResultAsync(format));
             return result.Result;
-        }
-
-        /// <summary>
-        /// Generate the PDF result of the current execution
-        /// </summary>
-        public string ConvertToPDFResult()
-        {
-            string newPath = "";
-            var originalFormat = Report.Format;
-            executeTasks(ExecutionStep.BeforeRendering);
-            try
-            {
-                string source = GeneratePrintResult();
-                newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
-                Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
-            }
-            finally
-            {
-                Report.Format = originalFormat;
-            }
-            return newPath;
-        }
-
-        /// <summary>
-        /// Generate the Excel result of the current execution
-        /// </summary>
-        public string ConvertToExcelResult()
-        {
-            var result = "";
-            try
-            {
-                executeTasks(ExecutionStep.BeforeRendering);
-                string path = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)) + ".xlsx");
-                result = Report.ExecutionView.ConvertToExcel(path);
-            }
-            finally
-            {
-            }
-            return result;
         }
 
         /// <summary>

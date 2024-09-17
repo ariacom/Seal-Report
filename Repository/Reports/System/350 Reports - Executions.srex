@@ -186,20 +186,22 @@ AND [a8465e45-327d-44c6-bea0-b9116ff0617c]</Restriction>
           <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>0e3473b8-4ee7-4435-996f-9a743b1b8d90</GUID>
-          <Name>sr_audit.report_name</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>8b62d228-4e1d-4b23-a805-8d876dbb8739</GUID>
           <Name>sr_audit.output_type</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0e3473b8-4ee7-4435-996f-9a743b1b8d90</GUID>
+          <Name>sr_audit.report_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>f506510f-a7c1-4b5b-9896-beeee4723702</GUID>
@@ -234,7 +236,7 @@ AND [a8465e45-327d-44c6-bea0-b9116ff0617c]</Restriction>
           <DisplayName>Duration</DisplayName>
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>1 Descendant</SortOrder>
+          <SortOrder>Not sorted</SortOrder>
           <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
         </ReportElement>
         <ReportElement>

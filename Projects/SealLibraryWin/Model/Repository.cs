@@ -23,14 +23,10 @@ using SharpCompress.Common;
 using System.Runtime.Loader;
 using Microsoft.CodeAnalysis.Text;
 
-
-
-
 #if WINDOWS
 using System.Windows.Forms;
 using System.Drawing;
 #endif
-
 
 namespace Seal.Model
 {
@@ -139,14 +135,6 @@ namespace Seal.Model
                     string licensePath = Path.Combine(Instance.SettingsFolder, "License.srl");
                     _licenseText = Helper.GetLicenseText(licensePath, out bool licenseInvalid);
                     LicenseInvalid = licenseInvalid;
-
-                    var converter = SealPdfConverter.Create();
-                    var converterLicenseText = converter.GetLicenseText();
-                    if (!string.IsNullOrEmpty(converterLicenseText))
-                    {
-                        _licenseText += converter.GetLicenseText();
-                    }
-
                 }
                 return _licenseText;
             }
@@ -398,6 +386,14 @@ namespace Seal.Model
             }
         }
 
+        public static bool IsInstanceCreated
+        {
+            get
+            {
+                return _instance != null;
+            }
+        }
+
         /// <summary>
         /// Creates a basic repository
         /// </summary>
@@ -497,7 +493,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        Helper.WriteLogException("Repository.Init: OutputEmailDevice", ex);
                     }
                 }
 
@@ -519,7 +515,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        Helper.WriteLogException("Repository.Init: OutputEmailDevice", ex);
                     }
                 }
                 foreach (var file in Directory.GetFiles(DevicesFileServerFolder, "*." + SealConfigurationFileExtension))
@@ -530,7 +526,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        Helper.WriteLogException("Repository.Init: OutputFileServerDevice", ex);
                     }
                 }
             }
@@ -552,7 +548,7 @@ namespace Seal.Model
                         }
                         catch (Exception ex)
                         {
-                            Helper.WriteLogException("Assemblies", ex);
+                            Helper.WriteLogException("Repository.Init: Assemblies", ex);
                         }
                     }
 
@@ -608,7 +604,7 @@ namespace Seal.Model
                         }
                         catch (Exception ex)
                         {
-                            Helper.WriteLogException("DynamicAssemblies", ex);
+                            Helper.WriteLogException("Repository.Init: DynamicAssemblies", ex);
                         }
                     }
 
@@ -1009,7 +1005,6 @@ namespace Seal.Model
                 var result = new List<ReportFormat>();
                 foreach (ReportFormat format in Enum.GetValues(typeof(ReportFormat)))
                 {
-                    if ((format == ReportFormat.pdf || format == ReportFormat.excel) && !hasConverter) continue;
                     result.Add(format);
                 }
                 return result;

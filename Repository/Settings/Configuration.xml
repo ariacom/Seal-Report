@@ -46,8 +46,6 @@ _ed.common.js
     </KeyValue>
   </KeyValues>
   <ApplicationKeys />
-  <PdfServicePassword />
-  <PdfWebServiceURL />
   <DefaultCulture />
   <NumberGroupSeparator />
   <NumberDecimalSeparator />

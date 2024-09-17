@@ -9,9 +9,9 @@
     <AssemblyName>SealServerManager</AssemblyName>
     <ApplicationIcon>serverManager.ico</ApplicationIcon>
     <Product>Seal Report</Product>
-    <Version>8.1.1.0</Version>
-    <FileVersion>8.1.1.0</FileVersion>
-    <AssemblyVersion>8.1.1.0</AssemblyVersion>
+    <Version>8.2.0.0</Version>
+    <FileVersion>8.2.0.0</FileVersion>
+    <AssemblyVersion>8.2.0.0</AssemblyVersion>
     <Description>Seal Server Manager</Description>
     <Authors>Ariacom</Authors>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
