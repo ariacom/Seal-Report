@@ -39,7 +39,7 @@ namespace Seal.Model
     //Upload the file to the server
     Report report = Model;
     ReportOutput output = report.OutputToExecute;
-    OutputFileServerDevice device = (OutputFileServerDevice)output.Device;
+    var device = output.Device as OutputFileServerDevice;
 
     var resultFileName = (output.ZipResult ? Path.GetFileNameWithoutExtension(report.ResultFileName) + "".zip"" : Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath));
     device.HandleZipOptions(report);
@@ -113,6 +113,11 @@ namespace Seal.Model
     report.LogMessage(""Report result generated in '{0}'"", remotePath);
 }
 ";
+
+        override public string GetProcessingScriptTemplate()
+        {
+            return ProcessingScriptTemplate;
+        }
 
 #if WINDOWS
         #region Editor
@@ -297,7 +302,7 @@ namespace Seal.Model
         public string Error { get; set; }
 
         /// <summary>
-        /// Check that the report result has been saved and set information
+        /// Process the report result for the output
         /// </summary>
         public override void Process(Report report)
         {

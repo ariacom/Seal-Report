@@ -174,18 +174,8 @@ namespace Seal
 
             _ = Repository.Instance.LicenseText;
 
-            if (Properties.Settings.Default.FormSize.Width > 0 && Properties.Settings.Default.FormSize.Height > 0)
-            {
-                this.StartPosition = FormStartPosition.Manual; // Prevents overriding by Windows' default behavior
-                this.Location = Properties.Settings.Default.FormLocation;
-                this.Size = Properties.Settings.Default.FormSize;
-                // Restore the window state
-                FormWindowState state;
-                if (Enum.TryParse(Properties.Settings.Default.FormState, out state))
-                {
-                    this.WindowState = state;
-                }
-            }
+
+            FormHelper.RestoreForm(this, Properties.Settings.Default.FormSize, Properties.Settings.Default.FormLocation, Properties.Settings.Default.FormState);
             //Viewer form
             ReportViewerForm.LastLocation = Properties.Settings.Default.ViewerFormLocation;
             ReportViewerForm.LastSize = Properties.Settings.Default.ViewerFormSize;

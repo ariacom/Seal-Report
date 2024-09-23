@@ -46,7 +46,7 @@ namespace Seal.Helpers
                 principal = JsonSerializer.Deserialize<ClientPrincipal>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
 
-            /** 
+            /*
              *  At this point, the code can iterate through `principal.Claims` to
              *  check claims as part of validation. Alternatively, we can convert
              *  it into a standard object with which to perform those checks later

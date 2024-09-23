@@ -1831,11 +1831,21 @@ namespace Seal.Forms
                     frm.Text = "Edit the init script of the source";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
-                else if (context.Instance is OutputFileServerDevice && context.PropertyDescriptor.Name == "ProcessingScript")
+                else if (context.Instance is OutputDevice && context.PropertyDescriptor.Name == "ProcessingScript")
                 {
-                    template = OutputFileServerDevice.ProcessingScriptTemplate;
+                    template = ((OutputDevice)context.Instance).GetProcessingScriptTemplate();
                     frm.ObjectForCheckSyntax = new Report();
                     frm.Text = "Edit the script executed when the output is processed";
+                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                }
+                else if (context.Instance is OutputEmailDevice)
+                {
+                    var device = ((OutputEmailDevice)context.Instance);
+                    if (context.PropertyDescriptor.Name == "SmtpScript") template = OutputEmailDevice.SmtpScriptTemplate;
+                    if (context.PropertyDescriptor.Name == "SendGridScript") template = OutputEmailDevice.SendGridScriptTemplate;
+                    if (context.PropertyDescriptor.Name == "MSGraphScript") template = OutputEmailDevice.MSGraphScriptTemplate;
+                    frm.ObjectForCheckSyntax = new OutputEmailDevice.EmailDefinition();
+                    frm.Text = "Edit the script executed when to send the email";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
                 else if (context.Instance is SealServerConfiguration)

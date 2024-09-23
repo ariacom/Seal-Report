@@ -14,6 +14,40 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
+using System.Net.Http;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml;
+using FluentFTP;
+using ICSharpCode.SharpZipLib.Zip;
+using Jose;
+using Microsoft.AnalysisServices.AdomdClient;
+using Microsoft.AspNetCore.Html;
+using Microsoft.Web.Administration;
+using Newtonsoft.Json.Linq;
+using Npgsql;
+using OfficeOpenXml;
+using Oracle.ManagedDataAccess.Client;
+using PuppeteerSharp;
+using Renci.SshNet;
+using ScottPlot;
+using System.Data.Odbc;
+using System.Data.OleDb;
+using System.DirectoryServices.AccountManagement;
+using System.DirectoryServices.Protocols;
+using System.Drawing;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Json;
+using System.Security.AccessControl;
+using System.ServiceModel.Syndication;
+using System.Web;
+using System.Xml.Linq;
+using System.Data.SqlClient;
+using System.DirectoryServices;
+using System.Net;
+using Twilio.Rest.Api.V2010.Account;
+using Svg.Skia;
+using System.Diagnostics;
 
 namespace Seal.Helpers
 {
@@ -22,6 +56,7 @@ namespace Seal.Helpers
         //Directory location for cached assemblies
         public static string RazorCacheDirectory = "";
 
+        static EventLogEntryType _01 = EventLogEntryType.Information; //Necessary to compile Security Scripts
         static int _loadTries = 3;
         /// <summary>
         /// Force the load of the assemblies
@@ -53,6 +88,47 @@ namespace Seal.Helpers
                             Helper.WriteLogException("LoadRazorAssemblies", ex);
                         }
                     }
+
+                    //Force other load (required to compile Razor scripts)
+                    _ = new HttpClient();
+                    _ = new HtmlString("");
+                    _ = new DataTable();
+                    _ = new OleDbConnection();
+                    _ = new LdapConnection("");
+                    _ = new SyndicationFeed();
+                    _ = new XDocument();
+                    _ = new PrincipalContext(ContextType.Machine);
+                    _ = JWT.DefaultSettings;
+                    _ = JObject.Parse("{}");
+                    _ = new FastZip();
+                    _ = new OdbcConnection();
+                    _ = new SqlConnection();
+                    _ = new Microsoft.Data.SqlClient.SqlConnection();
+                    _ = new SftpClient("", "a", "");
+                    _ = new FtpClient();
+                    _ = new AdomdConnection();
+                    _ = new ExcelPackage();
+                    _ = new MongoClient();
+                    _ = HttpUtility.HtmlEncode("");
+                    _ = JsonContent.Create(new { });
+                    _ = new OracleConnection("");
+                    _ = new JwtSecurityTokenHandler();
+                    _ = new DirectoryEntry();
+                    _ = new ServerManager();
+                    _ = new FileSystemAccessRule("a", FileSystemRights.Read, AccessControlType.Deny);
+                    _ = new MessageResource.ScheduleTypeEnum();
+                    _ = new WebProxy();
+                    _ = ColorTranslator.FromHtml("#00000");
+                    _ = new Plot();
+                    _ = new Workbook();
+                    _ = SpreadsheetDocument.Create(FileHelper.GetTempUniqueFileName("dummy.xlsx"), SpreadsheetDocumentType.Workbook);
+                    _ = new SKSvg();
+                    _ = new PdfOptions();
+                    _ = new NpgsqlConnection("");
+                    _ = AngleSharp.Configuration.Default;
+#if WINDOWS
+                    _ = new System.Windows.Forms.Control();
+#endif
                 }
                 catch (Exception ex)
                 {

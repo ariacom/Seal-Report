@@ -7,10 +7,11 @@
     provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_skip_domain", BoolValue = true, DisplayName = "Groups matching: Skip domain name", Description = "If true, the Windows-Security groups matching is done without the domain name." });
     provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_ad_context", Value = "", DisplayName = "Groups matching: Method used to get the Windows groups", Enums = new string[] { "", "Machine", "Domain", "ApplicationDirectory" }, Description = "Select the context type used to get the Windows Groups. If empty, Windows Identity is used instead of Active Directory." });
     
-    provider.Script = @"@using System.Net;
-@using System.DirectoryServices;
-@using System.DirectoryServices.AccountManagement;
-@using System.Security.Principal;
+    provider.Script = @"@using System.Net
+@using System.DirectoryServices
+@using System.DirectoryServices.AccountManagement
+@using System.Security.Principal
+@using System.Diagnostics
 @{
     SecurityUser user = Model;
 	//Integrated Windows authentication: check IPrincipal and set name and groups...
@@ -66,7 +67,7 @@
                     log += p.Name + ""\r\n"";
                 }
             }
-            Helper.WriteLogEntry(""Web Report Server"", System.Diagnostics.EventLogEntryType.Warning, log);            
+            Helper.WriteLogEntry(""Web Report Server"", EventLogEntryType.Warning, log);            
 		}
 		
 		//if not null, user.UserPrincipal contains all information got from the Active Directory (System.DirectoryServices.AccountManagement.UserPrincipal)

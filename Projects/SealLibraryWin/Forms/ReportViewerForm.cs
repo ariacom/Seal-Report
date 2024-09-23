@@ -84,17 +84,7 @@ namespace Seal.Forms
 
         void RestoreWindowState()
         {
-            if (LastSize.Width > 100) Size = LastSize;
-            if (LastLocation.X > 0) Location = LastLocation;
-            // Restore the window state
-            FormWindowState state;
-            if (Enum.TryParse(LastState, out state))
-            {
-                if (!string.IsNullOrEmpty(LastState) && Enum.TryParse(LastState, out state))
-                {
-                    WindowState = state;
-                }
-            }
+            FormHelper.RestoreForm(this, LastSize, LastLocation, LastState);
         }
 
         public void ViewReport(Report report, bool render, string viewGUID, string outputGUID, string originalFilePath, string taskGUID = null)

@@ -1605,6 +1605,11 @@
             Full name
             </summary>
         </member>
+        <member name="M:Seal.Model.OutputDevice.GetProcessingScriptTemplate">
+            <summary>
+            Returns the default processing script for the output device
+            </summary>
+        </member>
         <member name="M:Seal.Model.OutputDevice.Process(Seal.Model.Report)">
             <summary>
             Process the report and send it to the device
@@ -1641,9 +1646,34 @@
             OutputEmailDevice is an implementation of a SMTP Server device to send report result by emails. 
             </summary>
         </member>
+        <member name="T:Seal.Model.OutputEmailDevice.EmailDefinition">
+            <summary>
+            Parameter used to send email by script
+            </summary>
+        </member>
         <member name="M:Seal.Model.OutputEmailDevice.Create">
             <summary>
             Create a basic OutputEmailDevice
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputEmailDevice.ProcessingScriptTemplate">
+            <summary>
+            Default processing script template
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputEmailDevice.SmtpScriptTemplate">
+            <summary>
+            Default script template for SMTP
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputEmailDevice.SendGridScriptTemplate">
+            <summary>
+            Default script template for SendGrid
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputEmailDevice.MSGraphScriptTemplate">
+            <summary>
+            Default script template for Microsoft Graph
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.FullName">
@@ -1654,6 +1684,16 @@
         <member name="F:Seal.Model.OutputEmailDevice.LastModification">
             <summary>
             Last modification date time
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.Type">
+            <summary>
+            Type of Email server used
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.ProcessingScript">
+            <summary>
+            Script executed when the output is processed. The script can be customized.
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.Server">
@@ -1701,9 +1741,9 @@
             If true, the default credentials are used
             </summary>
         </member>
-        <member name="P:Seal.Model.OutputEmailDevice.UseSendGrid">
+        <member name="P:Seal.Model.OutputEmailDevice.SmtpScript">
             <summary>
-            If true, the SendGrid client is used instead of the SMTP client
+            Script used to send the Email via SMTP. The script can be customized.
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.SendGridKey">
@@ -1714,6 +1754,26 @@
         <member name="P:Seal.Model.OutputEmailDevice.ClearSendGridKey">
             <summary>
             The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registration (Free plan).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.SendGridScript">
+            <summary>
+            Script used to send the Email via SendGrid. The script can be customized.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.AzureSecret">
+            <summary>
+            The Azure Secret for MS Graph
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.ClearAzureSecret">
+            <summary>
+            Secret used for the authentication before sending the Email
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.MSGraphScript">
+            <summary>
+            Script used to send the Email via SendGrid. The script can be customized.
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.SenderEmail">
@@ -1733,7 +1793,7 @@
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.ChangeSender">
             <summary>
-            If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer
+            If true, the Email Sender or Reply address can be changed in the Report Designer
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.TestEmailTo">
@@ -1778,7 +1838,7 @@
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.Boolean,System.String)">
             <summary>
-            Send an Email either through SMTP or SendGrid
+            Send an Email either through SMTP or SendGrid (used for notification emails)
             </summary>
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String)">
@@ -1789,11 +1849,6 @@
         <member name="M:Seal.Model.OutputEmailDevice.Process(Seal.Model.Report)">
             <summary>
             Send the report result by email using the device configuration
-            </summary>
-        </member>
-        <member name="P:Seal.Model.OutputEmailDevice.SmtpClient">
-            <summary>
-            Current SmtpClient
             </summary>
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.SendTestEmail">
@@ -1883,7 +1938,7 @@
         </member>
         <member name="M:Seal.Model.OutputFileServerDevice.Process(Seal.Model.Report)">
             <summary>
-            Check that the report result has been saved and set information
+            Process the report result for the output
             </summary>
         </member>
         <member name="M:Seal.Model.OutputFileServerDevice.LoadFromFile(System.String,System.Boolean)">

@@ -678,4 +678,15 @@ namespace Seal.Model
         ChartPlotlyCanvas,
         GaugeCanvas,
     }
+
+    public enum EmailServerType
+    {
+        [Description("SMTP")]
+        SMTP,
+        [Description("SendGrid")]
+        SendGrid,
+        [Description("Microsoft Graph")]
+        MSGraph,
+    }
+
 }

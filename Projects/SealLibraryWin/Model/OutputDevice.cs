@@ -19,6 +19,11 @@ namespace Seal.Model
         public virtual string FullName { get; set; }
 
         /// <summary>
+        /// Returns the default processing script for the output device
+        /// </summary>
+        public abstract string GetProcessingScriptTemplate();
+
+        /// <summary>
         /// Process the report and send it to the device
         /// </summary>
         public abstract void Process(Report report);

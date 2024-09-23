@@ -69,6 +69,7 @@
 		<PackageReference Include="jose-jwt">
 			<Version>5.0.0</Version>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Graph" Version="5.58.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2592.51" />
 		<PackageReference Include="MongoDB.Driver" Version="2.27.0" />
 		<PackageReference Include="MySql.Data" Version="9.0.0" />
@@ -95,6 +96,7 @@
 		<PackageReference Include="System.Net.Http">
 			<Version>4.3.4</Version>
 		</PackageReference>
+		<PackageReference Include="System.Net.Primitives" Version="4.3.1" />
 		<PackageReference Include="System.Runtime.InteropServices.RuntimeInformation">
 			<Version>4.3.0</Version>
 		</PackageReference>
@@ -123,7 +125,8 @@
 		<None Include="..\..\Repository\Security\Providers\LDAP Authentication.cshtml" Link="SecurityProviders\LDAP Authentication.cshtml" />
 		<None Include="..\..\Repository\Security\Providers\No Security.cshtml" Link="SecurityProviders\No Security.cshtml" />
 		<None Include="..\..\Repository\Security\Providers\OpenId.cshtml" Link="SecurityProviders\OpenId.cshtml" />
-		<None Include="..\..\Repository\Sources\TableTemplates\Adomd OLAP MDX.cshtml" Link="TableTemplates\Adomd OLAP MDX.cshtml" />
+    <None Include="..\..\Repository\Security\Providers\Claims Principal.cshtml" Link="SecurityProviders\Claims Principal.cshtml" />
+    <None Include="..\..\Repository\Sources\TableTemplates\Adomd OLAP MDX.cshtml" Link="TableTemplates\Adomd OLAP MDX.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\CSV.cshtml" Link="TableTemplates\CSV.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Mongo DB.cshtml" Link="TableTemplates\Mongo DB.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Database.cshtml" Link="TableTemplates\Database.cshtml" />
