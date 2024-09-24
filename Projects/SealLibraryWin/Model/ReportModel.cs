@@ -1973,7 +1973,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) Sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
 
                         //Limit Max number of records for MySQL
-                        if (Connection.ConnectionType == ConnectionType.MySQL && MaxNumberOfRecords > 0) Sql += $"LIMIT {MaxNumberOfRecords}\r\n";
+                        if ((Connection.ConnectionType == ConnectionType.MySQL || Connection.ConnectionType == ConnectionType.PostgreSQL) && MaxNumberOfRecords > 0) Sql += $"LIMIT {MaxNumberOfRecords}\r\n";
 
                         //Finally inject common restriction values
                         if (!forConversion) Sql = ParseCommonRestrictions(Sql);
