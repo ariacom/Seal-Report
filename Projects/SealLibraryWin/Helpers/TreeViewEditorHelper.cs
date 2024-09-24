@@ -16,6 +16,10 @@ using System.Collections;
 using System.Data.Common;
 using System.Data.Odbc;
 using MongoDB.Driver;
+using System.Data.SqlClient;
+using Npgsql;
+using Oracle.ManagedDataAccess.Client;
+using MySql.Data.MySqlClient;
 
 namespace Seal.Forms
 {
@@ -764,8 +768,68 @@ namespace Seal.Forms
         List<MetaJoin> GetJoins(DbConnection connection, MetaSource source)
         {
             List<MetaJoin> joins = new List<MetaJoin>();
-            if (!(connection is OleDbConnection)) return joins;
-            DataTable schemaTables = ((OleDbConnection)connection).GetOleDbSchemaTable(OleDbSchemaGuid.Foreign_Keys, null);
+
+            DataTable schemaTables = null;
+            if (connection is OleDbConnection)
+            {
+                schemaTables = ((OleDbConnection)connection).GetOleDbSchemaTable(OleDbSchemaGuid.Foreign_Keys, null);
+            }
+            else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection)
+            {
+                //SQLServer
+                var sql = @"SELECT fk.name AS ForeignKeyName, tp.name AS PK_TABLE_NAME, cp.name AS PK_COLUMN_NAME, tr.name AS FK_TABLE_NAME, cr.name AS FK_COLUMN_NAME
+FROM sys.foreign_keys fk
+JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id
+JOIN sys.tables tp ON fkc.referenced_object_id = tp.object_id
+JOIN sys.columns cp ON fkc.referenced_object_id = cp.object_id AND fkc.referenced_column_id = cp.column_id
+JOIN sys.tables tr ON fkc.parent_object_id = tr.object_id
+JOIN sys.columns cr ON fkc.parent_object_id = cr.object_id AND fkc.parent_column_id = cr.column_id";
+
+                DbDataAdapter adapter = null;
+                schemaTables = new DataTable();
+                if (connection is SqlConnection) adapter = new SqlDataAdapter(sql, (SqlConnection)connection);
+                else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+            else if (connection is MySqlConnection)
+            {
+                //MySQL
+                var sql = @"SELECT TABLE_SCHEMA as PK_TABLE_SCHEMA, TABLE_SCHEMA as FK_TABLE_SCHEMA, TABLE_NAME AS FK_TABLE_NAME, COLUMN_NAME AS FK_COLUMN_NAME, CONSTRAINT_NAME AS ForeignKey, REFERENCED_TABLE_NAME AS PK_TABLE_NAME, REFERENCED_COLUMN_NAME AS PK_COLUMN_NAME
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE REFERENCED_TABLE_NAME IS NOT NULL";
+                schemaTables = new DataTable();
+                DbDataAdapter adapter = new MySqlDataAdapter(sql, (MySqlConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+            else if (connection is OracleConnection)
+            {
+                //Oracle
+                var sql = @"SELECT ac1.OWNER as PK_TABLE_SCHEMA, ac1.OWNER as FK_TABLE_SCHEMA, ac1.TABLE_NAME AS FK_TABLE_NAME, acc1.COLUMN_NAME AS FK_COLUMN_NAME, ac2.TABLE_NAME AS PK_TABLE_NAME, acc2.COLUMN_NAME AS PK_COLUMN_NAME
+FROM ALL_CONSTRAINTS ac1
+JOIN ALL_CONS_COLUMNS acc1 ON ac1.CONSTRAINT_NAME = acc1.CONSTRAINT_NAME AND ac1.OWNER = acc1.OWNER
+JOIN ALL_CONSTRAINTS ac2 ON ac1.R_CONSTRAINT_NAME = ac2.CONSTRAINT_NAME AND ac1.OWNER = ac2.OWNER
+JOIN ALL_CONS_COLUMNS acc2 ON ac2.CONSTRAINT_NAME = acc2.CONSTRAINT_NAME AND ac2.OWNER = acc2.OWNER AND acc1.POSITION = acc2.POSITION
+WHERE ac1.CONSTRAINT_TYPE = 'R'
+";
+                schemaTables = new DataTable();
+                DbDataAdapter adapter = new OracleDataAdapter(sql, (OracleConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+            else if (connection is NpgsqlConnection)
+            {
+                //Postgres
+                var sql = @"SELECT tc.table_name AS PK_TABLE_NAME, kcu.column_name AS PK_COLUMN_NAME, ccu.table_name AS FK_TABLE_NAME, ccu.column_name AS FK_COLUMN_NAME
+FROM information_schema.table_constraints AS tc
+JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+WHERE tc.constraint_type = 'FOREIGN KEY';
+";
+                schemaTables = new DataTable();
+                DbDataAdapter adapter = new NpgsqlDataAdapter(sql, (NpgsqlConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+
+            if (schemaTables is null) return joins;
 
             foreach (DataRow row in schemaTables.Rows)
             {
