@@ -20,9 +20,6 @@ using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
-using MySqlX.XDevAPI.Common;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.EMMA;
 using Npgsql;
 
 #if WINDOWS
@@ -99,6 +96,8 @@ namespace Seal.Model
                 GetProperty("UseRawSQL").SetIsBrowsable(IsSQLModel);
 
                 GetProperty("JoinsToSelect").SetIsBrowsable(!IsSQLModel);
+                GetProperty("UseNestedJoins").SetIsBrowsable(!IsSQLModel && !IsLINQ);
+                GetProperty("FirstJoinGUID").SetIsBrowsable(!IsSQLModel);
 
                 GetProperty("HelperViewJoins").SetIsBrowsable(!IsSQLModel);
                 GetProperty("HelperViewJoins").SetIsReadOnly(true);
@@ -506,15 +505,6 @@ namespace Seal.Model
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != -1; }
 
         /// <summary>
-        /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
-        /// </summary>
-#if WINDOWS
-        [DefaultValue(2000)]
-        [Category("Join preferences"), DisplayName("Build timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL or LINQ Query (may be used if many joins are defined)."), Id(11, 4)]
-#endif
-        public int BuildTimeout { get; set; } = 2000;
-
-        /// <summary>
         /// List of Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used.
         /// </summary>
         public List<string> JoinsToUse { get; set; } = new List<string>();
@@ -535,10 +525,45 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// If true, joins will be nested (and not sequential) in the generated FROM clause. This may give different results if OUTER joins are involved.
+        /// </summary>
+#if WINDOWS
+        [Category("Join preferences"), DisplayName("Use nested joins"), Description("If true, joins will be nested (and not sequential) in the generated FROM clause. This may give different results if OUTER joins are involved."), Id(3, 4)]
+        [DefaultValue(false)]
+#endif
+        public bool UseNestedJoins
+        {
+            get; set;
+        } = false;
+
+        private string _firstJoinGUID;
+        /// <summary>
+        /// If specified and if possible, force the first join used to choose the dynamic SQL joins path used to perform the query.
+        /// </summary>
+#if WINDOWS
+        [Category("Join preferences"), DisplayName("First join to use"), Description("If specified and if possible, force the first join used to choose the dynamic SQL joins path used to perform the query."), Id(4, 4)]
+        [TypeConverter(typeof(MetaJoinConverter))]
+#endif
+        public string FirstJoinGUID
+        {
+            get { return _firstJoinGUID; }
+            set { _firstJoinGUID = value; }
+        }
+
+        /// <summary>
+        /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(2000)]
+        [Category("Join preferences"), DisplayName("Build timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL or LINQ Query (may be used if many joins are defined)."), Id(5, 4)]
+#endif
+        public int BuildTimeout { get; set; } = 2000;
+
+        /// <summary>
         /// Helper to view joins evaluated for the model
         /// </summary>
 #if WINDOWS
-        [Category("Join preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4, 4)]
+        [Category("Join preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(10, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
 #endif
         public string HelperViewJoins
@@ -1705,7 +1730,7 @@ model.ResultTable = query2.CopyToDataTable2();
         /// Description of the joins chosen to build the SQL
         /// </summary>
         [XmlIgnore]
-        public StringBuilder JoinPaths = null;
+        public StringBuilder JoinLogs = null;
 
         void filterLINQFromTables()
         {
@@ -1941,10 +1966,9 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (!joinsOK)
                     {
                         var errMessage = "Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.";
-                        if (JoinPaths != null) JoinPaths.AppendLine("\r\n" + errMessage);
+                        if (JoinLogs != null) JoinLogs.AppendLine("\r\n" + errMessage);
                         throw new Exception(errMessage);
                     }
-
 
                     if (!IsLINQ)
                     {
@@ -2057,7 +2081,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     execFromClause.Append(FromTables[0].LINQExpressionName + "\r\n");
                 }
-                if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
+                if (JoinLogs != null) JoinLogs.AppendLine("Only one table: No join required.");
             }
             else
             {
@@ -2118,7 +2142,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 _buildTimer = DateTime.Now;
                 _directCount = 0;
                 _indirectCount = 0;
-                _bestJoinsCount = joinsToUse.Count;
+                _bestJoinsCount = joinsToUse.Count + 1;
 
                 foreach (var leftTable in FromTables)
                 {
@@ -2134,23 +2158,31 @@ model.ResultTable = query2.CopyToDataTable2();
                 }
                 Debug.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
 
-                if (JoinPaths != null)
+                if (JoinLogs != null)
                 {
-                    JoinPaths.AppendFormat("Time elapsed after Direct Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                    JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
+                    JoinLogs.AppendFormat("Time elapsed after Direct Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                    JoinLogs.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
                     int index = 1;
                     foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
                     {
-                        JoinPaths.AppendFormat("Direct Join {0}: ", index++);
-                        path.print(JoinPaths);
+                        JoinLogs.AppendFormat("Direct Join {0}: ", index++);
+                        path.print(JoinLogs);
                     }
                 }
 
                 //Choose the path having all tables, then preferred, then less joins...
-                if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
+                if (bestPath == null && !string.IsNullOrEmpty(FirstJoinGUID))
+                {
+                    bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0 && i.joins.FirstOrDefault()?.GUID == FirstJoinGUID).OrderBy(i => i.priority).FirstOrDefault();
+                    if (bestPath != null && JoinLogs != null) JoinLogs.Append("Forcing path starting with selected join\r\n");
+                }
+                if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.priority).FirstOrDefault();
+
                 bool checkIndirectJoin = false;
                 if (bestPath == null) checkIndirectJoin = true;
+                else if (!string.IsNullOrEmpty(FirstJoinGUID) && bestPath.startTable.GUID == FirstJoinGUID) checkIndirectJoin = false; //we force this path
                 else if (bestPath.joins.Count > tablesToUse.Count - 1) checkIndirectJoin = true;
+                else if (bestPath.joins.Exists(i => i.JoinType == JoinType.LeftOuter || i.JoinType == JoinType.RightOuter)) checkIndirectJoin = true;
                 // otherwise it means that a direct join with a minimum joins have been found, no need to check indirect joins 
 
                 if (checkIndirectJoin)
@@ -2165,7 +2197,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         {
                             if (newPath.joins.Count >= _bestJoinsCount) break;
                             //search a path starting from RightTable and finishing by a remaining table
-                            foreach (var path2 in resultPaths.OrderBy(i => i.tablesToUse.Count).Where(i => i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)))
+                            foreach (var path2 in resultPaths.OrderBy(i => i.tablesToUse.Count).Where(i => /*i.startTable == join.RightTable &&*/ path.tablesToUse.Contains(i.finalTable)))
                             {
                                 if (newPath.joins.Count >= _bestJoinsCount) break;
                                 //ok add joins to the newPath and remove tables to use
@@ -2187,6 +2219,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 if (newPath.tablesToUse.Count == 0)
                                 {
                                     //got one
+                                    newPath.startTable = newPath.joins.First().LeftTable;
                                     resultPaths2.Add(newPath);
 
                                     if (newPath.joins.Count < _bestJoinsCount)
@@ -2205,7 +2238,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             var bestPathIndirect = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
                             if (bestPath != null || bestPathIndirect != null)
                             {
-                                if (JoinPaths != null) JoinPaths.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                                if (JoinLogs != null) JoinLogs.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
                                 break;
                             }
                         }
@@ -2213,35 +2246,57 @@ model.ResultTable = query2.CopyToDataTable2();
 
                     Debug.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
 
-                    if (JoinPaths != null)
+                    if (JoinLogs != null)
                     {
-                        JoinPaths.AppendFormat("\r\nTime elapsed after Indirect Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                        JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
+                        JoinLogs.AppendFormat("\r\nTime elapsed after Indirect Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                        JoinLogs.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
                         int index = 1;
                         foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
                         {
-                            JoinPaths.AppendFormat("Indirect Join {0}: ", index++);
-                            path.print(JoinPaths);
+                            JoinLogs.AppendFormat("Indirect Join {0}: ", index++);
+                            path.print(JoinLogs);
                         }
                     }
 
-                    var bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
-                    if (bestPath != null && bestPath2 != null)
+                    JoinPath bestPath2 = null;
+                    if (!string.IsNullOrEmpty(FirstJoinGUID))
                     {
-                        //Choose here between direct best path or indirect best path
-                        if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
+                        bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0 && i.joins.FirstOrDefault()?.GUID == FirstJoinGUID).OrderBy(i => i.priority).FirstOrDefault();
+                        //we force this path
+                        if (bestPath2 != null)
+                        {
+                            if (JoinLogs != null) JoinLogs.Append("Forcing path starting with selected join\r\n");
+                            bestPath = bestPath2;
+                        }
                     }
-                    else if (bestPath == null)
+                    if (bestPath2 == null)
                     {
-                        bestPath = bestPath2;
+                        bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.priority).FirstOrDefault();
+                        if (bestPath != null && bestPath2 != null)
+                        {
+                            //Choose here between direct best path or indirect best path
+                            if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
+                            else if (bestPath2.joins.Count == bestPath.joins.Count)
+                            {
+                                //here we choose the one which does not mix left outer and right outer
+                                if (bestPath.hasLeftAndRightJoins && !bestPath2.hasLeftAndRightJoins)
+                                {
+                                    bestPath = bestPath2;
+                                }
+                            }
+                        }
+                        else if (bestPath == null)
+                        {
+                            bestPath = bestPath2;
+                        }
                     }
                 }
 
-                if (JoinPaths != null && bestPath != null)
+                if (JoinLogs != null && bestPath != null)
                 {
-                    JoinPaths.AppendFormat("\r\nTime elapsed: {0:F0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                    JoinPaths.AppendLine("\r\nAND THE WINNER IS:");
-                    bestPath.print(JoinPaths);
+                    JoinLogs.AppendFormat("\r\nTime elapsed: {0:F0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                    JoinLogs.AppendLine("\r\nAND THE WINNER IS:");
+                    bestPath.print(JoinLogs);
                 }
 
                 //Handle the best path
@@ -2267,80 +2322,133 @@ model.ResultTable = query2.CopyToDataTable2();
                         execFromClause.Append(bestPath.currentTable.LINQExpressionName + "\r\n");
                     }
 
-                    if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
+                    if (JoinLogs != null) JoinLogs.AppendLine("Only one table: No join required.");
                 }
                 else
                 {
-                    string lastTable = null;
+                    string joinSql = null;
                     List<MetaTable> tablesUsed = new List<MetaTable>();
                     var joins = bestPath.joins;
                     //Reverse join orders for LINQ
                     if (IsLINQ) joins.Reverse();
 
-                    for (int i = joins.Count - 1; i >= 0; i--)
+                    if (!IsLINQ && !UseNestedJoins)
                     {
-                        MetaJoin join = joins[i];
-                        if (string.IsNullOrEmpty(lastTable))
+                        if (JoinLogs != null) JoinLogs.Append("Using sequential joins.");
+                        for (int i = 0; i < joins.Count; i++)
                         {
-                            if (!IsLINQ)
+                            MetaJoin join = joins[i];
+                            if (string.IsNullOrEmpty(joinSql))
                             {
                                 string CTE2 = "", name2 = "";
-                                join.RightTable.GetExecSQLName(ref CTE2, ref name2);
+                                join.LeftTable.GetExecSQLName(ref CTE2, ref name2);
                                 execCTEClause = Helper.AddCTE(execCTEClause, CTE2);
-                                lastTable = name2 + "\r\n";
-                                tablesUsed.Add(join.RightTable);
+                                joinSql = name2 + "\r\n";
+                                tablesUsed.Add(join.LeftTable);
+                            }
+
+                            //check if tables are already in the join
+                            var rightTable = join.RightTable;
+                            if (tablesUsed.Contains(rightTable)) rightTable = join.LeftTable;
+                            if (tablesUsed.Contains(rightTable)) continue;
+
+                            string joinClause = join.Clause.Trim();
+                            //For outer join, add the extra restriction in the ON clause -> hopefully they are not defined as bi-directional
+                            MetaTable extraWhereTable = null;
+                            if (join.JoinType == JoinType.LeftOuter && !string.IsNullOrEmpty(join.RightTable.WhereSQL)) extraWhereTable = join.RightTable;
+                            else if (join.JoinType == JoinType.RightOuter && !string.IsNullOrWhiteSpace(join.LeftTable.WhereSQL)) extraWhereTable = join.LeftTable;
+                            else if (!string.IsNullOrWhiteSpace(rightTable.WhereSQL) && !extraWhereTables.Contains(rightTable))
+                            {
+                                extraWhereTables.Add(rightTable);
+                            }
+
+                            if (extraWhereTable != null)
+                            {
+                                string where = RazorHelper.CompileExecute(extraWhereTable.WhereSQL, extraWhereTable);
+                                if (!string.IsNullOrEmpty(where)) joinClause += " AND " + where;
+                                extraWhereTables.Remove(extraWhereTable);
+                            }
+
+                            //finally build the clause
+                            string CTE = "", name = "";
+                            rightTable.GetExecSQLName(ref CTE, ref name);
+                            execCTEClause = Helper.AddCTE(execCTEClause, CTE);
+
+                            if (join.JoinType != JoinType.Cross) joinSql = $"{joinSql}{join.SQLJoinType} {name} ON {joinClause}\r\n";
+                            else joinSql = $"{joinSql}{join.SQLJoinType} {name}\r\n";
+
+                            tablesUsed.Add(rightTable);
+                        }
+                    }
+                    else
+                    {
+                        if (JoinLogs != null) JoinLogs.Append("Using nested joins.");
+                        //nested joins
+                        for (int i = joins.Count - 1; i >= 0; i--)
+                        {
+                            MetaJoin join = joins[i];
+                            if (string.IsNullOrEmpty(joinSql))
+                            {
+                                if (!IsLINQ)
+                                {
+                                    string CTE2 = "", name2 = "";
+                                    join.RightTable.GetExecSQLName(ref CTE2, ref name2);
+                                    execCTEClause = Helper.AddCTE(execCTEClause, CTE2);
+                                    joinSql = name2 + "\r\n";
+                                    tablesUsed.Add(join.RightTable);
+                                }
+                                else
+                                {
+                                    joinSql = join.LeftTable.LINQExpressionName + "\r\n";
+                                }
+                            }
+
+                            //check if tables are already in the join
+                            var leftTable = join.LeftTable;
+                            if (tablesUsed.Contains(leftTable)) leftTable = join.RightTable;
+                            if (tablesUsed.Contains(leftTable)) continue;
+
+                            string joinClause = join.Clause.Trim();
+                            //For outer join, add the extra restriction in the ON clause -> hopefully they are not defined as bi-directional
+                            MetaTable extraWhereTable = null;
+                            if (join.JoinType == JoinType.LeftOuter && !string.IsNullOrEmpty(join.RightTable.WhereSQL)) extraWhereTable = join.RightTable;
+                            else if (join.JoinType == JoinType.RightOuter && !string.IsNullOrWhiteSpace(join.LeftTable.WhereSQL)) extraWhereTable = join.LeftTable;
+                            else if (!string.IsNullOrWhiteSpace(leftTable.WhereSQL) && !extraWhereTables.Contains(leftTable))
+                            {
+                                extraWhereTables.Add(leftTable);
+                            }
+
+                            if (extraWhereTable != null)
+                            {
+                                string where = RazorHelper.CompileExecute(extraWhereTable.WhereSQL, extraWhereTable);
+                                if (!string.IsNullOrEmpty(where)) joinClause += " AND " + where;
+                                extraWhereTables.Remove(extraWhereTable);
+                            }
+
+                            //finally build the clause
+                            if (!IsLINQ)
+                            {
+                                string CTE = "", name = "";
+                                leftTable.GetExecSQLName(ref CTE, ref name);
+                                execCTEClause = Helper.AddCTE(execCTEClause, CTE);
+
+                                if (join.JoinType != JoinType.Cross) joinSql = string.Format("\r\n({0} {1} {2} ON {3})\r\n", name, join.SQLJoinType, joinSql, joinClause);
+                                else joinSql = string.Format("\r\n({0} {1} {2})\r\n", name, join.SQLJoinType, joinSql);
                             }
                             else
                             {
-                                lastTable = join.LeftTable.LINQExpressionName + "\r\n";
+                                joinSql = string.Format("{0}join {1} on\r\n{2}\r\n", joinSql, join.RightTable.LINQExpressionName, joinClause);
                             }
+
+                            tablesUsed.Add(leftTable);
                         }
-
-                        //check if tables are already in the join
-                        var leftTable = join.LeftTable;
-                        if (tablesUsed.Contains(leftTable)) leftTable = join.RightTable;
-                        if (tablesUsed.Contains(leftTable)) continue;
-
-                        string joinClause = join.Clause.Trim();
-                        //For outer join, add the extra restriction in the ON clause -> hopefully they are not defined as bi-directional
-                        MetaTable extraWhereTable = null;
-                        if (join.JoinType == JoinType.LeftOuter && !string.IsNullOrEmpty(join.RightTable.WhereSQL)) extraWhereTable = join.RightTable;
-                        else if (join.JoinType == JoinType.RightOuter && !string.IsNullOrWhiteSpace(join.LeftTable.WhereSQL)) extraWhereTable = join.LeftTable;
-                        else if (!string.IsNullOrWhiteSpace(leftTable.WhereSQL) && !extraWhereTables.Contains(leftTable))
-                        {
-                            extraWhereTables.Add(leftTable);
-                        }
-
-                        if (extraWhereTable != null)
-                        {
-                            string where = RazorHelper.CompileExecute(extraWhereTable.WhereSQL, extraWhereTable);
-                            if (!string.IsNullOrEmpty(where)) joinClause += " AND " + where;
-                            extraWhereTables.Remove(extraWhereTable);
-                        }
-
-                        //finally build the clause
-                        if (!IsLINQ)
-                        {
-                            string CTE = "", name = "";
-                            leftTable.GetExecSQLName(ref CTE, ref name);
-                            execCTEClause = Helper.AddCTE(execCTEClause, CTE);
-
-                            if (join.JoinType != JoinType.Cross) lastTable = string.Format("\r\n({0} {1} {2} ON {3})\r\n", name, join.SQLJoinType, lastTable, joinClause);
-                            else lastTable = string.Format("\r\n({0} {1} {2})\r\n", name, join.SQLJoinType, lastTable);
-                        }
-                        else
-                        {
-                            lastTable = string.Format("{0}join {1} on\r\n{2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
-                        }
-
-                        tablesUsed.Add(leftTable);
                     }
-                    execFromClause = new StringBuilder(lastTable);
+                    execFromClause = new StringBuilder(joinSql);
                 }
-                if (JoinPaths != null)
+                if (JoinLogs != null)
                 {
-                    JoinPaths.Append("\r\n" + (IsLINQ ? "LINQ" : "SQL") + " Generated:\r\n");
-                    JoinPaths.Append(execFromClause.ToString());
+                    JoinLogs.Append("\r\n" + (IsLINQ ? "LINQ" : "SQL") + " Generated:\r\n");
+                    JoinLogs.Append(execFromClause.ToString());
                 }
             }
 
@@ -2372,6 +2480,21 @@ model.ResultTable = query2.CopyToDataTable2();
             public List<MetaJoin> joins = new List<MetaJoin>();
             public List<MetaTable> tablesToUse;
             public Dictionary<string, MetaJoin[]> joinsToUse;
+            public bool hasLeftAndRightJoins
+            {
+                get
+                {
+                    return joins.Exists(i => i.JoinType == JoinType.RightOuter) && joins.Exists(i => i.JoinType == JoinType.LeftOuter);
+                }
+            }
+            public int priority
+            {
+                get
+                {
+                    //priority first for path having less joins involved and no mix left/right
+                    return 100 * joins.Count + (hasLeftAndRightJoins ? 1 : 0);
+                }
+            }
 
             public string print()
             {
@@ -2419,7 +2542,7 @@ model.ResultTable = query2.CopyToDataTable2();
             {
                 if (resultPath.Exists(i => i.tablesToUse.Count == 0))
                 {
-                    if (JoinPaths != null) JoinPaths.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                    if (JoinLogs != null) JoinLogs.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
                     return;
                 }
             }

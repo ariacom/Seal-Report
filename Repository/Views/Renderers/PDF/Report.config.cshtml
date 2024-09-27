@@ -21,4 +21,5 @@
                 Enums = (from i in typeof(QuestPDF.Helpers.PageSizes).GetProperties() select i.Name).ToArray()
             });
     Template.Parameters.Add(new Parameter() { Name = "page_orientation", DisplayName = "Page orientation", Value="portrait", Description = "Define the pages orientation.", Enums = new string[] { "portrait|Portrait", "landscape|Landscape" } });
+    Template.Parameters.Add(new Parameter() { Name = "force_charts", DisplayName = "Charts: Force ScottPlot", BoolValue = false, Description = "If true, charts are converted to ScottPlot charts for a better rendering." });
 }

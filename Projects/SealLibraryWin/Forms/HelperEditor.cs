@@ -422,21 +422,21 @@ namespace Seal.Forms
                     {
                         try
                         {
-                            _model.JoinPaths = new StringBuilder();
+                            _model.JoinLogs = new StringBuilder();
                             _model.BuildQuery();
 
                             var frm = new ExecutionForm(null);
                             frm.Text = "List of Joins";
                             frm.cancelToolStripButton.Visible = false;
                             frm.pauseToolStripButton.Visible = false;
-                            frm.logTextBox.Text = _model.JoinPaths.ToString();
+                            frm.logTextBox.Text = _model.JoinLogs.ToString();
                             frm.logTextBox.SelectionStart = 0;
                             frm.logTextBox.SelectionLength = 0;
                             frm.ShowDialog();
                         }
                         finally
                         {
-                            _model.JoinPaths = null;
+                            _model.JoinLogs = null;
                         }
 
                     }

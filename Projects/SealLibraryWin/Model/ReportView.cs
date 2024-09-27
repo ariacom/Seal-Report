@@ -1371,7 +1371,7 @@ namespace Seal.Model
                     {
                         //template
                         key = $"{GetType().Name}_{renderer.Template.RendererType}_{Template.Name}";
-                        lastModification = Template.LastModification;
+                        lastModification = renderer.Template.LastModification;
                     }
                     else
                     {
