@@ -3766,11 +3766,6 @@
             "Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout.
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportModel.BuildTimeout">
-            <summary>
-            Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
-            </summary>
-        </member>
         <member name="P:Seal.Model.ReportModel.JoinsToUse">
             <summary>
             List of Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used.
@@ -3779,6 +3774,21 @@
         <member name="P:Seal.Model.ReportModel.JoinsToSelect">
             <summary>
             Helper to select Join preferences
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.UseNestedJoins">
+            <summary>
+            If true, joins will be nested (and not sequential) in the generated FROM clause. This may give different results if OUTER joins are involved.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.FirstJoinGUID">
+            <summary>
+            If specified and if possible, force the first join used to choose the dynamic SQL joins path used to perform the query.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.BuildTimeout">
+            <summary>
+            Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.HelperViewJoins">
@@ -4216,7 +4226,7 @@
             Add Sub-Reports elements to the SQL
             </summary>
         </member>
-        <member name="F:Seal.Model.ReportModel.JoinPaths">
+        <member name="F:Seal.Model.ReportModel.JoinLogs">
             <summary>
             Description of the joins chosen to build the SQL
             </summary>

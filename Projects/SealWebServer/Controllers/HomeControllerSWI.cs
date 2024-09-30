@@ -967,7 +967,7 @@ namespace SealWebServer.Controllers
                 return Json(new { 
                     SWIVersion = Repository.ProductVersion, 
                     SRVersion = Repository.ProductVersion, 
-                    Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "Free MIT Community License (For non-profit usage or small businesses)" : Repository.Instance.LicenseText
+                    Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "Free MIT Community License\r\nNon-profit usage or small businesses" : Repository.Instance.LicenseText
                 });
             }
             catch (Exception ex)

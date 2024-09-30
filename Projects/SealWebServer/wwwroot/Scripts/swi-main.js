@@ -61,6 +61,10 @@ var SWIMain = /** @class */ (function () {
         _gateway.GetVersions(function (data) {
             $("#brand-id").attr("title", SWIUtil.tr2("Web Interface Version") + " : " + data.SWIVersion + "\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\n" + data.Info);
             $("#footer-version").text(data.SWIVersion);
+            if (!data.Info.includes("Serial n")) {
+                $("#nav_cr").html(data.Info.replace("\r\n", "<br>"));
+                $("#nav_cr").show();
+            }
         });
         _gateway.GetUserProfile(function (data) {
             if (data.authenticated != null && data.authenticated == false) {

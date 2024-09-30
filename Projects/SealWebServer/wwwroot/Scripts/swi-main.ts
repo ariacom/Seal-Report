@@ -82,6 +82,10 @@ class SWIMain {
             function (data) {
                 $("#brand-id").attr("title", SWIUtil.tr2("Web Interface Version") + " : " + data.SWIVersion + "\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\n" + data.Info);
                 $("#footer-version").text(data.SWIVersion);
+                if (!data.Info.includes("Serial n")) {
+                    $("#nav_cr").html(data.Info.replace("\r\n","<br>"));
+                    $("#nav_cr").show();
+                }
             }
         );
 
@@ -130,6 +134,7 @@ class SWIMain {
             _main._newWindow = true;
             _main._reportIcon = null;
         }
+
 
         //Reset init state
         $("#menu-main-button").show();

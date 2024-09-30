@@ -184,9 +184,9 @@ namespace Seal
             BringToFront();
             Activate();
 
-            if (Repository.Instance.LicenseInvalid)
+            if (Repository.Instance.LicenseInvalid || string.IsNullOrWhiteSpace(Repository.Instance.LicenseText))
             {
-                AboutBoxForm frm = new AboutBoxForm();
+                AboutBoxForm frm = new AboutBoxForm(true);
                 frm.ShowDialog(this);
             }
         }
