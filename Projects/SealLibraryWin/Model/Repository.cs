@@ -931,7 +931,7 @@ namespace Seal.Model
                 }
                 catch (Exception emailEx)
                 {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Try 1: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : ""));
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Try 1: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : "")));
                     try
                     {
                         if (body.Length > 10000) body = body.Substring(1, 10000); //Body is perhaps too big
@@ -940,7 +940,7 @@ namespace Seal.Model
                     }
                     catch (Exception emailEx2)
                     {
-                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Try 2: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx2.Message + (emailEx2.InnerException != null ? "\r\n" + emailEx2.InnerException.Message : ""));
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Try 2: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx2.Message + (emailEx2.InnerException != null ? "\r\n" + emailEx2.InnerException.Message : "")));
                     }
                 }
             }
@@ -1378,6 +1378,7 @@ namespace Seal.Model
 
         public void FlushTranslationUsage()
         {
+            /*
             if (Translations.Count > 0)
             {
                 if (UnkownTranslations.Count > 0)
@@ -1396,7 +1397,7 @@ namespace Seal.Model
                 }
                 Debug.WriteLine("\r\nTranslations usage: consider to remove translations not used from the Translations.csv file:");
                 foreach (var translation in Translations.Values.OrderBy(i => i.Usage)) Debug.WriteLine(string.Format("Used {0} time(s): (Context:{1}) {2}", translation.Usage, translation.Context, translation.Reference));
-            }
+            }*/
         }
 #endif
 

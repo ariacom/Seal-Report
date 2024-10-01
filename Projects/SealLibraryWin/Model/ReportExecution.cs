@@ -2094,7 +2094,7 @@ namespace Seal.Model
                     InitReportSchedule(scheduleGUID, out report, out schedule);
                 }
 
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName);
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName));
                 int retries = schedule.ErrorNumberOfRetries + 1;
                 bool isFirst = true;
                 while (--retries >= 0)
@@ -2134,7 +2134,7 @@ namespace Seal.Model
                     {
                         if (useSealScheduler && !SealReportScheduler.Running)
                         {
-                            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Schedule '{0}': Cancelling report execution...", schedule.Name);
+                            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Schedule '{0}': Cancelling report execution...", schedule.Name));
                             report.CancelExecution();
                             break;
                         }
@@ -2187,7 +2187,7 @@ namespace Seal.Model
                     }
                     else
                     {
-                        Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Schedule '{0}' has been executed\r\nReport '{1}", schedule.Name, report.FilePath);
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Schedule '{0}' has been executed\r\nReport '{1}", schedule.Name, report.FilePath));
 
                         if (!string.IsNullOrEmpty(schedule.NotificationEmailTo) && !report.Cancel)
                         {
@@ -2204,7 +2204,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Error got when executing schedule '{0}':\r\n{1}\r\n\r\n{2}", scheduleGUID, ex.Message, ex.StackTrace);
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Error got when executing schedule '{0}':\r\n{1}\r\n\r\n{2}", scheduleGUID, ex.Message, ex.StackTrace));
             }
         }
 

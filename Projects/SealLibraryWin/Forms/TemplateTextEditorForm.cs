@@ -13,7 +13,6 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 using System.ComponentModel;
-using DocumentFormat.OpenXml.InkML;
 
 namespace Seal.Forms
 {
@@ -102,7 +101,37 @@ namespace Seal.Forms
                 mainTimer.Enabled = false;
                 testRenderingMenuItem.Enabled = false;
                 testExecutionMenuItem.Enabled = false;
-                if (ContextInstance != null) ReportTester?.TestExecute(ContextInstance, !string.IsNullOrEmpty(ContextPropertyName) ? ContextPropertyName : ContextPropertyDescriptor.Name, textBox.Text, sender == testRenderingMenuItem);
+                if (ContextInstance != null)
+                {
+                    var instance = ContextInstance;
+                    var propertyName = !string.IsNullOrEmpty(ContextPropertyName) ? ContextPropertyName : ContextPropertyDescriptor.Name;
+                    var value = textBox.Text;
+
+                    var functionsEditor = ContextInstance as FunctionsEditor;
+                    if (functionsEditor != null)
+                    {
+                        //Handle case if edited in functions editor
+                        if (functionsEditor.SourceObject is ReportTask)
+                        {
+                            var task = (ReportTask)functionsEditor.SourceObject;
+                            value = functionsEditor.ReplaceFunction(task.Script, ContextPropertyDescriptor.DisplayName, value);
+                            propertyName = "Script";
+                            instance = task;
+                        }
+                        else if (functionsEditor.SourceObject is MetaTable)
+                        {
+                            var metaTable = (MetaTable)functionsEditor.SourceObject;
+//                            value = functionsEditor.ReplaceFunction(metaTable.LoadScript, propertyName, task.Script);
+                            propertyName = "Script";
+
+                            //Save in the MetaTable Load Script
+                            //                    var metaTable = (MetaTable)frm.ObjectForCheckSyntax;
+                            //                  metaTable.LoadScript = ((FunctionsEditor)context.Instance).ReplaceFunction(metaTable.LoadScript, context.PropertyDescriptor.DisplayName, value.ToString());
+                        }
+                    }
+
+                    ReportTester?.TestExecute(instance, propertyName, value, sender == testRenderingMenuItem);
+                }
                 mainTimer.Enabled = true;
             }
         }

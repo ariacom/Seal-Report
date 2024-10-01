@@ -671,17 +671,9 @@ namespace Seal.Helpers
             Console.WriteLine(ex.Message);
         }
 
-        public static void WriteLogEntry(string source, EventLogEntryType type, string message, params object[] args)
+        public static void WriteLogEntry(string source, EventLogEntryType type, string message)
         {
             string msg = message;
-            try
-            {
-                if (args.Length != 0) msg = string.Format(message, args);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
             try
             {
                 Console.WriteLine(msg);
@@ -713,9 +705,9 @@ namespace Seal.Helpers
             }
         }
 
-        public static void WriteLogEntryScheduler(EventLogEntryType type, string message, params object[] args)
+        public static void WriteLogEntryScheduler(EventLogEntryType type, string message)
         {
-            WriteLogEntry(TaskSchedulerEntry, type, message, args);
+            WriteLogEntry(TaskSchedulerEntry, type, message);
         }
         public static void WriteEventLogEntry(string source, Exception ex)
         {

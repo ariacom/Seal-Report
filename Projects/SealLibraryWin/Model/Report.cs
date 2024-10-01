@@ -426,7 +426,10 @@ namespace Seal.Model
                         {
                             fileName = string.Format(fileName, DateTime.Now);
                         }
-                        catch { }
+                        catch(Exception ex) 
+                        {
+                            Helper.WriteLogException("ResultFileName", ex);
+                        }
                     }
                 }
                 if (string.IsNullOrEmpty(fileName)) fileName = "result";
