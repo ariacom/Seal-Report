@@ -6438,6 +6438,11 @@
             Dynamic assemblies folder
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.DynamicsWinFolder">
+            <summary>
+            Dynamic assemblies folder for Windows applications
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.RazorCacheFolder">
             <summary>
             Razor cache folder for compiled assemblies

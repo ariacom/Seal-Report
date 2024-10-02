@@ -52,8 +52,6 @@ namespace Seal.Model
         public const string EnumFilterKeyword = "{EnumFilter";
         public const string EnumValuesKeyword = "{EnumValues_";
         public const string JoinAutoName = "<AutomaticJoinName>";
-        public const string SealConverterDll = "SealConverter.dll";
-        public const string SealConverterWinDll = "SealConverterWin.dll";
 
 
         //appsettings.json
@@ -541,10 +539,7 @@ namespace Seal.Model
                     {
                         try
                         {
-                            if (Path.GetFileName(assembly) != SealConverterDll && Path.GetFileName(assembly) != SealConverterWinDll)
-                            {
-                                Assembly.LoadFrom(assembly);
-                            }
+                            Assembly.LoadFrom(assembly);
                         }
                         catch (Exception ex)
                         {
@@ -563,11 +558,12 @@ namespace Seal.Model
                 {
                     //Load extra dynamic assemblies
                     var csFiles = Directory.GetFiles(DynamicsFolder, "*.cs");
+                    var dynamicFolder = Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsFolder;
                     foreach (var csFile in csFiles)
                     {
                         try
                         {
-                            var dllPath = Path.Combine(DynamicsFolder, Path.GetFileNameWithoutExtension(csFile) + ".dll");
+                            var dllPath = Path.Combine(dynamicFolder, Path.GetFileNameWithoutExtension(csFile) + ".dll");
                             if (File.GetLastWriteTime(csFile) > File.GetLastWriteTime(dllPath))
                             {
                                 //Compile the file and save the dll
@@ -666,6 +662,7 @@ namespace Seal.Model
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
                 if (!Directory.Exists(AssembliesFolder)) Directory.CreateDirectory(AssembliesFolder);
+                if (!Directory.Exists(DynamicsWinFolder)) Directory.CreateDirectory(DynamicsWinFolder);
                 if (!Directory.Exists(DynamicsFolder)) Directory.CreateDirectory(DynamicsFolder);
                 if (!Directory.Exists(RazorCacheFolder)) Directory.CreateDirectory(RazorCacheFolder);
                 if (!Directory.Exists(RazorCacheWinFolder)) Directory.CreateDirectory(RazorCacheWinFolder);
@@ -816,6 +813,17 @@ namespace Seal.Model
             get
             {
                 return Path.Combine(AssembliesFolder, "Dynamics");
+            }
+        }
+
+        /// <summary>
+        /// Dynamic assemblies folder for Windows applications
+        /// </summary>
+        public string DynamicsWinFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "Dynamics\\Win");
             }
         }
 
@@ -1000,7 +1008,8 @@ namespace Seal.Model
         /// </summary>
         public List<ReportFormat> ResultAllFormats
         {
-            get {
+            get
+            {
                 bool hasConverter = File.Exists(SealConverterPath);
                 var result = new List<ReportFormat>();
                 foreach (ReportFormat format in Enum.GetValues(typeof(ReportFormat)))
@@ -1019,7 +1028,7 @@ namespace Seal.Model
             get
             {
                 if (Configuration.ReportFormats.Count == 0) return ResultAllFormats;
-                return (from f in Configuration.ReportFormats select (ReportFormat) Enum.Parse(typeof(ReportFormat), f)).ToList();
+                return (from f in Configuration.ReportFormats select (ReportFormat)Enum.Parse(typeof(ReportFormat), f)).ToList();
             }
         }
 
@@ -1199,7 +1208,7 @@ namespace Seal.Model
         /// </summary>
         public void LoadRepositoryTranslationsFromDataTable(DataTable dt)
         {
-            RepositoryTranslation.InitFromDataTable(RepositoryTranslations, dt, true);        
+            RepositoryTranslation.InitFromDataTable(RepositoryTranslations, dt, true);
         }
 
         /// <summary>
@@ -1310,7 +1319,7 @@ namespace Seal.Model
             string[] categories = instance.Split('/');
             foreach (var category in categories)
             {
-                current += (!string.IsNullOrEmpty(current) ? "/" : "") +category;
+                current += (!string.IsNullOrEmpty(current) ? "/" : "") + category;
                 result += (!string.IsNullOrEmpty(result) ? "/" : "") + TranslateCategory(current, category);
             }
             return result;
