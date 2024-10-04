@@ -122,7 +122,7 @@ You are using Seal Report under the MIT Community License:
 This license is for non-profit usage or small businesses.
 
 If you are using Seal Report in a production environment,
-please ensure that you are eligible to use this free license!
+please ensure that you are eligible to use this free license !
 
 Seal Report follows a dual-licensing model to ensure its maintenance, quality, and support.
 ";
