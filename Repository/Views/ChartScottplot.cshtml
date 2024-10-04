@@ -356,6 +356,7 @@
                 {
                     foreach (var p in plt.GetPlottables().Where(i => i is BarPlot || i is Scatter)) p.IsVisible = false;
                     //Force legend
+                    foreach (var legend in legendItems) legend.LineWidth = 2;
                     plt.ShowLegend(legendItems.ToArray());
                 }
             }

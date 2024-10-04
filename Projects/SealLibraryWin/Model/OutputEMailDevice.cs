@@ -181,8 +181,8 @@ namespace Seal.Model
 
     device.SendEmail(sender, output.EmailTo, replyTo, output.EmailCC, output.EmailBCC, subject, isHtmlBody, body, attachPath, attachName);
 
-    output.Information = report.Translate(""Email sent to '{0}'"", output.EmailTo.Replace(""\r\n"", "";""));
-    report.LogMessage(""Email sent to '{0}'"", output.EmailTo.Replace(""\r\n"", "";""));      
+    output.Information = report.Translate(""Email sent to '{0}'"", output.EmailTo.Replace(""\r\n"", ""\n"").Replace(""\r"", ""\n"").Replace(""\n"", "";""));
+    report.LogMessage(output.Information);      
 }        
 ";
 
