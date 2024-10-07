@@ -57,13 +57,13 @@
             tableLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tableLayoutPanel.Name = "tableLayoutPanel";
             tableLayoutPanel.RowCount = 7;
-            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.4999981F));
-            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.4999971F));
-            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 62.5F));
-            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.4999981F));
-            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
             tableLayoutPanel.Size = new System.Drawing.Size(766, 310);
             tableLayoutPanel.TabIndex = 0;
             // 
@@ -75,7 +75,7 @@
             logoPictureBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             logoPictureBox.Name = "logoPictureBox";
             tableLayoutPanel.SetRowSpan(logoPictureBox, 6);
-            logoPictureBox.Size = new System.Drawing.Size(313, 279);
+            logoPictureBox.Size = new System.Drawing.Size(313, 296);
             logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             logoPictureBox.TabIndex = 12;
             logoPictureBox.TabStop = false;
@@ -95,7 +95,7 @@
             // labelVersion
             // 
             labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-            labelVersion.Location = new System.Drawing.Point(328, 29);
+            labelVersion.Location = new System.Drawing.Point(328, 24);
             labelVersion.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
             labelVersion.MaximumSize = new System.Drawing.Size(0, 20);
             labelVersion.Name = "labelVersion";
@@ -107,13 +107,13 @@
             // textBoxDescription
             // 
             textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            textBoxDescription.Location = new System.Drawing.Point(328, 111);
+            textBoxDescription.Location = new System.Drawing.Point(328, 99);
             textBoxDescription.Margin = new System.Windows.Forms.Padding(7, 3, 4, 3);
             textBoxDescription.Multiline = true;
             textBoxDescription.Name = "textBoxDescription";
             textBoxDescription.ReadOnly = true;
             textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            textBoxDescription.Size = new System.Drawing.Size(434, 142);
+            textBoxDescription.Size = new System.Drawing.Size(434, 165);
             textBoxDescription.TabIndex = 23;
             textBoxDescription.TabStop = false;
             // 
@@ -121,7 +121,7 @@
             // 
             okButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            okButton.Location = new System.Drawing.Point(674, 259);
+            okButton.Location = new System.Drawing.Point(674, 276);
             okButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             okButton.Name = "okButton";
             okButton.Size = new System.Drawing.Size(88, 23);
@@ -131,7 +131,7 @@
             // linkLabel
             // 
             linkLabel.AutoSize = true;
-            linkLabel.Location = new System.Drawing.Point(325, 58);
+            linkLabel.Location = new System.Drawing.Point(325, 48);
             linkLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             linkLabel.Name = "linkLabel";
             linkLabel.Size = new System.Drawing.Size(170, 15);
@@ -143,7 +143,7 @@
             // linkLicense
             // 
             linkLicense.AutoSize = true;
-            linkLicense.Location = new System.Drawing.Point(325, 83);
+            linkLicense.Location = new System.Drawing.Point(325, 72);
             linkLicense.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             linkLicense.Name = "linkLicense";
             linkLicense.Size = new System.Drawing.Size(170, 15);

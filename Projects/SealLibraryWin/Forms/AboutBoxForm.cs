@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Media;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Seal.Forms
@@ -14,6 +15,18 @@ namespace Seal.Forms
     public partial class AboutBoxForm : Form
     {
         bool _startup = false;
+
+        // Constants for window styles
+        private const int GWL_STYLE = -16;
+        private const int WS_SYSMENU = 0x80000;
+
+        // Import the Windows API functions
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
         public AboutBoxForm(bool startup = false)
         {
             _startup = startup;
@@ -139,11 +152,13 @@ Visit our Web site, take a dive and join the Seal community...
             else
             {
                 okButton.Visible = false;
+                int style = GetWindowLong(this.Handle, GWL_STYLE);
+                SetWindowLong(this.Handle, GWL_STYLE, style & ~WS_SYSMENU); 
 
                 var timer = new Timer();
                 timer.Interval = 7500;
                 timer.Start();
-                timer.Tick += Timer_Tick ;
+                timer.Tick += Timer_Tick;
             }
 
             try
@@ -170,6 +185,9 @@ Visit our Web site, take a dive and join the Seal community...
         private void Timer_Tick(object sender, EventArgs e)
         {
             okButton.Visible = true;
+            int style = GetWindowLong(this.Handle, GWL_STYLE);
+            SetWindowLong(this.Handle, GWL_STYLE, style | WS_SYSMENU); // Enable the system menu (which includes the close button)
+
         }
     }
 }
