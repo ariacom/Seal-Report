@@ -30,6 +30,14 @@ namespace Seal.Forms
                 _thread.Start(this);
             }
         }
+        private void ExecutionForm_Shown(object sender, System.EventArgs e)
+        {
+            if (ScrollToEnd)
+            {
+                logTextBox.SelectionStart = logTextBox.Text.Length;
+                logTextBox.ScrollToCaret();
+            }
+        }
 
         public bool IsJobCancelled()
         {
@@ -86,6 +94,7 @@ namespace Seal.Forms
         }
 
         public bool CancelJob = false;
+        public bool ScrollToEnd = false;
         string _textToAppend = "";
         bool _inPause = false;
         Thread _thread;

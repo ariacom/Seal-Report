@@ -2370,7 +2370,17 @@ namespace Seal.Model
         [XmlIgnore]
         public ReportFormat Format
         {
-            get { return (ReportFormat)Enum.Parse(typeof(ReportFormat), ExecutionView.GetValue(Parameter.ReportFormatParameter)); }
+            get { 
+                var format = ExecutionView.GetValue(Parameter.ReportFormatParameter);
+                //from 8.2: converter not supported anymore -> formats to new formats
+                if (format == "excel") format = "Excel";
+                else if (format == "pdf") format = "PDF";
+
+                ReportFormat result;
+                if (Enum.TryParse(format, out result)) return result;
+
+                return ReportFormat.html;
+            }
             set { ExecutionView.SetParameter(Parameter.ReportFormatParameter, value.ToString()); }
         }
 

@@ -7,6 +7,7 @@
     //Parameters for this task
     task.Parameters.Add(new Parameter() { Name = "csv_path", Value = "", DisplayName = "CSV file path", Description = "The CSV file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path." + ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/Databases/Translations.csv", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "table_name", Value = "", DisplayName = "Destination table name", Description = "The name of the destination table created in the database. If empty, the name of the CSV file is used."  + ReportTask.TranslatedParameterDescription});
+    task.Parameters.Add(new Parameter() { Name = "table_prefix", Value = "", DisplayName = "Table name prefix", Description = "Prefix added to the table name created in the database."  + ReportTask.TranslatedParameterDescription});
     task.Parameters.Add(new Parameter() { Name = "csv_sep", Value = "", DisplayName = "Separator", Description = "The separator character of the CSV field. If empty, the default separator is used.", Enums = new string[] { ",", ";", "\\t" }, UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "csv_encoding", Value = "UTF8", DisplayName = "File encoding", Description = "The CSV File Encoding.", Enums = new string[] { "Default", "UTF8", "Unicode", "ASCII" }, UseOnlyEnumValues = true });
     task.Parameters.Add(new Parameter() { Name = "csv_vb", BoolValue = true, DisplayName = "Use Microsoft VB Parser", Description = "If true, the Microsoft VB Parser is used instead of the standard parser." });
@@ -39,7 +40,7 @@
     helper.LoadTableFromCSV(
         task.GetValueTranslated(""csv_folder""), 
         task.GetValueTranslated(""csv_path""), 
-        task.GetValueTranslated(""table_name""), 
+        task.GetValueTranslated(""table_prefix"").Trim() + task.GetValueTranslated(""table_name""),
         separator, 
         task.ExecuteForEachConnection, 
         task.GetBoolValue(""csv_vb"", true),

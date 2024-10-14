@@ -17,6 +17,7 @@ using System.Data;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Finance;
 using Seal.Renderer;
+using Microsoft.Graph.IdentityGovernance.PrivilegedAccess.Group.EligibilityScheduleRequests;
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -1399,7 +1400,16 @@ namespace Seal.Model
             if (!string.IsNullOrEmpty(Error))
             {
                 Report.ExecutionErrors += Error;
-                if (Renderer == null) result = Helper.ToHtml(Error);
+                if (Renderer == null)
+                {
+                    result = Helper.ToHtml(Error);
+                }
+                else
+                {
+                    //Generate result in html
+                    Report.ResultFilePath = Path.ChangeExtension(Report.ResultFilePath, "html");
+                    File.WriteAllText(Report.ResultFilePath, Helper.ToHtml(Error), UTF8Encoding.UTF8);
+                }
             }
 
             return result;

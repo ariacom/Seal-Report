@@ -3776,12 +3776,7 @@
             Helper to select Join preferences
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportModel.UseNestedJoins">
-            <summary>
-            If true, joins will be nested (and not sequential) in the generated FROM clause. This may give different results if OUTER joins are involved.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportModel.FirstJoinGUID">
+        <member name="P:Seal.Model.ReportModel.JoinHashcode">
             <summary>
             If specified and if possible, force the first join used to choose the dynamic SQL joins path used to perform the query.
             </summary>

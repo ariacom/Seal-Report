@@ -632,7 +632,7 @@ namespace Seal
             dlg.CheckFileExists = true;
             dlg.CheckPathExists = true;
             if (_report != null) dlg.InitialDirectory = Path.GetDirectoryName(_report.FilePath);
-            if (string.IsNullOrEmpty(dlg.InitialDirectory)) dlg.InitialDirectory = _repository.ReportsFolder;
+            if (string.IsNullOrEmpty(dlg.InitialDirectory) || sender == openRepositoryToolStripMenuItem) dlg.InitialDirectory = _repository.ReportsFolder;
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();

@@ -432,6 +432,7 @@ namespace Seal.Forms
                             frm.logTextBox.Text = _model.JoinLogs.ToString();
                             frm.logTextBox.SelectionStart = 0;
                             frm.logTextBox.SelectionLength = 0;
+                            frm.ScrollToEnd = true;
                             frm.ShowDialog();
                         }
                         finally

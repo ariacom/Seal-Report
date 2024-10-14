@@ -664,7 +664,7 @@ namespace Seal.Helpers
             }
             try
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", ex.Message, EventLogEntryType.Error);
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", $"{context}\r\n{ex.Message}", EventLogEntryType.Error);
             }
             catch { }
 

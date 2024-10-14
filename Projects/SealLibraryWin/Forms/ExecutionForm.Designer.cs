@@ -126,6 +126,7 @@
             this.Text = "Execution Form";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExecutionForm_FormClosing);
             this.Load += new System.EventHandler(this.ExecutionForm_Load);
+            this.Shown += ExecutionForm_Shown; 
             this.logToolStrip.ResumeLayout(false);
             this.logToolStrip.PerformLayout();
             this.ResumeLayout(false);

@@ -48,6 +48,7 @@ using System.Net;
 using Twilio.Rest.Api.V2010.Account;
 using Svg.Skia;
 using System.Diagnostics;
+using Seal.Model;
 
 namespace Seal.Helpers
 {
@@ -77,15 +78,20 @@ namespace Seal.Helpers
 
                     foreach (var path in toLoad)
                     {
+                        var fileName = Path.GetFileName(path);
+                        //Skip Seal and Microsoft.Extensions
+                        if (fileName.StartsWith(Repository.SealRootProductName) ||
+                            fileName.StartsWith("Microsoft.Extensions")
+                            ) continue;
+
                         //Force load of all assemblies available for dynamic Scripts
-                        var fileName = Path.GetFileName(path).ToLower();
                         try
                         {
                             loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path)));
                         }
                         catch (Exception ex)
                         {
-                            Helper.WriteLogException("LoadRazorAssemblies", ex);
+                            if (!(ex is FileNotFoundException)) Helper.WriteLogException($"LoadRazorAssemblies for '{path}'", ex);
                         }
                     }
 

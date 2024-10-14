@@ -53,6 +53,12 @@
         document.GeneratePdf(report.ResultFilePath);
 
     }
+    catch(Exception ex) 
+    {
+        var exceptionDocument = new PDFExceptionDocument() { Exception = ex };
+        exceptionDocument.GeneratePdf(report.ResultFilePath);
+        throw ex;
+    }
     finally
     {
         if (result.Page != null) await result.Page.CloseAsync();
@@ -62,37 +68,6 @@
 }
 
 @functions {
-    void convertToScottPlotCharts(Report report)
-    {
-        foreach (var model in report.Models)
-        {
-            foreach (var element in model.Elements)
-            {
-                if (element.ChartJSSerie == ChartJSSerieDefinition.Bar ||
-                    element.Nvd3Serie == NVD3SerieDefinition.MultiBarChart || element.Nvd3Serie == NVD3SerieDefinition.MultiBarHorizontalChart ||
-                    element.PlotlySerie == PlotlySerieDefinition.Bar)
-                {
-                    element.ScottPlotSerie = ScottPlotSerieDefinition.Bar;
-                }
-                else if (element.ChartJSSerie == ChartJSSerieDefinition.Line ||
-                    element.Nvd3Serie == NVD3SerieDefinition.Line || element.Nvd3Serie == NVD3SerieDefinition.ScatterChart || element.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart || element.Nvd3Serie == NVD3SerieDefinition.LineWithFocusChart ||
-                    element.PlotlySerie == PlotlySerieDefinition.Scatter)
-                {
-                    element.ScottPlotSerie = ScottPlotSerieDefinition.Scatter;
-                }
-                else if (element.ChartJSSerie == ChartJSSerieDefinition.Pie ||
-                    element.Nvd3Serie == NVD3SerieDefinition.PieChart ||
-                    element.PlotlySerie == PlotlySerieDefinition.Pie)
-                {
-                    element.ScottPlotSerie = ScottPlotSerieDefinition.Pie;
-                }
-                element.ChartJSSerie = ChartJSSerieDefinition.None;
-                element.Nvd3Serie = NVD3SerieDefinition.None;
-                element.PlotlySerie = PlotlySerieDefinition.None;
-            }
-        }
-    }
-
     public class PDFReportDocument : IDocument
     {
         public PDFRenderer Renderer;
@@ -155,7 +130,7 @@
                     }
                     else
                     {
-                        logoContainer.Image(configuration.LogoFilePath);
+                        logoContainer.Image(configuration.LogoFilePath).FitArea();
                     }
                 }
             });
@@ -272,6 +247,52 @@
                 .DefaultTextStyle(x => x.FontSize(fontSize))
                 .Text(Report.ExecutionMessages.Trim());
             });
+        }
+    }
+
+    public class PDFExceptionDocument : IDocument
+    {
+        public Exception Exception;
+
+        public void Compose(IDocumentContainer container)
+        {
+            container
+                .Page(page =>
+                {
+                    page.Margin(30);
+                    page.Content().Text(Exception.Message);
+                });
+        }
+    }
+
+    void convertToScottPlotCharts(Report report)
+    {
+        foreach (var model in report.Models)
+        {
+            foreach (var element in model.Elements)
+            {
+                if (element.ChartJSSerie == ChartJSSerieDefinition.Bar ||
+                    element.Nvd3Serie == NVD3SerieDefinition.MultiBarChart || element.Nvd3Serie == NVD3SerieDefinition.MultiBarHorizontalChart ||
+                    element.PlotlySerie == PlotlySerieDefinition.Bar)
+                {
+                    element.ScottPlotSerie = ScottPlotSerieDefinition.Bar;
+                }
+                else if (element.ChartJSSerie == ChartJSSerieDefinition.Line ||
+                    element.Nvd3Serie == NVD3SerieDefinition.Line || element.Nvd3Serie == NVD3SerieDefinition.ScatterChart || element.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart || element.Nvd3Serie == NVD3SerieDefinition.LineWithFocusChart ||
+                    element.PlotlySerie == PlotlySerieDefinition.Scatter)
+                {
+                    element.ScottPlotSerie = ScottPlotSerieDefinition.Scatter;
+                }
+                else if (element.ChartJSSerie == ChartJSSerieDefinition.Pie ||
+                    element.Nvd3Serie == NVD3SerieDefinition.PieChart ||
+                    element.PlotlySerie == PlotlySerieDefinition.Pie)
+                {
+                    element.ScottPlotSerie = ScottPlotSerieDefinition.Pie;
+                }
+                element.ChartJSSerie = ChartJSSerieDefinition.None;
+                element.Nvd3Serie = NVD3SerieDefinition.None;
+                element.PlotlySerie = PlotlySerieDefinition.None;
+            }
         }
     }
 }
