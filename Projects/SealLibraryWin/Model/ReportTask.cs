@@ -389,7 +389,7 @@ namespace Seal.Model
             get
             {
                 if (string.IsNullOrEmpty(ReferenceTaskGUID)) return null;
-                return _report.Tasks.FirstOrDefault(i => i.GUID == ReferenceTaskGUID);
+                return _report.AllTasks.FirstOrDefault(i => i.GUID == ReferenceTaskGUID);
             }
         }
 

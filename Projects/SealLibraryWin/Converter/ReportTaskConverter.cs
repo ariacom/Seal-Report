@@ -7,6 +7,7 @@ using System.Linq;
 using System.ComponentModel;
 using Seal.Model;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace Seal.Forms
 {
@@ -21,6 +22,16 @@ namespace Seal.Forms
             return true; //true will limit to list. false will show the list, but allow free-form entry
         }
 
+        List<ReportTask> getTaskList(PropertyDescriptor descriptor, Report report)
+        {
+
+            List<ReportTask> result = null;
+            if (descriptor.Name == "ReferenceTaskGUID") result = report.AllTasks;
+            else result = report.Tasks;
+            return result;
+        }
+
+
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
             string[] choices = new string[] { "No Task" };
@@ -28,9 +39,10 @@ namespace Seal.Forms
             var report = reportTask?.Report;
             if (reportTask != null)
             {
-                var list = (from s in reportTask.Report.Tasks where s.GUID != reportTask.GUID select s.Name).OrderBy(i => i).ToList();
-                list.Insert(0, "");
-                choices = list.ToArray();
+                var list = getTaskList(context.PropertyDescriptor, report);
+                var result = (from s in list where s.GUID != reportTask.GUID select s.Name).OrderBy(i => i).ToList();
+                result.Insert(0, "");
+                choices = result.ToArray();
             }
 
             return new StandardValuesCollection(choices);
@@ -50,7 +62,8 @@ namespace Seal.Forms
 
                 if (report != null && value != null)
                 {
-                    ReportTask task = report.Tasks.FirstOrDefault(i => i.GUID == value.ToString());
+                    var list = getTaskList(context.PropertyDescriptor, report);
+                    ReportTask task = list.FirstOrDefault(i => i.GUID == value.ToString());
                     if (task != null) return task.Name;
                 }
             }
@@ -69,7 +82,8 @@ namespace Seal.Forms
 
             if (report != null && value != null)
             {
-                ReportTask task = report.Tasks.FirstOrDefault(i => i.Name == value.ToString());
+                var list = getTaskList(context.PropertyDescriptor, report);
+                ReportTask task = list.FirstOrDefault(i => i.Name == value.ToString());
                 if (task != null) return task.GUID;
             }
             return base.ConvertFrom(context, culture, value);

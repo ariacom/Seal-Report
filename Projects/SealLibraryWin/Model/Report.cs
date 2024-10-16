@@ -2552,6 +2552,29 @@ namespace Seal.Model
             return result;
         }
 
+        void fillFullTaskList(List<ReportTask> tasks, List<ReportTask> result)
+        {
+            foreach (var task in tasks.OrderBy(i => i.SortOrder))
+            {
+                result.Add(task);
+                fillFullTaskList(task.Tasks, result);
+            }
+        }
+
+        /// <summary>
+        /// Helper to list of all the tasks of the report
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportTask> AllTasks
+        {
+            get
+            {
+                var result = new List<ReportTask>();
+                fillFullTaskList(Tasks, result);
+                return result;
+            }
+        }
+
 
         void fillFullViewList(List<ReportView> views, List<ReportView> result)
         {

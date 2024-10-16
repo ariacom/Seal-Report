@@ -32,11 +32,13 @@ namespace Seal.Model
                 GetProperty("FolderDetailScript").SetIsBrowsable(true);
                 GetProperty("MenuScript").SetIsBrowsable(true);
 
-//                GetProperty("Columns").SetIsBrowsable(true);
-//                GetProperty("SqlModel").SetIsBrowsable(true);
-//                GetProperty("Devices").SetIsBrowsable(true);
-//                GetProperty("Connections").SetIsBrowsable(true);
-//                GetProperty("Sources").SetIsBrowsable(true);
+#if WEBREPORTDESIGNER
+                GetProperty("Columns").SetIsBrowsable(true);
+                GetProperty("SqlModel").SetIsBrowsable(true);
+                GetProperty("Devices").SetIsBrowsable(true);
+                GetProperty("Connections").SetIsBrowsable(true);
+                GetProperty("Sources").SetIsBrowsable(true);
+#endif
 
                 GetProperty("OnStartup").SetIsBrowsable(true);
                 GetProperty("StartupReport").SetIsBrowsable(true);
@@ -53,11 +55,11 @@ namespace Seal.Model
                 TypeDescriptor.Refresh(this);
             }
         }
-        #endregion
+#endregion
 
 #endif
 
-        string _name = "Group";
+                string _name = "Group";
         /// <summary>
         /// The security group name
         /// </summary>

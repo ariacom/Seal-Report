@@ -37,10 +37,14 @@
         encoding = System.Text.Encoding.ASCII;
     }
 
+    var destinationTableName =  task.GetValueTranslated(""table_name"");
+    var csvPath = task.GetValueTranslated(""csv_path"");
+    if (string.IsNullOrEmpty(destinationTableName)) destinationTableName = Path.GetFileNameWithoutExtension(csvPath);
+
     helper.LoadTableFromCSV(
         task.GetValueTranslated(""csv_folder""), 
         task.GetValueTranslated(""csv_path""), 
-        task.GetValueTranslated(""table_prefix"").Trim() + task.GetValueTranslated(""table_name""),
+        task.GetValueTranslated(""table_prefix"").Trim() + destinationTableName,
         separator, 
         task.ExecuteForEachConnection, 
         task.GetBoolValue(""csv_vb"", true),

@@ -187,7 +187,7 @@ namespace SealWebServer.Controllers
                 var model = new WebMainModel() { Repository = Repository };
                 SetSessionId(sessionId);
 
-#if EDITOR
+#if WEBREPORTDESIGNER
                 model.HasEditor = true;
 #endif
                 model.ServerPath = WebRootPath;
