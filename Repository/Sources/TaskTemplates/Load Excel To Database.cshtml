@@ -15,6 +15,7 @@
     task.Parameters.Add(new Parameter() { Name = "excel_header", BoolValue = true, DisplayName = "Has header", Description = "If true, the first line is used to get the column names otherwise column names are automatic." });
     task.Parameters.Add(new Parameter() { Name = "force_load", BoolValue = false, DisplayName = "Force load", Description = "If true, the load is always performed, even if the Excel file was not modified. In this case the 'Loaded folder' parameter is not used. " });
     task.Parameters.Add(new Parameter() { Name = "excel_folder", Value = "", DisplayName = "Loaded folder", Description = "If 'Force load' is false, the folder used to store the loaded Excel files. If empty or single name, a sub-folder named is created having the specified name ('Loaded' by default)." + ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/TestFiles/Loaded", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "detect_types", BoolValue = false, DisplayName = "Detect types", Description = "If true, column types can be detected and values converted during the table load." });
 
     task.Script = @"@using System.IO
 @using System.Data
@@ -22,6 +23,8 @@
     ReportTask task = Model;
     var helper = new TaskHelper(task);
     
+    helper.DatabaseHelper.TableLoadDetectAndConvertTypes = task.GetBoolValue(""detect_types"", true);
+
     helper.LoadTableFromExcel(
         task.GetValueTranslated(""excel_folder""), 
         task.GetValueTranslated(""excel_path""), 

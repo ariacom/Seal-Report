@@ -1013,7 +1013,7 @@ WHERE tc.constraint_type = 'FOREIGN KEY';
                     List<MetaJoin> joins = GetJoins(connection, source);
                     if (joins.Count == 0)
                     {
-                        MessageBox.Show(connection is OleDbConnection ? "All Joins have been defined for the existing tables" : "Joins cannot be read from the database if the connection is not an OleDbConnection.\r\nPlease consider to define an OleDbConnection to create the Joins.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("No Joins found in the database.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return isModified;
                     }
                     selectSource = joins.OrderBy(i => i.Name).ToList();

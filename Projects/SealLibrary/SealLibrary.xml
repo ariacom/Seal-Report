@@ -2989,6 +2989,11 @@
             Helper to find a view from its name
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.AllTasks">
+            <summary>
+            Helper to list of all the tasks of the report
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.AllViews">
             <summary>
             Helper to list of all the views of the report

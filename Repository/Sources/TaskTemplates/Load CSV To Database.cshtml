@@ -13,6 +13,7 @@
     task.Parameters.Add(new Parameter() { Name = "csv_vb", BoolValue = true, DisplayName = "Use Microsoft VB Parser", Description = "If true, the Microsoft VB Parser is used instead of the standard parser." });
     task.Parameters.Add(new Parameter() { Name = "force_load", BoolValue = false, DisplayName = "Force load", Description = "If true, the load is always performed, even if the Excel file was not modified. In this case the 'Loaded folder' parameter is not used. " });
     task.Parameters.Add(new Parameter() { Name = "csv_folder", Value = "", DisplayName = "Loaded folder", Description = "If 'Force load' is false, the folder used to store the loaded CSV files. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path. If empty or single name, a sub-folder named is created having the specified name ('Loaded' by default)." + ReportTask.TranslatedParameterDescriptionFull, Enums = new string[] { @"%SEALREPOSITORY%/TestFiles/Loaded", ReportTask.ParentExecResultKeyword, ReportTask.ExecInputKeyword }, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "detect_types", BoolValue = true, DisplayName = "Detect types", Description = "If true, column types can be detected and values converted during the table load." });
 
     task.Script = @"@using System.IO
 @using System.Data
@@ -36,6 +37,8 @@
     else if (task.GetValue(""csv_encoding"")==""ASCII"") {
         encoding = System.Text.Encoding.ASCII;
     }
+
+    helper.DatabaseHelper.TableLoadDetectAndConvertTypes = task.GetBoolValue(""detect_types"", true);
 
     var destinationTableName =  task.GetValueTranslated(""table_name"");
     var csvPath = task.GetValueTranslated(""csv_path"");
