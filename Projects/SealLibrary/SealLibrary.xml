@@ -149,6 +149,11 @@
             Optional table hints for insert
             </summary>
         </member>
+        <member name="F:Seal.Helpers.TaskDatabaseHelper.TableLoadDetectAndConvertTypes">
+            <summary>
+            If  true, column types can be detected and values converted during a table load to database (For CSV and Excel load)
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.TaskHelper.LoadTablesFromExcel(System.String,System.String,System.String[],System.String[],System.Boolean)">
             <summary>
             Load tables from Excel tabs (one table per tab)

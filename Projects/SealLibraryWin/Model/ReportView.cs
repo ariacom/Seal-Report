@@ -1526,8 +1526,37 @@ namespace Seal.Model
                         parameter.Value = refParameter.Value;
                     }
                 }
+
+                //Renderers 
+                initRendererFromReferenceView(refView.ExcelRenderer, ExcelRenderer);
+                initRendererFromReferenceView(refView.CSVRenderer, CSVRenderer);
+                initRendererFromReferenceView(refView.PDFRenderer, PDFRenderer);
+                initRendererFromReferenceView(refView.HTML2PDFRenderer, HTML2PDFRenderer);
+                initRendererFromReferenceView(refView.JsonRenderer, JsonRenderer);
+                initRendererFromReferenceView(refView.TextRenderer, TextRenderer);
+                initRendererFromReferenceView(refView.XMLRenderer, XMLRenderer);
             }
         }
+
+        private void initRendererFromReferenceView(RootRenderer refRenderer, RootRenderer renderer)
+        {
+            if (!renderer.UseCustomTemplate)
+            {
+                renderer.UseCustomTemplate = refRenderer.UseCustomTemplate;
+                renderer.CustomTemplate = refRenderer.CustomTemplate;
+            }
+
+            //Parameters that have a default value
+            foreach (var parameter in renderer.Parameters.Where(i => i.Value == i.ConfigValue))
+            {
+                var refParameter = refRenderer.Parameters.FirstOrDefault(i => i.Name == parameter.Name);
+                if (refParameter != null)
+                {
+                    parameter.Value = refParameter.Value;
+                }
+            }
+        }
+
         private void initAxisProperties(List<ResultCell[]> XDimensions)
         {
             bool hasPie = Model.Elements.Exists(i => (i.Nvd3Serie == NVD3SerieDefinition.PieChart || i.ChartJSSerie == ChartJSSerieDefinition.Pie || i.ChartJSSerie == ChartJSSerieDefinition.PolarArea || i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);

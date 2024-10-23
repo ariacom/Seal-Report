@@ -67,7 +67,7 @@
             showMessages(result);
         }
 
-        result.Package.SaveAs(new FileInfo(report.ResultFilePath));
+        if (!report.HasErrors) result.Package.SaveAs(new FileInfo(report.ResultFilePath));
     }
 }
 

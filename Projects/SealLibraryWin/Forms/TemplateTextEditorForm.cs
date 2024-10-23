@@ -13,6 +13,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 using System.ComponentModel;
+using DiffPlex.WindowsForms;
 
 namespace Seal.Forms
 {
@@ -43,6 +44,7 @@ namespace Seal.Forms
         static Size? LastSize = null;
         static Point? LastLocation = null;
         public static IReportTester ReportTester = null;
+        public DifferenceForm DifferenceViewer = null;
 
         Dictionary<int, string> _compilationErrors = new Dictionary<int, string>();
 
@@ -162,6 +164,7 @@ namespace Seal.Forms
         {
             LastSize = Size;
             LastLocation = Location;
+            if (DifferenceViewer != null) DifferenceViewer.Close();
         }
 
         private void TemplateTextEditorForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -320,8 +323,19 @@ namespace Seal.Forms
             if (!string.IsNullOrEmpty(resetText))
             {
                 var resetButton = new ToolStripButton("Reset script");
-                resetButton.Click += new EventHandler(delegate (object sender2, EventArgs e2) { textBox.Text = resetText; });
+                resetButton.ToolTipText = "Reset to reference script";
+                resetButton.Click += new EventHandler(delegate (object sender2, EventArgs e2) {
+                    textBox.Text = resetText; 
+                });
                 mainToolStrip.Items.Add(resetButton);
+                var differenceButton = new ToolStripButton("Differences");
+                differenceButton.ToolTipText = "Show differences with the reference script";
+                differenceButton.Click += new EventHandler(delegate (object sender2, EventArgs e2) {
+                    if (DifferenceViewer != null) DifferenceViewer.Init();
+                    else DifferenceViewer = new DifferenceForm(textBox, resetText);
+                    DifferenceViewer.Show();
+                });
+                mainToolStrip.Items.Add(differenceButton);
             }
         }
 
