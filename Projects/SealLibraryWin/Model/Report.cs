@@ -453,7 +453,7 @@ namespace Seal.Model
             foreach (var view in Views) view.InitParameters(false);
 
             //Copy values from reference tasks
-            foreach (var task in Tasks.Where(i => i.ReferenceTask != null).OrderBy(i => i.SortOrder))
+            foreach (var task in Tasks.OrderBy(i => i.SortOrder))
             {
                 task.InitFromReferenceTask();
             }

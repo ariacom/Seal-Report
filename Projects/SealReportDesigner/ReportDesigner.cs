@@ -1559,11 +1559,10 @@ namespace Seal
             else if (selectedEntity is ReportTask)
             {
                 var taskEntity = selectedEntity as ReportTask;
-                newEntity = Helper.Clone(selectedEntity);
+                newEntity = taskEntity.Copy();
                 var tasks = taskEntity.ParentTask != null ? taskEntity.ParentTask.Tasks : Report.Tasks;
                 tasks.Add((ReportTask)newEntity);
                 _report.InitReferences();
-                ((RootComponent)newEntity).GUID = Guid.NewGuid().ToString();
                 ((RootComponent)newEntity).Name = Helper.GetUniqueName(taskEntity.Name + " - Copy", (from i in tasks select i.Name).ToList());
                 int idx = 1;
                 foreach (var task in tasks.OrderBy(i => i.SortOrder)) task.SortOrder = idx++;
