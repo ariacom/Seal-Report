@@ -243,13 +243,13 @@ namespace Seal.Helpers
         static public string GetUniqueColumnName(DataTable table, string columnName)
         {
             int index = 2;
-            columnName = columnName.Trim();
-            while (table.Columns.Contains(columnName))
+            var result = columnName.Trim();
+            while (table.Columns.Contains(result))
             {
-                columnName = $"{columnName}{index}";
+                result = $"{columnName}{index}";
                 index++;
             }
-            return columnName;
+            return result;
         }
 
         static public TextFieldParser InitCSVVBParser(string csvPath, char? separator, Encoding encoding, bool hasFieldsEnclosedInQuotes = true, bool trimWhiteSpace = true)
