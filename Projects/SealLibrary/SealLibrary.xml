@@ -5293,6 +5293,11 @@
             Creates a basic ReportTask
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportTask.Copy">
+            <summary>
+            Copy a ReportTask with its children
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportTask.InitReferences">
             <summary>
             Init all references of the task
