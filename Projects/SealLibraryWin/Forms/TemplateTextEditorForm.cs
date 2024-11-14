@@ -31,6 +31,7 @@ namespace Seal.Forms
         public object ContextInstance = null;
         public PropertyDescriptor ContextPropertyDescriptor = null;
         public string ContextPropertyName = null;
+        public bool IsRawCSharp = false;
 
         public Scintilla textBox = new Scintilla();
 
@@ -123,12 +124,9 @@ namespace Seal.Forms
                         else if (functionsEditor.SourceObject is MetaTable)
                         {
                             var metaTable = (MetaTable)functionsEditor.SourceObject;
-//                            value = functionsEditor.ReplaceFunction(metaTable.LoadScript, propertyName, task.Script);
-                            propertyName = "Script";
-
-                            //Save in the MetaTable Load Script
-                            //                    var metaTable = (MetaTable)frm.ObjectForCheckSyntax;
-                            //                  metaTable.LoadScript = ((FunctionsEditor)context.Instance).ReplaceFunction(metaTable.LoadScript, context.PropertyDescriptor.DisplayName, value.ToString());
+                            value = functionsEditor.ReplaceFunction(metaTable.LoadScript, ContextPropertyDescriptor.DisplayName, value);
+                            propertyName = "LoadScript";
+                            instance = metaTable;
                         }
                     }
 
@@ -218,19 +216,46 @@ namespace Seal.Forms
         public string CheckSyntax()
         {
             string error = "";
+            if (IsRawCSharp) ObjectForCheckSyntax = new object(); //Dummy object
+
+
             if (ObjectForCheckSyntax != null)
             {
                 try
                 {
                     var finalScript = "";
-                    if (ContextInstance is FunctionsEditor)
+                    if (IsRawCSharp)
                     {
-                        var editor = (FunctionsEditor) ContextInstance;
-                        var script = "";
-                        if (ObjectForCheckSyntax is ReportTask) script = ((ReportTask) ObjectForCheckSyntax).Script;
-                        if (ObjectForCheckSyntax is MetaTable) script = ((MetaTable)ObjectForCheckSyntax).LoadScript;
+                        if (!textBox.Text.Contains("namespace ") || !textBox.Text.Contains("class "))
+                        {
+                            throw new Exception("C# code expected: it must contain 'namespace' and 'class' keywords.");
+                        }
 
-                        finalScript = editor.ReplaceFunction(script, ContextPropertyDescriptor.DisplayName, textBox.Text);
+                        //case of Raw C# (for dynamics), convert to a Razor script
+                        var lines = textBox.Text.Replace("\r\n", "\r").Replace("\n", "\r").Split("\r");
+                        finalScript = "";
+                        foreach(var line in lines)
+                        {
+                            var newLine = line;
+                            if (line.Trim().StartsWith("using ")) newLine = line.Replace("using", "@using");
+                            if (line.Trim().StartsWith("namespace "))
+                            {
+                                newLine = "@functions "  + (line.Contains("{") ? "{" : "");
+                            }
+                            finalScript += newLine + "\r\n";
+                        }
+                    }
+                    else
+                    {
+                        if (ContextInstance is FunctionsEditor)
+                        {
+                            var editor = (FunctionsEditor)ContextInstance;
+                            var script = "";
+                            if (ObjectForCheckSyntax is ReportTask) script = ((ReportTask)ObjectForCheckSyntax).Script;
+                            if (ObjectForCheckSyntax is MetaTable) script = ((MetaTable)ObjectForCheckSyntax).LoadScript;
+
+                            finalScript = editor.ReplaceFunction(script, ContextPropertyDescriptor.DisplayName, textBox.Text);
+                        }
                     }
 
                     FormHelper.CheckRazorSyntax(textBox, ObjectForCheckSyntax, _compilationErrors, finalScript);
@@ -247,7 +272,7 @@ namespace Seal.Forms
                 }
                 else
                 {
-                    toolStripStatusLabel.Text = "Razor Syntax is OK";
+                    toolStripStatusLabel.Text = IsRawCSharp ? "C# Syntax is OK" : "Razor Syntax is OK";
                     toolStripStatusLabel.Image = global::Seal.Properties.Resources.checkedGreen;
                 }
             }

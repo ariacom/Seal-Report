@@ -165,7 +165,7 @@ namespace Seal.Helpers
             var result = "";
             if (!string.IsNullOrEmpty(RazorCacheDirectory))
             {
-                foreach (var f in Directory.GetFiles(RazorCacheDirectory, key + "*.dll"))
+                foreach (var f in Directory.GetFiles(RazorCacheDirectory, key + "_*.dll"))
                 {
                     if (lastModification > File.GetLastWriteTime(f))
                     {
