@@ -1150,7 +1150,7 @@ namespace Seal.Forms
             new Tuple<string, string>(
                 "Load a table from an Excel file",
 @"ReportTask task = Model;
-	var helper = new TaskHelper(task);
+    var helper = new TaskHelper(task);
     helper.LoadTableFromExcel(
         @""c:\temp\loadFolder"", //Folder used to store the files processed 
         @""c:\temp\excelFile.xlsx"", //source Excel file path

@@ -35,9 +35,9 @@ namespace Seal.Forms
 
         public Scintilla textBox = new Scintilla();
 
-        ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
-        ToolStripMenuItem samplesMenuItem2 = new ToolStripMenuItem("Samples (Notepad)");
-        ToolStripMenuItem copyToolStripButton = new ToolStripMenuItem("Copy to clipboard") { };
+        ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...") { ToolTipText = "Copy sample script in the editor" };
+        ToolStripMenuItem samplesMenuItem2 = new ToolStripMenuItem("Samples (Notepad)") { ToolTipText = "Open sample script in a Notepad" };
+        ToolStripMenuItem copyToolStripButton = new ToolStripMenuItem("Copy") { ToolTipText = "Copy text to clipboard" };
         public ToolStripMenuItem checkSyntaxToolStripButton = new ToolStripMenuItem("F8 Check Syntax") { ShortcutKeys = Keys.F8, ShowShortcutKeys = true };
         ToolStripMenuItem testExecutionMenuItem = new ToolStripMenuItem("F5 Execute...") { ShortcutKeys = Keys.F5, ShowShortcutKeys = true };
         ToolStripMenuItem testRenderingMenuItem = new ToolStripMenuItem("F6 Render...") { ShortcutKeys = Keys.F6, ShowShortcutKeys = true };
