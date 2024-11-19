@@ -640,7 +640,8 @@ OR
       </Elements>
       <Restriction>[e9c64e6f-a58d-43ef-929b-8e61636c0b89]
 AND [33ea67d3-9296-4703-87b8-d3a2855227ee]
-AND [d9a7ef8a-0fbe-4f99-b0a3-70fe24ee9846]</Restriction>
+AND [d9a7ef8a-0fbe-4f99-b0a3-70fe24ee9846]
+AND [ccf5db51-89b4-4366-8ffc-b6444c43e395]</Restriction>
       <Restrictions>
         <ReportRestriction>
           <GUID>e9c64e6f-a58d-43ef-929b-8e61636c0b89</GUID>
@@ -683,6 +684,20 @@ AND [d9a7ef8a-0fbe-4f99-b0a3-70fe24ee9846]</Restriction>
           <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
           <Operator>IsNotEmpty</Operator>
           <DisplayOrderRE>5</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>ccf5db51-89b4-4366-8ffc-b6444c43e395</GUID>
+          <Name>sr_audit.execution_context</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID>
+          <DisplayOrderRE>4</DisplayOrderRE>
+          <EnumValues>
+            <string>WebOutput</string>
+            <string>WebReport</string>
+          </EnumValues>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
