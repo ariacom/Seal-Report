@@ -16,6 +16,12 @@ using System.Xml;
 using System.Data.SqlClient;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Packaging;
+using MySql.Data.MySqlClient;
+using Npgsql;
+using Oracle.ManagedDataAccess.Client;
+
+using System.Data.OleDb;
+
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -713,6 +719,122 @@ namespace Seal.Model
             }
         }
 
+
+        /// <summary>
+        /// Return list of Joins from the catalog
+        /// </summary>
+        public List<MetaJoin> GetJoinsFromCatalog(DbConnection connection)
+        {
+            List<MetaJoin> joins = new List<MetaJoin>();
+
+            DataTable schemaTables = null;
+            if (connection is OleDbConnection)
+            {
+                schemaTables = ((OleDbConnection)connection).GetOleDbSchemaTable(OleDbSchemaGuid.Foreign_Keys, null);
+            }
+            else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection)
+            {
+                //SQLServer
+                var sql = @"SELECT fk.name AS ForeignKeyName, tp.name AS PK_TABLE_NAME, cp.name AS PK_COLUMN_NAME, tr.name AS FK_TABLE_NAME, cr.name AS FK_COLUMN_NAME
+FROM sys.foreign_keys fk
+JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id
+JOIN sys.tables tp ON fkc.referenced_object_id = tp.object_id
+JOIN sys.columns cp ON fkc.referenced_object_id = cp.object_id AND fkc.referenced_column_id = cp.column_id
+JOIN sys.tables tr ON fkc.parent_object_id = tr.object_id
+JOIN sys.columns cr ON fkc.parent_object_id = cr.object_id AND fkc.parent_column_id = cr.column_id";
+
+                DbDataAdapter adapter = null;
+                schemaTables = new DataTable();
+                if (connection is SqlConnection) adapter = new SqlDataAdapter(sql, (SqlConnection)connection);
+                else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+            else if (connection is MySqlConnection)
+            {
+                //MySQL
+                var sql = @"SELECT TABLE_SCHEMA as PK_TABLE_SCHEMA, TABLE_SCHEMA as FK_TABLE_SCHEMA, TABLE_NAME AS FK_TABLE_NAME, COLUMN_NAME AS FK_COLUMN_NAME, CONSTRAINT_NAME AS ForeignKey, REFERENCED_TABLE_NAME AS PK_TABLE_NAME, REFERENCED_COLUMN_NAME AS PK_COLUMN_NAME
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE REFERENCED_TABLE_NAME IS NOT NULL";
+                schemaTables = new DataTable();
+                DbDataAdapter adapter = new MySqlDataAdapter(sql, (MySqlConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+            else if (connection is OracleConnection)
+            {
+                //Oracle
+                var sql = @"SELECT ac1.OWNER as PK_TABLE_SCHEMA, ac1.OWNER as FK_TABLE_SCHEMA, ac1.TABLE_NAME AS FK_TABLE_NAME, acc1.COLUMN_NAME AS FK_COLUMN_NAME, ac2.TABLE_NAME AS PK_TABLE_NAME, acc2.COLUMN_NAME AS PK_COLUMN_NAME
+FROM ALL_CONSTRAINTS ac1
+JOIN ALL_CONS_COLUMNS acc1 ON ac1.CONSTRAINT_NAME = acc1.CONSTRAINT_NAME AND ac1.OWNER = acc1.OWNER
+JOIN ALL_CONSTRAINTS ac2 ON ac1.R_CONSTRAINT_NAME = ac2.CONSTRAINT_NAME AND ac1.OWNER = ac2.OWNER
+JOIN ALL_CONS_COLUMNS acc2 ON ac2.CONSTRAINT_NAME = acc2.CONSTRAINT_NAME AND ac2.OWNER = acc2.OWNER AND acc1.POSITION = acc2.POSITION
+WHERE ac1.CONSTRAINT_TYPE = 'R'
+";
+                schemaTables = new DataTable();
+                DbDataAdapter adapter = new OracleDataAdapter(sql, (OracleConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+            else if (connection is NpgsqlConnection)
+            {
+                //Postgres
+                var sql = @"SELECT tc.table_name AS PK_TABLE_NAME, kcu.column_name AS PK_COLUMN_NAME, ccu.table_name AS FK_TABLE_NAME, ccu.column_name AS FK_COLUMN_NAME
+FROM information_schema.table_constraints AS tc
+JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+WHERE tc.constraint_type = 'FOREIGN KEY';
+";
+                schemaTables = new DataTable();
+                DbDataAdapter adapter = new NpgsqlDataAdapter(sql, (NpgsqlConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+
+            if (schemaTables is null) return joins;
+
+            foreach (DataRow row in schemaTables.Rows)
+            {
+                string table1Name = GetTableName(row["PK_TABLE_NAME"].ToString());
+                string table2Name = GetTableName(row["FK_TABLE_NAME"].ToString());
+                MetaTable table1 = MetaData.Tables.FirstOrDefault(i => i.Name == GetTableName(table1Name));
+                MetaTable table2 = MetaData.Tables.FirstOrDefault(i => i.Name == GetTableName(table2Name));
+
+                if (table1 == null)
+                {
+                    string pkschema = "";
+                    if (schemaTables.Columns.Contains("PK_TABLE_SCHEMA")) pkschema = row["PK_TABLE_SCHEMA"].ToString();
+                    else if (schemaTables.Columns.Contains("PK_TABLE_SCHEM")) pkschema = row["PK_TABLE_SCHEM"].ToString();
+                    if (!string.IsNullOrEmpty(pkschema)) table1 = MetaData.Tables.FirstOrDefault(i => i.Name == pkschema + "." + table1Name);
+                }
+
+                if (table2 == null)
+                {
+                    string fkschema = "";
+                    if (schemaTables.Columns.Contains("FK_TABLE_SCHEMA")) fkschema = row["FK_TABLE_SCHEMA"].ToString();
+                    else if (schemaTables.Columns.Contains("FK_TABLE_SCHEM")) fkschema = row["FK_TABLE_SCHEM"].ToString();
+                    if (!string.IsNullOrEmpty(fkschema)) table2 = MetaData.Tables.FirstOrDefault(i => i.Name == fkschema + "." + table2Name);
+                }
+
+                if (table1 != null && table2 != null && table1.Name != table2.Name && !MetaData.Joins.Exists(i => i.LeftTableGUID == table1.GUID && i.RightTableGUID == table2.GUID))
+                {
+                    MetaJoin join = joins.FirstOrDefault(i => i.LeftTableGUID == table1.GUID && i.RightTableGUID == table2.GUID);
+                    if (join == null)
+                    {
+                        join = MetaJoin.Create();
+                        join.Name = table1.Name + " - " + table2.Name;
+                        join.LeftTableGUID = table1.GUID;
+                        join.RightTableGUID = table2.GUID;
+                        join.Source = this;
+                        join.IsBiDirectional = true;
+                        joins.Add(join);
+                    }
+
+                    if (!string.IsNullOrEmpty(join.Clause)) join.Clause += " AND ";
+                    join.Clause += string.Format("{0}.{1} = {2}.{3}\r\n", table1.Name, GetColumnName(row["PK_COLUMN_NAME"].ToString()), table2.Name, GetColumnName(row["FK_COLUMN_NAME"].ToString()));
+                    join.JoinType = JoinType.Inner;
+                }
+            }
+            return joins;
+        }
+
+
         static string[] MSSQLKeywords = new string[] { "ADD", "EXTERNAL", "PROCEDURE", "ALL", "FETCH", "PUBLIC", "ALTER", "FILE", "RAISERROR", "AND", "FILLFACTOR", "READ", "ANY", "FOR", "READTEXT", "AS", "FOREIGN", "RECONFIGURE", "ASC", "FREETEXT", "REFERENCES", "AUTHORIZATION", "FREETEXTTABLE", "REPLICATION", "BACKUP", "FROM", "RESTORE", "BEGIN", "FULL", "RESTRICT", "BETWEEN", "FUNCTION", "RETURN", "BREAK", "GOTO", "REVERT", "BROWSE", "GRANT", "REVOKE", "BULK", "GROUP", "RIGHT", "BY", "HAVING", "ROLLBACK", "CASCADE", "HOLDLOCK", "ROWCOUNT", "CASE", "IDENTITY", "ROWGUIDCOL", "CHECK", "IDENTITY_INSERT", "RULE", "CHECKPOINT", "IDENTITYCOL", "SAVE", "CLOSE", "IF", "SCHEMA", "CLUSTERED", "IN", "SECURITYAUDIT", "COALESCE", "INDEX", "SELECT", "COLLATE", "INNER", "SEMANTICKEYPHRASETABLE", "COLUMN", "INSERT", "SEMANTICSIMILARITYDETAILSTABLE", "COMMIT", "INTERSECT", "SEMANTICSIMILARITYTABLE", "COMPUTE", "INTO", "SESSION_USER", "CONSTRAINT", "IS", "SET", "CONTAINS", "JOIN", "SETUSER", "CONTAINSTABLE", "KEY", "SHUTDOWN", "CONTINUE", "KILL", "SOME", "CONVERT", "LEFT", "STATISTICS", "CREATE", "LIKE", "SYSTEM_USER", "CROSS", "LINENO", "TABLE", "CURRENT", "LOAD", "TABLESAMPLE", "CURRENT_DATE", "MERGE", "TEXTSIZE", "CURRENT_TIME", "NATIONAL", "THEN", "CURRENT_TIMESTAMP", "NOCHECK", "TO", "CURRENT_USER", "NONCLUSTERED", "TOP", "CURSOR", "NOT", "TRAN", "DATABASE", "NULL", "TRANSACTION", "DBCC", "NULLIF", "TRIGGER", "DEALLOCATE", "OF", "TRUNCATE", "DECLARE", "OFF", "TRY_CONVERT", "DEFAULT", "OFFSETS", "TSEQUAL", "DELETE", "ON", "UNION", "DENY", "OPEN", "UNIQUE", "DESC", "OPENDATASOURCE", "UNPIVOT", "DISK", "OPENQUERY", "UPDATE", "DISTINCT", "OPENROWSET", "UPDATETEXT", "DISTRIBUTED", "OPENXML", "USE", "DOUBLE", "OPTION", "USER", "DROP", "OR", "VALUES", "DUMP", "ORDER", "VARYING", "ELSE", "OUTER", "VIEW", "END", "OVER", "WAITFOR", "ERRLVL", "PERCENT", "WHEN", "ESCAPE", "PIVOT", "WHERE", "EXCEPT", "PLAN", "WHILE", "EXEC", "PRECISION", "WITH", "EXECUTE", "PRIMARY", "WITHIN GROUP", "EXISTS", "PRINT", "WRITETEXT", "EXIT", "PROC" };
 
         string[] getKeywords(DatabaseType dbType)
@@ -747,6 +869,41 @@ namespace Seal.Model
         }
 
         #region Helpers
+
+        /// <summary>
+        /// Fill list of MetaTable from the catalog
+        /// </summary>
+        public void AddSchemaTables(DataTable schemaTables, List<MetaTable> tables)
+        {
+            foreach (DataRow row in schemaTables.Rows)
+            {
+                //if (row["TABLE_TYPE"].ToString() == "SYSTEM TABLE" || row["TABLE_TYPE"].ToString() == "SYSTEM VIEW") continue;
+                MetaTable table = MetaTable.Create();
+                string schema = "";
+                string catalog = "";
+                if (schemaTables.Columns.Contains("TABLE_CATALOG")) catalog = row["TABLE_CATALOG"].ToString();
+                if (schemaTables.Columns.Contains("TABLE_SCHEMA")) schema = row["TABLE_SCHEMA"].ToString();
+                else if (schemaTables.Columns.Contains("TABLE_SCHEM")) schema = row["TABLE_SCHEM"].ToString();
+
+                var tableName = "";
+                if (row.Table.Columns.Contains("TABLE_NAME")) tableName = row["TABLE_NAME"].ToString();
+                else if (row.Table.Columns.Contains("VIEW_NAME")) tableName = row["VIEW_NAME"].ToString();
+
+                if (!string.IsNullOrEmpty(schema) || !string.IsNullOrEmpty(catalog))
+                {
+                    table.Name = catalog + "." + schema + "." + GetTableName(tableName);
+
+                }
+                else
+                {
+                    table.Name = GetTableName(tableName);
+                }
+
+                if (schemaTables.Columns.Contains("TABLE_TYPE")) table.Type = row["TABLE_TYPE"].ToString();
+                table.Source = this;
+                if (!tables.Exists(i => i.Name == table.Name)) tables.Add(table);
+            }
+        }
 
         /// <summary>
         /// Last information message

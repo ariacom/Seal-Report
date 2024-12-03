@@ -1152,6 +1152,11 @@
             Fill a list of columns from a table catalog
             </summary>
         </member>
+        <member name="M:Seal.Model.MetaSource.GetJoinsFromCatalog(System.Data.Common.DbConnection)">
+            <summary>
+            Retrun list of Joins from the catalog
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaSource.GetTableName(System.String)">
             <summary>
             Returns a full table name from a raw name
@@ -1160,6 +1165,11 @@
         <member name="M:Seal.Model.MetaSource.GetColumnName(System.String)">
             <summary>
             Returns a full column name from a raw name
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.AddSchemaTables(System.Data.DataTable,System.Collections.Generic.List{Seal.Model.MetaTable})">
+            <summary>
+            Fill list of MetaTable from the catalog
             </summary>
         </member>
         <member name="P:Seal.Model.MetaSource.Information">

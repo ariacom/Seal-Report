@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Linq;
+using Azure.Core;
 
 namespace Seal.Helpers
 {
@@ -63,11 +64,10 @@ namespace Seal.Helpers
         }
         #endregion
 
-
         #region Blob container
-        public static BlobContainerClient BlobGetContainerClient(string storageAccountName, string ContainerName)
+        public static BlobContainerClient BlobGetContainerClient(string storageAccountName, TokenCredential credential, string ContainerName)
         {
-            return new BlobServiceClient(new Uri($"https://{storageAccountName}.blob.core.windows.net"), new DefaultAzureCredential()).GetBlobContainerClient(ContainerName);
+            return new BlobServiceClient(new Uri($"https://{storageAccountName}.blob.core.windows.net"), credential).GetBlobContainerClient(ContainerName);
         }
 
         public static void BlobSaveTo(byte[] bytes, string uri, bool overwrite, BlobContainerClient containerClient)

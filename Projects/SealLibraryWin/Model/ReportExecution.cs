@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml;
 
 namespace Seal.Model
 {
@@ -2263,6 +2264,7 @@ namespace Seal.Model
             {
                 Report.Format = format;
                 Report.ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)), "." + Report.ResultExtension, true);
+                Report.HTMLResultFilePath = "";
                 Report.Status = ReportStatus.RenderingResult;
                 executeTasks(ExecutionStep.BeforeRendering);
 
