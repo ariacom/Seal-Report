@@ -29,7 +29,7 @@
 
         //Header & Footer
         var logoPath = Path.ChangeExtension(report.Repository.Configuration.LogoFilePath, "png");
-        if (File.Exists(logoPath))
+        if (File.Exists(logoPath) && renderer.GetBoolValue("show_logo"))
         {
             result.Worksheet.HeaderFooter.OddHeader.InsertPicture(Image.FromFile(logoPath), PictureAlignment.Right);
         }
@@ -51,6 +51,15 @@
             sheet.PrinterSettings.PaperSize = (ePaperSize)Enum.Parse(typeof(ePaperSize), renderer.GetValue("printer_paper_size"));
             sheet.PrinterSettings.Orientation = (eOrientation)Enum.Parse(typeof(eOrientation), renderer.GetValue("printer_orientation"));
             sheet.PrinterSettings.FitToPage = renderer.GetBoolValue("printer_fit_page");
+            sheet.PrinterSettings.FitToWidth = renderer.GetNumericValue("printer_fit_width");
+            sheet.PrinterSettings.FitToHeight = renderer.GetNumericValue("printer_fit_height");
+            sheet.PrinterSettings.LeftMargin = 0.314m;
+            sheet.PrinterSettings.RightMargin = 0.314m;
+            sheet.PrinterSettings.TopMargin = 0.59m;
+            sheet.PrinterSettings.BottomMargin = 0.59m;
+            sheet.PrinterSettings.HeaderMargin = 0.314m;
+            sheet.PrinterSettings.FooterMargin = 0.314m;
+
         }
 
         //Report information
