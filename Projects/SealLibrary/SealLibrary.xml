@@ -1147,14 +1147,24 @@
             Returns an open DbConnection
             </summary>
         </member>
+        <member name="M:Seal.Model.MetaSource.GetColumnsSchemaTable(System.Data.Common.DbConnection,System.String)">
+            <summary>
+            Returns a datatable containing the columns definiton of the table
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaSource.AddColumnsFromCatalog(System.Collections.Generic.List{Seal.Model.MetaColumn},System.Data.Common.DbConnection,Seal.Model.MetaTable)">
             <summary>
             Fill a list of columns from a table catalog
             </summary>
         </member>
+        <member name="M:Seal.Model.MetaSource.GetTableKeysSchemaTable(System.Data.Common.DbConnection)">
+            <summary>
+            Returns a datatable containing the key definition of the current database
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaSource.GetJoinsFromCatalog(System.Data.Common.DbConnection)">
             <summary>
-            Retrun list of Joins from the catalog
+            Return list of Joins from the catalog
             </summary>
         </member>
         <member name="M:Seal.Model.MetaSource.GetTableName(System.String)">

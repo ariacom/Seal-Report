@@ -21,6 +21,8 @@ using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 
 using System.Data.OleDb;
+using DocumentFormat.OpenXml.Wordprocessing;
+using static Azure.Core.HttpHeader;
 
 #if WINDOWS
 using Seal.Forms;
@@ -657,18 +659,15 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Fill a list of columns from a table catalog
+        /// Returns a datatable containing the columns definiton of the table
         /// </summary>
-        public void AddColumnsFromCatalog(List<MetaColumn> columns, DbConnection connection, MetaTable table)
+        public DataTable GetColumnsSchemaTable(DbConnection connection, string tableName)
         {
-            if (table.Name == null) throw new Exception("No table name has been defined...");
-
             //handle if table name = dbname.owner.tablename
-            string name = table.Name.Replace("[", "").Replace("]", "");
+            string name = tableName.Replace("[", "").Replace("]", "");
             string[] names = name.Split('.');
-            DataTable schemaColumns = null;
 
-            Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(table.PreSQL), table, table.IgnorePrePostError);
+            DataTable schemaColumns = null;
             if (names.Length == 3) schemaColumns = connection.GetSchema("Columns", names);
             else if (names.Length == 2) schemaColumns = connection.GetSchema("Columns", new string[] { null, names[0], names[1] });
             else schemaColumns = connection.GetSchema("Columns", new string[] { null, null, name });
@@ -685,6 +684,19 @@ namespace Seal.Model
                 schemaColumns = connection.GetSchema("Columns", new string[] { name });
             }
 
+            return schemaColumns;
+        }
+
+
+        /// <summary>
+        /// Fill a list of columns from a table catalog
+        /// </summary>
+        public void AddColumnsFromCatalog(List<MetaColumn> columns, DbConnection connection, MetaTable table)
+        {
+            if (table.Name == null) throw new Exception("No table name has been defined...");
+
+            Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(table.PreSQL), table, table.IgnorePrePostError);
+            DataTable schemaColumns = GetColumnsSchemaTable(connection, table.Name);
             Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(table.PostSQL), table, table.IgnorePrePostError);
 
             foreach (DataRow row in schemaColumns.Rows)
@@ -705,7 +717,6 @@ namespace Seal.Model
                     if (row.Table.Columns.Contains("DATA_TYPE")) dataType = row["DATA_TYPE"].ToString();
                     else if (row.Table.Columns.Contains("DATATYPE")) dataType = row["DATATYPE"].ToString();
 
-
                     if (connection is OdbcConnection) column.Type = Helper.ODBCToNetTypeConverter(dbType);
                     else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection) column.Type = Helper.ODBCToNetTypeConverter(dataType);
                     else column.Type = Helper.DatabaseToNetTypeConverter(dataType);
@@ -719,14 +730,11 @@ namespace Seal.Model
             }
         }
 
-
         /// <summary>
-        /// Return list of Joins from the catalog
+        /// Returns a datatable containing the key definition of the current database
         /// </summary>
-        public List<MetaJoin> GetJoinsFromCatalog(DbConnection connection)
+        public DataTable GetTableKeysSchemaTable(DbConnection connection)
         {
-            List<MetaJoin> joins = new List<MetaJoin>();
-
             DataTable schemaTables = null;
             if (connection is OleDbConnection)
             {
@@ -787,8 +795,16 @@ WHERE tc.constraint_type = 'FOREIGN KEY';
                 adapter.Fill(schemaTables);
             }
 
-            if (schemaTables is null) return joins;
+            return schemaTables;
+        }
 
+        /// <summary>
+        /// Return list of Joins from the catalog
+        /// </summary>
+        public List<MetaJoin> GetJoinsFromCatalog(DbConnection connection)
+        {
+            List<MetaJoin> joins = new List<MetaJoin>();
+            DataTable schemaTables = GetTableKeysSchemaTable(connection);
             foreach (DataRow row in schemaTables.Rows)
             {
                 string table1Name = GetTableName(row["PK_TABLE_NAME"].ToString());
