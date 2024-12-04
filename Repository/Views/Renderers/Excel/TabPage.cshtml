@@ -1,4 +1,8 @@
-﻿@using Seal.Model
+﻿@using DocumentFormat.OpenXml
+@using OfficeOpenXml
+@using System.IO
+@using System.Drawing
+@using Seal.Model
 @using Seal.Renderer
 @{
     Report report = Model;
@@ -9,6 +13,16 @@
     ExcelResult result = report.ExcelResult;
 
     if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.Name);
+
+    //Header & Footer
+    var logoPath = Path.ChangeExtension(report.Repository.Configuration.LogoFilePath, "png");
+    if (File.Exists(logoPath) && renderer.GetBoolValue("show_logo"))
+    {
+        result.Worksheet.HeaderFooter.OddHeader.InsertPicture(Image.FromFile(logoPath), PictureAlignment.Right);
+    }
+    result.Worksheet.HeaderFooter.OddHeader.LeftAlignedText = "&14&\"Arial,Regular Bold\" " + report.DisplayName;
+    result.Worksheet.HeaderFooter.OddFooter.RightAlignedText = report.Translate("Page") + $" {ExcelHeaderFooter.PageNumber}/{ExcelHeaderFooter.NumberOfPages}";
+    result.Worksheet.HeaderFooter.OddFooter.LeftAlignedText = ExcelHeaderFooter.FilePath + ExcelHeaderFooter.FileName;
 
     view.ParseChildren();
 }
