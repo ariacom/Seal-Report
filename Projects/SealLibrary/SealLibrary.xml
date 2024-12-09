@@ -6287,6 +6287,21 @@
             List of OutputDevice in the repository
             </summary>
         </member>
+        <member name="F:Seal.Model.Repository.Tag">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Repository.Tag2">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Repository.Tag3">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.CultureInfo">
             <summary>
             Default CultureInfo

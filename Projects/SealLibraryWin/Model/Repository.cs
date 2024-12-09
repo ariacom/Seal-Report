@@ -22,6 +22,8 @@ using Microsoft.CodeAnalysis;
 using SharpCompress.Common;
 using System.Runtime.Loader;
 using Microsoft.CodeAnalysis.Text;
+using System.Xml.Serialization;
+
 
 #if WINDOWS
 using System.Windows.Forms;
@@ -147,6 +149,25 @@ namespace Seal.Model
         /// List of OutputDevice in the repository
         /// </summary>
         public List<OutputDevice> Devices { get; private set; } = new List<OutputDevice>();
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag;
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag2;
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag3;
+
 
         void initCultureSeparators()
         {
