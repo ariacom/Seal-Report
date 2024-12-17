@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>115ecd58-b390-4d41-8678-c76cef2736d6</GUID>
+  <ViewGUID>f83fa48a-2c55-4d77-8972-894e32b206a2</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>b59341a9-1de1-4acd-8166-372d9033c36b</GUID>
+      <Type>Text</Type>
+      <DisplayName>Table name</DisplayName>
+      <EnumGUID>7e69a34f-65cd-4eb0-a13d-cb011fa09a92</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>7e69a34f-65cd-4eb0-a13d-cb011fa09a92</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Employees</string>
+      </EnumValues>
+      <TriggerExecution>true</TriggerExecution>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>7e69a34f-65cd-4eb0-a13d-cb011fa09a92</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>52c144c1-54bc-4433-a043-6e45a6c0a3c3</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData>
+        <Enums>
+          <MetaEnum>
+            <GUID>7e69a34f-65cd-4eb0-a13d-cb011fa09a92</GUID>
+            <Name>Table Name</Name>
+            <IsDynamic>true</IsDynamic>
+            <Sql>SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+ORDER BY 1
+</Sql>
+            <Values>
+              <MetaEV>
+                <Id>Alphabetical list of products</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Categories</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Category Sales for 1997</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Current Product List</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Customer and Suppliers by City</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>CustomerCustomerDemo</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>CustomerDemographics</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Customers</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Employees</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>EmployeeTerritories</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Invoices</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Order Details</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Order Details Extended</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Order Subtotals</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Orders</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Orders Qry</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Product Sales for 1997</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Products</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Products Above Average Price</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Products by Category</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Quarterly Orders</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Region</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Sales by Category</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Sales Totals by Amount</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Shippers</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Summary of Sales by Quarter</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Summary of Sales by Year</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Suppliers</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Territories</Id>
+              </MetaEV>
+            </Values>
+          </MetaEnum>
+        </Enums>
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>7d693e01-82c6-4f46-9a84-92fc6bdea3e4</GUID>
+      <Name>Dynamic model</Name>
+      <SourceGUID>52c144c1-54bc-4433-a043-6e45a6c0a3c3</SourceGUID>
+      <Alias>Master</Alias>
+      <Elements>
+        <ReportElement>
+          <GUID>0801e81f-073b-456c-aa95-529224cc8a23</GUID>
+          <Name>dummy</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d7d3f742-c0b9-453e-b372-06f26cd01c94</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Table>
+        <GUID>bb0e0ec1-722d-4d2e-8f62-38069951db2f</GUID>
+        <Sql>select 1 as dummy
+</Sql>
+        <Alias>Master</Alias>
+        <DynamicColumns>true</DynamicColumns>
+        <Columns>
+          <MetaColumn>
+            <GUID>d7d3f742-c0b9-453e-b372-06f26cd01c94</GUID>
+            <Name>dummy</Name>
+            <Type>Numeric</Type>
+            <Category>Model2</Category>
+            <DisplayName>Dummy</DisplayName>
+            <Format>N0</Format>
+          </MetaColumn>
+        </Columns>
+      </Table>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>cd5ddbd4-c849-4cb2-9da9-5b7924602317</GUID>
+      <Name>Build dynamic model</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>52c144c1-54bc-4433-a043-6e45a6c0a3c3</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    task.LogMessage($"Executing '{task.Name}'");
+
+    var sqlModel = report.Models.First();
+    foreach (var r in sqlModel.Restrictions) {
+        task.LogMessage($"{r.Name} {r.DisplayName} {r.GUID} {r.MetaColumn.Name} {r.FirstStringValue}");
+    }
+  //  task.LogMessage($"{sqlModel.Restriction}");
+
+    var restr = report.GetInputValueByName("Table name");
+    var tableName = restr.FirstStringValue;
+    report.DisplayName = tableName;
+    report.Tag = false; //Defining
+    report.AllViews.First(i =&gt; i.Name == "Data Table").Enabled = true;
+    if (report.StringTag != tableName) {
+        report.Tag = true; //Defining
+        report.StringTag = tableName;
+        report.AllViews.First(i =&gt; i.Name == "Data Table").Enabled = false;
+
+        sqlModel.Table.Sql = $"select {Helper.QuoteSingle(tableName)} table_name, * from [{tableName}]";
+        report.LogMessage($"Handling '{tableName}'");
+
+        report.ExecutionCommonRestrictions = null;
+        sqlModel.RefreshMetaTable(true);
+        sqlModel.Elements.Clear();
+        sqlModel.Restrictions.Clear();
+        sqlModel.Restriction = "";
+
+        var enumDef = report.Sources.First().MetaData.Enums.First(i =&gt; i.Name == "Employee Name");
+
+        foreach (var column in sqlModel.Table.Columns) {
+            if (column.Name.StartsWith("Photo") || column.Name.StartsWith("Notes") || column.Name.StartsWith("Picture")) continue;
+        
+            //Restriction
+            //Sample for an enum on the Employees table
+            var restriction = ReportRestriction.CreateReportRestriction();
+            restriction.MetaColumnGUID = column.GUID;
+            restriction.MetaColumn = column;
+            restriction.Source = sqlModel.Source;
+            restriction.Report = sqlModel.Report;
+            restriction.PivotPosition = PivotPosition.Row;
+            if (column.Name.StartsWith("LastName")) {
+                restriction.EnumGUIDRE = enumDef.GUID;
+                restriction.Prompt = PromptType.Prompt;
+                restriction.EnumLayout = RestrictionLayout.SelectNoFilter;
+                restriction. SetEnumHtmlIds();
+                if (!string.IsNullOrEmpty(sqlModel.Restriction)) sqlModel.Restriction += "\r\nAND ";
+                sqlModel.Restriction += restriction.Pattern;
+                sqlModel.Restrictions.Add(restriction);
+            }
+
+            //Element
+            var element = ReportElement.Create();
+            if (!column.Name.StartsWith("[")) column.Name = $"[{column.Name}]";
+            element.MetaColumnGUID = column.GUID;
+            element.MetaColumn = column;
+            element.Source = sqlModel.Source;
+            element.Report = sqlModel.Report;
+            element.PivotPosition = PivotPosition.Row;
+            element.SetDefaults();
+            sqlModel.Elements.Add(element);
+        }
+task.LogMessage($"Elements-&gt; '{sqlModel.Elements.Count}'");
+
+        report.StringTag2 = sqlModel.Restriction;
+        if (!string.IsNullOrEmpty(report.StringTag2)) sqlModel.Restriction = $"1=0 AND ({report.StringTag2})";
+
+        sqlModel.InitReferences();
+    }
+    else {
+        sqlModel.Restriction = report.StringTag2;
+    }
+    
+task.LogMessage($"Elements-&gt; '{sqlModel.Elements.Count}' Restrs-&gt;{sqlModel.Restrictions.Count}\r\n{sqlModel.Restriction}\r\n");
+    
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>f83fa48a-2c55-4d77-8972-894e32b206a2</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>9f843164-b5ea-4019-aea6-5216756f252e</GUID>
+          <Name>Dynamic model</Name>
+          <Views>
+            <ReportView>
+              <GUID>18adb78a-ba66-4d9d-8914-d8d0458605f2</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>9ab1719b-89cc-4321-968c-e050d17692d7</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>89089460-a14e-40a9-a35e-79d5a74ec92d</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>5791f17c-d09e-4077-ab5d-23ac05ee9a07</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>1a6102bf-edb5-4e6f-9438-efeb0121a9fa</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>00f9bf22-d543-4513-b275-cff261d674dc</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>b2f7268d-68b7-45e3-8cee-59c9713dba3d</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>7d693e01-82c6-4f46-9a84-92fc6bdea3e4</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>
