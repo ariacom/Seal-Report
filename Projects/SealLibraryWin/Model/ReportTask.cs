@@ -17,6 +17,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Data;
 using Npgsql;
+using System.Data.SQLite;
 using Npgsql.Internal;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Office2021.DocumentTasks;
@@ -800,6 +801,10 @@ namespace Seal.Model
                     else if (connection is NpgsqlConnection n)
                     {
                         result = ((NpgsqlConnection)connection).CreateCommand();
+                    }
+                    else if (connection is SQLiteConnection)
+                    {
+                        result = ((SQLiteConnection)connection).CreateCommand();
                     }
                     else
                     {

@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using Oracle.ManagedDataAccess.Client;
 using System.Xml;
 using Npgsql;
+using System.Data.SQLite;
 using DocumentFormat.OpenXml.Bibliography;
 using Azure.Identity;
 using Azure.Storage.Blobs;
@@ -805,6 +806,13 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new NpgsqlDataAdapter(command);
             }
+            else if (connection is SQLiteConnection)
+            {
+                SQLiteCommand command = ((SQLiteConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new SQLiteDataAdapter(command);
+            }
             else
             {
                 OleDbCommand command = ((OleDbConnection)connection).CreateCommand();
@@ -881,6 +889,10 @@ namespace Seal.Helpers
             {
                 connection = new NpgsqlConnection(connectionString);
             }
+            else if (connectionType == ConnectionType.SQLite)
+            {
+                connection = new SQLiteConnection(connectionString);
+            }
             else
             {
                 OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connectionString);
@@ -932,6 +944,10 @@ namespace Seal.Helpers
             else if (connectionString.ToLower().Contains("postgres"))
             {
                 result = DatabaseType.PostgreSQL;
+            }
+            else if (connectionString.ToLower().Contains("sqlite"))
+            {
+                result = DatabaseType.SQLite;
             }
 
             return result;
