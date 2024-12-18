@@ -241,6 +241,11 @@ namespace Seal.Forms
                             year.Name = string.Format("make_date(date_part('year',{0}), 1, 1)", _metaColumn.Name);
                             month.Name = string.Format("make_date(date_part('year',{0}), date_part('month',{0}), 1)", _metaColumn.Name);
                         }
+                        else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.SQLite)
+                        {
+                            year.Name = string.Format("date(substr({0}, 1, 4) || '-01-01')", _metaColumn.Name);
+                            month.Name = string.Format("date(substr({0}, 1, 4) || '-' || substr({0}, 6, 2) || '-01')", _metaColumn.Name);
+                        }
                         year.DrillChildren.Add(month.GUID);
                         month.DrillChildren.Add(_metaColumn.GUID);
                         initEntity(_metaColumn.MetaTable);

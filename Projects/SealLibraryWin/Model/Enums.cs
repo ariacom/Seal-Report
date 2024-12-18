@@ -30,7 +30,9 @@ namespace Seal.Model
         [Description("MySQL")]
         MySQL,
         [Description("PostgreSQL")]
-        PostgreSQL
+        PostgreSQL,
+        [Description("SQLite")]
+        SQLite
     }
 
     public enum ConnectionType
@@ -50,7 +52,9 @@ namespace Seal.Model
         [Description("Oracle")]
         Oracle,
         [Description("PostgreSQL")]
-        PostgreSQL,        
+        PostgreSQL,
+        [Description("SQLite")]
+        SQLite
     }
 
     public enum ColumnType

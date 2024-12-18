@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.Web.Administration;
 using Newtonsoft.Json.Linq;
 using Npgsql;
+using System.Data.SQLite;
 using OfficeOpenXml;
 using Oracle.ManagedDataAccess.Client;
 using PuppeteerSharp;
@@ -131,6 +132,7 @@ namespace Seal.Helpers
                     _ = new SKSvg();
                     _ = new PdfOptions();
                     _ = new NpgsqlConnection("");
+                    _ = new SQLiteConnection("");
                     _ = AngleSharp.Configuration.Default;
 #if WINDOWS
                     _ = new System.Windows.Forms.Control();
