@@ -805,6 +805,8 @@ WHERE tc.constraint_type = 'FOREIGN KEY';
         {
             List<MetaJoin> joins = new List<MetaJoin>();
             DataTable schemaTables = GetTableKeysSchemaTable(connection);
+            if (schemaTables == null) return joins;
+
             foreach (DataRow row in schemaTables.Rows)
             {
                 string table1Name = GetTableName(row["PK_TABLE_NAME"].ToString());
