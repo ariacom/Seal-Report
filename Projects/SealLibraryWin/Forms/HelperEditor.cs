@@ -243,8 +243,10 @@ namespace Seal.Forms
                         }
                         else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.SQLite)
                         {
-                            year.Name = string.Format("date(substr({0}, 1, 4) || '-01-01')", _metaColumn.Name);
-                            month.Name = string.Format("date(substr({0}, 1, 4) || '-' || substr({0}, 6, 2) || '-01')", _metaColumn.Name);
+                            year.Type = ColumnType.Text;
+                            month.Type = ColumnType.Text;
+                            year.Name = string.Format("substr({0}, 1, 4)", _metaColumn.Name);
+                            month.Name = string.Format("substr({0}, 1, 4) || '-' || substr({0}, 6, 2)", _metaColumn.Name); 
                         }
                         year.DrillChildren.Add(month.GUID);
                         month.DrillChildren.Add(_metaColumn.GUID);

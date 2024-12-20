@@ -84,7 +84,7 @@ namespace Seal.Helpers
         {
 
             BlobClient blobClient = containerClient.GetBlobClient(uri);
-            if (blobClient.ExistsAsync().Result)
+            if (blobClient.Exists())
             {
                 using (var stream = new MemoryStream())
                 {

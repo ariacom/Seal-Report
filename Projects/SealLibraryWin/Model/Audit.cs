@@ -4,7 +4,9 @@
 //
 using Seal.Helpers;
 using System;
+using System.Data.SQLite;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Seal.Model
 {
@@ -173,12 +175,44 @@ namespace Seal.Model
                     var script = Repository.Instance.Configuration.AuditScript;
                     if (string.IsNullOrEmpty(script)) script = AuditScriptTemplate;
                     var audit = new Audit() { Type = type, User = user, Path = path, Detail = detail, Error = error, Report = report, Schedule = schedule };
-                    RazorHelper.CompileExecute(script, audit, Key);
+
+                    var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith("Audit"));
+                    bool lockDatabase = (auditSource != null && auditSource.Connection.ConnectionType == ConnectionType.SQLite);
+
+                    if (lockDatabase)
+                    {
+                        lock (Key)
+                        {
+                            ExecuteWithRetry(() => RazorHelper.CompileExecute(script, audit, Key));
+                        }
+                    }
+                    else
+                    {
+                        RazorHelper.CompileExecute(script, audit, Key);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, $"Error executing the Audit Script:\r\n{ex.Message}");
+            }
+        }
+
+        private static void ExecuteWithRetry(Action action, int maxRetryCount = 3, int delayMilliseconds = 200)
+        {
+            int retryCount = 0;
+            while (true)
+            {
+                try
+                {
+                    action();
+                    break;
+                }
+                catch (SQLiteException ex) when (ex.Message.Contains("database is locked") && retryCount < maxRetryCount)
+                {
+                    retryCount++;
+                    System.Threading.Thread.Sleep(delayMilliseconds);
+                }
             }
         }
     }

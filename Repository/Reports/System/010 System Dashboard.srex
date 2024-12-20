@@ -115,34 +115,6 @@
       <GUID>f59c3635-356f-4791-b0a1-5d05a5571eb1</GUID>
       <Name>Errors per day</Name>
       <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
-      <LoadScript>@using System.Data
-@{
-    ReportModel model = Model;
-    DataTable table = model.ResultTable;
-	ReportExecutionLog log = model.Report;
-
-    //Script executed to modify the model result table after it has been loaded from the database
-    //Modify values in the current result table, rows can also be added and deleted.
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    log.LogMessage("Modifying table with the model 'Post Load Script'...");
-    
-    //Insert values to 0 if missing..
-    var offset = 20;
-    for (int day=0; day&lt;=offset; day++) {
-        var currentDate =  DateTime.Now.AddDays(day-offset).Date;
-        if (table.AsEnumerable().Where(i =&gt; i.Field&lt;DateTime&gt;("C1") == currentDate &amp;&amp; i.Field&lt;string&gt;("C0") == "Event Error").AsDataView().Count == 0)
-        {
-            table.Rows.Add(currentDate, 0, "Event Error"); 
-        }
-        if (table.AsEnumerable().Where(i =&gt; i.Field&lt;DateTime&gt;("C1") == currentDate &amp;&amp; i.Field&lt;string&gt;("C0") == "Report Execution Error").AsDataView().Count == 0)
-        {
-            table.Rows.Add(currentDate, 0, "Report Execution Error"); 
-        }
-    }    
-    
-    log.LogMessage("Table rows: {0}", table.Rows.Count);
-}
-</LoadScript>
       <Elements>
         <ReportElement>
           <GUID>bf5a07f3-d06e-44ca-8950-db9b06a4b585</GUID>
@@ -176,6 +148,7 @@
           <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
@@ -241,6 +214,7 @@ AND [3d13a079-5104-4fd6-9415-9a5ec4e91e6a]</Restriction>
           <AggregateFunction>Count</AggregateFunction>
           <ShowTotal>RowColumn</ShowTotal>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
@@ -314,7 +288,6 @@ AND [d470def5-af9d-47c6-ad2b-c8e96afc5459]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <TotalAggregateFunction>Max</TotalAggregateFunction>
-          <SerieDefinition>Axis</SerieDefinition>
           <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -327,7 +300,6 @@ AND [d470def5-af9d-47c6-ad2b-c8e96afc5459]</Restriction>
           <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
           <ShowTotal>RowColumn</ShowTotal>
-          <ChartJSSerie>Bar</ChartJSSerie>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
@@ -384,11 +356,11 @@ AND [5bca87bc-78c9-468a-8c37-b3df60bd8b25]</Restriction>
       <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
       <Elements>
         <ReportElement>
-          <GUID>c2e23161-4b45-440d-bba8-0779caa7bce0</GUID>
+          <GUID>15704b96-5116-4357-b954-d1009a0f1b2a</GUID>
           <Name>sr_audit.event_date</Name>
           <DisplayName />
           <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
-          <Format>dd/MM</Format>
+          <Format>dd/MM HH:mm</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <TotalAggregateFunction>Max</TotalAggregateFunction>

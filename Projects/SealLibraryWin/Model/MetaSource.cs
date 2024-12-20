@@ -23,6 +23,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data.OleDb;
 using DocumentFormat.OpenXml.Wordprocessing;
 using static Azure.Core.HttpHeader;
+using System.Data.SQLite;
 
 #if WINDOWS
 using Seal.Forms;
@@ -792,6 +793,18 @@ WHERE tc.constraint_type = 'FOREIGN KEY';
 ";
                 schemaTables = new DataTable();
                 DbDataAdapter adapter = new NpgsqlDataAdapter(sql, (NpgsqlConnection)connection);
+                adapter.Fill(schemaTables);
+            }
+            else if (connection is SQLiteConnection)
+            {
+                //SQLite
+                var sql = @"SELECT m.name AS PK_TABLE_NAME, [from] AS PK_COLUMN_NAME, [table] AS FK_TABLE_NAME, [to] AS FK_COLUMN_NAME
+FROM sqlite_master m
+JOIN pragma_foreign_key_list(m.name) p
+WHERE m.type = 'table';
+";
+                schemaTables = new DataTable();
+                DbDataAdapter adapter = new SQLiteDataAdapter(sql, (SQLiteConnection)connection);
                 adapter.Fill(schemaTables);
             }
 
