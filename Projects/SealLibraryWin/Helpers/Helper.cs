@@ -51,6 +51,39 @@ namespace Seal.Helpers
             else return value.ToString();
         }
 
+        public static string GetEnumDescription(object value)
+        {
+            var type = value.GetType();
+            FieldInfo fi = type.GetField(Enum.GetName(type, value));
+            DescriptionAttribute dna = (DescriptionAttribute)Attribute.GetCustomAttribute(fi, typeof(DescriptionAttribute));
+            if (dna != null) return dna.Description;
+            else return value.ToString();
+        }
+
+        public static T GetEnumFromDescription<T>(string description) where T : Enum
+        {
+            var type = typeof(T);
+            var fields = type.GetFields();
+
+            foreach (var field in fields)
+            {
+                var attribute = field.GetCustomAttribute<DescriptionAttribute>();
+                if (attribute != null && attribute.Description == description)
+                {
+                    return (T)field.GetValue(null);
+                }
+            }
+
+            // If no matching description is found, try parse the enum value directly
+            if (Enum.TryParse(typeof(T), description, true, out object result))
+            {
+                return (T)result;
+            }
+
+            throw new ArgumentException($"No enum value with description '{description}' found in {typeof(T).Name}");
+        }
+
+
         static public void CopyProperties(object src, object dest, string[] skipNames = null)
         {
             var xmlIgnore = new XmlIgnoreAttribute();
