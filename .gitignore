@@ -71,6 +71,9 @@ _ed.*.js
 *.slc
 *.srl
 Sources/_*.scfx
+TranslationsWebDesigner.xlsx
+sealweb-editor.css
+MainAssistant.cshtml
 
 # =========================
 # Operating System Files
@@ -101,4 +104,3 @@ Repository/Databases/Audit.ldb
 *.ldb
 Projects/SealDocumentation/Help.zip
 *.nupkg
-Repository/Settings/TranslationsWebDesigner.xlsx

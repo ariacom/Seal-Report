@@ -39,6 +39,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Remove="Views\Home\MainAssistant.cshtml" />
 		<Content Remove="Views\Home\MainEditor.cshtml" />
 		<Content Remove="Views\Home\MenuBig.cshtml" />
 	</ItemGroup>
