@@ -42,6 +42,7 @@ bld/
 TestFiles/
 
 #specific for Seal Report
+Repository/Databases/Audit.sqlite
 work/
 Repository/Sources/_*.scfx
 [Pp]ackages/

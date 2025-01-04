@@ -42,6 +42,8 @@
 		<Content Remove="Views\Home\MainAssistant.cshtml" />
 		<Content Remove="Views\Home\MainEditor.cshtml" />
 		<Content Remove="Views\Home\MenuBig.cshtml" />
+		<Content Remove="wwwroot\Content\sealweb-editor.css" />
+		<Content Remove="wwwroot\Content\_ed.editor.bootstrap.min.css" />
 	</ItemGroup>
 
 	<ItemGroup>
