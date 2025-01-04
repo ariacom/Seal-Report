@@ -179,6 +179,10 @@ table.dataTable {
         animation-duration: 1s;
     }
 
+#assistant-nav-item {
+    font-size: 20px;
+}
+
 #nav_button .fa-spin {
     opacity: 0.6;
     margin-left: 5px;

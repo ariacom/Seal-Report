@@ -60,7 +60,7 @@ namespace Seal.Helpers
             else return value.ToString();
         }
 
-        public static T GetEnumFromDescription<T>(string description) where T : Enum
+        public static T GetEnumFromDescription<T>(string description, T defaultValue) where T : Enum
         {
             var type = typeof(T);
             var fields = type.GetFields();
@@ -79,8 +79,7 @@ namespace Seal.Helpers
             {
                 return (T)result;
             }
-
-            throw new ArgumentException($"No enum value with description '{description}' found in {typeof(T).Name}");
+            return defaultValue;
         }
 
 
