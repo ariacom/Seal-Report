@@ -73,6 +73,10 @@
                         }
                     </ul>
                 </li>
+                @if (model.HasEditor)
+                {
+                    <li class="nav-item folderview"><a id="assistant-nav-item" class="navbar-white fa fa-cog" title="@repository.TranslateWeb("Toggle assistant and folders")"></a></li>
+                }
                 <li class="nav-item folderview"><a id="refresh-nav-item" class="navbar-white fa fa-refresh" title="@repository.TranslateWeb("Refresh")"></a></li>
                 <li class="nav-item folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="navbar-white fa fa-folder-open"></a></li>
             </ul>
