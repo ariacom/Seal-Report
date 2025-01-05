@@ -163,4 +163,24 @@ module SWIUtil {
         $("#refresh-nav-item").removeClass("fa-spin");
         $("#refresh-nav-item").css("display", "block");
     }
+
+    export function GatewayCallbackHandler(data: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        if (!data.error) {
+            if (callback) callback(data);
+        }
+        else {
+            if (errorcb) errorcb(data);
+            else {
+                SWIUtil.ShowMessage("alert-danger", data.error, 0);
+                if (!data.authenticated) {
+                    location.reload();
+                }
+            }
+        }
+    }
+
+    export function GatewayFailure(xhr, status, error) {
+        SWIUtil.ShowMessage("alert-danger", error + ". " + _errorServer, 0);
+    }
+
 }

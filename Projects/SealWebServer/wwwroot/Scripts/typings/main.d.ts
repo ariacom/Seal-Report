@@ -16,13 +16,6 @@ interface ReportEditorInterface {
     brand(): void;
     init(): void;
 }
-
-interface DashboardEditorInterface {
+interface AssistantInterface {
     init(): void;
-    initGrid(grid: any);
-    initGridGroupName(groupSpan: any, groupInput: any, groupDrag: any);
-    initGridItemOrder(grid: any);
-    initMenu();
-    initDashboardMenu();
-    getEditButtons();
 }

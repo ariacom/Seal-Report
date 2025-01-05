@@ -16,6 +16,7 @@ var $elementDropDown: JQuery;
 var _gateway: SWIGateway;
 var _main: SWIMain;
 var _editor: ReportEditorInterface;
+var _assistant: AssistantInterface;
 
 declare var folderRightSchedule: number;
 declare var folderRightEdit: number;

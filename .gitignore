@@ -55,13 +55,15 @@ Projects/SealDocumentation/Help/
 *.pubxml
 
 #web report editor files
+.env
 SealEditor*.sln
 SealWebServerEditor.*
 HomeControllerSWIEditor.cs
 SWIReportModels.cs
 swi-properties.*
 swi-editor.*
-swi-dashboard-editor.*
+swi-gateway-editor.*
+swi-assistant.*
 swi-button-group.*
 swi.js
 MenuBig.cshtml

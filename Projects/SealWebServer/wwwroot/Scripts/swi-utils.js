@@ -178,5 +178,26 @@ var SWIUtil;
         $("#refresh-nav-item").css("display", "block");
     }
     SWIUtil.StopSpinning = StopSpinning;
+    function GatewayCallbackHandler(data, callback, errorcb) {
+        if (!data.error) {
+            if (callback)
+                callback(data);
+        }
+        else {
+            if (errorcb)
+                errorcb(data);
+            else {
+                SWIUtil.ShowMessage("alert-danger", data.error, 0);
+                if (!data.authenticated) {
+                    location.reload();
+                }
+            }
+        }
+    }
+    SWIUtil.GatewayCallbackHandler = GatewayCallbackHandler;
+    function GatewayFailure(xhr, status, error) {
+        SWIUtil.ShowMessage("alert-danger", error + ". " + _errorServer, 0);
+    }
+    SWIUtil.GatewayFailure = GatewayFailure;
 })(SWIUtil || (SWIUtil = {}));
 //# sourceMappingURL=swi-utils.js.map
