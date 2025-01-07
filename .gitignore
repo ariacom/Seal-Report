@@ -57,6 +57,7 @@ Projects/SealDocumentation/Help/
 #web report editor files
 .env
 SealEditor*.sln
+SealAIServer.*
 SealWebServerEditor.*
 HomeControllerSWIEditor.cs
 SWIReportModels.cs

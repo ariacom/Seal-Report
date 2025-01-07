@@ -575,12 +575,14 @@ namespace Seal.Model
                     AssembliesLoaded = true;
                 }
 
+                var str = Assembly.Load("System.Data.Common").Location;
+
                 if (!DynamicAssembliesLoaded)
                 {
                     //Load extra dynamic assemblies
                     var csFiles = Directory.GetFiles(DynamicsFolder, "*.cs");
                     var dynamicFolder = Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsFolder;
-                    foreach (var csFile in csFiles)
+                    foreach (var csFile in csFiles.OrderBy(i => i))
                     {
                         try
                         {
@@ -591,10 +593,24 @@ namespace Seal.Model
                                 var code = File.ReadAllText(csFile);
                                 // Compile the code
                                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                                var references = AppDomain.CurrentDomain.GetAssemblies()
+                                var references = new[]
+                                {
+                                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                                    MetadataReference.CreateFromFile(typeof(List<>).Assembly.Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Collections").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Linq").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Globalization").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Net").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Security").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.IO").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Data").Location),
+                                     MetadataReference.CreateFromFile(Assembly.Load("System.Data.Common").Location)
+                               }.Concat(AppDomain.CurrentDomain.GetAssemblies()
                                     .Where(a => !a.IsDynamic && a.Location != dllPath)
-                                    .Select(a => MetadataReference.CreateFromFile(a.Location))
-                                    .Cast<MetadataReference>();
+                                    .Select(a => MetadataReference.CreateFromFile(a.Location)))
+                                .Distinct();
 
                                 var compilation = CSharpCompilation.Create(
                                     Path.GetFileNameWithoutExtension(csFile),
