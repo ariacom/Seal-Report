@@ -461,7 +461,7 @@
         </member>
         <member name="P:Seal.Model.MetaColumn.HelperShowValues">
             <summary>
-            Editor Helper:  Show the first 1000 values of the column
+            Editor Helper:  Show the different values of the column in the table
             </summary>
         </member>
         <member name="P:Seal.Model.MetaColumn.Information">

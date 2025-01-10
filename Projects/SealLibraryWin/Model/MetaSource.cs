@@ -15,14 +15,12 @@ using System.Data.Odbc;
 using System.Xml;
 using System.Data.SqlClient;
 using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Packaging;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 
 using System.Data.OleDb;
 using DocumentFormat.OpenXml.Wordprocessing;
-using static Azure.Core.HttpHeader;
 using System.Data.SQLite;
 
 #if WINDOWS
