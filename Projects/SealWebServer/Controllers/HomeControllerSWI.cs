@@ -806,6 +806,7 @@ namespace SealWebServer.Controllers
                 setSessionValue(SessionUser, null);
                 setSessionValue(SessionNavigationContext, null);
                 setSessionValue(SessionUploadedFiles, null);
+                setSessionValue(SessionAIController, null);
                 CreateWebUser();
 
                 //SignOut
