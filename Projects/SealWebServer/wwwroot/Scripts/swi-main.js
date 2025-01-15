@@ -135,6 +135,8 @@ var SWIMain = /** @class */ (function () {
         }
         if (_editor)
             _editor.brand();
+        if (_assistant)
+            _assistant.init();
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
             _main.ReloadReportsTable();

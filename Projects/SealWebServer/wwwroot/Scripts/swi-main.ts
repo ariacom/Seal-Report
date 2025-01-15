@@ -120,7 +120,6 @@ class SWIMain {
             $("body").css("opacity", "0.1");
             location.reload();
         }
-
         _main._profile = data;
         _main._reportPath = "";
         _main._folder = null;
@@ -174,6 +173,7 @@ class SWIMain {
         }
 
         if (_editor) _editor.brand();
+        if (_assistant) _assistant.init();
 
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
