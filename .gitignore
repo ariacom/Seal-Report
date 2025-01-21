@@ -64,6 +64,7 @@ SWIReportModels.cs
 swi-properties.*
 swi-editor.*
 swi-gateway-editor.*
+swi-gateway-assistant.*
 swi-assistant.*
 swi-button-group.*
 swi.js
@@ -77,7 +78,8 @@ _ed.*.js
 Sources/_*.scfx
 TranslationsWebDesigner.xlsx
 sealweb-editor.css
-MainAssistant.cshtml
+sealweb-assistant.css
+Assistant.cshtml
 
 # =========================
 # Operating System Files

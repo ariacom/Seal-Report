@@ -28,6 +28,12 @@
                         </ul>
                     </li>
                 </ul>
+                @if (model.HasEditor)
+                {
+                    <ul class="nav navbar-nav pull-xs-right assistantview folderview">
+                        <li class="nav-item"><a id="assistant-nav-item" class="navbar-white fa fa-cog" title="@repository.TranslateWeb("Toggle assistant and folders")"></a></li>
+                    </ul>
+                }
                 <span id="nav_cr" style="display:none;font-size:small;padding-top:5px;text-align:center;" class="navbar-brand"></span>
                 <a id="nav_button" href="#" class="navbar-brand"></a>
                 <span id="nav_badge" class="badge navbar-left hidden">@repository.TranslateReport("Nav")</span>
@@ -73,10 +79,6 @@
                         }
                     </ul>
                 </li>
-                @if (model.HasEditor)
-                {
-                    <li class="nav-item folderview"><a id="assistant-nav-item" class="navbar-white fa fa-cog" title="@repository.TranslateWeb("Toggle assistant and folders")"></a></li>
-                }
                 <li class="nav-item folderview"><a id="refresh-nav-item" class="navbar-white fa fa-refresh" title="@repository.TranslateWeb("Refresh")"></a></li>
                 <li class="nav-item folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="navbar-white fa fa-folder-open"></a></li>
             </ul>

@@ -2,11 +2,11 @@
     text-align: right;
 }
 
-.foldersview, .reportview, .navbar-right {
+.folderview, .reportview, .navbar-right {
     display: none;
 }
 
-.foldersview, .reportview, .navbar-right, #output-panel, #message_button {
+.folderview, .reportview, .navbar-right, #output-panel, #message_button {
     transition: opacity 1s linear;
 }
 

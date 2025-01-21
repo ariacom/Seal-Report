@@ -13,7 +13,6 @@ var $elementDropDown;
 var _gateway;
 var _main;
 var _editor;
-var _assistant;
 $(document).ready(function () {
     _gateway = new SWIGateway();
     _main = new SWIMain();
@@ -135,8 +134,6 @@ var SWIMain = /** @class */ (function () {
         }
         if (_editor)
             _editor.brand();
-        if (_assistant)
-            _assistant.init();
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
             _main.ReloadReportsTable();

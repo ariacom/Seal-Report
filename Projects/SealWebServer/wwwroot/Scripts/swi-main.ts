@@ -16,7 +16,6 @@ var $elementDropDown: JQuery;
 var _gateway: SWIGateway;
 var _main: SWIMain;
 var _editor: ReportEditorInterface;
-var _assistant: AssistantInterface;
 
 declare var folderRightSchedule: number;
 declare var folderRightEdit: number;
@@ -173,7 +172,6 @@ class SWIMain {
         }
 
         if (_editor) _editor.brand();
-        if (_assistant) _assistant.init();
 
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
