@@ -312,42 +312,49 @@ namespace Seal.Model
         {
             get
             {
-                var result = "";
-                if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
-                {
-                    result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.Odbc)
-                {
-                    result = Helper.GetOdbcConnectionString(OdbcConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.MongoDB)
-                {
-                    result = Helper.GetMongoConnectionString(MongoDBConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.MySQL)
-                {
-                    result = Helper.GetMySQLConnectionString(MySQLConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.Oracle)
-                {
-                    result = Helper.GetOleDbConnectionString(OracleConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.PostgreSQL)
-                {
-                    result = Helper.GetOleDbConnectionString(PostgreSQLConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.SQLite)
-                {
-                    result = Helper.GetOleDbConnectionString(SQLiteConnectionString, UserName, ClearPassword);
-                }
-                else
-                {
-                    result = Helper.GetOleDbConnectionString(ConnectionString, UserName, ClearPassword);
-                }
-
-                return Source.Repository.ReplaceRepositoryKeyword(result);
+                return GetFullConnectionString(UserName, ClearPassword);
             }
+        }
+
+        public string GetFullConnectionString(string userName, string password)
+        {
+            var result = "";
+            if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
+            {
+                result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.Odbc)
+            {
+                result = Helper.GetOdbcConnectionString(OdbcConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.MongoDB)
+            {
+                result = Helper.GetMongoConnectionString(MongoDBConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.MySQL)
+            {
+                result = Helper.GetMySQLConnectionString(MySQLConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.Oracle)
+            {
+                result = Helper.GetOleDbConnectionString(OracleConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.PostgreSQL)
+            {
+                result = Helper.GetOleDbConnectionString(PostgreSQLConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.SQLite)
+            {
+                result = Helper.GetOleDbConnectionString(SQLiteConnectionString, userName, password);
+            }
+            else
+            {
+                result = Helper.GetOleDbConnectionString(ConnectionString, userName, password);
+            }
+
+            return Source.Repository.ReplaceRepositoryKeyword(result);
+
+
         }
 
         /// <summary>
