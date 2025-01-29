@@ -600,11 +600,13 @@ namespace Seal.Model
                                     MetadataReference.CreateFromFile(Assembly.Load("System").Location),
                                     MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location),
                                     MetadataReference.CreateFromFile(Assembly.Load("System.Collections").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Collections.Generic").Location),
                                     MetadataReference.CreateFromFile(Assembly.Load("System.Linq").Location),
                                     MetadataReference.CreateFromFile(Assembly.Load("System.Globalization").Location),
                                     MetadataReference.CreateFromFile(Assembly.Load("System.Net").Location),
                                     MetadataReference.CreateFromFile(Assembly.Load("System.Security").Location),
                                     MetadataReference.CreateFromFile(Assembly.Load("System.IO").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.IO.Stream").Location),
                                     MetadataReference.CreateFromFile(Assembly.Load("System.Data").Location),
                                      MetadataReference.CreateFromFile(Assembly.Load("System.Data.Common").Location)
                                }.Concat(AppDomain.CurrentDomain.GetAssemblies()

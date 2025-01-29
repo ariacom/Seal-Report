@@ -695,6 +695,16 @@ namespace Seal.Helpers
                 WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
                 if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
             }
+            else
+            {
+                var path = Repository.FindRepository();
+                var pathLogs = Path.Combine(path, "Logs");  
+
+                if (Directory.Exists(pathLogs)) WriteDailyLog(DailyLogEvents, pathLogs, 30, fullMessage);
+                else if (Directory.Exists(path)) WriteDailyLog(DailyLogEvents, path, 30, fullMessage);
+                else WriteDailyLog(DailyLogEvents, FileHelper.TempApplicationDirectory, 30, fullMessage);
+            }
+
             try
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", $"{context}\r\n{ex.Message}", EventLogEntryType.Error);

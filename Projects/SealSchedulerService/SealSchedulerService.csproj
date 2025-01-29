@@ -6,9 +6,9 @@
     <RootNamespace>SealSchedulerService</RootNamespace>
     <AssemblyName>SealSchedulerService</AssemblyName>
     <Product>Seal Report</Product>
-    <Version>8.2.2.2</Version>
-    <FileVersion>8.2.2.2</FileVersion>
-    <AssemblyVersion>8.2.2.2</AssemblyVersion>
+    <Version>8.2.2.0</Version>
+    <FileVersion>8.2.2.0</FileVersion>
+    <AssemblyVersion>8.2.2.0</AssemblyVersion>
     <Description>Seal Report Scheduler Service</Description>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
     <ApplicationIcon />
