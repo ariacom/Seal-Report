@@ -20,6 +20,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Configuration;
 using Seal.Renderer;
+using System.ComponentModel.Design;
+
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -69,6 +71,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("DisplayName").SetIsBrowsable(true);
+                GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("ViewGUID").SetIsBrowsable(true);
                 GetProperty("InputValues").SetIsBrowsable(true);
                 GetProperty("PrintQueries").SetIsBrowsable(true);
@@ -98,6 +101,15 @@ namespace Seal.Model
 #endif
         public string DisplayName { get; set; } = "";
         public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(DisplayName); }
+
+        /// <summary>
+        /// The description of the report.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Description"), Description("The description of the report'."), Id(2, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string Description { get; set; } = null;
 
         private string _displayNameEx = null;
         /// <summary>
@@ -131,7 +143,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Current view"), Description("The view used by default to execute the report."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Current view"), Description("The view used by default to execute the report."), Id(3, 1)]
         [TypeConverter(typeof(ReportViewConverter))]
 #endif
         public string ViewGUID { get; set; }
