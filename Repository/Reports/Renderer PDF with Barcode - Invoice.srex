@@ -2850,9 +2850,9 @@ ORDER BY 1</Sql>
     var document = result.Document;
     var container = result.Container;
     
-    
     var orderId = datatable[1, 0].DisplayValue;
     var orderDate = datatable[1, 1].DisplayValue;
+    var orderIdRaw = datatable[1,0].RawDisplayValue;
     
     container
     .DefaultTextStyle(x =&gt; x.FontSize(10))
@@ -2860,7 +2860,7 @@ ORDER BY 1</Sql>
     {
         col.Item().PaddingTop(20).Row(row =&gt;
         {
-            row.AutoItem().Height(30).Width(120).BarcodeCode128(orderId);
+            row.AutoItem().Height(30).Width(120).BarcodeCode128(orderIdRaw);
         });
         
         col.Item().PaddingTop(5).Row(row =&gt; 
