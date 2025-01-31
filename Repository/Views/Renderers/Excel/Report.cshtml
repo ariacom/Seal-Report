@@ -1,5 +1,6 @@
 ﻿@using DocumentFormat.OpenXml
 @using OfficeOpenXml
+@using OfficeOpenXml.Style
 @using System.IO
 @using System.Drawing
 @using Seal.Model
@@ -89,6 +90,17 @@
         int rowStart = 1, colStart = 1;
         sheet.Cells[rowStart, 1].Value = report.DisplayNameEx;
         sheet.Cells[rowStart, 1, rowStart, 1].StyleName = ExcelResult.CellTitleStyle;
+        if (report.ExecutionView.HasValue("report_description"))
+        {
+            rowStart += 1;
+            sheet.Cells[rowStart, 1].Value = report.ExecutionView.GetValue("report_description");
+            var infoCells = sheet.Cells[rowStart, 1, rowStart + 1, 5];
+            infoCells.Merge = true;
+            infoCells.Style.WrapText = true;
+            infoCells.Style.VerticalAlignment = ExcelVerticalAlignment.Top; ;
+            infoCells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+            rowStart += 1;
+        }
         rowStart += 2;
 
         sheet.Cells[rowStart, 1].Value = report.Translate("Execution date");
