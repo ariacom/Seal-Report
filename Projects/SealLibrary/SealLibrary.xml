@@ -2203,11 +2203,6 @@
             The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'.
             </summary>
         </member>
-        <member name="P:Seal.Model.Report.Description">
-            <summary>
-            The description of the report.
-            </summary>
-        </member>
         <member name="P:Seal.Model.Report.DisplayNameEx">
             <summary>
             The final display name of the report. It may include script execution defined in DisplayName
