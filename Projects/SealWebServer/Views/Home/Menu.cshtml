@@ -73,7 +73,7 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        @foreach (var format in Enum.GetValues(typeof(ReportFormat)))
+                        @foreach (var format in repository.ResultAllowedFormats)
                         {
                             <li><a id="ViewResult" format="@format" class="result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
                         }

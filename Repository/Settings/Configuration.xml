@@ -44,6 +44,10 @@ _ed.common.js
       <Name>Application Keys</Name>
       <Value>1*çéàèüwien42feäöü!???**</Value>
     </KeyValue>
+    <KeyValue>
+      <Name>Output Email Device Azure Secret</Name>
+      <Value>56asdsddsdien;:eweewwcf9</Value>
+    </KeyValue>
   </KeyValues>
   <ApplicationKeys />
   <DefaultCulture />
