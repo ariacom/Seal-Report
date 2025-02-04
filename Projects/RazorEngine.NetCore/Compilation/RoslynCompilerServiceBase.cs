@@ -293,10 +293,20 @@ namespace RazorEngine.Roslyn.CSharp
             return Tuple.Create(type, compilationData);
         }
 
+        public Dictionary<int, object> ReferenceCache { get; set; }
+        
         [SecurityCritical]
         private MetadataReference[] GetMetadataReferences(IEnumerable<CompilerReference> references)
         {
-            return references.Select(reference => reference.Visit(new SelectMetadataReference())).ToArray();
+            return references.Select(reference => 
+            {
+                if (ReferenceCache != null && ReferenceCache.ContainsKey(reference.GetHashCode())) {
+                    return ReferenceCache[reference.GetHashCode()] as MetadataReference;
+                }
+                var metadata = reference.Visit(new SelectMetadataReference());
+                ReferenceCache.Add(reference.GetHashCode(), metadata);
+                return metadata;
+            }).ToArray();
         }
     }
 }
