@@ -149,15 +149,6 @@
           <MetaColumnGUID>12f3eb22-0694-4e86-9d7e-ad44eb0a3085</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>1717be66-2191-4464-a9e3-7919f7dcb187</GUID>
-          <Name>UN region</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>Not sorted</SortOrder>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>90b03f8a-c6d0-421f-a723-aa1cfe9f1f5f</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>7edef5a4-020e-4055-ab71-3eb7b5475902</GUID>
           <Name>United Nations[15]</Name>
           <DisplayName />
@@ -256,257 +247,27 @@
           </Views>
           <TemplateName>Model</TemplateName>
           <ModelGUID>d4fca67e-3100-4237-9285-3c0ae761a7a0</ModelGUID>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>b6a8d5bd-e3cb-4e4a-8c71-c711de2526f1</GUID>
+          <Name>Highlights</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;p&gt;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;2 HTML Tables getting data from wiki web sites in the LINQ Source.&lt;/li&gt;
+&lt;li&gt;1 New join 'HTML World Population - HTML World GDP'.&lt;/li&gt;
+&lt;li&gt;1 model based on the 2 tables to show the GDP and population per country.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+</CustomTemplate>
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
       <SortOrder>1</SortOrder>
-      <PDFRenderer>
-        <UseCustomTemplate>true</UseCustomTemplate>
-        <CustomTemplate>@using System.IO
-@using System.Threading
-@using QuestPDF.Infrastructure
-@using QuestPDF.Fluent
-@using QuestPDF.Helpers
-@using Colors = QuestPDF.Helpers.Colors
-@using Svg.Skia
-@using PuppeteerSharp
-@using Seal.Model
-@using Seal.Helpers
-@using Seal.Renderer
-@{
-    Report report = Model;
-    ReportView view = report.CurrentView;
-
-    //Community License, please check https://www.questpdf.com/
-    QuestPDF.Settings.License = LicenseType.Community;
-
-    PDFRenderer renderer = view.PDFRenderer;
-    PDFResult result = new PDFResult(report);
-    var document = new PDFReportDocument() { Renderer = renderer };
-    result.Document = document;
-
-    //Browser Puppeteer
-    try
-    {
-        if (!string.IsNullOrEmpty(report.HTMLResultFilePath) &amp;&amp; File.Exists(report.HTMLResultFilePath))
-        {
-            //Download browser, save in it Assemblies\Chrome directory by default
-            string chromePath = Directory.GetFiles(report.Repository.AssembliesFolder, "chrome.exe", SearchOption.AllDirectories).FirstOrDefault();
-            if (string.IsNullOrEmpty(chromePath))
-            {
-                var bfOptions = new BrowserFetcherOptions() { Path = report.Repository.AssembliesFolder };
-                await new BrowserFetcher(bfOptions).DownloadAsync();
-                chromePath = Directory.GetFiles(report.Repository.AssembliesFolder, "chrome.exe", SearchOption.AllDirectories).FirstOrDefault();
-                //Try default location
-                if (string.IsNullOrEmpty(chromePath)) await new BrowserFetcher().DownloadAsync();
-            }
-
-            //Print HTML has been generated for JavaScript Charts or Gauge
-            result.Browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, ExecutablePath = chromePath });
-            result.Page = await result.Browser.NewPageAsync();
-            await result.Page.GoToAsync("file:///" + report.HTMLResultFilePath, null, new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle0, WaitUntilNavigation.DOMContentLoaded });
-            Thread.Sleep(200);
-        }
-        document.GeneratePdf(report.ResultFilePath);
-
-    }
-    finally
-    {
-        if (result.Page != null) await result.Page.CloseAsync();
-        if (result.Browser != null) await result.Browser.CloseAsync();
-    }
-
-}
-
-@functions {
-    public class PDFReportDocument : IDocument
-    {
-        public PDFRenderer Renderer;
-        public Report Report { get { return Renderer.Report; } }
-        public ReportView View { get { return Renderer.View; } }
-
-        public void Compose(IDocumentContainer container)
-        {
-            container
-                .Page(page =&gt;
-                {
-                    page.Margin(30);
-
-                    var pageSize = Helper.GetStaticPropertyValue(typeof(PageSizes), Renderer.GetValue("page_size")) as PageSize;
-                    if (pageSize != null)
-                    {
-                        if (Renderer.GetValue("page_orientation") == "landscape") page.Size(pageSize.Landscape());
-                        else page.Size(pageSize.Portrait());
-                    }
-
-                    page.Header().Element(ComposeHeader);
-
-                    page.Content().Column(column =&gt;
-                    {
-                        //Content
-                        column.Item().Element(ComposeContent);
-
-                        //Information and messages
-                        bool showInformation = Renderer.GetBoolValue("show_information");
-                        bool showMessages = Renderer.GetBoolValue("show_messages");
-                        if (showInformation || showMessages) column.Item().PageBreak();
-                        if (showInformation) ComposeInformation(column.Item());
-                        if (showMessages) ComposeMessages(column.Item());
-                    });
-
-                    page.Footer().Element(ComposeFooter);
-                });
-        }
-
-        void ComposeHeader(IContainer container)
-        {
-
-            container.Row(row =&gt;
-            {
-                //Title
-                row.RelativeItem().Column(column =&gt;
-                {
-                    column.Item()
-                    .DefaultTextStyle(x =&gt; x.FontSize(Renderer.GetNumericValue("title_font_size")).SemiBold().FontColor(Renderer.GetValue("title_font_color")))
-                    .Text($"{Report.DisplayNameEx}");
-                });
-
-                //Logo
-                var configuration = Report.Repository.Configuration;
-                if (configuration.HasLogo)
-                {
-                    var logoContainer = row.ConstantItem(80).Height(40);
-                    if (configuration.LogoFilePath.EndsWith("svg"))
-                    {
-                       // var svg = new SKSvg();
-                       // svg.Load(configuration.LogoFilePath);
-                        //logoContainer.Svg(svg);
-                        logoContainer.Svg(SvgImage.FromFile(configuration.LogoFilePath));
-                    }
-                    else
-                    {
-                        logoContainer.Image(configuration.LogoFilePath);
-                    }
-                }
-            });
-        }
-        void ComposeContent(IContainer container)
-        {
-            container
-            .Column(column =&gt;
-            {
-                foreach (ReportView childView in View.Views.OrderBy(i =&gt; i.SortOrder))
-                {
-                    Renderer.Result.Container = column.Item();
-                    childView.Parse();
-                }
-            });
-        }
-
-        void ComposeFooter(IContainer container)
-        {
-            //Page numbers and execution date
-            container
-                .DefaultTextStyle(x =&gt; x.FontSize(Renderer.GetNumericValue("footer_font_size")).FontColor(Colors.Grey.Darken4))
-                .Row(row =&gt;
-                {
-                    row.RelativeItem().Text(x =&gt;
-                    {
-                        x.Span(Report.Translate("Page") + " ");
-                        x.CurrentPageNumber();
-                        x.Span(" / ");
-                        x.TotalPages();
-                    });
-                    row.RelativeItem().AlignRight().Text($"{Report.ExecutionStartDate}");
-                });
-
-        }
-
-        void ComposeInformation(IContainer container)
-        {
-            container.Column(column =&gt;
-            {
-                column.Item().Row(row =&gt;
-                {
-                    row.AutoItem().Text($"{Report.Translate("Execution date")}: {Report.ExecutionStartDate}");
-                    row.RelativeItem().AlignRight().Text(string.Format("{0}: {1} {2}", Report.Translate("Duration"), Math.Floor(Report.ExecutionFullDuration.TotalSeconds), Report.Translate("seconds")));
-                });
-
-                column.Item().PaddingTop(10);
-                column.Item().Table(table =&gt;
-                {
-                    //Column definition
-                    table.ColumnsDefinition(columns =&gt;
-                    {
-                        columns.RelativeColumn(4);
-                        columns.RelativeColumn(1);
-                        columns.RelativeColumn(1);
-                        columns.RelativeColumn(2);
-                        columns.RelativeColumn(8);
-                    });
-
-                    //Header
-                    table.Header(header =&gt;
-                    {
-                        header.Cell().Element(CellStyle).Text(Report.Translate("Model"));
-                        header.Cell().Element(CellStyle).AlignCenter().Text(Report.Translate("#"));
-                        header.Cell().Element(CellStyle).AlignCenter().Text(Report.Translate("Pages"));
-                        header.Cell().Element(CellStyle).AlignCenter().Text(Report.Translate("Duration"));
-                        header.Cell().Element(CellStyle).Text(Report.Translate("Restrictions"));
-                        static IContainer CellStyle(IContainer container)
-                        {
-                            return container.BorderBottom(1).BorderTop(1).BorderColor(Colors.Grey.Lighten1).Background(Colors.Grey.Lighten4).PaddingVertical(5).DefaultTextStyle(x =&gt; x.SemiBold().FontSize(10));
-                        }
-                    });
-
-                    //Body
-                    foreach (ReportModel item in Report.Models.Where(i =&gt; i.ResultTable != null &amp;&amp; i.Pages != null))
-                    {
-
-                        table.Cell().Element(CellStyle).Text($"{item.Name} ({item.Connection.Name}");
-                        table.Cell().Element(CellStyle).AlignCenter().Text($"{item.ResultTable.Rows.Count}");
-                        table.Cell().Element(CellStyle).AlignCenter().Text($"{item.Pages.Count}");
-                        table.Cell().Element(CellStyle).AlignCenter().Text($"{item.ExecutionDuration}");
-                        table.Cell().Element(CellStyle).Text($"{item.RestrictionText}");
-                        if (item.IsLINQ)
-                        {
-                            foreach (var subModel in item.LINQSubModels)
-                            {
-                                table.Cell().Element(CellStyle).Text($"{item.Name} ({subModel.Connection.Name})");
-                                table.Cell().Element(CellStyle).Text($"{subModel.ResultTable.Rows.Count})");
-                                table.Cell().Element(CellStyle).Text($"{subModel.Pages.Count})");
-                                table.Cell().Element(CellStyle).Text($"{subModel.ExecutionDuration})");
-                                table.Cell().Element(CellStyle).Text($"{subModel.RestrictionText})");
-                            }
-                        }
-                    }
-                    static IContainer CellStyle(IContainer container)
-                    {
-                        return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5).DefaultTextStyle(x =&gt; x.FontSize(10));
-                    }
-
-                });
-            });
-        }
-
-        void ComposeMessages(IContainer container)
-        {
-            container.Column(column =&gt;
-            {
-                var fontSize = Renderer.GetNumericValue("messages_font_size");
-                column.Item().PaddingTop(10);
-
-                column.Item()
-                .Border(0)
-                .BorderColor(Colors.Grey.Lighten1).Background(Colors.Grey.Lighten4).PaddingVertical(5)
-                .DefaultTextStyle(x =&gt; x.FontSize(fontSize))
-                .Text(Report.ExecutionMessages.Trim());
-            });
-        }
-    }
-}</CustomTemplate>
-      </PDFRenderer>
     </ReportView>
   </Views>
   <Cancel>false</Cancel>

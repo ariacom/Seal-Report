@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml;
 
 namespace Seal.Model
 {
@@ -162,36 +163,6 @@ namespace Seal.Model
                     Report.ExecutionMessages += string.Format("Unable to write to '{0}'.\r\nChanging report result to '{1}'.\r\n{2}\r\n", Report.ResultFilePath, newPath, ex.Message);
                     Report.ResultFilePath = newPath;
                     File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
-                }
-            }
-
-            if (Report.Format == ReportFormat.pdf)
-            {
-                try
-                {
-                    string folder = Path.GetDirectoryName(Report.ResultFilePath);
-                    string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".pdf";
-                    Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(Report.ResultFilePath, newPath);
-                    Report.ResultFilePath = newPath;
-                }
-                catch (Exception ex)
-                {
-                    Report.ExecutionErrors = ex.Message;
-                    if (ex.InnerException != null) Report.ExecutionErrors += "\r\n" + ex.InnerException.Message;
-                }
-            }
-            else if (Report.Format == ReportFormat.excel)
-            {
-                try
-                {
-                    string folder = Path.GetDirectoryName(Report.ResultFilePath);
-                    string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".xlsx";
-                    Report.ResultFilePath = Report.ExecutionView.ConvertToExcel(newPath);
-                }
-                catch (Exception ex)
-                {
-                    Report.ExecutionErrors = ex.Message;
-                    if (ex.InnerException != null) Report.ExecutionErrors += "\r\n" + ex.InnerException.Message;
                 }
             }
         }
@@ -2124,7 +2095,7 @@ namespace Seal.Model
                     InitReportSchedule(scheduleGUID, out report, out schedule);
                 }
 
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName);
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName));
                 int retries = schedule.ErrorNumberOfRetries + 1;
                 bool isFirst = true;
                 while (--retries >= 0)
@@ -2164,7 +2135,7 @@ namespace Seal.Model
                     {
                         if (useSealScheduler && !SealReportScheduler.Running)
                         {
-                            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Schedule '{0}': Cancelling report execution...", schedule.Name);
+                            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Schedule '{0}': Cancelling report execution...", schedule.Name));
                             report.CancelExecution();
                             break;
                         }
@@ -2217,7 +2188,7 @@ namespace Seal.Model
                     }
                     else
                     {
-                        Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Schedule '{0}' has been executed\r\nReport '{1}", schedule.Name, report.FilePath);
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Schedule '{0}' has been executed\r\nReport '{1}", schedule.Name, report.FilePath));
 
                         if (!string.IsNullOrEmpty(schedule.NotificationEmailTo) && !report.Cancel)
                         {
@@ -2234,7 +2205,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Error got when executing schedule '{0}':\r\n{1}\r\n\r\n{2}", scheduleGUID, ex.Message, ex.StackTrace);
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Error got when executing schedule '{0}':\r\n{1}\r\n\r\n{2}", scheduleGUID, ex.Message, ex.StackTrace));
             }
         }
 
@@ -2286,8 +2257,6 @@ namespace Seal.Model
         {
             if (format == ReportFormat.html) return Task.FromResult(GenerateHTMLResult(false));
             else if (format == ReportFormat.print) return Task.FromResult(GenerateHTMLResult(true));
-            else if (format == ReportFormat.excel) return Task.FromResult(ConvertToExcelResult()); //Converter
-            else if (format == ReportFormat.pdf) return Task.FromResult(ConvertToPDFResult()); //Converter
 
             Report.IsNavigating = false;
             var originalFormat = Report.Format;
@@ -2295,6 +2264,7 @@ namespace Seal.Model
             {
                 Report.Format = format;
                 Report.ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)), "." + Report.ResultExtension, true);
+                Report.HTMLResultFilePath = "";
                 Report.Status = ReportStatus.RenderingResult;
                 executeTasks(ExecutionStep.BeforeRendering);
 
@@ -2324,45 +2294,6 @@ namespace Seal.Model
         {
             var result = Task.Run(() => GenerateResultAsync(format));
             return result.Result;
-        }
-
-        /// <summary>
-        /// Generate the PDF result of the current execution
-        /// </summary>
-        public string ConvertToPDFResult()
-        {
-            string newPath = "";
-            var originalFormat = Report.Format;
-            executeTasks(ExecutionStep.BeforeRendering);
-            try
-            {
-                string source = GeneratePrintResult();
-                newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
-                Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
-            }
-            finally
-            {
-                Report.Format = originalFormat;
-            }
-            return newPath;
-        }
-
-        /// <summary>
-        /// Generate the Excel result of the current execution
-        /// </summary>
-        public string ConvertToExcelResult()
-        {
-            var result = "";
-            try
-            {
-                executeTasks(ExecutionStep.BeforeRendering);
-                string path = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)) + ".xlsx");
-                result = Report.ExecutionView.ConvertToExcel(path);
-            }
-            finally
-            {
-            }
-            return result;
         }
 
         /// <summary>

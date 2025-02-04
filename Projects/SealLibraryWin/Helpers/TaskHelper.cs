@@ -14,9 +14,7 @@ using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Data.Common;
-using System.Data.OleDb;
 using OfficeOpenXml;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 namespace Seal.Helpers
 {

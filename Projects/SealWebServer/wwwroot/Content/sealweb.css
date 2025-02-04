@@ -2,11 +2,11 @@
     text-align: right;
 }
 
-.foldersview, .reportview, .navbar-right {
+.folderview, .reportview, .navbar-right {
     display: none;
 }
 
-.foldersview, .reportview, .navbar-right, #output-panel, #message_button {
+.folderview, .reportview, .navbar-right, #output-panel, #message_button {
     transition: opacity 1s linear;
 }
 
@@ -178,6 +178,10 @@ table.dataTable {
     #refresh-nav-item.fa-spin {
         animation-duration: 1s;
     }
+
+#assistant-nav-item {
+    font-size: 20px;
+}
 
 #nav_button .fa-spin {
     opacity: 0.6;

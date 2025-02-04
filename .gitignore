@@ -42,6 +42,7 @@ bld/
 TestFiles/
 
 #specific for Seal Report
+Repository/Databases/Audit.sqlite
 work/
 Repository/Sources/_*.scfx
 [Pp]ackages/
@@ -54,13 +55,17 @@ Projects/SealDocumentation/Help/
 *.pubxml
 
 #web report editor files
+.env
 SealEditor*.sln
+SealAIServer.*
 SealWebServerEditor.*
 HomeControllerSWIEditor.cs
 SWIReportModels.cs
 swi-properties.*
 swi-editor.*
-swi-dashboard-editor.*
+swi-gateway-editor.*
+swi-gateway-assistant.*
+swi-assistant.*
 swi-button-group.*
 swi.js
 MenuBig.cshtml
@@ -71,6 +76,10 @@ _ed.*.js
 *.slc
 *.srl
 Sources/_*.scfx
+TranslationsWebDesigner.xlsx
+sealweb-editor.css
+sealweb-assistant.css
+Assistant.cshtml
 
 # =========================
 # Operating System Files

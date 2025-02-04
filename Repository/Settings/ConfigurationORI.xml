@@ -10,6 +10,6 @@
     </FileReplacePattern>
   </FileReplacePatterns>
   <TaskFolderName>Seal Report</TaskFolderName>
-  <AuditEnabled>false</AuditEnabled>
+  <AuditEnabled>true</AuditEnabled>
   <InstallationDirectory />
  </SealServerConfiguration>

@@ -13,7 +13,6 @@
       <EnumGUIDEL>b3a1f4c6-fae8-4a84-b120-9593fb1c2b9c</EnumGUIDEL>
       <Prompt>Prompt</Prompt>
       <OperatorStyle>NotModifiable</OperatorStyle>
-      <FirstSelection>All</FirstSelection>
       <TypeRe>Text</TypeRe>
       <EnumGUIDRE>b3a1f4c6-fae8-4a84-b120-9593fb1c2b9c</EnumGUIDRE>
     </ReportRestriction>
@@ -148,7 +147,10 @@
     //client = new FtpClient("waws-prod-dm1-165.ftp.azurewebsites.windows.net", @"sealcore\$sealcore", "password"); //  (e.g. for Azure)
 
     if (client != null) {
-        //Default FTP configuration for Azure
+        report.LogMessage("Connecting to '{0}'", client.Host);     
+        client.AutoConnect();
+        
+        /* Or manual configuration:
         client.Config.SslProtocols = SslProtocols.Tls;
         client.Config.ValidateAnyCertificate = true;
         client.Config.DataConnectionType = FtpDataConnectionType.PASV;
@@ -160,13 +162,8 @@
         client.Config.DataConnectionConnectTimeout = 2000;
         client.Config.DataConnectionReadTimeout = 2000;        
         client.Port = 21;
-
-        //For normal FTPS with implict encryption
-        //client.EncryptionMode = FtpEncryptionMode.Implicit; 
-        //client.Port = 990;
-
-        report.LogMessage("Connecting to '{0}'", client.Host);     
         client.Connect();
+        */
     }
     
     if (string.IsNullOrEmpty(repositoryDestination)) {

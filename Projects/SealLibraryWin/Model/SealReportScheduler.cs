@@ -63,7 +63,7 @@ namespace Seal.Model
 
                         catch (Exception ex)
                         {
-                            Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Error loading '{0}'.\r\n{1}", file, ex.Message);
+                            Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Error loading '{0}'.\r\n{1}", file, ex.Message));
                         }
                     }
                 }
@@ -107,13 +107,13 @@ namespace Seal.Model
 
             if (!File.Exists(reportPath) || (report != null && report.GUID != refSchedule.ReportGUID))
             {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "The report of schedule '{0}' does not exists ('{1}').\r\nSearching for the report in the repository...", refSchedule.FilePath, refSchedule.ReportPath);
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("The report of schedule '{0}' does not exists ('{1}').\r\nSearching for the report in the repository...", refSchedule.FilePath, refSchedule.ReportPath));
 
                 //Report has been moved or renamed: search report from its GUID in the report folder
                 report = Repository.Instance.FindReport(Repository.Instance.ReportsFolder, refSchedule.ReportGUID);
                 if (report != null)
                 {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "Report of schedule '{0}' has changed to '{1}'", refSchedule.FilePath, report.FilePath);
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Report of schedule '{0}' has changed to '{1}'", refSchedule.FilePath, report.FilePath));
                 }
             }
             return report;
@@ -124,7 +124,7 @@ namespace Seal.Model
             Report report = GetScheduledReport(refSchedule);
             if (report == null)
             {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "Report of schedule '{0}' not found, removing all schedules for the report GUID '{1}'", refSchedule.FilePath, refSchedule.ReportGUID);
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Report of schedule '{0}' not found, removing all schedules for the report GUID '{1}'", refSchedule.FilePath, refSchedule.ReportGUID));
                 //Remove the schedules of the report
                 var reportSchedules = _schedules.Values.Where(i => i.ReportGUID == refSchedule.ReportGUID).ToList();
                 foreach (var schedule in reportSchedules)

@@ -6,9 +6,9 @@
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealWebServer</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>8.1.0.0</Version>
-		<FileVersion>8.1.0.0</FileVersion>
-		<AssemblyVersion>8.1.0.0</AssemblyVersion>
+		<Version>8.2.2.0</Version>
+		<FileVersion>8.2.2.0</FileVersion>
+		<AssemblyVersion>8.2.2.0</AssemblyVersion>
 		<Description>Seal Report Web Server</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -39,8 +39,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Remove="Views\Home\MainAssistant.cshtml" />
 		<Content Remove="Views\Home\MainEditor.cshtml" />
 		<Content Remove="Views\Home\MenuBig.cshtml" />
+		<Content Remove="wwwroot\Content\sealweb-editor.css" />
+		<Content Remove="wwwroot\Content\_ed.editor.bootstrap.min.css" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -49,8 +52,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
-		<PackageReference Include="EPPlus" Version="4.5.3.3" />
 		<PackageReference Include="IdentityModel" Version="7.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.7" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />

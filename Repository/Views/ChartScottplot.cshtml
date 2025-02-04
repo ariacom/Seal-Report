@@ -3,6 +3,7 @@
 @using ScottPlot
 @using ScottPlot.Plottables
 @using System.Globalization
+@using SkiaSharp
 
 @{
     Report report = Model;
@@ -114,7 +115,6 @@
                         bar = plt.Add.Bar(new Bar() { Position = position, Value = y[i], FillColor = color });
                         index++;
                     }
-                    bar.LegendText = serie.SerieDisplayName;
                     if (isHorizontal) bar.Horizontal = true;
 
                     //secondary y axis
@@ -125,7 +125,7 @@
                     }
 
                     //Legend item
-                    if (i == 0) legendItems.Add(new LegendItem() { LabelText = serie.SerieDisplayName, LineColor = color, MarkerColor = color });
+                    if (i == 0) plt.Legend.ManualItems.Add(new LegendItem() { LabelText = serie.SerieDisplayName, FillColor = color, LineColor = color, MarkerColor = color });
 
                     //Marker
                     if (serie.Element.YAxisType == AxisType.Primary)
@@ -140,8 +140,6 @@
                 ticks.Add(new Tick(isStacked ? index : index - barSeries.Count + (group - 1) / 2.0, xLabels[i]));
                 index++;
             }
-            //Legend
-            plt.ShowLegend(legendItems.ToArray());
 
             //Set new x values
             x = (from t in ticks select t.Position).ToArray();
@@ -244,13 +242,26 @@
             //Ticks for X
             finalXAxis.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks.ToArray());
         }
+        finalXAxis.TickLabelStyle.IsVisible = view.GetBoolValue("chartsp_xaxis_show"); ;
+
         plt.Axes.Bottom.TickLabelStyle.Rotation = -1 * view.GetNumericValue("chartsp_bottom_axis_rotation");
         if (plt.Axes.Bottom.TickLabelStyle.Rotation < -10)
         {
-            plt.Axes.Bottom.TickLabelStyle.OffsetY = -10;
+            plt.Axes.Bottom.TickLabelStyle.OffsetY = 0;
             plt.Axes.Bottom.TickLabelStyle.Alignment = Alignment.MiddleRight;
         }
         plt.Axes.AutoScale();
+        // determine the width of the largest tick label
+        float largestLabelWidth = 0;
+        using SKPaint paint = new();
+        foreach (Tick tick in ticks)
+        {
+            PixelSize size = plt.Axes.Bottom.TickLabelStyle.Measure(tick.Label, paint).Size;
+            largestLabelWidth = Math.Max(largestLabelWidth, size.Width);
+        }
+
+        // ensure axis panels do not get smaller than the largest label
+        plt.Axes.Bottom.MinimumSize = largestLabelWidth;
 
         if (!hasPie)
         {
@@ -267,6 +278,7 @@
 
                 finalYAxis.Label.Text = view.GetValue("chartsp_yaxis_label");
                 finalYAxis.Label.Bold = view.GetBoolValue("chartsp_yaxis_label_bold");
+                finalYAxis.TickLabelStyle.IsVisible = view.GetBoolValue("chartsp_yaxis_show"); ;
             }
             if (secondaryAxisElement != null)
             {
@@ -275,6 +287,7 @@
 
                 finalYAxis2.Label.Text = view.GetValue("chartsp_yaxis2_label");
                 finalYAxis2.Label.Bold = view.GetBoolValue("chartsp_yaxis2_label_bold");
+                finalYAxis2.TickLabelStyle.IsVisible = view.GetBoolValue("chartsp_yaxis2_show"); ;
             }
             // adjust axis limits
             if (primaryYAxisValues.Count > 0)
@@ -288,7 +301,6 @@
                 if (finalYAxis is IYAxis) plt.Axes.SetLimitsY(min, max, (IYAxis)finalYAxis);
                 else plt.Axes.SetLimitsX(min, max, (IXAxis)finalYAxis);
             }
-            finalYAxis.TickLabelStyle.IsVisible = false;
 
             if (secondaryYAxisValues.Count > 0)
             {
@@ -344,6 +356,7 @@
                 {
                     foreach (var p in plt.GetPlottables().Where(i => i is BarPlot || i is Scatter)) p.IsVisible = false;
                     //Force legend
+                    foreach (var legend in legendItems) legend.LineWidth = 2;
                     plt.ShowLegend(legendItems.ToArray());
                 }
             }

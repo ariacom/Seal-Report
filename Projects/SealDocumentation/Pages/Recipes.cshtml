@@ -124,10 +124,6 @@
                             <p>
                                 The recommended format is a 125*50 images with white/transparent background color.
                             </p>
-                            <div class="bs-callout bs-callout-danger">
-                                <h4>PDF Converter and SVG</h4>
-                                If you are using a file with a <i>.svg</i> format, make sure that you have a copy of the logo file in <i>.png</i> format to allow a proper pdf conversion.
-                            </div>
                         </div>
                         <!-- end col -->
                     </div>
@@ -353,8 +349,10 @@
             restriction.Value1 = "er";
             report.Models[0].Restrictions.Add(restriction);
             //Set the restriction text
-            if (!string.IsNullOrEmpty(report.Models[0].Restriction)) report.Models[0].Restriction = string.Format("({0}) AND ", report.Models[0].Restriction);
-            report.Models[0].Restriction += ReportRestriction.REstrictionPattern;
+            var restrictionText = report.Models[0].Restriction;
+            if (!string.IsNullOrEmpty(restrictionText)) restrictionText += string.Format("({0}) AND ", restrictionText);
+            restrictionText += restriction.Pattern;
+            report.Models[0].Restriction = restrictionText;
 
             //Then execute it
             ReportExecution execution = new ReportExecution() { Report = report };

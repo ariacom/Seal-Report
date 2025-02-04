@@ -43,9 +43,9 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Log a message with optional parameters
         /// </summary>
-        public static void WriteLogEntryWeb(EventLogEntryType type, string message, params object[] args)
+        public static void WriteLogEntryWeb(EventLogEntryType type, string message)
         {
-            Helper.WriteLogEntry(WebServerLogEntry, type, message, args);
+            Helper.WriteLogEntry(WebServerLogEntry, type, message);
         }
 
         /// <summary>

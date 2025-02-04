@@ -343,13 +343,19 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
                   <GUID>cb283738-db95-43d8-b073-6812950417ee</GUID>
                   <Name>Chart Plotly</Name>
                   <TemplateName>Chart Plotly</TemplateName>
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>5</SortOrder>
                 </ReportView>
                 <ReportView>
                   <GUID>e90bd1dd-2bb7-46d3-8f1e-a63a5bd6fe09</GUID>
                   <Name>Data Table</Name>
                   <TemplateName>Data Table</TemplateName>
-                  <SortOrder>5</SortOrder>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>f1d0aeaf-fe07-4629-899d-8eef21a0758d</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>4</SortOrder>
                 </ReportView>
               </Views>
               <TemplateName>Container</TemplateName>

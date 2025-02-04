@@ -1150,7 +1150,7 @@ namespace Seal.Forms
             new Tuple<string, string>(
                 "Load a table from an Excel file",
 @"ReportTask task = Model;
-	var helper = new TaskHelper(task);
+    var helper = new TaskHelper(task);
     helper.LoadTableFromExcel(
         @""c:\temp\loadFolder"", //Folder used to store the files processed 
         @""c:\temp\excelFile.xlsx"", //source Excel file path
@@ -1395,6 +1395,7 @@ namespace Seal.Forms
         const string sqlConnectionString = @"Server=aServer;Database=aDatabase;Trusted_Connection=True;TrustServerCertificate=True;";
         const string mySqlConnectionString = @"Server=aServer;Port=1234;Database=aDatabase;";
         const string postgreSQLConnectionString = @"Server=aServer;Port=5432;Database=aDatabase;";
+        const string sqliteConnectionString = @"Data Source=c:\afolder\database.sqlite;";
         const string oracleConnectionString = @"Data Source=tnsName; /* Configure OracleConfiguration.OracleDataSources in the 'Connection Script' */";
         const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@aServer";
         const string odbcConnectionString = @"DSN=aDataSourceName;DATABASE=aDatabase";
@@ -1509,20 +1510,6 @@ namespace Seal.Forms
                         ScintillaHelper.Init(frm.textBox, (string.IsNullOrEmpty(parameter.EditorLanguage) ? "" : parameter.EditorLanguage));
                         if (parameter.TextSamples != null) frm.SetSamples(parameter.TextSamples.ToList());
                     }
-                }
-                else if (context.Instance.GetType().ToString() == "Seal.Converter.PdfConverter")
-                {
-                    string language = "cs";
-                    SealPdfConverter converter = (SealPdfConverter)context.Instance;
-                    converter.ConfigureTemplateEditor(frm, context.PropertyDescriptor.Name, ref template, ref language);
-                    ScintillaHelper.Init(frm.textBox, language);
-                }
-                else if (context.Instance.GetType().ToString() == "Seal.Converter.ExcelConverter")
-                {
-                    string language = "cs";
-                    SealExcelConverter converter = (SealExcelConverter)context.Instance;
-                    converter.ConfigureTemplateEditor(frm, context.PropertyDescriptor.Name, ref template, ref language);
-                    ScintillaHelper.Init(frm.textBox, language);
                 }
                 else if (context.Instance is Report)
                 {
@@ -1680,6 +1667,12 @@ namespace Seal.Forms
                     {
                         template = postgreSQLConnectionString;
                         frm.Text = "Edit the PostgreSQL Connection string";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "SQLiteConnectionString")
+                    {
+                        template = sqliteConnectionString;
+                        frm.Text = "Edit the SQLite Connection string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
                     else if (context.PropertyDescriptor.Name == "MongoDBConnectionString")
@@ -1845,22 +1838,21 @@ namespace Seal.Forms
                     frm.Text = "Edit the init script of the source";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
-                else if (context.Instance is OutputFileServerDevice && context.PropertyDescriptor.Name == "ProcessingScript")
+                else if (context.Instance is OutputDevice && context.PropertyDescriptor.Name == "ProcessingScript")
                 {
-                    template = OutputFileServerDevice.ProcessingScriptTemplate;
+                    template = ((OutputDevice)context.Instance).GetProcessingScriptTemplate();
                     frm.ObjectForCheckSyntax = new Report();
                     frm.Text = "Edit the script executed when the output is processed";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
-                else if (context.Instance is CommonScript)
+                else if (context.Instance is OutputEmailDevice)
                 {
-                    template = CommonScript.RazorTemplate;
-                    frm.Text = "Edit the script that will be added to all scripts executed for the report.";
-                    if (CurrentEntity is SealServerConfiguration)
-                    {
-                        //common script from configuration, nothing to include, we rely on @Include
-                    }
-                    frm.ObjectForCheckSyntax = CurrentEntity;
+                    var device = ((OutputEmailDevice)context.Instance);
+                    if (context.PropertyDescriptor.Name == "SmtpScript") template = OutputEmailDevice.SmtpScriptTemplate;
+                    if (context.PropertyDescriptor.Name == "SendGridScript") template = OutputEmailDevice.SendGridScriptTemplate;
+                    if (context.PropertyDescriptor.Name == "MSGraphScript") template = OutputEmailDevice.MSGraphScriptTemplate;
+                    frm.ObjectForCheckSyntax = new OutputEmailDevice.EmailDefinition();
+                    frm.Text = "Edit the script executed when to send the email";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
                 else if (context.Instance is SealServerConfiguration)

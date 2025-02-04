@@ -16,6 +16,10 @@ using System.Collections;
 using System.Data.Common;
 using System.Data.Odbc;
 using MongoDB.Driver;
+using System.Data.SqlClient;
+using Npgsql;
+using Oracle.ManagedDataAccess.Client;
+using MySql.Data.MySqlClient;
 
 namespace Seal.Forms
 {
@@ -761,88 +765,6 @@ namespace Seal.Forms
             }
         }
 
-        List<MetaJoin> GetJoins(DbConnection connection, MetaSource source)
-        {
-            List<MetaJoin> joins = new List<MetaJoin>();
-            if (!(connection is OleDbConnection)) return joins;
-            DataTable schemaTables = ((OleDbConnection)connection).GetOleDbSchemaTable(OleDbSchemaGuid.Foreign_Keys, null);
-
-            foreach (DataRow row in schemaTables.Rows)
-            {
-                string table1Name = source.GetTableName(row["PK_TABLE_NAME"].ToString());
-                string table2Name = source.GetTableName(row["FK_TABLE_NAME"].ToString());
-                MetaTable table1 = source.MetaData.Tables.FirstOrDefault(i => i.Name == source.GetTableName(table1Name));
-                MetaTable table2 = source.MetaData.Tables.FirstOrDefault(i => i.Name == source.GetTableName(table2Name));
-
-                if (table1 == null)
-                {
-                    string pkschema = "";
-                    if (schemaTables.Columns.Contains("PK_TABLE_SCHEMA")) pkschema = row["PK_TABLE_SCHEMA"].ToString();
-                    else if (schemaTables.Columns.Contains("PK_TABLE_SCHEM")) pkschema = row["PK_TABLE_SCHEM"].ToString();
-                    if (!string.IsNullOrEmpty(pkschema)) table1 = source.MetaData.Tables.FirstOrDefault(i => i.Name == pkschema + "." + table1Name);
-                }
-
-                if (table2 == null)
-                {
-                    string fkschema = "";
-                    if (schemaTables.Columns.Contains("FK_TABLE_SCHEMA")) fkschema = row["FK_TABLE_SCHEMA"].ToString();
-                    else if (schemaTables.Columns.Contains("FK_TABLE_SCHEM")) fkschema = row["FK_TABLE_SCHEM"].ToString();
-                    if (!string.IsNullOrEmpty(fkschema)) table2 = source.MetaData.Tables.FirstOrDefault(i => i.Name == fkschema + "." + table2Name);
-                }
-
-                if (table1 != null && table2 != null && table1.Name != table2.Name && !source.MetaData.Joins.Exists(i => i.LeftTableGUID == table1.GUID && i.RightTableGUID == table2.GUID))
-                {
-                    MetaJoin join = joins.FirstOrDefault(i => i.LeftTableGUID == table1.GUID && i.RightTableGUID == table2.GUID);
-                    if (join == null)
-                    {
-                        join = MetaJoin.Create();
-                        join.Name = table1.Name + " - " + table2.Name;
-                        join.LeftTableGUID = table1.GUID;
-                        join.RightTableGUID = table2.GUID;
-                        join.Source = source;
-                        join.IsBiDirectional = true;
-                        joins.Add(join);
-                    }
-
-                    if (!string.IsNullOrEmpty(join.Clause)) join.Clause += " AND ";
-                    join.Clause += string.Format("{0}.{1} = {2}.{3}\r\n", table1.Name, source.GetColumnName(row["PK_COLUMN_NAME"].ToString()), table2.Name, source.GetColumnName(row["FK_COLUMN_NAME"].ToString()));
-                    join.JoinType = JoinType.Inner;
-                }
-            }
-            return joins;
-        }
-
-        void addSchemaTables(DataTable schemaTables, List<MetaTable> tables, MetaSource source)
-        {
-            foreach (DataRow row in schemaTables.Rows)
-            {
-                //if (row["TABLE_TYPE"].ToString() == "SYSTEM TABLE" || row["TABLE_TYPE"].ToString() == "SYSTEM VIEW") continue;
-                MetaTable table = MetaTable.Create();
-                string schema = "";
-                string catalog = "";
-                if (schemaTables.Columns.Contains("TABLE_CATALOG")) catalog= row["TABLE_CATALOG"].ToString();
-                if (schemaTables.Columns.Contains("TABLE_SCHEMA")) schema = row["TABLE_SCHEMA"].ToString();
-                else if (schemaTables.Columns.Contains("TABLE_SCHEM")) schema = row["TABLE_SCHEM"].ToString();
-
-                var tableName = "";
-                if (row.Table.Columns.Contains("TABLE_NAME")) tableName = row["TABLE_NAME"].ToString();
-                else if (row.Table.Columns.Contains("VIEW_NAME")) tableName = row["VIEW_NAME"].ToString();
-
-                if (!string.IsNullOrEmpty(schema) || !string.IsNullOrEmpty(catalog))
-                {
-                    table.Name = catalog + "." + schema + "." + source.GetTableName(tableName);
-
-                }
-                else
-                {
-                    table.Name = source.GetTableName(tableName);
-                }
-
-                if (schemaTables.Columns.Contains("TABLE_TYPE")) table.Type = row["TABLE_TYPE"].ToString();
-                table.Source = source;
-                if (!tables.Exists(i => i.Name == table.Name)) tables.Add(table);
-            }
-        }
 
         public bool addFromToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -889,11 +811,11 @@ namespace Seal.Forms
                     else {
                         DbConnection connection = source.GetOpenConnection();
                         DataTable schemaTables = connection.GetSchema("Tables");
-                        addSchemaTables(schemaTables, tables, source);
+                        source.AddSchemaTables(schemaTables, tables);
                         try
                         {
                             //Add views connections if any...
-                            addSchemaTables(connection.GetSchema("Views"), tables, source);
+                            source.AddSchemaTables(connection.GetSchema("Views"), tables);
                         }
                         catch { }
                         options.Add(autoCreateJoins);
@@ -946,10 +868,10 @@ namespace Seal.Forms
                 else if (entity is JoinFolder)
                 {
                     DbConnection connection = source.GetOpenConnection();
-                    List<MetaJoin> joins = GetJoins(connection, source);
+                    List<MetaJoin> joins = source.GetJoinsFromCatalog(connection);
                     if (joins.Count == 0)
                     {
-                        MessageBox.Show(connection is OleDbConnection ? "All Joins have been defined for the existing tables" : "Joins cannot be read from the database if the connection is not an OleDbConnection.\r\nPlease consider to define an OleDbConnection to create the Joins.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("No Joins found in the database.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return isModified;
                     }
                     selectSource = joins.OrderBy(i => i.Name).ToList();
@@ -1055,7 +977,7 @@ namespace Seal.Forms
                         if (autoCreateJoins.Checked && source.IsSQL)
                         {
                             DbConnection connection = source.GetOpenConnection();
-                            foreach (var join in GetJoins(connection, source))
+                            foreach (var join in source.GetJoinsFromCatalog(connection))
                             {
                                 join.Name = Helper.GetUniqueName(join.Name, (from i in source.MetaData.Joins select i.Name).ToList());
                                 source.MetaData.Joins.Add(join);

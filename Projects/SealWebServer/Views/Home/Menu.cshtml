@@ -28,6 +28,13 @@
                         </ul>
                     </li>
                 </ul>
+                @if (model.HasEditor)
+                {
+                    <ul class="nav navbar-nav pull-xs-right assistantview folderview">
+                        <li class="nav-item"><a id="assistant-nav-item" class="navbar-white fa fa-cog" title="@repository.TranslateWeb("Toggle assistant and folders")"></a></li>
+                    </ul>
+                }
+                <span id="nav_cr" style="display:none;font-size:small;padding-top:5px;text-align:center;" class="navbar-brand"></span>
                 <a id="nav_button" href="#" class="navbar-brand"></a>
                 <span id="nav_badge" class="badge navbar-left hidden">@repository.TranslateReport("Nav")</span>
             </div>
@@ -66,7 +73,7 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        @foreach (var format in Enum.GetValues(typeof(ReportFormat)))
+                        @foreach (var format in repository.ResultAllowedFormats)
                         {
                             <li><a id="ViewResult" format="@format" class="result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
                         }

@@ -30,7 +30,9 @@ namespace Seal.Model
         [Description("MySQL")]
         MySQL,
         [Description("PostgreSQL")]
-        PostgreSQL
+        PostgreSQL,
+        [Description("SQLite")]
+        SQLite
     }
 
     public enum ConnectionType
@@ -50,7 +52,9 @@ namespace Seal.Model
         [Description("Oracle")]
         Oracle,
         [Description("PostgreSQL")]
-        PostgreSQL,        
+        PostgreSQL,
+        [Description("SQLite")]
+        SQLite
     }
 
     public enum ColumnType
@@ -103,10 +107,6 @@ namespace Seal.Model
         XML,
         [Description("Json")]
         Json,
-        [Description("Excel Converter")]
-        excel, //converter
-        [Description("PDF Converter")]
-        pdf, //converter 
     }
 
     public enum NumericStandardFormat
@@ -682,4 +682,15 @@ namespace Seal.Model
         ChartPlotlyCanvas,
         GaugeCanvas,
     }
+
+    public enum EmailServerType
+    {
+        [Description("SMTP")]
+        SMTP,
+        [Description("SendGrid")]
+        SendGrid,
+        [Description("Microsoft Graph")]
+        MSGraph,
+    }
+
 }

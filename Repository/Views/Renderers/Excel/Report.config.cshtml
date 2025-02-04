@@ -7,11 +7,12 @@
     Template.Parameters.Add(new Parameter() { Name = "show_information", DisplayName = "Show report information", BoolValue = true, Description = "If true, report information is displayed in a dedicated sheet." });
     Template.Parameters.Add(new Parameter() { Name = "show_messages", DisplayName = "Show messages", BoolValue = false, Description = "If true, report execution messages are displayed in a dedicated sheet." });
     Template.Parameters.Add(new Parameter() { Name = "auto_fit_columns", DisplayName = "Auto Fit columns", BoolValue = true, Description = "If true, columns widths are ajusted with the cell content." });
+    Template.Parameters.Add(new Parameter() { Name = "show_logo", DisplayName = "Print: Show logo", BoolValue = false, Description = "If true, the logo is inserted in the top right part of the header." });
     Template.Parameters.Add(new Parameter()
             {
                 Name = "printer_paper_size",
-                DisplayName = "Printer paper size",
-                Description = "Define the size of the paper when pprinting the document.",
+                DisplayName = "Print: Paper size",
+                Description = "Define the size of the paper when printing the document.",
                 Value = "A4",
                 UseOnlyEnumValues = true,
                 Enums = new string[] { },
@@ -20,12 +21,15 @@
     Template.Parameters.Add(new Parameter()
             {
                 Name = "printer_orientation",
-                DisplayName = "Printer orientation",
-                Description = "Define the printer orientation.",
+                DisplayName = "Print: Page orientation",
+                Description = "Define the page orientation when printing the document.",
                 Value = "Portrait",
                 UseOnlyEnumValues = true,
                 Enums = new string[] { },
                 EnumType = typeof(eOrientation)
             });
-    Template.Parameters.Add(new Parameter() { Name = "printer_fit_page", DisplayName = "Printer fit to page", BoolValue = true, Description = "If true, the pages are adapted to the paper size when printing." });
+    Template.Parameters.Add(new Parameter() { Name = "printer_fit_page", DisplayName = "Print: Fit to page", BoolValue = true, Description = "If true, the pages are adapted to the paper size when printing." });
+    Template.Parameters.Add(new Parameter() { Name = "printer_fit_width", DisplayName = "Print: Fit to width", NumericValue = 1, Description = "If 'Fit to page' is true, number of pages to fit in width, 0 for automatic." });
+    Template.Parameters.Add(new Parameter() { Name = "printer_fit_height", DisplayName = "Print: Fit to height", NumericValue = 0, Description = "If 'Fit to page' is true, number of pages to fit in height, 0 for automatic." });
+
 }

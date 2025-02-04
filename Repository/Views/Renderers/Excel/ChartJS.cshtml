@@ -121,11 +121,15 @@
     eChartType getChartType(ReportElement element, ReportView modelView)
     {
         //Create chart type and configuration from existing definitions for Excel chart
-        var view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartJSName);
         var def = element.ChartJSSerie;
-        var horizontal = view.GetBoolValue("chartjs_bar_horizontal");
-        var stacked = view.GetBoolValue("chartjs_bar_stacked");
-
+        var horizontal = false;
+        var stacked = false;
+        var view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartJSName);
+        if (view != null)
+        {
+            horizontal = view.GetBoolValue("chartjs_bar_horizontal");
+            stacked = view.GetBoolValue("chartjs_bar_stacked");
+        }
         if (def == ChartJSSerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
         if (def == ChartJSSerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
         if (def == ChartJSSerieDefinition.Line) return eChartType.Line;
@@ -135,17 +139,23 @@
         if (def == ChartJSSerieDefinition.Radar) return eChartType.Radar;
 
         view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartScottplotName);
+        if (view != null)
+        {
+            horizontal = view.GetBoolValue("chartsp_bar_horizontal");
+            stacked = view.GetBoolValue("chartsp_bar_stacked");
+        }
         var def2 = element.ScottPlotSerie;
-        horizontal = view.GetBoolValue("chartsp_bar_horizontal");
-        stacked = view.GetBoolValue("chartsp_bar_stacked");
         if (def2 == ScottPlotSerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
         if (def2 == ScottPlotSerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
         if (def2 == ScottPlotSerieDefinition.Scatter) return eChartType.XYScatter;
         if (def2 == ScottPlotSerieDefinition.Pie) return eChartType.Pie;
 
         view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartNVD3Name);
+        if (view != null)
+        {
+            stacked = view.GetBoolValue("nvd3_bar_stacked");
+        }
         var def3 = element.Nvd3Serie;
-        stacked = view.GetBoolValue("nvd3_bar_stacked");
         if (def3 == NVD3SerieDefinition.ScatterChart) return eChartType.XYScatter;
         if (def3 == NVD3SerieDefinition.PieChart) return eChartType.Pie;
         if (def3 == NVD3SerieDefinition.Line) return eChartType.Line;
@@ -157,9 +167,12 @@
         if (def3 == NVD3SerieDefinition.DiscreteBarChart) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
 
         view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartPlotlyName);
+        if (view != null)
+        {
+            horizontal = view.GetValue("plotly_bar_orientation") == "h";
+            stacked = view.GetBoolValue("plotly_bar_stacked");
+        }
         var def4 = element.PlotlySerie;
-        horizontal = view.GetValue("plotly_bar_orientation") == "h";
-        stacked = view.GetBoolValue("plotly_bar_stacked");
         if (def4 == PlotlySerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
         if (def4 == PlotlySerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
         if (def4 == PlotlySerieDefinition.Scatter) return eChartType.XYScatter;

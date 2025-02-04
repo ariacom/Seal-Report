@@ -52,7 +52,8 @@
             });
 
             //Header
-            foreach (var headerLine in dataTable.HeaderLines)
+            var headerLine = dataTable.HeaderLines.FirstOrDefault();
+            if (headerLine != null)
             {
                 table.Header(header =>
                 {
@@ -70,6 +71,23 @@
                         .Text(cell.DisplayValue);
                     }
                 });
+                //Following header lines
+                foreach (var headerLine2 in dataTable.HeaderLines.Where(i => i != headerLine))
+                {
+                    foreach (var cell in headerLine2)
+                    {
+                        table.Cell()
+                        .DefaultTextStyle(x => x.SemiBold().FontSize(fontSize))
+                        .PaddingVertical(5)
+                        .BorderTop(1)
+                        .BorderBottom(1)
+                        .BorderColor(Colors.Grey.Darken1)
+                        .Background(Colors.Grey.Lighten3)
+                        .AlignCell(cell)
+                        .PaddingHorizontal(1)
+                        .Text(cell.DisplayValue);
+                    }
+                }
             }
 
             //Body

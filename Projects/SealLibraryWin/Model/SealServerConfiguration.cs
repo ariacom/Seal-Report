@@ -96,13 +96,6 @@ namespace Seal.Model
                 GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
                 GetProperty("ApplicationKeys").SetIsBrowsable(!ForPublication);
 
-                GetProperty("PdfServer").SetIsBrowsable(!ForPublication);
-                GetProperty("PdfServerPort").SetIsBrowsable(!ForPublication);
-                GetProperty("PdfUseClient").SetIsBrowsable(!ForPublication);
-                GetProperty("PdfServicePassword").SetIsBrowsable(!ForPublication);
-                GetProperty("PdfWebServiceURL").SetIsBrowsable(!ForPublication);
-                GetProperty("PdfUseWebService").SetIsBrowsable(!ForPublication);
-
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
                 GetProperty("WebPublicationDirectory").SetIsBrowsable(ForPublication);
@@ -443,62 +436,6 @@ namespace Seal.Model
         /// </summary>
         public List<KeyValue> ApplicationKeys { get; set; } = new List<KeyValue>();
 
-
-
-        /// <summary>
-        /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services. If the value is modified, restart the Server Manager to update the default PDF Scripts."), Category("PDF Converter: Client Library"), Id(2, 6)]
-        [DefaultValue(false)]
-#endif
-        public bool PdfUseClient { get; set; } = false;
-
-        /// <summary>
-        /// If the client library is used, the HTML to PDF server IP or name.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("PDF Server"), Description("If the client library is used, the HTML to PDF server IP or name."), Category("PDF Converter: Client Library"), Id(3, 6)]
-        [DefaultValue("127.0.0.1")]
-#endif
-        public string PdfServer { get; set; } = "127.0.0.1";
-
-        /// <summary>
-        /// If the client library is used, the HTML to PDF server IP or name.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("PDF Server Port"), Description("If the client library is used, the HTML to PDF server port number."), Category("PDF Converter: Client Library"), Id(4, 6)]
-        [DefaultValue(45001)]
-#endif
-        public uint PdfServerPort { get; set; } = 45001;
-
-        /// <summary>
-        /// If the client library is used, optional HTML to PDF converter service password.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("PDF Service Password"), Description("If the client library is used, optional HTML to PDF converter service password."), Category("PDF Converter: Client Library"), Id(5, 6)]
-        [DefaultValue(false)]
-#endif
-        public string PdfServicePassword { get; set; } = "";
-
-        /// <summary>
-        /// If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("Use PDF Web Service"), Description("If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion."), Category("PDF Converter: Client Library"), Id(6, 6)]
-        [DefaultValue(false)]
-#endif
-        public bool PdfUseWebService { get; set; } = false;
-
-        /// <summary>
-        /// If the client library is used, the HTML to PDF web service URL.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("PDF Web Service URL"), Description("If the client library is used, the HTML to PDF web service URL."), Category("PDF Converter: Client Library"), Id(7, 6)]
-        [DefaultValue(false)]
-#endif
-        public string PdfWebServiceURL { get; set; } = "";
-
         /// <summary>
         /// The name of the culture used for the user session. It defines the language and the number and date formats. If not specified, the current culture of the server is used.
         /// </summary>
@@ -753,6 +690,10 @@ namespace Seal.Model
                 if (!_keyValues.Exists(i => i.Name == OutputEmailDevice.SendGridKeyName))
                 {
                     _keyValues.Add(new KeyValue() { Name = OutputEmailDevice.SendGridKeyName, Value = OutputEmailDevice.SendGridKeyValue });
+                }
+                if (!_keyValues.Exists(i => i.Name == OutputEmailDevice.AzureSecretKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = OutputEmailDevice.AzureSecretKeyName, Value = OutputEmailDevice.AzureSecretKeyValue });
                 }
                 if (!_keyValues.Exists(i => i.Name == OutputFileServerDevice.PasswordKeyName))
                 {

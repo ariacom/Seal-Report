@@ -74,17 +74,7 @@
     <div id="report-body" class="container-fluid reportview" style="display:none;">
     </div>
 
-    <!--Wait Dialog-->
-    <div class="modal fade in" id="wait-dialog" data-backdrop="static" data-keyboard="false" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body" style="text-align:center">
-                    <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
-                    <h3 style="display:inline">@repository.TranslateWeb("Please wait")...</h3>
-                </div>
-            </div>
-        </div>
-    </div>
+    @await Html.PartialAsync("~/Views/Home/Dialogs.cshtml")
 
     <!-- Views and Output -->
     <div id="output-panel" class="panel panel-default" style="display:none;">
@@ -96,44 +86,6 @@
                 </thead>
                 <tbody id="output-table-body"></tbody>
             </table>
-        </div>
-    </div>
-
-    <!-- File Name Dialog -->
-    <div id="report-name-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index:25000;">
-        <div class="modal-dialog">
-            <div class="modal-content" style="top:60px">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">@repository.TranslateWeb("Enter your new file name")</h4>
-                </div>
-                <div class="modal-body">
-                    <input id="report-name" type="text" class="form-control" placeholder="@repository.TranslateReport("New report")" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
-                    <button id="report-name-save" type="button" class="btn btn-primary">@repository.TranslateWeb("Save")</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Message Dialog -->
-    <div id="message-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index:25000;">
-        <div class="modal-dialog">
-            <div class="modal-content" style="top: 60px;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
-                    <h4 id="message-title" class="modal-title"></h4>
-                </div>
-                <div class="modal-body">
-                    <span id="message-text"></span>
-                </div>
-                <div class="modal-footer">
-                    <button id="message-cancel-button" type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
-                    <button id="message-ok-button" type="button" class="btn btn-primary">@repository.TranslateWeb("OK")</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -226,6 +178,10 @@
                         </div>
                     </div>
                     <div class="form-group edit-profile">
+                        <label for="onstartup-reportname"><span class="fa fa-edit"></span> @repository.TranslateWeb("Startup report name")</label>
+                        <input class="form-control" id="onstartup-reportname" />
+                    </div>
+                    <div class="form-group edit-profile">
                         <label for="executionmode-select"><span class="fa fa-external-link"></span> @repository.TranslateWeb("Report execution mode")</label>
                         <div>
                             <select id="executionmode-select" data-width="100%"></select>
@@ -277,7 +233,6 @@
     @if (model.HasEditor)
     {
         @await Html.PartialAsync("~/Views/Home/MainEditor.cshtml")
-        ;
     }
 
     <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
@@ -409,7 +364,7 @@
 
         if (model.HasEditor)
         {
-            <script src="~/Scripts/swi-editor-utils.js"></script>
+            <script src="~/Scripts/swi-gateway-editor.js"></script>
             <script src="~/Scripts/swi-button-group.js"></script>
             <script src="~/Scripts/swi-editor.js"></script>
             <script src="~/Scripts/swi-properties.js"></script>

@@ -273,7 +273,6 @@
         else {
             $("#results_menu").removeClass("reportview").css("display","none");
         }
-        $(".converter_item").css("display", @Helper.ToJS(view.GetBoolValue("converter_button")) ? "inline-block" : "none");
 
         var execButtons = $("#execute_button,#reload-nav-item");
         if (@Helper.ToJS(view.GetBoolValue("execute_button"))) {

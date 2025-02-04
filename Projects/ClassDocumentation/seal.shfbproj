@@ -212,6 +212,8 @@
             <assemblyIdentity name="Oracle.ManagedDataAccess" />
             <assemblyIdentity name="MongoDB.Driver" />
             <assemblyIdentity name="Twilio" />
+            <assemblyIdentity name="Npgsql" />
+            <assemblyIdentity name="AngleSharp" />
           </ignoreIfUnresolved>
         </configuration>
       </PlugInConfig>

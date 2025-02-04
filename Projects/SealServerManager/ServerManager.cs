@@ -12,6 +12,8 @@ using Seal.Helpers;
 using Seal.Forms;
 using System.Diagnostics;
 using System.Threading;
+using DocumentFormat.OpenXml.InkML;
+using ScintillaNET;
 
 namespace Seal
 {
@@ -24,6 +26,7 @@ namespace Seal
         ToolsHelper toolsHelper;
 
         ToolStripMenuItem configureMenuItem = new ToolStripMenuItem() { Text = "Configure Server...", ToolTipText = string.Format("Configure the {0} Report Server", Repository.SealRootProductName) };
+        ToolStripMenuItem dynamicsMenuItem = new ToolStripMenuItem() { Text = "Edit Dynamics Assemblies...", ToolTipText = "Check the compilation of *.cs files in the Assemblies folder." };
         ToolStripMenuItem publishWebMenuItem = new ToolStripMenuItem() { Text = "Publish Web Site on IIS...", ToolTipText = string.Format("Publish the {0} Web Site on the local Internet Information Server", Repository.SealRootProductName) };
         ToolStripMenuItem securityMenuItem = new ToolStripMenuItem() { Text = "Configure Web Security...", ToolTipText = string.Format("Configure how the reports and folders are published on {0} Web Site", Repository.SealRootProductName) };
 
@@ -97,6 +100,9 @@ namespace Seal
             configurationToolStripMenuItem.DropDownItems.Add(configureMenuItem);
             configureMenuItem.ShortcutKeys = (Keys.Control | Keys.C);
 
+            dynamicsMenuItem.Click += DynamicsMenuItem_Click;
+            configurationToolStripMenuItem.DropDownItems.Add(dynamicsMenuItem);
+
             configurationToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
             publishWebMenuItem.Click += configureClick;
             configurationToolStripMenuItem.DropDownItems.Add(publishWebMenuItem);
@@ -139,6 +145,30 @@ namespace Seal
             {
                 IsModified = false;
                 init();
+            }
+        }
+
+        private void DynamicsMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "CSharp Files (*.cs)|*.cs";
+            dlg.Title = "Select a CSharp file";
+            dlg.CheckFileExists = true;
+            dlg.CheckPathExists = true;
+            dlg.InitialDirectory = Repository.Instance.DynamicsFolder;
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                var code = File.ReadAllText(dlg.FileName);
+                var frm = new TemplateTextEditorForm();
+                frm.SetResetText(code);
+                frm.textBox.Text = code;
+                frm.checkSyntaxToolStripButton.Visible = true;
+                frm.IsRawCSharp = true;
+                ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                     File.WriteAllText(dlg.FileName, frm.textBox.Text);
+                }
             }
         }
 
@@ -416,10 +446,14 @@ namespace Seal
             _isInitialized = true;
 
             _ = Repository.Instance.LicenseText;
+
+            FormHelper.RestoreForm(this, Properties.Settings.Default.FormSize, Properties.Settings.Default.FormLocation, Properties.Settings.Default.FormState);
             BringToFront();
-            if (Repository.Instance.LicenseInvalid)
+            Activate();
+
+            if (Repository.Instance.LicenseInvalid || string.IsNullOrWhiteSpace(Repository.Instance.LicenseText))
             {
-                AboutBoxForm frm = new AboutBoxForm();
+                AboutBoxForm frm = new AboutBoxForm(true);
                 frm.ShowDialog(this);
             }
         }
@@ -432,6 +466,21 @@ namespace Seal
         private void ServerManager_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!checkModified()) e.Cancel = true;
+
+            //Save form location and size 
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                Properties.Settings.Default.FormLocation = this.Location;
+                Properties.Settings.Default.FormSize = this.Size;
+            }
+            else
+            {
+                Properties.Settings.Default.FormLocation = this.RestoreBounds.Location;
+                Properties.Settings.Default.FormSize = this.RestoreBounds.Size;
+            }
+            // Save the form state as a string
+            Properties.Settings.Default.FormState = this.WindowState.ToString();
+
             Properties.Settings.Default.Save();
         }
 

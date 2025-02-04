@@ -1079,11 +1079,12 @@ namespace Seal.Model
                 int cnt = 1000;
                 if (IsSQL)
                 {
-                    string sql = string.Format("SELECT {0} FROM {1}", column.Name, FullSQLName);
+                    string sql = $"SELECT {column.Name}, count(0) FROM {FullSQLName} GROUP BY {column.Name} ORDER BY count(0) DESC";
                     result = string.Format("{0}\r\n\r\n{1}:\r\n", sql, column.DisplayName);
                     DbConnection connection = Source.GetOpenConnection();
                     DbCommand command = connection.CreateCommand();
                     command.CommandText = sql;
+                    command.CommandTimeout = 20000;
                     var reader = command.ExecuteReader();
                     while (reader.Read() && --cnt >= 0)
                     {
@@ -1091,12 +1092,11 @@ namespace Seal.Model
                         if (!reader.IsDBNull(0))
                         {
                             object value = reader[0];
-
                             CultureInfo culture = (Source.Report != null ? Source.Report.ExecutionView.CultureInfo : Source.Repository.CultureInfo);
                             if (value is IFormattable) valueStr = ((IFormattable)value).ToString(column.Format, culture);
                             else valueStr = value.ToString();
                         }
-                        result += string.Format("{0}\r\n", valueStr);
+                        result += $"'{valueStr}' : {reader[1]} time(s)\r\n";
                     }
                     reader.Close();
                     command.Connection.Close();
@@ -1111,6 +1111,7 @@ namespace Seal.Model
                         result += string.Format("{0}\r\n", row[column.Name]);
                     }
                 }
+                if (cnt <= 0) result += "\r\nWarning: Only the first 1000 records are shown.\r\n";
             }
             catch (Exception ex)
             {

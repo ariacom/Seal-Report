@@ -115,34 +115,6 @@
       <GUID>f59c3635-356f-4791-b0a1-5d05a5571eb1</GUID>
       <Name>Errors per day</Name>
       <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
-      <LoadScript>@using System.Data
-@{
-    ReportModel model = Model;
-    DataTable table = model.ResultTable;
-	ReportExecutionLog log = model.Report;
-
-    //Script executed to modify the model result table after it has been loaded from the database
-    //Modify values in the current result table, rows can also be added and deleted.
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    log.LogMessage("Modifying table with the model 'Post Load Script'...");
-    
-    //Insert values to 0 if missing..
-    var offset = 20;
-    for (int day=0; day&lt;=offset; day++) {
-        var currentDate =  DateTime.Now.AddDays(day-offset).Date;
-        if (table.AsEnumerable().Where(i =&gt; i.Field&lt;DateTime&gt;("C1") == currentDate &amp;&amp; i.Field&lt;string&gt;("C0") == "Event Error").AsDataView().Count == 0)
-        {
-            table.Rows.Add(currentDate, 0, "Event Error"); 
-        }
-        if (table.AsEnumerable().Where(i =&gt; i.Field&lt;DateTime&gt;("C1") == currentDate &amp;&amp; i.Field&lt;string&gt;("C0") == "Report Execution Error").AsDataView().Count == 0)
-        {
-            table.Rows.Add(currentDate, 0, "Report Execution Error"); 
-        }
-    }    
-    
-    log.LogMessage("Table rows: {0}", table.Rows.Count);
-}
-</LoadScript>
       <Elements>
         <ReportElement>
           <GUID>bf5a07f3-d06e-44ca-8950-db9b06a4b585</GUID>
@@ -176,6 +148,7 @@
           <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
@@ -241,6 +214,7 @@ AND [3d13a079-5104-4fd6-9415-9a5ec4e91e6a]</Restriction>
           <AggregateFunction>Count</AggregateFunction>
           <ShowTotal>RowColumn</ShowTotal>
           <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
@@ -314,7 +288,6 @@ AND [d470def5-af9d-47c6-ad2b-c8e96afc5459]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <TotalAggregateFunction>Max</TotalAggregateFunction>
-          <SerieDefinition>Axis</SerieDefinition>
           <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -327,7 +300,6 @@ AND [d470def5-af9d-47c6-ad2b-c8e96afc5459]</Restriction>
           <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
           <ShowTotal>RowColumn</ShowTotal>
-          <ChartJSSerie>Bar</ChartJSSerie>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
@@ -384,11 +356,11 @@ AND [5bca87bc-78c9-468a-8c37-b3df60bd8b25]</Restriction>
       <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
       <Elements>
         <ReportElement>
-          <GUID>c2e23161-4b45-440d-bba8-0779caa7bce0</GUID>
+          <GUID>15704b96-5116-4357-b954-d1009a0f1b2a</GUID>
           <Name>sr_audit.event_date</Name>
           <DisplayName />
           <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
-          <Format>dd/MM</Format>
+          <Format>dd/MM HH:mm</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <TotalAggregateFunction>Max</TotalAggregateFunction>
@@ -612,6 +584,95 @@ OR
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
+    <ReportModel>
+      <GUID>b4d6a415-47c4-455f-8070-4e55844ad3d9</GUID>
+      <Name>Last user events</Name>
+      <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>972e0384-849f-40bc-bab2-b7fa05f43036</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2de491a0-912c-4c93-ae77-982129737ec8</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName>Last activity</DisplayName>
+          <Format>G</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[e9c64e6f-a58d-43ef-929b-8e61636c0b89]
+AND [33ea67d3-9296-4703-87b8-d3a2855227ee]
+AND [d9a7ef8a-0fbe-4f99-b0a3-70fe24ee9846]
+AND [ccf5db51-89b4-4366-8ffc-b6444c43e395]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>e9c64e6f-a58d-43ef-929b-8e61636c0b89</GUID>
+          <Name>CONVERT(date, sr_audit.event_date)</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-1D</Date1Keyword>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>33ea67d3-9296-4703-87b8-d3a2855227ee</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <EnumValues>
+            <string>EventError</string>
+            <string>Login</string>
+            <string>LoginFailure</string>
+            <string>Logout</string>
+            <string>ReportExecution</string>
+            <string>ReportExecutionError</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>d9a7ef8a-0fbe-4f99-b0a3-70fe24ee9846</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <DisplayOrder>5</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Operator>IsNotEmpty</Operator>
+          <DisplayOrderRE>5</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>ccf5db51-89b4-4366-8ffc-b6444c43e395</GUID>
+          <Name>sr_audit.execution_context</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID>
+          <DisplayOrderRE>4</DisplayOrderRE>
+          <EnumValues>
+            <string>WebOutput</string>
+            <string>WebReport</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
   </Models>
   <Tasks>
     <ReportTask>
@@ -684,7 +745,6 @@ OR
                       <GUID>6043722b-720d-465a-8fae-ab762187a58e</GUID>
                       <Name>KPI</Name>
                       <TemplateName>KPI</TemplateName>
-                      <CustomTemplate />
                       <Parameters>
                         <Parameter>
                           <Name>kpi_trend_index</Name>
@@ -878,7 +938,6 @@ OR
                       <GUID>9e61a2ab-7707-4274-9a84-4b757438b004</GUID>
                       <Name>KPI</Name>
                       <TemplateName>KPI</TemplateName>
-                      <CustomTemplate />
                       <Parameters>
                         <Parameter>
                           <Name>kpi_button_css</Name>
@@ -958,7 +1017,7 @@ glyphicon glyphicon-remove</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
-                  <Value>warning</Value>
+                  <Value>danger</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_css</Name>
@@ -989,17 +1048,17 @@ glyphicon glyphicon-remove</Value>
         </ReportView>
         <ReportView>
           <GUID>eb4057bf-6a19-4e84-b9b9-039b88c25971</GUID>
-          <Name>General Header</Name>
+          <Name>Events Header</Name>
           <TemplateName>Free</TemplateName>
           <UseCustomTemplate>true</UseCustomTemplate>
           <CustomTemplate>&lt;hr&gt;
-&lt;h2&gt;General&lt;/h2&gt;
+&lt;h2&gt;Events&lt;/h2&gt;
 </CustomTemplate>
           <SortOrder>3</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>058571f8-f06a-4589-9168-f5aa54bfa196</GUID>
-          <Name>General Container</Name>
+          <Name>Events Container</Name>
           <Views>
             <ReportView>
               <GUID>d5d1293b-b35e-4cea-b87e-b4dbdcde7d5f</GUID>
@@ -1046,6 +1105,75 @@ glyphicon glyphicon-remove</Value>
               </Parameters>
               <SortOrder>1</SortOrder>
             </ReportView>
+            <ReportView>
+              <GUID>4d7fd120-c795-4772-8d45-5bec0ceca7c4</GUID>
+              <Name>Last user events</Name>
+              <Views>
+                <ReportView>
+                  <GUID>d1935a66-26cb-47a4-9ad6-1ecbffda3767</GUID>
+                  <Name>Last user events</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>66fb881c-c0c7-4133-b2bf-23cf4ef10d6f</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>7bc0750d-cbe7-4a92-a3cc-538d75fc92d1</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>b4d6a415-47c4-455f-8070-4e55844ad3d9</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>widget_exec_report</Name>
+                  <Value>\System\200 Audit - Search.srex</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_icon</Name>
+                  <Value>tag</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_color</Name>
+                  <Value>warning</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-8;col-sm-4;</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>4</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>14a4144b-537e-4507-a57a-79d2eacf594e</GUID>
+          <Name>System Header</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;hr&gt;
+&lt;h2&gt;System&lt;/h2&gt;
+</CustomTemplate>
+          <SortOrder>5</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>9912dc8e-67a3-4967-b07e-dfdf1636bb97</GUID>
+          <Name>System Container</Name>
+          <Views>
             <ReportView>
               <GUID>3d786eee-1a21-41b0-baa1-eec2dbc1e666</GUID>
               <Name>System Reports</Name>
@@ -1095,17 +1223,17 @@ glyphicon glyphicon-remove</Value>
                   <Value>success</Value>
                 </Parameter>
               </Parameters>
-              <SortOrder>2</SortOrder>
+              <SortOrder>1</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Container</TemplateName>
           <Parameters>
             <Parameter>
               <Name>grid_layout</Name>
-              <Value>col-sm-8;col-sm-4;</Value>
+              <Value>col-sm-6;col-sm-6;</Value>
             </Parameter>
           </Parameters>
-          <SortOrder>4</SortOrder>
+          <SortOrder>6</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

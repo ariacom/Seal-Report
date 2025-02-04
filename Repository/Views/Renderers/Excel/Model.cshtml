@@ -15,11 +15,12 @@
     {
         bool displayFormat = renderer.GetBoolValue("use_display_format");
         bool cellStyles = renderer.GetBoolValue("use_display_format");
-        summaryRows(result, model, 0, 1, displayFormat, cellStyles);
-        summaryRows(result, model, model.SummaryTable.BodyStartRow, model.SummaryTable.BodyEndRow, displayFormat, cellStyles);
-        if (view.GetBoolValue("add_summary_totals_totals") && view.GetBoolValue("display_summary_totals") && model.HasTotals)
+        bool displayTotals = view.GetBoolValue("display_summary_totals");
+        summaryRows(result, model, 0, 1, displayFormat, cellStyles, displayTotals);
+        summaryRows(result, model, model.SummaryTable.BodyStartRow, model.SummaryTable.BodyEndRow, displayFormat, cellStyles, displayTotals);
+        if (view.GetBoolValue("add_summary_totals_totals") && displayTotals && model.HasTotals)
         {
-            summaryRows(result, model, model.SummaryTable.BodyEndRow, model.SummaryTable.RowCount, displayFormat, cellStyles);
+            summaryRows(result, model, model.SummaryTable.BodyEndRow, model.SummaryTable.RowCount, displayFormat, cellStyles, displayTotals);
         }
         result.CurrentRow++;
     }
@@ -49,13 +50,16 @@
 
 
 @functions {
-    void summaryRows(ExcelResult result, ReportModel model, int rowStart, int rowEnd, bool displayFormat, bool cellStyles)
+    void summaryRows(ExcelResult result, ReportModel model, int rowStart, int rowEnd, bool displayFormat, bool cellStyles, bool displayTotals)
     {
         for (int row = rowStart; row < rowEnd; row++)
         {
             result.CurrentCol = 1;
             for (int col = 0; col < model.SummaryTable.ColumnCount; col++)
             {
+                var cell = model.SummaryTable[row, col];
+                if (!displayTotals && (cell.IsTotal || cell.IsTotalTotal)) continue;
+
                 result.SetValue(model.SummaryTable[row, col], displayFormat, cellStyles);
                 result.CurrentCol++;
             }

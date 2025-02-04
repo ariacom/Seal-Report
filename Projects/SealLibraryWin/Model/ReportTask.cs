@@ -17,12 +17,15 @@ using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Data;
 using Npgsql;
+using System.Data.SQLite;
 using Npgsql.Internal;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Office2021.DocumentTasks;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 using System.Runtime.InteropServices;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+
 
 
 #if WINDOWS
@@ -100,6 +103,27 @@ namespace Seal.Model
             return new ReportTask() { GUID = Guid.NewGuid().ToString() };
         }
 
+
+
+        void changeGUIDs()
+        {
+            //update GUIDs
+            GUID = Guid.NewGuid().ToString();
+            foreach (var task in Tasks)
+            {
+                task.GUID = Guid.NewGuid().ToString();
+            }
+        }
+        /// <summary>
+        /// Copy a ReportTask with its children
+        /// </summary>
+        public ReportTask Copy()
+        {
+            var newTask = (ReportTask)Helper.Clone(this);
+            newTask.changeGUIDs();
+            newTask.InitReferences();
+            return newTask;
+        }
 
         /// <summary>
         /// Init all references of the task
@@ -205,7 +229,7 @@ namespace Seal.Model
 
         bool hasFunctions()
         {
-            return !string.IsNullOrEmpty(Script) && Script.Contains("@functions"); 
+            return !string.IsNullOrEmpty(Script) && Script.Contains("@functions");
         }
 
 #if WINDOWS
@@ -389,7 +413,7 @@ namespace Seal.Model
             get
             {
                 if (string.IsNullOrEmpty(ReferenceTaskGUID)) return null;
-                return _report.Tasks.FirstOrDefault(i => i.GUID == ReferenceTaskGUID);
+                return _report.AllTasks.FirstOrDefault(i => i.GUID == ReferenceTaskGUID);
             }
         }
 
@@ -667,6 +691,9 @@ namespace Seal.Model
                     }
                 }
             }
+            
+            //Then children
+            foreach (var task in Tasks.OrderBy(i => i.SortOrder)) task.InitFromReferenceTask(); 
         }
 
         #region Helpers
@@ -771,9 +798,13 @@ namespace Seal.Model
                         ((OracleConnection)connection).InfoMessage += new OracleInfoMessageEventHandler(OracleInfoMessage);
                         result = ((OracleConnection)connection).CreateCommand();
                     }
-                      else if (connection is NpgsqlConnection n)
-                    {                        
+                    else if (connection is NpgsqlConnection n)
+                    {
                         result = ((NpgsqlConnection)connection).CreateCommand();
+                    }
+                    else if (connection is SQLiteConnection)
+                    {
+                        result = ((SQLiteConnection)connection).CreateCommand();
                     }
                     else
                     {

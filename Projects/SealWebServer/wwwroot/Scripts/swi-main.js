@@ -61,6 +61,10 @@ var SWIMain = /** @class */ (function () {
         _gateway.GetVersions(function (data) {
             $("#brand-id").attr("title", SWIUtil.tr2("Web Interface Version") + " : " + data.SWIVersion + "\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\n" + data.Info);
             $("#footer-version").text(data.SWIVersion);
+            if (!data.Info.includes("Serial n")) {
+                $("#nav_cr").html(data.Info.replace("\r\n", "<br>"));
+                $("#nav_cr").show();
+            }
         });
         _gateway.GetUserProfile(function (data) {
             if (data.authenticated != null && data.authenticated == false) {
@@ -198,12 +202,11 @@ var SWIMain = /** @class */ (function () {
                 if (_main._profile.editprofile) {
                     var onstartup = $("#onstartup-select").val();
                     var startupreport = _main._profile.startupreport;
-                    var startupreportname = _main._profile.startupreportname;
                     if (onstartup == "4") {
                         onstartup = "3"; //Execute report
                         startupreport = _main._lastReport.path;
-                        startupreportname = _main._lastReport.name;
                     }
+                    var startupreportname = $("#onstartup-reportname").val();
                     var executionmode = $("#executionmode-select").val();
                     //connections
                     var connections = [];
@@ -227,12 +230,13 @@ var SWIMain = /** @class */ (function () {
             if (_main._lastReport.name && _main._lastReport.name != _main._profile.startupreportname)
                 $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.name + "'", _main._profile.onstartup));
             $select.selectpicker('refresh');
+            $("#onstartup-reportname").val(_main._profile.startupreportname);
             $select = $("#executionmode-select");
             $select.empty();
             $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default mode"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute report in a new Window"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute report in the current Window"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Allow only execution in a new Window"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute report in a new window"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute report in the current window"), _main._profile.executionmode));
+            $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Allow only execution in a new window"), _main._profile.executionmode));
             $select.selectpicker('refresh');
             $select = $("#culture-select");
             if ($select.children("option").length == 0) {
@@ -256,7 +260,7 @@ var SWIMain = /** @class */ (function () {
             }
             var $connections = $("#default-connections");
             $("#default-connections").empty();
-            if (_main._profile.sources.length === 0) {
+            if (_main._profile.sources.length === 0 || !_main._profile.editprofile) {
                 $("#default-connections").parent().hide();
             }
             else {
@@ -730,7 +734,7 @@ var SWIMain = /** @class */ (function () {
             $tr.append($td);
             if (file.isreport) {
                 if (_main._reportIcon !== null) {
-                    var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current Window" : "Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
+                    var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current window" : "Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
                     iconButton.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
                     $td.append(iconButton);
                 }

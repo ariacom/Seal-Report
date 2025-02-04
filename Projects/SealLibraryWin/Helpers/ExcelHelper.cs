@@ -134,7 +134,7 @@ namespace Seal.Helpers
                         }
                     }
                 }
-                result.Columns.Add(colName, t);
+                result.Columns.Add(GetUniqueColumnName(result, colName), t);
                 colTitle++;
             }
 
@@ -221,7 +221,8 @@ namespace Seal.Helpers
                     result = new DataTable();
                     for (int i = 0; i < collection.Count; i++)
                     {
-                        result.Columns.Add(new DataColumn(ExcelHelper.FromCsv(collection[i].Value.Replace("-","_")), typeof(string)));
+                        var colName = GetUniqueColumnName(result, FromCsv(collection[i].Value.Replace("-", "_")));
+                        result.Columns.Add(new DataColumn(colName, typeof(string)));
                     }
                     isHeader = false;
                 }
@@ -236,6 +237,18 @@ namespace Seal.Helpers
                 }
             }
 
+            return result;
+        }
+
+        static public string GetUniqueColumnName(DataTable table, string columnName)
+        {
+            int index = 2;
+            var result = columnName.Trim();
+            while (table.Columns.Contains(result))
+            {
+                result = $"{columnName}{index}";
+                index++;
+            }
             return result;
         }
 
@@ -275,6 +288,7 @@ namespace Seal.Helpers
                     result = new DataTable();
                     for (int i = 0; i < fields.Length; i++)
                     {
+                        var colName = GetUniqueColumnName(result, fields[i]);
                         result.Columns.Add(new DataColumn(fields[i], typeof(string)));
                     }
                     isHeader = false;

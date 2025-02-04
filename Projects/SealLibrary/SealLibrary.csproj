@@ -7,9 +7,9 @@
 		<Configurations>Debug;Release</Configurations>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Product>Seal Report</Product>
-		<Version>8.1.0.0</Version>
-		<FileVersion>8.1.0.0</FileVersion>
-		<AssemblyVersion>8.1.0.0</AssemblyVersion>
+		<Version>8.2.2.0</Version>
+		<FileVersion>8.2.2.0</FileVersion>
+		<AssemblyVersion>8.2.2.0</AssemblyVersion>
 		<Description>Provides the objects to create, load and execute reports using the Seal Report framework.
 A full repository file structure must be available on the machine running the program.</Description>
 		<Authors>Ariacom</Authors>
@@ -58,7 +58,8 @@ A full repository file structure must be available on the machine running the pr
 		<Compile Include="..\SealLibraryWin\Helpers\ObjectShredder.cs" Link="Helpers\ObjectShredder.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\CryptoHelper.cs" Link="Helpers\CryptoHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\DataTableLoader.cs" Link="Helpers\DataTableLoader.cs" />
-		<Compile Include="..\SealLibraryWin\Helpers\ExcelHelper.cs" Link="Helpers\ExcelHelper.cs" />
+    <Compile Include="..\SealLibraryWin\Helpers\AzureHelper.cs" Link="Helpers\AzureHelper.cs" />
+    <Compile Include="..\SealLibraryWin\Helpers\ExcelHelper.cs" Link="Helpers\ExcelHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\FileHelper.cs" Link="Helpers\FileHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\Impersonator.cs" Link="Helpers\Impersonator.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
@@ -67,7 +68,6 @@ A full repository file structure must be available on the machine running the pr
 		<Compile Include="..\SealLibraryWin\Helpers\TaskHelper.cs" Link="Helpers\TaskHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Audit.cs" Link="Model\Audit.cs" />
 		<Compile Include="..\SealLibraryWin\Model\CategoryFolder.cs" Link="Model\CategoryFolder.cs" />
-		<Compile Include="..\SealLibraryWin\Model\CommonScript.cs" Link="Model\CommonScript.cs" />
 		<Compile Include="..\SealLibraryWin\Model\EditorTableDefinition.cs" Link="Model\EditorTableDefinition.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Enums.cs" Link="Model\Enums.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ExecutionInterface.cs" Link="Model\ExecutionInterface.cs" />
@@ -115,9 +115,6 @@ A full repository file structure must be available on the machine running the pr
 		<Compile Include="..\SealLibraryWin\Model\ResultTotalCell.cs" Link="Model\ResultTotalCell.cs" />
 		<Compile Include="..\SealLibraryWin\Model\RootComponent.cs" Link="Model\RootComponent.cs" />
 		<Compile Include="..\SealLibraryWin\Model\RootEditor.cs" Link="Model\RootEditor.cs" />
-		<Compile Include="..\SealLibraryWin\Model\SealExcelConverter.cs" Link="Model\SealExcelConverter.cs" />
-		<Compile Include="..\SealLibraryWin\Model\SealInterface.cs" Link="Model\SealInterface.cs" />
-		<Compile Include="..\SealLibraryWin\Model\SealPdfConverter.cs" Link="Model\SealPdfConverter.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealReportScheduler.cs" Link="Model\SealReportScheduler.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealSchedule.cs" Link="Model\SealSchedule.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealSecurity.cs" Link="Model\SealSecurity.cs" />
@@ -149,7 +146,13 @@ A full repository file structure must be available on the machine running the pr
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
+    <PackageReference Include="Azure.Core" Version="1.42.0" />
+    <PackageReference Include="Azure.Identity" Version="1.12.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.21.2" />
+    <PackageReference Include="Azure.Storage.Common" Version="12.20.1" />
+    <PackageReference Include="Azure.Storage.Files.Shares" Version="12.19.1" />
+    <PackageReference Include="Azure.Storage.Queues" Version="12.19.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.0" />
 		<PackageReference Include="EPPlus" Version="4.5.3.3" />
 		<PackageReference Include="FluentFTP" Version="50.1.0" />
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="7.3.0.2" />
@@ -161,12 +164,15 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.7" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
-		<PackageReference Include="MongoDB.Driver" Version="2.27.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="5.1.0" />
+    <PackageReference Include="Microsoft.Graph" Version="5.58.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.27.0" />
 		<PackageReference Include="MySql.Data" Version="9.0.0" />
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.5.0" />
 		<PackageReference Include="Npgsql" Version="8.0.3" />
 		<PackageReference Include="PuppeteerSharp" Version="18.0.4" />
 		<PackageReference Include="QuestPDF" Version="2024.7.0" />
+		<PackageReference Include="QuestPDF.Barcodes" Version="2024.3.1" />
 		<PackageReference Include="ScottPlot" Version="5.0.36" />
 		<PackageReference Include="SendGrid" Version="9.29.3" />
 		<PackageReference Include="SharpZipLib" Version="1.4.2" />
@@ -175,10 +181,13 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="SSH.NET" Version="2024.1.0" />
 		<PackageReference Include="Svg.Skia" Version="1.0.0.18" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+		<PackageReference Include="System.Drawing.Common" Version="8.0.8" />
 		<PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
-		<PackageReference Include="TaskScheduler" Version="2.11.0" />
+    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
+    <PackageReference Include="TaskScheduler" Version="2.11.0" />
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
 		<PackageReference Include="Twilio" Version="7.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.7" />

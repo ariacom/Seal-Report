@@ -552,7 +552,7 @@
                         </Parameter>
                         <Parameter>
                           <Name>chartsp_title</Name>
-                          <Value>Chart ScotPlot</Value>
+                          <Value>Chart ScottPlot</Value>
                         </Parameter>
                       </Parameters>
                       <SortOrder>4</SortOrder>
@@ -631,7 +631,7 @@
                         </Parameter>
                         <Parameter>
                           <Name>chartsp_title</Name>
-                          <Value>Chart ScotPlot</Value>
+                          <Value>Chart ScottPlot</Value>
                         </Parameter>
                       </Parameters>
                       <SortOrder>4</SortOrder>
@@ -730,7 +730,7 @@
                         </Parameter>
                         <Parameter>
                           <Name>chartsp_title</Name>
-                          <Value>Chart ScotPlot</Value>
+                          <Value>Chart ScottPlot</Value>
                         </Parameter>
                         <Parameter>
                           <Name>chartsp_yaxis_min</Name>

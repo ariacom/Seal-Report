@@ -22,15 +22,13 @@ using Microsoft.CodeAnalysis;
 using SharpCompress.Common;
 using System.Runtime.Loader;
 using Microsoft.CodeAnalysis.Text;
-
-
+using System.Xml.Serialization;
 
 
 #if WINDOWS
 using System.Windows.Forms;
 using System.Drawing;
 #endif
-
 
 namespace Seal.Model
 {
@@ -56,8 +54,6 @@ namespace Seal.Model
         public const string EnumFilterKeyword = "{EnumFilter";
         public const string EnumValuesKeyword = "{EnumValues_";
         public const string JoinAutoName = "<AutomaticJoinName>";
-        public const string SealConverterDll = "SealConverter.dll";
-        public const string SealConverterWinDll = "SealConverterWin.dll";
 
 
         //appsettings.json
@@ -139,14 +135,6 @@ namespace Seal.Model
                     string licensePath = Path.Combine(Instance.SettingsFolder, "License.srl");
                     _licenseText = Helper.GetLicenseText(licensePath, out bool licenseInvalid);
                     LicenseInvalid = licenseInvalid;
-
-                    var converter = SealPdfConverter.Create();
-                    var converterLicenseText = converter.GetLicenseText();
-                    if (!string.IsNullOrEmpty(converterLicenseText))
-                    {
-                        _licenseText += converter.GetLicenseText();
-                    }
-
                 }
                 return _licenseText;
             }
@@ -161,6 +149,25 @@ namespace Seal.Model
         /// List of OutputDevice in the repository
         /// </summary>
         public List<OutputDevice> Devices { get; private set; } = new List<OutputDevice>();
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag;
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag2;
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag3;
+
 
         void initCultureSeparators()
         {
@@ -398,6 +405,14 @@ namespace Seal.Model
             }
         }
 
+        public static bool IsInstanceCreated
+        {
+            get
+            {
+                return _instance != null;
+            }
+        }
+
         /// <summary>
         /// Creates a basic repository
         /// </summary>
@@ -497,7 +512,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        Helper.WriteLogException("Repository.Init: OutputEmailDevice", ex);
                     }
                 }
 
@@ -519,7 +534,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        Helper.WriteLogException("Repository.Init: OutputEmailDevice", ex);
                     }
                 }
                 foreach (var file in Directory.GetFiles(DevicesFileServerFolder, "*." + SealConfigurationFileExtension))
@@ -530,7 +545,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        Helper.WriteLogException("Repository.Init: OutputFileServerDevice", ex);
                     }
                 }
             }
@@ -545,14 +560,11 @@ namespace Seal.Model
                     {
                         try
                         {
-                            if (Path.GetFileName(assembly) != SealConverterDll && Path.GetFileName(assembly) != SealConverterWinDll)
-                            {
-                                Assembly.LoadFrom(assembly);
-                            }
+                            Assembly.LoadFrom(assembly);
                         }
                         catch (Exception ex)
                         {
-                            Helper.WriteLogException("Assemblies", ex);
+                            Helper.WriteLogException("Repository.Init: Assemblies", ex);
                         }
                     }
 
@@ -563,25 +575,44 @@ namespace Seal.Model
                     AssembliesLoaded = true;
                 }
 
+                var str = Assembly.Load("System.Data.Common").Location;
+
                 if (!DynamicAssembliesLoaded)
                 {
                     //Load extra dynamic assemblies
                     var csFiles = Directory.GetFiles(DynamicsFolder, "*.cs");
-                    foreach (var csFile in csFiles)
+                    var dynamicFolder = Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsFolder;
+                    foreach (var csFile in csFiles.OrderBy(i => i))
                     {
                         try
                         {
-                            var dllPath = Path.Combine(DynamicsFolder, Path.GetFileNameWithoutExtension(csFile) + ".dll");
+                            var dllPath = Path.Combine(dynamicFolder, Path.GetFileNameWithoutExtension(csFile) + ".dll");
                             if (File.GetLastWriteTime(csFile) > File.GetLastWriteTime(dllPath))
                             {
                                 //Compile the file and save the dll
                                 var code = File.ReadAllText(csFile);
                                 // Compile the code
                                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                                var references = AppDomain.CurrentDomain.GetAssemblies()
+                                var references = new[]
+                                {
+                                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                                    MetadataReference.CreateFromFile(typeof(List<>).Assembly.Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Collections").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Collections.Generic").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Linq").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Globalization").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Net").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Security").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.IO").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.IO.Stream").Location),
+                                    MetadataReference.CreateFromFile(Assembly.Load("System.Data").Location),
+                                     MetadataReference.CreateFromFile(Assembly.Load("System.Data.Common").Location)
+                               }.Concat(AppDomain.CurrentDomain.GetAssemblies()
                                     .Where(a => !a.IsDynamic && a.Location != dllPath)
-                                    .Select(a => MetadataReference.CreateFromFile(a.Location))
-                                    .Cast<MetadataReference>();
+                                    .Select(a => MetadataReference.CreateFromFile(a.Location)))
+                                .Distinct();
 
                                 var compilation = CSharpCompilation.Create(
                                     Path.GetFileNameWithoutExtension(csFile),
@@ -608,7 +639,7 @@ namespace Seal.Model
                         }
                         catch (Exception ex)
                         {
-                            Helper.WriteLogException("DynamicAssemblies", ex);
+                            Helper.WriteLogException("Repository.Init: DynamicAssemblies", ex);
                         }
                     }
 
@@ -670,6 +701,7 @@ namespace Seal.Model
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
                 if (!Directory.Exists(AssembliesFolder)) Directory.CreateDirectory(AssembliesFolder);
+                if (!Directory.Exists(DynamicsWinFolder)) Directory.CreateDirectory(DynamicsWinFolder);
                 if (!Directory.Exists(DynamicsFolder)) Directory.CreateDirectory(DynamicsFolder);
                 if (!Directory.Exists(RazorCacheFolder)) Directory.CreateDirectory(RazorCacheFolder);
                 if (!Directory.Exists(RazorCacheWinFolder)) Directory.CreateDirectory(RazorCacheWinFolder);
@@ -824,6 +856,17 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Dynamic assemblies folder for Windows applications
+        /// </summary>
+        public string DynamicsWinFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "Dynamics\\Win");
+            }
+        }
+
+        /// <summary>
         /// Razor cache folder for compiled assemblies
         /// </summary>
         public string RazorCacheFolder
@@ -935,7 +978,7 @@ namespace Seal.Model
                 }
                 catch (Exception emailEx)
                 {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Try 1: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : ""));
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Try 1: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : "")));
                     try
                     {
                         if (body.Length > 10000) body = body.Substring(1, 10000); //Body is perhaps too big
@@ -944,7 +987,7 @@ namespace Seal.Model
                     }
                     catch (Exception emailEx2)
                     {
-                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Try 2: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx2.Message + (emailEx2.InnerException != null ? "\r\n" + emailEx2.InnerException.Message : ""));
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Try 2: Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx2.Message + (emailEx2.InnerException != null ? "\r\n" + emailEx2.InnerException.Message : "")));
                     }
                 }
             }
@@ -1004,12 +1047,12 @@ namespace Seal.Model
         /// </summary>
         public List<ReportFormat> ResultAllFormats
         {
-            get {
+            get
+            {
                 bool hasConverter = File.Exists(SealConverterPath);
                 var result = new List<ReportFormat>();
                 foreach (ReportFormat format in Enum.GetValues(typeof(ReportFormat)))
                 {
-                    if ((format == ReportFormat.pdf || format == ReportFormat.excel) && !hasConverter) continue;
                     result.Add(format);
                 }
                 return result;
@@ -1024,7 +1067,7 @@ namespace Seal.Model
             get
             {
                 if (Configuration.ReportFormats.Count == 0) return ResultAllFormats;
-                return (from f in Configuration.ReportFormats select (ReportFormat) Enum.Parse(typeof(ReportFormat), f)).ToList();
+                return (from f in Configuration.ReportFormats select (ReportFormat)Enum.Parse(typeof(ReportFormat), f)).ToList();
             }
         }
 
@@ -1204,7 +1247,7 @@ namespace Seal.Model
         /// </summary>
         public void LoadRepositoryTranslationsFromDataTable(DataTable dt)
         {
-            RepositoryTranslation.InitFromDataTable(RepositoryTranslations, dt, true);        
+            RepositoryTranslation.InitFromDataTable(RepositoryTranslations, dt, true);
         }
 
         /// <summary>
@@ -1315,7 +1358,7 @@ namespace Seal.Model
             string[] categories = instance.Split('/');
             foreach (var category in categories)
             {
-                current += (!string.IsNullOrEmpty(current) ? "/" : "") +category;
+                current += (!string.IsNullOrEmpty(current) ? "/" : "") + category;
                 result += (!string.IsNullOrEmpty(result) ? "/" : "") + TranslateCategory(current, category);
             }
             return result;
@@ -1383,6 +1426,7 @@ namespace Seal.Model
 
         public void FlushTranslationUsage()
         {
+            /*
             if (Translations.Count > 0)
             {
                 if (UnkownTranslations.Count > 0)
@@ -1401,7 +1445,7 @@ namespace Seal.Model
                 }
                 Debug.WriteLine("\r\nTranslations usage: consider to remove translations not used from the Translations.csv file:");
                 foreach (var translation in Translations.Values.OrderBy(i => i.Usage)) Debug.WriteLine(string.Format("Used {0} time(s): (Context:{1}) {2}", translation.Usage, translation.Context, translation.Reference));
-            }
+            }*/
         }
 #endif
 

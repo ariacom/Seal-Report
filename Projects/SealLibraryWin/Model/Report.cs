@@ -426,7 +426,10 @@ namespace Seal.Model
                         {
                             fileName = string.Format(fileName, DateTime.Now);
                         }
-                        catch { }
+                        catch(Exception ex) 
+                        {
+                            Helper.WriteLogException("ResultFileName", ex);
+                        }
                     }
                 }
                 if (string.IsNullOrEmpty(fileName)) fileName = "result";
@@ -450,7 +453,7 @@ namespace Seal.Model
             foreach (var view in Views) view.InitParameters(false);
 
             //Copy values from reference tasks
-            foreach (var task in Tasks.Where(i => i.ReferenceTask != null).OrderBy(i => i.SortOrder))
+            foreach (var task in Tasks.OrderBy(i => i.SortOrder))
             {
                 task.InitFromReferenceTask();
             }
@@ -517,12 +520,6 @@ namespace Seal.Model
             //Init scripts
             if (!_initScriptsExecuted)
             {
-                //Load converter assembly
-                if (ExecutionView != null)
-                {
-                    var converter = ExecutionView.PdfConverter;
-                }
-
                 //First config
                 if (!string.IsNullOrEmpty(Repository.Configuration.InitScript))
                 {
@@ -1412,10 +1409,6 @@ namespace Seal.Model
         /// </summary>
         public Report Clone()
         {
-            foreach (var view in Views)
-            {
-                view.SetAdvancedConfigurations();
-            }
             Report report = (Report)Helper.Clone(this);
             report.Repository = Repository;
             report.InitReferences();
@@ -1445,7 +1438,6 @@ namespace Seal.Model
 
                 foreach (var view in Views)
                 {
-                    view.SetAdvancedConfigurations();
                     view.BeforeSerialization();
                 }
                 //serialize only not readonly metadata
@@ -2378,7 +2370,17 @@ namespace Seal.Model
         [XmlIgnore]
         public ReportFormat Format
         {
-            get { return (ReportFormat)Enum.Parse(typeof(ReportFormat), ExecutionView.GetValue(Parameter.ReportFormatParameter)); }
+            get { 
+                var format = ExecutionView.GetValue(Parameter.ReportFormatParameter);
+                //from 8.2: converter not supported anymore -> formats to new formats
+                if (format == "excel") format = "Excel";
+                else if (format == "pdf") format = "PDF";
+
+                ReportFormat result;
+                if (Enum.TryParse(format, out result)) return result;
+
+                return ReportFormat.html;
+            }
             set { ExecutionView.SetParameter(Parameter.ReportFormatParameter, value.ToString()); }
         }
 
@@ -2411,8 +2413,8 @@ namespace Seal.Model
         public bool PrintLayout
         {
             get {
-                if ((Status == ReportStatus.RenderingDisplay || Status == ReportStatus.NotExecuted)  && ForOutput) return false;
-                return (Format == ReportFormat.print || Format == ReportFormat.pdf); 
+                if ((Status == ReportStatus.RenderingDisplay || Status == ReportStatus.NotExecuted) && ForOutput) return false;
+                return (Format == ReportFormat.print); 
             }
         }
 
@@ -2548,6 +2550,29 @@ namespace Seal.Model
                 if (result != null) break;
             }
             return result;
+        }
+
+        void fillFullTaskList(List<ReportTask> tasks, List<ReportTask> result)
+        {
+            foreach (var task in tasks.OrderBy(i => i.SortOrder))
+            {
+                result.Add(task);
+                fillFullTaskList(task.Tasks, result);
+            }
+        }
+
+        /// <summary>
+        /// Helper to list of all the tasks of the report
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportTask> AllTasks
+        {
+            get
+            {
+                var result = new List<ReportTask>();
+                fillFullTaskList(Tasks, result);
+                return result;
+            }
         }
 
 

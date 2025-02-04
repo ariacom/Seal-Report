@@ -392,6 +392,7 @@ $.post("https://sealreport.org/demo/SWIGetReportDetail", {
     var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
     f.attr('action', sealServer + "SWExecuteReportToResult");
     f.append($('&lt;input/>').attr('name', 'path').attr('value', path));  //the report path, if empty the report definition must be specified
+    f.append($('&lt;input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', sessionId)); //the current sessionId
     f.append($('&lt;input />').attr('name', 'render').attr('value', JSON.stringify(render))); //true if the report can be rendered (this option is used only if report definition is specified)
     f.append($('&lt;input />').attr('name', 'viewGUID').attr('value', viewGUID)); //optional, the view GUID to execute in the report
     f.append($('&lt;input />').attr('name', 'outputGUID').attr('value', outputGUID)); //optional, the output GUID to execute in the report
@@ -438,10 +439,11 @@ $.post("https://sealreport.org/demo/SWIGetReportDetail", {
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
     var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
     f.attr('action', sealServer + "SWExecuteReport");
     f.append($('&lt;input />').attr('name', 'path').attr('value', path));  //the report path, if empty the report definition must be specified
+    f.append($('&lt;input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', sessionId)); //the current sessionId
     f.append($('&lt;input />').attr('name', 'render').attr('value', JSON.stringify(render))); //true if the report can be rendered (this option is used only if report definition is specified)
     f.append($('&lt;input />').attr('name', 'viewGUID').attr('value', viewGUID)); //optional, the view GUID to execute in the report
     f.append($('&lt;input />').attr('name', 'outputGUID').attr('value', outputGUID)); //optional, the output GUID to execute in the report

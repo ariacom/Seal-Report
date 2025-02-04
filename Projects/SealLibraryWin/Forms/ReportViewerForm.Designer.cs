@@ -73,8 +73,6 @@ namespace Seal.Forms
             Name = "ReportViewerForm";
             Text = "Report Viewer";
             FormClosing += ReportViewerForm_FormClosing;
-            ClientSizeChanged += ReportViewerForm_ClientSizeChanged;
-            LocationChanged += ReportViewerForm_ClientSizeChanged;
             Load += ReportViewerForm_Load;
             mainPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webBrowser).EndInit();

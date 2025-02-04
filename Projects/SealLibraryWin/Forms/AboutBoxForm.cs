@@ -7,14 +7,30 @@ using System;
 using System.Diagnostics;
 using System.Media;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Seal.Forms
 {
     public partial class AboutBoxForm : Form
     {
-        public AboutBoxForm()
+        bool _startup = false;
+
+        // Constants for window styles
+        private const int GWL_STYLE = -16;
+        private const int WS_SYSMENU = 0x80000;
+
+        // Import the Windows API functions
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        public AboutBoxForm(bool startup = false)
         {
+            _startup = startup;
+
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle.Replace(" Library", ""));
             this.labelProductName.Text = AssemblyProduct;
@@ -114,34 +130,48 @@ namespace Seal.Forms
 
         private void AboutBoxForm_Shown(object sender, EventArgs e)
         {
-            var defaultText = @"A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.
+            var defaultText = @"
+You are using Seal Report under the MIT Community License:
+This license is for non-profit usage or small businesses.
+
+If you are using Seal Report in a production environment,
+please ensure that you are eligible to use this free license !
+
+Seal Report follows a dual-licensing model to ensure its maintenance, quality, and support.
+";
+
+            if (!_startup)
+            {
+                defaultText = @"
+A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.
 
 Visit our Web site, take a dive and join the Seal community...
 
-You are using Seal Report MIT Community License.
-
-Please make sure you are eligible to use this free license.
 ";
+            }
+            else
+            {
+                okButton.Visible = false;
+                int style = GetWindowLong(this.Handle, GWL_STYLE);
+                SetWindowLong(this.Handle, GWL_STYLE, style & ~WS_SYSMENU); 
+
+                var timer = new Timer();
+                timer.Interval = 7500;
+                timer.Start();
+                timer.Tick += Timer_Tick;
+            }
+
             try
             {
-                string text = "";
-                try
-                {
-                    var si = SealInterface.Create(Repository.Instance);
-                    si.Init();
-                    text = Repository.Instance.LicenseText + "\r\n\r\n" + si.Text();
-                    text = text.Trim();
-                }
-                catch
-                {
-                    text = Repository.Instance.LicenseText;
-                }
-
+                string text = Repository.Instance.LicenseText;
                 if (string.IsNullOrWhiteSpace(text))
                 {
                     this.textBoxDescription.Text = defaultText;
-                    SoundPlayer simpleSound = new SoundPlayer(Properties.Resources.seal_barking);
-                    simpleSound.Play();
+                    if (!_startup)
+                    {
+                        SoundPlayer simpleSound = new SoundPlayer(Properties.Resources.seal_barking);
+                        simpleSound.Play();
+                    }
                 }
                 else
                 {
@@ -152,5 +182,12 @@ Please make sure you are eligible to use this free license.
             catch { }
         }
 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            okButton.Visible = true;
+            int style = GetWindowLong(this.Handle, GWL_STYLE);
+            SetWindowLong(this.Handle, GWL_STYLE, style | WS_SYSMENU); // Enable the system menu (which includes the close button)
+
+        }
     }
 }

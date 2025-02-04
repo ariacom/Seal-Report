@@ -850,16 +850,6 @@ namespace Seal.Forms
                                         else view.Parameters.Add(new Parameter() { Name = item.Name, Value = item.Value });
                                     }
                                 }
-                                else if (descriptor.Name == "PdfConverter")
-                                {
-                                    view.PdfConverter = null;
-                                    view.PdfConfigurations = viewSource.PdfConfigurations.ToList();
-                                }
-                                else if (descriptor.Name == "ExcelConverter")
-                                {
-                                    view.ExcelConverter = null;
-                                    view.ExcelConfigurations = viewSource.ExcelConfigurations.ToList();
-                                }
                                 else if (descriptor.Name == "PartialTemplates")
                                 {
                                     view.PartialTemplates.Clear();

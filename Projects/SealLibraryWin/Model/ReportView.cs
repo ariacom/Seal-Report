@@ -17,6 +17,7 @@ using System.Data;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Finance;
 using Seal.Renderer;
+using Microsoft.Graph.IdentityGovernance.PrivilegedAccess.Group.EligibilityScheduleRequests;
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
@@ -83,14 +84,6 @@ namespace Seal.Model
 
                 GetProperty("JsonRenderer").SetIsBrowsable(true);
                 JsonRenderer.InitEditor();
-
-                //Converter
-                GetProperty("PdfConverter").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
-                PdfConverter.InitEditor();
-
-                //Converter
-                GetProperty("ExcelConverter").SetIsBrowsable(true);
-                ExcelConverter.InitEditor();
 
                 GetProperty("WebExec").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
 
@@ -940,24 +933,6 @@ namespace Seal.Model
             }
         }
 
-        /// <summary>
-        /// Set configurations for Excel or PDF converter
-        /// </summary>
-        public void SetAdvancedConfigurations()
-        {
-            //Pdf & Excel
-            if (PdfConverterEdited)
-            {
-                PdfConfigurations = PdfConverter.GetConfigurations();
-            }
-            if (ExcelConverterEdited)
-            {
-                ExcelConfigurations = ExcelConverter.GetConfigurations();
-            }
-
-            foreach (var view in Views) view.SetAdvancedConfigurations();
-        }
-
         #region Web Report Server
 
         /// <summary>
@@ -1210,110 +1185,6 @@ namespace Seal.Model
 
         #endregion
 
-
-        #region PDF and Excel Converters
-
-        /// <summary>
-        /// The PDF configuration of the view
-        /// </summary>
-        public List<string> PdfConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializePdfConfigurations()
-        {
-            if (TemplateName != ReportViewTemplate.ReportName) return false;
-            return PdfConverter.ShouldSerialize();
-        }
-
-        /// <summary>
-        /// Current SealPdfConverter
-        /// </summary>
-        private SealPdfConverter _pdfConverter = null;
-#if WINDOWS
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("PDF Converter Configuration"), Description("All the options applied to the PDF conversion from the HTML result."), Category("View parameters"), Id(20, 4)]
-#endif
-        [XmlIgnore]
-        public SealPdfConverter PdfConverter
-        {
-            get
-            {
-                if (_pdfConverter == null)
-                {
-                    _pdfConverter = SealPdfConverter.Create();
-                    _pdfConverter.SetConfigurations(PdfConfigurations, this);
-#if WINDOWS
-                    _pdfConverter.EntityHandler = HelperEditor.HandlerInterface;
-#endif
-                    UpdateEditorAttributes();
-                }
-                return _pdfConverter;
-            }
-            set { _pdfConverter = value; }
-        }
-
-        /// <summary>
-        /// True if the PDF Converter was edited
-        /// </summary>
-        [XmlIgnore]
-        public bool PdfConverterEdited
-        {
-            get { return _pdfConverter != null; }
-        }
-
-        /// <summary>
-        /// The Excel configuration of the view
-        /// </summary>
-        public List<string> ExcelConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializeExcelConfigurations()
-        {
-            return ExcelConverter.ShouldSerialize();
-        }
-
-        private SealExcelConverter _excelConverter = null;
-        /// <summary>
-        /// Current Excel converter
-        /// </summary>
-#if WINDOWS
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Excel Converter Configuration"), Description("All the options applied to the Excel conversion from the view."), Category("View parameters"), Id(21, 4)]
-#endif
-        [XmlIgnore]
-        public SealExcelConverter ExcelConverter
-        {
-            get
-            {
-                if (_excelConverter == null)
-                {
-                    _excelConverter = SealExcelConverter.Create();
-                    _excelConverter.SetConfigurations(ExcelConfigurations, this);
-#if WINDOWS
-                    _excelConverter.EntityHandler = HelperEditor.HandlerInterface;
-#endif
-                    UpdateEditorAttributes();
-                }
-                return _excelConverter;
-            }
-            set { _excelConverter = value; }
-        }
-
-        /// <summary>
-        /// True if the Excel converter was edited
-        /// </summary>
-        [XmlIgnore]
-        public bool ExcelConverterEdited
-        {
-            get { return _excelConverter != null; }
-        }
-
-        /// <summary>
-        /// Convert the view to an Excel Sheet
-        /// </summary>
-        public string ConvertToExcel(string destination)
-        {
-            return ExcelConverter.ConvertToExcel(destination);
-        }
-
-        #endregion
-
         #region Helpers
 
         /// <summary>
@@ -1501,7 +1372,7 @@ namespace Seal.Model
                     {
                         //template
                         key = $"{GetType().Name}_{renderer.Template.RendererType}_{Template.Name}";
-                        lastModification = Template.LastModification;
+                        lastModification = renderer.Template.LastModification;
                     }
                     else
                     {
@@ -1529,7 +1400,16 @@ namespace Seal.Model
             if (!string.IsNullOrEmpty(Error))
             {
                 Report.ExecutionErrors += Error;
-                result = Helper.ToHtml(Error);
+                if (Renderer == null)
+                {
+                    result = Helper.ToHtml(Error);
+                }
+                else
+                {
+                    //Generate result in html
+                    Report.ResultFilePath = Path.ChangeExtension(Report.ResultFilePath, "html");
+                    File.WriteAllText(Report.ResultFilePath, Helper.ToHtml(Error), UTF8Encoding.UTF8);
+                }
             }
 
             return result;
@@ -1647,19 +1527,36 @@ namespace Seal.Model
                     }
                 }
 
-                //Excel
-                if (ExcelConverter != null && refView.ExcelConverter != null)
-                {
-                    ExcelConverter.InitFromReferenceView(refView);
-                }
+                //Renderers 
+                initRendererFromReferenceView(refView.ExcelRenderer, ExcelRenderer);
+                initRendererFromReferenceView(refView.CSVRenderer, CSVRenderer);
+                initRendererFromReferenceView(refView.PDFRenderer, PDFRenderer);
+                initRendererFromReferenceView(refView.HTML2PDFRenderer, HTML2PDFRenderer);
+                initRendererFromReferenceView(refView.JsonRenderer, JsonRenderer);
+                initRendererFromReferenceView(refView.TextRenderer, TextRenderer);
+                initRendererFromReferenceView(refView.XMLRenderer, XMLRenderer);
+            }
+        }
 
-                //Pdf
-                if (PdfConverter != null && refView.PdfConverter != null)
+        private void initRendererFromReferenceView(RootRenderer refRenderer, RootRenderer renderer)
+        {
+            if (!renderer.UseCustomTemplate)
+            {
+                renderer.UseCustomTemplate = refRenderer.UseCustomTemplate;
+                renderer.CustomTemplate = refRenderer.CustomTemplate;
+            }
+
+            //Parameters that have a default value
+            foreach (var parameter in renderer.Parameters.Where(i => i.Value == i.ConfigValue))
+            {
+                var refParameter = refRenderer.Parameters.FirstOrDefault(i => i.Name == parameter.Name);
+                if (refParameter != null)
                 {
-                    PdfConverter.InitFromReferenceView(refView);
+                    parameter.Value = refParameter.Value;
                 }
             }
         }
+
         private void initAxisProperties(List<ResultCell[]> XDimensions)
         {
             bool hasPie = Model.Elements.Exists(i => (i.Nvd3Serie == NVD3SerieDefinition.PieChart || i.ChartJSSerie == ChartJSSerieDefinition.Pie || i.ChartJSSerie == ChartJSSerieDefinition.PolarArea || i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);

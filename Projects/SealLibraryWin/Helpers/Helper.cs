@@ -27,6 +27,10 @@ using System.Runtime.InteropServices;
 using Oracle.ManagedDataAccess.Client;
 using System.Xml;
 using Npgsql;
+using System.Data.SQLite;
+using DocumentFormat.OpenXml.Bibliography;
+using Azure.Identity;
+using Azure.Storage.Blobs;
 
 namespace Seal.Helpers
 {
@@ -46,6 +50,38 @@ namespace Seal.Helpers
             if (dna != null) return dna.Description;
             else return value.ToString();
         }
+
+        public static string GetEnumDescription(object value)
+        {
+            var type = value.GetType();
+            FieldInfo fi = type.GetField(Enum.GetName(type, value));
+            DescriptionAttribute dna = (DescriptionAttribute)Attribute.GetCustomAttribute(fi, typeof(DescriptionAttribute));
+            if (dna != null) return dna.Description;
+            else return value.ToString();
+        }
+
+        public static T GetEnumFromDescription<T>(string description, T defaultValue) where T : Enum
+        {
+            var type = typeof(T);
+            var fields = type.GetFields();
+
+            foreach (var field in fields)
+            {
+                var attribute = field.GetCustomAttribute<DescriptionAttribute>();
+                if (attribute != null && attribute.Description == description)
+                {
+                    return (T)field.GetValue(null);
+                }
+            }
+
+            // If no matching description is found, try parse the enum value directly
+            if (Enum.TryParse(typeof(T), description, true, out object result))
+            {
+                return (T)result;
+            }
+            return defaultValue;
+        }
+
 
         static public void CopyProperties(object src, object dest, string[] skipNames = null)
         {
@@ -654,22 +690,33 @@ namespace Seal.Helpers
         {
             var msg = $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}";
             var fullMessage = string.Format("**********\r\n{0} Exception\r\n{1}\r\n\r\n", DateTime.Now, msg);
-            WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
-            if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
+            if (Repository.IsInstanceCreated)
+            {
+                WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
+                if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
+            }
+            else
+            {
+                var path = Repository.FindRepository();
+                var pathLogs = Path.Combine(path, "Logs");  
+
+                if (Directory.Exists(pathLogs)) WriteDailyLog(DailyLogEvents, pathLogs, 30, fullMessage);
+                else if (Directory.Exists(path)) WriteDailyLog(DailyLogEvents, path, 30, fullMessage);
+                else WriteDailyLog(DailyLogEvents, FileHelper.TempApplicationDirectory, 30, fullMessage);
+            }
+
+            try
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", $"{context}\r\n{ex.Message}", EventLogEntryType.Error);
+            }
+            catch { }
+
             Console.WriteLine(ex.Message);
         }
 
-        public static void WriteLogEntry(string source, EventLogEntryType type, string message, params object[] args)
+        public static void WriteLogEntry(string source, EventLogEntryType type, string message)
         {
             string msg = message;
-            try
-            {
-                if (args.Length != 0) msg = string.Format(message, args);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
             try
             {
                 Console.WriteLine(msg);
@@ -701,9 +748,9 @@ namespace Seal.Helpers
             }
         }
 
-        public static void WriteLogEntryScheduler(EventLogEntryType type, string message, params object[] args)
+        public static void WriteLogEntryScheduler(EventLogEntryType type, string message)
         {
-            WriteLogEntry(TaskSchedulerEntry, type, message, args);
+            WriteLogEntry(TaskSchedulerEntry, type, message);
         }
         public static void WriteEventLogEntry(string source, Exception ex)
         {
@@ -801,6 +848,13 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new NpgsqlDataAdapter(command);
             }
+            else if (connection is SQLiteConnection)
+            {
+                SQLiteCommand command = ((SQLiteConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new SQLiteDataAdapter(command);
+            }
             else
             {
                 OleDbCommand command = ((OleDbConnection)connection).CreateCommand();
@@ -877,6 +931,10 @@ namespace Seal.Helpers
             {
                 connection = new NpgsqlConnection(connectionString);
             }
+            else if (connectionType == ConnectionType.SQLite)
+            {
+                connection = new SQLiteConnection(connectionString);
+            }
             else
             {
                 OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connectionString);
@@ -928,6 +986,10 @@ namespace Seal.Helpers
             else if (connectionString.ToLower().Contains("postgres"))
             {
                 result = DatabaseType.PostgreSQL;
+            }
+            else if (connectionString.ToLower().Contains("sqlite"))
+            {
+                result = DatabaseType.SQLite;
             }
 
             return result;

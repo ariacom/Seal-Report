@@ -300,5 +300,24 @@ namespace Seal.Renderer
             Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
             return parameter == null ? 0 : parameter.DoubleValue;
         }
+
+
+        /// <summary>
+        /// Set a parameter value
+        /// </summary>
+        public void SetParameter(string name, string value)
+        {
+            var result = Parameters.FirstOrDefault(i => i.Name == name);
+            if (result != null) result.Value = value;
+        }
+
+        /// <summary>
+        /// Set a parameter boolean value
+        /// </summary>
+        public void SetParameter(string name, bool value)
+        {
+            var result = Parameters.FirstOrDefault(i => i.Name == name);
+            if (result != null) result.BoolValue = value;
+        }
     }
 }

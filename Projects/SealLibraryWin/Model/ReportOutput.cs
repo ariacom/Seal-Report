@@ -438,7 +438,16 @@ namespace Seal.Model
             get
             {
                 var param = ViewParameters.FirstOrDefault(i => i.Name == Parameter.ReportFormatParameter && i.CustomValue);
-                if (param != null) return (ReportFormat)Enum.Parse(typeof(ReportFormat), param.Value);
+                if (param != null)
+                {
+                    var format = param.Value;
+                    //from 8.2: converter not supported anymore -> formats to new formats
+                    if (format == "excel") format = "Excel";
+                    else if (format == "pdf") format = "PDF";
+
+                    ReportFormat result;
+                    if (Enum.TryParse(format, out result)) return result;
+                }
                 return Report.Format;
             }
             set

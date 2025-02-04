@@ -31,6 +31,7 @@
       <EnumValues>
         <string>Yes</string>
       </EnumValues>
+      <EnumLayout>SelectNoFilter</EnumLayout>
       <TypeRe>Text</TypeRe>
       <EnumGUIDRE>53d43ae0-1513-4e46-b3b7-084f36f13833</EnumGUIDRE>
     </ReportRestriction>
@@ -48,6 +49,7 @@
       <EnumValues>
         <string>Yes</string>
       </EnumValues>
+      <EnumLayout>SelectNoFilter</EnumLayout>
       <TypeRe>Text</TypeRe>
       <EnumGUIDRE>53d43ae0-1513-4e46-b3b7-084f36f13833</EnumGUIDRE>
     </ReportRestriction>
@@ -65,6 +67,7 @@
       <EnumValues>
         <string>No</string>
       </EnumValues>
+      <EnumLayout>SelectNoFilter</EnumLayout>
       <TypeRe>Text</TypeRe>
       <EnumGUIDRE>53d43ae0-1513-4e46-b3b7-084f36f13833</EnumGUIDRE>
     </ReportRestriction>

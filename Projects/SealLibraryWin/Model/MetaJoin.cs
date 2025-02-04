@@ -65,7 +65,7 @@ namespace Seal.Model
 
         string getAutoName()
         {
-            if (RightTable != null && LeftTable != null) return LeftTable.Name + " - " + RightTable.Name;
+            if (RightTable != null && LeftTable != null) return (string.IsNullOrEmpty(LeftTable.Alias) ? LeftTable.Name : LeftTable.Alias) + " - " + (string.IsNullOrEmpty(RightTable.Alias) ? RightTable.Name : RightTable.Alias);
             return Repository.JoinAutoName;
         }
 

@@ -16,6 +16,10 @@ using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
 using MySqlX.XDevAPI.Common;
 using Npgsql;
+using System.Transactions;
+using System.Globalization;
+using System.Data.SQLite;
+using System.Runtime.Intrinsics.X86;
 
 namespace Seal.Helpers
 {
@@ -31,6 +35,8 @@ namespace Seal.Helpers
     public delegate DataTable CustomLoadDataTable(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection = null);
     public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true);
     public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);
+
+    public delegate DataTable CustomDetectAndConvertTypes(DataTable sourceTable);
 
     public class TaskDatabaseHelper
     {
@@ -75,6 +81,11 @@ namespace Seal.Helpers
         /// </summary>
         public string InsertTableHints = "";
 
+        /// <summary>
+        /// If  true, column types can be detected and values converted during a table load to database (For CSV and Excel load)
+        /// </summary>
+        public bool TableLoadDetectAndConvertTypes = false;
+
         public bool DebugMode = false;
         public StringBuilder DebugLog = new StringBuilder();
         public int SelectTimeout = 0;
@@ -93,6 +104,7 @@ namespace Seal.Helpers
         public CustomLoadDataTableFromExcel MyLoadDataTableFromExcel = null;
         public CustomLoadDataTableFromCSV MyLoadDataTableFromCSV = null;
 
+        public CustomDetectAndConvertTypes MyDetectAndConvertTypes = null;
 
         string _defaultColumnCharType = "";
         string _defaultColumnIntegerType = "";
@@ -103,11 +115,12 @@ namespace Seal.Helpers
 
         public string GetDatabaseName(string name)
         {
-            char[] chars = new char[] { '-', '\"', '\'', '[',']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
+            char[] chars = new char[] { '-', '\"', '\'', '[', ']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
             var result = chars.Aggregate(name, (c1, c2) => c1.Replace(c2, '_'));
             if (DatabaseType == DatabaseType.MSSQLServer) result = "[" + result + "]";
             else if (DatabaseType == DatabaseType.Oracle) result = Helper.QuoteDouble(result);
             else if (DatabaseType == DatabaseType.PostgreSQL) result = Helper.QuoteDouble(result);
+            else if (DatabaseType == DatabaseType.SQLite) result = "" + result + "";
             else if (DatabaseType == DatabaseType.MySQL) result = "`" + result + "`";
             else result = result.Replace(" ", "_");
             return result;
@@ -155,6 +168,7 @@ namespace Seal.Helpers
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else if (connection is OracleConnection) adapter = new OracleDataAdapter(sql, (OracleConnection)connection);
                         else if (connection is NpgsqlConnection) adapter = new NpgsqlDataAdapter(sql, (NpgsqlConnection)connection);
+                        else if (connection is SQLiteConnection) adapter = new SQLiteDataAdapter(sql, (SQLiteConnection)connection);
                         else adapter = new OleDbDataAdapter(sql, (OleDbConnection)connection);
                         adapter.SelectCommand.CommandTimeout = SelectTimeout;
                         adapter.Fill(table);
@@ -168,6 +182,7 @@ namespace Seal.Helpers
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) cmd = new MySql.Data.MySqlClient.MySqlCommand(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else if (connection is OracleConnection) cmd = new OracleCommand(sql, (OracleConnection)connection);
                         else if (connection is NpgsqlConnection) cmd = new NpgsqlCommand(sql, (NpgsqlConnection)connection);
+                        else if (connection is SQLiteConnection) cmd = new SQLiteCommand(sql, (SQLiteConnection)connection);
                         else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
                         cmd.CommandTimeout = SelectTimeout;
                         cmd.CommandType = CommandType.Text;
@@ -234,11 +249,147 @@ namespace Seal.Helpers
             return rowEmpty;
         }
 
+
+        public DataTable DetectAndConvertTypes(DataTable sourceTable)
+        {
+            if (MyDetectAndConvertTypes != null) return MyDetectAndConvertTypes(sourceTable);
+
+            var resultTable = new DataTable();
+            //New types
+            foreach (DataColumn column in sourceTable.Columns)
+            {
+                var finalType = typeof(string);
+                bool typeOk = true;
+                int cnt = 0;
+
+                if (finalType == typeof(string))
+                {
+                    //Try integer
+                    foreach (DataRow row in sourceTable.Rows)
+                    {
+                        if (column.DataType == typeof(string) && !row.IsNull(column))
+                        {
+                            var str = row[column].ToString();
+                            int value;
+                            if (!string.IsNullOrEmpty(str))
+                            {
+                                bool isOk = false;
+                                if (int.TryParse(str, out value)) isOk = true;
+                                if (!isOk)
+                                {
+                                    typeOk = false;
+                                    break;
+                                }
+                                cnt++;
+                            }
+                        }
+                    }
+                    if (typeOk && cnt > 0) finalType = typeof(int);
+                }
+
+                if (finalType == typeof(string))
+                {
+                    typeOk = true;
+                    cnt = 0;
+                    //Try double
+                    foreach (DataRow row in sourceTable.Rows)
+                    {
+                        if (column.DataType == typeof(string) && !row.IsNull(column))
+                        {
+                            var str = row[column].ToString();
+                            double value;
+                            if (!string.IsNullOrEmpty(str))
+                            {
+                                bool isOk = false;
+                                if (double.TryParse(str, NumberStyles.Any, CultureInfo.CurrentCulture, out value)) isOk = true;
+                                else if (double.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out value)) isOk = true;
+                                if (!isOk) {
+                                    typeOk = false;
+                                    break;
+                                }
+                                cnt++;
+                            }
+                        }
+                    }
+                    if (typeOk && cnt > 0) finalType = typeof(double);
+                }
+
+                if (finalType == typeof(string))
+                {
+                    typeOk = true;
+                    cnt = 0;
+                    //Try DateTime
+                    foreach (DataRow row in sourceTable.Rows)
+                    {
+                        if (column.DataType == typeof(string) && !row.IsNull(column))
+                        {
+                            var str = row[column].ToString();
+                            DateTime value;
+                            if (!string.IsNullOrEmpty(str))
+                            {
+                                bool isOk = false;
+                                if (DateTime.TryParse(str, CultureInfo.CurrentCulture, out value)) isOk = true;
+                                else if (DateTime.TryParse(str, CultureInfo.InvariantCulture, out value)) isOk = true;
+                                if (!isOk) {
+                                    typeOk = false;
+                                    break;
+                                }
+                                cnt++;
+                            }
+                        }
+                    }
+                    if (typeOk && cnt > 0) finalType = typeof(DateTime);
+                }
+
+                resultTable.Columns.Add(column.ColumnName, finalType);
+            }
+
+            //Then values
+            foreach (DataRow row in sourceTable.Rows)
+            {
+                var values = new List<object>();
+                for (int i=0; i < sourceTable.Columns.Count; i++)
+                {
+                    var str = row[i].ToString();
+                    var destColumn = resultTable.Columns[i];
+                    if (destColumn.DataType == typeof(int))
+                    {
+                        int value;
+                        if (int.TryParse(str, out value)) values.Add(value);
+                        else values.Add(null);
+                    }
+                    else if (destColumn.DataType == typeof(double))
+                    {
+                        double value;
+                        if (double.TryParse(str, NumberStyles.Any, CultureInfo.CurrentCulture, out value)) values.Add(value);
+                        else if (double.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out value)) values.Add(value);
+                        else values.Add(null);
+                    }
+                    else if (destColumn.DataType == typeof(DateTime))
+                    {
+                        DateTime value;
+                        if (DateTime.TryParse(str, CultureInfo.CurrentCulture, out value)) values.Add(value);
+                        else if (DateTime.TryParse(str, CultureInfo.InvariantCulture, out value)) values.Add(value);
+                        else values.Add(null);
+                    }
+                    else
+                    {
+                        values.Add(str);
+                    }
+                }
+                resultTable.Rows.Add(values.ToArray());
+            }
+
+            return resultTable;
+        }
+
         public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true)
         {
             if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endCol, endRow, hasHeader);
 
-            return ExcelHelper.LoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endCol, endRow, hasHeader);
+            var result = ExcelHelper.LoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endCol, endRow, hasHeader);
+            if (TableLoadDetectAndConvertTypes) result = DetectAndConvertTypes(result);
+            return result;
         }
 
 
@@ -246,7 +397,9 @@ namespace Seal.Helpers
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding ?? DefaultEncoding, noHeader);
+            var result = ExcelHelper.LoadDataTableFromCSV(csvPath, separator, encoding ?? DefaultEncoding, noHeader);
+            if (TableLoadDetectAndConvertTypes) result = DetectAndConvertTypes(result);
+            return result;
         }
 
 
@@ -254,7 +407,9 @@ namespace Seal.Helpers
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            return ExcelHelper.LoadDataTableFromCSVVBParser(csvPath, separator, encoding ?? DefaultEncoding);
+            var result = ExcelHelper.LoadDataTableFromCSVVBParser(csvPath, separator, encoding ?? DefaultEncoding);
+            if (TableLoadDetectAndConvertTypes) result = DetectAndConvertTypes(result);
+            return result;
         }
 
         public DatabaseType DatabaseType = DatabaseType.MSSQLServer;
@@ -271,6 +426,16 @@ namespace Seal.Helpers
                 _defaultInsertEndCommand = "end;";
             }
             else if (type == DatabaseType.PostgreSQL)
+            {
+                //Default, tested on SQLServer...
+                _defaultColumnCharType = "varchar";
+                _defaultColumnNumericType = "numeric(18,5)";
+                _defaultColumnIntegerType = "integer";
+                _defaultColumnDateTimeType = "timestamp";
+                _defaultInsertStartCommand = "";
+                _defaultInsertEndCommand = "";
+            }
+            else if (type == DatabaseType.SQLite)
             {
                 //Default, tested on SQLServer...
                 _defaultColumnCharType = "varchar";
@@ -315,6 +480,7 @@ namespace Seal.Helpers
             else if (connection is MySql.Data.MySqlClient.MySqlConnection) result = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
             else if (connection is OracleConnection) result = ((OracleConnection)connection).CreateCommand();
             else if (connection is NpgsqlConnection) result = ((NpgsqlConnection)connection).CreateCommand();
+            else if (connection is SQLiteConnection) result = ((SQLiteConnection)connection).CreateCommand();
             else result = ((OleDbConnection)connection).CreateCommand();
             result.CommandTimeout = SelectTimeout;
             return result;

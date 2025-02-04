@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Seal.Forms
 {
-    class FormHelper
+    public class FormHelper
     {
         /// <summary>
         /// Windows Forms Objects and Helpers
@@ -49,7 +50,7 @@ namespace Seal.Forms
             textBox.SelectionEnd = textBox.CurrentPosition;
             textBox.Focus();
 
-            if (end == textBox.CurrentPosition && end < textBox.Text.Length-1) end++;
+            if (end == textBox.CurrentPosition && end < textBox.Text.Length - 1) end++;
             textBox.IndicatorFillRange(textBox.CurrentPosition, end - textBox.CurrentPosition);
             for (int i = textBox.CurrentPosition; i < end; i++)
             {
@@ -140,6 +141,48 @@ namespace Seal.Forms
 
 
             if (!string.IsNullOrEmpty(error)) throw new Exception(error);
+        }
+
+
+        public static void RestoreForm(Form form, Size size, Point location, string stateStr)
+        {
+            if (size.Width > 0 && size.Height > 0)
+            {
+                form.StartPosition = FormStartPosition.Manual; // Prevents overriding by Windows' default behavior
+                form.Location = location;
+                form.Size = size;
+                // Restore the window state
+                FormWindowState state;
+                if (Enum.TryParse(stateStr, out state))
+                {
+                    form.WindowState = state;
+                }
+
+                if (!IsFormVisibleOnScreen(form))
+                {
+                    //Set default if not visible
+                    form.Location = new Point(150, 150);
+                    form.Size = new Size(1200, 800);
+                }
+            }
+
+        }
+
+
+        public static bool IsFormVisibleOnScreen(Form form)
+        {
+            // Get the bounds of the form
+            Rectangle formRectangle = new Rectangle(form.Location, form.Size);
+
+            // Check if the form is visible on any screen
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                if (screen.WorkingArea.IntersectsWith(formRectangle))
+                {
+                    return true; // Form is visible (even partially) on the screen
+                }
+            }
+            return false; // Form is not visible on any screen
         }
     }
 }

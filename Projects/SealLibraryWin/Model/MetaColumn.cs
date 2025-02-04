@@ -57,7 +57,7 @@ namespace Seal.Model
                 GetProperty("HelperCheckColumn").SetIsBrowsable(IsSQL);
                 GetProperty("HelperCreateEnum").SetIsBrowsable(true);
                 GetProperty("HelperShowValues").SetIsBrowsable(true);
-                GetProperty("HelperCreateDrillDates").SetIsBrowsable(Type == ColumnType.DateTime && (Source.Connection.DatabaseType == DatabaseType.MSAccess || Source.Connection.DatabaseType == DatabaseType.Oracle || Source.Connection.DatabaseType == DatabaseType.PostgreSQL ||Source.Connection.DatabaseType == DatabaseType.MSSQLServer));
+                GetProperty("HelperCreateDrillDates").SetIsBrowsable(Type == ColumnType.DateTime && (Source.Connection.DatabaseType == DatabaseType.MSAccess || Source.Connection.DatabaseType == DatabaseType.Oracle || Source.Connection.DatabaseType == DatabaseType.PostgreSQL || Source.Connection.DatabaseType == DatabaseType.MSSQLServer || Source.Connection.DatabaseType == DatabaseType.SQLite));
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
 
@@ -598,10 +598,10 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Editor Helper:  Show the first 1000 values of the column
+        /// Editor Helper:  Show the different values of the column in the table
         /// </summary>
 #if WINDOWS
-        [Category("Helpers"), DisplayName("Show column values"), Description("Show the first 1000 values of the column."), Id(3, 10)]
+        [Category("Helpers"), DisplayName("Show column values"), Description("Show the different values of the column in the table."), Id(3, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
 #endif
         public string HelperShowValues

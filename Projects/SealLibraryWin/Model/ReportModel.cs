@@ -20,10 +20,8 @@ using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
-using MySqlX.XDevAPI.Common;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.EMMA;
 using Npgsql;
+using System.Data.SQLite;
 
 #if WINDOWS
 using Seal.Forms;
@@ -99,6 +97,7 @@ namespace Seal.Model
                 GetProperty("UseRawSQL").SetIsBrowsable(IsSQLModel);
 
                 GetProperty("JoinsToSelect").SetIsBrowsable(!IsSQLModel);
+                GetProperty("JoinHashcode").SetIsBrowsable(!IsSQLModel);
 
                 GetProperty("HelperViewJoins").SetIsBrowsable(!IsSQLModel);
                 GetProperty("HelperViewJoins").SetIsReadOnly(true);
@@ -506,15 +505,6 @@ namespace Seal.Model
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != -1; }
 
         /// <summary>
-        /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
-        /// </summary>
-#if WINDOWS
-        [DefaultValue(2000)]
-        [Category("Join preferences"), DisplayName("Build timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL or LINQ Query (may be used if many joins are defined)."), Id(11, 4)]
-#endif
-        public int BuildTimeout { get; set; } = 2000;
-
-        /// <summary>
         /// List of Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used.
         /// </summary>
         public List<string> JoinsToUse { get; set; } = new List<string>();
@@ -534,11 +524,34 @@ namespace Seal.Model
             set { } //keep set for modification handler
         }
 
+        private int _joinHashcode = 0;
+        /// <summary>
+        /// If specified and if possible, force the first join used to choose the dynamic SQL joins path used to perform the query.
+        /// </summary>
+#if WINDOWS
+        [Category("Join preferences"), DisplayName("Path Hashcode to use"), Description("If different from 0, the hashcode of the join to use for the model. Hascodes can be got by using the 'View joins evaluated' helper."), Id(4, 4)]
+        [DefaultValue(0)]
+#endif
+        public int JoinHashcode
+        {
+            get { return _joinHashcode; }
+            set { _joinHashcode = value; }
+        }
+
+        /// <summary>
+        /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(2000)]
+        [Category("Join preferences"), DisplayName("Build timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL or LINQ Query (may be used if many joins are defined)."), Id(5, 4)]
+#endif
+        public int BuildTimeout { get; set; } = 2000;
+
         /// <summary>
         /// Helper to view joins evaluated for the model
         /// </summary>
 #if WINDOWS
-        [Category("Join preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4, 4)]
+        [Category("Join preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(10, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
 #endif
         public string HelperViewJoins
@@ -1705,7 +1718,7 @@ model.ResultTable = query2.CopyToDataTable2();
         /// Description of the joins chosen to build the SQL
         /// </summary>
         [XmlIgnore]
-        public StringBuilder JoinPaths = null;
+        public StringBuilder JoinLogs = null;
 
         void filterLINQFromTables()
         {
@@ -1941,10 +1954,9 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (!joinsOK)
                     {
                         var errMessage = "Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.";
-                        if (JoinPaths != null) JoinPaths.AppendLine("\r\n" + errMessage);
+                        if (JoinLogs != null) JoinLogs.AppendLine("\r\n" + errMessage);
                         throw new Exception(errMessage);
                     }
-
 
                     if (!IsLINQ)
                     {
@@ -1973,7 +1985,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) Sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
 
                         //Limit Max number of records for MySQL
-                        if (Connection.ConnectionType == ConnectionType.MySQL && MaxNumberOfRecords > 0) Sql += $"LIMIT {MaxNumberOfRecords}\r\n";
+                        if ((Connection.ConnectionType == ConnectionType.MySQL || Connection.ConnectionType == ConnectionType.PostgreSQL) && MaxNumberOfRecords > 0) Sql += $"LIMIT {MaxNumberOfRecords}\r\n";
 
                         //Finally inject common restriction values
                         if (!forConversion) Sql = ParseCommonRestrictions(Sql);
@@ -2057,14 +2069,14 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     execFromClause.Append(FromTables[0].LINQExpressionName + "\r\n");
                 }
-                if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
+                if (JoinLogs != null) JoinLogs.AppendLine("Only one table: No join required.");
             }
             else
             {
                 //multiple tables, find joins...
                 List<MetaTable> tablesToUse = FromTables.ToList();
                 List<JoinPath> resultPaths = new List<JoinPath>();
-                JoinPath bestPath = null;
+                JoinPath bestPath = null, hashcodePath = null;
 
                 //Build the list of joins to use: for each table, joins related
                 var joinsToUse = new Dictionary<string, List<MetaJoin>>();
@@ -2118,7 +2130,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 _buildTimer = DateTime.Now;
                 _directCount = 0;
                 _indirectCount = 0;
-                _bestJoinsCount = joinsToUse.Count;
+                _bestJoinsCount = joinsToUse.Count + 1;
 
                 foreach (var leftTable in FromTables)
                 {
@@ -2134,23 +2146,32 @@ model.ResultTable = query2.CopyToDataTable2();
                 }
                 Debug.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
 
-                if (JoinPaths != null)
+                if (JoinLogs != null)
                 {
-                    JoinPaths.AppendFormat("Time elapsed after Direct Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                    JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
+                    JoinLogs.AppendFormat("Time elapsed after Direct Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                    JoinLogs.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
                     int index = 1;
                     foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
                     {
-                        JoinPaths.AppendFormat("Direct Join {0}: ", index++);
-                        path.print(JoinPaths);
+                        JoinLogs.AppendFormat("Direct Join {0}: ", index++);
+                        path.print(JoinLogs);
                     }
                 }
 
-                //Choose the path having all tables, then preferred, then less joins...
-                if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
+
+                if (bestPath == null && JoinHashcode != 0) hashcodePath = resultPaths.FirstOrDefault(i => i.tablesToUse.Count == 0 && i.hash == JoinHashcode);
+                //Choose the path having all tables, then best priority...
+                if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.priority).FirstOrDefault();
+
                 bool checkIndirectJoin = false;
-                if (bestPath == null) checkIndirectJoin = true;
+                if (hashcodePath != null)
+                {
+                    if (JoinLogs != null) JoinLogs.AppendFormat($"Path chosen using the Hashcode {JoinHashcode}.\r\n");
+                    bestPath = hashcodePath;
+                }
+                else if (bestPath == null) checkIndirectJoin = true;
                 else if (bestPath.joins.Count > tablesToUse.Count - 1) checkIndirectJoin = true;
+                else if (bestPath.joins.Exists(i => i.JoinType == JoinType.LeftOuter || i.JoinType == JoinType.RightOuter)) checkIndirectJoin = true;
                 // otherwise it means that a direct join with a minimum joins have been found, no need to check indirect joins 
 
                 if (checkIndirectJoin)
@@ -2178,7 +2199,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                     if (!newPath.joins.Exists(i => i.GUID == join2.GUID))
                                     {
                                         newPath.joins.Insert(0, join2); // Fix 108
-                                                                        //newPath.print();
+                                        //newPath.print();
                                     }
                                     newPath.tablesToUse.Remove(join2.LeftTable);
                                     newPath.tablesToUse.Remove(join2.RightTable);
@@ -2187,6 +2208,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 if (newPath.tablesToUse.Count == 0)
                                 {
                                     //got one
+                                    newPath.startTable = newPath.joins.First().LeftTable;
                                     resultPaths2.Add(newPath);
 
                                     if (newPath.joins.Count < _bestJoinsCount)
@@ -2205,7 +2227,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             var bestPathIndirect = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
                             if (bestPath != null || bestPathIndirect != null)
                             {
-                                if (JoinPaths != null) JoinPaths.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                                if (JoinLogs != null) JoinLogs.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
                                 break;
                             }
                         }
@@ -2213,35 +2235,53 @@ model.ResultTable = query2.CopyToDataTable2();
 
                     Debug.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
 
-                    if (JoinPaths != null)
+                    if (JoinLogs != null)
                     {
-                        JoinPaths.AppendFormat("\r\nTime elapsed after Indirect Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                        JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
+                        JoinLogs.AppendFormat("\r\nTime elapsed after Indirect Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                        JoinLogs.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
                         int index = 1;
                         foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
                         {
-                            JoinPaths.AppendFormat("Indirect Join {0}: ", index++);
-                            path.print(JoinPaths);
+                            JoinLogs.AppendFormat("Indirect Join {0}: ", index++);
+                            path.print(JoinLogs);
                         }
                     }
 
-                    var bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
-                    if (bestPath != null && bestPath2 != null)
+                    JoinPath bestPath2 = null;
+                    if (JoinHashcode != 0) hashcodePath = resultPaths2.FirstOrDefault(i => i.tablesToUse.Count == 0 && i.hash == JoinHashcode);
+                    if (hashcodePath != null)
                     {
-                        //Choose here between direct best path or indirect best path
-                        if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
+                        if (JoinLogs != null) JoinLogs.AppendFormat($"Path chosen using the Hashcode {JoinHashcode}.\r\n");
+                        bestPath = hashcodePath;
                     }
-                    else if (bestPath == null)
+                    else
                     {
-                        bestPath = bestPath2;
+                        if (bestPath2 == null) bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.priority).FirstOrDefault();
+                        if (bestPath != null && bestPath2 != null)
+                        {
+                            //Choose here between direct best path or indirect best path
+                            if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
+                            else if (bestPath2.joins.Count == bestPath.joins.Count)
+                            {
+                                //here we choose the one which does not mix left outer and right outer
+                                if (bestPath.hasLeftAndRightJoins && !bestPath2.hasLeftAndRightJoins)
+                                {
+                                    bestPath = bestPath2;
+                                }
+                            }
+                        }
+                        else if (bestPath == null)
+                        {
+                            bestPath = bestPath2;
+                        }
                     }
                 }
 
-                if (JoinPaths != null && bestPath != null)
+                if (JoinLogs != null && bestPath != null)
                 {
-                    JoinPaths.AppendFormat("\r\nTime elapsed: {0:F0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                    JoinPaths.AppendLine("\r\nAND THE WINNER IS:");
-                    bestPath.print(JoinPaths);
+                    JoinLogs.AppendFormat("\r\nTime elapsed: {0:F0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                    JoinLogs.AppendLine("\r\nAND THE WINNER IS:");
+                    bestPath.print(JoinLogs);
                 }
 
                 //Handle the best path
@@ -2267,48 +2307,54 @@ model.ResultTable = query2.CopyToDataTable2();
                         execFromClause.Append(bestPath.currentTable.LINQExpressionName + "\r\n");
                     }
 
-                    if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
+                    if (JoinLogs != null) JoinLogs.AppendLine("Only one table: No join required.");
                 }
                 else
                 {
-                    string lastTable = null;
+                    string joinSql = null;
                     List<MetaTable> tablesUsed = new List<MetaTable>();
                     var joins = bestPath.joins;
                     //Reverse join orders for LINQ
                     if (IsLINQ) joins.Reverse();
 
+                    if (JoinLogs != null) JoinLogs.Append("Using nested joins.");
+                    //nested joins
                     for (int i = joins.Count - 1; i >= 0; i--)
                     {
                         MetaJoin join = joins[i];
-                        if (string.IsNullOrEmpty(lastTable))
+                        if (string.IsNullOrEmpty(joinSql))
                         {
                             if (!IsLINQ)
                             {
                                 string CTE2 = "", name2 = "";
                                 join.RightTable.GetExecSQLName(ref CTE2, ref name2);
                                 execCTEClause = Helper.AddCTE(execCTEClause, CTE2);
-                                lastTable = name2 + "\r\n";
+                                joinSql = name2;
                                 tablesUsed.Add(join.RightTable);
                             }
                             else
                             {
-                                lastTable = join.LeftTable.LINQExpressionName + "\r\n";
+                                joinSql = join.LeftTable.LINQExpressionName + "\r\n";
                             }
                         }
 
                         //check if tables are already in the join
-                        var leftTable = join.LeftTable;
-                        if (tablesUsed.Contains(leftTable)) leftTable = join.RightTable;
-                        if (tablesUsed.Contains(leftTable)) continue;
+                        var tableToJoin = join.LeftTable;
+                        if (tablesUsed.Contains(tableToJoin))
+                        {
+                            //use right join
+                            tableToJoin = join.RightTable;
+                        }
+                        if (tablesUsed.Contains(tableToJoin)) continue;
 
                         string joinClause = join.Clause.Trim();
-                        //For outer join, add the extra restriction in the ON clause -> hopefully they are not defined as bi-directional
+                        //For outer join, add the extra restriction in the ON clause
                         MetaTable extraWhereTable = null;
                         if (join.JoinType == JoinType.LeftOuter && !string.IsNullOrEmpty(join.RightTable.WhereSQL)) extraWhereTable = join.RightTable;
                         else if (join.JoinType == JoinType.RightOuter && !string.IsNullOrWhiteSpace(join.LeftTable.WhereSQL)) extraWhereTable = join.LeftTable;
-                        else if (!string.IsNullOrWhiteSpace(leftTable.WhereSQL) && !extraWhereTables.Contains(leftTable))
+                        else if (!string.IsNullOrWhiteSpace(tableToJoin.WhereSQL) && !extraWhereTables.Contains(tableToJoin))
                         {
-                            extraWhereTables.Add(leftTable);
+                            extraWhereTables.Add(tableToJoin);
                         }
 
                         if (extraWhereTable != null)
@@ -2322,25 +2368,29 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (!IsLINQ)
                         {
                             string CTE = "", name = "";
-                            leftTable.GetExecSQLName(ref CTE, ref name);
+                            tableToJoin.GetExecSQLName(ref CTE, ref name);
                             execCTEClause = Helper.AddCTE(execCTEClause, CTE);
 
-                            if (join.JoinType != JoinType.Cross) lastTable = string.Format("\r\n({0} {1} {2} ON {3})\r\n", name, join.SQLJoinType, lastTable, joinClause);
-                            else lastTable = string.Format("\r\n({0} {1} {2})\r\n", name, join.SQLJoinType, lastTable);
+                            if (join.JoinType != JoinType.Cross)
+                            {
+                                if (tableToJoin == join.RightTable) joinSql = $"({joinSql}\r\n{join.SQLJoinType} {name}\r\n    ON {joinClause})";
+                                else joinSql = $"({name}\r\n{join.SQLJoinType} {joinSql}\r\n    ON {joinClause})";
+                            }
+                            else joinSql = string.Format("\r\n({0} {1} {2})\r\n", name, join.SQLJoinType, joinSql);
                         }
                         else
                         {
-                            lastTable = string.Format("{0}join {1} on\r\n{2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
+                            joinSql = string.Format("{0}join {1} on\r\n{2}\r\n", joinSql, join.RightTable.LINQExpressionName, joinClause);
                         }
 
-                        tablesUsed.Add(leftTable);
+                        tablesUsed.Add(tableToJoin);
                     }
-                    execFromClause = new StringBuilder(lastTable);
+                    execFromClause = new StringBuilder(joinSql + "\r\n");
                 }
-                if (JoinPaths != null)
+                if (JoinLogs != null)
                 {
-                    JoinPaths.Append("\r\n" + (IsLINQ ? "LINQ" : "SQL") + " Generated:\r\n");
-                    JoinPaths.Append(execFromClause.ToString());
+                    JoinLogs.Append("\r\n" + (IsLINQ ? "LINQ" : "SQL") + " Generated:\r\n");
+                    JoinLogs.Append(execFromClause.ToString());
                 }
             }
 
@@ -2372,11 +2422,47 @@ model.ResultTable = query2.CopyToDataTable2();
             public List<MetaJoin> joins = new List<MetaJoin>();
             public List<MetaTable> tablesToUse;
             public Dictionary<string, MetaJoin[]> joinsToUse;
+            public bool hasLeftAndRightJoins
+            {
+                get
+                {
+                    return joins.Exists(i => i.JoinType == JoinType.RightOuter) && joins.Exists(i => i.JoinType == JoinType.LeftOuter);
+                }
+            }
+            public int priority
+            {
+                get
+                {
+                    //priority first for path having less joins involved and no mix left/right
+                    return 100 * joins.Count + (hasLeftAndRightJoins ? 1 : 0);
+                }
+            }
+            public int hash
+            {
+                get
+                {
+                    return print().GetHashCode();
+                }
+            }
 
             public string print()
             {
                 var str = new StringBuilder();
-                print(str);
+                for (int i = 0; i < joins.Count; i++)
+                {
+                    var join = joins[i];
+                    if (i == 0) str.Append(join.LeftTable.DisplayName + "->");
+                    if (i > 0 && join.LeftTableGUID != joins[i - 1].RightTableGUID)
+                    {
+                        //Break
+                        str.Append("\r\n" + join.LeftTable.DisplayName + "->");
+                    }
+                    str.Append(join.RightTable.DisplayName);
+                    if (i < joins.Count - 1 && join.RightTableGUID == joins[i + 1].LeftTableGUID)
+                    {
+                        str.Append("->");
+                    }
+                }
                 return str.ToString();
             }
 
@@ -2384,28 +2470,16 @@ model.ResultTable = query2.CopyToDataTable2();
             {
                 if (joinPaths == null) return;
                 joinPaths.AppendFormat("Tables left: {0} , Joins used:{1}\r\n", tablesToUse.Count, joins.Count);
-                for (int i = 0; i < joins.Count; i++)
-                {
-                    var join = joins[i];
-                    if (i == 0) joinPaths.Append(join.LeftTable.DisplayName + "->");
-                    if (i > 0 && join.LeftTableGUID != joins[i - 1].RightTableGUID)
-                    {
-                        //Break
-                        joinPaths.Append("\r\n" + join.LeftTable.DisplayName + "->");
-                    }
-                    joinPaths.Append(join.RightTable.DisplayName);
-                    if (i < joins.Count - 1 && join.RightTableGUID == joins[i + 1].LeftTableGUID)
-                    {
-                        joinPaths.Append("->");
-                    }
-                }
                 /*
                 joinPaths.AppendLine("\r\nDetail:");
                 foreach (var join in joins)
                 {
                     joinPaths.AppendFormat(string.Format("{0}-{1} ({2})\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
                 }*/
-                joinPaths.Append("\r\n\r\n");
+                var str = print();
+                joinPaths.Append(str);
+                if (tablesToUse.Count == 0) joinPaths.Append($"\r\nHash code: {str.GetHashCode()}\r\n");
+                joinPaths.Append($"\r\n\r\n");
             }
         }
 
@@ -2419,7 +2493,7 @@ model.ResultTable = query2.CopyToDataTable2();
             {
                 if (resultPath.Exists(i => i.tablesToUse.Count == 0))
                 {
-                    if (JoinPaths != null) JoinPaths.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                    if (JoinLogs != null) JoinLogs.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
                     return;
                 }
             }
@@ -3065,6 +3139,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) _command = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
                         else if (connection is OracleConnection) _command = ((OracleConnection)connection).CreateCommand();
                         else if (connection is NpgsqlConnection) _command = ((NpgsqlConnection)connection).CreateCommand();
+                        else if (connection is SQLiteConnection) _command = ((SQLiteConnection)connection).CreateCommand();
                         else _command = ((OleDbConnection)connection).CreateCommand();
 
                         _command.CommandTimeout = (CommandTimeout == -1 ? Connection.CommandTimeout : CommandTimeout);
@@ -3088,6 +3163,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter((MySql.Data.MySqlClient.MySqlCommand)_command);
                         else if (connection is OracleConnection) adapter = new OracleDataAdapter((OracleCommand)_command);
                         else if (connection is NpgsqlConnection) adapter = new NpgsqlDataAdapter((NpgsqlCommand)_command);
+                        else if (connection is SQLiteConnection) adapter = new SQLiteDataAdapter((SQLiteCommand)_command);
                         else adapter = new OleDbDataAdapter((OleDbCommand)_command);
                         ResultTable = new DataTable();
                         adapter.Fill(ResultTable);

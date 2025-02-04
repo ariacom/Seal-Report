@@ -149,6 +149,11 @@
             Optional table hints for insert
             </summary>
         </member>
+        <member name="F:Seal.Helpers.TaskDatabaseHelper.TableLoadDetectAndConvertTypes">
+            <summary>
+            If  true, column types can be detected and values converted during a table load to database (For CSV and Excel load)
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.TaskHelper.LoadTablesFromExcel(System.String,System.String,System.String[],System.String[],System.Boolean)">
             <summary>
             Load tables from Excel tabs (one table per tab)
@@ -217,26 +222,6 @@
         <member name="P:Seal.Model.CategoryFolder.Path">
             <summary>
             The full path of the of the category. This can be modified to change globally all the category names of the columns. The category path can be specified using the '/' character (e.g. '/Master/Name1/Name2')
-            </summary>
-        </member>
-        <member name="T:Seal.Model.CommonScript">
-            <summary>
-            Common script that are added at the end of all scripts executed
-            </summary>
-        </member>
-        <member name="F:Seal.Model.CommonScript.RazorTemplate">
-            <summary>
-            Sample
-            </summary>
-        </member>
-        <member name="P:Seal.Model.CommonScript.Name">
-            <summary>
-            The script name
-            </summary>
-        </member>
-        <member name="P:Seal.Model.CommonScript.Script">
-            <summary>
-            A Razor script that will be included in all executed scripts
             </summary>
         </member>
         <member name="T:Seal.Model.ExecutionLogInterface">
@@ -476,7 +461,7 @@
         </member>
         <member name="P:Seal.Model.MetaColumn.HelperShowValues">
             <summary>
-            Editor Helper:  Show the first 1000 values of the column
+            Editor Helper:  Show the different values of the column in the table
             </summary>
         </member>
         <member name="P:Seal.Model.MetaColumn.Information">
@@ -547,6 +532,11 @@
         <member name="P:Seal.Model.MetaConnection.OracleConnectionString">
             <summary>
             Oracle Connection string used to connect to the database if the connection type is Oracle
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaConnection.SQLiteConnectionString">
+            <summary>
+            If set, script executed to instanciate and open the connection
             </summary>
         </member>
         <member name="P:Seal.Model.MetaConnection.ConnectionScript">
@@ -1162,9 +1152,24 @@
             Returns an open DbConnection
             </summary>
         </member>
+        <member name="M:Seal.Model.MetaSource.GetColumnsSchemaTable(System.Data.Common.DbConnection,System.String)">
+            <summary>
+            Returns a datatable containing the columns definiton of the table
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaSource.AddColumnsFromCatalog(System.Collections.Generic.List{Seal.Model.MetaColumn},System.Data.Common.DbConnection,Seal.Model.MetaTable)">
             <summary>
             Fill a list of columns from a table catalog
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.GetTableKeysSchemaTable(System.Data.Common.DbConnection)">
+            <summary>
+            Returns a datatable containing the key definition of the current database
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.GetJoinsFromCatalog(System.Data.Common.DbConnection)">
+            <summary>
+            Return list of Joins from the catalog
             </summary>
         </member>
         <member name="M:Seal.Model.MetaSource.GetTableName(System.String)">
@@ -1175,6 +1180,11 @@
         <member name="M:Seal.Model.MetaSource.GetColumnName(System.String)">
             <summary>
             Returns a full column name from a raw name
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.AddSchemaTables(System.Data.DataTable,System.Collections.Generic.List{Seal.Model.MetaTable})">
+            <summary>
+            Fill list of MetaTable from the catalog
             </summary>
         </member>
         <member name="P:Seal.Model.MetaSource.Information">
@@ -1625,6 +1635,11 @@
             Full name
             </summary>
         </member>
+        <member name="M:Seal.Model.OutputDevice.GetProcessingScriptTemplate">
+            <summary>
+            Returns the default processing script for the output device
+            </summary>
+        </member>
         <member name="M:Seal.Model.OutputDevice.Process(Seal.Model.Report)">
             <summary>
             Process the report and send it to the device
@@ -1661,9 +1676,34 @@
             OutputEmailDevice is an implementation of a SMTP Server device to send report result by emails. 
             </summary>
         </member>
+        <member name="T:Seal.Model.OutputEmailDevice.EmailDefinition">
+            <summary>
+            Parameter used to send email by script
+            </summary>
+        </member>
         <member name="M:Seal.Model.OutputEmailDevice.Create">
             <summary>
             Create a basic OutputEmailDevice
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputEmailDevice.ProcessingScriptTemplate">
+            <summary>
+            Default processing script template
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputEmailDevice.SmtpScriptTemplate">
+            <summary>
+            Default script template for SMTP
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputEmailDevice.SendGridScriptTemplate">
+            <summary>
+            Default script template for SendGrid
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputEmailDevice.MSGraphScriptTemplate">
+            <summary>
+            Default script template for Microsoft Graph
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.FullName">
@@ -1674,6 +1714,16 @@
         <member name="F:Seal.Model.OutputEmailDevice.LastModification">
             <summary>
             Last modification date time
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.Type">
+            <summary>
+            Type of Email server used
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.ProcessingScript">
+            <summary>
+            Script executed when the output is processed. The script can be customized.
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.Server">
@@ -1721,9 +1771,9 @@
             If true, the default credentials are used
             </summary>
         </member>
-        <member name="P:Seal.Model.OutputEmailDevice.UseSendGrid">
+        <member name="P:Seal.Model.OutputEmailDevice.SmtpScript">
             <summary>
-            If true, the SendGrid client is used instead of the SMTP client
+            Script used to send the Email via SMTP. The script can be customized.
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.SendGridKey">
@@ -1734,6 +1784,26 @@
         <member name="P:Seal.Model.OutputEmailDevice.ClearSendGridKey">
             <summary>
             The clear API Key used for SendGrid. An API Key can be get from https://sendgrid.com/ after registration (Free plan).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.SendGridScript">
+            <summary>
+            Script used to send the Email via SendGrid. The script can be customized.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.AzureSecret">
+            <summary>
+            The Azure Secret for MS Graph
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.ClearAzureSecret">
+            <summary>
+            Secret used for the authentication before sending the Email
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.MSGraphScript">
+            <summary>
+            Script used to send the Email via SendGrid. The script can be customized.
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.SenderEmail">
@@ -1753,7 +1823,7 @@
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.ChangeSender">
             <summary>
-            If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer
+            If true, the Email Sender or Reply address can be changed in the Report Designer
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.TestEmailTo">
@@ -1798,7 +1868,7 @@
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.Boolean,System.String)">
             <summary>
-            Send an Email either through SMTP or SendGrid
+            Send an Email either through SMTP or SendGrid (used for notification emails)
             </summary>
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String)">
@@ -1809,11 +1879,6 @@
         <member name="M:Seal.Model.OutputEmailDevice.Process(Seal.Model.Report)">
             <summary>
             Send the report result by email using the device configuration
-            </summary>
-        </member>
-        <member name="P:Seal.Model.OutputEmailDevice.SmtpClient">
-            <summary>
-            Current SmtpClient
             </summary>
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.SendTestEmail">
@@ -1903,7 +1968,7 @@
         </member>
         <member name="M:Seal.Model.OutputFileServerDevice.Process(Seal.Model.Report)">
             <summary>
-            Check that the report result has been saved and set information
+            Process the report result for the output
             </summary>
         </member>
         <member name="M:Seal.Model.OutputFileServerDevice.LoadFromFile(System.String,System.Boolean)">
@@ -2954,6 +3019,11 @@
             Helper to find a view from its name
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.AllTasks">
+            <summary>
+            Helper to list of all the tasks of the report
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.AllViews">
             <summary>
             Helper to list of all the views of the report
@@ -3555,16 +3625,6 @@
             Generate the report in a given format and retruns the file path
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.ConvertToPDFResult">
-            <summary>
-            Generate the PDF result of the current execution
-            </summary>
-        </member>
-        <member name="M:Seal.Model.ReportExecution.ConvertToExcelResult">
-            <summary>
-            Generate the Excel result of the current execution
-            </summary>
-        </member>
         <member name="F:Seal.Model.ReportExecution.CurrentEnumValues">
             <summary>
             Dynamic enum values selected during the report execution
@@ -3741,11 +3801,6 @@
             "Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout.
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportModel.BuildTimeout">
-            <summary>
-            Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
-            </summary>
-        </member>
         <member name="P:Seal.Model.ReportModel.JoinsToUse">
             <summary>
             List of Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used.
@@ -3754,6 +3809,16 @@
         <member name="P:Seal.Model.ReportModel.JoinsToSelect">
             <summary>
             Helper to select Join preferences
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.JoinHashcode">
+            <summary>
+            If specified and if possible, force the first join used to choose the dynamic SQL joins path used to perform the query.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.BuildTimeout">
+            <summary>
+            Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.HelperViewJoins">
@@ -4191,7 +4256,7 @@
             Add Sub-Reports elements to the SQL
             </summary>
         </member>
-        <member name="F:Seal.Model.ReportModel.JoinPaths">
+        <member name="F:Seal.Model.ReportModel.JoinLogs">
             <summary>
             Description of the joins chosen to build the SQL
             </summary>
@@ -5253,6 +5318,11 @@
             Creates a basic ReportTask
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportTask.Copy">
+            <summary>
+            Copy a ReportTask with its children
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportTask.InitReferences">
             <summary>
             Init all references of the task
@@ -5816,11 +5886,6 @@
             Current CultureInfo
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportView.SetAdvancedConfigurations">
-            <summary>
-            Set configurations for Excel or PDF converter
-            </summary>
-        </member>
         <member name="P:Seal.Model.ReportView.WebExec">
             <summary>
             For the Web Report Server: If true, the view can be executed from the report list.
@@ -5884,41 +5949,6 @@
         <member name="P:Seal.Model.ReportView.JsonRenderer">
             <summary>
             Current Json renderer
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.PdfConfigurations">
-            <summary>
-            The PDF configuration of the view
-            </summary>
-        </member>
-        <member name="F:Seal.Model.ReportView._pdfConverter">
-            <summary>
-            Current SealPdfConverter
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.PdfConverterEdited">
-            <summary>
-            True if the PDF Converter was edited
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.ExcelConfigurations">
-            <summary>
-            The Excel configuration of the view
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.ExcelConverter">
-            <summary>
-            Current Excel converter
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportView.ExcelConverterEdited">
-            <summary>
-            True if the Excel converter was edited
-            </summary>
-        </member>
-        <member name="M:Seal.Model.ReportView.ConvertToExcel(System.String)">
-            <summary>
-            Convert the view to an Excel Sheet
             </summary>
         </member>
         <member name="P:Seal.Model.ReportView.HelperReloadConfiguration">
@@ -6262,6 +6292,21 @@
             List of OutputDevice in the repository
             </summary>
         </member>
+        <member name="F:Seal.Model.Repository.Tag">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Repository.Tag2">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Repository.Tag3">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.CultureInfo">
             <summary>
             Default CultureInfo
@@ -6441,6 +6486,11 @@
         <member name="P:Seal.Model.Repository.DynamicsFolder">
             <summary>
             Dynamic assemblies folder
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.DynamicsWinFolder">
+            <summary>
+            Dynamic assemblies folder for Windows applications
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.RazorCacheFolder">
@@ -7524,51 +7574,6 @@
             Init the default values
             </summary>
         </member>
-        <member name="T:Seal.Model.SealExcelConverter">
-            <summary>
-            Base class for the Excel Converter
-            </summary>
-        </member>
-        <member name="F:Seal.Model.SealExcelConverter.SourceFormat">
-            <summary>
-            Optional source format
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealExcelConverter.Create">
-            <summary>
-            Creates a basic SealExcelConverter
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealExcelConverter.ToString">
-            <summary>
-            Not implemented
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealExcelConverter.ConvertToExcel(System.String)">
-            <summary>
-            Convert to Excel and save the result to a destination path
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealExcelConverter.ShouldSerialize">
-            <summary>
-            True if the configuration should be serialized
-            </summary>
-        </member>
-        <member name="T:Seal.Model.SealInterface">
-            <summary>
-            Virtual class for SealInterface implementation
-            </summary>
-        </member>
-        <member name="T:Seal.Model.SealPdfConverter">
-            <summary>
-            Base class for the Pdf Converter
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealPdfConverter.ShouldSerialize">
-            <summary>
-            True if the configuration should be serialized
-            </summary>
-        </member>
         <member name="T:Seal.Model.SealReportScheduler">
             <summary>
             Main Scheduler to execute the report schedules defined in a repository.
@@ -8079,36 +8084,6 @@
         <member name="P:Seal.Model.SealServerConfiguration.ApplicationKeys">
             <summary>
             Keys or passwords used in the application (report and tasks). Values are encrypted using the encryption mode.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfUseClient">
-            <summary>
-            If true, the client library is used to perform the HTML to PDF conversion (mainly useful for non-Windows or Azure installation). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfServer">
-            <summary>
-            If the client library is used, the HTML to PDF server IP or name.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfServerPort">
-            <summary>
-            If the client library is used, the HTML to PDF server IP or name.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfServicePassword">
-            <summary>
-            If the client library is used, optional HTML to PDF converter service password.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfUseWebService">
-            <summary>
-            If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.PdfWebServiceURL">
-            <summary>
-            If the client library is used, the HTML to PDF web service URL.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.DefaultCulture">
@@ -9260,6 +9235,16 @@
             Returns a parameter double value
             </summary>
         </member>
+        <member name="M:Seal.Renderer.RootRenderer.SetParameter(System.String,System.String)">
+            <summary>
+            Set a parameter value
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.SetParameter(System.String,System.Boolean)">
+            <summary>
+            Set a parameter boolean value
+            </summary>
+        </member>
         <member name="M:Seal.Renderer.CSVRenderer.GetRenderType">
             <summary>
             Type name of the renderer
@@ -9343,6 +9328,11 @@
         <member name="P:Seal.Renderer.PDFRenderer.Result">
             <summary>
             Current result objects used by the Renderer
+            </summary>
+        </member>
+        <member name="T:Seal.Renderer.SkiaSharpHelpers">
+            <summary>
+            Helpers for image rendering
             </summary>
         </member>
         <member name="M:Seal.Renderer.HTML2PDFRenderer.GetRenderType">

@@ -55,6 +55,7 @@ namespace Seal.Model
                 GetProperty("MySQLConnectionString").SetIsBrowsable(true);
                 GetProperty("OracleConnectionString").SetIsBrowsable(true);
                 GetProperty("PostgreSQLConnectionString").SetIsBrowsable(true);
+                GetProperty("SQLiteConnectionString").SetIsBrowsable(true);
                 GetProperty("MongoDBConnectionString").SetIsBrowsable(Source != null && Source.IsNoSQL);
                 GetProperty("ConnectionScript").SetIsBrowsable(true);
 
@@ -64,6 +65,7 @@ namespace Seal.Model
                 GetProperty("MySQLConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("OracleConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("PostgreSQLConnectionString").SetIsReadOnly(!IsEditable);
+                GetProperty("SQLiteConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MongoDBConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("CommandTimeout").SetIsReadOnly(!IsEditable);
 
@@ -123,6 +125,7 @@ namespace Seal.Model
                 if (DatabaseType == DatabaseType.Oracle) return '\"';
                 if (DatabaseType == DatabaseType.MySQL) return '`';
                 if (DatabaseType == DatabaseType.PostgreSQL) return '\"';
+                if (DatabaseType == DatabaseType.SQLite) return '\"';
                 return '[';
             }
         }
@@ -133,6 +136,7 @@ namespace Seal.Model
                 if (DatabaseType == DatabaseType.Oracle) return '\"';
                 if (DatabaseType == DatabaseType.MySQL) return '`';
                 if (DatabaseType == DatabaseType.PostgreSQL) return '\"';
+                if (DatabaseType == DatabaseType.SQLite) return '\"';
                 return ']';
             }
         }
@@ -166,6 +170,10 @@ namespace Seal.Model
                 else if (_connectionType == ConnectionType.PostgreSQL && DatabaseType != DatabaseType.PostgreSQL)
                 {
                     DatabaseType = DatabaseType.PostgreSQL;
+                }
+                else if (_connectionType == ConnectionType.SQLite && DatabaseType != DatabaseType.SQLite)
+                {
+                    DatabaseType = DatabaseType.SQLite;
                 }
                 else if ((_connectionType == ConnectionType.MSSQLServer || _connectionType == ConnectionType.MSSQLServerMicrosoft) && DatabaseType != DatabaseType.MSSQLServer)
                 {
@@ -258,6 +266,17 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
+        [DisplayName("SQLite Connection string"), Description("SQLite Connection string used to connect to the database if the connection type is SQLite. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(10, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string SQLiteConnectionString { get; set; } = null;
+        public bool ShouldSerializeSQLiteConnectionString() { return !string.IsNullOrEmpty(SQLiteConnectionString); }
+
+        /// <summary>
+        /// If set, script executed to instanciate and open the connection
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(null)]
         [DisplayName("Connection Script"), Description("If set, script executed to instanciate and open the connection."), Category("Definition"), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
@@ -293,38 +312,49 @@ namespace Seal.Model
         {
             get
             {
-                var result = "";
-                if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
-                {
-                    result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.Odbc)
-                {
-                    result = Helper.GetOdbcConnectionString(OdbcConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.MongoDB)
-                {
-                    result = Helper.GetMongoConnectionString(MongoDBConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.MySQL)
-                {
-                    result = Helper.GetMySQLConnectionString(MySQLConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.Oracle)
-                {
-                    result = Helper.GetOleDbConnectionString(OracleConnectionString, UserName, ClearPassword);
-                }
-                else if (ConnectionType == ConnectionType.PostgreSQL)
-                {
-                    result = Helper.GetOleDbConnectionString(PostgreSQLConnectionString, UserName, ClearPassword);
-                }
-                else
-                {
-                    result = Helper.GetOleDbConnectionString(ConnectionString, UserName, ClearPassword);
-                }
-
-                return Source.Repository.ReplaceRepositoryKeyword(result);
+                return GetFullConnectionString(UserName, ClearPassword);
             }
+        }
+
+        public string GetFullConnectionString(string userName, string password)
+        {
+            var result = "";
+            if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
+            {
+                result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.Odbc)
+            {
+                result = Helper.GetOdbcConnectionString(OdbcConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.MongoDB)
+            {
+                result = Helper.GetMongoConnectionString(MongoDBConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.MySQL)
+            {
+                result = Helper.GetMySQLConnectionString(MySQLConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.Oracle)
+            {
+                result = Helper.GetOleDbConnectionString(OracleConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.PostgreSQL)
+            {
+                result = Helper.GetOleDbConnectionString(PostgreSQLConnectionString, userName, password);
+            }
+            else if (ConnectionType == ConnectionType.SQLite)
+            {
+                result = Helper.GetOleDbConnectionString(SQLiteConnectionString, userName, password);
+            }
+            else
+            {
+                result = Helper.GetOleDbConnectionString(ConnectionString, userName, password);
+            }
+
+            return Source.Repository.ReplaceRepositoryKeyword(result);
+
+
         }
 
         /// <summary>

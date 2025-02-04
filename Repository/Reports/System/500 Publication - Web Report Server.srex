@@ -91,6 +91,10 @@
     //client = new FtpClient("waws-prod-dm1-129.ftp.azurewebsites.windows.net", @"sealcore\$sealcore", "password"); //  (e.g. for Azure)
 
     if (client != null) {
+        report.LogMessage("Connecting to '{0}'", client.Host);     
+        client.AutoConnect();
+        
+        /* Or manual configuration:
         //Default FTP configuration for Azure
         client.Config.SslProtocols = SslProtocols.Tls;
         client.Config.ValidateAnyCertificate = true;
@@ -103,13 +107,8 @@
         client.Config.DataConnectionConnectTimeout = 2000;
         client.Config.DataConnectionReadTimeout = 2000;        
         client.Port = 21;
-        
-        //For normal FTPS with implict encryption
-        //client.EncryptionMode = FtpEncryptionMode.Implicit; 
-        //client.Port = 990;
-
-        report.LogMessage("Connecting to '{0}'", client.Host);     
         client.Connect();
+        */
     }
      
     

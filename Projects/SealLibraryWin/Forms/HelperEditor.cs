@@ -241,6 +241,13 @@ namespace Seal.Forms
                             year.Name = string.Format("make_date(date_part('year',{0}), 1, 1)", _metaColumn.Name);
                             month.Name = string.Format("make_date(date_part('year',{0}), date_part('month',{0}), 1)", _metaColumn.Name);
                         }
+                        else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.SQLite)
+                        {
+                            year.Type = ColumnType.Text;
+                            month.Type = ColumnType.Text;
+                            year.Name = string.Format("substr({0}, 1, 4)", _metaColumn.Name);
+                            month.Name = string.Format("substr({0}, 1, 4) || '-' || substr({0}, 6, 2)", _metaColumn.Name); 
+                        }
                         year.DrillChildren.Add(month.GUID);
                         month.DrillChildren.Add(_metaColumn.GUID);
                         initEntity(_metaColumn.MetaTable);
@@ -422,21 +429,22 @@ namespace Seal.Forms
                     {
                         try
                         {
-                            _model.JoinPaths = new StringBuilder();
+                            _model.JoinLogs = new StringBuilder();
                             _model.BuildQuery();
 
                             var frm = new ExecutionForm(null);
                             frm.Text = "List of Joins";
                             frm.cancelToolStripButton.Visible = false;
                             frm.pauseToolStripButton.Visible = false;
-                            frm.logTextBox.Text = _model.JoinPaths.ToString();
+                            frm.logTextBox.Text = _model.JoinLogs.ToString();
                             frm.logTextBox.SelectionStart = 0;
                             frm.logTextBox.SelectionLength = 0;
+                            frm.ScrollToEnd = true;
                             frm.ShowDialog();
                         }
                         finally
                         {
-                            _model.JoinPaths = null;
+                            _model.JoinLogs = null;
                         }
 
                     }

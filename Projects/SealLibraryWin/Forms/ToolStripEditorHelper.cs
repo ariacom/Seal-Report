@@ -95,7 +95,6 @@ namespace Seal.Forms
             else if (SelectedEntity is Report)
             {
                 AddHelperButton("Edit Report Input Values", "Edit the Report Input Values", Keys.F8);
-                AddHelperButton("Edit Common Scripts", "Edit the Common Scripts", Keys.F7);
             }
             else if (SelectedEntity is ReportTask)
             {
@@ -340,7 +339,6 @@ namespace Seal.Forms
                     }
                     else if (SelectedEntity is Report)
                     {
-                        if (key == Keys.F7) EditProperty("Common Scripts");
                         if (key == Keys.F8) EditProperty("Report Input Values");
                     }
                     else if (SelectedEntity is ReportSchedule)

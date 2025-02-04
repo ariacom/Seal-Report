@@ -8,9 +8,9 @@
 		<AssemblyName>SealReportDesigner</AssemblyName>
 		<ApplicationIcon>reportDesigner.ico</ApplicationIcon>
 		<Product>Seal Report</Product>
-		<Version>8.1.0.0</Version>
-		<FileVersion>8.1.0.0</FileVersion>
-		<AssemblyVersion>8.1.0.0</AssemblyVersion>
+		<Version>8.2.2.0</Version>
+		<FileVersion>8.2.2.0</FileVersion>
+		<AssemblyVersion>8.2.2.0</AssemblyVersion>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
 		<Description>Seal Report Designer</Description>
@@ -45,15 +45,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="Properties\Settings.settings">
+		<Content Include="Properties\Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
-		</None>
-		<Compile Update="Properties\Settings.Designer.cs">
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Settings.settings</DependentUpon>
-			<DesignTimeSharedInput>True</DesignTimeSharedInput>
-		</Compile>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -65,6 +60,11 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Resources.resx</DependentUpon>
 			<DesignTime>True</DesignTime>
+		</Compile>
+		<Compile Update="Properties\Settings.Designer.cs">
+		  <DesignTimeSharedInput>True</DesignTimeSharedInput>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>Settings.settings</DependentUpon>
 		</Compile>
 	</ItemGroup>
 </Project>

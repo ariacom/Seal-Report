@@ -210,7 +210,7 @@
             Log an Exception
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.WebHelper.WriteLogEntryWeb(System.Diagnostics.EventLogEntryType,System.String,System.Object[])">
+        <member name="M:SealWebServer.Controllers.WebHelper.WriteLogEntryWeb(System.Diagnostics.EventLogEntryType,System.String)">
             <summary>
             Log a message with optional parameters
             </summary>

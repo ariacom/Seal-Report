@@ -34,8 +34,9 @@ namespace Seal.Forms
         BrowserInterop _browserInterop = null;
         public Form ReportDesignerForm = null;
 
-        public static Size? LastSize = null;
-        public static Point? LastLocation = null;
+        public static Size LastSize = new Size(1200, 800);
+        public static Point LastLocation = new Point(120,120);
+        public static string LastState = "";
 
         string _url;
 
@@ -80,16 +81,18 @@ namespace Seal.Forms
             if (previousViewer != null) _report = previousViewer._report;
         }
 
+
+        void RestoreWindowState()
+        {
+            FormHelper.RestoreForm(this, LastSize, LastLocation, LastState);
+        }
+
         public void ViewReport(Report report, bool render, string viewGUID, string outputGUID, string originalFilePath, string taskGUID = null)
         {
-            if (LastSize != null) Size = LastSize.Value;
-            if (LastLocation != null) Location = LastLocation.Value;
+            RestoreWindowState();
             Show();
-            ClientSizeChanged += ReportViewerForm_ClientSizeChanged;
-            LocationChanged += ReportViewerForm_ClientSizeChanged;
 
             Text = Path.GetFileNameWithoutExtension(originalFilePath) + " - " + Repository.SealRootProductName + " Report Viewer";
-            WindowState = FormWindowState.Normal;
             BringToFront();
             TopLevel = true;
             Focus();
@@ -107,6 +110,7 @@ namespace Seal.Forms
             {
                 _report.TaskToExecute = _report.Tasks.FirstOrDefault(i => i.GUID == taskGUID);
             }
+
             //execute to output
             _report.OutputToExecute = null;
             if (!string.IsNullOrEmpty(outputGUID))
@@ -248,6 +252,24 @@ namespace Seal.Forms
             }
         }
 
+        public void SaveWindowState()
+        {
+            //Save form location and size 
+            if (WindowState == FormWindowState.Normal)
+            {
+                LastLocation = Location;
+                LastSize = Size;
+            }
+            else
+            {
+                LastLocation = RestoreBounds.Location;
+                LastSize = RestoreBounds.Size;
+            }
+            // Save the form state as a string
+            LastState = WindowState.ToString();
+
+        }
+
         private void ReportViewerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Icon = Properties.Resources.reportDesigner;
@@ -256,25 +278,15 @@ namespace Seal.Forms
             if (_report != null) _report.Repository.FlushTranslationUsage();
 #endif
             if (_report != null && _report.IsExecuting) _report.CancelExecution();
-            LastSize = Size;
-            LastLocation = Location;
+
+            SaveWindowState();
 
             if (_exitOnClose) Application.Exit();
         }
 
-        private void ReportViewerForm_ClientSizeChanged(object sender, System.EventArgs e)
-        {
-            if (Visible)
-            {
-                LastSize = Size;
-                LastLocation = Location;
-            }
-        }
-
         private void ReportViewerForm_Load(object sender, EventArgs e)
         {
-            if (LastSize != null) Size = LastSize.Value;
-            if (LastLocation != null) Location = LastLocation.Value;
+            RestoreWindowState();
             this.KeyDown += TextBox_KeyDown;
             this.webBrowser.PreviewKeyDown += WebBrowser_PreviewKeyDown;
 

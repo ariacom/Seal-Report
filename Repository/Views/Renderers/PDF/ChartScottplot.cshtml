@@ -31,7 +31,7 @@
             .AlignMiddle()
             .Width(renderer.GetNumericValue("chartsp_width"), Unit.Millimetre)
             .Height(renderer.GetNumericValue("chartsp_height"), Unit.Millimetre)
-            .Canvas((canvas, space) =>
+            .SkiaSharpCanvas((canvas, space) =>
             {
                 canvas.Save();
                 canvas.ClipRect(new SKRect(0, 0, space.Width, space.Height));
