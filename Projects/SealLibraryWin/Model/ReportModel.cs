@@ -2317,7 +2317,6 @@ model.ResultTable = query2.CopyToDataTable2();
                     //Reverse join orders for LINQ
                     if (IsLINQ) joins.Reverse();
 
-                    if (JoinLogs != null) JoinLogs.Append("Using nested joins.");
                     //nested joins
                     for (int i = joins.Count - 1; i >= 0; i--)
                     {

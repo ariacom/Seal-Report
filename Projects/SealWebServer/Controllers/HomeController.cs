@@ -155,6 +155,7 @@ namespace SealWebServer.Controllers
                     WebUser.Profile.Path = WebUser.ProfilePath;
                 }
             }
+
             return WebUser.IsAuthenticated;
         }
 
