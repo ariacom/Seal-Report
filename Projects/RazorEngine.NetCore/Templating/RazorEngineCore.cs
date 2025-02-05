@@ -12,6 +12,8 @@
     using System.Threading.Tasks;
     using RazorEngine.Compilation.ReferenceResolver;
     using System.IO;
+    using System.Collections.Generic;
+    using Microsoft.CodeAnalysis;
 
     internal class RazorEngineCore : IDisposable
     {
@@ -24,6 +26,7 @@
         private bool _disposed;
 
         private readonly ReferencesListForDynamicAssemblyResolution _references = new ReferencesListForDynamicAssemblyResolution();
+        private readonly Dictionary<int, object> _referenceCache= new Dictionary<int, object>();
 
         [SecuritySafeCritical]
         internal RazorEngineCore(ReadOnlyTemplateServiceConfiguration config, RazorEngineService cached)
@@ -125,6 +128,7 @@
             {
                 service.Debug = _config.Debug;
                 service.DisableTempFileLocking = _config.DisableTempFileLocking;
+                (service as RazorEngine.Roslyn.CSharp.RoslynCompilerServiceBase).ReferenceCache = _referenceCache;                
 #if !RAZOR4
 #pragma warning disable 0618 // Backwards Compat.
                 service.CodeInspectors = _config.CodeInspectors ?? Enumerable.Empty<ICodeInspector>();
