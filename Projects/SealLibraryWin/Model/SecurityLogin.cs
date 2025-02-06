@@ -58,12 +58,12 @@ namespace Seal.Model
         public bool ShouldSerializePassword() { return !string.IsNullOrEmpty(Password); }
 
         /// <summary>
-        /// Password in clear text
+        /// Password used to connect to the database.
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("\tPassword"), PasswordPropertyText(true), Description("Password used to connect to the database."), Id(2, 1)]
-        [XmlIgnore]
 #endif
+        [XmlIgnore]
         public string HashedPassword
         {
             get

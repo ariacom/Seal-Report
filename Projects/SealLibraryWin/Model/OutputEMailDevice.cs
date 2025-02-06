@@ -577,8 +577,8 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Microsoft Graph Definition"), DisplayName("Azure secret"), Description("Secret used for the authentication before sending the Email."), PasswordPropertyText(true), Id(1, 3)]
-        [XmlIgnore]
 #endif
+        [XmlIgnore]
         public string ClearAzureSecret
         {
             get
