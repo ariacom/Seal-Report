@@ -1154,7 +1154,7 @@ namespace Seal.Helpers
             do
             {
                 index = sql.IndexOf(keyword, index);
-                if (index > 0)
+                if (index >= 0)
                 {
                     index += keyword.Length;
                     string restrictionName = "";
