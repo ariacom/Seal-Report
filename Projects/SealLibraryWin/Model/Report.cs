@@ -303,6 +303,12 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Meta information that can be used for any purpose
+        /// </summary>
+        public List<string> MetaInfo { get; set; } = new List<string>();
+        public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
+
+        /// <summary>
         /// Last modification date of the report file 
         /// </summary>
         [XmlIgnore]

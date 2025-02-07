@@ -180,6 +180,12 @@ namespace Seal.Model
         public bool IgnorePrePostError { get; set; } = false;
 
         /// <summary>
+        /// Meta information that can be used for any purpose
+        /// </summary>
+        public List<string> MetaInfo { get; set;}  = new List<string>();
+        public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
+
+        /// <summary>
         /// Last modification Date Time
         /// </summary>
         [XmlIgnore]

@@ -1021,6 +1021,11 @@
             If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaSource.MetaInfo">
+            <summary>
+            Meta information that can be used for any purpose
+            </summary>
+        </member>
         <member name="F:Seal.Model.MetaSource.LastModification">
             <summary>
             Last modification Date Time
@@ -2301,6 +2306,11 @@
         <member name="P:Seal.Model.Report.RelativeFilePath">
             <summary>
             Current file path without reports directory 
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.MetaInfo">
+            <summary>
+            Meta information that can be used for any purpose
             </summary>
         </member>
         <member name="F:Seal.Model.Report.LastModification">
@@ -7729,6 +7739,11 @@
             Last modification date of the seal schedule
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSchedule.MetaInfo">
+            <summary>
+            Meta information that can be used for any purpose
+            </summary>
+        </member>
         <member name="M:Seal.Model.SealSchedule.LoadFromFile(System.String)">
             <summary>
             Load a web schedule from a file
@@ -8458,7 +8473,7 @@
         </member>
         <member name="P:Seal.Model.SecurityLogin.HashedPassword">
             <summary>
-            Password in clear text
+            Password used to connect to the database.
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityLogin.CheckPassword(System.String)">

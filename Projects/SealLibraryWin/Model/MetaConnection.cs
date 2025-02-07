@@ -353,8 +353,42 @@ namespace Seal.Model
             }
 
             return Source.Repository.ReplaceRepositoryKeyword(result);
+        }
 
-
+        public void  SetConnectionString(string connectionString)
+        {
+            if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
+            {
+                MSSqlServerConnectionString = connectionString;
+            }
+            else if (ConnectionType == ConnectionType.Odbc)
+            {
+                OdbcConnectionString = connectionString;
+            }
+            else if (ConnectionType == ConnectionType.MongoDB)
+            {
+                MongoDBConnectionString = connectionString;
+            }
+            else if (ConnectionType == ConnectionType.MySQL)
+            {
+                MySQLConnectionString = connectionString;
+            }
+            else if (ConnectionType == ConnectionType.Oracle)
+            {
+                OracleConnectionString = connectionString;
+            }
+            else if (ConnectionType == ConnectionType.PostgreSQL)
+            {
+                PostgreSQLConnectionString = connectionString;
+            }
+            else if (ConnectionType == ConnectionType.SQLite)
+            {
+                SQLiteConnectionString = connectionString;
+            }
+            else
+            {
+                ConnectionString = connectionString;
+            }
         }
 
         /// <summary>

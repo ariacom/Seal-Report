@@ -4,6 +4,7 @@
 //
 using Seal.Helpers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -128,6 +129,12 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public DateTime LastModification = DateTime.MinValue;
+
+        /// <summary>
+        /// Meta information that can be used for any purpose
+        /// </summary>
+        public List<string> MetaInfo { get; set; } = new List<string>();
+        public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
 
         /// <summary>
         /// Load a web schedule from a file
