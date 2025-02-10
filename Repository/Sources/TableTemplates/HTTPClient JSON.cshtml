@@ -2,6 +2,8 @@
 @{
     MetaTable table = Model;
 
+    table.Source.CommonRestrictions = "pattern";
+
     table.DefinitionScript = @"@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -26,6 +28,7 @@
     ReportModel reportModel = metaTable.NoSQLModel;
     Report report = (reportModel != null ? reportModel.Report : null);
     List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
+    List<ReportRestriction> commonRestrictions = (reportModel != null ? reportModel.CommonRestrictions : null);
     
     var client = new HttpClient();
     client.DefaultRequestHeaders.Accept.Clear();
@@ -51,6 +54,13 @@
         
         //Post SWISearch
         json = JsonConvert.SerializeObject(new { path=@""\"", pattern=""er""} );
+        if (commonRestrictions != null && commonRestrictions.Count > 0) {
+            var pattern = commonRestrictions.FirstOrDefault(cr => cr.Name == ""pattern"");
+            if (pattern != null) {
+                json = JsonConvert.SerializeObject(new { path=@""\"", pattern=pattern} );
+            }
+        }
+
         data = new StringContent(json, System.Text.Encoding.UTF8, ""application/json"");
         responsePost = client.PostAsync(url+""SWISearch"", data).Result;  
         responseBody = responsePost.Content.ReadAsStringAsync().Result;

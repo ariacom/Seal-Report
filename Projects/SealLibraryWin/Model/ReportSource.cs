@@ -43,6 +43,7 @@ namespace Seal.Model
 
                 GetProperty("InitScript").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
+                GetProperty("CommonRestrictions").SetIsBrowsable(IsNoSQL);
 
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
@@ -180,6 +181,7 @@ namespace Seal.Model
                     IsDefault = source.IsDefault;
                     IsNoSQL = source.IsNoSQL;
                     InitScript = source.InitScript;
+                    CommonRestrictions = source.CommonRestrictions;
                     _metaSourceName = source.Name;
                     foreach (var item in source.Connections)
                     {

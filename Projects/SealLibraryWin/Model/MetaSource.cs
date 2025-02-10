@@ -135,6 +135,16 @@ namespace Seal.Model
         public bool IsNoSQL { get; set; } = false;
 
         /// <summary>
+        /// If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue("")]
+        [Category("Scripts"), DisplayName("Common Restrictions"), Description("A list of common restrictions used in the Load Scripts for this data source"), Id(5,3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string CommonRestrictions { get; set; } = "";
+        public bool ShouldSerializeCommonRestrictions() { return !string.IsNullOrEmpty(CommonRestrictions); }
+        /// <summary>
         /// If true, this source contains only a table built from a database. The SQL engine will be used to fill the models.
         /// </summary>
         [XmlIgnore]

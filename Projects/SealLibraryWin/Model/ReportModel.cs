@@ -54,7 +54,7 @@ namespace Seal.Model
 
                 GetProperty("ConnectionGUID").SetIsBrowsable(true);
 
-                GetProperty("CommonRestrictions").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("CommonRestrictions").SetIsBrowsable(CommonRestrictions.Any());
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("ReferenceModelGUID").SetIsBrowsable(true);
                 GetProperty("ExecutionSet").SetIsBrowsable(true);
@@ -1585,10 +1585,18 @@ model.ResultTable = query2.CopyToDataTable2();
                 var names = Helper.GetSQLKeywordNames(finalSql, Repository.CommonRestrictionKeyword);
                 var valueNames = Helper.GetSQLKeywordNames(finalSql, Repository.CommonValueKeyword);
                 names.AddRange(valueNames);
+
+                List<string> replacementNames = new List<string>();
+                if (!string.IsNullOrEmpty(Source.CommonRestrictions)) {
+                    replacementNames = Source.CommonRestrictions.Split([',', ';', '\r', '\n'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
+                    names.AddRange(replacementNames);
+                }
+
                 foreach (var restrictionName in names)
                 {
                     var commonRestriction = CommonRestrictions.FirstOrDefault(i => i.Name == restrictionName);
                     bool isCommonValue = valueNames.Contains(restrictionName);
+                    bool isTextReplace = replacementNames.Contains(restrictionName);
 
                     if (commonRestriction == null)
                     {
@@ -1604,12 +1612,19 @@ model.ResultTable = query2.CopyToDataTable2();
                             commonRestriction.TypeRe = ColumnType.Numeric;
                             commonRestriction.Operator = Operator.ValueOnly;
                         }
+                        else if (isTextReplace)
+                        {
+                            commonRestriction.Operator = Operator.ValueOnly;
+                        }
                     }
                     commonRestriction.IsCommonValue = isCommonValue;
                 }
 
                 //clean restrictions not used
-                CommonRestrictions.RemoveAll(i => !finalSql.Contains(Repository.CommonRestrictionKeyword + i.Name + "}") && !finalSql.Contains(Repository.CommonValueKeyword + i.Name + "}"));
+                CommonRestrictions.RemoveAll(i =>
+                    !finalSql.Contains(Repository.CommonRestrictionKeyword + i.Name + "}") &&
+                    !finalSql.Contains(Repository.CommonValueKeyword + i.Name + "}") &&
+                    !replacementNames.Contains(i.Name));
 
                 //Set references
                 foreach (var restriction in CommonRestrictions)
