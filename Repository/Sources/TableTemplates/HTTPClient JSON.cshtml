@@ -2,7 +2,7 @@
 @{
     MetaTable table = Model;
 
-    table.Source.CommonRestrictions = "pattern";
+    if (table.Source != null) table.Source.CommonRestrictions = "pattern";
 
     table.DefinitionScript = @"@using System.Data
 @{
