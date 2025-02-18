@@ -27,6 +27,7 @@
       <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True;TrustServerCertificate=True;</MSSqlServerConnectionString>
     </MetaConnection>
   </Connections>
+  <Description>Northwind demonstration database containing sales information.</Description>
   <ConnectionGUID>164f0017-471d-4741-937c-3df7881ca392</ConnectionGUID>
   <MetaData>
     <Tables>

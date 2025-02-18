@@ -22,6 +22,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data.OleDb;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Data.SQLite;
+using AngleSharp.Text;
 
 #if WINDOWS
 using Seal.Forms;
@@ -60,6 +61,7 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
+                GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("ConnectionGUID").SetIsBrowsable(true);
                 GetProperty("PreSQL").SetIsBrowsable(!IsNoSQL);
                 GetProperty("PostSQL").SetIsBrowsable(!IsNoSQL);
@@ -91,13 +93,22 @@ namespace Seal.Model
         public bool ShouldSerializeConnections() { return Connections.Count > 0; }
 
 
+        /// <summary>
+        /// If true, this source is used as default when a new model is created in a report
+        /// </summary>
+#if WINDOWS
+        [Category("General"), DisplayName("Description"), Description("Description of the data source."), Id(1, 1)]
+#endif
+        public string Description { get; set; }
+
+
         protected string _connectionGUID;
         /// <summary>
         /// The connection currently used for this data source
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("General"), DisplayName("Current connection"), Description("The connection currently used for this data source"), Id(1, 1)]
+        [Category("General"), DisplayName("Current connection"), Description("The connection currently used for this data source"), Id(2, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
 #endif
         public string ConnectionGUID
@@ -106,13 +117,12 @@ namespace Seal.Model
             set { _connectionGUID = value; }
         }
 
-
         /// <summary>
         /// If true, this source is used as default when a new model is created in a report
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("General"), DisplayName("Is Default"), Description("If true, this source is used as default when a new model is created in a report."), Id(2, 1)]
+        [Category("General"), DisplayName("Is Default"), Description("If true, this source is used as default when a new model is created in a report."), Id(3, 1)]
 #endif
         public bool IsDefault { get; set; } = false;
 
@@ -121,7 +131,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("General"), DisplayName("Store Connections in a dedicated file"), Description("If true, the connections are saved in a XML file located beside the Data Source file. This may be useful for deployment."), Id(3, 1)]
+        [Category("General"), DisplayName("Store Connections in a dedicated file"), Description("If true, the connections are saved in a XML file located beside the Data Source file. This may be useful for deployment."), Id(4, 1)]
 #endif
         public bool ExternalConnections { get; set; } = false;
 
@@ -130,7 +140,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(4, 1)]
+        [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(5, 1)]
 #endif
         public bool IsNoSQL { get; set; } = false;
 
@@ -918,7 +928,7 @@ WHERE m.type = 'table';
         /// <summary>
         /// Fill list of MetaTable from the catalog
         /// </summary>
-        public void AddSchemaTables(DataTable schemaTables, List<MetaTable> tables)
+        public void AddSchemaTables(DataTable schemaTables, List<MetaTable> tables, string[] tableTypes = null, string tableFilter = null)
         {
             foreach (DataRow row in schemaTables.Rows)
             {
@@ -943,8 +953,11 @@ WHERE m.type = 'table';
                 {
                     table.Name = GetTableName(tableName);
                 }
+                if (!string.IsNullOrEmpty(tableFilter) && !Helper.IsMatchWildcard(tableName.ToLower(), tableFilter.ToLower())) continue;
 
                 if (schemaTables.Columns.Contains("TABLE_TYPE")) table.Type = row["TABLE_TYPE"].ToString();
+                if (tableTypes != null && !string.IsNullOrEmpty(table.Type) && !tableTypes.Contains(table.Type)) continue;
+
                 table.Source = this;
                 if (!tables.Exists(i => i.Name == table.Name)) tables.Add(table);
             }
