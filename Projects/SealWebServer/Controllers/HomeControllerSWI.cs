@@ -864,7 +864,7 @@ namespace SealWebServer.Controllers
                 WebUser.Profile.Connections.Clear();
                 foreach (var connection in connections)
                 {
-                    var guids = connection.Replace("\r\n", "\n").Replace("\r", "\n").Split('\r');
+                    var guids = connection.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
                     if (guids.Length == 2) WebUser.Profile.Connections.Add(new DefaultConnection() { SourceGUID = guids[0], ConnectionGUID = guids[1] });
 
                 }
