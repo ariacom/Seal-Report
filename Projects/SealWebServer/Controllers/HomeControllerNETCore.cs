@@ -113,6 +113,16 @@ namespace SealWebServer.Controllers
             CheckSession();
             _sessions[SessionKey][key] = value;
         }
+
+        void clearSessionValue(string key)
+        {
+            CheckSession();
+            lock (_sessions)
+            {
+                if (_sessions[SessionKey].ContainsKey(key)) _sessions[SessionKey].Remove(key);
+            }
+        }
+
         object getSessionValue(string key)
         {
 

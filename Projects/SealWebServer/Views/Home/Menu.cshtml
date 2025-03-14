@@ -15,7 +15,6 @@
                 <span class="sr-only">@repository.TranslateWeb("Toggle navigation")</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
             </button>
             <div>
                 <a id="brand-id" class="navbar-brand hidden-xs" href="#">@repository.Configuration.WebProductName</a>
@@ -30,7 +29,7 @@
                 </ul>
                 @if (model.HasEditor)
                 {
-                    <ul class="nav navbar-nav pull-xs-right assistantview folderview">
+                    <ul class="nav navbar-nav pull-xs-right assistantview">
                         <li class="nav-item"><a id="assistant-nav-item" class="navbar-white fa fa-cog" title="@repository.TranslateWeb("Toggle assistant and folders")"></a></li>
                     </ul>
                 }
@@ -40,7 +39,7 @@
             </div>
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
-            <ul class="nav navbar-nav pull-xs-right navbar-right">
+            <ul id="navbar-right-menu" class="nav navbar-nav pull-xs-right navbar-right">
                 <li class="nav-item"><a id="profile-nav-item" class="navbar-white fa fa-user" style="font-size:20px" title="@repository.TranslateWeb("Profile")"></a></li>
                 @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
                 {

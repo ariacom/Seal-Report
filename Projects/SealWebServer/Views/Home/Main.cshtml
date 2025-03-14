@@ -147,61 +147,6 @@
         </div>
     </div>
 
-    <!-- Profile Modal -->
-    <div id="profile-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" style="top:60px">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">@repository.TranslateWeb("Profile information")</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="profile-user"><span class="fa fa-user"></span> @repository.TranslateWeb("User name")</label>
-                        <input class="form-control" id="profile-user" disabled="disabled" />
-                    </div>
-                    <div class="form-group">
-                        <label for="profile-groups"><span class="fa fa-users"></span> @repository.TranslateWeb("User groups")</label>
-                        <textarea rows="3" class="form-control" id="profile-groups" disabled="disabled">
-                        </textarea>
-                    </div>
-                    <div class="form-group edit-profile">
-                        <label for="culture-select"><span class="fa fa-language"></span> @repository.TranslateWeb("Culture")</label>
-                        <div>
-                            <select id="culture-select" data-width="100%"></select>
-                        </div>
-                    </div>
-                    <div class="form-group edit-profile">
-                        <label for="onstartup-select"><span class="fa fa-power-off"></span> @repository.TranslateWeb("On startup")</label>
-                        <div>
-                            <select id="onstartup-select" data-width="100%"></select>
-                        </div>
-                    </div>
-                    <div class="form-group edit-profile">
-                        <label for="onstartup-reportname"><span class="fa fa-edit"></span> @repository.TranslateWeb("Startup report name")</label>
-                        <input class="form-control" id="onstartup-reportname" />
-                    </div>
-                    <div class="form-group edit-profile">
-                        <label for="executionmode-select"><span class="fa fa-external-link"></span> @repository.TranslateWeb("Report execution mode")</label>
-                        <div>
-                            <select id="executionmode-select" data-width="100%"></select>
-                        </div>
-                    </div>
-                    <div class="form-group edit-profile">
-                        <label><span class="fa fa-database"></span> @repository.TranslateWeb("Data source connections")</label>
-                        <div id="default-connections">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="profile-cancel" type="button" class="btn btn-default edit-profile" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
-                    <button id="profile-save" type="button" class="btn btn-primary edit-profile">@repository.TranslateWeb("Save")</button>
-                    <button id="profile-close" type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Close")</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Folder Modal -->
     <div id="folder-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
