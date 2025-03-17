@@ -134,6 +134,7 @@ namespace Seal.Model
         {
             var result = new OutputEmailDevice() { GUID = Guid.NewGuid().ToString() };
             result.Name = "Email Device";
+
             return result;
         }
 
@@ -354,7 +355,7 @@ namespace Seal.Model
     };
 
     // PostAsync method call
-    graphClient.Users[user].SendMail.PostAsync(body);
+    await graphClient.Users[user].SendMail.PostAsync(body);
 }
 ";
 
@@ -762,7 +763,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Send an Email either through SMTP or SendGrid (used for notification emails)
+        /// Send an Email either through SMTP or SendGrid or Graph API (used for notification emails)
         /// </summary>
         public void SendEmail(string sender, string to, string subject, bool isHtmlBody, string body)
         {
@@ -771,7 +772,7 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// Send an Email either through SMTP or SendGrid
+        /// Send an Email either through SMTP or SendGrid or Graph API 
         /// </summary>
         public void SendEmail(string sender, string to, string replyTo, string cc, string bcc, string subject, bool isHtmlBody, string body, string attachPath, string attachName)
         {

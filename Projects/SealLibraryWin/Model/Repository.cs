@@ -593,31 +593,42 @@ namespace Seal.Model
                                 var code = File.ReadAllText(csFile);
                                 // Compile the code
                                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
-                                var references = new[]
+
+                                //Force these basic references
+                                var refNameSpaces = new[] {
+                                    "System",
+                                    "System.Runtime",
+                                    "System.Collections",
+                                    "System.Collections.Generic",
+                                    "System.Linq",
+                                    "System.Globalization",
+                                    "System.Net",
+                                    "System.Security",
+                                    "System.IO",
+                                    "System.IO.Stream",
+                                    "System.Data",
+                                    "System.Data.Common",
+                                    "System.Data.SqlClient"
+                                };
+
+                                var refs = new List<PortableExecutableReference>();
+                                foreach (var refNameSpace in refNameSpaces)
                                 {
-                                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                                    MetadataReference.CreateFromFile(typeof(List<>).Assembly.Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.Collections").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.Collections.Generic").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.Linq").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.Globalization").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.Net").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.Security").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.IO").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.IO.Stream").Location),
-                                    MetadataReference.CreateFromFile(Assembly.Load("System.Data").Location),
-                                     MetadataReference.CreateFromFile(Assembly.Load("System.Data.Common").Location)
-                               }.Concat(AppDomain.CurrentDomain.GetAssemblies()
+                                    try { 
+                                        var refAssembly = Assembly.Load(refNameSpace); 
+                                        refs.Add(MetadataReference.CreateFromFile(refAssembly.Location)); }
+                                    catch { }
+                                }
+
+                                refs = refs.Concat(AppDomain.CurrentDomain.GetAssemblies()
                                     .Where(a => !a.IsDynamic && a.Location != dllPath)
                                     .Select(a => MetadataReference.CreateFromFile(a.Location)))
-                                .Distinct();
+                                .Distinct().ToList();
 
                                 var compilation = CSharpCompilation.Create(
                                     Path.GetFileNameWithoutExtension(csFile),
                                     new[] { syntaxTree },
-                                    references,
+                                    refs,
                                     new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
                                 );
 

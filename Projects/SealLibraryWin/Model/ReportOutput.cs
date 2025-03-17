@@ -250,10 +250,10 @@ namespace Seal.Model
         public string EmailBCC { get; set; }
 
         /// <summary>
-        /// The email address of the sender (From). If empty, the sender email address defined in the device is used. Make sure that the SMTP server allows the new address.
+        /// The email address of the sender (From). If empty, the sender email address defined in the device is used. Make sure that the email server allows the new address.
         /// </summary>
 #if WINDOWS
-        [Category("Email Addresses"), DisplayName("Sender"), Description("The email address of the sender (From). If empty, the sender email address defined in the device is used. Make sure that the SMTP server allows the new address."), Id(11, 2)]
+        [Category("Email Addresses"), DisplayName("Sender"), Description("The email address of the sender (From). If empty, the sender email address defined in the device is used. Make sure that the email server allows the new address."), Id(11, 2)]
 #endif
         public string EmailFrom { get; set; }
 
