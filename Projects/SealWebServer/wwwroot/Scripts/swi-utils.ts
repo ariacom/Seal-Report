@@ -54,8 +54,8 @@ module SWIUtil {
             else button.addClass("active").removeClass("disabled");
         }
         else {
-            if (!enabled) button.prop('disabled', 'true').addClass("disabled");
-            else button.removeAttr('disabled').removeProp('disabled').removeClass("disabled");
+            if (!enabled) button.prop('disabled', 'true').addClass("disabled").removeClass("active");
+            else button.removeAttr('disabled').removeProp('disabled').removeClass("disabled").addClass("active");
         }
     }
 

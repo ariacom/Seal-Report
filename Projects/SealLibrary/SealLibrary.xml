@@ -1001,11 +1001,6 @@
             If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.
             </summary>
         </member>
-        <member name="P:Seal.Model.MetaSource.CommonRestrictions">
-            <summary>
-            If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.
-            </summary>
-        </member>
         <member name="P:Seal.Model.MetaSource.IsSQL">
             <summary>
             If true, this source contains only a table built from a database. The SQL engine will be used to fill the models.
@@ -1883,12 +1878,12 @@
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.Boolean,System.String)">
             <summary>
-            Send an Email either through SMTP or SendGrid (used for notification emails)
+            Send an Email either through SMTP or SendGrid or Graph API (used for notification emails)
             </summary>
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String)">
             <summary>
-            Send an Email either through SMTP or SendGrid
+            Send an Email either through SMTP or SendGrid or Graph API 
             </summary>
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.Process(Seal.Model.Report)">
@@ -4423,7 +4418,7 @@
         </member>
         <member name="P:Seal.Model.ReportOutput.EmailFrom">
             <summary>
-            The email address of the sender (From). If empty, the sender email address defined in the device is used. Make sure that the SMTP server allows the new address.
+            The email address of the sender (From). If empty, the sender email address defined in the device is used. Make sure that the email server allows the new address.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportOutput.EmailReplyTo">

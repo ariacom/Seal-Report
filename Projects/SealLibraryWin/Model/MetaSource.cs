@@ -14,20 +14,20 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Xml;
 using System.Data.SqlClient;
-using DocumentFormat.OpenXml.Bibliography;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 
 using System.Data.OleDb;
-using DocumentFormat.OpenXml.Wordprocessing;
 using System.Data.SQLite;
 using AngleSharp.Text;
+
 
 #if WINDOWS
 using Seal.Forms;
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
+using System.ComponentModel.Design;
 #endif
 
 namespace Seal.Model
@@ -98,6 +98,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("General"), DisplayName("Description"), Description("Description of the data source."), Id(1, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string Description { get; set; }
 

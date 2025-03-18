@@ -15,10 +15,6 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Collections.Specialized;
-using Microsoft.Extensions.Options;
-using SealWebServer.Models.Configuration;
-using Microsoft.AspNetCore.Rewrite;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace SealWebServer.Controllers
 {

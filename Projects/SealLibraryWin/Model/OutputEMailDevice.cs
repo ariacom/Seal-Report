@@ -21,11 +21,6 @@ using Microsoft.Graph;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-
-
-
-
-
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.ComponentModel.Design;
