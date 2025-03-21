@@ -129,7 +129,8 @@ A full repository file structure must be available on the machine running the pr
 		<Compile Include="..\SealLibraryWin\Model\SecuritySource.cs" Link="Model\SecuritySource.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityUser.cs" Link="Model\SecurityUser.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityUserProfile.cs" Link="Model\SecurityUserProfile.cs" />
-		<Compile Include="..\SealLibraryWin\Model\SubReport.cs" Link="Model\SubReport.cs" />
+    <Compile Include="..\SealLibraryWin\Model\StringPair.cs" Link="Model\StringPair.cs" />
+    <Compile Include="..\SealLibraryWin\Model\SubReport.cs" Link="Model\SubReport.cs" />
 		<Compile Include="..\SealLibraryWin\Model\WebInterfaceModels.cs" Link="Model\WebInterfaceModels.cs" />
 		<Compile Include="..\SealLibraryWin\Model\WebMainModel.cs" Link="Model\WebMainModel.cs" />
 		<Compile Include="..\SealLibraryWin\Renderers\RootRenderer.cs" Link="Renderers\RootRenderer.cs" />
@@ -143,7 +144,7 @@ A full repository file structure must be available on the machine running the pr
 		<Compile Include="..\SealLibraryWin\Renderers\PDFRenderer.cs" Link="Renderers\PDFRenderer.cs" />
 		<Compile Include="..\SealLibraryWin\Renderers\HTML2PDFRenderer.cs" Link="Renderers\HTML2PDFRenderer.cs" />
 		<Compile Include="..\SealLibraryWin\Renderers\PDFResult.cs" Link="Renderers\PDFResult.cs" />
-	</ItemGroup>
+  </ItemGroup>
 
 	<ItemGroup>
     <PackageReference Include="Azure.Core" Version="1.42.0" />

@@ -200,6 +200,24 @@ var SWIUtil;
     }
     SWIUtil.GatewayFailure = GatewayFailure;
     //Static functions
+    function InitSpinning() {
+        $(document).ajaxStart(function () {
+            SWIUtil.StartSpinning();
+        });
+        $(document).ajaxStop(function () {
+            SWIUtil.StopSpinning();
+        });
+    }
+    SWIUtil.InitSpinning = InitSpinning;
+    function InitDropDownMenu() {
+        //Show dropdown menus on hover
+        $('.dropdown').hover(function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
+        }, function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(300);
+        });
+    }
+    SWIUtil.InitDropDownMenu = InitDropDownMenu;
     function InitVersion() {
         _gateway.GetVersions(function (data) {
             $("#brand-id").attr("title", SWIUtil.tr2("Web Interface Version") + " : " + data.SWIVersion + "\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\n" + data.Info);

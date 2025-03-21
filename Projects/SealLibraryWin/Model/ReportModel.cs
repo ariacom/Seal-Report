@@ -1437,16 +1437,6 @@ model.ResultTable = query2.CopyToDataTable2();
         public object Tag3;
 
         /// <summary>
-        /// Custom string serialized (saved with the report definition)
-        /// </summary>
-        public string SerializedTag { get; set; }
-
-        /// <summary>
-        /// Custom string serialized (saved with the report definition)
-        /// </summary>
-        public string SerializedTag2 { get; set; }
-
-        /// <summary>
         /// Init all model references: Elements, Restrictions, etc.
         /// </summary>
         public void InitReferences()

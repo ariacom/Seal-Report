@@ -305,8 +305,30 @@ namespace Seal.Model
         /// <summary>
         /// Meta information that can be used for any purpose
         /// </summary>
-        public List<string> MetaInfo { get; set; } = new List<string>();
+        public List<StringPair> MetaInfo { get; set; } = new List<StringPair>();
         public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
+
+        /// <summary>
+        /// Get a meta information value from its key
+        /// </summary>
+        public string GetMetaInfo(string key)
+        { 
+            return MetaInfo.FirstOrDefault(i => i.Key == key)?.Value; 
+        }
+
+        /// <summary>
+        /// Set a meta information value from its key
+        /// </summary>
+        public void SetMetaInfo(string key, string value)
+        {
+            var info = MetaInfo.FirstOrDefault(i => i.Key == key);
+            if (info == null)
+            {
+                info = new StringPair() { Key = key };
+                MetaInfo.Add(info);
+            }
+            info.Value = value;
+        }
 
         /// <summary>
         /// Last modification date of the report file 

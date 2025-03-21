@@ -735,6 +735,16 @@ namespace Seal.Model
                 return _profilePath;
             }
         }
+        /// <summary>
+        /// Profile directory
+        /// </summary>
+        public string ProfileDirectory
+        {
+            get
+            {
+                return Path.GetDirectoryName(ProfilePath);
+            }
+        }
 
         /// <summary>
         /// List reports menu

@@ -184,6 +184,29 @@ module SWIUtil {
     }
 
     //Static functions
+    export function InitSpinning() {
+        $(document).ajaxStart(function () {
+            SWIUtil.StartSpinning();
+        });
+
+        $(document).ajaxStop(function () {
+            SWIUtil.StopSpinning();
+        });
+
+    }
+
+    export function InitDropDownMenu() {
+        //Show dropdown menus on hover
+        $('.dropdown').hover(
+            function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
+            },
+            function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(300);
+            }
+        );
+    }
+
     export function InitVersion() {
         _gateway.GetVersions(
             function (data) {

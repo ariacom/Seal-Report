@@ -29,6 +29,9 @@ $(document).ready(function () {
     _gateway = new SWIGateway();
     _main = new SWIMain();
     _main.Process();
+
+    SWIUtil.InitDropDownMenu();
+
 });
 
 class SWIMain {
@@ -146,6 +149,7 @@ class SWIMain {
         $("#main-container").css("display", "block");
 
         SWIUtil.RefreshMenu(_main);
+        SWIUtil.InitSpinning();
 
         _main._currentView = "folders";
         if (_main._profile.showfolders) {
@@ -159,7 +163,10 @@ class SWIMain {
             $("#nav_button").addClass("nopointer");
         }
 
-        if (_editor) _editor.brand();
+        if (_editor) {
+            _editor.brand();
+            _editor.assistantMenu();
+        }
 
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
@@ -230,98 +237,6 @@ class SWIMain {
 
         //Profile
         SWIUtil.InitProfile(_main._profile);
-        /*
-        $("#profile-nav-item").unbind("click").on("click", function () {
-            $outputPanel.hide();
-            $("#profile-user").val(_main._profile.name);
-            $("#profile-groups").val(_main._profile.group.replaceAll(";", "\r"));
-
-            $("#profile-save").unbind("click").on("click", function (e) {
-                $("#profile-dialog").modal('hide');
-                if (_main._profile.editprofile) {
-                    var onstartup = $("#onstartup-select").val();
-                    var startupreport = _main._profile.startupreport;
-                    if (onstartup == "4") {
-                        onstartup = "3"; //Execute report
-                        startupreport = _main._lastReport.path;
-
-                    }
-                    var startupreportname = $("#onstartup-reportname").val();
-                    var executionmode = $("#executionmode-select").val();
-
-                    //connections
-                    var connections = [];
-                    _main._profile.sources.forEach(function (source) {
-                        connections.push(source.GUID + "\r" + $("#" + source.GUID).val())
-                    });
-                    _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, executionmode, connections, function () {
-                        location.reload();
-                    });
-                }
-            });
-
-            SWIUtil.ShowHideControl($(".edit-profile"), _main._profile.editprofile);
-            SWIUtil.ShowHideControl($("#profile-close"), !_main._profile.editprofile);
-
-            var $select = $("#onstartup-select");
-            $select.empty();
-            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default startup"), _main._profile.onstartup));
-            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Do not execute report"), _main._profile.onstartup));
-            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute the last report"), _main._profile.onstartup));
-            if (_main._profile.startupreportname) $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Execute the report") + " '" + _main._profile.startupreportname + "'", _main._profile.onstartup));
-            if (_main._lastReport.name && _main._lastReport.name != _main._profile.startupreportname) $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.name + "'", _main._profile.onstartup));
-            $select.selectpicker('refresh');
-
-            $("#onstartup-reportname").val(_main._profile.startupreportname);
-
-            $select = $("#executionmode-select");
-            $select.empty();
-            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default mode"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute report in a new window"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute report in the current window"), _main._profile.executionmode));
-            $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Allow only execution in a new window"), _main._profile.executionmode));
-            $select.selectpicker('refresh');
-
-            $select = $("#culture-select");
-            if ($select.children("option").length == 0) {
-                _gateway.GetCultures(function (data) {
-                    $select.append(SWIUtil.GetOption("", SWIUtil.tr("Default culture"), _main._profile.culture));
-                    for (var i = 0; i < data.length; i++) {
-                        $select.append(SWIUtil.GetOption(data[i].id, data[i].val, _main._profile.culture));
-                    }
-                    $select.selectpicker('refresh');
-                    $("#profile-dialog").modal();
-                    if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
-                });
-            }
-            else {
-                $select.val(_main._profile.culture).change();
-                $select.selectpicker('refresh');
-                $("#profile-dialog").modal();
-                if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
-            }
-
-            const $connections = $("#default-connections");
-            $("#default-connections").empty();
-            if (_main._profile.sources.length === 0 || !_main._profile.editprofile) {
-                $("#default-connections").parent().hide();
-            }
-            else {
-                $("#default-connections").parent().show();
-                _main._profile.sources.forEach(function (source) {
-                    const $connectionDiv = $("<div class='row'>");
-                    $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
-                    const $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
-                    source.connections.forEach(function (connection) {
-                        $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
-                    });
-                    $connectionDiv.append($("<div class='col-sm-8' style='padding-bottom:5px;'>").append($connectionSelect));
-                    $connections.append($connectionDiv);
-                    $connectionSelect.selectpicker('refresh');
-                });
-            }
-        });
-        */
 
         //Disconnect
         $("#disconnect-nav-item").unbind("click").on("click", function () {
@@ -443,14 +358,6 @@ class SWIMain {
                     });
                 });
             }
-        });
-
-        $(document).ajaxStart(function () {
-            SWIUtil.StartSpinning();
-        });
-
-        $(document).ajaxStop(function () {
-            SWIUtil.StopSpinning();
         });
 
         _main.enableControls();

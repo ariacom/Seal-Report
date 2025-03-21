@@ -29,6 +29,15 @@
                 </ul>
                 @if (model.HasEditor)
                 {
+                    <ul style="float:left;margin:0;padding:10px 0px;list-style:none">
+                        <li class="dropdown">
+                            <a id="menu-assistant-button" href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:10px 5px" title="@repository.TranslateWeb("Assistants menu")">
+                                <span class="glyphicon glyphicon-cog btn btn-sm btn-primary" aria-hidden="true"></span>
+                            </a>
+                            <ul id="menu-assistant" class="dropdown-menu">
+                            </ul>
+                        </li>
+                    </ul>
                     <ul class="nav navbar-nav pull-xs-right assistantview">
                         <li class="nav-item"><a id="assistant-nav-item" class="navbar-white fa fa-cog" title="@repository.TranslateWeb("Toggle assistant and folders")"></a></li>
                     </ul>

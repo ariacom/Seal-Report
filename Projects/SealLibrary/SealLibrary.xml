@@ -1031,6 +1031,16 @@
             Meta information that can be used for any purpose
             </summary>
         </member>
+        <member name="M:Seal.Model.MetaSource.GetMetaInfo(System.String)">
+            <summary>
+            Get a meta information value from its key
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.SetMetaInfo(System.String,System.String)">
+            <summary>
+            Set a meta information value from its key
+            </summary>
+        </member>
         <member name="F:Seal.Model.MetaSource.LastModification">
             <summary>
             Last modification Date Time
@@ -2316,6 +2326,16 @@
         <member name="P:Seal.Model.Report.MetaInfo">
             <summary>
             Meta information that can be used for any purpose
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.GetMetaInfo(System.String)">
+            <summary>
+            Get a meta information value from its key
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.SetMetaInfo(System.String,System.String)">
+            <summary>
+            Set a meta information value from its key
             </summary>
         </member>
         <member name="F:Seal.Model.Report.LastModification">
@@ -4224,16 +4244,6 @@
         <member name="F:Seal.Model.ReportModel.Tag3">
             <summary>
             Custom Tag the can be used at execution time to store any object
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportModel.SerializedTag">
-            <summary>
-            Custom string serialized (saved with the report definition)
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportModel.SerializedTag2">
-            <summary>
-            Custom string serialized (saved with the report definition)
             </summary>
         </member>
         <member name="M:Seal.Model.ReportModel.InitReferences">
@@ -8859,6 +8869,11 @@
         <member name="P:Seal.Model.SecurityUser.ProfilePath">
             <summary>
             Profile file path
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUser.ProfileDirectory">
+            <summary>
+            Profile directory
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.GetMenuReportViews">

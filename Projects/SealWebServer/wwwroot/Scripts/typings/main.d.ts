@@ -15,7 +15,6 @@ interface JQuery {
 interface ReportEditorInterface {
     brand(): void;
     init(): void;
-}
-interface AssistantInterface {
-    init(): void;
+    assistantMenu(): void;
+
 }
