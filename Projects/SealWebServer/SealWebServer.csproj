@@ -6,9 +6,9 @@
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealWebServer</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>8.2.2.0</Version>
-		<FileVersion>8.2.2.0</FileVersion>
-		<AssemblyVersion>8.2.2.0</AssemblyVersion>
+		<Version>8.3.0.0</Version>
+		<FileVersion>8.3.0.0</FileVersion>
+		<AssemblyVersion>8.3.0.0</AssemblyVersion>
 		<Description>Seal Report Web Server</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
