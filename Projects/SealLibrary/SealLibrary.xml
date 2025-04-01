@@ -996,6 +996,11 @@
             If true, the connections are saved in a XML file located beside the Data Source file.
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaSource.DataSourceReferences">
+            <summary>
+            Defines other reference Data Sources loaded with the Data Source.
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaSource.IsNoSQL">
             <summary>
             If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.

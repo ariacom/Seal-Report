@@ -9,7 +9,7 @@
 <script type="text/javascript">
 
     function processShowMsgDuringExec() {
-        var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode")== "enabledshownexec");
+        var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode") == "enabledshownexec");
         if (showMsgDuringExec) {
             $("#@view.ViewId").removeClass("active in");
             $("#report_button").parent().removeClass("active");
@@ -173,7 +173,7 @@
         };
         String.prototype.valueFormat = function (value) {
             var str = this;
-            return str.replaceAll(',', thousandSeparator).replaceAll('$', currencySymbol).replace('.', decimalSeparator);
+            return str.replace('.', "_").replaceAll(',', thousandSeparator).replaceAll('$', currencySymbol).replace('_', decimalSeparator);
         };
         String.prototype.normalizeNumeric = function (valueStr) {
             return parseFloat(this.replaceAll(',', '').replace(/\s+/g, ''));
@@ -290,10 +290,10 @@
             processReportViews();
         });
 
-        @Raw(view.GetValue("additional_js"))
+    @Raw(view.GetValue("additional_js"))
 </script>
 <style>
-        @Raw(view.GetValue("additional_css"))
+    @Raw(view.GetValue("additional_css"))
 </style>
 <div id="report_body_container" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")" style="display:none;padding-top:65px;@(report.PrintLayout ? ("width:"+view.GetValue("print_body_width")) : "")">
     @if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "right")
@@ -349,14 +349,14 @@
     @Raw(report.AttachScriptFile("nv.d3.min.js"))
     @Raw(report.AttachCSSFile("nv.d3.min.css"))
     <script>
-                function nvd3TranslateText(text)
-                {
-                    @foreach (var translation in repository.NVD3Translations)
-                    {
-                    <text>if (text == '@Raw(Helper.ToJS(translation.Key))') return '@Raw(Helper.ToJS(translation.Value))';</text>
-                    }
-                    return text;
-                }
+        function nvd3TranslateText(text)
+        {
+        @foreach (var translation in repository.NVD3Translations)
+        {
+            <text>if (text == '@Raw(Helper.ToJS(translation.Key))') return '@Raw(Helper.ToJS(translation.Value))';</text>
+        }
+            return text;
+        }
     </script>
     @Raw(report.AttachScriptFile("chartNVD3.js"))
 }
