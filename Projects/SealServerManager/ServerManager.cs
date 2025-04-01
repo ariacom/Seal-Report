@@ -669,6 +669,14 @@ namespace Seal
             {
                 ((RootComponent)selectedEntity).InitEditor();
                 mainPropertyGrid.SelectedObject = selectedEntity;
+
+                RootComponent entity = selectedEntity;
+                //Do not allow edition of repository objects
+                if (selectedEntity is MetaConnection && !((MetaConnection)selectedEntity).IsEditable) entity.SetReadOnly();
+                if (selectedEntity is MetaTable && !((MetaTable)selectedEntity).IsEditable) entity.SetReadOnly();
+                if (selectedEntity is MetaJoin && !((MetaJoin)selectedEntity).IsEditable) entity.SetReadOnly();
+                if (selectedEntity is MetaColumn && !((MetaColumn)selectedEntity).MetaTable.IsEditable) entity.SetReadOnly();
+                if (selectedEntity is MetaEnum && !((MetaEnum)selectedEntity).IsEditable) entity.SetReadOnly();
             }
 
             var entry = Helper.GetGridEntry(mainPropertyGrid, "table parameters");

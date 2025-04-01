@@ -68,6 +68,7 @@ namespace Seal.Model
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!IsNoSQL);
                 GetProperty("IsDefault").SetIsBrowsable(true);
                 GetProperty("ExternalConnections").SetIsBrowsable(true);
+                GetProperty("DataSourceReferences").SetIsBrowsable(true);
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
 
                 GetProperty("InitScript").SetIsBrowsable(true);
@@ -137,11 +138,21 @@ namespace Seal.Model
         public bool ExternalConnections { get; set; } = false;
 
         /// <summary>
+        /// Defines other reference Data Sources loaded with the Data Source.
+        /// </summary>
+#if WINDOWS
+        [Category("General"), DisplayName("Data Source References"), Description("Defines other reference Data Sources loaded with the Data Source."), Id(5, 1)]
+        [Editor(typeof(DataSourcesSelector), typeof(UITypeEditor))]
+#endif
+        public List<string> DataSourceReferences { get; set; } = new List<string>();
+        public bool ShouldSerializeDataSourceReferences() { return DataSourceReferences.Count > 0; }
+
+        /// <summary>
         /// If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(5, 1)]
+        [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(6, 1)]
 #endif
         public bool IsNoSQL { get; set; } = false;
 
@@ -462,6 +473,8 @@ namespace Seal.Model
         {
             Repository = repository;
 
+            LoadDatasourceReferences();
+
             //init references in objects
             foreach (var connection in Connections)
             {
@@ -529,6 +542,44 @@ namespace Seal.Model
         static string GetConnectionsFilePath(string path)
         {
             return Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "_Connections.xml");
+        }
+
+        void LoadDatasourceReferences()
+        {
+            foreach(var reference in Repository.Sources.Where(i => DataSourceReferences.Contains(i.GUID))) {
+                //Add connections
+                foreach (var connection in reference.Connections)
+                {
+                    if (Connections.Exists(i => i.GUID == connection.GUID)) continue;
+
+                    connection.IsEditable = false;
+                    Connections.Add(connection);
+                }
+                //Add tables
+                foreach (var table in reference.MetaData.Tables)
+                {
+                    if (MetaData.Tables.Exists(i => i.GUID == table.GUID)) continue;
+
+                    table.IsEditable = false;
+                    MetaData.Tables.Add(table);
+                }
+                //Add joins
+                foreach (var itemJoin in reference.MetaData.Joins)
+                {
+                    if (MetaData.Joins.Exists(i => i.GUID == itemJoin.GUID)) continue;
+
+                    itemJoin.IsEditable = false;
+                    MetaData.Joins.Add(itemJoin);
+                }
+                //Add enums
+                foreach (var itemEnum in reference.MetaData.Enums)
+                {
+                    if (MetaData.Enums.Exists(i => i.GUID == itemEnum.GUID)) continue;
+
+                    itemEnum.IsEditable = false;
+                    MetaData.Enums.Add(itemEnum);
+                }
+            }
         }
 
         /// <summary>
@@ -600,6 +651,8 @@ namespace Seal.Model
 
             try
             {
+                SetToTempReferences();
+
                 foreach (var table in MetaData.Tables) table.BeforeSerialization();
 
                 Name = Path.GetFileNameWithoutExtension(path);
@@ -615,6 +668,8 @@ namespace Seal.Model
             finally
             {
                 foreach (var table in MetaData.Tables) table.AfterSerialization();
+
+                GetFromTempReferences();
             }
         }
 
@@ -934,6 +989,41 @@ WHERE m.type = 'table';
                 || keywords.Contains(rawName.ToUpper()))
                 return string.Format("{0}{1}{2}", Connection.StartDelimiter, rawName, Connection.EndDelimiter);
             return rawName;
+        }
+
+        //Temporary variables to help for serialization...
+        [XmlIgnore]
+        public List<MetaConnection> TempConnections = new List<MetaConnection>();
+        [XmlIgnore]
+        public List<MetaTable> TempTables = new List<MetaTable>();
+        [XmlIgnore]
+        public List<MetaTableLink> TempLinks = new List<MetaTableLink>();
+        [XmlIgnore]
+        public List<MetaJoin> TempJoins = new List<MetaJoin>();
+        [XmlIgnore]
+        public List<MetaEnum> TempEnums = new List<MetaEnum>();
+
+        public void SetToTempReferences()
+        {
+            TempConnections = Connections.ToList();
+            TempTables = MetaData.Tables.ToList();
+            TempLinks = MetaData.TableLinks.ToList();
+            TempJoins = MetaData.Joins.ToList();
+            TempEnums = MetaData.Enums.ToList();
+            Connections.RemoveAll(i => !i.IsEditable);
+            MetaData.Tables.RemoveAll(i => !i.IsEditable);
+            MetaData.TableLinks.RemoveAll(i => !i.IsEditable);
+            MetaData.Joins.RemoveAll(i => !i.IsEditable);
+            MetaData.Enums.RemoveAll(i => !i.IsEditable);
+        }
+
+        public void GetFromTempReferences()
+        {
+            Connections = TempConnections;
+            MetaData.Tables = TempTables;
+            MetaData.TableLinks = TempLinks;
+            MetaData.Joins = TempJoins;
+            MetaData.Enums = TempEnums;
         }
 
         #region Helpers

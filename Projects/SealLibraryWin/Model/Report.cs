@@ -1471,16 +1471,7 @@ namespace Seal.Model
                 //serialize only not readonly metadata
                 foreach (ReportSource source in Sources)
                 {
-                    source.TempConnections = source.Connections.ToList();
-                    source.TempTables = source.MetaData.Tables.ToList();
-                    source.TempLinks = source.MetaData.TableLinks.ToList();
-                    source.TempJoins = source.MetaData.Joins.ToList();
-                    source.TempEnums = source.MetaData.Enums.ToList();
-                    source.Connections.RemoveAll(i => !i.IsEditable);
-                    source.MetaData.Tables.RemoveAll(i => !i.IsEditable);
-                    source.MetaData.TableLinks.RemoveAll(i => !i.IsEditable);
-                    source.MetaData.Joins.RemoveAll(i => !i.IsEditable);
-                    source.MetaData.Enums.RemoveAll(i => !i.IsEditable);
+                    source.SetToTempReferences();
 
                     foreach (var table in source.MetaData.Tables) table.BeforeSerialization();
                 }
@@ -1491,16 +1482,9 @@ namespace Seal.Model
                 foreach (ReportSource source in Sources)
                 {
 
-                    foreach (var table in source.MetaData.Tables)
-                    {
-                        table.AfterSerialization();
-                    }
+                    foreach (var table in source.MetaData.Tables) table.AfterSerialization();
 
-                    source.Connections = source.TempConnections;
-                    source.MetaData.Tables = source.TempTables;
-                    source.MetaData.TableLinks = source.TempLinks;
-                    source.MetaData.Joins = source.TempJoins;
-                    source.MetaData.Enums = source.TempEnums;
+                    source.GetFromTempReferences();
                 }
 
                 foreach (var task in Tasks)

@@ -241,19 +241,6 @@ namespace Seal.Model
                 itemEnum.RefreshEnum();
             }
         }
-
-        //Temporary variables to help for report serialization...
-        [XmlIgnore]
-        public List<MetaConnection> TempConnections = new List<MetaConnection>();
-        [XmlIgnore]
-        public List<MetaTable> TempTables = new List<MetaTable>();
-        [XmlIgnore]
-        public List<MetaTableLink> TempLinks = new List<MetaTableLink>();
-        [XmlIgnore]
-        public List<MetaJoin> TempJoins = new List<MetaJoin>();
-        [XmlIgnore]
-        public List<MetaEnum> TempEnums = new List<MetaEnum>();
     }
-
 }
 
