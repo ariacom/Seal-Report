@@ -172,8 +172,9 @@ namespace Seal.Model
             get { return _sql; }
             set
             {
+                bool isModified = (_sql != value);
                 _sql = value;
-                if (IsDynamic && IsDbRefresh && !string.IsNullOrEmpty(_sql) && _dctd != null) RefreshEnum();
+                if (isModified && IsDynamic && IsDbRefresh && !string.IsNullOrEmpty(_sql) && _dctd != null) RefreshEnum();
             }
         }
 

@@ -172,6 +172,7 @@ class SWIMain {
         $("#refresh-nav-item").unbind("click").on("click", function () {
             _main.ReloadReportsTable();
             if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
+            if (_editor) _editor.assistantMenu();
         });
 
         //Reload and execute
