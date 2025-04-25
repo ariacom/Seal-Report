@@ -635,9 +635,8 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Save to a file
+        /// Save MetaSource to a file
         /// </summary>
-        /// <param name="path"></param>
         public void SaveToFile(string path)
         {
             //Check last modification
@@ -1031,7 +1030,7 @@ WHERE m.type = 'table';
         /// <summary>
         /// Fill list of MetaTable from the catalog
         /// </summary>
-        public void AddSchemaTables(DataTable schemaTables, List<MetaTable> tables, string[] tableTypes = null, string tableFilter = null)
+        public void AddSchemaTables(DataTable schemaTables, List<MetaTable> tables)
         {
             foreach (DataRow row in schemaTables.Rows)
             {
@@ -1056,12 +1055,12 @@ WHERE m.type = 'table';
                 {
                     table.Name = GetTableName(tableName);
                 }
-                if (!string.IsNullOrEmpty(tableFilter) && !Helper.IsMatchWildcard(tableName.ToLower(), tableFilter.ToLower())) continue;
 
                 if (schemaTables.Columns.Contains("TABLE_TYPE")) table.Type = row["TABLE_TYPE"].ToString();
-                if (tableTypes != null && !string.IsNullOrEmpty(table.Type) && !tableTypes.Contains(table.Type)) continue;
 
                 table.Source = this;
+                var f = tables.FirstOrDefault(i => i.Name == table.Name);
+
                 if (!tables.Exists(i => i.Name == table.Name)) tables.Add(table);
             }
         }

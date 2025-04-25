@@ -8,7 +8,7 @@
     ExcelRenderer renderer = view.ExcelRenderer;
     ExcelResult result = report.ExcelResult;
 
-    if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.Name);
+    if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.ViewName);
 
     //Summary
     if (model.SummaryTable != null && model.SummaryTable.RowCount > 0 && view.GetBoolValue("show_summary_table", true))

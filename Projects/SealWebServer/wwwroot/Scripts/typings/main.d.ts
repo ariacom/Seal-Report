@@ -16,5 +16,4 @@ interface ReportEditorInterface {
     brand(): void;
     init(): void;
     assistantMenu(): void;
-
 }

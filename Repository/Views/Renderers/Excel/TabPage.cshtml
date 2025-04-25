@@ -12,7 +12,7 @@
     ExcelRenderer renderer = view.ExcelRenderer;
     ExcelResult result = report.ExcelResult;
 
-    if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.Name);
+    if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.ViewName);
 
     //Header & Footer
     var logoPath = Path.ChangeExtension(report.Repository.Configuration.LogoFilePath, "png");

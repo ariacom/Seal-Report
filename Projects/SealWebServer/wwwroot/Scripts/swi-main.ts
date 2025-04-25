@@ -276,6 +276,7 @@ class SWIMain {
                 _gateway.DeleteFiles(paths, function () {
                     SWIUtil.ShowMessage("alert-success", checked + " " + SWIUtil.tr("report(s) or file(s) have been deleted"), 5000);
                     _main.ReloadReportsTable();
+                    _main.refreshMenus();
                     $waitDialog.modal('hide');
                 });
             });
@@ -299,6 +300,7 @@ class SWIMain {
 
                     _gateway.MoveFile(source, destination, false, function () {
                         _main.ReloadReportsTable();
+                        _main.refreshMenus();
                         $waitDialog.modal('hide');
                         SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The report or file has been renamed"), 5000);
                     });
@@ -352,6 +354,7 @@ class SWIMain {
                         if (index == _main._clipboard.length - 1) {
                             setTimeout(function () {
                                 _main.ReloadReportsTable();
+                                _main.refreshMenus();
                                 $waitDialog.modal('hide');
                                 SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or file(s) processed"), 5000);
                             }, 2000);
@@ -562,11 +565,16 @@ class SWIMain {
         });
     }
 
-    private executeReport(path: string, viewGUID: string, outputGUID: string) {
-        _gateway.ExecuteReport(path, viewGUID, outputGUID);
+    private refreshMenus() {
         setTimeout(function () {
             SWIUtil.RefreshMenu(_main);
-        }, 2000);
+            if (_editor) _editor.assistantMenu();
+        }, 1000);
+    }
+
+    private executeReport(path: string, viewGUID: string, outputGUID: string) {
+        _gateway.ExecuteReport(path, viewGUID, outputGUID);
+        _main.refreshMenus();
     }
 
     private executeReportFromMenu(path: string, viewGUID: string, outputGUID: string, name: string) {
@@ -598,7 +606,7 @@ class SWIMain {
             _main.enableControls();
             $waitDialog.modal('hide');
             setTimeout(function () {
-                SWIUtil.RefreshMenu(_main);
+                _main.refreshMenus();
                 _main._lastReport.name = $("#nav_button").text();
             }, 1000);
         });

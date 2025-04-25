@@ -227,6 +227,7 @@ var SWIMain = /** @class */ (function () {
                 _gateway.DeleteFiles(paths, function () {
                     SWIUtil.ShowMessage("alert-success", checked + " " + SWIUtil.tr("report(s) or file(s) have been deleted"), 5000);
                     _main.ReloadReportsTable();
+                    _main.refreshMenus();
                     $waitDialog.modal('hide');
                 });
             });
@@ -248,6 +249,7 @@ var SWIMain = /** @class */ (function () {
                     $("#report-name-dialog").modal('hide');
                     _gateway.MoveFile(source, destination, false, function () {
                         _main.ReloadReportsTable();
+                        _main.refreshMenus();
                         $waitDialog.modal('hide');
                         SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The report or file has been renamed"), 5000);
                     });
@@ -297,6 +299,7 @@ var SWIMain = /** @class */ (function () {
                         if (index == _main._clipboard.length - 1) {
                             setTimeout(function () {
                                 _main.ReloadReportsTable();
+                                _main.refreshMenus();
                                 $waitDialog.modal('hide');
                                 SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or file(s) processed"), 5000);
                             }, 2000);
@@ -487,11 +490,16 @@ var SWIMain = /** @class */ (function () {
             SWIUtil.StopSpinning();
         });
     };
-    SWIMain.prototype.executeReport = function (path, viewGUID, outputGUID) {
-        _gateway.ExecuteReport(path, viewGUID, outputGUID);
+    SWIMain.prototype.refreshMenus = function () {
         setTimeout(function () {
             SWIUtil.RefreshMenu(_main);
-        }, 2000);
+            if (_editor)
+                _editor.assistantMenu();
+        }, 1000);
+    };
+    SWIMain.prototype.executeReport = function (path, viewGUID, outputGUID) {
+        _gateway.ExecuteReport(path, viewGUID, outputGUID);
+        _main.refreshMenus();
     };
     SWIMain.prototype.executeReportFromMenu = function (path, viewGUID, outputGUID, name) {
         $(".navbar-header,#navbar").addClass("disabled");
@@ -518,7 +526,7 @@ var SWIMain = /** @class */ (function () {
             _main.enableControls();
             $waitDialog.modal('hide');
             setTimeout(function () {
-                SWIUtil.RefreshMenu(_main);
+                _main.refreshMenus();
                 _main._lastReport.name = $("#nav_button").text();
             }, 1000);
         });

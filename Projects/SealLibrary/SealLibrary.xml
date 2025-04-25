@@ -1153,9 +1153,8 @@
         </member>
         <member name="M:Seal.Model.MetaSource.SaveToFile(System.String)">
             <summary>
-            Save to a file
+            Save MetaSource to a file
             </summary>
-            <param name="path"></param>
         </member>
         <member name="M:Seal.Model.MetaSource.Refresh">
             <summary>
@@ -1207,7 +1206,7 @@
             Returns a full column name from a raw name
             </summary>
         </member>
-        <member name="M:Seal.Model.MetaSource.AddSchemaTables(System.Data.DataTable,System.Collections.Generic.List{Seal.Model.MetaTable},System.String[],System.String)">
+        <member name="M:Seal.Model.MetaSource.AddSchemaTables(System.Data.DataTable,System.Collections.Generic.List{Seal.Model.MetaTable})">
             <summary>
             Fill list of MetaTable from the catalog
             </summary>

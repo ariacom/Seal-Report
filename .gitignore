@@ -111,3 +111,4 @@ Repository/Databases/Audit.ldb
 Projects/SealDocumentation/Help.zip
 *.nupkg
 /Repository/Sources/_OLD
+/Repository/Sources/Assistants

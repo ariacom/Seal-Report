@@ -115,7 +115,7 @@ var SWIUtil;
         while (true) {
             var found = false;
             $.each(array, function (key, value) {
-                if (value.name == result)
+                if (value.name == result || value.Name == result)
                     found = true;
             });
             if (found)
@@ -324,8 +324,9 @@ var SWIUtil;
     function executeReport(main, path, viewGUID, outputGUID) {
         _gateway.ExecuteReport(path, viewGUID, outputGUID);
         setTimeout(function () {
-            SWIUtil.RefreshMenu(main);
-        }, 2000);
+            if (main)
+                main.refreshMenus();
+        }, 1000);
     }
     SWIUtil.executeReport = executeReport;
     function InitProfile(profile) {

@@ -105,7 +105,7 @@ module SWIUtil {
         while (true) {
             var found = false;
             $.each(array, function (key, value) {
-                if (value.name == result) found = true;
+                if (value.name == result || value.Name == result) found = true;
             });
 
             if (found) result = name + index.toString();
@@ -313,8 +313,8 @@ module SWIUtil {
     export function executeReport(main, path: string, viewGUID: string, outputGUID: string) {
         _gateway.ExecuteReport(path, viewGUID, outputGUID);
         setTimeout(function () {
-            SWIUtil.RefreshMenu(main);
-        }, 2000);
+            if (main) main.refreshMenus();
+        }, 1000);
     }
 
     export function InitProfile(profile) {

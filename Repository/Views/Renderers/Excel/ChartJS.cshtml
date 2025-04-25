@@ -17,7 +17,7 @@
     {
         if (modelView.InitPageChart(page))
         {
-            if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(modelView.Name + " " + view.Report.Repository.TranslateReport("Charts"));
+            if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(modelView.ViewName + " " + view.Report.Repository.TranslateReport("Charts"));
             result.CurrentCol = 1;
             int rowStart = result.CurrentRow;
             int colStart = result.CurrentCol;
