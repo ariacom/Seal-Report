@@ -29,18 +29,18 @@
                 </ul>
                 @if (model.HasEditor)
                 {
-                    <ul style="float:left;margin:0;padding:10px 0px;list-style:none">
-                        <li class="dropdown">
-                            <a id="menu-assistant-button" href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:10px 5px" title="@repository.TranslateWeb("Assistants menu")">
-                                <span class="glyphicon glyphicon-cog btn btn-sm btn-primary" aria-hidden="true"></span>
-                            </a>
-                            <ul id="menu-assistant" class="dropdown-menu">
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="nav navbar-nav pull-xs-right">
-                        <li class="nav-item"><a id="backtoreports-nav-item" class="navbar-white fa fa-area-chart" title="@repository.TranslateWeb("Back to reports")"></a></li>
-                    </ul>
+                        <ul style="float:left;margin:0;padding:10px 0px;list-style:none">
+                            <li class="dropdown">
+                                <a id="menu-assistant-button" href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:10px 5px" title="@repository.TranslateWeb("Assistants menu")">
+                                    <span class="glyphicon glyphicon-cog btn btn-sm btn-primary" aria-hidden="true"></span>
+                                </a>
+                                <ul id="menu-assistant" class="dropdown-menu">
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav pull-xs-right">
+                                <li class="nav-item"><a id="backtoreports-nav-item" class="navbar-white fa fa-area-chart" title="@repository.TranslateWeb("Back to reports")"></a></li>
+                        </ul>
                 }
                 <span id="nav_cr" style="display:none;font-size:small;padding-top:5px;text-align:center;" class="navbar-brand"></span>
                 <a id="nav_button" href="#" class="navbar-brand"></a>
@@ -52,7 +52,7 @@
                 <li class="nav-item"><a id="profile-nav-item" class="navbar-white fa fa-user" style="font-size:20px" title="@repository.TranslateWeb("Profile")"></a></li>
                 @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
                 {
-                    <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="navbar-white fa fa-info" style="font-size:20px" title="@repository.TranslateWeb("Information")"></a></li>
+                        <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="navbar-white fa fa-info" style="font-size:20px" title="@repository.TranslateWeb("Information")"></a></li>
                 }
                 <li class="nav-item"><a id="disconnect-nav-item" class="navbar-white fa fa-sign-out" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"></a></li>
             </ul>
@@ -83,7 +83,7 @@
                     <ul class="dropdown-menu">
                         @foreach (var format in repository.ResultAllowedFormats)
                         {
-                            <li><a id="ViewResult" format="@format" class="result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
+                                <li><a id="ViewResult" format="@format" class="result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
                         }
                     </ul>
                 </li>

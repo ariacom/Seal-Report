@@ -112,3 +112,4 @@ Projects/SealDocumentation/Help.zip
 *.nupkg
 /Repository/Sources/_OLD
 /Repository/Sources/Assistants
+Projects/SealWebServer/wwwroot/Scripts/swiassistant.js

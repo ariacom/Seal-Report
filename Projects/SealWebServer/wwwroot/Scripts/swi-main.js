@@ -130,6 +130,7 @@ var SWIMain = /** @class */ (function () {
         if (_editor) {
             _editor.brand();
             _editor.assistantMenu();
+            SWIUtil.ShowHideControl($("#backtoreports-nav-item"), false);
         }
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {

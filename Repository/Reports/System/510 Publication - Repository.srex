@@ -135,7 +135,7 @@
 
     //Configure the root repository destination folder:
     var repositoryDestination = "";  // TO BE MODIFIED !
-    repositoryDestination =@"\\wsl$\Ubuntu-22.04\seal\Repository"; //For file system (Ubuntu Sub-System)
+    //repositoryDestination =@"\\wsl$\Ubuntu\seal\Repository"; //For file system (Ubuntu Sub-System)
     //repositoryDestination = "/Repository/"; //FTP root folder
     //repositoryDestination = "/site/wwwroot/Repository/"; //FTP root folder (e.g. for Azure)
 
