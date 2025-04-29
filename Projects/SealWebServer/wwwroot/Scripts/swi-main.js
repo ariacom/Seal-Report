@@ -421,6 +421,7 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.EnableButton($("#report-paste-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
+        SWIUtil.ShowHideControl($("#nav_button"), _main._reportPath != null && _main._reportPath != "");
         //Report or folders view
         var reportShown = _main._reportPath && _main._currentView == "report";
         SWIUtil.ShowHideControl($("#menu-view-folders"), _main._currentView == "report" && showFolders);
