@@ -236,3 +236,102 @@ table.dataTable {
 .not-dotnet-core {
     display: none !important;
 }
+
+
+/*ALERT*/
+/* Add this to sealweb-assistant.css */
+.sr-alert {
+    position: fixed !important;
+    top: 80px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    width: auto !important;
+    min-width: 300px;
+    max-width: 600px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    border: none;
+    z-index: 10000;
+    opacity: 0;
+    animation: fadeInOut 5s ease-in-out forwards;
+}
+
+    .sr-alert .close {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        opacity: 0.7;
+        font-size: 18px;
+        padding: 5px;
+    }
+
+        .sr-alert .close:hover {
+            opacity: 1;
+        }
+
+    .sr-alert p {
+        margin: 0;
+        font-weight: 500;
+        font-size: 14px;
+        padding-right: 20px;
+    }
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+
+    10% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    90% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+}
+
+/* menu divider */
+/* Style the divider */
+.menu-divider {
+    font-weight: bold;
+    padding: 5px 10px;
+    background: #f1f1f1;
+    color: #333;
+    cursor: default;
+    text-transform: uppercase;
+}

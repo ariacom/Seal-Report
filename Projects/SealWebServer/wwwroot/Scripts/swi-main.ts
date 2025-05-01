@@ -166,7 +166,6 @@ class SWIMain {
         if (_editor) {
             _editor.brand();
             _editor.assistantMenu();
-            SWIUtil.ShowHideControl($("#backtoreports-nav-item"), false);
         }
 
         //Refresh
