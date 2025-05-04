@@ -68,4 +68,18 @@
 	<ItemGroup>
 		<ProjectReference Include="..\SealLibrary\SealLibrary.csproj" />
 	</ItemGroup>
+
+  <!-- Fix for https://github.com/dotnet/aspnetcore/issues/57147  -->
+  <Target Name="PreResolveProjectStaticWebAssets" BeforeTargets="ResolveProjectStaticWebAssets">
+    <ItemGroup>
+      <StashedContent Include="@(Content)" />
+      <Content Remove="@(Content)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="PostResolveProjectStaticWebAssets" AfterTargets="ResolveProjectStaticWebAssets">
+    <ItemGroup>
+      <Content Include="@(StashedContent)" />
+    </ItemGroup>
+  </Target>
+  <!-- End of Fix-->
 </Project>
