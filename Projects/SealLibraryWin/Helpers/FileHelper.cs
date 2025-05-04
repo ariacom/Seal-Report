@@ -204,6 +204,7 @@ namespace Seal.Helpers
                 {
                     var dest = destination + Path.GetFileName(folder);
                     if (log != null) log.LogMessage("Copying directory '{0}' to '{1}'", folder, dest);
+                    client.CreateDirectory(dest, true);
                     var results = client.UploadDirectory(folder, dest, FtpFolderSyncMode.Update, FtpRemoteExists.Overwrite);
 
                     if (log != null)

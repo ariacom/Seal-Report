@@ -178,7 +178,7 @@
     var dirs = new Dictionary&lt;string, string&gt;();
     bool reportsDone = false;
     var dest = repositoryDestination;
-    if (!dest.EndsWith("/") || dest.EndsWith("\\")) {
+    if (!dest.EndsWith("/") || !dest.EndsWith("\\")) {
         dest += "\\";
     }
 

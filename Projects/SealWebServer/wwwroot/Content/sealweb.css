@@ -242,7 +242,7 @@ table.dataTable {
 /* Add this to sealweb-assistant.css */
 .sr-alert {
     position: fixed !important;
-    top: 80px !important;
+    top: 5px !important;
     left: 50% !important;
     transform: translateX(-50%);
     width: auto !important;
