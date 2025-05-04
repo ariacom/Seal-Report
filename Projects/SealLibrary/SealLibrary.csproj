@@ -7,9 +7,9 @@
 		<Configurations>Debug;Release</Configurations>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Product>Seal Report</Product>
-		<Version>8.3.0.0</Version>
-		<FileVersion>8.3.0.0</FileVersion>
-		<AssemblyVersion>8.3.0.0</AssemblyVersion>
+		<Version>8.3.0.1</Version>
+		<FileVersion>8.3.0.1</FileVersion>
+		<AssemblyVersion>8.3.0.1</AssemblyVersion>
 		<Description>Provides the objects to create, load and execute reports using the Seal Report framework.
 A full repository file structure must be available on the machine running the program.</Description>
 		<Authors>Ariacom</Authors>

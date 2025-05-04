@@ -50,12 +50,12 @@ Fork from https://antaris.github.io/RazorEngine/</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.3.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.3.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.36" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
-		<PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.32" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
 
