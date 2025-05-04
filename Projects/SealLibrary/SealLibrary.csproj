@@ -7,9 +7,9 @@
 		<Configurations>Debug;Release</Configurations>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Product>Seal Report</Product>
-		<Version>8.3.0.1</Version>
-		<FileVersion>8.3.0.1</FileVersion>
-		<AssemblyVersion>8.3.0.1</AssemblyVersion>
+		<Version>8.3.0.2</Version>
+		<FileVersion>8.3.0.2</FileVersion>
+		<AssemblyVersion>8.3.0.2</AssemblyVersion>
 		<Description>Provides the objects to create, load and execute reports using the Seal Report framework.
 A full repository file structure must be available on the machine running the program.</Description>
 		<Authors>Ariacom</Authors>
@@ -153,7 +153,8 @@ A full repository file structure must be available on the machine running the pr
     <PackageReference Include="Azure.Storage.Common" Version="12.20.1" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.19.1" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.19.1" />
-		<PackageReference Include="EPPlus" Version="4.5.3.3" /> <!-- Keep Open Source version -->
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.0" />
+    <PackageReference Include="EPPlus" Version="4.5.3.3" /> <!-- Keep Open Source version -->
 		<PackageReference Include="FluentFTP" Version="50.1.0" />
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="7.3.0.2" />
 		<PackageReference Include="jose-jwt" Version="5.0.0" />
