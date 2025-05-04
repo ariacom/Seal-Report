@@ -190,32 +190,39 @@
     <PlugInConfigurations>
       <PlugInConfig id="Assembly Binding Redirection" enabled="True">
         <configuration useGAC="false">
-          <assemblyBinding />
-          <ignoreIfUnresolved>
-            <assemblyIdentity name="BusinessObjects.Licensing.KeycodeDecoder" />
-            <assemblyIdentity name="Microsoft.VisualStudio.TestTools.UITest.Playback" />
-            <assemblyIdentity name="MongoDB.Bson" />
-            <assemblyIdentity name="MySql.Data" />
-            <assemblyIdentity name="EPPlus" />
-            <assemblyIdentity name="QuestPDF" />
-            <assemblyIdentity name="PuppeteerSharp" />
-            <assemblyIdentity name="Svg.Skia" />
-            <assemblyIdentity name="SkiaSharp" />
-            <assemblyIdentity name="ScottPlot" />
-            <assemblyIdentity name="DocumentFormat.OpenXml" />
-            <assemblyIdentity name="FluentFTP" />
-            <assemblyIdentity name="System.ServiceModel.Syndication" />
-            <assemblyIdentity name="jose-jwt" />
-            <assemblyIdentity name="Newtonsoft.Json" />
-            <assemblyIdentity name="ICSharpCode.SharpZipLib" />
-            <assemblyIdentity name="Renci.SshNet" />
-            <assemblyIdentity name="Oracle.ManagedDataAccess" />
-            <assemblyIdentity name="MongoDB.Driver" />
-            <assemblyIdentity name="Twilio" />
-            <assemblyIdentity name="Npgsql" />
-            <assemblyIdentity name="AngleSharp" />
-          </ignoreIfUnresolved>
-        </configuration>
+  <assemblyBinding />
+  <ignoreIfUnresolved>
+    <assemblyIdentity name="BusinessObjects.Licensing.KeycodeDecoder" />
+    <assemblyIdentity name="Microsoft.VisualStudio.TestTools.UITest.Playback" />
+    <assemblyIdentity name="MongoDB.Bson" />
+    <assemblyIdentity name="MySql.Data" />
+    <assemblyIdentity name="EPPlus" />
+    <assemblyIdentity name="QuestPDF" />
+    <assemblyIdentity name="PuppeteerSharp" />
+    <assemblyIdentity name="Svg.Skia" />
+    <assemblyIdentity name="SkiaSharp" />
+    <assemblyIdentity name="ScottPlot" />
+    <assemblyIdentity name="DocumentFormat.OpenXml" />
+    <assemblyIdentity name="FluentFTP" />
+    <assemblyIdentity name="System.ServiceModel.Syndication" />
+    <assemblyIdentity name="jose-jwt" />
+    <assemblyIdentity name="Newtonsoft.Json" />
+    <assemblyIdentity name="ICSharpCode.SharpZipLib" />
+    <assemblyIdentity name="Renci.SshNet" />
+    <assemblyIdentity name="Oracle.ManagedDataAccess" />
+    <assemblyIdentity name="MongoDB.Driver" />
+    <assemblyIdentity name="Twilio" />
+    <assemblyIdentity name="Npgsql" />
+    <assemblyIdentity name="AngleSharp" />
+    <assemblyIdentity name="Azure" />
+    <assemblyIdentity name="Azure.Identity" />
+    <assemblyIdentity name="Azure.Storage.Blobs" />
+    <assemblyIdentity name="Azure.Core" />
+    <assemblyIdentity name="Azure.Storage.Common" />
+    <assemblyIdentity name="Azure.Storage.Files.Shares" />
+    <assemblyIdentity name="Azure.Storage.Queues" />
+  </ignoreIfUnresolved>
+</configuration>
       </PlugInConfig>
     </PlugInConfigurations>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
