@@ -8,11 +8,10 @@
       <Name>Local SQLLite</Name>
       <DatabaseType>SQLite</DatabaseType>
       <ConnectionType>SQLite</ConnectionType>
-      <SQLiteConnectionString>Data Source=%SEALREPOSITORY%\Databases\Audit.sqlite;Date Time Format =1;</SQLiteConnectionString>
+      <SQLiteConnectionString>Data Source=%SEALREPOSITORY%\Databases\Audit.sqlite;Date Time Format =1;;DateTimeKind=Utc;</SQLiteConnectionString>
     </MetaConnection>
   </Connections>
   <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>
-  <SourceReferences />
   <MetaData>
     <Tables>
       <MetaTable>
@@ -163,11 +162,12 @@
           <MetaColumn>
             <GUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</GUID>
             <Name>date(sr_audit.event_date, 'start of day')</Name>
-            <Type>Text</Type>
+            <Type>DateTime</Type>
             <Category>Audit</Category>
             <DisplayName>Event day</DisplayName>
             <DisplayOrder>22</DisplayOrder>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>d</Format>
           </MetaColumn>
           <MetaColumn>
             <GUID>54acc367-0703-48c9-ad29-f1914dbfa994</GUID>

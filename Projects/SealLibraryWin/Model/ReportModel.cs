@@ -3159,6 +3159,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         else adapter = new OleDbDataAdapter((OleDbCommand)_command);
                         ResultTable = new DataTable();
                         adapter.Fill(ResultTable);
+                        if (connection is SQLiteConnection && Elements.Exists(i => i.TypeEl == ColumnType.DateTime)) handleSQLLiteDateTime();
 
                         executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
                         executePrePostStatements(false);
@@ -3278,6 +3279,50 @@ model.ResultTable = query2.CopyToDataTable2();
             ExecutionDuration = Convert.ToInt32((DateTime.Now - ExecutionDate).TotalSeconds);
             Progression = 70; //70% after getting result set
         }
+
+        void handleSQLLiteDateTime()
+        {
+            DataTable newTable = new DataTable();
+            var dtElements = Elements.Where(i => i.TypeEl == ColumnType.DateTime).ToList();
+
+            // Copy the schema (excluding the datetime column you want to modify)
+            foreach (DataColumn col in ResultTable.Columns)
+            {
+                if (dtElements.Exists(i => i.SQLColumnName == col.ColumnName))
+                    newTable.Columns.Add(col.ColumnName, typeof(DateTime));
+                else
+                    newTable.Columns.Add(col.ColumnName, col.DataType);
+            }
+
+            // Copy and convert the data
+            foreach (DataRow row in ResultTable.Rows)
+            {
+                DataRow newRow = newTable.NewRow();
+
+                foreach (DataColumn col in ResultTable.Columns)
+                {
+                    foreach (var el in dtElements)
+                    {
+                        if (col.ColumnName == el.SQLColumnName)
+                        {
+                            // Parse string to DateTime safely
+                            if (DateTime.TryParse(row[col].ToString(), out DateTime parsedDate))
+                                newRow[col.ColumnName] = parsedDate;
+                            else
+                                newRow[col.ColumnName] = DBNull.Value;  // or handle error
+                        }
+                        else
+                        {
+                            newRow[col.ColumnName] = row[col];
+                        }
+                    }
+                }
+
+                newTable.Rows.Add(newRow);
+            }
+            ResultTable = newTable;
+        }
+
 
         void handleEnums()
         {
