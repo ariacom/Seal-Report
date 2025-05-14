@@ -407,4 +407,29 @@ module SWIUtil {
         });
     }
 
+    export function InitStandardInput(id: string, val: string, modif: any, handler: (val: string) => any, numeric ?: boolean) {
+        var $input = $(id);
+        $input.val(val);
+        $input.unbind("input keyup change").on("input keyup change", function (e) {
+            if (e.type == "change" && modif) modif.setModified(true);
+            if (numeric) this.value = this.value.replace(/[^0-9\.]/g, '');
+            handler($(this).val());
+        });
+
+        return $input;
+    }
+
+    export function InitBoolSelect(id: string, val: boolean, textTrue: string, textFalse: string, handler: (val: boolean) => any) {
+        var $select = $(id);
+        var valstr = val ? "1" : "0";
+        $select.selectpicker("destroy");
+        $select.empty();
+        $select.append(SWIUtil.GetOption("1", textTrue, valstr));
+        $select.append(SWIUtil.GetOption("0", textFalse, valstr));
+        $select.unbind("change").on("change", function (e) {
+            handler($(this).val() == "1");
+        });
+        $select.selectpicker('refresh');
+        return $select;
+    }
 }

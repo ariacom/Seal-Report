@@ -52,6 +52,7 @@
       <MenuScript />
       <SqlModel>true</SqlModel>
       <Weight>1</Weight>
+      <EditConfiguration>true</EditConfiguration>
       <Culture />
       <StartupReport />
     </SecurityGroup>

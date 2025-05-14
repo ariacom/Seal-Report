@@ -4,6 +4,7 @@
 //
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Seal.Model
 {
@@ -17,6 +18,7 @@ namespace Seal.Model
         public string culture;
         public string folder;
         public bool showfolders;
+        public bool editconfiguration;
         public bool editprofile;
         public string usertag;
         public StartupOptions onstartup;
@@ -28,6 +30,30 @@ namespace Seal.Model
         public ExecutionMode groupexecutionmode;
         public List<SWIMetaSource> sources;
         public string sessionId;
+    }
+
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
+    public class SWIConfiguration
+    {
+        public List<StringPair> folders;
+        public string productname;
+        public List<SecurityGroup> groups;
+        public List<SecurityLogin> logins;
+
+        public static List<StringPair> GetFolders(SecurityUser user)
+        {
+            var result = new List<StringPair>();
+            foreach (var folder in user.Folders.Where(i => !i.IsPersonal)) fillFolders(user, folder, result);
+            return result;
+
+        }
+        static void fillFolders(SecurityUser user, SWIFolder folder, List<StringPair> choices)
+        {
+            if ((FolderRight)folder.right == FolderRight.Edit) choices.Add(new StringPair() { Key = folder.path, Value = folder.fullname });
+            foreach (var sub in folder.folders) fillFolders(user, sub, choices);
+        }
     }
 
     /// <summary>

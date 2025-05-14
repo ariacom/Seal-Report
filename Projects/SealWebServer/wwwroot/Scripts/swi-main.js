@@ -193,6 +193,8 @@ var SWIMain = /** @class */ (function () {
         });
         //Profile
         SWIUtil.InitProfile(_main._profile);
+        //Configuration
+        _main.initConfiguration(_main._profile);
         //Disconnect
         $("#disconnect-nav-item").unbind("click").on("click", function () {
             SWIUtil.HideMessages();
@@ -324,6 +326,223 @@ var SWIMain = /** @class */ (function () {
             _main.toggleFoldersReport(false);
             $waitDialog.modal('hide');
         }
+    };
+    SWIMain.prototype.initConfiguration = function (profile) {
+        SWIUtil.ShowHideControl($("#config-nav-item"), profile.editconfiguration);
+        $("#config-nav-item").unbind("click").on("click", function () {
+            $outputPanel.hide();
+            _gateway.GetConfiguration(function (data) {
+                _main._config = data;
+                SWIUtil.InitStandardInput("#config-webproduct-name", _main._config.productname, null, function (val) { _main._config.productname = val; });
+                _main.initDropDownGroups();
+                _main.initDropDownLogins();
+                $("#config-save").unbind("click").on("click", function (e) {
+                    $("#config-dialog").modal('hide');
+                    if (profile.editconfiguration) {
+                    }
+                });
+                $("#config-dialog").modal();
+            });
+        });
+    };
+    SWIMain.prototype.initDropDownGroups = function () {
+        if (_main._configGroup != null)
+            _main._configGroup = _main._config.groups.find(function (i) { return i.Name === _main._configGroup.Name; });
+        if (!_main._configGroup && _main._config.groups.length > 0)
+            _main._configGroup = _main._config.groups[0];
+        var $ddname = $("#config-groups-dropdown");
+        $ddname.empty();
+        $.each(_main._config.groups, function (key, value) {
+            var fa = "fa fa-users-o";
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Name, value.Name, "select", fa)));
+        });
+        if ($ddname.children().length > 0)
+            $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
+        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New group"), "", "group", "glyphicon glyphicon-plus-sign")));
+        if (_main._configGroup && _main._config.groups.length > 1) {
+            if ($ddname.children().length > 0)
+                $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, null, "remove", "glyphicon glyphicon-minus-sign")));
+        }
+        $("#config-groups-dropdown > li > a").unbind("click").on("click", function () {
+            var type = $(this).prop("type");
+            var id = $(this).prop("id");
+            if (type == "select") {
+                _main._configGroup = _main._config.groups.find(function (v) { return v.Name === id; });
+            }
+            else if (type == "group") {
+                var newGroup = {
+                    Name: SWIUtil.UniqueName(SWIUtil.tr2("New group"), _main._config.groups),
+                    Folders: [],
+                    EditConfiguration: false,
+                    EditProfile: true
+                };
+                _main._config.groups.push(newGroup);
+                _main._configGroup = newGroup;
+            }
+            else {
+                var index = _main._config.groups.indexOf(_main._configGroup);
+                if (index != -1)
+                    _main._config.groups.splice(index, 1);
+                _main._configGroup = null;
+            }
+            _main.initDropDownGroups();
+            _main.initSecurityGroupDetail();
+            _main.initLoginDetail();
+        });
+        _main.initSecurityGroupDetail();
+    };
+    SWIMain.prototype.initSecurityGroupDetail = function () {
+        var detail = _main._configGroup;
+        if (!detail.Folders)
+            detail.Folders = [];
+        SWIUtil.InitStandardInput("#config-group-name", detail.Name, null, function (val) { detail.Name = val; });
+        SWIUtil.InitBoolSelect("#config-group-editconfiguration", detail.EditConfiguration, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.EditConfiguration = val; });
+        SWIUtil.InitBoolSelect("#config-group-editprofile", detail.EditProfile, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.EditProfile = val; });
+        _main.initDropDownGroupsFolders();
+    };
+    SWIMain.prototype.initDropDownGroupsFolders = function () {
+        if (_main._configGroupFolder != null)
+            _main._configGroupFolder = _main._configGroup.Folders.find(function (i) { return i.Path === _main._configGroupFolder.Path; });
+        if (!_main._configGroupFolder && _main._configGroup.Folders.length > 0)
+            _main._configGroupFolder = _main._configGroup.Folders[0];
+        var $ddname = $("#config-group-folders-dropdown");
+        $ddname.empty();
+        $.each(_main._configGroup.Folders, function (key, value) {
+            var fa = "fa fa-users-o";
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Path, value.Path, "select", fa)));
+        });
+        if ($ddname.children().length > 0)
+            $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
+        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New folder configuration"), "", "folder", "glyphicon glyphicon-plus-sign")));
+        if (_main._configGroupFolder && _main._configGroup.Folders.length > 0) {
+            if ($ddname.children().length > 0)
+                $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroupFolder.Path, null, "remove", "glyphicon glyphicon-minus-sign")));
+        }
+        $("#config-group-folders-dropdown > li > a").unbind("click").on("click", function () {
+            var type = $(this).prop("type");
+            var id = $(this).prop("id");
+            if (type == "select") {
+                _main._configGroupFolder = _main._configGroup.Folders.find(function (v) { return v.Path === id; });
+            }
+            else if (type == "folder") {
+                var newFolder = {
+                    Path: "\\",
+                    FolderRight: 4,
+                    ManageFolder: true,
+                    UseSubFolders: true,
+                };
+                _main._configGroup.Folders.push(newFolder);
+                _main._configGroupFolder = newFolder;
+            }
+            else {
+                var index = _main._configGroup.Folders.indexOf(_main._configGroupFolder);
+                if (index != -1)
+                    _main._configGroup.Folders.splice(index, 1);
+                _main._configGroupFolder = null;
+            }
+            _main.initDropDownGroupsFolders();
+            _main.initSecurityFolderDetail();
+        });
+        _main.initSecurityFolderDetail();
+    };
+    SWIMain.prototype.initSecurityFolderDetail = function () {
+        var detail = _main._configGroupFolder;
+        SWIUtil.ShowHideControl($(".config-group-folder"), detail);
+        if (!detail) {
+            $("#config-group-folder-name").text("<" + SWIUtil.tr2("No folder configuration") + ">");
+        }
+        else {
+            $("#config-group-folder-name").text(SWIUtil.tr2("Configuration for ") + " " + detail.Path);
+            var $select = $("#config-group-folder-select");
+            $select.unbind("change");
+            $select.selectpicker("destroy");
+            $select.empty();
+            $.each(_main._config.folders, function (key, value) {
+                $select.append(SWIUtil.GetOption(value.Key, value.Key, _main._configGroupFolder.Path, "fa fa-folder-o"));
+            });
+            $select.unbind("change").on("change", function (e) {
+                _main._configGroupFolder.Path = $(this).val();
+                _main.initDropDownGroupsFolders();
+            });
+            $select.selectpicker('refresh');
+            var $select = $("#config-group-folder-right");
+            $select.unbind("change");
+            $select.selectpicker("destroy");
+            $select.empty();
+            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No right"), detail.FolderRight));
+            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute reports / View files"), detail.FolderRight));
+            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute reports and outputs / View files"), detail.FolderRight));
+            $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Edit schedules / View files"), detail.FolderRight));
+            $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Edit reports / Manage files"), detail.FolderRight));
+            $select.unbind("change").on("change", function (e) {
+                _main._configGroupFolder.FolderRight = $(this).val();
+            });
+            $select.selectpicker('refresh');
+            SWIUtil.InitBoolSelect("#config-group-folder-manage", detail.ManageFolder, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.ManageFolder = val; });
+            SWIUtil.InitBoolSelect("#config-group-folder-showsub", detail.UseSubFolders, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.UseSubFolders = val; });
+            SWIUtil.InitBoolSelect("#config-group-folder-expand", detail.ExpandSubFolders, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.ExpandSubFolders = val; });
+            SWIUtil.InitBoolSelect("#config-group-folder-filesonly", detail.FilesOnly, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.FilesOnly = val; });
+        }
+    };
+    SWIMain.prototype.initDropDownLogins = function () {
+        if (_main._configLogin != null)
+            _main._configLogin = _main._config.logins.find(function (i) { return i.Id === _main._configLogin.Id; });
+        if (!_main._configLogin && _main._config.logins.length > 0)
+            _main._configLogin = _main._config.logins[0];
+        var $ddname = $("#config-logins-dropdown");
+        $ddname.empty();
+        $.each(_main._config.logins, function (key, value) {
+            var fa = "fa fa-users-o";
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Id, value.Id, "select", fa)));
+        });
+        if ($ddname.children().length > 0)
+            $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
+        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New login"), "", "login", "glyphicon glyphicon-plus-sign")));
+        if (_main._configLogin && _main._config.logins.length > 1) {
+            if ($ddname.children().length > 0)
+                $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, null, "remove", "glyphicon glyphicon-minus-sign")));
+        }
+        $("#config-logins-dropdown > li > a").unbind("click").on("click", function () {
+            var type = $(this).prop("type");
+            var id = $(this).prop("id");
+            if (type == "select") {
+                _main._configLogin = _main._config.logins.find(function (v) { return v.Id === id; });
+            }
+            else if (type == "login") {
+                var newFolder = {
+                    Id: "new login",
+                };
+                _main._config.logins.push(newFolder);
+                _main._configLogin = newFolder;
+            }
+            else {
+                var index = _main._config.logins.indexOf(_main._configLogin);
+                if (index != -1)
+                    _main._config.logins.splice(index, 1);
+                _main._configLogin = null;
+            }
+            _main.initDropDownLogins();
+            _main.initLoginDetail();
+        });
+        _main.initLoginDetail();
+    };
+    SWIMain.prototype.initLoginDetail = function () {
+        var detail = _main._configLogin;
+        SWIUtil.InitStandardInput("#config-login-id", _main._configLogin.Id, null, function (val) { detail.Id = val; });
+        SWIUtil.InitStandardInput("#config-login-email", _main._configLogin.Email, null, function (val) { detail.Email = val; });
+        var select = $("#config-login-groups");
+        select.selectpicker("destroy");
+        select.empty();
+        $.each(_main._config.groups, function (index, value) {
+            select.append(SWIUtil.GetOption(value.Name, value.Name, _main._configLogin.GroupNames.some(function (i) { return i === value.Name; }) ? value.Name : ""));
+        });
+        select.unbind("change").on("change", function (e) {
+            _main._configLogin.GroupNames = $(this).val();
+        });
+        select.selectpicker('refresh');
     };
     SWIMain.prototype.search = function () {
         $waitDialog.modal();

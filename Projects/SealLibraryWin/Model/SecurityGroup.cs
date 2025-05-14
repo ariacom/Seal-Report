@@ -45,6 +45,7 @@ namespace Seal.Model
                 GetProperty("StartupReportName").SetIsBrowsable(true);
                 GetProperty("ExecutionMode").SetIsBrowsable(true);
                 GetProperty("Weight").SetIsBrowsable(true);
+                GetProperty("EditConfiguration").SetIsBrowsable(true);
                 GetProperty("EditProfile").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
@@ -55,11 +56,11 @@ namespace Seal.Model
                 TypeDescriptor.Refresh(this);
             }
         }
-#endregion
+        #endregion
 
 #endif
 
-                string _name = "Group";
+        string _name = "Group";
         /// <summary>
         /// The security group name
         /// </summary>
@@ -74,8 +75,9 @@ namespace Seal.Model
                 if (_dctd != null && _name != value)
                 {
                     //Update group names in Logins
-                    foreach(var login in Repository.Instance.Security.Logins) {
-                        for (var i =0; i <login.GroupNames.Count; i++)
+                    foreach (var login in Repository.Instance.Security.Logins)
+                    {
+                        for (var i = 0; i < login.GroupNames.Count; i++)
                         {
                             if (login.GroupNames[i] == _name) login.GroupNames[i] = value;
                         }
@@ -208,11 +210,20 @@ namespace Seal.Model
         public int Weight { get; set; } = 1;
 
         /// <summary>
+        /// Web Report Server: For Administrators of the Web Server, the user can edit the configuration and security of the Web Server.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(false)]
+        [Category("Default Options"), DisplayName("\t\tEdit configuration (Admin)"), Description("Web Report Server: For Administrators of the Web Server, the user can edit the configuration and security of the Web Server."), Id(2, 5)]
+#endif
+        public bool EditConfiguration { get; set; } = false;
+
+        /// <summary>
         /// Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.).
         /// </summary>
 #if WINDOWS
         [DefaultValue(true)]
-        [Category("Default Options"), DisplayName("\t\tEdit profile"), Description("Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.)."), Id(1, 5)]
+        [Category("Default Options"), DisplayName("\t\tEdit profile"), Description("Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.)."), Id(3, 5)]
 #endif
         public bool EditProfile { get; set; } = true;
 
@@ -220,7 +231,7 @@ namespace Seal.Model
         /// The culture used for users belonging to the group. If empty, the default culture is used.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tCulture"), Description("The culture used for users belonging to the group. If empty, the default culture is used."), Id(2, 5)]
+        [Category("Default Options"), DisplayName("\tCulture"), Description("The culture used for users belonging to the group. If empty, the default culture is used."), Id(4, 5)]
         [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
 #endif
         public string Culture { get; set; }
@@ -229,7 +240,7 @@ namespace Seal.Model
         /// The logo file name used for to generate the reports. If empty, the default logo is used.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(4, 5)]
+        [Category("Default Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(5, 5)]
 #endif
         public string LogoName { get; set; }
         /// <summary>
@@ -238,7 +249,7 @@ namespace Seal.Model
 #if WINDOWS
         [DefaultValue(StartupOptions.None)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("\tOn startup"), Description("Web Report Server: The action to take after the user logs in."), Id(3, 5)]
+        [Category("Default Options"), DisplayName("\tOn startup"), Description("Web Report Server: The action to take after the user logs in."), Id(6, 5)]
 #endif
         public StartupOptions OnStartup { get; set; } = StartupOptions.None;
 
@@ -246,7 +257,7 @@ namespace Seal.Model
         /// Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex').
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex')."), Id(4, 5)]
+        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex')."), Id(7, 5)]
 #endif
         public string StartupReport { get; set; }
 
@@ -254,7 +265,7 @@ namespace Seal.Model
         /// Web Report Server: Optional report name when the 'Report executed on startup' is set.).
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tReport name executed on startup"), Description("Web Report Server: Optional report name when the 'Report executed on startup' is set."), Id(5, 5)]
+        [Category("Default Options"), DisplayName("\tReport name executed on startup"), Description("Web Report Server: Optional report name when the 'Report executed on startup' is set."), Id(8, 5)]
 #endif
         public string StartupReportName { get; set; }
 
@@ -264,7 +275,7 @@ namespace Seal.Model
 #if WINDOWS
         [DefaultValue(ExecutionMode.NewWindow)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("Execution mode"), Description("Web Report Server: Define if reports are executed in a new window or in the same window by default."), Id(8, 5)]
+        [Category("Default Options"), DisplayName("Execution mode"), Description("Web Report Server: Define if reports are executed in a new window or in the same window by default."), Id(9, 5)]
 #endif
         public ExecutionMode ExecutionMode { get; set; } = ExecutionMode.NewWindow;
     }

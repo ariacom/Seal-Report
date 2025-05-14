@@ -108,6 +108,7 @@ namespace SealWebServer.Controllers
                 culture = culture,
                 folder = WebUser.Profile.LastFolder,
                 showfolders = WebUser.ShowFoldersView,
+                editconfiguration = defaultGroup.EditConfiguration,
                 editprofile = defaultGroup.EditProfile,
                 usertag = WebUser.Tag,
                 onstartup = WebUser.Profile.OnStartup,
@@ -119,6 +120,10 @@ namespace SealWebServer.Controllers
                 groupexecutionmode = defaultGroup.ExecutionMode,
                 sessionId = HttpContext.Session.GetString(SessionIdKey)
             };
+
+#if DEBUG
+            if (Repository.Security.ProviderName == "No Security") profile.editconfiguration = true;
+#endif
 
             if (!string.IsNullOrEmpty(profile.startupreport))
             {
@@ -890,6 +895,56 @@ namespace SealWebServer.Controllers
                 if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
 
                 return Json(getUserProfile());
+            }
+            catch
+            {
+                //not authenticated
+                return Json(new { authenticated = false });
+            }
+        }
+
+
+        /// <summary>
+        /// Save the configuration of the Web Server (including security).
+        /// </summary>
+        public ActionResult SWISetConfiguration(string sessionId)
+        {
+            writeDebug("SWISetConfiguration");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                if (!WebUser.DefaultGroup.EditConfiguration) throw new Exception("No right to save the configuration");
+
+                
+                return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the configuration of the web server (including security).
+        /// </summary>
+        public ActionResult SWIGetConfiguration(string sessionId)
+        {
+            writeDebug("SWIGetConfiguration");
+            try
+            {
+                SetSessionId(sessionId);
+                if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
+
+                var result = new SWIConfiguration()
+                {
+                    productname = Repository.Configuration.WebProductName,
+                    groups = Repository.Security.Groups,
+                    logins = Repository.Security.Logins,
+                };
+                result.folders = SWIConfiguration.GetFolders(WebUser);
+
+                return Json(result);
             }
             catch
             {

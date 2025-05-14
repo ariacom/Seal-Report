@@ -59,7 +59,7 @@
 </div>
 
 
-<!-- Profile Modal -->
+<!-- Profile Dialog -->
 <div id="profile-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="top:60px">
@@ -113,3 +113,143 @@
         </div>
     </div>
 </div>
+
+
+<!-- Configuration Dialog -->
+<div id="config-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content" style="top:60px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@repository.TranslateWeb("Configuration and security")</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-row">
+                    <span class="input-label">@repository.TranslateWeb("Web product name")</span>
+                    <input id="config-webproduct-name" type="text" class="form-control input-field" placeholder="@repository.TranslateWeb("Web product name")" />
+                </div>
+                <ul id="config-tab-control" class="nav nav-pills">
+                    <li class="active"><a data-toggle="pill" href="#config-group-detail-content">@repository.TranslateWeb("Groups")</a></li>
+                    <li class="assistants-panel"><a data-toggle="pill" href="#config-user-detail-content">@repository.TranslateWeb("Logins")</a></li>
+                </ul>
+                <div id="detail-section-1">
+                    <div class="tab-content">
+                        <div id="config-group-detail-content" class="tab-pane fade in active">
+                            <div class="form-group config-groups-panel">
+                                <div class="input-row">
+                                    <div class="input-group input-field">
+                                        <input id="config-group-name" type="text" class="form-control" />
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul id="config-groups-dropdown" class="dropdown-menu" style="left:auto;right:0"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label" for="config-group-editconfiguration">@repository.TranslateWeb("Edit configuration (Danger Zone: Is Administrator)")</label>
+                                <div>
+                                    <select class="form-control" id="config-group-editconfiguration"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="config-group-editprofile">@repository.TranslateWeb("Edit profile")</label>
+                                <div>
+                                    <select class="form-control" id="config-group-editprofile"></select>
+                                </div>
+                            </div>
+                            <div class="form-group group-folder-panel">
+                                <div class="input-row">
+                                    <span class="input-label">@repository.TranslateWeb("Folder")</span>
+                                    <div class="input-group input-field">
+                                        <span class="form-control" id="config-group-folder-name"></span>
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul id="config-group-folders-dropdown" class="dropdown-menu" style="left:auto;right:0"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group config-group-folder">
+                                <div>
+                                    <select class="form-control" id="config-group-folder-select"></select>
+                                </div>
+                            </div>
+                            <div class="form-group config-group-folder">
+                                <label class="control-label" for="config-group-folder-right">@repository.TranslateWeb("Rights")</label>
+                                <div>
+                                    <select class="form-control" id="config-group-folder-right"></select>
+                                </div>
+                            </div>
+                            <div class="form-group config-group-folder">
+                                <label class="control-label" for="config-group-folder-manage">@repository.TranslateWeb("Manage sub-folders")</label>
+                                <div>
+                                    <select class="form-control" id="config-group-folder-manage"></select>
+                                </div>
+                            </div>
+                            <div class="form-group config-group-folder">
+                                <label class="control-label" for="config-group-folder-showsub">@repository.TranslateWeb("Show sub-folders")</label>
+                                <div>
+                                    <select class="form-control" id="config-group-folder-showsub"></select>
+                                </div>
+                            </div>
+                            <div class="form-group config-group-folder">
+                                <label class="control-label" for="config-group-folder-expand">@repository.TranslateWeb("Expand in Treeview")</label>
+                                <div>
+                                    <select class="form-control" id="config-group-folder-expand"></select>
+                                </div>
+                            </div>
+                            <div class="form-group config-group-folder">
+                                <label class="control-label" for="config-group-folder-filesonly">@repository.TranslateWeb("Files only")</label>
+                                <div>
+                                    <select class="form-control" id="config-group-folder-filesonly"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="config-user-detail-content" class="tab-pane fade">
+                            <div class="form-group config-logins-panel">
+                                <div class="input-row">
+                                    <div class="input-group input-field">
+                                        <input id="config-login-id" type="text" class="form-control" />
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul id="config-logins-dropdown" class="dropdown-menu" style="left:auto;right:0"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="config-login input-row">
+                                <span class="input-label">@repository.TranslateWeb("Name")</span>
+                                <input id="config-login-name" type="text" class="form-control input-field" placeholder="@repository.TranslateWeb("Name")" />
+                            </div>
+                            <div class="config-login input-row">
+                                <span class="input-label">@repository.TranslateWeb("Email")</span>
+                                <input id="config-login-email" type="text" class="form-control input-field" placeholder="@repository.TranslateWeb("Email")" />
+                            </div>
+                            <div class="config-login input-row">
+                                <span class="input-label">@repository.TranslateWeb("Phone")</span>
+                                <input id="config-login-phone" type="text" class="form-control input-field" placeholder="@repository.TranslateWeb("Phone")" />
+                            </div>
+                            <div class="config-login input-row">
+                                <span class="input-label">@repository.TranslateWeb("Groups")</span>
+                                <select id="config-login-groups" multiple="multiple" data-live-search="true" data-actions-box="true" data-size="10" data-width="100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="config-cancel" type="button" class="btn btn-default edit-config" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                <button id="config-save" type="button" class="btn btn-primary edit-config">@repository.TranslateWeb("Save")</button>
+            </div>
+        </div>
+    </div>
+</div>
+

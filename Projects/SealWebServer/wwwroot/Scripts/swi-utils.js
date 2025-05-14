@@ -414,5 +414,32 @@ var SWIUtil;
         });
     }
     SWIUtil.InitProfile = InitProfile;
+    function InitStandardInput(id, val, modif, handler, numeric) {
+        var $input = $(id);
+        $input.val(val);
+        $input.unbind("input keyup change").on("input keyup change", function (e) {
+            if (e.type == "change" && modif)
+                modif.setModified(true);
+            if (numeric)
+                this.value = this.value.replace(/[^0-9\.]/g, '');
+            handler($(this).val());
+        });
+        return $input;
+    }
+    SWIUtil.InitStandardInput = InitStandardInput;
+    function InitBoolSelect(id, val, textTrue, textFalse, handler) {
+        var $select = $(id);
+        var valstr = val ? "1" : "0";
+        $select.selectpicker("destroy");
+        $select.empty();
+        $select.append(SWIUtil.GetOption("1", textTrue, valstr));
+        $select.append(SWIUtil.GetOption("0", textFalse, valstr));
+        $select.unbind("change").on("change", function (e) {
+            handler($(this).val() == "1");
+        });
+        $select.selectpicker('refresh');
+        return $select;
+    }
+    SWIUtil.InitBoolSelect = InitBoolSelect;
 })(SWIUtil || (SWIUtil = {}));
 //# sourceMappingURL=swi-utils.js.map

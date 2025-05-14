@@ -1196,6 +1196,11 @@
             Return list of Joins from the catalog
             </summary>
         </member>
+        <member name="M:Seal.Model.MetaSource.SyncJoinsAndTables">
+            <summary>
+            Synchronize joins and tables
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaSource.GetTableName(System.String)">
             <summary>
             Returns a full table name from a raw name
@@ -8440,6 +8445,11 @@
             Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user.
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityGroup.EditConfiguration">
+            <summary>
+            Web Report Server: For Administrators of the Web Server, the user can edit the configuration and security of the Web Server.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityGroup.EditProfile">
             <summary>
             Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.).
@@ -9016,6 +9026,11 @@
             </summary>
         </member>
         <member name="T:Seal.Model.SWIUserProfile">
+            <summary>
+            Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+            </summary>
+        </member>
+        <member name="T:Seal.Model.SWIConfiguration">
             <summary>
             Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
             </summary>

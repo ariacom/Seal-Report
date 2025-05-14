@@ -21,6 +21,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data.OleDb;
 using System.Data.SQLite;
 using AngleSharp.Text;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 
 #if WINDOWS
@@ -204,7 +205,7 @@ namespace Seal.Model
         /// <summary>
         /// Meta information that can be used for any purpose
         /// </summary>
-        public List<StringPair> MetaInfo { get; set;}  = new List<StringPair>();
+        public List<StringPair> MetaInfo { get; set; } = new List<StringPair>();
         public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
 
         /// <summary>
@@ -546,7 +547,8 @@ namespace Seal.Model
 
         void LoadDatasourceReferences()
         {
-            foreach(var reference in Repository.Sources.Where(i => DataSourceReferences.Contains(i.GUID))) {
+            foreach (var reference in Repository.Sources.Where(i => DataSourceReferences.Contains(i.GUID)))
+            {
                 //Add connections
                 foreach (var connection in reference.Connections)
                 {
@@ -835,13 +837,33 @@ namespace Seal.Model
             else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection)
             {
                 //SQLServer
-                var sql = @"SELECT fk.name AS ForeignKeyName, tp.name AS PK_TABLE_NAME, cp.name AS PK_COLUMN_NAME, tr.name AS FK_TABLE_NAME, cr.name AS FK_COLUMN_NAME
+                var sql = @"
+SELECT 
+    DB_NAME() AS CATALOG_NAME,
+    s_pk.name AS PK_TABLE_SCHEMA,
+    tp.name AS PK_TABLE_NAME,
+    cp.name AS PK_COLUMN_NAME,
+    s_fk.name AS FK_TABLE_SCHEMA,
+    tr.name AS FK_TABLE_NAME,
+    cr.name AS FK_COLUMN_NAME
 FROM sys.foreign_keys fk
-JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id
-JOIN sys.tables tp ON fkc.referenced_object_id = tp.object_id
-JOIN sys.columns cp ON fkc.referenced_object_id = cp.object_id AND fkc.referenced_column_id = cp.column_id
-JOIN sys.tables tr ON fkc.parent_object_id = tr.object_id
-JOIN sys.columns cr ON fkc.parent_object_id = cr.object_id AND fkc.parent_column_id = cr.column_id";
+JOIN sys.foreign_key_columns fkc 
+    ON fk.object_id = fkc.constraint_object_id
+JOIN sys.tables tp 
+    ON fkc.referenced_object_id = tp.object_id
+JOIN sys.schemas s_pk 
+    ON tp.schema_id = s_pk.schema_id
+JOIN sys.columns cp 
+    ON fkc.referenced_object_id = cp.object_id 
+    AND fkc.referenced_column_id = cp.column_id
+JOIN sys.tables tr 
+    ON fkc.parent_object_id = tr.object_id
+JOIN sys.schemas s_fk 
+    ON tr.schema_id = s_fk.schema_id
+JOIN sys.columns cr 
+    ON fkc.parent_object_id = cr.object_id 
+    AND fkc.parent_column_id = cr.column_id
+";
 
                 DbDataAdapter adapter = null;
                 schemaTables = new DataTable();
@@ -852,7 +874,8 @@ JOIN sys.columns cr ON fkc.parent_object_id = cr.object_id AND fkc.parent_column
             else if (connection is MySqlConnection)
             {
                 //MySQL
-                var sql = @"SELECT TABLE_SCHEMA as PK_TABLE_SCHEMA, TABLE_SCHEMA as FK_TABLE_SCHEMA, TABLE_NAME AS FK_TABLE_NAME, COLUMN_NAME AS FK_COLUMN_NAME, CONSTRAINT_NAME AS ForeignKey, REFERENCED_TABLE_NAME AS PK_TABLE_NAME, REFERENCED_COLUMN_NAME AS PK_COLUMN_NAME
+                var sql = @"SELECT TABLE_SCHEMA as PK_TABLE_SCHEMA, TABLE_SCHEMA as FK_TABLE_SCHEMA, TABLE_NAME AS FK_TABLE_NAME, 
+COLUMN_NAME AS FK_COLUMN_NAME, CONSTRAINT_NAME AS ForeignKey, REFERENCED_TABLE_NAME AS PK_TABLE_NAME, REFERENCED_COLUMN_NAME AS PK_COLUMN_NAME
 FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE REFERENCED_TABLE_NAME IS NOT NULL";
                 schemaTables = new DataTable();
@@ -862,7 +885,8 @@ WHERE REFERENCED_TABLE_NAME IS NOT NULL";
             else if (connection is OracleConnection)
             {
                 //Oracle
-                var sql = @"SELECT ac1.OWNER as PK_TABLE_SCHEMA, ac1.OWNER as FK_TABLE_SCHEMA, ac1.TABLE_NAME AS FK_TABLE_NAME, acc1.COLUMN_NAME AS FK_COLUMN_NAME, ac2.TABLE_NAME AS PK_TABLE_NAME, acc2.COLUMN_NAME AS PK_COLUMN_NAME
+                var sql = @"SELECT ac1.OWNER as PK_TABLE_SCHEMA, ac1.OWNER as FK_TABLE_SCHEMA, ac1.TABLE_NAME AS FK_TABLE_NAME, 
+acc1.COLUMN_NAME AS FK_COLUMN_NAME, ac2.TABLE_NAME AS PK_TABLE_NAME, acc2.COLUMN_NAME AS PK_COLUMN_NAME
 FROM ALL_CONSTRAINTS ac1
 JOIN ALL_CONS_COLUMNS acc1 ON ac1.CONSTRAINT_NAME = acc1.CONSTRAINT_NAME AND ac1.OWNER = acc1.OWNER
 JOIN ALL_CONSTRAINTS ac2 ON ac1.R_CONSTRAINT_NAME = ac2.CONSTRAINT_NAME AND ac1.OWNER = ac2.OWNER
@@ -876,11 +900,25 @@ WHERE ac1.CONSTRAINT_TYPE = 'R'
             else if (connection is NpgsqlConnection)
             {
                 //Postgres
-                var sql = @"SELECT tc.table_name AS PK_TABLE_NAME, kcu.column_name AS PK_COLUMN_NAME, ccu.table_name AS FK_TABLE_NAME, ccu.column_name AS FK_COLUMN_NAME
-FROM information_schema.table_constraints AS tc
-JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
-JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
-WHERE tc.constraint_type = 'FOREIGN KEY';
+                var sql = @"SELECT
+    current_database() AS CATALOG_NAME,
+    n_pk.nspname AS PK_TABLE_SCHEMA,
+    rel.relname AS PK_TABLE_NAME,
+    a.attname AS PK_COLUMN_NAME,
+    n_fk.nspname AS FK_TABLE_SCHEMA,
+    frel.relname AS FK_TABLE_NAME,
+    af.attname AS FK_COLUMN_NAME,
+    con.conname AS CONSTRAINT_NAME
+FROM
+    pg_constraint con
+    JOIN pg_class rel ON rel.oid = con.conrelid
+    JOIN pg_namespace n_pk ON n_pk.oid = rel.relnamespace
+    JOIN pg_attribute a ON a.attrelid = rel.oid AND a.attnum = con.conkey[1]
+    JOIN pg_class frel ON frel.oid = con.confrelid
+    JOIN pg_namespace n_fk ON n_fk.oid = frel.relnamespace
+    JOIN pg_attribute af ON af.attrelid = frel.oid AND af.attnum = con.confkey[1]
+WHERE
+    con.contype = 'f'
 ";
                 schemaTables = new DataTable();
                 DbDataAdapter adapter = new NpgsqlDataAdapter(sql, (NpgsqlConnection)connection);
@@ -913,25 +951,31 @@ WHERE m.type = 'table';
 
             foreach (DataRow row in schemaTables.Rows)
             {
-                string table1Name = GetTableName(row["PK_TABLE_NAME"].ToString());
-                string table2Name = GetTableName(row["FK_TABLE_NAME"].ToString());
-                MetaTable table1 = MetaData.Tables.FirstOrDefault(i => i.Name == GetTableName(table1Name));
-                MetaTable table2 = MetaData.Tables.FirstOrDefault(i => i.Name == GetTableName(table2Name));
+                string table1Name = GetTableName(row["PK_TABLE_NAME"].ToString()).ToLower();
+                string table2Name = GetTableName(row["FK_TABLE_NAME"].ToString()).ToLower();
+                MetaTable table1 = MetaData.Tables.FirstOrDefault(i => i.Name.ToLower() == table1Name);
+                MetaTable table2 = MetaData.Tables.FirstOrDefault(i => i.Name.ToLower() == table2Name);
+
+                //Try with schema
+                var catalog = "";
+                if (schemaTables.Columns.Contains("CATALOG_NAME")) catalog = row["CATALOG_NAME"].ToString().ToLower();
 
                 if (table1 == null)
                 {
                     string pkschema = "";
-                    if (schemaTables.Columns.Contains("PK_TABLE_SCHEMA")) pkschema = row["PK_TABLE_SCHEMA"].ToString();
-                    else if (schemaTables.Columns.Contains("PK_TABLE_SCHEM")) pkschema = row["PK_TABLE_SCHEM"].ToString();
-                    if (!string.IsNullOrEmpty(pkschema)) table1 = MetaData.Tables.FirstOrDefault(i => i.Name == pkschema + "." + table1Name);
+                    if (schemaTables.Columns.Contains("PK_TABLE_SCHEMA")) pkschema = row["PK_TABLE_SCHEMA"].ToString().ToLower();
+                    else if (schemaTables.Columns.Contains("PK_TABLE_SCHEM")) pkschema = row["PK_TABLE_SCHEM"].ToString().ToLower();
+                    if (!string.IsNullOrEmpty(pkschema)) table1 = MetaData.Tables.FirstOrDefault(i => i.Name.ToLower() == pkschema + "." + table1Name);
+                    if (table1 == null && !string.IsNullOrEmpty(catalog)) table1 = MetaData.Tables.FirstOrDefault(i => i.Name.ToLower() == catalog + "." + pkschema + "." + table1Name);
                 }
 
                 if (table2 == null)
                 {
                     string fkschema = "";
-                    if (schemaTables.Columns.Contains("FK_TABLE_SCHEMA")) fkschema = row["FK_TABLE_SCHEMA"].ToString();
-                    else if (schemaTables.Columns.Contains("FK_TABLE_SCHEM")) fkschema = row["FK_TABLE_SCHEM"].ToString();
-                    if (!string.IsNullOrEmpty(fkschema)) table2 = MetaData.Tables.FirstOrDefault(i => i.Name == fkschema + "." + table2Name);
+                    if (schemaTables.Columns.Contains("FK_TABLE_SCHEMA")) fkschema = row["FK_TABLE_SCHEMA"].ToString().ToLower();
+                    else if (schemaTables.Columns.Contains("FK_TABLE_SCHEM")) fkschema = row["FK_TABLE_SCHEM"].ToString().ToLower();
+                    if (!string.IsNullOrEmpty(fkschema)) table2 = MetaData.Tables.FirstOrDefault(i => i.Name.ToLower() == fkschema + "." + table2Name);
+                    if (table2 == null && !string.IsNullOrEmpty(catalog)) table2 = MetaData.Tables.FirstOrDefault(i => i.Name.ToLower() == catalog + "." + fkschema + "." + table2Name);
                 }
 
                 if (table1 != null && table2 != null && table1.Name != table2.Name && !MetaData.Joins.Exists(i => i.LeftTableGUID == table1.GUID && i.RightTableGUID == table2.GUID))
@@ -956,6 +1000,26 @@ WHERE m.type = 'table';
             return joins;
         }
 
+        /// <summary>
+        /// Synchronize joins and tables
+        /// </summary>
+        public void SyncJoinsAndTables()
+        {
+
+            //Joins
+            var joins = GetJoinsFromCatalog(Connection.GetOpenConnection());
+            foreach (var join in joins.Where(i => MetaData.Tables.Exists(j => j.GUID == i.LeftTableGUID) && MetaData.Tables.Exists(j => j.GUID == i.RightTableGUID)))
+            {
+                if (!MetaData.Joins.Exists(i =>
+                (i.LeftTableGUID == join.LeftTableGUID && i.RightTableGUID == join.RightTableGUID) ||
+                (i.LeftTableGUID == join.RightTableGUID && i.RightTableGUID == join.LeftTableGUID)))
+                {
+                    MetaData.Joins.Add(join);
+                }
+            }
+
+            MetaData.Joins.RemoveAll(i => !MetaData.Tables.Exists(j => j.GUID == i.LeftTableGUID) || !MetaData.Tables.Exists(j => j.GUID == i.RightTableGUID));
+        }
 
         static string[] MSSQLKeywords = new string[] { "ADD", "EXTERNAL", "PROCEDURE", "ALL", "FETCH", "PUBLIC", "ALTER", "FILE", "RAISERROR", "AND", "FILLFACTOR", "READ", "ANY", "FOR", "READTEXT", "AS", "FOREIGN", "RECONFIGURE", "ASC", "FREETEXT", "REFERENCES", "AUTHORIZATION", "FREETEXTTABLE", "REPLICATION", "BACKUP", "FROM", "RESTORE", "BEGIN", "FULL", "RESTRICT", "BETWEEN", "FUNCTION", "RETURN", "BREAK", "GOTO", "REVERT", "BROWSE", "GRANT", "REVOKE", "BULK", "GROUP", "RIGHT", "BY", "HAVING", "ROLLBACK", "CASCADE", "HOLDLOCK", "ROWCOUNT", "CASE", "IDENTITY", "ROWGUIDCOL", "CHECK", "IDENTITY_INSERT", "RULE", "CHECKPOINT", "IDENTITYCOL", "SAVE", "CLOSE", "IF", "SCHEMA", "CLUSTERED", "IN", "SECURITYAUDIT", "COALESCE", "INDEX", "SELECT", "COLLATE", "INNER", "SEMANTICKEYPHRASETABLE", "COLUMN", "INSERT", "SEMANTICSIMILARITYDETAILSTABLE", "COMMIT", "INTERSECT", "SEMANTICSIMILARITYTABLE", "COMPUTE", "INTO", "SESSION_USER", "CONSTRAINT", "IS", "SET", "CONTAINS", "JOIN", "SETUSER", "CONTAINSTABLE", "KEY", "SHUTDOWN", "CONTINUE", "KILL", "SOME", "CONVERT", "LEFT", "STATISTICS", "CREATE", "LIKE", "SYSTEM_USER", "CROSS", "LINENO", "TABLE", "CURRENT", "LOAD", "TABLESAMPLE", "CURRENT_DATE", "MERGE", "TEXTSIZE", "CURRENT_TIME", "NATIONAL", "THEN", "CURRENT_TIMESTAMP", "NOCHECK", "TO", "CURRENT_USER", "NONCLUSTERED", "TOP", "CURSOR", "NOT", "TRAN", "DATABASE", "NULL", "TRANSACTION", "DBCC", "NULLIF", "TRIGGER", "DEALLOCATE", "OF", "TRUNCATE", "DECLARE", "OFF", "TRY_CONVERT", "DEFAULT", "OFFSETS", "TSEQUAL", "DELETE", "ON", "UNION", "DENY", "OPEN", "UNIQUE", "DESC", "OPENDATASOURCE", "UNPIVOT", "DISK", "OPENQUERY", "UPDATE", "DISTINCT", "OPENROWSET", "UPDATETEXT", "DISTRIBUTED", "OPENXML", "USE", "DOUBLE", "OPTION", "USER", "DROP", "OR", "VALUES", "DUMP", "ORDER", "VARYING", "ELSE", "OUTER", "VIEW", "END", "OVER", "WAITFOR", "ERRLVL", "PERCENT", "WHEN", "ESCAPE", "PIVOT", "WHERE", "EXCEPT", "PLAN", "WHILE", "EXEC", "PRECISION", "WITH", "EXECUTE", "PRIMARY", "WITHIN GROUP", "EXISTS", "PRINT", "WRITETEXT", "EXIT", "PROC" };
 
@@ -984,8 +1048,10 @@ WHERE m.type = 'table';
         public string GetColumnName(string rawName)
         {
             var keywords = getKeywords(Connection.DatabaseType);
-            if ((!rawName.StartsWith(Connection.StartDelimiter) && !rawName.EndsWith(Connection.EndDelimiter) && rawName.IndexOfAny(" '\"-$-".ToCharArray()) != -1)
-                || keywords.Contains(rawName.ToUpper()))
+            if ((!rawName.StartsWith(Connection.StartDelimiter) && !rawName.EndsWith(Connection.EndDelimiter) && rawName.IndexOfAny(" '\"-$-.".ToCharArray()) != -1)
+                || keywords.Contains(rawName.ToUpper())
+                || (!string.IsNullOrEmpty(rawName) && char.IsDigit(rawName[0]))
+                )
                 return string.Format("{0}{1}{2}", Connection.StartDelimiter, rawName, Connection.EndDelimiter);
             return rawName;
         }
