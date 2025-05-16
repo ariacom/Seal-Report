@@ -8510,6 +8510,11 @@
             Check the hash code of the passwords
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityLogin.Name">
+            <summary>
+            Full name of the login
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityLogin.Email">
             <summary>
             The login email, may be used for a Two-Factor Authentication

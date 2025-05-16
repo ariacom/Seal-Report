@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace SealWebServer.Controllers
 {
@@ -916,7 +917,17 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 if (!WebUser.DefaultGroup.EditConfiguration) throw new Exception("No right to save the configuration");
 
-                
+                var swiConfig = JsonConvert.DeserializeObject(Request.Form["configuration"], typeof(SWIConfiguration)) as SWIConfiguration;
+                if (swiConfig == null) throw new Exception("Error: no configuration to save");
+
+                Repository.Configuration.WebProductName = swiConfig.productname;
+                Repository.Configuration.SaveToFile();
+
+                Repository.Security.Groups = swiConfig.groups;
+                Repository.Security.Logins = swiConfig.logins;
+
+                Repository.Security.SaveToFile();
+
                 return Json(new { });
             }
             catch (Exception ex)

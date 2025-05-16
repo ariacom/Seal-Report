@@ -337,8 +337,16 @@ var SWIMain = /** @class */ (function () {
                 _main.initDropDownGroups();
                 _main.initDropDownLogins();
                 $("#config-save").unbind("click").on("click", function (e) {
-                    $("#config-dialog").modal('hide');
                     if (profile.editconfiguration) {
+                        $waitDialog.modal();
+                        _gateway.SetConfiguration(JSON.stringify(_main._config), function () {
+                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The configuration has been saved"), 5000);
+                            $waitDialog.modal('hide');
+                            $("#config-dialog").modal('hide');
+                        }, function (data) {
+                            SWIUtil.ShowMessage("alert-danger", data.error, 0);
+                            $waitDialog.modal('hide');
+                        });
                     }
                 });
                 $("#config-dialog").modal();
@@ -532,7 +540,9 @@ var SWIMain = /** @class */ (function () {
     SWIMain.prototype.initLoginDetail = function () {
         var detail = _main._configLogin;
         SWIUtil.InitStandardInput("#config-login-id", _main._configLogin.Id, null, function (val) { detail.Id = val; });
+        SWIUtil.InitStandardInput("#config-login-name", _main._configLogin.Name, null, function (val) { detail.Name = val; });
         SWIUtil.InitStandardInput("#config-login-email", _main._configLogin.Email, null, function (val) { detail.Email = val; });
+        SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = val; });
         var select = $("#config-login-groups");
         select.selectpicker("destroy");
         select.empty();

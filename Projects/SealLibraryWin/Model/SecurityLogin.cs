@@ -33,6 +33,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Id").SetIsBrowsable(true);
+                GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Email").SetIsBrowsable(true);
                 GetProperty("Phone").SetIsBrowsable(true);
                 GetProperty("HashedPassword").SetIsBrowsable(true);
@@ -85,10 +86,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Full name of the login
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Name"), Description("Full name of the login"), Id(3, 1)]
+#endif
+        public string Name { get; set; }
+
+        /// <summary>
         /// The login email, may be used for a Two-Factor Authentication
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Email"), Description("The login email, may be used for a Two-Factor Authentication"), Id(3, 1)]
+        [Category("Definition"), DisplayName("Email"), Description("The login email, may be used for a Two-Factor Authentication"), Id(4, 1)]
 #endif
         public string Email { get; set; }
 
@@ -96,7 +105,7 @@ namespace Seal.Model
         /// The login phone number, may be used for a Two-Factor Authentication
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Phone Number"), Description("The login phone number, may be used for a Two-Factor Authentication"), Id(4, 1)]
+        [Category("Definition"), DisplayName("Phone Number"), Description("The login phone number, may be used for a Two-Factor Authentication"), Id(5, 1)]
 #endif
         public string Phone { get; set; }
 

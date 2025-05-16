@@ -41,6 +41,13 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     };
+    SWIGateway.prototype.SetConfiguration = function (configuration, callback, errorcb) {
+        $.post(_server + "SWISetConfiguration", {
+            configuration: configuration
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    };
     SWIGateway.prototype.GetUserProfile = function (callback, errorcb) {
         $.post(_server + "SWIGetUserProfile")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

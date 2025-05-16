@@ -49,6 +49,14 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public SetConfiguration(configuration: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWISetConfiguration", {
+            configuration: configuration
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public GetUserProfile(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetUserProfile")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
