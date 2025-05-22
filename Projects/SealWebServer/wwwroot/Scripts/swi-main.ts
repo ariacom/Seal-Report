@@ -9,6 +9,8 @@ var $editDialog: JQuery;
 var $folderTree: JQuery;
 var $loginModal: JQuery;
 var $securityModal: JQuery;
+var $passwordResetModal: JQuery;
+var $passwordResetModal2: JQuery;
 var $outputPanel: JQuery;
 var $propertiesPanel: JQuery;
 var $elementDropDown: JQuery;
@@ -59,9 +61,12 @@ class SWIMain {
         $folderTree = $("#folder-tree");
         $loginModal = $("#login-modal");
         $securityModal = $("#security-modal");
+        $passwordResetModal = $("#password-reset-modal");
+        $passwordResetModal2 = $("#password-reset-modal2");
         $outputPanel = $("#output-panel");
         $propertiesPanel = $("#properties-panel");
         $elementDropDown = $("#element-dropdown");
+        $("#menu-main-button").hide();
 
         $waitDialog.modal('show');
 
@@ -85,7 +90,51 @@ class SWIMain {
             _main.checkSecurityCode();
         });
 
+        $("#login-password-reset").unbind("click").on("click", function (e) {
+            e.preventDefault();
+            $loginModal.modal('hide');
+            $("#password-reset-name").text("")
+            $passwordResetModal.modal();
+        });
+
+        $("#password-reset-submit").unbind("click").on("click", function () {
+            _gateway.ResetPassword(
+                $("#password-reset-name").val(),
+                function (data) {
+                    $passwordResetModal.modal('hide');
+                    SWIUtil.ShowMessage("alert-success", SWIUtil.tr("If your identifier is valid, an email has been sent to reset your password."), 5000);
+                    _main.showLogin();
+                }
+            );
+        });
+
         SWIUtil.InitVersion();
+
+        //Reset password
+        const token = new URLSearchParams(window.location.search).get('ptoken');
+        const guid = new URLSearchParams(window.location.search).get('guid');
+        if (token && guid) {
+            $waitDialog.modal('hide');
+            $("#password-reset-submit2").unbind("click").on("click", function () {
+                _gateway.ResetPassword2(
+                    guid, token, $("#password-reset1").val(), $("#password-reset2").val(),
+                    function (data) {
+                        if (data.error) SWIUtil.ShowMessage("alert-danger", data.error, -1);
+                        else {
+                            $passwordResetModal2.modal('hide');
+                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
+                            _main.showLogin();
+                        }
+                    },
+                    function (data) {
+                        if (data.error) SWIUtil.ShowMessage("alert-danger", data.error, -1);
+                    }
+                );
+            });
+            $passwordResetModal2.modal();
+
+            return;
+        }
 
         _gateway.GetUserProfile(
             function (data) {
@@ -104,6 +153,7 @@ class SWIMain {
         $(window).unbind("resize").on('resize', function () {
             _main.resize();
         });
+
     }
 
     private loginSuccess(data: any) {
@@ -111,7 +161,6 @@ class SWIMain {
             _main.showSecurityCode();
             return;
         }
-
         if (_main._profile && _main._profile.culture && _main._profile.culture != data.culture) {
             $("body").css("opacity", "0.1");
             location.reload();
@@ -146,6 +195,7 @@ class SWIMain {
         $(".navbar-right").show();
         $("#footer-div").hide();
 
+        SWIUtil.ShowHideControl($("#login-password-reset"), data.showresetpassword);
         $("#password").val("");
         $("#securitycode").val("");
         $("#login-modal-error").text("");
@@ -248,6 +298,7 @@ class SWIMain {
         _main.initConfiguration(_main._profile);
 
         //Disconnect
+        SWIUtil.ShowHideControl($("#disconnect-nav-item"), true);
         $("#disconnect-nav-item").unbind("click").on("click", function () {
             SWIUtil.HideMessages();
             $outputPanel.hide();
@@ -256,7 +307,7 @@ class SWIMain {
             _gateway.Logout(function () {
                 $("#report-body").empty();
                 $("#nav_button").text("");
-                SWIUtil.ShowHideControl($("#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview"), false);
+                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item"), false);
                 _main.showLogin();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             });
@@ -419,7 +470,6 @@ class SWIMain {
         });
     }
 
-
     private initDropDownGroups() {
         if (_main._configGroup != null) _main._configGroup = _main._config.groups.find(i => i.Name === _main._configGroup.Name);
         if (!_main._configGroup && _main._config.groups.length > 0) _main._configGroup = _main._config.groups[0];
@@ -467,7 +517,6 @@ class SWIMain {
         _main.initSecurityGroupDetail();
     }
 
-
     private initSecurityGroupDetail() {
         var detail = _main._configGroup;
         if (!detail.Folders) detail.Folders = [];
@@ -477,7 +526,6 @@ class SWIMain {
         SWIUtil.InitBoolSelect("#config-group-editprofile", detail.EditProfile, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.EditProfile = val; });
         _main.initDropDownGroupsFolders();
     }
-
 
     private initDropDownGroupsFolders() {
         if (_main._configGroupFolder != null) _main._configGroupFolder = _main._configGroup.Folders.find(i => i.Path === _main._configGroupFolder.Path);
@@ -621,7 +669,7 @@ class SWIMain {
         SWIUtil.InitStandardInput("#config-login-id", _main._configLogin.Id, null, function (val) { detail.Id = val; });
         SWIUtil.InitStandardInput("#config-login-name", _main._configLogin.Name, null, function (val) { detail.Name = val; });
         SWIUtil.InitStandardInput("#config-login-email", _main._configLogin.Email, null, function (val) { detail.Email = val; });
-        SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = val; });
+        SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = detail.HashedPassword+val; });
 
         var select = $("#config-login-groups");
         select.selectpicker("destroy");
@@ -651,7 +699,6 @@ class SWIMain {
         _main.showLogin();
         _main.enableControls();
     }
-
 
     private showLogin() {
         $waitDialog.modal('hide');

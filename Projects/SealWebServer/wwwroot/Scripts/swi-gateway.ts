@@ -1,12 +1,12 @@
 ﻿declare var WebApplicationName: string;
 var _server: string = WebApplicationName;
-var _errorServer: string = SWIUtil.tr("Unexpected error on server") + ": '" + _server + "'"; 
+var _errorServer: string = SWIUtil.tr("Unexpected error on server") + ": '" + _server + "'";
 
 declare function postForm(url: string, target: string, data);
 
 class SWIGateway {
     public GetVersions(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetVersions", { })
+        $.post(_server + "SWIGetVersions", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
@@ -29,10 +29,10 @@ class SWIGateway {
 
     public Logout(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post({
-                url: _server + "SWILogout", xhrFields: {
-                    withCredentials: true
-                }
-            })
+            url: _server + "SWILogout", xhrFields: {
+                withCredentials: true
+            }
+        })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
@@ -57,6 +57,34 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public ResetPassword(id: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIResetPassword", {
+            id: id
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public ResetPassword2(guid: string, token: string, password1: string, password2: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIResetPassword2", {
+            guid: guid,
+            token: token,
+            password1: password1,
+            password2: password2,
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public ChangePassword(password: string, password1: string, password2: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIChangePassword", {
+            password: password,
+            password1: password1,
+            password2: password2,
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
     public GetUserProfile(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetUserProfile")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
@@ -90,7 +118,7 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
-    public MoveFile(source: string, destination: string, copy : boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public MoveFile(source: string, destination: string, copy: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIMoveFile", {
             source: source, destination: destination, copy: copy
         })
@@ -129,7 +157,7 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
-    public RenameFolder(source: string, destination : string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public RenameFolder(source: string, destination: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIRenameFolder", {
             source: source, destination: destination
         })
@@ -149,7 +177,7 @@ class SWIGateway {
         postForm(_server + "SWExecuteReport", "_blank", { path: path, viewGUID: viewGUID, outputGUID: outputGUID });
     }
 
-    public ExecuteReportFromMenu(path: string, viewGUID: string, outputGUID: string,  callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public ExecuteReportFromMenu(path: string, viewGUID: string, outputGUID: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWExecuteReport", {
             path: path,
             viewGUID: viewGUID,

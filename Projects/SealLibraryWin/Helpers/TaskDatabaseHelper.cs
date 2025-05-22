@@ -427,7 +427,6 @@ namespace Seal.Helpers
             }
             else if (type == DatabaseType.PostgreSQL)
             {
-                //Default, tested on SQLServer...
                 _defaultColumnCharType = "varchar";
                 _defaultColumnNumericType = "numeric(18,5)";
                 _defaultColumnIntegerType = "integer";
@@ -437,7 +436,6 @@ namespace Seal.Helpers
             }
             else if (type == DatabaseType.SQLite)
             {
-                //Default, tested on SQLServer...
                 _defaultColumnCharType = "varchar";
                 _defaultColumnNumericType = "numeric(18,5)";
                 _defaultColumnIntegerType = "integer";

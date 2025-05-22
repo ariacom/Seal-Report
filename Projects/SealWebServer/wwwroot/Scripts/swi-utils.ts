@@ -315,10 +315,34 @@ module SWIUtil {
     }
 
     export function InitProfile(profile) {
+        SWIUtil.ShowHideControl($("#profile-nav-item"), true);
         $("#profile-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#profile-user").val(profile.name);
             $("#profile-groups").val(profile.group.replaceAll(";", "\r"));
+            SWIUtil.ShowHideControl($("#profile-change-password"), profile.editprofile && profile.changepassword);
+
+            $waitDialog.modal('hide');
+
+            if (profile.editprofile && profile.changepassword) {
+                $("#profile-change-password").unbind("click").on("click", function (e) {
+                    $("#profile-dialog").modal('hide');
+                    $("#change-password-submit").unbind("click").on("click", function () {
+                        _gateway.ChangePassword(
+                            $("#password-change").val(), $("#password-change1").val(), $("#password-change2").val(),
+                            function (data) {
+                                if (data.error) SWIUtil.ShowMessage("alert-danger", data.error, -1);
+                                else {
+                                    $("#change-password-modal").modal('hide');
+                                    SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
+                                }
+                            }
+                        );
+                    });
+
+                    $("#change-password-modal").modal();
+                });
+            }
 
             $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');

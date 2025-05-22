@@ -54,6 +54,9 @@ namespace Seal.Model
                 GetProperty("Script").SetIsBrowsable(true);
                 GetProperty("TwoFAGenerationScript").SetIsBrowsable(true);
                 GetProperty("TwoFACheckScript").SetIsBrowsable(true);
+                GetProperty("ResetPasswordScript").SetIsBrowsable(true);
+                GetProperty("ResetPasswordScript2").SetIsBrowsable(true);
+                GetProperty("ChangePasswordScript").SetIsBrowsable(true);
                 GetProperty("CurrentParameters").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("TestUserName").SetIsBrowsable(true);
@@ -146,6 +149,33 @@ namespace Seal.Model
         public string TwoFACheckScript { get; set; }
 
         /// <summary>
+        /// If not empty, the script is executed when a user request a password reset.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Reset Password Script (Init Reset)"), Description("If not empty, the script is executed when a user request a password reset."), Id(5, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string ResetPasswordScript { get; set; }
+
+        /// <summary>
+        /// If not empty, the script is executed to perform the password reset.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Reset Password Script2 (Apply Reset)"), Description("If not empty, the script is executed to perform the password reset."), Id(6, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string ResetPasswordScript2 { get; set; }
+
+        /// <summary>
+        /// If not empty, the script is executed when a user changes his password.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Change Password Script"), Description("If not empty, the script is executed when a user changes his password."), Id(7, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string ChangePasswordScript { get; set; }
+
+        /// <summary>
         /// Current SecurityProvider
         /// </summary>
         public SecurityProvider Provider
@@ -190,7 +220,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(5, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(9, 2)]
 #endif
         [XmlIgnore]
         public List<SecurityParameter> CurrentParameters

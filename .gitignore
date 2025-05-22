@@ -45,6 +45,8 @@ TestFiles/
 Repository/Databases/Audit.sqlite
 work/
 Repository/Sources/_*.scfx
+Repository/Devices/Email/_*.scfx
+Repository/Devices/FileServer/_*.scfx
 [Pp]ackages/
 temp/
 Assemblies/
@@ -66,6 +68,7 @@ swi-editor.*
 swi-gateway-editor.*
 swi-gateway-assistant.*
 swi-assistant.*
+swiassistant.*
 swi-button-group.*
 swi.js
 MenuBig.cshtml
@@ -73,9 +76,10 @@ MainEditor.cshtml
 DataTableEditor*.cshtml
 _ed.*.css
 _ed.*.js
+/Repository/Sources/_OLD
+/Repository/Sources/Assistants
 *.slc
 *.srl
-Sources/_*.scfx
 TranslationsWebDesigner.xlsx
 sealweb-editor.css
 sealweb-assistant.css
@@ -110,6 +114,3 @@ Repository/Databases/Audit.ldb
 *.ldb
 Projects/SealDocumentation/Help.zip
 *.nupkg
-/Repository/Sources/_OLD
-/Repository/Sources/Assistants
-Projects/SealWebServer/wwwroot/Scripts/swiassistant.js

@@ -357,6 +357,106 @@ namespace Seal.Forms
 }
 ";
 
+        const string razorResetPasswordScriptTemplate = @"@using Newtonsoft.Json
+@using System.Web
+@{
+    SecurityUser user = Model;
+    var id = user.WebUserName;
+    var request = user.Request;
+    var repository = user.Security.Repository;
+    var security = user.Security;
+
+    //Implementation using Logins defined in the security
+    var login = security.Logins.FirstOrDefault(i => i.Id == id);
+    if (login == null && id.Contains(""@"")) login = security.Logins.FirstOrDefault(i => i.Email == id);
+
+    if (login == null) throw new Exception($""No login found for '{id}'"");
+    if (string.IsNullOrEmpty(login.Email)) throw new Exception($""No Email found for '{id}'"");
+
+    //Generate Token for reset
+    var guid = Guid.NewGuid().ToString();
+    var vals = new List<string>
+    {
+        id,
+        guid,
+        JsonConvert.SerializeObject(DateTime.Now)
+    };
+    var token = HttpUtility.UrlEncode(CryptoHelper.EncryptWithRSAContainer(string.Join(""\r"", vals), ""Reset"" + guid, false));
+
+    var url = $""{request.Scheme}://{request.Host}{request.PathBase}?guid={guid}&ptoken={token}"";
+    var message = repository.TranslateWeb(""Please find your link to reset your password (Note that this link is valid 10 minutes):"");
+    var from = """"; //Default of the device will be used
+    var to = login.Email;
+    var subject = ""Seal Report Password Reset"";
+    var linkLabel = repository.TranslateWeb(""Reset link"");
+    var body = $""{ message}: <br><b><a href='{url}'>{linkLabel}</a></b><br>"";
+
+    if (!repository.SendNotificationEmail(from, to, subject, true, body)) throw new Exception(""Unable to send email for Reset Password."");
+}
+";
+
+        const string razorResetPasswordScript2Template = @"@using Newtonsoft.Json
+@{
+    SecurityUser user = Model;
+    var repository = user.Security.Repository;
+    var security = user.Security;
+    var guid = user.WebUserName;
+
+    //Implementation using Logins defined in the security
+    if (!Helper.IsPasswordComplex(user.WebPassword)) throw new Exception(repository.TranslateWeb(""Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*).""));
+
+    var vals = CryptoHelper.DecryptWithRSAContainer(user.Token, ""Reset"" + guid, false).Split(""\r"");
+    if (vals.Length != 3 || vals[1] != guid) throw new Exception(""Invalid token"");
+    var generationDate = JsonConvert.DeserializeObject<DateTime>(vals[2]);
+    //Check date
+    if (DateTime.Now > generationDate.AddMinutes(10)) throw new Exception(""The token is not valid anymore."");
+
+    var id = vals[0];
+    user.WebUserName = id;
+    var login = security.Logins.FirstOrDefault(i => i.Id == id);
+    if (login == null && id.Contains(""@"")) login = security.Logins.FirstOrDefault(i => i.Email == id);
+
+    if (login == null) throw new Exception(""Invalid login in token."");
+
+    login.HashedPassword = user.WebPassword;
+    security.SaveToFile();
+
+    if (!string.IsNullOrEmpty(login.Email))
+    {
+        var message = repository.TranslateWeb(""Your password has been changed after a Reset."");
+        var from = """"; //Default of the device will be used
+        var to = login.Email;
+        var subject = repository.TranslateWeb(""Seal Report Password Change"");
+        var body = $""{message}<br>"";
+        if (!repository.SendNotificationEmail(from, to, subject, true, body)) Audit.LogEventAudit(AuditType.EventError, ""Unable to send email for Change Password afer Reset."");
+    }
+}
+";
+        const string razorChangePasswordScriptTemplate = @"@{
+    SecurityUser user = Model;
+    var repository = user.Security.Repository;
+    var security = user.Security;
+
+    //Implementation using Logins defined in the security
+    if (!Helper.IsPasswordComplex(user.WebPassword)) throw new Exception(repository.TranslateWeb(""Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*).""));
+    if (user.Login == null) throw new Exception(""No Login found."");
+
+    user.Login.HashedPassword = user.WebPassword;
+    security.SaveToFile();
+
+    if (!string.IsNullOrEmpty(user.Login.Email))
+    {
+        var message = repository.TranslateWeb(""Your password has been changed."") + $"" ({user.Login.Id})"";
+        var from = """"; //Default of the device will be used
+        var to = user.Login.Email;
+        var subject = repository.TranslateWeb(""Seal Report Password Change"");
+        var body = $""{message}<br>"";
+        if (!repository.SendNotificationEmail(from, to, subject, true, body)) Audit.LogEventAudit(AuditType.EventError, ""Unable to send email for Change Password."");
+    }
+}
+";
+
+
         const string razorTableDefaultTemplate = @"@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -1737,6 +1837,27 @@ namespace Seal.Forms
                         template = razorTwoFACheckScriptTemplate;
                         frm.ObjectForCheckSyntax = new SecurityUser(null);
                         frm.Text = "Edit the Two-Factor Authentication Check script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ResetPasswordScript")
+                    {
+                        template = razorResetPasswordScriptTemplate;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Reset Password script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ResetPasswordScript2")
+                    {
+                        template = razorResetPasswordScript2Template;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Reset Password script 2";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ChangePasswordScript")
+                    {
+                        template = razorChangePasswordScriptTemplate;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Change Password script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

@@ -48,6 +48,32 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     };
+    SWIGateway.prototype.ResetPassword = function (id, callback, errorcb) {
+        $.post(_server + "SWIResetPassword", {
+            id: id
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    };
+    SWIGateway.prototype.ResetPassword2 = function (guid, token, password1, password2, callback, errorcb) {
+        $.post(_server + "SWIResetPassword2", {
+            guid: guid,
+            token: token,
+            password1: password1,
+            password2: password2,
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    };
+    SWIGateway.prototype.ChangePassword = function (password, password1, password2, callback, errorcb) {
+        $.post(_server + "SWIChangePassword", {
+            password: password,
+            password1: password1,
+            password2: password2,
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    };
     SWIGateway.prototype.GetUserProfile = function (callback, errorcb) {
         $.post(_server + "SWIGetUserProfile")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

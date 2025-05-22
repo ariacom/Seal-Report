@@ -20,6 +20,8 @@ namespace Seal.Model
         public bool showfolders;
         public bool editconfiguration;
         public bool editprofile;
+        public bool changepassword;
+        public bool showresetpassword;
         public string usertag;
         public StartupOptions onstartup;
         public string startupreport;

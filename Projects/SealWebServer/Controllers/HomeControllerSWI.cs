@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using System.Web;
 
 namespace SealWebServer.Controllers
 {
@@ -63,6 +64,16 @@ namespace SealWebServer.Controllers
             checkRecentFiles();
             WebUser.Profile.Path = WebUser.ProfilePath;
         }
+
+        private object getNotAuthenticatedProfile()
+        {
+            return new
+            {
+                authenticated = false,
+                showresetpassword = !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript) && !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2)
+            };
+        }
+
 
         private SWIUserProfile getUserProfile()
         {
@@ -119,7 +130,9 @@ namespace SealWebServer.Controllers
                 reportname = reportToExecuteName,
                 executionmode = WebUser.Profile.ExecutionMode,
                 groupexecutionmode = defaultGroup.ExecutionMode,
-                sessionId = HttpContext.Session.GetString(SessionIdKey)
+                sessionId = HttpContext.Session.GetString(SessionIdKey),
+                changepassword = !string.IsNullOrEmpty(Repository.Security.ChangePasswordScript),
+                showresetpassword = !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript) && !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2)
             };
 
 #if DEBUG
@@ -177,7 +190,6 @@ namespace SealWebServer.Controllers
         public ActionResult SWILogin(string user, string password, string token)
         {
             writeDebug("SWILogin");
-
             try
             {
                 bool newAuthentication = false;
@@ -209,6 +221,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Check the security code for a 2 factors authentication
+        /// </summary>
         public ActionResult SWICheckSecurityCode(string code)
         {
             writeDebug("SWICheckSecurityCode");
@@ -246,6 +261,112 @@ namespace SealWebServer.Controllers
             catch (Exception ex)
             {
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Reset a user password
+        /// </summary>
+        public ActionResult SWIResetPassword(string id)
+        {
+            writeDebug("SWIResetPassword");
+            try
+            {
+                if (WebUser == null) CreateWebUser();
+
+                if (string.IsNullOrEmpty(id)) throw new Exception("Invalid argument");
+                if (string.IsNullOrEmpty(WebUser.Security.ResetPasswordScript)) throw new Exception("The 'Reset Password Script' is not defined. Please check your configuration.");
+
+                WebUser.WebUserName = id;
+                WebUser.Request = Request;
+
+                RazorHelper.CompileExecute(WebUser.Security.ResetPasswordScript, WebUser);
+
+                //Log and Audit
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Reset password sent for '{id}'");
+                Audit.LogAudit(AuditType.Login, null, null, $"Reset password sent for '{id}'");
+
+                return Json("");
+            }
+            catch (Exception ex)
+            {
+                HandleSWIException(ex);
+                return Json(new { login = true });
+            }
+        }
+
+
+        /// <summary>
+        /// Re-init a user password from a reset password link
+        /// </summary>
+        public ActionResult SWIResetPassword2(string guid, string token, string password1, string password2)
+        {
+            writeDebug("SWIResetPassword2");
+            try
+            {
+                if (string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(token)) throw new Exception("Invalid arguments");
+                if (password1 != password2) throw new Exception(Translate("The two passwords do not match."));
+                if (string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2)) throw new Exception("The 'Reset Password Script2' is not defined. Please check your configuration.");
+
+                if (WebUser == null) CreateWebUser();
+                WebUser.WebUserName = guid; //Guid in web password
+                WebUser.WebPassword = password1; //Guid in web password
+                WebUser.Token = token;
+
+                RazorHelper.CompileExecute(WebUser.Security.ResetPasswordScript2, WebUser);
+
+                //Log and Audit
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Password reset for '{WebUser.WebUserName}'");
+                Audit.LogAudit(AuditType.EventServer, null, null, $"Password reset for '{WebUser.WebUserName}'");
+
+                return Json("");
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+        /// <summary>
+        /// Change a user password
+        /// </summary>
+        public ActionResult SWIChangePassword(string password, string password1, string password2, string sessionId)
+        {
+            writeDebug("SWIChangePassword");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                var user = WebUser;
+
+                if (user.Login == null) throw new Exception("No login for the user");
+                if (!user.Login.CheckPassword(password)) throw new Exception(Translate("Invalid password."));
+                if (password1 != password2) throw new Exception(Translate("The two passwords do not match."));
+
+                if (!Helper.IsPasswordComplex(password1)) throw new Exception(Translate("Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*)."));
+
+                user.Login.HashedPassword = password1;
+                user.Security.SaveToFile();
+
+                if (!string.IsNullOrEmpty(user.Login.Email))
+                {
+                    var message = Repository.TranslateWeb("Your password has been changed.") + $" ({user.Login.Id})";
+                    var from = ""; //Default of the device will be used
+                    var to = user.Login.Email;
+                    var subject = Repository.TranslateWeb("Seal Report Password Change");
+                    var body = $"{message}<br>";
+                    if (!Repository.SendNotificationEmail(from, to, subject, true, body)) throw new Exception("Unable to send email for Change Password.");
+                }
+
+                //Log and Audit
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Password changed for '{user.Login.Id}'");
+                Audit.LogAudit(AuditType.EventServer, null, null, $"Password changed for '{user.Login.Id}'");
+
+
+                return Json("");
+            }
+            catch (Exception ex)
+            {
                 return HandleSWIException(ex);
             }
         }
@@ -893,17 +1014,16 @@ namespace SealWebServer.Controllers
             try
             {
                 SetSessionId(sessionId);
-                if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
+                if (WebUser == null || !WebUser.IsAuthenticated) return Json(getNotAuthenticatedProfile());
 
                 return Json(getUserProfile());
             }
             catch
             {
                 //not authenticated
-                return Json(new { authenticated = false });
+                return Json(getNotAuthenticatedProfile());
             }
         }
-
 
         /// <summary>
         /// Save the configuration of the Web Server (including security).
@@ -925,6 +1045,11 @@ namespace SealWebServer.Controllers
 
                 Repository.Security.Groups = swiConfig.groups;
                 Repository.Security.Logins = swiConfig.logins;
+                //Check passwords
+                foreach (var login in Repository.Security.Logins)
+                {
+                    if (login.Password.StartsWith(login.HashedPassword)) login.HashedPassword = login.Password.Substring(login.HashedPassword.Length);
+                }
 
                 Repository.Security.SaveToFile();
 
@@ -1031,9 +1156,10 @@ namespace SealWebServer.Controllers
             writeDebug("SWIGetVersions");
             try
             {
-                return Json(new { 
-                    SWIVersion = Repository.ProductVersion, 
-                    SRVersion = Repository.ProductVersion, 
+                return Json(new
+                {
+                    SWIVersion = Repository.ProductVersion,
+                    SRVersion = Repository.ProductVersion,
                     Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "Free MIT Community License\r\nNon-profit usage or small businesses" : Repository.Instance.LicenseText
                 });
             }

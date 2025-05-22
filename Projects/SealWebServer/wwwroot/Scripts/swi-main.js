@@ -7,6 +7,8 @@ var $editDialog;
 var $folderTree;
 var $loginModal;
 var $securityModal;
+var $passwordResetModal;
+var $passwordResetModal2;
 var $outputPanel;
 var $propertiesPanel;
 var $elementDropDown;
@@ -37,9 +39,12 @@ var SWIMain = /** @class */ (function () {
         $folderTree = $("#folder-tree");
         $loginModal = $("#login-modal");
         $securityModal = $("#security-modal");
+        $passwordResetModal = $("#password-reset-modal");
+        $passwordResetModal2 = $("#password-reset-modal2");
         $outputPanel = $("#output-panel");
         $propertiesPanel = $("#properties-panel");
         $elementDropDown = $("#element-dropdown");
+        $("#menu-main-button").hide();
         $waitDialog.modal('show');
         $("#search-pattern").keypress(function (e) {
             if ((e.keyCode || e.which) == 13)
@@ -59,7 +64,42 @@ var SWIMain = /** @class */ (function () {
         $("#security-modal-submit").unbind("click").on("click", function () {
             _main.checkSecurityCode();
         });
+        $("#login-password-reset").unbind("click").on("click", function (e) {
+            e.preventDefault();
+            $loginModal.modal('hide');
+            $("#password-reset-name").text("");
+            $passwordResetModal.modal();
+        });
+        $("#password-reset-submit").unbind("click").on("click", function () {
+            _gateway.ResetPassword($("#password-reset-name").val(), function (data) {
+                $passwordResetModal.modal('hide');
+                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("If your identifier is valid, an email has been sent to reset your password."), 5000);
+                _main.showLogin();
+            });
+        });
         SWIUtil.InitVersion();
+        //Reset password
+        var token = new URLSearchParams(window.location.search).get('ptoken');
+        var guid = new URLSearchParams(window.location.search).get('guid');
+        if (token && guid) {
+            $waitDialog.modal('hide');
+            $("#password-reset-submit2").unbind("click").on("click", function () {
+                _gateway.ResetPassword2(guid, token, $("#password-reset1").val(), $("#password-reset2").val(), function (data) {
+                    if (data.error)
+                        SWIUtil.ShowMessage("alert-danger", data.error, -1);
+                    else {
+                        $passwordResetModal2.modal('hide');
+                        SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
+                        _main.showLogin();
+                    }
+                }, function (data) {
+                    if (data.error)
+                        SWIUtil.ShowMessage("alert-danger", data.error, -1);
+                });
+            });
+            $passwordResetModal2.modal();
+            return;
+        }
         _gateway.GetUserProfile(function (data) {
             if (data.authenticated != null && data.authenticated == false) {
                 //Try to login without authentication
@@ -109,6 +149,7 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.HideMessages();
         $(".navbar-right").show();
         $("#footer-div").hide();
+        SWIUtil.ShowHideControl($("#login-password-reset"), data.showresetpassword);
         $("#password").val("");
         $("#securitycode").val("");
         $("#login-modal-error").text("");
@@ -196,6 +237,7 @@ var SWIMain = /** @class */ (function () {
         //Configuration
         _main.initConfiguration(_main._profile);
         //Disconnect
+        SWIUtil.ShowHideControl($("#disconnect-nav-item"), true);
         $("#disconnect-nav-item").unbind("click").on("click", function () {
             SWIUtil.HideMessages();
             $outputPanel.hide();
@@ -203,7 +245,7 @@ var SWIMain = /** @class */ (function () {
             _gateway.Logout(function () {
                 $("#report-body").empty();
                 $("#nav_button").text("");
-                SWIUtil.ShowHideControl($("#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview"), false);
+                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item"), false);
                 _main.showLogin();
                 if (SWIUtil.IsMobile())
                     $('.navbar-toggle').click();
@@ -542,7 +584,7 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.InitStandardInput("#config-login-id", _main._configLogin.Id, null, function (val) { detail.Id = val; });
         SWIUtil.InitStandardInput("#config-login-name", _main._configLogin.Name, null, function (val) { detail.Name = val; });
         SWIUtil.InitStandardInput("#config-login-email", _main._configLogin.Email, null, function (val) { detail.Email = val; });
-        SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = val; });
+        SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = detail.HashedPassword + val; });
         var select = $("#config-login-groups");
         select.selectpicker("destroy");
         select.empty();

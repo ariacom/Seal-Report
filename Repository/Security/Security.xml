@@ -89,7 +89,7 @@
       <SqlModel>false</SqlModel>
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
+      <EditProfile>false</EditProfile>
       <Culture />
       <OnStartup>None</OnStartup>
       <ExecutionMode>NewWindow</ExecutionMode>
@@ -395,7 +395,7 @@
     <SecurityLogin>
       <Id>ex</Id>
       <Password>sYKvHw8IOWBXSlFU6qkFnpH6A6vR02MX96jl9QFhMFA=</Password>
-      <Name>dsfsfdsf</Name>
+      <Name />
       <Email />
       <Phone />
       <GroupNames>

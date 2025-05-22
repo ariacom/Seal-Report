@@ -1266,6 +1266,20 @@ namespace Seal.Helpers
             return obj == null ? (double?)null : Convert.ToDouble(obj, CultureInfo.InvariantCulture);
         }
 
+        public static bool IsPasswordComplex(string password, int len = 8)
+        {
+            if (string.IsNullOrEmpty(password))
+                return false;
+
+            if (password.Length < len) return false;
+
+            bool hasUpperCase = Regex.IsMatch(password, "[A-Z]");
+            bool hasDigit = Regex.IsMatch(password, "[0-9]");
+            bool hasSpecialChar = Regex.IsMatch(password, "[^a-zA-Z0-9]");
+
+            return hasUpperCase && hasDigit && hasSpecialChar;
+        }
+
         #region License
         public static void GetLicense(string text, out DateTime generationDate, out int version, out string serial, out string name, out string type)
         {

@@ -7834,6 +7834,21 @@
             If a 'Two-Factor Authentication Generation Script' is set, the script is executed to check the security code and validate the a Two-Factor Authentication.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSecurity.ResetPasswordScript">
+            <summary>
+            If not empty, the script is executed when a user request a password reset.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.ResetPasswordScript2">
+            <summary>
+            If not empty, the script is executed to perform the password reset.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.ChangePasswordScript">
+            <summary>
+            If not empty, the script is executed when a user changes his password.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealSecurity.Provider">
             <summary>
             Current SecurityProvider
@@ -8502,7 +8517,7 @@
         </member>
         <member name="P:Seal.Model.SecurityLogin.HashedPassword">
             <summary>
-            Password used to connect to the database.
+            Login password 
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityLogin.CheckPassword(System.String)">
