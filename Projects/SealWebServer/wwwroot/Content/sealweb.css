@@ -335,3 +335,384 @@ table.dataTable {
     cursor: default;
     text-transform: uppercase;
 }
+
+/* Configuration Dialog Layout */
+#config-dialog .modal-dialog {
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+#config-dialog .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+#config-dialog .modal-header {
+    background-color: #f5f5f7;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    border-radius: 12px 12px 0 0;
+}
+
+#config-dialog .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+#config-dialog .modal-body {
+    padding: 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#config-dialog .modal-footer {
+    padding: 16px 24px;
+    background-color: #f5f5f7;
+    border-top: 1px solid #e0e0e0;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Input Layout Styling */
+.config-input-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 16px;
+    width: 100%;
+}
+
+.config-input-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.config-input-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    min-width: 150px;
+    max-width: 150px;
+    flex-shrink: 0;
+}
+
+.config-input-field {
+    flex: 1;
+    min-width: 0;
+    max-width: calc(100% - 166px);
+}
+
+/* Form Controls - Regular inputs */
+#config-dialog .form-control:not(.bootstrap-select):not(.btn) {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 10px 12px;
+    transition: border-color 0.2s ease;
+    width: 100%;
+    height: 42px;
+    box-sizing: border-box;
+}
+
+    #config-dialog .form-control:not(.bootstrap-select):not(.btn):focus {
+        border-color: #62a6ff;
+        box-shadow: none;
+        outline: none;
+    }
+
+#config-dialog textarea.form-control {
+    min-height: 80px;
+    resize: vertical;
+    height: auto;
+}
+
+/* Bootstrap Select Overrides */
+#config-dialog .bootstrap-select {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+    #config-dialog .bootstrap-select.form-control {
+        padding: 0 !important;
+        border: none !important;
+        height: auto !important;
+        width: 100% !important;
+    }
+
+    #config-dialog .bootstrap-select .btn {
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 6px !important;
+        padding: 10px 12px !important;
+        background-color: white !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        text-align: left !important;
+        font-size: 14px !important;
+        height: 42px !important;
+        line-height: 1.4 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+        #config-dialog .bootstrap-select .btn:focus,
+        #config-dialog .bootstrap-select .btn:active,
+        #config-dialog .bootstrap-select.open .btn {
+            border-color: #62a6ff !important;
+            box-shadow: none !important;
+            outline: none !important;
+            background-color: white !important;
+        }
+
+        #config-dialog .bootstrap-select .btn:hover {
+            background-color: #f8f9fa !important;
+            border-color: #e0e0e0 !important;
+        }
+
+    /* Fix for bootstrap-select caret */
+    #config-dialog .bootstrap-select .caret {
+        border-top: 4px solid #666;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        margin-left: 8px;
+    }
+
+/* Tab Navigation */
+#config-dialog .nav-pills {
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+    background: none;
+}
+
+    #config-dialog .nav-pills > li > a {
+        border-radius: 0;
+        padding: 12px 16px;
+        color: #5f6368;
+        background: none;
+        border: none;
+    }
+
+    #config-dialog .nav-pills > li.active > a,
+    #config-dialog .nav-pills > li.active > a:hover,
+    #config-dialog .nav-pills > li.active > a:focus {
+        color: #62a6ff;
+        background-color: transparent;
+        border-bottom: 2px solid #62a6ff;
+    }
+
+#config-dialog .tab-content {
+    padding-top: 0px;
+}
+
+#config-dialog .tab-pane {
+    padding: 0 !important;
+}
+
+/* Panel Groups */
+.config-groups-panel,
+.config-logins-panel {
+    margin-bottom: 20px;
+}
+
+.group-folder-panel {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Section Headers */
+.config-section-header {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Button Styling */
+#config-dialog .btn:not(.bootstrap-select .btn) {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+#config-dialog .btn-primary:not(.bootstrap-select .btn) {
+    background-color: #62a6ff;
+    color: white;
+}
+
+    #config-dialog .btn-primary:not(.bootstrap-select .btn):hover {
+        background-color: #4a90e2;
+    }
+
+#config-dialog .btn-default:not(.bootstrap-select .btn) {
+    background-color: #f5f5f7;
+    color: #333;
+    border: 1px solid #e0e0e0;
+}
+
+    #config-dialog .btn-default:not(.bootstrap-select .btn):hover {
+        background-color: #e5e5e7;
+    }
+
+/* Close Button */
+#config-dialog .close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+    #config-dialog .close:hover {
+        background-color: #e0e0e0;
+    }
+
+/* Dividers */
+#config-dialog hr {
+    border: none;
+    border-top: 1px solid #e1e1e3;
+    margin: 20px 0;
+}
+
+/* Input Groups */
+#config-dialog .input-group {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    height: 42px;
+    box-sizing: border-box;
+}
+
+    #config-dialog .input-group .form-control {
+        flex: 1;
+        border-radius: 6px 0 0 6px !important;
+        border-right: none !important;
+        height: 42px !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+    }
+
+        #config-dialog .input-group .form-control:focus {
+            z-index: 3;
+            border-color: #62a6ff !important;
+            border-right: none !important;
+        }
+
+#config-dialog .input-group-btn {
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    width: auto;
+}
+
+    #config-dialog .input-group-btn .btn {
+        border-left: none !important;
+        border-radius: 0 6px 6px 0 !important;
+        padding: 10px 12px !important;
+        background-color: #f8f9fa !important;
+        border: 1px solid #e0e0e0 !important;
+        height: 42px !important;
+        width: 42px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box;
+        margin: 0 !important;
+    }
+
+        #config-dialog .input-group-btn .btn:hover {
+            background-color: #e9ecef !important;
+        }
+
+        #config-dialog .input-group-btn .btn:focus {
+            z-index: 3;
+            border-color: #62a6ff !important;
+            border-left: none !important;
+        }
+
+
+#config-dialog .input-group .form-control[readonly],
+#config-dialog .input-group span.form-control {
+    background-color: #f8f9fa;
+    cursor: default;
+    height: 42px !important;
+    line-height: 20px !important;
+    padding: 10px 12px !important;
+    box-sizing: border-box;
+}
+
+/* Multi-select styling */
+#config-dialog select[multiple] {
+    min-height: 120px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px;
+    width: 100%;
+}
+
+#config-dialog .form-group {
+    margin-bottom: 16px;
+}
+
+#config-dialog .tab-content {
+    overflow: hidden;
+}
+
+#config-dialog .tab-pane {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Container width constraints */
+#config-group-detail-content,
+#config-user-detail-content {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #config-dialog .modal-dialog {
+        margin: 10px;
+        max-width: none;
+    }
+
+    .config-input-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .config-input-label {
+        margin-bottom: 4px;
+        min-width: auto;
+        max-width: none;
+    }
+
+    .config-input-field {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #config-dialog .input-group-btn .btn {
+        width: 40px !important;
+    }
+}
