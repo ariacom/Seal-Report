@@ -156,6 +156,7 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.HideMessages();
         $(".navbar-right").show();
         $("#footer-div").hide();
+        SWIUtil.ShowHideControl($("#search-pattern,#search-nav-item"), true);
         SWIUtil.ShowHideControl($("#login-password-reset"), data.showresetpassword);
         $("#password").val("");
         $("#securitycode").val("");
