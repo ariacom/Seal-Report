@@ -82,6 +82,7 @@ class SWIMain {
             if ((e.keyCode || e.which) == 13) _main.checkSecurityCode();
         });
 
+        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-assistant-button,#search-pattern,#search-nav-item"), false);
         $("#login-modal-submit").unbind("click").on("click", function () {
             _main.login();
         });
@@ -138,7 +139,13 @@ class SWIMain {
 
         _gateway.GetUserProfile(
             function (data) {
-                if (data.authenticated != null && data.authenticated == false) {
+                SWIUtil.ShowHideControl($("#login-password-reset"), data.showresetpassword);
+                var login = sessionStorage.getItem('login');
+                sessionStorage.removeItem('login');
+                if (login) {
+                    _main.loginFailure(data, true);
+                }
+                else if (data.authenticated != null && data.authenticated == false) {
                     //Try to login without authentication
                     _gateway.Login("", "", function (data) { _main.loginSuccess(data) }, function (data) { _main.loginFailure(data, true) });
                 }
@@ -307,7 +314,7 @@ class SWIMain {
             _gateway.Logout(function () {
                 $("#report-body").empty();
                 $("#nav_button").text("");
-                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item"), false);
+                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-assistant-button,#search-pattern,#search-nav-item"), false);
                 _main.showLogin();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             });
@@ -497,6 +504,7 @@ class SWIMain {
             }
             else if (type == "group") {
                 var newGroup = {
+                    GUID: SWIUtil.Newguid(),
                     Name: SWIUtil.UniqueName(SWIUtil.tr2("New group"), _main._config.groups),
                     Folders: [],
                     EditConfiguration: false,
@@ -648,6 +656,7 @@ class SWIMain {
             }
             else if (type == "login") {
                 var newFolder = {
+                    GUID: SWIUtil.Newguid(),
                     Id: "new login",
                 };
                 _main._config.logins.push(newFolder);
@@ -675,7 +684,7 @@ class SWIMain {
         select.selectpicker("destroy");
         select.empty();
         $.each(_main._config.groups, function (index, value) {
-            select.append(SWIUtil.GetOption(value.Name, value.Name, _main._configLogin.GroupNames.some(i => i === value.Name) ? value.Name : ""));
+            select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupNames && detail.GroupNames.some(i => i === value.GUID)) ? value.GUID : ""));
         });
         select.unbind("change").on("change", function (e) {
             _main._configLogin.GroupNames = $(this).val();

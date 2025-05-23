@@ -1048,7 +1048,7 @@ namespace SealWebServer.Controllers
                 //Check passwords
                 foreach (var login in Repository.Security.Logins)
                 {
-                    if (login.Password.StartsWith(login.HashedPassword)) login.HashedPassword = login.Password.Substring(login.HashedPassword.Length);
+                    if (login.Password != null && login.Password.StartsWith(login.HashedPassword)) login.HashedPassword = login.Password.Substring(login.HashedPassword.Length);
                 }
 
                 Repository.Security.SaveToFile();

@@ -44,6 +44,12 @@ namespace Seal.Model
         #endregion
 
 #endif
+
+        /// <summary>
+        /// The unique identifier
+        /// </summary>
+        public string GUID { get; set; }
+
         /// <summary>
         /// The login identifier (e.g. name, email, etc.).
         /// </summary>
@@ -110,7 +116,7 @@ namespace Seal.Model
         public string Phone { get; set; }
 
         /// <summary>
-        /// The security groups of the user.
+        /// The security group GUIDs of the user.
         /// </summary>
 #if WINDOWS
         [Category("Security Groups"), DisplayName("Groups"), Description("The security groups of the user."), Id(1, 2)]

@@ -37,6 +37,7 @@
   <TwoFACheckScript />
   <Groups>
     <SecurityGroup>
+      <GUID>13d763a0d8514f9fbb18e4459694fedc</GUID>
       <Name>Default Group</Name>
       <Folders>
         <SecurityFolder>
@@ -72,6 +73,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>01cf571d32a84145adf20aaa28f40449</GUID>
       <Name>Group (Execute)</Name>
       <Folders>
         <SecurityFolder>
@@ -95,6 +97,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>51f6208dd37d499fa92018f09ff33b62</GUID>
       <Name>Group (Execute Output)</Name>
       <Folders>
         <SecurityFolder>
@@ -126,6 +129,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>7e4087e0b39b4052a7b8534dff408f79</GUID>
       <Name>Group (Schedule)</Name>
       <Folders>
         <SecurityFolder>
@@ -149,6 +153,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>7a492a66d7e84d7aafca3f855ac6c234</GUID>
       <Name>Group (Edit)</Name>
       <Folders>
         <SecurityFolder>
@@ -204,6 +209,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>c550f8a8487a44f5a4b4da7d24606d33</GUID>
       <Name>Group (Demo)</Name>
       <PersFolderRight>Reports</PersFolderRight>
       <ShowFoldersView>true</ShowFoldersView>
@@ -216,6 +222,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>ca96ea5fc1bc4caea2169f7e17f92143</GUID>
       <Name>Group (Scripts 1)</Name>
       <PersFolderRight>None</PersFolderRight>
       <ShowFoldersView>true</ShowFoldersView>
@@ -276,6 +283,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>59013989fbfc4b09a7d5a2d9c7937df4</GUID>
       <Name>Group (Scripts 2)</Name>
       <PersFolderRight>Reports</PersFolderRight>
       <ShowFoldersView>true</ShowFoldersView>
@@ -311,6 +319,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>8f1ec42389ee42758af45364ebbaa4e5</GUID>
       <Name>Group (Menu)</Name>
       <Folders>
         <SecurityFolder>
@@ -352,6 +361,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>65b247d5ca804ef688e311e50f6da59a</GUID>
       <Name>Group (Startup Report)</Name>
       <PersFolderRight>None</PersFolderRight>
       <ShowFoldersView>true</ShowFoldersView>
@@ -366,6 +376,7 @@
       <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>3a5eeb4518ef46bf9f28fa514a3fd309</GUID>
       <Name>Group (Startup one Folder)</Name>
       <Folders>
         <SecurityFolder>
@@ -393,85 +404,96 @@
   </Groups>
   <Logins>
     <SecurityLogin>
+      <GUID>a24f9727f9d944e6b1947cc59079cd49</GUID>
       <Id>ex</Id>
       <Password>sYKvHw8IOWBXSlFU6qkFnpH6A6vR02MX96jl9QFhMFA=</Password>
       <Name />
       <Email />
       <Phone />
       <GroupNames>
-        <string>Group (Execute)</string>
+        <string>01cf571d32a84145adf20aaa28f40449</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>a92637f208c648c1a88d1ad4513de570</GUID>
       <Id>exo</Id>
       <Password>DjQEokCcFs8BYYCJNNP8d8/AyZASLBYVN9NbZ7A77AM=</Password>
       <GroupNames>
-        <string>Group (Execute Output)</string>
+        <string>51f6208dd37d499fa92018f09ff33b62</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>a6331576024d4f9b9ea4a971901bf2a3</GUID>
       <Id>sc</Id>
       <Password>o08w2ec10PBY9ry8ZjdIutgE+oQIONrNXflIb8tqBK4=</Password>
       <GroupNames>
-        <string>Group (Schedule)</string>
+        <string>7e4087e0b39b4052a7b8534dff408f79</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>613353d2ea90436cbf42420b59915732</GUID>
       <Id>ed</Id>
       <Password>P8IgYSuK3VxFHW7Jw5kN2/77Syt7baOATREXKAgkUmE=</Password>
       <GroupNames>
-        <string>Group (Edit)</string>
+        <string>7a492a66d7e84d7aafca3f855ac6c234</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>f2c158abc3224f3cb4ad91551357c9ee</GUID>
       <Id>exed</Id>
       <Password>dM18ybJITFztO3OM7N3KmnQNYDupfJ7fVM4XnD5scFQ=</Password>
       <GroupNames>
-        <string>Group (Execute)</string>
-        <string>Group (Edit)</string>
+        <string>01cf571d32a84145adf20aaa28f40449</string>
+        <string>7a492a66d7e84d7aafca3f855ac6c234</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>7c6baa5070fb41828a7dc06f6647f521</GUID>
       <Id>sc1</Id>
       <Password>pP9lEDHGQBHo1W4Nc9SWAADHT++fGIHQkV5tMo+fboM=</Password>
       <GroupNames>
-        <string>Group (Scripts 1)</string>
+        <string>ca96ea5fc1bc4caea2169f7e17f92143</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>2eed96526daa4e42b6e3c0dd77de1a3e</GUID>
       <Id>sc2</Id>
       <Password>SZwuoG5vEpEWgnnM/g56o+TZnyz77P42VzaQCMvMEWU=</Password>
       <GroupNames>
-        <string>Group (Scripts 2)</string>
+        <string>59013989fbfc4b09a7d5a2d9c7937df4</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>e9bee3484fe64506a3b5462522fc61ba</GUID>
       <Id>menu</Id>
       <Password>eybbMk9+pnU9fvpyOqid7xS5TIFJCWQh4xoyYSjFNvc=</Password>
       <GroupNames>
-        <string>Group (Menu)</string>
+        <string>8f1ec42389ee42758af45364ebbaa4e5</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>d61360411daa40169f34c5b0e10174b9</GUID>
       <Id>demo</Id>
       <Password>UyyPOA2CivOUeK1Qqc/t3hx49g09LN2j/Wlt0w8Kr0g=</Password>
       <GroupNames>
-        <string>Group (Demo)</string>
+        <string>c550f8a8487a44f5a4b4da7d24606d33</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>78af79441eaf438ba0991800cbc54e53</GUID>
       <Id>startup</Id>
       <Password>2v2vwLDXMLjH9VqfB231JJBxb9BH8hJuMyrrEe9qEfU=</Password>
       <GroupNames>
-        <string>Group (Execute)</string>
-        <string>Group (Startup Report)</string>
+        <string>01cf571d32a84145adf20aaa28f40449</string>
+        <string>65b247d5ca804ef688e311e50f6da59a</string>
       </GroupNames>
     </SecurityLogin>
     <SecurityLogin>
+      <GUID>cbab679feca645f5bf10bf08aa9607db</GUID>
       <Id>startupfolder</Id>
       <Password>epqVXebVd3V37EwkPryxWrgI1E6UIX/m/hsWMl/Kvzk=</Password>
       <GroupNames>
-        <string>Group (Startup one Folder)</string>
+        <string>3a5eeb4518ef46bf9f28fa514a3fd309</string>
       </GroupNames>
     </SecurityLogin>
   </Logins>

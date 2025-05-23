@@ -24,7 +24,7 @@ namespace Seal.Forms
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            List<string> choices = (from s in Repository.Instance.Security.Groups select s.Name).ToList();
+            List<string> choices = (from s in Repository.Instance.Security.Groups select s.GUID).ToList();
             return new StandardValuesCollection(choices);
         }   
     }

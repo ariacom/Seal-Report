@@ -38,7 +38,7 @@ namespace Seal.Forms
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
                     {
-                        if (login.GroupNames.Contains(((SecurityGroup)frm.checkedListBox.Items[i]).Name)) frm.checkedListBox.SetItemChecked(i, true);
+                        if (login.GroupNames.Contains(((SecurityGroup)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
                     }
 
                     if (frm.ShowDialog() == DialogResult.OK)
@@ -46,7 +46,7 @@ namespace Seal.Forms
                         login.GroupNames = new List<string>();
                         foreach (object item in frm.CheckedItems)
                         {
-                            login.GroupNames.Add(((SecurityGroup)item).Name);
+                            login.GroupNames.Add(((SecurityGroup)item).GUID);
                         }
                         value = login.GroupNames; //indicates a modification
                     }

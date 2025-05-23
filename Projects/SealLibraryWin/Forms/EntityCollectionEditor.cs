@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Drawing;
 using System.Linq;
 using Seal.Renderer;
+using Seal.Helpers;
 
 namespace Seal.Forms
 {
@@ -239,6 +240,14 @@ namespace Seal.Forms
             else if (instance is MetaEV)
             {
                 ((MetaEV) instance).MetaEnum = _component as MetaEnum;
+            }
+            else if (instance is SecurityGroup)
+            {
+                ((SecurityGroup)instance).GUID = Helper.NewGUID();
+            }
+            else if (instance is SecurityLogin)
+            {
+                ((SecurityLogin)instance).GUID = Helper.NewGUID();
             }
             return instance;
         }

@@ -4,6 +4,8 @@
 //
 using System.Collections.Generic;
 using System.ComponentModel;
+using Seal.Helpers;
+
 #if WINDOWS
 using DynamicTypeDescriptor;
 using Seal.Forms;
@@ -59,6 +61,12 @@ namespace Seal.Model
         #endregion
 
 #endif
+
+        /// <summary>
+        /// The unique identifier
+        /// </summary>
+        public string GUID {get; set; }
+
 
         string _name = "Group";
         /// <summary>

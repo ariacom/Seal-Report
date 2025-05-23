@@ -316,11 +316,29 @@ namespace Seal.Model
                 Groups.Add(group);
                 group.Folders.Add(new SecurityFolder());
             }
+            //Move to GUIDs if necessary (from version 8.4)
+            bool save = false;
+            foreach (var g in Groups.Where(i => string.IsNullOrEmpty(i.GUID)))
+            {
+                save = true;
+                g.GUID = Helper.NewGUID();
+                foreach (var l in Logins.Where(i => i.GroupNames.Contains(g.Name)))
+                {
+                    l.GroupNames.Remove(g.Name);
+                    l.GroupNames.Add(g.GUID);
+                }
+            }
+            foreach (var l in Logins.Where(i => string.IsNullOrEmpty(i.GUID)))
+            {
+                save = true;
+                l.GUID = Helper.NewGUID();
+            }
             //Remove deleted groups in logins
             foreach (var login in Logins)
             {
-                login.GroupNames.RemoveAll(i => !Groups.Exists(j => j.Name == i));
+                login.GroupNames.RemoveAll(i => !Groups.Exists(j => j.GUID == i));
             }
+            if (save) SaveToFile();
         }
 
         /// <summary>
