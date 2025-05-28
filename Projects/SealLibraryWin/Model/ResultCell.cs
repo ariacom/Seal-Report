@@ -303,7 +303,10 @@ namespace Seal.Model
         {
             get
             {
-                return CellCssClass;
+                updateFinalCssClass();
+                if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
+
+                return "";
             }
         }
 
@@ -389,7 +392,10 @@ namespace Seal.Model
         {
             get
             {
-                return CellCssStyle;
+                updateFinalCssStyle();
+                if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
+
+                return "";
             }
         }
 

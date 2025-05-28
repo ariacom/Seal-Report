@@ -332,6 +332,7 @@ namespace Seal
                 {
                     mainSplitContainer.Visible = true;
                     sourceHelper.addSource(mainTreeView.Nodes, _source, 9);
+                    mainTreeView.TreeViewNodeSorter = new NodeSorter();
                     mainTreeView.Nodes[0].Expand();
 
                 }

@@ -222,7 +222,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Default Options"), DisplayName("\t\tEdit configuration (Admin)"), Description("Web Report Server: For Administrators of the Web Server, the user can edit the configuration and security of the Web Server."), Id(2, 5)]
+        [Category("Default Options"), DisplayName("\t\tEdit configuration (Administrator)"), Description("Web Report Server: For Administrators of the Web Server, the user can edit the configuration and security of the Web Server."), Id(2, 5)]
 #endif
         public bool EditConfiguration { get; set; } = false;
 

@@ -359,6 +359,8 @@ namespace Seal
             finally
             {
                 mainTreeView.EndUpdate();
+                mainTreeView.TreeViewNodeSorter = new NodeSorter();
+
                 if (mainTreeView.SelectedNode != null) mainTreeView.SelectedNode.EnsureVisible();
             }
         }

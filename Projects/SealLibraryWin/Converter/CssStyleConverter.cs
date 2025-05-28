@@ -28,6 +28,7 @@ namespace Seal.Forms
             {
                 choices.Add("color:red;");
                 choices.Add("font-size:20px;");
+                choices.Add("text-align:left;");
                 choices.Add("font-weight:bold;color:red;");
             }
             return new StandardValuesCollection(choices.ToArray());

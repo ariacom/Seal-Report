@@ -518,16 +518,16 @@ namespace Seal.Model
         /// <summary>
         /// Add a security group from a given name
         /// </summary>
-        public void AddSecurityGroup(string name)
+        public void AddSecurityGroup(string guid)
         {
-            var newGroup = Security.Groups.FirstOrDefault(i => i.Name == name);
+            var newGroup = Security.Groups.FirstOrDefault(i => i.GUID == guid);
             if (newGroup != null)
             {
                 SecurityGroups.Add(newGroup);
             }
             else
             {
-                Warning += "Unable to add the security group: " + name + "\r\n";
+                Warning += "Unable to add the security group: " + guid + "\r\n";
             }
         }
 

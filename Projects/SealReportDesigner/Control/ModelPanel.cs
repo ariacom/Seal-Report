@@ -559,9 +559,16 @@ namespace Seal.Controls
             }
             elementTreeView.Tag = !Model.IsSQLModel ? Model.Source.GUID + Model.Source.LastMetadataModification.ToUniversalTime() : "";
 
-            TreeViewHelper.InitCategoryTreeNode(elementTreeView.Nodes, tableList);
-            elementTreeView.TreeViewNodeSorter = new NodeSorter();
-            elementTreeView.Sort();
+            try
+            {
+                elementTreeView.BeginUpdate();
+                TreeViewHelper.InitCategoryTreeNode(elementTreeView.Nodes, tableList);
+            }
+            finally
+            {
+                elementTreeView.EndUpdate();
+                elementTreeView.TreeViewNodeSorter = new NodeSorter();
+            }
             if (Model.IsSQLModel) elementTreeView.ExpandAll();
         }
 

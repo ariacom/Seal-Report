@@ -77,28 +77,39 @@ namespace Seal.Forms
     {
         // Compare the length of the strings, or the strings 
         // themselves, if they are the same length. 
+
         public int Compare(object x, object y)
         {
-            TreeNode tx = x as TreeNode;
-            TreeNode ty = y as TreeNode;
+            if (x is not TreeNode tx || y is not TreeNode ty)
+                return 0;
 
-            //Category folder bottom
-            if (tx.Tag is CategoryFolder && ty.Tag is CategoryFolder) return string.Compare(tx.Text, ty.Text); 
-            if (tx.Tag is CategoryFolder) return 1;
-            if (ty.Tag is CategoryFolder) return -1;
-            if (tx.Tag is TableLinkFolder) return 1;
-            if (ty.Tag is TableLinkFolder) return -1;
-            if (tx.Tag is Report) return 1;
+            object tagX = tx.Tag;
+            object tagY = ty.Tag;
 
-            if (tx.Tag is ITreeSort && ty.Tag is ITreeSort)
+            // Priority sorting logic
+            bool isCatX = tagX is CategoryFolder;
+            bool isCatY = tagY is CategoryFolder;
+            if (isCatX && isCatY) return string.Compare(tx.Text, ty.Text, StringComparison.OrdinalIgnoreCase);
+            if (isCatX) return 1;
+            if (isCatY) return -1;
+
+            bool isTblX = tagX is TableLinkFolder;
+            bool isTblY = tagY is TableLinkFolder;
+            if (isTblX) return 1;
+            if (isTblY) return -1;
+
+            if (tagX is Report) return 1;
+
+            // ITreeSort logic
+            if (tagX is ITreeSort sortX && tagY is ITreeSort sortY)
             {
-                ITreeSort viewx = tx.Tag as ITreeSort;
-                ITreeSort viewy = ty.Tag as ITreeSort;
-                if (viewx.GetSort() == viewy.GetSort()) return string.Compare(tx.Text, ty.Text);
-                if (viewx.GetSort() > viewy.GetSort()) return 1;
-                return -1;
+                int sortCompare = sortX.GetSort().CompareTo(sortY.GetSort());
+                return sortCompare != 0
+                    ? sortCompare
+                    : string.Compare(tx.Text, ty.Text, StringComparison.OrdinalIgnoreCase);
             }
-            return string.Compare(tx.Text, ty.Text);
+
+            return string.Compare(tx.Text, ty.Text, StringComparison.OrdinalIgnoreCase);
         }
     }
 
@@ -205,8 +216,6 @@ namespace Seal.Forms
                 sourceEnumTN.Nodes.Add(tn);
             }
             if (!ForReport) sourceEnumTN.ExpandAll();
-
-            mainTreeView.TreeViewNodeSorter = new NodeSorter();
         }
 
         public void sortColumns_Click(object sender, EventArgs e, bool byPosition)
