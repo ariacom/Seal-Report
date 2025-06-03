@@ -235,7 +235,26 @@ namespace Seal.Model
             }
         }
 
-        private bool? _sqlModel = null;
+        private DownloadUpload? _downloadUpload = null;
+        /// <summary>
+        /// Right for the personal folder
+        /// </summary>
+        public DownloadUpload DownloadUploadRight
+        {
+            get
+            {
+                if (_downloadUpload == null)
+                {
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (_downloadUpload == null || _downloadUpload < group.DownloadUpload) _downloadUpload = group.DownloadUpload;
+                    }
+                    if (_downloadUpload == null) _downloadUpload = DownloadUpload.None;
+                }
+                return _downloadUpload.Value;
+            }
+        }
+
         /// <summary>
         /// True if the user has right to edit SQL models
         /// </summary>
@@ -243,19 +262,10 @@ namespace Seal.Model
         {
             get
             {
-                if (_sqlModel == null)
-                {
-                    _sqlModel = false;
-                    foreach (var group in SecurityGroups)
-                    {
-                        if (group.SqlModel) _sqlModel = true;
-                    }
-                }
-                return _sqlModel.Value;
+                return SecurityGroups.Any(group => group.SqlModel);
             }
         }
 
-        private bool? _showFoldersView = null;
         /// <summary>
         /// If true, folders view is shown
         /// </summary>
@@ -263,19 +273,10 @@ namespace Seal.Model
         {
             get
             {
-                if (_showFoldersView == null)
-                {
-                    _showFoldersView = false;
-                    foreach (var group in SecurityGroups)
-                    {
-                        if (group.ShowFoldersView) _showFoldersView = true;
-                    }
-                }
-                return _showFoldersView.Value;
+                return SecurityGroups.Any(group => group.ShowFoldersView);
             }
         }
 
-        private bool? _showAllFolder = null;
         /// <summary>
         /// True if folders with no right are also shown
         /// </summary>
@@ -283,15 +284,29 @@ namespace Seal.Model
         {
             get
             {
-                if (_showAllFolder == null)
-                {
-                    _showAllFolder = false;
-                    foreach (var group in SecurityGroups)
-                    {
-                        if (group.ShowAllFolders) _showAllFolder = true;
-                    }
-                }
-                return _showAllFolder.Value;
+                return SecurityGroups.Any(group => group.ShowAllFolders);
+            }
+        }
+
+        /// <summary>
+        /// True if user can edit his profile
+        /// </summary>
+        public bool EditProfile
+        {
+            get
+            {
+                return SecurityGroups.Any(group => group.EditProfile);
+            }
+        }
+
+        /// <summary>
+        /// True if user can edit the configuration (is administrator)
+        /// </summary>
+        public bool EditConfiguration
+        {
+            get
+            {
+                return SecurityGroups.Any(group => group.EditConfiguration);
             }
         }
 

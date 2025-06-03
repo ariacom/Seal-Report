@@ -170,12 +170,14 @@ namespace Seal.Model
         {
             try
             {
+                if (type == AuditType.LoginFailure && string.IsNullOrEmpty(user.WebUserName)) return; //No audit for this type
+
                 if (Repository.Instance.Configuration.AuditEnabled)
                 {
                     var script = Repository.Instance.Configuration.AuditScript;
                     if (string.IsNullOrEmpty(script)) script = AuditScriptTemplate;
-                    var audit = new Audit() { Type = type, User = user, Path = path, Detail = detail, Error = error, Report = report, Schedule = schedule };
 
+                    var audit = new Audit() { Type = type, User = user, Path = path, Detail = detail, Error = error, Report = report, Schedule = schedule };
                     var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith("Audit"));
                     bool lockDatabase = (auditSource != null && auditSource.Connection.ConnectionType == ConnectionType.SQLite);
 

@@ -4,6 +4,260 @@
   <LogDays>30</LogDays>
   <WebProductName>Seal Report</WebProductName>
   <WebHelpLink>https://sealreport.org</WebHelpLink>
+  <WebCultures>
+    <string>Arabic</string>
+    <string>Arabic (world)</string>
+    <string>Arabic (United Arab Emirates)</string>
+    <string>Arabic (Bahrain)</string>
+    <string>Arabic (Djibouti)</string>
+    <string>Arabic (Algeria)</string>
+    <string>Arabic (Egypt)</string>
+    <string>Arabic (Eritrea)</string>
+    <string>Arabic (Israel)</string>
+    <string>Arabic (Iraq)</string>
+    <string>Arabic (Jordan)</string>
+    <string>Arabic (Comoros)</string>
+    <string>Arabic (Kuwait)</string>
+    <string>Arabic (Lebanon)</string>
+    <string>Arabic (Libya)</string>
+    <string>Arabic (Morocco)</string>
+    <string>Arabic (Mauritania)</string>
+    <string>Arabic (Oman)</string>
+    <string>Arabic (Palestinian Authority)</string>
+    <string>Arabic (Qatar)</string>
+    <string>Arabic (Saudi Arabia)</string>
+    <string>Arabic (Sudan)</string>
+    <string>Arabic (Somalia)</string>
+    <string>Arabic (South Sudan)</string>
+    <string>Arabic (Syria)</string>
+    <string>Arabic (Chad)</string>
+    <string>Arabic (Tunisia)</string>
+    <string>Arabic (Yemen)</string>
+    <string>Spanish</string>
+    <string>Spanish (Latin America)</string>
+    <string>Spanish (Argentina)</string>
+    <string>Spanish (Bolivia)</string>
+    <string>Spanish (Brazil)</string>
+    <string>Spanish (Belize)</string>
+    <string>Spanish (Chile)</string>
+    <string>Spanish (Colombia)</string>
+    <string>Spanish (Costa Rica)</string>
+    <string>Spanish (Cuba)</string>
+    <string>Spanish (Dominican Republic)</string>
+    <string>Spanish (Ecuador)</string>
+    <string>Spanish (Spain)</string>
+    <string>Spanish (Equatorial Guinea)</string>
+    <string>Spanish (Guatemala)</string>
+    <string>Spanish (Honduras)</string>
+    <string>Spanish (Mexico)</string>
+    <string>Spanish (Nicaragua)</string>
+    <string>Spanish (Panama)</string>
+    <string>Spanish (Peru)</string>
+    <string>Spanish (Philippines)</string>
+    <string>Spanish (Puerto Rico)</string>
+    <string>Spanish (Paraguay)</string>
+    <string>Spanish (El Salvador)</string>
+    <string>Spanish (United States)</string>
+    <string>Spanish (Uruguay)</string>
+    <string>Spanish (Venezuela)</string>
+    <string>Italian</string>
+    <string>Italian (Switzerland)</string>
+    <string>Italian (Italy)</string>
+    <string>Italian (San Marino)</string>
+    <string>Italian (Vatican City)</string>
+    <string>Norwegian Bokmål</string>
+    <string>Norwegian Bokmål (Norway)</string>
+    <string>Norwegian Bokmål (Svalbard &amp; Jan Mayen)</string>
+    <string>Polish</string>
+    <string>Polish (Poland)</string>
+    <string>Portuguese</string>
+    <string>Portuguese (Angola)</string>
+    <string>Portuguese (Brazil)</string>
+    <string>Portuguese (Switzerland)</string>
+    <string>Portuguese (Cabo Verde)</string>
+    <string>Portuguese (Equatorial Guinea)</string>
+    <string>Portuguese (Guinea-Bissau)</string>
+    <string>Portuguese (Luxembourg)</string>
+    <string>Portuguese (Macao SAR)</string>
+    <string>Portuguese (Mozambique)</string>
+    <string>Portuguese (Portugal)</string>
+    <string>Portuguese (São Tomé &amp; Príncipe)</string>
+    <string>Portuguese (Timor-Leste)</string>
+    <string>Russian</string>
+    <string>Russian (Belarus)</string>
+    <string>Russian (Kyrgyzstan)</string>
+    <string>Russian (Kazakhstan)</string>
+    <string>Russian (Moldova)</string>
+    <string>Russian (Russia)</string>
+    <string>Russian (Ukraine)</string>
+    <string>Chinese</string>
+    <string>Chinese (Simplified)</string>
+    <string>Chinese (Simplified, China)</string>
+    <string>Chinese (Simplified, Hong Kong SAR)</string>
+    <string>Chinese (Simplified, Macao SAR)</string>
+    <string>Chinese (Simplified, Singapore)</string>
+    <string>Chinese (Traditional)</string>
+    <string>Chinese (Traditional, Hong Kong SAR)</string>
+    <string>Chinese (Traditional, Macao SAR)</string>
+    <string>Chinese (Traditional, Taiwan)</string>
+    <string>English</string>
+    <string>English (world)</string>
+    <string>English (Caribbean)</string>
+    <string>English (Europe)</string>
+    <string>English (United Arab Emirates)</string>
+    <string>English (Antigua &amp; Barbuda)</string>
+    <string>English (Anguilla)</string>
+    <string>English (American Samoa)</string>
+    <string>English (Austria)</string>
+    <string>English (Australia)</string>
+    <string>English (Barbados)</string>
+    <string>English (Belgium)</string>
+    <string>English (Burundi)</string>
+    <string>English (Bermuda)</string>
+    <string>English (Bahamas)</string>
+    <string>English (Botswana)</string>
+    <string>English (Belize)</string>
+    <string>English (Canada)</string>
+    <string>English (Cocos [Keeling] Islands)</string>
+    <string>English (Switzerland)</string>
+    <string>English (Cook Islands)</string>
+    <string>English (Cameroon)</string>
+    <string>English (Christmas Island)</string>
+    <string>English (Cyprus)</string>
+    <string>English (Germany)</string>
+    <string>English (Denmark)</string>
+    <string>English (Dominica)</string>
+    <string>English (Eritrea)</string>
+    <string>English (Finland)</string>
+    <string>English (Fiji)</string>
+    <string>English (Falkland Islands)</string>
+    <string>English (Micronesia)</string>
+    <string>English (United Kingdom)</string>
+    <string>English (Grenada)</string>
+    <string>English (Guernsey)</string>
+    <string>English (Ghana)</string>
+    <string>English (Gibraltar)</string>
+    <string>English (Gambia)</string>
+    <string>English (Guam)</string>
+    <string>English (Guyana)</string>
+    <string>English (Hong Kong SAR)</string>
+    <string>English (Indonesia)</string>
+    <string>English (Ireland)</string>
+    <string>English (Israel)</string>
+    <string>English (Isle of Man)</string>
+    <string>English (India)</string>
+    <string>English (British Indian Ocean Territory)</string>
+    <string>English (Jersey)</string>
+    <string>English (Jamaica)</string>
+    <string>English (Kenya)</string>
+    <string>English (Kiribati)</string>
+    <string>English (St. Kitts &amp; Nevis)</string>
+    <string>English (Cayman Islands)</string>
+    <string>English (St. Lucia)</string>
+    <string>English (Liberia)</string>
+    <string>English (Lesotho)</string>
+    <string>English (Madagascar)</string>
+    <string>English (Marshall Islands)</string>
+    <string>English (Macao SAR)</string>
+    <string>English (Northern Mariana Islands)</string>
+    <string>English (Montserrat)</string>
+    <string>English (Malta)</string>
+    <string>English (Mauritius)</string>
+    <string>English (Maldives)</string>
+    <string>English (Malawi)</string>
+    <string>English (Malaysia)</string>
+    <string>English (Namibia)</string>
+    <string>English (Norfolk Island)</string>
+    <string>English (Nigeria)</string>
+    <string>English (Netherlands)</string>
+    <string>English (Nauru)</string>
+    <string>English (Niue)</string>
+    <string>English (New Zealand)</string>
+    <string>English (Papua New Guinea)</string>
+    <string>English (Philippines)</string>
+    <string>English (Pakistan)</string>
+    <string>English (Pitcairn Islands)</string>
+    <string>English (Puerto Rico)</string>
+    <string>English (Palau)</string>
+    <string>English (Rwanda)</string>
+    <string>English (Solomon Islands)</string>
+    <string>English (Seychelles)</string>
+    <string>English (Sudan)</string>
+    <string>English (Sweden)</string>
+    <string>English (Singapore)</string>
+    <string>English (St Helena, Ascension, Tristan da Cunha)</string>
+    <string>English (Slovenia)</string>
+    <string>English (Sierra Leone)</string>
+    <string>English (South Sudan)</string>
+    <string>English (Sint Maarten)</string>
+    <string>English (Eswatini)</string>
+    <string>English (Turks &amp; Caicos Islands)</string>
+    <string>English (Tokelau)</string>
+    <string>English (Tonga)</string>
+    <string>English (Trinidad &amp; Tobago)</string>
+    <string>English (Tuvalu)</string>
+    <string>English (Tanzania)</string>
+    <string>English (Uganda)</string>
+    <string>English (U.S. Outlying Islands)</string>
+    <string>English (United States)</string>
+    <string>English (United States, Computer)</string>
+    <string>English (St. Vincent &amp; Grenadines)</string>
+    <string>English (British Virgin Islands)</string>
+    <string>English (U.S. Virgin Islands)</string>
+    <string>English (Vanuatu)</string>
+    <string>English (Samoa)</string>
+    <string>English (South Africa)</string>
+    <string>English (Zambia)</string>
+    <string>English (Zimbabwe)</string>
+    <string>French</string>
+    <string>French (Caribbean)</string>
+    <string>French (Belgium)</string>
+    <string>French (Burkina Faso)</string>
+    <string>French (Burundi)</string>
+    <string>French (Benin)</string>
+    <string>French (St. Barthélemy)</string>
+    <string>French (Canada)</string>
+    <string>French (Congo [DRC])</string>
+    <string>French (Central African Republic)</string>
+    <string>French (Congo)</string>
+    <string>French (Switzerland)</string>
+    <string>French (Côte d’Ivoire)</string>
+    <string>French (Cameroon)</string>
+    <string>French (Djibouti)</string>
+    <string>French (Algeria)</string>
+    <string>French (France)</string>
+    <string>French (Gabon)</string>
+    <string>French (French Guiana)</string>
+    <string>French (Guinea)</string>
+    <string>French (Guadeloupe)</string>
+    <string>French (Equatorial Guinea)</string>
+    <string>French (Haiti)</string>
+    <string>French (Comoros)</string>
+    <string>French (Luxembourg)</string>
+    <string>French (Morocco)</string>
+    <string>French (Monaco)</string>
+    <string>French (St. Martin)</string>
+    <string>French (Madagascar)</string>
+    <string>French (Mali)</string>
+    <string>French (Martinique)</string>
+    <string>French (Mauritania)</string>
+    <string>French (Mauritius)</string>
+    <string>French (New Caledonia)</string>
+    <string>French (Niger)</string>
+    <string>French (French Polynesia)</string>
+    <string>French (St. Pierre &amp; Miquelon)</string>
+    <string>French (Réunion)</string>
+    <string>French (Rwanda)</string>
+    <string>French (Seychelles)</string>
+    <string>French (Senegal)</string>
+    <string>French (Syria)</string>
+    <string>French (Chad)</string>
+    <string>French (Togo)</string>
+    <string>French (Tunisia)</string>
+    <string>French (Vanuatu)</string>
+    <string>French (Wallis &amp; Futuna)</string>
+    <string>French (Mayotte)</string>
+  </WebCultures>
   <IsLocal>true</IsLocal>
   <HostForPersonalFolder>false</HostForPersonalFolder>
   <FileReplacePatterns>

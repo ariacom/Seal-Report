@@ -120,8 +120,9 @@ namespace SealWebServer.Controllers
                 culture = culture,
                 folder = WebUser.Profile.LastFolder,
                 showfolders = WebUser.ShowFoldersView,
-                editconfiguration = defaultGroup.EditConfiguration,
-                editprofile = defaultGroup.EditProfile,
+                editconfiguration = WebUser.EditConfiguration,
+                editprofile = WebUser.EditProfile,
+                downloadupload = WebUser.DownloadUploadRight,
                 usertag = WebUser.Tag,
                 onstartup = WebUser.Profile.OnStartup,
                 startupreport = WebUser.Profile.StartUpReport,
@@ -905,8 +906,40 @@ namespace SealWebServer.Controllers
 
                 var file = getFileDetail(path);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-
+                if (file.isreport && WebUser.DownloadUploadRight == DownloadUpload.None) throw new Exception("Error: no right to download report");
                 return getFileResult(getFullPath(path), null);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Upload a file in a repository folder.
+        /// </summary>
+        public ActionResult SWUploadFile(string sessionId)
+        {
+            writeDebug("SWUploadFile");
+            try
+            {
+                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+
+                var path = Request.Form["path"];
+                SWIFolder folder = getFolder(path);
+                if (Request.Form.Files.Count == 0) throw new Exception("No file to upload");
+                if ((FolderRight)folder.right != FolderRight.Edit) throw new Exception("Error: no right to upload file on this folder");
+
+
+                var file = Request.Form.Files[0];
+                //Saving the file
+                var finalPath = FileHelper.GetUniqueFileName(Path.Combine(folder.GetFullPath(), file.FileName));
+                using (var stream = System.IO.File.Create(finalPath))
+                {
+                    file.CopyTo(stream);
+                }
+                return Json(new { Status = true, Message = Translate("The file has been uploaded.") });
             }
             catch (Exception ex)
             {

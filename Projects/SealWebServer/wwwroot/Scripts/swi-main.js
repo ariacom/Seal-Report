@@ -360,6 +360,31 @@ var SWIMain = /** @class */ (function () {
                 });
             }
         });
+        //Upload
+        $("#report-upload-lightbutton").unbind("click").on("click", function (e) {
+            e.preventDefault();
+            $("#upload-file").click();
+        });
+        $("#upload-file").on("change", function (e) {
+            var fileInput = e.target;
+            if (fileInput.files && fileInput.files.length > 0) {
+                var formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('path', _main._folder.path);
+                _gateway.UploadFile(formData, function (data) {
+                    if (data.Status) {
+                        _main.ReloadReportsTable();
+                        _main.refreshMenus();
+                        SWIUtil.ShowMessage("alert-success", data.Message, 5000);
+                    }
+                    else {
+                        SWIUtil.ShowMessage("alert-danger", data.Message, 0);
+                    }
+                    // Clear the file input
+                    fileInput.value = '';
+                });
+            }
+        });
         _main.enableControls();
         _main.resize();
         //Start last report
@@ -390,7 +415,7 @@ var SWIMain = /** @class */ (function () {
                     if (profile.editconfiguration) {
                         $waitDialog.modal();
                         _gateway.SetConfiguration(JSON.stringify(_main._config), function () {
-                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The configuration has been saved"), 5000);
+                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The configuration has been saved. Please login again if you are impacted by the security."), 5000);
                             $waitDialog.modal('hide');
                             $("#config-dialog").modal('hide');
                         }, function (data) {
@@ -434,7 +459,8 @@ var SWIMain = /** @class */ (function () {
                     Name: SWIUtil.UniqueName(SWIUtil.tr2("New group"), _main._config.groups),
                     Folders: [],
                     EditConfiguration: false,
-                    EditProfile: true
+                    EditProfile: true,
+                    PersFolderRight: 2
                 };
                 _main._config.groups.push(newGroup);
                 _main._configGroup = newGroup;
@@ -456,8 +482,30 @@ var SWIMain = /** @class */ (function () {
         if (!detail.Folders)
             detail.Folders = [];
         SWIUtil.InitStandardInput("#config-group-name", detail.Name, null, function (val) { detail.Name = val; });
-        SWIUtil.InitBoolSelect("#config-group-editconfiguration", detail.EditConfiguration, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.EditConfiguration = val; });
-        SWIUtil.InitBoolSelect("#config-group-editprofile", detail.EditProfile, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.EditProfile = val; });
+        SWIUtil.InitBoolSelect("#config-group-editconfiguration", detail.EditConfiguration, SWIUtil.tr("Yes (User is administrator of the Web Server)"), SWIUtil.tr("No"), function (val) { detail.EditConfiguration = val; });
+        SWIUtil.InitBoolSelect("#config-group-editprofile", detail.EditProfile, SWIUtil.tr("Yes (User can edit his profile)"), SWIUtil.tr("No"), function (val) { detail.EditProfile = val; });
+        var $select = $("#config-group-personalfolder");
+        $select.unbind("change");
+        $select.selectpicker("destroy");
+        $select.empty();
+        $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No personal folder"), detail.PersFolderRight));
+        $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Personal folder for files only"), detail.PersFolderRight));
+        $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Personal folder for reports and files"), detail.PersFolderRight));
+        $select.unbind("change").on("change", function (e) {
+            detail.PersFolderRight = $(this).val();
+        });
+        $select.selectpicker('refresh');
+        var $select = $("#config-group-downloadupload");
+        $select.unbind("change");
+        $select.selectpicker("destroy");
+        $select.empty();
+        $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No download or upload"), detail.DownloadUpload));
+        $select.append(SWIUtil.GetOption("1", SWIUtil.tr("User can download reports"), detail.DownloadUpload));
+        $select.append(SWIUtil.GetOption("2", SWIUtil.tr("User can download and upload reports and files"), detail.DownloadUpload));
+        $select.unbind("change").on("change", function (e) {
+            detail.DownloadUpload = $(this).val();
+        });
+        $select.selectpicker('refresh');
         _main.initDropDownGroupsFolders();
     };
     SWIMain.prototype.initDropDownGroupsFolders = function () {
@@ -539,10 +587,10 @@ var SWIMain = /** @class */ (function () {
                 _main._configGroupFolder.FolderRight = $(this).val();
             });
             $select.selectpicker('refresh');
-            SWIUtil.InitBoolSelect("#config-group-folder-manage", detail.ManageFolder, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.ManageFolder = val; });
-            SWIUtil.InitBoolSelect("#config-group-folder-showsub", detail.UseSubFolders, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.UseSubFolders = val; });
-            SWIUtil.InitBoolSelect("#config-group-folder-expand", detail.ExpandSubFolders, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.ExpandSubFolders = val; });
-            SWIUtil.InitBoolSelect("#config-group-folder-filesonly", detail.FilesOnly, SWIUtil.tr("Yes"), SWIUtil.tr("No"), function (val) { detail.FilesOnly = val; });
+            SWIUtil.InitBoolSelect("#config-group-folder-manage", detail.ManageFolder, SWIUtil.tr("Yes (User can create and edit sub-folders)"), SWIUtil.tr("No"), function (val) { detail.ManageFolder = val; });
+            SWIUtil.InitBoolSelect("#config-group-folder-showsub", detail.UseSubFolders, SWIUtil.tr("Yes (User can browse sub-folders)"), SWIUtil.tr("No"), function (val) { detail.UseSubFolders = val; });
+            SWIUtil.InitBoolSelect("#config-group-folder-expand", detail.ExpandSubFolders, SWIUtil.tr("Yes (Folder is expanded in the tree view)"), SWIUtil.tr("No"), function (val) { detail.ExpandSubFolders = val; });
+            SWIUtil.InitBoolSelect("#config-group-folder-filesonly", detail.FilesOnly, SWIUtil.tr("Yes (Only files can be stored)"), SWIUtil.tr("No"), function (val) { detail.FilesOnly = val; });
         }
     };
     SWIMain.prototype.initDropDownLogins = function () {
@@ -699,6 +747,7 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.EnableButton($("#report-cut-lightbutton"), checked != 0 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-copy-lightbutton"), checked != 0 && right > 0);
         SWIUtil.EnableButton($("#report-paste-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
+        SWIUtil.ShowHideControl($("#report-upload-lightbutton"), _main._profile && _main._profile.downloadupload > 1 && right >= folderRightEdit);
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
         SWIUtil.ShowHideControl($("#nav_button"), _main._reportPath != null && _main._reportPath != "");
@@ -859,6 +908,11 @@ var SWIMain = /** @class */ (function () {
                     button.append($("<span class='glyphicon glyphicon-pencil'></span>"));
                     $td.append(button);
                 }
+                if (_main._profile.downloadupload > 0) {
+                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-default btn-table report-download hidden-xs");
+                    button.append($("<span class='glyphicon glyphicon-download'></span>"));
+                    $td.append(button);
+                }
             }
             $tr.append($("<td>").css("text-align", "right").addClass("hidden-xs").text(file.last));
         }
@@ -900,6 +954,11 @@ var SWIMain = /** @class */ (function () {
             else {
                 _main.executeReportFromMenu(path, null, null, name);
             }
+        });
+        $(".report-download").unbind("click").on("click", function (e) {
+            $outputPanel.hide();
+            var path = $(e.currentTarget).parent().data("path");
+            _gateway.ViewFile(path);
         });
         $(".report-output").unbind("click").on("click", function (e) {
             $outputPanel.hide();

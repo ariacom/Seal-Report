@@ -199,4 +199,16 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+
+    public UploadFile(data: FormData, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.ajax({
+            url: _server + "SWUploadFile",
+            type: 'POST',
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); },
+            error: function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); }
+        });
+    }
 }

@@ -8,7 +8,7 @@
       <Name>Local SQLLite</Name>
       <DatabaseType>SQLite</DatabaseType>
       <ConnectionType>SQLite</ConnectionType>
-      <SQLiteConnectionString>Data Source=%SEALREPOSITORY%\Databases\Audit.sqlite;Date Time Format =1;;DateTimeKind=Utc;</SQLiteConnectionString>
+      <SQLiteConnectionString>Data Source=%SEALREPOSITORY%\Databases\Audit.sqlite;Date Time Format =1;DateTimeKind=Utc;</SQLiteConnectionString>
     </MetaConnection>
   </Connections>
   <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>

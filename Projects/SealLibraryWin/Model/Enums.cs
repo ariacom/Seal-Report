@@ -693,4 +693,13 @@ namespace Seal.Model
         MSGraph,
     }
 
+    public enum DownloadUpload
+    {
+        [Description("None")]
+        None,
+        [Description("Download")]
+        Download,
+        [Description("Download and Upload")]
+        DownloadUpload,
+    }
 }

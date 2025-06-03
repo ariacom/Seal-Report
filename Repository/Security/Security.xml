@@ -40,61 +40,37 @@
       <GUID>13d763a0d8514f9fbb18e4459694fedc</GUID>
       <Name>Default Group</Name>
       <Folders>
-        <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
-          <FolderRight>Edit</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
-        </SecurityFolder>
+        <SecurityFolder />
         <SecurityFolder>
           <Path>\System</Path>
           <UseSubFolders>false</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
-          <FolderRight>Edit</FolderRight>
           <ExpandSubFolders>false</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
-      <PersFolderRight>Reports</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
+      <PersFolderRight>None</PersFolderRight>
       <FoldersScript />
       <FolderDetailScript />
       <MenuScript />
       <SqlModel>true</SqlModel>
       <Weight>1</Weight>
       <EditConfiguration>true</EditConfiguration>
-      <EditProfile>true</EditProfile>
+      <DownloadUpload>DownloadUpload</DownloadUpload>
       <Culture />
-      <OnStartup>None</OnStartup>
       <StartupReport />
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>01cf571d32a84145adf20aaa28f40449</GUID>
       <Name>Group (Execute)</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
           <FolderRight>Execute</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
       <PersFolderRight>None</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
-      <SqlModel>false</SqlModel>
       <Weight>1</Weight>
-      <EditConfiguration>false</EditConfiguration>
       <EditProfile>false</EditProfile>
       <Culture />
-      <OnStartup>None</OnStartup>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>51f6208dd37d499fa92018f09ff33b62</GUID>
@@ -102,89 +78,52 @@
       <Folders>
         <SecurityFolder>
           <Path>\Samples</Path>
-          <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
           <FolderRight>ExecuteReportOuput</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
         <SecurityFolder>
           <Path>\System</Path>
-          <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
           <FolderRight>ExecuteReportOuput</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
       <PersFolderRight>None</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
-      <SqlModel>false</SqlModel>
       <Weight>1</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
       <Culture />
-      <OnStartup>None</OnStartup>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>7e4087e0b39b4052a7b8534dff408f79</GUID>
       <Name>Group (Schedule)</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
           <FolderRight>Schedule</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
       <PersFolderRight>Files</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
-      <SqlModel>false</SqlModel>
       <Weight>1</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
       <Culture />
-      <OnStartup>None</OnStartup>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>7a492a66d7e84d7aafca3f855ac6c234</GUID>
       <Name>Group (Edit)</Name>
       <Folders>
-        <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
-          <FolderRight>Edit</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
-        </SecurityFolder>
+        <SecurityFolder />
       </Folders>
-      <PersFolderRight>Reports</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
-      <SqlModel>false</SqlModel>
+      <PersFolderRight>None</PersFolderRight>
       <Devices>
         <SecurityDevice>
           <Name>Folder Device</Name>
-          <Right>NoSelection</Right>
         </SecurityDevice>
       </Devices>
       <Sources>
         <SecuritySource>
           <Name>RSS No SQL Source</Name>
-          <Right>NoSelection</Right>
         </SecuritySource>
       </Sources>
       <Connections>
         <SecurityConnection>
           <Name>connection</Name>
-          <Right>NoSelection</Right>
         </SecurityConnection>
       </Connections>
       <Columns>
@@ -192,41 +131,27 @@
           <Source>Northwind</Source>
           <Tag />
           <Category>Products</Category>
-          <Right>NoSelection</Right>
         </SecurityColumn>
         <SecurityColumn>
           <Source>Northwind</Source>
           <Tag />
           <Category>Customers</Category>
-          <Right>NoSelection</Right>
         </SecurityColumn>
       </Columns>
       <Weight>1</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
       <Culture />
-      <OnStartup>None</OnStartup>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>c550f8a8487a44f5a4b4da7d24606d33</GUID>
       <Name>Group (Demo)</Name>
-      <PersFolderRight>Reports</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
+      <PersFolderRight>None</PersFolderRight>
       <SqlModel>true</SqlModel>
       <Weight>1</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
-      <OnStartup>None</OnStartup>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>ca96ea5fc1bc4caea2169f7e17f92143</GUID>
       <Name>Group (Scripts 1)</Name>
       <PersFolderRight>None</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
       <FoldersScript>@{
     SecurityUser user = Model;
     //Full documentation at https://sealreport.org/Help/Index.html
@@ -275,19 +200,12 @@
     }
 }
 </FolderDetailScript>
-      <SqlModel>false</SqlModel>
       <Weight>1</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
-      <OnStartup>None</OnStartup>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>59013989fbfc4b09a7d5a2d9c7937df4</GUID>
       <Name>Group (Scripts 2)</Name>
-      <PersFolderRight>Reports</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
+      <PersFolderRight>None</PersFolderRight>
       <FoldersScript>@{
     SecurityUser user = Model;
     //Full documentation at https://sealreport.org/Help/Index.html
@@ -311,29 +229,19 @@
     }
 }
 </FolderDetailScript>
-      <SqlModel>false</SqlModel>
       <Weight>1</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
-      <OnStartup>None</OnStartup>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>8f1ec42389ee42758af45364ebbaa4e5</GUID>
       <Name>Group (Menu)</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
           <FolderRight>Execute</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
       <PersFolderRight>None</PersFolderRight>
       <ShowFoldersView>false</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
       <MenuScript>@{
     SecurityUser user = Model;
     //Full documentation at https://sealreport.org/Help/Index.html
@@ -352,28 +260,18 @@
     user.WebMenu.recentreports.Clear();
 }
 </MenuScript>
-      <SqlModel>false</SqlModel>
       <Weight>1</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
       <OnStartup>ExecuteReport</OnStartup>
       <StartupReport>\work\basic.srex</StartupReport>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>65b247d5ca804ef688e311e50f6da59a</GUID>
       <Name>Group (Startup Report)</Name>
       <PersFolderRight>None</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
-      <SqlModel>false</SqlModel>
       <Weight>10</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
       <OnStartup>ExecuteReport</OnStartup>
       <StartupReport>/Samples/40-Startup Report.srex</StartupReport>
       <StartupReportName>Starting...</StartupReportName>
-      <ExecutionMode>NewWindow</ExecutionMode>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>3a5eeb4518ef46bf9f28fa514a3fd309</GUID>
@@ -382,19 +280,11 @@
         <SecurityFolder>
           <Path>\Samples</Path>
           <UseSubFolders>false</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
           <FolderRight>Execute</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
       <PersFolderRight>None</PersFolderRight>
-      <ShowFoldersView>true</ShowFoldersView>
-      <ShowAllFolders>false</ShowAllFolders>
-      <SqlModel>false</SqlModel>
       <Weight>10</Weight>
-      <EditConfiguration>false</EditConfiguration>
-      <EditProfile>true</EditProfile>
       <Culture />
       <OnStartup>ExecuteReport</OnStartup>
       <StartupReport>/Samples/41-Startup Folder.srex</StartupReport>

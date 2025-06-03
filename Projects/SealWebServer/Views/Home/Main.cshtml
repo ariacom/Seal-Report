@@ -59,6 +59,7 @@
                     <div id="report-paste-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-paste"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Paste")</span></div>
                     <div id="report-delete-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-remove"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Delete")</span></div>
                     <div id="report-rename-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-file-text"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Rename")</span></div>
+                    <div id="report-upload-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-upload"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Upload")</span></div>
                 </div>
                 <div id="file-table-view" style="overflow:auto;">
                     <table id="file-table" class="table table-striped table-hover">
@@ -66,7 +67,11 @@
                         <tbody id="file-table-body"></tbody>
                     </table>
                 </div>
+                    <form id="upload-file-form" class="hidden">
+                        <input id="upload-file" type="file" name="file" />
+                    </form>
             </div>
+
         </div>
     </div>
 

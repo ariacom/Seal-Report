@@ -8475,6 +8475,11 @@
             Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.).
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityGroup.DownloadUpload">
+            <summary>
+            Web Report Server: If true, the user can download reports or upload files or reports in the published folders.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityGroup.Culture">
             <summary>
             The culture used for users belonging to the group. If empty, the default culture is used.
@@ -8795,6 +8800,11 @@
             Right for the personal folder
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityUser.DownloadUploadRight">
+            <summary>
+            Right for the personal folder
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityUser.SqlModel">
             <summary>
             True if the user has right to edit SQL models
@@ -8808,6 +8818,16 @@
         <member name="P:Seal.Model.SecurityUser.ShowAllFolders">
             <summary>
             True if folders with no right are also shown
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUser.EditProfile">
+            <summary>
+            True if user can edit his profile
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUser.EditConfiguration">
+            <summary>
+            True if user can edit the configuration (is administrator)
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.Authenticate">

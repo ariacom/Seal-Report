@@ -20,6 +20,7 @@ namespace Seal.Model
         public bool showfolders;
         public bool editconfiguration;
         public bool editprofile;
+        public DownloadUpload downloadupload;
         public bool changepassword;
         public bool showresetpassword;
         public string usertag;

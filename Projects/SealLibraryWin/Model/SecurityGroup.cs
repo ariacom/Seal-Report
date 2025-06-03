@@ -49,6 +49,7 @@ namespace Seal.Model
                 GetProperty("Weight").SetIsBrowsable(true);
                 GetProperty("EditConfiguration").SetIsBrowsable(true);
                 GetProperty("EditProfile").SetIsBrowsable(true);
+                GetProperty("DownloadUpload").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
                 GetProperty("PersFolderRight").SetIsBrowsable(true);
@@ -111,7 +112,7 @@ namespace Seal.Model
 #if WINDOWS
         [Category("Definition"), DisplayName("\t\t\tPersonal Folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(PersonalFolderRight.None)]
+        [DefaultValue(PersonalFolderRight.Reports)]
 #endif
         public PersonalFolderRight PersFolderRight { get; set; } = PersonalFolderRight.None;
 
@@ -236,10 +237,19 @@ namespace Seal.Model
         public bool EditProfile { get; set; } = true;
 
         /// <summary>
+        /// Web Report Server: If true, the user can download reports or upload files or reports in the published folders.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(DownloadUpload.None)]
+        [Category("Default Options"), DisplayName("\t\tUpload/Download"), Description("Web Report Server: Defines if the user can download reports or upload files or reports in the published folders."), Id(4, 5)]
+#endif
+        public DownloadUpload DownloadUpload { get; set; } = DownloadUpload.None;
+
+        /// <summary>
         /// The culture used for users belonging to the group. If empty, the default culture is used.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tCulture"), Description("The culture used for users belonging to the group. If empty, the default culture is used."), Id(4, 5)]
+        [Category("Default Options"), DisplayName("\tCulture"), Description("The culture used for users belonging to the group. If empty, the default culture is used."), Id(5, 5)]
         [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
 #endif
         public string Culture { get; set; }
@@ -248,7 +258,7 @@ namespace Seal.Model
         /// The logo file name used for to generate the reports. If empty, the default logo is used.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(5, 5)]
+        [Category("Default Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(6, 5)]
 #endif
         public string LogoName { get; set; }
         /// <summary>
@@ -257,7 +267,7 @@ namespace Seal.Model
 #if WINDOWS
         [DefaultValue(StartupOptions.None)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("\tOn startup"), Description("Web Report Server: The action to take after the user logs in."), Id(6, 5)]
+        [Category("Default Options"), DisplayName("\tOn startup"), Description("Web Report Server: The action to take after the user logs in."), Id(7, 5)]
 #endif
         public StartupOptions OnStartup { get; set; } = StartupOptions.None;
 
@@ -265,7 +275,7 @@ namespace Seal.Model
         /// Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex').
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex')."), Id(7, 5)]
+        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex')."), Id(8, 5)]
 #endif
         public string StartupReport { get; set; }
 
@@ -273,7 +283,7 @@ namespace Seal.Model
         /// Web Report Server: Optional report name when the 'Report executed on startup' is set.).
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tReport name executed on startup"), Description("Web Report Server: Optional report name when the 'Report executed on startup' is set."), Id(8, 5)]
+        [Category("Default Options"), DisplayName("\tReport name executed on startup"), Description("Web Report Server: Optional report name when the 'Report executed on startup' is set."), Id(9, 5)]
 #endif
         public string StartupReportName { get; set; }
 
@@ -283,7 +293,7 @@ namespace Seal.Model
 #if WINDOWS
         [DefaultValue(ExecutionMode.NewWindow)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("Execution mode"), Description("Web Report Server: Define if reports are executed in a new window or in the same window by default."), Id(9, 5)]
+        [Category("Default Options"), DisplayName("Execution mode"), Description("Web Report Server: Define if reports are executed in a new window or in the same window by default."), Id(10, 5)]
 #endif
         public ExecutionMode ExecutionMode { get; set; } = ExecutionMode.NewWindow;
     }
