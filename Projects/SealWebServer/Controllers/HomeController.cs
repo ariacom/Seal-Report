@@ -32,7 +32,6 @@ namespace SealWebServer.Controllers
         public const string SessionUser = "SessionUser";
         public const string SessionNavigationContext = "SessionNavigationContext";
         public const string SessionUploadedFiles = "SessionUploadedFiles";
-        public const string SessionAssistant = "SessionAssistant";
 
         const string _loginContent = "<html><script>window.top.location.href='Main';</script></html>";
         string _noReportFoundMessage

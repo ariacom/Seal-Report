@@ -239,7 +239,6 @@ table.dataTable {
 
 
 /*ALERT*/
-/* Add this to sealweb-assistant.css */
 .sr-alert {
     position: fixed !important;
     top: 5px !important;
@@ -255,8 +254,8 @@ table.dataTable {
     align-items: center;
     border: none;
     z-index: 10000;
-    opacity: 0;
-    animation: fadeInOut 5s ease-in-out forwards;
+    opacity: 1;
+    animation: none;
 }
 
     .sr-alert .close {

@@ -36,7 +36,7 @@ var SWIUtil;
                 timeout = 15000;
             if (timeout > 0)
                 setTimeout(function () { $alert.alert('close'); }, timeout);
-        }, 500);
+        }, 200);
     }
     SWIUtil.ShowMessage = ShowMessage;
     function HideMessages() {

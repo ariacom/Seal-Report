@@ -942,7 +942,7 @@ namespace Seal.Model
             else LogMessage("Error got in task '{0}'", Name);
             if (!IgnoreError)
             {
-                Report.ExecutionErrors = message;
+                Report.ExecutionErrors = $"Error in task '{Name}': {message}";
                 Report.ExecutionErrorStackTrace = ex.StackTrace;
                 Cancel();
             }

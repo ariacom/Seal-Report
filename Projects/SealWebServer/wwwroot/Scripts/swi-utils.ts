@@ -38,7 +38,7 @@ module SWIUtil {
             $("body").append($alert);
             if (timeout == 0) timeout = 15000;
             if (timeout > 0) setTimeout(function () { $alert.alert('close'); }, timeout);
-        }, 500);
+        }, 200);
     }
 
     export function HideMessages() {
