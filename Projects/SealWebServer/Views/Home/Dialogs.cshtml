@@ -63,10 +63,10 @@
                     <label for="securitycode"><span class="glyphicon glyphicon-lock"></span> @repository.TranslateWeb("Security code")</label>
                     <input type="text" class="form-control" id="securitycode" name="securitycode" placeholder="@repository.TranslateWeb("Enter your security code")" />
                 </div>
-                <a id="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
+                <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 <button id="security-modal-submit" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> @repository.TranslateWeb("Login")</button>
             </div>
-            <div class="modal-footer" style="text-align:left">
+            <div class="modal-footer" style="text-align:left">  
                 <span id="security-modal-error" class="label label-danger" style="font-size: 12px;"></span>
             </div>
         </div>
@@ -86,7 +86,7 @@
                 <div class="form-group">
                     <label for="password-reset-name"><span class="glyphicon glyphicon-user"></span> @repository.TranslateWeb("Enter your user identifier or email")</label>
                     <input type="text" class="form-control" id="password-reset-name" name="password-reset-name" placeholder="@repository.TranslateWeb("Enter user identifier or email")" />
-                    <a id="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
+                    <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 </div>
                 <button id="password-reset-submit" class="btn btn-default btn-warning btn-block"><span class="glyphicon glyphicon-check"></span> @repository.TranslateWeb("Reset password")</button>
             </div>
