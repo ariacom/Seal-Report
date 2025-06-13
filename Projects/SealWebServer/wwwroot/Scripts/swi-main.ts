@@ -109,6 +109,11 @@ class SWIMain {
             );
         });
 
+        $("#security-back-to-login").unbind("click").on("click", function (e) {
+            e.preventDefault();
+            window.location.reload();
+        });
+
         SWIUtil.InitVersion();
 
         //Reset password
@@ -165,7 +170,7 @@ class SWIMain {
 
     private loginSuccess(data: any) {
         if (data.securitycoderequired) {
-            _main.showSecurityCode();
+            _main.showSecurityCode(data);
             return;
         }
         if (_main._profile && _main._profile.culture && _main._profile.culture != data.culture) {
@@ -452,7 +457,7 @@ class SWIMain {
                         SWIUtil.ShowMessage("alert-success", data.Message, 5000);
                     }
                     else {
-                        SWIUtil.ShowMessage("alert-danger", data.Message,0);
+                        SWIUtil.ShowMessage("alert-danger", data.Message, 0);
                     }
                     // Clear the file input
                     fileInput.value = '';
@@ -539,7 +544,7 @@ class SWIMain {
                     Folders: [],
                     EditConfiguration: false,
                     EditProfile: true,
-                    PersFolderRight : 2
+                    PersFolderRight: 2
                 };
                 _main._config.groups.push(newGroup);
                 _main._configGroup = newGroup;
@@ -629,7 +634,7 @@ class SWIMain {
             else {
                 var index = _main._configGroup.Folders.indexOf(_main._configGroupFolder);
                 if (index != -1) _main._configGroup.Folders.splice(index, 1);
-               _main._configGroupFolder = null;
+                _main._configGroupFolder = null;
             }
             _main.initDropDownGroupsFolders();
             _main.initSecurityFolderDetail();
@@ -733,7 +738,7 @@ class SWIMain {
         SWIUtil.InitStandardInput("#config-login-id", _main._configLogin.Id, null, function (val) { detail.Id = val; });
         SWIUtil.InitStandardInput("#config-login-name", _main._configLogin.Name, null, function (val) { detail.Name = val; });
         SWIUtil.InitStandardInput("#config-login-email", _main._configLogin.Email, null, function (val) { detail.Email = val; });
-        SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = detail.HashedPassword+val; });
+        SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = detail.HashedPassword + val; });
 
         var select = $("#config-login-groups");
         select.selectpicker("destroy");
@@ -771,7 +776,8 @@ class SWIMain {
         $loginModal.modal();
     }
 
-    private showSecurityCode() {
+    private showSecurityCode(data: any) {
+        if (data) $("#security-code-message").text(data.message);
         $waitDialog.modal('hide');
         $("body").children(".modal-backdrop").remove();
         $securityModal.show();
@@ -785,7 +791,7 @@ class SWIMain {
             function (data) {
                 $("#password").val("");
                 if (data.securitycoderequired) {
-                    _main.showSecurityCode();
+                    _main.showSecurityCode(data);
                 }
                 else {
                     _main.loginSuccess(data);
@@ -813,7 +819,7 @@ class SWIMain {
             function (data) {
                 $waitDialog.modal('hide');
                 $("#security-modal-error").text(data.error);
-                _main.showSecurityCode();
+                _main.showSecurityCode(null);
                 _main.enableControls();
             });
     }
@@ -999,7 +1005,7 @@ class SWIMain {
         if (_main._canEdit) $tr.append($("<th style='width:22px;' class='nosort hidden-xs'><input id='selectall-checkbox' type='checkbox'/></th>"));
         $tr.append($("<th>").html(SWIUtil.tr("Report")));
         $tr.append($("<th id='action-tableheader' class='nosort'>").html(SWIUtil.tr("Actions")));
-        $tr.append($("<th style='width:170px;min-width:170px;' class='hidden-xs'>").html(SWIUtil.tr("Last modification")));
+        $tr.append($("<th style='width:170px;min-width:170px;text-align:right' class='hidden-xs'>").html(SWIUtil.tr("Last modification")));
 
         //Body
         for (var i = 0; i < data.files.length; i++) {
@@ -1031,6 +1037,10 @@ class SWIMain {
                     button.append($("<span class='glyphicon glyphicon-download'></span>"));
                     $td.append(button);
                 }
+                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Mark as favorite")).addClass("btn btn-default btn-table report-favorite hidden-xs");
+                if (file.isfavorite) button.append($("<span class='glyphicon glyphicon-star'></span>"));
+                else button.append($("<span class='glyphicon glyphicon-star-empty'></span>"));
+                $td.append(button);
             }
             $tr.append($("<td>").css("text-align", "right").addClass("hidden-xs").text(file.last));
         }
@@ -1080,6 +1090,19 @@ class SWIMain {
             $outputPanel.hide();
             const path = $(e.currentTarget).parent().data("path");
             _gateway.ViewFile(path);
+        });
+
+        $(".report-favorite").unbind("click").on("click", function (e) {
+            $outputPanel.hide();
+            const path = $(e.currentTarget).parent().data("path");
+            _gateway.MarkFavorite(path,
+                function (data) {
+                    SWIUtil.ShowMessage("alert-success", data.Message, 5000);
+                    var icon = $(e.currentTarget).children("span");
+                    icon.toggleClass("glyphicon-star");
+                    icon.toggleClass("glyphicon-star-empty");
+                    SWIUtil.RefreshMenu(_main);
+                });
         });
 
         $(".report-output").unbind("click").on("click", function (e) {

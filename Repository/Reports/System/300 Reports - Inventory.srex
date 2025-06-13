@@ -47,7 +47,7 @@
         foreach (var item in ((List&lt;Report&gt;) report.Tag)) {
             table.Rows.Add(
                 item.DisplayNameEx, 
-                item.FilePath.Replace(report.Repository.ReportsFolder, ""), 
+                item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
                 item.LastModification,
                 item.LoadErrors
                 );
@@ -146,7 +146,7 @@
             foreach (var schedule in item.Schedules) {
                 table.Rows.Add(
                     item.DisplayNameEx, 
-                    item.FilePath.Replace(report.Repository.ReportsFolder, ""), 
+                    item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
                     schedule.Output != null ? schedule.Output.Name : "", 
                     schedule.Output != null ? schedule.Output.DeviceName : "", 
                     schedule.Output != null ? schedule.Output.FolderPath : "",  
@@ -305,7 +305,7 @@
                 foreach (var element in model.Elements) {
                     table.Rows.Add(
                         item.DisplayNameEx, 
-                        item.FilePath.Replace(report.Repository.ReportsFolder, ""), 
+                        item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
                         model.Name, 
                         model.Source.Name, 
                         model.Connection.Name, 
@@ -508,7 +508,7 @@
                 log.LogMessage(model.Name + " " + restriction.DisplayNameEl);
                     table.Rows.Add(
                         item.DisplayNameEx, 
-                        item.FilePath.Replace(report.Repository.ReportsFolder, ""), 
+                        item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
                         model.Name, 
                         "",//model.Source.Name, 
                         "",//model.Connection.Name, 
@@ -680,32 +680,6 @@
           <MetaColumnGUID>a2209938-0f1d-4ce1-8ea0-26fc62ba9af7</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[d9171c88-bd16-446b-a208-7da5864c9e0e]
-&amp;&amp; [572d9e77-3993-4ace-86c6-5e647d38bb7c]</Restriction>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>d9171c88-bd16-446b-a208-7da5864c9e0e</GUID>
-          <Name>name</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>2</SortOrder>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>cf8cf340-8651-489a-bbbe-6bf04a989ae1</MetaColumnGUID>
-          <Operator>Contains</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>572d9e77-3993-4ace-86c6-5e647d38bb7c</GUID>
-          <Name>path</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>1</SortOrder>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>8418af01-9b19-44ef-a396-d6eaafc0e174</MetaColumnGUID>
-          <Operator>Contains</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>3149ae09-076e-4a13-919f-909d83f6751e</GUID>
@@ -784,21 +758,6 @@
           <MetaColumnGUID>7d661824-b23f-46a7-aeac-18730fa09e50</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[2421771f-5519-40a4-9a96-3150a8349c3a]
-</Restriction>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>2421771f-5519-40a4-9a96-3150a8349c3a</GUID>
-          <Name>path</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>1</SortOrder>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>cd787954-758c-4279-b80a-1497cb4996e6</MetaColumnGUID>
-          <Operator>Contains</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>0234547b-d1a9-422d-a648-183d8716304e</GUID>
@@ -933,21 +892,6 @@
           <MetaColumnGUID>c7e0c6bb-67aa-41d1-8667-fb237189baf0</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[54641f4b-a540-47c3-8108-d3ae42dbbf33]</Restriction>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>54641f4b-a540-47c3-8108-d3ae42dbbf33</GUID>
-          <Name>path</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>1</SortOrder>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>ba6766e5-0a21-4b15-a8f0-b045def0d0a3</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Contains</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>0537a192-73f6-46fe-b7ce-ff607f8ada06</GUID>
@@ -1058,20 +1002,6 @@
           <MetaColumnGUID>c798e97f-f4bb-420c-ba77-b7de5a365791</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[7a92d7f0-d704-4c63-ae05-1fd2efe3df5c]</Restriction>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>7a92d7f0-d704-4c63-ae05-1fd2efe3df5c</GUID>
-          <Name>path</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>1</SortOrder>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>23ad0bc6-517b-4d01-9b77-96ae014f6e38</MetaColumnGUID>
-          <Operator>Contains</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
   </Models>
   <Tasks>
@@ -1091,6 +1021,11 @@
     SearchReports(report, report.Repository.ReportsFolder);
     //Search sub-reports
     SearchReports(report, report.Repository.SubReportsFolder);
+    //Personal folder
+    if (report.SecurityContext != null) {
+        var securityContext = report.SecurityContext;
+        SearchReports(report, report.Repository.GetPersonalFolder(securityContext));
+    }
 }
 
 @functions {
@@ -1122,34 +1057,6 @@
 
 </Script>
       <SortOrder>1</SortOrder>
-    </ReportTask>
-    <ReportTask>
-      <GUID>14306ed7-6b95-4f5f-8237-d7349a5ddcc9</GUID>
-      <Name>Copy restrictions</Name>
-      <Tasks />
-      <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>Default</TemplateName>
-      <SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID>
-      <Script>@using System.Data
-@{
-	ReportTask task = Model;
-    Report report = task.Report;
-    var modelSource = report.Models.FirstOrDefault(i =&gt; i.Name == "Reports Elements");
-    
-    foreach (var model in report.Models) {
-        foreach (var restriction in model.Restrictions) {
-            var sourceRestriction = modelSource.Restrictions.FirstOrDefault(i =&gt; i.Name == restriction.Name);
-            if (sourceRestriction != null) {
-                restriction.Value1 = sourceRestriction.Value1;
-                restriction.Value2 = sourceRestriction.Value2;
-                restriction.Value3 = sourceRestriction.Value3;
-                restriction.Value4 = sourceRestriction.Value4;
-            }
-        }
-    }
-}
-</Script>
-      <SortOrder>2</SortOrder>
     </ReportTask>
   </Tasks>
   <Views>

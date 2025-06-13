@@ -200,6 +200,14 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public MarkFavorite(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWMarkFavorite", {
+            path: path
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public UploadFile(data: FormData, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.ajax({
             url: _server + "SWUploadFile",

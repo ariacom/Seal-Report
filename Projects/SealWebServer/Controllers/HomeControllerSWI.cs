@@ -204,7 +204,7 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
                     //2FA check
-                    return Json(new { securitycoderequired = true });
+                    return Json(new { securitycoderequired = true,  message=WebUser.SecurityCodeMessage});
                 }
 
                 //Audit
@@ -445,6 +445,11 @@ namespace SealWebServer.Controllers
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
+
+                WebUser.Profile.RecentReports.RemoveAll(i => i == null || !System.IO.File.Exists(getFullPath(i.Path)));
+                WebUser.Profile.Favorites.RemoveAll(i => i == null || !System.IO.File.Exists(getFullPath(i.Path)));
+
+
                 WebUser.WebMenu = new SWIWebMenu()
                 {
                     recentreports = (from r in WebUser.Profile.RecentReports
@@ -456,7 +461,14 @@ namespace SealWebServer.Controllers
                                          name = r.Name
                                      }
                                          ).ToList(),
-                    reports = getWebMenu().ToList()
+                    reports = getWebMenu().ToList(),
+                    favorites = (from r in WebUser.Profile.Favorites
+                                     select new SWIMenuItem()
+                                     {
+                                         path = r.Path,
+                                         name = r.Name
+                                     }
+                                         ).ToList()
                 };
 
                 var profile = WebUser.Profile;
@@ -940,6 +952,30 @@ namespace SealWebServer.Controllers
                     file.CopyTo(stream);
                 }
                 return Json(new { Status = true, Message = Translate("The file has been uploaded.") });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Mark/Unmark report as favorite.
+        /// </summary>
+        public ActionResult SWMarkFavorite(string path, string sessionId)
+        {
+            writeDebug("SWMarkFavorite");
+            try
+            {
+                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+
+                SWIFolder folder = getFolder(path);
+                if ((FolderRight)folder.right == FolderRight.None) throw new Exception("Error: no right on this folder");
+
+                WebUser.Profile.MarkFavorite(path);
+                WebUser.SaveProfile();
+
+                return Json(new { Message = Translate("The favorite has been updated.") });
             }
             catch (Exception ex)
             {

@@ -173,6 +173,13 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     };
+    SWIGateway.prototype.MarkFavorite = function (path, callback, errorcb) {
+        $.post(_server + "SWMarkFavorite", {
+            path: path
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    };
     SWIGateway.prototype.UploadFile = function (data, callback, errorcb) {
         $.ajax({
             url: _server + "SWUploadFile",

@@ -112,7 +112,7 @@ namespace Seal.Model
 #if WINDOWS
         [Category("Definition"), DisplayName("\t\t\tPersonal Folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(PersonalFolderRight.Reports)]
+        [DefaultValue(PersonalFolderRight.None)]
 #endif
         public PersonalFolderRight PersFolderRight { get; set; } = PersonalFolderRight.None;
 

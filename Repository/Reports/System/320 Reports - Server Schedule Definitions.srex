@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CurrentViewGUID>edc9ff71-aa49-4f39-973c-7f0acc7ad05e</CurrentViewGUID>
   <GUID>84aa5dda-fe4d-4930-8696-7fbef43e826e</GUID>
   <ViewGUID>edc9ff71-aa49-4f39-973c-7f0acc7ad05e</ViewGUID>
   <Sources>
@@ -11,7 +10,6 @@
         <MetaConnection>
           <GUID>9fa2649b-4aff-4c5e-b716-133ae98c79a4</GUID>
           <Name>connection</Name>
-          <ConnectionString />
         </MetaConnection>
       </Connections>
       <ConnectionGUID>9fa2649b-4aff-4c5e-b716-133ae98c79a4</ConnectionGUID>
@@ -68,7 +66,7 @@
                 schedule.SealSchedule.CalculateNextExecution();
                 table.Rows.Add(
                     item.DisplayNameEx, 
-                    item.FilePath.Replace(report.Repository.ReportsFolder, ""), 
+                    item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
                     schedule.Output != null ? schedule.Output.Name : "", 
                     schedule.Output != null ? schedule.Output.DeviceName : "", 
                     schedule.Output != null ? schedule.Output.FolderPath : "",  
@@ -475,72 +473,15 @@
           <MetaColumnGUID>1037dfb1-db7f-4b8a-b015-c9014fcc76a2</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[309a4afe-66ba-4f69-a931-81d74367d36e]
-&amp;&amp; [a8f98fb0-98c7-4a41-88af-1b32e1eda01d]
-&amp;&amp; [23435f07-f535-4c00-a00b-d051041c0b82]
-&amp;&amp; [d26d8287-9da5-46f5-b149-fc921428f563]</Restriction>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>309a4afe-66ba-4f69-a931-81d74367d36e</GUID>
-          <Name>type</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>2a4bd65e-f1ad-4585-a2cc-e48a53ac261d</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>a8f98fb0-98c7-4a41-88af-1b32e1eda01d</GUID>
-          <Name>enabled</Name>
-          <DisplayName />
-          <DisplayOrder>2</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>ca454f81-132d-40ac-8ee9-dd0a44d18c56</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>2</DisplayOrderRE>
-          <EnumValues>
-            <string>True</string>
-          </EnumValues>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>23435f07-f535-4c00-a00b-d051041c0b82</GUID>
-          <Name>start</Name>
-          <DisplayName />
-          <DisplayOrder>3</DisplayOrder>
-          <Format>G</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <TotalAggregateFunction>Max</TotalAggregateFunction>
-          <MetaColumnGUID>72e21750-7a2f-4f2b-a63c-c0fcc4419418</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Greater</Operator>
-          <DisplayOrderRE>3</DisplayOrderRE>
-          <FormatRe>G</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>d26d8287-9da5-46f5-b149-fc921428f563</GUID>
-          <Name>next_execution</Name>
-          <DisplayName />
-          <DisplayOrder>4</DisplayOrder>
-          <Format>G</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <TotalAggregateFunction>Max</TotalAggregateFunction>
-          <MetaColumnGUID>cacebc5d-bc0a-47cb-9e24-b7e80ae881f6</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>IsNotNull</Operator>
-          <DisplayOrderRE>4</DisplayOrderRE>
-          <FormatRe>G</FormatRe>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
   </Models>
   <Tasks>
     <ReportTask>
       <GUID>a3ff48d8-a5ce-4d27-b68f-c4edb362a15c</GUID>
       <Name>Fill report list</Name>
-      <CancelReport>false</CancelReport>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
       <SourceGUID>ffc65bc9-2064-4f18-9f12-6b210be97f1f</SourceGUID>
       <Script>@using System.IO
 @{
@@ -550,6 +491,10 @@
     report.Tag = new List&lt;Report&gt;();
     
     SearchReports(report, report.Repository.ReportsFolder);
+    if (report.SecurityContext != null) {
+        var securityContext = report.SecurityContext;
+        SearchReports(report, report.Repository.GetPersonalFolder(securityContext));
+    }
 }
 
 @functions {

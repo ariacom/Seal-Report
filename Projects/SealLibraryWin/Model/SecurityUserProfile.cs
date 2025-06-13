@@ -93,6 +93,12 @@ namespace Seal.Model
         /// List of recent reports
         /// </summary>
         public List<RecentFileItem> RecentReports { get; set; } = new List<RecentFileItem>();
+
+        /// <summary>
+        /// List of favorites
+        /// </summary>
+        public List<RecentFileItem> Favorites { get; set; } = new List<RecentFileItem>();
+
         /// <summary>
         /// Set a recent report for the user profile
         /// </summary>
@@ -102,6 +108,16 @@ namespace Seal.Model
             RecentReports.RemoveAll(i => i == null || i.Path == path);
             RecentReports.Insert(0, new RecentFileItem() { Path = path, ViewGUID = viewGUID, OutputGUID = outputGUID, Name = !string.IsNullOrEmpty(report.ExecutionName) ? report.ExecutionName : report.DisplayNameEx });
             if (RecentReports.Count > 9) RecentReports.RemoveAt(RecentReports.Count - 1);
+        }
+
+        /// <summary>
+        /// Mark/unmark as favorite
+        /// </summary>
+        public void MarkFavorite(string path)
+        {
+            path = FileHelper.ConvertOSFilePath(path);
+            if (Favorites.Exists(i => i.Path == path)) Favorites.RemoveAll(i => i.Path == path);
+            else Favorites.Insert(0, new RecentFileItem() { Path = path, Name = System.IO.Path.GetFileNameWithoutExtension(path) });
         }
 
         /// <summary>

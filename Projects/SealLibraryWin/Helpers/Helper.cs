@@ -1266,6 +1266,9 @@ namespace Seal.Helpers
             return obj == null ? (double?)null : Convert.ToDouble(obj, CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Check if a password is complex enough (at least 8 characters, one uppercase letter, one digit, and one special character)   
+        /// </summary>
         public static bool IsPasswordComplex(string password, int len = 8)
         {
             if (string.IsNullOrEmpty(password))
@@ -1278,6 +1281,94 @@ namespace Seal.Helpers
             bool hasSpecialChar = Regex.IsMatch(password, "[^a-zA-Z0-9]");
 
             return hasUpperCase && hasDigit && hasSpecialChar;
+        }
+
+        private static string FormatMaskedPhone(string maskedDigits, string originalPhone)
+        {
+            // Try to preserve the original formatting structure
+            StringBuilder result = new StringBuilder();
+            int maskedIndex = 0;
+
+            foreach (char c in originalPhone)
+            {
+                if (char.IsDigit(c))
+                {
+                    // Replace with masked digit if available
+                    if (maskedIndex < maskedDigits.Length)
+                    {
+                        result.Append(maskedDigits[maskedIndex]);
+                        maskedIndex++;
+                    }
+                }
+                else
+                {
+                    // Keep formatting characters like (), -, +, spaces
+                    result.Append(c);
+                }
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Mask a phone number to show only the last 4 digits, replacing the rest with asterisks.
+        /// </summary>
+        public static string MaskPhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrEmpty(phoneNumber))
+                return phoneNumber;
+
+            // Remove all non-digit characters for processing
+            string digitsOnly = Regex.Replace(phoneNumber, @"\D", "");
+
+            if (digitsOnly.Length < 4)
+                return new string('*', phoneNumber.Length);
+
+            // Show last 4 digits
+            string masked = new string('*', digitsOnly.Length - 4) + digitsOnly.Substring(digitsOnly.Length - 4);
+
+            // If original had formatting, try to preserve some structure
+            if (phoneNumber.Contains("-") || phoneNumber.Contains(" ") || phoneNumber.Contains("("))
+            {
+                return FormatMaskedPhone(masked, phoneNumber);
+            }
+
+            return masked;
+        }
+
+        /// <summary>
+        /// Masks an email address using standard masking
+        /// Shows first 1-2 and last 1 character of local part
+        /// Example: john.doe@example.com → jo****e@example.com
+        /// </summary>
+        public static string MaskEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+                return email;
+
+            var parts = email.Split('@');
+            if (parts.Length != 2)
+                return email;
+
+            string localPart = parts[0];
+            string domain = parts[1];
+
+            // Handle very short local parts
+            if (localPart.Length <= 3)
+            {
+                return new string('*', localPart.Length) + "@" + domain;
+            }
+
+            // Determine how many characters to show at start
+            int showStart = localPart.Length <= 6 ? 1 : 2;
+            int showEnd = 1;
+            int maskLength = localPart.Length - showStart - showEnd;
+
+            string maskedLocal = localPart.Substring(0, showStart) +
+                               new string('*', maskLength) +
+                               localPart.Substring(localPart.Length - showEnd);
+
+            return maskedLocal + "@" + domain;
         }
 
         #region License

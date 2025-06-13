@@ -78,6 +78,10 @@ var SWIMain = /** @class */ (function () {
                 _main.showLogin();
             });
         });
+        $(".security-back-to-login").unbind("click").on("click", function (e) {
+            e.preventDefault();
+            window.location.reload();
+        });
         SWIUtil.InitVersion();
         //Reset password
         var token = new URLSearchParams(window.location.search).get('ptoken');
@@ -124,7 +128,7 @@ var SWIMain = /** @class */ (function () {
     };
     SWIMain.prototype.loginSuccess = function (data) {
         if (data.securitycoderequired) {
-            _main.showSecurityCode();
+            _main.showSecurityCode(data);
             return;
         }
         if (_main._profile && _main._profile.culture && _main._profile.culture != data.culture) {
@@ -677,7 +681,9 @@ var SWIMain = /** @class */ (function () {
         $("#footer-div").show();
         $loginModal.modal();
     };
-    SWIMain.prototype.showSecurityCode = function () {
+    SWIMain.prototype.showSecurityCode = function (data) {
+        if (data)
+            $("#security-code-message").text(data.message);
         $waitDialog.modal('hide');
         $("body").children(".modal-backdrop").remove();
         $securityModal.show();
@@ -689,7 +695,7 @@ var SWIMain = /** @class */ (function () {
         _gateway.Login($("#username").val(), $("#password").val(), function (data) {
             $("#password").val("");
             if (data.securitycoderequired) {
-                _main.showSecurityCode();
+                _main.showSecurityCode(data);
             }
             else {
                 _main.loginSuccess(data);
@@ -713,7 +719,7 @@ var SWIMain = /** @class */ (function () {
         }, function (data) {
             $waitDialog.modal('hide');
             $("#security-modal-error").text(data.error);
-            _main.showSecurityCode();
+            _main.showSecurityCode(null);
             _main.enableControls();
         });
     };
@@ -881,7 +887,7 @@ var SWIMain = /** @class */ (function () {
             $tr.append($("<th style='width:22px;' class='nosort hidden-xs'><input id='selectall-checkbox' type='checkbox'/></th>"));
         $tr.append($("<th>").html(SWIUtil.tr("Report")));
         $tr.append($("<th id='action-tableheader' class='nosort'>").html(SWIUtil.tr("Actions")));
-        $tr.append($("<th style='width:170px;min-width:170px;' class='hidden-xs'>").html(SWIUtil.tr("Last modification")));
+        $tr.append($("<th style='width:170px;min-width:170px;text-align:right' class='hidden-xs'>").html(SWIUtil.tr("Last modification")));
         //Body
         for (var i = 0; i < data.files.length; i++) {
             var file = data.files[i];
@@ -913,6 +919,12 @@ var SWIMain = /** @class */ (function () {
                     button.append($("<span class='glyphicon glyphicon-download'></span>"));
                     $td.append(button);
                 }
+                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Mark as favorite")).addClass("btn btn-default btn-table report-favorite hidden-xs");
+                if (file.isfavorite)
+                    button.append($("<span class='glyphicon glyphicon-star'></span>"));
+                else
+                    button.append($("<span class='glyphicon glyphicon-star-empty'></span>"));
+                $td.append(button);
             }
             $tr.append($("<td>").css("text-align", "right").addClass("hidden-xs").text(file.last));
         }
@@ -959,6 +971,17 @@ var SWIMain = /** @class */ (function () {
             $outputPanel.hide();
             var path = $(e.currentTarget).parent().data("path");
             _gateway.ViewFile(path);
+        });
+        $(".report-favorite").unbind("click").on("click", function (e) {
+            $outputPanel.hide();
+            var path = $(e.currentTarget).parent().data("path");
+            _gateway.MarkFavorite(path, function (data) {
+                SWIUtil.ShowMessage("alert-success", data.Message, 5000);
+                var icon = $(e.currentTarget).children("span");
+                icon.toggleClass("glyphicon-star");
+                icon.toggleClass("glyphicon-star-empty");
+                SWIUtil.RefreshMenu(_main);
+            });
         });
         $(".report-output").unbind("click").on("click", function (e) {
             $outputPanel.hide();

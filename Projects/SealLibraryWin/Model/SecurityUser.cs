@@ -152,6 +152,11 @@ namespace Seal.Model
         public string SecurityCode = null;
 
         /// <summary>
+        /// Parameters for authentication: Security code message generated for 2FA
+        /// </summary>
+        public string SecurityCodeMessage = null;
+
+        /// <summary>
         /// Parameters for authentication: Security code generation date for 2FA
         /// </summary>
         public DateTime SecurityCodeGeneration = DateTime.MinValue;

@@ -970,14 +970,17 @@ namespace SealWebServer.Controllers
                     if (folder.files && FileHelper.IsReportFile(newPath)) continue;
                     if (folder.IsPersonal && newPath.ToLower() == WebUser.ProfilePath.ToLower()) continue;
 
-                    files.Add(new SWIFile()
+                    var file = new SWIFile()
                     {
                         path = FileHelper.ConvertOSFilePath(folder.Combine(Path.GetFileName(newPath))),
                         name = Repository.TranslateFileName(newPath) + (FileHelper.IsReportFile(newPath) ? "" : Path.GetExtension(newPath)),
                         last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
                         isreport = FileHelper.IsReportFile(newPath),
+                        isfavorite = WebUser.Profile.Favorites.Exists(i => i.Path == path),
                         right = folder.right
-                    });
+                    };
+                    file.isfavorite = WebUser.Profile.Favorites.Exists(i => i.Path == file.path);
+                    files.Add(file);
                 }
             }
 

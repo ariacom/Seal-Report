@@ -56,10 +56,14 @@
                 <h4 style="color:white;"><span class="glyphicon glyphicon-lock"></span> @repository.Configuration.WebProductName @repository.TranslateWeb("Two-Factor Authentication")</h4>
             </div>
             <div class="modal-body">
+                <div  style="margin-bottom:20px;">
+                <span id="security-code-message" class="label label-warning" style="font-size:14px;"></span>
+                </div>
                 <div class="form-group">
-                    <label for="securitycode"><span class="glyphicon glyphicon-user"></span> @repository.TranslateWeb("Security code")</label>
+                    <label for="securitycode"><span class="glyphicon glyphicon-lock"></span> @repository.TranslateWeb("Security code")</label>
                     <input type="text" class="form-control" id="securitycode" name="securitycode" placeholder="@repository.TranslateWeb("Enter your security code")" />
                 </div>
+                <a id="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 <button id="security-modal-submit" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> @repository.TranslateWeb("Login")</button>
             </div>
             <div class="modal-footer" style="text-align:left">
@@ -82,6 +86,7 @@
                 <div class="form-group">
                     <label for="password-reset-name"><span class="glyphicon glyphicon-user"></span> @repository.TranslateWeb("Enter your user identifier or email")</label>
                     <input type="text" class="form-control" id="password-reset-name" name="password-reset-name" placeholder="@repository.TranslateWeb("Enter user identifier or email")" />
+                    <a id="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 </div>
                 <button id="password-reset-submit" class="btn btn-default btn-warning btn-block"><span class="glyphicon glyphicon-check"></span> @repository.TranslateWeb("Reset password")</button>
             </div>

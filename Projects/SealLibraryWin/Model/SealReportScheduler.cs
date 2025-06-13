@@ -183,6 +183,14 @@ namespace Seal.Model
                                 //Try in the Core distribution
                                 path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + Repository.CoreInstallationSubDirectory, Repository.SealTaskScheduler);
                             }
+#if DEBUG
+                            if (!File.Exists(path))
+                            {
+                                //Try in debug folder
+                                path = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net8.0", Repository.SealTaskScheduler);
+                            }
+                            
+#endif
                             if (!File.Exists(path)) throw new Exception($"Unable to execute in Outer Process. {path} was not found.");
 
                             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

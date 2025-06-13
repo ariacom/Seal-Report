@@ -202,6 +202,11 @@ namespace Seal.Model
         public bool isreport;
 
         /// <summary>
+        /// True if the report is a favorite
+        /// </summary>
+        public bool isfavorite;
+
+        /// <summary>
         /// Right applied on the file/report:
         /// 0: No right
         /// 1: Execute reports / View files
@@ -266,6 +271,7 @@ namespace Seal.Model
     {
         public List<SWIMenuItem> recentreports = new List<SWIMenuItem>();
         public List<SWIMenuItem> reports = new List<SWIMenuItem>();
+        public List<SWIMenuItem> favorites = new List<SWIMenuItem>();
     }
 
     /// <summary>

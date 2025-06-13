@@ -303,7 +303,7 @@ namespace Seal.Forms
         var to = user.Login?.Email; //Destination email: could be get from database, LDAP, etc.
         //to = ""email@company.com""
         if (string.IsNullOrEmpty(to)) {
-            throw new Exception($""No Email Address for the user {user.WebUserName}.""); 
+            throw new Exception($""No Email Address for the user {user.WebUserName}."");  
         }
         
         var subject = ""Seal Report"";
@@ -313,12 +313,15 @@ namespace Seal.Forms
         if (!user.Security.Repository.SendNotificationEmail(from, to, subject, isHtml, body)) {
             throw new Exception(""Unable to send email. Check that an Email Device is defined for notification. Restart the 'Server Manager' after changing the configuration.""); 
         }
+
+        //Message
+        user.SecurityCodeMessage = user.Security.Repository.TranslateReport(""A security code has been sent by Email at"")  + $"": {Helper.MaskEmail(to)}"";
     }
     
     //Send it by SMS using Twilio
     if (sendBySMS) {
         var from = ""+1111111""; //My Twilio phone number
-        var to = user.Login?.Phone; //Destination email: could be get from database, LDAP, etc.
+        var to = user.Login?.Phone; //Destination phone: could be get from database, LDAP, etc.
         //to = ""+411111111""
         if (string.IsNullOrEmpty(to)) {
             throw new Exception($""No Phone number for the user {user.WebUserName}.""); 
@@ -332,8 +335,12 @@ namespace Seal.Forms
             from: new Twilio.Types.PhoneNumber(from),
             to: new Twilio.Types.PhoneNumber(to)
         );    
+        
+        //Message        
+        user.SecurityCodeMessage = user.Security.Repository.TranslateReport(""A security code has been sent by SMS at"")  + $"": {Helper.MaskPhoneNumber(to)}"";
     }
 }
+
 ";
 
         const string razorTwoFACheckScriptTemplate = @"@{
