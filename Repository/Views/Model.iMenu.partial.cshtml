@@ -4,6 +4,8 @@
     ReportView view = Model;
     ReportModel reportModel = view.Model;
     Report report = view.Report;
+
+    var elementMenuCount = view.GetNumericValue("model_menu_element_count");
 }
 
 <script>
@@ -30,11 +32,11 @@
         {
             <li class="active"><a data-toggle="@view.GetValue("model_menu_style")" href='#@(view.IdSuffix + "_summary")'>@report.Translate("Summary")</a></li>
         }
-        @for (int row = 1; row < reportModel.SummaryTable.RowCount && row < reportModel.Pages.Count + 1; row++)
+        @for (int row = 1; row <reportModel.SummaryTable.RowCount && row < reportModel.Pages.Count + 1; row++)
         {
             ResultPage page = reportModel.Pages[row - 1];
             string val = "";
-            for (int col = 0; col < reportModel.SummaryTable.ColumnCount; col++)
+            for (int col = 0; col < (elementMenuCount == 0 ? reportModel.SummaryTable.ColumnCount : elementMenuCount); col++)
             {
                 ResultCell cell = reportModel.SummaryTable[row, col];
                 if (!cell.IsTotal)

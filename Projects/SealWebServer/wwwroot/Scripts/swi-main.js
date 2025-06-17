@@ -78,7 +78,7 @@ var SWIMain = /** @class */ (function () {
                 _main.showLogin();
             });
         });
-        $(".security-back-to-login").unbind("click").on("click", function (e) {
+        $("#security-back-to-login").unbind("click").on("click", function (e) {
             e.preventDefault();
             window.location.reload();
         });
