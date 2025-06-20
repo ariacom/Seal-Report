@@ -43,6 +43,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.7" />
+    <PackageReference Include="System.ClientModel" Version="1.2.1" />
   </ItemGroup>
   
   <ItemGroup>

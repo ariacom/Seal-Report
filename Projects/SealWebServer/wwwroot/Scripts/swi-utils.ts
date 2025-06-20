@@ -207,7 +207,10 @@ module SWIUtil {
     export function InitVersion() {
         _gateway.GetVersions(
             function (data) {
-                $("#brand-id").attr("title", SWIUtil.tr2("Web Interface Version") + " : " + data.SWIVersion + "\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\n" + data.Info);
+                var title = SWIUtil.tr2(SWIUtil.tr("Version") + " : " + data.SRVersion + "\n");
+                if (data.SRAdditionalVersion) title += SWIUtil.tr("AI Version") + " : " + data.SRAdditionalVersion + "\n";
+                title += data.Info
+                $("#brand-id").attr("title", title);
                 $("#footer-version").text(data.SWIVersion);
                 if (!data.Info.includes("Serial n")) {
                     $("#nav_cr").html(data.Info.replace("\r\n", "<br>"));

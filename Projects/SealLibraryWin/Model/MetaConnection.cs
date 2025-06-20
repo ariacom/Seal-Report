@@ -316,6 +316,45 @@ namespace Seal.Model
             }
         }
 
+        public string GetRawConnectionString()
+        {
+            var result = "";
+            if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
+            {
+                result = MSSqlServerConnectionString;
+            }
+            else if (ConnectionType == ConnectionType.Odbc)
+            {
+                result = OdbcConnectionString;
+            }
+            else if (ConnectionType == ConnectionType.MongoDB)
+            {
+                result = MongoDBConnectionString;
+            }
+            else if (ConnectionType == ConnectionType.MySQL)
+            {
+                result = MySQLConnectionString;
+            }
+            else if (ConnectionType == ConnectionType.Oracle)
+            {
+                result = OracleConnectionString;
+            }
+            else if (ConnectionType == ConnectionType.PostgreSQL)
+            {
+                result = PostgreSQLConnectionString;
+            }
+            else if (ConnectionType == ConnectionType.SQLite)
+            {
+                result = SQLiteConnectionString;
+            }
+            else
+            {
+                result = ConnectionString;
+            }
+
+            return result;
+        }
+
         public string GetFullConnectionString(string userName, string password)
         {
             var result = "";

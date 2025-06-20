@@ -90,6 +90,7 @@ namespace Seal.Model
                 GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("AlternateTempDirectory").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableRazorCache").SetIsBrowsable(!ForPublication);
+                GetProperty("EnableDownloadUpload").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportFormats").SetIsBrowsable(!ForPublication);
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
@@ -257,7 +258,7 @@ namespace Seal.Model
         public string AlternateTempDirectory { get; set; } = null;
 
         /// <summary>
-        /// If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results.
+        /// If true, standard razor script used for templates (Views, Tables, Tasks and Security Providers) are compiled and stored in the 'Assemblies\\RazorCache' repository folder. This speed-up the application start-up.
         /// </summary>
 #if WINDOWS
         [Category("Server Settings"), DisplayName("Enable Razor Cache"), Description("If true, standard razor script used for templates (Views, Tables, Tasks and Security Providers) are compiled and stored in the 'Assemblies\\RazorCache' repository folder. This speed-up the application start-up."), Id(21, 1)]
@@ -266,12 +267,22 @@ namespace Seal.Model
         public bool EnableRazorCache { get; set; } = true;
         public bool ShouldSerializeEnableRazorCache() { return !EnableRazorCache; }
 
+        /// <summary>
+        /// If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Enable Download and Upload"), Description("If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right."), Id(22, 1)]
+        [DefaultValue(true)]
+#endif
+        public bool EnableDownloadUpload { get; set; } = true;
+        public bool ShouldSerializeEnableDownloadUpload() { return !EnableDownloadUpload; }
+
 
         /// <summary>
         /// List of report format allowed in view result. If empty, all formats are taken.
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("Result Report Formats"), Description("List of report format allowed in view result. If empty, all formats are taken."), Id(22, 1)]
+        [Category("Server Settings"), DisplayName("Result Report Formats"), Description("List of report format allowed in view result. If empty, all formats are taken."), Id(23, 1)]
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         public List<string> ReportFormats { get; set; } = new List<string>();

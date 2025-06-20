@@ -9,14 +9,22 @@
       <DatabaseType>SQLite</DatabaseType>
       <ConnectionType>SQLite</ConnectionType>
       <SQLiteConnectionString>Data Source=%SEALREPOSITORY%\Databases\Audit.sqlite;Date Time Format =1;DateTimeKind=Utc;</SQLiteConnectionString>
+      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
     </MetaConnection>
   </Connections>
+  <Description>Audit database</Description>
   <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>
+  <IsDefault>false</IsDefault>
+  <ExternalConnections>false</ExternalConnections>
+  <IsNoSQL>false</IsNoSQL>
+  <IgnorePrePostError>false</IgnorePrePostError>
   <MetaData>
     <Tables>
       <MetaTable>
         <GUID>36ffc9d2-1a1b-4357-8c46-24331e961794</GUID>
         <Name>sr_audit</Name>
+        <CacheDuration>0</CacheDuration>
+        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
@@ -25,6 +33,7 @@
             <Type>DateTime</Type>
             <Category>Audit</Category>
             <DisplayName>Date time</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
             <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
             <Format>G</Format>
           </MetaColumn>
@@ -209,10 +218,15 @@
       <MetaEnum>
         <GUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</GUID>
         <Name>Event type</Name>
+        <IsDynamic>false</IsDynamic>
+        <IsDbRefresh>false</IsDbRefresh>
+        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 sr_audit.event_type, sr_audit.event_type
 FROM sr_audit 
 ORDER BY 1</Sql>
+        <UsePosition>false</UsePosition>
+        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>EventError</Id>
@@ -279,10 +293,15 @@ ORDER BY 1</Sql>
       <MetaEnum>
         <GUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</GUID>
         <Name>Execution context</Name>
+        <IsDynamic>false</IsDynamic>
+        <IsDbRefresh>false</IsDbRefresh>
+        <ValuesPerConnection>false</ValuesPerConnection>
         <Sql>SELECT DISTINCT 
 sr_audit.execution_context 
 FROM sr_audit 
 ORDER BY 1</Sql>
+        <UsePosition>false</UsePosition>
+        <Translate>false</Translate>
         <Values>
           <MetaEV>
             <Id>DesignerOutput</Id>

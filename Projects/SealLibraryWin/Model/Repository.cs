@@ -87,6 +87,11 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Product2 version
+        /// </summary>
+        public static string ProductAdditionalVersion = "";
+
+        /// <summary>
         /// The SealTaskScheduler executable full path
         /// </summary>
         public string SealTaskSchedulerPath

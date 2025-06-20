@@ -50,6 +50,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="8.0.0" />
+		<PackageReference Include="System.ClientModel" Version="1.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>

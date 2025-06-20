@@ -122,7 +122,7 @@ namespace SealWebServer.Controllers
                 showfolders = WebUser.ShowFoldersView,
                 editconfiguration = WebUser.EditConfiguration,
                 editprofile = WebUser.EditProfile,
-                downloadupload = WebUser.DownloadUploadRight,
+                downloadupload = Repository.Configuration.EnableDownloadUpload ? WebUser.DownloadUploadRight : DownloadUpload.None,
                 usertag = WebUser.Tag,
                 onstartup = WebUser.Profile.OnStartup,
                 startupreport = WebUser.Profile.StartUpReport,
@@ -213,6 +213,10 @@ namespace SealWebServer.Controllers
 
                 //Refresh menu reports
                 if (newAuthentication) MenuReportViewsPool.ForceReload();
+
+#if WEBREPORTDESIGNER
+                InitAI();
+#endif
 
                 return Json(getUserProfile());
             }
@@ -918,7 +922,8 @@ namespace SealWebServer.Controllers
 
                 var file = getFileDetail(path);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-                if (file.isreport && WebUser.DownloadUploadRight == DownloadUpload.None) throw new Exception("Error: no right to download report");
+                if (file.isreport && WebUser.DownloadUploadRight == DownloadUpload.None || !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: no right to download report.");
+                if (file.isreport && !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: upload and download are not allowed for the server.");
                 return getFileResult(getFullPath(path), null);
             }
             catch (Exception ex)
@@ -1146,6 +1151,7 @@ namespace SealWebServer.Controllers
                     productname = Repository.Configuration.WebProductName,
                     groups = Repository.Security.Groups,
                     logins = Repository.Security.Logins,
+                    downloadupload = Repository.Configuration.EnableDownloadUpload,
                 };
                 result.folders = SWIConfiguration.GetFolders(WebUser);
 
@@ -1227,8 +1233,8 @@ namespace SealWebServer.Controllers
             {
                 return Json(new
                 {
-                    SWIVersion = Repository.ProductVersion,
                     SRVersion = Repository.ProductVersion,
+                    SRAdditionalVersion = Repository.ProductAdditionalVersion,
                     Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "Free MIT Community License\r\nNon-profit usage or small businesses" : Repository.Instance.LicenseText
                 });
             }

@@ -241,6 +241,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(DownloadUpload.None)]
+        [TypeConverter(typeof(NamedEnumConverterNoDefault))]
         [Category("Default Options"), DisplayName("\t\tUpload/Download"), Description("Web Report Server: Defines if the user can download reports or upload files or reports in the published folders."), Id(4, 5)]
 #endif
         public DownloadUpload DownloadUpload { get; set; } = DownloadUpload.None;

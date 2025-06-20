@@ -44,6 +44,7 @@ namespace Seal.Model
         public string productname;
         public List<SecurityGroup> groups;
         public List<SecurityLogin> logins;
+        public bool downloadupload = true;
 
         public static List<StringPair> GetFolders(SecurityUser user)
         {

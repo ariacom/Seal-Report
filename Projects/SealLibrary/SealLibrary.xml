@@ -6323,6 +6323,11 @@
             Product version
             </summary>
         </member>
+        <member name="F:Seal.Model.Repository.ProductAdditionalVersion">
+            <summary>
+            Product2 version
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.SealTaskSchedulerPath">
             <summary>
             The SealTaskScheduler executable full path
@@ -8089,7 +8094,12 @@
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.EnableRazorCache">
             <summary>
-            If set, the directory is used instead of the standard Temp directory for compiling Razor Scripts and generating report results.
+            If true, standard razor script used for templates (Views, Tables, Tasks and Security Providers) are compiled and stored in the 'Assemblies\\RazorCache' repository folder. This speed-up the application start-up.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.EnableDownloadUpload">
+            <summary>
+            If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.ReportFormats">

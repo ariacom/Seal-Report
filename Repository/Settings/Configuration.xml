@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 <SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <LogoName>logo.svg</LogoName>
-  <LogDays>30</LogDays>
   <WebProductName>Seal Report</WebProductName>
   <WebHelpLink>https://sealreport.org</WebHelpLink>
   <WebCultures>
@@ -258,8 +256,6 @@
     <string>French (Wallis &amp; Futuna)</string>
     <string>French (Mayotte)</string>
   </WebCultures>
-  <IsLocal>true</IsLocal>
-  <HostForPersonalFolder>false</HostForPersonalFolder>
   <FileReplacePatterns>
     <FileReplacePattern>
       <FileName>datatables.min.css</FileName>
@@ -275,15 +271,12 @@ _ed.common.js
 </ScriptFiles>
   <WebScriptFiles />
   <AlternateTempDirectory />
-  <SchedulerMode>Windows</SchedulerMode>
   <TaskFolderName>Seal Report</TaskFolderName>
-  <OuterProcess>true</OuterProcess>
   <AuditEnabled>true</AuditEnabled>
   <AuditScript />
   <WebSessionInitScript />
   <InitScript />
   <RepositoryTranslationsScript />
-  <EncryptionMode>Default</EncryptionMode>
   <KeyValues>
     <KeyValue>
       <Name>Meta Connection Password</Name>
@@ -312,8 +305,6 @@ _ed.common.js
   </KeyValues>
   <ApplicationKeys />
   <DefaultCulture />
-  <NumericFormat>N0</NumericFormat>
-  <DateTimeFormat>d</DateTimeFormat>
   <NumberGroupSeparator />
   <NumberDecimalSeparator />
   <DateSeparator />

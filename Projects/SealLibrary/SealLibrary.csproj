@@ -181,6 +181,7 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
 		<PackageReference Include="SSH.NET" Version="2024.1.0" />
 		<PackageReference Include="Svg.Skia" Version="1.0.0.18" />
+		<PackageReference Include="System.ClientModel" Version="1.2.1" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
 		<PackageReference Include="System.Drawing.Common" Version="5.0.3" />    <!-- Keep this version to allow Excel Export via EPPlus on Linux -->

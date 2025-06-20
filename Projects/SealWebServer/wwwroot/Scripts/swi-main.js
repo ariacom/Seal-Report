@@ -499,17 +499,20 @@ var SWIMain = /** @class */ (function () {
             detail.PersFolderRight = $(this).val();
         });
         $select.selectpicker('refresh');
-        var $select = $("#config-group-downloadupload");
-        $select.unbind("change");
-        $select.selectpicker("destroy");
-        $select.empty();
-        $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No download or upload"), detail.DownloadUpload));
-        $select.append(SWIUtil.GetOption("1", SWIUtil.tr("User can download reports"), detail.DownloadUpload));
-        $select.append(SWIUtil.GetOption("2", SWIUtil.tr("User can download and upload reports and files"), detail.DownloadUpload));
-        $select.unbind("change").on("change", function (e) {
-            detail.DownloadUpload = $(this).val();
-        });
-        $select.selectpicker('refresh');
+        SWIUtil.ShowHideControl($("#config-group-downloadupload-row"), _main._config.downloadupload);
+        if (_main._config.downloadupload) {
+            var $select = $("#config-group-downloadupload");
+            $select.unbind("change");
+            $select.selectpicker("destroy");
+            $select.empty();
+            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No download (except files) or upload"), detail.DownloadUpload));
+            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("User can download reports"), detail.DownloadUpload));
+            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("User can download reports and upload reports and files"), detail.DownloadUpload));
+            $select.unbind("change").on("change", function (e) {
+                detail.DownloadUpload = $(this).val();
+            });
+            $select.selectpicker('refresh');
+        }
         _main.initDropDownGroupsFolders();
     };
     SWIMain.prototype.initDropDownGroupsFolders = function () {
