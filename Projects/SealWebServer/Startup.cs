@@ -27,10 +27,10 @@ namespace SealWebServer
 
             //Set repository path
             Repository.RepositoryConfigurationPath = Configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:{Repository.SealConfigurationRepositoryPathKeyword}");
-            DebugMode = Configuration.GetValue<Boolean>($"{Repository.SealConfigurationSectionKeyword}:DebugMode", false);
+            DebugMode = Configuration.GetValue<bool>($"{Repository.SealConfigurationSectionKeyword}:DebugMode", false);
             SessionTimeout = Configuration.GetValue<int>($"{Repository.SealConfigurationSectionKeyword}:SessionTimeout", 60);
             PathBaseProxy = Configuration.GetValue<string>($"{Repository.SealConfigurationSectionKeyword}:PathBaseProxy", null);
-            
+
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");

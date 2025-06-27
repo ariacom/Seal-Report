@@ -38,17 +38,17 @@ namespace Seal.Forms
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
                     {
-                        if (login.GroupNames.Contains(((SecurityGroup)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
+                        if (login.GroupIds.Contains(((SecurityGroup)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
                     }
 
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        login.GroupNames = new List<string>();
+                        login.GroupIds = new List<string>();
                         foreach (object item in frm.CheckedItems)
                         {
-                            login.GroupNames.Add(((SecurityGroup)item).GUID);
+                            login.GroupIds.Add(((SecurityGroup)item).GUID);
                         }
-                        value = login.GroupNames; //indicates a modification
+                        value = login.GroupIds; //indicates a modification
                     }
                 }
                 else if (context.Instance is SealServerConfiguration)

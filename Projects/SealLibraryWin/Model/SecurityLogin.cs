@@ -122,8 +122,11 @@ namespace Seal.Model
         [Category("Security Groups"), DisplayName("Groups"), Description("The security groups of the user."), Id(1, 2)]
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
+        //Deprecated
         public List<string> GroupNames { get; set; } = new List<string>();
-        public bool ShouldSerializeGroups() { return GroupNames.Count > 0; }
+        public bool ShouldSerializeGroupNames() { return GroupNames.Count > 0; }
+        public List<string> GroupIds { get; set; } = new List<string>();
+        public bool ShouldSerializeGroupIds() { return GroupIds.Count > 0; }
     }
 }
 

@@ -200,6 +200,9 @@ namespace SealWebServer.Controllers
                     SetWebUser(user, password, token);
                     newAuthentication = true;
                 }
+#if WEBREPORTDESIGNER
+                InitAI();
+#endif
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
@@ -213,10 +216,6 @@ namespace SealWebServer.Controllers
 
                 //Refresh menu reports
                 if (newAuthentication) MenuReportViewsPool.ForceReload();
-
-#if WEBREPORTDESIGNER
-                InitAI();
-#endif
 
                 return Json(getUserProfile());
             }
@@ -1008,6 +1007,7 @@ namespace SealWebServer.Controllers
                 setSessionValue(SessionNavigationContext, null);
                 setSessionValue(SessionUploadedFiles, null);
                 setSessionValue(SessionAssistant, null);
+                setSessionValue(SessionAssistantConfiguration, null);
                 CreateWebUser();
 
                 //SignOut
@@ -1234,7 +1234,7 @@ namespace SealWebServer.Controllers
                 return Json(new
                 {
                     SRVersion = Repository.ProductVersion,
-                    SRAdditionalVersion = Repository.ProductAdditionalVersion,
+                    SRAdditionalVersion = Repository.ProductAdditionalInfo,
                     Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "Free MIT Community License\r\nNon-profit usage or small businesses" : Repository.Instance.LicenseText
                 });
             }

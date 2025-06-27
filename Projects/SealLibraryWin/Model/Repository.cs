@@ -89,7 +89,7 @@ namespace Seal.Model
         /// <summary>
         /// Product2 version
         /// </summary>
-        public static string ProductAdditionalVersion = "";
+        public static string ProductAdditionalInfo = "";
 
         /// <summary>
         /// The SealTaskScheduler executable full path

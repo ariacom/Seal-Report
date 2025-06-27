@@ -1401,7 +1401,7 @@ namespace Seal.Helpers
                         result = $"Warning: The license date {generationDate.ToShortDateString()} is invalid for the build date {buildDate.ToShortDateString()}.\r\n";
                         result += "Please consider to buy a new license to use this version.\r\nThank you.\r\n\r\n";
                     }
-                    result += $"License type: {type}\r\nSerial number: {serial}\r\nLicense name: {name}\r\nGeneration date: {generationDate.ToShortDateString()}\r\n\r\n";
+                    result += $"License type: {type}\r\nSerial number: {serial}\r\nLicense name: {name}\r\nGeneration date: {generationDate.ToShortDateString()}\r\n";
                 }
             }
             catch

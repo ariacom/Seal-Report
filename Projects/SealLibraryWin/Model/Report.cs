@@ -419,6 +419,12 @@ namespace Seal.Model
         public string WebUrl = "";
 
         /// <summary>
+        /// If true, errors are shown in the Web Report Server
+        /// </summary>
+        [XmlIgnore]
+        public bool ForceShowErrorMessages = false;
+
+        /// <summary>
         /// Current identifier of the report's execution
         /// </summary>
         [XmlIgnore]
@@ -673,7 +679,7 @@ namespace Seal.Model
         {
             get
             {
-                return !string.IsNullOrEmpty(WebUrl) && !HasValidationErrors && !string.IsNullOrEmpty(ExecutionErrors) ? Translate("This report has execution errors. Please check details in the Logs Files...") : ExecutionErrors;
+                return !string.IsNullOrEmpty(WebUrl) && !HasValidationErrors && !string.IsNullOrEmpty(ExecutionErrors) && !ForceShowErrorMessages ? Translate("This report has execution errors. Please check details in the Logs Files...") : ExecutionErrors;
             }
         }
 

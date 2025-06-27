@@ -2399,6 +2399,11 @@
             URL when executed from the Web Report Server 
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.ForceShowErrorMessages">
+            <summary>
+            If true, errors are shown in the Web Report Server
+            </summary>
+        </member>
         <member name="F:Seal.Model.Report.ExecutionGUID">
             <summary>
             Current identifier of the report's execution
@@ -6323,7 +6328,7 @@
             Product version
             </summary>
         </member>
-        <member name="F:Seal.Model.Repository.ProductAdditionalVersion">
+        <member name="F:Seal.Model.Repository.ProductAdditionalInfo">
             <summary>
             Product2 version
             </summary>

@@ -747,10 +747,10 @@ class SWIMain {
         select.selectpicker("destroy");
         select.empty();
         $.each(_main._config.groups, function (index, value) {
-            select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupNames && detail.GroupNames.some(i => i === value.GUID)) ? value.GUID : ""));
+            select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupIds && detail.GroupIds.some(i => i === value.GUID)) ? value.GUID : ""));
         });
         select.unbind("change").on("change", function (e) {
-            _main._configLogin.GroupNames = $(this).val();
+            _main._configLogin.GroupIds = $(this).val();
         });
         select.selectpicker('refresh');
     }

@@ -79,21 +79,7 @@ namespace Seal.Model
         public string Name
         {
             get { return _name; }
-            set
-            {
-                if (_dctd != null && _name != value)
-                {
-                    //Update group names in Logins
-                    foreach (var login in Repository.Instance.Security.Logins)
-                    {
-                        for (var i = 0; i < login.GroupNames.Count; i++)
-                        {
-                            if (login.GroupNames[i] == _name) login.GroupNames[i] = value;
-                        }
-                    }
-                }
-                _name = value;
-            }
+            set { _name = value; }
         }
 
         /// <summary>

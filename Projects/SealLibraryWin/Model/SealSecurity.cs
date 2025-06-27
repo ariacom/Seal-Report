@@ -325,7 +325,7 @@ namespace Seal.Model
                 foreach (var l in Logins.Where(i => i.GroupNames.Contains(g.Name)))
                 {
                     l.GroupNames.Remove(g.Name);
-                    l.GroupNames.Add(g.GUID);
+                    l.GroupIds.Add(g.GUID);
                 }
             }
             foreach (var l in Logins.Where(i => string.IsNullOrEmpty(i.GUID)))
@@ -336,7 +336,8 @@ namespace Seal.Model
             //Remove deleted groups in logins
             foreach (var login in Logins)
             {
-                login.GroupNames.RemoveAll(i => !Groups.Exists(j => j.GUID == i));
+                login.GroupNames.Clear();
+                login.GroupIds.RemoveAll(i => !Groups.Exists(j => j.GUID == i));
             }
             if (save) SaveToFile();
         }

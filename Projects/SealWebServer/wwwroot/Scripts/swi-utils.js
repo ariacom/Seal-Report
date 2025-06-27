@@ -218,9 +218,9 @@ var SWIUtil;
     function InitVersion() {
         _gateway.GetVersions(function (data) {
             var title = SWIUtil.tr2(SWIUtil.tr("Version") + " : " + data.SRVersion + "\n");
-            if (data.SRAdditionalVersion)
-                title += SWIUtil.tr("AI Version") + " : " + data.SRAdditionalVersion + "\n";
             title += data.Info;
+            if (data.SRAdditionalVersion)
+                title += data.SRAdditionalVersion + "\n";
             $("#brand-id").attr("title", title);
             $("#footer-version").text(data.SWIVersion);
             if (!data.Info.includes("Serial n")) {
