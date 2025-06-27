@@ -1288,13 +1288,17 @@
         //Static users...use the logins defined
         foreach (var login in Repository.Instance.Security.Logins)
         {
-            var user = new SecurityUser(Repository.Instance.Security) { Name = login.Id };
-        
+            var user = new SecurityUser(Repository.Instance.Security) { Name = login.Id };        
             //Add the groups defined for the login
-            foreach (var group in login.GroupNames)
+            foreach (var groupId in login.GroupIds)
             {
-                user.AddSecurityGroup(group);
-            }            
+                var newGroup = Repository.Instance.Security.Groups.FirstOrDefault(i =&gt; i.GUID == groupId);
+                if (newGroup != null)
+                {
+                    user.SecurityGroups.Add(newGroup);
+                }
+            }
+            
             result.Add(user);
         }                        
     }
@@ -1659,39 +1663,6 @@
         </Parameter>
       </Parameters>
       <SortOrder>1</SortOrder>
-      <ExcelConfigurations>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;NewSheetWidget&gt;true&lt;/NewSheetWidget&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
-  &lt;ChartHorizontal&gt;false&lt;/ChartHorizontal&gt;
-  &lt;ChartShowTotals&gt;true&lt;/ChartShowTotals&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-      </ExcelConfigurations>
     </ReportView>
   </Views>
   <Cancel>false</Cancel>
