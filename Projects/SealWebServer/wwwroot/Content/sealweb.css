@@ -680,11 +680,11 @@ table.dataTable {
 }
 
 /* Container width constraints */
-#config-group-detail-content,
+#config-group-detail-content,   
 #config-user-detail-content {
     width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: auto;
 }
 
 /* Responsive Design */
@@ -715,3 +715,202 @@ table.dataTable {
         width: 40px !important;
     }
 }
+
+/*  Profile Dialog  */
+#profile-dialog .modal-dialog {
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+#profile-dialog .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+#profile-dialog .modal-header {
+    background-color: #f5f5f7;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    border-radius: 12px 12px 0 0;
+}
+
+#profile-dialog .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+#profile-dialog .modal-body {
+    padding: 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#profile-dialog .modal-footer {
+    padding: 16px 24px;
+    background-color: #f5f5f7;
+    border-top: 1px solid #e0e0e0;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+#profile-dialog .form-group {
+    margin-bottom: 16px;
+}
+
+#profile-dialog .form-control {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 10px 12px;
+    transition: border-color 0.2s ease;
+    width: 100%;
+    height: 42px;
+    box-sizing: border-box;
+}
+
+    #profile-dialog .form-control:focus {
+        border-color: #62a6ff;
+        box-shadow: none;
+        outline: none;
+    }
+
+#profile-dialog textarea.form-control {
+    min-height: 80px;
+    resize: vertical;
+    height: auto;
+}
+
+#profile-dialog select {
+/*    width: 100% !important;*/
+    max-width: 100% !important;
+    border-radius: 6px;
+    min-height: 42px;
+}
+
+#profile-dialog .btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+#profile-dialog .btn-primary {
+    background-color: #62a6ff;
+    color: white;
+}
+
+    #profile-dialog .btn-primary:hover {
+        background-color: #4a90e2;
+    }
+
+#profile-dialog .btn-default {
+    background-color: #f5f5f7;
+    color: #333;
+    border: 1px solid #e0e0e0;
+}
+
+    #profile-dialog .btn-default:hover {
+        background-color: #e5e5e7;
+    }
+
+#profile-dialog .close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+    #profile-dialog .close:hover {
+        background-color: #e0e0e0;
+    }
+
+@media (max-width: 768px) {
+    #profile-dialog .modal-dialog {
+        margin: 10px;
+        max-width: none;
+    }
+}
+
+#profile-dialog .dropdown-menu,
+#config-dialog .dropdown-menu {
+    min-width: 0 !important; /* Prevents default minimum width */
+    width: 100% !important; /* Matches the button/input width */
+    max-width: 400px; /* Optional: restricts max width */
+    box-sizing: border-box;
+    left: 0 !important; /* Ensures left alignment */
+    right: auto !important;
+    overflow-x: auto; /* Adds horizontal scroll if needed */
+    overflow-y: auto; /* Adds vertical scroll if needed */
+    max-height: 250px; /* Adjust for comfortable scrolling */
+    word-break: break-word; /* Ensures long strings wrap */
+    z-index: 1050; /* Appears above modal/dialog */
+}
+
+#profile-dialog .bootstrap-select .dropdown-menu,
+#config-dialog .bootstrap-select .dropdown-menu {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 250px;
+    left: 0 !important;
+    right: auto !important;
+    box-sizing: border-box;
+}
+
+#profile-dialog .input-group .dropdown-menu,
+#config-dialog .input-group .dropdown-menu,
+#profile-dialog .config-input-field .dropdown-menu,
+#config-dialog .config-input-field .dropdown-menu {
+    left: 0 !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: none;
+}
+
+#profile-dialog .dropdown-menu::-webkit-scrollbar,
+#config-dialog .dropdown-menu::-webkit-scrollbar {
+    height: 7px;
+}
+
+#profile-dialog .dropdown-menu::-webkit-scrollbar-thumb,
+#config-dialog .dropdown-menu::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+#profile-dialog .input-group .dropdown-menu,
+#config-dialog .input-group .dropdown-menu {
+    min-width: 100% !important;
+    width: 100% !important;
+    max-width: 400px;
+    max-height: 250px;
+    overflow-y: auto;
+    left: 0 !important;
+    right: auto !important;
+    box-sizing: border-box;
+}
+
+#profile-dialog .input-group.config-input-field,
+#config-dialog .input-group.config-input-field {
+    cursor: pointer;
+}
+
+    #profile-dialog .input-group.config-input-field input[readonly],
+    #profile-dialog .input-group.config-input-field .btn,
+    #config-dialog .input-group.config-input-field input[readonly],
+    #config-dialog .input-group.config-input-field .btn {
+        cursor: pointer;
+    }

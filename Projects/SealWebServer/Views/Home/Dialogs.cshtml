@@ -230,48 +230,59 @@
 <!-- Profile Dialog -->
 <div id="profile-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
-        <div class="modal-content" style="top:60px">
+        <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <h4 class="modal-title">@repository.TranslateWeb("Profile information")</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="profile-user"><span class="fa fa-user"></span> @repository.TranslateWeb("User name")</label>
-                    <input class="form-control" id="profile-user" disabled="disabled" />
+
+                <div class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("User name")</span>
+                    <input class="form-control config-input-field" id="profile-user" disabled="disabled" />
                 </div>
-                <div class="form-group">
-                    <label for="profile-groups"><span class="fa fa-users"></span> @repository.TranslateWeb("User groups")</label>
-                    <textarea rows="3" class="form-control" id="profile-groups" disabled="disabled">
-                        </textarea>
+                <div class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("User groups")</span>
+                    <textarea rows="3" class="form-control config-input-field" id="profile-groups" disabled="disabled"></textarea>
                 </div>
-                <button id="profile-change-password" type="button" class="btn btn-default">@repository.TranslateWeb("Change password")</button>
-                <div class="form-group edit-profile">
-                    <label for="culture-select"><span class="fa fa-language"></span> @repository.TranslateWeb("Culture")</label>
-                    <div>
+                <div class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("Change password")</span>
+                    <button id="profile-change-password" type="button" class="btn btn-default">@repository.TranslateWeb("Change password")</button>
+                </div>
+
+                <hr />
+
+                <div class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("Culture")</span>
+                    <div class="config-input-field">
                         <select id="culture-select" data-width="100%"></select>
                     </div>
                 </div>
-                <div class="form-group edit-profile">
-                    <label for="onstartup-select"><span class="fa fa-power-off"></span> @repository.TranslateWeb("On startup")</label>
-                    <div>
+
+                <div class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("On startup")</span>
+                    <div class="config-input-field">
                         <select id="onstartup-select" data-width="100%"></select>
                     </div>
                 </div>
-                <div class="form-group edit-profile">
-                    <label for="onstartup-reportname"><span class="fa fa-edit"></span> @repository.TranslateWeb("Startup report name")</label>
-                    <input class="form-control" id="onstartup-reportname" />
+
+                <div class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("Startup report name")</span>
+                    <input class="form-control config-input-field" id="onstartup-reportname" />
                 </div>
-                <div class="form-group edit-profile">
-                    <label for="executionmode-select"><span class="fa fa-external-link"></span> @repository.TranslateWeb("Report execution mode")</label>
-                    <div>
+
+                <div class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("Report execution mode")</span>
+                    <div class="config-input-field">
                         <select id="executionmode-select" data-width="100%"></select>
                     </div>
                 </div>
-                <div class="form-group edit-profile">
-                    <label><span class="fa fa-database"></span> @repository.TranslateWeb("Data source connections")</label>
-                    <div id="default-connections">
-                    </div>
+
+                <div class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("Data source connections")</span>
+                    <div id="default-connections" class="config-input-field"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -310,14 +321,14 @@
                             <div class="config-groups-panel">
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Group Name")</span>
-                                    <div class="input-group config-input-field">
-                                        <input id="config-group-name" type="text" class="form-control" />
-                                        <div class="input-group-btn">
+                                    <div class="input-group config-input-field dropdown">
+                                        <input id="config-group-name" type="text" class="form-control dropdown-toggle" data-toggle="dropdown" autocomplete="off" readonly />
+                                        <span class="input-group-btn">
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
-                                            <ul id="config-groups-dropdown" class="dropdown-menu" style="left:auto;right:0"></ul>
-                                        </div>
+                                        </span>
+                                        <ul id="config-groups-dropdown" class="dropdown-menu" style="width:100%"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -347,14 +358,14 @@
                                 
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Folder")</span>
-                                    <div class="input-group config-input-field">
-                                        <span class="form-control" id="config-group-folder-name"></span>
-                                        <div class="input-group-btn">
+                                    <div class="input-group config-input-field dropdown">
+                                        <input id="config-group-folder-name" type="text" class="form-control dropdown-toggle" data-toggle="dropdown" autocomplete="off" readonly />
+                                        <span class="input-group-btn">
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
-                                            <ul id="config-group-folders-dropdown" class="dropdown-menu" style="left:auto;right:0"></ul>
-                                        </div>
+                                        </span>
+                                        <ul id="config-group-folders-dropdown" class="dropdown-menu" style="width:100%"></ul>
                                     </div>
                                 </div>
 
@@ -389,14 +400,14 @@
                             <div class="config-logins-panel">
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Login ID")</span>
-                                    <div class="input-group config-input-field">
-                                        <input id="config-login-id" type="text" class="form-control" />
-                                        <div class="input-group-btn">
+                                    <div class="input-group config-input-field dropdown">
+                                        <input id="config-login-id" type="text" class="form-control dropdown-toggle" data-toggle="dropdown" autocomplete="off" readonly />
+                                        <span class="input-group-btn">
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
-                                            <ul id="config-logins-dropdown" class="dropdown-menu" style="left:auto;right:0"></ul>
-                                        </div>
+                                        </span>
+                                        <ul id="config-logins-dropdown" class="dropdown-menu" style="width:100%"></ul>
                                     </div>
                                 </div>
                             </div>
