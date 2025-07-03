@@ -152,6 +152,9 @@ var SWIMain = /** @class */ (function () {
         //Reset init state
         $("#menu-main-button").show();
         $("#nav_button,#brand-id").css("pointer-events", "");
+        $("#brand-id").unbind("click").on("click", function () {
+            window.location.href = WebApplicationName;
+        });
         _main.showTreeView(true);
         $("#reload-nav-item,#execute_button,#restrictions_button").addClass("reportview");
         $("#search-pattern").val("");
@@ -405,6 +408,7 @@ var SWIMain = /** @class */ (function () {
             _main.toggleFoldersReport(false);
             $waitDialog.modal('hide');
         }
+        SWIUtil.InitVersion();
     };
     SWIMain.prototype.initConfiguration = function (profile) {
         SWIUtil.ShowHideControl($("#config-nav-item"), profile.editconfiguration);
