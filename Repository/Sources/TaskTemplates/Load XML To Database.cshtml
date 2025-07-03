@@ -27,7 +27,7 @@
         var dt = new DataTable(tableName);
 
         //Load the XML file and define the columns
-        var firstNode = xml.Root.Descendants(nodeName).FirstOrDefault();
+        var firstNode = xml.Root.Descendants().FirstOrDefault(i => i.Name.LocalName == nodeName);
         if (firstNode != null) {
             foreach (var el in firstNode.Elements())
             {
@@ -38,7 +38,7 @@
         task.LogMessage(""{0} column(s) defined"", dt.Columns.Count);
         
 		//Load the values in the table
-		foreach (var node in xml.Root.Descendants(nodeName))
+		foreach (var node in xml.Root.Descendants().Where(i => i.Name.LocalName == nodeName))
 		{
 			var values = new List<string>();
 			foreach (DataColumn col in dt.Columns) {
