@@ -880,17 +880,6 @@ table.dataTable {
     max-width: none;
 }
 
-#profile-dialog .dropdown-menu::-webkit-scrollbar,
-#config-dialog .dropdown-menu::-webkit-scrollbar {
-    height: 7px;
-}
-
-#profile-dialog .dropdown-menu::-webkit-scrollbar-thumb,
-#config-dialog .dropdown-menu::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-}
-
 #profile-dialog .input-group .dropdown-menu,
 #config-dialog .input-group .dropdown-menu {
     min-width: 100% !important;
