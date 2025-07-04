@@ -363,7 +363,7 @@ table.dataTable {
 
 #config-dialog .modal-body {
     padding: 24px;
-    max-height: 70vh;
+    max-height: 74vh;
     overflow-y: auto;
 }
 
@@ -717,38 +717,44 @@ table.dataTable {
 }
 
 /*  Profile Dialog  */
-#profile-dialog .modal-dialog {
+#profile-dialog .modal-dialog,
+#folder-dialog .modal-dialog {
     max-width: 600px;
     margin: 30px auto;
 }
 
-#profile-dialog .modal-content {
+#profile-dialog .modal-content,
+#folder-dialog .modal-content {
     border-radius: 12px;
     border: none;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-#profile-dialog .modal-header {
+#profile-dialog .modal-header,
+#folder-dialog .modal-header {
     background-color: #f5f5f7;
     padding: 20px 24px;
     border-bottom: 1px solid #e0e0e0;
     border-radius: 12px 12px 0 0;
 }
 
-#profile-dialog .modal-title {
+#profile-dialog .modal-title,
+#folder-dialog .modal-title {
     font-size: 18px;
     font-weight: 600;
     color: #333;
     margin: 0;
 }
 
-#profile-dialog .modal-body {
+#profile-dialog .modal-body,
+#folder-dialog .modal-body {
     padding: 24px;
     max-height: 70vh;
     overflow-y: auto;
 }
 
-#profile-dialog .modal-footer {
+#profile-dialog .modal-footer,
+#folder-dialog .modal-footer {
     padding: 16px 24px;
     background-color: #f5f5f7;
     border-top: 1px solid #e0e0e0;
@@ -758,11 +764,13 @@ table.dataTable {
     gap: 12px;
 }
 
-#profile-dialog .form-group {
+#profile-dialog .form-group,
+#folder-dialog .form-group {
     margin-bottom: 16px;
 }
 
-#profile-dialog .form-control {
+#profile-dialog .form-control,
+#folder-dialog .form-control {
     border: 1px solid #e0e0e0;
     border-radius: 6px;
     font-size: 14px;
@@ -773,26 +781,30 @@ table.dataTable {
     box-sizing: border-box;
 }
 
-    #profile-dialog .form-control:focus {
+    #profile-dialog .form-control:focus,
+    #folder-dialog .form-control:focus {
         border-color: #62a6ff;
         box-shadow: none;
         outline: none;
     }
 
-#profile-dialog textarea.form-control {
+#profile-dialog textarea.form-control,
+#folder-dialog textarea.form-control {
     min-height: 80px;
     resize: vertical;
     height: auto;
 }
 
-#profile-dialog select {
-/*    width: 100% !important;*/
+#profile-dialog select,
+#folder-dialog select {
+    /*    width: 100% !important;*/
     max-width: 100% !important;
     border-radius: 6px;
     min-height: 42px;
 }
 
-#profile-dialog .btn {
+#profile-dialog .btn,
+#folder-dialog .btn {
     padding: 10px 20px;
     border-radius: 6px;
     font-weight: 500;
@@ -800,26 +812,31 @@ table.dataTable {
     border: none;
 }
 
-#profile-dialog .btn-primary {
+#profile-dialog .btn-primary,
+#folder-dialog .btn-primary {
     background-color: #62a6ff;
     color: white;
 }
 
-    #profile-dialog .btn-primary:hover {
+    #profile-dialog .btn-primary:hover,
+    #folder-dialog .btn-primary:hover {
         background-color: #4a90e2;
     }
 
-#profile-dialog .btn-default {
+#profile-dialog .btn-default,
+#folder-dialog .btn-default {
     background-color: #f5f5f7;
     color: #333;
     border: 1px solid #e0e0e0;
 }
 
-    #profile-dialog .btn-default:hover {
+    #profile-dialog .btn-default:hover,
+    #folder-dialog .btn-default:hover {
         background-color: #e5e5e7;
     }
 
-#profile-dialog .close {
+#profile-dialog .close,
+#folder-dialog .close {
     position: absolute;
     right: 20px;
     top: 20px;
@@ -831,12 +848,14 @@ table.dataTable {
     border-radius: 4px;
 }
 
-    #profile-dialog .close:hover {
+    #profile-dialog .close:hover,
+    #folder-dialog .close:hover {
         background-color: #e0e0e0;
     }
 
 @media (max-width: 768px) {
-    #profile-dialog .modal-dialog {
+    #profile-dialog .modal-dialog,
+    #folder-dialog .modal-dialog {
         margin: 10px;
         max-width: none;
     }
