@@ -275,6 +275,7 @@ _ed.common.js
 </ScriptFiles>
   <WebScriptFiles />
   <AlternateTempDirectory />
+  <EnableDownloadUpload>false</EnableDownloadUpload>
   <SchedulerMode>Windows</SchedulerMode>
   <TaskFolderName>Seal Report</TaskFolderName>
   <OuterProcess>true</OuterProcess>
