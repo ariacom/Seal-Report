@@ -31,6 +31,7 @@ using System.Data.SQLite;
 using DocumentFormat.OpenXml.Bibliography;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using MimeKit;
 
 namespace Seal.Helpers
 {
@@ -358,6 +359,12 @@ namespace Seal.Helpers
 
             return format.Replace("y", "Y").Replace("d", "D").Replace("tt", "A").Replace("z", "Z").Replace("/", culture.DateTimeFormat.DateSeparator);
         }
+
+        static public bool AreEqualToSecond(DateTime dt1, DateTime dt2)
+        {
+            return Math.Abs((dt1 - dt2).TotalSeconds) < 1;
+        }
+
 
         static public string RemoveHTMLTags(string value)
         {
@@ -1071,8 +1078,23 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Add email address to a MailAddressCollection
+        /// Add email address to a InternetAddressList
         /// </summary>
+        public static void AddEmailAddresses(InternetAddressList list, string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                var addresses = GetEmailAddresses(input);
+                foreach (string address in addresses)
+                {
+                    list.Add(MailboxAddress.Parse(address.Trim()));
+                }
+            }
+        }
+
+        /// <summary>
+                 /// Add email address to a MailAddressCollection
+                 /// </summary>
         static public string[] GetEmailAddresses(string input)
         {
             if (!string.IsNullOrEmpty(input))

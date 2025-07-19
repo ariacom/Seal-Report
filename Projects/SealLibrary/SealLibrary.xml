@@ -79,6 +79,11 @@
             Add email address to a MailAddressCollection
             </summary>
         </member>
+        <member name="M:Seal.Helpers.Helper.AddEmailAddresses(MimeKit.InternetAddressList,System.String)">
+            <summary>
+            Add email address to a InternetAddressList
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.Helper.GetEmailAddresses(System.String)">
             <summary>
             Add email address to a MailAddressCollection
@@ -1742,6 +1747,11 @@
             Default script template for SMTP
             </summary>
         </member>
+        <member name="F:Seal.Model.OutputEmailDevice.MimeKitScriptTemplate">
+            <summary>
+            Default script template for MimeKit
+            </summary>
+        </member>
         <member name="F:Seal.Model.OutputEmailDevice.SendGridScriptTemplate">
             <summary>
             Default script template for SendGrid
@@ -1797,6 +1807,11 @@
             The clear password used to connect to the SMTP server
             </summary>
         </member>
+        <member name="P:Seal.Model.OutputEmailDevice.Timeout">
+            <summary>
+            Amount of time in milli-seconds after which the email is not sent
+            </summary>
+        </member>
         <member name="P:Seal.Model.OutputEmailDevice.DeliveryMethod">
             <summary>
             Specifies how outgoing email messages will be handled
@@ -1807,9 +1822,9 @@
             If true, the client uses Secure Socket Layer
             </summary>
         </member>
-        <member name="P:Seal.Model.OutputEmailDevice.Timeout">
+        <member name="P:Seal.Model.OutputEmailDevice.SecureSocketOptions">
             <summary>
-            Amount of time in milli-seconds after which the email is not sent
+            If true, the client uses Secure Socket Layer
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.UseDefaultCredentials">
@@ -1819,7 +1834,12 @@
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.SmtpScript">
             <summary>
-            Script used to send the Email via SMTP. The script can be customized.
+            Script used to send the Email via SMTP (System.Net.Mail). The script can be customized.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.MimeKitScript">
+            <summary>
+            Script used to send the Email via SMTP (MimeKit). The script can be customized.
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.SendGridKey">
@@ -6597,6 +6617,11 @@
         <member name="M:Seal.Model.Repository.GetPersonalFolderName(Seal.Model.SecurityUser)">
             <summary>
             Returns the personal folder name of a user
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.NotificationEmailDevice">
+            <summary>
+            Get the first email device used for notification
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.SendNotificationEmail(System.String,System.String,System.String,System.Boolean,System.String)">

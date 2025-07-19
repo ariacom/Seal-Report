@@ -31,7 +31,7 @@
                             <input type="password" class="form-control" id="password" placeholder="@repository.TranslateWeb("Enter password")" />
                         </div>
 
-                        <a id="login-password-reset" href="">Forget your password ?</a>
+                        <a id="login-password-reset" href="">@repository.TranslateWeb("Forget your password ?")</a>
                     }
                     <button id="login-modal-submit" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> @repository.TranslateWeb("Login")</button>
                 }
@@ -85,7 +85,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="password-reset-name"><span class="glyphicon glyphicon-user"></span> @repository.TranslateWeb("Enter your user identifier or email")</label>
-                    <input type="text" class="form-control" id="password-reset-name" name="password-reset-name" placeholder="@repository.TranslateWeb("Enter user identifier or email")" />
+                    <input type="text" class="form-control" id="password-reset-name" name="password-reset-name" placeholder="@repository.TranslateWeb("User identifier or email")" />
                     <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 </div>
                 <button id="password-reset-submit" class="btn btn-default btn-warning btn-block"><span class="glyphicon glyphicon-check"></span> @repository.TranslateWeb("Reset password")</button>
@@ -106,11 +106,11 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="password-reset1"><span class="glyphicon glyphicon-eye-open"></span> @repository.TranslateWeb("Enter your new password")</label>
-                    <input type="password" class="form-control" id="password-reset1" name="password-reset1" placeholder="@repository.TranslateWeb("Enter your new password")" />
+                    <input type="password" class="form-control" id="password-reset1" name="password-reset1" placeholder="@repository.TranslateWeb("New password")" />
                 </div>
                 <div class="form-group">
                     <label for="password-reset2"><span class="glyphicon glyphicon-eye-close"></span> @repository.TranslateWeb("Confirm your new password")</label>
-                    <input type="password" class="form-control" id="password-reset2" name="password-reset2" placeholder="@repository.TranslateWeb("Confirm your new password")" />
+                    <input type="password" class="form-control" id="password-reset2" name="password-reset2" placeholder="@repository.TranslateWeb("New password")" />
                 </div>
                 <button id="password-reset-submit2" class="btn btn-default btn-warning btn-block"><span class="glyphicon glyphicon-check"></span> @repository.TranslateWeb("Change password")</button>
             </div>
@@ -129,16 +129,16 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="password-change"><span class="glyphicon glyphicon-eye-open"></span> @repository.TranslateWeb("Enter your new password")</label>
-                    <input type="password" class="form-control" id="password-change" name="password-change" placeholder="@repository.TranslateWeb("Enter your current password")" />
+                    <label for="password-change"><span class="glyphicon glyphicon-eye-open"></span> @repository.TranslateWeb("Enter your current password")</label>
+                    <input type="password" class="form-control" id="password-change" name="password-change" placeholder="@repository.TranslateWeb("Current password")" />
                 </div>
                 <div class="form-group">
                     <label for="password-change1"><span class="glyphicon glyphicon-eye-open"></span> @repository.TranslateWeb("Enter your new password")</label>
-                    <input type="password" class="form-control" id="password-change1" name="password-change1" placeholder="@repository.TranslateWeb("Enter your new password")" />
+                    <input type="password" class="form-control" id="password-change1" name="password-change1" placeholder="@repository.TranslateWeb("New password")" />
                 </div>
                 <div class="form-group">
                     <label for="password-change2"><span class="glyphicon glyphicon-eye-close"></span> @repository.TranslateWeb("Confirm your new password")</label>
-                    <input type="password" class="form-control" id="password-change2" name="password-change2" placeholder="@repository.TranslateWeb("Confirm your new password")" />
+                    <input type="password" class="form-control" id="password-change2" name="password-change2" placeholder="@repository.TranslateWeb("New password")" />
                 </div>
                 <button id="change-password-submit" class="btn btn-default btn-warning btn-block"><span class="glyphicon glyphicon-check"></span> @repository.TranslateWeb("Change password")</button>
             </div>
@@ -321,7 +321,7 @@
                         <div id="config-group-detail-content" class="tab-pane fade in active">
                             <div class="config-groups-panel">
                                 <div class="config-input-row">
-                                    <span class="config-input-label">@repository.TranslateWeb("Group Name")</span>
+                                    <span class="config-input-label">@repository.TranslateWeb("Group name")</span>
                                     <div class="input-group config-input-field dropdown">
                                         <input id="config-group-name" type="text" class="form-control dropdown-toggle" data-toggle="dropdown" autocomplete="off" />
                                         <span class="input-group-btn">

@@ -159,7 +159,8 @@
         var tra = [];
         @foreach (var translation in repository.JSTranslations)
         {
-            <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
+            <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";
+            </text>
         }
         var opers = [];
         @if (model.HasEditor)

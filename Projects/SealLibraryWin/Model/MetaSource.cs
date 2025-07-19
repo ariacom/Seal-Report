@@ -644,7 +644,7 @@ namespace Seal.Model
             //Check last modification
             if (LastModification != DateTime.MinValue && File.Exists(path))
             {
-                if (LastModification != File.GetLastWriteTime(path))
+                if (!Helper.AreEqualToSecond(LastModification,File.GetLastWriteTime(path)))
                 {
                     throw new Exception("Unable to save the Data Source file. The file has been modified by another user.");
                 }

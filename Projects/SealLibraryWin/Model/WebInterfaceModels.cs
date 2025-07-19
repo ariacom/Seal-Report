@@ -16,6 +16,7 @@ namespace Seal.Model
         public string name;
         public string group;
         public string culture;
+        public string language;
         public string folder;
         public bool showfolders;
         public bool editconfiguration;

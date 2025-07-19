@@ -118,6 +118,7 @@ namespace SealWebServer.Controllers
                 name = WebUser.Name,
                 group = WebUser.SecurityGroupsDisplay,
                 culture = culture,
+                language = Repository.CultureInfo.TwoLetterISOLanguageName,
                 folder = WebUser.Profile.LastFolder,
                 showfolders = WebUser.ShowFoldersView,
                 editconfiguration = WebUser.EditConfiguration,
@@ -200,9 +201,6 @@ namespace SealWebServer.Controllers
                     SetWebUser(user, password, token);
                     newAuthentication = true;
                 }
-#if WEBREPORTDESIGNER
-                InitAI();
-#endif
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
@@ -214,6 +212,9 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(AuditType.Login, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
+#if WEBREPORTDESIGNER
+                InitAI();
+#endif
                 //Refresh menu reports
                 if (newAuthentication) MenuReportViewsPool.ForceReload();
 
@@ -979,7 +980,7 @@ namespace SealWebServer.Controllers
                 WebUser.Profile.MarkFavorite(path);
                 WebUser.SaveProfile();
 
-                return Json(new { Message = Translate("The favorite has been updated.") });
+                return Json(new { Message = Translate("The favorite has been updated") });
             }
             catch (Exception ex)
             {

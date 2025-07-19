@@ -685,8 +685,10 @@ namespace Seal.Model
 
     public enum EmailServerType
     {
-        [Description("SMTP")]
+        [Description("SMTP (System.Net.Mail)")]
         SMTP,
+        [Description("SMTP (MimeKit)")]
+        SMTPMimeKit,
         [Description("SendGrid")]
         SendGrid,
         [Description("Microsoft Graph")]

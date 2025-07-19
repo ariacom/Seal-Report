@@ -974,12 +974,26 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Get the first email device used for notification
+        /// </summary>
+        public OutputEmailDevice NotificationEmailDevice
+        {
+            get
+            {
+                //Get the first email device used for notification
+                var device = Devices.OfType<OutputEmailDevice>().FirstOrDefault(i => i.UsedForNotification);
+                if (device == null) device = Devices.OfType<OutputEmailDevice>().FirstOrDefault();
+                return device;
+            }
+        }
+
+        /// <summary>
         /// Send an Email using the first Notification Email Device.
         /// </summary>
 
         public bool SendNotificationEmail(string from, string to, string subject, bool isHtmlBody, string body)
         {
-            var device = Devices.OfType<OutputEmailDevice>().FirstOrDefault(i => i.UsedForNotification);
+            var device = NotificationEmailDevice;
             if (device == null) device = Devices.OfType<OutputEmailDevice>().FirstOrDefault();
             if (device == null)
             {

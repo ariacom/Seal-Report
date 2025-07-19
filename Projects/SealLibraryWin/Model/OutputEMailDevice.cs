@@ -20,6 +20,7 @@ using Microsoft.Graph;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MailKit.Security;
 
 #if WINDOWS
 using DynamicTypeDescriptor;
@@ -73,6 +74,7 @@ namespace Seal.Model
                 GetProperty("Type").SetIsBrowsable(true);
                 GetProperty("ProcessingScript").SetIsBrowsable(true);
 
+                bool isSmtp = _type != EmailServerType.SMTP || _type != EmailServerType.SMTPMimeKit;
                 //Smtp
                 GetProperty("Server").SetIsBrowsable(true);
                 GetProperty("UserName").SetIsBrowsable(true);
@@ -81,19 +83,24 @@ namespace Seal.Model
                 GetProperty("UseDefaultCredentials").SetIsBrowsable(true);
                 GetProperty("DeliveryMethod").SetIsBrowsable(true);
                 GetProperty("EnableSsl").SetIsBrowsable(true);
+                GetProperty("SecureSocketOptions").SetIsBrowsable(true);
                 GetProperty("ChangeSender").SetIsBrowsable(true);
                 GetProperty("Timeout").SetIsBrowsable(true);
                 GetProperty("SmtpScript").SetIsBrowsable(true);
-                GetProperty("Server").SetIsReadOnly(_type != EmailServerType.SMTP);
-                GetProperty("UserName").SetIsReadOnly(_type != EmailServerType.SMTP);
-                GetProperty("ClearPassword").SetIsReadOnly(_type != EmailServerType.SMTP);
-                GetProperty("Port").SetIsReadOnly(_type != EmailServerType.SMTP);
+                GetProperty("MimeKitScript").SetIsBrowsable(true);
+
+                GetProperty("Server").SetIsReadOnly(!isSmtp);
+                GetProperty("UserName").SetIsReadOnly(!isSmtp);
+                GetProperty("ClearPassword").SetIsReadOnly(!isSmtp);
+                GetProperty("Port").SetIsReadOnly(!isSmtp);
                 GetProperty("UseDefaultCredentials").SetIsReadOnly(_type != EmailServerType.SMTP);
                 GetProperty("DeliveryMethod").SetIsReadOnly(_type != EmailServerType.SMTP);
                 GetProperty("EnableSsl").SetIsReadOnly(_type != EmailServerType.SMTP);
-                GetProperty("ChangeSender").SetIsReadOnly(_type != EmailServerType.SMTP);
-                GetProperty("Timeout").SetIsReadOnly(_type != EmailServerType.SMTP);
+                GetProperty("SecureSocketOptions").SetIsReadOnly(_type != EmailServerType.SMTPMimeKit);
+                GetProperty("ChangeSender").SetIsReadOnly(!isSmtp);
+                GetProperty("Timeout").SetIsReadOnly(!isSmtp);
                 GetProperty("SmtpScript").SetIsReadOnly(_type != EmailServerType.SMTP);
+                GetProperty("MimeKitScript").SetIsReadOnly(_type != EmailServerType.SMTPMimeKit);
 
                 //Sendgrid
                 GetProperty("ClearSendGridKey").SetIsBrowsable(true);
@@ -230,6 +237,70 @@ namespace Seal.Model
 }
 ";
 
+        /// <summary>
+        /// Default script template for MimeKit
+        /// </summary>
+        public const string MimeKitScriptTemplate = @"@using MimeKit
+@using MailKit.Net.Smtp
+@using MailKit.Security
+
+@{
+    OutputEmailDevice.EmailDefinition def = Model;
+    var device = def.device;
+
+    var message = new MimeMessage();
+
+    // From
+    message.From.Add(MailboxAddress.Parse(def.sender));
+
+    // To, CC, Bcc
+    Helper.AddEmailAddresses(message.To, def.to);
+    Helper.AddEmailAddresses(message.Cc, def.cc);
+    Helper.AddEmailAddresses(message.Bcc, def.bcc);
+    Helper.AddEmailAddresses(message.ReplyTo, def.replyTo);
+
+    message.Subject = def.subject;
+
+    // Body
+    var bodyBuilder = new BodyBuilder();
+    if (def.isHtmlBody)
+    {
+        bodyBuilder.HtmlBody = def.body;
+    }
+    else
+    {
+        bodyBuilder.TextBody = def.body;
+    }
+
+    // Attachment
+    if (!string.IsNullOrEmpty(def.attachPath))
+    {
+        var attachment = bodyBuilder.Attachments.Add(def.attachPath);
+        if (!string.IsNullOrEmpty(def.attachName))
+        {
+            attachment.ContentDisposition.FileName = def.attachName;
+            attachment.ContentType.Name = def.attachName;
+        }
+    }
+
+    message.Body = bodyBuilder.ToMessageBody();
+
+    // Send email
+    using (var client = new SmtpClient())
+    {
+        client.Timeout = device.Timeout;
+        client.Connect(device.Server, device.Port, device.SecureSocketOptions);
+
+        if (!string.IsNullOrEmpty(device.UserName))
+        {
+            client.Authenticate(device.UserName, device.ClearPassword);
+        }
+
+        client.Send(message);
+        client.Disconnect(true);
+    }
+}
+";
         /// <summary>
         /// Default script template for SendGrid
         /// </summary>
@@ -468,10 +539,19 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Amount of time in milli-seconds after which the email is not sent
+        /// </summary>
+#if WINDOWS
+        [Category("SMTP Definition"), DisplayName("Time out"), Description("Amount of time in milli-seconds after which the email is not sent."), Id(5, 1)]
+        [DefaultValue(60000)]
+#endif
+        public int Timeout { get; set; } = 60000;
+
+        /// <summary>
         /// Specifies how outgoing email messages will be handled
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("Delivery method"), Description("Specifies how outgoing email messages will be handled."), Id(5, 1)]
+        [Category("SMTP Definition"), DisplayName("Delivery method (System.Net.Mail)"), Description("Specifies how outgoing email messages will be handled."), Id(6, 1)]
         [DefaultValue(SmtpDeliveryMethod.Network)]
 #endif
         public SmtpDeliveryMethod DeliveryMethod { get; set; } = SmtpDeliveryMethod.Network;
@@ -480,37 +560,46 @@ namespace Seal.Model
         /// If true, the client uses Secure Socket Layer
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("Enable SSL"), Description("If true, the client uses Secure Socket Layer."), Id(6, 1)]
+        [Category("SMTP Definition"), DisplayName("Enable SSL (System.Net.Mail)"), Description("If true, the client uses Secure Socket Layer."), Id(7, 1)]
         [DefaultValue(false)]
 #endif
         public bool EnableSsl { get; set; } = false;
 
         /// <summary>
-        /// Amount of time in milli-seconds after which the email is not sent
+        /// If true, the client uses Secure Socket Layer
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("Time out"), Description("Amount of time in milli-seconds after which the email is not sent."), Id(7, 1)]
-        [DefaultValue(100000)]
+        [Category("SMTP Definition"), DisplayName("Secure Socket Options (MimeKit)"), Description("Socket options used for the connection."), Id(8, 1)]
+        [DefaultValue(SecureSocketOptions.Auto)]
 #endif
-        public int Timeout { get; set; } = 100000;
+        public SecureSocketOptions SecureSocketOptions { get; set; } = SecureSocketOptions.Auto;
 
         /// <summary>
         /// If true, the default credentials are used
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("Use default credentials"), Description("If true, the default credentials are used."), Id(8, 1)]
+        [Category("SMTP Definition"), DisplayName("Use default credentials (System.Net.Mail)"), Description("If true, the default credentials are used."), Id(9, 1)]
         [DefaultValue(false)]
 #endif
         public bool UseDefaultCredentials { get; set; } = false;
 
         /// <summary>
-        /// Script used to send the Email via SMTP. The script can be customized.
+        /// Script used to send the Email via SMTP (System.Net.Mail). The script can be customized.
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("SMTP script"), Description("Script used to send the Email via SMTP. The script can be customized."), Id(9, 1)]
+        [Category("SMTP Definition"), DisplayName("SMTP script (System.Net.Mail)"), Description("Script used to send the Email via SMTP (System.Net.Mail). The script can be customized."), Id(10, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string SmtpScript { get; set; } = "";
+
+        /// <summary>
+        /// Script used to send the Email via SMTP (MimeKit). The script can be customized.
+        /// </summary>
+#if WINDOWS
+        [Category("SMTP Definition"), DisplayName("SMTP script (MimeKit)"), Description("Script used to send the Email via SMTP (MimeKit). The script can be customized."), Id(11, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string MimeKitScript { get; set; } = "";
 
         /// <summary>
         /// The API Key for SendGrid
@@ -790,8 +879,9 @@ namespace Seal.Model
             };
 
             var script = string.IsNullOrWhiteSpace(SmtpScript) ? SmtpScriptTemplate : SmtpScript;
-            if (Type == EmailServerType.SendGrid) script = string.IsNullOrWhiteSpace(SendGridScript) ? SendGridScriptTemplate : SendGridScript;
-            if (Type == EmailServerType.MSGraph) script = string.IsNullOrWhiteSpace(MSGraphScript) ? MSGraphScriptTemplate : MSGraphScript;
+            if (Type == EmailServerType.SMTPMimeKit) script = string.IsNullOrWhiteSpace(MimeKitScript) ? MimeKitScriptTemplate : MimeKitScript;
+            else if (Type == EmailServerType.SendGrid) script = string.IsNullOrWhiteSpace(SendGridScript) ? SendGridScriptTemplate : SendGridScript;
+            else if (Type == EmailServerType.MSGraph) script = string.IsNullOrWhiteSpace(MSGraphScript) ? MSGraphScriptTemplate : MSGraphScript;
 
             RazorHelper.CompileExecute(script, emailDefinition);
         }

@@ -1,4 +1,4 @@
-﻿declare var tra;
+﻿declare var tra: string[]; 
 declare var availableDateKeywords;
 declare var shortDateFormat;
 declare var shortDateTimeFormat;

@@ -1977,10 +1977,11 @@ namespace Seal.Forms
                 {
                     var device = ((OutputEmailDevice)context.Instance);
                     if (context.PropertyDescriptor.Name == "SmtpScript") template = OutputEmailDevice.SmtpScriptTemplate;
-                    if (context.PropertyDescriptor.Name == "SendGridScript") template = OutputEmailDevice.SendGridScriptTemplate;
-                    if (context.PropertyDescriptor.Name == "MSGraphScript") template = OutputEmailDevice.MSGraphScriptTemplate;
+                    else if (context.PropertyDescriptor.Name == "SendGridScript") template = OutputEmailDevice.SendGridScriptTemplate;
+                    else if (context.PropertyDescriptor.Name == "MSGraphScript") template = OutputEmailDevice.MSGraphScriptTemplate;
+                    else if (context.PropertyDescriptor.Name == "MimeKitScript") template = OutputEmailDevice.MimeKitScriptTemplate;
                     frm.ObjectForCheckSyntax = new OutputEmailDevice.EmailDefinition();
-                    frm.Text = "Edit the script executed when to send the email";
+                    frm.Text = "Edit the script executed to send the email";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
                 else if (context.Instance is SealServerConfiguration)

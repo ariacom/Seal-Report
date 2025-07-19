@@ -173,7 +173,9 @@ class SWIMain {
             _main.showSecurityCode(data);
             return;
         }
-        if (_main._profile && _main._profile.culture && _main._profile.culture != data.culture) {
+
+        //check if we have to relaod translations
+        if ((_main._profile && _main._profile.culture && _main._profile.culture != data.culture) || (languageName != data.language)) {
             $("body").css("opacity", "0.1");
             location.reload();
         }
