@@ -201,6 +201,9 @@ namespace SealWebServer.Controllers
                     SetWebUser(user, password, token);
                     newAuthentication = true;
                 }
+#if WEBREPORTDESIGNER
+                InitAI();
+#endif
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
@@ -212,9 +215,6 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(AuditType.Login, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
-#if WEBREPORTDESIGNER
-                InitAI();
-#endif
                 //Refresh menu reports
                 if (newAuthentication) MenuReportViewsPool.ForceReload();
 
