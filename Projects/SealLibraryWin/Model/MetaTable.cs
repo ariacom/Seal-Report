@@ -433,6 +433,8 @@ namespace Seal.Model
         [DefaultValue(0)]
 #endif
         public int CacheDuration { get; set; } = 0;
+        public bool ShouldSerializeCacheDuration() { return CacheDuration != 0; }
+
 
         /// <summary>
         /// If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified.
@@ -469,6 +471,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Keep column names"), Description("If true, the display names of the columns are kept when generated from the source SQL."), Id(7, 1)]
 #endif
         public bool KeepColumnNames { get; set; } = false;
+        public bool ShouldSerializeKeepColumnNames() { return KeepColumnNames; }
 
         /// <summary>
         /// Type of the table got from database catalog

@@ -112,6 +112,7 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        public bool ShouldSerializeIsDynamic() { return IsDynamic; }
 
         private bool _isDbRefresh = false;
         /// <summary>
@@ -130,6 +131,7 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        public bool ShouldSerializeIsDbRefresh() { return IsDbRefresh; }
 
         /// <summary>
         /// If True, the enum loads and stores the values for each connection.
@@ -139,6 +141,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("List values depend on the connection"), Description("If True, the enum loads and stores the values for each connection."), Id(4, 1)]
 #endif
         public bool ValuesPerConnection { get; set; } = false;
+        public bool ShouldSerializeValuesPerConnection() { return ValuesPerConnection; }
 
         /// <summary>
         /// True if the list has dynamic display
@@ -204,6 +207,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Use defined position to sort in reports"), Description("If True, the current position of the values in the list is used to sort the column in the report result."), Id(7, 1)]
 #endif
         public bool UsePosition { get; set; } = false;
+        public bool ShouldSerializeUsePosition() { return UsePosition; }
 
         /// <summary>
         /// If True, the enumerated values are translated using the Repository translations
@@ -213,6 +217,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are translated using the Repository translations."), Id(8, 1)]
 #endif
         public bool Translate { get; set; } = false;
+        public bool ShouldSerializeTranslate() { return Translate; }
 
         /// <summary>
         /// If the list is dynamic, refreshed before execution and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed

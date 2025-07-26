@@ -291,6 +291,7 @@ namespace Seal.Model
         [DisplayName("Database Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(10, 1)]
 #endif
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
+        public bool ShouldSerializeDateTimeFormat() { return DateTimeFormat != "yyyy-MM-dd HH:mm:ss"; }
 
         /// <summary>
         /// "Default Timeout in seconds for the SQL Statements executed. 0 means no Timeout.

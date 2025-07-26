@@ -191,7 +191,7 @@ namespace Seal.Model
         [Category("Display"), DisplayName("Display order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(4, 2)]
 #endif
         public int DisplayOrder { get; set; } = 1;
-        public bool ShouldSerializeDisplayOrder() { return DisplayOrder != 0; }
+        public bool ShouldSerializeDisplayOrder() { return DisplayOrder != 1; }
 
         /// <summary>
         /// The display order

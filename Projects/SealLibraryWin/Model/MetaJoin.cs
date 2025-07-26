@@ -195,6 +195,7 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        public bool ShouldSerializeJoinType() { return JoinType != JoinType.Inner; }
 
         /// <summary>
         /// Indicates if the join can also be used in the other direction (left-right or right-left). For LINQ tables, the join clause must have the pattern with 'equals' (e.g. 'Helper.ToString(leftTable["col1"]) equals Helper.ToString(rightTable["col2"])').
@@ -204,6 +205,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Is bi-directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left). For LINQ tables, the join clause must have the pattern with 'equals' (e.g. 'Helper.ToString(leftTable[\"col1\"]) equals Helper.ToString(rightTable[\"col2\"])')."), Id(3, 1)]
 #endif
         public bool IsBiDirectional { get; set; } = true;
+        public bool ShouldSerializeIsBiDirectional() { return !IsBiDirectional; }
 
         /// <summary>
         /// SQL generated for the join type

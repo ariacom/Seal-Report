@@ -128,6 +128,7 @@ namespace Seal.Model
         [Category("General"), DisplayName("Is Default"), Description("If true, this source is used as default when a new model is created in a report."), Id(3, 1)]
 #endif
         public bool IsDefault { get; set; } = false;
+        public bool ShouldSerializeIsDefault() { return IsDefault; }
 
         /// <summary>
         /// If true, the connections are saved in a XML file located beside the Data Source file.
@@ -137,6 +138,7 @@ namespace Seal.Model
         [Category("General"), DisplayName("Store Connections in a dedicated file"), Description("If true, the connections are saved in a XML file located beside the Data Source file. This may be useful for deployment."), Id(4, 1)]
 #endif
         public bool ExternalConnections { get; set; } = false;
+        public bool ShouldSerializeExternalConnections() { return ExternalConnections; }
 
         /// <summary>
         /// Defines other reference Data Sources loaded with the Data Source.
@@ -156,6 +158,7 @@ namespace Seal.Model
         [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(6, 1)]
 #endif
         public bool IsNoSQL { get; set; } = false;
+        public bool ShouldSerializeIsNoSQL() { return IsNoSQL; }
 
         /// <summary>
         /// If true, this source contains only a table built from a database. The SQL engine will be used to fill the models.
@@ -201,6 +204,7 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(7, 4)]
 #endif
         public bool IgnorePrePostError { get; set; } = false;
+        public bool ShouldSerializeIgnorePrePostError() { return IgnorePrePostError; }
 
         /// <summary>
         /// Meta information that can be used for any purpose
