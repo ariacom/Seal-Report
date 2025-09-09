@@ -25,7 +25,23 @@ A **live demonstration** of the <a href="https://sealreport.org/demo" target=_bl
 **Quick start guides**  for building reports are available at the <a href="https://sealreport.org" target=_blank>Seal Report</a> Web site.
 
 Use the <a href="https://github.com/ariacom/Seal-Report/discussions" target=_blank>Github Discussions</a> to get free support, information and hints on the product.
+***
+## Seal AI: Hosting and AI Assistance
+**Seal AI** is a new product built on Microsoft Azure that extends the open-source Seal Report platform.  
+It provides:  
+- Secure and scalable hosting for your **Web Report Server**.  
+- An integrated AI assistant to create, refine, and optimize reports using natural language.
 
+Please visit [Seal AI Website](https://sealreport.ai) for more information (A free trial is available).
+***
+## Supporting Seal Report
+Seal Report is an open-source project maintained by **Ariacom**.  
+You can support its development and sustainability in several ways.
+- **License Purchase**: The simplest way to support the product is to purchase a license at [Seal Report Licenses](https://sealreport.com).
+- **Consulting**: If you require professional consulting, training, or workshops, please contact [Ariacom](https://ariacom.com).
+- **Sponsoring new features**: If you need a new feature that could also benefit the community and become part of future product releases, you may sponsor its development. Contact us at [Ariacom](https://ariacom.com).
+
+***
 # Screen shots 
 ## HTML Report Result
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult4.png) 
