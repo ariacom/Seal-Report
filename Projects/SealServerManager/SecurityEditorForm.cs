@@ -64,10 +64,10 @@ Rules applied if a user belongs to several groups:
 
 Web Report Designer Security
 - SQL Models: True if true in one group
-- Devices: Cannot be selected if it is specified in one group
-- Sources: Cannot be selected if it is specified in one group
-- Connections: Cannot be selected if it is specified in one group
-- Columns: Cannot be selected if it is specified in one group
+- Devices: Can be selected if it is specified in one group, then cannot be selected if it is specified in one group
+- Sources: Can be selected if it is specified in one group, then cannot be selected if it is specified in one group
+- Connections: Can be selected if it is specified in one group, then cannot be selected if it is specified in one group
+- Columns: Can be selected if it is specified in one group, then cannot be selected if it is specified in one group
 
 - Default options (Edit Profile, Culture, Logo, Startup) are taken from the group having the highest weight.
 ";

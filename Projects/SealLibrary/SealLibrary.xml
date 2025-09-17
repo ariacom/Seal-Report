@@ -2752,7 +2752,7 @@
         </member>
         <member name="M:Seal.Model.Report.InitGUIDAndSchedules">
             <summary>
-            Init view GUIDs and clear schedule before a report Copy
+            Init view GUIDs and clear schedule for a report Copy
             </summary>
         </member>
         <member name="M:Seal.Model.Report.SynchronizeTasks">
@@ -4340,6 +4340,11 @@
         <member name="M:Seal.Model.ReportModel.InitFromReferenceModel">
             <summary>
             Initializes the model its reference model
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.InitRestrictionsFromReferenceModel(Seal.Model.ReportModel)">
+            <summary>
+            Initializes the model restrictions from a reference model
             </summary>
         </member>
         <member name="M:Seal.Model.ReportModel.BuildQuery(System.Boolean,System.Boolean)">
@@ -8912,9 +8917,9 @@
             Find a security folder from a given name
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.ForbiddenColumns">
+        <member name="P:Seal.Model.SecurityUser.SecurityColumns">
             <summary>
-            List of columns that cannot be edited with the Web Report Designer
+            List of columns that can or cannot be edited with the Web Report Designer
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.CanSelectColumn(Seal.Model.MetaColumn)">
@@ -8922,9 +8927,9 @@
             True if the column can be selected 
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.ForbiddenSources">
+        <member name="P:Seal.Model.SecurityUser.SecuritySources">
             <summary>
-            List of data source that cannot be edited with the Web Report Designer
+            List of data source that can or cannot be edited with the Web Report Designer
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.CanSelectSource(Seal.Model.MetaSource)">
@@ -8932,9 +8937,9 @@
             True if the data source can be selected 
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.ForbiddenDevices">
+        <member name="P:Seal.Model.SecurityUser.SecurityDevices">
             <summary>
-            List of devices that cannot be edited with the Web Report Designer
+            List of devices that can or cannot be edited with the Web Report Designer
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.CanSelectDevice(Seal.Model.OutputDevice)">
@@ -8942,9 +8947,9 @@
             True if the device can be selected 
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.ForbiddenConnections">
+        <member name="P:Seal.Model.SecurityUser.SecurityConnections">
             <summary>
-            List of connections that cannot be edited with the Web Report Designer
+            List of connections that can or cannot be edited with the Web Report Designer
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.CanSelectConnection(Seal.Model.MetaConnection)">

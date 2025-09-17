@@ -673,7 +673,6 @@ namespace Seal.Model
             finally
             {
                 foreach (var table in MetaData.Tables) table.AfterSerialization();
-
                 GetFromTempReferences();
             }
         }

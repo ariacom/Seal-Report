@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using FluentFTP;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
@@ -411,6 +412,13 @@ namespace Seal.Helpers
         {
             string content = File.ReadAllText(path);
             return content.Contains("<ReportSchedule>") && content.Contains("</ReportSchedule>");
+        }
+
+        public static void ChangeGUID(string path, string oldGUID, string newGUID)
+        {
+            string content = File.ReadAllText(path);
+            content = content.Replace(oldGUID, newGUID);
+            File.WriteAllText(path, content, new UTF8Encoding(false)); //No bom encoding
         }
 
         public static void DeleteFile(string path)

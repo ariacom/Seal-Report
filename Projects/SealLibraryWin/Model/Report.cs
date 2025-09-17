@@ -306,7 +306,7 @@ namespace Seal.Model
         /// Meta information that can be used for any purpose
         /// </summary>
         public List<StringPair> MetaInfo { get; set; } = new List<StringPair>();
-        public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
+        public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0 && MetaInfo.Exists(i => !string.IsNullOrEmpty(i.Value)); }
 
         /// <summary>
         /// Get a meta information value from its key
@@ -1348,7 +1348,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Init view GUIDs and clear schedule before a report Copy
+        /// Init view GUIDs and clear schedule for a report Copy
         /// </summary>
         public void InitGUIDAndSchedules()
         {

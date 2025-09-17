@@ -604,13 +604,11 @@ namespace Seal.Model
                                     "System",
                                     "System.Runtime",
                                     "System.Collections",
-                                    "System.Collections.Generic",
                                     "System.Linq",
                                     "System.Globalization",
                                     "System.Net",
                                     "System.Security",
                                     "System.IO",
-                                    "System.IO.Stream",
                                     "System.Data",
                                     "System.Data.Common",
                                     "System.Data.SqlClient"

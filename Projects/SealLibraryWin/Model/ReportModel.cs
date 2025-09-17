@@ -1726,8 +1726,6 @@ model.ResultTable = query2.CopyToDataTable2();
             }
         }
 
-
-
         /// <summary>
         /// Initializes the model its reference model
         /// </summary>
@@ -1771,33 +1769,41 @@ model.ResultTable = query2.CopyToDataTable2();
                     }
                 }
 
-                if (HasStandardRestrictions)
-                {
-                    foreach (var restriction in refModel.Restrictions)
-                    {
-                        if (!Restrictions.Exists(i => restriction.MetaColumnGUID == i.MetaColumnGUID))
-                        {
-                            Restrictions.Add(restriction);
-                            if (!string.IsNullOrEmpty(Restriction)) Restriction = Restriction.TrimEnd() + "\r\n" + (IsLINQ ? "&&" : "AND") + " ";
-                            Restriction += restriction.Pattern;
-                        }
-                    }
-                }
-
-                if (HasStandardAggregateRestrictions)
-                {
-                    foreach (var restriction in refModel.AggregateRestrictions)
-                    {
-                        if (!AggregateRestrictions.Exists(i => restriction.MetaColumnGUID == i.MetaColumnGUID))
-                        {
-                            AggregateRestrictions.Add(restriction);
-                            if (!string.IsNullOrEmpty(AggregateRestriction)) AggregateRestriction = AggregateRestriction.TrimEnd() + "\r\n" + (IsLINQ ? "&&" : "AND") + " ";
-                            AggregateRestriction += restriction.Pattern;
-                        }
-                    }
-                }
+                InitRestrictionsFromReferenceModel(refModel);
 
                 InitReferences();
+            }
+        }
+
+        /// <summary>
+        /// Initializes the model restrictions from a reference model
+        /// </summary>
+        public void InitRestrictionsFromReferenceModel(ReportModel refModel)
+        {
+            if (HasStandardRestrictions)
+            {
+                foreach (var restriction in refModel.Restrictions)
+                {
+                    if (!Restrictions.Exists(i => restriction.MetaColumnGUID == i.MetaColumnGUID))
+                    {
+                        Restrictions.Add(restriction);
+                        if (!string.IsNullOrEmpty(Restriction)) Restriction = Restriction.TrimEnd() + "\r\n" + (IsLINQ ? "&&" : "AND") + " ";
+                        Restriction += restriction.Pattern;
+                    }
+                }
+            }
+
+            if (HasStandardAggregateRestrictions)
+            {
+                foreach (var restriction in refModel.AggregateRestrictions)
+                {
+                    if (!AggregateRestrictions.Exists(i => restriction.MetaColumnGUID == i.MetaColumnGUID))
+                    {
+                        AggregateRestrictions.Add(restriction);
+                        if (!string.IsNullOrEmpty(AggregateRestriction)) AggregateRestriction = AggregateRestriction.TrimEnd() + "\r\n" + (IsLINQ ? "&&" : "AND") + " ";
+                        AggregateRestriction += restriction.Pattern;
+                    }
+                }
             }
         }
 

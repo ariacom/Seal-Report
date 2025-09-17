@@ -294,5 +294,18 @@
                 element.PlotlySerie = PlotlySerieDefinition.None;
             }
         }
+
+        //Add missing scottplot views
+        foreach (var parentView in report.AllViews.Where(i =>
+            i.Views.Exists(j => j.TemplateName == ReportViewTemplate.ChartJSName) ||
+            i.Views.Exists(j => j.TemplateName == ReportViewTemplate.ChartNVD3Name) ||
+            i.Views.Exists(j => j.TemplateName == ReportViewTemplate.ChartPlotlyName)
+        ))
+        {
+            if (!parentView.Views.Exists(i => i.TemplateName == ReportViewTemplate.ChartScottplotName))
+            {
+                report.AddChildView(parentView, ReportViewTemplate.ChartScottplotName);
+            }
+        }
     }
 }

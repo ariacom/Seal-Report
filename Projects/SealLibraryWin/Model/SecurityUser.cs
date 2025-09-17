@@ -211,7 +211,7 @@ namespace Seal.Model
             {
                 if (DefaultGroup.EditProfile) Profile.SaveToFile();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Helper.WriteLogException("SaveProfile", ex);
                 return false;
@@ -400,9 +400,9 @@ namespace Seal.Model
 
         private List<SecurityColumn> _securityColumns = null;
         /// <summary>
-        /// List of columns that cannot be edited with the Web Report Designer
+        /// List of columns that can or cannot be edited with the Web Report Designer
         /// </summary>
-        public List<SecurityColumn> ForbiddenColumns
+        public List<SecurityColumn> SecurityColumns
         {
             get
             {
@@ -418,19 +418,29 @@ namespace Seal.Model
         {
             var sourceName = column.Source.Name;
             if (column.Source is ReportSource) sourceName = ((ReportSource)column.Source).MetaSourceName;
-            return !ForbiddenColumns.Exists(i =>
+
+            var result = SecurityColumns.Exists(i =>
                 (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
                 (string.IsNullOrEmpty(i.Tag) || i.Tag == column.Tag) &&
-                (string.IsNullOrEmpty(i.Category) || i.Category == column.Category)
+                (string.IsNullOrEmpty(i.Category) || i.Category == column.Category) &&
+                i.Right == EditorRight.Selection
+                );
+            if (result) return true;
+
+            return !SecurityColumns.Exists(i =>
+                (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
+                (string.IsNullOrEmpty(i.Tag) || i.Tag == column.Tag) &&
+                (string.IsNullOrEmpty(i.Category) || i.Category == column.Category) &&
+                i.Right == EditorRight.NoSelection
                 );
         }
 
 
         private List<SecuritySource> _securitySources = null;
         /// <summary>
-        /// List of data source that cannot be edited with the Web Report Designer
+        /// List of data source that can or cannot be edited with the Web Report Designer
         /// </summary>
-        public List<SecuritySource> ForbiddenSources
+        public List<SecuritySource> SecuritySources
         {
             get
             {
@@ -446,17 +456,25 @@ namespace Seal.Model
         {
             var sourceName = item.Name;
             if (item is ReportSource) sourceName = ((ReportSource)item).MetaSourceName;
-            return !ForbiddenSources.Exists(i =>
-                (string.IsNullOrEmpty(i.Name) || i.Name == sourceName)
+
+            var result = SecuritySources.Exists(i =>
+                (string.IsNullOrEmpty(i.Name) || i.Name == sourceName) &&
+                i.Right == EditorRight.Selection
+                );
+            if (result) return true;
+
+            return !SecuritySources.Exists(i =>
+                (string.IsNullOrEmpty(i.Name) || i.Name == sourceName) &&
+                i.Right == EditorRight.NoSelection
                 );
         }
 
 
         private List<SecurityDevice> _securityDevices = null;
         /// <summary>
-        /// List of devices that cannot be edited with the Web Report Designer
+        /// List of devices that can or cannot be edited with the Web Report Designer
         /// </summary>
-        public List<SecurityDevice> ForbiddenDevices
+        public List<SecurityDevice> SecurityDevices
         {
             get
             {
@@ -470,17 +488,24 @@ namespace Seal.Model
         /// </summary>
         public bool CanSelectDevice(OutputDevice item)
         {
-            return !ForbiddenDevices.Exists(i =>
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
+            var result = SecurityDevices.Exists(i =>
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) &&
+                i.Right == EditorRight.Selection
+                );
+            if (result) return true;
+
+            return !SecurityDevices.Exists(i =>
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) &&
+                i.Right == EditorRight.NoSelection
                 );
         }
 
 
         private List<SecurityConnection> _securityConnections = null;
         /// <summary>
-        /// List of connections that cannot be edited with the Web Report Designer
+        /// List of connections that can or cannot be edited with the Web Report Designer
         /// </summary>
-        public List<SecurityConnection> ForbiddenConnections
+        public List<SecurityConnection> SecurityConnections
         {
             get
             {
@@ -496,9 +521,17 @@ namespace Seal.Model
         {
             var sourceName = item.Source.Name;
             if (item.Source is ReportSource) sourceName = ((ReportSource)item.Source).MetaSourceName;
-            return !ForbiddenConnections.Exists(i =>
+            var result = SecurityConnections.Exists(i =>
                 (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) &&
+                i.Right == EditorRight.Selection
+                );
+            if (result) return true;
+
+            return !SecurityConnections.Exists(i =>
+                (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) &&
+                i.Right == EditorRight.NoSelection
                 );
         }
 
@@ -513,10 +546,10 @@ namespace Seal.Model
 
             foreach (var sgroup in SecurityGroups)
             {
-                _securityConnections.AddRange(sgroup.Connections.Where(i => i.Right == EditorRight.NoSelection));
-                _securityDevices.AddRange(sgroup.Devices.Where(i => i.Right == EditorRight.NoSelection));
-                _securitySources.AddRange(sgroup.Sources.Where(i => i.Right == EditorRight.NoSelection));
-                _securityColumns.AddRange(sgroup.Columns.Where(i => i.Right == EditorRight.NoSelection));
+                _securityConnections.AddRange(sgroup.Connections);
+                _securityDevices.AddRange(sgroup.Devices);
+                _securitySources.AddRange(sgroup.Sources);
+                _securityColumns.AddRange(sgroup.Columns);
             }
         }
 
@@ -790,7 +823,7 @@ namespace Seal.Model
                     if (folder != null && folder.FolderRight != FolderRight.None) addIt = true;
                 }
 
-                if (addIt) result.Add(view);                
+                if (addIt) result.Add(view);
             }
             return result;
         }

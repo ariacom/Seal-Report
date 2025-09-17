@@ -104,6 +104,26 @@
             Start a session with the Web Report Server using the user name, password, token (may be optional according to the authentication configured on the server) and returns information of the logged user (SWIUserProfile).
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWICheckSecurityCode(System.String)">
+            <summary>
+            Check the security code for a 2 factors authentication
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIResetPassword(System.String)">
+            <summary>
+            Reset a user password
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIResetPassword2(System.String,System.String,System.String,System.String)">
+            <summary>
+            Re-init a user password from a reset password link
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIChangePassword(System.String,System.String,System.String,System.String)">
+            <summary>
+            Change a user password
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetRootMenu(System.String)">
             <summary>
             Returns the menu of the logged user.
@@ -169,6 +189,16 @@
             View a file published in the repository.
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWUploadFile(System.String)">
+            <summary>
+            Upload a file in a repository folder.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWMarkFavorite(System.String,System.String)">
+            <summary>
+            Mark/Unmark report as favorite.
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWILogout(System.String)">
             <summary>
             Clear the current user session.
@@ -182,6 +212,16 @@
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetUserProfile(System.String)">
             <summary>
             Returns the profile information of the logged user.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWISetConfiguration(System.String)">
+            <summary>
+            Save the configuration of the Web Server (including security).
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetConfiguration(System.String)">
+            <summary>
+            Returns the configuration of the web server (including security).
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetCultures">

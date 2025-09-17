@@ -34,13 +34,11 @@ namespace Seal.Model
                 GetProperty("FolderDetailScript").SetIsBrowsable(true);
                 GetProperty("MenuScript").SetIsBrowsable(true);
 
-#if WEBREPORTDESIGNER
                 GetProperty("Columns").SetIsBrowsable(true);
                 GetProperty("SqlModel").SetIsBrowsable(true);
                 GetProperty("Devices").SetIsBrowsable(true);
                 GetProperty("Connections").SetIsBrowsable(true);
                 GetProperty("Sources").SetIsBrowsable(true);
-#endif
 
                 GetProperty("OnStartup").SetIsBrowsable(true);
                 GetProperty("StartupReport").SetIsBrowsable(true);

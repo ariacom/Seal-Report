@@ -278,7 +278,7 @@ var SWIUtil;
             if (menu.favorites.length > 0) {
                 if (menu.reports.length > 0 || (main && (main._reportPath != "" || main._currentView == "report") && _main._profile.showfolders))
                     parent.append($("<li class='menu-divider-recent-report divider menu-reports')>"));
-                parent.append($("<li class='menu-divider menu-reports'>").text(SWIUtil.tr("Favorites")));
+                parent.append($("<li class='menu-divider menu-reports'>").html(SWIUtil.tr("Favorites")));
                 menu.favorites.forEach(function (value) {
                     SWIUtil.addReportMenu(main, parent, value);
                 });
@@ -287,7 +287,7 @@ var SWIUtil;
             if (menu.recentreports.length > 0) {
                 if (menu.favorites.length > 0 || menu.reports.length > 0 || (main && (main._reportPath != "" || main._currentView == "report") && _main._profile.showfolders))
                     parent.append($("<li class='menu-divider-recent-report divider menu-reports')>"));
-                parent.append($("<li class='menu-divider menu-reports'>").text(SWIUtil.tr("Recents")));
+                parent.append($("<li class='menu-divider menu-reports'>").html(SWIUtil.tr("Recents")));
                 menu.recentreports.forEach(function (value) {
                     SWIUtil.addReportMenu(main, parent, value);
                 });
