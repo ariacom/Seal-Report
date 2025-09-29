@@ -786,22 +786,38 @@ namespace SealWebServer.Controllers
                 if (System.IO.File.Exists(destinationPath) && copy) destinationPath = FileHelper.GetUniqueFileName(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + " - Copy" + Path.GetExtension(destinationPath), Path.GetExtension(destinationPath));
 
                 bool hasSchedule = (FileHelper.IsReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
-                FileHelper.MoveFile(sourcePath, destinationPath, copy);
-                if (copy) Audit.LogAudit(AuditType.FileCopy, WebUser, sourcePath, string.Format("Copy to '{0}'", destinationPath));
-                else Audit.LogAudit(AuditType.FileMove, WebUser, sourcePath, string.Format("Move to '{0}'", destinationPath));
-                if (hasSchedule)
+                if (file.isreport)
                 {
-                    //Re-init schedules...
-                    var report = Report.LoadFromFile(destinationPath, Repository, false);
                     if (copy)
                     {
-                        //remove schedules
-                        report.InitGUIDAndSchedules();
+                        //Change GUIDs
+                        var report = Report.LoadFromFile(sourcePath, Repository, false);
+                        report.InitGUIDs();
+                        report.FilePath = destinationPath;
                         report.SaveToFile();
                     }
-                    report.SchedulesWithCurrentUser = false;
-                    report.SynchronizeTasks();
+                    else
+                    {
+                        //Simple report move
+                        FileHelper.MoveFile(sourcePath, destinationPath, copy);
+                        if (hasSchedule)
+                        {
+                            //Re-init schedules...
+                            var report = Report.LoadFromFile(destinationPath, Repository, false);
+                            report.SchedulesWithCurrentUser = false;
+                            report.SynchronizeTasks();
+
+                        }
+                    }
                 }
+                else
+                {
+                    //Simple file move/copy
+                    FileHelper.MoveFile(sourcePath, destinationPath, copy);
+                }
+
+                if (copy) Audit.LogAudit(AuditType.FileCopy, WebUser, sourcePath, string.Format("Copy to '{0}'", destinationPath));
+                else Audit.LogAudit(AuditType.FileMove, WebUser, sourcePath, string.Format("Move to '{0}'", destinationPath));
 
                 checkRecentFiles();
                 WebUser.SaveProfile();

@@ -88,6 +88,10 @@ a {
     border-radius: 4px !important;
 }
 
+.jstree-search {
+    color:black !important;
+}
+
 #elements-tree {
     background: none !important;
 }

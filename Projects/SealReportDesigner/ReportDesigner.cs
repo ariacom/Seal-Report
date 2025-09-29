@@ -753,7 +753,7 @@ namespace Seal
                         if (sender == saveAsToolStripMenuItem)
                         {
                             //Save as -> new GUID and no schedule copy...
-                            _report.InitGUIDAndSchedules();
+                            _report.InitGUIDs();
                         }
                         _report.FilePath = dlg.FileName;
                         init();

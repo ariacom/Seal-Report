@@ -2750,9 +2750,9 @@
             Save the current report to its file
             </summary>
         </member>
-        <member name="M:Seal.Model.Report.InitGUIDAndSchedules">
+        <member name="M:Seal.Model.Report.InitGUIDs">
             <summary>
-            Init view GUIDs and clear schedule for a report Copy
+            Init GUIDs and clear schedule for a report Copy
             </summary>
         </member>
         <member name="M:Seal.Model.Report.SynchronizeTasks">

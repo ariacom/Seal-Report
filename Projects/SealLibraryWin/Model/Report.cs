@@ -1348,17 +1348,45 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Init view GUIDs and clear schedule for a report Copy
+        /// Init GUIDs and clear schedule for a report Copy
         /// </summary>
-        public void InitGUIDAndSchedules()
+        public void InitGUIDs()
         {
             GUID = Helper.NewGUID();
+
+            //Sources
+            foreach (var source in Sources)
+            {
+                var oldGUID = source.GUID;
+                foreach (var model in Models.Where(i=> i.SourceGUID == oldGUID)) model.SourceGUID = source.GUID;
+            }
+
+            //Models
+            foreach (var model in Models)
+            {
+                var oldGUID = model.GUID;
+                model.GUID = Helper.NewGUID();
+                foreach (var child in Models.Where(i => i.ReferenceModelGUID == oldGUID)) child.ReferenceModelGUID = model.GUID;
+                foreach (var child in AllViews.Where(i => i.ModelGUID == oldGUID)) child.ModelGUID = model.GUID;
+            }
+
+            //Views
+            foreach (var view in AllViews)
+            {
+                var oldGUID = view.GUID;
+                view.GUID = Helper.NewGUID();
+                if (ViewGUID == oldGUID) ViewGUID = view.GUID; 
+                foreach (var child in AllViews.Where(i => i.ReferenceViewGUID == oldGUID)) child.ReferenceViewGUID = view.GUID;
+                foreach (var child in Outputs.Where(i => i.ViewGUID == oldGUID)) child.ViewGUID = view.GUID;
+            }
+
             //Output 
             foreach (var output in Outputs) output.GUID = Helper.NewGUID();
 
             //No schedule
             Schedules.Clear();
         }
+
 
         /// <summary>
         /// Synchronize all report schedules defined in the report with the Windows Task Scheduler.
