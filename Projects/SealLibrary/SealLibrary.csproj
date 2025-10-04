@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibrary</AssemblyName>
 		<Configurations>Debug;Release</Configurations>
@@ -146,8 +146,41 @@ A full repository file structure must be available on the machine running the pr
 		<Compile Include="..\SealLibraryWin\Renderers\PDFResult.cs" Link="Renderers\PDFResult.cs" />
   </ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="Azure.Core" Version="1.42.0" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
+    <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
+    <PackageReference Include="System.Data.OleDb" Version="8.0.0" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
+    <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
+    <PackageReference Include="System.IO.Packaging" Version="8.0.1" />
+  </ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <PackageReference Include="Azure.Core" Version="1.42.0" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="9.0.8" />
+    <PackageReference Include="System.Data.Odbc" Version="9.0.8" />
+    <PackageReference Include="System.Data.OleDb" Version="9.0.8" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.8" />
+    <PackageReference Include="System.DirectoryServices" Version="9.0.8" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="9.0.8" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="9.0.8" />
+    <PackageReference Include="System.Net.Http.Json" Version="9.0.8" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="9.0.8" />
+    <PackageReference Include="System.IO.Packaging" Version="9.0.8" />
+  </ItemGroup>
+
+	<ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.12.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.21.2" />
     <PackageReference Include="Azure.Storage.Common" Version="12.20.1" />
@@ -163,7 +196,6 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.7" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
     <PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="5.1.0" />
     <PackageReference Include="Microsoft.Graph" Version="5.58.0" />
@@ -187,24 +219,12 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="System.Drawing.Common" Version="5.0.3" />    <!-- Keep this version to allow Excel Export via EPPlus on Linux -->
 		<PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-		<PackageReference Include="System.IO.Packaging" Version="8.0.1" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
     <PackageReference Include="TaskScheduler" Version="2.11.0" />
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
 		<PackageReference Include="Twilio" Version="7.2.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.7" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Data.Odbc" Version="8.0.0" />
-		<PackageReference Include="System.Data.OleDb" Version="8.0.0" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
-		<PackageReference Include="System.DirectoryServices" Version="8.0.0" />
-		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
-		<PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
-		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
-		<PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
     <PackageReference Include="AngleSharp" Version="1.1.2" />
     <PackageReference Include="MailKit" Version="4.13.0" />
     <PackageReference Include="MimeKit" Version="4.13.0" />
