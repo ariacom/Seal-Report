@@ -570,10 +570,10 @@ var SWIMain = /** @class */ (function () {
         var detail = _main._configGroupFolder;
         SWIUtil.ShowHideControl($(".config-group-folder"), detail);
         if (!detail) {
-            $("#config-group-folder-name").text("<" + SWIUtil.tr2("No folder configuration") + ">");
+            $("#config-group-folder-name2").val("<" + SWIUtil.tr2("No folder configuration") + ">");
         }
         else {
-            $("#config-group-folder-name").text(SWIUtil.tr2("Configuration for ") + " " + detail.Path);
+            $("#config-group-folder-name").val(SWIUtil.tr2("Configuration for ") + " " + detail.Path);
             var $select = $("#config-group-folder-select");
             $select.unbind("change");
             $select.selectpicker("destroy");

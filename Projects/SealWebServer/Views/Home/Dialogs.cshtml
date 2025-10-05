@@ -56,8 +56,8 @@
                 <h4 style="color:white;"><span class="glyphicon glyphicon-lock"></span> @repository.Configuration.WebProductName @repository.TranslateWeb("Two-Factor Authentication")</h4>
             </div>
             <div class="modal-body">
-                <div  style="margin-bottom:20px;">
-                <span id="security-code-message" class="label label-warning" style="font-size:14px;"></span>
+                <div style="margin-bottom:20px;">
+                    <span id="security-code-message" class="label label-warning" style="font-size:14px;"></span>
                 </div>
                 <div class="form-group">
                     <label for="securitycode"><span class="glyphicon glyphicon-lock"></span> @repository.TranslateWeb("Security code")</label>
@@ -66,7 +66,7 @@
                 <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 <button id="security-modal-submit" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> @repository.TranslateWeb("Login")</button>
             </div>
-            <div class="modal-footer" style="text-align:left">  
+            <div class="modal-footer" style="text-align:left">
                 <span id="security-modal-error" class="label label-danger" style="font-size: 12px;"></span>
             </div>
         </div>
@@ -305,17 +305,17 @@
                 </button>
                 <h4 class="modal-title">@repository.TranslateWeb("Configuration and security")</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="height:900px;width:600px;">
                 <div class="config-input-row">
                     <span class="config-input-label">@repository.TranslateWeb("Web product name")</span>
                     <input id="config-webproduct-name" type="text" class="form-control config-input-field" placeholder="@repository.TranslateWeb("Web product name")" />
                 </div>
-                
+
                 <ul id="config-tab-control" class="nav nav-pills">
                     <li class="active"><a data-toggle="pill" href="#config-group-detail-content">@repository.TranslateWeb("Groups")</a></li>
                     <li class="assistants-panel"><a data-toggle="pill" href="#config-user-detail-content">@repository.TranslateWeb("Logins")</a></li>
                 </ul>
-                
+
                 <div id="detail-section-1">
                     <div class="tab-content">
                         <div id="config-group-detail-content" class="tab-pane fade in active">
@@ -323,13 +323,13 @@
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Group name")</span>
                                     <div class="input-group config-input-field dropdown">
-                                        <input id="config-group-name" type="text" class="form-control dropdown-toggle" data-toggle="dropdown" autocomplete="off" />
-                                        <span class="input-group-btn">
+                                        <input id="config-group-name" type="text" class="form-control" />
+                                        <div class="input-group-btn">
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
-                                        </span>
-                                        <ul id="config-groups-dropdown" class="dropdown-menu" style="width:100%"></ul>
+                                            <ul id="config-groups-dropdown" class="dropdown-menu" style="left:auto;right:0;"></ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -356,17 +356,16 @@
 
                             <div class="group-folder-panel">
                                 <h5 class="config-section-header">@repository.TranslateWeb("Folder Permissions")</h5>
-                                
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Folder")</span>
                                     <div class="input-group config-input-field dropdown">
-                                        <input id="config-group-folder-name" type="text" class="form-control dropdown-toggle" data-toggle="dropdown" autocomplete="off" />
-                                        <span class="input-group-btn">
+                                        <input id="config-group-folder-name" type="text" class="form-control" />
+                                        <div class="input-group-btn">
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
-                                        </span>
-                                        <ul id="config-group-folders-dropdown" class="dropdown-menu" style="width:100%"></ul>
+                                            <ul id="config-group-folders-dropdown" class="dropdown-menu" style="left:auto;right:0;"></ul>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -396,19 +395,19 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div id="config-user-detail-content" class="tab-pane fade">
+
+                        <div id="config-user-detail-content" class="tab-pane fade" style="height: 500px;">
                             <div class="config-logins-panel">
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Login ID")</span>
                                     <div class="input-group config-input-field dropdown">
-                                        <input id="config-login-id" type="text" class="form-control dropdown-toggle" data-toggle="dropdown" autocomplete="off" />
-                                        <span class="input-group-btn">
+                                        <input id="config-login-id" type="text" class="form-control" />
+                                        <div class="input-group-btn">
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
-                                        </span>
-                                        <ul id="config-logins-dropdown" class="dropdown-menu" style="width:100%"></ul>
+                                            <ul id="config-logins-dropdown" class="dropdown-menu" style="left:auto;right:0;"></ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

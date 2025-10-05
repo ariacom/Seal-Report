@@ -194,7 +194,7 @@ module SWIUtil {
 
     export function InitDropDownMenu() {
         //Show dropdown menus on hover
-        $('.dropdown').hover(
+        $('.dropdown-menu-li').hover(
             function () {
                 $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
             },

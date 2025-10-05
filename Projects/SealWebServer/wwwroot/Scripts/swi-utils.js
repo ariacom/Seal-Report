@@ -208,7 +208,7 @@ var SWIUtil;
     SWIUtil.InitSpinning = InitSpinning;
     function InitDropDownMenu() {
         //Show dropdown menus on hover
-        $('.dropdown').hover(function () {
+        $('.dropdown-menu-li').hover(function () {
             $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
         }, function () {
             $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(300);

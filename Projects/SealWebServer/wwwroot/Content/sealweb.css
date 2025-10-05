@@ -629,15 +629,7 @@ table.dataTable {
         border-left: none !important;
         border-radius: 0 6px 6px 0 !important;
         padding: 10px 12px !important;
-        background-color: #f8f9fa !important;
         border: 1px solid #e0e0e0 !important;
-        height: 42px !important;
-        width: 42px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        box-sizing: border-box;
-        margin: 0 !important;
     }
 
         #config-dialog .input-group-btn .btn:hover {
@@ -864,65 +856,3 @@ table.dataTable {
         max-width: none;
     }
 }
-
-#profile-dialog .dropdown-menu,
-#config-dialog .dropdown-menu {
-    min-width: 0 !important; /* Prevents default minimum width */
-    width: 100% !important; /* Matches the button/input width */
-    max-width: 400px; /* Optional: restricts max width */
-    box-sizing: border-box;
-    left: 0 !important; /* Ensures left alignment */
-    right: auto !important;
-    overflow-x: auto; /* Adds horizontal scroll if needed */
-    overflow-y: auto; /* Adds vertical scroll if needed */
-    max-height: 250px; /* Adjust for comfortable scrolling */
-    word-break: break-word; /* Ensures long strings wrap */
-    z-index: 1050; /* Appears above modal/dialog */
-}
-
-#profile-dialog .bootstrap-select .dropdown-menu,
-#config-dialog .bootstrap-select .dropdown-menu {
-    min-width: 0 !important;
-    width: 100% !important;
-    max-width: 400px;
-    overflow-y: auto;
-    overflow-x: auto;
-    max-height: 250px;
-    left: 0 !important;
-    right: auto !important;
-    box-sizing: border-box;
-}
-
-#profile-dialog .input-group .dropdown-menu,
-#config-dialog .input-group .dropdown-menu,
-#profile-dialog .config-input-field .dropdown-menu,
-#config-dialog .config-input-field .dropdown-menu {
-    left: 0 !important;
-    right: auto !important;
-    width: 100% !important;
-    max-width: none;
-}
-
-#profile-dialog .input-group .dropdown-menu,
-#config-dialog .input-group .dropdown-menu {
-    min-width: 100% !important;
-    width: 100% !important;
-    max-width: 400px;
-    max-height: 250px;
-    overflow-y: auto;
-    left: 0 !important;
-    right: auto !important;
-    box-sizing: border-box;
-}
-
-#profile-dialog .input-group.config-input-field,
-#config-dialog .input-group.config-input-field {
-    cursor: pointer;
-}
-
-    #profile-dialog .input-group.config-input-field input[readonly],
-    #profile-dialog .input-group.config-input-field .btn,
-    #config-dialog .input-group.config-input-field input[readonly],
-    #config-dialog .input-group.config-input-field .btn {
-        cursor: pointer;
-    }
