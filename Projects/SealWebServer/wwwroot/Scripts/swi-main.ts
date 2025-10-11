@@ -657,7 +657,7 @@ class SWIMain {
         var detail = _main._configGroupFolder;
         SWIUtil.ShowHideControl($(".config-group-folder"), detail);
         if (!detail) {
-            $("#config-group-folder-name2").val("<" + SWIUtil.tr2("No folder configuration") + ">");
+            $("#config-group-folder-name").val("<" + SWIUtil.tr2("No folder configuration") + ">");
         }
         else {
             $("#config-group-folder-name").val(SWIUtil.tr2("Configuration for ") + " " + detail.Path);
@@ -714,7 +714,7 @@ class SWIMain {
         if ($ddname.children().length > 0) $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
         $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New login"), "", "login", "glyphicon glyphicon-plus-sign")));
 
-        if (_main._configLogin && _main._config.logins.length > 1) {
+        if (_main._configLogin) {
             if ($ddname.children().length > 0) $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
             $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, null, "remove", "glyphicon glyphicon-minus-sign")));
         }
@@ -746,21 +746,27 @@ class SWIMain {
 
     private initLoginDetail() {
         var detail = _main._configLogin;
-        SWIUtil.InitStandardInput("#config-login-id", _main._configLogin.Id, null, function (val) { detail.Id = val; });
-        SWIUtil.InitStandardInput("#config-login-name", _main._configLogin.Name, null, function (val) { detail.Name = val; });
-        SWIUtil.InitStandardInput("#config-login-email", _main._configLogin.Email, null, function (val) { detail.Email = val; });
-        SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = detail.HashedPassword + val; });
+        SWIUtil.ShowHideControl($(".config-login"), detail);
+        if (!detail) {
+            $("#config-login-id").val("<" + SWIUtil.tr2("No login") + ">");
+        }
+        else {
+            SWIUtil.InitStandardInput("#config-login-id", detail.Id, null, function (val) { detail.Id = val; });
+            SWIUtil.InitStandardInput("#config-login-name", detail.Name, null, function (val) { detail.Name = val; });
+            SWIUtil.InitStandardInput("#config-login-email", detail.Email, null, function (val) { detail.Email = val; });
+            SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = detail.HashedPassword + val; });
 
-        var select = $("#config-login-groups");
-        select.selectpicker("destroy");
-        select.empty();
-        $.each(_main._config.groups, function (index, value) {
-            select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupIds && detail.GroupIds.some(i => i === value.GUID)) ? value.GUID : ""));
-        });
-        select.unbind("change").on("change", function (e) {
-            _main._configLogin.GroupIds = $(this).val();
-        });
-        select.selectpicker('refresh');
+            var select = $("#config-login-groups");
+            select.selectpicker("destroy");
+            select.empty();
+            $.each(_main._config.groups, function (index, value) {
+                select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupIds && detail.GroupIds.some(i => i === value.GUID)) ? value.GUID : ""));
+            });
+            select.unbind("change").on("change", function (e) {
+                _main._configLogin.GroupIds = $(this).val();
+            });
+            select.selectpicker('refresh');
+        }
     }
 
     private search() {

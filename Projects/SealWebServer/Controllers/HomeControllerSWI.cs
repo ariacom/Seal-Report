@@ -137,10 +137,6 @@ namespace SealWebServer.Controllers
                 showresetpassword = !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript) && !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2)
             };
 
-#if DEBUG
-            if (Repository.Security.ProviderName == "No Security") profile.editconfiguration = true;
-#endif
-
             if (!string.IsNullOrEmpty(profile.startupreport))
             {
                 try

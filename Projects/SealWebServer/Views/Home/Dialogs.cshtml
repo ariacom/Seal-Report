@@ -318,7 +318,7 @@
 
                 <div id="detail-section-1">
                     <div class="tab-content">
-                        <div id="config-group-detail-content" class="tab-pane fade in active">
+                        <div id="config-group-detail-content" class="tab-pane fade in active" style="height: 500px;">
                             <div class="config-groups-panel">
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Group name")</span>
@@ -411,12 +411,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="config-input-row">
-                                <span class="config-input-label">@repository.TranslateWeb("Change password")</span>
-                                <input type="password" class="form-control config-input-field" id="config-login-password" placeholder="@repository.TranslateWeb("Type a new password")" />
-                            </div>
-
                             <div class="config-input-row config-login">
                                 <span class="config-input-label">@repository.TranslateWeb("Name")</span>
                                 <input id="config-login-name" type="text" class="form-control config-input-field" placeholder="@repository.TranslateWeb("Name")" />
@@ -436,6 +430,12 @@
                                 <span class="config-input-label">@repository.TranslateWeb("Groups")</span>
                                 <select id="config-login-groups" multiple="multiple" class="form-control config-input-field" data-live-search="true" data-actions-box="true" data-size="10" data-width="100%"></select>
                             </div>
+
+                            <div class="config-input-row config-login">
+                                <span class="config-input-label">@repository.TranslateWeb("Change password")</span>
+                                <input type="password" class="form-control config-input-field" id="config-login-password" placeholder="@repository.TranslateWeb("Type a new password")" />
+                            </div>
+
                         </div>
                     </div>
                 </div>
