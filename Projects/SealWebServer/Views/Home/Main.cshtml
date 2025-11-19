@@ -239,5 +239,7 @@
     {
         <script src="~/Scripts/swi.js"></script>
     }
+
+    @Html.Raw(RazorHelper.CompileExecute(repository.Configuration.WebMainAdditionalScript, model))
 </body>
 </html>

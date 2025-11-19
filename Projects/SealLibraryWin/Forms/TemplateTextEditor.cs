@@ -902,6 +902,52 @@ namespace Seal.Forms
 }
 ";
 
+        const string razorConfigurationWebMainAdditionalScriptTemplate = @"@{
+   WebMainModel model = Model;
+   var repository = model.Repository;
+   
+   var infoDate = DateTime.Now.ToShortDateString() + "" "" + DateTime.Now.ToShortTimeString();
+   var infoText = repository.RepositoryTranslate(""GeneralText"",""*"", ""Data loaded successfully"").Replace(""'"",""\\'"");
+   var infoTitle =repository.RepositoryTranslate(""GeneralText"", ""*"", ""Click to reload"").Replace(""'"",""\\'"");
+   var infoGlyp = ""ok""; //ok, minus, remove, ok-sign remove-sign
+   var infoColor = ""success""; //success, warning, danger, info
+   var infoWebName = repository.Configuration.WebApplicationName;
+
+    var js = $@""
+<script>
+$('<div>', {{ 
+        id: 'info-span', 
+        class: 'ext-center btn btn-{infoColor} btn-lg',
+        title: '{infoTitle}'
+    }})
+    .append('{infoDate}')
+    .append(""""<span class='glyphicon glyphicon-{infoGlyp}' style='padding:0px 5px' aria-hidden='true'></span>"""")
+    .append('{infoText}')
+    .insertAfter('#nav_badge');
+    
+    $('#info-span').unbind('click').on('click', function () {{
+        window.location.href = '{infoWebName}';
+    }});
+</script>
+    "";
+    
+    var style = @""
+<style>
+#info-span {
+    display: inline-block;
+    margin-left: 8px; 
+    margin-top: 12px; 
+    cursor: default;
+    font-size: 12px;
+    padding: 5px 5px;
+}
+</style>
+    "";
+}
+@Raw(js)
+@Raw(style)
+";
+
         const string razorConfigurationWebSessionInitScriptTemplate = @"@{
     WebMainModel model = Model;
 
@@ -1989,7 +2035,14 @@ namespace Seal.Forms
                     //use report tag to store current config
                     var report = new Report();
                     report.Tag = context.Instance;
-                    if (context.PropertyDescriptor.Name == "WebSessionInitScript")
+                    if (context.PropertyDescriptor.Name == "WebMainAdditionalScript")
+                    {
+                        template = razorConfigurationWebMainAdditionalScriptTemplate;
+                        frm.ObjectForCheckSyntax = new WebMainModel();
+                        frm.Text = "Edit the Web Main Additional script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "WebSessionInitScript")
                     {
                         template = razorConfigurationWebSessionInitScriptTemplate;
                         frm.ObjectForCheckSyntax = new WebMainModel();

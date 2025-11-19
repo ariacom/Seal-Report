@@ -187,28 +187,29 @@ namespace Seal.Forms
             //Hide Add/Remove -> Get the forms type
             if (!allowRemove)
             {
-                Type formType = frmCollectionEditorForm.GetType();
-                FieldInfo fieldInfo = formType.GetField("removeButton", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (fieldInfo != null)
-                {
-                    Control removeButton = (Control)fieldInfo.GetValue(frmCollectionEditorForm);
-                    removeButton.Hide();
-                }
+                HideButtonRecursive(frmCollectionEditorForm, "&Remove");
             }
 
             if (!allowAdd)
             {
-                Type formType = frmCollectionEditorForm.GetType();
-                FieldInfo fieldInfo = formType.GetField("addButton", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (fieldInfo != null)
-                {
-                    Control addButton = (Control)fieldInfo.GetValue(frmCollectionEditorForm);
-                    addButton.Hide();
-                }
+                HideButtonRecursive(frmCollectionEditorForm, "&Add");
             }
             return collectionForm;
         }
 
+        void HideButtonRecursive(Control parent, string label)
+        {
+            foreach (Control ctrl in parent.Controls)
+            {
+                if (ctrl is Button btn && btn.Text.Equals(label, StringComparison.OrdinalIgnoreCase))
+                {
+                    btn.Visible = false;
+                    return;
+                }
+                if (ctrl.HasChildren)
+                    HideButtonRecursive(ctrl, label);
+            }
+        }
 
 
         void propertyGrid_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)

@@ -91,6 +91,7 @@ namespace Seal.Model
                         GetProperty("Value3").SetIsBrowsable(true);
                         GetProperty("Value4").SetIsBrowsable(true);
                     }
+                    GetProperty("BlankValues").SetIsBrowsable(true);
 
                     if (!IsEnum)
                     {
@@ -934,11 +935,23 @@ namespace Seal.Model
         public bool ShouldSerializeCaseSensitive() { return CaseSensitive; }
 
         /// <summary>
+        /// Fourth value used for the restriction
+        /// </summary>
+#if WINDOWS
+        [Category("Advanced"), DisplayName("Blank values"), Description("Options to select Blank (NULL or Empty) or Not Blank values in the restriction."), Id(12, 4)]
+        [DefaultValue(RestrictionBlankValueOption.Default)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+#endif
+        public RestrictionBlankValueOption BlankValues { get; set; } = RestrictionBlankValueOption.Default;
+        public bool ShouldSerializeBlankValues() { return BlankValues != RestrictionBlankValueOption.Default; }
+
+
+        /// <summary>
         /// If True, the restriction can be modified through the Web API, even if the restriction is not prompted.
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Advanced"), DisplayName("Allow modifications through API"), Description("If True, the restriction can be modified through the Web API, even if the restriction is not prompted."), Id(11, 4)]
+        [Category("Advanced"), DisplayName("Allow modifications through API"), Description("If True, the restriction can be modified through the Web API, even if the restriction is not prompted."), Id(15, 4)]
 #endif
         public bool AllowAPI { get; set; } = false;
         public bool ShouldSerializeAllowAPI() { return AllowAPI; }
@@ -1583,7 +1596,7 @@ namespace Seal.Model
                 {
                     result = "new BsonRegularExpression(@\"/";
                     if (Operator == Operator.StartsWith) result += "^";
-                    result += value2.Replace("/","\\/").Replace("\"","\"\"");
+                    result += value2.Replace("/", "\\/").Replace("\"", "\"\"");
                     if (Operator == Operator.EndsWith) result += "$";
                     result += "/" + (CaseSensitive ? "" : "i") + "\")";
                 }
@@ -1629,7 +1642,7 @@ namespace Seal.Model
         void addLINQOperator(ref string LINQText, string value, DateTime finalDate, string LINQOperator, string LINQSuffix)
         {
             string separator = " || ";
-            if (_operator == Operator.NotContains || _operator == Operator.ContainsAll || _operator == Operator.NotContainsAny || _operator == Operator.NotEqual) separator =" && ";
+            if (_operator == Operator.NotContains || _operator == Operator.ContainsAll || _operator == Operator.NotContainsAny || _operator == Operator.NotEqual) separator = " && ";
             string prefix = (_operator == Operator.NotContains || _operator == Operator.NotContainsAny || _operator == Operator.NotContainsAll) ? "!" : "";
             if (IsDateTime)
             {
@@ -1688,7 +1701,7 @@ namespace Seal.Model
             _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? operatorLabel : OperatorLabel);
             _displayRestriction = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? operatorLabel : OperatorLabel);
 
-            if (!HasValue)
+            if (!HasValue && BlankValues == RestrictionBlankValueOption.Default)
             {
                 _SQLText = "(1=1)";
                 _displayText += " ?";
@@ -1784,6 +1797,20 @@ namespace Seal.Model
                     _displayRestriction += " " + GetDisplayRestriction(Value1, Date1Keyword, Date1);
                     _SQLText += " " + GetSQLValue(Value1, FinalDate1, _operator);
                 }
+            }
+
+            if (BlankValues != RestrictionBlankValueOption.Default)
+            {
+                var andOr = (BlankValues == RestrictionBlankValueOption.BlankValues ? "OR" : "AND");
+                var andOrLabel = Report.Translate(andOr.ToLower());
+                var isBlankLabel = (BlankValues == RestrictionBlankValueOption.BlankValues ? Report.Translate("Is Blank") : Report.Translate("Is Not Blank"));
+
+                var blankSQL = SQLColumn + (BlankValues == RestrictionBlankValueOption.BlankValues ? " IS NULL" : " IS NOT NULL");
+                if (IsText) blankSQL += $" {andOr} " + SQLColumn + (BlankValues == RestrictionBlankValueOption.BlankValues ? " = ''" : " != ''");
+
+                _SQLText = !HasValue ? $"({blankSQL})" : $"(({_SQLText}) {andOr} {blankSQL})";
+                _displayText = (!HasValue ? "" : _displayText  + $" {andOrLabel} ") + displayLabel + " " + isBlankLabel;
+                _displayRestriction = (!HasValue ? "" : _displayRestriction + $" {andOrLabel} ") + displayLabel + " " + isBlankLabel;
             }
 
             if (!IsSQL) BuildLINQText();

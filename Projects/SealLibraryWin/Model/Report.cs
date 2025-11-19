@@ -115,7 +115,11 @@ namespace Seal.Model
                     {
                         _displayNameEx = RazorHelper.CompileExecute(DisplayName, this).Trim();
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        _displayNameEx = Path.GetFileNameWithoutExtension(FilePath);
+                        Helper.WriteLogException("DisplayNameEx", ex);
+                    }
                 }
                 else
                 {

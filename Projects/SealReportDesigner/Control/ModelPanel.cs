@@ -71,9 +71,9 @@ namespace Seal.Controls
             RestrictionGrid.PropertySort = PropertySort.Categorized;
             RestrictionGrid.LineColor = SystemColors.ControlLight;
             restrictionsContainer.Panel2.Controls.Add(RestrictionGrid);
-            PropertyGridHelper.AddResetMenu(RestrictionGrid);
+            //No reset as it des not sync with the restriction text
+            //PropertyGridHelper.AddResetMenu(RestrictionGrid);
             RestrictionGrid.Leave += RestrictionGrid_Leave;
-
             elementTreeView.MouseUp += elementTreeView_MouseUp;
         }
 
@@ -783,6 +783,11 @@ namespace Seal.Controls
 
             MainForm.IsModified = true;
 
+        }
+
+        public void UpdateRestrictionText()
+        {
+            restrictionsPanel.UpdateRestrictionText();
         }
 
         private void RestrictionGrid_Leave(object sender, EventArgs e)

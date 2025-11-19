@@ -34,7 +34,7 @@
         {
             result.Worksheet.HeaderFooter.OddHeader.InsertPicture(Image.FromFile(logoPath), PictureAlignment.Right);
         }
-        result.Worksheet.HeaderFooter.OddHeader.LeftAlignedText = "&14&\"Arial,Regular Bold\" " + report.DisplayName;
+        result.Worksheet.HeaderFooter.OddHeader.LeftAlignedText = "&14&\"Arial,Regular Bold\" " + report.ExecutionName;
         result.Worksheet.HeaderFooter.OddFooter.RightAlignedText = report.Translate("Page") + $" {ExcelHeaderFooter.PageNumber}/{ExcelHeaderFooter.NumberOfPages}";
         result.Worksheet.HeaderFooter.OddFooter.LeftAlignedText = ExcelHeaderFooter.FilePath + ExcelHeaderFooter.FileName;
 
@@ -132,6 +132,7 @@
         }
 
         sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+        sheet.Cells[sheet.Dimension.Address].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
         sheet.Column(5).Width = 80;
     }
 

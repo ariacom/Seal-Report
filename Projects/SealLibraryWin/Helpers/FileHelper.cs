@@ -191,6 +191,8 @@ namespace Seal.Helpers
                     CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), recursive, log, searchPattern);
                 }
             }
+
+            if (!Directory.EnumerateFileSystemEntries(destination).Any()) Directory.Delete(destination);
         }
 
         public static void FtpCopyDirectory(FtpClient client, string source, string destination, bool recursive, ReportExecutionLog log = null)

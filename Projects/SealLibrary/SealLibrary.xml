@@ -4889,6 +4889,11 @@
             If True, the restriction text is case sensitive in the LINQ where clause.
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportRestriction.BlankValues">
+            <summary>
+            Fourth value used for the restriction
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportRestriction.AllowAPI">
             <summary>
             If True, the restriction can be modified through the Web API, even if the restriction is not prompted.
@@ -8167,9 +8172,14 @@
             If set, the script is executed to log events. The default implementation is to insert a record into a database table.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.WebMainAdditionalScript">
+            <summary>
+            If set, the script is executed and the result is added at the end of the Main result page. This may be used to inject dynamic javascripts.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebSessionInitScript">
             <summary>
-            If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
+            If set, the script is executed when a Web Server Session is started.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.InitScript">

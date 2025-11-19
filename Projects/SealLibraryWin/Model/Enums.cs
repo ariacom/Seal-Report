@@ -621,6 +621,16 @@ namespace Seal.Model
         NotVisible,
     }
 
+    public enum RestrictionBlankValueOption
+    {
+        [Description("Default")]
+        Default,
+        [Description("Select Blank values")]
+        BlankValues,
+        [Description("Select Not Blank values")]
+        NotBlankValues,
+    }
+
     public enum StartupOptions
     {
         [Description("Default")]

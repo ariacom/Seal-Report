@@ -77,6 +77,7 @@ namespace Seal.Model
                 GetProperty("AuditScript").SetIsBrowsable(!ForPublication);
                 GetProperty("AuditScript").SetIsReadOnly(!AuditEnabled);
 
+                GetProperty("WebMainAdditionalScript").SetIsBrowsable(!ForPublication);
                 GetProperty("WebSessionInitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
@@ -365,10 +366,19 @@ namespace Seal.Model
         public string AuditScript { get; set; } = null;
 
         /// <summary>
-        /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
+        /// If set, the script is executed and the result is added at the end of the Main result page. This may be used to inject dynamic javascripts.
         /// </summary>
 #if WINDOWS
-        [Category("Scripts"), DisplayName("Web Server Session Init Script"), Description("If set, the script is executed when a Web Server Session is started."), Id(3, 4)]
+        [Category("Scripts"), DisplayName("Web Server Main Additional Script"), Description("If set, the script is executed and the string result is added at the end of the Main result page. This may be used to inject dynamic javascripts."), Id(3, 4)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string WebMainAdditionalScript { get; set; } = null;
+
+        /// <summary>
+        /// If set, the script is executed when a Web Server Session is started.
+        /// </summary>
+#if WINDOWS
+        [Category("Scripts"), DisplayName("Web Server Session Init Script"), Description("If set, the script is executed when a Web Server Session is started."), Id(4, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string WebSessionInitScript { get; set; } = null;
@@ -377,7 +387,7 @@ namespace Seal.Model
         /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
         /// </summary>
 #if WINDOWS
-        [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 4)]
+        [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(5, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string InitScript { get; set; } = null;
@@ -386,7 +396,7 @@ namespace Seal.Model
         /// If set, the script is executed when a new report is created. Default values for report creation can be set here.
         /// </summary>
 #if WINDOWS
-        [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(5, 4)]
+        [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(6, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ReportCreationScript { get; set; } = null;

@@ -681,7 +681,7 @@
         var users = report.Tag as List&lt;SecurityUser&gt;;
         if (users != null) {
             foreach (var user in users) {
-                foreach (var item in user.ForbiddenDevices) {
+                foreach (var item in user.SecurityDevices) {
                     table.Rows.Add(
                         user.Name, 
                         user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
@@ -693,7 +693,7 @@
                         );   
                 }
                 
-                foreach (var item in user.ForbiddenSources) {
+                foreach (var item in user.SecuritySources) {
                     table.Rows.Add(
                         user.Name, 
                         user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
@@ -705,7 +705,7 @@
                         );   
                 }
                 
-                foreach (var item in user.ForbiddenConnections) {
+                foreach (var item in user.SecurityConnections) {
                     table.Rows.Add(
                        user.Name, 
                         user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
@@ -717,7 +717,7 @@
                         );   
                 }
                 
-                foreach (var item in user.ForbiddenColumns) {
+                foreach (var item in user.SecurityColumns) {
                     table.Rows.Add(
                         user.Name, 
                         user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
