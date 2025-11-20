@@ -1860,7 +1860,7 @@ model.ResultTable = query2.CopyToDataTable2();
 
                 foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions).Union(ExecutionCommonRestrictions).OrderBy(i => i.DisplayOrderRE))
                 {
-                    if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
+                    if (restriction.HasValue || restriction.BlankValues != RestrictionBlanksOptions.Default) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                 }
 
                 bool noGroupBy = GetElements(PivotPosition.Data).Count() == 0 && Elements.Count(i => i.IsAggregateEl) == 0 && execHavingClause.Length == 0;
@@ -1903,7 +1903,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions))
                     {
                         MetaTable table = restriction.MetaColumn.MetaTable;
-                        if (table != null && !FromTables.Contains(table) && (restriction.HasValue || forceRestrictionsTables) && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
+                        if (table != null && !FromTables.Contains(table) && (restriction.HasValue || restriction.BlankValues != RestrictionBlanksOptions.Default  || forceRestrictionsTables) && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
                     }
 
                     //Clear group by clause if not necessary

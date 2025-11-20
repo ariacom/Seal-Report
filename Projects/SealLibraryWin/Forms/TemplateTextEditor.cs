@@ -906,6 +906,7 @@ namespace Seal.Forms
    WebMainModel model = Model;
    var repository = model.Repository;
    
+   //Sample to display an information panel in the web interface
    var infoDate = DateTime.Now.ToShortDateString() + "" "" + DateTime.Now.ToShortTimeString();
    var infoText = repository.RepositoryTranslate(""GeneralText"",""*"", ""Data loaded successfully"").Replace(""'"",""\\'"");
    var infoTitle =repository.RepositoryTranslate(""GeneralText"", ""*"", ""Click to reload"").Replace(""'"",""\\'"");

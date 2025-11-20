@@ -939,11 +939,11 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Category("Advanced"), DisplayName("Blank values"), Description("Options to select Blank (NULL or Empty) or Not Blank values in the restriction."), Id(12, 4)]
-        [DefaultValue(RestrictionBlankValueOption.Default)]
+        [DefaultValue(RestrictionBlanksOptions.Default)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
-        public RestrictionBlankValueOption BlankValues { get; set; } = RestrictionBlankValueOption.Default;
-        public bool ShouldSerializeBlankValues() { return BlankValues != RestrictionBlankValueOption.Default; }
+        public RestrictionBlanksOptions BlankValues { get; set; } = RestrictionBlanksOptions.Default;
+        public bool ShouldSerializeBlankValues() { return BlankValues != RestrictionBlanksOptions.Default; }
 
 
         /// <summary>
@@ -972,7 +972,8 @@ namespace Seal.Model
                     || (!IsEnum && HasValue1)
                     || (!IsEnum && HasValue2 && !IsGreaterSmallerOperator)
                     || (!IsEnum && HasValue3 && !IsGreaterSmallerOperator && !IsBetweenOperator)
-                    || (!IsEnum && HasValue4 && !IsGreaterSmallerOperator && !IsBetweenOperator);
+                    || (!IsEnum && HasValue4 && !IsGreaterSmallerOperator && !IsBetweenOperator)
+                    ;
             }
         }
 
@@ -1701,7 +1702,7 @@ namespace Seal.Model
             _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? operatorLabel : OperatorLabel);
             _displayRestriction = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? operatorLabel : OperatorLabel);
 
-            if (!HasValue && BlankValues == RestrictionBlankValueOption.Default)
+            if (!HasValue && BlankValues == RestrictionBlanksOptions.Default)
             {
                 _SQLText = "(1=1)";
                 _displayText += " ?";
@@ -1799,18 +1800,18 @@ namespace Seal.Model
                 }
             }
 
-            if (BlankValues != RestrictionBlankValueOption.Default)
+            if (BlankValues != RestrictionBlanksOptions.Default)
             {
-                var andOr = (BlankValues == RestrictionBlankValueOption.BlankValues ? "OR" : "AND");
+                var andOr = (BlankValues == RestrictionBlanksOptions.BlankValues ? "OR" : "AND");
                 var andOrLabel = Report.Translate(andOr.ToLower());
-                var isBlankLabel = (BlankValues == RestrictionBlankValueOption.BlankValues ? Report.Translate("Is Blank") : Report.Translate("Is Not Blank"));
+                var isBlankLabel = (BlankValues == RestrictionBlanksOptions.BlankValues ? Report.Translate("Is Blank") : Report.Translate("Is Not Blank"));
 
-                var blankSQL = SQLColumn + (BlankValues == RestrictionBlankValueOption.BlankValues ? " IS NULL" : " IS NOT NULL");
-                if (IsText) blankSQL += $" {andOr} " + SQLColumn + (BlankValues == RestrictionBlankValueOption.BlankValues ? " = ''" : " != ''");
+                var blankSQL = SQLColumn + (BlankValues == RestrictionBlanksOptions.BlankValues ? " IS NULL" : " IS NOT NULL");
+                if (IsText) blankSQL += $" {andOr} " + SQLColumn + (BlankValues == RestrictionBlanksOptions.BlankValues ? " = ''" : " != ''");
 
                 _SQLText = !HasValue ? $"({blankSQL})" : $"(({_SQLText}) {andOr} {blankSQL})";
-                _displayText = (!HasValue ? "" : _displayText  + $" {andOrLabel} ") + displayLabel + " " + isBlankLabel;
-                _displayRestriction = (!HasValue ? "" : _displayRestriction + $" {andOrLabel} ") + displayLabel + " " + isBlankLabel;
+                _displayText = (!HasValue ? displayLabel + " " : _displayText  + $" {andOrLabel} ") +  isBlankLabel;
+                _displayRestriction = (!HasValue ? displayLabel + " ": _displayRestriction + $" {andOrLabel} ") + isBlankLabel;
             }
 
             if (!IsSQL) BuildLINQText();
