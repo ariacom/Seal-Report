@@ -112,9 +112,19 @@ namespace Seal.Model
         public SecurityUserProfile Profile = new SecurityUserProfile();
 
         /// <summary>
+        /// User email if set during login process
+        /// </summary>
+        public string Email;
+
+        /// <summary>
         /// Custom string got in user profile
         /// </summary>
         public string Tag;
+
+        /// <summary>
+        /// Custom string got in user profile
+        /// </summary>
+        public string Tag2;
 
         /// <summary>
         /// Parameters for authentication: User name 

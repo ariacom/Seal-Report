@@ -110,6 +110,12 @@ namespace Seal.Helpers
             return result;
         }
 
+        public static bool HasInvalidFileNameChars(string fileName)
+        {
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+            return fileName.IndexOfAny(invalidChars) >= 0;
+        }
+
         public static string GetUniqueFileName(string filePath, string newExtension = "", bool lockFile = false)
         {
             return GetUniqueFileName(Path.GetDirectoryName(filePath), Path.GetFileName(filePath), newExtension, lockFile);

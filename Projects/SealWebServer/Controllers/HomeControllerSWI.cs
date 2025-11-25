@@ -636,6 +636,7 @@ namespace SealWebServer.Controllers
                 SetSessionId(sessionId);
                 SWIFolder folder = getFolder(path);
                 if (folder.manage == 0) throw new Exception("Error: no right to create in this folder");
+                if (FileHelper.HasInvalidFileNameChars(Path.GetFileName(path))) throw new Exception(Translate("Error: the destination folder name contains invalid characters."));
                 Directory.CreateDirectory(folder.GetFullPath());
                 Audit.LogAudit(AuditType.FolderCreate, WebUser, folder.GetFullPath());
                 return Json(new object { });
@@ -659,6 +660,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folderDest = getFolder(destination);
                 if (folderSource.manage != 2 || folderDest.manage != 2) throw new Exception("Error: no right to rename this folder");
                 if (!Directory.Exists(Path.GetDirectoryName(folderDest.GetFullPath()))) throw new Exception("Error: create the parent directory first");
+                if (FileHelper.HasInvalidFileNameChars(Path.GetFileName(destination))) throw new Exception(Translate("Error: the destination folder name contains invalid characters."));
                 Directory.Move(folderSource.GetFullPath(), folderDest.GetFullPath());
                 Audit.LogAudit(AuditType.FolderRename, WebUser, folderSource.GetFullPath(), string.Format("Rename to '{0}'", folderDest.GetFullPath()));
 
@@ -778,6 +780,7 @@ namespace SealWebServer.Controllers
                 string sourcePath = getFullPath(source);
                 string destinationPath = getFullPath(destination);
                 if (!System.IO.File.Exists(sourcePath)) throw new Exception("Error: source path is incorrect");
+                if (FileHelper.HasInvalidFileNameChars(Path.GetFileName(destinationPath))) throw new Exception(Translate("Error: the destination file name contains invalid characters."));
                 if (folderDest.files && FileHelper.IsReportFile(sourcePath)) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
                 if (System.IO.File.Exists(destinationPath) && copy) destinationPath = FileHelper.GetUniqueFileName(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + " - Copy" + Path.GetExtension(destinationPath), Path.GetExtension(destinationPath));
 
