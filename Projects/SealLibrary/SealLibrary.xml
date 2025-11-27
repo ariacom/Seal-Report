@@ -8782,7 +8782,17 @@
             Current SecurityUserProfile
             </summary>
         </member>
+        <member name="F:Seal.Model.SecurityUser.Email">
+            <summary>
+            User email if set during login process
+            </summary>
+        </member>
         <member name="F:Seal.Model.SecurityUser.Tag">
+            <summary>
+            Custom string got in user profile
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.Tag2">
             <summary>
             Custom string got in user profile
             </summary>

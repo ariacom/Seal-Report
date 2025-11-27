@@ -47,7 +47,7 @@
         foreach (var item in ((List&lt;Report&gt;) report.Tag)) {
             table.Rows.Add(
                 item.DisplayNameEx, 
-                item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
+                item.StringTag, 
                 item.LastModification,
                 item.LoadErrors
                 );
@@ -146,7 +146,7 @@
             foreach (var schedule in item.Schedules) {
                 table.Rows.Add(
                     item.DisplayNameEx, 
-                    item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
+                    item.StringTag, 
                     schedule.Output != null ? schedule.Output.Name : "", 
                     schedule.Output != null ? schedule.Output.DeviceName : "", 
                     schedule.Output != null ? schedule.Output.FolderPath : "",  
@@ -305,7 +305,7 @@
                 foreach (var element in model.Elements) {
                     table.Rows.Add(
                         item.DisplayNameEx, 
-                        item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
+                        item.StringTag, 
                         model.Name, 
                         model.Source.Name, 
                         model.Connection.Name, 
@@ -508,7 +508,7 @@
                 log.LogMessage(model.Name + " " + restriction.DisplayNameEl);
                     table.Rows.Add(
                         item.DisplayNameEx, 
-                        item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
+                        item.StringTag, 
                         model.Name, 
                         "",//model.Source.Name, 
                         "",//model.Connection.Name, 
@@ -1016,16 +1016,14 @@
 @{
     ReportTask task = Model;
     Report report = task.Report;
+    var repository = report.Repository;
 
     report.Tag = new List&lt;Report&gt;();
-    SearchReports(report, report.Repository.ReportsFolder);
+    SearchReports(report,repository.ReportsFolder);
     //Search sub-reports
-    SearchReports(report, report.Repository.SubReportsFolder);
-    //Personal folder
-    if (report.SecurityContext != null) {
-        var securityContext = report.SecurityContext;
-        SearchReports(report, report.Repository.GetPersonalFolder(securityContext));
-    }
+    SearchReports(report, repository.SubReportsFolder);
+    //Personal folders
+    SearchReports(report, repository.PersonalFolder);
 }
 
 @functions {
@@ -1040,6 +1038,8 @@
                 Report report = Report.LoadFromFile(reportPath, repository);
                 if (!string.IsNullOrEmpty(report.LoadErrors)) log.LogMessage("Error loading the report '{0}': {1}", reportPath, report.LoadErrors);
                 //Add report to the list
+                report.StringTag = report.FilePath.Replace(repository.ReportsFolder, "").Replace(repository.PersonalFolder, "Personal").Replace(repository.SubReportsFolder, "Sub Report");
+
                 list.Add(report);
             }
             catch (Exception ex) {
