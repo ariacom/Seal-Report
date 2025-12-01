@@ -5,7 +5,7 @@
   <Sources>
     <ReportSource>
       <GUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</GUID>
-      <Name>Reports</Name>
+      <Name>Main</Name>
       <Connections>
         <MetaConnection>
           <GUID>5216e238-323f-4891-985c-e9c4196ecf49</GUID>
@@ -18,7 +18,7 @@
         <Tables>
           <MetaTable>
             <GUID>f09f5456-f125-403b-bfa1-16583f103a7d</GUID>
-            <Name>Master</Name>
+            <Name>Reports</Name>
             <DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -63,7 +63,7 @@
                 <GUID>8418af01-9b19-44ef-a396-d6eaafc0e174</GUID>
                 <Name>path</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Reports</Category>
                 <DisplayName>Path</DisplayName>
                 <DisplayOrder>2</DisplayOrder>
               </MetaColumn>
@@ -71,7 +71,7 @@
                 <GUID>51a42026-7b83-4d5e-9633-b21cb85f3682</GUID>
                 <Name>last_modification</Name>
                 <Type>DateTime</Type>
-                <Category>Master</Category>
+                <Category>Reports</Category>
                 <DisplayName>Last modification</DisplayName>
                 <DisplayOrder>3</DisplayOrder>
                 <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
@@ -81,38 +81,22 @@
                 <GUID>cf8cf340-8651-489a-bbbe-6bf04a989ae1</GUID>
                 <Name>name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Reports</Category>
                 <DisplayName>Name</DisplayName>
               </MetaColumn>
               <MetaColumn>
                 <GUID>a2209938-0f1d-4ce1-8ea0-26fc62ba9af7</GUID>
                 <Name>load_error</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Reports</Category>
                 <DisplayName>Load error</DisplayName>
                 <DisplayOrder>4</DisplayOrder>
               </MetaColumn>
             </Columns>
           </MetaTable>
-        </Tables>
-      </MetaData>
-    </ReportSource>
-    <ReportSource>
-      <GUID>ffc65bc9-2064-4f18-9f12-6b210be97f1f</GUID>
-      <Name>Reports Schedules</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>9fa2649b-4aff-4c5e-b716-133ae98c79a4</GUID>
-          <Name>connection</Name>
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>9fa2649b-4aff-4c5e-b716-133ae98c79a4</ConnectionGUID>
-      <IsNoSQL>true</IsNoSQL>
-      <MetaData>
-        <Tables>
           <MetaTable>
             <GUID>0bc787ed-820f-4161-bef8-6d4ed8f4b478</GUID>
-            <Name>Master</Name>
+            <Name>Schedules</Name>
             <DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -184,14 +168,14 @@
                 <GUID>11d505fb-e247-42ed-8199-06b633346cb2</GUID>
                 <Name>report_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Schedules</Category>
                 <DisplayName>Report name</DisplayName>
               </MetaColumn>
               <MetaColumn>
                 <GUID>2660c72b-a194-4d35-8f56-82367389f3de</GUID>
                 <Name>output</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Schedules</Category>
                 <DisplayName>Output</DisplayName>
                 <DisplayOrder>3</DisplayOrder>
               </MetaColumn>
@@ -199,7 +183,7 @@
                 <GUID>7d661824-b23f-46a7-aeac-18730fa09e50</GUID>
                 <Name>schedule</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Schedules</Category>
                 <DisplayName>Schedule</DisplayName>
                 <DisplayOrder>8</DisplayOrder>
               </MetaColumn>
@@ -207,7 +191,7 @@
                 <GUID>df676cf2-997d-4e73-81a2-16fa5e3eeba3</GUID>
                 <Name>output_device</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Schedules</Category>
                 <DisplayName>Output device</DisplayName>
                 <DisplayOrder>4</DisplayOrder>
               </MetaColumn>
@@ -215,7 +199,7 @@
                 <GUID>303f4925-daea-4a16-a09b-69c2a2606b27</GUID>
                 <Name>output_path</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Schedules</Category>
                 <DisplayName>Output path</DisplayName>
                 <DisplayOrder>5</DisplayOrder>
               </MetaColumn>
@@ -223,7 +207,7 @@
                 <GUID>2d9da864-fdd4-4929-bbc2-a0a030e05694</GUID>
                 <Name>output_email</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Schedules</Category>
                 <DisplayName>Output email</DisplayName>
                 <DisplayOrder>7</DisplayOrder>
               </MetaColumn>
@@ -231,7 +215,7 @@
                 <GUID>cd787954-758c-4279-b80a-1497cb4996e6</GUID>
                 <Name>path</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Schedules</Category>
                 <DisplayName>Path</DisplayName>
                 <DisplayOrder>2</DisplayOrder>
               </MetaColumn>
@@ -239,31 +223,15 @@
                 <GUID>24d88930-e9b6-4d52-b427-f0e686533d9a</GUID>
                 <Name>output_file_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Schedules</Category>
                 <DisplayName>Output file name</DisplayName>
                 <DisplayOrder>6</DisplayOrder>
               </MetaColumn>
             </Columns>
           </MetaTable>
-        </Tables>
-      </MetaData>
-    </ReportSource>
-    <ReportSource>
-      <GUID>0e24b259-d9f6-4423-b1e9-e2dbb4064112</GUID>
-      <Name>Reports Elements</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>86caab16-21c5-4b3f-a0af-b017fc9b849b</GUID>
-          <Name>connection</Name>
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>86caab16-21c5-4b3f-a0af-b017fc9b849b</ConnectionGUID>
-      <IsNoSQL>true</IsNoSQL>
-      <MetaData>
-        <Tables>
           <MetaTable>
             <GUID>cae6a1ed-0b2c-4c47-b5d3-892ea5191646</GUID>
-            <Name>Master</Name>
+            <Name>Elements</Name>
             <DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -275,9 +243,6 @@
     table.Columns.Add(new DataColumn("report_name", typeof(string)));
     table.Columns.Add(new DataColumn("path", typeof(string)));
     table.Columns.Add(new DataColumn("model_name", typeof(string)));
-    table.Columns.Add(new DataColumn("model_source", typeof(string)));
-    table.Columns.Add(new DataColumn("model_connection", typeof(string)));
-    table.Columns.Add(new DataColumn("model_isSQL", typeof(string)));
     table.Columns.Add(new DataColumn("element_name", typeof(string)));
     table.Columns.Add(new DataColumn("display_name", typeof(string)));
     table.Columns.Add(new DataColumn("category", typeof(string)));
@@ -308,9 +273,6 @@
                         item.StringTag, 
                         model.Name, 
                         model.Source.Name, 
-                        model.Connection.Name, 
-                        model.IsSQLModel ? "Yes" : "No",
-                        element.Name,
                         element.DisplayNameEl,
                         element.MetaColumn != null ? element.MetaColumn.Category : "",
                         Helper.GetEnumDescription(element.PivotPosition.GetType(), element.PivotPosition),
@@ -335,142 +297,102 @@
                 <GUID>e62bdced-433a-4f0d-893a-bd06183dd21c</GUID>
                 <Name>report_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Report name</DisplayName>
               </MetaColumn>
               <MetaColumn>
                 <GUID>1f023c21-9f36-4d12-be05-a32fa2d748c6</GUID>
                 <Name>display_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Display name</DisplayName>
-                <DisplayOrder>8</DisplayOrder>
+                <DisplayOrder>5</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>868edf40-8cf4-4fb4-a7ad-437cbc270bb1</GUID>
                 <Name>pivot_position</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Pivot position</DisplayName>
-                <DisplayOrder>10</DisplayOrder>
+                <DisplayOrder>7</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>28c2895c-7862-477b-9f33-024271d37c08</GUID>
                 <Name>aggregate_function</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Aggregate function</DisplayName>
-                <DisplayOrder>12</DisplayOrder>
+                <DisplayOrder>9</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>007c0089-eeca-4731-a42f-b3ae4b215b44</GUID>
                 <Name>show_total</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Show total</DisplayName>
-                <DisplayOrder>13</DisplayOrder>
+                <DisplayOrder>10</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>c6759002-e7b1-451d-a522-2b270461b3d0</GUID>
                 <Name>serie_definition</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Serie definition</DisplayName>
-                <DisplayOrder>14</DisplayOrder>
+                <DisplayOrder>11</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>c7e0c6bb-67aa-41d1-8667-fb237189baf0</GUID>
                 <Name>enum_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Enum name</DisplayName>
-                <DisplayOrder>15</DisplayOrder>
+                <DisplayOrder>12</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>7ba34ad5-82be-498b-aba3-b8ba6cffe1f1</GUID>
                 <Name>model_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Model name</DisplayName>
                 <DisplayOrder>3</DisplayOrder>
-              </MetaColumn>
-              <MetaColumn>
-                <GUID>0c8ff98d-44ca-4e24-8064-4fdd2f1a5fde</GUID>
-                <Name>model_isSQL</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Model isSQL</DisplayName>
-                <DisplayOrder>6</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>046f4b25-1555-412c-981d-5d6d3b456474</GUID>
                 <Name>element_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Element name</DisplayName>
-                <DisplayOrder>7</DisplayOrder>
+                <DisplayOrder>4</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>32b48246-4111-4164-89fc-0294722dc987</GUID>
                 <Name>element_SQL</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Element SQL</DisplayName>
-                <DisplayOrder>11</DisplayOrder>
+                <DisplayOrder>8</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>81a7b99a-71bf-4bf8-b806-0ea783d74942</GUID>
                 <Name>category</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Category</DisplayName>
-                <DisplayOrder>9</DisplayOrder>
+                <DisplayOrder>6</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>ba6766e5-0a21-4b15-a8f0-b045def0d0a3</GUID>
                 <Name>path</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Elements</Category>
                 <DisplayName>Path</DisplayName>
                 <DisplayOrder>2</DisplayOrder>
               </MetaColumn>
-              <MetaColumn>
-                <GUID>e1bb7a51-bbea-4a55-b022-7c9dcacdd179</GUID>
-                <Name>model_source</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Model source</DisplayName>
-                <DisplayOrder>4</DisplayOrder>
-              </MetaColumn>
-              <MetaColumn>
-                <GUID>3fd04c68-0b36-4cbd-bb84-2d1fe3511069</GUID>
-                <Name>model_connection</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Model connection</DisplayName>
-                <DisplayOrder>5</DisplayOrder>
-              </MetaColumn>
             </Columns>
           </MetaTable>
-        </Tables>
-      </MetaData>
-    </ReportSource>
-    <ReportSource>
-      <GUID>5119ea68-e57e-4f06-903a-d8ca47c5900a</GUID>
-      <Name>Reports Restrictions</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>0a80cdb1-0617-49a5-889b-1c1ecffffc50</GUID>
-          <Name>connection</Name>
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>0a80cdb1-0617-49a5-889b-1c1ecffffc50</ConnectionGUID>
-      <IsNoSQL>true</IsNoSQL>
-      <MetaData>
-        <Tables>
           <MetaTable>
             <GUID>5abbc111-51e4-4f5d-919f-dccb84089f14</GUID>
-            <Name>Master</Name>
+            <Name>Restrictions</Name>
             <DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
@@ -480,9 +402,6 @@
     table.Columns.Add(new DataColumn("report_name", typeof(string)));
     table.Columns.Add(new DataColumn("path", typeof(string)));
     table.Columns.Add(new DataColumn("model_name", typeof(string)));
-    table.Columns.Add(new DataColumn("model_source", typeof(string)));
-    table.Columns.Add(new DataColumn("model_connection", typeof(string)));
-    table.Columns.Add(new DataColumn("model_isSQL", typeof(string)));
     table.Columns.Add(new DataColumn("restriction_name", typeof(string)));
     table.Columns.Add(new DataColumn("display_name", typeof(string)));
     table.Columns.Add(new DataColumn("category", typeof(string)));
@@ -510,9 +429,6 @@
                         item.DisplayNameEx, 
                         item.StringTag, 
                         model.Name, 
-                        "",//model.Source.Name, 
-                        "",//model.Connection.Name, 
-                        model.IsSQLModel ? "Yes" : "No",
                         restriction.Name,
                         restriction.DisplayNameEl,
                         restriction.MetaColumn != null ? restriction.MetaColumn.Category : "",
@@ -535,96 +451,203 @@
                 <GUID>fde62cbe-9096-4679-a68a-a2e66a56b46b</GUID>
                 <Name>report_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
                 <DisplayName>Report name</DisplayName>
               </MetaColumn>
               <MetaColumn>
                 <GUID>05f90ef1-cdf6-4606-b83a-cc66851d5a8a</GUID>
                 <Name>model_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
                 <DisplayName>Model name</DisplayName>
                 <DisplayOrder>3</DisplayOrder>
-              </MetaColumn>
-              <MetaColumn>
-                <GUID>d40477cf-654a-4cd4-b29e-6870e5dcc9ff</GUID>
-                <Name>model_isSQL</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Model isSQL</DisplayName>
-                <DisplayOrder>6</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>15f51065-f0fc-4f39-be16-1b856906ced9</GUID>
                 <Name>restriction_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
                 <DisplayName>Restriction name</DisplayName>
-                <DisplayOrder>7</DisplayOrder>
+                <DisplayOrder>4</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>e3c2e6a8-8a38-4cae-a0fd-7d4089109ea9</GUID>
                 <Name>display_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
                 <DisplayName>Display name</DisplayName>
-                <DisplayOrder>8</DisplayOrder>
+                <DisplayOrder>5</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>142a98e9-0345-4a6d-a7e1-1345e7c8b31a</GUID>
                 <Name>category</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
                 <DisplayName>Category</DisplayName>
-                <DisplayOrder>9</DisplayOrder>
+                <DisplayOrder>6</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>ec8480b0-53da-4fc8-8130-1592fbdf1ef2</GUID>
                 <Name>restriction_SQL</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
                 <DisplayName>Restriction SQL</DisplayName>
-                <DisplayOrder>10</DisplayOrder>
+                <DisplayOrder>7</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>281c7a50-aeed-4ebc-9e24-30587903e760</GUID>
                 <Name>enum_name</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
                 <DisplayName>Enum name</DisplayName>
-                <DisplayOrder>11</DisplayOrder>
+                <DisplayOrder>8</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>c798e97f-f4bb-420c-ba77-b7de5a365791</GUID>
                 <Name>text</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
                 <DisplayName>Text</DisplayName>
-                <DisplayOrder>12</DisplayOrder>
+                <DisplayOrder>9</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>23ad0bc6-517b-4d01-9b77-96ae014f6e38</GUID>
                 <Name>path</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
+                <Category>Restrictions</Category>
+                <DisplayName>Path</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>5a2187a2-a8c5-440b-a583-fab832e0b14d</GUID>
+            <Name>Models</Name>
+            <DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+                ReportExecutionLog log = metaTable;
+
+    //Script executed to define the result table columns that will be loaded by the 'Load Script'
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("report_name", typeof(string)));
+    table.Columns.Add(new DataColumn("path", typeof(string)));
+    table.Columns.Add(new DataColumn("model_name", typeof(string)));
+    table.Columns.Add(new DataColumn("model_source", typeof(string)));
+    table.Columns.Add(new DataColumn("model_connection", typeof(string)));
+    table.Columns.Add(new DataColumn("model_isSQL", typeof(string)));
+    table.Columns.Add(new DataColumn("model_isLINQ", typeof(string)));
+    table.Columns.Add(new DataColumn("max_records", typeof(int)));
+    table.Columns.Add(new DataColumn("SQL or LINQ", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+                ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+
+    if (report != null &amp;&amp; report.Tag != null) {
+        foreach (var item in ((List&lt;Report&gt;) report.Tag)) {
+            foreach (var model in item.Models) {
+                model.BuildQuery();
+                table.Rows.Add(
+                    item.DisplayNameEx, 
+                    item.StringTag, 
+                    model.Name, 
+                    model.Source.Name, 
+                    model.Connection.Name, 
+                    model.IsSQLModel ? "Yes" : "No",
+                    model.IsLINQ ? "Yes" : "No",
+                    model.MaxNumberOfRecords, 
+                    model.IsLINQ ? model.LINQSelect : model.Sql
+                    );
+            }
+        }
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>942fa68f-dd63-4ca2-a0c4-83b60dacbe31</GUID>
+                <Name>report_name</Name>
+                <Type>Text</Type>
+                <Category>Models</Category>
+                <DisplayName>Report name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e12cf59d-4dbc-48fb-a5f7-e648a744eb07</GUID>
+                <Name>model_name</Name>
+                <Type>Text</Type>
+                <Category>Models</Category>
+                <DisplayName>Model name</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>c682ac46-b299-4688-94bd-ec590862393d</GUID>
+                <Name>model_isSQL</Name>
+                <Type>Text</Type>
+                <Category>Models</Category>
+                <DisplayName>Is SQL</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>38cfdb4a-0c3c-4515-a00d-0cfb7d2a18d8</GUID>
+                <Name>path</Name>
+                <Type>Text</Type>
+                <Category>Models</Category>
                 <DisplayName>Path</DisplayName>
                 <DisplayOrder>2</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
-                <GUID>d86610d1-8df2-4ddf-90d7-64e9ea322750</GUID>
+                <GUID>46e52145-d4d3-4beb-8d98-db0d9b728cba</GUID>
                 <Name>model_source</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Model source</DisplayName>
+                <Category>Models</Category>
+                <DisplayName>Source</DisplayName>
                 <DisplayOrder>4</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
-                <GUID>6fcb754c-efdb-4b32-9340-b334e5f77bd2</GUID>
+                <GUID>02607633-b127-4468-9e5b-7428ecf4f2ee</GUID>
                 <Name>model_connection</Name>
                 <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Model connection</DisplayName>
+                <Category>Models</Category>
+                <DisplayName>Connection</DisplayName>
                 <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>4f93f5da-d06b-463d-997a-3c9607cf1b3d</GUID>
+                <Name>SQL or LINQ</Name>
+                <Type>Text</Type>
+                <Category>Models</Category>
+                <DisplayName>SQL or LINQ</DisplayName>
+                <DisplayOrder>9</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>4f3c344a-cfb1-4177-b84e-b84a77b75446</GUID>
+                <Name>model_isLINQ</Name>
+                <Type>Text</Type>
+                <Category>Models</Category>
+                <DisplayName>Is LINQ</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e907e32c-ab53-4678-93ba-a0bf2bbd1ae0</GUID>
+                <Name>max_records</Name>
+                <Type>Numeric</Type>
+                <Category>Models</Category>
+                <DisplayName>Max records</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+                <Format>N0</Format>
               </MetaColumn>
             </Columns>
           </MetaTable>
@@ -683,8 +706,8 @@
     </ReportModel>
     <ReportModel>
       <GUID>3149ae09-076e-4a13-919f-909d83f6751e</GUID>
-      <Name>Reports Schedules</Name>
-      <SourceGUID>ffc65bc9-2064-4f18-9f12-6b210be97f1f</SourceGUID>
+      <Name>Schedules</Name>
+      <SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID>
       <LINQSubTables>
         <MetaTable>
           <GUID>0bc787ed-820f-4161-bef8-6d4ed8f4b478</GUID>
@@ -761,8 +784,8 @@
     </ReportModel>
     <ReportModel>
       <GUID>0234547b-d1a9-422d-a648-183d8716304e</GUID>
-      <Name>Reports Elements</Name>
-      <SourceGUID>0e24b259-d9f6-4423-b1e9-e2dbb4064112</SourceGUID>
+      <Name>Elements</Name>
+      <SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID>
       <LINQSubTables>
         <MetaTable>
           <GUID>cae6a1ed-0b2c-4c47-b5d3-892ea5191646</GUID>
@@ -794,30 +817,6 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>7ba34ad5-82be-498b-aba3-b8ba6cffe1f1</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>9e5f67d6-4f3a-49e4-b91a-a8be49a75688</GUID>
-          <Name>model_source</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>e1bb7a51-bbea-4a55-b022-7c9dcacdd179</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>79c92afb-3224-4b88-8172-b3587cffba08</GUID>
-          <Name>model_connection</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>3fd04c68-0b36-4cbd-bb84-2d1fe3511069</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>944278ff-b948-4792-83c4-17a9d3e8768d</GUID>
-          <Name>model_isSQL</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>0c8ff98d-44ca-4e24-8064-4fdd2f1a5fde</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>55d4c68d-e4a8-4bd1-9142-87c6cb509931</GUID>
@@ -895,8 +894,8 @@
     </ReportModel>
     <ReportModel>
       <GUID>0537a192-73f6-46fe-b7ce-ff607f8ada06</GUID>
-      <Name>Reports Restrictions</Name>
-      <SourceGUID>5119ea68-e57e-4f06-903a-d8ca47c5900a</SourceGUID>
+      <Name>Restrictions</Name>
+      <SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID>
       <LINQSubTables>
         <MetaTable>
           <GUID>5abbc111-51e4-4f5d-919f-dccb84089f14</GUID>
@@ -1003,6 +1002,92 @@
         </ReportElement>
       </Elements>
     </ReportModel>
+    <ReportModel>
+      <GUID>61eceafa-064b-4123-be0b-2d129331d998</GUID>
+      <Name>Models</Name>
+      <SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>5a2187a2-a8c5-440b-a583-fab832e0b14d</GUID>
+          <Name>Models</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>2697bb87-8ff7-4f0d-84be-7d131c9ba8a7</GUID>
+          <Name>report_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>942fa68f-dd63-4ca2-a0c4-83b60dacbe31</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3dc5e263-6463-4b21-b025-273b597ee3a4</GUID>
+          <Name>path</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>38cfdb4a-0c3c-4515-a00d-0cfb7d2a18d8</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>207e467d-a01b-4f19-9966-5ee4ead8ee2b</GUID>
+          <Name>model_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>e12cf59d-4dbc-48fb-a5f7-e648a744eb07</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9801da85-8e55-4748-bfd3-481de84a2afc</GUID>
+          <Name>model_source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>46e52145-d4d3-4beb-8d98-db0d9b728cba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f5c8349a-b9b3-4508-a1bd-cc715a3499f9</GUID>
+          <Name>model_connection</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>02607633-b127-4468-9e5b-7428ecf4f2ee</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cfa89f4b-e86c-4b9d-8b1e-4da6a7ea9c94</GUID>
+          <Name>model_isSQL</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>c682ac46-b299-4688-94bd-ec590862393d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>bf8954e1-de91-4437-af3d-c3d815cd352a</GUID>
+          <Name>model_isLINQ</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>4f3c344a-cfb1-4177-b84e-b84a77b75446</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7b4b1a27-dbf9-4745-bc89-7fb29ea5b1d4</GUID>
+          <Name>max_records</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e907e32c-ab53-4678-93ba-a0bf2bbd1ae0</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4510cf91-aa52-442b-a49c-f8d0ddb14592</GUID>
+          <Name>SQL or LINQ</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>4f93f5da-d06b-463d-997a-3c9607cf1b3d</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
   </Models>
   <Tasks>
     <ReportTask>
@@ -1039,7 +1124,9 @@
                 if (!string.IsNullOrEmpty(report.LoadErrors)) log.LogMessage("Error loading the report '{0}': {1}", reportPath, report.LoadErrors);
                 //Add report to the list
                 report.StringTag = report.FilePath.Replace(repository.ReportsFolder, "").Replace(repository.PersonalFolder, "Personal").Replace(repository.SubReportsFolder, "Sub Report");
-
+                //Apply initialization
+                report.InitForExecution();
+                
                 list.Add(report);
             }
             catch (Exception ex) {
@@ -1108,6 +1195,12 @@
                           <GUID>3eb6f6b5-85bd-4e54-bd0e-3953f8049f45</GUID>
                           <Name>Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
                           <SortOrder>5</SortOrder>
                         </ReportView>
                       </Views>
@@ -1129,7 +1222,7 @@
               <Views>
                 <ReportView>
                   <GUID>412f9559-e24d-43c4-8cba-f2317a643bfd</GUID>
-                  <Name>Reports Schedules</Name>
+                  <Name>Schedules</Name>
                   <Views>
                     <ReportView>
                       <GUID>325f6286-1c89-449d-a004-40a04befcafb</GUID>
@@ -1163,6 +1256,12 @@
                           <GUID>6ca21a98-23e4-45c9-aeed-deb253a37b26</GUID>
                           <Name>Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
                           <SortOrder>5</SortOrder>
                         </ReportView>
                       </Views>
@@ -1176,7 +1275,7 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <SortOrder>4</SortOrder>
+              <SortOrder>5</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>3c35ca07-a218-4c00-835a-71b88339f838</GUID>
@@ -1184,7 +1283,7 @@
               <Views>
                 <ReportView>
                   <GUID>6b26406e-84cb-475d-bcb6-c8b026c56af0</GUID>
-                  <Name>Reports Elements</Name>
+                  <Name>Elements</Name>
                   <Views>
                     <ReportView>
                       <GUID>846e4c2b-e520-4de3-8c61-91e1b1701687</GUID>
@@ -1218,6 +1317,12 @@
                           <GUID>42e05e47-9271-4d6f-95fe-d52107f18f4f</GUID>
                           <Name>Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
                           <SortOrder>5</SortOrder>
                         </ReportView>
                       </Views>
@@ -1231,7 +1336,7 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <SortOrder>2</SortOrder>
+              <SortOrder>3</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>5c07a783-d3b0-4148-9fd0-0266c3f7459e</GUID>
@@ -1239,7 +1344,7 @@
               <Views>
                 <ReportView>
                   <GUID>0a59e480-4cb7-4bf0-8dac-54a01cd04fb1</GUID>
-                  <Name>Reports Restrictions</Name>
+                  <Name>Restrictions</Name>
                   <Views>
                     <ReportView>
                       <GUID>0920629e-07c8-4c7a-96ac-779f8a6e174f</GUID>
@@ -1273,6 +1378,12 @@
                           <GUID>b1cacf8b-ce2e-416d-93fd-133d3821d973</GUID>
                           <Name>Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
                           <SortOrder>5</SortOrder>
                         </ReportView>
                       </Views>
@@ -1286,7 +1397,68 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <SortOrder>3</SortOrder>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>2b5cdec3-942b-4a01-8684-0ba94737508e</GUID>
+              <Name>Models</Name>
+              <Views>
+                <ReportView>
+                  <GUID>3158aecd-7c3d-4c37-af80-a548fea1c896</GUID>
+                  <Name>Models</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>1884513f-fa03-4b1c-8d67-656e2f4c4c4d</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>a6407cf3-7947-4528-a0fb-9351e1f8daa1</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>724709d1-84c1-4ff7-b85f-c8823492119c</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>0f8fa525-aae3-4b7a-8153-d37b5c60c47c</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>982cad1d-353e-4cdd-8bd5-8f5a50487e44</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>0d559820-a419-46ae-a2d0-111fb318cc35</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>61eceafa-064b-4123-be0b-2d129331d998</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>2</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>
