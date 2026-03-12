@@ -2281,7 +2281,12 @@
         </member>
         <member name="F:Seal.Model.Report.CurrentViewGUID">
             <summary>
-            GUID of the view to being executed
+            GUID of the view being executed
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.CurrentScheduleGUID">
+            <summary>
+            GUID of the schedule being executed
             </summary>
         </member>
         <member name="P:Seal.Model.Report.InputValues">
@@ -2458,6 +2463,11 @@
              <summary>
             Execution messages after execution
              </summary>
+        </member>
+        <member name="P:Seal.Model.Report.ExecutionMessagesToDisplay">
+            <summary>
+            Execution messages limited for display
+            </summary>
         </member>
         <member name="F:Seal.Model.Report.ExecutionErrors">
              <summary>
@@ -3691,7 +3701,7 @@
             Return the report of a given schedule GUID
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.ExecuteReportSchedule(System.String,Seal.Model.Report)">
+        <member name="M:Seal.Model.ReportExecution.ExecuteReportSchedule(System.String,System.String,Seal.Model.Report)">
             <summary>
             Execute a report schedule
             </summary>
@@ -4432,6 +4442,11 @@
             The device used by this output
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportOutput.ViewGUID">
+            <summary>
+            The view used to execute the report output
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportOutput.CancelIfNoRecords">
             <summary>
             If the models of the report do not have any record, the output generation is cancelled
@@ -4450,11 +4465,6 @@
         <member name="P:Seal.Model.ReportOutput.ViewParameters">
             <summary>
             Custom parameters used for the Root View when the output is executed
-            </summary>
-        </member>
-        <member name="P:Seal.Model.ReportOutput.ViewGUID">
-            <summary>
-            The view used to execute the report output
             </summary>
         </member>
         <member name="P:Seal.Model.ReportOutput.FolderPath">
@@ -5152,6 +5162,11 @@
         <member name="P:Seal.Model.ReportSchedule.SealEnabled">
             <summary>
             True if the schedule is enabled
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportSchedule.ScheduleSequencerGUID">
+            <summary>
+            If set, the report will be executed from the Schedule defined in the Schedule Sequencer Report.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportSchedule.SealStart">
@@ -8157,6 +8172,11 @@
             Name of the Task Scheduler folder containing the schedules of the reports if the Windows Task Scheduler is used
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.ScheduleSequencerPath">
+            <summary>
+            Path of the Schedule Sequencer report.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.OuterProcess">
             <summary>
             If true and the scheduler in executed in Service, Worker or Web Server, schedules is executed in an outer process forked by the initiator process. If false, the schedule is executed in a dedicated thread of the initiator.
@@ -8330,6 +8350,16 @@
         <member name="M:Seal.Model.SealServerConfiguration.GetBuildDate">
             <summary>
             Retruns the build date of the assembly
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.ScheduleSequencerReport">
+            <summary>
+            Schedule Sequencer Report if defined
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.GetSequencerReportSchedules">
+            <summary>
+            List of schedules defined in the sequencer report
             </summary>
         </member>
         <member name="T:Seal.Model.SealServerConfiguration.KeyValue">

@@ -2,7 +2,7 @@
   "profiles": {
     "SealTaskScheduler": {
       "commandName": "Project",
-      "commandLineArgs": "dffaf15e-d587-453c-8168-14515859cbd5"
+      "commandLineArgs": "b90e401d-a9d5-442d-b1be-97e0dec9da86 \"C:\\_dev\\Seal-Report\\Repository\\Reports\\work\\free sql.srex\""
     }
   }
 }

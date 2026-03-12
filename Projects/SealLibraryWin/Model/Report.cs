@@ -141,10 +141,16 @@ namespace Seal.Model
         public string ViewGUID { get; set; }
 
         /// <summary>
-        /// GUID of the view to being executed
+        /// GUID of the view being executed
         /// </summary>
         [XmlIgnore]
         public string CurrentViewGUID;
+
+        /// <summary>
+        /// GUID of the schedule being executed
+        /// </summary>
+        [XmlIgnore]
+        public string CurrentScheduleGUID;
 
         /// <summary>
         /// Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report.

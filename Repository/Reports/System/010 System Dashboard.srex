@@ -356,15 +356,16 @@ AND [5bca87bc-78c9-468a-8c37-b3df60bd8b25]</Restriction>
       <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
       <Elements>
         <ReportElement>
-          <GUID>30f9404e-7daa-4072-8387-bb4695d6a7bb</GUID>
-          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <GUID>93a9c10e-7fe9-410e-9d44-bfc81efac5f0</GUID>
+          <Name>sr_audit.event_date</Name>
           <DisplayName />
-          <Format>d</Format>
+          <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+          <Format>dd/MM</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <TotalAggregateFunction>Max</TotalAggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>1ae14856-aab0-4c9e-9094-67486920fa2c</GUID>
@@ -373,6 +374,7 @@ AND [5bca87bc-78c9-468a-8c37-b3df60bd8b25]</Restriction>
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
           <ChartJSSerie>Line</ChartJSSerie>
           <MetaColumnGUID>8f4337f8-57f0-4d68-91cb-c1b797fbbd81</MetaColumnGUID>
         </ReportElement>

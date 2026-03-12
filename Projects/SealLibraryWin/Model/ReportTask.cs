@@ -938,6 +938,7 @@ namespace Seal.Model
         public void HandleException(Exception ex)
         {
             var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
+            Helper.WriteLogException($"Task '{Name}'", ex);
             if (string.IsNullOrEmpty(Report.WebUrl)) LogMessage("Error in task '{0}': {1}\r\n{2}", Name, message, ex.StackTrace);
             else LogMessage("Error got in task '{0}'", Name);
             if (!IgnoreError)

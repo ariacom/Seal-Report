@@ -110,7 +110,7 @@ namespace Seal.Model
             //PDF conversion requires Print Result
             if (Report.Format == ReportFormat.HTML2PDF) generatePrintResult = true;
 
-            if (generatePrintResult) 
+            if (generatePrintResult)
             {
                 var orignalFormat = Report.Format;
                 try
@@ -2045,31 +2045,43 @@ namespace Seal.Model
             return schedule;
         }
 
-        static void InitReportSchedule(string scheduleGUID, out Report report, out ReportSchedule schedule)
+        static void InitReportSchedule(string scheduleGUID, string reportPath, out Report report, out ReportSchedule schedule)
         {
+            report = null;
             if (string.IsNullOrEmpty(scheduleGUID)) throw new Exception("No schedule GUID specified !\r\n");
             Repository repository = Repository.Instance;
 
-            var taskService = new Microsoft.Win32.TaskScheduler.TaskService();
-            var taskFolder = taskService.RootFolder.SubFolders.FirstOrDefault(i => i.Name == repository.Configuration.TaskFolderName);
-            if (taskFolder == null) throw new Exception(string.Format("Unable to find schedule task folder '{0}'\r\nCheck your configuration...", repository.Configuration.TaskFolderName));
+            if (string.IsNullOrEmpty(reportPath))
+            {
+                var taskService = new Microsoft.Win32.TaskScheduler.TaskService();
+                var taskFolder = taskService.RootFolder.SubFolders.FirstOrDefault(i => i.Name == repository.Configuration.TaskFolderName);
+                if (taskFolder == null) throw new Exception(string.Format("Unable to find schedule task folder '{0}'\r\nCheck your configuration...", repository.Configuration.TaskFolderName));
 
-            var task = taskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID));
-            if (task == null) throw new Exception(string.Format("Unable to find schedule '{0}'\r\n", scheduleGUID));
+                var task = taskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID));
+                if (task == null) throw new Exception(string.Format("Unable to find schedule '{0}'\r\n", scheduleGUID));
 
-            string reportPath = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);
-            string reportGUID = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 1);
-            report = GetScheduledReport(taskFolder, reportPath, reportGUID, scheduleGUID, repository);
-            if (report == null) throw new Exception(string.Format("Unable to find report '{0}' for schedule '{1}'\r\nReport schedules have been deleted...", reportGUID, scheduleGUID));
+                reportPath = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);
+                var reportGUID = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 1);
+                report = GetScheduledReport(taskFolder, reportPath, reportGUID, scheduleGUID, repository);
 
-            schedule = GetReportSchedule(taskFolder, report, scheduleGUID);
-            if (schedule == null) throw new Exception(string.Format("Unable to find schedule '{0}' in report '{1}'.\r\nSchedule has been deleted", scheduleGUID, report.FilePath));
+                if (report == null) throw new Exception(string.Format("Unable to find report '{0}' for schedule '{1}'\r\nReport schedules have been deleted...", reportGUID, scheduleGUID));
+
+                schedule = GetReportSchedule(taskFolder, report, scheduleGUID);
+                if (schedule == null) throw new Exception(string.Format("Unable to find schedule '{0}' in report '{1}'.\r\nSchedule has been deleted", scheduleGUID, report.FilePath));
+            }
+            else
+            {
+                if (File.Exists(reportPath)) report = Report.LoadFromFile(reportPath, repository);
+                if (report == null) throw new Exception(string.Format("Unable to find report '{0}' for schedule '{1}'\r\nReport schedules have been deleted...", reportPath, scheduleGUID));
+
+                schedule = report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
+            }
         }
 
         /// <summary>
         /// Execute a report schedule
         /// </summary>
-        public static void ExecuteReportSchedule(string scheduleGUID, Report refReport = null)
+        public static void ExecuteReportSchedule(string scheduleGUID, string reportPath, Report refReport = null)
         {
             try
             {
@@ -2078,6 +2090,8 @@ namespace Seal.Model
                 bool useSealScheduler = Repository.Instance.UseSealScheduler;
                 if (useSealScheduler)
                 {
+                    if (!string.IsNullOrEmpty(reportPath) && File.Exists(reportPath)) refReport = Report.LoadFromFile(reportPath, Repository.Instance);
+
                     if (refReport == null)
                     {
                         //outer process, use the GUID to find the schedule
@@ -2092,7 +2106,7 @@ namespace Seal.Model
                 }
                 else
                 {
-                    InitReportSchedule(scheduleGUID, out report, out schedule);
+                    InitReportSchedule(scheduleGUID, reportPath, out report, out schedule);
                 }
 
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName));
@@ -2110,13 +2124,14 @@ namespace Seal.Model
                         }
                         else
                         {
-                            InitReportSchedule(scheduleGUID, out report, out schedule);
+                            InitReportSchedule(scheduleGUID, reportPath, out report, out schedule);
                         }
                     }
                     isFirst = false;
 
                     ReportExecution reportExecution = new ReportExecution() { Report = report };
                     report.ExecutionContext = ReportExecutionContext.TaskScheduler;
+                    report.CurrentScheduleGUID = scheduleGUID;
                     if (!schedule.IsTasksSchedule)
                     {
                         report.OutputToExecute = schedule.Output;

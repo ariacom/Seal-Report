@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>664aacf5-7d4d-4009-956d-72768f2453ec</GUID>
+  <ViewGUID>c50c4f0f-6359-4319-93c1-271666aeac5d</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>b823eb92-301e-41f2-9379-93664d97bb41</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData>
+        <Enums>
+          <MetaEnum>
+            <GUID>de4a6c57-c824-4c0f-bceb-3b10bc4a9822</GUID>
+            <Name>{Schedule options}</Name>
+            <Translate>true</Translate>
+            <Values>
+              <MetaEV>
+                <Id>NONE</Id>
+                <Val>&lt;No option&gt;</Val>
+              </MetaEV>
+            </Values>
+          </MetaEnum>
+        </Enums>
+      </MetaData>
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>6b1caf87-2c08-4c10-bed6-b78186e1d17c</GUID>
+      <Name>Model</Name>
+      <SourceGUID>b823eb92-301e-41f2-9379-93664d97bb41</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>24482a51-ffce-42bd-beea-e39396a94579</GUID>
+      <Name>Loop</Name>
+      <Tasks>
+        <ReportTask>
+          <GUID>2f0ce6bb-d86a-47eb-b3c6-517eb60438e0</GUID>
+          <Name>Start report</Name>
+          <Tasks />
+          <ExecProcessChildren>true</ExecProcessChildren>
+          <TemplateName>Default</TemplateName>
+          <SourceGUID>b823eb92-301e-41f2-9379-93664d97bb41</SourceGUID>
+          <Script>@using System.Threading
+@using System.IO
+@using System.Reflection
+@using System.Runtime.InteropServices
+@using System.Diagnostics
+@{
+    ReportTask task = Model;
+    var repository = task.Repository;
+    var scheduleGUID = task.Report.CurrentScheduleGUID;
+    var scheduleName = task.Report.Schedules.FirstOrDefault(i =&gt; i.GUID == scheduleGUID)?.Name;
+    
+    //Options
+    var waitForCompletion = false;
+
+    var reportPath = task.ExecInput.ToString();
+    try {
+        Report report = Report.LoadFromFile(reportPath, repository);
+        if (!string.IsNullOrEmpty(report.LoadErrors)) {
+            task.LogMessage($"Error loading the report {reportPath}: {report.LoadErrors}");
+            return;
+        }
+        report.ExecutionContext = ReportExecutionContext.TaskScheduler;
+        var schedule = report.Schedules.FirstOrDefault(i =&gt; i.ScheduleSequencerGUID == scheduleGUID);
+        if (schedule == null) {
+            task.LogMessage($"No schedule found for {scheduleGUID}");
+            return;
+        }
+    
+        //Execute using the task scheduler
+        var installationDir = repository.Configuration.InstallationDirectory;
+        
+        //specific installation directory
+        //DEV
+        //installationDir = @"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net8.0";
+        
+        var path = Path.Combine(installationDir, Repository.SealTaskScheduler);
+        if (!File.Exists(path)) throw new Exception($"Unable to execute in Outer Process. {path} was not found.");
+
+        var arg = schedule.GUID + " " + Helper.QuoteDouble(reportPath);
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            //Non-windows
+            path = "dotnet";
+            arg = Repository.SealTaskScheduler.Replace(".exe",".dll") + " " + arg;
+        }
+        using var p = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+            //    RedirectStandardOutput = true,
+              //  UseShellExecute = false,
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                FileName = path,
+                Arguments = arg
+            }
+        };
+        p.Start();
+        task.LogMessage($"Schedule '{scheduleName}' for '{reportPath}' has been started");
+        
+        if (waitForCompletion)  {
+            while (!p.HasExited &amp;&amp; !task.Report.Cancel) Thread.Sleep(500);
+            task.LogMessage($"Schedule '{scheduleName}' for '{reportPath}' has been terminated");
+        }
+
+    }
+    catch (Exception ex) {
+        task.HandleException(ex);
+    }
+}
+</Script>
+          <SortOrder>1</SortOrder>
+        </ReportTask>
+      </Tasks>
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Loop</TemplateName>
+      <SourceGUID>b823eb92-301e-41f2-9379-93664d97bb41</SourceGUID>
+      <Script>@using System.IO
+@using System.Threading
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var helper = new TaskHelper(task);
+
+    var items = new List&lt;object&gt;();
+    var thread = task.GetNumericValue("thread");
+    
+    //DEV 
+    //report.CurrentScheduleGUID = report.Schedules.First(i =&gt; i.Name == "Daily at 10am").GUID;
+
+    GetReportsToSchedule(report.Repository.ReportsFolder, report.CurrentScheduleGUID, items);
+    GetReportsToSchedule(report.Repository.PersonalFolder, report.CurrentScheduleGUID, items);
+
+    if (thread == 0) {
+        thread = items.Count;
+    }
+    
+    task.LogMessage($"Processing {items.Count} item(s) using {thread} thread(s)");
+    var tasks = new List&lt;Task&gt;();
+    for (int i=1; i&lt;=thread &amp;&amp; !report.Cancel &amp;&amp; items.Count&gt;0;i++) {
+        tasks.Add(Task.Run(() =&gt; AsyncExec(items)));
+        Thread.Sleep(100); 
+    }
+    
+    while (!report.Cancel) {
+        Thread.Sleep(100);
+        if (!tasks.Exists(i =&gt; !i.IsCompleted)) {
+            break;
+        }    
+    }    
+}
+
+@functions {
+    void GetReportsToSchedule(string folder, string scheduleGUID, List&lt;object&gt; reports) {
+        ReportTask task = Model;
+        try {
+            foreach (string reportPath in Directory.GetFiles(folder, "*.srex"))
+            {
+                if (reportPath == task.Report.FilePath) continue;
+            
+                var reportText = File.ReadAllText(reportPath);
+                var pattern = $"&lt;ScheduleSequencerGUID&gt;{scheduleGUID}&lt;/ScheduleSequencerGUID&gt;";
+                if (reportText.Contains(pattern)) {
+                    reports.Add(reportPath);
+                }
+            }
+            
+            foreach (string subFolder in Directory.GetDirectories(folder))
+            {
+                GetReportsToSchedule(subFolder, scheduleGUID, reports);
+            }
+        }
+        catch(Exception ex) {
+            task.LogMessage(ex.Message);
+        }
+    }
+
+    async Task AsyncExec(List&lt;object&gt; items) {
+    	ReportTask task = Model;
+        Report report = task.Report;
+        try {
+            task.LogMessage($"Starting Thread");
+            
+            while (true) {
+                object item;
+                lock (task) {
+                    item = items.FirstOrDefault();
+                    if (item != null) {
+                        items.Remove(item);
+                        task.LogMessage($"---------------------------------------------- {items.Count} Items left.");
+                    }
+                }
+                if (report.Cancel || item == null) break;
+
+                //Execute children
+                foreach (var child in task.Tasks.Where(i=&gt; i.Enabled).OrderBy(i =&gt; i.SortOrder))
+                {                
+                    if (report.Cancel) break;
+                    child.InitParameters();
+                    ReportTask newTask = (ReportTask) Helper.Clone(child);
+                    newTask.Report = report;
+                    newTask.InitReferences();
+
+                    task.LogMessage($"Processing task {newTask.Name} for item {item.ToString()}");
+                    newTask.ExecInput = item;
+                    newTask.Execute();
+                }            
+            }                
+        }
+        catch (Exception ex) {
+            task.HandleException(ex);
+        }
+        finally {
+            task.LogMessage($"Ending Thread");
+        }
+    }    
+}
+
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>c50c4f0f-6359-4319-93c1-271666aeac5d</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>3a1bd92b-dbca-4191-be50-809ca651f920</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>6543b332-f08f-45ad-8faa-a9946a05e76d</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>6f438baa-b784-4a94-b9e5-b83773a067d8</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>dcd76024-6ff0-4fbf-b93d-c5dd028bcf0c</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>6d6cf9c9-6943-443a-816f-c7daf301391c</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>4448bd50-10dd-4db5-9607-46753bc75651</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>8eb86ade-48aa-470b-b214-ef8f13a694e3</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>ded83c00-59d5-4067-a997-feabcd84f7ad</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>6b1caf87-2c08-4c10-bed6-b78186e1d17c</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Schedules>
+    <ReportSchedule>
+      <GUID>3f8c027c-7254-4667-814f-ce16f4438907</GUID>
+      <Name>Daily at 10am</Name>
+    </ReportSchedule>
+    <ReportSchedule>
+      <GUID>94e737bd-7c76-47df-aee3-3bcb25905d11</GUID>
+      <Name>Monday at 6am</Name>
+    </ReportSchedule>
+  </Schedules>
+  <Cancel>false</Cancel>
+</Report>

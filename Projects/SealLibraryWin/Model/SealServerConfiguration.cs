@@ -59,6 +59,7 @@ namespace Seal.Model
                 GetProperty("TaskFolderName").SetIsReadOnly(_schedulerMode != SchedulerMode.Windows);
                 GetProperty("OuterProcess").SetIsBrowsable(!ForPublication);
                 GetProperty("OuterProcess").SetIsReadOnly(_schedulerMode == SchedulerMode.Windows);
+                GetProperty("ScheduleSequencerPath").SetIsBrowsable(!ForPublication);
 
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
                 GetProperty("NumberGroupSeparator").SetIsBrowsable(!ForPublication);
@@ -322,6 +323,19 @@ namespace Seal.Model
 #endif
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
+
+        const string DefaultScheduleSequencerPath = "System/800 Schedule - Sequencer.srex";
+        /// <summary>
+        /// Path of the Schedule Sequencer report.
+        /// </summary>
+#if WINDOWS
+        [Category("Report Scheduler Settings"), DisplayName("Schedule Sequencer"), Description("Path of the Schedule Sequencer report"), Id(4, 2)]
+        [DefaultValue(DefaultScheduleSequencerPath)]
+#endif
+        public string ScheduleSequencerPath { get; set; } = DefaultScheduleSequencerPath;
+        public bool ShouldSerializeScheduleSequencerPath() { return ScheduleSequencerPath != DefaultScheduleSequencerPath; }
+
+
         /// <summary>
         /// If true and the scheduler in executed in Service, Worker or Web Server, schedules is executed in an outer process forked by the initiator process. If false, the schedule is executed in a dedicated thread of the initiator.
         /// </summary>
@@ -330,7 +344,6 @@ namespace Seal.Model
         [DefaultValue(true)]
 #endif
         public bool OuterProcess { get; set; } = true;
-
 
 
         bool _auditEnabled = false;
@@ -802,6 +815,35 @@ namespace Seal.Model
             return attribute?.DateTime ?? default(DateTime);
         }
 
+        Report _scheduleSequencerReport = null;
+        /// <summary>
+        /// Schedule Sequencer Report if defined
+        /// </summary>
+        public Report ScheduleSequencerReport
+        {
+            get
+            {
+                Report result = null;
+                if (!string.IsNullOrEmpty(ScheduleSequencerPath))
+                {
+                    var path = System.IO.Path.Combine(Repository.ReportsFolder, ScheduleSequencerPath);
+                    if (System.IO.Path.Exists(path))
+                    {
+                        //Reload report if necessary
+                        if (_scheduleSequencerReport == null || (_scheduleSequencerReport.LastModification != File.GetLastWriteTime(path))) _scheduleSequencerReport = Report.LoadFromFile(path, Repository, false);
+                    }
+                }
+                return _scheduleSequencerReport;
+            }
+        }
+
+        /// <summary>
+        /// List of schedules defined in the sequencer report
+        /// </summary>
+        public List<ReportSchedule> GetSequencerReportSchedules()
+        {
+            return (ScheduleSequencerReport != null ? ScheduleSequencerReport.Schedules : new List<ReportSchedule>());
+        }
 
         /// <summary>
         /// Key name and values used by the application and stored at server level

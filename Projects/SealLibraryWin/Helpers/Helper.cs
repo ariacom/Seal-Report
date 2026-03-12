@@ -681,7 +681,8 @@ namespace Seal.Helpers
                                 catch (Exception ex)
                                 {
                                     Console.WriteLine(message + "\r\n" + ex.Message);
-                                };
+                                }
+                                ;
                             }
                         }
                     }
@@ -695,25 +696,25 @@ namespace Seal.Helpers
 
         public static void WriteLogException(string context, Exception ex)
         {
-            var msg = $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}";
-            var fullMessage = string.Format("**********\r\n{0} Exception\r\n{1}\r\n\r\n", DateTime.Now, msg);
-            if (Repository.IsInstanceCreated)
-            {
-                WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
-                if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
-            }
-            else
-            {
-                var path = Repository.FindRepository();
-                var pathLogs = Path.Combine(path, "Logs");  
-
-                if (Directory.Exists(pathLogs)) WriteDailyLog(DailyLogEvents, pathLogs, 30, fullMessage);
-                else if (Directory.Exists(path)) WriteDailyLog(DailyLogEvents, path, 30, fullMessage);
-                else WriteDailyLog(DailyLogEvents, FileHelper.TempApplicationDirectory, 30, fullMessage);
-            }
-
             try
             {
+                var msg = $"Exception got in {context}\r\n{ex.Message}\r\n{ex.StackTrace}";
+                var fullMessage = string.Format("**********\r\n{0} Exception\r\n{1}\r\n\r\n", DateTime.Now, msg);
+                if (Repository.IsInstanceCreated)
+                {
+                    WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
+                    if (ex.InnerException != null) WriteDailyLog(DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"Inner Exception:\r\n{ex.InnerException.Message}\r\n{ex.InnerException.StackTrace}");
+                }
+                else
+                {
+                    var path = Repository.FindRepository();
+                    var pathLogs = Path.Combine(path, "Logs");
+
+                    if (Directory.Exists(pathLogs)) WriteDailyLog(DailyLogEvents, pathLogs, 30, fullMessage);
+                    else if (Directory.Exists(path)) WriteDailyLog(DailyLogEvents, path, 30, fullMessage);
+                    else WriteDailyLog(DailyLogEvents, FileHelper.TempApplicationDirectory, 30, fullMessage);
+                }
+
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", $"{context}\r\n{ex.Message}", EventLogEntryType.Error);
             }
             catch { }
@@ -1093,8 +1094,8 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-                 /// Add email address to a MailAddressCollection
-                 /// </summary>
+        /// Add email address to a MailAddressCollection
+        /// </summary>
         static public string[] GetEmailAddresses(string input)
         {
             if (!string.IsNullOrEmpty(input))

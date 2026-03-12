@@ -171,7 +171,7 @@ namespace Seal.Model
                     {
                         if (!Repository.Instance.Configuration.OuterProcess)
                         {
-                            ReportExecution.ExecuteReportSchedule(schedule.GUID, report);
+                            ReportExecution.ExecuteReportSchedule(schedule.GUID, null, report);
                         }
                         else
                         {

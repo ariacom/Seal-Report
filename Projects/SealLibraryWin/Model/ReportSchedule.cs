@@ -36,6 +36,7 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("OutputName").SetIsBrowsable(!IsTasksSchedule);
                 GetProperty("IsTasksSchedule").SetIsBrowsable(IsTasksSchedule);
+                GetProperty("ScheduleSequencerGUID").SetIsBrowsable(Report.Repository.Configuration.ScheduleSequencerReport == null || Report.Repository.Configuration.ScheduleSequencerReport.FilePath != Report.FilePath);
 
                 //Seal scheduler
                 GetProperty("SealEnabled").SetIsBrowsable(Report.Repository.UseSealScheduler);
@@ -50,6 +51,19 @@ namespace Seal.Model
                 GetProperty("SealRepeatInterval").SetIsBrowsable(Report.Repository.UseSealScheduler);
                 GetProperty("SealRepeatDuration").SetIsBrowsable(Report.Repository.UseSealScheduler);
                 GetProperty("SealNextExecution").SetIsBrowsable(Report.Repository.UseSealScheduler);
+
+                GetProperty("SealEnabled").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealStart").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealEnd").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealType").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealDaysInterval").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealWeeksInterval").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealWeekdays").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealMonths").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealDays").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealRepeatInterval").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealRepeatDuration").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
+                GetProperty("SealNextExecution").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
 
                 GetProperty("IsEnabled").SetIsBrowsable(!Report.Repository.UseSealScheduler);
                 GetProperty("LastRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
@@ -115,7 +129,7 @@ namespace Seal.Model
         /// True if the schedule is enabled
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Is enabled"), Description("True if the schedule is enabled."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Is enabled"), Description("True if the schedule is enabled."), Id(4, 1)]
         [DefaultValue(false)]
 #endif
         [XmlIgnore]
@@ -131,11 +145,32 @@ namespace Seal.Model
             }
         }
 
+
+        private string _scheduleSequencerGUID;
+        /// <summary>
+        /// If set, the report will be executed from the Schedule defined in the Schedule Sequencer Report.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Trigger from sequencer report"), Description("If set, the report will be executed from the Schedule defined in the Schedule Sequencer Report."), Id(3, 1)]
+        [TypeConverter(typeof(SequencerScheduleConverter))]
+#endif
+        public string ScheduleSequencerGUID
+        {
+            get { return _scheduleSequencerGUID; }
+            set
+            {
+                _scheduleSequencerGUID = value;
+#if WINDOWS
+                UpdateEditor();
+#endif
+            }
+        }
+
         /// <summary>
         /// Start date and time of the schedule
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Start date"), Description("Start date and time of the schedule."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Start date"), Description("Start date and time of the schedule."), Id(5, 1)]
 #endif
         [XmlIgnore]
         public DateTime SealStart
@@ -158,7 +193,7 @@ namespace Seal.Model
         /// End date and time of the schedule
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("End date"), Description("End date and time of the schedule."), Id(4, 1)]
+        [Category("Definition"), DisplayName("End date"), Description("End date and time of the schedule."), Id(6, 1)]
 #endif
         [XmlIgnore]
         public DateTime SealEnd
@@ -181,7 +216,7 @@ namespace Seal.Model
         /// Type of schedule trigger
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Trigger type"), Description("Type of schedule trigger."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Trigger type"), Description("Type of schedule trigger."), Id(7, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(TriggerType.Daily)]
 #endif
@@ -206,7 +241,7 @@ namespace Seal.Model
         /// Number of days
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Recur every (days)"), Description("Number of days."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Recur every (days)"), Description("Number of days."), Id(8, 1)]
 #endif
         [XmlIgnore]
         public int SealDaysInterval
@@ -229,7 +264,7 @@ namespace Seal.Model
         /// Number of weeks
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Recur every (weeks)"), Description("Number of weeks."), Id(7, 1)]
+        [Category("Definition"), DisplayName("Recur every (weeks)"), Description("Number of weeks."), Id(9, 1)]
 #endif
         [XmlIgnore]
         public int SealWeeksInterval
@@ -252,7 +287,7 @@ namespace Seal.Model
         /// Days of the week to execute the schedule
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Week days"), Description("Days of the week to execute the schedule."), Id(8, 1)]
+        [Category("Definition"), DisplayName("Week days"), Description("Days of the week to execute the schedule."), Id(10, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
 #endif
         [XmlIgnore]
@@ -276,7 +311,7 @@ namespace Seal.Model
         /// Months to execute the schedule
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Months"), Description("Months to execute the schedule."), Id(9, 1)]
+        [Category("Definition"), DisplayName("Months"), Description("Months to execute the schedule."), Id(11, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
 #endif
         [XmlIgnore]
@@ -300,7 +335,7 @@ namespace Seal.Model
         /// Days of the month to execute the schedule
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Days of the month"), Description("Days of the month to execute the schedule."), Id(10, 1)]
+        [Category("Definition"), DisplayName("Days of the month"), Description("Days of the month to execute the schedule."), Id(12, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
 #endif
         [XmlIgnore]
@@ -324,7 +359,7 @@ namespace Seal.Model
         /// Interval of the schedule repetition
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Repeat schedule every"), Description("Interval of the schedule repetition."), Id(11, 1)]
+        [Category("Definition"), DisplayName("Repeat schedule every"), Description("Interval of the schedule repetition."), Id(13, 1)]
         [DefaultValue("None")]
         [TypeConverter(typeof(ScheduleRepeatConverter))]
 #endif
@@ -349,7 +384,7 @@ namespace Seal.Model
         /// Duration of the schedule repetition
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("For a duration of"), Description("Duration of the schedule repetition."), Id(12, 1)]
+        [Category("Definition"), DisplayName("For a duration of"), Description("Duration of the schedule repetition."), Id(14, 1)]
         [DefaultValue("Indefinitely")]
         [TypeConverter(typeof(ScheduleRepeatConverter))]
 #endif
@@ -374,7 +409,7 @@ namespace Seal.Model
         /// Next execution planned for the schedule
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Next execution"), Description("Next execution planned for the schedule."), Id(13, 1)]
+        [Category("Definition"), DisplayName("Next execution"), Description("Next execution planned for the schedule."), Id(15, 1)]
 #endif
         [XmlIgnore]
         public DateTime? SealNextExecution
@@ -673,6 +708,25 @@ namespace Seal.Model
         /// </summary>
         public void SynchronizeTask()
         {
+            if (!string.IsNullOrEmpty(ScheduleSequencerGUID))
+            {
+                var schedule = Report.Repository.Configuration.GetSequencerReportSchedules().FirstOrDefault(i => i.GUID == ScheduleSequencerGUID);
+                if (schedule != null)
+                {
+                    try
+                    {
+                        if (Report.Repository.UseSealScheduler) SealReportScheduler.Instance.DeleteSchedule(GUID);
+                        else Report.TaskFolder.DeleteTask(Task.Name);
+                    }
+                    catch { }
+                    return;
+                }
+                else
+                {
+                    ScheduleSequencerGUID = "";
+                }
+            }
+
             if (Report.Repository.UseSealScheduler)
             {
                 if (File.Exists(SealSchedule.FilePath))
@@ -696,7 +750,7 @@ namespace Seal.Model
                 var action = definition.Actions.FirstOrDefault() as ExecAction;
                 if (action != null)
                 {
-                    var path = action.Path.Replace("\"","");
+                    var path = action.Path.Replace("\"", "");
                     if (!File.Exists(path))
                     {
                         //Migration to 6.6 update path if required

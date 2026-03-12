@@ -1,0 +1,9 @@
+#bar_top, #menu-main-button > span, #menu-main-button
+{
+    background-color: #908A85 !important;
+}
+
+#navbarCollapse
+{
+    background-color: #f8f8f8 !important;
+}

@@ -41,7 +41,8 @@ namespace SealTaskScheduler
                         if (mws > 0) Process.GetCurrentProcess().MaxWorkingSet = new IntPtr(Convert.ToInt64(Math.Max(1, mws) * 1024 * 1024 * 1024));
 
                     }
-                    ReportExecution.ExecuteReportSchedule(args[0].ToString());
+                    var reportPath = args.Length > 1 ? args[1].ToString() : null;
+                    ReportExecution.ExecuteReportSchedule(args[0].ToString(), reportPath);
                 }
                 catch (Exception ex)
                 {

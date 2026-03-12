@@ -40,7 +40,7 @@ namespace Seal.Model
                 GetProperty("PreScript").SetIsBrowsable(true);
                 GetProperty("PostScript").SetIsBrowsable(true);
                 GetProperty("ViewParameters").SetIsBrowsable(true);
-
+                
                 GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputFileServerDevice);
                 if (Device is OutputFileServerDevice) GetProperty("FolderPath").SetDescription("Path of the folder used to generate the report result.");
                 GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputFileServerDevice);
@@ -150,6 +150,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// The view used to execute the report output
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("View name"), Description("The view used to execute the report output."), Id(2, 1)]
+        [TypeConverter(typeof(ReportViewConverter))]
+#endif
+        public string ViewGUID { get; set; }
+
+        /// <summary>
         /// If the models of the report do not have any record, the output generation is cancelled
         /// </summary>
 #if WINDOWS
@@ -186,14 +195,6 @@ namespace Seal.Model
         public List<OutputParameter> ViewParameters { get; set; } = new List<OutputParameter>();
         public bool ShouldSerializeViewParameters() { return ViewParameters.Count > 0; }
 
-        /// <summary>
-        /// The view used to execute the report output
-        /// </summary>
-#if WINDOWS
-        [Category("Definition"), DisplayName("View name"), Description("The view used to execute the report output."), Id(2, 1)]
-        [TypeConverter(typeof(ReportViewConverter))]
-#endif
-        public string ViewGUID { get; set; }
 
         /// <summary>
         /// Path of the folder used to generate the report result.

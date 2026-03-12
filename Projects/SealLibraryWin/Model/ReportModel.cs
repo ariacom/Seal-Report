@@ -2126,6 +2126,9 @@ model.ResultTable = query2.CopyToDataTable2();
                     }
                 }
 
+                //var js = JoinPathFinder.GetJoinsForPath(Source.MetaData.Joins.Where(i => JoinsToUse.Count == 0 || (JoinsToUse.Contains(i.GUID))).ToList(), (from C in FromTables select C.GUID).ToList());
+               // var wc = JoinPathFinder.BuildFromClause(Source.MetaData.Joins.Where(i => JoinsToUse.Count == 0 || (JoinsToUse.Contains(i.GUID))).ToList(), (from C in FromTables select C.GUID).ToList());
+
                 _buildTimer = DateTime.Now;
                 _directCount = 0;
                 _indirectCount = 0;
@@ -2177,7 +2180,19 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     List<JoinPath> resultPaths2 = new List<JoinPath>();
                     //no direct joins found or more than 3 joins...try using several path...
-                    foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count))
+
+                    //add simple join in resultPaths
+                    /*
+                    foreach (var join in Source.MetaData.Joins.Where(i => i.LeftTableGUID != null))
+                    {
+                        //Filter in joins to use here
+                        if (JoinsToUse.Count > 0 && !JoinsToUse.Contains(join.GUID)) continue;
+
+                        resultPaths.Add(new JoinPath() { startTable = join.LeftTable, currentTable = join.LeftTable, finalTable = join.RightTable, joins = [join] });
+                        if (join.IsBiDirectional) resultPaths.Add(new JoinPath() { startTable = join.RightTable, currentTable = join.RightTable, finalTable = join.LeftTable, joins = [join] });
+                    }*/
+
+                    foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count))
                     {
                         JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse) };
                         //newPath.print();
