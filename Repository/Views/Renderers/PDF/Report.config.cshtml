@@ -22,4 +22,8 @@
             });
     Template.Parameters.Add(new Parameter() { Name = "page_orientation", DisplayName = "Page orientation", Value="portrait", Description = "Define the pages orientation.", Enums = new string[] { "portrait|Portrait", "landscape|Landscape" } });
     Template.Parameters.Add(new Parameter() { Name = "force_charts", DisplayName = "Charts: Force ScottPlot", BoolValue = true, Description = "If true, charts are converted to ScottPlot charts for a better rendering." });
+
+    // QuestPDF Companion integration
+    Template.Parameters.Add(new Parameter() { Name = "show_in_companion", DisplayName = "Show report in QuestPDF companion app", BoolValue = false, Description = "If true, report is generated in the quest pdf companion app. The app must be opened and show 'Active and Listening' in the port settings." });
+    Template.Parameters.Add(new Parameter() { Name = "companion_port", DisplayName = "Port configured in QuestPDF companion app", NumericValue = 12500, Description = "Change port value to match the configured value in Companion settings, default is 12500." });
 }
