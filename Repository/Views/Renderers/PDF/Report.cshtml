@@ -3,6 +3,7 @@
 @using QuestPDF.Infrastructure
 @using QuestPDF.Fluent
 @using QuestPDF.Helpers
+@using QuestPDF.Companion
 @using Colors = QuestPDF.Helpers.Colors
 @using Svg.Skia
 @using PuppeteerSharp
@@ -49,11 +50,25 @@
             Thread.Sleep(200);
         }
 
-        //Generate the PDF result
-        document.GeneratePdf(report.ResultFilePath);
-
+        if (renderer.GetBoolValue("show_in_companion") && report.ExecutionContext == ReportExecutionContext.DesignerReport)
+        {
+            // Send to companion — no PDF generated, so designer won't launch viewer
+            int port = renderer.GetNumericValue("companion_port");
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(3));
+            try
+            {
+                document.ShowInCompanionAsync(port, cts.Token).GetAwaiter().GetResult();
+                report.SkipExternalViewer = true;
+            }
+            catch (OperationCanceledException) { }
+        }
+        else
+        {
+            document.GeneratePdf(report.ResultFilePath);
+        }
     }
-    catch(Exception ex) 
+    catch (Exception ex)
     {
         var exceptionDocument = new PDFExceptionDocument() { Exception = ex };
         exceptionDocument.GeneratePdf(report.ResultFilePath);

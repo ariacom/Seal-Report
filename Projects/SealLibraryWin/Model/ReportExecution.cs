@@ -312,7 +312,7 @@ namespace Seal.Model
                 if (!Report.Cancel) executeTasks(ExecutionStep.AfterExecution);
 
                 //Open external result viewer
-                if (!Report.HasErrors && !Report.ForOutput && Report.ExecutionContext == ReportExecutionContext.DesignerReport && !Report.CheckingExecution && Report.HasExternalViewer)
+                if (!Report.HasErrors && !Report.ForOutput && Report.ExecutionContext == ReportExecutionContext.DesignerReport && !Report.CheckingExecution && Report.HasExternalViewer && !Report.SkipExternalViewer)
                 {
                     var p = new Process();
                     p.StartInfo = new ProcessStartInfo(Report.ResultFilePath) { UseShellExecute = true };

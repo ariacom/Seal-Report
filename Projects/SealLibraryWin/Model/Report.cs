@@ -2739,6 +2739,12 @@ namespace Seal.Model
             return Models.FirstOrDefault(i => i.Name == modelName);
         }
 
+        /// <summary>
+        /// True if being shown in companion
+        /// </summary>
+        [XmlIgnore]
+        public bool SkipExternalViewer { get; set; } = false;
+
         #region Translation Helpers
 
         string TranslationFilePath
