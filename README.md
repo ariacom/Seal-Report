@@ -13,7 +13,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **Excel and PDF**: Have a full control of your report result in Excel (use of EPPlus library) or PDF (use of QuestPDF library). Several other formats are available (XML, Json, Text, CSV) or can be easily customized.
 * **KPI and Widget Views**: Create and display your Key Performance Indicators in a single report.
 * **Web Report Server**: Publish your reports on the web (Support of Windows and Linux OS with .Net Core).
-* **Report scheduler**: Schedule your report executions and generate results in folders, FTP, SFTP server or send them by emails (integrated with the Windows Tasks Scheduler or available as a service)
+* **Report scheduler**: Schedule your report executions and generate results in folders, FTP, SFTP server or send them by emails (integrated with the Windows Tasks Scheduler or available as a service) via SMTP, SendGrid or MS Graph.
 * **Drill Down navigation and Sub Reports:** Navigate in your report result to drill to a detail or to execute another report.
 * **Report Tasks & ETL:** Define tasks to perform your ETL or batch operations (data load, excel load, file download from FTP or SFTP, zip, backup, data processing, etc.) or to trigger procedures from external assemblies.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
