@@ -130,7 +130,8 @@ namespace Seal
 
             treeViewFilter.TextChanged += (sender, e) =>
             {
-                TreeViewHelper.ApplyTreeViewFilter(mainTreeView, treeViewFilter.Text, _originalNodes);
+                if (treeViewFilter.Text.Length > 2) TreeViewHelper.ApplyTreeViewFilter(mainTreeView, treeViewFilter.Text, _originalNodes);
+                else if (treeViewFilter.Text.Length == 0) init();
                 treeViewFilter.Focus();
             };
             TreeViewHelper.SendMessage(treeViewFilter.Handle, TreeViewHelper.EM_SETCUEBANNER, 0, "Type to filter...");

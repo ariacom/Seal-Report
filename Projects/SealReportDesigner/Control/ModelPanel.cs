@@ -92,10 +92,14 @@ namespace Seal.Controls
 
             treeViewFilter.TextChanged += (sender, e) =>
             {
-                if (string.IsNullOrEmpty(treeViewFilter.Text)) initTreeView();
-                else
+                if (treeViewFilter.Text.Length > 2)
                 {
                     TreeViewHelper.ApplyTreeViewFilter(elementTreeView, treeViewFilter.Text, _originalNodes);
+                    treeViewFilter.Focus();
+                }
+                else if (treeViewFilter.Text.Length == 0) {
+                    elementTreeView.Tag = "";
+                    initTreeView();
                     treeViewFilter.Focus();
                 }
             };
@@ -105,6 +109,7 @@ namespace Seal.Controls
             {
                 elementTreeView.Tag = "";
                 treeViewFilter.Text = "";
+                initTreeView();
             };
 
             initTreeView();

@@ -75,11 +75,11 @@
                         var value = prop.GetValue(col);
                         if (value != null &amp;&amp; prop.Name == "EnumGUID")
                         {
-                            value = col.Enum.Name;
+                            value = col.Enum?.Name;
                         }
                         if (value != null &amp;&amp; prop.Name == "MetaTable")
                         {
-                            value = col.MetaTable.Name;
+                            value = col.MetaTable?.Name;
                         }
                         values.Add(value != null ? value.ToString() : "");
                     }

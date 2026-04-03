@@ -369,7 +369,7 @@ namespace Seal.Model
     var user = ""e5c47ab9-54c7-4e51-8626-0f02a72b6dd7"";
     
     // Credential
-    var credentials = new ClientSecretCredential(tenant, client,  device.ClearAzureSecret);
+    var credentials = new ClientSecretCredential(tenant, client, device.ClearAzureSecret);
 
     // Graph client instance
     var graphClient = new GraphServiceClient(credentials, scopes);
@@ -519,7 +519,6 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Error = "Error during password decryption:" + ex.Message;
-                    TypeDescriptor.Refresh(this);
                     return Password;
                 }
             }
@@ -533,7 +532,6 @@ namespace Seal.Model
                 {
                     Error = "Error during password encryption:" + ex.Message;
                     Password = value;
-                    TypeDescriptor.Refresh(this);
                 }
             }
         }
@@ -624,7 +622,6 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Error = "Error during SendGridKey decryption:" + ex.Message;
-                    TypeDescriptor.Refresh(this);
                     return SendGridKey;
                 }
             }
@@ -638,7 +635,6 @@ namespace Seal.Model
                 {
                     Error = "Error during SendGridKey encryption:" + ex.Message;
                     SendGridKey = value;
-                    TypeDescriptor.Refresh(this);
                 }
             }
         }
@@ -675,7 +671,6 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Error = "Error during Azure Secret decryption:" + ex.Message;
-                    TypeDescriptor.Refresh(this);
                     return AzureSecret;
                 }
             }
@@ -689,7 +684,6 @@ namespace Seal.Model
                 {
                     Error = "Error during Azure Secret encryption:" + ex.Message;
                     AzureSecret = value;
-                    TypeDescriptor.Refresh(this);
                 }
             }
         }

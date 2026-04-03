@@ -765,34 +765,28 @@ namespace Seal.Model
                     definition.RegistrationInfo.Source = TaskSource;
                     definition.RegistrationInfo.Description = description;
 
+
                     //If name has changed, we have to delete then insert it again...
                     string oldName = Task.Name;
-                    if (!string.IsNullOrEmpty(oldName) && TaskName != oldName)
-                    {
-                        Report.TaskFolder.DeleteTask(oldName);
-                        RegisterTaskDefinition(definition);
-                    }
-                    else
-                    {
-                        _task.RegisterChanges();
-                    }
+                    if (!string.IsNullOrEmpty(oldName) && TaskName != oldName) Report.TaskFolder.DeleteTask(oldName);
+                    RegisterTaskDefinition(definition);
                 }
             }
         }
 
         public void RegisterTaskDefinition(TaskDefinition definition)
         {
-            if (!Report.SchedulesWithCurrentUser)
+            var configuration = Report.Repository.Configuration;
+
+            definition.Principal.RunLevel = configuration.HighestPrivileges ? TaskRunLevel.Highest : TaskRunLevel.LUA;
+            if (string.IsNullOrEmpty(configuration.SchedulerUser))
             {
-                definition.Principal.RunLevel = TaskRunLevel.Highest;
                 _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, definition, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
             }
             else
             {
-                //default user
-                //FUTURE required the user password...., 
-                //definition.Principal.LogonType = TaskLogonType.InteractiveTokenOrPassword;
-                _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, definition);
+                //Specific user
+                _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, definition, TaskCreation.CreateOrUpdate, configuration.SchedulerUser, configuration.ClearSchedulerPassword, TaskLogonType.InteractiveTokenOrPassword);
             }
         }
 
@@ -858,7 +852,7 @@ namespace Seal.Model
                     if (_task == null)
                     {
                         Report.SchedulesModified = true;
-                        if (Report.TaskFolder.GetTasks().FirstOrDefault(i => i.Name.EndsWith(GUID) && i.Definition.RegistrationInfo.Source.EndsWith(GUID)) != null)
+                        if (Report.TaskFolder.GetTasks().FirstOrDefault(i => i.Name != null && i.Name.EndsWith(GUID) && i.Definition != null && i.Definition.RegistrationInfo != null && i.Definition.RegistrationInfo.Source != null && i.Definition.RegistrationInfo.Source.EndsWith(GUID)) != null)
                         {
                             //change my GUID as another schedule exists with this GUID
                             GUID = Guid.NewGuid().ToString();

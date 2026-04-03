@@ -8,6 +8,7 @@
     separator = string.IsNullOrEmpty(separator) ? report.Repository.Configuration.CsvSeparator : separator;
     separator = string.IsNullOrEmpty(separator) ? report.Repository.CultureInfo.TextInfo.ListSeparator : separator;
     bool useFormat = view.CSVRenderer.GetBoolValue("use_display_format", true);
+    bool addLastSeparator = view.CSVRenderer.GetBoolValue("add_last_separator", true);
 }
 @foreach (ResultPage page in reportModel.Pages)
 {
@@ -17,7 +18,7 @@
         {
             ResultCell header = page.PageTable[0,i];
             ResultCell value = page.PageTable[1,i];
-            @Raw(header.CSVValue(false, separator) + value.CSVValue(useFormat, separator) + "\r\n")
+            @Raw(header.CSVValue(false, separator) + value.CSVValue(useFormat, (!addLastSeparator && i == page.PageTable.ColumnCount - 1) ? "" : separator) + "\r\n")
         }
     }
     if (page.DataTable != null && view.GetBoolValue("show_data_tables"))
@@ -26,7 +27,7 @@
         {
             for (int col = 0; col < page.DataTable.ColumnCount; col++)
             {
-                @Raw(page.DataTable[row,col].CSVValue(useFormat, separator))
+                @Raw(page.DataTable[row, col].CSVValue(useFormat, (!addLastSeparator && col == page.DataTable.ColumnCount - 1) ? "" : separator))
             }
             @Raw("\r\n")
         }

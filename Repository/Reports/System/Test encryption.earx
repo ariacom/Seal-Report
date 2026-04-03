@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>6bdade82-0016-4cc4-a571-72f63544e38f</GUID>
+  <ViewGUID>084ae3e2-022a-4db5-a1ae-f19df455dcb7</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>6bf3797e-be9e-464a-9d67-7298215b133b</GUID>
+      <Name>Audit (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>39f6e388-1826-42d1-8a3e-c476e542c80c</GUID>
+      <Name>ER APSYS (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>true</IsDefault>
+      <MetaData />
+      <MetaSourceGUID>C2D620CF-6FC1-49A4-84C9-08106FBB7FD4</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>8695a1ad-05dd-4fea-8245-c15f62a9cf57</GUID>
+      <Name>ER APSYS Oracle (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>fa0ba870-9b5f-4bfa-8f4a-c53f5fa5043b</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>f2371cf9-bf77-40b8-a822-7c4c81e1a3b0</GUID>
+      <Name>Model</Name>
+      <SourceGUID>39f6e388-1826-42d1-8a3e-c476e542c80c</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>b7920b46-bf3e-4202-ad4d-9bea5530b654</GUID>
+      <Name>Default</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>6bf3797e-be9e-464a-9d67-7298215b133b</SourceGUID>
+      <Script>@using System.Security.Cryptography;
+@using System.IO;
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    
+    var cmdShell = "\r\n";
+    foreach (var key in report.Repository.Configuration.KeyValues) {
+        CspParameters csp = new CspParameters();
+        csp.KeyContainerName = key.Name;
+        csp.Flags = CspProviderFlags.UseMachineKeyStore;
+        RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(csp);
+        task.LogMessage(rsa.CspKeyContainerInfo.KeyContainerName + " " + rsa.CspKeyContainerInfo.UniqueKeyContainerName);
+        //Power shell to add rights
+        cmdShell += $@"&amp; ""C:\Windows\Microsoft.NET\Framework64\v4.0.30319\aspnet_regiis.exe"" -pa ""{rsa.CspKeyContainerInfo.UniqueKeyContainerName}"" ""adbames\s-ereports""" + "\r\n";        
+    }
+    task.LogMessage(cmdShell);
+        
+    task.LogMessage("Key=" + report.Repository.GetApplicationKey("demo user password"));
+    task.LogMessage("Pwd=" + report.Repository.Configuration.ClearSchedulerPassword);
+    task.LogMessage("Pwd=" + report.Sources.First(i =&gt; i.Name.StartsWith("ER APSYS Oracle")).Connection.ClearPassword);
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>084ae3e2-022a-4db5-a1ae-f19df455dcb7</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>0901bafb-110d-4f10-9e21-74b4c9c78753</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>57e3e64e-283e-40f1-bf63-91518592f38a</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c179c6c3-3d3e-4f71-9617-73a0e2556422</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>1a379094-9314-4961-9cad-1e06f69b7b8b</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>a662a6ca-57a1-474d-960c-ca46c73e9bdf</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>49246099-6116-4026-9691-a2fce3f10c09</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>36a63c4e-b83d-4389-af9e-43ced330fe1f</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>ae437ef3-a647-4504-8490-3e2fc7eefc00</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>f2371cf9-bf77-40b8-a822-7c4c81e1a3b0</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

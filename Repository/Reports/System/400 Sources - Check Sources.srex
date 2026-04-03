@@ -466,10 +466,7 @@
                 report.LogMessage("Processing data source '{0}'", source.Name);
                 foreach (MetaConnection item in source.Connections.OrderBy(i =&gt; i.Name))
                 {
-                    if (report.Cancel) { break; }                
-                    if (source.IsNoSQL &amp;&amp; !item.ConnectionString.ToLower().Contains("provider=")) {
-                        continue;
-                    }
+                    if (report.Cancel) { break; }
                     report.LogMessage("Checking connection '{0}':", item.Name);
                     item.CheckConnection();
                 }                

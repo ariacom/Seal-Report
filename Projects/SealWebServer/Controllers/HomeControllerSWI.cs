@@ -803,7 +803,6 @@ namespace SealWebServer.Controllers
                         {
                             //Re-init schedules...
                             var report = Report.LoadFromFile(destinationPath, Repository, false);
-                            report.SchedulesWithCurrentUser = false;
                             report.SynchronizeTasks();
 
                         }

@@ -121,7 +121,7 @@
             // 
             treeViewFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             treeViewFilter.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            treeViewFilter.Location = new System.Drawing.Point(0, 5);
+            treeViewFilter.Location = new System.Drawing.Point(4, 5);
             treeViewFilter.Name = "treeViewFilter";
             treeViewFilter.Size = new System.Drawing.Size(152, 16);
             treeViewFilter.TabIndex = 0;
@@ -137,7 +137,7 @@
             elementTreeView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             elementTreeView.Name = "elementTreeView";
             elementTreeView.SelectedImageIndex = 0;
-            elementTreeView.Size = new System.Drawing.Size(208, 401);
+            elementTreeView.Size = new System.Drawing.Size(208, 400);
             elementTreeView.TabIndex = 1;
             elementTreeView.ItemDrag += elementTreeView_ItemDrag;
             elementTreeView.BeforeSelect += ElementTreeView_BeforeSelect;

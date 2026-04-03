@@ -32,6 +32,9 @@ namespace Seal.Model
         public const string ApplicationKeysKeyName = "Application Keys";
         public const string ApplicationKeysKeyValue = "1*çéàèüwien42feäöü!???**";
 
+        public const string SchedulerPasswordKeyName = "Scheduler Password";
+        public const string SchedulerPasswordKeyValue = "eko934dj$$$12sdffwrkdk))";
+
         /// <summary>
         /// Current file path
         /// </summary>
@@ -60,6 +63,12 @@ namespace Seal.Model
                 GetProperty("OuterProcess").SetIsBrowsable(!ForPublication);
                 GetProperty("OuterProcess").SetIsReadOnly(_schedulerMode == SchedulerMode.Windows);
                 GetProperty("ScheduleSequencerPath").SetIsBrowsable(!ForPublication);
+                GetProperty("SchedulerUser").SetIsBrowsable(!ForPublication);
+                GetProperty("SchedulerUser").SetIsReadOnly(_schedulerMode != SchedulerMode.Windows);
+                GetProperty("ClearSchedulerPassword").SetIsBrowsable(!ForPublication);
+                GetProperty("ClearSchedulerPassword").SetIsReadOnly(_schedulerMode != SchedulerMode.Windows);
+                GetProperty("HighestPrivileges").SetIsBrowsable(!ForPublication);
+                GetProperty("HighestPrivileges").SetIsReadOnly(_schedulerMode != SchedulerMode.Windows);
 
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
                 GetProperty("NumberGroupSeparator").SetIsBrowsable(!ForPublication);
@@ -344,6 +353,67 @@ namespace Seal.Model
         [DefaultValue(true)]
 #endif
         public bool OuterProcess { get; set; } = true;
+
+        /// <summary>
+        /// Scheduler User
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Scheduler User Name"), Description("User name used to configure tasks in the Windows Task Scheduler. If empty, the SYSTEM user account is used."), Category("Report Scheduler Settings"), Id(5, 2)]
+#endif
+        public string SchedulerUser { get; set; }
+        public bool ShouldSerializeSchedulerUser() { return !string.IsNullOrEmpty(SchedulerPassword); }
+
+        /// <summary>
+        /// Scheduler Password
+        /// </summary>
+        public string SchedulerPassword { get; set; }
+        public bool ShouldSerializeSchedulerPassword() { return !string.IsNullOrEmpty(SchedulerPassword); }
+
+        /// <summary>
+        /// Scheduler Password in clear text
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Scheduler User Password"), PasswordPropertyText(true), Description("Password used to configure task in the Windows Task Scheduler."), Category("Report Scheduler Settings"), Id(6, 2)]
+#endif
+        [XmlIgnore]
+        public string ClearSchedulerPassword
+        {
+            get
+            {
+                try
+                {
+                    return Repository.DecryptValue(SchedulerPassword, SchedulerPasswordKeyName);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("ClearSchedulerPassword get", ex);
+                    return SchedulerPassword;
+                }
+            }
+            set
+            {
+                try
+                {
+                    SchedulerPassword = Repository.EncryptValue(value, SchedulerPasswordKeyName);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("ClearSchedulerPassword set", ex);
+                    TypeDescriptor.Refresh(this);
+                    SchedulerPassword = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// If true, the task for Windows Task scheduler is run with highest privileges.
+        /// </summary>
+#if WINDOWS
+        [Category("Report Scheduler Settings"), DisplayName("Run with Highest Privileges"), Description("If true, the task for Windows Task scheduler is run with highest privileges."), Id(7, 2)]
+        [DefaultValue(true)]
+#endif
+        public bool HighestPrivileges { get; set; } = true;
+
 
 
         bool _auditEnabled = false;
@@ -736,6 +806,10 @@ namespace Seal.Model
                 if (!_keyValues.Exists(i => i.Name == ApplicationKeysKeyName))
                 {
                     _keyValues.Add(new KeyValue() { Name = ApplicationKeysKeyName, Value = ApplicationKeysKeyValue });
+                }
+                if (!_keyValues.Exists(i => i.Name == SchedulerPasswordKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = SchedulerPasswordKeyName, Value = SchedulerPasswordKeyValue });
                 }
             }
         }

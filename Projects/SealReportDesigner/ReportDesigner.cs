@@ -127,7 +127,8 @@ namespace Seal
 
             treeViewFilter.TextChanged += (sender, e) =>
             {
-                TreeViewHelper.ApplyTreeViewFilter(mainTreeView, treeViewFilter.Text, _originalNodes);
+                if (treeViewFilter.Text.Length > 2) TreeViewHelper.ApplyTreeViewFilter(mainTreeView, treeViewFilter.Text, _originalNodes);
+                else if (treeViewFilter.Text.Length == 0) init();
                 treeViewFilter.Focus();
             };
             TreeViewHelper.SendMessage(treeViewFilter.Handle, TreeViewHelper.EM_SETCUEBANNER, 0, "Type to filter...");
@@ -164,7 +165,6 @@ namespace Seal
 
             showScriptErrorsToolStripMenuItem.Checked = Properties.Settings.Default.ShowScriptErrors;
             if (!Helper.IsMachineAdministrator()) Properties.Settings.Default.SchedulesWithCurrentUser = true;
-            schedulesWithCurrentUserToolStripMenuItem.Checked = Properties.Settings.Default.SchedulesWithCurrentUser;
 
             if (open)
             {
@@ -718,7 +718,6 @@ namespace Seal
             if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();
             toolsHelper.Report = _report;
             TemplateTextEditor.CurrentEntity = _report;
-            _report.SchedulesWithCurrentUser = Properties.Settings.Default.SchedulesWithCurrentUser;
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -740,7 +739,6 @@ namespace Seal
 
                 toolsHelper.Report = _report;
                 TemplateTextEditor.CurrentEntity = _report;
-                _report.SchedulesWithCurrentUser = Properties.Settings.Default.SchedulesWithCurrentUser;
 
                 if (!string.IsNullOrEmpty(_report.ExecutionErrors)) MessageBox.Show(_report.ExecutionErrors, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -812,14 +810,6 @@ namespace Seal
             Properties.Settings.Default.Save();
         }
 
-        private void schedulesWithCurrentUserToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            schedulesWithCurrentUserToolStripMenuItem.Checked = !schedulesWithCurrentUserToolStripMenuItem.Checked;
-            Properties.Settings.Default.SchedulesWithCurrentUser = schedulesWithCurrentUserToolStripMenuItem.Checked;
-            if (_report != null) _report.SchedulesWithCurrentUser = Properties.Settings.Default.SchedulesWithCurrentUser;
-            Properties.Settings.Default.Save();
-        }
-
         #endregion
 
         #region Tree View Handlers
@@ -851,7 +841,7 @@ namespace Seal
             if (selectedEntity != null && isChildNodeSelected)
             {
                 object newEntity = e.Node.Tag;
-                if (!_report.SchedulesWithCurrentUser && !_adminWarningDone && (newEntity is ReportSchedule || newEntity is ScheduleFolder) && !Helper.IsMachineAdministrator())
+                if (!_adminWarningDone && (newEntity is ReportSchedule || newEntity is ScheduleFolder) && !Helper.IsMachineAdministrator())
                 {
                     MessageBox.Show("We recommend to execute the 'Report Designer' application with the option 'Run as administrator' to edit the Schedules (part of the Windows Tasks Scheduler)...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     _adminWarningDone = true;

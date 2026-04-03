@@ -896,11 +896,6 @@ namespace Seal.Model
         [XmlIgnore]
         public bool SchedulesModified = false;
 
-        /// <summary>
-        /// True if the schedules have to be defined with the current user, otherwise SYSTEM is used
-        /// </summary>
-        [XmlIgnore]
-        public bool SchedulesWithCurrentUser = false;
 
         /// <summary>
         /// True if the report is being executed

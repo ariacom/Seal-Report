@@ -45,7 +45,6 @@ namespace Seal.Forms
         ToolStripMenuItem _exportSourceObjectsExcel = new ToolStripMenuItem() { Text = "Export Objects to an Excel file...", ToolTipText = "Export Data Source  Objects to an Excel file.", AutoToolTip = true };
         ToolStripMenuItem _importSourceObjects = new ToolStripMenuItem() { Text = "Import Objects from another Data Source file...", ToolTipText = "Import Data Source Objects from another Data Source file.", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedules = new ToolStripMenuItem() { Text = "Synchronize Report Schedules...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler", AutoToolTip = true };
-        ToolStripMenuItem _synchronizeSchedulesCurrentUser = new ToolStripMenuItem() { Text = "Synchronize Report Schedules with the logged user...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler using the current logged user", AutoToolTip = true };
         ToolStripMenuItem _executeDesigner = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Report Designer", ToolTipText = "run the Report Designer application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D))), ShowShortcutKeys = true };
         ToolStripMenuItem _executeManager = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Server Manager", ToolTipText = "run the Server Manager application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M))), ShowShortcutKeys = true };
         ToolStripMenuItem _openReportFolder = new ToolStripMenuItem() { Text = "Open Repository Reports Folder", ToolTipText = "open the Reports repository folder in Windows Explorer", AutoToolTip = true };
@@ -61,16 +60,13 @@ namespace Seal.Forms
 
             if (!forDesigner)
             {
-                toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
-
                 if (Helper.IsMachineAdministrator())
                 {
+                    toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
+
                     _synchronizeSchedules.Click += tools_Click;
                     toolsMenuItem.DropDownItems.Add(_synchronizeSchedules);
                 }
-
-                _synchronizeSchedulesCurrentUser.Click += tools_Click;
-                toolsMenuItem.DropDownItems.Add(_synchronizeSchedulesCurrentUser);
             }
 
             if (!forDesigner)
@@ -256,12 +252,12 @@ namespace Seal.Forms
                         }
                     }
                 }
-                else if (sender == _synchronizeSchedules || sender == _synchronizeSchedulesCurrentUser)
+                else if (sender == _synchronizeSchedules)
                 {
                     if (!Helper.CheckTaskSchedulerOS()) return;
                     thread = new Thread(delegate (object param)
                     {
-                        SynchronizeSchedules((ExecutionLogInterface)param, sender == _synchronizeSchedulesCurrentUser);
+                        SynchronizeSchedules((ExecutionLogInterface)param);
                     });
                 }
                 else if (sender == _executeManager || sender == _executeDesigner)
@@ -1108,7 +1104,7 @@ namespace Seal.Forms
                 log.Log("\r\n[UNEXPECTED ERROR RECEIVED]\r\n{0}\r\n", ex.Message);
             }
         }
-        void SynchronizeSchedules(ExecutionLogInterface log, string folder, Repository repository, ref int count, ref int errorCount, StringBuilder errorSummary, bool useCurrentUser)
+        void SynchronizeSchedules(ExecutionLogInterface log, string folder, Repository repository, ref int count, ref int errorCount, StringBuilder errorSummary)
         {
             log.Log("Checking folder '{0}'", folder);
             foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))
@@ -1118,7 +1114,6 @@ namespace Seal.Forms
                     if (log.IsJobCancelled()) return;
                     count++;
                     Report report = Report.LoadFromFile(reportPath, repository, false);
-                    report.SchedulesWithCurrentUser = useCurrentUser;
                     if (report.Schedules.Count > 0)
                     {
                         log.Log("Synchronizing schedules for report '{0}'", reportPath);
@@ -1158,13 +1153,13 @@ namespace Seal.Forms
             foreach (string subFolder in Directory.GetDirectories(folder))
             {
                 if (log.IsJobCancelled()) return;
-                SynchronizeSchedules(log, subFolder, repository, ref count, ref errorCount, errorSummary, useCurrentUser);
+                SynchronizeSchedules(log, subFolder, repository, ref count, ref errorCount, errorSummary);
             }
 
             log.LogRaw("\r\n");
         }
 
-        public void SynchronizeSchedules(ExecutionLogInterface log, bool useCurrentUser)
+        public void SynchronizeSchedules(ExecutionLogInterface log)
         {
             int count = 0, errorCount = 0, taskDeleted = 0;
             StringBuilder errorSummary = new StringBuilder("");
@@ -1174,11 +1169,11 @@ namespace Seal.Forms
             {
                 log.Log("Starting Report Schedules Synchronization\r\n");
 
-                if (!Helper.IsMachineAdministrator() && !useCurrentUser) log.Log("WARNING: For this tool, we recommend to execute the 'Server Manager' application with the option 'Run as administrator'\r\n");
+                if (!Helper.IsMachineAdministrator()) log.Log("WARNING: For this tool, we recommend to execute the 'Server Manager' application with the option 'Run as administrator'\r\n");
 
-                SynchronizeSchedules(log, repository.ReportsFolder, repository, ref count, ref errorCount, errorSummary, useCurrentUser);
+                SynchronizeSchedules(log, repository.ReportsFolder, repository, ref count, ref errorCount, errorSummary);
                 log.Log("Checking personal folders\r\n");
-                SynchronizeSchedules(log, repository.PersonalFolder, repository, ref count, ref errorCount, errorSummary, useCurrentUser);
+                SynchronizeSchedules(log, repository.PersonalFolder, repository, ref count, ref errorCount, errorSummary);
 
                 log.Log("Checking for Orphan schedules\r\n");
 

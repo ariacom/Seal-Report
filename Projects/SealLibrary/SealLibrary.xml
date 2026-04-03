@@ -2574,11 +2574,6 @@
             True if the schedules have been modified
             </summary>
         </member>
-        <member name="F:Seal.Model.Report.SchedulesWithCurrentUser">
-            <summary>
-            True if the schedules have to be defined with the current user, otherwise SYSTEM is used
-            </summary>
-        </member>
         <member name="P:Seal.Model.Report.IsExecuting">
             <summary>
             True if the report is being executed
@@ -3148,6 +3143,11 @@
         <member name="M:Seal.Model.Report.GetReportModel(System.String)">
             <summary>
             Helper to get a report model from its name
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.SkipExternalViewer">
+            <summary>
+            True if being shown in companion
             </summary>
         </member>
         <member name="P:Seal.Model.Report.TaskHelper">
@@ -8180,6 +8180,26 @@
         <member name="P:Seal.Model.SealServerConfiguration.OuterProcess">
             <summary>
             If true and the scheduler in executed in Service, Worker or Web Server, schedules is executed in an outer process forked by the initiator process. If false, the schedule is executed in a dedicated thread of the initiator.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.SchedulerUser">
+            <summary>
+            Scheduler User
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.SchedulerPassword">
+            <summary>
+            Scheduler Password
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.ClearSchedulerPassword">
+            <summary>
+            Scheduler Password in clear text
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.HighestPrivileges">
+            <summary>
+            If true, the task for Windows Task scheduler is run with highest privileges.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.AuditEnabled">

@@ -36,6 +36,7 @@
     table.Columns.Add(new DataColumn("output_email", typeof(string)));
     table.Columns.Add(new DataColumn("name", typeof(string)));
     table.Columns.Add(new DataColumn("type", typeof(string)));
+    table.Columns.Add(new DataColumn("sequencer_schedule", typeof(string)));
     table.Columns.Add(new DataColumn("enabled", typeof(string)));
     table.Columns.Add(new DataColumn("start", typeof(DateTime)));
     table.Columns.Add(new DataColumn("end", typeof(DateTime)));
@@ -63,6 +64,13 @@
     if (report != null &amp;&amp; report.Tag != null) {
         foreach (var item in ((List&lt;Report&gt;) report.Tag)) {
             foreach (var schedule in item.Schedules) {
+                var sequencerScheduleName = "";
+                if (!string.IsNullOrEmpty(schedule.ScheduleSequencerGUID))
+                {
+                    var sequencerSchedule = report.Repository.Configuration.GetSequencerReportSchedules().FirstOrDefault(i =&gt; i.GUID == schedule.ScheduleSequencerGUID);
+                    if (sequencerSchedule != null) sequencerScheduleName = sequencerSchedule.Name;
+                }
+            
                 schedule.SealSchedule.CalculateNextExecution();
                 table.Rows.Add(
                     item.DisplayNameEx, 
@@ -74,6 +82,7 @@
                     schedule.Output != null ? schedule.Output.EmailTo : "", 
                     schedule.Name,
                     Helper.GetEnumDescription(typeof(TriggerType), schedule.SealType),
+                    sequencerScheduleName,
                     schedule.SealEnabled.ToString(),
                     schedule.SealStart,
                     schedule.SealEnd,
@@ -155,7 +164,7 @@
                 <Name>name</Name>
                 <Type>Text</Type>
                 <Category>Master</Category>
-                <DisplayName>Name</DisplayName>
+                <DisplayName>Schedule</DisplayName>
                 <DisplayOrder>8</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
@@ -168,21 +177,12 @@
                 <EnumGUID>b8ab8524-ed31-413e-84e7-15ca5a4f7a97</EnumGUID>
               </MetaColumn>
               <MetaColumn>
-                <GUID>ca454f81-132d-40ac-8ee9-dd0a44d18c56</GUID>
-                <Name>enabled</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Enabled</DisplayName>
-                <DisplayOrder>10</DisplayOrder>
-                <EnumGUID>b739ce08-49d1-4a54-97b3-97fad710bb46</EnumGUID>
-              </MetaColumn>
-              <MetaColumn>
                 <GUID>72e21750-7a2f-4f2b-a63c-c0fcc4419418</GUID>
                 <Name>start</Name>
                 <Type>DateTime</Type>
                 <Category>Master</Category>
                 <DisplayName>Start</DisplayName>
-                <DisplayOrder>11</DisplayOrder>
+                <DisplayOrder>12</DisplayOrder>
                 <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
                 <Format>G</Format>
               </MetaColumn>
@@ -192,7 +192,7 @@
                 <Type>DateTime</Type>
                 <Category>Master</Category>
                 <DisplayName>End</DisplayName>
-                <DisplayOrder>12</DisplayOrder>
+                <DisplayOrder>13</DisplayOrder>
                 <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
                 <Format>G</Format>
               </MetaColumn>
@@ -202,7 +202,7 @@
                 <Type>Text</Type>
                 <Category>Master</Category>
                 <DisplayName>Days</DisplayName>
-                <DisplayOrder>13</DisplayOrder>
+                <DisplayOrder>14</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>500e71f8-57a8-4cfa-851c-b5c1b9bce15e</GUID>
@@ -210,7 +210,7 @@
                 <Type>Text</Type>
                 <Category>Master</Category>
                 <DisplayName>Days interval</DisplayName>
-                <DisplayOrder>14</DisplayOrder>
+                <DisplayOrder>15</DisplayOrder>
                 <Format>N0</Format>
               </MetaColumn>
               <MetaColumn>
@@ -219,7 +219,7 @@
                 <Type>Text</Type>
                 <Category>Master</Category>
                 <DisplayName>Weeks</DisplayName>
-                <DisplayOrder>15</DisplayOrder>
+                <DisplayOrder>16</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>bceb0259-d3ec-404b-9eda-9b29efd2e1f7</GUID>
@@ -227,7 +227,7 @@
                 <Type>Text</Type>
                 <Category>Master</Category>
                 <DisplayName>Weeks interval</DisplayName>
-                <DisplayOrder>16</DisplayOrder>
+                <DisplayOrder>17</DisplayOrder>
                 <Format>N0</Format>
               </MetaColumn>
               <MetaColumn>
@@ -236,7 +236,7 @@
                 <Type>Text</Type>
                 <Category>Master</Category>
                 <DisplayName>Months</DisplayName>
-                <DisplayOrder>17</DisplayOrder>
+                <DisplayOrder>18</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>fa0fd7fe-7780-4686-a163-5c7ce007204a</GUID>
@@ -244,7 +244,7 @@
                 <Type>Text</Type>
                 <Category>Master</Category>
                 <DisplayName>Repeat interval</DisplayName>
-                <DisplayOrder>18</DisplayOrder>
+                <DisplayOrder>19</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>1037dfb1-db7f-4b8a-b015-c9014fcc76a2</GUID>
@@ -252,7 +252,7 @@
                 <Type>Text</Type>
                 <Category>Master</Category>
                 <DisplayName>Repeat duration</DisplayName>
-                <DisplayOrder>19</DisplayOrder>
+                <DisplayOrder>20</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>cacebc5d-bc0a-47cb-9e24-b7e80ae881f6</GUID>
@@ -260,9 +260,25 @@
                 <Type>DateTime</Type>
                 <Category>Master</Category>
                 <DisplayName>Next execution</DisplayName>
-                <DisplayOrder>20</DisplayOrder>
+                <DisplayOrder>21</DisplayOrder>
                 <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
                 <Format>G</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5599701a-6dff-4731-a96b-f27313d95e72</GUID>
+                <Name>sequencer_schedule</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Sequencer schedule</DisplayName>
+                <DisplayOrder>10</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>d21e5ff7-22b6-46bf-bc68-1b45491c584c</GUID>
+                <Name>enabled</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Enabled</DisplayName>
+                <DisplayOrder>11</DisplayOrder>
               </MetaColumn>
             </Columns>
           </MetaTable>
@@ -316,13 +332,12 @@
       </LINQSubTables>
       <Elements>
         <ReportElement>
-          <GUID>80f239c0-be2c-4b94-825f-6d9baea4a913</GUID>
-          <Name>next_execution</Name>
+          <GUID>82498327-d8fc-4c5b-8396-6981bd0e4317</GUID>
+          <Name>report_name</Name>
           <DisplayName />
-          <Format>G</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>cacebc5d-bc0a-47cb-9e24-b7e80ae881f6</MetaColumnGUID>
+          <MetaColumnGUID>11d505fb-e247-42ed-8199-06b633346cb2</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>9a109c03-f6af-4c20-b358-77bec45462dc</GUID>
@@ -381,6 +396,14 @@
           <MetaColumnGUID>5ce7d07d-76bf-4234-a89a-ff5ec1f9c6bc</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
+          <GUID>6d193573-a55f-4515-8787-fd1fbdda007a</GUID>
+          <Name>sequencer_schedule</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5599701a-6dff-4731-a96b-f27313d95e72</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
           <GUID>a0cfc50f-97f8-4f20-bd87-c2c7c4d5c7dc</GUID>
           <Name>type</Name>
           <DisplayName />
@@ -389,12 +412,12 @@
           <MetaColumnGUID>2a4bd65e-f1ad-4585-a2cc-e48a53ac261d</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>9a60f85f-3118-48f5-a2f9-d86146bac977</GUID>
+          <GUID>82ce5d4e-56cc-4724-87f5-3ed9a1578ca8</GUID>
           <Name>enabled</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>ca454f81-132d-40ac-8ee9-dd0a44d18c56</MetaColumnGUID>
+          <MetaColumnGUID>d21e5ff7-22b6-46bf-bc68-1b45491c584c</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>a2dc193a-3172-414b-a337-cb4a4b461d55</GUID>
@@ -472,6 +495,15 @@
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>1037dfb1-db7f-4b8a-b015-c9014fcc76a2</MetaColumnGUID>
         </ReportElement>
+        <ReportElement>
+          <GUID>80f239c0-be2c-4b94-825f-6d9baea4a913</GUID>
+          <Name>next_execution</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>cacebc5d-bc0a-47cb-9e24-b7e80ae881f6</MetaColumnGUID>
+        </ReportElement>
       </Elements>
     </ReportModel>
   </Models>
@@ -527,6 +559,26 @@
 </Script>
       <SortOrder>1</SortOrder>
     </ReportTask>
+    <ReportTask>
+      <GUID>23c8bd9c-6b01-4914-822e-4021280c0e9d</GUID>
+      <Name>Remove columns</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>ffc65bc9-2064-4f18-9f12-6b210be97f1f</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    task.LogMessage($"Executing '{task.Name}'");
+    if (report.Repository.Configuration.SchedulerMode == SchedulerMode.Windows) {
+        var model = report.Models.First();
+        model.Elements = model.Elements.Take(9).ToList();
+    }
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
   </Tasks>
   <Views>
     <ReportView>
@@ -578,26 +630,6 @@
           </Views>
           <TemplateName>Model</TemplateName>
           <ModelGUID>3149ae09-076e-4a13-919f-909d83f6751e</ModelGUID>
-          <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>eceb8e8f-7d26-4acb-9c0c-35969ba23830</GUID>
-          <Name>Warning</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>@using Seal.Model
-@{
-    Report report = Model;
-    if (report.Repository.Configuration.SchedulerMode == SchedulerMode.Windows) {
-    &lt;text&gt;
-        &lt;b&gt;&lt;font color=red&gt;Warning:&lt;/font&gt;&lt;/b&gt;
-        &lt;br&gt;The Server Configuration property 'Report Scheduler Mode' is set to 'Windows Task Scheduler', thus the schedules defined below will not be valid as the Windows Task Scheduler is used...
-        &lt;br&gt;
-        &lt;br&gt;
-    &lt;/text&gt;    
-    }    
-}
-</CustomTemplate>
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>

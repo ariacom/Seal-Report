@@ -497,7 +497,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Return the display value from the identifer
+        /// Return the display value from the identifier
         /// </summary>
         public string GetDisplayValue(string id, MetaConnection connection, bool forRestriction = false)
         {

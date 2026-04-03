@@ -464,7 +464,6 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Error = "Error during password decryption:" + ex.Message;
-                    TypeDescriptor.Refresh(this);
                     return Password;
                 }
             }
@@ -477,7 +476,6 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Error = "Error during password encryption:" + ex.Message;
-                    TypeDescriptor.Refresh(this);
                     Password = value;
                 }
             }

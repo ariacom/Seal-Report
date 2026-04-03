@@ -50,7 +50,6 @@
             exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             showScriptErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            schedulesWithCurrentUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -239,7 +238,7 @@
             // 
             // optionsToolStripMenuItem
             // 
-            optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { showScriptErrorsToolStripMenuItem, schedulesWithCurrentUserToolStripMenuItem });
+            optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { showScriptErrorsToolStripMenuItem });
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             optionsToolStripMenuItem.Text = "Options";
@@ -248,19 +247,10 @@
             // 
             showScriptErrorsToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             showScriptErrorsToolStripMenuItem.Name = "showScriptErrorsToolStripMenuItem";
-            showScriptErrorsToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            showScriptErrorsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             showScriptErrorsToolStripMenuItem.Text = "Show Edge DevTools";
             showScriptErrorsToolStripMenuItem.ToolTipText = "If checked, the Edge DevTools Window is shown when a report is executed.";
             showScriptErrorsToolStripMenuItem.Click += showScriptErrorsToolStripMenuItem_Click;
-            // 
-            // schedulesWithCurrentUserToolStripMenuItem
-            // 
-            schedulesWithCurrentUserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            schedulesWithCurrentUserToolStripMenuItem.Name = "schedulesWithCurrentUserToolStripMenuItem";
-            schedulesWithCurrentUserToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            schedulesWithCurrentUserToolStripMenuItem.Text = "Schedule reports using current user";
-            schedulesWithCurrentUserToolStripMenuItem.ToolTipText = "If checked, the schedules are created with the current logged user.\r\nNo administrators rights are required in this case.";
-            schedulesWithCurrentUserToolStripMenuItem.Click += schedulesWithCurrentUserToolStripMenuItem_Click;
             // 
             // toolsToolStripMenuItem
             // 
@@ -468,7 +458,7 @@
             // 
             buttonResetFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             buttonResetFilter.FlatAppearance.BorderSize = 0;
-            buttonResetFilter.Location = new System.Drawing.Point(193, 2);
+            buttonResetFilter.Location = new System.Drawing.Point(192, 2);
             buttonResetFilter.Name = "buttonResetFilter";
             buttonResetFilter.Size = new System.Drawing.Size(48, 24);
             buttonResetFilter.TabIndex = 3;
@@ -626,7 +616,6 @@
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showScriptErrorsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem schedulesWithCurrentUserToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortColumnAlphaOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortColumnSQLOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetDisplayOrderToolStripMenuItem;

@@ -73,7 +73,7 @@
         }
     
         //Execute using the task scheduler
-        var installationDir = repository.Configuration.InstallationDirectory;
+        var installationDir = repository.Configuration.InstallationDirectory + "\\Core";
         
         //specific installation directory
         //DEV
