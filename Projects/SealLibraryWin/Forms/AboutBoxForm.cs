@@ -130,24 +130,10 @@ namespace Seal.Forms
 
         private void AboutBoxForm_Shown(object sender, EventArgs e)
         {
-            var defaultText = @"
-You are using Seal Report under the MIT Community License:
-This license is for non-profit usage or small businesses.
-
-If you are using Seal Report in a production environment,
-please ensure that you are eligible to use this free license !
-
-Seal Report follows a dual-licensing model to ensure its maintenance, quality, and support.
-";
-
+            var defaultText = "\r\nYou are using Seal Report under the MIT Community License:\r\n\r\nThis license is for non-profit usage or small businesses.\r\n\r\nIf you are using Seal Report in a production environment, please ensure that you are eligible to use this free license !\r\n\r\nSeal Report follows a dual-licensing model to ensure its maintenance, quality, and support.\r\n";
             if (!_startup)
             {
-                defaultText = @"
-A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.
-
-Visit our Web site, take a dive and join the Seal community...
-
-";
+                defaultText = "\r\nA genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n";
             }
             else
             {

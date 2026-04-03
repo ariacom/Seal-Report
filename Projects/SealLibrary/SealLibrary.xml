@@ -810,7 +810,7 @@
         </member>
         <member name="M:Seal.Model.MetaEnum.GetDisplayValue(System.String,Seal.Model.MetaConnection,System.Boolean)">
             <summary>
-            Return the display value from the identifer
+            Return the display value from the identifier
             </summary>
         </member>
         <member name="P:Seal.Model.MetaEnum.HelperRefreshEnum">

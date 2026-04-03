@@ -279,7 +279,6 @@ _ed.common.js
   <WebSessionInitScript />
   <InitScript />
   <RepositoryTranslationsScript />
-  <EncryptionMode>MachineRSAContainer</EncryptionMode>
   <KeyValues>
     <KeyValue>
       <Name>Meta Connection Password</Name>
@@ -310,12 +309,7 @@ _ed.common.js
       <Value>eko934dj$$$12sdffwrkdk))</Value>
     </KeyValue>
   </KeyValues>
-  <ApplicationKeys>
-    <KeyValue>
-      <Name>test key</Name>
-      <Value>ZwiowOSi17WyrLMWvR3P5PIez5NOFmfN2Pvaay8gO9q5DiqXSgUaUqqdZI8fJzN2zNDdwhG2znZhl1IsPt9ZwRaK/KJ5q2QxDvPCq+du9Jof509C3JBQpiyshYwhRYdeqOn51xLoJlCfBUHBtrawG+2nuFDzZ7nhiuhjl3FOnug=</Value>
-    </KeyValue>
-  </ApplicationKeys>
+  <ApplicationKeys />
   <DefaultCulture />
   <NumberGroupSeparator />
   <NumberDecimalSeparator />
