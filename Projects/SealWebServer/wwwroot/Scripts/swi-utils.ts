@@ -425,9 +425,11 @@ module SWIUtil {
             $("#default-connections").empty();
             if (profile.sources.length === 0 || !profile.editprofile) {
                 $("#default-connections").parent().hide();
+                $("#default-connections-title").parent().hide();
             }
             else {
                 $("#default-connections").parent().show();
+                $("#default-connections-title").parent().show();
                 profile.sources.forEach(function (source) {
                     const $connectionDiv = $("<div class='row'>");
                     $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
