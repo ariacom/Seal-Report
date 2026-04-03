@@ -763,7 +763,7 @@ namespace Seal.Model
                 model.SetColumnsName();
 
                 //Force enum values
-                if (model.Elements.Exists(i => i.IsEnum && i.ShowAllEnums))
+                if (model.ResultTable != null && model.Elements.Exists(i => i.IsEnum && i.ShowAllEnums))
                 {
                     var enumsValues = new Dictionary<ReportElement, List<string>>();
                     //Build list of enum values to force
@@ -802,13 +802,16 @@ namespace Seal.Model
                     model.ResultTable = model.ResultTable.DefaultView.ToTable();
                 }
 
-                //Handle set Zero to Null in the result table
-                foreach (var element in model.Elements.Where(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero))
+                if (model.ResultTable != null)
                 {
-                    foreach (DataRow row in model.ResultTable.Rows)
+                    //Handle set Zero to Null in the result table
+                    foreach (var element in model.Elements.Where(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero))
                     {
-                        if (Report.Cancel) break;
-                        if (row[element.SQLColumnName] == DBNull.Value || row[element.SQLColumnName] == null) row[element.SQLColumnName] = 0;
+                        foreach (DataRow row in model.ResultTable.Rows)
+                        {
+                            if (Report.Cancel) break;
+                            if (row[element.SQLColumnName] == DBNull.Value || row[element.SQLColumnName] == null) row[element.SQLColumnName] = 0;
+                        }
                     }
                 }
 
