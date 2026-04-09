@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<DefineConstants>$(DefineConstants);RAZOR4</DefineConstants>
 		<DefineConstants>$(DefineConstants);NO_APPDOMAIN;NO_CODEDOM;NO_CONFIGURATION;NETCORE</DefineConstants>
-		<Version>8.1.0.0</Version>
-		<FileVersion>8.1.0.0</FileVersion>
-		<AssemblyVersion>8.1.0.0</AssemblyVersion>
+		<Version>10.0.0.0</Version>
+		<FileVersion>10.0.0.0</FileVersion>
+		<AssemblyVersion>10.0.0.0</AssemblyVersion>
 		<AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<RootNamespace>RazorEngine</RootNamespace>
@@ -50,13 +50,11 @@ Fork from https://antaris.github.io/RazorEngine/</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.32" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.36" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" />
 	</ItemGroup>
 
 	<!-- Exclude components that use System.Configuration -->

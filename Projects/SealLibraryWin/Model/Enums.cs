@@ -41,7 +41,7 @@ namespace Seal.Model
         OleDb,
         [Description("Odbc")]
         Odbc,
-        [Description("MS SQLServer (System.Data)")]
+        [Description("MS SQLServer (System.Data) (Deprecated = Microsoft.Data)")]
         MSSQLServer,
         [Description("MS SQLServer (Microsoft.Data)")]
         MSSQLServerMicrosoft,
@@ -159,6 +159,8 @@ namespace Seal.Model
         Exponential2,
         [Description("Fixed-point (1234.57)")]
         Fixedpoint,
+        [Description("Fixed-point 0 Decimals (1234)")]
+        Fixedpoint0,
         [Description("Fixed-point 2 Decimals (1234.56)")]
         Fixedpoint2,
         [Description("Hexadecimal (FF)")]

@@ -12,7 +12,7 @@ using System.Data.Common;
 using System.Threading;
 using System.Data.Odbc;
 using System.Data.OleDb;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Data;
@@ -780,13 +780,8 @@ namespace Seal.Model
                     }
                     else if (connection is SqlConnection)
                     {
-                        ((SqlConnection)connection).InfoMessage += new SqlInfoMessageEventHandler(SqlInfoMessage);
+                        ((SqlConnection)connection).InfoMessage += new SqlInfoMessageEventHandler(MicrosoftSqlInfoMessage);
                         result = ((SqlConnection)connection).CreateCommand();
-                    }
-                    else if (connection is Microsoft.Data.SqlClient.SqlConnection)
-                    {
-                        ((Microsoft.Data.SqlClient.SqlConnection)connection).InfoMessage += new Microsoft.Data.SqlClient.SqlInfoMessageEventHandler(MicrosoftSqlInfoMessage);
-                        result = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
                     }
                     else if (connection is MySql.Data.MySqlClient.MySqlConnection)
                     {
@@ -958,12 +953,8 @@ namespace Seal.Model
         {
             DbInfoMessage.Append(e.Message);
         }
-        void SqlInfoMessage(object sender, SqlInfoMessageEventArgs e)
-        {
-            DbInfoMessage.Append(e.Message);
-        }
 
-        void MicrosoftSqlInfoMessage(object sender, Microsoft.Data.SqlClient.SqlInfoMessageEventArgs e)
+        void MicrosoftSqlInfoMessage(object sender, SqlInfoMessageEventArgs e)
         {
             DbInfoMessage.Append(e.Message);
         }

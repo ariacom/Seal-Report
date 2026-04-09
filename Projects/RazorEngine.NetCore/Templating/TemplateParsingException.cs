@@ -60,7 +60,9 @@
         /// <param name="info">The serialisation info.</param>
         /// <param name="context">The streaming context.</param>
         [SecurityCritical]
+#pragma warning disable CS0672 // Member overrides obsolete member
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
+#pragma warning restore CS0672 // Member overrides obsolete member
         {
             base.GetObjectData(info, context);
 

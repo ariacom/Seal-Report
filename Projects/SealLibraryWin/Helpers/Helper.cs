@@ -21,7 +21,7 @@ using System.Data.Odbc;
 using System.Xml.Serialization;
 using System.Globalization;
 using System.Net.Mail;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Oracle.ManagedDataAccess.Client;
@@ -570,6 +570,7 @@ namespace Seal.Helpers
             else if (format == NumericStandardFormat.Exponential) return "E";
             else if (format == NumericStandardFormat.Exponential2) return "E2";
             else if (format == NumericStandardFormat.Fixedpoint) return "F";
+            else if (format == NumericStandardFormat.Fixedpoint0) return "F0";
             else if (format == NumericStandardFormat.Fixedpoint2) return "F2";
             else if (format == NumericStandardFormat.General) return "G";
             else if (format == NumericStandardFormat.General2) return "G2";
@@ -810,6 +811,7 @@ namespace Seal.Helpers
         }
 
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0038:Use pattern matching", Justification = "<Pending>")]
         public static DataTable GetDataTable(DbConnection connection, string sql)
         {
             DataTable result = new DataTable();
@@ -827,13 +829,6 @@ namespace Seal.Helpers
                 command.CommandTimeout = 0;
                 command.CommandText = sql;
                 adapter = new SqlDataAdapter(command);
-            }
-            else if (connection is Microsoft.Data.SqlClient.SqlConnection)
-            {
-                Microsoft.Data.SqlClient.SqlCommand command = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
-                command.CommandTimeout = 0;
-                command.CommandText = sql;
-                adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(command);
             }
             else if (connection is MySql.Data.MySqlClient.MySqlConnection)
             {
@@ -915,13 +910,9 @@ namespace Seal.Helpers
         public static DbConnection DbConnectionFromConnectionString(ConnectionType connectionType, string connectionString)
         {
             DbConnection connection;
-            if (connectionType == ConnectionType.MSSQLServer)
+            if (connectionType == ConnectionType.MSSQLServer || connectionType == ConnectionType.MSSQLServerMicrosoft)
             {
                 connection = new SqlConnection(connectionString);
-            }
-            else if (connectionType == ConnectionType.MSSQLServerMicrosoft)
-            {
-                connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
             }
             else if (connectionType == ConnectionType.Odbc)
             {
@@ -1042,7 +1033,7 @@ namespace Seal.Helpers
         {
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             byte[] filebytes = new byte[fs.Length];
-            fs.Read(filebytes, 0, Convert.ToInt32(fs.Length));
+            _ = fs.Read(filebytes, 0, Convert.ToInt32(fs.Length));
             var ext = Path.GetExtension(path);
             string type;
             if (ext == ".ico") type = "x-icon";

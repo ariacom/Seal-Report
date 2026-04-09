@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealServerManager</AssemblyName>
     <ApplicationIcon>serverManager.ico</ApplicationIcon>
     <Product>Seal Report</Product>
-    <Version>8.5.0.0</Version>
-    <FileVersion>8.5.0.0</FileVersion>
-    <AssemblyVersion>8.5.0.0</AssemblyVersion>
+    <Version>10.0.0.0</Version>
+    <FileVersion>10.0.0.0</FileVersion>
+    <AssemblyVersion>10.0.0.0</AssemblyVersion>
     <Description>Seal Server Manager</Description>
     <Authors>Ariacom</Authors>
     <Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -42,8 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.7" />
-    <PackageReference Include="System.ClientModel" Version="1.2.1" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.5" />
+    <PackageReference Include="System.ClientModel" Version="1.10.0" />
   </ItemGroup>
   
   <ItemGroup>

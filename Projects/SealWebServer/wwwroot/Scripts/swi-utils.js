@@ -1,3 +1,4 @@
+"use strict";
 var SWIUtil;
 (function (SWIUtil) {
     function tr(reference) {
@@ -19,7 +20,7 @@ var SWIUtil;
     }
     SWIUtil.Newguid = Newguid;
     function GetReportName(path) {
-        return path.split(dirSeparator).pop().replace(".srex", "");
+        return (path.split(dirSeparator).pop() ?? "").replace(".srex", "");
     }
     SWIUtil.GetReportName = GetReportName;
     function GetDirectoryName(path) {
@@ -157,10 +158,10 @@ var SWIUtil;
     }
     SWIUtil.IsMobile = IsMobile;
     function InitNumericInput() {
-        $(".numeric_input").keyup(function () {
-            var v = this.value;
+        $(".numeric_input").keyup((event) => {
+            var v = $(event.target).value;
             if (!$.isNumeric(v)) {
-                this.value = this.value.slice(0, -1);
+                $(event.target).value = $(event.target).value.slice(0, -1);
             }
         });
     }
@@ -208,10 +209,10 @@ var SWIUtil;
     SWIUtil.InitSpinning = InitSpinning;
     function InitDropDownMenu() {
         //Show dropdown menus on hover
-        $('.dropdown-menu-li').hover(function () {
-            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
-        }, function () {
-            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(300);
+        $('.dropdown-menu-li').hover((event) => {
+            $(event.target).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
+        }, (event) => {
+            $(event.target).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(300);
         });
     }
     SWIUtil.InitDropDownMenu = InitDropDownMenu;
@@ -231,7 +232,7 @@ var SWIUtil;
     }
     SWIUtil.InitVersion = InitVersion;
     function addReportMenu(main, parent, value) {
-        var aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
+        let aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
         if (main && main._reportIcon !== null)
             aref.append($("<span class='external-navigation glyphicon glyphicon-" + main._reportIcon + "'></span>"));
         aref.addClass(value.classes);
@@ -244,12 +245,12 @@ var SWIUtil;
                 SWIUtil.addReportMenu(main, parent, value);
             }
             else {
-                var li = $("<li class='menu-reports dropdown dropdown-submenu'>");
-                var label = $("<a href='#' class='dropdown-toggle' data-toggle='dropdown'>").html(value.name);
+                const li = $("<li class='menu-reports dropdown dropdown-submenu'>");
+                const label = $("<a href='#' class='dropdown-toggle' data-toggle='dropdown'>").html(value.name);
                 li.append(label);
                 parent.append(li);
                 li.addClass(value.classes);
-                var ul = $("<ul class='dropdown-menu'>");
+                const ul = $("<ul class='dropdown-menu'>");
                 li.append(ul);
                 SWIUtil.initMenu(main, ul, value.items);
             }
@@ -295,8 +296,8 @@ var SWIUtil;
             $('ul.dropdown-menu [data-toggle=dropdown]').unbind("click").on('click', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
-                $(this).parent().siblings().removeClass('open');
-                $(this).parent().toggleClass('open');
+                $(event.target).parent().siblings().removeClass('open');
+                $(event.target).parent().toggleClass('open');
             });
             //Toggle report/folders
             $("#menu-view-folders, #menu-view-report, #nav_button").unbind("click").on("click", function () {
@@ -307,17 +308,17 @@ var SWIUtil;
                     $("#menu-main").dropdown('toggle');
             });
             //Execute reports from menu
-            $("a.menu-report").unbind("click").on("click", function () {
+            $("a.menu-report").unbind("click").on("click", (event) => {
                 if (main && !_main._newWindow) {
                     $waitDialog.modal();
-                    main.executeReportFromMenu($(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"), $(this).text());
+                    main.executeReportFromMenu($(event.target).attr("path"), $(event.target).attr("viewGUID"), $(event.target).attr("outputGUID"), $(event.target).text());
                 }
                 else {
-                    SWIUtil.executeReport(main, $(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"));
+                    SWIUtil.executeReport(main, $(event.target).attr("path"), $(event.target).attr("viewGUID"), $(event.target).attr("outputGUID"));
                 }
             });
-            $("a.menu-report span").unbind("click").on("click", function () {
-                var parent = $(this).parent();
+            $("a.menu-report span").unbind("click").on("click", (event) => {
+                const parent = $(event.target).parent();
                 if (!main || !main._newWindow) {
                     SWIUtil.executeReport(main, parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
                 }
@@ -425,7 +426,7 @@ var SWIUtil;
                 if (SWIUtil.IsMobile())
                     $('.navbar-toggle').click();
             }
-            var $connections = $("#default-connections");
+            const $connections = $("#default-connections");
             $("#default-connections").empty();
             if (profile.sources.length === 0 || !profile.editprofile) {
                 $("#default-connections").parent().hide();
@@ -435,9 +436,9 @@ var SWIUtil;
                 $("#default-connections").parent().show();
                 $("#default-connections-title").parent().show();
                 profile.sources.forEach(function (source) {
-                    var $connectionDiv = $("<div class='row'>");
+                    const $connectionDiv = $("<div class='row'>");
                     $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
-                    var $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
+                    const $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
                     source.connections.forEach(function (connection) {
                         $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
                     });
@@ -452,12 +453,12 @@ var SWIUtil;
     function InitStandardInput(id, val, modif, handler, numeric) {
         var $input = $(id);
         $input.val(val);
-        $input.unbind("input keyup change").on("input keyup change", function (e) {
-            if (e.type == "change" && modif)
+        $input.unbind("input keyup change").on("input keyup change", (event) => {
+            if (event.type == "change" && modif)
                 modif.setModified(true);
             if (numeric)
-                this.value = this.value.replace(/[^0-9\.]/g, '');
-            handler($(this).val());
+                $(event.target).value = $(event.target).value.replace(/[^0-9\.]/g, '');
+            handler($(event.target).val());
         });
         return $input;
     }
@@ -469,8 +470,8 @@ var SWIUtil;
         $select.empty();
         $select.append(SWIUtil.GetOption("1", textTrue, valstr));
         $select.append(SWIUtil.GetOption("0", textFalse, valstr));
-        $select.unbind("change").on("change", function (e) {
-            handler($(this).val() == "1");
+        $select.unbind("change").on("change", (event) => {
+            handler($(event.target).val() == "1");
         });
         $select.selectpicker('refresh');
         return $select;

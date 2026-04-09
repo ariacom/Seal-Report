@@ -24,8 +24,8 @@ declare var folderRightEdit: number;
 declare var hasEditor: boolean;
 declare var dirSeparator: string;
 
-declare function redrawDataTables();
-declare function initScrollReport();
+declare function redrawDataTables() : any;
+declare function initScrollReport() : any;
 
 $(document).ready(function () {
     _gateway = new SWIGateway();
@@ -41,14 +41,14 @@ class SWIMain {
     private _canEdit: boolean = false;
     public _folder: any = null;
     private _searchMode: boolean = false;
-    private _clipboard: string[];
+    private _clipboard: string[] = [];
     private _clipboardCut: boolean = false;
     private _folderpath: string = "\\";
-    private _reportPath: string;
+    private _reportPath: string = "";
     public _lastReport: any = new Object();
     public _currentView: string = "folders";
     public _newWindow: boolean = true;
-    public _reportIcon: string;
+    public _reportIcon: string = "";
     public _config: any;
     public _configGroup: any;
     public _configGroupFolder: any;
@@ -174,7 +174,7 @@ class SWIMain {
             return;
         }
 
-        //check if we have to relaod translations
+        //check if we have to reload translations
         if ((_main._profile && _main._profile.culture && _main._profile.culture != data.culture) || (languageName != data.language)) {
             $("body").css("opacity", "0.1");
             location.reload();
@@ -183,7 +183,7 @@ class SWIMain {
         _main._reportPath = "";
         _main._folder = null;
         _main._searchMode = false;
-        _main._clipboard = null;
+        _main._clipboard = [];
         _main._clipboardCut = false;
         _main.clearFilesTable();
         _main._newWindow = (_main._profile.executionmode === 1 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 1));
@@ -191,7 +191,7 @@ class SWIMain {
         //disable current window, 0=Default, 1=NewWindow, 2=SameWindow, 3=AlwaysNewWindow
         if (_main._profile.executionmode === 3 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 3)) {
             _main._newWindow = true;
-            _main._reportIcon = null;
+            _main._reportIcon = "";
         }
 
         //Reset init state
@@ -333,8 +333,8 @@ class SWIMain {
         });
 
         //Delete reports
-        $("#report-delete-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this))) return;
+        $("#report-delete-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target))) return;
             $outputPanel.hide();
 
             var checked: number = $(".report-checkbox:checked").length;
@@ -362,14 +362,14 @@ class SWIMain {
         });
 
         //Rename
-        $("#report-rename-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this))) return;
+        $("#report-rename-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target))) return;
             $outputPanel.hide();
 
             var source: string = $(".report-checkbox:checked").first().data("path");
             if (source) {
-                var filename: string = source.split(dirSeparator).pop();
-                var extension: string = filename.split('.').pop();
+                var filename: string | any = source.split(dirSeparator).pop();
+                var extension: string | any = filename.split('.').pop();
                 $("#report-name-save").unbind("click").on("click", function () {
                     $waitDialog.modal();
                     var folder: string = _main._folder.path;
@@ -384,14 +384,14 @@ class SWIMain {
                     });
 
                 });
-                $("#report-name").val(filename.replace(/\.[^/.]+$/, ""));
+                $("#report-name").val(filename?.replace(/\.[^/.]+$/, ""));
                 $("#report-name-dialog").modal();
             }
         });
 
         //Copy
-        $("#report-copy-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this))) return;
+        $("#report-copy-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target))) return;
             $outputPanel.hide();
 
             _main._clipboard = [];
@@ -404,8 +404,8 @@ class SWIMain {
         });
 
         //Cut
-        $("#report-cut-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this))) return;
+        $("#report-cut-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target))) return;
             $outputPanel.hide();
 
             _main._clipboard = [];
@@ -418,15 +418,15 @@ class SWIMain {
         });
 
         //Paste
-        $("#report-paste-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this))) return;
+        $("#report-paste-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target))) return;
             $outputPanel.hide();
 
-            if (_main._clipboard && _main._clipboard.length > 0) {
+            if (_main._clipboard.length > 0) {
                 $waitDialog.modal();
                 _main._clipboard.forEach(function (value, index) {
-                    var newName: string = value.split(dirSeparator).pop();
-                    var folder: string = _main._folder.path;
+                    var newName: string | undefined = value.split(dirSeparator).pop();
+                    var folder: string | undefined = _main._folder.path;
                     var destination: string = (folder != dirSeparator ? folder : "") + dirSeparator + newName;
                     _gateway.MoveFile(value, destination, !_main._clipboardCut, function () {
                         if (index == _main._clipboard.length - 1) {
@@ -476,10 +476,10 @@ class SWIMain {
 
         //Start last report
         if (_main._profile.report) {
-            _main.executeReportFromMenu(_main._profile.report, null, null, _main._profile.reportname);
+            _main.executeReportFromMenu(_main._profile.report, "", "", _main._profile.reportname);
             $("#brand-id").unbind("click").on("click", function () {
                 if (_main._reportPath == _main._profile.report) _main.toggleFoldersReport(true);
-                else _main.executeReportFromMenu(_main._profile.report, null, null, _main._profile.reportname);
+                else _main.executeReportFromMenu(_main._profile.report, "", "", _main._profile.reportname);
             });
         }
         else {
@@ -490,7 +490,7 @@ class SWIMain {
         SWIUtil.InitVersion();
     }
 
-    private initConfiguration(profile) {
+    private initConfiguration(profile : any) {
         SWIUtil.ShowHideControl($("#config-nav-item"), profile.editconfiguration);
         $("#config-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
@@ -521,7 +521,7 @@ class SWIMain {
     }
 
     private initDropDownGroups() {
-        if (_main._configGroup != null) _main._configGroup = _main._config.groups.find(i => i.Name === _main._configGroup.Name);
+        if (_main._configGroup != null) _main._configGroup = _main._config.groups.find((i : any) => i.Name === _main._configGroup.Name);
         if (!_main._configGroup && _main._config.groups.length > 0) _main._configGroup = _main._config.groups[0];
 
         var $ddname = $("#config-groups-dropdown");
@@ -536,14 +536,14 @@ class SWIMain {
 
         if (_main._configGroup && _main._config.groups.length > 1) {
             if ($ddname.children().length > 0) $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, null, "remove", "glyphicon glyphicon-minus-sign")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, "", "remove", "glyphicon glyphicon-minus-sign")));
         }
 
-        $("#config-groups-dropdown > li > a").unbind("click").on("click", function () {
-            var type = $(this).prop("type");
-            var id = $(this).prop("id");
+        $("#config-groups-dropdown > li > a").unbind("click").on("click", (event) => {
+            var type = $(event.target).prop("type");
+            var id = $(event.target).prop("id");
             if (type == "select") {
-                _main._configGroup = _main._config.groups.find(v => v.Name === id);
+                _main._configGroup = _main._config.groups.find((v :any) => v.Name === id);
             }
             else if (type == "group") {
                 var newGroup = {
@@ -584,8 +584,8 @@ class SWIMain {
         $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No personal folder"), detail.PersFolderRight));
         $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Personal folder for files only"), detail.PersFolderRight));
         $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Personal folder for reports and files"), detail.PersFolderRight));
-        $select.unbind("change").on("change", function (e) {
-            detail.PersFolderRight = $(this).val();
+        $select.unbind("change").on("change", (event) => {
+            detail.PersFolderRight = $(event.target).val();
         });
         $select.selectpicker('refresh');
 
@@ -598,8 +598,8 @@ class SWIMain {
             $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No download (except files) or upload"), detail.DownloadUpload));
             $select.append(SWIUtil.GetOption("1", SWIUtil.tr("User can download reports"), detail.DownloadUpload));
             $select.append(SWIUtil.GetOption("2", SWIUtil.tr("User can download reports and upload reports and files"), detail.DownloadUpload));
-            $select.unbind("change").on("change", function (e) {
-                detail.DownloadUpload = $(this).val();
+            $select.unbind("change").on("change", (event) => {
+                detail.DownloadUpload = $(event.target).val();
             });
             $select.selectpicker('refresh');
         }
@@ -608,7 +608,7 @@ class SWIMain {
     }
 
     private initDropDownGroupsFolders() {
-        if (_main._configGroupFolder != null) _main._configGroupFolder = _main._configGroup.Folders.find(i => i.Path === _main._configGroupFolder.Path);
+        if (_main._configGroupFolder != null) _main._configGroupFolder = _main._configGroup.Folders.find((i : any) => i.Path === _main._configGroupFolder.Path);
         if (!_main._configGroupFolder && _main._configGroup.Folders.length > 0) _main._configGroupFolder = _main._configGroup.Folders[0];
 
         var $ddname = $("#config-group-folders-dropdown");
@@ -623,14 +623,14 @@ class SWIMain {
 
         if (_main._configGroupFolder && _main._configGroup.Folders.length > 0) {
             if ($ddname.children().length > 0) $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroupFolder.Path, null, "remove", "glyphicon glyphicon-minus-sign")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroupFolder.Path, "", "remove", "glyphicon glyphicon-minus-sign")));
         }
 
-        $("#config-group-folders-dropdown > li > a").unbind("click").on("click", function () {
-            var type = $(this).prop("type");
-            var id = $(this).prop("id");
+        $("#config-group-folders-dropdown > li > a").unbind("click").on("click", (event) => {
+            var type = $(event.target).prop("type");
+            var id = $(event.target).prop("id");
             if (type == "select") {
-                _main._configGroupFolder = _main._configGroup.Folders.find(v => v.Path === id);
+                _main._configGroupFolder = _main._configGroup.Folders.find((v : any) => v.Path === id);
             }
             else if (type == "folder") {
                 var newFolder = {
@@ -671,8 +671,8 @@ class SWIMain {
                 $select.append(SWIUtil.GetOption(value.Key, value.Key, _main._configGroupFolder.Path, "fa fa-folder-o"));
             });
 
-            $select.unbind("change").on("change", function (e) {
-                _main._configGroupFolder.Path = $(this).val();
+            $select.unbind("change").on("change", (event) => {
+                _main._configGroupFolder.Path = $(event.target).val();
                 _main.initDropDownGroupsFolders();
             });
             $select.selectpicker('refresh');
@@ -687,8 +687,8 @@ class SWIMain {
             $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Edit schedules / View files"), detail.FolderRight));
             $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Edit reports / Manage files"), detail.FolderRight));
 
-            $select.unbind("change").on("change", function (e) {
-                _main._configGroupFolder.FolderRight = $(this).val();
+            $select.unbind("change").on("change", (event) => {
+                _main._configGroupFolder.FolderRight = $(event.target).val();
             });
             $select.selectpicker('refresh');
 
@@ -701,7 +701,7 @@ class SWIMain {
     }
 
     private initDropDownLogins() {
-        if (_main._configLogin != null) _main._configLogin = _main._config.logins.find(i => i.Id === _main._configLogin.Id);
+        if (_main._configLogin != null) _main._configLogin = _main._config.logins.find((i :any) => i.Id === _main._configLogin.Id);
         if (!_main._configLogin && _main._config.logins.length > 0) _main._configLogin = _main._config.logins[0];
 
         var $ddname = $("#config-logins-dropdown");
@@ -716,14 +716,14 @@ class SWIMain {
 
         if (_main._configLogin) {
             if ($ddname.children().length > 0) $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, null, "remove", "glyphicon glyphicon-minus-sign")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, "", "remove", "glyphicon glyphicon-minus-sign")));
         }
 
-        $("#config-logins-dropdown > li > a").unbind("click").on("click", function () {
-            var type = $(this).prop("type");
-            var id = $(this).prop("id");
+        $("#config-logins-dropdown > li > a").unbind("click").on("click", (event) => {
+            var type = $(event.target).prop("type");
+            var id = $(event.target).prop("id");
             if (type == "select") {
-                _main._configLogin = _main._config.logins.find(v => v.Id === id);
+                _main._configLogin = _main._config.logins.find((v : any) => v.Id === id);
             }
             else if (type == "login") {
                 var newFolder = {
@@ -760,10 +760,10 @@ class SWIMain {
             select.selectpicker("destroy");
             select.empty();
             $.each(_main._config.groups, function (index, value) {
-                select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupIds && detail.GroupIds.some(i => i === value.GUID)) ? value.GUID : ""));
+                select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupIds && detail.GroupIds.some((i :any) => i === value.GUID)) ? value.GUID : ""));
             });
-            select.unbind("change").on("change", function (e) {
-                _main._configLogin.GroupIds = $(this).val();
+            select.unbind("change").on("change", (event) => {
+                _main._configLogin.GroupIds = $(event.target).val();
             });
             select.selectpicker('refresh');
         }
@@ -882,9 +882,9 @@ class SWIMain {
         SWIUtil.ShowHideControl($("#nav_button"), _main._reportPath != null && _main._reportPath != "");
 
         //Report or folders view
-        const reportShown = _main._reportPath && _main._currentView == "report";
+        const reportShown = _main._reportPath != "" && _main._currentView == "report";
         SWIUtil.ShowHideControl($("#menu-view-folders"), _main._currentView == "report" && showFolders);
-        SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath && _main._currentView != "report");
+        SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath != "" && _main._currentView != "report");
         SWIUtil.ShowHideControl($(".reportview"), reportShown);
         SWIUtil.ShowHideControl($(".folderview"), _main._currentView != "report");
         //Dividers
@@ -908,7 +908,7 @@ class SWIMain {
     private loadFolderTree() {
         _gateway.GetRootFolders(function (data) {
             _main._canEdit = false;
-            var result = [];
+            var result : any[] = [];
             $folderTree.jstree("destroy").empty();
             $folderTree.jstree({
                 core: {
@@ -1081,11 +1081,11 @@ class SWIMain {
             const name = $target.data("name");
             if ($target.data("isReport")) {
                 if (_main._newWindow) {
-                    _main.executeReport(path, null, null);
+                    _main.executeReport(path, "", "");
                 }
                 else {
                     $waitDialog.modal();
-                    _main.executeReportFromMenu(path, null, null, name);
+                    _main.executeReportFromMenu(path, "", "", name);
                 }
             }
             else _gateway.ViewFile(path);
@@ -1096,10 +1096,10 @@ class SWIMain {
             const path = $(e.currentTarget).parent().data("path");
             const name = $(e.currentTarget).parent().data("name");
             if (!_main._newWindow) {
-                _main.executeReport(path, null, null);
+                _main.executeReport(path, "", "");
             }
             else {
-                _main.executeReportFromMenu(path, null, null, name);
+                _main.executeReportFromMenu(path, "", "", name);
             }
         });
 
@@ -1267,7 +1267,7 @@ class SWIMain {
     }
 
 
-    public toggleFoldersReport(viewreport: boolean, foldertoselect: string = null) {
+    public toggleFoldersReport(viewreport: boolean, foldertoselect: string = "") {
         _main._currentView = (viewreport || !_main._profile.showfolders ? "report" : "folders");
 
         if (foldertoselect) { //Select a folder in the treeview

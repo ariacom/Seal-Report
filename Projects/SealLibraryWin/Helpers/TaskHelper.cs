@@ -10,11 +10,11 @@ using Seal.Model;
 using System.Data;
 using System.IO;
 using System.Diagnostics;
-using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Data.Common;
 using OfficeOpenXml;
+using Microsoft.Data.SqlClient;
 
 namespace Seal.Helpers
 {
@@ -624,18 +624,13 @@ namespace Seal.Helpers
             {
                 if (_task.Report.Cancel) break;
 
-                SqlConnection sqlConnection = null;
-                Microsoft.Data.SqlClient.SqlConnection msConnection = null;
+                SqlConnection msConnection = null;
 
 
                 string connectionString = connection.FullConnectionString;
-                if (connection.ConnectionType == ConnectionType.MSSQLServer)
+                if (connection.ConnectionType == ConnectionType.MSSQLServer || connection.ConnectionType == ConnectionType.MSSQLServerMicrosoft)
                 {
-                    sqlConnection = new SqlConnection(connectionString);
-                }
-                else if (connection.ConnectionType == ConnectionType.MSSQLServerMicrosoft)
-                {
-                    msConnection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                    msConnection = new SqlConnection(connectionString);
                 }
                 else
                 {
@@ -644,12 +639,6 @@ namespace Seal.Helpers
 
                 try
                 {
-                    if (sqlConnection != null)
-                    {
-                        sqlConnection.FireInfoMessageEventOnUserErrors = true;
-                        sqlConnection.InfoMessage += MSSQLConnection_InfoMessage;
-                        sqlConnection.Open();
-                    }
                     if (msConnection != null)
                     {
                         msConnection.FireInfoMessageEventOnUserErrors = true;
@@ -712,18 +701,9 @@ namespace Seal.Helpers
                         if (!string.IsNullOrEmpty(commandString.Trim()))
                         {
                             DateTime startCommand = DateTime.Now;
-                            if (sqlConnection != null)
-                            {
-                                using (var command = new SqlCommand("", sqlConnection))
-                                {
-                                    command.CommandTimeout = DatabaseHelper.ExecuteTimeout;
-                                    command.CommandText = commandString;
-                                    command.ExecuteNonQuery();
-                                }
-                            }
                             if (msConnection != null)
                             {
-                                using (var command = new Microsoft.Data.SqlClient.SqlCommand("", msConnection))
+                                using (var command = new SqlCommand("", msConnection))
                                 {
                                     command.CommandTimeout = DatabaseHelper.ExecuteTimeout;
                                     command.CommandText = commandString;
@@ -738,10 +718,6 @@ namespace Seal.Helpers
                 }
                 finally
                 {
-                    if (sqlConnection != null)
-                    {
-                        sqlConnection.Close();
-                    }
                     if (msConnection != null)
                     {
                         msConnection.Close();
@@ -778,23 +754,9 @@ CREATE {3} INDEX {0} ON {1}({2})
             ExecuteNonQuery(string.Format(sql, indexName, tableName, colNames, isCluster ? "CLUSTERED" : "NONCLUSTERED"));
         }
 
-        void MSSQLConnection_InfoMessage(object sender, SqlInfoMessageEventArgs e)
+        void MicrosoftMSSQLConnection_InfoMessage(object sender, SqlInfoMessageEventArgs e)
         {
             foreach (SqlError err in e.Errors)
-            {
-                if (err.Class >= _mssqlErrorClassLevel)
-                {
-                    _mssqlError = e.Message;
-                    break;
-                }
-            }
-            LogMessage(e.Message);
-            Thread.Sleep(20);
-        }
-
-        void MicrosoftMSSQLConnection_InfoMessage(object sender, Microsoft.Data.SqlClient.SqlInfoMessageEventArgs e)
-        {
-            foreach (Microsoft.Data.SqlClient.SqlError err in e.Errors)
             {
                 if (err.Class >= _mssqlErrorClassLevel)
                 {

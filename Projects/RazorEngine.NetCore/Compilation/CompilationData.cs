@@ -51,7 +51,9 @@ namespace RazorEngine.Compilation
         [SecuritySafeCritical]
         public void DeleteAll()
         {
+#pragma warning disable SYSLIB0003 // Type or member is obsolete
             new PermissionSet(PermissionState.Unrestricted).Assert();
+#pragma warning restore SYSLIB0003 // Type or member is obsolete
             if (!string.IsNullOrEmpty(tmpFolder))
             {
                 try

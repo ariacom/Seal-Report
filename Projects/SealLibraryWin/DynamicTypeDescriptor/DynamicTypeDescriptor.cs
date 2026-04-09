@@ -1091,7 +1091,8 @@ namespace DynamicTypeDescriptor
                     {
                         if (String.IsNullOrEmpty(attr.AssemblyFullName) == false)
                         {
-                            rm = new ResourceManager(attr.BaseName, Assembly.ReflectionOnlyLoad(attr.AssemblyFullName));
+                            var assembly = Assembly.Load(attr.AssemblyFullName);
+                            rm = new ResourceManager(attr.BaseName, assembly);
                         }
                         else
                         {
@@ -1432,7 +1433,8 @@ namespace DynamicTypeDescriptor
                 {
                     if (String.IsNullOrEmpty(attr.AssemblyFullName) == false)
                     {
-                        rm = new ResourceManager(attr.BaseName, Assembly.ReflectionOnlyLoad(attr.AssemblyFullName));
+                        var assembly = Assembly.Load(attr.AssemblyFullName);
+                        rm = new ResourceManager(attr.BaseName, assembly);
                     }
                     else
                     {

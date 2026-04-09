@@ -10,7 +10,7 @@ using System.Data.Odbc;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using OfficeOpenXml;
 using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
@@ -164,7 +164,6 @@ namespace Seal.Helpers
                         DbDataAdapter adapter = null;
                         if (connection is OdbcConnection) adapter = new OdbcDataAdapter(sql, (OdbcConnection)connection);
                         else if (connection is SqlConnection) adapter = new SqlDataAdapter(sql, (SqlConnection)connection);
-                        else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else if (connection is OracleConnection) adapter = new OracleDataAdapter(sql, (OracleConnection)connection);
                         else if (connection is NpgsqlConnection) adapter = new NpgsqlDataAdapter(sql, (NpgsqlConnection)connection);
@@ -178,7 +177,6 @@ namespace Seal.Helpers
                         DbCommand cmd = null;
                         if (connection is OdbcConnection) cmd = new OdbcCommand(sql, (OdbcConnection)connection);
                         else if (connection is SqlConnection) cmd = new SqlCommand(sql, (SqlConnection)connection);
-                        else if (connection is Microsoft.Data.SqlClient.SqlConnection) cmd = new Microsoft.Data.SqlClient.SqlCommand(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
                         else if (connection is MySql.Data.MySqlClient.MySqlConnection) cmd = new MySql.Data.MySqlClient.MySqlCommand(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
                         else if (connection is OracleConnection) cmd = new OracleCommand(sql, (OracleConnection)connection);
                         else if (connection is NpgsqlConnection) cmd = new NpgsqlCommand(sql, (NpgsqlConnection)connection);
@@ -474,7 +472,7 @@ namespace Seal.Helpers
             DbCommand result = null;
             if (connection is OdbcConnection) result = ((OdbcConnection)connection).CreateCommand();
             else if (connection is SqlConnection) result = ((SqlConnection)connection).CreateCommand();
-            else if (connection is Microsoft.Data.SqlClient.SqlConnection) result = ((Microsoft.Data.SqlClient.SqlConnection)connection).CreateCommand();
+            else if (connection is SqlConnection) result = ((SqlConnection)connection).CreateCommand();
             else if (connection is MySql.Data.MySqlClient.MySqlConnection) result = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
             else if (connection is OracleConnection) result = ((OracleConnection)connection).CreateCommand();
             else if (connection is NpgsqlConnection) result = ((NpgsqlConnection)connection).CreateCommand();

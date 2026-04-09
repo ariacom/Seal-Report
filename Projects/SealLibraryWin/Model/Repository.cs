@@ -11,9 +11,6 @@ using System.Globalization;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using Amazon.Runtime.Internal.Transform;
 using System.Text;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
@@ -611,7 +608,7 @@ namespace Seal.Model
                                     "System.IO",
                                     "System.Data",
                                     "System.Data.Common",
-                                    "System.Data.SqlClient"
+                                    "Microsoft.Data.SqlClient"
                                 };
 
                                 var refs = new List<PortableExecutableReference>();

@@ -1845,7 +1845,7 @@ $('<div>', {{
                     {
                         template = connectionScript;
                         List<string> samples = new List<string>();
-                        samples.Add(@"@using System.Data.SqlClient
+                        samples.Add(@"@using Microsoft.Data.SqlClient
 @{
     //MS SQLServer Connection
     MetaConnection connection = Model;

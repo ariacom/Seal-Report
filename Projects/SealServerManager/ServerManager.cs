@@ -46,6 +46,7 @@ namespace Seal
 
 
         bool _isModified = false;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsModified
         {
             get { return _isModified; }

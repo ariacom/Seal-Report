@@ -2,7 +2,7 @@
 var _server: string = WebApplicationName;
 var _errorServer: string = SWIUtil.tr("Unexpected error on server") + ": '" + _server + "'";
 
-declare function postForm(url: string, target: string, data);
+declare function postForm(url: string, target: string, data : any) : any;
 
 class SWIGateway {
     public GetVersions(callback: (data: any) => void, errorcb?: (data: any) => void) {

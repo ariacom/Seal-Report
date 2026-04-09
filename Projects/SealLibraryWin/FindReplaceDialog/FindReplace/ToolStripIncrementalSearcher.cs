@@ -2,6 +2,7 @@
 
 using ScintillaNET;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 #endregion Using Directives
 
@@ -12,6 +13,7 @@ namespace ScintillaNET_FindReplaceDialog
     {
         #region Properties
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Scintilla Scintilla
         {
             get { return Searcher.Scintilla; }

@@ -169,8 +169,8 @@ namespace SealWebServer.Controllers
         {
             Response.Clear();
             Response.Headers.Clear();
-            Response.Headers.Add("title", Path.GetFileName(filePath));
-            Response.Headers.Add("content-disposition", "inline;filename=\"" + Path.GetFileName(filePath) + "\"");
+            Response.Headers.Append("title", Path.GetFileName(filePath));
+            Response.Headers.Append("content-disposition", "inline;filename=\"" + Path.GetFileName(filePath) + "\"");
             Response.ContentType = "text/html";
             return Content(System.IO.File.ReadAllText(filePath));
         }

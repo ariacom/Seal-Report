@@ -15,7 +15,9 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
     /// Support Deserializing the proxy since on separate runs of an executable
     /// </summary>
     [Serializable]
+#pragma warning disable SYSLIB0050 // Type or member is obsolete
     public class ActLikeProxySerializationHelper : IObjectReference
+#pragma warning restore SYSLIB0050 // Type or member is obsolete
     {
         /// <summary>
         /// Original Object

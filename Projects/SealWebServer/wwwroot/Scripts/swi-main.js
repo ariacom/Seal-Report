@@ -1,3 +1,4 @@
+"use strict";
 /// <reference path="typings/jquery/jquery.d.ts" />
 /// <reference path="typings/bootstrap/index.d.ts" />
 /// <reference path="typings/jstree/jstree.d.ts" />
@@ -21,19 +22,22 @@ $(document).ready(function () {
     _main.Process();
     SWIUtil.InitDropDownMenu();
 });
-var SWIMain = /** @class */ (function () {
-    function SWIMain() {
+class SWIMain {
+    constructor() {
         this._profile = null;
         this._canEdit = false;
         this._folder = null;
         this._searchMode = false;
+        this._clipboard = [];
         this._clipboardCut = false;
         this._folderpath = "\\";
+        this._reportPath = "";
         this._lastReport = new Object();
         this._currentView = "folders";
         this._newWindow = true;
+        this._reportIcon = "";
     }
-    SWIMain.prototype.Process = function () {
+    Process() {
         $waitDialog = $("#wait-dialog");
         $editDialog = $("#edit-dialog");
         $folderTree = $("#folder-tree");
@@ -84,8 +88,8 @@ var SWIMain = /** @class */ (function () {
         });
         SWIUtil.InitVersion();
         //Reset password
-        var token = new URLSearchParams(window.location.search).get('ptoken');
-        var guid = new URLSearchParams(window.location.search).get('guid');
+        const token = new URLSearchParams(window.location.search).get('ptoken');
+        const guid = new URLSearchParams(window.location.search).get('guid');
         if (token && guid) {
             $waitDialog.modal('hide');
             $("#password-reset-submit2").unbind("click").on("click", function () {
@@ -125,13 +129,13 @@ var SWIMain = /** @class */ (function () {
         $(window).unbind("resize").on('resize', function () {
             _main.resize();
         });
-    };
-    SWIMain.prototype.loginSuccess = function (data) {
+    }
+    loginSuccess(data) {
         if (data.securitycoderequired) {
             _main.showSecurityCode(data);
             return;
         }
-        //check if we have to relaod translations
+        //check if we have to reload translations
         if ((_main._profile && _main._profile.culture && _main._profile.culture != data.culture) || (languageName != data.language)) {
             $("body").css("opacity", "0.1");
             location.reload();
@@ -140,7 +144,7 @@ var SWIMain = /** @class */ (function () {
         _main._reportPath = "";
         _main._folder = null;
         _main._searchMode = false;
-        _main._clipboard = null;
+        _main._clipboard = [];
         _main._clipboardCut = false;
         _main.clearFilesTable();
         _main._newWindow = (_main._profile.executionmode === 1 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 1));
@@ -148,7 +152,7 @@ var SWIMain = /** @class */ (function () {
         //disable current window, 0=Default, 1=NewWindow, 2=SameWindow, 3=AlwaysNewWindow
         if (_main._profile.executionmode === 3 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 3)) {
             _main._newWindow = true;
-            _main._reportIcon = null;
+            _main._reportIcon = "";
         }
         //Reset init state
         $("#menu-main-button").show();
@@ -268,8 +272,8 @@ var SWIMain = /** @class */ (function () {
             });
         });
         //Delete reports
-        $("#report-delete-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this)))
+        $("#report-delete-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target)))
                 return;
             $outputPanel.hide();
             var checked = $(".report-checkbox:checked").length;
@@ -294,8 +298,8 @@ var SWIMain = /** @class */ (function () {
             $("#message-dialog").modal();
         });
         //Rename
-        $("#report-rename-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this)))
+        $("#report-rename-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target)))
                 return;
             $outputPanel.hide();
             var source = $(".report-checkbox:checked").first().data("path");
@@ -314,13 +318,13 @@ var SWIMain = /** @class */ (function () {
                         SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The report or file has been renamed"), 5000);
                     });
                 });
-                $("#report-name").val(filename.replace(/\.[^/.]+$/, ""));
+                $("#report-name").val(filename?.replace(/\.[^/.]+$/, ""));
                 $("#report-name-dialog").modal();
             }
         });
         //Copy
-        $("#report-copy-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this)))
+        $("#report-copy-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target)))
                 return;
             $outputPanel.hide();
             _main._clipboard = [];
@@ -332,8 +336,8 @@ var SWIMain = /** @class */ (function () {
             SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or files(s) copied in the clipboard"), 5000);
         });
         //Cut
-        $("#report-cut-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this)))
+        $("#report-cut-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target)))
                 return;
             $outputPanel.hide();
             _main._clipboard = [];
@@ -345,11 +349,11 @@ var SWIMain = /** @class */ (function () {
             SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or file(s) cut in the clipboard"), 5000);
         });
         //Paste
-        $("#report-paste-lightbutton").unbind("click").on("click", function () {
-            if (!SWIUtil.IsEnabled($(this)))
+        $("#report-paste-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.target)))
                 return;
             $outputPanel.hide();
-            if (_main._clipboard && _main._clipboard.length > 0) {
+            if (_main._clipboard.length > 0) {
                 $waitDialog.modal();
                 _main._clipboard.forEach(function (value, index) {
                     var newName = value.split(dirSeparator).pop();
@@ -374,9 +378,9 @@ var SWIMain = /** @class */ (function () {
             $("#upload-file").click();
         });
         $("#upload-file").on("change", function (e) {
-            var fileInput = e.target;
+            const fileInput = e.target;
             if (fileInput.files && fileInput.files.length > 0) {
-                var formData = new FormData();
+                const formData = new FormData();
                 formData.append('file', fileInput.files[0]);
                 formData.append('path', _main._folder.path);
                 _gateway.UploadFile(formData, function (data) {
@@ -397,12 +401,12 @@ var SWIMain = /** @class */ (function () {
         _main.resize();
         //Start last report
         if (_main._profile.report) {
-            _main.executeReportFromMenu(_main._profile.report, null, null, _main._profile.reportname);
+            _main.executeReportFromMenu(_main._profile.report, "", "", _main._profile.reportname);
             $("#brand-id").unbind("click").on("click", function () {
                 if (_main._reportPath == _main._profile.report)
                     _main.toggleFoldersReport(true);
                 else
-                    _main.executeReportFromMenu(_main._profile.report, null, null, _main._profile.reportname);
+                    _main.executeReportFromMenu(_main._profile.report, "", "", _main._profile.reportname);
             });
         }
         else {
@@ -410,8 +414,8 @@ var SWIMain = /** @class */ (function () {
             $waitDialog.modal('hide');
         }
         SWIUtil.InitVersion();
-    };
-    SWIMain.prototype.initConfiguration = function (profile) {
+    }
+    initConfiguration(profile) {
         SWIUtil.ShowHideControl($("#config-nav-item"), profile.editconfiguration);
         $("#config-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
@@ -436,10 +440,10 @@ var SWIMain = /** @class */ (function () {
                 $("#config-dialog").modal();
             });
         });
-    };
-    SWIMain.prototype.initDropDownGroups = function () {
+    }
+    initDropDownGroups() {
         if (_main._configGroup != null)
-            _main._configGroup = _main._config.groups.find(function (i) { return i.Name === _main._configGroup.Name; });
+            _main._configGroup = _main._config.groups.find((i) => i.Name === _main._configGroup.Name);
         if (!_main._configGroup && _main._config.groups.length > 0)
             _main._configGroup = _main._config.groups[0];
         var $ddname = $("#config-groups-dropdown");
@@ -454,13 +458,13 @@ var SWIMain = /** @class */ (function () {
         if (_main._configGroup && _main._config.groups.length > 1) {
             if ($ddname.children().length > 0)
                 $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, null, "remove", "glyphicon glyphicon-minus-sign")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, "", "remove", "glyphicon glyphicon-minus-sign")));
         }
-        $("#config-groups-dropdown > li > a").unbind("click").on("click", function () {
-            var type = $(this).prop("type");
-            var id = $(this).prop("id");
+        $("#config-groups-dropdown > li > a").unbind("click").on("click", (event) => {
+            var type = $(event.target).prop("type");
+            var id = $(event.target).prop("id");
             if (type == "select") {
-                _main._configGroup = _main._config.groups.find(function (v) { return v.Name === id; });
+                _main._configGroup = _main._config.groups.find((v) => v.Name === id);
             }
             else if (type == "group") {
                 var newGroup = {
@@ -485,8 +489,8 @@ var SWIMain = /** @class */ (function () {
             _main.initLoginDetail();
         });
         _main.initSecurityGroupDetail();
-    };
-    SWIMain.prototype.initSecurityGroupDetail = function () {
+    }
+    initSecurityGroupDetail() {
         var detail = _main._configGroup;
         if (!detail.Folders)
             detail.Folders = [];
@@ -500,8 +504,8 @@ var SWIMain = /** @class */ (function () {
         $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No personal folder"), detail.PersFolderRight));
         $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Personal folder for files only"), detail.PersFolderRight));
         $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Personal folder for reports and files"), detail.PersFolderRight));
-        $select.unbind("change").on("change", function (e) {
-            detail.PersFolderRight = $(this).val();
+        $select.unbind("change").on("change", (event) => {
+            detail.PersFolderRight = $(event.target).val();
         });
         $select.selectpicker('refresh');
         SWIUtil.ShowHideControl($("#config-group-downloadupload-row"), _main._config.downloadupload);
@@ -513,16 +517,16 @@ var SWIMain = /** @class */ (function () {
             $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No download (except files) or upload"), detail.DownloadUpload));
             $select.append(SWIUtil.GetOption("1", SWIUtil.tr("User can download reports"), detail.DownloadUpload));
             $select.append(SWIUtil.GetOption("2", SWIUtil.tr("User can download reports and upload reports and files"), detail.DownloadUpload));
-            $select.unbind("change").on("change", function (e) {
-                detail.DownloadUpload = $(this).val();
+            $select.unbind("change").on("change", (event) => {
+                detail.DownloadUpload = $(event.target).val();
             });
             $select.selectpicker('refresh');
         }
         _main.initDropDownGroupsFolders();
-    };
-    SWIMain.prototype.initDropDownGroupsFolders = function () {
+    }
+    initDropDownGroupsFolders() {
         if (_main._configGroupFolder != null)
-            _main._configGroupFolder = _main._configGroup.Folders.find(function (i) { return i.Path === _main._configGroupFolder.Path; });
+            _main._configGroupFolder = _main._configGroup.Folders.find((i) => i.Path === _main._configGroupFolder.Path);
         if (!_main._configGroupFolder && _main._configGroup.Folders.length > 0)
             _main._configGroupFolder = _main._configGroup.Folders[0];
         var $ddname = $("#config-group-folders-dropdown");
@@ -537,13 +541,13 @@ var SWIMain = /** @class */ (function () {
         if (_main._configGroupFolder && _main._configGroup.Folders.length > 0) {
             if ($ddname.children().length > 0)
                 $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroupFolder.Path, null, "remove", "glyphicon glyphicon-minus-sign")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroupFolder.Path, "", "remove", "glyphicon glyphicon-minus-sign")));
         }
-        $("#config-group-folders-dropdown > li > a").unbind("click").on("click", function () {
-            var type = $(this).prop("type");
-            var id = $(this).prop("id");
+        $("#config-group-folders-dropdown > li > a").unbind("click").on("click", (event) => {
+            var type = $(event.target).prop("type");
+            var id = $(event.target).prop("id");
             if (type == "select") {
-                _main._configGroupFolder = _main._configGroup.Folders.find(function (v) { return v.Path === id; });
+                _main._configGroupFolder = _main._configGroup.Folders.find((v) => v.Path === id);
             }
             else if (type == "folder") {
                 var newFolder = {
@@ -565,8 +569,8 @@ var SWIMain = /** @class */ (function () {
             _main.initSecurityFolderDetail();
         });
         _main.initSecurityFolderDetail();
-    };
-    SWIMain.prototype.initSecurityFolderDetail = function () {
+    }
+    initSecurityFolderDetail() {
         var detail = _main._configGroupFolder;
         SWIUtil.ShowHideControl($(".config-group-folder"), detail);
         if (!detail) {
@@ -581,8 +585,8 @@ var SWIMain = /** @class */ (function () {
             $.each(_main._config.folders, function (key, value) {
                 $select.append(SWIUtil.GetOption(value.Key, value.Key, _main._configGroupFolder.Path, "fa fa-folder-o"));
             });
-            $select.unbind("change").on("change", function (e) {
-                _main._configGroupFolder.Path = $(this).val();
+            $select.unbind("change").on("change", (event) => {
+                _main._configGroupFolder.Path = $(event.target).val();
                 _main.initDropDownGroupsFolders();
             });
             $select.selectpicker('refresh');
@@ -595,8 +599,8 @@ var SWIMain = /** @class */ (function () {
             $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute reports and outputs / View files"), detail.FolderRight));
             $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Edit schedules / View files"), detail.FolderRight));
             $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Edit reports / Manage files"), detail.FolderRight));
-            $select.unbind("change").on("change", function (e) {
-                _main._configGroupFolder.FolderRight = $(this).val();
+            $select.unbind("change").on("change", (event) => {
+                _main._configGroupFolder.FolderRight = $(event.target).val();
             });
             $select.selectpicker('refresh');
             SWIUtil.InitBoolSelect("#config-group-folder-manage", detail.ManageFolder, SWIUtil.tr("Yes (User can create and edit sub-folders)"), SWIUtil.tr("No"), function (val) { detail.ManageFolder = val; });
@@ -604,10 +608,10 @@ var SWIMain = /** @class */ (function () {
             SWIUtil.InitBoolSelect("#config-group-folder-expand", detail.ExpandSubFolders, SWIUtil.tr("Yes (Folder is expanded in the tree view)"), SWIUtil.tr("No"), function (val) { detail.ExpandSubFolders = val; });
             SWIUtil.InitBoolSelect("#config-group-folder-filesonly", detail.FilesOnly, SWIUtil.tr("Yes (Only files can be stored)"), SWIUtil.tr("No"), function (val) { detail.FilesOnly = val; });
         }
-    };
-    SWIMain.prototype.initDropDownLogins = function () {
+    }
+    initDropDownLogins() {
         if (_main._configLogin != null)
-            _main._configLogin = _main._config.logins.find(function (i) { return i.Id === _main._configLogin.Id; });
+            _main._configLogin = _main._config.logins.find((i) => i.Id === _main._configLogin.Id);
         if (!_main._configLogin && _main._config.logins.length > 0)
             _main._configLogin = _main._config.logins[0];
         var $ddname = $("#config-logins-dropdown");
@@ -622,13 +626,13 @@ var SWIMain = /** @class */ (function () {
         if (_main._configLogin) {
             if ($ddname.children().length > 0)
                 $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, null, "remove", "glyphicon glyphicon-minus-sign")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, "", "remove", "glyphicon glyphicon-minus-sign")));
         }
-        $("#config-logins-dropdown > li > a").unbind("click").on("click", function () {
-            var type = $(this).prop("type");
-            var id = $(this).prop("id");
+        $("#config-logins-dropdown > li > a").unbind("click").on("click", (event) => {
+            var type = $(event.target).prop("type");
+            var id = $(event.target).prop("id");
             if (type == "select") {
-                _main._configLogin = _main._config.logins.find(function (v) { return v.Id === id; });
+                _main._configLogin = _main._config.logins.find((v) => v.Id === id);
             }
             else if (type == "login") {
                 var newFolder = {
@@ -648,8 +652,8 @@ var SWIMain = /** @class */ (function () {
             _main.initLoginDetail();
         });
         _main.initLoginDetail();
-    };
-    SWIMain.prototype.initLoginDetail = function () {
+    }
+    initLoginDetail() {
         var detail = _main._configLogin;
         SWIUtil.ShowHideControl($(".config-login"), detail);
         if (!detail) {
@@ -664,15 +668,15 @@ var SWIMain = /** @class */ (function () {
             select.selectpicker("destroy");
             select.empty();
             $.each(_main._config.groups, function (index, value) {
-                select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupIds && detail.GroupIds.some(function (i) { return i === value.GUID; })) ? value.GUID : ""));
+                select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupIds && detail.GroupIds.some((i) => i === value.GUID)) ? value.GUID : ""));
             });
-            select.unbind("change").on("change", function (e) {
-                _main._configLogin.GroupIds = $(this).val();
+            select.unbind("change").on("change", (event) => {
+                _main._configLogin.GroupIds = $(event.target).val();
             });
             select.selectpicker('refresh');
         }
-    };
-    SWIMain.prototype.search = function () {
+    }
+    search() {
         $waitDialog.modal();
         _gateway.Search(_main._folder.path, $("#search-pattern").val(), function (data) {
             _main._searchMode = true;
@@ -681,29 +685,29 @@ var SWIMain = /** @class */ (function () {
             if (SWIUtil.IsMobile())
                 $('.navbar-toggle').click();
         });
-    };
-    SWIMain.prototype.loginFailure = function (data, firstTry) {
+    }
+    loginFailure(data, firstTry) {
         $waitDialog.modal('hide');
         if (!firstTry)
             $("#login-modal-error").text(data.error);
         _main.showLogin();
         _main.enableControls();
-    };
-    SWIMain.prototype.showLogin = function () {
+    }
+    showLogin() {
         $waitDialog.modal('hide');
         $("body").children(".modal-backdrop").remove();
         $("#footer-div").show();
         $loginModal.modal();
-    };
-    SWIMain.prototype.showSecurityCode = function (data) {
+    }
+    showSecurityCode(data) {
         if (data)
             $("#security-code-message").text(data.message);
         $waitDialog.modal('hide');
         $("body").children(".modal-backdrop").remove();
         $securityModal.show();
         $securityModal.modal();
-    };
-    SWIMain.prototype.login = function () {
+    }
+    login() {
         $loginModal.modal('hide');
         $waitDialog.modal();
         _gateway.Login($("#username").val(), $("#password").val(), function (data) {
@@ -717,8 +721,8 @@ var SWIMain = /** @class */ (function () {
         }, function (data) {
             _main.loginFailure(data, false);
         });
-    };
-    SWIMain.prototype.checkSecurityCode = function () {
+    }
+    checkSecurityCode() {
         $securityModal.modal('hide');
         $waitDialog.modal();
         _gateway.CheckSecurityCode($("#securitycode").val(), function (data) {
@@ -736,8 +740,8 @@ var SWIMain = /** @class */ (function () {
             _main.showSecurityCode(null);
             _main.enableControls();
         });
-    };
-    SWIMain.prototype.resize = function () {
+    }
+    resize() {
         if (!SWIUtil.IsMobile()) {
             $("#folder-tree").height($(window).height() - 80);
             $("#file-table-view").height($(window).height() - 125);
@@ -745,11 +749,11 @@ var SWIMain = /** @class */ (function () {
         else {
             $("#folder-tree").css("max-height", ($(window).height() / 2 - 45));
         }
-    };
-    SWIMain.prototype.enableControls = function () {
-        var right = 0; //1 Execute,2 Shedule,3 Edit
-        var files = false;
-        var showFolders = false;
+    }
+    enableControls() {
+        let right = 0; //1 Execute,2 Shedule,3 Edit
+        let files = false;
+        let showFolders = false;
         if (_main._folder) {
             right = _main._folder.right;
             files = _main._folder.files;
@@ -761,7 +765,7 @@ var SWIMain = /** @class */ (function () {
         $('#back-to-top').tooltip('hide');
         SWIUtil.EnableButton($("#report-edit-lightbutton"), right >= folderRightEdit && !files);
         SWIUtil.ShowHideControl($("#report-edit-lightbutton"), hasEditor);
-        var checked = $(".report-checkbox:checked").length;
+        const checked = $(".report-checkbox:checked").length;
         SWIUtil.EnableButton($("#report-rename-lightbutton"), checked == 1 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-delete-lightbutton"), checked != 0 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-cut-lightbutton"), checked != 0 && right >= folderRightEdit);
@@ -772,9 +776,9 @@ var SWIMain = /** @class */ (function () {
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
         SWIUtil.ShowHideControl($("#nav_button"), _main._reportPath != null && _main._reportPath != "");
         //Report or folders view
-        var reportShown = _main._reportPath && _main._currentView == "report";
+        const reportShown = _main._reportPath != "" && _main._currentView == "report";
         SWIUtil.ShowHideControl($("#menu-view-folders"), _main._currentView == "report" && showFolders);
-        SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath && _main._currentView != "report");
+        SWIUtil.ShowHideControl($("#menu-view-report"), _main._reportPath != "" && _main._currentView != "report");
         SWIUtil.ShowHideControl($(".reportview"), reportShown);
         SWIUtil.ShowHideControl($(".folderview"), _main._currentView != "report");
         //Dividers
@@ -782,10 +786,10 @@ var SWIMain = /** @class */ (function () {
         //title color
         $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d");
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
-    };
-    SWIMain.prototype.toJSTreeFolderData = function (data, result, parent) {
-        for (var i = 0; i < data.length; i++) {
-            var folder = data[i];
+    }
+    toJSTreeFolderData(data, result, parent) {
+        for (let i = 0; i < data.length; i++) {
+            const folder = data[i];
             result[result.length] = { "id": folder.path, "parent": parent, "text": (folder.name == "" ? "Reports" : folder.name), "state": { "opened": folder.expand, "selected": (folder.name == "") } };
             if (folder.folders && folder.folders.length > 0)
                 _main.toJSTreeFolderData(folder.folders, result, folder.path);
@@ -793,8 +797,8 @@ var SWIMain = /** @class */ (function () {
                 _main._canEdit = true;
         }
         return result;
-    };
-    SWIMain.prototype.loadFolderTree = function () {
+    }
+    loadFolderTree() {
         _gateway.GetRootFolders(function (data) {
             _main._canEdit = false;
             var result = [];
@@ -824,11 +828,11 @@ var SWIMain = /** @class */ (function () {
                     $folderTree.jstree('select_node', _main._folderpath);
             }, 500);
         });
-    };
-    SWIMain.prototype.ReloadReportsTable = function () {
+    }
+    ReloadReportsTable() {
         _main.LoadReports($folderTree.jstree("get_selected")[0]);
-    };
-    SWIMain.prototype.LoadReports = function (path) {
+    }
+    LoadReports(path) {
         if (!path)
             return;
         SWIUtil.StartSpinning();
@@ -840,19 +844,19 @@ var SWIMain = /** @class */ (function () {
             _main._profile.folder = path;
             SWIUtil.StopSpinning();
         });
-    };
-    SWIMain.prototype.refreshMenus = function () {
+    }
+    refreshMenus() {
         setTimeout(function () {
             SWIUtil.RefreshMenu(_main);
             if (_editor)
                 _editor.assistantMenu();
         }, 1000);
-    };
-    SWIMain.prototype.executeReport = function (path, viewGUID, outputGUID) {
+    }
+    executeReport(path, viewGUID, outputGUID) {
         _gateway.ExecuteReport(path, viewGUID, outputGUID);
         _main.refreshMenus();
-    };
-    SWIMain.prototype.executeReportFromMenu = function (path, viewGUID, outputGUID, name) {
+    }
+    executeReportFromMenu(path, viewGUID, outputGUID, name) {
         $(".navbar-header,#navbar").addClass("disabled");
         $(".fixedHeader-floating").empty();
         $("#report-body").empty();
@@ -881,16 +885,16 @@ var SWIMain = /** @class */ (function () {
                 _main._lastReport.name = $("#nav_button").text();
             }, 1000);
         });
-    };
-    SWIMain.prototype.clearFilesTable = function () {
+    }
+    clearFilesTable() {
         var $tableHead = $("#file-table-head");
         var $tableBody = $("#file-table-body");
         if (!$("#file-table-head").is(':empty'))
             $('#file-table').dataTable().fnDestroy();
         $tableHead.empty();
         $tableBody.empty();
-    };
-    SWIMain.prototype.buildReportsTable = function (data) {
+    }
+    buildReportsTable(data) {
         var $tableHead = $("#file-table-head");
         var $tableBody = $("#file-table-body");
         _main.clearFilesTable();
@@ -956,15 +960,15 @@ var SWIMain = /** @class */ (function () {
         $(".report-name").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
-            var path = $target.data("path");
-            var name = $target.data("name");
+            const path = $target.data("path");
+            const name = $target.data("name");
             if ($target.data("isReport")) {
                 if (_main._newWindow) {
-                    _main.executeReport(path, null, null);
+                    _main.executeReport(path, "", "");
                 }
                 else {
                     $waitDialog.modal();
-                    _main.executeReportFromMenu(path, null, null, name);
+                    _main.executeReportFromMenu(path, "", "", name);
                 }
             }
             else
@@ -972,23 +976,23 @@ var SWIMain = /** @class */ (function () {
         });
         $(".report-execute").unbind("click").on("click", function (e) {
             $outputPanel.hide();
-            var path = $(e.currentTarget).parent().data("path");
-            var name = $(e.currentTarget).parent().data("name");
+            const path = $(e.currentTarget).parent().data("path");
+            const name = $(e.currentTarget).parent().data("name");
             if (!_main._newWindow) {
-                _main.executeReport(path, null, null);
+                _main.executeReport(path, "", "");
             }
             else {
-                _main.executeReportFromMenu(path, null, null, name);
+                _main.executeReportFromMenu(path, "", "", name);
             }
         });
         $(".report-download").unbind("click").on("click", function (e) {
             $outputPanel.hide();
-            var path = $(e.currentTarget).parent().data("path");
+            const path = $(e.currentTarget).parent().data("path");
             _gateway.ViewFile(path);
         });
         $(".report-favorite").unbind("click").on("click", function (e) {
             $outputPanel.hide();
-            var path = $(e.currentTarget).parent().data("path");
+            const path = $(e.currentTarget).parent().data("path");
             _gateway.MarkFavorite(path, function (data) {
                 SWIUtil.ShowMessage("alert-success", data.Message, 5000);
                 var icon = $(e.currentTarget).children("span");
@@ -1116,8 +1120,8 @@ var SWIMain = /** @class */ (function () {
             }, 200);
         });
         _main.enableControls();
-    };
-    SWIMain.prototype.showTreeView = function (show) {
+    }
+    showTreeView(show) {
         if (!show) {
             $("#folder-view").hide();
             $("#file-view").removeClass("col-sm-8").addClass("col-sm-12");
@@ -1126,9 +1130,8 @@ var SWIMain = /** @class */ (function () {
             $("#folder-view").show();
             $("#file-view").removeClass("col-sm-12").addClass("col-sm-8");
         }
-    };
-    SWIMain.prototype.toggleFoldersReport = function (viewreport, foldertoselect) {
-        if (foldertoselect === void 0) { foldertoselect = null; }
+    }
+    toggleFoldersReport(viewreport, foldertoselect = "") {
         _main._currentView = (viewreport || !_main._profile.showfolders ? "report" : "folders");
         if (foldertoselect) { //Select a folder in the treeview
             _main._folderpath = foldertoselect;
@@ -1139,10 +1142,9 @@ var SWIMain = /** @class */ (function () {
             redrawDataTables();
         _main.enableControls();
         //transition
-        var reportShown = _main._reportPath && _main._currentView == "report";
+        const reportShown = _main._reportPath && _main._currentView == "report";
         $(!reportShown ? ".reportview" : ".folderview").css("opacity", "0.2");
         $(reportShown ? ".reportview" : ".folderview").css("opacity", "1");
-    };
-    return SWIMain;
-}());
+    }
+}
 //# sourceMappingURL=swi-main.js.map

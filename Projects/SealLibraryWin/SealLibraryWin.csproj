@@ -2,14 +2,14 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows7.0</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibraryWin</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>8.5.0.0</Version>
-		<FileVersion>8.5.0.0</FileVersion>
-		<AssemblyVersion>8.5.0.0</AssemblyVersion>
+		<Version>10.0.0.0</Version>
+		<FileVersion>10.0.0.0</FileVersion>
+		<AssemblyVersion>10.0.0.0</AssemblyVersion>
 		<Description>Seal Report Library (Windows)</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -26,11 +26,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <NoWarn>1701;1702;CA1416;CS1591</NoWarn>
+		<NoWarn>1701;1702;CA1416;CS1591</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <NoWarn>1701;1702;CA1416;CS1591</NoWarn>
+		<NoWarn>1701;1702;CA1416;CS1591</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -44,80 +44,68 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.42.0" />
-    <PackageReference Include="Azure.Identity" Version="1.12.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.21.2" />
-    <PackageReference Include="Azure.Storage.Common" Version="12.20.1" />
-    <PackageReference Include="Azure.Storage.Files.Shares" Version="12.19.1" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.19.1" />
-    <PackageReference Include="FluentFTP" Version="50.1.0" />
+		<PackageReference Include="Azure.Core" Version="1.52.0" />
+		<PackageReference Include="Azure.Identity" Version="1.20.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.27.0" />
+		<PackageReference Include="Azure.Storage.Common" Version="12.26.0" />
+		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.25.0" />
+		<PackageReference Include="Azure.Storage.Queues" Version="12.25.0" />
+		<PackageReference Include="FluentFTP" Version="54.1.0" />
 		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.84.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.7" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
-    <PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="5.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.5" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.0.0" />
 		<PackageReference Include="EPPlus">
-			<Version>4.5.3.3</Version> <!-- Keep Open Source version -->
+			<Version>4.5.3.3</Version>
+			<!-- Keep Open Source version -->
 		</PackageReference>
 		<PackageReference Include="jose-jwt">
-			<Version>5.0.0</Version>
+			<Version>5.3.0</Version>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Graph" Version="5.58.0" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2592.51" />
-		<PackageReference Include="MongoDB.Driver" Version="2.27.0" />
-		<PackageReference Include="MySql.Data" Version="9.0.0" />
-		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.5.0" />
-    <PackageReference Include="Npgsql" Version="8.0.3" />
-    <PackageReference Include="PuppeteerSharp" Version="18.0.4" />
-		<PackageReference Include="QuestPDF" Version="2025.1.5" />
+		<PackageReference Include="Microsoft.Graph" Version="5.103.0" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
+		<PackageReference Include="MongoDB.Driver" Version="3.7.1" />
+		<PackageReference Include="MySql.Data" Version="9.6.0" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.200" />
+		<PackageReference Include="Npgsql" Version="10.0.2" />
+		<PackageReference Include="PuppeteerSharp" Version="24.40.0" />
+		<PackageReference Include="QuestPDF" Version="2026.2.4" />
 		<PackageReference Include="QuestPDF.Barcodes" Version="2024.10.3" />
 		<PackageReference Include="ScintillaNET.Core" Version="3.6.51" />
-		<PackageReference Include="ScottPlot" Version="5.0.36" />
+		<PackageReference Include="ScottPlot" Version="5.1.58" />
 		<PackageReference Include="SendGrid" Version="9.29.3" />
 		<PackageReference Include="SharpZipLib">
 			<Version>1.4.2</Version>
 		</PackageReference>
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.8" />
-    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.2" />
+		<PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
 		<PackageReference Include="SSH.NET">
-			<Version>2024.1.0</Version>
+			<Version>2025.1.0</Version>
 		</PackageReference>
-		<PackageReference Include="Svg.Skia" Version="1.0.0.18" />
-		<PackageReference Include="System.ClientModel" Version="1.2.1" />
+		<PackageReference Include="Svg.Skia" Version="3.7.0" />
+		<PackageReference Include="System.ClientModel" Version="1.10.0" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-		<PackageReference Include="System.IO.FileSystem.Primitives">
-			<Version>4.3.0</Version>
-		</PackageReference>
-		<PackageReference Include="System.Net.Http">
-			<Version>4.3.4</Version>
-		</PackageReference>
-		<PackageReference Include="System.Net.Primitives" Version="4.3.1" />
-		<PackageReference Include="System.Runtime.InteropServices.RuntimeInformation">
-			<Version>4.3.0</Version>
-		</PackageReference>
 		<PackageReference Include="TaskScheduler">
-			<Version>2.11.0</Version>
+			<Version>2.12.2</Version>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
-		<PackageReference Include="Twilio" Version="7.2.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.7" />
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.7" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Data.Odbc" Version="8.0.0" />
-		<PackageReference Include="System.Data.OleDb" Version="8.0.0" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
-		<PackageReference Include="System.DirectoryServices" Version="8.0.0" />
-		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
-    <PackageReference Include="AngleSharp" Version="1.1.2" />
-    <PackageReference Include="DiffPlex" Version="1.7.2" />
-    <PackageReference Include="DiffPlex.Wpf" Version="1.4.0" />
-    <PackageReference Include="MailKit" Version="4.13.0" />
-    <PackageReference Include="MimeKit" Version="4.15.1" />
-  </ItemGroup>
+		<PackageReference Include="Twilio" Version="7.14.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.5" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.5" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="System.Data.Odbc" Version="10.0.5" />
+		<PackageReference Include="System.Data.OleDb" Version="10.0.5" />
+		<PackageReference Include="AngleSharp" Version="1.4.0" />
+		<PackageReference Include="DiffPlex" Version="1.9.0" />
+		<PackageReference Include="DiffPlex.Wpf" Version="1.9.1" />
+		<PackageReference Include="MailKit" Version="4.15.1" />
+		<PackageReference Include="MimeKit" Version="4.15.1" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\..\Repository\Security\Providers\Basic Authentication.cshtml" Link="SecurityProviders\Basic Authentication.cshtml" />
@@ -128,13 +116,13 @@
 		<None Include="..\..\Repository\Security\Providers\LDAP Authentication.cshtml" Link="SecurityProviders\LDAP Authentication.cshtml" />
 		<None Include="..\..\Repository\Security\Providers\No Security.cshtml" Link="SecurityProviders\No Security.cshtml" />
 		<None Include="..\..\Repository\Security\Providers\OpenId.cshtml" Link="SecurityProviders\OpenId.cshtml" />
-    <None Include="..\..\Repository\Security\Providers\Claims Principal.cshtml" Link="SecurityProviders\Claims Principal.cshtml" />
-    <None Include="..\..\Repository\Sources\TableTemplates\Adomd OLAP MDX.cshtml" Link="TableTemplates\Adomd OLAP MDX.cshtml" />
+		<None Include="..\..\Repository\Security\Providers\Claims Principal.cshtml" Link="SecurityProviders\Claims Principal.cshtml" />
+		<None Include="..\..\Repository\Sources\TableTemplates\Adomd OLAP MDX.cshtml" Link="TableTemplates\Adomd OLAP MDX.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\CSV.cshtml" Link="TableTemplates\CSV.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Mongo DB.cshtml" Link="TableTemplates\Mongo DB.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Database.cshtml" Link="TableTemplates\Database.cshtml" />
-    <None Include="..\..\Repository\Sources\TableTemplates\HTML.cshtml" Link="TableTemplates\HTML.cshtml" />
-    <None Include="..\..\Repository\Sources\TableTemplates\Default.cshtml" Link="TableTemplates\Default.cshtml" />
+		<None Include="..\..\Repository\Sources\TableTemplates\HTML.cshtml" Link="TableTemplates\HTML.cshtml" />
+		<None Include="..\..\Repository\Sources\TableTemplates\Default.cshtml" Link="TableTemplates\Default.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Excel.cshtml" Link="TableTemplates\Excel.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\Generic.cshtml" Link="TableTemplates\Generic.cshtml" />
 		<None Include="..\..\Repository\Sources\TableTemplates\HTTPClient Json.cshtml" Link="TableTemplates\HTTPClient Json.cshtml" />
@@ -148,8 +136,8 @@
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load Excel To Database.cshtml" Link="TaskTemplates\Load Excel To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load CSV To Database.cshtml" Link="TaskTemplates\Load CSV To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load XML To Database.cshtml" Link="TaskTemplates\Load XML To Database.cshtml" />
-    <None Include="..\..\Repository\Sources\TaskTemplates\Load Model To Database.cshtml" Link="TaskTemplates\Load Model To Database.cshtml" />
-    <None Include="..\..\Repository\Sources\TaskTemplates\Execute Report.cshtml" Link="TaskTemplates\Execute Report.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\Load Model To Database.cshtml" Link="TaskTemplates\Load Model To Database.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\Execute Report.cshtml" Link="TaskTemplates\Execute Report.cshtml" />
 		<None Include="..\..\Repository\Views\ChartJS.config.cshtml" Link="Views\ChartJS.config.cshtml" />
 		<None Include="..\..\Repository\Views\ChartJS.cshtml" Link="Views\ChartJS.cshtml" />
 		<None Include="..\..\Repository\Views\ChartNVD3.config.cshtml" Link="Views\ChartNVD3.config.cshtml" />
@@ -214,9 +202,9 @@
 		<None Include="..\..\Repository\Views\Renderers\Excel\Report.cshtml" Link="Views\Renderers\Excel\Report.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\Model.config.cshtml" Link="Views\Renderers\Excel\Model.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\Model.cshtml" Link="Views\Renderers\Excel\Model.cshtml" />
-    <None Include="..\..\Repository\Views\Renderers\Excel\ModelDetail.config.cshtml" Link="Views\Renderers\Excel\ModelDetail.config.cshtml" />
-    <None Include="..\..\Repository\Views\Renderers\Excel\ModelDetail.cshtml" Link="Views\Renderers\Excel\ModelDetail.cshtml" />
-    <None Include="..\..\Repository\Views\Renderers\Excel\PageTable.config.cshtml" Link="Views\Renderers\Excel\PageTable.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\ModelDetail.config.cshtml" Link="Views\Renderers\Excel\ModelDetail.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\ModelDetail.cshtml" Link="Views\Renderers\Excel\ModelDetail.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\Excel\PageTable.config.cshtml" Link="Views\Renderers\Excel\PageTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\PageTable.cshtml" Link="Views\Renderers\Excel\PageTable.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\DataTable.config.cshtml" Link="Views\Renderers\Excel\DataTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\Excel\DataTable.cshtml" Link="Views\Renderers\Excel\DataTable.cshtml" />
@@ -240,9 +228,9 @@
 		<None Include="..\..\Repository\Views\Renderers\PDF\Report.cshtml" Link="Views\Renderers\PDF\Report.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\Model.config.cshtml" Link="Views\Renderers\PDF\Model.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\Model.cshtml" Link="Views\Renderers\PDF\Model.cshtml" />
-    <None Include="..\..\Repository\Views\Renderers\PDF\ModelDetail.config.cshtml" Link="Views\Renderers\PDF\ModelDetail.config.cshtml" />
-    <None Include="..\..\Repository\Views\Renderers\PDF\ModelDetail.cshtml" Link="Views\Renderers\PDF\ModelDetail.cshtml" />
-    <None Include="..\..\Repository\Views\Renderers\PDF\PageTable.config.cshtml" Link="Views\Renderers\PDF\PageTable.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ModelDetail.config.cshtml" Link="Views\Renderers\PDF\ModelDetail.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ModelDetail.cshtml" Link="Views\Renderers\PDF\ModelDetail.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\PageTable.config.cshtml" Link="Views\Renderers\PDF\PageTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\PageTable.cshtml" Link="Views\Renderers\PDF\PageTable.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\DataTable.config.cshtml" Link="Views\Renderers\PDF\DataTable.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\DataTable.cshtml" Link="Views\Renderers\PDF\DataTable.cshtml" />

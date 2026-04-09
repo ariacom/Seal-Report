@@ -13,7 +13,7 @@ using Seal.Helpers;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Xml;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
@@ -624,6 +624,20 @@ namespace Seal.Model
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
                 result.LastMetadataModification = result.LastModification;
+
+                //Move deprecated connections from 10.0
+                foreach (var connection in result.Connections)
+                {
+                    if (connection.ConnectionType == ConnectionType.MSSQLServer)
+                    {
+                        connection.ConnectionType = ConnectionType.MSSQLServerMicrosoft;
+                        if (!connection.MSSqlServerConnectionString.ToLower().Contains("trustservercertificate=true;"))
+                        {
+                            if (!connection.MSSqlServerConnectionString.EndsWith(";")) connection.MSSqlServerConnectionString += ";";
+                            connection.MSSqlServerConnectionString += "TrustServerCertificate=True;";
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -633,7 +647,8 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Save to the current file
+        /// Save to the current file;
+        /// 
         /// </summary>
         public void SaveToFile()
         {
@@ -815,7 +830,7 @@ namespace Seal.Model
                     else if (row.Table.Columns.Contains("DATATYPE")) dataType = row["DATATYPE"].ToString();
 
                     if (connection is OdbcConnection) column.Type = Helper.ODBCToNetTypeConverter(dbType);
-                    else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection) column.Type = Helper.ODBCToNetTypeConverter(dataType);
+                    else if (connection is SqlConnection) column.Type = Helper.ODBCToNetTypeConverter(dataType);
                     else column.Type = Helper.DatabaseToNetTypeConverter(dataType);
                     column.SetStandardFormat();
                     if (!columns.Exists(i => i.Name == column.Name)) columns.Add(column);
@@ -837,7 +852,7 @@ namespace Seal.Model
             {
                 schemaTables = ((OleDbConnection)connection).GetOleDbSchemaTable(OleDbSchemaGuid.Foreign_Keys, null);
             }
-            else if (connection is SqlConnection || connection is Microsoft.Data.SqlClient.SqlConnection)
+            else if (connection is SqlConnection)
             {
                 //SQLServer
                 var sql = @"
@@ -871,7 +886,6 @@ JOIN sys.columns cr
                 DbDataAdapter adapter = null;
                 schemaTables = new DataTable();
                 if (connection is SqlConnection) adapter = new SqlDataAdapter(sql, (SqlConnection)connection);
-                else if (connection is Microsoft.Data.SqlClient.SqlConnection) adapter = new Microsoft.Data.SqlClient.SqlDataAdapter(sql, (Microsoft.Data.SqlClient.SqlConnection)connection);
                 adapter.Fill(schemaTables);
             }
             else if (connection is MySqlConnection)

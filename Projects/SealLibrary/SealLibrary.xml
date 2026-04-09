@@ -1170,7 +1170,8 @@
         </member>
         <member name="M:Seal.Model.MetaSource.SaveToFile">
             <summary>
-            Save to the current file
+            Save to the current file;
+            
             </summary>
         </member>
         <member name="M:Seal.Model.MetaSource.SaveToFile(System.String)">

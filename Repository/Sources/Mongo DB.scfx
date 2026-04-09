@@ -7,7 +7,6 @@
       <GUID>76fa7d06-1a32-4170-9ad0-1ca1e44378e6</GUID>
       <Name>Mongo Demonstration</Name>
       <ConnectionType>MongoDB</ConnectionType>
-      <ConnectionString />
       <MongoDBConnectionString>mongodb+srv://%USER%:%PASSWORD%@cluster0.1b0hc.mongodb.net</MongoDBConnectionString>
       <UserName>demosr</UserName>
       <Password>DWg+nx4RdLpAb0cYTHcAtg==</Password>
@@ -258,8 +257,8 @@
             <Category>transactions_transactions</Category>
             <DisplayName>Year</DisplayName>
             <DisplayOrder>9</DisplayOrder>
-            <NumericStandardFormat>Decimal0</NumericStandardFormat>
-            <Format>D0</Format>
+            <NumericStandardFormat>Fixedpoint0</NumericStandardFormat>
+            <Format>F0</Format>
           </MetaColumn>
           <MetaColumn>
             <GUID>1daf7479-14ad-453b-b692-0dfde8ad9a30</GUID>
@@ -453,8 +452,8 @@ metacritic</Value>
             <Category>movies</Category>
             <DisplayName>Year</DisplayName>
             <DisplayOrder>12</DisplayOrder>
-            <NumericStandardFormat>Decimal</NumericStandardFormat>
-            <Format>D</Format>
+            <NumericStandardFormat>Fixedpoint0</NumericStandardFormat>
+            <Format>F0</Format>
           </MetaColumn>
           <MetaColumn>
             <GUID>bd55319a-2ac4-45a6-952a-7e7f6b610dd2</GUID>

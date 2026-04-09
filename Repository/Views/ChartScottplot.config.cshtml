@@ -12,6 +12,7 @@
     Template.Parameters.Add(new Parameter() { Name = "chartsp_height", NumericValue = 400, DisplayName = "Chart height", Description = "The chart height in pixels." });
     Template.Parameters.Add(new Parameter() { Name = "chartsp_title", DisplayName = "Title", Description = "Title of the chart." });
     Template.Parameters.Add(new Parameter() { Name = "chartsp_title_size", NumericValue = 12, DisplayName = "Title size", Description = "Size of the title." });
+    Template.Parameters.Add(new Parameter() { Name = "chartsp_format", Value="PNG", Enums = new string[] { "PNG", "SVG"}, DisplayName = "Format", Description = "The format of the chart generated." });
     Template.Parameters.Add(new Parameter()
             {
                 Name = "chartsp_palette",

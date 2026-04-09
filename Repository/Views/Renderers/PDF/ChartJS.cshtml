@@ -18,6 +18,8 @@
     var document = result.Document;
     var container = result.Container;
 
+    if (result.Page == null) return;
+
     try
     {
         foreach (var id in page.GetIdentifiers(ResultPageIdentifierType.ChartJSCanvas))
@@ -25,38 +27,41 @@
             string canvasSelector = "#" + id;
 
             // Get the bounding box of the canvas
-            var boundingBox = await result.Page.EvaluateFunctionAsync<dynamic>(
+            var boundingBox = await result.Page.EvaluateFunctionAsync<BoundingBox>(
              "(selector) => { const element = document.querySelector(selector); var rect = element.getBoundingClientRect(); return { x: rect.x, y : rect.y, width : rect.width, height : rect.height }; }",
              canvasSelector
             );
 
-            // Capture screenshot of the canvas element
-            var screenshotOptions = new ScreenshotOptions
-                    {
-                        Clip = new Clip
-                        {
-                            X = boundingBox.x,
-                            Y = boundingBox.y,
-                            Width = boundingBox.width,
-                            Height = boundingBox.height,
-                        },
-                    };
-
-            var image = await result.Page.ScreenshotDataAsync(screenshotOptions);
-
-            container.Column(column =>
+            if (boundingBox != null)
             {
-                var i = column.Item()
-                .AlignCenter()
-                .AlignMiddle();
-                var w = renderer.GetNumericValue("chart_width");
-                if (w > 0) i = i.Width(w, Unit.Millimetre);
-                var h = renderer.GetNumericValue("chart_height");
-                if (h > 0) i = i.Height(h, Unit.Millimetre);
-                i.Image(image).FitArea();
+                // Capture screenshot of the canvas element
+                var screenshotOptions = new ScreenshotOptions
+                        {
+                            Clip = new Clip
+                            {
+                                X = boundingBox.X,
+                                Y = boundingBox.Y,
+                                Width = boundingBox.Width,
+                                Height = boundingBox.Height,
+                            },
+                        };
 
-                container = column.Item();
-            });
+                var image = await result.Page.ScreenshotDataAsync(screenshotOptions);
+
+                container.Column(column =>
+                {
+                    var i = column.Item()
+                    .AlignCenter()
+                    .AlignMiddle();
+                    var w = renderer.GetNumericValue("chart_width");
+                    if (w > 0) i = i.Width(w, Unit.Millimetre);
+                    var h = renderer.GetNumericValue("chart_height");
+                    if (h > 0) i = i.Height(h, Unit.Millimetre);
+                    i.Image(image).FitArea();
+
+                    container = column.Item();
+                });
+            }
         }
         page.ClearIdentifiers(ResultPageIdentifierType.ChartJSCanvas);
     }

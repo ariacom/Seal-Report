@@ -222,7 +222,6 @@ namespace Seal.Helpers
         }
 
         public const int EM_SETCUEBANNER = 0x1501;
-        List<TreeNode> _originalNodes;
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, string lParam);
     }

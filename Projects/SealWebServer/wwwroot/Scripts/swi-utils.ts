@@ -1,12 +1,12 @@
-﻿declare var tra: string[]; 
-declare var availableDateKeywords;
-declare var shortDateFormat;
-declare var shortDateTimeFormat;
-declare var languageName;
+﻿declare var tra: Record<string, string>;
+declare var availableDateKeywords : any;
+declare var shortDateFormat: string;
+declare var shortDateTimeFormat: string;
+declare var languageName: string;
 
-module SWIUtil {
+namespace SWIUtil {
     export function tr(reference: string): string {
-        var result = tra[reference];
+        var result : string = tra[reference];
         if (!result || result == "") result = reference;
         return result;
     }
@@ -23,7 +23,7 @@ module SWIUtil {
     }
 
     export function GetReportName(path: string): string {
-        return path.split(dirSeparator).pop().replace(".srex", "");
+        return (path.split(dirSeparator).pop() ?? "").replace(".srex", "");
     }
 
     export function GetDirectoryName(path: string): string {
@@ -143,10 +143,10 @@ module SWIUtil {
     }
 
     export function InitNumericInput() {
-        $(".numeric_input").keyup(function () {
-            var v = this.value;
+        $(".numeric_input").keyup((event) => {
+            var v = $(event.target).value;
             if (!$.isNumeric(v)) {
-                this.value = this.value.slice(0, -1);
+                $(event.target).value = $(event.target).value.slice(0, -1);
             }
         });
     }
@@ -176,7 +176,7 @@ module SWIUtil {
         }
     }
 
-    export function GatewayFailure(xhr, status, error) {
+    export function GatewayFailure(xhr: any, status: any, error: any) {
         SWIUtil.ShowMessage("alert-danger", error + ". " + _errorServer, 0);
     }
 
@@ -195,11 +195,11 @@ module SWIUtil {
     export function InitDropDownMenu() {
         //Show dropdown menus on hover
         $('.dropdown-menu-li').hover(
-            function () {
-                $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
+            (event) => {
+                $(event.target).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
             },
-            function () {
-                $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(300);
+            (event) => {
+                $(event.target).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(300);
             }
         );
     }
@@ -220,15 +220,15 @@ module SWIUtil {
         );
     }
 
-    export function addReportMenu(main, parent, value) {
+    export function addReportMenu(main: any, parent: any, value: any) {
         let aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
         if (main && main._reportIcon !== null) aref.append($("<span class='external-navigation glyphicon glyphicon-" + main._reportIcon + "'></span>"));
         aref.addClass(value.classes);
         parent.append($("<li class='menu-reports'>").append(aref));
     }
 
-    export function initMenu(main, parent, items) {
-        items.forEach(function (value) {
+    export function initMenu(main: any, parent: any, items: any) {
+        items.forEach(function (value : any) {
             if (value.path) {
                 SWIUtil.addReportMenu(main, parent, value);
             }
@@ -245,7 +245,7 @@ module SWIUtil {
         });
     }
 
-    export function RefreshMenu(main) {
+    export function RefreshMenu(main : any) {
         //Menu
         _gateway.GetRootMenu(function (menu) {
             if (menu.reports.length != 0 || menu.recentreports.length != 0) $("#menu-main-button").removeClass("disabled");
@@ -265,7 +265,7 @@ module SWIUtil {
             if (menu.favorites.length > 0) {
                 if (menu.reports.length > 0 || (main && (main._reportPath != "" || main._currentView == "report") && _main._profile.showfolders)) parent.append($("<li class='menu-divider-recent-report divider menu-reports')>"));
                 parent.append($("<li class='menu-divider menu-reports'>").html(SWIUtil.tr("Favorites")));
-                menu.favorites.forEach(function (value) {
+                menu.favorites.forEach(function (value : any) {
                     SWIUtil.addReportMenu(main, parent, value);
                 });
             }
@@ -273,7 +273,7 @@ module SWIUtil {
             if (menu.recentreports.length > 0) {
                 if (menu.favorites.length > 0 || menu.reports.length > 0 || (main && (main._reportPath != "" || main._currentView == "report") && _main._profile.showfolders)) parent.append($("<li class='menu-divider-recent-report divider menu-reports')>"));
                 parent.append($("<li class='menu-divider menu-reports'>").html(SWIUtil.tr("Recents")));
-                menu.recentreports.forEach(function (value) {
+                menu.recentreports.forEach(function (value: any) {
                     SWIUtil.addReportMenu(main, parent, value);
                 });
             }
@@ -281,8 +281,8 @@ module SWIUtil {
             $('ul.dropdown-menu [data-toggle=dropdown]').unbind("click").on('click', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
-                $(this).parent().siblings().removeClass('open');
-                $(this).parent().toggleClass('open');
+                $(event.target).parent().siblings().removeClass('open');
+                $(event.target).parent().toggleClass('open');
             });
 
             //Toggle report/folders
@@ -294,17 +294,17 @@ module SWIUtil {
             });
 
             //Execute reports from menu
-            $("a.menu-report").unbind("click").on("click", function () {
+            $("a.menu-report").unbind("click").on("click", (event) => {
                 if (main && !_main._newWindow) {
                     $waitDialog.modal();
-                    main.executeReportFromMenu($(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"), $(this).text());
+                    main.executeReportFromMenu($(event.target).attr("path"), $(event.target).attr("viewGUID"), $(event.target).attr("outputGUID"), $(event.target).text());
                 }
                 else {
-                    SWIUtil.executeReport(main, $(this).attr("path"), $(this).attr("viewGUID"), $(this).attr("outputGUID"));
+                    SWIUtil.executeReport(main, $(event.target).attr("path"), $(event.target).attr("viewGUID"), $(event.target).attr("outputGUID"));
                 }
             });
-            $("a.menu-report span").unbind("click").on("click", function () {
-                const parent = $(this).parent();
+            $("a.menu-report span").unbind("click").on("click", (event) => {
+                const parent = $(event.target).parent();
                 if (!main || !main._newWindow) {
                     SWIUtil.executeReport(main, parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
                 }
@@ -319,14 +319,14 @@ module SWIUtil {
         });
     }
 
-    export function executeReport(main, path: string, viewGUID: string, outputGUID: string) {
+    export function executeReport(main : any, path: string, viewGUID: string, outputGUID: string) {
         _gateway.ExecuteReport(path, viewGUID, outputGUID);
         setTimeout(function () {
             if (main) main.refreshMenus();
         }, 1000);
     }
 
-    export function InitProfile(profile) {
+    export function InitProfile(profile : any) {
         SWIUtil.ShowHideControl($("#profile-nav-item"), true);
         $("#profile-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
@@ -370,8 +370,8 @@ module SWIUtil {
                     var executionmode = $("#executionmode-select").val();
 
                     //connections
-                    var connections = [];
-                    profile.sources.forEach(function (source) {
+                    var connections : any[] = [];
+                    profile.sources.forEach(function (source : any) {
                         connections.push(source.GUID + "\r" + $("#" + source.GUID).val())
                     });
                     _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, executionmode, connections, function () {
@@ -430,11 +430,11 @@ module SWIUtil {
             else {
                 $("#default-connections").parent().show();
                 $("#default-connections-title").parent().show();
-                profile.sources.forEach(function (source) {
+                profile.sources.forEach(function (source : any) {
                     const $connectionDiv = $("<div class='row'>");
                     $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
                     const $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
-                    source.connections.forEach(function (connection) {
+                    source.connections.forEach(function (connection : any) {
                         $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
                     });
                     $connectionDiv.append($("<div class='col-sm-8' style='padding-bottom:5px;'>").append($connectionSelect));
@@ -448,10 +448,10 @@ module SWIUtil {
     export function InitStandardInput(id: string, val: string, modif: any, handler: (val: string) => any, numeric ?: boolean) {
         var $input = $(id);
         $input.val(val);
-        $input.unbind("input keyup change").on("input keyup change", function (e) {
-            if (e.type == "change" && modif) modif.setModified(true);
-            if (numeric) this.value = this.value.replace(/[^0-9\.]/g, '');
-            handler($(this).val());
+        $input.unbind("input keyup change").on("input keyup change", (event) => {
+            if (event.type == "change" && modif) modif.setModified(true);
+            if (numeric) $(event.target).value = $(event.target).value.replace(/[^0-9\.]/g, '');
+            handler($(event.target).val());
         });
 
         return $input;
@@ -464,8 +464,8 @@ module SWIUtil {
         $select.empty();
         $select.append(SWIUtil.GetOption("1", textTrue, valstr));
         $select.append(SWIUtil.GetOption("0", textFalse, valstr));
-        $select.unbind("change").on("change", function (e) {
-            handler($(this).val() == "1");
+        $select.unbind("change").on("change", (event) => {
+            handler($(event.target).val() == "1");
         });
         $select.selectpicker('refresh');
         return $select;

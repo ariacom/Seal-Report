@@ -43,7 +43,7 @@ using System.Security.AccessControl;
 using System.ServiceModel.Syndication;
 using System.Web;
 using System.Xml.Linq;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.DirectoryServices;
 using System.Net;
 using Twilio.Rest.Api.V2010.Account;
@@ -57,8 +57,7 @@ namespace Seal.Helpers
     {
         //Directory location for cached assemblies
         public static string RazorCacheDirectory = "";
-
-        static EventLogEntryType _01 = EventLogEntryType.Information; //Necessary to compile Security Scripts
+        public static EventLogEntryType _01; //Necessary to compile Security Scripts
         static int _loadTries = 3;
         /// <summary>
         /// Force the load of the assemblies
@@ -110,7 +109,6 @@ namespace Seal.Helpers
                     _ = new FastZip();
                     _ = new OdbcConnection();
                     _ = new SqlConnection();
-                    _ = new Microsoft.Data.SqlClient.SqlConnection();
                     _ = new SftpClient("", "a", "");
                     _ = new FtpClient();
                     _ = new AdomdConnection();
@@ -137,6 +135,7 @@ namespace Seal.Helpers
 #if WINDOWS
                     _ = new System.Windows.Forms.Control();
 #endif
+                    _01 = EventLogEntryType.Warning;
                 }
                 catch (Exception ex)
                 {

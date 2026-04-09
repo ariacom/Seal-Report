@@ -897,7 +897,6 @@ namespace Seal.Model
         {
             get
             {
-                Report result = null;
                 if (!string.IsNullOrEmpty(ScheduleSequencerPath))
                 {
                     var path = System.IO.Path.Combine(Repository.ReportsFolder, ScheduleSequencerPath);

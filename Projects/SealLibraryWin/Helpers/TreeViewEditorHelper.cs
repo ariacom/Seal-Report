@@ -16,7 +16,7 @@ using System.Collections;
 using System.Data.Common;
 using System.Data.Odbc;
 using MongoDB.Driver;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 using MySql.Data.MySqlClient;

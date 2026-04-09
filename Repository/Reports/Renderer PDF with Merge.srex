@@ -2674,6 +2674,7 @@ ORDER BY 1</Sql>
         
         //save report where generatePdf would have
         doc.Save(report.ResultFilePath);
+        System.Threading.Thread.Sleep(500);
     }
     catch(Exception ex) 
     {

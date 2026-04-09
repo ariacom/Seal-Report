@@ -105,7 +105,9 @@
         [SecuritySafeCritical]
         private static Func<ITemplate> GetConstructorInternal(Type type)
         {
+#pragma warning disable SYSLIB0003 // Type or member is obsolete
             (new PermissionSet(PermissionState.Unrestricted)).Assert();
+#pragma warning restore SYSLIB0003 // Type or member is obsolete
             var method = type.GetConstructor(new Type[0]);
 
             var result = Expression.Lambda<Func<ITemplate>>(

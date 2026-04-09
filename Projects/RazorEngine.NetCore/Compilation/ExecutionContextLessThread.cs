@@ -97,7 +97,7 @@ namespace RazorEngine.Compilation
             catch (ThreadAbortException e)
             {
                 messagePumpExn = e;
-                Thread.ResetAbort();
+                throw;
             }
             catch (Exception e)
             {
@@ -226,7 +226,6 @@ namespace RazorEngine.Compilation
             (new PermissionSet(PermissionState.Unrestricted)).Assert();
             if (t.IsAlive)
             {
-                t.Abort();
                 t.Join();
             }
         }

@@ -915,6 +915,7 @@ namespace Seal.Model
         }
 
 
+        /*
         async Task SandBoxAsync()
         {
             OutputEmailDevice.EmailDefinition def = new EmailDefinition();
@@ -982,7 +983,8 @@ namespace Seal.Model
             };
 
             //awaiting PostAsync method call
-            graphClient.Users[userId].SendMail.PostAsync(body);
+            //graphClient.Users[userId].SendMail.PostAsync(body);
         }
+        */
     }
 }

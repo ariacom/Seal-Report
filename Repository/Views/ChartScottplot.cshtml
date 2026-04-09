@@ -188,7 +188,6 @@
                 var pie = plt.Add.Pie(slices);
 
                 pie.ExplodeFraction = view.GetDoubleValue("chartsp_pie_explode_fraction");
-                pie.ShowSliceLabels = view.GetBoolValue("chartsp_pie_labels");
                 pie.SliceLabelDistance = view.GetDoubleValue("chartsp_pie_distance");
             }
         }
@@ -253,7 +252,7 @@
         plt.Axes.AutoScale();
         // determine the width of the largest tick label
         float largestLabelWidth = 0;
-        using SKPaint paint = new();
+        using Paint paint = Paint.NewDisposablePaint();
         foreach (Tick tick in ticks)
         {
             PixelSize size = plt.Axes.Bottom.TickLabelStyle.Measure(tick.Label, paint).Size;
@@ -371,7 +370,7 @@
         }
 
         <div>
-            @Raw(plt.GetImageHtml(view.GetNumericValue("chartsp_width"), view.GetNumericValue("chartsp_height")))
+            @Raw(view.GetValue("chartsp_format") == "PNG" ? plt.GetPngHtml(view.GetNumericValue("chartsp_width"), view.GetNumericValue("chartsp_height")) : plt.GetSvgHtml(view.GetNumericValue("chartsp_width"), view.GetNumericValue("chartsp_height")))
         </div>
         chartOk = true;
     }
