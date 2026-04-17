@@ -1,7 +1,8 @@
 "use strict";
-/// <reference path="typings/jquery/jquery.d.ts" />
+/// <reference path="typings/jquery/JQuery.d.ts" />
 /// <reference path="typings/bootstrap/index.d.ts" />
 /// <reference path="typings/jstree/jstree.d.ts" />
+/// <reference path="typings/datatables/types.d.ts" />
 /// <reference path="typings/main.d.ts" />
 var $waitDialog;
 var $editDialog;
@@ -273,7 +274,7 @@ class SWIMain {
         });
         //Delete reports
         $("#report-delete-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target)))
+            if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
             var checked = $(".report-checkbox:checked").length;
@@ -299,7 +300,7 @@ class SWIMain {
         });
         //Rename
         $("#report-rename-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target)))
+            if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
             var source = $(".report-checkbox:checked").first().data("path");
@@ -324,7 +325,7 @@ class SWIMain {
         });
         //Copy
         $("#report-copy-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target)))
+            if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
             _main._clipboard = [];
@@ -337,7 +338,7 @@ class SWIMain {
         });
         //Cut
         $("#report-cut-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target)))
+            if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
             _main._clipboard = [];
@@ -350,7 +351,7 @@ class SWIMain {
         });
         //Paste
         $("#report-paste-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target)))
+            if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
             if (_main._clipboard.length > 0) {
@@ -461,8 +462,8 @@ class SWIMain {
             $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, "", "remove", "glyphicon glyphicon-minus-sign")));
         }
         $("#config-groups-dropdown > li > a").unbind("click").on("click", (event) => {
-            var type = $(event.target).prop("type");
-            var id = $(event.target).prop("id");
+            var type = $(event.currentTarget).prop("type");
+            var id = $(event.currentTarget).prop("id");
             if (type == "select") {
                 _main._configGroup = _main._config.groups.find((v) => v.Name === id);
             }
@@ -577,7 +578,7 @@ class SWIMain {
             $("#config-group-folder-name").val("<" + SWIUtil.tr2("No folder configuration") + ">");
         }
         else {
-            $("#config-group-folder-name").val(SWIUtil.tr2("Configuration for ") + " " + detail.Path);
+            $("#config-group-folder-name").val(SWIUtil.tr2("Configuration for") + " " + detail.Path);
             var $select = $("#config-group-folder-select");
             $select.unbind("change");
             $select.selectpicker("destroy");
@@ -743,11 +744,11 @@ class SWIMain {
     }
     resize() {
         if (!SWIUtil.IsMobile()) {
-            $("#folder-tree").height($(window).height() - 80);
-            $("#file-table-view").height($(window).height() - 125);
+            $("#folder-tree").height($(window).height() ?? 0 - 80);
+            $("#file-table-view").height($(window).height() ?? 0 - 125);
         }
         else {
-            $("#folder-tree").css("max-height", ($(window).height() / 2 - 45));
+            $("#folder-tree").css("max-height", ($(window).height() ?? 0 / 2 - 45));
         }
     }
     enableControls() {
@@ -889,8 +890,10 @@ class SWIMain {
     clearFilesTable() {
         var $tableHead = $("#file-table-head");
         var $tableBody = $("#file-table-body");
-        if (!$("#file-table-head").is(':empty'))
-            $('#file-table').dataTable().fnDestroy();
+        if (!$("#file-table-head").is(':empty')) {
+            const table = new DataTable('#file-table');
+            table.destroy();
+        }
         $tableHead.empty();
         $tableBody.empty();
     }
@@ -1005,14 +1008,14 @@ class SWIMain {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             var $tableBody = $("#output-table-body");
-            var top = $target.offset().top - 30;
+            var top = ($target.offset()?.top ?? 0) - 30;
             $tableBody.empty();
             $tableBody.append($("<tr>").append($("<td colspan=2>").append($("<i>").addClass("fa fa-spinner fa-spin fa-1x fa-fw")).append($("<span>").html(SWIUtil.tr("Please wait") + "..."))));
             $outputPanel.css({
                 'display': 'inline',
                 'position': 'absolute',
                 'z-index': '10000',
-                'left': $target.offset().left - $outputPanel.width(),
+                'left': ($target.offset()?.left ?? 0) - ($outputPanel.width() ?? 0),
                 'top': top,
                 'opacity': 0.6
             }).show();
@@ -1049,8 +1052,8 @@ class SWIMain {
                     $tr.append($("<td>").html(SWIUtil.tr("Output")));
                 }
                 //adjust position with the final size
-                top = $target.offset().top + 40 - $outputPanel.height();
-                $outputPanel.css({ top: top, left: $target.offset().left - $outputPanel.width(), position: 'absolute' });
+                top = ($target.offset()?.top ?? 0) + 40 - ($outputPanel.height() ?? 0);
+                $outputPanel.css({ top: top, left: ($target.offset()?.left ?? 0) - ($outputPanel.width() ?? 0), position: 'absolute' });
                 $(".output-execute").unbind("click").on("click", function (e) {
                     $outputPanel.hide();
                     if (!_main._newWindow) {
@@ -1082,7 +1085,7 @@ class SWIMain {
         if (_editor)
             _editor.init();
         var isMobile = SWIUtil.IsMobile();
-        $('#file-table').dataTable({
+        new DataTable($('#file-table'), {
             bSort: true,
             stateSave: true,
             aaSorting: [],

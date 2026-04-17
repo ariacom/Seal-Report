@@ -308,7 +308,7 @@ async function getTableData(datatable, guid, viewid, pageid, data, callback, set
     var action = "ActionGetTableData";
 
     try {
-        var params = data.draw + "§" + settings.aaSorting + "§" + settings.oPreviousSearch.sSearch.replace("<", "&lt;").replace(">", "&gt;") + "§" + settings._iDisplayLength + "§" + settings._iDisplayStart;
+        var params = data.draw + "§" + (data.order && data.order.length > 0 ? data.order[0].column + "," + data.order[0].dir : "") + "§" + (data.search.value ? data.search.value.replace("<", "&lt;").replace(">", "&gt;") : "") + "§" + data.length + "§" + data.start;
         if (_urlPrefix != "") {
             $.post(_urlPrefix + action, { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
                 .done(function (data) {

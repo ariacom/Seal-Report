@@ -141,15 +141,15 @@ namespace SWIUtil {
     export function IsMobile() {
         return SWIUtil.FindBootstrapEnvironment() == "xs";
     }
-
+    /*
     export function InitNumericInput() {
         $(".numeric_input").keyup((event) => {
-            var v = $(event.target).value;
+            var v = $(event.target).val();
             if (!$.isNumeric(v)) {
-                $(event.target).value = $(event.target).value.slice(0, -1);
+                $(event.target).val = $(event.target).val.slice(0, -1);
             }
         });
-    }
+    }*/
 
     export function StartSpinning() {
         $("#refresh-nav-item").addClass("fa-spin");
@@ -300,13 +300,13 @@ namespace SWIUtil {
                     main.executeReportFromMenu($(event.target).attr("path"), $(event.target).attr("viewGUID"), $(event.target).attr("outputGUID"), $(event.target).text());
                 }
                 else {
-                    SWIUtil.executeReport(main, $(event.target).attr("path"), $(event.target).attr("viewGUID"), $(event.target).attr("outputGUID"));
+                    SWIUtil.executeReport(main, $(event.target).attr("path") as string, $(event.target).attr("viewGUID") as string, $(event.target).attr("outputGUID") as string);
                 }
             });
             $("a.menu-report span").unbind("click").on("click", (event) => {
                 const parent = $(event.target).parent();
                 if (!main || !main._newWindow) {
-                    SWIUtil.executeReport(main, parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
+                    SWIUtil.executeReport(main, parent.attr("path") as string, parent.attr("viewGUID") as string, parent.attr("outputGUID") as string);
                 }
                 else {
                     main.executeReportFromMenu(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"), parent.text());
@@ -341,7 +341,7 @@ namespace SWIUtil {
                     $("#profile-dialog").modal('hide');
                     $("#change-password-submit").unbind("click").on("click", function () {
                         _gateway.ChangePassword(
-                            $("#password-change").val(), $("#password-change1").val(), $("#password-change2").val(),
+                            $("#password-change").val() as string, $("#password-change1").val() as string, $("#password-change2").val() as string,
                             function (data) {
                                 if (data.error) SWIUtil.ShowMessage("alert-danger", data.error, -1);
                                 else {
@@ -359,22 +359,22 @@ namespace SWIUtil {
             $("#profile-save").unbind("click").on("click", function (e) {
                 $("#profile-dialog").modal('hide');
                 if (profile.editprofile) {
-                    var onstartup = $("#onstartup-select").val();
+                    var onstartup = $("#onstartup-select").val() as string;
                     var startupreport = profile.startupreport;
                     if (onstartup == "4") {
                         onstartup = "3"; //Execute report
                         startupreport = _main._lastReport.path;
 
                     }
-                    var startupreportname = $("#onstartup-reportname").val();
-                    var executionmode = $("#executionmode-select").val();
+                    var startupreportname = $("#onstartup-reportname").val() as string;
+                    var executionmode = $("#executionmode-select").val() as string;
 
                     //connections
                     var connections : any[] = [];
                     profile.sources.forEach(function (source : any) {
                         connections.push(source.GUID + "\r" + $("#" + source.GUID).val())
                     });
-                    _gateway.SetUserProfile($("#culture-select").val(), onstartup, startupreport, startupreportname, executionmode, connections, function () {
+                    _gateway.SetUserProfile($("#culture-select").val() as string, onstartup, startupreport, startupreportname, executionmode, connections, function () {
                         location.reload();
                     });
                 }
@@ -388,8 +388,8 @@ namespace SWIUtil {
             $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default startup"), profile.onstartup));
             $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Do not execute report"), profile.onstartup));
             $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute the last report"), profile.onstartup));
-            if (profile.startupreportname) $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Execute the report") + " '" + profile.startupreportname + "'", profile.onstartup));
-            if (_main._lastReport.name && _main._lastReport.name != profile.startupreportname) $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.name + "'", profile.onstartup));
+            if (profile.startupreportname) $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Execute the report") + " '" + profile.report + "'", profile.onstartup));
+            if (_main._lastReport.name && _main._lastReport.name != profile.startupreportname) $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.path + "'", profile.onstartup));
             $select.selectpicker('refresh');
 
             $("#onstartup-reportname").val(profile.startupreportname);
@@ -450,8 +450,9 @@ namespace SWIUtil {
         $input.val(val);
         $input.unbind("input keyup change").on("input keyup change", (event) => {
             if (event.type == "change" && modif) modif.setModified(true);
-            if (numeric) $(event.target).value = $(event.target).value.replace(/[^0-9\.]/g, '');
-            handler($(event.target).val());
+            const target = event.target as HTMLInputElement;
+            if (numeric) target.value = target.value.replace(/[^0-9\.\,\r\n\-]/g, '');
+            handler(target.value);
         });
 
         return $input;

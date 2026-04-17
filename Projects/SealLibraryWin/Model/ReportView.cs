@@ -1571,7 +1571,8 @@ namespace Seal.Model
                         Model.ExecChartIsNumericAxis = dimensions[0].Element.IsNumeric;
                         Model.ExecChartIsDateTimeAxis = dimensions[0].Element.IsDateTime;
                         Model.ExecD3XAxisFormat = dimensions[0].Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
-                        Model.ExecMomentJSXAxisFormat = dimensions[0].Element.GetMomentJSFormat(CultureInfo);
+                        Model.ExecMomentJSXAxisFormat = dimensions[0].Element.GetMomentJSFormat(CultureInfo); ;
+                        Model.ExecDateFnsXAxisFormat = dimensions[0].Element.GetDateFnsFormat(CultureInfo);
                     }
                 }
             }

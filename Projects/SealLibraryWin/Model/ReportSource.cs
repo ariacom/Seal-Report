@@ -228,6 +228,20 @@ namespace Seal.Model
                 ConnectionGUID = Connections[0].GUID;
             }
 
+            //Move deprecated connections from 10.0
+            foreach (var connection in Connections)
+            {
+                if (connection.ConnectionType == ConnectionType.MSSQLServer)
+                {
+                    connection.ConnectionType = ConnectionType.MSSQLServerMicrosoft;
+                    if (!connection.MSSqlServerConnectionString.ToLower().Contains("trustservercertificate=true;"))
+                    {
+                        if (!connection.MSSqlServerConnectionString.EndsWith(";")) connection.MSSqlServerConnectionString += ";";
+                        connection.MSSqlServerConnectionString += "TrustServerCertificate=True;";
+                    }
+                }
+            }
+
             Loaded = true;
         }
 

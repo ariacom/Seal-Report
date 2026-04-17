@@ -263,15 +263,11 @@
       <NewValue>url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular</NewValue>
     </FileReplacePattern>
   </FileReplacePatterns>
-  <CssFiles>_ed.editor.bootstrap.min.css</CssFiles>
+  <CssFiles />
   <WebCssFiles />
-  <ScriptFiles>_ed.dataTables.editor.min.js
-_ed.bootstrap.min.js
-_ed.common.js
-</ScriptFiles>
+  <ScriptFiles />
   <WebScriptFiles />
   <AlternateTempDirectory />
-  <EnableDownloadUpload>false</EnableDownloadUpload>
   <TaskFolderName>Seal Report</TaskFolderName>
   <AuditEnabled>true</AuditEnabled>
   <AuditScript />

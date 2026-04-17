@@ -2,12 +2,12 @@
 
 	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <TypeScriptTarget>ES2021</TypeScriptTarget>
-	  <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+	  <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <TypeScriptTarget>ES2021</TypeScriptTarget>
-	  <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+	  <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -60,6 +60,23 @@
 		<Content Remove="Views\Home\MenuBig.cshtml" />
 		<Content Remove="wwwroot\Content\sealweb-editor.css" />
 		<Content Remove="wwwroot\Content\_ed.editor.bootstrap.min.css" />
+		<Content Remove="wwwroot\Scripts\swi-assistant.js" />
+		<Content Remove="wwwroot\Scripts\swi-assistant.js.map" />
+		<Content Remove="wwwroot\Scripts\swi-editor.js" />
+		<Content Remove="wwwroot\Scripts\swi-editor.js.map" />
+		<Content Remove="wwwroot\Scripts\swi-gateway-assistant.js" />
+		<Content Remove="wwwroot\Scripts\swi-gateway-assistant.js.map" />
+		<Content Remove="wwwroot\Scripts\swi-gateway-editor.js" />
+		<Content Remove="wwwroot\Scripts\swi-gateway-editor.js.map" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-assistant.ts" />
+	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-button-group.ts" />
+	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-editor.ts" />
+	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-gateway-assistant.ts" />
+	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-gateway-editor.ts" />
+	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-properties.ts" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -69,19 +86,20 @@
 
 	<ItemGroup>
 		<PackageReference Include="IdentityModel" Version="7.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.5" />
-		<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.6" />
 		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="6.0.3">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Security.Permissions" Version="10.0.5" />
+		<PackageReference Include="System.Security.Permissions" Version="10.0.6" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\SealLibrary\SealLibrary.csproj" />
 	</ItemGroup>
+
 
   <!-- Fix for https://github.com/dotnet/aspnetcore/issues/57147  -->
   <Target Name="PreResolveProjectStaticWebAssets" BeforeTargets="ResolveProjectStaticWebAssets">

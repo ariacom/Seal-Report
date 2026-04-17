@@ -215,6 +215,9 @@
                     previous: "&lt;&lt;",
                     next: ">>",
                     last: ">|"
+                },
+                lengthLabels: {
+                    '-1': "@Raw(Helper.ToJS(report.Translate("All")))"
                 }
             },
             pagingType: "full_numbers",
@@ -331,13 +334,14 @@
 
 @if (report.HasChartJSChart)
 {
-    @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"))
-    @Raw(report.AttachScriptFile("chartjs-plugin-datalabels.min.js", "https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"))
+    @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js"))
+    @Raw(report.AttachScriptFile("chartjs-plugin-datalabels.min.js", "https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"))
+    @Raw(report.AttachScriptFile("chartjs-adapter-date-fns.min.js", "https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-date-fns/3.0.0/chartjs-adapter-date-fns.min.js"))
 }
 
 @if (report.HasPlotlyChart)
 {
-    @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdn.plot.ly/plotly-1.48.1.min.js"))
+    @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.1.1/plotly.min.js"))
     if (view.CultureInfo.TwoLetterISOLanguageName != "en")
     {
         @Raw(report.AttachScriptFile("plotly\\plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))

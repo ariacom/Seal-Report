@@ -1237,6 +1237,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Moment JS Format for the chart
+        /// </summary>
+        public string GetDateFnsFormat(CultureInfo culture)
+        {
+            return Helper.ToDateFnsFormat(culture, FormatEl);
+        }
+
+        /// <summary>
         /// Excel Format of the element
         /// </summary>
         public string GetExcelFormat(CultureInfo culture)

@@ -3597,6 +3597,11 @@
             Moment JS Format for the chart
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportElement.GetDateFnsFormat(System.Globalization.CultureInfo)">
+            <summary>
+            Moment JS Format for the chart
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportElement.GetExcelFormat(System.Globalization.CultureInfo)">
             <summary>
             Excel Format of the element
@@ -4181,6 +4186,11 @@
         <member name="F:Seal.Model.ReportModel.ExecMomentJSXAxisFormat">
             <summary>
             Format for Moment JS chart X axis
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportModel.ExecDateFnsXAxisFormat">
+            <summary>
+            Format for Date FNS chart X axis
             </summary>
         </member>
         <member name="F:Seal.Model.ReportModel.ExecNVD3ChartType">
@@ -7027,22 +7037,12 @@
         </member>
         <member name="F:Seal.Model.ResultCell.DefaultNumericTitleCssStyle">
             <summary>
-            Default Css Style for a numeric title cell. Default value is 'text-align:right;padding-right:25px;'
-            </summary>
-        </member>
-        <member name="F:Seal.Model.ResultCell.DefaultNumericSummaryTitleCssStyle">
-            <summary>
-            Default Css Style for a numeric title cell of summary table. Default value is 'text-align:right;'
+            Default Css Style for a numeric title cell.
             </summary>
         </member>
         <member name="F:Seal.Model.ResultCell.DefaultDateTimeTitleCssStyle">
             <summary>
-            Default Css Style for a datetime title cell. Default value is 'text-align:right;padding-right:25px;'
-            </summary>
-        </member>
-        <member name="F:Seal.Model.ResultCell.DefaultDateTimeSummaryTitleCssStyle">
-            <summary>
-            Default Css Style for a datetime title cell. Default value is 'text-align:right;'
+            Default Css Style for a datetime title cell.
             </summary>
         </member>
         <member name="P:Seal.Model.ResultCell.HTMLValue">

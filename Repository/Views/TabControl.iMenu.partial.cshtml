@@ -13,6 +13,7 @@
             if (childView.GetBoolValue("tab_show_count"))
             {
                 var dataTableView = report.FindViewFromTemplate(childView.Views, ReportViewTemplate.DataTableName);
+                if (dataTableView == null) dataTableView = report.FindViewFromTemplate(childView.Views, ReportViewTemplate.DataTableEditorName);
                 if (dataTableView != null)
                 {
                     var pages = dataTableView.ModelView.Model?.Pages;

@@ -63,6 +63,7 @@ namespace Seal.Model
         public object Tag3;
 
         private string _lastSearch = "";
+        private string _lastSort = "";
         private List<ResultCell[]> _filteredLines = null;
 
         /// <summary>
@@ -156,6 +157,24 @@ namespace Seal.Model
                 }
                 if (ResultCell.ShouldSort(_filteredLines)) _filteredLines.Sort(ResultCell.CompareCellsForTableLoad);
             }
+            else if (string.IsNullOrEmpty(sort) && _lastSort != sort)
+            {
+                //Back to default sort
+                int i = 0;
+                foreach (var element in model.Elements)
+                {
+                    if (element.SortOrder != ReportElement.kNoSortKeyword)
+                    {
+                        if (element.SortOrder == ReportElement.kAutomaticAscSortKeyword) element.FinalSortOrder = string.Format("{0} {1}", i, ReportElement.kAscendantSortKeyword);
+                        else if (element.SortOrder == ReportElement.kAutomaticDescSortKeyword) element.FinalSortOrder = string.Format("{0} {1}", i, ReportElement.kDescendantSortKeyword);
+                        else element.FinalSortOrder = element.SortOrder;
+                    }
+                    else element.FinalSortOrder = "";
+                    i++;
+                }
+                if (ResultCell.ShouldSort(_filteredLines)) _filteredLines.Sort(ResultCell.CompareCellsForTableLoad);
+            }
+            _lastSort = sort;
 
             //build the json result
             if (len == -1)

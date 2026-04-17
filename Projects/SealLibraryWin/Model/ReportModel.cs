@@ -1086,6 +1086,12 @@ model.ResultTable = query2.CopyToDataTable2();
         public string ExecMomentJSXAxisFormat;
 
         /// <summary>
+        /// Format for Date FNS chart X axis
+        /// </summary>
+        [XmlIgnore]
+        public string ExecDateFnsXAxisFormat;
+
+        /// <summary>
         /// NVD3 chart type
         /// </summary>
         [XmlIgnore]

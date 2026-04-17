@@ -53,9 +53,9 @@
                 {
                     <tr>
                         <td>@item.Name (@item.Connection.Name)</td>
-                        <td class="text-center">@item.ResultTable.Rows.Count</td>
-                        <td class="text-center">@item.Pages.Count</td>
-                        <td class="text-center">@item.ExecutionDuration</td>
+                        <td>@item.ResultTable.Rows.Count</td>
+                        <td>@item.Pages.Count</td>
+                        <td>@item.ExecutionDuration</td>
                         <td>@Raw(Helper.ToHtml(item.RestrictionText))</td>
                     </tr>
 
@@ -65,9 +65,9 @@
                         {
                             <tr>
                                 <td>@item.Name (@item.Connection.Name)<br /><i>@subModel.Name (@subModel.Connection.Name)</i></td>
-                                <td class="text-center">@subModel.ResultTable.Rows.Count</td>
-                                <td class="text-center">@subModel.Pages.Count</td>
-                                <td class="text-center">@subModel.ExecutionDuration</td>
+                                <td>@subModel.ResultTable.Rows.Count</td>
+                                <td>@subModel.Pages.Count</td>
+                                <td>@subModel.ExecutionDuration</td>
                                 <td>@Raw(Helper.ToHtml(subModel.RestrictionText))</td>
                             </tr>
 

@@ -399,7 +399,7 @@ namespace SealWebServer.Controllers
                         Debug.WriteLine(string.Format("Report Status {0}", report.Status));
                         if (report.Status == ReportStatus.Executed)
                         {
-                            return Json(new { result_ready = true }); ;
+                            return Json(new { result_ready = true });
                         }
                         else if (report.IsExecuting)
                         {

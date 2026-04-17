@@ -4,34 +4,35 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using System.ComponentModel;
-using Seal.Model;
-using System.Data.OleDb;
-using System.Text.RegularExpressions;
-using System.Web;
-using RazorEngine.Templating;
-using System.IO;
-using System.Diagnostics;
-using System.Security.Principal;
 using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
-using System.Xml.Serialization;
-using System.Globalization;
-using System.Net.Mail;
-using Microsoft.Data.SqlClient;
-using System.Linq;
-using System.Runtime.InteropServices;
-using Oracle.ManagedDataAccess.Client;
-using System.Xml;
-using Npgsql;
+using System.Data.OleDb;
 using System.Data.SQLite;
-using DocumentFormat.OpenXml.Bibliography;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net.Mail;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Security.Principal;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Xml;
+using System.Xml.Serialization;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.Data.SqlClient;
 using MimeKit;
+using Npgsql;
+using Oracle.ManagedDataAccess.Client;
+using RazorEngine.Templating;
+using Seal.Model;
 
 namespace Seal.Helpers
 {
@@ -344,7 +345,7 @@ namespace Seal.Helpers
             return HttpUtility.JavaScriptStringEncode(value);
         }
 
-
+        /*
         static public string ToMomentJSFormat(CultureInfo culture, string datetimeFormat)
         {
             string format = datetimeFormat;
@@ -358,6 +359,151 @@ namespace Seal.Helpers
             else if (datetimeFormat == "F") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
 
             return format.Replace("y", "Y").Replace("d", "D").Replace("tt", "A").Replace("z", "Z").Replace("/", culture.DateTimeFormat.DateSeparator);
+        }
+
+        static public string ToDateFnsFormat(CultureInfo culture, string datetimeFormat)
+        {
+            string format = datetimeFormat;
+            if (datetimeFormat == "d") format = culture.DateTimeFormat.ShortDatePattern;
+            else if (datetimeFormat == "D") format = culture.DateTimeFormat.LongDatePattern;
+            else if (datetimeFormat == "t") format = culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "T") format = culture.DateTimeFormat.LongTimePattern;
+            else if (datetimeFormat == "g") format = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "G") format = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+            else if (datetimeFormat == "f") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "F") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+
+            return format.Replace("y", "Y").Replace("d", "D").Replace("tt", "A").Replace("z", "Z").Replace("/", culture.DateTimeFormat.DateSeparator);
+        }
+        */
+
+        public static string ToMomentJSFormat(CultureInfo culture, string datetimeFormat)
+        {
+            var tokenMap = new (string CSharp, string Moment)[]
+            {
+        ("dddd", "dddd"),   // full weekday name — same token
+        ("ddd",  "ddd"),    // short weekday name — same token
+        ("dd",   "DD"),     // day 2 digits
+        ("d",    "D"),      // day 1-2 digits
+        ("yyyy", "YYYY"),   // year 4 digits
+        ("yyy",  "YYYY"),   // year 4 digits (fallback)
+        ("yy",   "YY"),     // year 2 digits
+        ("y",    "YYYY"),   // year minimal -> 4 digits
+        ("fff",  "SSS"),    // milliseconds 3 digits
+        ("ff",   "SS"),     // milliseconds 2 digits
+        ("f",    "S"),      // milliseconds 1 digit
+        ("tt",   "A"),      // AM/PM
+        ("t",    "A"),      // A/P -> AM/PM
+        ("zzz",  "Z"),      // timezone +01:00
+        ("zz",   "ZZ"),     // timezone +0100
+        ("z",    "ZZ"),     // timezone offset
+        ("K",    "Z"),      // timezone info
+        ("g",    ""),       // era — no Moment equivalent
+            };
+
+            return ConvertFormat(culture, datetimeFormat, tokenMap);
+        }
+
+        public static string ToDateFnsFormat(CultureInfo culture, string datetimeFormat)
+        {
+            string format = datetimeFormat;
+            if (datetimeFormat == "d") format = culture.DateTimeFormat.ShortDatePattern;
+            else if (datetimeFormat == "D") format = culture.DateTimeFormat.LongDatePattern;
+            else if (datetimeFormat == "t") format = culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "T") format = culture.DateTimeFormat.LongTimePattern;
+            else if (datetimeFormat == "g") format = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "G") format = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+            else if (datetimeFormat == "f") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "F") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+
+            var tokenMap = new (string CSharp, string DateFns)[]
+            {
+        ("dddd", "EEEE"),   // full weekday name
+        ("ddd",  "EEE"),    // short weekday name
+        ("yyyy", "yyyy"),   // needed to block single 'y' match
+        ("yyy",  "yyyy"),   // year 4 digits (fallback)
+        ("fff",  "SSS"),    // milliseconds 3 digits
+        ("ff",   "SS"),     // milliseconds 2 digits
+        ("f",    "S"),      // milliseconds 1 digit
+        ("tt",   "aa"),     // AM/PM
+        ("t",    "aa"),     // A/P -> AM/PM
+        ("zzz",  "xxx"),    // timezone +01:00
+        ("zz",   "xx"),     // timezone +0100
+        ("z",    "xx"),     // timezone offset
+        ("K",    "xxx"),    // timezone info
+        ("y",    "yyyy"),   // year minimal -> 4 digits
+        ("g",    ""),       // era — no date-fns equivalent
+            };
+
+            return ConvertFormat(culture, datetimeFormat, tokenMap);
+        }
+
+        private static string ConvertFormat(CultureInfo culture, string datetimeFormat, (string From, string To)[] tokenMap)
+        {
+            string format = datetimeFormat;
+            if (datetimeFormat == "d") format = culture.DateTimeFormat.ShortDatePattern;
+            else if (datetimeFormat == "D") format = culture.DateTimeFormat.LongDatePattern;
+            else if (datetimeFormat == "t") format = culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "T") format = culture.DateTimeFormat.LongTimePattern;
+            else if (datetimeFormat == "g") format = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "G") format = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+            else if (datetimeFormat == "f") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "F") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+
+            var result = new StringBuilder();
+            int i = 0;
+
+            while (i < format.Length)
+            {
+                // Quoted literal strings: 'text' passes through as-is
+                if (format[i] == '\'')
+                {
+                    i++;
+                    while (i < format.Length && format[i] != '\'')
+                    {
+                        result.Append(format[i]);
+                        i++;
+                    }
+                    if (i < format.Length) i++; // consume closing '
+                    continue;
+                }
+
+                // Date separator
+                if (format[i] == '/')
+                {
+                    result.Append(culture.DateTimeFormat.DateSeparator);
+                    i++;
+                    continue;
+                }
+
+                // Time separator
+                if (format[i] == ':')
+                {
+                    result.Append(culture.DateTimeFormat.TimeSeparator);
+                    i++;
+                    continue;
+                }
+
+                bool matched = false;
+                foreach (var (from, to) in tokenMap)
+                {
+                    if (format.AsSpan(i).StartsWith(from.AsSpan()))
+                    {
+                        result.Append(to);
+                        i += from.Length;
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched)
+                {
+                    result.Append(format[i]);
+                    i++;
+                }
+            }
+
+            return result.ToString();
         }
 
         static public bool AreEqualToSecond(DateTime dt1, DateTime dt2)

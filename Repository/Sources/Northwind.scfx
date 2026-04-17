@@ -7,15 +7,15 @@
       <GUID>442f6511-a22b-47ec-a33e-e1c7344adb68</GUID>
       <Name>Local MS SQL Server</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
-      <ConnectionType>MSSQLServer</ConnectionType>
-      <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True</MSSqlServerConnectionString>
+      <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
+      <MSSqlServerConnectionString>Server=localhost;Database=Northwind;Trusted_Connection=True;TrustServerCertificate=True;</MSSqlServerConnectionString>
     </MetaConnection>
     <MetaConnection>
       <GUID>164f0017-471d-4741-937c-3df7881ca392</GUID>
       <Name>Demonstration Server</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
-      <ConnectionType>MSSQLServer</ConnectionType>
-      <MSSqlServerConnectionString>Server=ariacom.com;Database=Northwind;</MSSqlServerConnectionString>
+      <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
+      <MSSqlServerConnectionString>Server=ariacom.com;Database=Northwind;TrustServerCertificate=True;</MSSqlServerConnectionString>
       <UserName>demo</UserName>
       <Password>jFBdR+/x69+IBwkZSf06Hw==</Password>
     </MetaConnection>

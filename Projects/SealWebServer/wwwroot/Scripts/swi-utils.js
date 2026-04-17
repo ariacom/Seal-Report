@@ -157,15 +157,15 @@ var SWIUtil;
         return SWIUtil.FindBootstrapEnvironment() == "xs";
     }
     SWIUtil.IsMobile = IsMobile;
-    function InitNumericInput() {
+    /*
+    export function InitNumericInput() {
         $(".numeric_input").keyup((event) => {
-            var v = $(event.target).value;
+            var v = $(event.target).val();
             if (!$.isNumeric(v)) {
-                $(event.target).value = $(event.target).value.slice(0, -1);
+                $(event.target).val = $(event.target).val.slice(0, -1);
             }
         });
-    }
-    SWIUtil.InitNumericInput = InitNumericInput;
+    }*/
     function StartSpinning() {
         $("#refresh-nav-item").addClass("fa-spin");
         $("#refresh-nav-item").css("display", "inline-block");
@@ -394,9 +394,9 @@ var SWIUtil;
             $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Do not execute report"), profile.onstartup));
             $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute the last report"), profile.onstartup));
             if (profile.startupreportname)
-                $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Execute the report") + " '" + profile.startupreportname + "'", profile.onstartup));
+                $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Execute the report") + " '" + profile.report + "'", profile.onstartup));
             if (_main._lastReport.name && _main._lastReport.name != profile.startupreportname)
-                $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.name + "'", profile.onstartup));
+                $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.path + "'", profile.onstartup));
             $select.selectpicker('refresh');
             $("#onstartup-reportname").val(profile.startupreportname);
             $select = $("#executionmode-select");
@@ -456,9 +456,10 @@ var SWIUtil;
         $input.unbind("input keyup change").on("input keyup change", (event) => {
             if (event.type == "change" && modif)
                 modif.setModified(true);
+            const target = event.target;
             if (numeric)
-                $(event.target).value = $(event.target).value.replace(/[^0-9\.]/g, '');
-            handler($(event.target).val());
+                target.value = target.value.replace(/[^0-9\.\,\r\n\-]/g, '');
+            handler(target.value);
         });
         return $input;
     }

@@ -1,8 +1,8 @@
-﻿/// <reference path="typings/jquery/jquery.d.ts" />
+﻿/// <reference path="typings/jquery/JQuery.d.ts" />
 /// <reference path="typings/bootstrap/index.d.ts" />
 /// <reference path="typings/jstree/jstree.d.ts" />
+/// <reference path="typings/datatables/types.d.ts" />
 /// <reference path="typings/main.d.ts" />
-
 
 var $waitDialog: JQuery;
 var $editDialog: JQuery;
@@ -23,6 +23,8 @@ declare var folderRightSchedule: number;
 declare var folderRightEdit: number;
 declare var hasEditor: boolean;
 declare var dirSeparator: string;
+
+declare var DataTable: any;
 
 declare function redrawDataTables() : any;
 declare function initScrollReport() : any;
@@ -100,7 +102,7 @@ class SWIMain {
 
         $("#password-reset-submit").unbind("click").on("click", function () {
             _gateway.ResetPassword(
-                $("#password-reset-name").val(),
+                $("#password-reset-name").val() as string,
                 function (data) {
                     $passwordResetModal.modal('hide');
                     SWIUtil.ShowMessage("alert-success", SWIUtil.tr("If your identifier is valid, an email has been sent to reset your password."), 5000);
@@ -123,7 +125,7 @@ class SWIMain {
             $waitDialog.modal('hide');
             $("#password-reset-submit2").unbind("click").on("click", function () {
                 _gateway.ResetPassword2(
-                    guid, token, $("#password-reset1").val(), $("#password-reset2").val(),
+                    guid, token, $("#password-reset1").val() as string, $("#password-reset2").val() as string,
                     function (data) {
                         if (data.error) SWIUtil.ShowMessage("alert-danger", data.error, -1);
                         else {
@@ -276,7 +278,7 @@ class SWIMain {
 
             $("#folder-rename").unbind("click").on("click", function () {
                 $("#folder-dialog").modal('hide');
-                var newpath: string = $("#rename-folder-name").val();
+                var newpath: string = $("#rename-folder-name").val() as string;
                 _gateway.RenameFolder(_main._folder.path, newpath, function () {
                     _main._profile.folder = newpath;
                     _main.loadFolderTree();
@@ -334,7 +336,7 @@ class SWIMain {
 
         //Delete reports
         $("#report-delete-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target))) return;
+            if (!SWIUtil.IsEnabled($(event.currentTarget as HTMLElement))) return;
             $outputPanel.hide();
 
             var checked: number = $(".report-checkbox:checked").length;
@@ -363,7 +365,7 @@ class SWIMain {
 
         //Rename
         $("#report-rename-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target))) return;
+            if (!SWIUtil.IsEnabled($(event.currentTarget as HTMLElement))) return;
             $outputPanel.hide();
 
             var source: string = $(".report-checkbox:checked").first().data("path");
@@ -391,7 +393,7 @@ class SWIMain {
 
         //Copy
         $("#report-copy-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target))) return;
+            if (!SWIUtil.IsEnabled($(event.currentTarget as HTMLElement))) return;
             $outputPanel.hide();
 
             _main._clipboard = [];
@@ -405,7 +407,7 @@ class SWIMain {
 
         //Cut
         $("#report-cut-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target))) return;
+            if (!SWIUtil.IsEnabled($(event.currentTarget as HTMLElement))) return;
             $outputPanel.hide();
 
             _main._clipboard = [];
@@ -419,7 +421,7 @@ class SWIMain {
 
         //Paste
         $("#report-paste-lightbutton").unbind("click").on("click", (event) => {
-            if (!SWIUtil.IsEnabled($(event.target))) return;
+            if (!SWIUtil.IsEnabled($(event.currentTarget as HTMLElement))) return;
             $outputPanel.hide();
 
             if (_main._clipboard.length > 0) {
@@ -540,8 +542,8 @@ class SWIMain {
         }
 
         $("#config-groups-dropdown > li > a").unbind("click").on("click", (event) => {
-            var type = $(event.target).prop("type");
-            var id = $(event.target).prop("id");
+            var type = $(event.currentTarget as HTMLElement).prop("type");
+            var id = $(event.currentTarget as HTMLElement).prop("id");
             if (type == "select") {
                 _main._configGroup = _main._config.groups.find((v :any) => v.Name === id);
             }
@@ -549,7 +551,7 @@ class SWIMain {
                 var newGroup = {
                     GUID: SWIUtil.Newguid(),
                     Name: SWIUtil.UniqueName(SWIUtil.tr2("New group"), _main._config.groups),
-                    Folders: [],
+                    Folders: [] as string[],
                     EditConfiguration: false,
                     EditProfile: true,
                     PersFolderRight: 2
@@ -660,7 +662,7 @@ class SWIMain {
             $("#config-group-folder-name").val("<" + SWIUtil.tr2("No folder configuration") + ">");
         }
         else {
-            $("#config-group-folder-name").val(SWIUtil.tr2("Configuration for ") + " " + detail.Path);
+            $("#config-group-folder-name").val(SWIUtil.tr2("Configuration for") + " " + detail.Path);
 
             var $select = $("#config-group-folder-select");
             $select.unbind("change");
@@ -771,7 +773,7 @@ class SWIMain {
 
     private search() {
         $waitDialog.modal();
-        _gateway.Search(_main._folder.path, $("#search-pattern").val(), function (data) {
+        _gateway.Search(_main._folder.path, $("#search-pattern").val() as string, function (data) {
             _main._searchMode = true;
             _main.buildReportsTable(data);
             $waitDialog.modal('hide');
@@ -804,7 +806,7 @@ class SWIMain {
     private login() {
         $loginModal.modal('hide');
         $waitDialog.modal();
-        _gateway.Login($("#username").val(), $("#password").val(),
+        _gateway.Login($("#username").val() as string, $("#password").val() as string,
             function (data) {
                 $("#password").val("");
                 if (data.securitycoderequired) {
@@ -822,7 +824,7 @@ class SWIMain {
     private checkSecurityCode() {
         $securityModal.modal('hide');
         $waitDialog.modal();
-        _gateway.CheckSecurityCode($("#securitycode").val(),
+        _gateway.CheckSecurityCode($("#securitycode").val() as string,
             function (data) {
                 $("#securitycode").val("");
                 $("#security-modal-error").text("");
@@ -843,11 +845,11 @@ class SWIMain {
 
     private resize() {
         if (!SWIUtil.IsMobile()) {
-            $("#folder-tree").height($(window).height() - 80);
-            $("#file-table-view").height($(window).height() - 125);
+            $("#folder-tree").height($(window).height() ?? 0 - 80);
+            $("#file-table-view").height($(window).height() ?? 0 - 125);
         }
         else {
-            $("#folder-tree").css("max-height", ($(window).height() / 2 - 45));
+            $("#folder-tree").css("max-height", ($(window).height() ?? 0 / 2 - 45));
         }
     }
 
@@ -1002,11 +1004,13 @@ class SWIMain {
             }, 1000);
         });
     }
-
     private clearFilesTable() {
         var $tableHead = $("#file-table-head");
         var $tableBody = $("#file-table-body");
-        if (!$("#file-table-head").is(':empty')) $('#file-table').dataTable().fnDestroy();
+        if (!$("#file-table-head").is(':empty')) {
+            const table = new DataTable('#file-table');
+            table.destroy();
+        }
         $tableHead.empty();
         $tableBody.empty();
     }
@@ -1126,14 +1130,14 @@ class SWIMain {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             var $tableBody = $("#output-table-body");
-            var top = $target.offset().top - 30;
+            var top = ($target.offset()?.top ?? 0) - 30;
             $tableBody.empty();
             $tableBody.append($("<tr>").append($("<td colspan=2>").append($("<i>").addClass("fa fa-spinner fa-spin fa-1x fa-fw")).append($("<span>").html(SWIUtil.tr("Please wait") + "..."))));
             $outputPanel.css({
                 'display': 'inline',
                 'position': 'absolute',
                 'z-index': '10000',
-                'left': $target.offset().left - $outputPanel.width(),
+                'left': ($target.offset()?.left ?? 0) - ($outputPanel.width() ?? 0),
                 'top': top,
                 'opacity': 0.6
             }).show();
@@ -1173,8 +1177,8 @@ class SWIMain {
                     }
 
                     //adjust position with the final size
-                    top = $target.offset().top + 40 - $outputPanel.height();
-                    $outputPanel.css({ top: top, left: $target.offset().left - $outputPanel.width(), position: 'absolute' });
+                    top = ($target.offset()?.top ?? 0) + 40 - ($outputPanel.height() ?? 0);
+                    $outputPanel.css({ top: top, left: ($target.offset()?.left ?? 0) - ($outputPanel.width() ?? 0), position: 'absolute' });
 
 
                     $(".output-execute").unbind("click").on("click", function (e) {
@@ -1212,7 +1216,7 @@ class SWIMain {
         if (_editor) _editor.init();
 
         var isMobile = SWIUtil.IsMobile();
-        $('#file-table').dataTable({
+        new DataTable($('#file-table'), {
             bSort: true,
             stateSave: true,
             aaSorting: [],

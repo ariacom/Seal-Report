@@ -936,7 +936,7 @@ namespace SealWebServer.Controllers
 
                 var file = getFileDetail(path);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-                if (file.isreport && WebUser.DownloadUploadRight == DownloadUpload.None || !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: no right to download report.");
+                if ((file.isreport && WebUser.DownloadUploadRight == DownloadUpload.None) || !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: no right to download report or file.");
                 if (file.isreport && !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: upload and download are not allowed for the server.");
                 return getFileResult(getFullPath(path), null);
             }

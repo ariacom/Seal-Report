@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.6" />
     <PackageReference Include="System.ClientModel" Version="1.10.0" />
   </ItemGroup>
   

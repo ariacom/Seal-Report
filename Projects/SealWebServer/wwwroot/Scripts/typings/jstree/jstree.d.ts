@@ -1,10 +1,10 @@
-﻿// Type definitions for jsTree v3.3.3 
+﻿// Type definitions for jsTree v3.3.3
 // Project: http://www.jstree.com/
 // Definitions by: Adam Pluciński <https://github.com/adaskothebeast>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // 1 commit 26e99ad5ec27c1a594ed57974cb16e0987482fd5 2016-11-19
 
-///<reference path="../jquery/jquery.d.ts" />
+///<reference path="../jquery/JQuery.d.ts" />
 
 interface JQueryStatic {
     /**
