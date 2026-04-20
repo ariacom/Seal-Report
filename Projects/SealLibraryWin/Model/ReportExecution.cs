@@ -1316,7 +1316,7 @@ namespace Seal.Model
                                     if (i == 0)
                                     {
                                         totalCell.IsTitle = true;
-                                        totalCell.Value = Report.Translate("Total");
+                                        totalCell.Value = Report.Translate(model.TotalLabel);
                                         totalCell.Element = null;
                                     }
                                 }
@@ -1375,9 +1375,11 @@ namespace Seal.Model
                                     if (i == 0 && !isTotalTitleSet)
                                     {
                                         if (!isHeaderLine) isTotalTitleSet = true;
-                                        value = Report.Translate("Total");
+                                        value = string.IsNullOrEmpty(element.TotalLabel) ? Report.Translate("Total") : Report.Translate(element.TotalLabel);
                                     }
-                                    if (isHeaderLine && rowTotalElements.Count() > 1) Helper.AddValue(ref value, " ", Report.TranslateElement(element, element.DisplayNameEl));
+                                    if (isHeaderLine && rowTotalElements.Count() > 1 && string.IsNullOrEmpty(element.TotalLabel)) Helper.AddValue(ref value, " ", Report.TranslateElement(element, element.DisplayNameEl));
+
+
                                     if (!string.IsNullOrEmpty(value)) totalCell.IsTitle = true;
                                     totalCell.Value = value;
                                 }
@@ -1483,7 +1485,7 @@ namespace Seal.Model
                     if (!line0[i].IsTotal)
                     {
                         //empty cell
-                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, IsTitle = true, Value = (i == 0 ? Report.Translate("Total") : "") };
+                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, IsTitle = true, Value = (i == 0 ? Report.Translate(model.TotalLabel) : "") };
                     }
                     else
                     {
@@ -1648,7 +1650,7 @@ namespace Seal.Model
                                     newCell.Cells.Add(sourceCell);
                                 }
                             }
-                            newSubTotalLine[0].Value = Report.Translate("Subtotal");
+                            newSubTotalLine[0].Value = Report.Translate(model.SubTotalLabel);
 
                             if (subTotalLine != null)
                             {

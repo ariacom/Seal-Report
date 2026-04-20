@@ -15,12 +15,12 @@ namespace Seal.Model
         const long kTickDivider = 10000000;
 
         /// <summary>
-        /// Sum, Min, Max after claculations
+        /// Sum, Min, Max after calculations
         /// </summary>
         public double? Sum = null, Min = null, Max = null;
 
         /// <summary>
-        /// Date sum after claculations
+        /// Date sum after calculations
         /// </summary>
         public long? DateSum = null;
 

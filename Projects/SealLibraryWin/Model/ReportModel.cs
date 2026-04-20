@@ -60,6 +60,8 @@ namespace Seal.Model
                 GetProperty("ExecutionSet").SetIsBrowsable(true);
                 GetProperty("ShareResultTable").SetIsBrowsable(true);
                 GetProperty("PrintQuery").SetIsBrowsable(true);
+                GetProperty("TotalLabel").SetIsBrowsable(true);
+                GetProperty("SubTotalLabel").SetIsBrowsable(true);
 
                 GetProperty("LoadScript").SetIsBrowsable(!IsSubModel);
                 GetProperty("FinalScript").SetIsBrowsable(!IsSubModel);
@@ -330,6 +332,23 @@ namespace Seal.Model
         public bool ShowFirstLine { get; set; } = true;
         public bool ShouldSerializeShowFirstLine() { return !ShowFirstLine; }
 
+        /// <summary>
+        /// Label for the total cell of the table footer line
+        /// </summary>
+#if WINDOWS
+        [Category("Model definition"), DisplayName("Total label"), Description("Label for the total cell of the table footer line."), Id(14, 1)]
+        [DefaultValue("Total")]
+#endif
+        public string TotalLabel { get; set; } = "Total";
+
+        /// <summary>
+        /// Label for the sub total cell title
+        /// </summary>
+#if WINDOWS
+        [Category("Model definition"), DisplayName("Total label"), Description("Label for the sub total cell title."), Id(15, 1)]
+        [DefaultValue("Subtotal")]
+#endif
+        public string SubTotalLabel { get; set; } = "Subtotal";
 
         /// <summary>
         /// Alias name used for the table defining the select

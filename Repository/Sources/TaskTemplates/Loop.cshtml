@@ -12,6 +12,7 @@
     task.Parameters.Add(new Parameter() { Name = "excel_tab", Value = "", DisplayName = "3.List of DataRow: Excel tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty, the first tab is used." + ReportTask.TranslatedParameterDescription });
     task.Parameters.Add(new Parameter() { Name = "input", Value = "", DisplayName = "4.List of  object", Description = "Use an input from another task.", Enums = new string[] { "NONE|", "PARENTEXECRESULT|Use Parent Exec Result", "EXECINPUT|Use Exec Input" }, UseOnlyEnumValues = true });
     task.Parameters.Add(new Parameter() { Name = "thread", NumericValue = 1, DisplayName = "Number of threads", Description = "Number of threads used to execute child tasks. A value of 0 means a number of threads equals to the list count." });
+    task.Parameters.Add(new Parameter() { Name = "take", NumericValue = 0, DisplayName = "Number of items", Description = "Number of items to take in the list. A value of 0 means all items." });
 
     task.Script = @"@using System.IO
 @using System.Threading
@@ -26,6 +27,7 @@
     var thread = task.GetNumericValue(""thread"");
     var excel = task.GetValueTranslated(""excel_path"");
     var input = task.GetValue(""input"");
+    var take = task.GetNumericValue(""take"");
     
     //Folder input
     if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder)) {
@@ -56,6 +58,8 @@
     }
     //OR 
     //   fill the items collection with any relevant object
+
+    if (take > 0) items = items.Take(take).ToList();
 
     if (thread == 0) {
         thread = items.Count;

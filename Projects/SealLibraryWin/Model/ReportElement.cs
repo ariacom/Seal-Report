@@ -64,6 +64,7 @@ namespace Seal.Model
                     GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
                     GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ShowTotal").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("TotalLabel").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("CellScript").SetIsBrowsable(true);
                     GetProperty("NavigationScript").SetIsBrowsable(true);
                     GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
@@ -503,6 +504,15 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+
+        /// <summary>
+        /// Label for the total title cell. If empty, the default label is used.
+        /// </summary>
+#if WINDOWS
+        [Category("Data options"), DisplayName("Total label"), Description("Label for the total title cell. If empty, the default label is used."), Id(4, 4)]
+        [DefaultValue("")]
+#endif
+        public string TotalLabel { get; set; } = "";
 
         /// <summary>
         /// Aggregate function applied for the totals
