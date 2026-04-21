@@ -3,8 +3,8 @@
     ReportViewTemplate Template = Model;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "scale", DisplayName = "Scale", DoubleValue = 1, Description = "Scale of the webpage rendering. Scale amount must be between 0.1 and 2.." });
-    Template.Parameters.Add(new Parameter() { Name = "display_hf", DisplayName = "Display header footer", BoolValue = true, Description = "If true, headers and footers are displayed on the page." });
+    Template.Parameters.Add(new Parameter() { Name = "scale", DisplayName = "Scale", DoubleValue = 1, ShowInResultOptions = true, Description = "Scale of the webpage rendering. Scale amount must be between 0.1 and 2.." });
+    Template.Parameters.Add(new Parameter() { Name = "display_hf", DisplayName = "Display header footer", BoolValue = true, ShowInResultOptions = true, Description = "If true, headers and footers are displayed on the page." });
     Template.Parameters.Add(new Parameter()
             {
                 Name = "header_template",
@@ -25,7 +25,7 @@
             });
 
     Template.Parameters.Add(new Parameter() { Name = "print_background", DisplayName = "Print background", BoolValue = false, Description = "If true, print background graphics." });
-    Template.Parameters.Add(new Parameter() { Name = "landscape", DisplayName = "Landscape", BoolValue = false, Description = "If true, paper orientation is landscape." });
+    Template.Parameters.Add(new Parameter() { Name = "landscape", DisplayName = "Landscape", BoolValue = false, ShowInResultOptions = true, Description = "If true, paper orientation is landscape." });
     Template.Parameters.Add(new Parameter() { Name = "page_ranges", DisplayName = "Page ranges", Value = "", Description = "Paper ranges to print, (e.g., 1-5, 8, 11-13). If empty, all pages are printed." });
     Template.Parameters.Add(new Parameter()
             {

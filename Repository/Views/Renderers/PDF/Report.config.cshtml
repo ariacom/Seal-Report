@@ -3,8 +3,8 @@
     ReportViewTemplate Template = Model;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "show_information", DisplayName = "Show report information", BoolValue = true, Description = "If true, report information is displayed at the end of the document." });
-    Template.Parameters.Add(new Parameter() { Name = "show_messages", DisplayName = "Show messages", BoolValue = false, Description = "If true, report execution messages are displayed at the end of the document." });
+    Template.Parameters.Add(new Parameter() { Name = "show_information", DisplayName = "Show report information", BoolValue = true, ShowInResultOptions = true, Description = "If true, report information is displayed at the end of the document." });
+    Template.Parameters.Add(new Parameter() { Name = "show_messages", DisplayName = "Show messages", BoolValue = false, ShowInResultOptions = true, Description = "If true, report execution messages are displayed at the end of the document." });
     Template.Parameters.Add(new Parameter() { Name = "title_font_size", DisplayName = "Font size: Title", NumericValue = 24, Description = "Font size of the title." });
     Template.Parameters.Add(new Parameter() { Name = "title_font_color", DisplayName = "Font color: Title", Value = "#29778b", Description = "Font color of the title." });
     Template.Parameters.Add(new Parameter() { Name = "messages_font_size", DisplayName = "Font size: Messages", NumericValue = 8, Description = "Font size of the report execution messages." });
@@ -17,10 +17,11 @@
                 DisplayName = "Page size",
                 Description = "Define the size of the pages of the document.",
                 Value = "A4",
+                ShowInResultOptions = true,
                 UseOnlyEnumValues = true,
                 Enums = (from i in typeof(QuestPDF.Helpers.PageSizes).GetProperties() select i.Name).ToArray()
             });
-    Template.Parameters.Add(new Parameter() { Name = "page_orientation", DisplayName = "Page orientation", Value="portrait", Description = "Define the pages orientation.", Enums = new string[] { "portrait|Portrait", "landscape|Landscape" } });
+    Template.Parameters.Add(new Parameter() { Name = "page_orientation", DisplayName = "Page orientation", Value="portrait", ShowInResultOptions = true, Description = "Define the pages orientation.", Enums = new string[] { "portrait|Portrait", "landscape|Landscape" } });
     Template.Parameters.Add(new Parameter() { Name = "force_charts", DisplayName = "Charts: Force ScottPlot", BoolValue = true, Description = "If true, charts are converted to ScottPlot charts for a better rendering." });
 
     // QuestPDF Companion integration

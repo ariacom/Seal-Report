@@ -4,10 +4,10 @@
     ReportViewTemplate Template = Model;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "show_information", DisplayName = "Show report information", BoolValue = true, Description = "If true, report information is displayed in a dedicated sheet." });
-    Template.Parameters.Add(new Parameter() { Name = "show_messages", DisplayName = "Show messages", BoolValue = false, Description = "If true, report execution messages are displayed in a dedicated sheet." });
-    Template.Parameters.Add(new Parameter() { Name = "auto_fit_columns", DisplayName = "Auto Fit columns", BoolValue = true, Description = "If true, columns widths are ajusted with the cell content." });
-    Template.Parameters.Add(new Parameter() { Name = "show_logo", DisplayName = "Print: Show logo", BoolValue = false, Description = "If true, the logo is inserted in the top right part of the header." });
+    Template.Parameters.Add(new Parameter() { Name = "show_information", DisplayName = "Show report information", BoolValue = true, ShowInResultOptions = true, Description = "If true, report information is displayed in a dedicated sheet." });
+    Template.Parameters.Add(new Parameter() { Name = "show_messages", DisplayName = "Show messages", BoolValue = false, ShowInResultOptions = true, Description = "If true, report execution messages are displayed in a dedicated sheet." });
+    Template.Parameters.Add(new Parameter() { Name = "auto_fit_columns", DisplayName = "Auto Fit columns", BoolValue = true, ShowInResultOptions = true, Description = "If true, columns widths are ajusted with the cell content." });
+    Template.Parameters.Add(new Parameter() { Name = "show_logo", DisplayName = "Print: Show logo", BoolValue = false, ShowInResultOptions = true, Description = "If true, the logo is inserted in the top right part of the header." });
     Template.Parameters.Add(new Parameter()
             {
                 Name = "printer_paper_size",
@@ -24,6 +24,7 @@
                 DisplayName = "Print: Page orientation",
                 Description = "Define the page orientation when printing the document.",
                 Value = "Portrait",
+                ShowInResultOptions = true,
                 UseOnlyEnumValues = true,
                 Enums = new string[] { },
                 EnumType = typeof(eOrientation)

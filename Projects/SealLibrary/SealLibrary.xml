@@ -2148,6 +2148,21 @@
             
             </summary>
         </member>
+        <member name="P:Seal.Model.Parameter.ShowInResultOptions">
+            <summary>
+            If true, the parameter value can be modified in the report result dialog
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Parameter.ResultOptionName">
+            <summary>
+            Name when used as a result option paramter
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Parameter.ResultOptionDisplayName">
+            <summary>
+            Display name when used as a result option paramter
+            </summary>
+        </member>
         <member name="P:Seal.Model.Parameter.BoolValue">
             <summary>
             The boolean parameter value
@@ -3056,7 +3071,7 @@
             List of links used for Script navigation
             </summary>
         </member>
-        <member name="M:Seal.Model.Report.UpdateViewParameter(System.String,System.String,System.String)">
+        <member name="M:Seal.Model.Report.UpdateViewParameter(System.String,System.String,System.String,System.Boolean)">
             <summary>
             Helper to update a view parameter
             </summary>
@@ -3086,6 +3101,16 @@
             Object that can be used at run-time for any purpose
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.Tag4">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.Tag5">
+            <summary>
+            Object that can be used at run-time for any purpose
+            </summary>
+        </member>
         <member name="F:Seal.Model.Report.StringTag">
             <summary>
             String that can be used at run-time for any purpose
@@ -3097,6 +3122,16 @@
             </summary>
         </member>
         <member name="F:Seal.Model.Report.StringTag3">
+            <summary>
+            String that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.StringTag4">
+            <summary>
+            String that can be used at run-time for any purpose
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.StringTag5">
             <summary>
             String that can be used at run-time for any purpose
             </summary>
@@ -3345,6 +3380,11 @@
         <member name="P:Seal.Model.ReportElement.ShowTotal">
             <summary>
             For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportElement.TotalLabel">
+            <summary>
+            Label for the total title cell. If empty, the default label is used.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.TotalAggregateFunction">
@@ -3831,6 +3871,16 @@
         <member name="P:Seal.Model.ReportModel.ShowFirstLine">
             <summary>
             If true and the table has column values, the first line used for titles is generated in the table header
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.TotalLabel">
+            <summary>
+            Label for the total cell of the table footer line
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.SubTotalLabel">
+            <summary>
+            Label for the sub total cell title
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.Alias">
@@ -7593,22 +7643,22 @@
         </member>
         <member name="F:Seal.Model.ResultTotalCell.Sum">
             <summary>
-            Sum, Min, Max after claculations
+            Sum, Min, Max after calculations
             </summary>
         </member>
         <member name="F:Seal.Model.ResultTotalCell.Min">
             <summary>
-            Sum, Min, Max after claculations
+            Sum, Min, Max after calculations
             </summary>
         </member>
         <member name="F:Seal.Model.ResultTotalCell.Max">
             <summary>
-            Sum, Min, Max after claculations
+            Sum, Min, Max after calculations
             </summary>
         </member>
         <member name="F:Seal.Model.ResultTotalCell.DateSum">
             <summary>
-            Date sum after claculations
+            Date sum after calculations
             </summary>
         </member>
         <member name="F:Seal.Model.ResultTotalCell.DateMin">

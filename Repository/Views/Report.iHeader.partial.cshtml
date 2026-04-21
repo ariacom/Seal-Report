@@ -45,6 +45,8 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
+                            <li><a id="ResultOptions" href="#">@report.Translate("Options")...</a></li>
+                            <li class="divider"></li>
                             @foreach (var format in repository.ResultAllowedFormats)
                             {
                                 <li><a id="ViewResult" format="@format" class="result_item" href="#">@report.Translate("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
@@ -56,3 +58,91 @@
         </div>
     </div>
 </nav>
+
+@if (report.GenerateHTMLDisplay || !report.PrintLayout)
+{            
+    <script>
+        $(document).ready(function () {
+            $('#ResultOptions').click(function (e) {
+                e.preventDefault();
+                $(this).closest('.open').removeClass('open'); // closes the dropdown
+                $("#result-options-modal").modal();
+                return false;
+            });        
+            
+            $('.result-options-input').unbind("input keyup change").on("input keyup change", (e) => {
+                if ($(e.target).hasClass("numeric_input")) e.target.value = e.target.value.replace(/[^0-9\.]/g, '');
+                processSubmitViewParameter(e.target.id, e.target.value, '@view.ViewId');
+            });
+            
+            $('.result-options-select').selectpicker('refresh');
+            $('.result-options-select').on("change", (e) => {
+                const values = $(e.target).val();
+                const joined = Array.isArray(values) ? values.join('|') : values;
+                processSubmitViewParameter(e.target.id, joined, '@view.ViewId');
+            });
+            
+            
+        });
+    </script>
+                                
+    <!-- Result Options modal -->
+    <div id="result-options-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" style="width: 900px; max-width: 95vw;">
+            <div class="modal-content" style="top:60px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@report.Translate("Report result options")</h4>
+                </div>
+                <div class="modal-body" style="height:600px;overflow:auto;">
+                    @foreach(var parameter in report.ResultOptionParameters)
+                    {
+                        var name = parameter.ResultOptionName;
+                        
+                        <div class="form-group" style='height:25px'>
+                            <label class="control-label col-sm-6" style="text-align:left;overflow:hidden;cursor:default;margin-top:10px;" for='@name'>
+                                @Raw(Helper.ToHtml(parameter.ResultOptionDisplayName))
+                            </label>                    
+                        
+                            @if (parameter.Type == ViewParameterType.Enum) {
+                                var multiple = "";
+                                if (name == "|tabs") multiple = "multiple";
+                            
+                                <select name='@name' id='@name' class='result-options-select col-sm-6' @multiple data-actions-box='true'>
+                                    @foreach(var val in parameter.EnumValues)
+                                    {
+                                        <option id='@val' value='@val' @(parameter.MultipleEnumValues.Contains(val) ? "selected" : "")>@Raw(Helper.ToHtml(@report.Translate(parameter.EnumGetDisplayFromValue(val))))
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            else if (parameter.Type == ViewParameterType.Boolean) {
+                                <div class="btn-group col-sm-6" data-toggle="buttons" id='@name'>
+                                    <label class="btn btn-default @(parameter.BoolValue ? "active" : "")">
+                                        <input type="radio" name='@name' id='@name' class='result-options-input' value='True' @(parameter.BoolValue ? "checked" : "")>@report.Translate("Yes")
+                                    </label>
+                                    <label class="btn btn-default @(!parameter.BoolValue ? "active" : "")">
+                                        <input type="radio" name='@name' id='@name' class='result-options-input' value='False' @(!parameter.BoolValue ? "checked" : "")>@report.Translate("No")
+                                    </label>
+                                </div>
+                            }
+                            else if (parameter.Type == ViewParameterType.Numeric) {
+                                <div class='col-sm-6'>
+                                    <input type='text' name='@name' id='@name' class='result-options-input form-control numeric_input' value='@parameter.Value'/>
+                                </div>
+                            }
+                            else {
+                                <div class='col-sm-6'>
+                                    <input type='text' name='@name' id='@name' class='result-options-input form-control' value='@parameter.Value'/>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@report.Translate("Close")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+} 

@@ -537,7 +537,7 @@ namespace SealWebServer.Controllers
                     if (parameter_view_name == Parameter.EnableResultsMenuParameter) throw new Exception("Incorrect action");
 
                     Report report = execution.Report;
-                    report.UpdateViewParameter(parameter_view_id, parameter_view_name, parameter_view_value);
+                    report.UpdateViewParameter(parameter_view_id, parameter_view_name, parameter_view_value, false);
                     return new EmptyResult();
                 }
             }

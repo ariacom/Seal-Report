@@ -347,9 +347,9 @@ namespace Seal.Forms
                 Execution.UpdateEnumValues(enumId, values);
             }
 
-            public void UpdateViewParameter(string viewId, string parameterName, string parameterValue)
+            public void UpdateViewParameter(string viewId, string parameterName, string parameterValue, bool resultOption)
             {
-                Report.UpdateViewParameter(viewId, parameterName, parameterValue);
+                Report.UpdateViewParameter(viewId, parameterName, parameterValue, resultOption);
             }
 
             public void ExecuteReport(string formValues)

@@ -111,6 +111,7 @@ namespace Seal.Model
                     parameter.Description = configParameter.Description;
                     parameter.Type = configParameter.Type;
                     parameter.UseOnlyEnumValues = configParameter.UseOnlyEnumValues;
+                    parameter.ShowInResultOptions = configParameter.ShowInResultOptions;
                     parameter.DisplayName = configParameter.DisplayName;
                     parameter.ConfigValue = configParameter.Value;
                     parameter.EditorLanguage = configParameter.EditorLanguage;

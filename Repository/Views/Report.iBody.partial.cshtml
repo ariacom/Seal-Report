@@ -30,7 +30,7 @@
             $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
         }
         else {
-            window.chrome.webview.hostObjects.sync.dotnet.UpdateViewParameter(viewId, parameterName, String(parameterValue));
+            window.chrome.webview.hostObjects.sync.dotnet.UpdateViewParameter(viewId, parameterName, String(parameterValue), true);
         }
     }
 
@@ -298,6 +298,7 @@
 <style>
     @Raw(view.GetValue("additional_css"))
 </style>
+
 <div id="report_body_container" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")" style="display:none;padding-top:65px;@(report.PrintLayout ? ("width:"+view.GetValue("print_body_width")) : "")">
     @if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "right")
     {

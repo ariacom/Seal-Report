@@ -2274,6 +2274,16 @@ namespace Seal.Model
 
         private Task<string> GenerateResultAsync(ReportFormat format)
         {
+            //Enable/Disable Tabs from result options
+            var activeTabs = Report.ResultOptionParameters.FirstOrDefault(i => i.ResultOptionName == Parameter.ResultOptionNameTabs);
+            if (activeTabs != null && !string.IsNullOrEmpty(activeTabs.Value))
+            {
+                foreach (var v in Report.AllViews.Where(i => i.TemplateName == ReportViewTemplate.TabPageName))
+                {
+                    v.Enabled = (activeTabs.MultipleEnumValues.Contains(v.Name));
+                }
+            }
+
             if (format == ReportFormat.html) return Task.FromResult(GenerateHTMLResult(false));
             else if (format == ReportFormat.print) return Task.FromResult(GenerateHTMLResult(true));
 

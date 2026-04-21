@@ -157,15 +157,6 @@ var SWIUtil;
         return SWIUtil.FindBootstrapEnvironment() == "xs";
     }
     SWIUtil.IsMobile = IsMobile;
-    /*
-    export function InitNumericInput() {
-        $(".numeric_input").keyup((event) => {
-            var v = $(event.target).val();
-            if (!$.isNumeric(v)) {
-                $(event.target).val = $(event.target).val.slice(0, -1);
-            }
-        });
-    }*/
     function StartSpinning() {
         $("#refresh-nav-item").addClass("fa-spin");
         $("#refresh-nav-item").css("display", "inline-block");

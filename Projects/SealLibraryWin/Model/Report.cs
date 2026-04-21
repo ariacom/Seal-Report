@@ -4,21 +4,23 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
-using System.IO;
-using Seal.Helpers;
-using System.Web;
-using System.Globalization;
-using Microsoft.Win32.TaskScheduler;
-using System.Threading;
-using System.Text;
-using System.Diagnostics;
-using System.Xml;
-using RazorEngine.Templating;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Configuration;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
+using System.Web;
+using System.Xml;
+using System.Xml.Serialization;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Win32.TaskScheduler;
+using RazorEngine.Templating;
+using Seal.Helpers;
 using Seal.Renderer;
 #if WINDOWS
 using Seal.Forms;
@@ -2498,17 +2500,69 @@ namespace Seal.Model
         /// <summary>
         /// Helper to update a view parameter
         /// </summary>
-        public void UpdateViewParameter(string viewId, string parameterName, string parameterValue)
+        public void UpdateViewParameter(string viewId, string parameterName, string parameterValue, bool resultOption)
         {
             ReportView view = ExecutionView.GetView(viewId);
             if (view != null)
             {
-                Parameter parameter = view.Parameters.FirstOrDefault(i => i.Name == parameterName);
-                if (parameter != null)
+                Parameter parameter = null;
+                if (resultOption)
                 {
-                    parameter.Value = parameterValue;
+                    //Update from result options
+                    parameter = ResultOptionParameters.FirstOrDefault(i => i.ResultOptionName == parameterName);
                 }
+                else
+                {
+                    parameter = view.Parameters.FirstOrDefault(i => i.Name == parameterName);
+                }
+                if (parameter != null) parameter.Value = parameterValue;
             }
+        }
+
+        List<Parameter> _resultOptionParameters;
+        [XmlIgnore]
+        public List<Parameter> ResultOptionParameters
+        {
+            get
+            {
+                if (_resultOptionParameters == null)
+                {
+                    _resultOptionParameters = new List<Parameter>();
+                    //Add generic parameters
+                    var tabsParameter = new Parameter() { ResultOptionName = Parameter.ResultOptionNameTabs, ResultOptionDisplayName = Translate("Tabs to show") };
+                    tabsParameter.Enums = (from v in AllViews.Where(i => i.TemplateName == ReportViewTemplate.TabPageName && i.Enabled) select v.Name).ToArray();
+                    if (tabsParameter.Enums.Length > 0) _resultOptionParameters.Add(tabsParameter);
+
+                    //Add parameters from renderers
+                    var paramList = ExecutionView.Parameters.Where(i => i.ShowInResultOptions).ToList();
+                    foreach (var p in paramList)
+                    {
+                        p.ResultOptionName = "HTML " + p.Name;
+                        p.ResultOptionDisplayName = Translate(p.DisplayName);
+                    }
+                    _resultOptionParameters.AddRange(paramList);
+
+                    addOptionParametersFromRenderer(_resultOptionParameters, ExecutionView.ExcelRenderer);
+                    addOptionParametersFromRenderer(_resultOptionParameters, ExecutionView.PDFRenderer);
+                    addOptionParametersFromRenderer(_resultOptionParameters, ExecutionView.HTML2PDFRenderer);
+                    addOptionParametersFromRenderer(_resultOptionParameters, ExecutionView.CSVRenderer);
+                    addOptionParametersFromRenderer(_resultOptionParameters, ExecutionView.TextRenderer);
+                    addOptionParametersFromRenderer(_resultOptionParameters, ExecutionView.JsonRenderer);
+                    addOptionParametersFromRenderer(_resultOptionParameters, ExecutionView.XMLRenderer);
+                }
+                return _resultOptionParameters;
+            }
+        }
+
+        void addOptionParametersFromRenderer(List<Parameter> parameters, RootRenderer renderer)
+        {
+            var paramList = renderer.Parameters.Where(i => i.ShowInResultOptions).ToList();
+            foreach (var p in paramList)
+            {
+                p.ResultOptionName = $"{renderer.GetRenderType()} " + p.Name;
+                p.ResultOptionDisplayName = $"({renderer.GetRenderDisplayType()}) " + Translate(p.DisplayName);
+            }
+            parameters.AddRange(paramList);
         }
 
         /// <summary>
@@ -2558,6 +2612,18 @@ namespace Seal.Model
         public object Tag3;
 
         /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag4;
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag5;
+
+        /// <summary>
         /// String that can be used at run-time for any purpose
         /// </summary>
         [XmlIgnore]
@@ -2574,6 +2640,18 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public string StringTag3;
+
+        /// <summary>
+        /// String that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public string StringTag4;
+
+        /// <summary>
+        /// String that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public string StringTag5;
 
         /// <summary>
         /// Helper to find a view from its identifier

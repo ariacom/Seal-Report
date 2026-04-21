@@ -141,16 +141,6 @@ namespace SWIUtil {
     export function IsMobile() {
         return SWIUtil.FindBootstrapEnvironment() == "xs";
     }
-    /*
-    export function InitNumericInput() {
-        $(".numeric_input").keyup((event) => {
-            var v = $(event.target).val();
-            if (!$.isNumeric(v)) {
-                $(event.target).val = $(event.target).val.slice(0, -1);
-            }
-        });
-    }*/
-
     export function StartSpinning() {
         $("#refresh-nav-item").addClass("fa-spin");
         $("#refresh-nav-item").css("display", "inline-block");

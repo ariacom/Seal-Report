@@ -28,19 +28,16 @@
         //style.Style.Font.UnderLine = true;
         //style.Style.Font.Color.SetColor(System.Drawing.Color.Blue);
 
-        //Header & Footer
-        var logoPath = Path.ChangeExtension(report.Repository.Configuration.LogoFilePath, "png");
-        if (File.Exists(logoPath) && renderer.GetBoolValue("show_logo"))
-        {
-            result.Worksheet.HeaderFooter.OddHeader.InsertPicture(Image.FromFile(logoPath), PictureAlignment.Right);
-        }
-        result.Worksheet.HeaderFooter.OddHeader.LeftAlignedText = "&14&\"Arial,Regular Bold\" " + report.ExecutionName;
-        result.Worksheet.HeaderFooter.OddFooter.RightAlignedText = report.Translate("Page") + $" {ExcelHeaderFooter.PageNumber}/{ExcelHeaderFooter.NumberOfPages}";
-        result.Worksheet.HeaderFooter.OddFooter.LeftAlignedText = ExcelHeaderFooter.FilePath + ExcelHeaderFooter.FileName;
-
         view.ParseChildren();
 
         result.CleanWorkbook();
+
+        //Report information
+        if (renderer.GetBoolValue("show_information"))
+        {
+            result.AddWorksheet(report.Translate("Information"));
+            showInformation(renderer);
+        }
 
         //Final options
         foreach (ExcelWorksheet sheet in result.Workbook.Worksheets.Where(i => i.Dimension != null))
@@ -60,14 +57,6 @@
             sheet.PrinterSettings.BottomMargin = 0.59m;
             sheet.PrinterSettings.HeaderMargin = 0.314m;
             sheet.PrinterSettings.FooterMargin = 0.314m;
-
-        }
-
-        //Report information
-        if (renderer.GetBoolValue("show_information"))
-        {
-            result.AddWorksheet(report.Translate("Information"));
-            showInformation(renderer);
         }
 
         //Messages
@@ -77,6 +66,21 @@
             showMessages(result);
         }
 
+        //Header & Footer
+        foreach (ExcelWorksheet sheet in result.Workbook.Worksheets) 
+        {
+            var headerFooter = sheet.HeaderFooter;
+            headerFooter.differentFirst = false;        
+            var logoPath = Path.ChangeExtension(report.Repository.Configuration.LogoFilePath, "png");
+            if (File.Exists(logoPath) && renderer.GetBoolValue("show_logo"))
+            {
+                headerFooter.OddHeader.InsertPicture(Image.FromFile(logoPath), PictureAlignment.Right);
+            }
+            headerFooter.OddHeader.LeftAlignedText = "&14&\"Arial,Regular Bold\" " + report.ExecutionName;
+            headerFooter.OddFooter.RightAlignedText = report.Translate("Page") + $" {ExcelHeaderFooter.PageNumber}/{ExcelHeaderFooter.NumberOfPages}";
+            headerFooter.OddFooter.LeftAlignedText = ExcelHeaderFooter.FilePath + ExcelHeaderFooter.FileName;
+        }
+        
         if (!report.HasErrors) result.Package.SaveAs(new FileInfo(report.ResultFilePath));
     }
 }
@@ -105,9 +109,11 @@
 
         sheet.Cells[rowStart, 1].Value = report.Translate("Execution date");
         sheet.Cells[rowStart, 2].Value = report.ExecutionStartDate;
+        sheet.Cells[rowStart, 2, rowStart, 4].Merge = true;
         sheet.Cells[rowStart, 2].Style.Numberformat.Format = report.CultureInfo.DateTimeFormat.ShortDatePattern + " " + report.CultureInfo.DateTimeFormat.LongTimePattern;
         rowStart++;
         sheet.Cells[rowStart, 1].Value = report.Translate("Execution duration");
+        sheet.Cells[rowStart, 2, rowStart, 4].Merge = true;
         sheet.Cells[rowStart, 2].Value = Math.Floor(report.ExecutionModelDuration.TotalSeconds);
         sheet.Cells[rowStart - 1, 1, rowStart, 1].StyleName = ExcelResult.CellTitleStyle;
 
@@ -133,7 +139,7 @@
 
         sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
         sheet.Cells[sheet.Dimension.Address].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-        sheet.Column(5).Width = 80;
+        sheet.Column(5).Width = 60;
     }
 
     void showMessages(ExcelResult result)
@@ -145,4 +151,3 @@
         sheet.Column(result.CurrentCol).Width = 80;
     }
 }
-

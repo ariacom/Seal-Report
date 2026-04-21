@@ -862,7 +862,9 @@ namespace Seal.Helpers
                     else WriteDailyLog(DailyLogEvents, FileHelper.TempApplicationDirectory, 30, fullMessage);
                 }
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", $"{context}\r\n{ex.Message}", EventLogEntryType.Error);
+                if (ex.Message.Length > 32000) msg = ex.Message.Substring(32000);
+                else msg = ex.Message;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", $"{context}\r\n{msg}", EventLogEntryType.Error);
             }
             catch { }
 
