@@ -82,9 +82,11 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        <li><a id="ResultOptions" href="#">@repository.TranslateReport("Options")...</a></li>
+                        <li class="divider"></li>
                         @foreach (var format in repository.ResultAllowedFormats)
                         {
-                                <li><a id="ViewResult" format="@format" class="result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
+                            <li><a id="ViewResult" format="@format" class="result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
                         }
                     </ul>
                 </li>

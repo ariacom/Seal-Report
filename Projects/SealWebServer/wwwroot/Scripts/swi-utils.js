@@ -1,4 +1,3 @@
-"use strict";
 var SWIUtil;
 (function (SWIUtil) {
     function tr(reference) {

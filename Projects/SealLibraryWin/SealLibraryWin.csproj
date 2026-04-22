@@ -172,6 +172,7 @@
 		<None Include="..\..\Repository\Views\Report.iBody.partial.cshtml" Link="Views\Report.iBody.partial.cshtml" />
 		<None Include="..\..\Repository\Views\Report.iContent.partial.cshtml" Link="Views\Report.iContent.partial.cshtml" />
 		<None Include="..\..\Repository\Views\Report.iHeader.partial.cshtml" Link="Views\Report.iHeader.partial.cshtml" />
+		<None Include="..\..\Repository\Views\Report.iResultOptions.partial.cshtml" Link="Views\Report.iResultOptions.partial.cshtml" />
 		<None Include="..\..\Repository\Views\Report.iInformation.partial.cshtml" Link="Views\Report.iInformation.partial.cshtml" />
 		<None Include="..\..\Repository\Views\Report.iMessages.partial.cshtml" Link="Views\Report.iMessages.partial.cshtml" />
 		<None Include="..\..\Repository\Views\Report.iRestrictions.partial.cshtml" Link="Views\Report.iRestrictions.partial.cshtml" />

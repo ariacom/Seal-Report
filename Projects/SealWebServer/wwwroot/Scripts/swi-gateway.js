@@ -1,4 +1,3 @@
-"use strict";
 var _server = WebApplicationName;
 var _errorServer = SWIUtil.tr("Unexpected error on server") + ": '" + _server + "'";
 class SWIGateway {

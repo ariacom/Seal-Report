@@ -1,4 +1,3 @@
-"use strict";
 /// <reference path="typings/jquery/JQuery.d.ts" />
 /// <reference path="typings/bootstrap/index.d.ts" />
 /// <reference path="typings/jstree/jstree.d.ts" />
@@ -785,7 +784,7 @@ class SWIMain {
         //Dividers
         SWIUtil.ShowHideControl($(".menu-divider-folders-report"), (_main._reportPath != "" || _main._currentView == "report") && showFolders);
         //title color
-        $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d");
+        $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d").css("outline", "none");
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
     }
     toJSTreeFolderData(data, result, parent) {

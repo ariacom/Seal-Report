@@ -24,10 +24,10 @@
         myWindow.document.write("<head><title>" + '@Raw(Helper.ToJS(report.Translate("Messages")))' + "</title></head><div id='messages'>" + $("#execution_messages").html() + "<div>");
     }
 
-    function processSubmitViewParameter(parameterName, parameterValue, viewId) {
+    function processSubmitViewParameter(parameterName, parameterValue, viewId, resultOptions) {
         if (!viewId) viewId = '@view.ViewId';
         if (_urlPrefix != "") {
-            $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+            $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue, result_options: resultOptions });
         }
         else {
             window.chrome.webview.hostObjects.sync.dotnet.UpdateViewParameter(viewId, parameterName, String(parameterValue), true);

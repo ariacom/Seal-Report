@@ -2560,7 +2560,7 @@ namespace Seal.Model
             foreach (var p in paramList)
             {
                 p.ResultOptionName = $"{renderer.GetRenderType()} " + p.Name;
-                p.ResultOptionDisplayName = $"({renderer.GetRenderDisplayType()}) " + Translate(p.DisplayName);
+                p.ResultOptionDisplayName = $"({Translate(renderer.GetRenderDisplayType())}) " + Translate(p.DisplayName);
             }
             parameters.AddRange(paramList);
         }

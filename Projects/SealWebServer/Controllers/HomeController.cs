@@ -523,7 +523,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Update the value of a view parameter of a report execution
         /// </summary>
-        public ActionResult ActionUpdateViewParameter(string execution_guid, string parameter_view_id, string parameter_view_name, string parameter_view_value, string sessionId)
+        public ActionResult ActionUpdateViewParameter(string execution_guid, string parameter_view_id, string parameter_view_name, string parameter_view_value, bool result_options, string sessionId)
         {
             writeDebug("ActionUpdateViewParameter");
             try
@@ -537,7 +537,7 @@ namespace SealWebServer.Controllers
                     if (parameter_view_name == Parameter.EnableResultsMenuParameter) throw new Exception("Incorrect action");
 
                     Report report = execution.Report;
-                    report.UpdateViewParameter(parameter_view_id, parameter_view_name, parameter_view_value, false);
+                    report.UpdateViewParameter(parameter_view_id, parameter_view_name, parameter_view_value, result_options);
                     return new EmptyResult();
                 }
             }

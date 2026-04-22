@@ -600,9 +600,6 @@ namespace Seal
             Properties.Settings.Default.ViewerFormSize = ReportViewerForm.LastSize;
             Properties.Settings.Default.ViewerFormState = ReportViewerForm.LastState;
 
-
-            Properties.Settings.Default.Save();
-
             Properties.Settings.Default.Save();
             if (!checkModified()) e.Cancel = true;
             if (!checkRunning()) e.Cancel = true;
