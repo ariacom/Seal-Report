@@ -1,3 +1,4 @@
+"use strict";
 /// <reference path="typings/jquery/JQuery.d.ts" />
 /// <reference path="typings/bootstrap/index.d.ts" />
 /// <reference path="typings/jstree/jstree.d.ts" />

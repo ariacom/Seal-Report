@@ -127,13 +127,16 @@
                     }
                 }
 
-                function getPercentage(dataset, dataIndex) {
+                function getPercentage(dataset, dataIndex, chart) {
                     var total = 0;
-                    for (var i in dataset.data) total += getValue(dataset, i);
+                    for (var i in dataset.data) 
+                        if (chart.getDataVisibility(i)) {
+                            total += getValue(dataset, i);
+                        }
                     return Math.round((getValue(dataset, dataIndex) / total) * 100);
                 }
 
-                var valueFormatter = function (dataset, dataIndex, type) {
+                var valueFormatter = function (dataset, dataIndex, type, chart) {
                     var axisID = dataset.@(isHorizontalBar ? "x" : "y")AxisID;
                     var format = (axisID == 'y2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
                     var isDate = (axisID == 'y2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
@@ -145,7 +148,7 @@
                     if (type == "auto") type = '@(chartType == "pie" || chartType == "polarArea" || chartType == "radar" ? "vp" : "val")';
                     if (type == "val") return valStr;
 
-                    var percentage = getPercentage(dataset, dataIndex);
+                    var percentage = getPercentage(dataset, dataIndex, chart);
                     if (type == "per") return percentage + '%';
                     if (type == "vp") return valStr + ' (' + percentage + '%)';
                     return valStr;
@@ -159,19 +162,19 @@
                     @if (chartType == "pie" || chartType == "polarArea" || chartType == "radar")
                     {
                         <text>
-                            return tooltipLabel + ': ' + valueFormatter(dataset, context.dataIndex, '@view.GetValue("chartjs_tooltip_format")');
+                            return tooltipLabel + ': ' + valueFormatter(dataset, context.dataIndex, '@view.GetValue("chartjs_tooltip_format")', context.chart);
                         </text>
                     }
                     else if (chartType == "scatter")
                     {
                         <text>
-                            return tooltipLabel + ': ' + valueFormatter(dataset, context.dataIndex, '@view.GetValue("chartjs_tooltip_format")');
+                            return tooltipLabel + ': ' + valueFormatter(dataset, context.dataIndex, '@view.GetValue("chartjs_tooltip_format")', context.chart);
                         </text>
                     }
                     else
                     {
                         <text>
-                            return valueFormatter(dataset, context.dataIndex, '@view.GetValue("chartjs_tooltip_format")');
+                            return valueFormatter(dataset, context.dataIndex, '@view.GetValue("chartjs_tooltip_format")', context.chart);
                         </text>
                     }
                 }
@@ -236,7 +239,7 @@
                             formatter: function (value, context) {
                                 var type = '@view.GetValue("chartjs_label_format")';
                                 if (type == "auto") type = '@(chartType == "pie" || chartType == "polarArea" || chartType == "radar" ? "per" : "val")';
-                                return valueFormatter(context.dataset, context.dataIndex, type);
+                                return valueFormatter(context.dataset, context.dataIndex, type, context.chart);
                             }
                         }
                     },
@@ -337,9 +340,9 @@
                     }
                 </text>
             }
-                                };
+            };
 
-                                var @chartId = new Chart(ctx, {
+            var @chartId = new Chart(ctx, {
                 type: '@finalChartType',
                 data: data,
                 options: options
