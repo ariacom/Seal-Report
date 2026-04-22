@@ -130,7 +130,7 @@
                 function getPercentage(dataset, dataIndex, chart) {
                     var total = 0;
                     for (var i in dataset.data) 
-                        if (chart.getDataVisibility(i)) {
+                        if (chart && chart.getDataVisibility(i)) {
                             total += getValue(dataset, i);
                         }
                     return Math.round((getValue(dataset, dataIndex) / total) * 100);

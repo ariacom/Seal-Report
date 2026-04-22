@@ -52,61 +52,6 @@
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>bbb49ee6-a879-4a2d-9ca9-ab0da80c74ee</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>23440352-86f8-4932-b74a-03229fafb8c0</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>03effeb7-e01a-44b1-bd7d-9269268f74c5</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>80663cd3-e469-46d0-9831-9d956887cc6c</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</GUID>
@@ -184,61 +129,6 @@
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>2eb5255b-8e47-44ed-ae97-92746de2e8e6</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>4949ba5f-c44f-4f36-9628-525e0b4aa8ee</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>865467fb-0165-47e2-bf5e-d1543d044abb</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>249521ab-f905-4809-8f23-1dd07a978238</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</GUID>
@@ -318,61 +208,6 @@
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>f053313f-de25-4fb3-86e0-918b4c39d038</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>0d5b736c-bc3f-4c6f-b9a7-e3fcfe091b01</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>416240c0-8eff-41d9-9be4-b19edec266a6</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>9942b63a-7850-4360-bab2-c91f4e3a3717</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>c19fa517-6db1-4436-a2e7-219168eee98c</GUID>
@@ -413,61 +248,6 @@
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>add364a6-f217-49db-aad9-829f86d45f78</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>930575f2-ed94-438a-9aaa-f042752f1286</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>60cc50db-1ac9-4b79-b807-306d33ac1f4d</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>8c4fa239-6cf9-49bd-b520-23551576d583</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</GUID>
@@ -509,61 +289,6 @@
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>3df3fb28-7245-447d-8230-13f3c15408f8</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>c48dc342-4ffd-486c-9e27-89334f1aa897</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>cbe78c48-bf3b-43d8-9405-03a6c0f746f2</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>069c2def-6c6c-4cec-9e38-775b45d1d0f5</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</GUID>
@@ -885,61 +610,6 @@
           <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>b3057c2a-ac93-431c-9611-9b6d4f1e2d46</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>4f81169e-0dd5-47e3-a53d-159d417da93b</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>eaf43afc-4d04-4439-b69c-ca864053a6e0</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>ea9144b9-23db-4932-a109-c3e841151c03</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>11b5c180-e0d7-4fa5-997e-97cf0022e104</GUID>
@@ -1056,61 +726,6 @@
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>8ddc4238-10db-4279-bb5d-1cd3a439246d</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>53b0d6c2-200e-4f41-b542-34cf1dbad383</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>c84fc7fd-fc20-414c-b9da-eb6c70b348ef</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>1c8f000b-604f-4dea-9004-b59f35d74634</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>1bf0453c-1b65-410c-bf55-7ca5a6a954c7</GUID>
@@ -1183,61 +798,6 @@
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>7cb6b770-3141-467a-8eea-37f294d57e1f</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>2bf61f1a-a1a6-4faa-881a-bc214c8f58b3</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>e20910e7-8bfe-42bc-bef9-4b45d5968acf</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>960e193f-2379-48be-bc37-a9dfd64a2242</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>f3295776-9389-41a1-b80d-eaf9454d4350</GUID>
@@ -1314,61 +874,6 @@
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>d043addc-3da1-4e0a-9228-f0a61af189ca</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>176df4cb-b22a-4e52-aa70-ba83d154d395</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>3f0afefc-64d6-4c84-bc77-21940dcdcb25</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>b32e5d4a-5936-46c2-bcfc-46de0c96fefa</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>e61d8918-c3d3-4f4e-82b9-3be441fc135e</GUID>
@@ -1500,61 +1005,6 @@
           <SetNullToZero>true</SetNullToZero>
         </ReportElement>
       </Elements>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>549b780d-98b8-4f4f-9d33-37ab094e5e37</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <Format>MM/yyyy</Format>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <Operator>Between</Operator>
-          <DisplayOrderRE>0</DisplayOrderRE>
-          <Date1>1997-01-01T00:00:00</Date1>
-          <Date2>1997-12-31T00:00:00</Date2>
-          <FormatRe>MM/yyyy</FormatRe>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>32a6ffef-a11b-428c-bfb9-f505be994d0d</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>be815c15-0a0a-466a-a764-fd6dbc3657f2</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>8bd6372e-e593-4a7f-bc07-8f363a24992a</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <DisplayName />
-          <DisplayOrder>0</DisplayOrder>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <DisplayOrderRE>0</DisplayOrderRE>
-        </ReportRestriction>
-      </Restrictions>
     </ReportModel>
     <ReportModel>
       <GUID>9514a43f-7047-45f2-aaec-3dab55b04438</GUID>
@@ -2134,7 +1584,7 @@ col-sm-12</Value>
                                   <Parameters>
                                     <Parameter>
                                       <Name>chartjs_contwidth</Name>
-                                      <Value>240px</Value>
+                                      <Value>260px</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>chartjs_contheight</Name>
