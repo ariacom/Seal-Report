@@ -59,7 +59,7 @@
             Cancel a report execution
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.HomeController.ActionUpdateViewParameter(System.String,System.String,System.String,System.String,System.String)">
+        <member name="M:SealWebServer.Controllers.HomeController.ActionUpdateViewParameter(System.String,System.String,System.String,System.String,System.Boolean,System.String)">
             <summary>
             Update the value of a view parameter of a report execution
             </summary>

@@ -42,9 +42,9 @@
             <thead>
                 <tr class="info">
                     <th>@report.Translate("Model")</th>
-                    <th>@report.Translate("Records")</th>
-                    <th>@report.Translate("Pages")</th>
-                    <th>@report.Translate("Duration (seconds)")</th>
+                    <th class="text-right">@report.Translate("Records")</th>
+                    <th class="text-right">@report.Translate("Pages")</th>
+                    <th class="text-right">@report.Translate("Duration (seconds)")</th>
                     <th>@report.Translate("Restrictions")</th>
                 </tr>
             </thead>
@@ -53,9 +53,9 @@
                 {
                     <tr>
                         <td>@item.Name (@item.Connection.Name)</td>
-                        <td>@item.ResultTable.Rows.Count</td>
-                        <td>@item.Pages.Count</td>
-                        <td>@item.ExecutionDuration</td>
+                        <td class="text-right">@item.ResultTable.Rows.Count</td>
+                        <td class="text-right">@item.Pages.Count</td>
+                        <td class="text-right">@item.ExecutionDuration</td>
                         <td>@Raw(Helper.ToHtml(item.RestrictionText))</td>
                     </tr>
 
@@ -65,9 +65,9 @@
                         {
                             <tr>
                                 <td>@item.Name (@item.Connection.Name)<br /><i>@subModel.Name (@subModel.Connection.Name)</i></td>
-                                <td>@subModel.ResultTable.Rows.Count</td>
-                                <td>@subModel.Pages.Count</td>
-                                <td>@subModel.ExecutionDuration</td>
+                                <td class="text-right">@subModel.ResultTable.Rows.Count</td>
+                                <td class="text-right">@subModel.Pages.Count</td>
+                                <td class="text-right">@subModel.ExecutionDuration</td>
                                 <td>@Raw(Helper.ToHtml(subModel.RestrictionText))</td>
                             </tr>
 

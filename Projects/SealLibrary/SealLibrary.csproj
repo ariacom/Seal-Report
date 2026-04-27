@@ -163,12 +163,12 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.7" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
     <PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Graph" Version="5.103.0" />
-    <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
-		<PackageReference Include="MySql.Data" Version="9.6.0" />
+    <PackageReference Include="Microsoft.Graph" Version="5.104.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.8.0" />
+		<PackageReference Include="MySql.Data" Version="9.7.0" />
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.200" />
 		<PackageReference Include="Npgsql" Version="10.0.2" />
 		<PackageReference Include="PuppeteerSharp" Version="24.40.0" />
@@ -180,26 +180,26 @@ A full repository file structure must be available on the machine running the pr
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.2" />
 		<PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
 		<PackageReference Include="SSH.NET" Version="2025.1.0" />
-		<PackageReference Include="Svg.Skia" Version="4.3.0" />
+		<PackageReference Include="Svg.Skia" Version="4.5.0" />
 		<PackageReference Include="System.ClientModel" Version="1.10.0" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
-		<PackageReference Include="System.Drawing.Common" Version="10.0.6" />    <!-- Keep this version to allow Excel Export via EPPlus on Linux -->
+		<PackageReference Include="System.Drawing.Common" Version="10.0.7" />    <!-- Keep this version to allow Excel Export via EPPlus on Linux -->
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-		<PackageReference Include="System.IO.Packaging" Version="10.0.6" />
+		<PackageReference Include="System.IO.Packaging" Version="10.0.7" />
     <PackageReference Include="TaskScheduler" Version="2.12.2" />
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
 		<PackageReference Include="Twilio" Version="7.14.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.6" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.6" />
-		<PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.7" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.7" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="System.Data.Odbc" Version="10.0.6" />
-		<PackageReference Include="System.Data.OleDb" Version="10.0.6" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.6" />
-		<PackageReference Include="System.DirectoryServices" Version="10.0.6" />
-		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.6" />
-		<PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.6" />
-		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.6" />
+		<PackageReference Include="System.Data.Odbc" Version="10.0.7" />
+		<PackageReference Include="System.Data.OleDb" Version="10.0.7" />
+		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.7" />
+		<PackageReference Include="System.DirectoryServices" Version="10.0.7" />
+		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.7" />
+		<PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.7" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.7" />
     <PackageReference Include="AngleSharp" Version="1.4.0" />
     <PackageReference Include="MailKit" Version="4.16.0" />
     <PackageReference Include="MimeKit" Version="4.16.0" />
