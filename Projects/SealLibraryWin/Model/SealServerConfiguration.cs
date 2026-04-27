@@ -94,7 +94,6 @@ namespace Seal.Model
                 GetProperty("RepositoryTranslationsScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
                 GetProperty("HostForPersonalFolder").SetIsBrowsable(!ForPublication);
-                GetProperty("FileReplacePatterns").SetIsBrowsable(!ForPublication);
                 GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("WebCssFiles").SetIsBrowsable(!ForPublication);
@@ -213,16 +212,6 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool HostForPersonalFolder { get; set; } = false;
-
-        /// <summary>
-        /// List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS.
-        /// </summary>
-#if WINDOWS
-        [Category("Server Settings"), DisplayName("Patterns to replace in CSS or JScript"), Description("List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS."), Id(11, 1)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-#endif
-        public List<FileReplacePattern> FileReplacePatterns { get; set; } = new List<FileReplacePattern>();
-        public bool ShouldSerializeFileReplacePatterns() { return FileReplacePatterns.Count > 0; }
 
         /// <summary>
         /// Additional CSS files to be included in the HTML report result. One per line or separated by semi-column.
@@ -750,12 +739,7 @@ namespace Seal.Model
         /// </summary>
         public string GetAttachedFileContent(string fileName)
         {
-            string result = File.ReadAllText(fileName);
-            foreach (var item in FileReplacePatterns.Where(i => i.FileName == System.IO.Path.GetFileName(fileName)))
-            {
-                result = result.Replace(item.OldValue, item.NewValue);
-            }
-            return result;
+            return File.ReadAllText(fileName);
         }
 
         /// <summary>
