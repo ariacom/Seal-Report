@@ -28,6 +28,18 @@
         //style.Style.Font.UnderLine = true;
         //style.Style.Font.Color.SetColor(System.Drawing.Color.Blue);
 
+        //Summary
+        if (report.ExecutionView.HasValue("report_summary"))
+        {
+            var summaryCells = result.Worksheet.Cells[1, 1, 5, 10];
+            summaryCells.Merge = true;
+            summaryCells.Style.WrapText = true;
+            summaryCells.Style.VerticalAlignment = ExcelVerticalAlignment.Top; ;
+            summaryCells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+            result.SetHtmlValue(summaryCells, report.ExecutionView.GetValue("report_summary"));
+            result.CurrentRow = 6;
+        }
+        
         view.ParseChildren();
 
         result.CleanWorkbook();

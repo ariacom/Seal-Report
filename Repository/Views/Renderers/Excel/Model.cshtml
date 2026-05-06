@@ -1,4 +1,6 @@
-﻿@using Seal.Model
+﻿@using OfficeOpenXml
+@using OfficeOpenXml.Style
+@using Seal.Model
 @using Seal.Renderer
 @{
     Report report = Model;
@@ -10,6 +12,18 @@
 
     if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(view.ViewName);
 
+    //Model summary
+    if (view.HasValue("model_summary"))
+    {
+        var summaryCells = result.Worksheet.Cells[result.CurrentRow, 1, result.CurrentRow + 5, 10];
+        summaryCells.Merge = true;
+        summaryCells.Style.WrapText = true;
+        summaryCells.Style.VerticalAlignment = ExcelVerticalAlignment.Top; ;
+        summaryCells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+        result.SetHtmlValue(summaryCells, view.GetValue("model_summary"));
+        result.CurrentRow += 6;
+    }
+        
     //Summary
     if (model.SummaryTable != null && model.SummaryTable.RowCount > 0 && view.GetBoolValue("show_summary_table", true))
     {

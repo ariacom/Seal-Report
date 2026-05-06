@@ -10,6 +10,9 @@
 <div id='@(view.ViewId)_div' class='view tab-pane fade @((view.GetValue("information_mode") == "enabledshown" || report.ShowExecutionMessages) && !report.PrintLayout ? "" : "active in")' style="transition:1s">
     @if (report.IsExecuting && !report.Cancel && (report.Status == ReportStatus.RenderingResult || report.IsBasicHTMLWithNoOutput))
     {
+		<div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
+			@Raw(view.GetValue("report_summary"))
+		</div>
         @Raw(view.ParseChildren());
     }
     else if (report.ForOutput && report.Status == ReportStatus.RenderingDisplay && !report.Cancel)

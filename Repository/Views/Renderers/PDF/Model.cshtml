@@ -20,6 +20,15 @@
     {
         if (renderer.GetBoolValue("page_break")) column.Item().PageBreak();
 
+        //Model summary
+        if (view.HasValue("model_summary"))
+        {
+            column.Item().PaddingTop(10);
+            column.Item().Element(c =>
+                HtmlToQuestPdf.Render(c, view.GetValue("model_summary")));
+        }
+    
+
         //Summary
         if (model.SummaryTable != null && model.SummaryTable.RowCount > 0 && view.GetBoolValue("show_summary_table", true))
         {

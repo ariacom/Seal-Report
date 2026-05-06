@@ -22,6 +22,8 @@ using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using Npgsql;
 using System.Data.SQLite;
+using Newtonsoft.Json;
+
 
 #if WINDOWS
 using Seal.Forms;
@@ -1031,6 +1033,111 @@ model.ResultTable = query2.CopyToDataTable2();
                 return result;
             }
         }
+
+        /// <summary>
+        /// Json string for the result table with an additional Json containing aggregation
+        /// </summary>
+        [XmlIgnore]
+        public (string, string) ResultTableTranslatedJson
+        {
+            get
+            {
+                var dt = ResultTableTranslated;
+                if (dt == null)
+                {
+                    return (JsonConvert.SerializeObject(new { table = new { row_count = 0 }, cols = new string[0], rows = new object[0], aggregates = new { } }, Formatting.None), "");
+                }
+
+
+                var aggregates = new Dictionary<string, object>();
+                foreach (DataColumn c in dt.Columns)
+                {
+                    var nonNull = dt.AsEnumerable()
+                                    .Where(r => r[c] != DBNull.Value)
+                                    .Select(r => r[c])
+                                    .ToList();
+                    if (nonNull.Count == 0) continue;
+
+                    // ----- Numeric -----
+                    if (c.DataType == typeof(decimal) || c.DataType == typeof(double) ||
+                        c.DataType == typeof(float) || c.DataType == typeof(int) ||
+                        c.DataType == typeof(long) || c.DataType == typeof(short))
+                    {
+                        var vals = nonNull.Select(v => Convert.ToDecimal(v)).ToList();
+                        aggregates[c.ColumnName] = new
+                        {
+                            type = "number",
+                            sum = Math.Round(vals.Sum(), 4),
+                            avg = Math.Round(vals.Average(), 4),
+                            min = Math.Round(vals.Min(), 4),
+                            max = Math.Round(vals.Max(), 4),
+                            count = vals.Count
+                        };
+                    }
+                    // ----- Date / DateTime -----
+                    else if (c.DataType == typeof(DateTime))
+                    {
+                        var vals = nonNull.Cast<DateTime>().ToList();
+                        var min = vals.Min();
+                        var max = vals.Max();
+                        var span = max - min;
+
+                        aggregates[c.ColumnName] = new
+                        {
+                            type = "date",
+                            min = min,            // serialized as ISO 8601 by Newtonsoft, like the rows
+                            max = max,
+                            span_days = (int)span.TotalDays,
+                            span_months = (int)Math.Round(span.TotalDays / 30.4375),
+                            distinct_days = vals.Select(v => v.Date).Distinct().Count(),
+                            distinct_months = vals.Select(v => new { v.Year, v.Month }).Distinct().Count(),
+                            distinct_years = vals.Select(v => v.Year).Distinct().Count(),
+                            count = vals.Count
+                        };
+                    }
+                    // ----- Text -----
+                    else if (c.DataType == typeof(string))
+                    {
+                        var vals = nonNull.Cast<string>().ToList();
+                        aggregates[c.ColumnName] = new
+                        {
+                            type = "text",
+                            count = vals.Count,
+                            distinct = vals.Distinct().Count(),
+                            top = vals.GroupBy(v => v)
+                                           .OrderByDescending(g => g.Count())
+                                           .Take(3)
+                                           .Select(g => new { value = g.Key, count = g.Count() })
+                                           .ToArray()
+                        };
+                    }
+                }
+
+                var tableAgg = new
+                {
+                    row_count = dt.Rows.Count,
+                    non_empty_rows = dt.AsEnumerable()
+                                      .Count(r => r.ItemArray.Any(v => v != DBNull.Value))
+                };
+
+                string aggJson = JsonConvert.SerializeObject(
+                                        new { table = tableAgg, columns = aggregates },
+                                        Formatting.None);
+
+                var tableJson = JsonConvert.SerializeObject(new
+                {
+                    cols = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray(),
+                    rows = dt.AsEnumerable()
+                             .Select(r => r.ItemArray
+                                           .Select(v => v == DBNull.Value ? null : v)
+                                           .ToArray())
+                             .ToArray()
+                }, Formatting.None);
+
+                return (tableJson, aggJson);
+            }
+        }
+
         /// <summary>
         /// Progression in percentage of the model processing
         /// </summary>
@@ -1625,8 +1732,8 @@ model.ResultTable = query2.CopyToDataTable2();
                 }
 
                 //clean restrictions not used
-                CommonRestrictions.RemoveAll(i => 
-                !finalSql.Contains(Repository.CommonRestrictionKeyword + i.Name + "}") && 
+                CommonRestrictions.RemoveAll(i =>
+                !finalSql.Contains(Repository.CommonRestrictionKeyword + i.Name + "}") &&
                 !finalSql.Contains(Repository.CommonValueKeyword + i.Name + "}"));
 
                 //Set references
@@ -1928,7 +2035,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions))
                     {
                         MetaTable table = restriction.MetaColumn.MetaTable;
-                        if (table != null && !FromTables.Contains(table) && (restriction.HasValue || restriction.BlankValues != RestrictionBlanksOptions.Default  || forceRestrictionsTables) && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
+                        if (table != null && !FromTables.Contains(table) && (restriction.HasValue || restriction.BlankValues != RestrictionBlanksOptions.Default || forceRestrictionsTables) && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
                     }
 
                     //Clear group by clause if not necessary
@@ -2152,7 +2259,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 }
 
                 //var js = JoinPathFinder.GetJoinsForPath(Source.MetaData.Joins.Where(i => JoinsToUse.Count == 0 || (JoinsToUse.Contains(i.GUID))).ToList(), (from C in FromTables select C.GUID).ToList());
-               // var wc = JoinPathFinder.BuildFromClause(Source.MetaData.Joins.Where(i => JoinsToUse.Count == 0 || (JoinsToUse.Contains(i.GUID))).ToList(), (from C in FromTables select C.GUID).ToList());
+                // var wc = JoinPathFinder.BuildFromClause(Source.MetaData.Joins.Where(i => JoinsToUse.Count == 0 || (JoinsToUse.Contains(i.GUID))).ToList(), (from C in FromTables select C.GUID).ToList());
 
                 _buildTimer = DateTime.Now;
                 _directCount = 0;

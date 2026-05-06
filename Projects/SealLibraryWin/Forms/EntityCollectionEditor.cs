@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Linq;
 using Seal.Renderer;
 using Seal.Helpers;
+using Seal.AI;
 
 namespace Seal.Forms
 {
@@ -166,6 +167,13 @@ namespace Seal.Forms
                 var metaEnum = _component as MetaEnum;
                 foreach (var ev in metaEnum.Values) ev.MetaEnum = metaEnum;
             }
+            else if (CollectionItemType == typeof(AIProviderConfiguration))
+            {
+                frmCollectionEditorForm.Text = "AI Provider Configuration Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
 
             TableLayoutPanel tlpLayout = frmCollectionEditorForm.Controls[0] as TableLayoutPanel;
 
@@ -291,6 +299,7 @@ namespace Seal.Forms
                 var item = value as MetaEV;
                 return base.GetDisplayText(string.IsNullOrEmpty(item.Id) ? "<Empty value>" : string.Format("{0}", item.DisplayValue));
             }
+            else if (value is AIProviderConfiguration) result = ((AIProviderConfiguration)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
     }

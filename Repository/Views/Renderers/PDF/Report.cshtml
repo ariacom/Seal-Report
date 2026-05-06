@@ -107,6 +107,14 @@
 
                     page.Content().Column(column =>
                     {
+                        //Summary
+                        if (Report.ExecutionView.HasValue("report_summary"))
+                        {
+                            column.Item().PaddingTop(10);
+                            column.Item().Element(c =>
+                                HtmlToQuestPdf.Render(c, Report.ExecutionView.GetValue("report_summary")));
+                        }
+                    
                         //Content
                         column.Item().Element(ComposeContent);
 
@@ -150,6 +158,7 @@
                 }
             });
         }
+        
         void ComposeContent(IContainer container)
         {
             container
@@ -186,12 +195,23 @@
         {
             container.Column(column =>
             {
+                //Execution date and duration
                 column.Item().Row(row =>
                 {
                     row.AutoItem().Text($"{Report.Translate("Execution date")}: {Report.ExecutionStartDate}");
                     row.RelativeItem().AlignRight().Text(string.Format("{0}: {1} {2}", Report.Translate("Duration"), Math.Floor(Report.ExecutionFullDuration.TotalSeconds), Report.Translate("seconds")));
                 });
-
+                
+                //Description
+                if (Report.ExecutionView.HasValue("report_description"))
+                {
+                    column.Item().PaddingTop(10);
+                    column.Item().Row(row =>
+                    {
+                        row.AutoItem().Text(Report.ExecutionView.GetValue("report_description"));
+                    });
+                }
+                
                 column.Item().PaddingTop(10);
                 column.Item().Table(table =>
                 {

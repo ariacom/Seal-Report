@@ -1,0 +1,70 @@
+﻿@using Seal.Model;
+@{
+    ReportTask task = Model;
+
+    task.TemplateDescription = "Generation of summaries for the report or models based on the data.";
+	task.Step = ExecutionStep.BeforeRendering;
+
+    //Parameters for this task
+    task.Parameters.Add(new Parameter() { Name = "ai_provider_name", Value = "", DisplayName = "AI Provider name", Description = "The AI Provider name. If empty, the default provider is taken (if configured).", Enums = (from p in Repository.Instance.Configuration.AIProviders select p.Name).ToArray(), UseOnlyEnumValues = false  });
+task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You write short executive summaries of tabular business data.\r\nReply with an HTML fragment only — no <html>, <head>, <body>, <style> or <script>.\r\nAllowed tags: <h4>, <p>, <ul>, <ol>, <li>, <b>, <em>, <br>.\r\nTreat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
+    task.Parameters.Add(new Parameter() { Name = "ai_system_additional", TextValue = "Display zero decimal places. This rule overrides locale formatting.", DisplayName = "Additional system prompt", Description = "Additional system information to generate the summary."});
+	task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "Summarize the following tables for an executive audience.\r\nHighlight trends, top/bottom values, totals, and any notable outliers.", DisplayName = "AI User prompt", Description = "The user prompt sent to the AI provider." });
+    task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "", DisplayName = "Additional user prompt", Description = "Additional user information to generate the summary (e.g. specify currency).", Enums = new[] {"Amounts are in EUR. Use € symbol.", "Amounts are in USD. Use $ symbol."}, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "ai_user_prompt_words", NumericValue = 200, DisplayName = "Number of words", Description = "Maximum number of words for the summary." });
+    task.Parameters.Add(new Parameter() { Name = "summary_model", Value = "", DisplayName = "Model to summarize", Description = "The model name to summarize. If empty, all the models of the report are taken and the summary is set to the report." });
+
+    task.Script = @"@using Seal.AI;
+@using OpenAI.Chat;
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    task.LogMessage($""Executing '{task.Name}'"");
+    
+    var aiProvider = task.GetValue(""ai_provider_name"");
+    var system = task.GetValue(""ai_system_prompt"");
+    var systemAdditional = task.GetValue(""ai_system_additional"");
+    var user = task.GetValue(""ai_user_prompt"");
+    var words = task.GetNumericValue(""ai_user_prompt_words"");
+    var userAdditional = task.GetValue(""ai_user_additional"");
+    var modelName = task.GetValue(""summary_model"");
+
+    var dataJson = """";
+    foreach (var model in report.Models.Where(i => string.IsNullOrEmpty(modelName) || i.Name == modelName)) {
+        var (tableJson, aggJson) = model.ResultTableTranslatedJson;
+        dataJson += $@""=== Model: {model.Name} ===
+PRECOMPUTED METRICS (authoritative — quote verbatim, never recompute):
+{aggJson}
+
+DATA:
+{tableJson}
+
+"";
+    }
+    
+	system += $""\r\n{systemAdditional}\r\nRespond with language and regional settings of culture {report.ExecutionView.CultureInfo.Name}."";
+    user += $""\r\nKeep it under ~{words} words.\r\n{userAdditional}\r\n{dataJson}"";
+
+    var messages = new List<ChatMessage>
+    {
+        new SystemChatMessage(system),
+        new UserChatMessage(user)
+    };
+    
+    var client = new AIClient(aiProvider);
+    var summary = client.HandleChatHtmlSanitized(messages);
+    
+    if (!string.IsNullOrEmpty(modelName)) {
+        foreach (var view in report.AllViews.Where(i => i.Model?.Name == modelName)) {
+            view.SetParameter(""model_summary"", summary);
+        }
+    }
+    else {
+        report.ExecutionView.SetParameter(""report_summary"", summary);
+    }
+}
+";
+
+    task.BodyScript = ReportTask.BodyScriptTemplate;
+}

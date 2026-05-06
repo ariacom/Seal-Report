@@ -8,6 +8,10 @@
 }
 
 <div id='@("model_" + view.IdSuffix)' @Raw(view.AddAttribute("class", "model_class")) @Raw(view.AddAttribute("style", "model_css"))>
+    <div class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
+		@Raw(view.GetValue("model_summary"))
+    </div>
+	
     @if (viewModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "right")
     {
         <div class="row">

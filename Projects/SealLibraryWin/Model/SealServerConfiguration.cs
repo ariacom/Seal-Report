@@ -14,6 +14,8 @@ using System.Reflection;
 using System.Globalization;
 using Twilio.Rest.Trunking.V1;
 using DocumentFormat.OpenXml.Vml;
+using Seal.AI;
+
 #if WINDOWS
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
@@ -97,11 +99,13 @@ namespace Seal.Model
                 GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("WebCssFiles").SetIsBrowsable(!ForPublication);
-                GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication);
+                GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication); 
                 GetProperty("AlternateTempDirectory").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableRazorCache").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableDownloadUpload").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportFormats").SetIsBrowsable(!ForPublication);
+
+                GetProperty("AIProviders").SetIsBrowsable(!ForPublication);
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
                 GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
@@ -482,12 +486,31 @@ namespace Seal.Model
 #endif
         public string RepositoryTranslationsScript { get; set; } = null;
 
+        List<AIProviderConfiguration> _AIProviders = new List<AIProviderConfiguration>();
+        /// <summary>
+        /// AI Providers available to configure AIClient.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("AI providers"), Description("AI Providers available to configure AIClient.."), Category("AI Configuration"), Id(1, 6)]
+        [DefaultValue(false)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+#endif
+        public List<AIProviderConfiguration> AIProviders
+        {
+            get
+            {
+                return _AIProviders;
+            }
+            set { _AIProviders = value; }
+        }
+
+
         EncryptionMode _encryptionMode = EncryptionMode.Default;
         /// <summary>
         /// Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows User will have access to the keys. Warning: You must retype the used password after changing mode or key values.
         /// </summary>
 #if WINDOWS
-        [DisplayName("Storage and encryption mode"), Description("Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows user will have access to the keys to decrypt the password. Warning: You must retype the used password after changing mode or key values."), Category("Server Keys"), Id(1, 6)]
+        [DisplayName("Storage and encryption mode"), Description("Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows user will have access to the keys to decrypt the password. Warning: You must retype the used password after changing mode or key values."), Category("Server Keys"), Id(1, 7)]
         [DefaultValue(EncryptionMode.Default)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
@@ -509,7 +532,7 @@ namespace Seal.Model
         /// If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting connection password, SMTP or FTP passwords).
         /// </summary>
 #if WINDOWS
-        [DisplayName("Key values"), Description("If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting Connection password, SMTP or FTP passwords)."), Category("Server Keys"), Id(2, 6)]
+        [DisplayName("Key values"), Description("If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting Connection password, SMTP or FTP passwords)."), Category("Server Keys"), Id(2, 7)]
         [DefaultValue(false)]
 #endif
         public List<KeyValue> KeyValues
@@ -522,7 +545,7 @@ namespace Seal.Model
         }
 
  #if WINDOWS
-        [DisplayName("Application keys and passwords"), Description("Keys or passwords used in the application (e.g. keys used in scripts in reports and tasks using the Repository.GetApplicationKey(\"KeyName\") method). Values are encrypted using the encryption mode defined above."), Category("Server Keys"), Id(3, 6)]
+        [DisplayName("Application keys and passwords"), Description("Keys or passwords used in the application (e.g. keys used in scripts in reports and tasks using the Repository.GetApplicationKey(\"KeyName\") method). Values are encrypted using the encryption mode defined above."), Category("Server Keys"), Id(3, 7)]
 #endif       
         /// <summary>
         /// Keys or passwords used in the application (report and tasks). Values are encrypted using the encryption mode.
@@ -794,6 +817,10 @@ namespace Seal.Model
                 if (!_keyValues.Exists(i => i.Name == SchedulerPasswordKeyName))
                 {
                     _keyValues.Add(new KeyValue() { Name = SchedulerPasswordKeyName, Value = SchedulerPasswordKeyValue });
+                }
+                if (!_keyValues.Exists(i => i.Name == AIProviderConfiguration.AIProviderKeysKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = AIProviderConfiguration.AIProviderKeysKeyName, Value = AIProviderConfiguration.AIProviderKeysKeyValue });
                 }
             }
         }

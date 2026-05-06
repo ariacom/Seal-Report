@@ -4,6 +4,158 @@
         <name>SealLibrary</name>
     </assembly>
     <members>
+        <member name="M:Seal.AI.AIClient.#ctor">
+            <summary>
+            Creates a new <see cref="T:Seal.AI.AIClient"/> using the default provider configuration
+            (the <see cref="T:Seal.AI.AIProviderConfiguration"/> with <see cref="P:Seal.AI.AIProviderConfiguration.IsDefault"/> set to <c>true</c>).
+            </summary>
+            <exception cref="T:System.Exception">Thrown when no default provider configuration is found.</exception>
+        </member>
+        <member name="M:Seal.AI.AIClient.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Seal.AI.AIClient"/> bound to the given provider configuration name.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIClient.ProviderName">
+            <summary>
+            Name of the <see cref="T:Seal.AI.AIProviderConfiguration"/> to use, looked up from
+            <see cref="!:Repository.AIProviderConfigurations"/> at initialisation time.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIClient.GetProvider(System.Boolean)">
+            <summary>
+            Resolves <see cref="P:Seal.AI.AIClient.ProviderName"/> against <see cref="!:Repository.AIProviderConfigurations"/>,
+            creates and initialises the matching provider, and returns it.
+            Subsequent calls return the cached instance unless <paramref name="forceReinit"/> is <c>true</c>.
+            </summary>
+            <exception cref="T:System.Exception">
+            Thrown when no configuration with the given <see cref="P:Seal.AI.AIClient.ProviderName"/> is found.
+            </exception>
+        </member>
+        <member name="M:Seal.AI.AIClient.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
+            <summary>
+            Sends the message list to the AI and returns the assistant reply.
+            The reply is automatically appended to <paramref name="messages"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.IAIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
+            <summary>
+            Sends <paramref name="messages"/> to the AI and returns the assistant reply.
+            The reply is automatically appended to <paramref name="messages"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIProvider.Initialize(System.String,System.String,System.String,System.Single,System.Int32,System.Single)">
+            <summary>
+            Configures the provider with the endpoint URL, API key, model name, and generation parameters.
+            Called internally by <see cref="M:Seal.AI.AIProvider.GetAIProvider(Seal.AI.ProviderType,System.String,System.String,System.String,System.Single,System.Int32,System.Single)"/> immediately after construction.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
+            <summary>
+            Sends <paramref name="messages"/> to the AI and returns the assistant reply.
+            The reply is automatically appended to <paramref name="messages"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIProvider.GetAIProvider(Seal.AI.ProviderType,System.String,System.String,System.String,System.Single,System.Int32,System.Single)">
+            <summary>
+            Creates, initialises, and returns a provider for the given <paramref name="providerType"/>.
+            </summary>
+            <exception cref="T:System.ArgumentException">
+            Thrown when both <paramref name="temperature"/> and <paramref name="topP"/> are set to non-default values.
+            Set one or the other, not both.
+            </exception>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.Name">
+            <summary>
+            Display name of this provider configuration.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.IsDefault">
+            <summary>
+            When <c>true</c>, this configuration is used by <see cref="T:Seal.AI.AIClient"/> when no provider name is specified.
+            Only one configuration should have this flag set.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.Type">
+            <summary>
+            Type of the AI provider.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.Model">
+            <summary>
+            Model name to use (e.g. gpt-4o, claude-3-5-sonnet-20241022, llama3).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.EndPoint">
+            <summary>
+            The resource endpoint URL.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.ProviderKey">
+            <summary>
+            Encrypted API Key.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.ClearProviderKey">
+            <summary>
+            Provider API Key in clear text.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.Temperature">
+            <summary>
+            Sampling temperature (0.0 = deterministic, 1.0 = creative).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.MaxTokens">
+            <summary>
+            Maximum number of tokens to generate in a single reply.
+            Set to 0 to use the provider's default (parameter is not sent).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.TopP">
+            <summary>
+            Nucleus sampling threshold (0.0–1.0). Use instead of, or together with, Temperature.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AnthropicProvider.#ctor">
+            <summary>
+            Initializes a new Anthropic provider.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AnthropicProvider.Initialize(System.String,System.String,System.String,System.Single,System.Int32,System.Single)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.AnthropicProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.AzureProvider.Initialize(System.String,System.String,System.String,System.Single,System.Int32,System.Single)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.AzureProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.OllamaProvider.#ctor">
+            <summary>
+            Initializes a new Ollama provider.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.OllamaProvider.Initialize(System.String,System.String,System.String,System.Single,System.Int32,System.Single)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.OllamaProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.OpenAIProvider.#ctor">
+            <summary>
+            Initializes a new OpenAI provider.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.OpenAIProvider.Initialize(System.String,System.String,System.String,System.Single,System.Int32,System.Single)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.OpenAIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
+            <inheritdoc/>
+        </member>
         <member name="M:Seal.Helpers.ObjectShredder`1.Shred(System.Collections.Generic.IEnumerable{`0},System.Data.DataTable,System.Nullable{System.Data.LoadOption})">
             <summary>
             Loads a DataTable from a sequence of objects.
@@ -8281,6 +8433,11 @@
         <member name="P:Seal.Model.SealServerConfiguration.RepositoryTranslationsScript">
             <summary>
             If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.AIProviders">
+            <summary>
+            AI Providers available to configure AIClient.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.EncryptionMode">

@@ -44,20 +44,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Core" Version="1.53.0" />
+		<PackageReference Include="Azure.Core" Version="1.54.0" />
 		<PackageReference Include="Azure.Identity" Version="1.21.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.27.0" />
 		<PackageReference Include="Azure.Storage.Common" Version="12.26.0" />
 		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.25.0" />
 		<PackageReference Include="Azure.Storage.Queues" Version="12.25.0" />
 		<PackageReference Include="FluentFTP" Version="54.1.1" />
+		<PackageReference Include="HtmlSanitizer" Version="9.0.892" />
 		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.84.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.7" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.0.0" />
 		<PackageReference Include="EPPlus">
 			<Version>4.5.3.3</Version>
@@ -105,6 +106,7 @@
 		<PackageReference Include="DiffPlex.Wpf" Version="1.9.1" />
 		<PackageReference Include="MailKit" Version="4.16.0" />
 		<PackageReference Include="MimeKit" Version="4.16.0" />
+		<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -256,9 +258,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="TableTemplates\" />
+		<Folder Include="SecurityProviders\" />
 		<Folder Include="SecurityProviders\" />
 		<Folder Include="TableTemplates\" />
 		<Folder Include="Views\Content\" />
+		<Folder Include="Views\Content\" />
+		<Folder Include="Views\Scripts\" />
+		<Folder Include="Views\Renderers\" />
 		<Folder Include="Views\Renderers\" />
 		<Folder Include="Views\Scripts\" />
 	</ItemGroup>

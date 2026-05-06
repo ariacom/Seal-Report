@@ -9,6 +9,8 @@ using Seal.Helpers;
 using Seal.Model;
 using System;
 using System.Linq;
+using AngleSharp.Html.Parser;
+using AngleSharp.Dom;
 
 namespace Seal.Renderer
 {
@@ -130,6 +132,165 @@ namespace Seal.Renderer
             Worksheet = Workbook.Worksheets.Add(name);
             CurrentRow = 1;
             CurrentCol = 1;
+        }
+
+        /// <summary>
+        /// Converts an HTML string to plain text and writes it into an EPPlus cell.
+        /// The cell's WrapText / alignment / merge must be set by the caller.
+        /// </summary>
+        public void SetHtmlValue(ExcelRange cells, string html)
+        {
+            cells.Value = HtmlToText.Convert(html);
+        }
+    }
+
+    // =========================================================================
+    // HtmlToText — converts limited HTML to plain text with structure preserved.
+    // Supported tags: <h4>, <p>, <ul>, <ol>, <li>, <b>, <em>, <br>
+    // Inline tags (<b>, <em>) are stripped; their text content is kept.
+    // Block tags produce newlines; list items get bullet / number prefixes.
+    // Uses AngleSharp (already a project dependency) — no extra NuGet needed.
+    // Usable from any renderer (Excel, Text, …).
+    // =========================================================================
+
+    public static class HtmlToText
+    {
+        /// <summary>
+        /// Converts an HTML string to structured plain text.
+        /// </summary>
+        public static string Convert(string html)
+        {
+            if (string.IsNullOrWhiteSpace(html))
+                return string.Empty;
+
+            var parser   = new HtmlParser();
+            var document = parser.ParseDocument(html);
+
+            var sb = new System.Text.StringBuilder();
+            ConvertNodes(sb, document.Body?.ChildNodes ?? document.ChildNodes, indent: 0, orderedCounters: new System.Collections.Generic.Stack<int>());
+
+            return sb.ToString().Trim();
+        }
+
+        // ---------------------------------------------------------------------
+
+        private static void ConvertNodes(
+            System.Text.StringBuilder sb,
+            INodeList nodes,
+            int       indent,
+            System.Collections.Generic.Stack<int> orderedCounters)
+        {
+            foreach (var node in nodes)
+            {
+                if (node.NodeType == NodeType.Text)
+                {
+                    // Raw text outside a block tag — emit as-is (trimmed)
+                    var raw = node.TextContent.Trim();
+                    if (!string.IsNullOrEmpty(raw))
+                        AppendLine(sb, raw, indent);
+                    continue;
+                }
+
+                if (node.NodeType != NodeType.Element)
+                    continue;
+
+                var el  = (IElement)node;
+                var tag = el.TagName.ToLower();
+
+                switch (tag)
+                {
+                    case "h4":
+                        AppendLine(sb, InnerText(el), indent);
+                        break;
+
+                    case "p":
+                        AppendLine(sb, InnerText(el), indent);
+                        break;
+
+                    case "br":
+                        sb.Append('\n');
+                        break;
+
+                    case "ul":
+                        foreach (var child in el.ChildNodes)
+                        {
+                            if (child.NodeType != NodeType.Element) continue;
+                            var li = (IElement)child;
+                            if (li.TagName.ToLower() != "li") continue;
+                            AppendLine(sb, "• " + InnerText(li), indent + 1);
+                        }
+                        break;
+
+                    case "ol":
+                        int counter = 1;
+                        foreach (var child in el.ChildNodes)
+                        {
+                            if (child.NodeType != NodeType.Element) continue;
+                            var li = (IElement)child;
+                            if (li.TagName.ToLower() != "li") continue;
+                            AppendLine(sb, $"{counter}. " + InnerText(li), indent + 1);
+                            counter++;
+                        }
+                        break;
+
+                    default:
+                        // Unknown / wrapper tag — recurse into children
+                        if (el.HasChildNodes)
+                            ConvertNodes(sb, el.ChildNodes, indent, orderedCounters);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Extracts the plain text of a node, collapsing all inline tags.
+        /// Inline &lt;br&gt; is converted to a space to keep text readable.
+        /// </summary>
+        private static string InnerText(IElement el)
+        {
+            var sb = new System.Text.StringBuilder();
+            ExtractText(sb, el.ChildNodes);
+            return sb.ToString().Trim();
+        }
+
+        private static void ExtractText(System.Text.StringBuilder sb, INodeList nodes)
+        {
+            foreach (var node in nodes)
+            {
+                if (node.NodeType == NodeType.Text)
+                {
+                    sb.Append(node.TextContent);
+                }
+                else if (node.NodeType == NodeType.Element)
+                {
+                    var el  = (IElement)node;
+                    var tag = el.TagName.ToLower();
+                    if (tag == "br")
+                        sb.Append(' ');
+                    else if (el.HasChildNodes)
+                        ExtractText(sb, el.ChildNodes);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Appends a line with optional indentation. Each indent level adds two spaces.
+        /// Ensures the previous content ends with a newline before writing.
+        /// </summary>
+        private static void AppendLine(System.Text.StringBuilder sb, string text, int indent)
+        {
+            if (string.IsNullOrEmpty(text))
+                return;
+
+            // Ensure block separation: don't double-blank, but do add newline between blocks
+            if (sb.Length > 0 && sb[sb.Length - 1] != '\n')
+                sb.Append('\n');
+
+            if (indent > 0)
+                sb.Append(new string(' ', indent * 2));
+
+            sb.Append(text);
+            sb.Append('\n');
         }
     }
 }
