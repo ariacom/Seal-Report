@@ -41,7 +41,7 @@ Use the <a href="https://github.com/ariacom/Seal-Report/discussions" target=_bla
 ## System Requirements
 **For use:**
 * .Net 8.0 (Microsoft Windows Desktop Runtime 8)
-* Database OLE DB, ODBC, MS SQLServer, Mongo DB or MySQL Drivers
+* Database OLE DB, ODBC, MS SQLServer, Oracle, MySQL, SQLite, PostgreSQL, Mongo DB Drivers
 * For the Report Designer: Microsoft Edge WebView2
 * For the Web Report Server: Internet Information Server with ASP.Net Core Runtime 8 (Hosting Bundle) or greater
 
