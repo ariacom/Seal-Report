@@ -4,13 +4,6 @@
         <name>SealLibrary</name>
     </assembly>
     <members>
-        <member name="M:Seal.AI.AIClient.#ctor">
-            <summary>
-            Creates a new <see cref="T:Seal.AI.AIClient"/> using the default provider configuration
-            (the <see cref="T:Seal.AI.AIProviderConfiguration"/> with <see cref="P:Seal.AI.AIProviderConfiguration.IsDefault"/> set to <c>true</c>).
-            </summary>
-            <exception cref="T:System.Exception">Thrown when no default provider configuration is found.</exception>
-        </member>
         <member name="M:Seal.AI.AIClient.#ctor(System.String)">
             <summary>
             Creates a new <see cref="T:Seal.AI.AIClient"/> bound to the given provider configuration name.
@@ -35,6 +28,12 @@
         <member name="M:Seal.AI.AIClient.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
             <summary>
             Sends the message list to the AI and returns the assistant reply.
+            The reply is automatically appended to <paramref name="messages"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIClient.HandleChatHtmlSanitized(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
+            <summary>
+            Sends the message list to the AI and returns the assistant reply as Html.
             The reply is automatically appended to <paramref name="messages"/>.
             </summary>
         </member>
@@ -4328,6 +4327,11 @@
         <member name="P:Seal.Model.ReportModel.ResultTableTranslated">
             <summary>
             Result DataTable got from the SQL query with the original column names and without hidden columns
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.ResultTableTranslatedJson">
+            <summary>
+            Json string for the result table with an additional Json containing aggregation
             </summary>
         </member>
         <member name="F:Seal.Model.ReportModel.Progression">
@@ -9742,6 +9746,29 @@
         <member name="M:Seal.Renderer.ExcelResult.AddWorksheet(System.String)">
             <summary>
             Add a Worksheet to the current Workbook
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.SetHtmlValue(OfficeOpenXml.ExcelRange,System.String)">
+            <summary>
+            Converts an HTML string to plain text and writes it into an EPPlus cell.
+            The cell's WrapText / alignment / merge must be set by the caller.
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HtmlToText.Convert(System.String)">
+            <summary>
+            Converts an HTML string to structured plain text.
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HtmlToText.InnerText(AngleSharp.Dom.IElement)">
+            <summary>
+            Extracts the plain text of a node, collapsing all inline tags.
+            Inline &lt;br&gt; is converted to a space to keep text readable.
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HtmlToText.AppendLine(System.Text.StringBuilder,System.String,System.Int32)">
+            <summary>
+            Appends a line with optional indentation. Each indent level adds two spaces.
+            Ensures the previous content ends with a newline before writing.
             </summary>
         </member>
         <member name="M:Seal.Renderer.TextRenderer.GetRenderType">

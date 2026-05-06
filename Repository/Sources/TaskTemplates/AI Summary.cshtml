@@ -10,7 +10,7 @@
 task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You write short executive summaries of tabular business data.\r\nReply with an HTML fragment only — no <html>, <head>, <body>, <style> or <script>.\r\nAllowed tags: <h4>, <p>, <ul>, <ol>, <li>, <b>, <em>, <br>.\r\nTreat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "ai_system_additional", TextValue = "Display zero decimal places. This rule overrides locale formatting.", DisplayName = "Additional system prompt", Description = "Additional system information to generate the summary."});
 	task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "Summarize the following tables for an executive audience.\r\nHighlight trends, top/bottom values, totals, and any notable outliers.", DisplayName = "AI User prompt", Description = "The user prompt sent to the AI provider." });
-    task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "", DisplayName = "Additional user prompt", Description = "Additional user information to generate the summary (e.g. specify currency).", Enums = new[] {"Amounts are in EUR. Use € symbol.", "Amounts are in USD. Use $ symbol."}, UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "", DisplayName = "Additional user prompt", Description = "Additional user information to generate the summary (e.g. specify currency).", Enums = new[] {"Amounts are in EUR. Use € symbol with a space as thousand separator, comma as decimal separator and 2 decimals.", "Amounts are in USD. Use $ symbol."}, UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "ai_user_prompt_words", NumericValue = 200, DisplayName = "Number of words", Description = "Maximum number of words for the summary." });
     task.Parameters.Add(new Parameter() { Name = "summary_model", Value = "", DisplayName = "Model to summarize", Description = "The model name to summarize. If empty, all the models of the report are taken and the summary is set to the report." });
 
@@ -43,7 +43,7 @@ DATA:
 "";
     }
     
-	system += $""\r\n{systemAdditional}\r\nRespond with language and regional settings of culture {report.ExecutionView.CultureInfo.Name}."";
+	system += $""\r\nRespond with language and regional settings of culture {report.ExecutionView.CultureInfo.Name}.\r\n{systemAdditional}"";
     user += $""\r\nKeep it under ~{words} words.\r\n{userAdditional}\r\n{dataJson}"";
 
     var messages = new List<ChatMessage>
