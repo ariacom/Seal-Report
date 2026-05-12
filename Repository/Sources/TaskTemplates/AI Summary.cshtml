@@ -7,13 +7,13 @@
 
     //Parameters for this task
     task.Parameters.Add(new Parameter() { Name = "ai_provider_name", Value = "", DisplayName = "AI Provider name", Description = "The AI Provider name. If empty, the default provider is taken (if configured).", Enums = (from p in Repository.Instance.Configuration.AIProviders select p.Name).ToArray(), UseOnlyEnumValues = false  });
-task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You write short executive summaries of tabular business data.\r\nReply with an HTML fragment only — no <html>, <head>, <body>, <style> or <script>.\r\nAllowed tags: <h4>, <p>, <ul>, <ol>, <li>, <b>, <em>, <br>.\r\nTreat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
+task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You write short executive summaries of tabular business data.\r\nReply with an HTML fragment only — no <html>, <head>, <body>, <style> or <script>.\r\nAllowed tags: <h4>, <p>, <ul>, <ol>, <li>, <b>, <em>, <br>.\r\nThe data includes a PRE-AGGREGATED METRICS section with already-computed totals and statistics. Use these values directly in your summary. You may reformat them per locale rules.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "ai_system_additional", TextValue = "Use zero decimal places for all numbers.", DisplayName = "Additional system prompt", Description = "Additional system information to generate the summary."});
 	task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "Summarize the following tables for an executive audience.\r\nHighlight trends, top/bottom values, totals, and any notable outliers.", DisplayName = "AI User prompt", Description = "The user prompt sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "", DisplayName = "Additional user prompt", Description = "Additional user information to generate the summary (e.g. specify currency).", Enums = new[] {"Amounts are in EUR. Use € symbol with a space as thousand separator, comma as decimal separator and 2 decimals.", "Amounts are in USD. Use $ symbol."}, UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "ai_user_prompt_words", NumericValue = 200, DisplayName = "Number of words", Description = "Maximum number of words for the summary." });
     task.Parameters.Add(new Parameter() { Name = "summary_model", Value = "", DisplayName = "Model to summarize", Description = "The model name to summarize. If empty, all the models of the report are taken and the summary is set to the report." });
-    task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
+    task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = true, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
 
     task.Script = @"@using Seal.AI;
 @using OpenAI.Chat;
@@ -36,7 +36,7 @@ task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You wr
     foreach (var model in report.Models.Where(i => string.IsNullOrEmpty(modelName) || i.Name == modelName)) {
         var (tableJson, aggJson) = model.ResultTableTranslatedJson;
         dataJson += $@""=== Model: {model.Name} ===
-PRECOMPUTED METRICS (authoritative — quote verbatim, never recompute):
+PRE-AGGREGATED METRICS:
 {aggJson}
 
 DATA:
@@ -44,6 +44,7 @@ DATA:
 
 "";
     }
+	if (string.IsNullOrEmpty(dataJson)) throw new Exception(""No data found. Check your model name"");
     
 	system += $""\r\nRespond with language and regional settings of culture {report.ExecutionView.CultureInfo.Name}.\r\n{systemAdditional}"";
     user += $""\r\nKeep it under ~{words} words.\r\n{userAdditional}\r\n{dataJson}"";
@@ -55,11 +56,12 @@ DATA:
     };
     
     if (logRequests) {
-        task.LogMessage($""[AI Request] System:\r\n{system}"");
-        task.LogMessage($""[AI Request] User:\r\n{user}"");
+		task.LogMessage($""[AI Request {system.Length}] System:\r\n{system}"");
+		task.LogMessage($""[AI Request {user.Length}] User:\r\n{user}"");
     }
     var client = new AIClient(aiProvider);
     var summary = client.HandleChatHtmlSanitized(messages);
+	if (string.IsNullOrEmpty(summary)) throw new Exception(""Got empty summary."");
     if (logRequests) task.LogMessage($""[AI Response]\r\n{summary}"");
     
     if (!string.IsNullOrEmpty(modelName)) {

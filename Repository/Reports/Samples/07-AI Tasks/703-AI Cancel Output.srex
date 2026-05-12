@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>566f6cd4fcd04703ae8d83f9d29de4d2</GUID>
+  <ViewGUID>56595d831bad4158a557d702102d00f7</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>19b92280-92ce-4be1-8530-5502bd713bec</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>b32ee15b16ee49c880b397a5ed7ff957</GUID>
+      <Name>Sales by Employee</Name>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>b058649d-6fe5-4d09-8645-a39de3a3b4f4</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c6192148-a3d8-4c20-bb8e-3a72ae618d20</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5ec3b6be-01ca-41b2-964e-d199baaf3e07</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[3c19377c-0b38-4ee2-ba36-dfd00771bf22]
+</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>3c19377c-0b38-4ee2-ba36-dfd00771bf22</GUID>
+          <Name>Orders.OrderDate</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <Operator>Between</Operator>
+          <Date1>1997-01-01T00:00:00</Date1>
+          <Date2>1997-12-31T00:00:00</Date2>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Outputs>
+    <ReportOutput>
+      <GUID>bd6301d9-0683-4855-9bd4-b31c4fd05fab</GUID>
+      <Name>output (Folder Device)</Name>
+      <OutputDeviceGUID>c428a6ba-061b-4a47-b9bc-f3f02442ab4b</OutputDeviceGUID>
+      <ViewGUID>56595d831bad4158a557d702102d00f7</ViewGUID>
+      <FolderPath>%SEALREPOSITORY%\Reports\Samples\07-AI Tasks</FolderPath>
+      <FileName>%SEALREPORTDISPLAYNAME%</FileName>
+    </ReportOutput>
+  </Outputs>
+  <Tasks>
+    <ReportTask>
+      <GUID>0e893258-5497-45a1-a460-8979a1464604</GUID>
+      <Name>AI Cancel Output</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>AI Cancel Output</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>ai_user_prompt</Name>
+          <Value>Cancel the report output if an employee has no amount for a month</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <Step>BeforeRendering</Step>
+      <SortOrder>8</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>56595d831bad4158a557d702102d00f7</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>3559e8027dce42ada7152923dfac7f77</GUID>
+          <Name>Sales by Employee</Name>
+          <Views>
+            <ReportView>
+              <GUID>b4b43fe0813b428980286814a1123d26</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>e3d047554ec64a408617b5a196494b7a</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>518d9b76a1ba4b7497e8b5bc126b98df</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>44ea38fad4a0463e996a3db790fe04d3</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>c4ceaf6f0e7444e486f0403de23a913e</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>3550e6a3ce464c22a3691b5beac674de</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>4bf9fc205cf0455f8b1fbf60abfceefc</GUID>
+                  <Name>Sales Employee Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>b32ee15b16ee49c880b397a5ed7ff957</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

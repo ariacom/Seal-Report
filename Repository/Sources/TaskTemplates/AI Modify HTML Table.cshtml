@@ -59,7 +59,6 @@
 
         user += $""\r\n{userAdditional}\r\nHTML to modify:\r\n{element.InnerHtml}"";
 
-        task.LogMessage($""HTML length = {user.Length}"");
         var messages = new List<ChatMessage>
         {
             new SystemChatMessage(system),
@@ -67,8 +66,8 @@
         };
 
         if (logRequests) {
-            task.LogMessage($""[AI Request] System:\r\n{system}"");
-            task.LogMessage($""[AI Request] User:\r\n{user}"");
+            task.LogMessage($""[AI Request {system.Length}] System:\r\n{system}"");
+            task.LogMessage($""[AI Request {user.Length}] User:\r\n{user}"");
         }
         var client = new AIClient(aiProvider);
         var aiResult = client.HandleChat(messages);

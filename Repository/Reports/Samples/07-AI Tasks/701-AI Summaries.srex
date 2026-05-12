@@ -14,7 +14,7 @@
   <Models>
     <ReportModel>
       <GUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</GUID>
-      <Name>Year 1997</Name>
+      <Name>_Restriction Reference</Name>
       <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
       <ShowFirstLine>false</ShowFirstLine>
       <Restriction>[6a3d67e9-2e90-47a6-b324-835e73433e69]</Restriction>
@@ -34,7 +34,7 @@
     </ReportModel>
     <ReportModel>
       <GUID>57dc74e7-9e08-4f92-bb7c-c5af70c1bcb8</GUID>
-      <Name>Sales by Employee</Name>
+      <Name>01 Sales by Employee</Name>
       <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
       <ReferenceModelGUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</ReferenceModelGUID>
       <ShowFirstLine>false</ShowFirstLine>
@@ -87,7 +87,7 @@
     </ReportModel>
     <ReportModel>
       <GUID>110f7ac1-aac2-4ed1-9663-28a01917e40d</GUID>
-      <Name>Sales by Product</Name>
+      <Name>02 Sales by Product</Name>
       <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
       <ReferenceModelGUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</ReferenceModelGUID>
       <ShowFirstLine>false</ShowFirstLine>
@@ -120,7 +120,7 @@
     </ReportModel>
     <ReportModel>
       <GUID>2246a391-f27c-45cb-97fa-6d5398afc82c</GUID>
-      <Name>Sales by Customer</Name>
+      <Name>03 Sales by Customer</Name>
       <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
       <ReferenceModelGUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</ReferenceModelGUID>
       <ShowFirstLine>false</ShowFirstLine>
@@ -162,7 +162,7 @@
     </ReportModel>
     <ReportModel>
       <GUID>d2540f2b-ec84-4188-b48c-e758588baa5d</GUID>
-      <Name>Monthly Sales Trend</Name>
+      <Name>04 Monthly Sales Trend</Name>
       <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
       <ReferenceModelGUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</ReferenceModelGUID>
       <ShowFirstLine>false</ShowFirstLine>
@@ -198,139 +198,109 @@
   </Models>
   <Tasks>
     <ReportTask>
-      <GUID>05823941-5348-4e83-9836-3636c672800a</GUID>
-      <Name>AI Summary</Name>
-      <Tasks />
+      <GUID>9df395d4-3576-4748-84b9-1ad5578b9121</GUID>
+      <Name>Parallel</Name>
+      <Tasks>
+        <ReportTask>
+          <GUID>05823941-5348-4e83-9836-3636c672800a</GUID>
+          <Name>AI Summary</Name>
+          <Tasks />
+          <ExecProcessChildren>true</ExecProcessChildren>
+          <TemplateName>AI Summary</TemplateName>
+          <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+          <Step>BeforeRendering</Step>
+          <SortOrder>1</SortOrder>
+        </ReportTask>
+        <ReportTask>
+          <GUID>5e1fa31c-d4dd-4ce8-a22f-28556a731e4b</GUID>
+          <Name>AI Summary - Monthly Sales Trend</Name>
+          <Tasks />
+          <ExecProcessChildren>true</ExecProcessChildren>
+          <TemplateName>AI Summary</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>ai_user_prompt</Name>
+              <Value />
+            </Parameter>
+            <Parameter>
+              <Name>ai_user_prompt_words</Name>
+              <Value>50</Value>
+            </Parameter>
+            <Parameter>
+              <Name>summary_model</Name>
+              <Value>04 Monthly Sales Trend</Value>
+            </Parameter>
+          </Parameters>
+          <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+          <Step>BeforeRendering</Step>
+          <SortOrder>5</SortOrder>
+        </ReportTask>
+        <ReportTask>
+          <GUID>c9e197ea-e5cf-4347-b277-b41f9e6f2b94</GUID>
+          <Name>AI Summary - Sales by Customer</Name>
+          <Tasks />
+          <ExecProcessChildren>true</ExecProcessChildren>
+          <TemplateName>AI Summary</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>ai_user_prompt_words</Name>
+              <Value>50</Value>
+            </Parameter>
+            <Parameter>
+              <Name>summary_model</Name>
+              <Value>03 Sales by Customer</Value>
+            </Parameter>
+          </Parameters>
+          <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+          <Step>BeforeRendering</Step>
+          <SortOrder>4</SortOrder>
+        </ReportTask>
+        <ReportTask>
+          <GUID>ef8dcf11-792c-4c89-b6e7-a2d8d65e7c81</GUID>
+          <Name>AI Summary - Sales by Product</Name>
+          <Tasks />
+          <ExecProcessChildren>true</ExecProcessChildren>
+          <TemplateName>AI Summary</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>ai_user_prompt_words</Name>
+              <Value>50</Value>
+            </Parameter>
+            <Parameter>
+              <Name>summary_model</Name>
+              <Value>02 Sales by Product</Value>
+            </Parameter>
+          </Parameters>
+          <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+          <Step>BeforeRendering</Step>
+          <SortOrder>3</SortOrder>
+        </ReportTask>
+        <ReportTask>
+          <GUID>e5a9b0b9-8cfd-4aef-aeb2-7ee013e6f9fe</GUID>
+          <Name>AI Summary - Sales by Employee</Name>
+          <Tasks />
+          <ExecProcessChildren>true</ExecProcessChildren>
+          <TemplateName>AI Summary</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>ai_user_prompt_words</Name>
+              <Value>50</Value>
+            </Parameter>
+            <Parameter>
+              <Name>summary_model</Name>
+              <Value>01 Sales by Employee</Value>
+            </Parameter>
+          </Parameters>
+          <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+          <Step>BeforeRendering</Step>
+          <SortOrder>2</SortOrder>
+        </ReportTask>
+      </Tasks>
       <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>AI Summary</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>ai_system_prompt</Name>
-          <Value>You write short executive summaries of tabular business data.
-Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
-Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
-Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
-        </Parameter>
-        <Parameter>
-          <Name>ai_user_prompt</Name>
-          <Value>Summarize the following tables for an executive audience.
-Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
-        </Parameter>
-      </Parameters>
-      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
-      <Step>BeforeRendering</Step>
-      <SortOrder>1</SortOrder>
-    </ReportTask>
-    <ReportTask>
-      <GUID>ef8dcf11-792c-4c89-b6e7-a2d8d65e7c81</GUID>
-      <Name>AI Summary - Sales by Product</Name>
-      <Tasks />
-      <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>AI Summary</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>ai_system_prompt</Name>
-          <Value>You write short executive summaries of tabular business data.
-Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
-Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
-Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
-        </Parameter>
-        <Parameter>
-          <Name>ai_user_prompt</Name>
-          <Value>Summarize the following tables for an executive audience.
-Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
-        </Parameter>
-        <Parameter>
-          <Name>summary_model</Name>
-          <Value>Sales by Product</Value>
-        </Parameter>
-      </Parameters>
-      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
-      <Step>BeforeRendering</Step>
-      <SortOrder>2</SortOrder>
-    </ReportTask>
-    <ReportTask>
-      <GUID>c9e197ea-e5cf-4347-b277-b41f9e6f2b94</GUID>
-      <Name>AI Summary - Sales by Customer</Name>
-      <Tasks />
-      <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>AI Summary</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>ai_system_prompt</Name>
-          <Value>You write short executive summaries of tabular business data.
-Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
-Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
-Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
-        </Parameter>
-        <Parameter>
-          <Name>ai_user_prompt</Name>
-          <Value>Summarize the following tables for an executive audience.
-Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
-        </Parameter>
-        <Parameter>
-          <Name>summary_model</Name>
-          <Value>Sales by Customer</Value>
-        </Parameter>
-      </Parameters>
-      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
-      <Step>BeforeRendering</Step>
-      <SortOrder>3</SortOrder>
-    </ReportTask>
-    <ReportTask>
-      <GUID>5e1fa31c-d4dd-4ce8-a22f-28556a731e4b</GUID>
-      <Name>AI Summary - Monthly Sales Trend</Name>
-      <Tasks />
-      <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>AI Summary</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>ai_system_prompt</Name>
-          <Value>You write short executive summaries of tabular business data.
-Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
-Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
-Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
-        </Parameter>
-        <Parameter>
-          <Name>ai_user_prompt</Name>
-          <Value />
-        </Parameter>
-        <Parameter>
-          <Name>summary_model</Name>
-          <Value>Monthly Sales Trend</Value>
-        </Parameter>
-      </Parameters>
+      <TemplateName>Parallel</TemplateName>
       <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
       <Step>BeforeRendering</Step>
       <SortOrder>5</SortOrder>
-    </ReportTask>
-    <ReportTask>
-      <GUID>e5a9b0b9-8cfd-4aef-aeb2-7ee013e6f9fe</GUID>
-      <Name>AI Summary - Sales by Employee</Name>
-      <Tasks />
-      <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>AI Summary</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>ai_system_prompt</Name>
-          <Value>You write short executive summaries of tabular business data.
-Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
-Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
-Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
-        </Parameter>
-        <Parameter>
-          <Name>ai_user_prompt</Name>
-          <Value>Summarize the following tables for an executive audience.
-Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
-        </Parameter>
-        <Parameter>
-          <Name>summary_model</Name>
-          <Value>Sales by Employee</Value>
-        </Parameter>
-      </Parameters>
-      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
-      <Step>BeforeRendering</Step>
-      <SortOrder>4</SortOrder>
     </ReportTask>
   </Tasks>
   <Views>
@@ -348,7 +318,7 @@ Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
               <Views>
                 <ReportView>
                   <GUID>ccbaec6a-9515-4c1c-b3c2-86ca6df2f115</GUID>
-                  <Name>Sales by Employee</Name>
+                  <Name>01 Sales by Employee</Name>
                   <Views>
                     <ReportView>
                       <GUID>6c3be6f3-c99f-4797-b7ea-588b5b73de5c</GUID>
@@ -386,7 +356,7 @@ Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
                         </ReportView>
                         <ReportView>
                           <GUID>d534b126-0abf-4855-9f6a-243543d800fe</GUID>
-                          <Name>Data Table</Name>
+                          <Name>Sales Employee Data Table</Name>
                           <TemplateName>Data Table</TemplateName>
                           <SortOrder>6</SortOrder>
                         </ReportView>
@@ -409,7 +379,7 @@ Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
               <Views>
                 <ReportView>
                   <GUID>9828e96c-8fee-4f97-807e-3a1abab08758</GUID>
-                  <Name>Sales by Product</Name>
+                  <Name>02 Sales by Product</Name>
                   <Views>
                     <ReportView>
                       <GUID>a5a23219-9f4c-44b1-aaec-26c94492c17c</GUID>
@@ -452,7 +422,7 @@ Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
               <Views>
                 <ReportView>
                   <GUID>a94bb29d-a38e-4246-a829-3c71ab34aed2</GUID>
-                  <Name>Sales by Customer</Name>
+                  <Name>03 Sales by Customer</Name>
                   <Views>
                     <ReportView>
                       <GUID>0e16e891-a97c-424b-9806-e5faf1b551f3</GUID>
@@ -495,7 +465,7 @@ Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
               <Views>
                 <ReportView>
                   <GUID>e8f5c2db-53f8-4de3-a354-255393de0c9f</GUID>
-                  <Name>Monthly Sales Trend</Name>
+                  <Name>04 Monthly Sales Trend</Name>
                   <Views>
                     <ReportView>
                       <GUID>33c7baf5-d075-42c0-80c7-40157552c81a</GUID>
@@ -534,6 +504,18 @@ Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>60c3bd9b-a4e1-471c-b51e-f2c7aac4dee8</GUID>
+          <Name>Separator</Name>
+          <TemplateName>Free</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>show_separator</Name>
+              <Value>True</Value>
+            </Parameter>
+          </Parameters>
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
