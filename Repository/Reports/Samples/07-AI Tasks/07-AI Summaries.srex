@@ -1,0 +1,545 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>185b93dc-2cb6-4cf7-a6e7-e3a2bc033bd6</GUID>
+  <ViewGUID>cb516a3d-ae74-4326-94ec-dde0a47aea78</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>19b92280-92ce-4be1-8530-5502bd713bec</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</GUID>
+      <Name>Year 1997</Name>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Restriction>[6a3d67e9-2e90-47a6-b324-835e73433e69]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>6a3d67e9-2e90-47a6-b324-835e73433e69</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName>Year</DisplayName>
+          <Format>yyyy</Format>
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <Date1>1997-01-01T00:00:00</Date1>
+          <FormatRe>yyyy</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>57dc74e7-9e08-4f92-bb7c-c5af70c1bcb8</GUID>
+      <Name>Sales by Employee</Name>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <ReferenceModelGUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</ReferenceModelGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>b058649d-6fe5-4d09-8645-a39de3a3b4f4</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c6192148-a3d8-4c20-bb8e-3a72ae618d20</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>be368b74-3d12-49ed-a6e0-1d33fb497a23</GUID>
+          <Name>Employees.City</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>87920ecf-d317-4449-a0f9-4982005d169b</GUID>
+          <Name>Employees.BirthDate</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5ec3b6be-01ca-41b2-964e-d199baaf3e07</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>110f7ac1-aac2-4ed1-9663-28a01917e40d</GUID>
+      <Name>Sales by Product</Name>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <ReferenceModelGUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</ReferenceModelGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>6df16553-b4be-475c-803a-d4d2b97cf268</GUID>
+          <Name>Products.ProductName</Name>
+          <DisplayName>Product</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>a99f63bf-4cd8-4f0c-8090-087f00291221</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a0b3d1f9-0053-4d30-b98b-d982e5a7d72c</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName>Qty Sold</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>57398c39-f8ed-43e5-8f74-c7cbd2bfb3ac</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName>Revenue</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>2246a391-f27c-45cb-97fa-6d5398afc82c</GUID>
+      <Name>Sales by Customer</Name>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <ReferenceModelGUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</ReferenceModelGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>4df9f61c-ae35-416d-aad0-8c8995e893ce</GUID>
+          <Name>Customers.CompanyName</Name>
+          <DisplayName>Customer</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2433bd12-9170-4056-89a1-580a44440d17</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName>Country</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d100d6c7-f5ec-4658-a803-a4391bdd838d</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName>Revenue</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0e7ddc52-8a8e-4e71-a93a-f03b118d2121</GUID>
+          <Name>Orders.OrderID</Name>
+          <DisplayName>Orders</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>d2540f2b-ec84-4188-b48c-e758588baa5d</GUID>
+      <Name>Monthly Sales Trend</Name>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <ReferenceModelGUID>ab30bb83-0311-44ab-ad4d-c3c2e92ac54a</ReferenceModelGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>703641ea-bc22-4f85-9e4e-9aca6d39cce0</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName>Month</DisplayName>
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>dce01b9a-3653-48da-91ed-b1afa5c319f7</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName>Revenue</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>dbd7a27c-bc5d-4a34-bd1e-eb836f44f6dc</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName>Qty Sold</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>05823941-5348-4e83-9836-3636c672800a</GUID>
+      <Name>AI Summary</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>AI Summary</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>ai_system_prompt</Name>
+          <Value>You write short executive summaries of tabular business data.
+Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
+Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
+Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>ai_user_prompt</Name>
+          <Value>Summarize the following tables for an executive audience.
+Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <Step>BeforeRendering</Step>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>ef8dcf11-792c-4c89-b6e7-a2d8d65e7c81</GUID>
+      <Name>AI Summary - Sales by Product</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>AI Summary</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>ai_system_prompt</Name>
+          <Value>You write short executive summaries of tabular business data.
+Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
+Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
+Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>ai_user_prompt</Name>
+          <Value>Summarize the following tables for an executive audience.
+Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>summary_model</Name>
+          <Value>Sales by Product</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <Step>BeforeRendering</Step>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c9e197ea-e5cf-4347-b277-b41f9e6f2b94</GUID>
+      <Name>AI Summary - Sales by Customer</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>AI Summary</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>ai_system_prompt</Name>
+          <Value>You write short executive summaries of tabular business data.
+Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
+Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
+Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>ai_user_prompt</Name>
+          <Value>Summarize the following tables for an executive audience.
+Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>summary_model</Name>
+          <Value>Sales by Customer</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <Step>BeforeRendering</Step>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>5e1fa31c-d4dd-4ce8-a22f-28556a731e4b</GUID>
+      <Name>AI Summary - Monthly Sales Trend</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>AI Summary</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>ai_system_prompt</Name>
+          <Value>You write short executive summaries of tabular business data.
+Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
+Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
+Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>ai_user_prompt</Name>
+          <Value />
+        </Parameter>
+        <Parameter>
+          <Name>summary_model</Name>
+          <Value>Monthly Sales Trend</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <Step>BeforeRendering</Step>
+      <SortOrder>5</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>e5a9b0b9-8cfd-4aef-aeb2-7ee013e6f9fe</GUID>
+      <Name>AI Summary - Sales by Employee</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>AI Summary</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>ai_system_prompt</Name>
+          <Value>You write short executive summaries of tabular business data.
+Reply with an HTML fragment only — no &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;style&gt; or &lt;script&gt;.
+Allowed tags: &lt;h4&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;b&gt;, &lt;em&gt;, &lt;br&gt;.
+Treat the PRECOMPUTED METRICS block as authoritative — quote those values verbatim, never recompute. You may reformat them per locale rules.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>ai_user_prompt</Name>
+          <Value>Summarize the following tables for an executive audience.
+Highlight trends, top/bottom values, totals, and any notable outliers.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>summary_model</Name>
+          <Value>Sales by Employee</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
+      <Step>BeforeRendering</Step>
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>cb516a3d-ae74-4326-94ec-dde0a47aea78</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>a57efa8f-714a-45cf-b613-4d7d6f6fe0cb</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>1ca2745f-3dfa-4b82-9ad3-c598415178f1</GUID>
+              <Name>Sales by Employee</Name>
+              <Views>
+                <ReportView>
+                  <GUID>ccbaec6a-9515-4c1c-b3c2-86ca6df2f115</GUID>
+                  <Name>Sales by Employee</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>6c3be6f3-c99f-4797-b7ea-588b5b73de5c</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>a2d5d6a6-23cc-4250-8eac-4a51a47b879a</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>2acaa22b-1740-445f-af6b-610b83f6d997</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>16e017cd-5000-4eb9-961c-68db2b4963b3</GUID>
+                          <Name>Chart Scottplot</Name>
+                          <TemplateName>Chart Scottplot</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>dd849199-fa90-4b42-b41d-33d278b450f0</GUID>
+                          <Name>Chart NVD3</Name>
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <SortOrder>4</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>e10c5242-3070-48b6-b962-1ca92b85eb2d</GUID>
+                          <Name>Chart Plotly</Name>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <SortOrder>5</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>d534b126-0abf-4855-9f6a-243543d800fe</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>6</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>57dc74e7-9e08-4f92-bb7c-c5af70c1bcb8</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>7a1c621c-bd1d-4a69-b446-57c8d40f96e0</GUID>
+              <Name>Sales by Product</Name>
+              <Views>
+                <ReportView>
+                  <GUID>9828e96c-8fee-4f97-807e-3a1abab08758</GUID>
+                  <Name>Sales by Product</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>a5a23219-9f4c-44b1-aaec-26c94492c17c</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>140eda12-0c39-4ae5-91f6-e7419fa00c8e</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>4be9df09-90fe-4271-af63-0707f05636cd</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>491c968a-d0b0-414a-92c9-19b12d469194</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>110f7ac1-aac2-4ed1-9663-28a01917e40d</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>13b38d75-141d-4fca-9a55-d42534e71f8d</GUID>
+              <Name>Sales by Customer</Name>
+              <Views>
+                <ReportView>
+                  <GUID>a94bb29d-a38e-4246-a829-3c71ab34aed2</GUID>
+                  <Name>Sales by Customer</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>0e16e891-a97c-424b-9806-e5faf1b551f3</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>233c6c43-f709-48fc-b9c2-db7a6113ab26</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>abc84827-2a76-4594-b0cb-1e80a33d5712</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>e7a59796-a75a-4a46-a399-1c99c127e70a</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>2246a391-f27c-45cb-97fa-6d5398afc82c</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>51f200a7-1afb-45d9-b938-fac7b687cfd5</GUID>
+              <Name>Monthly Sales Trend</Name>
+              <Views>
+                <ReportView>
+                  <GUID>e8f5c2db-53f8-4de3-a354-255393de0c9f</GUID>
+                  <Name>Monthly Sales Trend</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>33c7baf5-d075-42c0-80c7-40157552c81a</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>ff17015c-a955-4b9f-8c2c-5c18a32223d0</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>1eed3de2-193f-40a6-8506-062de00dba51</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>882911ef-80f8-4b2f-9f22-5b7a9f062582</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>3</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>d2540f2b-ec84-4188-b48c-e758588baa5d</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

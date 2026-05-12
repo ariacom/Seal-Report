@@ -414,7 +414,7 @@ namespace Seal.Model
         /// If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management.
         /// </summary>
 #if WINDOWS
-        [Category("Audit Settings"), DisplayName("Audit Enabled"), Description("If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management."), Id(2, 3)]
+        [Category("Audit Settings"), DisplayName("Audit Enabled"), Description("If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management."), Id(2, 4)]
         [DefaultValue(false)]
 #endif
         public bool AuditEnabled
@@ -436,7 +436,7 @@ namespace Seal.Model
         /// If set, the script is executed to log events. The default implementation is to insert a record into a database table.
         /// </summary>
 #if WINDOWS
-        [Category("Audit Settings"), DisplayName("Audit Script"), Description("If set, the script is executed to log events. The default implementation is to insert a record into a database table."), Id(3, 3)]
+        [Category("Audit Settings"), DisplayName("Audit Script"), Description("If set, the script is executed to log events. The default implementation is to insert a record into a database table."), Id(3, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string AuditScript { get; set; } = null;
@@ -445,7 +445,7 @@ namespace Seal.Model
         /// If set, the script is executed and the result is added at the end of the Main result page. This may be used to inject dynamic javascripts.
         /// </summary>
 #if WINDOWS
-        [Category("Scripts"), DisplayName("Web Server Main Additional Script"), Description("If set, the script is executed and the string result is added at the end of the Main result page. This may be used to inject dynamic javascripts."), Id(3, 4)]
+        [Category("Scripts"), DisplayName("Web Server Main Additional Script"), Description("If set, the script is executed and the string result is added at the end of the Main result page. This may be used to inject dynamic javascripts."), Id(3, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string WebMainAdditionalScript { get; set; } = null;
@@ -454,7 +454,7 @@ namespace Seal.Model
         /// If set, the script is executed when a Web Server Session is started.
         /// </summary>
 #if WINDOWS
-        [Category("Scripts"), DisplayName("Web Server Session Init Script"), Description("If set, the script is executed when a Web Server Session is started."), Id(4, 4)]
+        [Category("Scripts"), DisplayName("Web Server Session Init Script"), Description("If set, the script is executed when a Web Server Session is started."), Id(4, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string WebSessionInitScript { get; set; } = null;
@@ -463,7 +463,7 @@ namespace Seal.Model
         /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
         /// </summary>
 #if WINDOWS
-        [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(5, 4)]
+        [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(5, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string InitScript { get; set; } = null;
@@ -472,7 +472,7 @@ namespace Seal.Model
         /// If set, the script is executed when a new report is created. Default values for report creation can be set here.
         /// </summary>
 #if WINDOWS
-        [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(6, 4)]
+        [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(6, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ReportCreationScript { get; set; } = null;
@@ -481,7 +481,7 @@ namespace Seal.Model
         /// If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source.
         /// </summary>
 #if WINDOWS
-        [Category("Scripts"), DisplayName("\tRepository Translations Script"), Description("If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source."), Id(8, 4)]
+        [Category("Scripts"), DisplayName("\tRepository Translations Script"), Description("If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source."), Id(8, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string RepositoryTranslationsScript { get; set; } = null;
@@ -491,7 +491,7 @@ namespace Seal.Model
         /// AI Providers available to configure AIClient.
         /// </summary>
 #if WINDOWS
-        [DisplayName("AI providers"), Description("AI Providers available to configure AIClient.."), Category("AI Configuration"), Id(1, 6)]
+        [DisplayName("AI providers"), Description("AI Providers available to configure AIClient.."), Category("AI Configuration"), Id(1, 3)]
         [DefaultValue(false)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
@@ -556,7 +556,7 @@ namespace Seal.Model
         /// The name of the culture used for the user session. It defines the language and the number and date formats. If not specified, the current culture of the server is used.
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used for the user session. It defines the language and the number and date formats. If not specified, the current culture of the server is used."), Id(2, 3)]
+        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used for the user session. It defines the language and the number and date formats. If not specified, the current culture of the server is used."), Id(2, 4)]
         [TypeConverter(typeof(Forms.CultureInfoConverter))]
 #endif
         public string DefaultCulture { get; set; } = "";
@@ -565,7 +565,7 @@ namespace Seal.Model
         /// The numeric format used for numeric column having the default format
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format."), Id(3, 3)]
+        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format."), Id(3, 4)]
         [TypeConverter(typeof(CustomFormatConverter))]
         [DefaultValue("N0")]
 #endif
@@ -575,7 +575,7 @@ namespace Seal.Model
         /// The date time format used for date time column having the default format
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format."), Id(4, 3)]
+        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format."), Id(4, 4)]
         [TypeConverter(typeof(CustomFormatConverter))]
         [DefaultValue("d")]
 #endif
@@ -585,7 +585,7 @@ namespace Seal.Model
         /// If set, overrides the Group Separator for numbers of the current culture
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Number Group Separator"), Description("If set, overrides the Group Separator for numbers of the current culture."), Id(5, 3)]
+        [Category("Formats"), DisplayName("Number Group Separator"), Description("If set, overrides the Group Separator for numbers of the current culture."), Id(5, 4)]
 #endif
         public string NumberGroupSeparator { get; set; } = null;
 
@@ -593,7 +593,7 @@ namespace Seal.Model
         /// If set, overrides the Decimal Separator for numbers of the current culture
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Number Decimal Separator"), Description("If set, overrides the Decimal Separator for numbers of the current culture."), Id(6, 3)]
+        [Category("Formats"), DisplayName("Number Decimal Separator"), Description("If set, overrides the Decimal Separator for numbers of the current culture."), Id(6, 4)]
 #endif
         public string NumberDecimalSeparator { get; set; } = null;
 
@@ -601,7 +601,7 @@ namespace Seal.Model
         /// If set, overrides the Date Separator for dates of the current culture
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Date Separator"), Description("If set, overrides the Date Separator for dates of the current culture."), Id(7, 3)]
+        [Category("Formats"), DisplayName("Date Separator"), Description("If set, overrides the Date Separator for dates of the current culture."), Id(7, 4)]
 #endif
         public string DateSeparator { get; set; } = null;
 
@@ -609,7 +609,7 @@ namespace Seal.Model
         /// If set, overrides the Time Separator for times of the current culture
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("Time Separator"), Description("If set, overrides the Time Separator for times of the current culture."), Id(8, 3)]
+        [Category("Formats"), DisplayName("Time Separator"), Description("If set, overrides the Time Separator for times of the current culture."), Id(8, 4)]
 #endif
         public string TimeSeparator { get; set; } = null;
 
@@ -617,7 +617,7 @@ namespace Seal.Model
         /// If not specified in the report, separator used for the CSV template
         /// </summary>
 #if WINDOWS
-        [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(9, 3)]
+        [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(9, 4)]
 #endif
         public string CsvSeparator { get; set; } = "";
 
@@ -625,7 +625,7 @@ namespace Seal.Model
         /// The name of the IIS Web application. Use '/' to publish on 'Default Web Site'
         /// </summary>
 #if WINDOWS
-        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'."), Id(2, 3)]
+        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'."), Id(2, 4)]
 #endif
         public string WebApplicationName { get; set; } = "/Seal";
 
@@ -633,7 +633,7 @@ namespace Seal.Model
         /// The name of the IIS Application pool used by the web application
         /// </summary>
 #if WINDOWS
-        [Category("Web Server IIS Publication"), DisplayName("Application Pool Name"), Description("The name of the IIS Application pool used by the web application."), Id(3, 3)]
+        [Category("Web Server IIS Publication"), DisplayName("Application Pool Name"), Description("The name of the IIS Application pool used by the web application."), Id(3, 4)]
 #endif
         public string WebApplicationPoolName { get; set; } = Repository.SealRootProductName + " Application Pool";
 
@@ -641,7 +641,7 @@ namespace Seal.Model
         /// The directory were the web site files are published
         /// </summary>
 #if WINDOWS
-        [Category("Web Server IIS Publication"), DisplayName("Publication Directory"), Description("The directory were the web site files are published."), Id(4, 3)]
+        [Category("Web Server IIS Publication"), DisplayName("Publication Directory"), Description("The directory were the web site files are published."), Id(4, 4)]
         [EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor))]
 #endif
         public string WebPublicationDirectory { get; set; } = "";

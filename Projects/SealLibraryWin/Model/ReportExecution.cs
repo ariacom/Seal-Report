@@ -181,6 +181,7 @@ namespace Seal.Model
             string result = Render();
             Debug.WriteLine(string.Format("RenderHTMLDisplay {0} {1} {2}", Report.HTMLDisplayFilePath, Report.Status, Report.ExecutionGUID));
             File.WriteAllText(Report.HTMLDisplayFilePath, result, Encoding.UTF8);
+            if (!Report.Cancel && Report.IsBasicHTMLWithNoOutput) executeTasks(ExecutionStep.AfterRendering);
         }
 
         /// <summary>
@@ -283,6 +284,7 @@ namespace Seal.Model
                         Report.OnlyBody = originalOnlyBody;
                     }
                     Report.LogMessage("Report result generated in '{0}'", Report.DisplayResultFilePath);
+                    if (!Report.Cancel) executeTasks(ExecutionStep.AfterRendering);
                 }
 
                 if (!Report.Cancel && Report.OutputToExecute != null)
@@ -2250,6 +2252,8 @@ namespace Seal.Model
                 executeTasks(ExecutionStep.BeforeRendering);
                 string result = Render();
                 File.WriteAllText(newPath, result.Trim(), Encoding.UTF8);
+                Report.HTMLResultFilePath = newPath;
+                executeTasks(ExecutionStep.AfterRendering);
             }
             finally
             {
@@ -2259,8 +2263,6 @@ namespace Seal.Model
                 Report.Status = ReportStatus.Executed;
                 Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1}", Report.Status, Report.ExecutionGUID));
             }
-
-            Report.HTMLResultFilePath = newPath;
             return newPath;
         }
 
@@ -2305,6 +2307,7 @@ namespace Seal.Model
                 {
                     File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
                 }
+                executeTasks(ExecutionStep.AfterRendering);
             }
             finally
             {

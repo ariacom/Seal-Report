@@ -115,3 +115,4 @@ Repository/Databases/Audit.ldb
 *.ldb
 Projects/SealDocumentation/Help.zip
 *.nupkg
+CLAUDE.md

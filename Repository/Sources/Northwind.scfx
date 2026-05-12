@@ -1353,7 +1353,6 @@ ORDER BY 1</Sql>
         <GUID>b9126304-1091-45e0-93e6-c2f028c02f8f</GUID>
         <Name>Product Name</Name>
         <IsDynamic>true</IsDynamic>
-        <IsDbRefresh>true</IsDbRefresh>
         <Sql>SELECT ProductID, ProductName 
 FROM Products
 ORDER BY ProductName</Sql>

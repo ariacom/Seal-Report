@@ -529,7 +529,9 @@ namespace Seal.Model
         BeforeModel,
         [Description("Models generated, before rendering")]
         BeforeRendering,
-        [Description("Rendering is done, before output execution")]
+        [Description("After rendering")]
+        AfterRendering,
+        [Description("Output Execution: Before output execution")]
         BeforeOutput,
         [Description("After execution")]
         AfterExecution

@@ -1,0 +1,90 @@
+@using Seal.Model;
+@{
+    ReportTask task = Model;
+
+    task.TemplateDescription = "Uses AI to modify the HTML of a rendered table in the report output.";
+    task.Step = ExecutionStep.AfterRendering;
+
+    task.Parameters.Add(new Parameter() { Name = "ai_provider_name", Value = "", DisplayName = "AI Provider name", Description = "The AI Provider name. If empty, the default provider is taken (if configured).", Enums = (from p in Repository.Instance.Configuration.AIProviders select p.Name).ToArray(), UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You are an HTML editing assistant.\r\nThe user will give you an HTML part and editing instructions.\r\nReturn ONLY the complete modified HTML — no explanation, no markdown fences, no commentary. The output must be valid, well-formed HTML.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
+    task.Parameters.Add(new Parameter() { Name = "ai_system_additional", TextValue = "", DisplayName = "Additional system prompt", Description = "Additional system information for the AI provider." });
+    task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "Highlight cells where the amount exceeds a threshold using a color gradient.", DisplayName = "AI User prompt", Description = "Instructions describing how to modify the HTML table (e.g. highlight cells, reformat values, add styles)." });
+    task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "", DisplayName = "Additional user prompt", Description = "Additional user information sent to the AI provider." });
+    task.Parameters.Add(new Parameter() { Name = "view_name", Value = "", DisplayName = "View name", Description = "The name of the view whose HTML table should be modified. Must match exactly the view name in the report. Server pagination must be disabled in the root Execution view." });
+    task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
+
+    task.Script = @"@using Seal.AI;
+@using OpenAI.Chat;
+@using System.IO;
+@using AngleSharp
+@using AngleSharp.Html.Parser
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    task.LogMessage($""Executing '{task.Name}'"");
+
+    if (report.Format != ReportFormat.html && report.Format != ReportFormat.print) return;
+
+    var aiProvider = task.GetValue(""ai_provider_name"");
+    var system = task.GetValue(""ai_system_prompt"");
+    var systemAdditional = task.GetValue(""ai_system_additional"");
+    var user = task.GetValue(""ai_user_prompt"");
+    var userAdditional = task.GetValue(""ai_user_additional"");
+    var viewName = task.GetValue(""view_name"");
+    var logRequests = task.GetBoolValue(""log_ai_requests"", false);
+
+    system += $""\r\n{systemAdditional}"";
+
+    var resultPath = report.ResultFilePath;
+    if (!string.IsNullOrEmpty(report.HTMLResultFilePath) && File.Exists(report.HTMLResultFilePath)) resultPath = report.HTMLResultFilePath;
+
+    try
+    {
+        //No pagination should be set
+        if (report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter)) throw new Exception(""[AI Modify HTML Table] Server pagination should be set to false in the root Execution view."");
+
+        if (string.IsNullOrEmpty(viewName)) throw new Exception(""[AI Modify HTML Table] View name parameter is empty."");
+
+        var html = File.ReadAllText(resultPath);
+        var parser = new HtmlParser();
+        var doc = parser.ParseDocument(html);
+
+        var view = report.AllViews.FirstOrDefault(i => i.Name == viewName);
+        if (view == null) throw new Exception($""[AI Modify HTML Table] View not found: '{viewName}'"");
+        if (view.TemplateName != ReportViewTemplate.DataTableName) throw new Exception($""[AI Modify HTML Table] View '{viewName}' is not a Data Table view (found type: '{view.TemplateName}')."");
+
+        var element = doc.GetElementById($""dt_{view.IdSuffix}"");
+        if (element == null) throw new Exception($""[AI Modify HTML Table] No table element found for view '{viewName}'"");
+
+        user += $""\r\n{userAdditional}\r\nHTML to modify:\r\n{element.InnerHtml}"";
+
+        task.LogMessage($""HTML length = {user.Length}"");
+        var messages = new List<ChatMessage>
+        {
+            new SystemChatMessage(system),
+            new UserChatMessage(user)
+        };
+
+        if (logRequests) {
+            task.LogMessage($""[AI Request] System:\r\n{system}"");
+            task.LogMessage($""[AI Request] User:\r\n{user}"");
+        }
+        var client = new AIClient(aiProvider);
+        var aiResult = client.HandleChat(messages);
+        if (logRequests) task.LogMessage($""[AI Response]\r\n{aiResult}"");
+        element.InnerHtml = aiResult;
+
+        File.WriteAllText(resultPath, doc.DocumentElement.OuterHtml);
+    }
+    catch (Exception ex)
+    {
+        report.ExecutionErrors = ex.Message;
+        report.Cancel = true;
+        File.WriteAllText(resultPath, report.ExecutionView.Parse());
+    }
+}
+";
+
+    task.BodyScript = ReportTask.BodyScriptTemplate;
+}
