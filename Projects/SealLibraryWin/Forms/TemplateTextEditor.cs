@@ -26,8 +26,12 @@ namespace Seal.Forms
 
         const string razorPreOutputTemplate = @"@{
     ReportOutput output = Model;
-    //Set the flag to cancel the report.
+    //Set the flag to cancel the report
     //output.Report.Cancel = true;
+
+    //Set subject or body from report summary
+    //output.EmailSubject = output.Report.ExecutionView.GetValue(""report_summary"");
+    //output.EmailBody = output.Report.ExecutionView.GetValue(""report_summary"");
 }
 ";
 
