@@ -53,14 +53,6 @@ Seal Report follows a **dual-licensing model** to ensure its maintenance, qualit
 
 More information at <a href="https://sealreport.com" target="_blank">https://sealreport.com</a>
 
-## Seal AI: Hosting and AI Assistance
-**Seal AI** is a new product built on Microsoft Azure that extends the open-source Seal Report platform.  
-It provides:  
-- Secure and scalable hosting for your **Web Report Server**.  
-- An integrated AI assistant to create, refine, and optimize reports using natural language.
-
-Please visit [Seal AI Website](https://sealreport.ai) for more information (A free trial is available).
-
 ## Supporting Seal Report
 Seal Report is an open-source project maintained by **Ariacom**.  
 You can support its development and sustainability in several ways.
