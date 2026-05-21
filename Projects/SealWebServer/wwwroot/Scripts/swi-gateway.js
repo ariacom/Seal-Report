@@ -2,6 +2,9 @@
 var _server = WebApplicationName;
 var _errorServer = SWIUtil.tr("Unexpected error on server") + ": '" + _server + "'";
 class SWIGateway {
+    constructor() {
+        this._currentAIXHR = null;
+    }
     GetVersions(callback, errorcb) {
         $.post(_server + "SWIGetVersions", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
@@ -189,6 +192,29 @@ class SWIGateway {
             success: function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); },
             error: function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); }
         });
+    }
+    ClearAIAssistant(callback, errorcb) {
+        $.post(_server + "SWIClearAIAssistant", {})
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    GetAIAssistantResponse(message, callback, errorcb) {
+        this._currentAIXHR = $.post(_server + "SWIGetAIAssistantResponse", {
+            message: message
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { if (status !== 'abort')
+            SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    CancelAIAssistantResponse(callback, errorcb) {
+        if (this._currentAIXHR) {
+            this._currentAIXHR.abort();
+            this._currentAIXHR = null;
+        }
+        $.post(_server + "SWICancelAIAssistantResponse", {})
+            .done(function (data) { if (callback)
+            callback(data); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 }
 //# sourceMappingURL=swi-gateway.js.map

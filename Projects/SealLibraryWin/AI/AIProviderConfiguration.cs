@@ -38,6 +38,11 @@ namespace Seal.AI
         #endregion
 #endif
 
+        /// <summary>
+        /// Unique identifier for this provider configuration.
+        /// </summary>
+        public string GUID { get; set; } = Guid.NewGuid().ToString();
+
         string _name = "Provider";
         /// <summary>
         /// Display name of this provider configuration.
@@ -60,6 +65,15 @@ namespace Seal.AI
         [DefaultValue(false)]
 #endif
         public bool IsDefault { get; set; } = false;
+
+        /// <summary>
+        /// When <c>false</c>, this provider is excluded from all operations without being deleted.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Is Enabled"), Description("When false, this provider is excluded from all operations."), Id(3, 1)]
+        [DefaultValue(true)]
+#endif
+        public bool IsEnabled { get; set; } = true;
 
         /// <summary>
         /// Type of the AI provider.

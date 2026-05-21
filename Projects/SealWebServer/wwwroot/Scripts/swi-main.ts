@@ -33,9 +33,6 @@ $(document).ready(function () {
     _gateway = new SWIGateway();
     _main = new SWIMain();
     _main.Process();
-
-    SWIUtil.InitDropDownMenu();
-
 });
 
 class SWIMain {
@@ -329,6 +326,7 @@ class SWIMain {
                 $("#report-body").empty();
                 $("#nav_button").text("");
                 SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-assistant-button,#search-pattern,#search-nav-item"), false);
+                if (window.aiPanel) window.aiPanel.clearConversation();
                 _main.showLogin();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             });

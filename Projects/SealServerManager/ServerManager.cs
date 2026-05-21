@@ -214,9 +214,9 @@ namespace Seal
 
             if (!_adminWarningDone && !Helper.IsMachineAdministrator())
             {
+                _adminWarningDone = true;
                 if (MessageBox.Show("We recommend to execute the 'Server Manager' application with the option 'Run as administrator' to publish the Web Server application...\r\nDo you want to continue ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
                 {
-                    _adminWarningDone = true;
                     return;
                 }
             }

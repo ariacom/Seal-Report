@@ -39,28 +39,19 @@ namespace Seal.AI
             var body = new Dictionary<string, object>
             {
                 ["model"] = _model,
-                ["messages"] = messages.Select(m => new
-                {
-                    role = GetRole(m),
-                    content = m.Content[0].Text
-                }).ToList<object>(),
+                ["messages"] = messages.Select(SerializeMessage).ToList<object>(),
                 ["temperature"] = _temperature,
                 ["top_p"] = _topP
             };
             if (_maxTokens > 0)
                 body["max_completion_tokens"] = _maxTokens;
 
-            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
-            {
-                Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
-            };
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-
+            var request = BuildRequest(body);
             var response = _httpClient.SendAsync(request).Result;
             response.EnsureSuccessStatusCode();
 
-            var responseBody = response.Content.ReadAsStringAsync().Result;
-            var responseObject = JsonSerializer.Deserialize<OpenAIResponse>(responseBody);
+            var responseObject = JsonSerializer.Deserialize<OpenAIResponse>(
+                response.Content.ReadAsStringAsync().Result);
 
             var result = responseObject?.Choices?[0]?.Message?.Content
                 ?? throw new Exception("Failed to get response from OpenAI");
@@ -69,13 +60,107 @@ namespace Seal.AI
             return result;
         }
 
-        private static string GetRole(ChatMessage message) => message switch
+        /// <inheritdoc/>
+        public override string HandleChatWithTools(List<ChatMessage> messages, IList<AITool> tools, out IList<AIToolCall> toolCalls)
         {
-            SystemChatMessage => "system",
-            UserChatMessage => "user",
-            AssistantChatMessage => "assistant",
-            _ => "user"
-        };
+            toolCalls = new List<AIToolCall>();
+
+            var body = new Dictionary<string, object>
+            {
+                ["model"] = _model,
+                ["messages"] = messages.Select(SerializeMessage).ToList<object>(),
+                ["temperature"] = _temperature,
+                ["top_p"] = _topP,
+                ["tools"] = tools.Select(t => (object)new
+                {
+                    type = "function",
+                    function = new
+                    {
+                        name = t.Name,
+                        description = t.Description,
+                        parameters = string.IsNullOrEmpty(t.ParametersSchema)
+                            ? JsonSerializer.Deserialize<JsonElement>("{\"type\":\"object\",\"properties\":{}}")
+                            : JsonSerializer.Deserialize<JsonElement>(t.ParametersSchema)
+                    }
+                }).ToList()
+            };
+            if (_maxTokens > 0)
+                body["max_completion_tokens"] = _maxTokens;
+
+            var request = BuildRequest(body);
+            var response = _httpClient.SendAsync(request).Result;
+            response.EnsureSuccessStatusCode();
+
+            var responseObject = JsonSerializer.Deserialize<OpenAIResponse>(
+                response.Content.ReadAsStringAsync().Result);
+
+            var choice = responseObject?.Choices?[0]
+                ?? throw new Exception("Failed to get response from OpenAI");
+
+            if (choice.FinishReason == "tool_calls" && choice.Message?.ToolCalls?.Length > 0)
+            {
+                var calls = choice.Message.ToolCalls
+                    .Select(tc => new AIToolCall
+                    {
+                        Id = tc.Id,
+                        Name = tc.Function?.Name,
+                        Arguments = tc.Function?.Arguments
+                    })
+                    .ToList();
+
+                toolCalls = calls;
+                messages.Add(new AssistantToolCallsChatMessage(calls, choice.Message.Content));
+                return string.Empty;
+            }
+
+            var result = choice.Message?.Content
+                ?? throw new Exception("Failed to get response from OpenAI");
+
+            messages.Add(new AssistantChatMessage(result));
+            return result;
+        }
+
+        private HttpRequestMessage BuildRequest(Dictionary<string, object> body)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            {
+                Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+            return request;
+        }
+
+        /// <summary>
+        /// Serializes a <see cref="ChatMessage"/> to an anonymous object suitable for the
+        /// OpenAI REST API, handling plain messages, tool-call assistant turns, and tool results.
+        /// </summary>
+        private static object SerializeMessage(ChatMessage m)
+        {
+            switch (m)
+            {
+                // Must be checked before AssistantChatMessage (it is a subclass).
+                case AssistantToolCallsChatMessage atcm:
+                    return new
+                    {
+                        role = "assistant",
+                        content = atcm.TextContent,
+                        tool_calls = atcm.AIToolCalls.Select(tc => (object)new
+                        {
+                            id = tc.Id,
+                            type = "function",
+                            function = new { name = tc.Name, arguments = tc.Arguments }
+                        }).ToList()
+                    };
+                case SystemChatMessage:
+                    return new { role = "system", content = m.Content[0].Text };
+                case AssistantChatMessage:
+                    return new { role = "assistant", content = m.Content[0].Text };
+                case ToolChatMessage tool:
+                    return new { role = "tool", tool_call_id = tool.ToolCallId, content = tool.Content[0].Text };
+                default:
+                    return new { role = "user", content = m.Content[0].Text };
+            }
+        }
 
         private class OpenAIResponse
         {
@@ -86,12 +171,36 @@ namespace Seal.AI
             {
                 [JsonPropertyName("message")]
                 public Message Message { get; set; }
+
+                [JsonPropertyName("finish_reason")]
+                public string FinishReason { get; set; }
             }
 
             public class Message
             {
                 [JsonPropertyName("content")]
                 public string Content { get; set; }
+
+                [JsonPropertyName("tool_calls")]
+                public ToolCall[] ToolCalls { get; set; }
+            }
+
+            public class ToolCall
+            {
+                [JsonPropertyName("id")]
+                public string Id { get; set; }
+
+                [JsonPropertyName("function")]
+                public FunctionCall Function { get; set; }
+            }
+
+            public class FunctionCall
+            {
+                [JsonPropertyName("name")]
+                public string Name { get; set; }
+
+                [JsonPropertyName("arguments")]
+                public string Arguments { get; set; }
             }
         }
     }

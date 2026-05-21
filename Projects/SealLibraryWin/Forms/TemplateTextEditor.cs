@@ -11,6 +11,7 @@ using System.Windows.Forms.Design;
 using System.Windows.Forms;
 using Seal.Model;
 using Seal.Helpers;
+using Seal.AI;
 using ScintillaNET;
 using System.Data.OleDb;
 using System.Data;
@@ -988,6 +989,26 @@ $('<div>', {{
 
     //e.g. to change a parameter in the default view
     //report.ExecutionView.SetParameter(Parameter.EnableResultsMenuParameter, false);
+}
+";
+
+        const string razorAIToolExecutionScriptTemplate = @"@using System.Text.Json
+@using System.Text
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+
+    // TODO: implement the tool logic here.
+    // Resolve the data source (uses ExecSource name if set, otherwise the default source):
+    //   var source = tool.GetExecSource();
+    //   var connection = source.GetOpenConnection();
+    // Read an argument:
+    //   var myParam = args.GetProperty(""paramName"").GetString();
+    // Assign the result to tool.ExecResult – it is sent back to the AI model:
+    tool.ExecResult = ""result"";
 }
 ";
 
@@ -2080,6 +2101,31 @@ $('<div>', {{
                         template = Audit.AuditScriptTemplate;
                         frm.ObjectForCheckSyntax = new Audit();
                         frm.Text = "Edit the script executed when a an audit event occurs";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                }
+                else if (context.Instance is AIToolConfiguration)
+                {
+                    if (context.PropertyDescriptor.Name == "ProviderNames")
+                    {
+                        frm.Text = "Provider names (one per line)";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "Description")
+                    {
+                        frm.Text = "Description";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ParametersSchema")
+                    {
+                        frm.Text = "JSON Schema string";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ExecutionScript")
+                    {
+                        template = razorAIToolExecutionScriptTemplate;
+                        frm.ObjectForCheckSyntax = new AIToolConfiguration();
+                        frm.Text = "Edit the AI Tool execution script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

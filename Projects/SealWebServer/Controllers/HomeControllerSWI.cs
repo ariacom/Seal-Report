@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Seal.Helpers;
 using Seal.Model;
 using System.Threading;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,6 +21,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.Web;
+using Seal.AI;
 
 namespace SealWebServer.Controllers
 {
@@ -28,6 +30,17 @@ namespace SealWebServer.Controllers
     /// </summary>
     public partial class HomeController : Controller
     {
+        // ── AI cancellation support ──────────────────────────────────────────
+        private class CancellationFlagOperation : ICancelOperation
+        {
+            private volatile bool _cancel;
+            public bool Cancel => _cancel;
+            public void RequestCancel() => _cancel = true;
+        }
+
+        private static readonly ConcurrentDictionary<string, CancellationFlagOperation> _aiCancelTokens
+            = new ConcurrentDictionary<string, CancellationFlagOperation>();
+        // ────────────────────────────────────────────────────────────────────
         [Authorize]
         public async Task<IActionResult> Login()
         {
@@ -211,9 +224,6 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(AuditType.Login, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
-                //Refresh menu reports
-                if (newAuthentication) MenuReportViewsPool.ForceReload();
-
                 return Json(getUserProfile());
             }
             catch (Exception ex)
@@ -255,8 +265,6 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(AuditType.Login, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
-                //Refresh menu reports
-                MenuReportViewsPool.ForceReload();
                 return Json(getUserProfile());
             }
             catch (Exception ex)
@@ -372,63 +380,6 @@ namespace SealWebServer.Controllers
             }
         }
 
-        SWIMenuItem getMenuFromNames(List<SWIMenuItem> parents, List<string> names, SWIMenuItem menuItem)
-        {
-            var result = parents.FirstOrDefault(i => i.name == names[0] && i.path == null);
-            if (result == null)
-            {
-                result = new SWIMenuItem() { name = names[0] };
-                parents.Add(result);
-                parents = parents.OrderBy(i => i.name).ToList();
-            }
-            if (names.Count > 1)
-            {
-                names.RemoveAt(0);
-                result = getMenuFromNames(result.items, names, menuItem);
-            }
-            else
-            {
-                result.items.Add(menuItem);
-                result.items = result.items.OrderBy(i => i.name).ToList();
-            }
-
-            return result;
-        }
-
-
-        IEnumerable<SWIMenuItem> getWebMenu()
-        {
-            var result = new List<SWIMenuItem>();
-            foreach (var view in WebUser.GetMenuReportViews())
-            {
-                var menuNames = view.MenuPath.Split('/').Where(i => !string.IsNullOrEmpty(i)).ToList();
-                if (menuNames.Count > 0)
-                {
-                    var relativePath = "";
-                    var personalFolder = WebUser.Security.Repository.GetPersonalFolder(WebUser);
-                    if (view.Report.FilePath.StartsWith(personalFolder)) relativePath = view.Report.FilePath.Replace(personalFolder, ":");
-                    else relativePath = view.Report.RelativeFilePath;
-
-                    var menuItem = new SWIMenuItem()
-                    {
-                        path = relativePath,
-                        name = view.MenuReportViewName,
-                        viewGUID = view.GUID
-                    };
-                    menuNames.RemoveAt(menuNames.Count - 1);
-                    if (menuNames.Count > 0)
-                    {
-                        getMenuFromNames(result, menuNames, menuItem);
-                    }
-                    else
-                    {
-                        result.Add(menuItem);
-                    }
-                }
-            }
-            return result.OrderBy(i => i.name);
-        }
-
         void checkRecentFiles()
         {
             //Clean reports
@@ -461,7 +412,7 @@ namespace SealWebServer.Controllers
                                          name = r.Name
                                      }
                                          ).ToList(),
-                    reports = getWebMenu().ToList(),
+                    reports = new List<SWIMenuItem>(),
                     favorites = (from r in WebUser.Profile.Favorites
                                      select new SWIMenuItem()
                                      {
@@ -1231,6 +1182,95 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 if (!string.IsNullOrEmpty(instance)) return Json(new { text = Repository.RepositoryTranslate(context, instance, reference) });
                 return Json(new { text = Repository.Translate(context, reference) });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Clears the AI Assistant conversation history stored in the current session.
+        /// </summary>
+        public ActionResult SWIClearAIAssistant(string sessionId)
+        {
+            writeDebug("SWIClearAIAssistant");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                setSessionValue(SessionAssistant, null);
+                return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Sends a user message to the AI Assistant and returns the AI response.
+        /// An <see cref="AIAssistant"/> instance is maintained in the session (keyed by
+        /// <see cref="SessionAssistant"/>) so that follow-up questions retain context.
+        /// </summary>
+        public ActionResult SWIGetAIAssistantResponse(string message, string sessionId)
+        {
+            writeDebug("SWIGetAIAssistantResponse");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+
+                if (string.IsNullOrEmpty(message)) throw new Exception("Error: message must be supplied");
+
+                // Retrieve or initialise the per-session assistant
+                var assistant = getSessionValue(SessionAssistant) as AIAssistant;
+                if (assistant == null)
+                    assistant = new AIAssistant(); // resolves the default assistant configuration
+
+                // Register a fresh cancel flag so SWICancelAIAssistantResponse can interrupt Chat()
+                var cancelOp = new CancellationFlagOperation();
+                _aiCancelTokens[SessionKey] = cancelOp;
+                string reply;
+                try
+                {
+                    reply = assistant.Chat(message, cancelOp);
+                }
+                finally
+                {
+                    _aiCancelTokens.TryRemove(SessionKey, out _);
+                }
+
+                // Persist the updated assistant so follow-up messages retain context
+                setSessionValue(SessionAssistant, assistant);
+
+                return Json(new { response = reply });
+            }
+            catch (Exception ex)
+            {
+                WebHelper.WriteWebException(ex, "SWIGetAIAssistantResponse");
+                return Json(new { response = "Error: " + ex.Message});
+            }
+        }
+
+        /// <summary>
+        /// Signals the in-progress AI chat call for this session to stop at the next safe
+        /// iteration boundary (i.e. sets the <see cref="ICancelOperation.Cancel"/> flag that
+        /// <see cref="AIAssistant.Chat"/> checks between tool-call iterations).
+        /// </summary>
+        public ActionResult SWICancelAIAssistantResponse(string sessionId)
+        {
+            writeDebug("SWICancelAIAssistantResponse");
+            try
+            {
+                // Intentionally no checkSWIAuthentication() here: this action runs
+                // concurrently with SWIGetAIAssistantResponse on the same session, and
+                // the underlying _sessions dictionary is not thread-safe. SessionKey only
+                // reads from the ASP.NET Core cookie store, which is safe to call here.
+                if (_aiCancelTokens.TryGetValue(SessionKey, out var cancelOp))
+                    cancelOp.RequestCancel();
+
+                return Json(new { });
             }
             catch (Exception ex)
             {

@@ -106,6 +106,8 @@ namespace Seal.Model
                 GetProperty("ReportFormats").SetIsBrowsable(!ForPublication);
 
                 GetProperty("AIProviders").SetIsBrowsable(!ForPublication);
+                GetProperty("AITools").SetIsBrowsable(!ForPublication);
+                GetProperty("AIAssistants").SetIsBrowsable(!ForPublication);
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
                 GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
@@ -502,6 +504,37 @@ namespace Seal.Model
                 return _AIProviders;
             }
             set { _AIProviders = value; }
+        }
+
+        List<AIToolConfiguration> _AITools = new List<AIToolConfiguration>();
+        /// <summary>
+        /// AI Tools (functions) available to AI providers. Each tool has an optional Razor execution script
+        /// that is run when the AI model decides to call the tool.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("AI tools"), Description("AI Tools (functions) available to AI providers. Each tool carries an optional Razor execution script run when the AI invokes the tool."), Category("AI Configuration"), Id(2, 3)]
+        [DefaultValue(false)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+#endif
+        public List<AIToolConfiguration> AITools
+        {
+            get { return _AITools; }
+            set { _AITools = value; }
+        }
+
+        List<AIAssistantConfiguration> _AIAssistants = new List<AIAssistantConfiguration>();
+        /// <summary>
+        /// AI Assistants combining a provider, an optional set of tools, and a default system prompt.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("AI assistants"), Description("AI Assistants: each assistant ties together a provider, an optional subset of tools, and a default system prompt."), Category("AI Configuration"), Id(3, 3)]
+        [DefaultValue(false)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+#endif
+        public List<AIAssistantConfiguration> AIAssistants
+        {
+            get { return _AIAssistants; }
+            set { _AIAssistants = value; }
         }
 
 

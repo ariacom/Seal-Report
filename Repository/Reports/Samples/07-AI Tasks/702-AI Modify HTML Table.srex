@@ -89,6 +89,10 @@ AND [0f63478a-8a5f-44c8-831a-1d97a9052fd1]</Restriction>
       <TemplateName>AI Modify HTML Table</TemplateName>
       <Parameters>
         <Parameter>
+          <Name>ai_user_prompt</Name>
+          <Value />
+        </Parameter>
+        <Parameter>
           <Name>view_name</Name>
           <Value>Sales Employee Data Table</Value>
         </Parameter>

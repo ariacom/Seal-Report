@@ -5,16 +5,15 @@
     task.TemplateDescription = "Uses AI to modify the HTML of a rendered table in the report output.";
     task.Step = ExecutionStep.AfterRendering;
 
-    task.Parameters.Add(new Parameter() { Name = "ai_provider_name", Value = "", DisplayName = "AI Provider name", Description = "The AI Provider name. If empty, the default provider is taken (if configured).", Enums = (from p in Repository.Instance.Configuration.AIProviders select p.Name).ToArray(), UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "ai_assistant_name", Value = "", DisplayName = "AI Assistant name", Description = "The AI Assistant name. If empty, the default assistant is used (if configured).", Enums = (from a in Repository.Instance.Configuration.AIAssistants where a.IsEnabled select a.Name).ToArray(), UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You are an HTML editing assistant.\r\nThe user will give you an HTML part and editing instructions.\r\nReturn ONLY the complete modified HTML — no explanation, no markdown fences, no commentary. The output must be valid, well-formed HTML.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "ai_system_additional", TextValue = "", DisplayName = "Additional system prompt", Description = "Additional system information for the AI provider." });
-    task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "Highlight cells where the amount exceeds a threshold using a color gradient.", DisplayName = "AI User prompt", Description = "Instructions describing how to modify the HTML table (e.g. highlight cells, reformat values, add styles)." });
+    task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "Highlight cells where the amount exceeds 1000 using a red color gradient from lowest to highest value.", DisplayName = "AI User prompt", Description = "Instructions describing how to modify the HTML table (e.g. highlight cells, reformat values, add styles)." });
     task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "", DisplayName = "Additional user prompt", Description = "Additional user information sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "view_name", Value = "", DisplayName = "View name", Description = "The name of the view whose HTML table should be modified. Must match exactly the view name in the report. Server pagination must be disabled in the root Execution view." });
     task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
 
     task.Script = @"@using Seal.AI;
-@using OpenAI.Chat;
 @using System.IO;
 @using AngleSharp
 @using AngleSharp.Html.Parser
@@ -26,7 +25,7 @@
 
     if (report.Format != ReportFormat.html && report.Format != ReportFormat.print) return;
 
-    var aiProvider = task.GetValue(""ai_provider_name"");
+    var assistantName = task.GetValue(""ai_assistant_name"");
     var system = task.GetValue(""ai_system_prompt"");
     var systemAdditional = task.GetValue(""ai_system_additional"");
     var user = task.GetValue(""ai_user_prompt"");
@@ -59,18 +58,13 @@
 
         user += $""\r\n{userAdditional}\r\nHTML to modify:\r\n{element.InnerHtml}"";
 
-        var messages = new List<ChatMessage>
-        {
-            new SystemChatMessage(system),
-            new UserChatMessage(user)
-        };
-
         if (logRequests) {
             task.LogMessage($""[AI Request {system.Length}] System:\r\n{system}"");
             task.LogMessage($""[AI Request {user.Length}] User:\r\n{user}"");
         }
-        var client = new AIClient(aiProvider);
-        var aiResult = client.HandleChat(messages);
+        var assistant = new AIAssistant(assistantName);
+        assistant.OverrideSystemPrompt(system);
+        var aiResult = assistant.Chat(user);
         if (logRequests) task.LogMessage($""[AI Response]\r\n{aiResult}"");
         element.InnerHtml = aiResult;
 

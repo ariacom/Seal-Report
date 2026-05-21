@@ -174,7 +174,20 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
-
+            else if (CollectionItemType == typeof(AIToolConfiguration))
+            {
+                frmCollectionEditorForm.Text = "AI Tool Configuration Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
+            else if (CollectionItemType == typeof(AIAssistantConfiguration))
+            {
+                frmCollectionEditorForm.Text = "AI Assistant Configuration Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
             TableLayoutPanel tlpLayout = frmCollectionEditorForm.Controls[0] as TableLayoutPanel;
 
             if (tlpLayout != null)
@@ -258,6 +271,13 @@ namespace Seal.Forms
             {
                 ((SecurityLogin)instance).GUID = Helper.NewGUID();
             }
+            else if (instance is AIAssistantConfiguration)
+            {
+                var assistant = (AIAssistantConfiguration)instance;
+                var providers = Repository.Instance.Configuration.AIProviders;
+                var defaultProvider = providers.FirstOrDefault(p => p.IsDefault) ?? providers.FirstOrDefault();
+                if (defaultProvider != null) assistant.ProviderGUID = defaultProvider.GUID;
+            }
             return instance;
         }
 
@@ -300,6 +320,8 @@ namespace Seal.Forms
                 return base.GetDisplayText(string.IsNullOrEmpty(item.Id) ? "<Empty value>" : string.Format("{0}", item.DisplayValue));
             }
             else if (value is AIProviderConfiguration) result = ((AIProviderConfiguration)value).Name;
+            else if (value is AIToolConfiguration) result = ((AIToolConfiguration)value).Name;
+            else if (value is AIAssistantConfiguration) result = ((AIAssistantConfiguration)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
     }

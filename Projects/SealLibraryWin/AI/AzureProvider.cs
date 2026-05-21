@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Azure.AI.OpenAI;
 using OpenAI.Chat;
 
@@ -48,6 +49,46 @@ namespace Seal.AI
         public override string HandleChat(List<ChatMessage> messages)
         {
             ChatCompletion completion = _chatClient.CompleteChat(messages, Options);
+
+            if (completion.FinishReason == ChatFinishReason.Stop)
+            {
+                var result = completion.Content[0].Text;
+                messages.Add(new AssistantChatMessage(result));
+                return result;
+            }
+
+            return string.Empty;
+        }
+
+        /// <inheritdoc/>
+        public override string HandleChatWithTools(List<ChatMessage> messages, IList<AITool> tools, out IList<AIToolCall> toolCalls)
+        {
+            toolCalls = new List<AIToolCall>();
+
+            var options = Options;
+            foreach (var tool in tools)
+            {
+                var schema = BinaryData.FromString(
+                    string.IsNullOrEmpty(tool.ParametersSchema) ? "{}" : tool.ParametersSchema);
+                options.Tools.Add(ChatTool.CreateFunctionTool(tool.Name, tool.Description, schema));
+            }
+
+            ChatCompletion completion = _chatClient.CompleteChat(messages, options);
+
+            if (completion.FinishReason == ChatFinishReason.ToolCalls)
+            {
+                toolCalls = completion.ToolCalls
+                    .Select(tc => new AIToolCall
+                    {
+                        Id = tc.Id,
+                        Name = tc.FunctionName,
+                        Arguments = tc.FunctionArguments.ToString()
+                    })
+                    .ToList();
+                // SDK-native constructor preserves ToolCalls for the next turn's serialization.
+                messages.Add(new AssistantChatMessage(completion));
+                return string.Empty;
+            }
 
             if (completion.FinishReason == ChatFinishReason.Stop)
             {

@@ -841,8 +841,8 @@ namespace Seal
                 object newEntity = e.Node.Tag;
                 if (!_adminWarningDone && (newEntity is ReportSchedule || newEntity is ScheduleFolder) && !Helper.IsMachineAdministrator())
                 {
-                    MessageBox.Show("We recommend to execute the 'Report Designer' application with the option 'Run as administrator' to edit the Schedules (part of the Windows Tasks Scheduler)...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     _adminWarningDone = true;
+                    MessageBox.Show("We recommend to execute the 'Report Designer' application with the option 'Run as administrator' to edit the Schedules (part of the Windows Tasks Scheduler)...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     e.Cancel = true;
                     return;
                 }

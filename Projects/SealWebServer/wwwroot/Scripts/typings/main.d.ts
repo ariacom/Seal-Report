@@ -1,4 +1,23 @@
 // Type definitions for Seal
+
+interface MenuItem {
+    name: string;
+    path?: string;
+    viewGUID?: string;
+    outputGUID?: string;
+}
+
+interface AiPanel {
+    clearConversation(): void;
+    setFavorite(state: boolean): void;
+    setFavorites(items: MenuItem[]): void;
+    setRecents(items: MenuItem[]): void;
+}
+
+interface Window {
+    aiPanel: AiPanel;
+}
+
 interface JQuery {
     selectpicker(): JQuery;
     selectpicker(options: any): JQuery;

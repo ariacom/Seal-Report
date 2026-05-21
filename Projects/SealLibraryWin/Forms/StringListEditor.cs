@@ -9,6 +9,7 @@ using System.Drawing.Design;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Seal.AI;
 using Seal.Helpers;
 using Seal.Model;
 
@@ -49,6 +50,26 @@ namespace Seal.Forms
                             login.GroupIds.Add(((SecurityGroup)item).GUID);
                         }
                         value = login.GroupIds; //indicates a modification
+                    }
+                }
+                else if (context.Instance is AIAssistantConfiguration)
+                {
+                    AIAssistantConfiguration assistant = context.Instance as AIAssistantConfiguration;
+                    MultipleSelectForm frm = new MultipleSelectForm("Please select the tools", Repository.Instance.Configuration.AITools, "Name");
+                    //select existing values
+                    for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
+                    {
+                        if (assistant.ToolGUIDs.Contains(((AIToolConfiguration)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
+                    }
+
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        assistant.ToolGUIDs = new List<string>();
+                        foreach (object item in frm.CheckedItems)
+                        {
+                            assistant.ToolGUIDs.Add(((AIToolConfiguration)item).GUID);
+                        }
+                        value = assistant.ToolGUIDs;
                     }
                 }
                 else if (context.Instance is SealServerConfiguration)

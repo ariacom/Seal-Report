@@ -813,30 +813,6 @@ namespace Seal.Model
             }
         }
 
-        /// <summary>
-        /// List reports menu
-        /// </summary>
-        public List<ReportView> GetMenuReportViews()
-        {
-            var result = new List<ReportView>();
-            foreach (var view in MenuReportViewsPool.MenuReportViews)
-            {
-                bool addIt = false;
-                if (view.Report.FilePath.StartsWith(Security.Repository.GetPersonalFolder(this)) && PersonalFolderRight != PersonalFolderRight.None)
-                {
-                    addIt = true;
-                }
-                else
-                {
-                    //Public folders
-                    var folder = FindSecurityFolder(Path.GetDirectoryName(FileHelper.ConvertOSFilePath(view.Report.RelativeFilePath)));
-                    if (folder != null && folder.FolderRight != FolderRight.None) addIt = true;
-                }
-
-                if (addIt) result.Add(view);
-            }
-            return result;
-        }
     }
 }
 

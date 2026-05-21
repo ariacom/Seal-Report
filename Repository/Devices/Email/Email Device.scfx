@@ -9,7 +9,10 @@
   <UserName />
   <Password />
   <SmtpScript />
+  <MimeKitScript />
   <SendGridKey />
   <SendGridScript />
+  <AzureSecret />
+  <MSGraphScript />
   <SenderEmail>takeAdive@sealreport.org</SenderEmail>
 </OutputEmailDevice>

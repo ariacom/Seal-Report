@@ -43,6 +43,70 @@
 
     @await Html.PartialAsync("~/Views/Home/Menu.cshtml")
 
+    <!-- AI Chat Panel toggle button -->
+    <button id="ai-panel-toggle" title="AI Assistant">
+        <i class="fa fa-comments"></i>
+    </button>
+
+    <!-- AI Chat Panel (collapsible left drawer) -->
+    <div id="ai-chat-panel">
+        <div class="ai-panel-header">
+            <div class="ai-panel-title">
+                <i class="fa fa-comments"></i>
+                <span>AI Assistant</span>
+            </div>
+            <div class="ai-panel-header-actions">
+                <!-- Favorite toggle -->
+                <button id="ai-panel-fav-btn" class="ai-panel-icon-btn" title="Mark as favorite">
+                    <i class="fa fa-star-o"></i>
+                </button>
+                <!-- Favorites / MRU dropdown -->
+                <div class="ai-panel-dropdown-wrap">
+                    <button id="ai-panel-history-btn" class="ai-panel-icon-btn" title="Favorites &amp; Recent">
+                        <i class="fa fa-clock-o"></i><i class="fa fa-caret-down ai-caret"></i>
+                    </button>
+                    <div id="ai-panel-history-dropdown" class="ai-panel-dropdown" style="display:none;">
+                        <div class="ai-panel-dropdown-section">
+                            <div class="ai-panel-dropdown-label">
+                                <i class="fa fa-star"></i> @repository.TranslateWeb("Favorites")
+                            </div>
+                            <ul id="ai-panel-fav-list" class="ai-panel-dropdown-list">
+                                <li class="ai-panel-dropdown-empty">@repository.TranslateWeb("No favorites yet")</li>
+                            </ul>
+                        </div>
+                        <div class="ai-panel-dropdown-divider"></div>
+                        <div class="ai-panel-dropdown-section">
+                            <div class="ai-panel-dropdown-label">
+                                <i class="fa fa-clock-o"></i> @repository.TranslateWeb("Recent")
+                            </div>
+                            <ul id="ai-panel-mru-list" class="ai-panel-dropdown-list">
+                                <li class="ai-panel-dropdown-empty">@repository.TranslateWeb("No recent items")</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- New conversation -->
+                <button id="ai-panel-new" class="ai-panel-icon-btn" title="@repository.TranslateWeb("New conversation")">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <!-- Close -->
+                <button id="ai-panel-close" title="Hide panel">&times;</button>
+            </div>
+        </div>
+        <div id="ai-panel-messages" class="ai-panel-messages">
+            <!-- conversation bubbles appended here -->
+        </div>
+        <div class="ai-panel-input-area">
+            <textarea id="ai-panel-input" class="ai-panel-input" rows="3" placeholder="Ask the AI assistant…"></textarea>
+            <div class="ai-panel-actions">
+                <span id="ai-panel-running"></span>
+                <button id="ai-panel-send" class="ai-panel-send-btn" disabled>
+                    <span class="send-icon">&#10148;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!--Folders view -->
     <div id="main-container" class="container-fluid folderview" style="padding-top:62px;display:none;">
         <div class="row">
@@ -226,6 +290,7 @@
         <script src="~/Scripts/swi-utils.js"></script>
         <script src="~/Scripts/swi-gateway.js"></script>
         <script src="~/Scripts/swi-main.js"></script>
+        <script src="~/Scripts/swi-ai.js"></script>
 
         if (model.HasEditor)
         {
@@ -241,5 +306,6 @@
     }
 
     @Html.Raw(RazorHelper.CompileExecute(repository.Configuration.WebMainAdditionalScript, model))
+
 </body>
 </html>

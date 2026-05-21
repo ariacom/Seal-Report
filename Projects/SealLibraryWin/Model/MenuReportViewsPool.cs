@@ -67,49 +67,9 @@ namespace Seal.Model
             }
         }
 
+        // ShowInMenu / MenuName have been removed from ReportView — this pool is no longer populated.
         static void getMenuReportViews(Dictionary<string, DateTime> reports, string folder, Repository repository)
         {
-            foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))
-            {
-                try
-                {
-                    //Report did not change
-                    if (reports.ContainsKey(reportPath) && reports[reportPath] == File.GetLastWriteTime(reportPath)) continue;
-
-                    var reportStr = File.ReadAllText(reportPath);
-                    if (!reportStr.Contains("<ShowInMenu>true</ShowInMenu>"))
-                    {
-                        _menuReportViews.RemoveAll(i => i.Report.FilePath == reportPath);
-                        continue;
-                    }
-
-                    Report report = Report.LoadFromFile(reportPath, repository, false);
-                    if (string.IsNullOrEmpty(report.LoadErrors))
-                    {
-                        //clean previous
-                        _menuReportViews.RemoveAll(i => i.Report.FilePath == report.FilePath);
-
-                        //then add again
-                        foreach (ReportView view in report.Views.Where(i =>i.ShowInMenu))
-                        {
-                            _menuReportViews.Add(view);
-                        }
-                    }
-                    else Debug.WriteLine(report.LoadErrors);
-
-                    if (reports.ContainsKey(reportPath)) reports[reportPath] = report.LastModification;
-                    else reports.Add(reportPath, report.LastModification);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
-
-            foreach (string subFolder in Directory.GetDirectories(folder))
-            {
-                getMenuReportViews(reports, subFolder, repository);
-            }
         }
     }
 }

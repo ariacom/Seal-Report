@@ -11,10 +11,23 @@ namespace Seal.AI
         /// The reply is automatically appended to <paramref name="messages"/>.
         /// </summary>
         string HandleChat(List<ChatMessage> messages);
+
+        /// <summary>
+        /// Sends <paramref name="messages"/> together with available <paramref name="tools"/> to the AI.
+        /// If the model decides to invoke one or more tools the descriptors are placed in
+        /// <paramref name="toolCalls"/> and the method returns <see cref="string.Empty"/>;
+        /// the assistant message (with embedded tool-call data) is appended to <paramref name="messages"/>
+        /// automatically so the conversation can be continued after the caller executes the tools.
+        /// If the model produces a text reply the reply is appended to <paramref name="messages"/> and returned.
+        /// </summary>
+        string HandleChatWithTools(List<ChatMessage> messages, IList<AITool> tools, out IList<AIToolCall> toolCalls);
     }
 
     public abstract class AIProvider : IAIProvider
     {
+        /// <summary>Unique identifier for this provider instance.</summary>
+        public Guid GUID { get; set; } = Guid.NewGuid();
+
         protected string _endpoint;
         protected string _apiKey;
         protected string _model;
@@ -33,6 +46,33 @@ namespace Seal.AI
         /// The reply is automatically appended to <paramref name="messages"/>.
         /// </summary>
         public abstract string HandleChat(List<ChatMessage> messages);
+
+        /// <inheritdoc cref="IAIProvider.HandleChatWithTools"/>
+        public abstract string HandleChatWithTools(List<ChatMessage> messages, IList<AITool> tools, out IList<AIToolCall> toolCalls);
+
+        /// <summary>
+        /// Resolves a provider configuration by name, creates it, and returns it.
+        /// Pass <c>null</c> or empty to use the default provider
+        /// (the one with <see cref="AIProviderConfiguration.IsDefault"/> set to <c>true</c>).
+        /// </summary>
+        /// <exception cref="Exception">
+        /// Thrown when no matching or no default configuration is found.
+        /// </exception>
+        public static IAIProvider GetProvider(string providerName = null)
+        {
+            AIProviderConfiguration config;
+            if (string.IsNullOrEmpty(providerName))
+            {
+                config = Seal.Model.Repository.Instance.Configuration.AIProviders.Find(p => p.IsDefault)
+                    ?? throw new Exception("No default AI provider configuration found. Set IsDefault = true on one configuration.");
+            }
+            else
+            {
+                config = Seal.Model.Repository.Instance.Configuration.AIProviders.Find(p => p.Name == providerName)
+                    ?? throw new Exception($"AI provider configuration '{providerName}' not found.");
+            }
+            return GetAIProvider(config.Type, config.EndPoint, config.ClearProviderKey, config.Model, config.Temperature, config.MaxTokens, config.TopP);
+        }
 
         /// <summary>
         /// Creates, initialises, and returns a provider for the given <paramref name="providerType"/>.

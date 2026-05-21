@@ -5,7 +5,7 @@
     task.TemplateDescription = "Cancels a report output based on a condition evaluated by AI on the report data.";
     task.Step = ExecutionStep.BeforeRendering;
 
-    task.Parameters.Add(new Parameter() { Name = "ai_provider_name", Value = "", DisplayName = "AI Provider name", Description = "The AI Provider name. If empty, the default provider is taken (if configured).", Enums = (from p in Repository.Instance.Configuration.AIProviders select p.Name).ToArray(), UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "ai_assistant_name", Value = "", DisplayName = "AI Assistant name", Description = "The AI Assistant name. If empty, the default assistant is used (if configured).", Enums = (from a in Repository.Instance.Configuration.AIAssistants where a.IsEnabled select a.Name).ToArray(), UseOnlyEnumValues = false });
     task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You are a report output controller for a business reporting system.\r\nYour sole responsibility is to decide whether a report output should be cancelled or published, based on data values extracted from the report.\r\n\r\nOutput format — respond with a JSON object containing exactly two fields:\r\n- \"cancel\": boolean. true = cancel the output. false = publish the output.\r\n- \"reason\": a single sentence stating the value found and whether the condition was met.\r\n\r\nThe \"reason\" field must always be consistent with the \"cancel\" field:\r\n- If cancel is true, reason must confirm the condition was met and the output is cancelled.\r\n- If cancel is false, reason must confirm the condition was not met and the output is published.\r\n\r\nRules:\r\n- Do not add any text, markdown, or commentary outside the JSON object.\r\n- Base your decision strictly on the condition provided in the user message.\r\n- Use the DATA rows as the primary source for numeric values.\r\n- If the relevant value cannot be found in the data, set cancel to false and explain in reason.\r\n- Evaluate the condition first, set cancel accordingly, then write reason to match.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "ai_system_additional", TextValue = "", DisplayName = "Additional system prompt", Description = "Additional system information for the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "Cancel the report output if [describe your cancellation condition here].", DisplayName = "AI User prompt", Description = "The condition to evaluate. Describe what data value and threshold should trigger a cancellation." });
@@ -14,7 +14,6 @@
     task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
 
     task.Script = @"@using Seal.AI;
-@using OpenAI.Chat;
 @using Newtonsoft.Json.Linq;
 @{
     ReportTask task = Model;
@@ -25,7 +24,7 @@
     //Check only for report output
     if (report.OutputToExecute == null) return;
 
-    var aiProvider = task.GetValue(""ai_provider_name"");
+    var assistantName = task.GetValue(""ai_assistant_name"");
     var system = task.GetValue(""ai_system_prompt"");
     var systemAdditional = task.GetValue(""ai_system_additional"");
     var user = task.GetValue(""ai_user_prompt"");
@@ -50,18 +49,13 @@ DATA:
     system += $""\r\nRespond with language and regional settings of culture {report.ExecutionView.CultureInfo.Name}.\r\n{systemAdditional}"";
     user += $""\r\n{userAdditional}\r\n{dataJson}"";
 
-    var messages = new List<ChatMessage>
-    {
-        new SystemChatMessage(system),
-        new UserChatMessage(user)
-    };
-
     if (logRequests) {
 		task.LogMessage($""[AI Request {system.Length}] System:\r\n{system}"");
 		task.LogMessage($""[AI Request {user.Length}] User:\r\n{user}"");
     }
-    var client = new AIClient(aiProvider);
-    var answer = client.HandleChat(messages);
+    var assistant = new AIAssistant(assistantName);
+    assistant.OverrideSystemPrompt(system);
+    var answer = assistant.Chat(user);
     if (logRequests) task.LogMessage($""[AI Response]\r\n{answer}"");
     JObject obj = JObject.Parse(answer);
 

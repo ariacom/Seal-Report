@@ -46,8 +46,6 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("ModelGUID").SetIsBrowsable(Template.ForReportModel);
                 GetProperty("UseModelName").SetIsBrowsable(Template.ForReportModel);
-                GetProperty("ShowInMenu").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
-                GetProperty("MenuName").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
                 GetProperty("RestrictionsToSelect").SetIsBrowsable(Template.IsRestrictionsView);
 
                 GetProperty("ReferenceViewGUID").SetIsBrowsable(true);
@@ -89,7 +87,6 @@ namespace Seal.Model
 
                 //Read only
                 GetProperty("TemplateName").SetIsReadOnly(true);
-                GetProperty("MenuName").SetIsReadOnly(!ShowInMenu);
 
                 //Helpers
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
@@ -612,38 +609,6 @@ namespace Seal.Model
         }
         public bool ShouldSerializeUseModelName() { return !_useModelName; }
 
-
-        bool _showInMenu = false;
-        /// <summary>
-        /// If true, the report view is shown and can be executed from the menu of the Web Report Server.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("Show in the Web menu"), Description("If true, the report view is shown and can be executed from the menu of the Web Report Server."), Category("Definition"), Id(5, 1)]
-        [DefaultValue(false)]
-#endif
-        public bool ShowInMenu
-        {
-            get { return _showInMenu; }
-            set
-            {
-                _showInMenu = value;
-                UpdateEditorAttributes();
-            }
-        }
-        public bool ShouldSerializeShowInMenu() { return _showInMenu; }
-
-        /// <summary>
-        /// If not empty, overrides the default name of the report view in the Web Menu. Sub-menus can be specified using the '/' character (e.g. 'Samples/Orders').
-        /// </summary>
-#if WINDOWS
-        [DefaultValue(null)]
-        [DisplayName("Menu name"), Description("If not empty, overrides the default name of the report view in the Web Menu. Sub-menus can be specified using the '/' character (e.g. 'Samples/General/Orders')."), Category("Definition"), Id(6, 1)]
-        [TypeConverter(typeof(MenuNameConverter))]
-#endif
-        public string MenuName
-        {
-            get; set;
-        }
 
         /// <summary>
         /// List of Restrictions GUID to display for a Restrictions view.
@@ -1909,39 +1874,6 @@ namespace Seal.Model
             return _columnsHidden.Contains((col + 1).ToString());
         }
 
-
-        /// <summary>
-        /// Path of the view in the menu
-        /// </summary>
-        [XmlIgnore]
-        public string MenuPath
-        {
-            get
-            {
-                var result = MenuName;
-                if (string.IsNullOrEmpty(MenuName))
-                {
-                    result = Path.GetDirectoryName(Report.RelativeFilePath);
-                    if (!result.EndsWith("\\")) result += "\\";
-                    result += Path.GetFileNameWithoutExtension(Report.FilePath);
-                    result = result.Replace("\\", "/");
-                }
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Name of the report in the menu
-        /// </summary>
-        [XmlIgnore]
-        public string MenuReportViewName
-        {
-            get
-            {
-                var names = MenuPath.Split('/');
-                return Report.TranslateDisplayName(names.Length == 0 ? RootView.Name : names[names.Length - 1]);
-            }
-        }
 
         /// <summary>
         /// Helper to find a child view from its template name

@@ -20,6 +20,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Win32.TaskScheduler;
 using RazorEngine.Templating;
+using Seal.AI;
 using Seal.Helpers;
 using Seal.Renderer;
 #if WINDOWS
@@ -55,7 +56,7 @@ namespace Seal.Model
     /// <summary>
     /// The main Report class to store a report definition, plus extra properties for execution 
     /// </summary>
-    public class Report : RootEditor, ReportExecutionLog
+    public class Report : RootEditor, ReportExecutionLog, ICancelOperation
 #if WINDOWS
 , ITreeSort
 #endif

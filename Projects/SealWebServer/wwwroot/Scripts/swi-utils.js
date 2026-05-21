@@ -198,15 +198,6 @@ var SWIUtil;
         });
     }
     SWIUtil.InitSpinning = InitSpinning;
-    function InitDropDownMenu() {
-        //Show dropdown menus on hover
-        $('.dropdown-menu-li').hover((event) => {
-            $(event.target).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(300);
-        }, (event) => {
-            $(event.target).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(300);
-        });
-    }
-    SWIUtil.InitDropDownMenu = InitDropDownMenu;
     function InitVersion() {
         _gateway.GetVersions(function (data) {
             var title = SWIUtil.tr2(SWIUtil.tr("Version") + " : " + data.SRVersion + "\n");
@@ -251,45 +242,32 @@ var SWIUtil;
     function RefreshMenu(main) {
         //Menu
         _gateway.GetRootMenu(function (menu) {
-            if (menu.reports.length != 0 || menu.recentreports.length != 0)
+            if (menu.favorites.length != 0 || menu.recentreports.length != 0)
                 $("#menu-main-button").removeClass("disabled");
             else
                 $("#menu-main-button").addClass("disabled");
-            //Reports
             var parent = $("#menu-main");
             parent.children(".menu-reports").remove();
-            SWIUtil.ShowHideControl($(".divider-menu-reports"), menu.reports.length > 0);
-            SWIUtil.initMenu(main, parent, menu.reports);
-            if (main) {
-                if (menu.reports.length > 0)
-                    parent.append($("<li class='menu-divider-folders-report divider menu-reports')>"));
-                parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
-                parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
-            }
             //Favorites
             if (menu.favorites.length > 0) {
-                if (menu.reports.length > 0 || (main && (main._reportPath != "" || main._currentView == "report") && _main._profile.showfolders))
-                    parent.append($("<li class='menu-divider-recent-report divider menu-reports')>"));
-                parent.append($("<li class='menu-divider menu-reports'>").html(SWIUtil.tr("Favorites")));
+                parent.append($("<li class='menu-divider menu-reports'>").html('<i class="fa fa-star" style="color:#f5a623;margin-right:5px;"></i>' + SWIUtil.tr("Favorites")));
                 menu.favorites.forEach(function (value) {
                     SWIUtil.addReportMenu(main, parent, value);
                 });
             }
             //Recent reports
             if (menu.recentreports.length > 0) {
-                if (menu.favorites.length > 0 || menu.reports.length > 0 || (main && (main._reportPath != "" || main._currentView == "report") && _main._profile.showfolders))
-                    parent.append($("<li class='menu-divider-recent-report divider menu-reports')>"));
-                parent.append($("<li class='menu-divider menu-reports'>").html(SWIUtil.tr("Recents")));
+                parent.append($("<li class='menu-divider menu-reports'>").html('<i class="fa fa-clock-o" style="margin-right:5px;"></i>' + SWIUtil.tr("Recents")));
                 menu.recentreports.forEach(function (value) {
                     SWIUtil.addReportMenu(main, parent, value);
                 });
+                if (main && main._reportPath != "")
+                    parent.append($("<li class='menu-divider-recent-report divider menu-reports'>"));
             }
-            $('ul.dropdown-menu [data-toggle=dropdown]').unbind("click").on('click', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                $(event.target).parent().siblings().removeClass('open');
-                $(event.target).parent().toggleClass('open');
-            });
+            if (main) {
+                parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
+                parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
+            }
             //Toggle report/folders
             $("#menu-view-folders, #menu-view-report, #nav_button").unbind("click").on("click", function () {
                 main.toggleFoldersReport(_main._currentView != "report");
@@ -300,16 +278,17 @@ var SWIUtil;
             });
             //Execute reports from menu
             $("a.menu-report").unbind("click").on("click", (event) => {
+                const $a = $(event.currentTarget);
                 if (main && !_main._newWindow) {
                     $waitDialog.modal();
-                    main.executeReportFromMenu($(event.target).attr("path"), $(event.target).attr("viewGUID"), $(event.target).attr("outputGUID"), $(event.target).text());
+                    main.executeReportFromMenu($a.attr("path"), $a.attr("viewGUID"), $a.attr("outputGUID"), $a.text());
                 }
                 else {
-                    SWIUtil.executeReport(main, $(event.target).attr("path"), $(event.target).attr("viewGUID"), $(event.target).attr("outputGUID"));
+                    SWIUtil.executeReport(main, $a.attr("path"), $a.attr("viewGUID"), $a.attr("outputGUID"));
                 }
             });
-            $("a.menu-report span").unbind("click").on("click", (event) => {
-                const parent = $(event.target).parent();
+            $("a.menu-report span").unbind("click").on("click", function () {
+                const parent = $(this).parent();
                 if (!main || !main._newWindow) {
                     SWIUtil.executeReport(main, parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"));
                 }
