@@ -2379,7 +2379,7 @@ namespace Seal.Model
                     {
                         CurrentEnumValues.Add(r.EnumRE, null);
                         //First: SQL, Second: Script for list for Script dependencies
-                        CurrentEnumValues[r.EnumRE] = new List<string> { restriction.EnumSQLValue, restriction.EnumLINQValue };
+                        CurrentEnumValues[r.EnumRE] = new List<string> { r.EnumSQLValue, r.EnumLINQValue };
                     }
                 }
 
