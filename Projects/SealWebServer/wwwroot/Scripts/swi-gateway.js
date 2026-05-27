@@ -206,6 +206,11 @@ class SWIGateway {
             .fail(function (xhr, status, error) { if (status !== 'abort')
             SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    GetAIAssistantSamplePrompts(callback, errorcb) {
+        $.post(_server + "SWIGetAIAssistantSamplePrompts", {})
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
     CancelAIAssistantResponse(callback, errorcb) {
         if (this._currentAIXHR) {
             this._currentAIXHR.abort();
@@ -214,6 +219,35 @@ class SWIGateway {
         $.post(_server + "SWICancelAIAssistantResponse", {})
             .done(function (data) { if (callback)
             callback(data); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    // ── Chat persistence (Recents / Favorites) ──────────────────
+    SaveAIAssistantChat(name, infos, callback, errorcb) {
+        $.post(_server + "SAISaveAssistantChat", {
+            name: name,
+            infosJson: JSON.stringify(infos)
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    GetAIAssistantChats(callback, errorcb) {
+        $.post(_server + "SAIGetAssistantChats", {})
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    MarkAIAssistantChatFavorite(name, callback, errorcb) {
+        $.post(_server + "SAIMarkAssistantChatFavorite", {
+            name: name
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    LoadAIAssistantChat(name, favorite, callback, errorcb) {
+        $.post(_server + "SAILoadAssistantChat", {
+            name: name,
+            favorite: favorite
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 }

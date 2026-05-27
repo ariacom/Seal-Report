@@ -1036,6 +1036,36 @@ table.dataTable {
     font-size: 12px;
 }
 
+/* Execute report actions — row of buttons below an AI bubble */
+.ai-panel-report-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 2px 0 4px 8px;
+}
+
+.ai-panel-execute-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #4a9c4a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.ai-panel-execute-btn:hover {
+    background-color: #3a7c3a;
+}
+
+.ai-panel-execute-btn .fa {
+    font-size: 11px;
+}
+
 /* Input area */
 .ai-panel-input-area {
     border-top: 1px solid #e0e0e0;
@@ -1107,6 +1137,38 @@ table.dataTable {
     font-size: 12px;
     color: #888;
     font-style: italic;
+}
+
+/* Sample prompts button (in the input-area actions row) */
+.ai-panel-samples-wrap {
+    position: relative;
+    margin-right: 6px;
+}
+
+.ai-panel-samples-btn {
+    color: #f0a500;
+}
+
+.ai-panel-samples-btn:hover {
+    color: #c07d00;
+}
+
+/* Sample prompts dropdown — positioned via JS (position:fixed escapes the panel's
+   transform stacking context so it is never clipped by the drawer) */
+.ai-panel-samples-dropdown {
+    position: fixed !important; /* must escape the panel's transform stacking context */
+    min-width: 600px;
+    max-width: 600px;
+    max-height: 600px;
+    overflow-y: auto !important;
+    z-index: 1100;
+}
+
+.ai-panel-samples-dropdown .ai-panel-dropdown-list li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 /* Header action group (fav + dropdown + close) */

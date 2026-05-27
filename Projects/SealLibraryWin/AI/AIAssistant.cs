@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Ganss.Xss;
+using Newtonsoft.Json;
 using OpenAI.Chat;
 using Seal.Model;
 
@@ -35,7 +38,7 @@ namespace Seal.AI
         /// <summary>
         /// Creates an <see cref="AIAssistant"/> from a named
         /// <see cref="AIAssistantConfiguration"/>.
-        /// Injects the configuration's <see cref="AIAssistantConfiguration.DefaultSystemPrompt"/>
+        /// Injects the configuration's <see cref="AIAssistantConfiguration.EffectiveSystemPrompt"/>
         /// as the first message in the conversation when it is not empty.
         /// </summary>
         /// <param name="assistantName">
@@ -67,8 +70,8 @@ namespace Seal.AI
                     $"AI assistant '{Configuration.Name}' has no valid provider configuration.");
 
             // Seed conversation with the system prompt if one is defined
-            if (!string.IsNullOrWhiteSpace(Configuration.DefaultSystemPrompt))
-                Messages.Add(new SystemChatMessage(Configuration.DefaultSystemPrompt));
+            if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
+                Messages.Add(new SystemChatMessage(Configuration.EffectiveSystemPrompt));
         }
 
         /// <summary>
@@ -84,8 +87,8 @@ namespace Seal.AI
                 ?? throw new System.Exception(
                     $"AI assistant '{Configuration.Name}' has no valid provider configuration.");
 
-            if (!string.IsNullOrWhiteSpace(Configuration.DefaultSystemPrompt))
-                Messages.Add(new SystemChatMessage(Configuration.DefaultSystemPrompt));
+            if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
+                Messages.Add(new SystemChatMessage(Configuration.EffectiveSystemPrompt));
         }
 
         // ----------------------------------------------------------------
@@ -132,6 +135,9 @@ namespace Seal.AI
                 foreach (var toolCall in toolCalls)
                 {
                     if (cancelOperation?.Cancel == true) break;
+
+                    toolCall.SecurityContext = SecurityContext;
+                    toolCall.CancelOperation = cancelOperation;
 
                     var toolConfig = toolConfigs.FirstOrDefault(t => t.IsEnabled && t.Name == toolCall.Name);
                     var result = toolConfig?.Execute(toolCall) ?? string.Empty;
@@ -182,7 +188,7 @@ namespace Seal.AI
         /// <paramref name="prompt"/>.  If <paramref name="prompt"/> is null or
         /// whitespace the existing system message (if any) is simply removed.
         /// Call this before <see cref="Chat"/> to inject a parameter-driven system
-        /// prompt that overrides the one from <see cref="AIAssistantConfiguration.DefaultSystemPrompt"/>.
+        /// prompt that overrides the one from <see cref="AIAssistantConfiguration.EffectiveSystemPrompt"/>.
         /// </summary>
         public void OverrideSystemPrompt(string prompt)
         {
@@ -200,8 +206,8 @@ namespace Seal.AI
         public void Clear()
         {
             Messages.Clear();
-            if (!string.IsNullOrWhiteSpace(Configuration.DefaultSystemPrompt))
-                Messages.Add(new SystemChatMessage(Configuration.DefaultSystemPrompt));
+            if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
+                Messages.Add(new SystemChatMessage(Configuration.EffectiveSystemPrompt));
         }
 
         /// <summary>
@@ -209,5 +215,198 @@ namespace Seal.AI
         /// system prompt when present).
         /// </summary>
         public int MessageCount => Messages.Count;
+
+        /// <summary>
+        /// Current security user of the assistant
+        /// </summary>
+        public SecurityUser SecurityContext = null;
+
+        // ----------------------------------------------------------------
+        //  Serialisation  (JSON format)
+        // ----------------------------------------------------------------
+
+        /// <summary>
+        /// Serialises the current conversation to a <see cref="ChatSessionFile"/> object.
+        /// </summary>
+        /// <param name="infos">
+        /// Key/value pairs that describe the session (Type, Name, Description, Instance …).
+        /// Pass <c>null</c> to produce an empty Infos list.
+        /// </param>
+        public ChatSessionFile ToSessionFile(List<StringPair> infos = null)
+        {
+            var session = new ChatSessionFile
+            {
+                Infos = infos ?? new List<StringPair>()
+            };
+
+            foreach (var msg in Messages)
+            {
+                // AssistantToolCallsChatMessage extends AssistantChatMessage and must be
+                // handled first (before the base type) via an explicit is-check.
+                if (msg is AssistantToolCallsChatMessage atcm)
+                {
+                    var toolCalls = atcm.AIToolCalls
+                        .Select(tc => new ChatSessionToolCall { Id = tc.Id, FunctionName = tc.Name, Arguments = tc.Arguments })
+                        .ToList();
+                    session.Messages.Add(new ChatSessionMessage
+                    {
+                        Type      = "AssistantChatMessage",
+                        Content   = atcm.TextContent ?? string.Empty,
+                        ToolCalls = toolCalls
+                    });
+                    continue;
+                }
+
+                string type;
+                string content;
+                string toolCallId = null;
+                List<ChatSessionToolCall> sessionToolCalls = null;
+
+                switch (msg)
+                {
+                    case SystemChatMessage sys:
+                        type    = "SystemChatMessage";
+                        content = sys.Content.Count > 0 ? sys.Content[0].Text : string.Empty;
+                        break;
+                    case UserChatMessage usr:
+                        type    = "UserChatMessage";
+                        content = usr.Content.Count > 0 ? usr.Content[0].Text : string.Empty;
+                        break;
+                    case AssistantChatMessage asst:
+                        type    = "AssistantChatMessage";
+                        content = asst.Content.Count > 0 ? asst.Content[0].Text : string.Empty;
+                        // Azure SDK-native path: ToolCalls is populated on the base class
+                        if (asst.ToolCalls != null && asst.ToolCalls.Count > 0)
+                        {
+                            sessionToolCalls = asst.ToolCalls
+                                .Select(tc => new ChatSessionToolCall
+                                {
+                                    Id           = tc.Id,
+                                    FunctionName = tc.FunctionName,
+                                    Arguments    = tc.FunctionArguments.ToString()
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case ToolChatMessage tool:
+                        type       = "ToolChatMessage";
+                        content    = tool.Content.Count > 0 ? tool.Content[0].Text : string.Empty;
+                        toolCallId = tool.ToolCallId;
+                        break;
+                    default:
+                        continue; // skip unknown message types
+                }
+
+                // Save the entry when it has text, tool calls, or is a tool result.
+                // Tool-call assistant messages may have empty text but must still be saved
+                // so that the paired ToolChatMessage entries are not orphaned on reload.
+                bool hasToolCalls = sessionToolCalls != null && sessionToolCalls.Count > 0;
+                if (!string.IsNullOrEmpty(content) || hasToolCalls || type == "ToolChatMessage")
+                {
+                    session.Messages.Add(new ChatSessionMessage
+                    {
+                        Type       = type,
+                        Content    = content,
+                        ToolCallId = toolCallId,
+                        ToolCalls  = sessionToolCalls
+                    });
+                }
+            }
+
+            return session;
+        }
+
+        /// <summary>
+        /// Saves the current conversation to a JSON file.
+        /// </summary>
+        /// <param name="path">Full file-system path (including file name and extension).</param>
+        /// <param name="infos">Session metadata to embed in the file.</param>
+        public void SaveToFile(string path, List<StringPair> infos = null)
+        {
+            var dir = System.IO.Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            var session = ToSessionFile(infos);
+            var json = JsonConvert.SerializeObject(session, Newtonsoft.Json.Formatting.Indented);
+            File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Restores the conversation history from a <see cref="ChatSessionFile"/>.
+        /// The current <see cref="Messages"/> list is cleared first.
+        /// </summary>
+        public void LoadFromSessionFile(ChatSessionFile session)
+        {
+            if (session == null) throw new ArgumentNullException(nameof(session));
+
+            Messages.Clear();
+            foreach (var entry in session.Messages)
+            {
+                ChatMessage msg;
+                switch (entry.Type)
+                {
+                    case "SystemChatMessage":
+                        msg = new SystemChatMessage(entry.Content ?? string.Empty);
+                        break;
+                    case "UserChatMessage":
+                        msg = new UserChatMessage(entry.Content ?? string.Empty);
+                        break;
+                    case "AssistantChatMessage":
+                        if (entry.ToolCalls != null && entry.ToolCalls.Count > 0)
+                        {
+                            // Reconstruct as AssistantToolCallsChatMessage so that the AI
+                            // provider accepts the following ToolChatMessage responses.
+                            var aiToolCalls = entry.ToolCalls
+                                .Select(tc => new AIToolCall { Id = tc.Id, Name = tc.FunctionName, Arguments = tc.Arguments })
+                                .ToList();
+                            msg = new AssistantToolCallsChatMessage(aiToolCalls, entry.Content);
+                        }
+                        else
+                        {
+                            msg = new AssistantChatMessage(entry.Content ?? string.Empty);
+                        }
+                        break;
+                    case "ToolChatMessage":
+                        // Only valid when paired with a preceding AssistantToolCallsChatMessage.
+                        msg = !string.IsNullOrEmpty(entry.ToolCallId)
+                            ? new ToolChatMessage(entry.ToolCallId, entry.Content ?? string.Empty)
+                            : null;
+                        break;
+                    default:
+                        msg = null;
+                        break;
+                }
+                if (msg != null) Messages.Add(msg);
+            }
+        }
+
+        /// <summary>
+        /// Loads a conversation from a JSON file and returns both the assistant
+        /// and the embedded session metadata.
+        /// The assistant is built from the configuration whose Name matches the
+        /// <c>Name</c> info key; falls back to the default configuration when not found.
+        /// </summary>
+        /// <param name="path">Full file-system path to the file.</param>
+        /// <returns>A tuple of the restored assistant and the raw session file.</returns>
+        public static (AIAssistant assistant, ChatSessionFile session) LoadFromFile(string path)
+        {
+            if (!File.Exists(path))
+                throw new FileNotFoundException("Chat session file not found.", path);
+
+            var json = File.ReadAllText(path, System.Text.Encoding.UTF8);
+            var session = JsonConvert.DeserializeObject<ChatSessionFile>(json)
+                          ?? throw new InvalidOperationException("Invalid json file: could not deserialise.");
+
+            // Resolve assistant configuration by name (fall back to default)
+            var assistantName = session.GetInfo("Name");
+            AIAssistant assistant;
+            try { assistant = new AIAssistant(assistantName); }
+            catch { assistant = new AIAssistant(); }
+
+            // Replace the seeded system prompt with the saved history
+            assistant.LoadFromSessionFile(session);
+            return (assistant, session);
+        }
     }
 }

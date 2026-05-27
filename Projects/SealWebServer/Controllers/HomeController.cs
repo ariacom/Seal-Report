@@ -1027,6 +1027,9 @@ namespace SealWebServer.Controllers
             string folderPath = folder.GetFullPath();
             foreach (string subFolder in Directory.GetDirectories(folderPath))
             {
+                // _Assistant is a hidden system folder – never expose it in the browser
+                if (folder.IsPersonal && Path.GetFileName(subFolder) == AssistantFolders.FolderName) continue;
+
                 SWIFolder sub = getFolder(folder.Combine(subFolder));
                 //Add if right on this folder, or a sub folder is defined with this root
                 if ((sub.right > 0) || WebUser.SecurityGroups.Exists(i => i.Folders.Exists(j => j.Path.StartsWith(sub.path + (sub.path == Path.DirectorySeparatorChar.ToString() ? "" : Path.DirectorySeparatorChar.ToString())) && j.FolderRight != FolderRight.None)))
@@ -1058,6 +1061,9 @@ namespace SealWebServer.Controllers
 
             foreach (string subFolder in Directory.GetDirectories(folder.GetFullPath()))
             {
+                // _Assistant is a hidden system folder – skip it during searches too
+                if (folder.IsPersonal && Path.GetFileName(subFolder) == AssistantFolders.FolderName) continue;
+
                 SWIFolder sub = getFolder(folder.Combine(subFolder));
                 if (sub.right > 0) searchFolder(sub, pattern, files);
             }

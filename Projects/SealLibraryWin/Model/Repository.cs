@@ -720,6 +720,8 @@ namespace Seal.Model
                 if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
                 if (!Directory.Exists(PersonalFolder)) Directory.CreateDirectory(PersonalFolder);
                 if (!Directory.Exists(SchedulesFolder)) Directory.CreateDirectory(SchedulesFolder);
+                if (!Directory.Exists(AIPromptsFolder)) Directory.CreateDirectory(AIPromptsFolder);
+                if (!Directory.Exists(AISamplePromptsFolder)) Directory.CreateDirectory(AISamplePromptsFolder);
             }
             catch { }
         }
@@ -786,6 +788,22 @@ namespace Seal.Model
         public string SettingsFolder
         {
             get { return Path.Combine(RepositoryPath, "Settings"); }
+        }
+
+        /// <summary>
+        /// Folder for AI system prompt files (Settings\AI\Prompts).
+        /// </summary>
+        public string AIPromptsFolder
+        {
+            get { return Path.Combine(SettingsFolder, "AI", "Prompts"); }
+        }
+
+        /// <summary>
+        /// Folder for AI sample prompts files (Settings\AI\Prompts\Samples).
+        /// </summary>
+        public string AISamplePromptsFolder
+        {
+            get { return Path.Combine(SettingsFolder, "AI", "Prompts", "Samples"); }
         }
 
         /// <summary>

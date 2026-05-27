@@ -100,6 +100,22 @@
             <textarea id="ai-panel-input" class="ai-panel-input" rows="3" placeholder="Ask the AI assistant…"></textarea>
             <div class="ai-panel-actions">
                 <span id="ai-panel-running"></span>
+                <!-- Sample prompts picker -->
+                <div class="ai-panel-dropdown-wrap ai-panel-samples-wrap">
+                    <button id="ai-panel-samples-btn" class="ai-panel-icon-btn ai-panel-samples-btn" title="@repository.TranslateWeb("Sample prompts")">
+                        <i class="fa fa-lightbulb-o"></i>
+                    </button>
+                    <div id="ai-panel-samples-dropdown" class="ai-panel-dropdown ai-panel-samples-dropdown" style="display:none;">
+                        <div class="ai-panel-dropdown-section">
+                            <div class="ai-panel-dropdown-label">
+                                <i class="fa fa-lightbulb-o"></i> @repository.TranslateWeb("Sample Prompts")
+                            </div>
+                            <ul id="ai-panel-samples-list" class="ai-panel-dropdown-list">
+                                <li class="ai-panel-dropdown-empty">@repository.TranslateWeb("No sample prompts defined")</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 <button id="ai-panel-send" class="ai-panel-send-btn" disabled>
                     <span class="send-icon">&#10148;</span>
                 </button>

@@ -12,6 +12,7 @@ interface AiPanel {
     setFavorite(state: boolean): void;
     setFavorites(items: MenuItem[]): void;
     setRecents(items: MenuItem[]): void;
+    reset(): void;
 }
 
 interface Window {

@@ -112,6 +112,13 @@ namespace Seal.Model
         public SecurityUserProfile Profile = new SecurityUserProfile();
 
         /// <summary>
+        /// The folder path (SWI format) the user is currently browsing in the web interface.
+        /// Set by SWIGetFolderDetail each time the user navigates to a folder.
+        /// Empty string means the Reports root; ":" means the Personal root.
+        /// </summary>
+        public string CurrentFolder = "";
+
+        /// <summary>
         /// User email if set during login process
         /// </summary>
         public string Email;
@@ -811,6 +818,40 @@ namespace Seal.Model
             {
                 return Path.GetDirectoryName(ProfilePath);
             }
+        }
+
+        /// <summary>
+        /// Returns true when the given physical directory is accessible to this user
+        /// with at least <paramref name="minRight"/>.
+        /// Mirrors SWIMoveFile: resolves physDir to a SWIFolder path, looks it up in
+        /// AllFolders, then applies the same right checks (right==0 → no access;
+        /// FolderRight.Edit required for write operations).
+        /// </summary>
+        public bool HasFolderRight(string physDir, int minRight)
+        {
+            var repo = Repository.Instance;
+            string swiPath;
+            if (physDir.StartsWith(repo.ReportsFolder, StringComparison.OrdinalIgnoreCase))
+            {
+                swiPath = string.Equals(physDir, repo.ReportsFolder, StringComparison.OrdinalIgnoreCase)
+                    ? Path.DirectorySeparatorChar.ToString()
+                    : physDir.Substring(repo.ReportsFolder.Length);
+            }
+            else if (physDir.StartsWith(repo.PersonalFolder, StringComparison.OrdinalIgnoreCase))
+            {
+                if (PersonalFolderRight == PersonalFolderRight.None) return false;
+                var pud = repo.GetPersonalFolder(this);
+                if (!physDir.StartsWith(pud, StringComparison.OrdinalIgnoreCase)) return false;
+                swiPath = string.Equals(physDir, pud, StringComparison.OrdinalIgnoreCase)
+                    ? SWIFolder.GetPersonalRoot()
+                    : SWIFolder.GetPersonalRoot() + physDir.Substring(pud.Length);
+            }
+            else return false; // unknown root – deny
+
+            var folder = AllFolders.FirstOrDefault(f => f.path == swiPath);
+            if (folder == null || folder.right == 0) return false;
+            if (minRight >= (int)FolderRight.Edit) return (FolderRight)folder.right == FolderRight.Edit;
+            return true;
         }
 
     }

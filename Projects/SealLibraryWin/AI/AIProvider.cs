@@ -71,7 +71,7 @@ namespace Seal.AI
                 config = Seal.Model.Repository.Instance.Configuration.AIProviders.Find(p => p.Name == providerName)
                     ?? throw new Exception($"AI provider configuration '{providerName}' not found.");
             }
-            return GetAIProvider(config.Type, config.EndPoint, config.ClearProviderKey, config.Model, config.Temperature, config.MaxTokens, config.TopP);
+            return GetAIProvider(config.Type, config.EndPoint, config.ClearProviderKey, config.Model);
         }
 
         /// <summary>

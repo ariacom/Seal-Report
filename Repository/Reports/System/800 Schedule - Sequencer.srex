@@ -66,12 +66,7 @@
             return;
         }
         report.ExecutionContext = ReportExecutionContext.TaskScheduler;
-        var schedule = report.Schedules.FirstOrDefault(i =&gt; i.ScheduleSequencerGUID == scheduleGUID);
-        if (schedule == null) {
-            task.LogMessage($"No schedule found for {scheduleGUID}");
-            return;
-        }
-    
+        
         //Execute using the task scheduler
         var installationDir = repository.Configuration.InstallationDirectory + "\\Core";
         
@@ -82,33 +77,35 @@
         var path = Path.Combine(installationDir, Repository.SealTaskScheduler);
         if (!File.Exists(path)) throw new Exception($"Unable to execute in Outer Process. {path} was not found.");
 
-        var arg = schedule.GUID + " " + Helper.QuoteDouble(reportPath);
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        foreach (var schedule in report.Schedules.Where(i =&gt; i.ScheduleSequencerGUID == scheduleGUID))
         {
-            //Non-windows
-            path = "dotnet";
-            arg = Repository.SealTaskScheduler.Replace(".exe",".dll") + " " + arg;
-        }
-        using var p = new Process
-        {
-            StartInfo = new ProcessStartInfo
+            var arg = schedule.GUID + " " + Helper.QuoteDouble(reportPath);
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-            //    RedirectStandardOutput = true,
-              //  UseShellExecute = false,
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                FileName = path,
-                Arguments = arg
+                //Non-windows
+                path = "dotnet";
+                arg = Repository.SealTaskScheduler.Replace(".exe",".dll") + " " + arg;
             }
-        };
-        p.Start();
-        task.LogMessage($"Schedule '{scheduleName}' for '{reportPath}' has been started");
-        
-        if (waitForCompletion)  {
-            while (!p.HasExited &amp;&amp; !task.Report.Cancel) Thread.Sleep(500);
-            task.LogMessage($"Schedule '{scheduleName}' for '{reportPath}' has been terminated");
+            using var p = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                //    RedirectStandardOutput = true,
+                  //  UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = path,
+                    Arguments = arg
+                }
+            };
+            p.Start();
+            task.LogMessage($"Schedule '{scheduleName}' for '{reportPath}' has been started");
+            
+            if (waitForCompletion)  {
+                while (!p.HasExited &amp;&amp; !task.Report.Cancel) Thread.Sleep(500);
+                task.LogMessage($"Schedule '{scheduleName}' for '{reportPath}' has been terminated");
+            }
         }
-
     }
     catch (Exception ex) {
         task.HandleException(ex);

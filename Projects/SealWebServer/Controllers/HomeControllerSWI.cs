@@ -12,6 +12,7 @@ using System.Threading;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +29,7 @@ namespace SealWebServer.Controllers
     /// <summary>
     /// Main Controller of the Web Report Server
     /// </summary>
-    public partial class HomeController : Controller
+    public partial class HomeController : Controller, ReportExecutionLog
     {
         // ── AI cancellation support ──────────────────────────────────────────
         private class CancellationFlagOperation : ICancelOperation
@@ -217,7 +218,7 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
                     //2FA check
-                    return Json(new { securitycoderequired = true,  message=WebUser.SecurityCodeMessage});
+                    return Json(new { securitycoderequired = true, message = WebUser.SecurityCodeMessage });
                 }
 
                 //Audit
@@ -414,11 +415,11 @@ namespace SealWebServer.Controllers
                                          ).ToList(),
                     reports = new List<SWIMenuItem>(),
                     favorites = (from r in WebUser.Profile.Favorites
-                                     select new SWIMenuItem()
-                                     {
-                                         path = r.Path,
-                                         name = r.Name
-                                     }
+                                 select new SWIMenuItem()
+                                 {
+                                     path = r.Path,
+                                     name = r.Name
+                                 }
                                          ).ToList()
                 };
 
@@ -523,6 +524,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 var folderDetail = getFolderDetail(path, true);
                 WebUser.Profile.LastFolder = path;
+                WebUser.CurrentFolder = path;
                 WebUser.SaveProfile();
                 return Json(folderDetail);
             }
@@ -645,9 +647,11 @@ namespace SealWebServer.Controllers
                 if (!System.IO.File.Exists(newPath)) throw new Exception("Report path not found");
                 Repository repository = Repository;
                 Report report = Report.LoadFromFile(newPath, repository, false);
-                SWIReportDetail result = new SWIReportDetail();
-                result.views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToList();
-                result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || string.IsNullOrEmpty(j.UserName) || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToList() : new List<SWIOutput>();
+                SWIReportDetail result = new SWIReportDetail
+                {
+                    views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToList(),
+                    outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || string.IsNullOrEmpty(j.UserName) || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToList() : new List<SWIOutput>()
+                };
                 if (result.views.Count == 0 && result.outputs.Count == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToList();
 
                 return Json(result);
@@ -1112,14 +1116,14 @@ namespace SealWebServer.Controllers
                 SetSessionId(sessionId);
                 if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
 
-                var result = new SWIConfiguration()
+                var result = new SWIConfiguration
                 {
                     productname = Repository.Configuration.WebProductName,
                     groups = Repository.Security.Groups,
                     logins = Repository.Security.Logins,
                     downloadupload = Repository.Configuration.EnableDownloadUpload,
+                    folders = SWIConfiguration.GetFolders(WebUser)
                 };
-                result.folders = SWIConfiguration.GetFolders(WebUser);
 
                 return Json(result);
             }
@@ -1199,7 +1203,7 @@ namespace SealWebServer.Controllers
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
-                setSessionValue(SessionAssistant, null);
+                Assistant.Messages.Clear();
                 return Json(new { });
             }
             catch (Exception ex)
@@ -1207,6 +1211,258 @@ namespace SealWebServer.Controllers
                 return HandleSWIException(ex);
             }
         }
+
+        /// <summary>
+        /// Returns the list of sample prompts defined for the current session's AI Assistant.
+        /// Falls back to the default assistant configuration when no conversation has started yet.
+        /// </summary>
+        public ActionResult SWIGetAIAssistantSamplePrompts(string sessionId)
+        {
+            writeDebug("SWIGetAIAssistantSamplePrompts");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+
+                var assistant = Assistant;
+                List<string> prompts;
+                if (assistant != null)
+                {
+                    prompts = assistant.Configuration.GetSamplePrompts();
+                }
+                else
+                {
+                    var config = Repository.Instance.Configuration.AIAssistants
+                        .Find(a => a.IsDefault && a.IsEnabled);
+                    prompts = config?.GetSamplePrompts() ?? new List<string>();
+                }
+
+                return Json(new { prompts = prompts });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        // ----------------------------------------------------------------
+        //  Assistant chat persistence  (_Assistant/Recents + _Assistant/Favorites)
+        // ----------------------------------------------------------------
+
+        /// <summary>
+        /// Returns the full path to one of the _Assistant sub-folders (Recents or Favorites)
+        /// for the current user, creating it on demand.
+        /// </summary>
+        string GetAssistantSubFolder(string subFolder)
+        {
+            var path = Path.Combine(Repository.GetPersonalFolder(WebUser),
+                                    AssistantFolders.FolderName,
+                                    subFolder);
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            return path;
+        }
+
+        /// <summary>
+        /// Saves the current assistant conversation (taken from the server session) to a
+        /// file in _Assistant/Recents.  Old entries beyond <paramref name="maxRecents"/>
+        /// are pruned (oldest-first).
+        /// </summary>
+        /// <param name="name">Human-readable chat name used as the file name.</param>
+        /// <param name="infosJson">JSON-serialised array of StringPair objects (Type, Name, Description, Instance …).</param>
+        public ActionResult SAISaveAssistantChat(string name, string infosJson, string sessionId, int maxRecents = 10)
+        {
+            writeDebug("SAISaveAssistantChat");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
+
+                var assistant = Assistant;
+                if (assistant == null) throw new Exception("No active assistant session to save.");
+
+                var infos = string.IsNullOrWhiteSpace(infosJson)
+                    ? new List<StringPair>()
+                    : JsonConvert.DeserializeObject<List<StringPair>>(infosJson) ?? new List<StringPair>();
+
+                var recentsFolder = GetAssistantSubFolder(AssistantFolders.Recents);
+                var fileName = Helper.CleanFileName(name) + AssistantFolders.FileExt;
+                var filePath = Path.Combine(recentsFolder, fileName);
+
+                assistant.SaveToFile(filePath, infos);
+
+                // Prune: keep only the most-recent maxRecents files
+                var files = Directory.GetFiles(recentsFolder, "*" + AssistantFolders.FileExt)
+                                     .Select(f => new FileInfo(f))
+                                     .OrderByDescending(f => f.LastWriteTime)
+                                     .ToList();
+                for (int i = maxRecents; i < files.Count; i++)
+                    files[i].Delete();
+
+                return Json(new { fileName = Path.GetFileNameWithoutExtension(fileName) });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the list of saved chat sessions from _Assistant/Recents and
+        /// _Assistant/Favorites for the current user.
+        /// </summary>
+        public ActionResult SAIGetAssistantChats(string sessionId)
+        {
+            writeDebug("SAIGetAssistantChats");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+
+                List<ChatSessionInfo> ReadFolder(string subFolder, bool isFavorite)
+                {
+                    var folder = GetAssistantSubFolder(subFolder);
+                    return Directory.GetFiles(folder, "*" + AssistantFolders.FileExt)
+                        .Select(f =>
+                        {
+                            try
+                            {
+                                var raw = System.IO.File.ReadAllText(f, System.Text.Encoding.UTF8);
+                                var session = JsonConvert.DeserializeObject<ChatSessionFile>(raw);
+                                return new ChatSessionInfo
+                                {
+                                    FileName = Path.GetFileNameWithoutExtension(f),
+                                    Name = session?.GetInfo("Name") ?? Path.GetFileNameWithoutExtension(f),
+                                    Type = session?.GetInfo("Type") ?? string.Empty,
+                                    Description = session?.GetInfo("Description") ?? string.Empty,
+                                    Instance = session?.GetInfo("Instance") ?? string.Empty,
+                                    IsFavorite = isFavorite,
+                                    LastModified = System.IO.File.GetLastWriteTime(f).ToString("G", Repository.CultureInfo)
+                                };
+                            }
+                            catch { return null; }
+                        })
+                        .Where(i => i != null)
+                        .OrderByDescending(i => i.LastModified)
+                        .ToList();
+                }
+
+                return Json(new
+                {
+                    recents = ReadFolder(AssistantFolders.Recents, false),
+                    favorites = ReadFolder(AssistantFolders.Favorites, true)
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Toggles the favorite status of a saved chat session.
+        /// If the file is in Recents it is moved (copied) to Favorites, and vice-versa.
+        /// The original file is removed after a successful copy.
+        /// </summary>
+        public ActionResult SAIMarkAssistantChatFavorite(string name, string sessionId)
+        {
+            writeDebug("SAIMarkAssistantChatFavorite");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
+
+                var fileName = Helper.CleanFileName(name) + AssistantFolders.FileExt;
+                var recentsPath = Path.Combine(GetAssistantSubFolder(AssistantFolders.Recents), fileName);
+                var favoritesPath = Path.Combine(GetAssistantSubFolder(AssistantFolders.Favorites), fileName);
+
+                bool nowFavorite;
+                if (System.IO.File.Exists(recentsPath))
+                {
+                    // Move to Favorites
+                    System.IO.File.Copy(recentsPath, favoritesPath, overwrite: true);
+                    System.IO.File.Delete(recentsPath);
+                    nowFavorite = true;
+                }
+                else if (System.IO.File.Exists(favoritesPath))
+                {
+                    // Move back to Recents
+                    System.IO.File.Copy(favoritesPath, recentsPath, overwrite: true);
+                    System.IO.File.Delete(favoritesPath);
+                    nowFavorite = false;
+                }
+                else
+                {
+                    throw new Exception($"Chat session '{name}' not found in Recents or Favorites.");
+                }
+
+                return Json(new
+                {
+                    isFavorite = nowFavorite,
+                    Message = Translate(nowFavorite ? "Added to favorites" : "Removed from favorites")
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Loads a chat-session file and returns its raw <see cref="ChatSessionFile"/>
+        /// so the client can replay the conversation history.
+        /// </summary>
+        public ActionResult SAILoadAssistantChat(string name, bool favorite, string sessionId)
+        {
+            writeDebug("SAILoadAssistantChat");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
+
+                var subFolder = favorite ? AssistantFolders.Favorites : AssistantFolders.Recents;
+                var filePath = Path.Combine(GetAssistantSubFolder(subFolder),
+                                             Helper.CleanFileName(name) + AssistantFolders.FileExt);
+
+                if (!System.IO.File.Exists(filePath))
+                    throw new Exception($"Chat session '{name}' not found.");
+
+                var raw = System.IO.File.ReadAllText(filePath, System.Text.Encoding.UTF8);
+                var session = JsonConvert.DeserializeObject<ChatSessionFile>(raw)
+                              ?? throw new Exception("Invalid json file.");
+
+                // Restore the assistant in the current session
+                var assistant = Assistant;
+                if (assistant != null)
+                {
+                    assistant.LoadFromSessionFile(session);
+                }
+
+                return Json(session);
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        AIAssistant Assistant
+        {
+            get
+            {
+                var assistant = getSessionValue(SessionAssistant) as AIAssistant;
+                if (assistant == null)
+                {
+                    assistant = new AIAssistant { SecurityContext = WebUser }; // resolves the default assistant configuration
+                    setSessionValue(SessionAssistant, assistant);
+
+                }
+                return assistant;
+            }
+        }
+
 
         /// <summary>
         /// Sends a user message to the AI Assistant and returns the AI response.
@@ -1224,9 +1480,7 @@ namespace SealWebServer.Controllers
                 if (string.IsNullOrEmpty(message)) throw new Exception("Error: message must be supplied");
 
                 // Retrieve or initialise the per-session assistant
-                var assistant = getSessionValue(SessionAssistant) as AIAssistant;
-                if (assistant == null)
-                    assistant = new AIAssistant(); // resolves the default assistant configuration
+                var assistant = Assistant;
 
                 // Register a fresh cancel flag so SWICancelAIAssistantResponse can interrupt Chat()
                 var cancelOp = new CancellationFlagOperation();
@@ -1234,22 +1488,54 @@ namespace SealWebServer.Controllers
                 string reply;
                 try
                 {
-                    reply = assistant.Chat(message, cancelOp);
+                    reply = assistant.Chat(message, cancelOp, Startup.DebugMode ? this : null);
                 }
                 finally
                 {
                     _aiCancelTokens.TryRemove(SessionKey, out _);
                 }
 
-                // Persist the updated assistant so follow-up messages retain context
-                setSessionValue(SessionAssistant, assistant);
+                // Parse [EXECUTE_REPORT:path|name] tags out of the reply and return them
+                // as structured actions so the UI can render clickable Execute buttons.
+                //
+                // The AI uses report_list display paths (e.g. "Reports\foo.srex",
+                // "Personal\user\foo.srex"). SWExecuteReport expects the SWI format where
+                // ReportsFolder is the implicit root, so the path must start with a
+                // separator (e.g. "\foo.srex") or the personal prefix (":").
+                //   "Reports\..."  → "\..."   (strip "Reports" prefix, keep leading sep)
+                //   "Personal\..." → ":..."   (replace "Personal" with personal-root ":")
+                var reportActions = new List<object>();
+                var cleanedReply = Regex.Replace(reply ?? string.Empty,
+                    @"\[EXECUTE_REPORT:([^\]\|]+)\|([^\]]+)\]",
+                    match =>
+                    {
+                        var rawPath = match.Groups[1].Value.Trim();
+                        string swiPath;
+                        if (rawPath.StartsWith("Reports\\") || rawPath.StartsWith("Reports/"))
+                            swiPath = rawPath.Substring("Reports".Length);
+                        else if (rawPath.StartsWith("Personal\\") || rawPath.StartsWith("Personal/"))
+                            swiPath = ":" + rawPath.Substring("Personal".Length);
+                        else
+                            swiPath = rawPath; // already in SWI format or unknown – pass through
 
-                return Json(new { response = reply });
+                        reportActions.Add(new
+                        {
+                            path = swiPath,
+                            name = match.Groups[2].Value.Trim()
+                        });
+                        return string.Empty;
+                    });
+
+                return Json(new
+                {
+                    response = cleanedReply.Trim(),
+                    reportActions = reportActions.Count > 0 ? reportActions : null
+                });
             }
             catch (Exception ex)
             {
                 WebHelper.WriteWebException(ex, "SWIGetAIAssistantResponse");
-                return Json(new { response = "Error: " + ex.Message});
+                return Json(new { response = "Error: " + ex.Message });
             }
         }
 
@@ -1297,6 +1583,11 @@ namespace SealWebServer.Controllers
             {
                 return HandleSWIException(ex);
             }
+        }
+
+        public void LogMessage(string message, params object[] args)
+        {
+            WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, message);
         }
     }
 }

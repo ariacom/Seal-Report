@@ -1575,7 +1575,7 @@ $('<div>', {{
         const string mySqlConnectionString = @"Server=aServer;Port=1234;Database=aDatabase;";
         const string postgreSQLConnectionString = @"Server=aServer;Port=5432;Database=aDatabase;";
         const string sqliteConnectionString = @"Data Source=c:\afolder\database.sqlite;";
-        const string oracleConnectionString = @"Data Source=tnsName; /* Configure OracleConfiguration.OracleDataSources in the 'Connection Script' */";
+        const string oracleConnectionString = "//Connection string using SID\r\nData Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oracleHost)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SID=aSID)));\r\n//Connection string using Service Name\r\nData Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oracleHost)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=aServiceName)));";
         const string mongoConnectionString = @"mongodb+srv://%USER%:%PASSWORD%@aServer";
         const string odbcConnectionString = @"DSN=aDataSourceName;DATABASE=aDatabase";
         const string connectionScript = @"@{

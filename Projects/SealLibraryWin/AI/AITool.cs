@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using OpenAI.Chat;
+using Seal.Model;
 
 namespace Seal.AI
 {
@@ -39,6 +40,18 @@ namespace Seal.AI
         /// <summary>JSON string containing the arguments the AI supplied.</summary>
         public string Arguments { get; set; }
 
+        /// <summary>
+        /// Current security user for the tool execution
+        /// </summary>
+        public SecurityUser SecurityContext = null;
+
+        /// <summary>
+        /// Optional cancellation source propagated from the outer
+        /// <see cref="AIAssistant.Chat"/> loop.  Execution scripts should
+        /// poll <c>CancelOperation?.Cancel</c> inside any long-running loop
+        /// and abort early when it is <c>true</c>.
+        /// </summary>
+        public ICancelOperation CancelOperation = null;
     }
 
     /// <summary>

@@ -114,22 +114,6 @@
             Provider API Key in clear text.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIProviderConfiguration.Temperature">
-            <summary>
-            Sampling temperature (0.0 = deterministic, 1.0 = creative).
-            </summary>
-        </member>
-        <member name="P:Seal.AI.AIProviderConfiguration.MaxTokens">
-            <summary>
-            Maximum number of tokens to generate in a single reply.
-            Set to 0 to use the provider's default (parameter is not sent).
-            </summary>
-        </member>
-        <member name="P:Seal.AI.AIProviderConfiguration.TopP">
-            <summary>
-            Nucleus sampling threshold (0.0–1.0). Use instead of, or together with, Temperature.
-            </summary>
-        </member>
         <member name="M:Seal.AI.AnthropicProvider.#ctor">
             <summary>
             Initializes a new Anthropic provider.
@@ -241,6 +225,19 @@
         </member>
         <member name="P:Seal.AI.AIToolCall.Arguments">
             <summary>JSON string containing the arguments the AI supplied.</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolCall.SecurityContext">
+            <summary>
+            Current security user for the tool execution
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIToolCall.CancelOperation">
+            <summary>
+            Optional cancellation source propagated from the outer
+            <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,System.Int32)"/> loop.  Execution scripts should
+            poll <c>CancelOperation?.Cancel</c> inside any long-running loop
+            and abort early when it is <c>true</c>.
+            </summary>
         </member>
         <member name="T:Seal.AI.AssistantToolCallsChatMessage">
             <summary>
@@ -387,8 +384,51 @@
         </member>
         <member name="P:Seal.AI.AIAssistantConfiguration.DefaultSystemPrompt">
             <summary>
-            System prompt injected at the start of every conversation for this assistant.
+            Inline system prompt injected at the start of every conversation.
+            Ignored when <see cref="P:Seal.AI.AIAssistantConfiguration.SystemPromptFile"/> is set.
             Leave empty to use no system prompt.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAssistantConfiguration.SystemPromptFile">
+            <summary>
+            File name of a text file containing the system prompt, relative to <c>Settings\AI\Prompts</c>.
+            When set, takes precedence over <see cref="P:Seal.AI.AIAssistantConfiguration.DefaultSystemPrompt"/>.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAssistantConfiguration.SamplePromptsFile">
+            <summary>
+            File name of a text file containing sample user prompts, relative to <c>Settings\AI\Prompts\Samples</c>.
+            One prompt per line; blank lines and lines starting with <c>#</c> are ignored.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAssistantConfiguration.EffectiveSystemPrompt">
+            <summary>
+            Returns the effective system prompt at runtime.
+            Reads <see cref="P:Seal.AI.AIAssistantConfiguration.SystemPromptFile"/> from <c>Settings\AI\Prompts</c> when set;
+            otherwise returns <see cref="P:Seal.AI.AIAssistantConfiguration.DefaultSystemPrompt"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAssistantConfiguration.GetSamplePrompts">
+            <summary>
+            Reads and returns the list of sample user prompts from <see cref="P:Seal.AI.AIAssistantConfiguration.SamplePromptsFile"/>.
+            Returns an empty list when the file is not set or does not exist.
+            Blank lines and lines starting with <c>#</c> are skipped.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAssistantConfiguration.Temperature">
+            <summary>
+            Sampling temperature (0.0 = deterministic, 1.0 = creative).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAssistantConfiguration.MaxTokens">
+            <summary>
+            Maximum number of tokens to generate in a single reply.
+            Set to 0 to use the provider's default (parameter is not sent).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAssistantConfiguration.TopP">
+            <summary>
+            Nucleus sampling threshold (0.0–1.0). Use instead of Temperature.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAssistantConfiguration.GetProviderConfiguration">
@@ -433,7 +473,7 @@
             <summary>
             Creates an <see cref="T:Seal.AI.AIAssistant"/> from a named
             <see cref="T:Seal.AI.AIAssistantConfiguration"/>.
-            Injects the configuration's <see cref="P:Seal.AI.AIAssistantConfiguration.DefaultSystemPrompt"/>
+            Injects the configuration's <see cref="P:Seal.AI.AIAssistantConfiguration.EffectiveSystemPrompt"/>
             as the first message in the conversation when it is not empty.
             </summary>
             <param name="assistantName">
@@ -475,7 +515,7 @@
             <paramref name="prompt"/>.  If <paramref name="prompt"/> is null or
             whitespace the existing system message (if any) is simply removed.
             Call this before <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,System.Int32)"/> to inject a parameter-driven system
-            prompt that overrides the one from <see cref="P:Seal.AI.AIAssistantConfiguration.DefaultSystemPrompt"/>.
+            prompt that overrides the one from <see cref="P:Seal.AI.AIAssistantConfiguration.EffectiveSystemPrompt"/>.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAssistant.Clear">
@@ -489,6 +529,43 @@
             Number of messages currently in the conversation (including the
             system prompt when present).
             </summary>
+        </member>
+        <member name="F:Seal.AI.AIAssistant.SecurityContext">
+            <summary>
+            Current security user of the assistant
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAssistant.ToSessionFile(System.Collections.Generic.List{Seal.Model.StringPair})">
+            <summary>
+            Serialises the current conversation to a <see cref="T:Seal.Model.ChatSessionFile"/> object.
+            </summary>
+            <param name="infos">
+            Key/value pairs that describe the session (Type, Name, Description, Instance …).
+            Pass <c>null</c> to produce an empty Infos list.
+            </param>
+        </member>
+        <member name="M:Seal.AI.AIAssistant.SaveToFile(System.String,System.Collections.Generic.List{Seal.Model.StringPair})">
+            <summary>
+            Saves the current conversation to a JSON file.
+            </summary>
+            <param name="path">Full file-system path (including file name and extension).</param>
+            <param name="infos">Session metadata to embed in the file.</param>
+        </member>
+        <member name="M:Seal.AI.AIAssistant.LoadFromSessionFile(Seal.Model.ChatSessionFile)">
+            <summary>
+            Restores the conversation history from a <see cref="T:Seal.Model.ChatSessionFile"/>.
+            The current <see cref="P:Seal.AI.AIAssistant.Messages"/> list is cleared first.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAssistant.LoadFromFile(System.String)">
+            <summary>
+            Loads a conversation from a JSON file and returns both the assistant
+            and the embedded session metadata.
+            The assistant is built from the configuration whose Name matches the
+            <c>Name</c> info key; falls back to the default configuration when not found.
+            </summary>
+            <param name="path">Full file-system path to the file.</param>
+            <returns>A tuple of the restored assistant and the raw session file.</returns>
         </member>
         <member name="M:Seal.Helpers.ObjectShredder`1.Shred(System.Collections.Generic.IEnumerable{`0},System.Data.DataTable,System.Nullable{System.Data.LoadOption})">
             <summary>
@@ -7066,6 +7143,16 @@
             Settings folder
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.AIPromptsFolder">
+            <summary>
+            Folder for AI system prompt files (Settings\AI\Prompts).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.AISamplePromptsFolder">
+            <summary>
+            Folder for AI sample prompts files (Settings\AI\Prompts\Samples).
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.SecurityFolder">
             <summary>
             Security folder
@@ -9350,6 +9437,13 @@
             Current SecurityUserProfile
             </summary>
         </member>
+        <member name="F:Seal.Model.SecurityUser.CurrentFolder">
+            <summary>
+            The folder path (SWI format) the user is currently browsing in the web interface.
+            Set by SWIGetFolderDetail each time the user navigates to a folder.
+            Empty string means the Reports root; ":" means the Personal root.
+            </summary>
+        </member>
         <member name="F:Seal.Model.SecurityUser.Email">
             <summary>
             User email if set during login process
@@ -9593,6 +9687,15 @@
         <member name="P:Seal.Model.SecurityUser.ProfileDirectory">
             <summary>
             Profile directory
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.HasFolderRight(System.String,System.Int32)">
+            <summary>
+            Returns true when the given physical directory is accessible to this user
+            with at least <paramref name="minRight"/>.
+            Mirrors SWIMoveFile: resolves physDir to a SWIFolder path, looks it up in
+            AllFolders, then applies the same right checks (right==0 → no access;
+            FolderRight.Edit required for write operations).
             </summary>
         </member>
         <member name="T:Seal.Model.RecentFileItem">
@@ -9876,6 +9979,63 @@
         <member name="T:Seal.Model.SWIMenuItem">
             <summary>
             Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+            </summary>
+        </member>
+        <member name="T:Seal.Model.AssistantFolders">
+            <summary>
+            Name of the hidden personal sub-folder used to store assistant chat sessions.
+            The leading underscore signals to the web server that it must not appear
+            in the folder browser.
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ChatSessionToolCall">
+            <summary>
+            A single tool call stored alongside an AssistantChatMessage that requested tool invocations.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionToolCall.Id">
+            <summary>Provider-issued call identifier.</summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionToolCall.FunctionName">
+            <summary>Name of the function/tool to invoke.</summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionToolCall.Arguments">
+            <summary>JSON string containing the arguments supplied by the AI.</summary>
+        </member>
+        <member name="T:Seal.Model.ChatSessionMessage">
+            <summary>
+            One message in a persisted chat session.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionMessage.Type">
+            <summary>Type discriminator: SystemChatMessage | UserChatMessage | AssistantChatMessage | ToolChatMessage</summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionMessage.Content">
+            <summary>Plain-text content of the message.</summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionMessage.ToolCallId">
+            <summary>Tool call id – only set for ToolChatMessage entries.</summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionMessage.ToolCalls">
+            <summary>
+            Tool calls requested by the assistant.
+            Only non-null for AssistantChatMessage entries where the AI invoked one or more tools.
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ChatSessionFile">
+            <summary>
+            Root object for a chat-session file.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionFile.Infos">
+            <summary>Key/value metadata: Type, Name, Description, Instance, …</summary>
+        </member>
+        <member name="P:Seal.Model.ChatSessionFile.Messages">
+            <summary>Full conversation history, system prompt included.</summary>
+        </member>
+        <member name="T:Seal.Model.ChatSessionInfo">
+            <summary>
+            Summary of a single chat-session file returned by SAIGetAssistantChats.
             </summary>
         </member>
         <member name="T:Seal.Model.WebMainModel">

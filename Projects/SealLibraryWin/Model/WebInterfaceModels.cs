@@ -302,4 +302,88 @@ namespace Seal.Model
         public string connectionGUID;
         public List<SWIConnection> connections = new List<SWIConnection>();
     }
+
+    // ---------------------------------------------------------------
+    // Assistant chat session serialisation (files)
+    // ---------------------------------------------------------------
+
+    /// <summary>
+    /// Name of the hidden personal sub-folder used to store assistant chat sessions.
+    /// The leading underscore signals to the web server that it must not appear
+    /// in the folder browser.
+    /// </summary>
+    public static class AssistantFolders
+    {
+        public const string FolderName  = "_Assistant";
+        public const string Recents     = "Recents";
+        public const string Favorites   = "Favorites";
+        public const string FileExt     = ".json";
+    }
+
+    /// <summary>
+    /// A single tool call stored alongside an AssistantChatMessage that requested tool invocations.
+    /// </summary>
+    public class ChatSessionToolCall
+    {
+        /// <summary>Provider-issued call identifier.</summary>
+        public string Id          { get; set; }
+        /// <summary>Name of the function/tool to invoke.</summary>
+        public string FunctionName { get; set; }
+        /// <summary>JSON string containing the arguments supplied by the AI.</summary>
+        public string Arguments   { get; set; }
+    }
+
+    /// <summary>
+    /// One message in a persisted chat session.
+    /// </summary>
+    public class ChatSessionMessage
+    {
+        /// <summary>Type discriminator: SystemChatMessage | UserChatMessage | AssistantChatMessage | ToolChatMessage</summary>
+        public string Type    { get; set; }
+        /// <summary>Plain-text content of the message.</summary>
+        public string Content { get; set; }
+        /// <summary>Tool call id – only set for ToolChatMessage entries.</summary>
+        public string ToolCallId { get; set; }
+        /// <summary>
+        /// Tool calls requested by the assistant.
+        /// Only non-null for AssistantChatMessage entries where the AI invoked one or more tools.
+        /// </summary>
+        public List<ChatSessionToolCall> ToolCalls { get; set; }
+    }
+
+    /// <summary>
+    /// Root object for a chat-session file.
+    /// </summary>
+    public class ChatSessionFile
+    {
+        /// <summary>Key/value metadata: Type, Name, Description, Instance, …</summary>
+        public List<StringPair> Infos    { get; set; } = new List<StringPair>();
+        /// <summary>Full conversation history, system prompt included.</summary>
+        public List<ChatSessionMessage> Messages { get; set; } = new List<ChatSessionMessage>();
+
+        // Convenience accessors
+        public string GetInfo(string key) =>
+            Infos?.FirstOrDefault(i => i.Key == key)?.Value;
+
+        public void SetInfo(string key, string value)
+        {
+            var existing = Infos.FirstOrDefault(i => i.Key == key);
+            if (existing != null) existing.Value = value;
+            else Infos.Add(new StringPair { Key = key, Value = value });
+        }
+    }
+
+    /// <summary>
+    /// Summary of a single chat-session file returned by SAIGetAssistantChats.
+    /// </summary>
+    public class ChatSessionInfo
+    {
+        public string Name        { get; set; }
+        public string Type        { get; set; }
+        public string Description { get; set; }
+        public string Instance    { get; set; }
+        public string FileName    { get; set; }
+        public bool   IsFavorite  { get; set; }
+        public string LastModified { get; set; }
+    }
 }

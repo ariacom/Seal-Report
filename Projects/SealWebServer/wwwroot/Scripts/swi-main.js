@@ -267,7 +267,7 @@ class SWIMain {
                 $("#nav_button").text("");
                 SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-assistant-button,#search-pattern,#search-nav-item"), false);
                 if (window.aiPanel)
-                    window.aiPanel.clearConversation();
+                    window.aiPanel.reset();
                 _main.showLogin();
                 if (SWIUtil.IsMobile())
                     $('.navbar-toggle').click();

@@ -29,9 +29,6 @@ namespace Seal.AI
                 GetProperty("Model").SetIsBrowsable(true);
                 GetProperty("EndPoint").SetIsBrowsable(true);
                 GetProperty("ClearProviderKey").SetIsBrowsable(true);
-                GetProperty("Temperature").SetIsBrowsable(true);
-                GetProperty("MaxTokens").SetIsBrowsable(true);
-                GetProperty("TopP").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -142,32 +139,5 @@ namespace Seal.AI
             }
         }
 
-        /// <summary>
-        /// Sampling temperature (0.0 = deterministic, 1.0 = creative).
-        /// </summary>
-#if WINDOWS
-        [Category("Parameters"), DisplayName("Temperature"), Description("Sampling temperature: 0.0 is deterministic, 1.0 is most creative"), Id(6, 2)]
-        [DefaultValue(0.0f)]
-#endif
-        public float Temperature { get; set; } = 0.0f;
-
-        /// <summary>
-        /// Maximum number of tokens to generate in a single reply.
-        /// Set to 0 to use the provider's default (parameter is not sent).
-        /// </summary>
-#if WINDOWS
-        [Category("Parameters"), DisplayName("Max Tokens"), Description("Maximum number of tokens to generate. Set to 0 to use the provider default."), Id(7, 2)]
-        [DefaultValue(0)]
-#endif
-        public int MaxTokens { get; set; } = 0;
-
-        /// <summary>
-        /// Nucleus sampling threshold (0.0–1.0). Use instead of, or together with, Temperature.
-        /// </summary>
-#if WINDOWS
-        [Category("Parameters"), DisplayName("Top P"), Description("Nucleus sampling: only tokens within the top P probability mass are considered"), Id(8, 2)]
-        [DefaultValue(1.0f)]
-#endif
-        public float TopP { get; set; } = 1.0f;
     }
 }
