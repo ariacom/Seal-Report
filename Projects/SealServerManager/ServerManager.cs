@@ -207,7 +207,6 @@ namespace Seal
             _repository.Configuration.ForPublication = (sender == publishWebMenuItem);
             if (_repository.Configuration.ForPublication && string.IsNullOrEmpty(_repository.Configuration.WebPublicationDirectory))
             {
-
                 try
                 {
                     Microsoft.Web.Administration.ServerManager serverMgr = new Microsoft.Web.Administration.ServerManager();
@@ -217,17 +216,17 @@ namespace Seal
                 catch { }
             }
 
-            if (!_adminWarningDone && !Helper.IsMachineAdministrator())
-            {
-                _adminWarningDone = true;
-                if (MessageBox.Show("We recommend to execute the 'Server Manager' application with the option 'Run as administrator' to publish the Web Server application...\r\nDo you want to continue ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
-                {
-                    return;
-                }
-            }
-
             if (_repository.Configuration.ForPublication)
             {
+                if (!_adminWarningDone && !Helper.IsMachineAdministrator())
+                {
+                    _adminWarningDone = true;
+                    if (MessageBox.Show("We recommend to execute the 'Server Manager' application with the option 'Run as administrator' to publish the Web Server application...\r\nDo you want to continue ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+
                 if (!Helper.CheckWebServerOS()) return;
             }
 
