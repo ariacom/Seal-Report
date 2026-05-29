@@ -16,6 +16,7 @@ using System.Drawing.Design;
 using DynamicTypeDescriptor;
 using Seal.Forms;
 using System.ComponentModel.Design;
+using System.ComponentModel;
 #endif
 
 namespace Seal.AI
@@ -57,6 +58,8 @@ namespace Seal.AI
                 GetProperty("AIProviders").SetIsBrowsable(true);
                 GetProperty("AITools").SetIsBrowsable(true);
                 GetProperty("AIAssistants").SetIsBrowsable(true);
+                GetProperty("DefaultProviderGUID").SetIsBrowsable(true);
+                GetProperty("DefaultAssistantGUID").SetIsBrowsable(true);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -121,6 +124,34 @@ namespace Seal.AI
         {
             get { return _AITools; }
             set { _AITools = value; }
+        }
+
+        string _defaultProviderGUID;
+        /// <summary>
+        /// GUID of the default AI provider. Used when no provider name is specified.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Default Provider"), Description("The default AI provider used when no provider name is specified."), Category("AI Configuration"), Id(5, 1)]
+        [TypeConverter(typeof(AIProviderConverter))]
+#endif
+        public string DefaultProviderGUID
+        {
+            get { return _defaultProviderGUID; }
+            set { _defaultProviderGUID = value; }
+        }
+
+        string _defaultAssistantGUID;
+        /// <summary>
+        /// GUID of the default AI assistant. Used when no assistant name is specified.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Default Assistant"), Description("The default AI assistant used when no assistant name is specified."), Category("AI Configuration"), Id(6, 1)]
+        [TypeConverter(typeof(AIAssistantConverter))]
+#endif
+        public string DefaultAssistantGUID
+        {
+            get { return _defaultAssistantGUID; }
+            set { _defaultAssistantGUID = value; }
         }
 
         List<AIAssistantConfiguration> _AIAssistants = new List<AIAssistantConfiguration>();

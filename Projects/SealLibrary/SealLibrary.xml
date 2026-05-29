@@ -53,7 +53,7 @@
             <summary>
             Resolves a provider configuration by name, creates it, and returns it.
             Pass <c>null</c> or empty to use the default provider
-            (the one with <see cref="P:Seal.AI.AIProviderConfiguration.IsDefault"/> set to <c>true</c>).
+            (set via <see cref="P:Seal.AI.AIServerConfiguration.DefaultProviderGUID"/>).
             </summary>
             <exception cref="T:System.Exception">
             Thrown when no matching or no default configuration is found.
@@ -115,6 +115,16 @@
             that is run when the AI model decides to call the tool.
             </summary>
         </member>
+        <member name="P:Seal.AI.AIServerConfiguration.DefaultProviderGUID">
+            <summary>
+            GUID of the default AI provider. Used when no provider name is specified.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.DefaultAssistantGUID">
+            <summary>
+            GUID of the default AI assistant. Used when no assistant name is specified.
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIServerConfiguration.AIAssistants">
             <summary>
             AI Assistants combining a provider, an optional set of tools, and a default system prompt.
@@ -143,12 +153,6 @@
         <member name="P:Seal.AI.AIProviderConfiguration.Name">
             <summary>
             Display name of this provider configuration.
-            </summary>
-        </member>
-        <member name="P:Seal.AI.AIProviderConfiguration.IsDefault">
-            <summary>
-            When <c>true</c>, this configuration is used by <see cref="!:AIClient"/> when no provider name is specified.
-            Only one configuration should have this flag set.
             </summary>
         </member>
         <member name="P:Seal.AI.AIProviderConfiguration.IsEnabled">
@@ -346,7 +350,7 @@
         </member>
         <member name="P:Seal.AI.AIToolConfiguration.IsEnabled">
             <summary>
-            When <c>false</c>, this tool is excluded from all provider calls without being deleted.
+            When <c>false</c>, this tool is excluded from all assistant calls without being deleted.
             </summary>
         </member>
         <member name="P:Seal.AI.AIToolConfiguration.ParametersSchema">
@@ -417,6 +421,9 @@
             and a default system prompt. Stored in <see cref="P:Seal.AI.AIServerConfiguration.AIAssistants"/>.
             </summary>
         </member>
+        <member name="F:Seal.AI.AIAssistantConfiguration.DefaultAssistantGUIDValue">
+            <summary>Hardcoded GUID sentinel for "use the server default assistant".</summary>
+        </member>
         <member name="P:Seal.AI.AIAssistantConfiguration.GUID">
             <summary>
             Unique identifier for this assistant configuration.
@@ -425,12 +432,6 @@
         <member name="P:Seal.AI.AIAssistantConfiguration.Name">
             <summary>
             Display name of this assistant configuration.
-            </summary>
-        </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.IsDefault">
-            <summary>
-            When <c>true</c>, this assistant is used by default when no assistant is specified.
-            Only one assistant should have this flag set.
             </summary>
         </member>
         <member name="P:Seal.AI.AIAssistantConfiguration.IsEnabled">
@@ -546,7 +547,7 @@
             <param name="assistantName">
             Name of the <see cref="T:Seal.AI.AIAssistantConfiguration"/> to look up.
             Pass <c>null</c> or empty to use the default configuration
-            (the one with <see cref="P:Seal.AI.AIAssistantConfiguration.IsDefault"/> set).
+            (set via <see cref="P:Seal.AI.AIServerConfiguration.DefaultAssistantGUID"/>).
             </param>
         </member>
         <member name="M:Seal.AI.AIAssistant.#ctor(Seal.AI.AIAssistantConfiguration)">
@@ -9268,6 +9269,11 @@
             Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.).
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityGroup.AssistantGUID">
+            <summary>
+            Web Report Server: The GUID of the AI Assistant assigned to users of this group. Use the Default Assistant GUID to use the default AI Assistant, or leave empty to disable the AI Assistant for this group.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityGroup.DownloadUpload">
             <summary>
             Web Report Server: If true, the user can download reports or upload files or reports in the published folders.
@@ -9658,6 +9664,12 @@
         <member name="P:Seal.Model.SecurityUser.DefaultGroup">
             <summary>
             Default group of the user
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUser.AssistantConfiguration">
+            <summary>
+            AI Assistant configuration assigned to this user via the DefaultGroup AssistantGUID.
+            Returns null if no group is set, the assistant is disabled, or AssistantGUID is NoAssistant.
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.FindSecurityFolder(System.String)">

@@ -53,7 +53,7 @@ namespace Seal.AI
         /// <summary>
         /// Resolves a provider configuration by name, creates it, and returns it.
         /// Pass <c>null</c> or empty to use the default provider
-        /// (the one with <see cref="AIProviderConfiguration.IsDefault"/> set to <c>true</c>).
+        /// (set via <see cref="AIServerConfiguration.DefaultProviderGUID"/>).
         /// </summary>
         /// <exception cref="Exception">
         /// Thrown when no matching or no default configuration is found.
@@ -63,8 +63,9 @@ namespace Seal.AI
             AIProviderConfiguration config;
             if (string.IsNullOrEmpty(providerName))
             {
-                config = Seal.Model.Repository.Instance.AIConfiguration.AIProviders.Find(p => p.IsDefault)
-                    ?? throw new Exception("No default AI provider configuration found. Set IsDefault = true on one configuration.");
+                var defaultGuid = Seal.Model.Repository.Instance.AIConfiguration.DefaultProviderGUID;
+                config = Seal.Model.Repository.Instance.AIConfiguration.AIProviders.Find(p => p.GUID == defaultGuid)
+                    ?? throw new Exception("No default AI provider configuration found. Set Default Provider in AI Configuration.");
             }
             else
             {

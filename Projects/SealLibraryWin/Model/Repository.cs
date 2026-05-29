@@ -830,7 +830,7 @@ namespace Seal.Model
         /// </summary>
         public string AISamplePromptsFolder
         {
-            get { return Path.Combine(SettingsFolder, "AI", "Prompts", "Samples"); }
+            get { return Path.Combine(SettingsFolder, "AI", "Samples"); }
         }
 
         /// <summary>

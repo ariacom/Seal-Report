@@ -10,7 +10,6 @@
     var $input    = $('#ai-panel-input');
     var $send     = $('#ai-panel-send');
     var $messages = $('#ai-panel-messages');
-    var $favBtn      = $('#ai-panel-fav-btn');
     var $histBtn     = $('#ai-panel-history-btn');
     var $histDrop    = $('#ai-panel-history-dropdown');
     var $histWrap    = $histBtn.parent(); // .ai-panel-dropdown-wrap
@@ -40,6 +39,30 @@
         // Line breaks
         text = text.replace(/\r\n|\r|\n/g, '<br>');
         return text;
+    }
+
+    // ── Report-action parser ────────────────────────────────────
+    // Strips [EXECUTE_REPORT:path|name] tags from text, returns cleaned text
+    // and a jQuery element (possibly empty) containing Execute buttons.
+    function parseReportActions(text: string): { cleaned: string; $actions: JQuery } {
+        const $actions = $('<div>').addClass('ai-panel-report-actions');
+        const re = /\[EXECUTE_REPORT:([^\]\|]+)\|([^\]]+)\]/g;
+        const cleaned = text.replace(re, function (_match: string, rawPath: string, name: string) {
+            let swiPath: string;
+            if (/^Reports[\\\/]/.test(rawPath))
+                swiPath = rawPath.substring('Reports'.length);
+            else if (/^Personal[\\\/]/.test(rawPath))
+                swiPath = ':' + rawPath.substring('Personal'.length);
+            else
+                swiPath = rawPath;
+            $('<button>')
+                .addClass('ai-panel-execute-btn')
+                .html('<i class="fa fa-play"></i> ' + $('<span>').text(name.trim()).html())
+                .on('click', function () { _gateway.ExecuteReport(swiPath, '', ''); })
+                .appendTo($actions);
+            return '';
+        });
+        return { cleaned: cleaned.trim(), $actions };
     }
 
     // ── Clear conversation (UI only) ────────────────────────────
@@ -92,6 +115,7 @@
     function setSendMode(): void {
         $send.find('.send-icon').html('&#10148;');
         $send.removeClass('ai-panel-cancel-btn');
+        $input.prop('disabled', false);
         $send.prop('disabled', ($input.val() as string).trim() === '');
         $send.attr('title', '');
         if (_runningInterval !== null) {
@@ -104,6 +128,7 @@
     function setCancelMode(): void {
         $send.find('.send-icon').html('&#9632;');
         $send.addClass('ai-panel-cancel-btn');
+        $input.prop('disabled', true);
         $send.prop('disabled', false);
         $send.attr('title', 'Cancel');
         _runningDotIndex = 0;
@@ -210,22 +235,7 @@
 
     function setFavorite(state: boolean): void {
         _isFavorite = state;
-        var $icon = $favBtn.find('i');
-        if (state) {
-            $icon.attr('class', 'fa fa-star');
-            $favBtn.addClass('fav-active').attr('title', 'Remove from favorites');
-        } else {
-            $icon.attr('class', 'fa fa-star-o');
-            $favBtn.removeClass('fav-active').attr('title', 'Mark as favorite');
-        }
     }
-
-    $favBtn.on('click', function () {
-        if (!_panelChatFileName) return; // nothing saved yet
-        _gateway.MarkAIAssistantChatFavorite(_panelChatFileName, function (data: any) {
-            if (data) setFavorite(data.isFavorite);
-        });
-    });
 
     // ── Favorites / MRU dropdown ────────────────────────────────
     function openDropdown():  void { $histDrop.show(); }
@@ -238,15 +248,7 @@
         toggleDropdown();
         // Fetch and populate lists whenever the dropdown is opening
         if ($histDrop.is(':visible')) {
-            _gateway.GetAIAssistantChats(function (data: any) {
-                var toMenuItems = function (list: any[]): MenuItem[] {
-                    return (list || []).map(function (s: any): MenuItem {
-                        return { name: s.Name || s.FileName, path: s.FileName };
-                    });
-                };
-                window.aiPanel.setRecents(toMenuItems(data.recents));
-                window.aiPanel.setFavorites(toMenuItems(data.favorites));
-            });
+            refreshHistoryLists();
         }
     });
 
@@ -309,6 +311,19 @@
         }
     });
 
+    // ── Helper: refresh the history dropdown lists ──────────────
+    function refreshHistoryLists(): void {
+        _gateway.GetAIAssistantChats(function (data: any) {
+            var toMenuItems = function (list: any[]): MenuItem[] {
+                return (list || []).map(function (s: any): MenuItem {
+                    return { name: s.Name || s.FileName, path: s.FileName };
+                });
+            };
+            window.aiPanel.setRecents(toMenuItems(data.recents));
+            window.aiPanel.setFavorites(toMenuItems(data.favorites));
+        });
+    }
+
     // ── Helper: build a list of <li> items ──────────────────────
     function buildList($ul: JQuery, items: MenuItem[], emptyMsg: string, isFavorite: boolean): void {
         $ul.empty();
@@ -317,31 +332,111 @@
             return;
         }
         $.each(items, function (_, item: MenuItem) {
-            $('<li>')
-                .attr('title', item.name)
-                .text(item.name)
-                .data({ path: item.path || '', viewGuid: item.viewGUID || '', outputGuid: item.outputGUID || '' })
-                .on('click', function () {
-                    closeDropdown();
-                    if (!item.path) return;
-                    _gateway.LoadAIAssistantChat(item.path, isFavorite, function (session: any) {
-                        clearConversation();
-                        _panelChatFileName = item.path as string;
-                        setFavorite(isFavorite);
-                        // Replay the saved messages in the panel
-                        if (session && session.Messages) {
-                            $.each(session.Messages, function (_: any, msg: any) {
-                                if (msg.Type === 'UserChatMessage' && msg.Content) {
-                                    $messages.append($('<div>').addClass('ai-panel-bubble user').text(msg.Content));
-                                } else if (msg.Type === 'AssistantChatMessage' && msg.Content) {
-                                    $messages.append($('<div>').addClass('ai-panel-bubble ai').html(formatResponse(msg.Content)));
+            var $li = $('<li>').attr('title', item.name);
+
+            // Label span (clicking it loads the chat)
+            var $label = $('<span>').addClass('ai-chat-item-label').text(item.name);
+            $label.on('click', function () {
+                closeDropdown();
+                if (!item.path) return;
+                _gateway.LoadAIAssistantChat(item.path, isFavorite, function (session: any) {
+                    clearConversation();
+                    _panelChatFileName = item.path as string;
+                    setFavorite(isFavorite);
+                    if (session && session.Messages) {
+                        $.each(session.Messages, function (_: any, msg: any) {
+                            if (msg.Type === 'UserChatMessage' && msg.Content) {
+                                $messages.append($('<div>').addClass('ai-panel-bubble user').text(msg.Content));
+                            } else if (msg.Type === 'AssistantChatMessage' && msg.Content) {
+                                const { cleaned, $actions } = parseReportActions(msg.Content as string);
+                                if (cleaned) {
+                                    $messages.append($('<div>').addClass('ai-panel-bubble ai').html(formatResponse(cleaned)));
                                 }
-                            });
-                            $messages[0].scrollTop = $messages[0].scrollHeight;
+                                if ($actions.children().length > 0) {
+                                    $messages.append($actions);
+                                }
+                            }
+                        });
+                        $messages[0].scrollTop = $messages[0].scrollHeight;
+                    }
+                });
+            });
+
+            // Rename button
+            var $renameBtn = $('<button>').addClass('ai-chat-item-btn').attr('title', 'Rename')
+                .html('<i class="fa fa-pencil"></i>');
+            $renameBtn.on('click', function (e: JQuery.ClickEvent) {
+                e.stopPropagation();
+                // Replace label with an inline input
+                var $input = $('<input>').addClass('ai-chat-item-rename-input')
+                    .val(item.name).attr('maxlength', 60);
+                $label.replaceWith($input);
+                $input.focus().select();
+
+                function commitRename(): void {
+                    var newName = ($input.val() as string).trim();
+                    if (!newName || newName === item.name) {
+                        $input.replaceWith($label);
+                        return;
+                    }
+                    _gateway.RenameAIAssistantChat(item.path as string, newName, isFavorite, function (data: any) {
+                        if (data && data.fileName) {
+                            item.path = data.fileName;
+                            item.name = data.name || newName;
+                            $label.text(item.name);
+                            $li.attr('title', item.name);
+                        }
+                        $input.replaceWith($label);
+                        // If the renamed chat is the currently open one, update the tracked filename
+                        if (_panelChatFileName === (item.path as string) || data && _panelChatFileName === data.fileName) {
+                            _panelChatFileName = data.fileName;
                         }
                     });
-                })
-                .appendTo($ul);
+                }
+
+                $input.on('blur', commitRename);
+                $input.on('keydown', function (ev: JQuery.KeyDownEvent) {
+                    if (ev.key === 'Enter') { ev.preventDefault(); commitRename(); }
+                    if (ev.key === 'Escape') { $input.replaceWith($label); }
+                });
+            });
+
+            // Delete button
+            var $deleteBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-delete').attr('title', 'Delete')
+                .html('<i class="fa fa-trash"></i>');
+            $deleteBtn.on('click', function (e: JQuery.ClickEvent) {
+                e.stopPropagation();
+                _gateway.DeleteAIAssistantChat(item.path as string, isFavorite, function () {
+                    $li.remove();
+                    // If deleting the currently open chat, reset the panel state
+                    if (_panelChatFileName === item.path) {
+                        _panelChatFileName = '';
+                        setFavorite(false);
+                    }
+                    // Show empty message if the list is now empty
+                    if ($ul.children().length === 0) {
+                        $ul.append('<li class="ai-panel-dropdown-empty">' + emptyMsg + '</li>');
+                    }
+                });
+            });
+
+            // Favorite toggle button
+            var $favItemBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-fav')
+                .attr('title', isFavorite ? 'Remove from favorites' : 'Mark as favorite')
+                .html(isFavorite ? '<i class="fa fa-star"></i>' : '<i class="fa fa-star-o"></i>');
+            if (isFavorite) $favItemBtn.addClass('fav-active');
+            $favItemBtn.on('click', function (e: JQuery.ClickEvent) {
+                e.stopPropagation();
+                _gateway.MarkAIAssistantChatFavorite(item.path as string, function () {
+                    refreshHistoryLists();
+                });
+            });
+
+            // Action buttons container (hidden until hover via CSS)
+            var $actions = $('<span>').addClass('ai-chat-item-actions')
+                .append($favItemBtn).append($renameBtn).append($deleteBtn);
+
+            $li.append($label).append($actions).appendTo($ul);
         });
     }
 

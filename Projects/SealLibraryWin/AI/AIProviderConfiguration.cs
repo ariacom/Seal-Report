@@ -24,7 +24,6 @@ namespace Seal.AI
             {
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 GetProperty("Name").SetIsBrowsable(true);
-                GetProperty("IsDefault").SetIsBrowsable(true);
                 GetProperty("Type").SetIsBrowsable(true);
                 GetProperty("Model").SetIsBrowsable(true);
                 GetProperty("EndPoint").SetIsBrowsable(true);
@@ -52,16 +51,6 @@ namespace Seal.AI
             get { return _name; }
             set { _name = value; }
         }
-
-        /// <summary>
-        /// When <c>true</c>, this configuration is used by <see cref="AIClient"/> when no provider name is specified.
-        /// Only one configuration should have this flag set.
-        /// </summary>
-#if WINDOWS
-        [Category("Definition"), DisplayName("Is Default"), Description("When true, this configuration is used by AIClient when no provider name is specified"), Id(2, 1)]
-        [DefaultValue(false)]
-#endif
-        public bool IsDefault { get; set; } = false;
 
         /// <summary>
         /// When <c>false</c>, this provider is excluded from all operations without being deleted.

@@ -275,7 +275,8 @@ namespace Seal.Forms
             {
                 var assistant = (AIAssistantConfiguration)instance;
                 var providers = Repository.Instance.AIConfiguration.AIProviders;
-                var defaultProvider = providers.FirstOrDefault(p => p.IsDefault) ?? providers.FirstOrDefault();
+                var defaultGuid = Repository.Instance.AIConfiguration.DefaultProviderGUID;
+                var defaultProvider = providers.FirstOrDefault(p => p.GUID == defaultGuid) ?? providers.FirstOrDefault();
                 if (defaultProvider != null) assistant.ProviderGUID = defaultProvider.GUID;
             }
             return instance;

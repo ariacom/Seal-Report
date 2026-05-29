@@ -153,6 +153,19 @@ namespace Seal.AI
                     };
                 case SystemChatMessage:
                     return new { role = "system", content = m.Content[0].Text };
+                // SDK-native assistant message with tool calls (e.g. loaded from a saved session).
+                case AssistantChatMessage asst when asst.ToolCalls?.Count > 0:
+                    return new
+                    {
+                        role = "assistant",
+                        content = asst.Content.Count > 0 ? asst.Content[0].Text : (string)null,
+                        tool_calls = asst.ToolCalls.Select(tc => (object)new
+                        {
+                            id = tc.Id,
+                            type = "function",
+                            function = new { name = tc.FunctionName, arguments = tc.FunctionArguments.ToString() }
+                        }).ToList()
+                    };
                 case AssistantChatMessage:
                     return new { role = "assistant", content = m.Content[0].Text };
                 case ToolChatMessage tool:

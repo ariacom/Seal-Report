@@ -68,11 +68,11 @@ namespace Seal.AI
 #endif
         public string Description { get; set; }
 
-/// <summary>
-        /// When <c>false</c>, this tool is excluded from all provider calls without being deleted.
+        /// <summary>
+        /// When <c>false</c>, this tool is excluded from all assistant calls without being deleted.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Is Enabled"), Description("When false, this tool is excluded from all provider calls."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Is Enabled"), Description("When false, this tool is excluded from all assistant calls."), Id(4, 1)]
         [DefaultValue(true)]
 #endif
         public bool IsEnabled { get; set; } = true;

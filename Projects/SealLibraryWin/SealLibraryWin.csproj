@@ -40,6 +40,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="..\..\Repository\Settings\AI\Prompts\main-system-prompt.md" Link="AI\Prompts\main-system-prompt.md" />
+		<Content Include="..\..\Repository\Settings\AI\Samples\main-sample-prompts.md" Link="AI\Samples\main-sample-prompts.md" />
 		<Content Include="..\..\Repository\Views\Content\seal.css" Link="Views\Content\seal.css" />
 	</ItemGroup>
 

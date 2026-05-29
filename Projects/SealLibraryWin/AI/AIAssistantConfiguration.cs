@@ -21,6 +21,11 @@ namespace Seal.AI
     /// </summary>
     public class AIAssistantConfiguration : RootEditor
     {
+        /// <summary>Hardcoded GUID sentinel for "use the server default assistant".</summary>
+        public const string DefaultAssistantGUIDValue = "1";
+        public const string DefaultAssistant = "<Default Assistant>";
+        public const string NoAssistant = "<No Assistant>";
+
 #if WINDOWS
         #region Editor
         protected override void UpdateEditorAttributes()
@@ -29,7 +34,6 @@ namespace Seal.AI
             {
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 GetProperty("Name").SetIsBrowsable(true);
-                GetProperty("IsDefault").SetIsBrowsable(true);
                 GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("ProviderGUID").SetIsBrowsable(true);
                 GetProperty("ToolGUIDs").SetIsBrowsable(true);
@@ -62,16 +66,6 @@ namespace Seal.AI
             get { return _name; }
             set { _name = value; }
         }
-
-        /// <summary>
-        /// When <c>true</c>, this assistant is used by default when no assistant is specified.
-        /// Only one assistant should have this flag set.
-        /// </summary>
-#if WINDOWS
-        [Category("Definition"), DisplayName("\t\tIs Default"), Description("When true, this assistant is used by default when no assistant is specified. Only one assistant should have this flag set."), Id(2, 1)]
-        [DefaultValue(false)]
-#endif
-        public bool IsDefault { get; set; } = false;
 
         /// <summary>
         /// When <c>false</c>, this assistant is excluded from all operations without being deleted.
@@ -119,7 +113,7 @@ namespace Seal.AI
         /// When set, takes precedence over <see cref="DefaultSystemPrompt"/>.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\tSystem Prompt File"), Description("File name of the system prompt (e.g. my-prompt.txt), located in Settings\\AI\\Prompts. When set, overrides Default System Prompt."), Id(8, 1)]
+        [Category("Definition"), DisplayName("\tSystem Prompt File"), Description("File name of the system prompt (e.g. my-prompt.md), located in Settings\\AI\\Prompts. When set, overrides Default System Prompt."), Id(8, 1)]
 #endif
         public string SystemPromptFile { get; set; }
 
@@ -128,7 +122,7 @@ namespace Seal.AI
         /// One prompt per line; blank lines and lines starting with <c>#</c> are ignored.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Sample Prompts File"), Description("File name of the sample prompts list (e.g. sample-prompts.txt), located in Settings\\AI\\Prompts\\Samples. One prompt per line; lines starting with # are treated as comments."), Id(9, 1)]
+        [Category("Definition"), DisplayName("Sample Prompts File"), Description("File name of the sample prompts list (e.g. sample-prompts.md), located in Settings\\AI\\Prompts\\Samples. One prompt per line; lines starting with # are treated as comments."), Id(9, 1)]
 #endif
         public string SamplePromptsFile { get; set; }
 

@@ -148,7 +148,8 @@ namespace SealWebServer.Controllers
                 groupexecutionmode = defaultGroup.ExecutionMode,
                 sessionId = HttpContext.Session.GetString(SessionIdKey),
                 changepassword = !string.IsNullOrEmpty(Repository.Security.ChangePasswordScript),
-                showresetpassword = !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript) && !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2)
+                showresetpassword = !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript) && !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2),
+                hasassistant = WebUser.AssistantConfiguration != null
             };
 
             if (!string.IsNullOrEmpty(profile.startupreport))
@@ -1122,7 +1123,11 @@ namespace SealWebServer.Controllers
                     groups = Repository.Security.Groups,
                     logins = Repository.Security.Logins,
                     downloadupload = Repository.Configuration.EnableDownloadUpload,
-                    folders = SWIConfiguration.GetFolders(WebUser)
+                    folders = SWIConfiguration.GetFolders(WebUser),
+                    assistants = Repository.Instance.AIConfiguration.AIAssistants
+                        .Where(a => a.IsEnabled)
+                        .Select(a => new StringPair { Key = a.GUID, Value = a.Name })
+                        .ToList()
                 };
 
                 return Json(result);
@@ -1203,7 +1208,7 @@ namespace SealWebServer.Controllers
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
-                Assistant.Messages.Clear();
+                Assistant.Clear();
                 return Json(new { });
             }
             catch (Exception ex)
@@ -1225,16 +1230,10 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
 
                 var assistant = Assistant;
-                List<string> prompts;
+                List<string> prompts = new List<string>();
                 if (assistant != null)
                 {
                     prompts = assistant.Configuration.GetSamplePrompts();
-                }
-                else
-                {
-                    var config = Repository.Instance.AIConfiguration.AIAssistants
-                        .Find(a => a.IsDefault && a.IsEnabled);
-                    prompts = config?.GetSamplePrompts() ?? new List<string>();
                 }
 
                 return Json(new { prompts = prompts });
@@ -1269,7 +1268,7 @@ namespace SealWebServer.Controllers
         /// </summary>
         /// <param name="name">Human-readable chat name used as the file name.</param>
         /// <param name="infosJson">JSON-serialised array of StringPair objects (Type, Name, Description, Instance …).</param>
-        public ActionResult SAISaveAssistantChat(string name, string infosJson, string sessionId, int maxRecents = 10)
+        public ActionResult SAISaveAssistantChat(string name, string infosJson, string sessionId, int maxRecents = 20)
         {
             writeDebug("SAISaveAssistantChat");
             try
@@ -1448,6 +1447,69 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a saved chat session from Recents or Favorites.
+        /// </summary>
+        public ActionResult SAIDeleteAssistantChat(string name, bool favorite, string sessionId)
+        {
+            writeDebug("SAIDeleteAssistantChat");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
+
+                var subFolder = favorite ? AssistantFolders.Favorites : AssistantFolders.Recents;
+                var filePath = Path.Combine(GetAssistantSubFolder(subFolder),
+                                            Helper.CleanFileName(name) + AssistantFolders.FileExt);
+
+                if (!System.IO.File.Exists(filePath))
+                    throw new Exception($"Chat session '{name}' not found.");
+
+                System.IO.File.Delete(filePath);
+
+                return Json(new { deleted = true });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Renames a saved chat session within its current folder (Recents or Favorites).
+        /// </summary>
+        public ActionResult SAIRenameAssistantChat(string name, string newName, bool favorite, string sessionId)
+        {
+            writeDebug("SAIRenameAssistantChat");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
+                if (string.IsNullOrWhiteSpace(newName)) throw new Exception("newName is required");
+
+                var subFolder = favorite ? AssistantFolders.Favorites : AssistantFolders.Recents;
+                var folder = GetAssistantSubFolder(subFolder);
+                var oldPath = Path.Combine(folder, Helper.CleanFileName(name) + AssistantFolders.FileExt);
+                var cleanNew = Helper.CleanFileName(newName);
+                var newPath = Path.Combine(folder, cleanNew + AssistantFolders.FileExt);
+
+                if (!System.IO.File.Exists(oldPath))
+                    throw new Exception($"Chat session '{name}' not found.");
+                if (System.IO.File.Exists(newPath) && !string.Equals(oldPath, newPath, StringComparison.OrdinalIgnoreCase))
+                    throw new Exception($"A chat session named '{newName}' already exists.");
+
+                System.IO.File.Move(oldPath, newPath);
+
+                return Json(new { fileName = cleanNew, name = newName });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
         AIAssistant Assistant
         {
             get
@@ -1455,7 +1517,12 @@ namespace SealWebServer.Controllers
                 var assistant = getSessionValue(SessionAssistant) as AIAssistant;
                 if (assistant == null)
                 {
-                    assistant = new AIAssistant { SecurityContext = WebUser }; // resolves the default assistant configuration
+                    if (WebUser.AssistantConfiguration == null) throw new Exception("No assistant configured for the user.");
+
+                    assistant = new AIAssistant(WebUser.AssistantConfiguration)
+                    {
+                        SecurityContext = WebUser
+                    };
                     setSessionValue(SessionAssistant, assistant);
 
                 }
@@ -1535,7 +1602,7 @@ namespace SealWebServer.Controllers
             catch (Exception ex)
             {
                 WebHelper.WriteWebException(ex, "SWIGetAIAssistantResponse");
-                return Json(new { response = "Error: " + ex.Message });
+                return Json(new { response = "Error: " + getExceptionMessage(ex) });
             }
         }
 

@@ -250,5 +250,22 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    DeleteAIAssistantChat(name, favorite, callback, errorcb) {
+        $.post(_server + "SAIDeleteAssistantChat", {
+            name: name,
+            favorite: favorite
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    RenameAIAssistantChat(name, newName, favorite, callback, errorcb) {
+        $.post(_server + "SAIRenameAssistantChat", {
+            name: name,
+            newName: newName,
+            favorite: favorite
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
 }
 //# sourceMappingURL=swi-gateway.js.map

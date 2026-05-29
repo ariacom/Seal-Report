@@ -1453,16 +1453,17 @@
 }</ExecutionScript>
     </AIToolConfiguration>
   </AITools>
+  <DefaultProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</DefaultProviderGUID>
+  <DefaultAssistantGUID>16dc89e8-1954-4425-a539-a5d3d71f32ae</DefaultAssistantGUID>
   <AIAssistants>
     <AIAssistantConfiguration>
       <GUID>16dc89e8-1954-4425-a539-a5d3d71f32ae</GUID>
-      <Name>Main</Name>
-      <IsDefault>true</IsDefault>
+      <Name>Web Assistant</Name>
       <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
       <ToolGUIDs />
       <DefaultSystemPrompt />
-      <SystemPromptFile>main-system-prompt.txt</SystemPromptFile>
-      <SamplePromptsFile>main-sample-prompts.txt</SamplePromptsFile>
+      <SystemPromptFile>main-system-prompt.md</SystemPromptFile>
+      <SamplePromptsFile>main-sample-prompts.md</SamplePromptsFile>
     </AIAssistantConfiguration>
   </AIAssistants>
 </AIServerConfiguration>

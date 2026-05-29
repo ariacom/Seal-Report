@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
+using Seal.AI;
 using Seal.Helpers;
 using System;
 using System.Collections.Generic;
@@ -403,6 +404,23 @@ namespace Seal.Model
             get
             {
                 return SecurityGroups.OrderByDescending(i => i.Weight).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// AI Assistant configuration assigned to this user via the DefaultGroup AssistantGUID.
+        /// Returns null if no group is set, the assistant is disabled, or AssistantGUID is NoAssistant.
+        /// </summary>
+        public AIAssistantConfiguration AssistantConfiguration
+        {
+            get
+            {
+                var group = DefaultGroup;
+                if (group == null) return null;
+                var guid = group.AssistantGUID;
+                if (string.IsNullOrEmpty(guid)) return null;
+                if (guid == AIAssistantConfiguration.DefaultAssistantGUIDValue) guid = Repository.Instance.AIConfiguration.DefaultAssistantGUID;
+                return Repository.Instance.AIConfiguration.AIAssistants.Find(a => a.GUID == guid && a.IsEnabled);
             }
         }
 

@@ -44,18 +44,19 @@ namespace Seal.AI
         /// <param name="assistantName">
         /// Name of the <see cref="AIAssistantConfiguration"/> to look up.
         /// Pass <c>null</c> or empty to use the default configuration
-        /// (the one with <see cref="AIAssistantConfiguration.IsDefault"/> set).
+        /// (set via <see cref="AIServerConfiguration.DefaultAssistantGUID"/>).
         /// </param>
         public AIAssistant(string assistantName = null)
         {
             // Resolve configuration
             if (string.IsNullOrEmpty(assistantName))
             {
+                var defaultGuid = Repository.Instance.AIConfiguration.DefaultAssistantGUID;
                 Configuration = Repository.Instance.AIConfiguration.AIAssistants
-                    .Find(a => a.IsDefault && a.IsEnabled)
+                    .Find(a => a.GUID == defaultGuid && a.IsEnabled)
                     ?? throw new System.Exception(
                         "No default AI assistant configuration found. " +
-                        "Set IsDefault = true on one enabled assistant.");
+                        "Set Default Assistant in AI Configuration.");
             }
             else
             {
@@ -355,12 +356,14 @@ namespace Seal.AI
                     case "AssistantChatMessage":
                         if (entry.ToolCalls != null && entry.ToolCalls.Count > 0)
                         {
-                            // Reconstruct as AssistantToolCallsChatMessage so that the AI
-                            // provider accepts the following ToolChatMessage responses.
-                            var aiToolCalls = entry.ToolCalls
-                                .Select(tc => new AIToolCall { Id = tc.Id, Name = tc.FunctionName, Arguments = tc.Arguments })
+                            // Reconstruct using SDK-native ChatToolCall objects so that both
+                            // the Azure SDK provider (CompleteChat) and the OpenAI custom-HTTP
+                            // provider (SerializeMessage) can serialise tool_calls correctly.
+                            var sdkToolCalls = entry.ToolCalls
+                                .Select(tc => ChatToolCall.CreateFunctionToolCall(
+                                    tc.Id, tc.FunctionName, BinaryData.FromString(tc.Arguments ?? "{}")))
                                 .ToList();
-                            msg = new AssistantToolCallsChatMessage(aiToolCalls, entry.Content);
+                            msg = new AssistantChatMessage(sdkToolCalls);
                         }
                         else
                         {

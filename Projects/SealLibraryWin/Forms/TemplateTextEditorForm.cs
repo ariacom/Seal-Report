@@ -38,12 +38,14 @@ namespace Seal.Forms
         ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...") { ToolTipText = "Copy sample script in the editor" };
         ToolStripMenuItem samplesMenuItem2 = new ToolStripMenuItem("Samples (Notepad)") { ToolTipText = "Open sample script in a Notepad" };
         ToolStripMenuItem copyToolStripButton = new ToolStripMenuItem("Copy") { ToolTipText = "Copy text to clipboard" };
+        ToolStripMenuItem wordWrapMenuItem = new ToolStripMenuItem("Word Wrap") { ToolTipText = "Toggle word wrap", CheckOnClick = true };
         public ToolStripMenuItem checkSyntaxToolStripButton = new ToolStripMenuItem("F8 Check Syntax") { ShortcutKeys = Keys.F8, ShowShortcutKeys = true };
         ToolStripMenuItem testExecutionMenuItem = new ToolStripMenuItem("F5 Execute...") { ShortcutKeys = Keys.F5, ShowShortcutKeys = true };
         ToolStripMenuItem testRenderingMenuItem = new ToolStripMenuItem("F6 Render...") { ShortcutKeys = Keys.F6, ShowShortcutKeys = true };
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
+        static bool WordWrap = false;
         public static IReportTester ReportTester = null;
         public DifferenceForm DifferenceViewer = null;
 
@@ -90,6 +92,9 @@ namespace Seal.Forms
             mainToolStrip.Items.Add(copyToolStripButton);
             copyToolStripButton.Click += copyToolStripButton_Click;
 
+            wordWrapMenuItem.Checked = WordWrap;
+            wordWrapMenuItem.Click += wordWrapMenuItem_Click;
+            mainToolStrip.Items.Add(wordWrapMenuItem);
         }
 
         private void TestExecutionMenuItem_Click(object sender, EventArgs e)
@@ -156,6 +161,13 @@ namespace Seal.Forms
             if (LastLocation != null) Location = LastLocation.Value;
             textBox.IndicatorClick += TextBox_IndicatorClick;
             textBox.SetSavePoint();
+            textBox.WrapMode = WordWrap ? WrapMode.Word : WrapMode.None;
+        }
+
+        private void wordWrapMenuItem_Click(object sender, EventArgs e)
+        {
+            WordWrap = wordWrapMenuItem.Checked;
+            textBox.WrapMode = WordWrap ? WrapMode.Word : WrapMode.None;
         }
 
         void TemplateTextEditorForm_FormClosed(object sender, FormClosedEventArgs e)

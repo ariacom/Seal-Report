@@ -179,6 +179,7 @@ class SWIMain {
             location.reload();
         }
         _main._profile = data;
+        SWIUtil.ShowHideControl($("#ai-panel-toggle, #ai-chat-panel"), data.hasassistant);
         _main._reportPath = "";
         _main._folder = null;
         _main._searchMode = false;
@@ -552,7 +553,8 @@ class SWIMain {
                     Folders: [] as string[],
                     EditConfiguration: false,
                     EditProfile: true,
-                    PersFolderRight: 2
+                    PersFolderRight: 2,
+                    AssistantGUID: "1"
                 };
                 _main._config.groups.push(newGroup);
                 _main._configGroup = newGroup;
@@ -588,6 +590,22 @@ class SWIMain {
             detail.PersFolderRight = $(event.target).val();
         });
         $select.selectpicker('refresh');
+
+        var $selectAssistant = $("#config-group-assistant");
+        $selectAssistant.unbind("change");
+        $selectAssistant.selectpicker("destroy");
+        $selectAssistant.empty();
+        $selectAssistant.append(SWIUtil.GetOption("", "&lt;" + SWIUtil.tr("No assistant") + "&gt;", detail.AssistantGUID));
+        $selectAssistant.append(SWIUtil.GetOption("1", "&lt;" + SWIUtil.tr("Default assistant") + "&gt;", detail.AssistantGUID));
+        if (_main._config.assistants) {
+            $.each(_main._config.assistants, function (key: any, value: any) {
+                $selectAssistant.append(SWIUtil.GetOption(value.Key, value.Value, detail.AssistantGUID));
+            });
+        }
+        $selectAssistant.unbind("change").on("change", (event) => {
+            detail.AssistantGUID = $(event.target).val();
+        });
+        $selectAssistant.selectpicker('refresh');
 
         SWIUtil.ShowHideControl($("#config-group-downloadupload-row"), _main._config.downloadupload)
         if (_main._config.downloadupload) {

@@ -110,18 +110,21 @@ namespace SealWebServer.Controllers
             }
         }
 
+        string getExceptionMessage(Exception ex)
+        {
+            var message = "";
+            if (WebUser != null && WebUser.EditConfiguration) message += string.Format("{0}<br>{1}<br>{2}", Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message, RequestUrl, ex.StackTrace);
+            else message += "Please consult log files on the server machine to have more information (Logs Repository folder and Windows Event Logs on Windows machine)...";
+            return message;
+        }
+
         ContentResult HandleException(Exception ex)
         {
             var detail = getContextDetail(Request, WebUser);
             Audit.LogAudit(AuditType.EventError, WebUser, null, detail, ex.Message);
             WebHelper.WriteWebException(ex, detail);
-            var message = "<p style='font-family:Helvetica,Arial,sans-serif;padding-top:60px'>";
-#if DEBUG
-            message += string.Format("<b>Sorry, we got an unexpected exception.</b><br>{0}<br>{1}<br>{2}", ex.Message.Replace(Repository.RepositoryPath, ""), RequestUrl, ex.StackTrace);
-#else
-            message += "<b>Sorry, we got an unexpected exception.</b><br>Please consult log files on the server machine to have more information (Logs Repository folder and Windows Event Logs on Windows machine)...";
-#endif
-            message += "</p>";
+            var message = "<p style='font-family:Helvetica,Arial,sans-serif;padding-top:60px'><b>Sorry, we got an unexpected exception.</b><br>";
+            message += getExceptionMessage(ex) + "</p>";
             var content = Content(message);
             content.ContentType = "text/html";
             return content;
@@ -870,13 +873,13 @@ namespace SealWebServer.Controllers
                     Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
                     WebHelper.WriteWebException(ex, detail);
                 }
-                result = Json(new { error = (Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
+                result = Json(new { error = getExceptionMessage(ex), authenticated = (WebUser != null && WebUser.IsAuthenticated) });
             }
             catch (Exception ex2)
             {
                 if (ex != null) Helper.WriteLogException("HandleSWIException1", ex);
                 Helper.WriteLogException("HandleSWIException2", ex2);
-                result = Json(new { error = ex2.Message + (ex != null ? ex.Message : "") });
+                result = Json(new { error = getExceptionMessage(ex2) + (ex != null ? getExceptionMessage(ex) : "") });
             }
             return result;
         }

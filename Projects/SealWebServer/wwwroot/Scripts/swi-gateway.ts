@@ -285,4 +285,23 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+
+    public DeleteAIAssistantChat(name: string, favorite: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SAIDeleteAssistantChat", {
+            name: name,
+            favorite: favorite
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public RenameAIAssistantChat(name: string, newName: string, favorite: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SAIRenameAssistantChat", {
+            name: name,
+            newName: newName,
+            favorite: favorite
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
 }

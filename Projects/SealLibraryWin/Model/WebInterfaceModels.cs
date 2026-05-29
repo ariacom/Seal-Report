@@ -34,6 +34,7 @@ namespace Seal.Model
         public ExecutionMode groupexecutionmode;
         public List<SWIMetaSource> sources;
         public string sessionId;
+        public bool hasassistant;
     }
 
     /// <summary>
@@ -46,6 +47,7 @@ namespace Seal.Model
         public List<SecurityGroup> groups;
         public List<SecurityLogin> logins;
         public bool downloadupload = true;
+        public List<StringPair> assistants;
 
         public static List<StringPair> GetFolders(SecurityUser user)
         {

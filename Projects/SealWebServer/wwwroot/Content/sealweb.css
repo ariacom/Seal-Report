@@ -1222,8 +1222,8 @@ table.dataTable {
 .ai-panel-dropdown {
     position: absolute;
     top: calc(100% + 6px);
-    right: 0;
-    width: 230px;
+    right: -70px;
+    width: 380px;
     background: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -1263,19 +1263,74 @@ table.dataTable {
 }
 
 .ai-panel-dropdown-list li {
-    padding: 7px 14px;
+    padding: 5px 14px;
     font-size: 13px;
     color: #333;
     cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 4px;
     transition: background-color 0.12s;
 }
 
 .ai-panel-dropdown-list li:hover {
     background: #f0f5ff;
     color: #62a6ff;
+}
+
+/* Chat item label (clickable name) */
+.ai-chat-item-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 2px 0;
+}
+
+/* Action buttons (rename / delete) — hidden by default, shown on row hover */
+.ai-chat-item-actions {
+    display: none;
+    flex-shrink: 0;
+    gap: 2px;
+    align-items: center;
+}
+
+.ai-panel-dropdown-list li:hover .ai-chat-item-actions {
+    display: flex;
+}
+
+.ai-chat-item-btn {
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    cursor: pointer;
+    color: #888;
+    font-size: 12px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: color 0.12s, background 0.12s;
+}
+
+.ai-chat-item-btn:hover {
+    color: #62a6ff;
+    background: rgba(98, 166, 255, 0.12);
+}
+
+.ai-chat-item-btn-delete:hover {
+    color: #e05252;
+    background: rgba(224, 82, 82, 0.1);
+}
+
+/* Inline rename input */
+.ai-chat-item-rename-input {
+    flex: 1;
+    font-size: 13px;
+    padding: 1px 4px;
+    border: 1px solid #62a6ff;
+    border-radius: 3px;
+    outline: none;
+    min-width: 0;
 }
 
 .ai-panel-dropdown-empty {
