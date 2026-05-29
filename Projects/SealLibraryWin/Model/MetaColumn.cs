@@ -46,10 +46,8 @@ namespace Seal.Model
                 GetProperty("Format").SetIsBrowsable(true);
                 GetProperty("EnumGUID").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetIsBrowsable(true);
-                GetProperty("DrillChildren").SetDisplayName("Drill Children: " + (DrillChildren.Count == 0 ? "None" : DrillChildren.Count.ToString() + " Items(s)"));
                 GetProperty("DrillUpOnlyIfDD").SetIsBrowsable(true);
                 GetProperty("SubReports").SetIsBrowsable(Repository.IsServerManager);
-                GetProperty("SubReports").SetDisplayName("Sub-Reports: " + (SubReports.Count == 0 ? "None" : SubReports.Count.ToString() + " Items(s)"));
 
                 GetProperty("HelperCreateSubReport").SetIsBrowsable(Repository.IsServerManager);
                 GetProperty("HelperAddSubReport").SetIsBrowsable(Repository.IsServerManager);

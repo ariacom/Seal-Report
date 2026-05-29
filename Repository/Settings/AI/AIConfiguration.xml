@@ -1379,6 +1379,35 @@
                     if (cols.Count == 0) continue;
                     sb.AppendLine($"  Model '{model.Name}': {string.Join(", ", cols)}");
                 }
+                // Outputs
+                if (report.Outputs.Count &gt; 0)
+                {
+                    sb.AppendLine("  Outputs:");
+                    foreach (var output in report.Outputs)
+                    {
+                        var formatParam = output.ViewParameters.FirstOrDefault(p =&gt; p.Name == "report_format");
+                        var fmt = formatParam != null ? formatParam.Value : "html";
+                        var folderDevGuids = new System.Collections.Generic.HashSet&lt;string&gt;(StringComparer.OrdinalIgnoreCase);
+                        foreach (var d in repo.Devices.OfType&lt;OutputFolderDevice&gt;()) folderDevGuids.Add(d.GUID);
+                        folderDevGuids.Add(OutputFolderDevice.DefaultGUID);
+                        var deviceType = folderDevGuids.Contains(output.OutputDeviceGUID) ? "folder" : "other";
+                        sb.AppendLine($"    Output '{output.Name}' [{deviceType}]: folder='{output.FolderPath}', file='{output.FileName}', format='{fmt}'");
+                    }
+                }
+                // Schedules
+                if (report.Schedules.Count &gt; 0)
+                {
+                    sb.AppendLine("  Schedules:");
+                    foreach (var schedule in report.Schedules)
+                    {
+                        string schedInfo;
+                        if (Repository.Instance.UseSealScheduler)
+                            schedInfo = $"type={schedule.SealType}, start={schedule.SealStart:yyyy-MM-dd HH:mm}, enabled={schedule.SealEnabled}";
+                        else
+                            schedInfo = $"Windows Task Scheduler (task: {schedule.TaskName})";
+                        sb.AppendLine($"    Schedule '{schedule.Name}': {schedInfo}");
+                    }
+                }
                 sb.AppendLine();
             }
             catch (Exception ex)

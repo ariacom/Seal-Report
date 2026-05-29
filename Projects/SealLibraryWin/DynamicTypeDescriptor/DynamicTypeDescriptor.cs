@@ -695,6 +695,18 @@ namespace DynamicTypeDescriptor
 
     }
 
+    internal class CollectionItemCountConverter : CollectionConverter
+    {
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string) && value is ICollection col)
+            {
+                return $"({col.Count} item{(col.Count != 1 ? "s" : "")})";
+            }
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
+
     internal class StandardValuesConverter : TypeConverter
     {
         static int _COUNT = 0;
@@ -1680,6 +1692,10 @@ namespace DynamicTypeDescriptor
                 if (en != null && (this.PropertyFlags & PropertyFlags.ExpandIEnumerable) > 0)
                 {
                     return new StandardValuesConverter();
+                }
+                if (typeof(ICollection).IsAssignableFrom(this.PropertyType))
+                {
+                    return new CollectionItemCountConverter();
                 }
                 return base.Converter;
 
