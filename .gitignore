@@ -117,3 +117,4 @@ Projects/SealDocumentation/Help.zip
 *.nupkg
 CLAUDE.md
 /Repository/Sources/_work
+Repository/Settings/AI/AIConfiguration_AIProviders.xml

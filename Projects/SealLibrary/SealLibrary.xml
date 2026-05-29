@@ -68,6 +68,73 @@
             Set one or the other, not both.
             </exception>
         </member>
+        <member name="T:Seal.AI.AIServerConfiguration">
+            <summary>
+            Dedicated configuration for AI Providers, Tools and Assistants.
+            Serialized to Settings\AI\AIConfiguration.xml in the repository.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIServerConfiguration.FilePath">
+            <summary>
+            Current file path
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIServerConfiguration.Repository">
+            <summary>
+            Current repository
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIServerConfiguration.LastModification">
+            <summary>
+            Last modification date time
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIServerConfiguration.GetAIProvidersFilePath(System.String)">
+            <summary>
+            Returns the path of the dedicated AI Providers file beside the AIConfiguration.xml file
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.ExternalAIProviders">
+            <summary>
+            If true, the AI Providers are saved in a dedicated XML file located beside the AIConfiguration.xml file. This may be useful for deployment.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.AIProviders">
+            <summary>
+            AI Providers available to configure AIClient.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIServerConfiguration.ShouldSerializeAIProviders">
+            <summary>
+            Do not serialize AIProviders inline when they are stored in a dedicated file
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.AITools">
+            <summary>
+            AI Tools (functions) available to AI providers. Each tool has an optional Razor execution script
+            that is run when the AI model decides to call the tool.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.AIAssistants">
+            <summary>
+            AI Assistants combining a provider, an optional set of tools, and a default system prompt.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIServerConfiguration.LoadFromFile(System.String,System.Boolean)">
+            <summary>
+            Load AI configuration from a file
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIServerConfiguration.SaveToFile">
+            <summary>
+            Save to current file
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIServerConfiguration.SaveToFile(System.String)">
+            <summary>
+            Save to a given file path
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIProviderConfiguration.GUID">
             <summary>
             Unique identifier for this provider configuration.
@@ -256,7 +323,7 @@
         <member name="T:Seal.AI.AIToolConfiguration">
             <summary>
             Configuration for a single AI tool (function) available to AI providers.
-            Stored in <see cref="P:Seal.Model.SealServerConfiguration.AITools"/> and edited
+            Stored in <see cref="P:Seal.AI.AIServerConfiguration.AITools"/> and edited
             through the Server Manager.
             </summary>
         </member>
@@ -347,7 +414,7 @@
         <member name="T:Seal.AI.AIAssistantConfiguration">
             <summary>
             Configuration for an AI assistant: ties together one provider, an optional subset of tools,
-            and a default system prompt. Stored in <see cref="P:Seal.Model.SealServerConfiguration.AIAssistants"/>.
+            and a default system prompt. Stored in <see cref="P:Seal.AI.AIServerConfiguration.AIAssistants"/>.
             </summary>
         </member>
         <member name="P:Seal.AI.AIAssistantConfiguration.GUID">
@@ -7042,6 +7109,16 @@
             Forces a configuration reload
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.AIConfiguration">
+            <summary>
+            Current AI configuration (providers, tools, assistants)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.ReloadAIConfiguration">
+            <summary>
+            Forces an AI configuration reload
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.Security">
             <summary>
             Current security
@@ -7276,6 +7353,11 @@
         <member name="P:Seal.Model.Repository.ConfigurationPath">
             <summary>
             Configuration file path
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.AIConfigurationPath">
+            <summary>
+            AI Configuration file path
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.SecurityPath">
@@ -8824,22 +8906,6 @@
         <member name="P:Seal.Model.SealServerConfiguration.RepositoryTranslationsScript">
             <summary>
             If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.AIProviders">
-            <summary>
-            AI Providers available to configure AIClient.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.AITools">
-            <summary>
-            AI Tools (functions) available to AI providers. Each tool has an optional Razor execution script
-            that is run when the AI model decides to call the tool.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.AIAssistants">
-            <summary>
-            AI Assistants combining a provider, an optional set of tools, and a default system prompt.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.EncryptionMode">

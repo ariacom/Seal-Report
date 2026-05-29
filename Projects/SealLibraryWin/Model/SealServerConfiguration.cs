@@ -16,6 +16,7 @@ using Twilio.Rest.Trunking.V1;
 using DocumentFormat.OpenXml.Vml;
 using Seal.AI;
 
+
 #if WINDOWS
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
@@ -104,10 +105,6 @@ namespace Seal.Model
                 GetProperty("EnableRazorCache").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableDownloadUpload").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportFormats").SetIsBrowsable(!ForPublication);
-
-                GetProperty("AIProviders").SetIsBrowsable(!ForPublication);
-                GetProperty("AITools").SetIsBrowsable(!ForPublication);
-                GetProperty("AIAssistants").SetIsBrowsable(!ForPublication);
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
                 GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
@@ -487,56 +484,6 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string RepositoryTranslationsScript { get; set; } = null;
-
-        List<AIProviderConfiguration> _AIProviders = new List<AIProviderConfiguration>();
-        /// <summary>
-        /// AI Providers available to configure AIClient.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("AI providers"), Description("AI Providers available to configure AIClient.."), Category("AI Configuration"), Id(1, 3)]
-        [DefaultValue(false)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-#endif
-        public List<AIProviderConfiguration> AIProviders
-        {
-            get
-            {
-                return _AIProviders;
-            }
-            set { _AIProviders = value; }
-        }
-
-        List<AIToolConfiguration> _AITools = new List<AIToolConfiguration>();
-        /// <summary>
-        /// AI Tools (functions) available to AI providers. Each tool has an optional Razor execution script
-        /// that is run when the AI model decides to call the tool.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("AI tools"), Description("AI Tools (functions) available to AI providers. Each tool carries an optional Razor execution script run when the AI invokes the tool."), Category("AI Configuration"), Id(2, 3)]
-        [DefaultValue(false)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-#endif
-        public List<AIToolConfiguration> AITools
-        {
-            get { return _AITools; }
-            set { _AITools = value; }
-        }
-
-        List<AIAssistantConfiguration> _AIAssistants = new List<AIAssistantConfiguration>();
-        /// <summary>
-        /// AI Assistants combining a provider, an optional set of tools, and a default system prompt.
-        /// </summary>
-#if WINDOWS
-        [DisplayName("AI assistants"), Description("AI Assistants: each assistant ties together a provider, an optional subset of tools, and a default system prompt."), Category("AI Configuration"), Id(3, 3)]
-        [DefaultValue(false)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-#endif
-        public List<AIAssistantConfiguration> AIAssistants
-        {
-            get { return _AIAssistants; }
-            set { _AIAssistants = value; }
-        }
-
 
         EncryptionMode _encryptionMode = EncryptionMode.Default;
         /// <summary>

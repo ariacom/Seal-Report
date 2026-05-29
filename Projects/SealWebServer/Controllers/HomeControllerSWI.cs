@@ -1232,7 +1232,7 @@ namespace SealWebServer.Controllers
                 }
                 else
                 {
-                    var config = Repository.Instance.Configuration.AIAssistants
+                    var config = Repository.Instance.AIConfiguration.AIAssistants
                         .Find(a => a.IsDefault && a.IsEnabled);
                     prompts = config?.GetSamplePrompts() ?? new List<string>();
                 }

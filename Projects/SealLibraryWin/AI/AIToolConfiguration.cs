@@ -16,7 +16,7 @@ namespace Seal.AI
 {
     /// <summary>
     /// Configuration for a single AI tool (function) available to AI providers.
-    /// Stored in <see cref="Seal.Model.SealServerConfiguration.AITools"/> and edited
+    /// Stored in <see cref="Seal.AI.AIServerConfiguration.AITools"/> and edited
     /// through the Server Manager.
     /// </summary>
     public class AIToolConfiguration : RootEditor

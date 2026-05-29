@@ -58,6 +58,7 @@
 		<None Include="LICENSE.txt" Pack="true" PackagePath="" />
 		<Compile Include="..\SealLibraryWin\AI\ICancelOperation.cs" Link="AI\ICancelOperation.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIProvider.cs" Link="AI\AIProvider.cs" />
+		<Compile Include="..\SealLibraryWin\AI\AIServerConfiguration.cs" Link="AI\AIServerConfiguration.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIProviderConfiguration.cs" Link="AI\AIProviderConfiguration.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AnthropicProvider.cs" Link="AI\AnthropicProvider.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AzureProvider.cs" Link="AI\AzureProvider.cs" />

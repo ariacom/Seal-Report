@@ -27,6 +27,7 @@ namespace Seal
         ToolsHelper toolsHelper;
 
         ToolStripMenuItem configureMenuItem = new ToolStripMenuItem() { Text = "Configure Server...", ToolTipText = string.Format("Configure the {0} Report Server", Repository.SealRootProductName) };
+        ToolStripMenuItem configureAIMenuItem = new ToolStripMenuItem() { Text = "Configure AI...", ToolTipText = string.Format("Configure AI Providers, Tools and Assistants for the {0} Report Server", Repository.SealRootProductName) };
         ToolStripMenuItem dynamicsMenuItem = new ToolStripMenuItem() { Text = "Edit Dynamics Assemblies...", ToolTipText = "Check the compilation of *.cs files in the Assemblies folder." };
         ToolStripMenuItem publishWebMenuItem = new ToolStripMenuItem() { Text = "Publish Web Site on IIS...", ToolTipText = string.Format("Publish the {0} Web Site on the local Internet Information Server", Repository.SealRootProductName) };
         ToolStripMenuItem securityMenuItem = new ToolStripMenuItem() { Text = "Configure Web Security...", ToolTipText = string.Format("Configure how the reports and folders are published on {0} Web Site", Repository.SealRootProductName) };
@@ -102,6 +103,10 @@ namespace Seal
             configureMenuItem.Click += configureClick;
             configurationToolStripMenuItem.DropDownItems.Add(configureMenuItem);
             configureMenuItem.ShortcutKeys = (Keys.Control | Keys.C);
+
+            configureAIMenuItem.Click += configureAIClick;
+            configurationToolStripMenuItem.DropDownItems.Add(configureAIMenuItem);
+            configureAIMenuItem.ShortcutKeys = (Keys.Control | Keys.I);
 
             dynamicsMenuItem.Click += DynamicsMenuItem_Click;
             configurationToolStripMenuItem.DropDownItems.Add(dynamicsMenuItem);
@@ -236,6 +241,21 @@ namespace Seal
             {
                 //reload configuration
                 _repository.ReloadConfiguration();
+            }
+        }
+
+        void configureAIClick(object sender, EventArgs e)
+        {
+            var frm = new AIConfigurationEditorForm(_repository.AIConfiguration);
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                if (string.IsNullOrEmpty(_repository.AIConfiguration.FilePath)) _repository.AIConfiguration.FilePath = _repository.AIConfigurationPath;
+                _repository.AIConfiguration.SaveToFile();
+            }
+            else
+            {
+                //reload AI configuration
+                _repository.ReloadAIConfiguration();
             }
         }
 

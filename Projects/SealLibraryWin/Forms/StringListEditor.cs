@@ -55,7 +55,7 @@ namespace Seal.Forms
                 else if (context.Instance is AIAssistantConfiguration)
                 {
                     AIAssistantConfiguration assistant = context.Instance as AIAssistantConfiguration;
-                    MultipleSelectForm frm = new MultipleSelectForm("Please select the tools", Repository.Instance.Configuration.AITools, "Name");
+                    MultipleSelectForm frm = new MultipleSelectForm("Please select the tools", Repository.Instance.AIConfiguration.AITools, "Name");
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
                     {

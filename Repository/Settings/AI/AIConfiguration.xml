@@ -1,0 +1,1468 @@
+<?xml version="1.0"?>
+<AIServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ExternalAIProviders>true</ExternalAIProviders>
+  <AITools>
+    <AIToolConfiguration>
+      <GUID>975395e7-8f7f-47a8-84a7-dbf7bb3bec44</GUID>
+      <Name>database_execute_query</Name>
+      <Description>Executes a SQL SELECT statement against a data source and returns up to 50 rows as a tab-separated table. Use it to validate generated SQL, check sample data, debug wrong results, or preview table contents. Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
+      <ParametersSchema>{"type":"object","properties":{"sql":{"type":"string","description":"SQL SELECT statement to execute"},"datasource_guid":{"type":"string","description":"GUID of the data source to query, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["sql"]}</ParametersSchema>
+      <ExecutionScript>@using System.Text.Json
+@using System.Text
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var sql      = args.GetProperty("sql").GetString();
+
+    // Guard: only SELECT statements are allowed
+    var sqlTrimmed = sql?.TrimStart() ?? "";
+    var firstWord  = sqlTrimmed.Split(new[]{' ','\t','\r','\n'}, StringSplitOptions.RemoveEmptyEntries)
+                                .FirstOrDefault()?.ToUpperInvariant() ?? "";
+    var forbidden  = new[]{"INSERT","UPDATE","DELETE","DROP","CREATE","ALTER","TRUNCATE","MERGE","EXEC","EXECUTE"};
+    if (forbidden.Contains(firstWord)) {
+        tool.ExecResult = $"Error: only SELECT statements are permitted. Got '{firstWord}'.";
+        return;
+    }
+
+    var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var source   = tool.GetExecSource(dsGuid);
+    if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+    var conn = tool.GetExecConnection(source, connGuid);
+    if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
+
+    var connection = conn.GetOpenConnection();
+    var helper     = new TaskDatabaseHelper();
+    try {
+        var table = helper.LoadDataTable(conn.ConnectionType,
+                                         conn.FullConnectionString,
+                                         sql, connection);
+        var sb = new StringBuilder();
+
+        // header row
+        var headers = new List&lt;string&gt;();
+        foreach (System.Data.DataColumn col in table.Columns) headers.Add(col.ColumnName);
+        sb.AppendLine(string.Join("\t", headers));
+
+        // data rows (capped at 50)
+        int rowCount = 0;
+        foreach (System.Data.DataRow row in table.Rows) {
+            if (++rowCount &gt; 50) {
+                sb.AppendLine($"... ({table.Rows.Count - 50} more rows not shown)");
+                break;
+            }
+            var vals = new List&lt;string&gt;();
+            foreach (var v in row.ItemArray)
+                vals.Add(v == DBNull.Value ? "NULL" : v?.ToString() ?? "");
+            sb.AppendLine(string.Join("\t", vals));
+        }
+        if (table.Rows.Count == 0) sb.AppendLine("(no rows returned)");
+        tool.ExecResult = sb.ToString();
+    }
+    catch (Exception ex) { tool.ExecResult = $"Query error: {ex.Message}"; }
+    finally               { connection.Close(); }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>f56c62db-9a53-413e-8df4-6dde496adff4</GUID>
+      <Name>database_get_columns</Name>
+      <Description>Returns the column names and data types of a table. Use it to confirm column names before generating report elements, or to discover schema when scanning a data source. Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
+      <ParametersSchema>{"type":"object","properties":{"table":{"type":"string","description":"Table name, optionally schema-qualified (e.g. dbo.Orders)"},"datasource_guid":{"type":"string","description":"GUID of the data source, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["table"]}</ParametersSchema>
+      <ExecutionScript>@using System.Text.Json
+@using System.Text
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var tableName = args.GetProperty("table").GetString();
+    var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid  = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var source    = tool.GetExecSource(dsGuid);
+    if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+    var conn = tool.GetExecConnection(source, connGuid);
+    if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
+
+    var connection = conn.GetOpenConnection();
+    try {
+        var schema = source.GetColumnsSchemaTable(connection, tableName);
+        if (schema.Rows.Count == 0) {
+            tool.ExecResult = $"No columns found for table '{tableName}'. Check the table name and schema prefix.";
+            return;
+        }
+
+        var sb = new StringBuilder();
+        sb.AppendLine("column_name\tdata_type\tis_nullable");
+        foreach (System.Data.DataRow row in schema.Rows) {
+            var colName  = schema.Columns.Contains("COLUMN_NAME") ? row["COLUMN_NAME"]?.ToString() : row[3]?.ToString();
+            var dataType = schema.Columns.Contains("DATA_TYPE")   ? row["DATA_TYPE"]?.ToString()
+                         : schema.Columns.Contains("TYPE_NAME")   ? row["TYPE_NAME"]?.ToString() : "";
+            var nullable = schema.Columns.Contains("IS_NULLABLE") ? row["IS_NULLABLE"]?.ToString() : "";
+            sb.AppendLine($"{colName}\t{dataType}\t{nullable}");
+        }
+        tool.ExecResult = sb.ToString();
+    }
+    catch (Exception ex) { tool.ExecResult = $"Schema error: {ex.Message}"; }
+    finally               { connection.Close(); }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
+      <Name>database_get_sample_values</Name>
+      <Description>Returns up to 50 distinct non-null values from the given column. Use it to discover what enum or category values exist when building restriction filters or display labels. Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
+      <ParametersSchema>{"type":"object","properties":{"table":{"type":"string","description":"Table name"},"column":{"type":"string","description":"Column name"},"datasource_guid":{"type":"string","description":"GUID of the data source, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["table","column"]}</ParametersSchema>
+      <ExecutionScript>@using System.Text.Json
+@using System.Text
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args       = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var tableName  = args.GetProperty("table").GetString();
+    var columnName = args.GetProperty("column").GetString();
+    var dsGuid     = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid   = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var source     = tool.GetExecSource(dsGuid);
+    if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+    var conn = tool.GetExecConnection(source, connGuid);
+    if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
+
+    var connection = conn.GetOpenConnection();
+    var helper     = new TaskDatabaseHelper();
+    try {
+        // Note: square-bracket quoting is SQL Server syntax.
+        // For PostgreSQL use "double quotes"; for MySQL use `backticks`.
+        var sql = $"SELECT DISTINCT [{columnName}] FROM [{tableName}] " +
+                  $"WHERE [{columnName}] IS NOT NULL ORDER BY [{columnName}]";
+        var table = helper.LoadDataTable(conn.ConnectionType,
+                                         conn.FullConnectionString,
+                                         sql, connection);
+        if (table.Rows.Count == 0) {
+            tool.ExecResult = $"No non-null values found in {tableName}.{columnName}.";
+            return;
+        }
+
+        var values = new List&lt;string&gt;();
+        int cnt = 0;
+        foreach (System.Data.DataRow row in table.Rows) {
+            if (++cnt &gt; 50) break;
+            values.Add(row[0]?.ToString() ?? "");
+        }
+        var result = string.Join(", ", values);
+        if (table.Rows.Count &gt; 50)
+            result += $" ... ({table.Rows.Count} distinct values total, first 50 shown)";
+        tool.ExecResult = result;
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    finally               { connection.Close(); }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>84ddf1ed-6473-488a-90a4-2dee3205e7ea</GUID>
+      <Name>database_count_rows</Name>
+      <Description>Returns the row count of a table, optionally filtered by a WHERE clause. Use it to decide whether TopRecords makes sense or to check the cardinality of a filter before applying it. Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
+      <ParametersSchema>{"type":"object","properties":{"table":{"type":"string","description":"Table name"},"where":{"type":"string","description":"Optional SQL WHERE clause without the WHERE keyword (e.g. Country = 'France')"},"datasource_guid":{"type":"string","description":"GUID of the data source, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["table"]}</ParametersSchema>
+      <ExecutionScript>@using System.Text.Json
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var tableName = args.GetProperty("table").GetString();
+    var whereStr  = args.TryGetProperty("where", out var whereProp) ? whereProp.GetString() : null;
+    var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid  = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var source    = tool.GetExecSource(dsGuid);
+    if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+    var conn = tool.GetExecConnection(source, connGuid);
+    if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
+
+    var connection = conn.GetOpenConnection();
+    var helper     = new TaskDatabaseHelper();
+    try {
+        // Note: square-bracket quoting is SQL Server syntax.
+        // For PostgreSQL use "double quotes"; for MySQL use `backticks`.
+        var sql = $"SELECT COUNT(*) FROM [{tableName}]";
+        if (!string.IsNullOrWhiteSpace(whereStr)) sql += $" WHERE {whereStr}";
+
+        var table = helper.LoadDataTable(conn.ConnectionType,
+                                         conn.FullConnectionString,
+                                         sql, connection);
+        var count = table.Rows[0][0]?.ToString() ?? "0";
+        tool.ExecResult = string.IsNullOrWhiteSpace(whereStr)
+            ? $"{tableName}: {count} rows"
+            : $"{tableName} WHERE {whereStr}: {count} rows";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    finally               { connection.Close(); }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
+      <Name>datasource_list</Name>
+      <Description>Lists all configured data sources with their GUID, database type, available connections (each with its GUID), and tables. Call this first to discover which sources, connections, and tables are available before querying or inspecting them. Use the returned GUIDs with datasource_guid and connection_guid parameters in database tools.</Description>
+      <ExecutionScript>@using System.Text
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var sb = new System.Text.StringBuilder();
+    foreach (var source in Repository.Instance.Sources)
+    {
+        var dbType = source.Connection?.DatabaseType.ToString() ?? "Unknown";
+        var desc   = string.IsNullOrEmpty(source.Description) ? "" : $" — {source.Description}";
+        sb.AppendLine($"## {source.Name}{desc} [{dbType}]{(source.IsDefault ? " (default)" : "")} (GUID: {source.GUID})");
+
+        // Connections
+        sb.AppendLine("  Connections:");
+        foreach (var conn in source.Connections)
+        {
+            var isDefault = source.Connection?.GUID == conn.GUID ? " (default)" : "";
+            sb.AppendLine($"    - {conn.Name}{isDefault} (GUID: {conn.GUID})");
+        }
+
+        // Tables
+        var tables = source.MetaData?.Tables;
+        if (tables == null || tables.Count == 0)
+        {
+            sb.AppendLine("  (no tables)");
+        }
+        else
+        {
+            sb.AppendLine("  Tables:");
+            foreach (var table in tables)
+            {
+                var label = table.DisplayName != table.Name &amp;&amp; !string.IsNullOrEmpty(table.DisplayName)
+                    ? $"{table.Name} ({table.DisplayName})"
+                    : table.Name;
+                sb.AppendLine($"    - {label}");
+            }
+        }
+        sb.AppendLine();
+    }
+    tool.ExecResult = sb.ToString();
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
+      <Name>datasource_get_detail</Name>
+      <Description>Returns a structured summary of a data source: connection info (no credentials), tables with their columns and types, and joins between tables. Use this to understand the schema and relationships before writing SQL.</Description>
+      <ParametersSchema>{"type":"object","properties":{"name":{"type":"string","description":"Data source name"}},"required":["name"]}</ParametersSchema>
+      <ExecutionScript>@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var name   = args.GetProperty("name").GetString();
+    var source = Repository.Instance.Sources.FirstOrDefault(i =&gt; i.Name == name);
+    if (source == null) { tool.ExecResult = $"Error: data source '{name}' not found."; return; }
+
+    var sb = new StringBuilder();
+
+    // --- Connection (no credentials) ---
+    sb.AppendLine($"# {source.Name}{(string.IsNullOrEmpty(source.Description) ? "" : $" — {source.Description}")}");
+    sb.AppendLine($"GUID           : {source.GUID}");
+    sb.AppendLine($"Database type  : {source.Connection?.DatabaseType}");
+    sb.AppendLine($"Connection type: {source.Connection?.ConnectionType}");
+    sb.AppendLine($"Is default     : {source.IsDefault}");
+    sb.AppendLine();
+
+    // --- Tables and columns ---
+    sb.AppendLine("## Tables");
+    foreach (var table in source.MetaData.Tables)
+    {
+        var tableName = string.IsNullOrEmpty(table.Alias) ? table.Name : $"{table.Name} (alias: {table.Alias})";
+        sb.AppendLine($"### {tableName}");
+        foreach (var col in table.Columns)
+        {
+            var label = col.DisplayName != col.Name &amp;&amp; !string.IsNullOrEmpty(col.DisplayName)
+                        ? $"{col.Name} ({col.DisplayName})"
+                        : col.Name;
+            sb.AppendLine($"  {label} [{col.Type}{(col.IsAggregate ? ", aggregate" : "")}] (GUID: {col.GUID})");
+        }
+        sb.AppendLine();
+    }
+
+    // --- Joins ---
+    if (source.MetaData.Joins.Count &gt; 0)
+    {
+        sb.AppendLine("## Joins");
+        foreach (var join in source.MetaData.Joins)
+        {
+            var left  = join.LeftTable?.AliasName  ?? "?";
+            var right = join.RightTable?.AliasName ?? "?";
+            sb.AppendLine($"  {left} → {right}");
+            if (!string.IsNullOrWhiteSpace(join.Clause))
+                sb.AppendLine($"    ON {join.Clause.Trim()}");
+        }
+    }
+
+    tool.ExecResult = sb.ToString();
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
+      <Name>report_get_detail</Name>
+      <Description>Returns full details of a report: display name, description, and for each model its source, elements (columns with pivot position and aggregate), and restrictions (with prompt and required flags). Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"}},"required":["path"]}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var relativePath = args.GetProperty("path").GetString();
+
+    // Resolve full path across all three repository roots
+    var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+    {
+        var candidate = relativePath.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(kv.Value, relativePath.Substring(kv.Key.Length + 1))
+            : Path.Combine(kv.Value, relativePath);
+        if (File.Exists(candidate)) { fullPath = candidate; break; }
+    }
+
+    if (fullPath == null) { tool.ExecResult = $"Error: report '{relativePath}' not found."; return; }
+
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), 1))
+        { tool.ExecResult = $"Error: access denied to '{relativePath}'."; return; }
+
+    Report report;
+    try { report = Report.LoadFromFile(fullPath, repo, refreshEnums: false); }
+    catch (Exception ex) { tool.ExecResult = $"Error loading report: {ex.Message}"; return; }
+
+    var sb = new StringBuilder();
+
+    // Header
+    var displayName = !string.IsNullOrEmpty(report.DisplayName) &amp;&amp; !report.DisplayName.StartsWith("@")
+                      ? report.DisplayName : Path.GetFileNameWithoutExtension(fullPath);
+    var description = report.GetMetaInfo("Description") ?? "";
+    sb.AppendLine($"# {displayName}");
+    sb.AppendLine($"Path: {relativePath}");
+    if (!string.IsNullOrEmpty(description)) sb.AppendLine($"Description: {description}");
+    sb.AppendLine();
+
+    // Input values (prompted restrictions at report level)
+    if (report.InputValues.Count &gt; 0)
+    {
+        sb.AppendLine("## Input values");
+        foreach (var iv in report.InputValues)
+            sb.AppendLine($"  {iv.DisplayNameEl} [prompt={iv.Prompt}, required={iv.Required}]");
+        sb.AppendLine();
+    }
+
+    // Models
+    foreach (var model in report.Models)
+    {
+        var sourceName = model.Source?.Name ?? "?";
+        sb.AppendLine($"## Model '{model.Name}' (source: {sourceName})");
+
+        // Elements
+        if (model.Elements.Count &gt; 0)
+        {
+            sb.AppendLine("  Elements:");
+            foreach (var el in model.Elements)
+            {
+                var agg = el.PivotPosition == PivotPosition.Data ? $", {el.AggregateFunction}" : "";
+                sb.AppendLine($"    {el.DisplayNameEl} [{el.PivotPosition}{agg}]");
+            }
+        }
+
+        // Restrictions
+        var allRestrictions = model.Restrictions.Concat(model.AggregateRestrictions).ToList();
+        if (allRestrictions.Count &gt; 0)
+        {
+            sb.AppendLine("  Restrictions:");
+            foreach (var r in allRestrictions)
+            {
+                var flags = new System.Collections.Generic.List&lt;string&gt;();
+                if (r.Prompt != PromptType.None) flags.Add($"prompt={r.Prompt}");
+                if (r.Required) flags.Add("required");
+                var flagStr = flags.Count &gt; 0 ? $" [{string.Join(", ", flags)}]" : "";
+                sb.AppendLine($"    {r.DisplayNameEl}{flagStr}");
+            }
+        }
+
+        sb.AppendLine();
+    }
+
+    tool.ExecResult = sb.ToString();
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
+      <Name>report_get_xml</Name>
+      <Description>Returns the raw XML content of a report file. Use this to inspect the full report definition or to obtain a template before modifying and saving it with report_create_from_sql. Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"}},"required":["path"]}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path = args.GetProperty("path").GetString();
+
+    var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+    {
+        var candidate = path.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(kv.Value, path.Substring(kv.Key.Length + 1))
+            : Path.Combine(kv.Value, path);
+        if (File.Exists(candidate)) { fullPath = candidate; break; }
+    }
+
+    if (fullPath == null) { tool.ExecResult = $"Error: report '{path}' not found."; return; }
+
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), 1))
+        { tool.ExecResult = $"Error: access denied to '{path}'."; return; }
+
+    try   { tool.ExecResult = File.ReadAllText(fullPath); }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
+      <Name>report_check_model_type</Name>
+      <Description>Analyses a report request and returns whether it requires a SQL model (report_create_from_sql) or a metadata model (report_create_from_xml), with the reasoning. Always call this before creating any report.</Description>
+      <ParametersSchema>{"type":"object","properties":{"request":{"type":"string","description":"The user's report request, exactly as stated."}},"required":["request"]}</ParametersSchema>
+      <ExecutionScript>@using System.Text.Json
+@using System.Linq
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args    = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var request = args.GetProperty("request").GetString().ToLowerInvariant();
+
+    // Patterns that genuinely require SQL (window functions, subqueries, set ops)
+    var sqlPatterns = new System.Collections.Generic.Dictionary&lt;string, string[]&gt;
+    {
+        ["window function (running/cumulative)"] = new[] {
+            "cumulative", "running total", "running sum", "running average", "running count",
+            "year-to-date", "ytd", "month-to-date", "mtd", "rolling total", "rolling average",
+            "rolling sum", "rolling window", "moving average", "moving sum"
+        },
+        ["window function (ranking)"] = new[] {
+            "rank", "ranking", "row number", "dense rank", "ntile", "percentile",
+            "top n per", "first per", "last per"
+        },
+        ["window function (offset)"] = new[] {
+            " lag ", " lead ", "previous row", "next row", "previous month", "next month",
+            "previous year", "next year", "prior period", "period over period", "mom", "yoy",
+            "month over month", "year over year"
+        },
+        ["subquery / CTE"] = new[] {
+            "subquery", "sub-query", "with clause", " cte ", "common table expression",
+            "nested query", "exists ", "not exists", "in (select", "having count",
+            "customers who have never", "customers without", "products never ordered",
+            "orders with no"
+        },
+        ["set operation"] = new[] {
+            " union ", " union all ", " intersect ", " except ", " minus "
+        },
+    };
+
+    var hits = new System.Collections.Generic.List&lt;string&gt;();
+    foreach (var kv in sqlPatterns)
+        foreach (var pattern in kv.Value)
+            if (request.Contains(pattern) &amp;&amp; !hits.Contains(kv.Key))
+                hits.Add(kv.Key);
+
+    if (hits.Any())
+    {
+        tool.ExecResult =
+            $"MODEL TYPE: SQL — use report_create_from_sql.\n" +
+            $"REASON: the request contains patterns that require SQL and cannot be expressed with metadata columns:\n" +
+            string.Join("\n", hits.Select(h =&gt; $"  • {h}"));
+    }
+    else
+    {
+        tool.ExecResult =
+            "MODEL TYPE: Metadata — use report_create_from_xml.\n" +
+            "REASON: no SQL-requiring patterns detected (no window functions, subqueries, CTEs, or set operations). " +
+            "Standard aggregation, grouping, and filtering are native metadata model capabilities.";
+    }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>aa2baa07-6828-4f6c-9640-466feb5e1b22</GUID>
+      <Name>report_create_from_sql</Name>
+      <Description>Creates a new report with a single SQL model using the Seal Report API. The SQL is executed at runtime against the chosen data source; columns are resolved dynamically so no metadata GUIDs are required. Use datasource_get_detail to obtain the correct table and column names before writing the SQL.</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\Sales\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"display_name":{"type":"string","description":"Report display name shown in results."},"sql":{"type":"string","description":"SELECT statement executed by the model."},"source_guid":{"type":"string","description":"GUID of the data source to use, as returned by datasource_list or datasource_get_detail. Omit to use the default source."},"model_name":{"type":"string","description":"Optional name for the model. Defaults to 'Model'."},"description":{"type":"string","description":"Optional report description stored in MetaInfo."},"keep_column_names":{"type":"boolean","description":"If true, SQL column aliases are used as-is for column headers. Default false."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file. Default false."}},"required":["path","display_name","sql"]}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args             = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path             = args.GetProperty("path").GetString();
+    var displayName      = args.GetProperty("display_name").GetString();
+    var sql              = args.GetProperty("sql").GetString();
+    var sourceGuid       = args.TryGetProperty("source_guid",        out var snp) ? snp.GetString() : null;
+    var modelName        = args.TryGetProperty("model_name",        out var mnp) ? mnp.GetString() : null;
+    var description      = args.TryGetProperty("description",       out var dp)  ? dp.GetString()  : null;
+    var keepColumnNames  = args.TryGetProperty("keep_column_names", out var kp)  &amp;&amp; kp.GetBoolean();
+    var overwrite        = args.TryGetProperty("overwrite",         out var op)  &amp;&amp; op.GetBoolean();
+
+    var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    // Resolve destination full path
+    string fullPath = null;
+    foreach (var kv in roots)
+        if (path.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            { fullPath = Path.Combine(kv.Value, path.Substring(kv.Key.Length + 1)); break; }
+    if (fullPath == null) fullPath = Path.Combine(repo.ReportsFolder, path);
+    if (!fullPath.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+        fullPath += "." + Repository.SealReportFileExtension;
+
+    if (File.Exists(fullPath) &amp;&amp; !overwrite)
+        { tool.ExecResult = $"Error: '{path}' already exists. Set overwrite=true to replace it."; return; }
+
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), (int)FolderRight.Edit))
+        { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+
+    try
+    {
+        // Create the report shell (sources, default model, default HTML view)
+        var report = Report.Create(repo);
+        report.FilePath    = fullPath;
+        report.DisplayName = displayName;
+        if (!string.IsNullOrEmpty(description)) report.SetMetaInfo("Description", description);
+
+        // Pick the right ReportSource by MetaSource GUID
+        ReportSource reportSource = null;
+        if (!string.IsNullOrEmpty(sourceGuid))
+        {
+            reportSource = report.Sources.FirstOrDefault(s =&gt; s.MetaSourceGUID == sourceGuid);
+            if (reportSource == null)
+                { tool.ExecResult = $"Error: no source with GUID '{sourceGuid}' found. Available GUIDs: {string.Join(", ", report.Sources.Select(s =&gt; s.MetaSourceGUID))}"; return; }
+        }
+        else
+        {
+            reportSource = report.Sources.FirstOrDefault(s =&gt; s.IsDefault) ?? report.Sources.FirstOrDefault();
+        }
+        report.Sources.RemoveAll(i =&gt; i != reportSource);
+
+        // Configure the default model as a SQL model
+        var model = report.Models[0];
+        model.SourceGUID = reportSource.GUID;
+        if (!string.IsNullOrEmpty(modelName)) model.Name = modelName;
+        model.Table                  = MetaTable.Create();
+        model.Table.DynamicColumns   = true;
+        model.Table.KeepColumnNames  = keepColumnNames;
+        model.Table.Sql              = sql;
+        model.RefreshMetaTable(true);
+        
+        //Add elements
+        foreach (var col in model.Table.Columns)
+        {
+            var element = ReportElement.Create();
+            element.Source = model.Source;
+            element.Report = model.Report;
+            element.Model = model;
+            element.MetaColumnGUID = col.GUID;
+            element.MetaColumn = col;
+            element.Name = col.Name;
+            element.PivotPosition = PivotPosition.Row;
+            element.SetDefaults();
+            model.Elements.Add(element);
+        }
+
+        var dir = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+        report.SaveToFile(fullPath);
+
+        tool.ExecResult = $"Created: {path}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
+      <Name>report_create_from_xml</Name>
+      <Description>Creates a new metadata report by writing a complete XML definition. Use for reports built on the data source's defined metadata columns (tabular, pivot, search reports). Before calling this tool, set &lt;MetaSourceGUID&gt; to the GUID from datasource_list and every &lt;MetaColumnGUID&gt; to the matching column GUID from datasource_get_detail. Internal cross-reference GUIDs (GUID, ViewGUID, SourceGUID, ModelGUID) are regenerated automatically; metadata reference GUIDs (MetaSourceGUID, MetaColumnGUID) are preserved exactly as supplied. For SQL-based reports use report_create_from_sql instead.</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\\\Sales\\\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"xml":{"type":"string","description":"Complete XML content of the report file (.srex). Retrieve a template via report_get_xml, replace MetaSourceGUID and MetaColumnGUID with values from datasource_list / datasource_get_detail, then pass the result here."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file at the destination path. Default false."}},"required":["path","xml"]}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using System.Text.RegularExpressions
+@using System.Xml.Linq
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path      = args.GetProperty("path").GetString();
+    var xml       = args.GetProperty("xml").GetString();
+    var overwrite = args.TryGetProperty("overwrite", out var op) &amp;&amp; op.GetBoolean();
+
+    var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+        if (path.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            { fullPath = Path.Combine(kv.Value, path.Substring(kv.Key.Length + 1)); break; }
+    if (fullPath == null) fullPath = Path.Combine(repo.ReportsFolder, path);
+    if (!fullPath.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+        fullPath += "." + Repository.SealReportFileExtension;
+
+    if (File.Exists(fullPath) &amp;&amp; !overwrite)
+        { tool.ExecResult = $"Error: '{path}' already exists. Set overwrite=true to replace it."; return; }
+
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), (int)FolderRight.Edit))
+        { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+
+    try
+    {
+        var doc = XDocument.Parse(xml);
+
+        // Only regenerate internal cross-reference GUIDs.
+        // MetaSourceGUID and MetaColumnGUID must be preserved — they reference
+        // actual repository metadata objects and must be supplied correctly by the caller.
+        var internalNames = new System.Collections.Generic.HashSet&lt;string&gt;(StringComparer.OrdinalIgnoreCase)
+        {
+            "GUID", "ViewGUID", "SourceGUID", "ModelGUID"
+        };
+
+        // Build old→new map from all internal GUID elements
+        var guidMap = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase);
+        foreach (var el in doc.Descendants())
+        {
+            if (!internalNames.Contains(el.Name.LocalName)) continue;
+            var val = el.Value?.Trim();
+            if (!string.IsNullOrEmpty(val) &amp;&amp; !guidMap.ContainsKey(val))
+                guidMap[val] = Guid.NewGuid().ToString();
+        }
+
+        // Rewrite internal GUID elements with the new values
+        foreach (var el in doc.Descendants())
+        {
+            if (!internalNames.Contains(el.Name.LocalName)) continue;
+            var val = el.Value?.Trim();
+            if (!string.IsNullOrEmpty(val) &amp;&amp; guidMap.TryGetValue(val, out var rep))
+                el.Value = rep;
+        }
+
+        // Rewrite GUID references inside &lt;Restriction&gt; and &lt;AggregateRestriction&gt; text.
+        // The format is [key] where key may be a real GUID or any short placeholder (e.g. f1).
+        // Match anything inside brackets and remap it if found in guidMap.
+        var restrictionNames = new System.Collections.Generic.HashSet&lt;string&gt;(StringComparer.OrdinalIgnoreCase)
+        {
+            "Restriction", "AggregateRestriction"
+        };
+        foreach (var el in doc.Descendants())
+        {
+            if (!restrictionNames.Contains(el.Name.LocalName) || string.IsNullOrEmpty(el.Value)) continue;
+            el.Value = Regex.Replace(el.Value,
+                @"\[([^\]]+)\]",
+                m =&gt; {
+                    var inner = m.Groups[1].Value;
+                    return guidMap.TryGetValue(inner, out var rep) ? "[" + rep + "]" : m.Value;
+                });
+        }
+
+        var sb = new StringBuilder();
+        if (doc.Declaration != null) { sb.Append(doc.Declaration).Append("\r\n"); }
+        sb.Append(doc.ToString());
+
+        var dir = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+        File.WriteAllText(fullPath, sb.ToString(), System.Text.Encoding.UTF8);
+
+        tool.ExecResult = $"Created: {path}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c</GUID>
+      <Name>report_configure_output</Name>
+      <Description>Configures or removes a folder output on an existing report. Use action=configure (default) to add or update the output folder, file name, and format. Use action=delete to remove the output and all its associated schedules from the report — never use report_manage for this. Folder path formats: "Personal" or "Personal\subfolder" for the user's personal folder; "Reports\subfolder" for a repository reports folder; an absolute path (e.g. C:\Reports\Daily); or a path with %SEALREPOSITORY% for the repository root. Always call this before report_configure_schedule.</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update the folder output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"folder_path":{"type":"string","description":"Required for action=configure. Output folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date (e.g. report_{0:yyyyMMdd}.xlsx). Omit to use the report display name."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"output_name":{"type":"string","description":"Display name for this output inside the report. Auto-generated if omitted."}},"required":["path"]}</ParametersSchema>
+      <ExecutionScript>@using System.Text.Json
+@using System.IO
+@using System.Linq
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args       = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path       = args.GetProperty("path").GetString();
+    var action     = args.TryGetProperty("action",        out var acp) ? acp.GetString() : "configure";
+    var folderPath = args.TryGetProperty("folder_path",   out var flp) ? flp.GetString() : null;
+    var fileName   = args.TryGetProperty("file_name",     out var fnp) ? fnp.GetString() : null;
+    var format     = args.TryGetProperty("output_format", out var fmp) ? fmp.GetString() : "Excel";
+    var outputName = args.TryGetProperty("output_name",   out var onp) ? onp.GetString() : null;
+
+    var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string Resolve(string relative)
+    {
+        foreach (var kv in roots)
+        {
+            var candidate = relative.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                ? Path.Combine(kv.Value, relative.Substring(kv.Key.Length + 1))
+                : Path.Combine(kv.Value, relative);
+            if (File.Exists(candidate)) return candidate;
+        }
+        return null;
+    }
+
+    // Helper: collect GUIDs of all folder devices
+    var folderDeviceGuids = new System.Collections.Generic.HashSet&lt;string&gt;(StringComparer.OrdinalIgnoreCase);
+    foreach (var d in repo.Devices.OfType&lt;OutputFolderDevice&gt;()) folderDeviceGuids.Add(d.GUID);
+    folderDeviceGuids.Add(OutputFolderDevice.DefaultGUID);
+
+    try
+    {
+        var fullPath = Resolve(path);
+        if (fullPath == null) { tool.ExecResult = $"Error: report '{path}' not found."; return; }
+
+        var dir = Path.GetDirectoryName(fullPath);
+        if (!securityContext.HasFolderRight(dir, (int)FolderRight.Edit))
+            { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+
+        var report = Report.LoadFromFile(fullPath, repo, false);
+
+        // ── DELETE branch ────────────────────────────────────────────────────────
+        if (string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase))
+        {
+            var toRemove = report.Outputs.Where(o =&gt; folderDeviceGuids.Contains(o.OutputDeviceGUID)).ToList();
+            if (toRemove.Count == 0) { tool.ExecResult = $"No folder output found on '{path}' to delete."; return; }
+            foreach (var o in toRemove) report.RemoveOutput(o); // also removes linked schedules
+            report.SaveToFile();
+            tool.ExecResult = $"Folder output (and all linked schedules) removed from '{path}'.";
+            return;
+        }
+
+        // ── CONFIGURE branch ─────────────────────────────────────────────────────
+        if (string.IsNullOrEmpty(folderPath))
+            { tool.ExecResult = "Error: folder_path is required for action=configure."; return; }
+
+        // Find existing folder-device output or create a new one
+        var device = repo.Devices.OfType&lt;OutputFolderDevice&gt;().FirstOrDefault()
+                     ?? OutputFolderDevice.Create();
+
+        var output = report.Outputs.FirstOrDefault(o =&gt; folderDeviceGuids.Contains(o.OutputDeviceGUID));
+        if (output == null)
+            output = report.AddOutput(device);
+
+        if (!string.IsNullOrEmpty(outputName)) output.Name = outputName;
+
+        // ── Resolve folder_path to a keyword-based stored path ──────────────────
+        // Mirrors the web interface logic so the path is portable across machines.
+        string resolvedFolderPath;
+        if (folderPath.StartsWith("Personal", StringComparison.OrdinalIgnoreCase))
+        {
+            // Personal folder: resolve to user's physical personal folder then store
+            // with %SEALPERSONALREPOSITORY% so it expands correctly at runtime.
+            if (securityContext.PersonalFolderRight == PersonalFolderRight.None)
+                { tool.ExecResult = "Error: no right to create files in your personal folder."; return; }
+
+            var personalRoot = repo.GetPersonalFolder(securityContext); // e.g. C:\Repo\Personal\john
+            var sub = folderPath.Substring("Personal".Length).TrimStart(Path.DirectorySeparatorChar, '/');
+            // The LLM may include the username segment (from report_list display format).
+            // Strip it if present so we don't double-nest it under the personal root.
+            var userName = Path.GetFileName(personalRoot.TrimEnd(Path.DirectorySeparatorChar));
+            if (sub.StartsWith(userName + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                sub = sub.Substring(userName.Length + 1);
+            else if (string.Equals(sub, userName, StringComparison.OrdinalIgnoreCase))
+                sub = string.Empty;
+
+            var physPath = string.IsNullOrEmpty(sub) ? personalRoot : Path.Combine(personalRoot, sub);
+            resolvedFolderPath = physPath.Replace(repo.PersonalFolder, Repository.SealPersonalRepositoryKeyword);
+        }
+        else if (folderPath.StartsWith("Reports", StringComparison.OrdinalIgnoreCase))
+        {
+            // Reports repository folder: check write access then store with keyword.
+            var sub = folderPath.Substring("Reports".Length); // e.g. "\Sales\output" or ""
+            var swiSub = sub.Length &gt; 0 ? sub : Path.DirectorySeparatorChar.ToString();
+            var secFolder = securityContext.FindSecurityFolder(swiSub);
+            if (secFolder != null &amp;&amp; secFolder.FolderRight != FolderRight.Edit)
+                { tool.ExecResult = $"Error: no write access to reports folder '{folderPath}'."; return; }
+            resolvedFolderPath = Repository.SealReportsRepositoryKeyword + sub;
+        }
+        else
+        {
+            // Absolute path or already contains a %SEAL...% keyword — store as-is.
+            resolvedFolderPath = folderPath;
+        }
+
+        output.FolderPath = resolvedFolderPath;
+        if (!string.IsNullOrEmpty(fileName)) output.FileName = fileName;
+
+        // Update report_format view parameter on the output
+        var param = output.ViewParameters.FirstOrDefault(p =&gt; p.Name == "report_format");
+        if (param != null) { param.Value = format; param.CustomValue = true; }
+
+        report.SaveToFile();
+        tool.ExecResult = $"Output configured on '{path}': folder='{folderPath}', file='{output.FileName}', format='{format}', name='{output.Name}'. You can now call report_configure_schedule to add a schedule.";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d</GUID>
+      <Name>report_configure_schedule</Name>
+      <Description>Adds or removes a recurring or one-time schedule on an existing report's folder output. Use action=configure (default) to add a schedule; use action=delete to remove all schedules from the report — never use report_manage for this. Requires the report to already have a folder output — call report_configure_output first if none exists. Use when the user wants automated execution: "every morning at 7am", "weekly on Monday", "run daily", "schedule this report", "send every month on the 1st", "delete the schedule".</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add a new schedule. delete: remove all schedules from the report (does NOT delete the report file or its output)."},"type":{"type":"string","enum":["daily","weekly","monthly","once"],"description":"Required for action=configure. Recurrence type. Use once for a single one-time run."},"start_datetime":{"type":"string","description":"Required for action=configure. ISO 8601 date-time for the first or only run, e.g. 2025-06-01T07:00:00"},"days_interval":{"type":"integer","description":"For daily: interval in days between runs (default 1 = every day)."},"weekdays":{"type":"array","items":{"type":"integer"},"description":"For weekly: days of week to run. 0=Sunday, 1=Monday … 6=Saturday. E.g. [1,3] = Mon and Wed."},"months":{"type":"array","items":{"type":"integer"},"description":"For monthly: months to run (1=Jan … 12=Dec). Omit for every month."},"days":{"type":"array","items":{"type":"integer"},"description":"For monthly: days of month to run (1-31, 32=last day). E.g. [1] = 1st of each month."},"schedule_name":{"type":"string","description":"Optional display name for the schedule."}},"required":["path"]}</ParametersSchema>
+      <ExecutionScript>@using System.Text.Json
+@using System.IO
+@using System.Linq
+@using Seal.Model
+@using Seal.AI
+@using Microsoft.Win32.TaskScheduler
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path         = args.GetProperty("path").GetString();
+    var action       = args.TryGetProperty("action",        out var acp) ? acp.GetString() : "configure";
+    var scheduleType = args.TryGetProperty("type",          out var stp) ? stp.GetString() : null;
+    var startStr     = args.TryGetProperty("start_datetime",out var sdp) ? sdp.GetString() : null;
+    var daysInterval = args.TryGetProperty("days_interval", out var dip) ? dip.GetInt32()  : 1;
+    var scheduleName = args.TryGetProperty("schedule_name", out var snp) ? snp.GetString() : null;
+
+    int[] weekdays = null;
+    if (args.TryGetProperty("weekdays", out var wdp) &amp;&amp; wdp.ValueKind == JsonValueKind.Array)
+        weekdays = wdp.EnumerateArray().Select(e =&gt; e.GetInt32()).ToArray();
+
+    int[] months = null;
+    if (args.TryGetProperty("months", out var mp) &amp;&amp; mp.ValueKind == JsonValueKind.Array)
+        months = mp.EnumerateArray().Select(e =&gt; e.GetInt32()).ToArray();
+
+    int[] days = null;
+    if (args.TryGetProperty("days", out var daysp) &amp;&amp; daysp.ValueKind == JsonValueKind.Array)
+        days = daysp.EnumerateArray().Select(e =&gt; e.GetInt32()).ToArray();
+
+    var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string Resolve(string relative)
+    {
+        foreach (var kv in roots)
+        {
+            var candidate = relative.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                ? Path.Combine(kv.Value, relative.Substring(kv.Key.Length + 1))
+                : Path.Combine(kv.Value, relative);
+            if (File.Exists(candidate)) return candidate;
+        }
+        return null;
+    }
+
+    try
+    {
+        var fullPath = Resolve(path);
+        if (fullPath == null) { tool.ExecResult = $"Error: report '{path}' not found."; return; }
+
+        var dir = Path.GetDirectoryName(fullPath);
+        if (!securityContext.HasFolderRight(dir, (int)FolderRight.Edit))
+            { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+
+        var report = Report.LoadFromFile(fullPath, repo, false);
+
+        // Collect folder device GUIDs
+        var folderDeviceGuids = new System.Collections.Generic.HashSet&lt;string&gt;(repo.Devices.OfType&lt;OutputFolderDevice&gt;().Select(d =&gt; d.GUID));
+        folderDeviceGuids.Add(OutputFolderDevice.DefaultGUID);
+
+        // ── DELETE branch ────────────────────────────────────────────────────────
+        if (string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase))
+        {
+            var s = report.Schedules.FirstOrDefault(s =&gt; s.Name == scheduleName);
+            if (s== null)
+                { tool.ExecResult = $"No schedules found on '{path}' to delete."; return; }
+            report.RemoveSchedule(s);
+            
+            report.SaveToFile();
+            tool.ExecResult = $"schedule removed from '{path}'.";
+            return;
+        }
+
+        // ── CONFIGURE branch — validate required params ──────────────────────────
+        if (string.IsNullOrEmpty(scheduleType))
+            { tool.ExecResult = "Error: 'type' is required for action=configure."; return; }
+        if (string.IsNullOrEmpty(startStr))
+            { tool.ExecResult = "Error: 'start_datetime' is required for action=configure."; return; }
+
+        var output = report.Outputs.FirstOrDefault(o =&gt; folderDeviceGuids.Contains(o.OutputDeviceGUID));
+        if (output == null)
+            { tool.ExecResult = "Error: this report has no folder output. Call report_configure_output first."; return; }
+
+        // Parse start datetime
+        if (!DateTime.TryParse(startStr, out var startDt))
+            { tool.ExecResult = $"Error: cannot parse start_datetime '{startStr}'. Use ISO 8601 (e.g. 2025-06-01T07:00:00)."; return; }
+
+        // Map type to TriggerType (used by both Seal and WTS paths)
+        TriggerType triggerType;
+        switch (scheduleType.ToLowerInvariant())
+        {
+            case "daily":   triggerType = TriggerType.Daily;   break;
+            case "weekly":  triggerType = TriggerType.Weekly;  break;
+            case "monthly": triggerType = TriggerType.Monthly; break;
+            case "once":    triggerType = TriggerType.Time;    break;
+            default:
+                tool.ExecResult = $"Error: unknown type '{scheduleType}'. Use daily, weekly, monthly or once.";
+                return;
+        }
+
+        // Create schedule linked to the output
+        var schedule = report.AddSchedule(output);
+        if (!string.IsNullOrEmpty(scheduleName)) schedule.Name = scheduleName;
+
+        // ── Seal Scheduler path ──────────────────────────────────────────────────
+        // SealXxx properties are only meaningful when UseSealScheduler is true.
+        // They are stored on the SealSchedule object and persisted by
+        // SealReportScheduler.Instance.SaveSchedule() inside SynchronizeTask().
+        if (Repository.Instance.UseSealScheduler)
+        {
+            schedule.SealEnabled = true;
+            schedule.SealType    = triggerType;
+            schedule.SealStart   = startDt;
+            schedule.SealEnd     = startDt.AddYears(10);
+
+            if (triggerType == TriggerType.Daily)
+                schedule.SealDaysInterval = daysInterval;
+
+            if (triggerType == TriggerType.Weekly &amp;&amp; weekdays != null &amp;&amp; weekdays.Length &gt; 0)
+                schedule.SealWeekdays = weekdays;
+
+            if (triggerType == TriggerType.Monthly)
+            {
+                if (months != null &amp;&amp; months.Length &gt; 0) schedule.SealMonths = months;
+                if (days   != null &amp;&amp; days.Length   &gt; 0) schedule.SealDays   = days;
+            }
+        }
+        // ── Windows Task Scheduler path ──────────────────────────────────────────
+        // The SealXxx properties have no effect here. The trigger must be written
+        // directly to the TaskDefinition and re-registered.
+        // schedule.Task creates the WTS task on first access if it doesn't exist yet.
+        else
+        {
+            var wtsTask   = schedule.Task;          // creates WTS task if missing
+            var definition = wtsTask.Definition;
+            definition.Triggers.Clear();
+
+            Trigger wTrigger;
+            switch (triggerType)
+            {
+                case TriggerType.Daily:
+                    var dt = new DailyTrigger { StartBoundary = startDt, Enabled = true };
+                    dt.DaysInterval = (short)daysInterval;
+                    wTrigger = dt;
+                    break;
+                case TriggerType.Weekly:
+                    var wt = new WeeklyTrigger { StartBoundary = startDt, Enabled = true };
+                    if (weekdays != null &amp;&amp; weekdays.Length &gt; 0)
+                    {
+                        // DaysOfWeek flags: Sunday=1, Monday=2, Tuesday=4 … Saturday=64 → bit = 1 &lt;&lt; dayIndex
+                        DaysOfTheWeek dow = 0;
+                        foreach (var d in weekdays) dow |= (DaysOfTheWeek)(1 &lt;&lt; d);
+                        wt.DaysOfWeek = dow;
+                    }
+                    wTrigger = wt;
+                    break;
+                case TriggerType.Monthly:
+                    var mt = new MonthlyTrigger { StartBoundary = startDt, Enabled = true };
+                    if (months != null &amp;&amp; months.Length &gt; 0)
+                    {
+                        // MonthsOfYear flags: Jan=1, Feb=2, Mar=4 … Dec=2048 → bit = 1 &lt;&lt; (month-1)
+                        MonthsOfTheYear moy = 0;
+                        foreach (var m in months) moy |= (MonthsOfTheYear)(1 &lt;&lt; (m - 1));
+                        mt.MonthsOfYear = moy;
+                    }
+                    if (days != null &amp;&amp; days.Length &gt; 0)
+                    {
+                        // DaysOfMonth is int[] of day numbers (1-31); day 32 = last day of month
+                        var domList = new System.Collections.Generic.List&lt;int&gt;();
+                        bool lastDay = false;
+                        foreach (var d in days)
+                        {
+                            if (d == 32) lastDay = true;
+                            else if (d &gt;= 1 &amp;&amp; d &lt;= 31) domList.Add(d);
+                        }
+                        mt.DaysOfMonth = domList.ToArray();
+                        mt.RunOnLastDayOfMonth = lastDay;
+                    }
+                    wTrigger = mt;
+                    break;
+                default: // once
+                    wTrigger = new TimeTrigger { StartBoundary = startDt, Enabled = true };
+                    break;
+            }
+            definition.Triggers.Add(wTrigger);
+            schedule.RegisterTaskDefinition(definition);
+        }
+
+        report.SchedulesModified = true;
+        report.SaveToFile();
+
+        var schedulerLabel = Repository.Instance.UseSealScheduler ? "Seal Scheduler" : "Windows Task Scheduler";
+        var sb = new System.Text.StringBuilder();
+        sb.Append($"Schedule '{schedule.Name}' added to '{path}' [{schedulerLabel}]: type={scheduleType}, starts={startDt:yyyy-MM-dd HH:mm}");
+        if (triggerType == TriggerType.Daily)                                       sb.Append($", every {daysInterval} day(s)");
+        if (triggerType == TriggerType.Weekly  &amp;&amp; weekdays != null)                 sb.Append($", weekdays=[{string.Join(",", weekdays)}]");
+        if (triggerType == TriggerType.Monthly &amp;&amp; months   != null)                 sb.Append($", months=[{string.Join(",", months)}]");
+        if (triggerType == TriggerType.Monthly &amp;&amp; days     != null)                 sb.Append($", days=[{string.Join(",", days)}]");
+        tool.ExecResult = sb.ToString();
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
+      <Name>report_execute_get_data</Name>
+      <Description>Executes a report and returns its result tables as structured JSON data. Use it to fetch the actual data produced by an existing report for analysis, answering data questions, or generating a summary. Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex). Optionally pass model_name to restrict the output to a single model.</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex or Personal\\username\\monthly.srex)"},"model_name":{"type":"string","description":"Optional model name to restrict results to a single model. If omitted, all models are returned."}},"required":["path"]}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Threading
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var relativePath = args.GetProperty("path").GetString();
+    var modelName    = args.TryGetProperty("model_name", out var mnp) ? mnp.GetString() : null;
+
+    // Resolve full path across repository roots
+    var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+    {
+        var candidate = relativePath.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(kv.Value, relativePath.Substring(kv.Key.Length + 1))
+            : Path.Combine(kv.Value, relativePath);
+        if (File.Exists(candidate)) { fullPath = candidate; break; }
+    }
+
+    if (fullPath == null) { tool.ExecResult = $"Error: report '{relativePath}' not found."; return; }
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), 1))
+        { tool.ExecResult = $"Error: access denied to '{relativePath}'."; return; }
+
+    Report report;
+    try { report = Report.LoadFromFile(fullPath, repo); }
+    catch (Exception ex) { tool.ExecResult = $"Error loading report: {ex.Message}"; return; }
+
+    if (!string.IsNullOrEmpty(report.LoadErrors))
+        { tool.ExecResult = $"Error loading report '{relativePath}': {report.LoadErrors}"; return; }
+
+    try {
+        var execution = new ReportExecution() { Report = report };
+        execution.Execute();
+        while (report.Status != ReportStatus.Executed &amp;&amp; !report.HasErrors &amp;&amp; !report.Cancel)
+        {
+            if (tool.CurrentToolCall.CancelOperation?.Cancel == true) { report.Cancel = true; break; }
+            Thread.Sleep(500);
+        }
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error executing report: {ex.Message}"; return; }
+
+    if (report.HasErrors)
+        { tool.ExecResult = $"Error executing '{relativePath}':\r\n{report.ExecutionErrors}"; return; }
+
+    var models = report.Models.Where(m =&gt; string.IsNullOrEmpty(modelName) || m.Name == modelName).ToList();
+    if (models.Count == 0)
+    {
+        tool.ExecResult = string.IsNullOrEmpty(modelName)
+            ? "No models found in report."
+            : $"No model named '{modelName}' found. Available: {string.Join(", ", report.Models.Select(m =&gt; m.Name))}.";
+        return;
+    }
+
+    var sb = new System.Text.StringBuilder();
+    foreach (var model in models)
+    {
+        var (tableJson, aggJson) = model.ResultTableTranslatedJson;
+        sb.AppendLine($"=== Model: {model.Name} ===");
+        sb.AppendLine("PRE-AGGREGATED METRICS:");
+        sb.AppendLine(aggJson);
+        sb.AppendLine("DATA:");
+        sb.AppendLine(tableJson);
+        sb.AppendLine();
+    }
+    tool.ExecResult = sb.ToString();
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
+      <Name>report_manage</Name>
+      <Description>File-level operations on a report: delete, rename (new filename in the same folder), move (to a different folder or root), or copy (to a new path). Paths use the format returned by report_list, e.g. Reports\Sales\monthly.srex. Roots are: Reports, Personal.</Description>
+      <ParametersSchema>{"type":"object","properties":{"action":{"type":"string","enum":["delete","rename","move","copy"],"description":"Operation to perform"},"path":{"type":"string","description":"Relative path of the source report (e.g. Reports\\Sales\\monthly.srex)"},"destination":{"type":"string","description":"Target relative path for rename/move/copy (e.g. Reports\\Archive\\monthly.srex). Not used for delete."}},"required":["action","path"]}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var action = args.GetProperty("action").GetString();
+    var path   = args.GetProperty("path").GetString();
+    var dest   = args.TryGetProperty("destination", out var dp) ? dp.GetString() : null;
+
+    // Root folder map
+    var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+
+    // Resolve a relative path to a full path; returns null if file not found
+    string Resolve(string relative)
+    {
+        foreach (var kv in roots)
+        {
+            var candidate = relative.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                ? Path.Combine(kv.Value, relative.Substring(kv.Key.Length + 1))
+                : Path.Combine(kv.Value, relative);
+            if (File.Exists(candidate)) return candidate;
+        }
+        return null;
+    }
+
+    // Build a full path for a destination that may not exist yet
+    string ResolveDestination(string relative, string sourceRoot)
+    {
+        foreach (var kv in roots)
+            if (relative.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                return Path.Combine(kv.Value, relative.Substring(kv.Key.Length + 1));
+        return Path.Combine(sourceRoot, relative);
+    }
+
+    // Determine root folder for a resolved path
+    string GetSourceRoot(string fullPath)
+    {
+        foreach (var kv in roots)
+            if (fullPath.StartsWith(kv.Value, StringComparison.OrdinalIgnoreCase)) return kv.Value;
+        return roots["Reports"];
+    }
+
+    try
+    {
+        var sourceFull = Resolve(path);
+        if (sourceFull == null) { tool.ExecResult = $"Error: '{path}' not found."; return; }
+
+        var sourceDir = Path.GetDirectoryName(sourceFull);
+
+        if (action == "delete")
+        {
+            if (!securityContext.HasFolderRight(sourceDir, (int)FolderRight.Edit))
+                { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+            File.Delete(sourceFull);
+            tool.ExecResult = $"Deleted: {path}";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(dest)) { tool.ExecResult = "Error: 'destination' is required for this action."; return; }
+
+        var destFull = ResolveDestination(dest, GetSourceRoot(sourceFull));
+        var destDir  = Path.GetDirectoryName(destFull);
+
+        if (action == "rename" || action == "move")
+        {
+            // Write on source (to remove it) and write on destination
+            if (!securityContext.HasFolderRight(sourceDir, (int)FolderRight.Edit))
+                { tool.ExecResult = $"Error: write access denied to source '{path}'."; return; }
+            if (!securityContext.HasFolderRight(destDir, (int)FolderRight.Edit))
+                { tool.ExecResult = $"Error: write access denied to destination '{dest}'."; return; }
+            if (File.Exists(destFull)) { tool.ExecResult = $"Error: destination '{dest}' already exists."; return; }
+            if (!Directory.Exists(destDir)) Directory.CreateDirectory(destDir);
+            File.Move(sourceFull, destFull);
+            tool.ExecResult = $"{(action == "rename" ? "Renamed" : "Moved")}: {path} → {dest}";
+        }
+        else if (action == "copy")
+        {
+            // Read on source, write on destination
+            if (!securityContext.HasFolderRight(sourceDir, 1))
+                { tool.ExecResult = $"Error: read access denied to source '{path}'."; return; }
+            if (!securityContext.HasFolderRight(destDir, (int)FolderRight.Edit))
+                { tool.ExecResult = $"Error: write access denied to destination '{dest}'."; return; }
+            if (!Directory.Exists(destDir)) Directory.CreateDirectory(destDir);
+            if (sourceFull.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                var report = Report.LoadFromFile(sourceFull, repo, false);
+                report.InitGUIDs();
+                report.FilePath = destFull;
+                report.SaveToFile();
+            }
+            else
+            {
+                File.Copy(sourceFull, destFull, overwrite: false);
+            }
+            tool.ExecResult = $"Copied: {path} → {dest}";
+        }
+        else
+        {
+            tool.ExecResult = $"Error: unknown action '{action}'. Use delete, rename, move or copy.";
+        }
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
+      <Name>report_list</Name>
+      <Description>Lists reports accessible to the current web user. Only folders with access rights are browsed — hidden folders (right=0) and files-only folders are excluded — and Personal folders are included when the user has personal folder rights. Display paths use "Reports\..." or "Personal\username\..." format compatible with other report tools. Pass an optional list of sub-folder names to restrict the scan; omit or pass [] to scan all accessible folders.</Description>
+      <ParametersSchema>{"type":"object","properties":{"folders":{"type":"array","items":{"type":"string"},"description":"Optional list of sub-folder names to scan. Omit or pass [] to scan everything accessible."}}}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var sb              = new StringBuilder();
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+
+    // Parse optional folder-filter argument
+    var rawArgs = tool.CurrentToolCall.Arguments;
+    var args    = JsonDocument.Parse(string.IsNullOrWhiteSpace(rawArgs) ? "{}" : rawArgs).RootElement;
+    var filterFolders = args.TryGetProperty("folders", out var fp)
+        ? fp.EnumerateArray().Select(e =&gt; e.GetString()).Where(s =&gt; !string.IsNullOrWhiteSpace(s)).ToList()
+        : new System.Collections.Generic.List&lt;string&gt;();
+
+    if (securityContext == null)
+    {
+        tool.ExecResult = "Error: no security context available.";
+        return;
+    }
+
+    // Compute the user's personal directory root (null when no personal right).
+    string personalUserDir = securityContext.PersonalFolderRight != PersonalFolderRight.None
+        ? repo.GetPersonalFolder(securityContext)
+        : null;
+
+    // Folder tree built by SWIGetRootFolders – iterate every accessible folder.
+    // Skip folders with no right (hidden) and files-only folders (no reports shown).
+    foreach (var folder in securityContext.AllFolders)
+    {
+        if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
+        if (folder.right == 0) continue;  // no access – hidden from this user
+        if (folder.files)      continue;  // files-only folder, reports not shown
+
+        // Compute physical path and display path from the SWIFolder fields.
+        // Physical path is derived directly – never via GetFullPath() which may be null.
+        // Display paths match the convention used by report_get_detail / report_get_xml:
+        //   Reports\subfolder\...   or   Personal\username\subfolder\...
+        string physPath, displayPath;
+        if (folder.IsPersonal)
+        {
+            if (personalUserDir == null) continue;
+            var absDir  = personalUserDir + folder.FinalPath;
+            physPath    = absDir;
+            displayPath = "Personal" + folder.FinalPath;
+        }
+        else
+        {
+            physPath    = repo.ReportsFolder + folder.path;
+            displayPath = "Reports" + folder.path.TrimEnd(Path.DirectorySeparatorChar);
+        }
+
+        if (!Directory.Exists(physPath)) continue;
+
+        // Apply optional name filter
+        if (filterFolders.Count &gt; 0 &amp;&amp; !filterFolders.Any(f =&gt;
+                displayPath.IndexOf(f, StringComparison.OrdinalIgnoreCase) &gt;= 0))
+            continue;
+
+        // Scan this folder only (TopDirectoryOnly – every sub-folder is its own entry
+        // in AllFolders and will be processed separately, filtered by its own right).
+        foreach (var file in Directory.GetFiles(physPath, "*." + Repository.SealReportFileExtension).OrderBy(f =&gt; f))
+        {
+            if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
+            try
+            {
+                var report      = Report.LoadFromFile(file, repo, refreshEnums: false);
+                var relPath     = displayPath.TrimEnd(Path.DirectorySeparatorChar)
+                                  + Path.DirectorySeparatorChar + Path.GetFileName(file);
+                var displayName = !string.IsNullOrEmpty(report.DisplayName) &amp;&amp; !report.DisplayName.StartsWith("@")
+                                  ? report.DisplayName
+                                  : Path.GetFileNameWithoutExtension(file);
+                var description = report.GetMetaInfo("Description") ?? "";
+
+                sb.Append($"## {relPath}");
+                if (displayName != Path.GetFileNameWithoutExtension(file)) sb.Append($" ({displayName})");
+                if (!string.IsNullOrEmpty(description)) sb.Append($" — {description}");
+                sb.AppendLine();
+
+                foreach (var model in report.Models)
+                {
+                    var cols = model.Elements.Select(e =&gt; e.DisplayNameEl).Distinct().ToList();
+                    if (cols.Count == 0) continue;
+                    sb.AppendLine($"  Model '{model.Name}': {string.Join(", ", cols)}");
+                }
+                sb.AppendLine();
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine($"## {Path.GetFileName(file)} — Error loading: {ex.Message}");
+                sb.AppendLine();
+            }
+        }
+    }
+    tool.ExecResult = sb.ToString();
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+      <Name>get_current_folder</Name>
+      <Description>Returns the user's current working folder — the folder the user is currently browsing in the web interface — in the display-path format used by report_list and the report creation tools (e.g. "Reports\Sales"). Also lists all folders where the user has write access. Always call this tool fresh every time you need the current folder; never reuse a result from earlier in the conversation, as the user may have navigated to a different folder since then.</Description>
+      <ParametersSchema>{"type":"object","properties":{}}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var sb = new StringBuilder();
+
+    // ── Current folder ────────────────────────────────────────────────────────
+    // SecurityUser.CurrentFolder is the SWI folder path set by SWIGetFolderDetail
+    // each time the user navigates a folder in the web UI:
+    //   ""        → Reports root
+    //   "\Sales"  → Reports\Sales
+    //   ":"       → Personal root
+    //   ":\Sub"   → Personal\Sub
+    // Convert to the report_list display format used by the report_ tools.
+    var swiFolder = securityContext.CurrentFolder ?? "";
+    string currentFolder;
+    if (swiFolder.StartsWith(":"))
+    {
+        var sub = swiFolder.Substring(1).TrimEnd(Path.DirectorySeparatorChar);
+        currentFolder = string.IsNullOrEmpty(sub) ? "Personal" : "Personal" + sub;
+    }
+    else
+    {
+        currentFolder = "Reports" + swiFolder.TrimEnd(Path.DirectorySeparatorChar);
+    }
+
+    sb.AppendLine($"Current folder: {currentFolder}");
+    sb.AppendLine();
+
+    // ── Writable folders ──────────────────────────────────────────────────────
+    sb.AppendLine("Writable folders (where you can save reports):");
+    bool hasWritable = false;
+    foreach (var folder in securityContext.AllFolders)
+    {
+        if ((FolderRight)folder.right != FolderRight.Edit) continue;
+        if (folder.files) continue;
+
+        string displayPath = folder.IsPersonal
+            ? "Personal" + folder.FinalPath.TrimEnd(Path.DirectorySeparatorChar)
+            : "Reports"  + folder.path.TrimEnd(Path.DirectorySeparatorChar);
+
+        sb.AppendLine($"  - {displayPath}");
+        hasWritable = true;
+    }
+    if (!hasWritable) sb.AppendLine("  (none — user has no write access to any folder)");
+
+    tool.ExecResult = sb.ToString();
+}</ExecutionScript>
+    </AIToolConfiguration>
+  </AITools>
+  <AIAssistants>
+    <AIAssistantConfiguration>
+      <GUID>16dc89e8-1954-4425-a539-a5d3d71f32ae</GUID>
+      <Name>Main</Name>
+      <IsDefault>true</IsDefault>
+      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ToolGUIDs />
+      <DefaultSystemPrompt />
+      <SystemPromptFile>main-system-prompt.txt</SystemPromptFile>
+      <SamplePromptsFile>main-sample-prompts.txt</SamplePromptsFile>
+    </AIAssistantConfiguration>
+  </AIAssistants>
+</AIServerConfiguration>

@@ -51,7 +51,7 @@ namespace Seal.AI
             // Resolve configuration
             if (string.IsNullOrEmpty(assistantName))
             {
-                Configuration = Repository.Instance.Configuration.AIAssistants
+                Configuration = Repository.Instance.AIConfiguration.AIAssistants
                     .Find(a => a.IsDefault && a.IsEnabled)
                     ?? throw new System.Exception(
                         "No default AI assistant configuration found. " +
@@ -59,7 +59,7 @@ namespace Seal.AI
             }
             else
             {
-                Configuration = Repository.Instance.Configuration.AIAssistants
+                Configuration = Repository.Instance.AIConfiguration.AIAssistants
                     .Find(a => a.Name == assistantName && a.IsEnabled)
                     ?? throw new System.Exception(
                         $"AI assistant configuration '{assistantName}' not found or is disabled.");

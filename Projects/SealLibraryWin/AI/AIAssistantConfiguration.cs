@@ -17,7 +17,7 @@ namespace Seal.AI
 {
     /// <summary>
     /// Configuration for an AI assistant: ties together one provider, an optional subset of tools,
-    /// and a default system prompt. Stored in <see cref="Seal.Model.SealServerConfiguration.AIAssistants"/>.
+    /// and a default system prompt. Stored in <see cref="Seal.AI.AIServerConfiguration.AIAssistants"/>.
     /// </summary>
     public class AIAssistantConfiguration : RootEditor
     {
@@ -211,7 +211,7 @@ namespace Seal.AI
         public AIProviderConfiguration GetProviderConfiguration()
         {
             if (string.IsNullOrEmpty(ProviderGUID)) return null;
-            return Repository.Instance.Configuration.AIProviders
+            return Repository.Instance.AIConfiguration.AIProviders
                 .FirstOrDefault(p => p.GUID == ProviderGUID);
         }
 
@@ -221,7 +221,7 @@ namespace Seal.AI
         /// </summary>
         public List<AIToolConfiguration> GetToolConfigurations()
         {
-            var allEnabled = Repository.Instance.Configuration.AITools.Where(t => t.IsEnabled);
+            var allEnabled = Repository.Instance.AIConfiguration.AITools.Where(t => t.IsEnabled);
             if (ToolGUIDs == null || ToolGUIDs.Count == 0)
                 return allEnabled.ToList();
             return allEnabled.Where(t => ToolGUIDs.Contains(t.GUID)).ToList();

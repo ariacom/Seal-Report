@@ -297,6 +297,33 @@ namespace Seal.Model
             _configuration = null;
         }
 
+        Seal.AI.AIServerConfiguration _aiConfiguration = null;
+        /// <summary>
+        /// Current AI configuration (providers, tools, assistants)
+        /// </summary>
+        public Seal.AI.AIServerConfiguration AIConfiguration
+        {
+            get
+            {
+                if (_aiConfiguration == null)
+                {
+                    _aiConfiguration = Seal.AI.AIServerConfiguration.LoadFromFile(AIConfigurationPath, true);
+                    if (_aiConfiguration == null) _aiConfiguration = new Seal.AI.AIServerConfiguration();
+                    _aiConfiguration.Repository = this;
+                }
+                return _aiConfiguration;
+            }
+            set { _aiConfiguration = value; }
+        }
+
+        /// <summary>
+        /// Forces an AI configuration reload
+        /// </summary>
+        public void ReloadAIConfiguration()
+        {
+            _aiConfiguration = null;
+        }
+
         SealSecurity _security = null;
 
         /// <summary>
@@ -1066,6 +1093,14 @@ namespace Seal.Model
         public string ConfigurationPath
         {
             get { return Path.Combine(SettingsFolder, "Configuration.xml"); }
+        }
+
+        /// <summary>
+        /// AI Configuration file path
+        /// </summary>
+        public string AIConfigurationPath
+        {
+            get { return Path.Combine(SettingsFolder, "AI", "AIConfiguration.xml"); }
         }
 
         /// <summary>

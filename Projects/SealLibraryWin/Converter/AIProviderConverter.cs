@@ -19,7 +19,7 @@ namespace Seal.Forms
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            var names = Repository.Instance.Configuration.AIProviders
+            var names = Repository.Instance.AIConfiguration.AIProviders
                 .Select(p => p.Name)
                 .OrderBy(n => n)
                 .ToList();
@@ -32,7 +32,7 @@ namespace Seal.Forms
         {
             if (value != null)
             {
-                var provider = Repository.Instance.Configuration.AIProviders
+                var provider = Repository.Instance.AIConfiguration.AIProviders
                     .FirstOrDefault(p => p.GUID == value.ToString());
                 if (provider != null) return provider.Name;
             }
@@ -45,7 +45,7 @@ namespace Seal.Forms
         {
             if (value != null)
             {
-                var provider = Repository.Instance.Configuration.AIProviders
+                var provider = Repository.Instance.AIConfiguration.AIProviders
                     .FirstOrDefault(p => p.Name == value.ToString());
                 if (provider != null) return provider.GUID;
             }

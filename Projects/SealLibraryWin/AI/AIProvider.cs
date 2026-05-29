@@ -63,12 +63,12 @@ namespace Seal.AI
             AIProviderConfiguration config;
             if (string.IsNullOrEmpty(providerName))
             {
-                config = Seal.Model.Repository.Instance.Configuration.AIProviders.Find(p => p.IsDefault)
+                config = Seal.Model.Repository.Instance.AIConfiguration.AIProviders.Find(p => p.IsDefault)
                     ?? throw new Exception("No default AI provider configuration found. Set IsDefault = true on one configuration.");
             }
             else
             {
-                config = Seal.Model.Repository.Instance.Configuration.AIProviders.Find(p => p.Name == providerName)
+                config = Seal.Model.Repository.Instance.AIConfiguration.AIProviders.Find(p => p.Name == providerName)
                     ?? throw new Exception($"AI provider configuration '{providerName}' not found.");
             }
             return GetAIProvider(config.Type, config.EndPoint, config.ClearProviderKey, config.Model);
