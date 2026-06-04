@@ -85,7 +85,11 @@
       <Parameters>
         <Parameter>
           <Name>ai_user_prompt</Name>
-          <Value>Cancel the report output if an employee has no amount for a month</Value>
+          <Value>Cancel the report output if any employee is missing a record for any month in the reporting period. Treat a missing employee-month row as having no amount.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>log_ai_requests</Name>
+          <Value>True</Value>
         </Parameter>
       </Parameters>
       <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>

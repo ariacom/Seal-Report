@@ -17,18 +17,25 @@
       <Name>_Restriction Reference</Name>
       <SourceGUID>19b92280-92ce-4be1-8530-5502bd713bec</SourceGUID>
       <ShowFirstLine>false</ShowFirstLine>
-      <Restriction>[6a3d67e9-2e90-47a6-b324-835e73433e69]</Restriction>
+      <Restriction>[e873e6ef-d118-4877-b27c-0134cf39e880]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>6a3d67e9-2e90-47a6-b324-835e73433e69</GUID>
-          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
-          <DisplayName>Year</DisplayName>
-          <Format>yyyy</Format>
-          <PivotPosition>Column</PivotPosition>
+          <GUID>e873e6ef-d118-4877-b27c-0134cf39e880</GUID>
+          <Name>Orders.OrderDate</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Between</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
           <Date1>1997-01-01T00:00:00</Date1>
-          <FormatRe>yyyy</FormatRe>
+          <Date2>1997-12-31T00:00:00</Date2>
+          <Date1Keyword />
+          <FormatRe>d</FormatRe>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
@@ -520,7 +527,17 @@
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
-      <SortOrder>1</SortOrder>
+      <Parameters>
+        <Parameter>
+          <Name>restriction_button</Name>
+          <Value>False</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>0</SortOrder>
     </ReportView>
   </Views>
   <Cancel>false</Cancel>

@@ -66,7 +66,12 @@
       <Weight>1</Weight>
       <EditConfiguration>true</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>1</AssistantGUID>
+      <AssistantGUIDs>
+        <string>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</string>
+        <string>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e</string>
+        <string>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</string>
+        <string>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</string>
+      </AssistantGUIDs>
       <DownloadUpload>DownloadUpload</DownloadUpload>
       <Culture />
       <OnStartup>None</OnStartup>
@@ -93,7 +98,6 @@
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>false</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <Culture />
       <OnStartup>None</OnStartup>
@@ -127,7 +131,6 @@
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <Culture />
       <OnStartup>None</OnStartup>
@@ -153,7 +156,6 @@
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <Culture />
       <OnStartup>None</OnStartup>
@@ -211,7 +213,6 @@
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <Culture />
       <OnStartup>None</OnStartup>
@@ -227,7 +228,6 @@
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <OnStartup>None</OnStartup>
       <ExecutionMode>NewWindow</ExecutionMode>
@@ -290,7 +290,6 @@
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <OnStartup>None</OnStartup>
       <ExecutionMode>NewWindow</ExecutionMode>
@@ -328,7 +327,6 @@
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <OnStartup>None</OnStartup>
       <ExecutionMode>NewWindow</ExecutionMode>
@@ -371,7 +369,6 @@
       <Weight>1</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <OnStartup>ExecuteReport</OnStartup>
       <StartupReport>\work\basic.srex</StartupReport>
@@ -387,7 +384,6 @@
       <Weight>10</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <OnStartup>ExecuteReport</OnStartup>
       <StartupReport>/Samples/40-Startup Report.srex</StartupReport>
@@ -414,7 +410,6 @@
       <Weight>10</Weight>
       <EditConfiguration>false</EditConfiguration>
       <EditProfile>true</EditProfile>
-      <AssistantGUID>66395a33-a752-4320-a22f-137171e50408</AssistantGUID>
       <DownloadUpload>None</DownloadUpload>
       <Culture />
       <OnStartup>ExecuteReport</OnStartup>

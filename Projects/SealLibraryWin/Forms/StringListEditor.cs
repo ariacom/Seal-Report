@@ -72,6 +72,27 @@ namespace Seal.Forms
                         value = assistant.ToolGUIDs;
                     }
                 }
+                else if (context.Instance is SecurityGroup)
+                {
+                    SecurityGroup group = context.Instance as SecurityGroup;
+                    var assistants = Repository.Instance.AIConfiguration.AIAssistants.Where(a => a.IsEnabled).OrderBy(a => a.Name).ToList();
+                    MultipleSelectForm frm = new MultipleSelectForm("Please select the AI Assistants", assistants, "Name");
+                    //select existing values
+                    for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
+                    {
+                        if (group.AssistantGUIDs.Contains(((AIAssistantConfiguration)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
+                    }
+
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        group.AssistantGUIDs = new List<string>();
+                        foreach (object item in frm.CheckedItems)
+                        {
+                            group.AssistantGUIDs.Add(((AIAssistantConfiguration)item).GUID);
+                        }
+                        value = group.AssistantGUIDs;
+                    }
+                }
                 else if (context.Instance is SealServerConfiguration)
                 {
                     SealServerConfiguration configuration = context.Instance as SealServerConfiguration;

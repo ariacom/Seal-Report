@@ -193,6 +193,16 @@ class SWIGateway {
             error: function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); }
         });
     }
+    GetUserAssistants(callback, errorcb) {
+        $.post(_server + "SWIGetUserAssistants", {})
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    SelectAssistant(guid, callback, errorcb) {
+        $.post(_server + "SWISelectAssistant", { guid: guid })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
     ClearAIAssistant(callback, errorcb) {
         $.post(_server + "SWIClearAIAssistant", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

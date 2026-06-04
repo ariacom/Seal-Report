@@ -408,20 +408,29 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// AI Assistant configuration assigned to this user via the DefaultGroup AssistantGUID.
-        /// Returns null if no group is set, the assistant is disabled, or AssistantGUID is NoAssistant.
+        /// AI Assistant configurations assigned to this user via the DefaultGroup AssistantGUIDs.
+        /// Returns an empty list if no group is set or no enabled assistants are found.
         /// </summary>
-        public AIAssistantConfiguration AssistantConfiguration
+        public List<AIAssistantConfiguration> AssistantConfigurations
         {
             get
             {
                 var group = DefaultGroup;
-                if (group == null) return null;
-                var guid = group.AssistantGUID;
-                if (string.IsNullOrEmpty(guid)) return null;
-                if (guid == AIAssistantConfiguration.DefaultAssistantGUIDValue) guid = Repository.Instance.AIConfiguration.DefaultAssistantGUID;
-                return Repository.Instance.AIConfiguration.AIAssistants.Find(a => a.GUID == guid && a.IsEnabled);
+                if (group == null) return new List<AIAssistantConfiguration>();
+                return group.AssistantGUIDs
+                    .Select(guid => Repository.Instance.AIConfiguration.AIAssistants.Find(a => a.GUID == guid && a.IsEnabled))
+                    .Where(a => a != null)
+                    .ToList();
             }
+        }
+
+        /// <summary>
+        /// First AI Assistant configuration assigned to this user via the DefaultGroup AssistantGUIDs.
+        /// Returns null if no group is set or no enabled assistants are found.
+        /// </summary>
+        public AIAssistantConfiguration AssistantConfiguration
+        {
+            get { return AssistantConfigurations.FirstOrDefault(); }
         }
 
         /// <summary>

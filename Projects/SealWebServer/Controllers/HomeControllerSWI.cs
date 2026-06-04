@@ -1250,17 +1250,37 @@ namespace SealWebServer.Controllers
         }
 
         // ----------------------------------------------------------------
-        //  Assistant chat persistence  (_Assistant/Recents + _Assistant/Favorites)
+        //  Assistant chat persistence  (_Assistant/{GUID}/Recents + _Assistant/{GUID}/Favorites)
         // ----------------------------------------------------------------
 
         /// <summary>
-        /// Returns the full path to one of the _Assistant sub-folders (Recents or Favorites)
-        /// for the current user, creating it on demand.
+        /// Returns the GUID of the currently active assistant without creating an
+        /// <see cref="AIAssistant"/> instance.  Respects the user-selected GUID stored in
+        /// <see cref="SessionAssistantConfiguration"/>; falls back to the first assistant in
+        /// the user's security group.
+        /// </summary>
+        string CurrentAssistantGUID
+        {
+            get
+            {
+                var selectedGuid = getSessionValue(SessionAssistantConfiguration) as string;
+                if (!string.IsNullOrEmpty(selectedGuid) &&
+                    WebUser.AssistantConfigurations.Any(a => a.GUID == selectedGuid))
+                    return selectedGuid;
+                return WebUser.AssistantConfiguration?.GUID ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Returns the full path to one of the _Assistant/{GUID} sub-folders (Recents or Favorites)
+        /// for the current user and the currently active assistant, creating it on demand.
         /// </summary>
         string GetAssistantSubFolder(string subFolder)
         {
+            var guid = CurrentAssistantGUID;
             var path = Path.Combine(Repository.GetPersonalFolder(WebUser),
                                     AssistantFolders.FolderName,
+                                    guid,
                                     subFolder);
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             return path;
@@ -1268,7 +1288,7 @@ namespace SealWebServer.Controllers
 
         /// <summary>
         /// Saves the current assistant conversation (taken from the server session) to a
-        /// file in _Assistant/Recents.  Old entries beyond <paramref name="maxRecents"/>
+        /// file in _Assistant/{GUID}/Recents.  Old entries beyond <paramref name="maxRecents"/>
         /// are pruned (oldest-first).
         /// </summary>
         /// <param name="name">Human-readable chat name used as the file name.</param>
@@ -1312,8 +1332,8 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Returns the list of saved chat sessions from _Assistant/Recents and
-        /// _Assistant/Favorites for the current user.
+        /// Returns the list of saved chat sessions from _Assistant/{GUID}/Recents and
+        /// _Assistant/{GUID}/Favorites for the current user and currently active assistant.
         /// </summary>
         public ActionResult SAIGetAssistantChats(string sessionId)
         {
@@ -1522,16 +1542,78 @@ namespace SealWebServer.Controllers
                 var assistant = getSessionValue(SessionAssistant) as AIAssistant;
                 if (assistant == null)
                 {
-                    if (WebUser.AssistantConfiguration == null) throw new Exception("No assistant configured for the user.");
+                    // Use the user-selected assistant GUID if set, otherwise fall back to the first available.
+                    var selectedGuid = getSessionValue(SessionAssistantConfiguration) as string;
+                    var config = (!string.IsNullOrEmpty(selectedGuid))
+                        ? WebUser.AssistantConfigurations.FirstOrDefault(a => a.GUID == selectedGuid)
+                        : null;
+                    config = config ?? WebUser.AssistantConfiguration;
 
-                    assistant = new AIAssistant(WebUser.AssistantConfiguration)
+                    if (config == null) throw new Exception("No assistant configured for the user.");
+
+                    assistant = new AIAssistant(config)
                     {
                         SecurityContext = WebUser
                     };
                     setSessionValue(SessionAssistant, assistant);
-
                 }
                 return assistant;
+            }
+        }
+
+        /// <summary>
+        /// Returns the list of AI Assistants available to the current user (from their security group AssistantGUIDs),
+        /// together with the currently selected assistant GUID.
+        /// </summary>
+        public ActionResult SWIGetUserAssistants(string sessionId)
+        {
+            writeDebug("SWIGetUserAssistants");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+
+                var configs = WebUser.AssistantConfigurations;
+                var selectedGuid = getSessionValue(SessionAssistantConfiguration) as string
+                    ?? configs.FirstOrDefault()?.GUID;
+
+                return Json(new
+                {
+                    assistants = configs.Select(a => new { guid = a.GUID, name = a.Name, description = a.Description }).ToList(),
+                    selectedGuid = selectedGuid
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Selects an AI Assistant for the current session by GUID.
+        /// The GUID must belong to one of the assistants allowed for the user.
+        /// Clears the active session assistant so the next request picks up the new configuration.
+        /// </summary>
+        public ActionResult SWISelectAssistant(string guid, string sessionId)
+        {
+            writeDebug("SWISelectAssistant");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+
+                var config = WebUser.AssistantConfigurations.FirstOrDefault(a => a.GUID == guid);
+                if (config == null) throw new Exception("Invalid or unauthorised assistant GUID.");
+
+                // Clear the cached assistant instance so it is recreated with the new configuration.
+                setSessionValue(SessionAssistant, null);
+                setSessionValue(SessionAssistantConfiguration, guid);
+
+                return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
             }
         }
 

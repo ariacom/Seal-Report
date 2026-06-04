@@ -1081,7 +1081,7 @@
     <AIToolConfiguration>
       <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
       <Name>report_execute_get_data</Name>
-      <Description>Executes a report and returns its result tables as structured JSON data. Use it to fetch the actual data produced by an existing report for analysis, answering data questions, or generating a summary. Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex). Optionally pass model_name to restrict the output to a single model.</Description>
+      <Description>Executes a report and returns its result tables as structured JSON data, followed by the execution messages. Use it to fetch the actual data produced by an existing report for analysis, answering data questions, generating a summary, or diagnosing execution issues. Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex). Optionally pass model_name to restrict the output to a single model.</Description>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex or Personal\\username\\monthly.srex)"},"model_name":{"type":"string","description":"Optional model name to restrict results to a single model. If omitted, all models are returned."}},"required":["path"]}</ParametersSchema>
       <ExecutionScript>@using System.IO
 @using System.Linq
@@ -1160,6 +1160,11 @@
         sb.AppendLine("DATA:");
         sb.AppendLine(tableJson);
         sb.AppendLine();
+    }
+    if (!string.IsNullOrWhiteSpace(report.ExecutionMessages))
+    {
+        sb.AppendLine("=== EXECUTION MESSAGES ===");
+        sb.AppendLine(report.ExecutionMessages);
     }
     tool.ExecResult = sb.ToString();
 }</ExecutionScript>
@@ -1485,13 +1490,136 @@
     tool.ExecResult = sb.ToString();
 }</ExecutionScript>
     </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d</GUID>
+      <Name>log_read</Name>
+      <Description>Reads Seal Report log files for the given date. Type must be one of: events (server start/stop, authentication, errors), executions (report execution traces), schedules (scheduler runs). Date defaults to today. Use keyword to filter lines containing a specific string. Returns up to max_lines lines (default 200).</Description>
+      <ParametersSchema>{"type":"object","properties":{"type":{"type":"string","enum":["events","executions","schedules"],"description":"Log file type: events, executions or schedules"},"date":{"type":"string","description":"Date in YYYY-MM-DD format. Defaults to today."},"keyword":{"type":"string","description":"Optional string filter: only lines containing this keyword (case-insensitive) are returned."},"max_lines":{"type":"integer","description":"Maximum number of lines to return. Defaults to 200."}},"required":["type"]}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo = Repository.Instance;
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+
+    var type     = args.GetProperty("type").GetString();
+    var date     = args.TryGetProperty("date",      out var dp)  ? dp.GetString()      : null;
+    var keyword  = args.TryGetProperty("keyword",   out var kp)  ? kp.GetString()      : null;
+    var maxLines = args.TryGetProperty("max_lines", out var mlp) ? mlp.GetInt32()      : 200;
+
+    DateTime logDate;
+    if (string.IsNullOrEmpty(date) || !DateTime.TryParse(date, out logDate))
+        logDate = DateTime.Today;
+
+    var fileName = $"{type}_{logDate:yyyy_MM_dd}.txt";
+    var filePath = Path.Combine(repo.LogsFolder, fileName);
+
+    if (!File.Exists(filePath))
+    {
+        tool.ExecResult = $"No log file found: {fileName}";
+        return;
+    }
+
+    var lines = File.ReadAllLines(filePath);
+    if (!string.IsNullOrWhiteSpace(keyword))
+        lines = lines.Where(l =&gt; l.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) &gt;= 0).ToArray();
+
+    if (lines.Length &gt; maxLines)
+        lines = lines.Skip(lines.Length - maxLines).ToArray();
+
+    tool.ExecResult = $"=== {fileName} ({lines.Length} lines) ===\r\n" + string.Join("\r\n", lines);
+}</ExecutionScript>
+    </AIToolConfiguration>
   </AITools>
   <DefaultProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</DefaultProviderGUID>
-  <DefaultAssistantGUID>16dc89e8-1954-4425-a539-a5d3d71f32ae</DefaultAssistantGUID>
+  <DefaultAssistantGUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</DefaultAssistantGUID>
   <AIAssistants>
+    <AIAssistantConfiguration>
+      <GUID>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</GUID>
+      <Name>Report Designer</Name>
+      <Description>Creates, modifies and manages reports: explores schema, writes SQL, builds report models and handles report files.</Description>
+      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ToolGUIDs>
+        <GUID>975395e7-8f7f-47a8-84a7-dbf7bb3bec44</GUID>
+        <GUID>f56c62db-9a53-413e-8df4-6dde496adff4</GUID>
+        <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
+        <GUID>84ddf1ed-6473-488a-90a4-2dee3205e7ea</GUID>
+        <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
+        <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
+        <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
+        <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
+        <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
+        <GUID>aa2baa07-6828-4f6c-9640-466feb5e1b22</GUID>
+        <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
+        <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
+        <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
+        <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
+        <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+      </ToolGUIDs>
+      <DefaultSystemPrompt />
+      <SystemPromptFile>designer-system-prompt.md</SystemPromptFile>
+      <SamplePromptsFile>designer-sample-prompts.md</SamplePromptsFile>
+    </AIAssistantConfiguration>
+    <AIAssistantConfiguration>
+      <GUID>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e</GUID>
+      <Name>Schedule &amp; Output</Name>
+      <Description>Configures report outputs and schedules for automated delivery to files, emails or other destinations.</Description>
+      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ToolGUIDs>
+        <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
+        <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+        <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
+        <GUID>f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c</GUID>
+        <GUID>a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d</GUID>
+      </ToolGUIDs>
+      <DefaultSystemPrompt />
+      <SystemPromptFile>scheduler-system-prompt.md</SystemPromptFile>
+      <SamplePromptsFile>scheduler-sample-prompts.md</SamplePromptsFile>
+    </AIAssistantConfiguration>
+    <AIAssistantConfiguration>
+      <GUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</GUID>
+      <Name>Data Analyst</Name>
+      <Description>Explores data sources, queries tables and executes existing reports to answer data questions.</Description>
+      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ToolGUIDs>
+        <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
+        <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
+        <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
+        <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
+        <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
+        <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
+        <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+      </ToolGUIDs>
+      <DefaultSystemPrompt />
+      <SystemPromptFile>analyst-system-prompt.md</SystemPromptFile>
+      <SamplePromptsFile>analyst-sample-prompts.md</SamplePromptsFile>
+    </AIAssistantConfiguration>
+    <AIAssistantConfiguration>
+      <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</GUID>
+      <Name>System Admin</Name>
+      <Description>Monitors the server, reads logs, manages data sources and inspects or executes reports.</Description>
+      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ToolGUIDs>
+        <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
+        <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
+        <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
+        <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
+        <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
+        <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
+        <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+        <GUID>a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d</GUID>
+      </ToolGUIDs>
+      <DefaultSystemPrompt />
+      <SystemPromptFile>admin-system-prompt.md</SystemPromptFile>
+      <SamplePromptsFile>admin-sample-prompts.md</SamplePromptsFile>
+    </AIAssistantConfiguration>
     <AIAssistantConfiguration>
       <GUID>16dc89e8-1954-4425-a539-a5d3d71f32ae</GUID>
       <Name>Web Assistant</Name>
+      <Description>General-purpose assistant for navigating the portal and getting help with Seal Report.</Description>
       <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
       <ToolGUIDs />
       <DefaultSystemPrompt />

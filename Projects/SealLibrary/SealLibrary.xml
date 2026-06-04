@@ -421,9 +421,6 @@
             and a default system prompt. Stored in <see cref="P:Seal.AI.AIServerConfiguration.AIAssistants"/>.
             </summary>
         </member>
-        <member name="F:Seal.AI.AIAssistantConfiguration.DefaultAssistantGUIDValue">
-            <summary>Hardcoded GUID sentinel for "use the server default assistant".</summary>
-        </member>
         <member name="P:Seal.AI.AIAssistantConfiguration.GUID">
             <summary>
             Unique identifier for this assistant configuration.
@@ -432,6 +429,11 @@
         <member name="P:Seal.AI.AIAssistantConfiguration.Name">
             <summary>
             Display name of this assistant configuration.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAssistantConfiguration.Description">
+            <summary>
+            Short description of what this assistant can do.
             </summary>
         </member>
         <member name="P:Seal.AI.AIAssistantConfiguration.IsEnabled">
@@ -9274,9 +9276,9 @@
             Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.).
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityGroup.AssistantGUID">
+        <member name="P:Seal.Model.SecurityGroup.AssistantGUIDs">
             <summary>
-            Web Report Server: The GUID of the AI Assistant assigned to users of this group. Use the Default Assistant GUID to use the default AI Assistant, or leave empty to disable the AI Assistant for this group.
+            Web Report Server: The GUIDs of the AI Assistants assigned to users of this group. Leave empty to disable the AI Assistant for this group.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.DownloadUpload">
@@ -9671,10 +9673,16 @@
             Default group of the user
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityUser.AssistantConfigurations">
+            <summary>
+            AI Assistant configurations assigned to this user via the DefaultGroup AssistantGUIDs.
+            Returns an empty list if no group is set or no enabled assistants are found.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityUser.AssistantConfiguration">
             <summary>
-            AI Assistant configuration assigned to this user via the DefaultGroup AssistantGUID.
-            Returns null if no group is set, the assistant is disabled, or AssistantGUID is NoAssistant.
+            First AI Assistant configuration assigned to this user via the DefaultGroup AssistantGUIDs.
+            Returns null if no group is set or no enabled assistants are found.
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.FindSecurityFolder(System.String)">

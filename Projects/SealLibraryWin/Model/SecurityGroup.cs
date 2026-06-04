@@ -48,7 +48,7 @@ namespace Seal.Model
                 GetProperty("Weight").SetIsBrowsable(true);
                 GetProperty("EditConfiguration").SetIsBrowsable(true);
                 GetProperty("EditProfile").SetIsBrowsable(true);
-                GetProperty("AssistantGUID").SetIsBrowsable(true);
+                GetProperty("AssistantGUIDs").SetIsBrowsable(true);
                 GetProperty("DownloadUpload").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
@@ -223,14 +223,14 @@ namespace Seal.Model
         public bool EditProfile { get; set; } = true;
 
         /// <summary>
-        /// Web Report Server: The GUID of the AI Assistant assigned to users of this group. Use the Default Assistant GUID to use the default AI Assistant, or leave empty to disable the AI Assistant for this group.
+        /// Web Report Server: The GUIDs of the AI Assistants assigned to users of this group. Leave empty to disable the AI Assistant for this group.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\t\tAI Assistant"), Description("Web Report Server: The AI Assistant assigned to users of this group. Use '<Default Assistant>' to use the default AI Assistant, or '<No Assistant>' to disable the AI Assistant for this group."), Id(4, 5)]
-        [TypeConverter(typeof(AIAssistantNameConverter))]
-        [DefaultValue(AIAssistantConfiguration.DefaultAssistantGUIDValue)]
+        [Category("Default Options"), DisplayName("\t\tAI Assistants"), Description("Web Report Server: The AI Assistants assigned to users of this group. Leave empty to disable the AI Assistant for this group."), Id(4, 5)]
+        [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
-        public string AssistantGUID { get; set; } = AIAssistantConfiguration.DefaultAssistantGUIDValue;
+        public List<string> AssistantGUIDs { get; set; } = new List<string>();
+        public bool ShouldSerializeAssistantGUIDs() { return AssistantGUIDs.Count > 0; }
 
         /// <summary>
         /// Web Report Server: If true, the user can download reports or upload files or reports in the published folders.

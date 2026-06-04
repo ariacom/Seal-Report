@@ -220,6 +220,18 @@ class SWIGateway {
         });
     }
 
+    public GetUserAssistants(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIGetUserAssistants", {})
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public SelectAssistant(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWISelectAssistant", { guid: guid })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public ClearAIAssistant(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIClearAIAssistant", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

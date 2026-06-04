@@ -21,10 +21,6 @@ namespace Seal.AI
     /// </summary>
     public class AIAssistantConfiguration : RootEditor
     {
-        /// <summary>Hardcoded GUID sentinel for "use the server default assistant".</summary>
-        public const string DefaultAssistantGUIDValue = "1";
-        public const string DefaultAssistant = "<Default Assistant>";
-        public const string NoAssistant = "<No Assistant>";
 
 #if WINDOWS
         #region Editor
@@ -34,6 +30,7 @@ namespace Seal.AI
             {
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 GetProperty("Name").SetIsBrowsable(true);
+                GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("ProviderGUID").SetIsBrowsable(true);
                 GetProperty("ToolGUIDs").SetIsBrowsable(true);
@@ -65,6 +62,19 @@ namespace Seal.AI
         {
             get { return _name; }
             set { _name = value; }
+        }
+
+        string _description = "";
+        /// <summary>
+        /// Short description of what this assistant can do.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\t\tDescription"), Description("Short description of what this assistant can do."), Id(2, 1)]
+#endif
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
         }
 
         /// <summary>

@@ -17,6 +17,7 @@
     var $samplesBtn  = $('#ai-panel-samples-btn');
     var $samplesDrop = $('#ai-panel-samples-dropdown');
     var $samplesWrap = $samplesBtn.parent(); // .ai-panel-samples-wrap
+    var $assistantSelect = $('#ai-panel-assistant-select');
     // Move dropdown to <body> so position:fixed is relative to the viewport,
     // not the transformed #ai-chat-panel (transform creates a new stacking context
     // that traps fixed-position descendants).
@@ -91,6 +92,66 @@
     });
 
     $close.on('click', closePanel);
+
+    // ── Assistant selector ──────────────────────────────────────
+    // Fetches the assistants available to the current user. Shows the selectpicker
+    // in the header always (≥ 1 assistant). When only one is available the control
+    // is disabled so it acts as a plain title label.
+    var _assistantsLoaded: boolean = false;
+
+    function loadAssistants(): void {
+        if (_assistantsLoaded) return;
+        _assistantsLoaded = true;
+        _gateway.GetUserAssistants(function (data: any) {
+            var assistants: Array<{ guid: string; name: string; description: string }> = data.assistants || [];
+            if (assistants.length === 0) return;
+
+            // Rebuild the options.
+            ($assistantSelect as any).selectpicker('destroy');
+            $assistantSelect.empty();
+            $.each(assistants, function (_, a: { guid: string; name: string; description: string }) {
+                $('<option>').val(a.guid).text(a.name).appendTo($assistantSelect);
+            });
+
+            // Disable when there is only one choice — serves as a read-only title.
+            $assistantSelect.prop('disabled', assistants.length === 1);
+
+            // Initialise / refresh the selectpicker.
+            ($assistantSelect as any).selectpicker({ width: 'auto' });
+            if (data.selectedGuid) {
+                $assistantSelect.val(data.selectedGuid);
+                ($assistantSelect as any).selectpicker('refresh');
+            }
+
+            // Apply Bootstrap tooltips to the rendered dropdown items.
+            var $dropdownItems = $assistantSelect.closest('.bootstrap-select').find('.dropdown-menu li');
+            $.each(assistants, function (i: number, a: { guid: string; name: string; description: string }) {
+                if (a.description) {
+                    ($dropdownItems.eq(i) as any).tooltip({ title: a.description, placement: 'right', container: 'body', trigger: 'hover' });
+                }
+            });
+        });
+    }
+
+    $assistantSelect.on('change', function () {
+        var guid = ($assistantSelect.val() as string);
+        if (!guid) return;
+        _gateway.SelectAssistant(guid, function () {
+            // Clear the conversation: the new assistant has no prior context.
+            _gateway.ClearAIAssistant(function () {
+                clearConversation();
+                _panelChatFileName = '';
+                setFavorite(false);
+                // Refresh history lists so they reflect the newly selected assistant.
+                refreshHistoryLists();
+            });
+        });
+    });
+
+    // Load the assistant list the first time the panel is opened.
+    $toggle.on('click', function () {
+        if ($panel.hasClass('ai-panel-open')) loadAssistants();
+    });
 
     // ── Chat persistence state ──────────────────────────────────
     var _panelChatFileName: string = '';

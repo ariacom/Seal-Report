@@ -477,7 +477,7 @@ class SWIMain {
                     EditConfiguration: false,
                     EditProfile: true,
                     PersFolderRight: 2,
-                    AssistantGUID: "1"
+                    AssistantGUIDs: []
                 };
                 _main._config.groups.push(newGroup);
                 _main._configGroup = newGroup;
@@ -516,15 +516,17 @@ class SWIMain {
         $selectAssistant.unbind("change");
         $selectAssistant.selectpicker("destroy");
         $selectAssistant.empty();
-        $selectAssistant.append(SWIUtil.GetOption("", "&lt;" + SWIUtil.tr("No assistant") + "&gt;", detail.AssistantGUID));
-        $selectAssistant.append(SWIUtil.GetOption("1", "&lt;" + SWIUtil.tr("Default assistant") + "&gt;", detail.AssistantGUID));
         if (_main._config.assistants) {
+            var guids = detail.AssistantGUIDs || [];
             $.each(_main._config.assistants, function (key, value) {
-                $selectAssistant.append(SWIUtil.GetOption(value.Key, value.Value, detail.AssistantGUID));
+                var $opt = $("<option>").attr("value", value.Key).html(value.Value);
+                if (guids.indexOf(value.Key) >= 0)
+                    $opt.attr("selected", "true");
+                $selectAssistant.append($opt);
             });
         }
         $selectAssistant.unbind("change").on("change", (event) => {
-            detail.AssistantGUID = $(event.target).val();
+            detail.AssistantGUIDs = $(event.target).val() || [];
         });
         $selectAssistant.selectpicker('refresh');
         SWIUtil.ShowHideControl($("#config-group-downloadupload-row"), _main._config.downloadupload);
