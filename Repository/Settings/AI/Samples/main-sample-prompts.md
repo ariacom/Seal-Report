@@ -20,6 +20,10 @@ Save the report created in the Sales folder
 Create a report with the SQL and save it in the Marketing folder
 Save the report in Reports\Monthly Summary.srex
 
+# --- Output & Schedule ---
+Create a default Excel output for the [report name] report and save the result in my Personal Folder
+Schedule the output of [report name] every Monday at 9am
+
 # --- Charts ---
 For Northwind, make a report with a bar chart of orders by country
 For Northwind, add a line chart showing the sales trend over time

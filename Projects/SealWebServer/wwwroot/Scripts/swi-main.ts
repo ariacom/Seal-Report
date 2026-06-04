@@ -916,7 +916,7 @@ class SWIMain {
     private toJSTreeFolderData(data: any, result: any, parent: string) {
         for (let i = 0; i < data.length; i++) {
             const folder = data[i];
-            result[result.length] = { "id": folder.path, "parent": parent, "text": (folder.name == "" ? "Reports" : folder.name), "state": { "opened": folder.expand, "selected": (folder.name == "") } }
+            result[result.length] = { "id": folder.path, "parent": parent, "text": (folder.name == "" ? "Reports" : folder.name), "type": (folder.type || "default"), "state": { "opened": folder.expand, "selected": (folder.name == "") } }
             if (folder.folders && folder.folders.length > 0) _main.toJSTreeFolderData(folder.folders, result, folder.path);
             if (folder.right == 4) _main._canEdit = true;
         }
@@ -937,6 +937,9 @@ class SWIMain {
                 types: {
                     "default": {
                         "icon": "fa fa-folder-o"
+                    },
+                    "bin": {
+                        "icon": "fa fa-trash-o"
                     }
                 },
                 plugins: ["types", "wholerow"]

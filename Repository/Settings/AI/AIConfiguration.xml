@@ -1234,6 +1234,10 @@
         {
             if (!securityContext.HasFolderRight(sourceDir, (int)FolderRight.Edit))
                 { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+            //Copy to recycle bin before deleting
+            var bin = Repository.Instance.GetRecycleBinFolder(securityContext);
+            var binDest = Path.Combine(bin, $"{DateTime.UtcNow:yyyyMMddHHmmss}_{Path.GetFileName(sourceFull)}");
+            File.Copy(sourceFull, binDest, overwrite: true);
             File.Delete(sourceFull);
             tool.ExecResult = $"Deleted: {path}";
             return;

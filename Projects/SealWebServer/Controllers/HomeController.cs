@@ -926,7 +926,9 @@ namespace SealWebServer.Controllers
                 result.SetManageFlag(true, true, result.FinalPath == "");
                 result.expand = false;
                 string prefix = Repository.GetPersonalFolderName(WebUser);
-                result.name = (result.FinalPath == "" ? prefix : Path.GetFileName(result.FinalPath));
+                var folderLeafName = Path.GetFileName(result.FinalPath);
+                if (folderLeafName == "BIN") result.type = "bin";
+                result.name = (result.FinalPath == "" ? prefix : folderLeafName);
                 result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
                 result.right = (int)FolderRight.Edit;
                 result.files = (WebUser.PersonalFolderRight == PersonalFolderRight.Files);

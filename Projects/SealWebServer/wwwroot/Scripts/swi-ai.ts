@@ -10,6 +10,7 @@
     var $input    = $('#ai-panel-input');
     var $send     = $('#ai-panel-send');
     var $messages = $('#ai-panel-messages');
+    var $favBtn      = $('#ai-panel-fav-btn');
     var $histBtn     = $('#ai-panel-history-btn');
     var $histDrop    = $('#ai-panel-history-dropdown');
     var $histWrap    = $histBtn.parent(); // .ai-panel-dropdown-wrap
@@ -46,8 +47,8 @@
     // and a jQuery element (possibly empty) containing Execute buttons.
     function parseReportActions(text: string): { cleaned: string; $actions: JQuery } {
         const $actions = $('<div>').addClass('ai-panel-report-actions');
-        const re = /\[EXECUTE_REPORT:([^\]\|]+)\|([^\]]+)\]/g;
-        const cleaned = text.replace(re, function (_match: string, rawPath: string, name: string) {
+        const re = /\[EXECUTE_REPORT:([^\]\|]+)\|([^\]\|]+)(?:\|([^\]]*))?\]/g;
+        const cleaned = text.replace(re, function (_match: string, rawPath: string, name: string, outputGUID: string) {
             let swiPath: string;
             if (/^Reports[\\\/]/.test(rawPath))
                 swiPath = rawPath.substring('Reports'.length);
@@ -58,7 +59,7 @@
             $('<button>')
                 .addClass('ai-panel-execute-btn')
                 .html('<i class="fa fa-play"></i> ' + $('<span>').text(name.trim()).html())
-                .on('click', function () { _gateway.ExecuteReport(swiPath, '', ''); })
+                .on('click', function () { _gateway.ExecuteReport(swiPath, '', outputGUID || ''); })
                 .appendTo($actions);
             return '';
         });
@@ -202,12 +203,12 @@
             // Render Execute buttons when the AI proposes running one or more reports
             if (data.reportActions && (data.reportActions as any[]).length > 0) {
                 const $actions = $('<div>').addClass('ai-panel-report-actions');
-                (data.reportActions as Array<{ path: string; name: string }>).forEach(function (action) {
+                (data.reportActions as Array<{ path: string; name: string; outputGUID: string }>).forEach(function (action) {
                     $('<button>')
                         .addClass('ai-panel-execute-btn')
                         .html('<i class="fa fa-play"></i> ' + $('<span>').text(action.name).html())
                         .on('click', function () {
-                            _gateway.ExecuteReport(action.path, '', '');
+                            _gateway.ExecuteReport(action.path, '', action.outputGUID || '');
                         })
                         .appendTo($actions);
                 });
@@ -235,7 +236,18 @@
 
     function setFavorite(state: boolean): void {
         _isFavorite = state;
+        $favBtn.find('i').toggleClass('fa-star', state).toggleClass('fa-star-o', !state);
+        $favBtn.toggleClass('fav-active', state);
+        $favBtn.attr('title', state ? 'Remove from favorites' : 'Mark as favorite');
     }
+    $favBtn.on('click', function () {
+        if (!_panelChatFileName) return;
+        var newState = !_isFavorite;
+        setFavorite(newState);
+        _gateway.MarkAIAssistantChatFavorite(_panelChatFileName, function (data: any) {
+            if (data && typeof data.isFavorite !== 'undefined') setFavorite(data.isFavorite);
+        });
+    });
 
     // ── Favorites / MRU dropdown ────────────────────────────────
     function openDropdown():  void { $histDrop.show(); }

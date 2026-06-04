@@ -7311,6 +7311,11 @@
             SpecialsFolder Personal folder
             </summary>
         </member>
+        <member name="M:Seal.Model.Repository.GetRecycleBinFolder(Seal.Model.SecurityUser)">
+            <summary>
+            Returns the recycle bin folder path for a user (PersonalFolder/{user}/BIN), creating it if needed
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.SchedulesFolder">
             <summary>
             SpecialsFolder Schedules folder
@@ -9977,6 +9982,11 @@
             0 do not manage sub-folders
             1 manage sub-folders only as they are defined by the security (no rename or delete allowed)
             2 manage all: create, delete and rename sub-folders
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIFolder.type">
+            <summary>
+            Optional type hint for the UI tree (e.g. "bin" for the recycle bin folder)
             </summary>
         </member>
         <member name="F:Seal.Model.SWIFolder.folders">

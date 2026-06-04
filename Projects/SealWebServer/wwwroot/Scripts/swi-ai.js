@@ -10,6 +10,7 @@
     var $input = $('#ai-panel-input');
     var $send = $('#ai-panel-send');
     var $messages = $('#ai-panel-messages');
+    var $favBtn = $('#ai-panel-fav-btn');
     var $histBtn = $('#ai-panel-history-btn');
     var $histDrop = $('#ai-panel-history-dropdown');
     var $histWrap = $histBtn.parent(); // .ai-panel-dropdown-wrap
@@ -44,8 +45,8 @@
     // and a jQuery element (possibly empty) containing Execute buttons.
     function parseReportActions(text) {
         const $actions = $('<div>').addClass('ai-panel-report-actions');
-        const re = /\[EXECUTE_REPORT:([^\]\|]+)\|([^\]]+)\]/g;
-        const cleaned = text.replace(re, function (_match, rawPath, name) {
+        const re = /\[EXECUTE_REPORT:([^\]\|]+)\|([^\]\|]+)(?:\|([^\]]*))?\]/g;
+        const cleaned = text.replace(re, function (_match, rawPath, name, outputGUID) {
             let swiPath;
             if (/^Reports[\\\/]/.test(rawPath))
                 swiPath = rawPath.substring('Reports'.length);
@@ -56,7 +57,7 @@
             $('<button>')
                 .addClass('ai-panel-execute-btn')
                 .html('<i class="fa fa-play"></i> ' + $('<span>').text(name.trim()).html())
-                .on('click', function () { _gateway.ExecuteReport(swiPath, '', ''); })
+                .on('click', function () { _gateway.ExecuteReport(swiPath, '', outputGUID || ''); })
                 .appendTo($actions);
             return '';
         });
@@ -195,7 +196,7 @@
                         .addClass('ai-panel-execute-btn')
                         .html('<i class="fa fa-play"></i> ' + $('<span>').text(action.name).html())
                         .on('click', function () {
-                        _gateway.ExecuteReport(action.path, '', '');
+                        _gateway.ExecuteReport(action.path, '', action.outputGUID || '');
                     })
                         .appendTo($actions);
                 });
@@ -224,7 +225,20 @@
     var _isFavorite = false;
     function setFavorite(state) {
         _isFavorite = state;
+        $favBtn.find('i').toggleClass('fa-star', state).toggleClass('fa-star-o', !state);
+        $favBtn.toggleClass('fav-active', state);
+        $favBtn.attr('title', state ? 'Remove from favorites' : 'Mark as favorite');
     }
+    $favBtn.on('click', function () {
+        if (!_panelChatFileName)
+            return;
+        var newState = !_isFavorite;
+        setFavorite(newState);
+        _gateway.MarkAIAssistantChatFavorite(_panelChatFileName, function (data) {
+            if (data && typeof data.isFavorite !== 'undefined')
+                setFavorite(data.isFavorite);
+        });
+    });
     // ── Favorites / MRU dropdown ────────────────────────────────
     function openDropdown() { $histDrop.show(); }
     function closeDropdown() { $histDrop.hide(); }

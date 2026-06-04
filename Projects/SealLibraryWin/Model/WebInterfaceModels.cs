@@ -119,6 +119,11 @@ namespace Seal.Model
         public int manage = 0;
 
         /// <summary>
+        /// Optional type hint for the UI tree (e.g. "bin" for the recycle bin folder)
+        /// </summary>
+        public string type = "default";
+
+        /// <summary>
         /// List of folder children.
         /// </summary>
         public List<SWIFolder> folders = new List<SWIFolder>();

@@ -984,6 +984,16 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Returns the recycle bin folder path for a user (PersonalFolder/{user}/BIN), creating it if needed
+        /// </summary>
+        public string GetRecycleBinFolder(SecurityUser user)
+        {
+            var bin = Path.Combine(GetPersonalFolder(user), "BIN");
+            if (!Directory.Exists(bin)) Directory.CreateDirectory(bin);
+            return bin;
+        }
+
+        /// <summary>
         /// SpecialsFolder Schedules folder
         /// </summary>
         public string SchedulesFolder

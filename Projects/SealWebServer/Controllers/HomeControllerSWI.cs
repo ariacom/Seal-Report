@@ -695,6 +695,11 @@ namespace SealWebServer.Controllers
                             report.SynchronizeTasks();
                         }
 
+                        //Copy to recycle bin before deleting
+                        var bin = Repository.GetRecycleBinFolder(WebUser);
+                        var binDest = Path.Combine(bin, $"{DateTime.UtcNow:yyyyMMddHHmmss}_{Path.GetFileName(fullPath)}");
+                        System.IO.File.Copy(fullPath, binDest, overwrite: true);
+
                         FileHelper.DeleteFile(fullPath);
 
                         Audit.LogAudit(AuditType.FileDelete, WebUser, path);
