@@ -733,8 +733,8 @@
     <AIToolConfiguration>
       <GUID>f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c</GUID>
       <Name>report_configure_output</Name>
-      <Description>Configures or removes a folder output on an existing report. Use action=configure (default) to add or update the output folder, file name, and format. Use action=delete to remove the output and all its associated schedules from the report — never use report_manage for this. Folder path formats: "Personal" or "Personal\subfolder" for the user's personal folder; "Reports\subfolder" for a repository reports folder; an absolute path (e.g. C:\Reports\Daily); or a path with %SEALREPOSITORY% for the repository root. Always call this before report_configure_schedule.</Description>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update the folder output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"folder_path":{"type":"string","description":"Required for action=configure. Output folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date (e.g. report_{0:yyyyMMdd}.xlsx). Omit to use the report display name."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"output_name":{"type":"string","description":"Display name for this output inside the report. Auto-generated if omitted."}},"required":["path"]}</ParametersSchema>
+      <Description>Configures or removes an output on an existing report. Use action=configure (default) to add or update a delivery output; device_type selects the delivery method: folder (default), email, or ftp. Use action=delete to remove outputs and all their associated schedules — never use report_manage for this. Pass output_guid to target a specific output for update or delete; for folder outputs without a GUID the first folder output is reused. For delete: pass output_guid or output_name to remove a specific output; omit both to delete all. Returns outputGUID in the result — store it to pass to report_configure_schedule. Always call this before report_configure_schedule.</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update an output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"device_type":{"type":"string","enum":["folder","email","ftp"],"description":"Delivery type: folder (default), email, or ftp."},"output_guid":{"type":"string","description":"GUID of an existing output to update or delete, as returned by a prior call. Use to target a specific output when the report has multiple."},"output_name":{"type":"string","description":"For action=configure: display name for this output (auto-generated if omitted). For action=delete: name of the specific output to remove. Omit to delete all outputs on the report."},"device_name":{"type":"string","description":"Name of the specific email or FTP device to use when multiple are configured."},"folder_path":{"type":"string","description":"Required for device_type=folder. Output folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date. Omit to use the report display name. Never include a file extension."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"email_to":{"type":"string","description":"Required for device_type=email. Recipient email address(es), semicolon-separated."},"email_cc":{"type":"string","description":"CC email address(es), semicolon-separated."},"email_bcc":{"type":"string","description":"BCC email address(es), semicolon-separated."},"email_subject":{"type":"string","description":"Email subject line. Defaults to the report name."},"email_body":{"type":"string","description":"Plain-text or HTML body for the email."},"email_html_body":{"type":"boolean","description":"If true, sends the report HTML as the email body (no attachment)."},"email_skip_attachments":{"type":"boolean","description":"If true, sends the email body only with no file attached."}},"required":["path"]}</ParametersSchema>
       <ExecutionScript>@using System.Text.Json
 @using System.IO
 @using System.Linq
@@ -749,10 +749,20 @@
     var args       = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path       = args.GetProperty("path").GetString();
     var action     = args.TryGetProperty("action",        out var acp) ? acp.GetString() : "configure";
+    var deviceType = args.TryGetProperty("device_type",   out var dtp) ? dtp.GetString() : "folder";
+    var outputGuid = args.TryGetProperty("output_guid",   out var ogp) ? ogp.GetString() : null;
     var folderPath = args.TryGetProperty("folder_path",   out var flp) ? flp.GetString() : null;
     var fileName   = args.TryGetProperty("file_name",     out var fnp) ? fnp.GetString() : null;
     var format     = args.TryGetProperty("output_format", out var fmp) ? fmp.GetString() : "Excel";
     var outputName = args.TryGetProperty("output_name",   out var onp) ? onp.GetString() : null;
+    var deviceName = args.TryGetProperty("device_name",   out var dnp) ? dnp.GetString() : null;
+    var emailTo       = args.TryGetProperty("email_to",              out var etp) ? etp.GetString()  : null;
+    var emailCc       = args.TryGetProperty("email_cc",              out var ecp) ? ecp.GetString()  : null;
+    var emailBcc      = args.TryGetProperty("email_bcc",             out var ebp) ? ebp.GetString()  : null;
+    var emailSubject  = args.TryGetProperty("email_subject",         out var esp) ? esp.GetString()  : null;
+    var emailBody     = args.TryGetProperty("email_body",            out var emb) ? emb.GetString()  : null;
+    var emailHtmlBody = args.TryGetProperty("email_html_body",       out var ehb) &amp;&amp; ehb.GetBoolean();
+    var emailSkipAtt  = args.TryGetProperty("email_skip_attachments",out var esa) &amp;&amp; esa.GetBoolean();
 
     var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
     {
@@ -791,76 +801,128 @@
         // ── DELETE branch ────────────────────────────────────────────────────────
         if (string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase))
         {
-            var toRemove = report.Outputs.Where(o =&gt; folderDeviceGuids.Contains(o.OutputDeviceGUID)).ToList();
-            if (toRemove.Count == 0) { tool.ExecResult = $"No folder output found on '{path}' to delete."; return; }
+            List&lt;ReportOutput&gt; toRemove;
+            if (!string.IsNullOrEmpty(outputGuid))
+            {
+                toRemove = report.Outputs.Where(o =&gt; string.Equals(o.GUID, outputGuid, StringComparison.OrdinalIgnoreCase)).ToList();
+                if (toRemove.Count == 0) { tool.ExecResult = $"No output with GUID '{outputGuid}' found on '{path}'."; return; }
+            }
+            else if (!string.IsNullOrEmpty(outputName))
+            {
+                toRemove = report.Outputs.Where(o =&gt; string.Equals(o.Name, outputName, StringComparison.OrdinalIgnoreCase)).ToList();
+                if (toRemove.Count == 0) { tool.ExecResult = $"No output named '{outputName}' found on '{path}'."; return; }
+            }
+            else
+            {
+                toRemove = report.Outputs.ToList();
+                if (toRemove.Count == 0) { tool.ExecResult = $"No outputs found on '{path}' to delete."; return; }
+            }
             foreach (var o in toRemove) report.RemoveOutput(o); // also removes linked schedules
             report.SaveToFile();
-            tool.ExecResult = $"Folder output (and all linked schedules) removed from '{path}'.";
+            var removed = string.Join(", ", toRemove.Select(o =&gt; $"'{o.Name}'"));
+            tool.ExecResult = $"Output(s) {removed} (and all linked schedules) removed from '{path}'.";
             return;
         }
 
         // ── CONFIGURE branch ─────────────────────────────────────────────────────
-        if (string.IsNullOrEmpty(folderPath))
-            { tool.ExecResult = "Error: folder_path is required for action=configure."; return; }
+        ReportOutput output = null;
 
-        // Find existing folder-device output or create a new one
-        var device = repo.Devices.OfType&lt;OutputFolderDevice&gt;().FirstOrDefault()
-                     ?? OutputFolderDevice.Create();
+        // If output_guid provided, find the existing output to update
+        if (!string.IsNullOrEmpty(outputGuid))
+        {
+            output = report.Outputs.FirstOrDefault(o =&gt; string.Equals(o.GUID, outputGuid, StringComparison.OrdinalIgnoreCase));
+            if (output == null) { tool.ExecResult = $"Error: no output with GUID '{outputGuid}' found on '{path}'."; return; }
+        }
 
-        var output = report.Outputs.FirstOrDefault(o =&gt; folderDeviceGuids.Contains(o.OutputDeviceGUID));
+        // ── EMAIL branch ─────────────────────────────────────────────────────────
+        if (string.Equals(deviceType, "email", StringComparison.OrdinalIgnoreCase))
+        {
+            if (string.IsNullOrEmpty(emailTo) &amp;&amp; output == null)
+                { tool.ExecResult = "Error: email_to is required for device_type=email."; return; }
+
+            if (output == null)
+            {
+                var emailDevice = string.IsNullOrEmpty(deviceName)
+                    ? repo.Devices.OfType&lt;OutputEmailDevice&gt;().FirstOrDefault()
+                    : repo.Devices.OfType&lt;OutputEmailDevice&gt;().FirstOrDefault(d =&gt; string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase));
+                if (emailDevice == null) { tool.ExecResult = "Error: no email device configured in the repository."; return; }
+                output = report.AddOutput(emailDevice);
+            }
+
+            if (!string.IsNullOrEmpty(outputName))   output.Name                 = outputName;
+            if (!string.IsNullOrEmpty(emailTo))       output.EmailTo              = emailTo;
+            if (!string.IsNullOrEmpty(emailCc))       output.EmailCC              = emailCc;
+            if (!string.IsNullOrEmpty(emailBcc))      output.EmailBCC             = emailBcc;
+            if (!string.IsNullOrEmpty(emailSubject))  output.EmailSubject         = emailSubject;
+            if (!string.IsNullOrEmpty(emailBody))     output.EmailBody            = emailBody;
+            if (emailHtmlBody)                         output.EmailHtmlBody        = true;
+            if (emailSkipAtt)                          output.EmailSkipAttachments = true;
+
+            var param = output.ViewParameters.FirstOrDefault(p =&gt; p.Name == "report_format");
+            if (param != null) { param.Value = format; param.CustomValue = true; }
+
+            report.SaveToFile();
+            tool.ExecResult = $"Email output configured on '{path}': to='{output.EmailTo}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+            return;
+        }
+
+        // ── FOLDER branch (default) ───────────────────────────────────────────────
+        if (string.IsNullOrEmpty(folderPath) &amp;&amp; output == null)
+            { tool.ExecResult = "Error: folder_path is required for device_type=folder."; return; }
+
         if (output == null)
-            output = report.AddOutput(device);
+        {
+            var device = string.IsNullOrEmpty(deviceName)
+                ? (repo.Devices.OfType&lt;OutputFolderDevice&gt;().FirstOrDefault() ?? OutputFolderDevice.Create())
+                : (repo.Devices.OfType&lt;OutputFolderDevice&gt;().FirstOrDefault(d =&gt; string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase)) ?? OutputFolderDevice.Create());
+            output = report.Outputs.FirstOrDefault(o =&gt; folderDeviceGuids.Contains(o.OutputDeviceGUID))
+                     ?? report.AddOutput(device);
+        }
 
         if (!string.IsNullOrEmpty(outputName)) output.Name = outputName;
 
-        // ── Resolve folder_path to a keyword-based stored path ──────────────────
-        // Mirrors the web interface logic so the path is portable across machines.
-        string resolvedFolderPath;
-        if (folderPath.StartsWith("Personal", StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrEmpty(folderPath))
         {
-            // Personal folder: resolve to user's physical personal folder then store
-            // with %SEALPERSONALREPOSITORY% so it expands correctly at runtime.
-            if (securityContext.PersonalFolderRight == PersonalFolderRight.None)
-                { tool.ExecResult = "Error: no right to create files in your personal folder."; return; }
-
-            var personalRoot = repo.GetPersonalFolder(securityContext); // e.g. C:\Repo\Personal\john
-            var sub = folderPath.Substring("Personal".Length).TrimStart(Path.DirectorySeparatorChar, '/');
-            // The LLM may include the username segment (from report_list display format).
-            // Strip it if present so we don't double-nest it under the personal root.
-            var userName = Path.GetFileName(personalRoot.TrimEnd(Path.DirectorySeparatorChar));
-            if (sub.StartsWith(userName + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
-                sub = sub.Substring(userName.Length + 1);
-            else if (string.Equals(sub, userName, StringComparison.OrdinalIgnoreCase))
-                sub = string.Empty;
-
-            var physPath = string.IsNullOrEmpty(sub) ? personalRoot : Path.Combine(personalRoot, sub);
-            resolvedFolderPath = physPath.Replace(repo.PersonalFolder, Repository.SealPersonalRepositoryKeyword);
-        }
-        else if (folderPath.StartsWith("Reports", StringComparison.OrdinalIgnoreCase))
-        {
-            // Reports repository folder: check write access then store with keyword.
-            var sub = folderPath.Substring("Reports".Length); // e.g. "\Sales\output" or ""
-            var swiSub = sub.Length &gt; 0 ? sub : Path.DirectorySeparatorChar.ToString();
-            var secFolder = securityContext.FindSecurityFolder(swiSub);
-            if (secFolder != null &amp;&amp; secFolder.FolderRight != FolderRight.Edit)
-                { tool.ExecResult = $"Error: no write access to reports folder '{folderPath}'."; return; }
-            resolvedFolderPath = Repository.SealReportsRepositoryKeyword + sub;
-        }
-        else
-        {
-            // Absolute path or already contains a %SEAL...% keyword — store as-is.
-            resolvedFolderPath = folderPath;
+            // ── Resolve folder_path to a keyword-based stored path ──────────────────
+            string resolvedFolderPath;
+            if (folderPath.StartsWith("Personal", StringComparison.OrdinalIgnoreCase))
+            {
+                if (securityContext.PersonalFolderRight == PersonalFolderRight.None)
+                    { tool.ExecResult = "Error: no right to create files in your personal folder."; return; }
+                var personalRoot = repo.GetPersonalFolder(securityContext);
+                var sub = folderPath.Substring("Personal".Length).TrimStart(Path.DirectorySeparatorChar, '/');
+                var userName = Path.GetFileName(personalRoot.TrimEnd(Path.DirectorySeparatorChar));
+                if (sub.StartsWith(userName + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                    sub = sub.Substring(userName.Length + 1);
+                else if (string.Equals(sub, userName, StringComparison.OrdinalIgnoreCase))
+                    sub = string.Empty;
+                var physPath = string.IsNullOrEmpty(sub) ? personalRoot : Path.Combine(personalRoot, sub);
+                resolvedFolderPath = physPath.Replace(repo.PersonalFolder, Repository.SealPersonalRepositoryKeyword);
+            }
+            else if (folderPath.StartsWith("Reports", StringComparison.OrdinalIgnoreCase))
+            {
+                var sub = folderPath.Substring("Reports".Length);
+                var swiSub = sub.Length &gt; 0 ? sub : Path.DirectorySeparatorChar.ToString();
+                var secFolder = securityContext.FindSecurityFolder(swiSub);
+                if (secFolder != null &amp;&amp; secFolder.FolderRight != FolderRight.Edit)
+                    { tool.ExecResult = $"Error: no write access to reports folder '{folderPath}'."; return; }
+                resolvedFolderPath = Repository.SealReportsRepositoryKeyword + sub;
+            }
+            else
+            {
+                resolvedFolderPath = folderPath;
+            }
+            output.FolderPath = resolvedFolderPath;
         }
 
-        output.FolderPath = resolvedFolderPath;
         if (!string.IsNullOrEmpty(fileName)) output.FileName = fileName;
 
         // Update report_format view parameter on the output
-        var param = output.ViewParameters.FirstOrDefault(p =&gt; p.Name == "report_format");
-        if (param != null) { param.Value = format; param.CustomValue = true; }
+        var param2 = output.ViewParameters.FirstOrDefault(p =&gt; p.Name == "report_format");
+        if (param2 != null) { param2.Value = format; param2.CustomValue = true; }
 
         report.SaveToFile();
-        tool.ExecResult = $"Output configured on '{path}': folder='{folderPath}', file='{output.FileName}', format='{format}', name='{output.Name}'. You can now call report_configure_schedule to add a schedule.";
+        tool.ExecResult = $"Output configured on '{path}': folder='{folderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
 }</ExecutionScript>
@@ -1324,15 +1386,18 @@
         return;
     }
 
+sb.AppendLine("popol");
     // Compute the user's personal directory root (null when no personal right).
     string personalUserDir = securityContext.PersonalFolderRight != PersonalFolderRight.None
         ? repo.GetPersonalFolder(securityContext)
         : null;
 
+sb.AppendLine("popol3");
     // Folder tree built by SWIGetRootFolders – iterate every accessible folder.
     // Skip folders with no right (hidden) and files-only folders (no reports shown).
     foreach (var folder in securityContext.AllFolders)
     {
+sb.AppendLine(folder.FinalPath + " " + folder.right.ToString());
         if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
         if (folder.right == 0) continue;  // no access – hidden from this user
         if (folder.files)      continue;  // files-only folder, reports not shown
@@ -1355,6 +1420,7 @@
             displayPath = "Reports" + folder.path.TrimEnd(Path.DirectorySeparatorChar);
         }
 
+sb.AppendLine(physPath);
         if (!Directory.Exists(physPath)) continue;
 
         // Apply optional name filter
@@ -1540,7 +1606,6 @@
     <AIAssistantConfiguration>
       <GUID>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</GUID>
       <Name>Report Designer</Name>
-      <Description>Creates, modifies and manages reports: explores schema, writes SQL, builds report models and handles report files.</Description>
       <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
       <ToolGUIDs>
         <GUID>975395e7-8f7f-47a8-84a7-dbf7bb3bec44</GUID>
@@ -1566,7 +1631,6 @@
     <AIAssistantConfiguration>
       <GUID>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e</GUID>
       <Name>Schedule &amp; Output</Name>
-      <Description>Configures report outputs and schedules for automated delivery to files, emails or other destinations.</Description>
       <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
       <ToolGUIDs>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
@@ -1582,7 +1646,6 @@
     <AIAssistantConfiguration>
       <GUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</GUID>
       <Name>Data Analyst</Name>
-      <Description>Explores data sources, queries tables and executes existing reports to answer data questions.</Description>
       <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
@@ -1600,7 +1663,6 @@
     <AIAssistantConfiguration>
       <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</GUID>
       <Name>System Admin</Name>
-      <Description>Monitors the server, reads logs, manages data sources and inspects or executes reports.</Description>
       <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
@@ -1615,16 +1677,6 @@
       <DefaultSystemPrompt />
       <SystemPromptFile>admin-system-prompt.md</SystemPromptFile>
       <SamplePromptsFile>admin-sample-prompts.md</SamplePromptsFile>
-    </AIAssistantConfiguration>
-    <AIAssistantConfiguration>
-      <GUID>16dc89e8-1954-4425-a539-a5d3d71f32ae</GUID>
-      <Name>Web Assistant</Name>
-      <Description>General-purpose assistant for navigating the portal and getting help with Seal Report.</Description>
-      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
-      <ToolGUIDs />
-      <DefaultSystemPrompt />
-      <SystemPromptFile>main-system-prompt.md</SystemPromptFile>
-      <SamplePromptsFile>main-sample-prompts.md</SamplePromptsFile>
     </AIAssistantConfiguration>
   </AIAssistants>
 </AIServerConfiguration>

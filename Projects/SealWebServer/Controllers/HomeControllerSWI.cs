@@ -497,14 +497,7 @@ namespace SealWebServer.Controllers
                 }
 
                 //Folders Script
-                WebUser.Folders = result;
-                WebUser.ScriptNumber = 1;
-                foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FoldersScript)).OrderBy(i => i.Name))
-                {
-                    RazorHelper.CompileExecute(group.FoldersScript, WebUser);
-                    WebUser.ScriptNumber++;
-
-                }
+                WebUser.SetFolders(result);
                 return Json(WebUser.Folders);
             }
             catch (Exception ex)
@@ -695,10 +688,13 @@ namespace SealWebServer.Controllers
                             report.SynchronizeTasks();
                         }
 
-                        //Copy to recycle bin before deleting
+                        //Copy to recycle bin before deleting (skip if already in bin)
                         var bin = Repository.GetRecycleBinFolder(WebUser);
-                        var binDest = Path.Combine(bin, $"{DateTime.UtcNow:yyyyMMddHHmmss}_{Path.GetFileName(fullPath)}");
-                        System.IO.File.Copy(fullPath, binDest, overwrite: true);
+                        if (!fullPath.StartsWith(bin + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                        {
+                            var binDest = Path.Combine(bin, $"{DateTime.UtcNow:yyyyMMddHHmmss}_{Path.GetFileName(fullPath)}");
+                            System.IO.File.Copy(fullPath, binDest, overwrite: true);
+                        }
 
                         FileHelper.DeleteFile(fullPath);
 

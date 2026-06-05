@@ -88,6 +88,20 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Set the current folders of the user and execute the Folders Scripts of the user's security groups.
+        /// </summary>
+        public void SetFolders(List<SWIFolder> folders)
+        {
+            Folders = folders;
+            ScriptNumber = 1;
+            foreach (var group in SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FoldersScript)).OrderBy(i => i.Name))
+            {
+                RazorHelper.CompileExecute(group.FoldersScript, this);
+                ScriptNumber++;
+            }
+        }
+
+        /// <summary>
         /// Current folder detail of the user
         /// </summary>
         public SWIFolderDetail FolderDetail = new SWIFolderDetail();

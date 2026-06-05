@@ -768,7 +768,7 @@ class SWIMain {
             $("#file-table-view").height($(window).height() ?? 0 - 125);
         }
         else {
-            $("#folder-tree").css("max-height", (($(window).height() ?? 0) / 2 - 45));
+            $("#folder-tree").css("max-height", ($(window).height() ?? 0 / 2 - 45));
         }
     }
     enableControls() {
@@ -968,11 +968,11 @@ class SWIMain {
                     $td.append(button);
                 }
                 if (_main._profile.downloadupload > 0) {
-                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-default btn-table report-download");
+                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-default btn-table report-download hidden-xs");
                     button.append($("<span class='glyphicon glyphicon-download'></span>"));
                     $td.append(button);
                 }
-                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Mark as favorite")).addClass("btn btn-default btn-table report-favorite");
+                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Mark as favorite")).addClass("btn btn-default btn-table report-favorite hidden-xs");
                 if (file.isfavorite)
                     button.append($("<span class='glyphicon glyphicon-star'></span>"));
                 else

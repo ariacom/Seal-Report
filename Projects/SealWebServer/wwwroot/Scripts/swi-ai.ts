@@ -279,6 +279,7 @@
             $messages[0].scrollTop = $messages[0].scrollHeight;
             _requesting = false;
             setSendMode();
+            $input.focus();
             // Auto-save to Recents after every exchange
             // On the first save use the user's message as a friendly name
             var saveName = _panelChatFileName || sanitizeFileName(message);
@@ -289,6 +290,7 @@
             if ($currentTyping) { $currentTyping.remove(); $currentTyping = null; }
             _requesting = false;
             setSendMode();
+            $input.focus();
         });
     });
 

@@ -43,12 +43,10 @@
 		<Content Include="..\..\Repository\Settings\AI\Prompts\admin-system-prompt.md" Link="AI\Prompts\admin-system-prompt.md" />
 		<Content Include="..\..\Repository\Settings\AI\Prompts\analyst-system-prompt.md" Link="AI\Prompts\analyst-system-prompt.md" />
 		<Content Include="..\..\Repository\Settings\AI\Prompts\designer-system-prompt.md" Link="AI\Prompts\designer-system-prompt.md" />
-		<Content Include="..\..\Repository\Settings\AI\Prompts\main-system-prompt.md" Link="AI\Prompts\main-system-prompt.md" />
 		<Content Include="..\..\Repository\Settings\AI\Prompts\scheduler-system-prompt.md" Link="AI\Prompts\scheduler-system-prompt.md" />
 		<Content Include="..\..\Repository\Settings\AI\Samples\admin-sample-prompts.md" Link="AI\Samples\admin-sample-prompts.md" />
 		<Content Include="..\..\Repository\Settings\AI\Samples\analyst-sample-prompts.md" Link="AI\Samples\analyst-sample-prompts.md" />
 		<Content Include="..\..\Repository\Settings\AI\Samples\designer-sample-prompts.md" Link="AI\Samples\designer-sample-prompts.md" />
-		<Content Include="..\..\Repository\Settings\AI\Samples\main-sample-prompts.md" Link="AI\Samples\main-sample-prompts.md" />
 		<Content Include="..\..\Repository\Settings\AI\Samples\scheduler-sample-prompts.md" Link="AI\Samples\scheduler-sample-prompts.md" />
 		<Content Include="..\..\Repository\Views\Content\seal.css" Link="Views\Content\seal.css" />
 	</ItemGroup>

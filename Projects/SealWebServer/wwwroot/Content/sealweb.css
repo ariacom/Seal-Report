@@ -835,13 +835,18 @@ table.dataTable {
     #config-dialog .input-group-btn .btn {
         width: 40px !important;
     }
+
+    #profile-dialog .modal-dialog,
+    #folder-dialog .modal-dialog {
+        width: auto;
+        margin: 10px;
+    }
 }
 
 /*  Profile Dialog  */
 #profile-dialog .modal-dialog,
 #folder-dialog .modal-dialog {
-    width: 800px;
-    margin: 30px auto;
+    margin: 20px auto;
 }
 
 #profile-dialog .modal-content,

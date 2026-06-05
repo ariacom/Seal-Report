@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>84bb7b98-6974-4e78-bbab-9864e7f44832</GUID>
+  <ViewGUID>fbc8de0c-3535-4736-8780-2f80df73f703</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>6d95d92e-207d-463c-a5b6-980429b851cc</GUID>
+      <Name>Model</Name>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>6697840e-7298-420b-84ea-77d7f986b9c9</GUID>
+      <Name>AI Summary</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>AI Summary</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>ai_assistant_name</Name>
+          <Value>Schedule &amp; Output</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Enabled>false</Enabled>
+      <Step>BeforeRendering</Step>
+      <Script>@using Seal.AI;
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    task.LogMessage($"Executing '{task.Name}'");
+    
+    var assistantName = task.GetValue("ai_assistant_name");
+    var system = task.GetValue("ai_system_prompt");
+    var systemAdditional = task.GetValue("ai_system_additional");
+    var user = task.GetValue("ai_user_prompt");
+    var words = task.GetNumericValue("ai_user_prompt_words");
+    var userAdditional = task.GetValue("ai_user_additional");
+    var modelName = task.GetValue("summary_model");
+    var logRequests = task.GetBoolValue("log_ai_requests", false);
+
+    var dataJson = "";
+    foreach (var model in report.Models.Where(i =&gt; string.IsNullOrEmpty(modelName) || i.Name == modelName)) {
+        var (tableJson, aggJson) = model.ResultTableTranslatedJson;
+        dataJson += $@"=== Model: {model.Name} ===
+PRE-AGGREGATED METRICS:
+{aggJson}
+
+DATA:
+{tableJson}
+
+";
+    }
+	if (string.IsNullOrEmpty(dataJson)) throw new Exception("No data found. Check your model name");
+    
+	system += $"\r\nRespond with language and regional settings of culture {report.ExecutionView.CultureInfo.Name}.\r\n{systemAdditional}";
+    user += $"\r\nKeep it under ~{words} words.\r\n{userAdditional}\r\n{dataJson}";
+
+    if (logRequests) {
+		task.LogMessage($"[AI Request {system.Length}] System:\r\n{system}");
+		task.LogMessage($"[AI Request {user.Length}] User:\r\n{user}");
+    }
+    var assistant = new AIAssistant(assistantName);
+    //assistant.OverrideSystemPrompt(system);
+    var summary = assistant.ChatHtml(user);
+	if (string.IsNullOrEmpty(summary)) throw new Exception("Got empty summary.");
+    if (logRequests) task.LogMessage($"[AI Response]\r\n{summary}");
+    
+    if (!string.IsNullOrEmpty(modelName)) {
+        foreach (var view in report.AllViews.Where(i =&gt; i.Model?.Name == modelName)) {
+            view.SetParameter("model_summary", summary);
+        }
+    }
+    else {
+        report.ExecutionView.SetParameter("report_summary", summary);
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>f1102e88-89ac-46a2-8761-15af8bbd6f2f</GUID>
+      <Name>Default</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@using Seal.AI;
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    task.LogMessage($"Executing '{task.Name}'");
+    
+    var user = new SecurityUser(report.Repository.Security);
+    user.AddDefaultSecurityGroup();
+    
+    foreach (var g in user.SecurityGroups) task.LogMessage(g.Name);
+    
+    report.SecurityContext = user;
+    
+    var assistant = new AIAssistant("Report Designer");
+    assistant.SecurityContext = user;
+    
+    var request = @"
+        Clear all reports and files stored in {Repository}\Reports\Tests\Output
+    ";
+    
+    request = "List all folders";
+    request = "List existing reports";
+    task.LogMessage($"{request}");
+    var response = assistant.Chat(request, report, report);
+    task.LogMessage($"[AI Response]\r\n{response}");
+    
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>fbc8de0c-3535-4736-8780-2f80df73f703</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>f06ee54c-5def-4c4e-9988-2abd365352c4</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>0e0a3ad0-f3c3-4dbb-9eb6-8357c4657812</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>15f3d55e-8ae0-488f-a345-aa72cbca4f00</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>9ec4eb2a-5df5-4d0d-930f-0055c3f40261</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>ff07efe4-120e-4068-a65c-db2fde002322</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>01ef9cb5-b25b-401f-88de-7a03d09e4ed7</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>6b898ca0-1e21-4064-8305-1619b69141a2</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>e5c00c2d-ee62-4e3a-80e7-643058e79ad2</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>6d95d92e-207d-463c-a5b6-980429b851cc</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>
