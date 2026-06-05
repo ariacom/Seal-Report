@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>297385b3-45fa-4199-ae7e-b7c5c2b1b275</GUID>
+  <DisplayName>Top 10 Best Suppliers in 1997 in Amount</DisplayName>
+  <ViewGUID>6866467a-afca-4e9a-a9f4-c7803c71d054</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>32b755a8-0c62-4f67-a051-ca010a54cc40</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>987fa941-eab2-48db-bcc2-67dff2d4f903</GUID>
+      <Name>Model</Name>
+      <SourceGUID>32b755a8-0c62-4f67-a051-ca010a54cc40</SourceGUID>
+      <Alias>Master</Alias>
+      <Elements>
+        <ReportElement>
+          <GUID>563398a1-134b-4bf3-b0da-b1fa3309b0df</GUID>
+          <Name>Supplier</Name>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>bf583d71-d1be-4385-9c12-3b9b7fd5266d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>468b84c7-93e0-4ec5-b21c-11531d42fa95</GUID>
+          <Name>Amount</Name>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>bc4d9b00-d8b3-419d-b429-b36d7e5542a4</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Table>
+        <GUID>9f28a9ff-db97-4411-ac73-2cdd72edf7f4</GUID>
+        <Sql>SELECT TOP 10 s.CompanyName AS Supplier, SUM((1-od.Discount)*od.Quantity*od.UnitPrice) AS Amount
+FROM Suppliers s
+JOIN Products p ON s.SupplierID = p.SupplierID
+JOIN [Order Details] od ON p.ProductID = od.ProductID
+JOIN Orders o ON od.OrderID = o.OrderID
+WHERE YEAR(o.OrderDate) = 1997
+GROUP BY s.CompanyName</Sql>
+        <Alias>Master</Alias>
+        <DynamicColumns>true</DynamicColumns>
+        <Columns>
+          <MetaColumn>
+            <GUID>bf583d71-d1be-4385-9c12-3b9b7fd5266d</GUID>
+            <Name>Supplier</Name>
+            <Type>Text</Type>
+            <Category>Model</Category>
+            <DisplayName>Supplier</DisplayName>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>bc4d9b00-d8b3-419d-b429-b36d7e5542a4</GUID>
+            <Name>Amount</Name>
+            <Type>Numeric</Type>
+            <Category>Model</Category>
+            <DisplayName>Amount</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+        </Columns>
+      </Table>
+    </ReportModel>
+  </Models>
+  <Outputs>
+    <ReportOutput>
+      <GUID>dff70bc4-10f4-4a17-aad5-162177455b97</GUID>
+      <Name>output (Folder Device)</Name>
+      <OutputDeviceGUID>c428a6ba-061b-4a47-b9bc-f3f02442ab4b</OutputDeviceGUID>
+      <ViewGUID>6866467a-afca-4e9a-a9f4-c7803c71d054</ViewGUID>
+      <ViewParameters>
+        <OutputParameter>
+          <Name>report_format</Name>
+          <Value>pdf</Value>
+          <CustomValue>true</CustomValue>
+        </OutputParameter>
+      </ViewParameters>
+      <FolderPath>%SEALREPORTSREPOSITORY%\Tests\Output</FolderPath>
+      <FileName>top_10_best_suppliers_in_1997_in_amount_{0:yyyyMMdd}</FileName>
+    </ReportOutput>
+  </Outputs>
+  <Views>
+    <ReportView>
+      <GUID>6866467a-afca-4e9a-a9f4-c7803c71d054</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>fa14abbb-94d1-4a1d-a771-aa1ee2d321af</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>038f92e1-66bc-425c-90f3-628ce8cde668</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>bd3c73a0-7361-4a78-8fd6-3b24e266eba6</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>5412280d-3982-466a-88f6-98abc0db7ca1</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>f58ae68b-ef16-4045-88db-7a7e7b8f705b</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>22386805-eba3-4d2e-b949-52335c4b7ea4</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>11bf1c13-e3b3-4726-9ced-e7514903c222</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>2fb5670f-b7e1-4fc2-b782-c5b9ff9a6dfd</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>987fa941-eab2-48db-bcc2-67dff2d4f903</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

@@ -88,11 +88,142 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Set the current folders of the user and execute the Folders Scripts of the user's security groups.
+        /// Returns the full physical path of a folder relative path.
         /// </summary>
-        public void SetFolders(List<SWIFolder> folders)
+        public string GetFullPath(string path)
         {
-            Folders = folders;
+            path = FileHelper.ConvertOSFilePath(path);
+            if (path.StartsWith(SWIFolder.GetPersonalRoot())) return Security.Repository.GetPersonalFolder(this) + path.Substring(1);
+            else return Security.Repository.ReportsFolder + path;
+        }
+
+        /// <summary>
+        /// Returns the SWIFolder for a given relative path, applying the user's security rights.
+        /// </summary>
+        public SWIFolder GetFolder(string path)
+        {
+            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+            if (!IsAuthenticated) throw new Exception("Error: user is not authenticated");
+            if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
+            path = FileHelper.ConvertOSFilePath(path);
+
+            SWIFolder result = AllFolders.FirstOrDefault(i => i.path == path);
+            if (result != null)
+            {
+                //Folder was already initialized
+                result.SetFullPath(GetFullPath(path));
+                return result;
+            }
+
+            result = new SWIFolder();
+            result.path = path;
+            result.right = 0;
+            result.sql = SqlModel;
+            result.SetFullPath(GetFullPath(path));
+
+            if (result.IsPersonal)
+            {
+                //Personal
+                if (PersonalFolderRight == PersonalFolderRight.None) throw new Exception("Error: this user has no personal folder");
+                result.SetManageFlag(true, true, result.FinalPath == "");
+                result.expand = false;
+                string prefix = Security.Repository.GetPersonalFolderName(this);
+                var folderLeafName = Path.GetFileName(result.FinalPath);
+                if (folderLeafName == "BIN") result.type = "bin";
+                if (result.FinalPath == "") result.type = "personal";
+                result.name = (result.FinalPath == "" ? prefix : folderLeafName);
+                result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
+                result.right = (int)FolderRight.Edit;
+                result.files = (PersonalFolderRight == PersonalFolderRight.Files);
+            }
+            else
+            {
+                if (result.FinalPath == Path.DirectorySeparatorChar.ToString()) result.type = "reports";
+                result.name = (result.FinalPath == Path.DirectorySeparatorChar.ToString() ? Security.Repository.TranslateWeb("Reports") : Security.Repository.TranslateFolderName(path));
+                result.fullname = Security.Repository.TranslateWeb("Reports") + Security.Repository.TranslateFolderPath(result.FinalPath);
+                SecurityFolder securityFolder = FindSecurityFolder(path);
+                if (securityFolder != null)
+                {
+                    result.SetManageFlag(securityFolder.UseSubFolders, securityFolder.ManageFolder, securityFolder.IsDefined);
+                    result.expand = securityFolder.ExpandSubFolders;
+                    result.right = (int)securityFolder.FolderRight;
+                    result.files = securityFolder.FilesOnly;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Fills the sub-folders of a folder applying the user's security rights.
+        /// </summary>
+        public void FillFolder(SWIFolder folder)
+        {
+            List<SWIFolder> subFolders = new List<SWIFolder>();
+            if (folder.IsPersonal && PersonalFolderRight == PersonalFolderRight.None) return;
+
+            string folderPath = folder.GetFullPath();
+            foreach (string subFolder in Directory.GetDirectories(folderPath))
+            {
+                // _Assistant is a hidden system folder – never expose it in the browser
+                if (folder.IsPersonal && Path.GetFileName(subFolder) == AssistantFolders.FolderName) continue;
+
+                SWIFolder sub = GetFolder(folder.Combine(subFolder));
+                //Add if right on this folder, or a sub folder is defined with this root
+                if ((sub.right > 0) || SecurityGroups.Exists(i => i.Folders.Exists(j => j.Path.StartsWith(sub.path + (sub.path == Path.DirectorySeparatorChar.ToString() ? "" : Path.DirectorySeparatorChar.ToString())) && j.FolderRight != FolderRight.None)))
+                {
+                    FillFolder(sub);
+                    subFolders.Add(sub);
+                }
+            }
+            folder.folders = subFolders;
+        }
+
+        /// <summary>
+        /// Adds the folders having rights (recursively) to the result list.
+        /// </summary>
+        void AddValidFolders(SWIFolder folder, List<SWIFolder> result)
+        {
+            if (folder.right == 0)
+            {
+                //Add only folder with rights
+                foreach (var childFolder in folder.folders)
+                {
+                    AddValidFolders(childFolder, result);
+                }
+            }
+            else
+            {
+                result.Add(folder);
+            }
+        }
+
+        /// <summary>
+        /// Build the current folders of the user (including Personal folders) and execute the Folders Scripts of the user's security groups.
+        /// </summary>
+        public void SetFolders()
+        {
+            List<SWIFolder> result = new List<SWIFolder>();
+            //Personal
+            if (PersonalFolderRight != PersonalFolderRight.None)
+            {
+                var personalFolder = GetFolder(SWIFolder.GetPersonalRoot());
+                FillFolder(personalFolder);
+                result.Add(personalFolder);
+            }
+            //Report
+            var folder = GetFolder(Path.DirectorySeparatorChar.ToString());
+            FillFolder(folder);
+            if (ShowAllFolders)
+            {
+                result.Add(folder);
+            }
+            else
+            {
+                AddValidFolders(folder, result);
+            }
+
+            //Folders Script
+            Folders = result;
             ScriptNumber = 1;
             foreach (var group in SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FoldersScript)).OrderBy(i => i.Name))
             {

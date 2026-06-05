@@ -46,6 +46,19 @@ namespace Seal.AI
         public SecurityUser SecurityContext = null;
 
         /// <summary>
+        /// Current log for the tool execution
+        /// </summary>
+        public ReportExecutionLog ExecutionLog = null;
+
+        /// <summary>
+        /// Logs a message to the current <see cref="ExecutionLog"/> if one is set.
+        /// </summary>
+        public void LogMessage(string message, params object[] args)
+        {
+            ExecutionLog?.LogMessage(message, args);
+        }
+
+        /// <summary>
         /// Optional cancellation source propagated from the outer
         /// <see cref="AIAssistant.Chat"/> loop.  Execution scripts should
         /// poll <c>CancelOperation?.Cancel</c> inside any long-running loop

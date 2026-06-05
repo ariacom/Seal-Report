@@ -1920,7 +1920,7 @@ namespace Seal.Model
         {
             Schedules.Remove(schedule);
             SchedulesModified = true;
-            //Do not sync taks here, it will be done when report is really saved...
+            //Do not sync tasks here, it will be done when report is really saved...
         }
 
         /// <summary>

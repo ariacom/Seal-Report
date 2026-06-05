@@ -103,7 +103,7 @@ namespace Seal.AI
         /// produced or <paramref name="maxIterations"/> is reached.
         /// Falls back to a plain <see cref="IAIProvider.HandleChat"/> call when no tools are configured.
         /// </summary>
-        public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, int maxIterations = 10)
+        public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10)
         {
             var messageCountBefore = Messages.Count;
             Messages.Add(new UserChatMessage(userMessage));
@@ -138,6 +138,7 @@ namespace Seal.AI
                     if (cancelOperation?.Cancel == true) break;
 
                     toolCall.SecurityContext = SecurityContext;
+                    toolCall.ExecutionLog = toolsLog;
                     toolCall.CancelOperation = cancelOperation;
 
                     var toolConfig = toolConfigs.FirstOrDefault(t => t.IsEnabled && t.Name == toolCall.Name);
@@ -161,9 +162,9 @@ namespace Seal.AI
         /// <summary>
         /// Same as <see cref="Chat"/> but returns the reply sanitized as safe HTML.
         /// </summary>
-        public string ChatHtml(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, int maxIterations = 10)
+        public string ChatHtml(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10)
         {
-            var raw = Chat(userMessage, cancelOperation, log, maxIterations);
+            var raw = Chat(userMessage, cancelOperation, log, toolsLog, maxIterations);
             var sanitizer = new HtmlSanitizer();
             sanitizer.AllowedAttributes.Add("class");
             return sanitizer.Sanitize(raw);

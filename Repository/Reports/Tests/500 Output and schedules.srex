@@ -20,112 +20,140 @@
   </Models>
   <Tasks>
     <ReportTask>
-      <GUID>6697840e-7298-420b-84ea-77d7f986b9c9</GUID>
-      <Name>AI Summary</Name>
-      <Tasks />
-      <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>AI Summary</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>ai_assistant_name</Name>
-          <Value>Schedule &amp; Output</Value>
-        </Parameter>
-      </Parameters>
-      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
-      <Enabled>false</Enabled>
-      <Step>BeforeRendering</Step>
-      <Script>@using Seal.AI;
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-
-    task.LogMessage($"Executing '{task.Name}'");
-    
-    var assistantName = task.GetValue("ai_assistant_name");
-    var system = task.GetValue("ai_system_prompt");
-    var systemAdditional = task.GetValue("ai_system_additional");
-    var user = task.GetValue("ai_user_prompt");
-    var words = task.GetNumericValue("ai_user_prompt_words");
-    var userAdditional = task.GetValue("ai_user_additional");
-    var modelName = task.GetValue("summary_model");
-    var logRequests = task.GetBoolValue("log_ai_requests", false);
-
-    var dataJson = "";
-    foreach (var model in report.Models.Where(i =&gt; string.IsNullOrEmpty(modelName) || i.Name == modelName)) {
-        var (tableJson, aggJson) = model.ResultTableTranslatedJson;
-        dataJson += $@"=== Model: {model.Name} ===
-PRE-AGGREGATED METRICS:
-{aggJson}
-
-DATA:
-{tableJson}
-
-";
-    }
-	if (string.IsNullOrEmpty(dataJson)) throw new Exception("No data found. Check your model name");
-    
-	system += $"\r\nRespond with language and regional settings of culture {report.ExecutionView.CultureInfo.Name}.\r\n{systemAdditional}";
-    user += $"\r\nKeep it under ~{words} words.\r\n{userAdditional}\r\n{dataJson}";
-
-    if (logRequests) {
-		task.LogMessage($"[AI Request {system.Length}] System:\r\n{system}");
-		task.LogMessage($"[AI Request {user.Length}] User:\r\n{user}");
-    }
-    var assistant = new AIAssistant(assistantName);
-    //assistant.OverrideSystemPrompt(system);
-    var summary = assistant.ChatHtml(user);
-	if (string.IsNullOrEmpty(summary)) throw new Exception("Got empty summary.");
-    if (logRequests) task.LogMessage($"[AI Response]\r\n{summary}");
-    
-    if (!string.IsNullOrEmpty(modelName)) {
-        foreach (var view in report.AllViews.Where(i =&gt; i.Model?.Name == modelName)) {
-            view.SetParameter("model_summary", summary);
-        }
-    }
-    else {
-        report.ExecutionView.SetParameter("report_summary", summary);
-    }
-}
-</Script>
-      <SortOrder>1</SortOrder>
-    </ReportTask>
-    <ReportTask>
       <GUID>f1102e88-89ac-46a2-8761-15af8bbd6f2f</GUID>
-      <Name>Default</Name>
+      <Name>Cleanup</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
       <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
       <Script>@using Seal.AI;
+@using System.IO;
+
 @{
     ReportTask task = Model;
     Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = @"Reports\Tests\Output";
+    var outputDirPath = Path.Combine(repository.ReportsFolder, @"Tests\Output");
 
     task.LogMessage($"Executing '{task.Name}'");
+    var assistant = new AIAssistant("Schedule &amp; Output");
+    assistant.SecurityContext = report.SecurityContext;
     
-    var user = new SecurityUser(report.Repository.Security);
-    user.AddDefaultSecurityGroup();
-    
-    foreach (var g in user.SecurityGroups) task.LogMessage(g.Name);
-    
-    report.SecurityContext = user;
-    
-    var assistant = new AIAssistant("Report Designer");
-    assistant.SecurityContext = user;
-    
-    var request = @"
-        Clear all reports and files stored in {Repository}\Reports\Tests\Output
-    ";
-    
-    request = "List all folders";
-    request = "List existing reports";
-    task.LogMessage($"{request}");
-    var response = assistant.Chat(request, report, report);
-    task.LogMessage($"[AI Response]\r\n{response}");
-    
+    var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
+    task.LogMessage(request);
+    assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+
+    assistant = new AIAssistant("System Admin");
+    assistant.SecurityContext = report.SecurityContext;
+    request = @$"Delete all reports and files stored in directory {outputDir}";
+    assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+
+    //Check
+    if (Directory.GetFiles(outputDirPath).Length &gt; 0) throw new Exception($"Files still exist in '{outputDirPath}' after the assistant call.");
 }
 </Script>
       <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>31687d2e-b13c-4cc3-8fe8-12d7c1c700b1</GUID>
+      <Name>Add output and schedules</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = @"Reports\Tests\Output";
+    var outputDirPath = Path.Combine(repository.ReportsFolder, @"Tests\Output");
+
+    task.LogMessage($"Executing '{task.Name}'");
+    
+    var assistant = new AIAssistant("Schedule &amp; Output");
+    assistant.SecurityContext = report.SecurityContext;
+    
+    var request = $@"
+        Add an output folder in PDF to generate the report 'Top 10 best suppliers in 1997 in amount.srex' located in directory {outputDir}.
+        Generate the file with a daily date in {outputDir}.
+    ";
+    task.LogMessage(request);
+    assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+
+    request = $@"
+        Schedule it every monday at 10:45.
+    ";
+    task.LogMessage(request);
+    assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+    //Check
+//    if (Directory.GetFiles(outputDirPath, "*.srex").Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
+
+}
+</Script>
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>38378b59-02a6-443a-a339-5200d8c444ee</GUID>
+      <Name>Create report</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = @"Reports\Tests\Output";
+    var outputDirPath = Path.Combine(repository.ReportsFolder, @"Tests\Output");
+
+    task.LogMessage($"Executing '{task.Name}'");
+    
+    var assistant = new AIAssistant("Report Designer");
+    assistant.SecurityContext = report.SecurityContext;
+    
+    var request = $@"
+        Create a report named 'Top 10 best suppliers in 1997 in amount.srex' in directory {outputDir}
+        showing the top 10 suppliers by total amounts for the year 1997.
+    ";
+    task.LogMessage(request);
+    assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+
+    //Check
+    if (Directory.GetFiles(outputDirPath, "*.srex").Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
+
+}
+</Script>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>7d1e6314-5d02-4244-8c2b-d3809a061fe5</GUID>
+      <Name>Init context</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+
+    var user = new SecurityUser(repository.Security);
+    user.AddDefaultSecurityGroup();
+    user.SetFolders();
+    report.SecurityContext = user;
+}
+</Script>
+      <SortOrder>1</SortOrder>
     </ReportTask>
   </Tasks>
   <Views>

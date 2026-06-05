@@ -450,22 +450,6 @@ namespace SealWebServer.Controllers
             }
         }
 
-        void addValidFolders(SWIFolder folder, List<SWIFolder> result)
-        {
-            if (folder.right == 0)
-            {
-                //Add only folder with rights
-                foreach (var childFolder in folder.folders)
-                {
-                    addValidFolders(childFolder, result);
-                }
-            }
-            else
-            {
-                result.Add(folder);
-            }
-        }
-
         /// <summary>
         /// Returns all the folders of the user (including Personal folders).
         /// </summary>
@@ -476,28 +460,7 @@ namespace SealWebServer.Controllers
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
-                List<SWIFolder> result = new List<SWIFolder>();
-                //Personal
-                if (WebUser.PersonalFolderRight != PersonalFolderRight.None)
-                {
-                    var personalFolder = getFolder(SWIFolder.GetPersonalRoot());
-                    fillFolder(personalFolder);
-                    result.Add(personalFolder);
-                }
-                //Report
-                var folder = getFolder(Path.DirectorySeparatorChar.ToString());
-                fillFolder(folder);
-                if (WebUser.ShowAllFolders)
-                {
-                    result.Add(folder);
-                }
-                else
-                {
-                    addValidFolders(folder, result);
-                }
-
-                //Folders Script
-                WebUser.SetFolders(result);
+                WebUser.SetFolders();
                 return Json(WebUser.Folders);
             }
             catch (Exception ex)

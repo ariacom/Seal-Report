@@ -886,9 +886,7 @@ namespace SealWebServer.Controllers
 
         string getFullPath(string path)
         {
-            path = FileHelper.ConvertOSFilePath(path);
-            if (path.StartsWith(SWIFolder.GetPersonalRoot())) return Repository.GetPersonalFolder(WebUser) + path.Substring(1);
-            else return Repository.ReportsFolder + path;
+            return WebUser.GetFullPath(path);
         }
 
         SWIFolder getParentFolder(string path)
@@ -900,55 +898,8 @@ namespace SealWebServer.Controllers
         }
         SWIFolder getFolder(string path)
         {
-            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
             checkSWIAuthentication();
-            if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
-            path = FileHelper.ConvertOSFilePath(path);
-
-            SWIFolder result = WebUser.AllFolders.FirstOrDefault(i => i.path == path);
-            if (result != null)
-            {
-                //Folder was already initialized
-                result.SetFullPath(getFullPath(path));
-                return result;
-            }
-
-            result = new SWIFolder();
-            result.path = path;
-            result.right = 0;
-            result.sql = WebUser.SqlModel;
-            result.SetFullPath(getFullPath(path));
-
-            if (result.IsPersonal)
-            {
-                //Personal
-                if (WebUser.PersonalFolderRight == PersonalFolderRight.None) throw new Exception("Error: this user has no personal folder");
-                result.SetManageFlag(true, true, result.FinalPath == "");
-                result.expand = false;
-                string prefix = Repository.GetPersonalFolderName(WebUser);
-                var folderLeafName = Path.GetFileName(result.FinalPath);
-                if (folderLeafName == "BIN") result.type = "bin";
-                if (result.FinalPath == "") result.type = "personal";
-                result.name = (result.FinalPath == "" ? prefix : folderLeafName);
-                result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
-                result.right = (int)FolderRight.Edit;
-                result.files = (WebUser.PersonalFolderRight == PersonalFolderRight.Files);
-            }
-            else
-            {
-                if (result.FinalPath == Path.DirectorySeparatorChar.ToString()) result.type = "reports";
-                result.name = (result.FinalPath == Path.DirectorySeparatorChar.ToString() ? Translate("Reports") : Repository.TranslateFolderName(path));
-                result.fullname = Translate("Reports") + Repository.TranslateFolderPath(result.FinalPath);
-                SecurityFolder securityFolder = WebUser.FindSecurityFolder(path);
-                if (securityFolder != null)
-                {
-                    result.SetManageFlag(securityFolder.UseSubFolders, securityFolder.ManageFolder, securityFolder.IsDefined);
-                    result.expand = securityFolder.ExpandSubFolders;
-                    result.right = (int)securityFolder.FolderRight;
-                    result.files = securityFolder.FilesOnly;
-                }
-            }
-            return result;
+            return WebUser.GetFolder(path);
         }
 
         SWIFolderDetail getFolderDetail(string path, bool refresh = false)
@@ -1028,24 +979,7 @@ namespace SealWebServer.Controllers
 
         void fillFolder(SWIFolder folder)
         {
-            List<SWIFolder> subFolders = new List<SWIFolder>();
-            if (folder.IsPersonal && WebUser.PersonalFolderRight == PersonalFolderRight.None) return;
-
-            string folderPath = folder.GetFullPath();
-            foreach (string subFolder in Directory.GetDirectories(folderPath))
-            {
-                // _Assistant is a hidden system folder – never expose it in the browser
-                if (folder.IsPersonal && Path.GetFileName(subFolder) == AssistantFolders.FolderName) continue;
-
-                SWIFolder sub = getFolder(folder.Combine(subFolder));
-                //Add if right on this folder, or a sub folder is defined with this root
-                if ((sub.right > 0) || WebUser.SecurityGroups.Exists(i => i.Folders.Exists(j => j.Path.StartsWith(sub.path + (sub.path == Path.DirectorySeparatorChar.ToString() ? "" : Path.DirectorySeparatorChar.ToString())) && j.FolderRight != FolderRight.None)))
-                {
-                    fillFolder(sub);
-                    subFolders.Add(sub);
-                }
-            }
-            folder.folders = subFolders;
+            WebUser.FillFolder(folder);
         }
 
         void searchFolder(SWIFolder folder, string pattern, List<SWIFile> files)

@@ -16,6 +16,7 @@
     AIToolConfiguration tool = Model;
     var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var sql      = args.GetProperty("sql").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (sql: {sql})..");
 
     // Guard: only SELECT statements are allowed
     var sqlTrimmed = sql?.TrimStart() ?? "";
@@ -64,6 +65,7 @@
     }
     catch (Exception ex) { tool.ExecResult = $"Query error: {ex.Message}"; }
     finally               { connection.Close(); }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -80,6 +82,7 @@
     AIToolConfiguration tool = Model;
     var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var tableName = args.GetProperty("table").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table: {tableName})..");
     var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
     var connGuid  = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
     var source    = tool.GetExecSource(dsGuid);
@@ -108,6 +111,7 @@
     }
     catch (Exception ex) { tool.ExecResult = $"Schema error: {ex.Message}"; }
     finally               { connection.Close(); }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -125,6 +129,7 @@
     var args       = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var tableName  = args.GetProperty("table").GetString();
     var columnName = args.GetProperty("column").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table: {tableName}, column: {columnName})..");
     var dsGuid     = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
     var connGuid   = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
     var source     = tool.GetExecSource(dsGuid);
@@ -160,6 +165,7 @@
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
     finally               { connection.Close(); }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -176,6 +182,7 @@
     var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var tableName = args.GetProperty("table").GetString();
     var whereStr  = args.TryGetProperty("where", out var whereProp) ? whereProp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table: {tableName})..");
     var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
     var connGuid  = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
     var source    = tool.GetExecSource(dsGuid);
@@ -201,6 +208,7 @@
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
     finally               { connection.Close(); }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -212,6 +220,7 @@
 @using Seal.AI
 @{
     AIToolConfiguration tool = Model;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
     var sb = new System.Text.StringBuilder();
     foreach (var source in Repository.Instance.Sources)
     {
@@ -247,6 +256,7 @@
         sb.AppendLine();
     }
     tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -262,6 +272,7 @@
     AIToolConfiguration tool = Model;
     var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var name   = args.GetProperty("name").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (name: {name})..");
     var source = Repository.Instance.Sources.FirstOrDefault(i =&gt; i.Name == name);
     if (source == null) { tool.ExecResult = $"Error: data source '{name}' not found."; return; }
 
@@ -306,6 +317,7 @@
     }
 
     tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -327,6 +339,7 @@
 
     var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var relativePath = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {relativePath})..");
 
     // Resolve full path across all three repository roots
     var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;
@@ -410,6 +423,7 @@
     }
 
     tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -430,6 +444,7 @@
 
     var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
 
     var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
     {
@@ -454,6 +469,7 @@
 
     try   { tool.ExecResult = File.ReadAllText(fullPath); }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -468,6 +484,7 @@
     AIToolConfiguration tool = Model;
     var args    = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var request = args.GetProperty("request").GetString().ToLowerInvariant();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (request: {request})..");
 
     // Patterns that genuinely require SQL (window functions, subqueries, set ops)
     var sqlPatterns = new System.Collections.Generic.Dictionary&lt;string, string[]&gt;
@@ -517,6 +534,7 @@
             "REASON: no SQL-requiring patterns detected (no window functions, subqueries, CTEs, or set operations). " +
             "Standard aggregation, grouping, and filtering are native metadata model capabilities.";
     }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -537,6 +555,7 @@
 
     var args             = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path             = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
     var displayName      = args.GetProperty("display_name").GetString();
     var sql              = args.GetProperty("sql").GetString();
     var sourceGuid       = args.TryGetProperty("source_guid",        out var snp) ? snp.GetString() : null;
@@ -621,6 +640,7 @@
         tool.ExecResult = $"Created: {path}";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -644,6 +664,7 @@
 
     var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path      = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
     var xml       = args.GetProperty("xml").GetString();
     var overwrite = args.TryGetProperty("overwrite", out var op) &amp;&amp; op.GetBoolean();
 
@@ -671,6 +692,55 @@
     try
     {
         var doc = XDocument.Parse(xml);
+
+        // --- Validate / resolve metadata column references (guard against fabricated GUIDs) ---
+        Func&lt;string, string&gt; norm = s =&gt; (s ?? "").Replace("[", "").Replace("]", "").Trim().ToLowerInvariant();
+
+        var msGuid = doc.Descendants("MetaSourceGUID")
+                        .Select(e =&gt; e.Value == null ? null : e.Value.Trim())
+                        .FirstOrDefault(v =&gt; !string.IsNullOrEmpty(v));
+        var metaSource = repo.Sources.FirstOrDefault(s =&gt; string.Equals(s.GUID, msGuid, StringComparison.OrdinalIgnoreCase));
+        if (metaSource == null)
+        {
+            tool.ExecResult = $"Error: MetaSourceGUID '{msGuid}' does not match any data source. Use the GUID from datasource_list.";
+            return;
+        }
+
+        var validColGuids = new System.Collections.Generic.HashSet&lt;string&gt;(StringComparer.OrdinalIgnoreCase);
+        var colGuidByName = new System.Collections.Generic.Dictionary&lt;string, string&gt;();
+        foreach (var table in metaSource.MetaData.Tables)
+            foreach (var col in table.Columns)
+            {
+                validColGuids.Add(col.GUID);
+                colGuidByName[norm(col.Name)] = col.GUID;
+                if (!string.IsNullOrEmpty(col.DisplayName)) colGuidByName[norm(col.DisplayName)] = col.GUID;
+            }
+
+        var badRefs = new System.Collections.Generic.List&lt;string&gt;();
+        foreach (var mc in doc.Descendants("MetaColumnGUID").ToList())
+        {
+            var val = mc.Value == null ? "" : mc.Value.Trim();
+            if (validColGuids.Contains(val)) continue;
+
+            var refName = mc.Parent == null ? null : (string)mc.Parent.Element("Name");
+            string realGuid;
+            if (refName != null &amp;&amp; colGuidByName.TryGetValue(norm(refName), out realGuid))
+            {
+                tool.CurrentToolCall.LogMessage($"Resolved MetaColumnGUID for '{refName.Trim()}': '{val}' -&gt; '{realGuid}'");
+                mc.Value = realGuid;
+            }
+            else
+            {
+                badRefs.Add(refName != null ? $"'{refName.Trim()}' (supplied GUID '{val}')" : $"GUID '{val}'");
+            }
+        }
+        if (badRefs.Count &gt; 0)
+        {
+            tool.ExecResult = "Error: these MetaColumnGUID values are not columns of source '" + metaSource.Name +
+                "': " + string.Join("; ", badRefs) +
+                ". Call datasource_get_detail and copy the exact column GUIDs - never invent or sequence GUIDs.";
+            return;
+        }
 
         // Only regenerate internal cross-reference GUIDs.
         // MetaSourceGUID and MetaColumnGUID must be preserved — they reference
@@ -728,12 +798,13 @@
         tool.ExecResult = $"Created: {path}";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c</GUID>
       <Name>report_configure_output</Name>
-      <Description>Configures or removes an output on an existing report. Use action=configure (default) to add or update a delivery output; device_type selects the delivery method: folder (default), email, or ftp. Use action=delete to remove outputs and all their associated schedules — never use report_manage for this. Pass output_guid to target a specific output for update or delete; for folder outputs without a GUID the first folder output is reused. For delete: pass output_guid or output_name to remove a specific output; omit both to delete all. Returns outputGUID in the result — store it to pass to report_configure_schedule. Always call this before report_configure_schedule.</Description>
+      <Description>Configures or removes an output on an existing report. Use action=configure (default) to add or update a delivery output; device_type selects the delivery method: folder (default), email, or ftp. Use action=delete to remove outputs and all their associated schedules — never use file_manage for this. Pass output_guid to target a specific output for update or delete; for folder outputs without a GUID the first folder output is reused. For delete: pass output_guid or output_name to remove a specific output; omit both to delete all. Returns outputGUID in the result — store it to pass to report_configure_schedule. Always call this before report_configure_schedule.</Description>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update an output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"device_type":{"type":"string","enum":["folder","email","ftp"],"description":"Delivery type: folder (default), email, or ftp."},"output_guid":{"type":"string","description":"GUID of an existing output to update or delete, as returned by a prior call. Use to target a specific output when the report has multiple."},"output_name":{"type":"string","description":"For action=configure: display name for this output (auto-generated if omitted). For action=delete: name of the specific output to remove. Omit to delete all outputs on the report."},"device_name":{"type":"string","description":"Name of the specific email or FTP device to use when multiple are configured."},"folder_path":{"type":"string","description":"Required for device_type=folder. Output folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date. Omit to use the report display name. Never include a file extension."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"email_to":{"type":"string","description":"Required for device_type=email. Recipient email address(es), semicolon-separated."},"email_cc":{"type":"string","description":"CC email address(es), semicolon-separated."},"email_bcc":{"type":"string","description":"BCC email address(es), semicolon-separated."},"email_subject":{"type":"string","description":"Email subject line. Defaults to the report name."},"email_body":{"type":"string","description":"Plain-text or HTML body for the email."},"email_html_body":{"type":"boolean","description":"If true, sends the report HTML as the email body (no attachment)."},"email_skip_attachments":{"type":"boolean","description":"If true, sends the email body only with no file attached."}},"required":["path"]}</ParametersSchema>
       <ExecutionScript>@using System.Text.Json
 @using System.IO
@@ -748,6 +819,7 @@
 
     var args       = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path       = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
     var action     = args.TryGetProperty("action",        out var acp) ? acp.GetString() : "configure";
     var deviceType = args.TryGetProperty("device_type",   out var dtp) ? dtp.GetString() : "folder";
     var outputGuid = args.TryGetProperty("output_guid",   out var ogp) ? ogp.GetString() : null;
@@ -925,13 +997,14 @@
         tool.ExecResult = $"Output configured on '{path}': folder='{folderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d</GUID>
       <Name>report_configure_schedule</Name>
-      <Description>Adds or removes a recurring or one-time schedule on an existing report's folder output. Use action=configure (default) to add a schedule; use action=delete to remove all schedules from the report — never use report_manage for this. Requires the report to already have a folder output — call report_configure_output first if none exists. Use when the user wants automated execution: "every morning at 7am", "weekly on Monday", "run daily", "schedule this report", "send every month on the 1st", "delete the schedule".</Description>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add a new schedule. delete: remove all schedules from the report (does NOT delete the report file or its output)."},"type":{"type":"string","enum":["daily","weekly","monthly","once"],"description":"Required for action=configure. Recurrence type. Use once for a single one-time run."},"start_datetime":{"type":"string","description":"Required for action=configure. ISO 8601 date-time for the first or only run, e.g. 2025-06-01T07:00:00"},"days_interval":{"type":"integer","description":"For daily: interval in days between runs (default 1 = every day)."},"weekdays":{"type":"array","items":{"type":"integer"},"description":"For weekly: days of week to run. 0=Sunday, 1=Monday … 6=Saturday. E.g. [1,3] = Mon and Wed."},"months":{"type":"array","items":{"type":"integer"},"description":"For monthly: months to run (1=Jan … 12=Dec). Omit for every month."},"days":{"type":"array","items":{"type":"integer"},"description":"For monthly: days of month to run (1-31, 32=last day). E.g. [1] = 1st of each month."},"schedule_name":{"type":"string","description":"Optional display name for the schedule."}},"required":["path"]}</ParametersSchema>
+      <Description>Adds, updates, or removes a recurring or one-time schedule on an existing report's folder output. Use action=configure (default) to add a new schedule, or pass schedule_guid to update an existing one. Use action=delete with schedule_guid (preferred) or schedule_name to remove a specific schedule — never use file_manage for this, and never omit both targets. Requires the report to already have a folder output — call report_configure_output first if none exists. Returns scheduleGUID in the result — store it to later modify or delete this schedule. Schedule GUIDs can also be discovered via report_list. Use when the user wants automated execution: "every morning at 7am", "weekly on Monday", "run daily", "schedule this report", "send every month on the 1st", "delete the schedule".</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add a new schedule, or update an existing one when schedule_guid is provided. delete: remove the schedule identified by schedule_guid or schedule_name (does NOT delete the report file or its output)."},"schedule_guid":{"type":"string","description":"GUID of an existing schedule, as returned by a prior call or by report_list. Required to update a schedule; for delete, pass this (preferred) or schedule_name to target a specific schedule."},"type":{"type":"string","enum":["daily","weekly","monthly","once"],"description":"Required for action=configure. Recurrence type. Use once for a single one-time run."},"start_datetime":{"type":"string","description":"Required for action=configure. ISO 8601 date-time for the first or only run, e.g. 2025-06-01T07:00:00"},"days_interval":{"type":"integer","description":"For daily: interval in days between runs (default 1 = every day)."},"weekdays":{"type":"array","items":{"type":"integer"},"description":"For weekly: days of week to run. 0=Sunday, 1=Monday … 6=Saturday. E.g. [1,3] = Mon and Wed."},"months":{"type":"array","items":{"type":"integer"},"description":"For monthly: months to run (1=Jan … 12=Dec). Omit for every month."},"days":{"type":"array","items":{"type":"integer"},"description":"For monthly: days of month to run (1-31, 32=last day). E.g. [1] = 1st of each month."},"schedule_name":{"type":"string","description":"For action=configure: display name for the schedule (auto-generated if omitted). For action=delete: name of the specific schedule to remove when schedule_guid is not provided."}},"required":["path"]}</ParametersSchema>
       <ExecutionScript>@using System.Text.Json
 @using System.IO
 @using System.Linq
@@ -946,11 +1019,13 @@
 
     var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path         = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
     var action       = args.TryGetProperty("action",        out var acp) ? acp.GetString() : "configure";
     var scheduleType = args.TryGetProperty("type",          out var stp) ? stp.GetString() : null;
     var startStr     = args.TryGetProperty("start_datetime",out var sdp) ? sdp.GetString() : null;
     var daysInterval = args.TryGetProperty("days_interval", out var dip) ? dip.GetInt32()  : 1;
     var scheduleName = args.TryGetProperty("schedule_name", out var snp) ? snp.GetString() : null;
+    var scheduleGuid = args.TryGetProperty("schedule_guid", out var sgp) ? sgp.GetString() : null;
 
     int[] weekdays = null;
     if (args.TryGetProperty("weekdays", out var wdp) &amp;&amp; wdp.ValueKind == JsonValueKind.Array)
@@ -998,15 +1073,31 @@
         folderDeviceGuids.Add(OutputFolderDevice.DefaultGUID);
 
         // ── DELETE branch ────────────────────────────────────────────────────────
+        // Mirrors report_configure_output: target a schedule by GUID (preferred) or by
+        // name. A target is required — never mass-delete when both are omitted.
         if (string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase))
         {
-            var s = report.Schedules.FirstOrDefault(s =&gt; s.Name == scheduleName);
-            if (s== null)
-                { tool.ExecResult = $"No schedules found on '{path}' to delete."; return; }
-            report.RemoveSchedule(s);
-            
+            ReportSchedule toRemove;
+            if (!string.IsNullOrEmpty(scheduleGuid))
+            {
+                toRemove = report.Schedules.FirstOrDefault(s =&gt; string.Equals(s.GUID, scheduleGuid, StringComparison.OrdinalIgnoreCase));
+                if (toRemove == null) { tool.ExecResult = $"No schedule with GUID '{scheduleGuid}' found on '{path}'."; return; }
+            }
+            else if (!string.IsNullOrEmpty(scheduleName))
+            {
+                toRemove = report.Schedules.FirstOrDefault(s =&gt; string.Equals(s.Name, scheduleName, StringComparison.OrdinalIgnoreCase));
+                if (toRemove == null) { tool.ExecResult = $"No schedule named '{scheduleName}' found on '{path}'."; return; }
+            }
+            else
+            {
+                tool.ExecResult = "Error: provide schedule_guid (preferred) or schedule_name to delete a schedule.";
+                return;
+            }
+            var removedName = toRemove.Name;
+            var removedGuid = toRemove.GUID;
+            report.RemoveSchedule(toRemove);
             report.SaveToFile();
-            tool.ExecResult = $"schedule removed from '{path}'.";
+            tool.ExecResult = $"Schedule '{removedName}' (scheduleGUID='{removedGuid}') removed from '{path}'.";
             return;
         }
 
@@ -1037,8 +1128,18 @@
                 return;
         }
 
-        // Create schedule linked to the output
-        var schedule = report.AddSchedule(output);
+        // Update an existing schedule when schedule_guid is provided, otherwise create
+        // a new one linked to the output.
+        ReportSchedule schedule;
+        if (!string.IsNullOrEmpty(scheduleGuid))
+        {
+            schedule = report.Schedules.FirstOrDefault(s =&gt; string.Equals(s.GUID, scheduleGuid, StringComparison.OrdinalIgnoreCase));
+            if (schedule == null) { tool.ExecResult = $"Error: no schedule with GUID '{scheduleGuid}' found on '{path}'."; return; }
+        }
+        else
+        {
+            schedule = report.AddSchedule(output);
+        }
         if (!string.IsNullOrEmpty(scheduleName)) schedule.Name = scheduleName;
 
         // ── Seal Scheduler path ──────────────────────────────────────────────────
@@ -1130,7 +1231,8 @@
 
         var schedulerLabel = Repository.Instance.UseSealScheduler ? "Seal Scheduler" : "Windows Task Scheduler";
         var sb = new System.Text.StringBuilder();
-        sb.Append($"Schedule '{schedule.Name}' added to '{path}' [{schedulerLabel}]: type={scheduleType}, starts={startDt:yyyy-MM-dd HH:mm}");
+        var verb = string.IsNullOrEmpty(scheduleGuid) ? "added to" : "updated on";
+        sb.Append($"Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}') {verb} '{path}' [{schedulerLabel}]: type={scheduleType}, starts={startDt:yyyy-MM-dd HH:mm}");
         if (triggerType == TriggerType.Daily)                                       sb.Append($", every {daysInterval} day(s)");
         if (triggerType == TriggerType.Weekly  &amp;&amp; weekdays != null)                 sb.Append($", weekdays=[{string.Join(",", weekdays)}]");
         if (triggerType == TriggerType.Monthly &amp;&amp; months   != null)                 sb.Append($", months=[{string.Join(",", months)}]");
@@ -1138,6 +1240,7 @@
         tool.ExecResult = sb.ToString();
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -1160,6 +1263,7 @@
     var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var relativePath = args.GetProperty("path").GetString();
     var modelName    = args.TryGetProperty("model_name", out var mnp) ? mnp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {relativePath})..");
 
     // Resolve full path across repository roots
     var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
@@ -1229,12 +1333,89 @@
         sb.AppendLine(report.ExecutionMessages);
     }
     tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}</ExecutionScript>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
+      <Name>file_list</Name>
+      <Description>Browses files in the folders the current user has access to, across the Reports and Personal roots. Returns relative paths in the same format file_manage expects (e.g. Reports\Sales\monthly.srex, Personal\user\notes.txt) together with size and last-modified date. Lists every file type, not only reports, and includes files-only folders. ALWAYS call this tool first to discover and confirm the exact path of a file before any file_manage operation (delete, rename, move, copy). Optionally filter by sub-folder name(s) via 'folders', or by file extension via 'extension'.</Description>
+      <ParametersSchema>{"type":"object","properties":{"folders":{"type":"array","items":{"type":"string"},"description":"Optional list of sub-folder names to restrict the scan. Omit or pass [] to scan everything accessible."},"extension":{"type":"string","description":"Optional file extension filter without the dot, e.g. 'srex' or 'txt'. Omit to list all files."}}}</ParametersSchema>
+      <ExecutionScript>@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
+    var sb              = new StringBuilder();
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var rawArgs = tool.CurrentToolCall.Arguments;
+    var args    = JsonDocument.Parse(string.IsNullOrWhiteSpace(rawArgs) ? "{}" : rawArgs).RootElement;
+    var filterFolders = args.TryGetProperty("folders", out var fp)
+        ? fp.EnumerateArray().Select(e =&gt; e.GetString()).Where(s =&gt; !string.IsNullOrWhiteSpace(s)).ToList()
+        : new System.Collections.Generic.List&lt;string&gt;();
+    var extension = args.TryGetProperty("extension", out var ep) ? ep.GetString() : null;
+    if (!string.IsNullOrWhiteSpace(extension)) extension = extension.TrimStart('.');
+
+    string personalUserDir = securityContext.PersonalFolderRight != PersonalFolderRight.None
+        ? repo.GetPersonalFolder(securityContext)
+        : null;
+
+    foreach (var folder in securityContext.AllFolders)
+    {
+        if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
+        if (folder.right == 0) continue;
+
+        string physPath, displayPath;
+        if (folder.IsPersonal)
+        {
+            if (personalUserDir == null) continue;
+            physPath    = personalUserDir + folder.FinalPath;
+            displayPath = "Personal" + folder.FinalPath.TrimEnd(Path.DirectorySeparatorChar);
+        }
+        else
+        {
+            physPath    = repo.ReportsFolder + folder.path;
+            displayPath = "Reports" + folder.path.TrimEnd(Path.DirectorySeparatorChar);
+        }
+
+        if (!Directory.Exists(physPath)) continue;
+
+        if (filterFolders.Count &gt; 0 &amp;&amp; !filterFolders.Any(f =&gt;
+                displayPath.IndexOf(f, StringComparison.OrdinalIgnoreCase) &gt;= 0))
+            continue;
+
+        var pattern = string.IsNullOrWhiteSpace(extension) ? "*.*" : "*." + extension;
+        var files = Directory.GetFiles(physPath, pattern).OrderBy(f =&gt; f).ToList();
+        if (files.Count == 0) continue;
+
+        sb.AppendLine($"## {displayPath}");
+        foreach (var file in files)
+        {
+            if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
+            var fi      = new FileInfo(file);
+            var relPath = displayPath.TrimEnd(Path.DirectorySeparatorChar)
+                          + Path.DirectorySeparatorChar + fi.Name;
+            sb.AppendLine($"  - {relPath} ({fi.Length} bytes, modified {fi.LastWriteTime:yyyy-MM-dd HH:mm})");
+        }
+        sb.AppendLine();
+    }
+
+    if (sb.Length == 0) sb.AppendLine("No files found in accessible folders.");
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }</ExecutionScript>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
-      <Name>report_manage</Name>
-      <Description>File-level operations on a report: delete, rename (new filename in the same folder), move (to a different folder or root), or copy (to a new path). Paths use the format returned by report_list, e.g. Reports\Sales\monthly.srex. Roots are: Reports, Personal.</Description>
+      <Name>file_manage</Name>
+      <Description>File-level operations on a file in the repository: delete, rename (new filename in the same folder), move (to a different folder or root), or copy (to a new path). Works on any repository file (reports .srex, etc.). Paths use the format returned by report_list, e.g. Reports\Sales\monthly.srex. Roots are: Reports, Personal. Access is restricted to files within these roots and to folders the current user has rights on. Always call file_list first to discover and confirm the exact source path before performing any file_manage operation.</Description>
       <ParametersSchema>{"type":"object","properties":{"action":{"type":"string","enum":["delete","rename","move","copy"],"description":"Operation to perform"},"path":{"type":"string","description":"Relative path of the source report (e.g. Reports\\Sales\\monthly.srex)"},"destination":{"type":"string","description":"Target relative path for rename/move/copy (e.g. Reports\\Archive\\monthly.srex). Not used for delete."}},"required":["action","path"]}</ParametersSchema>
       <ExecutionScript>@using System.IO
 @using System.Linq
@@ -1251,6 +1432,7 @@
     var action = args.GetProperty("action").GetString();
     var path   = args.GetProperty("path").GetString();
     var dest   = args.TryGetProperty("destination", out var dp) ? dp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (action: {action}, path: {path})..");
 
     // Root folder map
     var roots = new System.Collections.Generic.Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase)
@@ -1259,6 +1441,20 @@
         ["Personal"] = repo.GetPersonalFolder(securityContext),
     };
 
+
+    // Canonicalize and ensure a path stays within an allowed root (defense in depth)
+    bool IsWithinRoots(string fullPath)
+    {
+        if (string.IsNullOrEmpty(fullPath)) return false;
+        var canonical = Path.GetFullPath(fullPath);
+        foreach (var kv in roots)
+        {
+            var root = Path.GetFullPath(kv.Value).TrimEnd(Path.DirectorySeparatorChar);
+            if (string.Equals(canonical, root, StringComparison.OrdinalIgnoreCase)) return true;
+            if (canonical.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
+    }
 
     // Resolve a relative path to a full path; returns null if file not found
     string Resolve(string relative)
@@ -1386,18 +1582,15 @@
         return;
     }
 
-sb.AppendLine("popol");
     // Compute the user's personal directory root (null when no personal right).
     string personalUserDir = securityContext.PersonalFolderRight != PersonalFolderRight.None
         ? repo.GetPersonalFolder(securityContext)
         : null;
 
-sb.AppendLine("popol3");
     // Folder tree built by SWIGetRootFolders – iterate every accessible folder.
     // Skip folders with no right (hidden) and files-only folders (no reports shown).
     foreach (var folder in securityContext.AllFolders)
     {
-sb.AppendLine(folder.FinalPath + " " + folder.right.ToString());
         if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
         if (folder.right == 0) continue;  // no access – hidden from this user
         if (folder.files)      continue;  // files-only folder, reports not shown
@@ -1420,7 +1613,6 @@ sb.AppendLine(folder.FinalPath + " " + folder.right.ToString());
             displayPath = "Reports" + folder.path.TrimEnd(Path.DirectorySeparatorChar);
         }
 
-sb.AppendLine(physPath);
         if (!Directory.Exists(physPath)) continue;
 
         // Apply optional name filter
@@ -1466,7 +1658,7 @@ sb.AppendLine(physPath);
                         foreach (var d in repo.Devices.OfType&lt;OutputFolderDevice&gt;()) folderDevGuids.Add(d.GUID);
                         folderDevGuids.Add(OutputFolderDevice.DefaultGUID);
                         var deviceType = folderDevGuids.Contains(output.OutputDeviceGUID) ? "folder" : "other";
-                        sb.AppendLine($"    Output '{output.Name}' [{deviceType}]: folder='{output.FolderPath}', file='{output.FileName}', format='{fmt}'");
+                        sb.AppendLine($"    Output '{output.Name}' [{deviceType}] (outputGUID='{output.GUID}'): folder='{output.FolderPath}', file='{output.FileName}', format='{fmt}'");
                     }
                 }
                 // Schedules
@@ -1480,7 +1672,7 @@ sb.AppendLine(physPath);
                             schedInfo = $"type={schedule.SealType}, start={schedule.SealStart:yyyy-MM-dd HH:mm}, enabled={schedule.SealEnabled}";
                         else
                             schedInfo = $"Windows Task Scheduler (task: {schedule.TaskName})";
-                        sb.AppendLine($"    Schedule '{schedule.Name}': {schedInfo}");
+                        sb.AppendLine($"    Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}'): {schedInfo}");
                     }
                 }
                 sb.AppendLine();
@@ -1620,6 +1812,7 @@ sb.AppendLine(physPath);
         <GUID>aa2baa07-6828-4f6c-9640-466feb5e1b22</GUID>
         <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
         <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
+        <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
         <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
         <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
@@ -1670,6 +1863,8 @@ sb.AppendLine(physPath);
         <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
         <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
         <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
+        <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
+        <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
         <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
         <GUID>a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d</GUID>

@@ -9491,6 +9491,31 @@
             Flat list of all SWIFolder of the user 
             </summary>
         </member>
+        <member name="M:Seal.Model.SecurityUser.GetFullPath(System.String)">
+            <summary>
+            Returns the full physical path of a folder relative path.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.GetFolder(System.String)">
+            <summary>
+            Returns the SWIFolder for a given relative path, applying the user's security rights.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.FillFolder(Seal.Model.SWIFolder)">
+            <summary>
+            Fills the sub-folders of a folder applying the user's security rights.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.AddValidFolders(Seal.Model.SWIFolder,System.Collections.Generic.List{Seal.Model.SWIFolder})">
+            <summary>
+            Adds the folders having rights (recursively) to the result list.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.SetFolders">
+            <summary>
+            Build the current folders of the user (including Personal folders) and execute the Folders Scripts of the user's security groups.
+            </summary>
+        </member>
         <member name="F:Seal.Model.SecurityUser.FolderDetail">
             <summary>
             Current folder detail of the user
