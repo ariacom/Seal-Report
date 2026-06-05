@@ -73,13 +73,117 @@ a {
     margin-bottom: 2px;
 }
 
-#output-table-body td, #file-table-body td {
+#file-table-body td {
     vertical-align: middle;
     padding: 4px;
 }
 
+/* Output panel — popover style */
+#output-panel {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    min-width: 260px;
+    max-width: 380px;
+    padding: 6px 0;
+    overflow: hidden;
+}
+
+#output-panel-close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #aaa;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+}
+#output-panel-close:hover {
+    color: #333;
+}
+
+.output-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    transition: background 0.15s;
+}
+.output-item:hover {
+    background: #f5f5f5;
+}
+.output-item.output-loading {
+    color: #888;
+    font-size: 13px;
+    padding-right: 32px;
+}
+.output-item .output-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+}
+.output-type-badge {
+    font-size: 11px;
+    color: #fff;
+    background: #5b9bd5;
+    border-radius: 3px;
+    padding: 1px 5px;
+    flex-shrink: 0;
+}
+.output-type-badge.output-type-output {
+    background: #70ad47;
+}
+
 .btn-table {
-    font-size: 12px;
+    font-size: 15px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: #888;
+    padding: 4px 10px;
+    margin: 0 2px;
+}
+.btn-table:hover, .btn-table:focus {
+    background: rgba(0,0,0,0.07);
+    border: none;
+    box-shadow: none;
+    color: #333;
+}
+
+/* Report name cell: flex row with name on left, buttons on right */
+.report-name-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.report-name-cell .report-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.report-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Hide action buttons, show on row hover (mouse devices only) */
+@media (hover: hover) {
+    #file-table-body tr .btn-table {
+        visibility: hidden;
+    }
+    #file-table-body tr:hover .btn-table {
+        visibility: visible;
+    }
 }
 
 /* jstree */

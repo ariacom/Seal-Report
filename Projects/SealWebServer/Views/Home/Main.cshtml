@@ -162,16 +162,9 @@
     @await Html.PartialAsync("~/Views/Home/Dialogs.cshtml")
 
     <!-- Views and Output -->
-    <div id="output-panel" class="panel panel-default" style="display:none;">
-        <div class="panel-heading" style="height:20px;padding: 0px 10px;"><button type='button' id="output-panel-close" class='close'>&times;</button></div>
-        <div id="output-panel-content">
-            <table class="table table-striped">
-                <thead>
-                    <tr><th>@repository.TranslateWeb("Name")</th><th></th><th>@repository.TranslateWeb("Type")</th></tr>
-                </thead>
-                <tbody id="output-table-body"></tbody>
-            </table>
-        </div>
+    <div id="output-panel" style="display:none;">
+        <button type='button' id="output-panel-close">&times;</button>
+        <div id="output-panel-content"></div>
     </div>
 
     @if (model.HasEditor)

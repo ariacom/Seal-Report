@@ -928,6 +928,7 @@ namespace SealWebServer.Controllers
                 string prefix = Repository.GetPersonalFolderName(WebUser);
                 var folderLeafName = Path.GetFileName(result.FinalPath);
                 if (folderLeafName == "BIN") result.type = "bin";
+                if (result.FinalPath == "") result.type = "personal";
                 result.name = (result.FinalPath == "" ? prefix : folderLeafName);
                 result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
                 result.right = (int)FolderRight.Edit;
@@ -935,6 +936,7 @@ namespace SealWebServer.Controllers
             }
             else
             {
+                if (result.FinalPath == Path.DirectorySeparatorChar.ToString()) result.type = "reports";
                 result.name = (result.FinalPath == Path.DirectorySeparatorChar.ToString() ? Translate("Reports") : Repository.TranslateFolderName(path));
                 result.fullname = Translate("Reports") + Repository.TranslateFolderPath(result.FinalPath);
                 SecurityFolder securityFolder = WebUser.FindSecurityFolder(path);

@@ -941,6 +941,12 @@ class SWIMain {
                     },
                     "bin": {
                         "icon": "fa fa-trash-o"
+                    },
+                    "personal": {
+                        "icon": "fa fa-user"
+                    },
+                    "reports": {
+                        "icon": "fa fa-bar-chart"
                     }
                 },
                 plugins: ["types", "wholerow"]
@@ -1045,7 +1051,6 @@ class SWIMain {
         $tableHead.append($tr);
         if (_main._canEdit) $tr.append($("<th style='width:22px;' class='nosort hidden-xs'><input id='selectall-checkbox' type='checkbox'/></th>"));
         $tr.append($("<th>").html(SWIUtil.tr("Report")));
-        $tr.append($("<th id='action-tableheader' class='nosort'>").html(SWIUtil.tr("Actions")));
         $tr.append($("<th style='width:170px;min-width:170px;text-align:right' class='hidden-xs'>").html(SWIUtil.tr("Last modification")));
 
         //Body
@@ -1056,9 +1061,13 @@ class SWIMain {
             $tr = $("<tr>");
             $tableBody.append($tr);
             if (_main._canEdit) $tr.append($("<td class='hidden-xs' style='padding:8px'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
-            $tr.append($("<td>").append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isreport).text(file.name)));
-            var $td = $("<td>").css("text-align", "center").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
-            $tr.append($td);
+            var $nameTd = $("<td>").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
+            var $nameWrapper = $("<div>").addClass("report-name-cell");
+            $nameWrapper.append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isreport).text(file.name));
+            var $td = $("<div>").addClass("report-actions").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
+            $nameWrapper.append($td);
+            $nameTd.append($nameWrapper);
+            $tr.append($nameTd);
             if (file.isreport) {
                 if (_main._reportIcon !== null) {
                     var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current window" : "Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
@@ -1149,10 +1158,10 @@ class SWIMain {
         $(".report-output").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
-            var $tableBody = $("#output-table-body");
+            var $tableBody = $("#output-panel-content");
             var top = ($target.offset()?.top ?? 0) - 30;
             $tableBody.empty();
-            $tableBody.append($("<tr>").append($("<td colspan=2>").append($("<i>").addClass("fa fa-spinner fa-spin fa-1x fa-fw")).append($("<span>").html(SWIUtil.tr("Please wait") + "..."))));
+            $tableBody.append($("<div class='output-item output-loading'>").append($("<i>").addClass("fa fa-spinner fa-spin fa-1x fa-fw")).append($("<span>").html(" " + SWIUtil.tr("Please wait") + "...")));
             $outputPanel.css({
                 'display': 'inline',
                 'position': 'absolute',
@@ -1162,8 +1171,10 @@ class SWIMain {
                 'opacity': 0.6
             }).show();
 
-
             $("#output-panel-close").unbind("click").on("click", function () {
+                $outputPanel.hide();
+            });
+            $outputPanel.unbind("mouseleave").on("mouseleave", function () {
                 $outputPanel.hide();
             });
 
@@ -1172,28 +1183,26 @@ class SWIMain {
                     $outputPanel.css("opacity", "1");
                     $tableBody.empty();
                     for (var i = 0; i < data.views.length; i++) {
-                        var $tr = $("<tr>");
-                        $tableBody.append($tr);
-                        $tr.append($("<td>").append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayname)));
+                        var $item = $("<div>").addClass("output-item");
+                        $item.append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayname));
+                        $item.append($("<span>").addClass("output-type-badge").html(SWIUtil.tr("View")));
                         if (_main._reportIcon !== null) {
                             var button = $("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
                             button.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
-                            $tr.append($("<td>").append(button));
+                            $item.append(button);
                         }
-                        else $tr.append($("<td>"));
-                        $tr.append($("<td>").html(SWIUtil.tr("View")));
+                        $tableBody.append($item);
                     }
                     for (var i = 0; i < data.outputs.length; i++) {
-                        var $tr = $("<tr>");
-                        $tableBody.append($tr);
-                        $tr.append($("<td>").append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayname)));
+                        var $item = $("<div>").addClass("output-item");
+                        $item.append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayname));
+                        $item.append($("<span>").addClass("output-type-badge output-type-output").html(SWIUtil.tr("Output")));
                         if (_main._reportIcon !== null) {
                             var button = $("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
                             button.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
-                            $tr.append($("<td>").append(button));
+                            $item.append(button);
                         }
-                        else $tr.append($("<td>"));
-                        $tr.append($("<td>").html(SWIUtil.tr("Output")));
+                        $tableBody.append($item);
                     }
 
                     //adjust position with the final size
