@@ -33,31 +33,34 @@
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var outputDir = @"Reports\Tests\Output";
-    var outputDirPath = Path.Combine(repository.ReportsFolder, @"Tests\Output");
-
+    var outputDir = report.StringTag;
+    
     task.LogMessage($"Executing '{task.Name}'");
+
     var assistant = new AIAssistant("Schedule &amp; Output");
     assistant.SecurityContext = report.SecurityContext;
     
     var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
     task.LogMessage(request);
     assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-
+    if (report.Cancel) return;
+    
     assistant = new AIAssistant("System Admin");
     assistant.SecurityContext = report.SecurityContext;
     request = @$"Delete all reports and files stored in directory {outputDir}";
+    task.LogMessage(request);
     assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-
+    if (report.Cancel) return;
+    
     //Check
-    if (Directory.GetFiles(outputDirPath).Length &gt; 0) throw new Exception($"Files still exist in '{outputDirPath}' after the assistant call.");
+    if (Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir)).Length &gt; 0) throw new Exception($"Files still exist in '{outputDir}' after the assistant call.");
 }
 </Script>
-      <SortOrder>2</SortOrder>
+      <SortOrder>1</SortOrder>
     </ReportTask>
     <ReportTask>
       <GUID>31687d2e-b13c-4cc3-8fe8-12d7c1c700b1</GUID>
-      <Name>Add output and schedules</Name>
+      <Name>Output and schedule</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
@@ -69,32 +72,40 @@
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var outputDir = @"Reports\Tests\Output";
-    var outputDirPath = Path.Combine(repository.ReportsFolder, @"Tests\Output");
+    var outputDir = report.StringTag;
 
     task.LogMessage($"Executing '{task.Name}'");
     
     var assistant = new AIAssistant("Schedule &amp; Output");
     assistant.SecurityContext = report.SecurityContext;
     
+    var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
+    if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
+    var reportFilePath = reportFiles[0];
+
     var request = $@"
-        Add an output folder in PDF to generate the report 'Top 10 best suppliers in 1997 in amount.srex' located in directory {outputDir}.
+        Add an output folder in PDF to generate the report {reportFilePath}.
         Generate the file with a daily date in {outputDir}.
     ";
     task.LogMessage(request);
     assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-
+    if (report.Cancel) return;
+    
     request = $@"
         Schedule it every monday at 10:45.
     ";
     task.LogMessage(request);
     assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+    if (report.Cancel) return;
+    
     //Check
-//    if (Directory.GetFiles(outputDirPath, "*.srex").Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
-
+    var outputReport = Report.LoadFromFile(reportFilePath, repository);
+    if (outputReport.Outputs.Count != 1) throw new Exception($"No output was created after the assistant call.");
+    if (outputReport.Outputs.First().Format != ReportFormat.PDF) throw new Exception($"No PDF output was created after the assistant call.");
+    if (outputReport.Schedules.Count != 1) throw new Exception($"No schedule was created after the assistant call.");
 }
 </Script>
-      <SortOrder>4</SortOrder>
+      <SortOrder>3</SortOrder>
     </ReportTask>
     <ReportTask>
       <GUID>38378b59-02a6-443a-a339-5200d8c444ee</GUID>
@@ -110,8 +121,7 @@
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var outputDir = @"Reports\Tests\Output";
-    var outputDirPath = Path.Combine(repository.ReportsFolder, @"Tests\Output");
+    var outputDir = report.StringTag;
 
     task.LogMessage($"Executing '{task.Name}'");
     
@@ -119,22 +129,44 @@
     assistant.SecurityContext = report.SecurityContext;
     
     var request = $@"
-        Create a report named 'Top 10 best suppliers in 1997 in amount.srex' in directory {outputDir}
-        showing the top 10 suppliers by total amounts for the year 1997.
+        Create a report named 'Top 10 best customers in 1997 in amount.srex' in directory {outputDir} using the Northwind data source.
+        The report model must contain EXACTLY two elements:
+          - 'Customer' (Customers.CompanyName) as the only Row dimension.
+          - 'Amount' as a Data element aggregated with Sum, with a DESCENDING sort order so rows go from the highest total to the lowest.
+        Restrict the data to the whole year 1997 by filtering Order Date between 1997-01-01 and 1997-12-31. The date is a RESTRICTION ONLY and must never be added as an element, row, column or grouping dimension.
+        Group only by Customer so each customer appears once with its full-year total. Order the rows by total Amount descending and keep only the top 10, i.e. the 10 customers with the HIGHEST total amount (QUICK-Stop must be the first row, around 61,110).
+        Do not add Order Date, Order Year, Order Month or any other column to the model.
     ";
     task.LogMessage(request);
     assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+    if (report.Cancel) return;
+    
+    //Check report created and get its file path
+    var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
+    if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
+    var reportFilePath = reportFiles[0];
 
-    //Check
-    if (Directory.GetFiles(outputDirPath, "*.srex").Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
-
+    request = $@"
+        Get the data of the report located at '{reportFilePath}'.
+        Compare amounts rounded to the nearest whole number, ignoring decimals and thousand separators.
+        Check that the first row in the table is the customer 'QUICK-Stop' with an amount that rounds to 61,110 (accept 61,109 to 61,111)
+        and that the last customer is 'Folk och fä HB' with an amount that rounds to 13,315 (accept 13,314 to 13,316).
+        If both checks succeed, answer with exactly 'CHECK OK'.
+        If any check fails, answer with exactly 'CHECK FAILED' followed by the reason.
+    ";
+    task.LogMessage(request);
+    var checkResult = assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+    if (report.Cancel) return;
+    
+    if (checkResult == null || !checkResult.ToString().Contains("CHECK OK"))
+        throw new Exception($"Data check failed for '{reportFilePath}': {checkResult}");
 }
 </Script>
-      <SortOrder>3</SortOrder>
+      <SortOrder>2</SortOrder>
     </ReportTask>
     <ReportTask>
       <GUID>7d1e6314-5d02-4244-8c2b-d3809a061fe5</GUID>
-      <Name>Init context</Name>
+      <Name>Init</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
@@ -147,13 +179,50 @@
     Report report = task.Report;
     var repository = report.Repository;
 
+    //Single place defining the output directory (subfolder = 6 first chars of the report name)
+    var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
+    report.StringTag = $@"Reports\Tests\Output\{subDir}";
+
+    //Ensure the output directory physically exists BEFORE building the security folders,
+    //so SetFolders() includes it in AllFolders and grants write access to it.
+    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, report.StringTag));
+
     var user = new SecurityUser(repository.Security);
     user.AddDefaultSecurityGroup();
     user.SetFolders();
     report.SecurityContext = user;
 }
 </Script>
-      <SortOrder>1</SortOrder>
+      <SortOrder>0</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>efa78c0e-f3b1-465e-8795-e9f53d810447</GUID>
+      <Name>Schedule cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = report.StringTag;
+    
+    task.LogMessage($"Executing '{task.Name}'");
+
+    var assistant = new AIAssistant("Schedule &amp; Output");
+    assistant.SecurityContext = report.SecurityContext;
+    
+    var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
+    task.LogMessage(request);
+    assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+    if (report.Cancel) return;
+}
+</Script>
+      <SortOrder>4</SortOrder>
     </ReportTask>
   </Tasks>
   <Views>
