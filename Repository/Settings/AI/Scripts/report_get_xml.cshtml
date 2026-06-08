@@ -1,0 +1,40 @@
+@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
+
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+    {
+        var candidate = path.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(kv.Value, path.Substring(kv.Key.Length + 1))
+            : Path.Combine(kv.Value, path);
+        if (File.Exists(candidate)) { fullPath = candidate; break; }
+    }
+
+    if (fullPath == null) { tool.ExecResult = $"Error: report '{path}' not found."; return; }
+
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), 1))
+        { tool.ExecResult = $"Error: access denied to '{path}'."; return; }
+
+    try   { tool.ExecResult = File.ReadAllText(fullPath); }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

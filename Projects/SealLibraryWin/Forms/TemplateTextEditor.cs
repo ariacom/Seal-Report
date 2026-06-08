@@ -4,6 +4,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Drawing.Design;
 using System.ComponentModel;
@@ -1599,6 +1600,9 @@ $('<div>', {{
                 string template = "", warning = "";
                 string valueToEdit = (value == null ? "" : value.ToString());
                 bool isReadOnly = context.PropertyDescriptor.IsReadOnly;
+                //When set, the editor edits the content of an external script file instead of the property value (which stays the file name)
+                bool editScriptFile = false;
+                string scriptFileName = null;
 
                 if (context.Instance is ReportView)
                 {
@@ -2121,12 +2125,25 @@ $('<div>', {{
                         frm.Text = "JSON Schema string";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
-                    else if (context.PropertyDescriptor.Name == "ExecutionScript")
+                    else if (context.PropertyDescriptor.Name == "ExecutionScriptFile")
                     {
+                        //Edit the content of the external script file (the property keeps the file name)
+                        editScriptFile = true;
+                        scriptFileName = valueToEdit;
                         template = razorAIToolExecutionScriptTemplate;
                         frm.ObjectForCheckSyntax = new AIToolConfiguration();
-                        frm.Text = "Edit the AI Tool execution script";
+                        frm.Text = "Edit the AI Tool execution script file";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+
+                        //Load the file content into the editor instead of the file name
+                        valueToEdit = "";
+                        if (!string.IsNullOrWhiteSpace(scriptFileName))
+                        {
+                            var scriptPath = Path.IsPathRooted(scriptFileName)
+                                ? scriptFileName
+                                : Path.Combine(Repository.Instance.AIScriptsFolder, scriptFileName);
+                            if (File.Exists(scriptPath)) valueToEdit = File.ReadAllText(scriptPath);
+                        }
                     }
                 }
                 else if (context.Instance is SecurityGroup)
@@ -2178,7 +2195,30 @@ $('<div>', {{
                 {
                     if (string.IsNullOrEmpty(template)) template = "";
 
-                    if (frm.textBox.Text.Trim() != template.Trim() || string.IsNullOrEmpty(template)) value = frm.textBox.Text;
+                    if (editScriptFile)
+                    {
+                        //Persist the edited content to the external script file; the property value stays the file name
+                        if (!string.IsNullOrWhiteSpace(frm.textBox.Text))
+                        {
+                            var fileName = scriptFileName;
+                            if (string.IsNullOrWhiteSpace(fileName))
+                            {
+                                //No file name yet: derive one from the tool name (fallback to a GUID)
+                                var toolName = (context.Instance as AIToolConfiguration)?.Name;
+                                if (string.IsNullOrWhiteSpace(toolName)) toolName = "ai_tool_" + Guid.NewGuid().ToString("N").Substring(0, 8);
+                                foreach (var c in Path.GetInvalidFileNameChars()) toolName = toolName.Replace(c, '_');
+                                fileName = toolName + ".cshtml";
+                            }
+                            var scriptPath = Path.IsPathRooted(fileName)
+                                ? fileName
+                                : Path.Combine(Repository.Instance.AIScriptsFolder, fileName);
+                            if (!Directory.Exists(Repository.Instance.AIScriptsFolder)) Directory.CreateDirectory(Repository.Instance.AIScriptsFolder);
+                            File.WriteAllText(scriptPath, frm.textBox.Text);
+                            value = Path.IsPathRooted(fileName) ? fileName : Path.GetFileName(fileName);
+                        }
+                        //Empty content: keep the existing file name unchanged
+                    }
+                    else if (frm.textBox.Text.Trim() != template.Trim() || string.IsNullOrEmpty(template)) value = frm.textBox.Text;
                     else if (frm.textBox.Text.Trim() == template.Trim() && !string.IsNullOrEmpty(template)) value = "";
 
                     if (context.Instance is FunctionsEditor)

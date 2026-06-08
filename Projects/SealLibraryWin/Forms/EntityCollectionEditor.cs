@@ -5,6 +5,7 @@
 using System;
 using System.Drawing.Design;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 using Seal.Model;
 using System.ComponentModel.Design;
@@ -261,7 +262,7 @@ namespace Seal.Forms
             }
             else if (instance is MetaEV)
             {
-                ((MetaEV) instance).MetaEnum = _component as MetaEnum;
+                ((MetaEV)instance).MetaEnum = _component as MetaEnum;
             }
             else if (instance is SecurityGroup)
             {
@@ -290,6 +291,20 @@ namespace Seal.Forms
             if (instance is SecurityGroup)
             {
                 Repository.Instance.Security.InitSecurity();
+            }
+            else if (instance is AIToolConfiguration tool && !string.IsNullOrWhiteSpace(tool.ExecutionScriptFile))
+            {
+                var path = Path.IsPathRooted(tool.ExecutionScriptFile)
+                    ? tool.ExecutionScriptFile
+                    : Path.Combine(Repository.Instance.AIScriptsFolder, tool.ExecutionScriptFile);
+                try
+                {
+                    File.Delete(path);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("Unable to delete the script file:\r\n{0}", ex.Message), "Delete script file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 

@@ -1,0 +1,55 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var sb = new StringBuilder();
+
+    // ── Current folder ────────────────────────────────────────────────────────
+    // SecurityUser.CurrentFolder is the SWI folder path set by SWIGetFolderDetail
+    // each time the user navigates a folder in the web UI:
+    //   ""        → Reports root
+    //   "\Sales"  → Reports\Sales
+    //   ":"       → Personal root
+    //   ":\Sub"   → Personal\Sub
+    // Convert to the report_list display format used by the report_ tools.
+    var swiFolder = securityContext.CurrentFolder ?? "";
+    string currentFolder;
+    if (swiFolder.StartsWith(":"))
+    {
+        var sub = swiFolder.Substring(1).TrimEnd(Path.DirectorySeparatorChar);
+        currentFolder = string.IsNullOrEmpty(sub) ? "Personal" : "Personal" + sub;
+    }
+    else
+    {
+        currentFolder = "Reports" + swiFolder.TrimEnd(Path.DirectorySeparatorChar);
+    }
+
+    sb.AppendLine($"Current folder: {currentFolder}");
+    sb.AppendLine();
+
+    // ── Writable folders ──────────────────────────────────────────────────────
+    sb.AppendLine("Writable folders (where you can save reports):");
+    bool hasWritable = false;
+    foreach (var folder in securityContext.AllFolders)
+    {
+        if ((FolderRight)folder.right != FolderRight.Edit) continue;
+        if (folder.files) continue;
+
+        string displayPath = folder.IsPersonal
+            ? "Personal" + folder.FinalPath.TrimEnd(Path.DirectorySeparatorChar)
+            : "Reports"  + folder.path.TrimEnd(Path.DirectorySeparatorChar);
+
+        sb.AppendLine($"  - {displayPath}");
+        hasWritable = true;
+    }
+    if (!hasWritable) sb.AppendLine("  (none — user has no write access to any folder)");
+
+    tool.ExecResult = sb.ToString();
+}

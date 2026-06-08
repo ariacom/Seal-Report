@@ -1,0 +1,134 @@
+@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var action = args.GetProperty("action").GetString();
+    var path   = args.GetProperty("path").GetString();
+    var dest   = args.TryGetProperty("destination", out var dp) ? dp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (action: {action}, path: {path})..");
+
+    // Root folder map
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+
+    // Canonicalize and ensure a path stays within an allowed root (defense in depth)
+    bool IsWithinRoots(string fullPath)
+    {
+        if (string.IsNullOrEmpty(fullPath)) return false;
+        var canonical = Path.GetFullPath(fullPath);
+        foreach (var kv in roots)
+        {
+            var root = Path.GetFullPath(kv.Value).TrimEnd(Path.DirectorySeparatorChar);
+            if (string.Equals(canonical, root, StringComparison.OrdinalIgnoreCase)) return true;
+            if (canonical.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
+    }
+
+    // Resolve a relative path to a full path; returns null if file not found
+    string Resolve(string relative)
+    {
+        foreach (var kv in roots)
+        {
+            var candidate = relative.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                ? Path.Combine(kv.Value, relative.Substring(kv.Key.Length + 1))
+                : Path.Combine(kv.Value, relative);
+            if (File.Exists(candidate)) return candidate;
+        }
+        return null;
+    }
+
+    // Build a full path for a destination that may not exist yet
+    string ResolveDestination(string relative, string sourceRoot)
+    {
+        foreach (var kv in roots)
+            if (relative.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                return Path.Combine(kv.Value, relative.Substring(kv.Key.Length + 1));
+        return Path.Combine(sourceRoot, relative);
+    }
+
+    // Determine root folder for a resolved path
+    string GetSourceRoot(string fullPath)
+    {
+        foreach (var kv in roots)
+            if (fullPath.StartsWith(kv.Value, StringComparison.OrdinalIgnoreCase)) return kv.Value;
+        return roots["Reports"];
+    }
+
+    try
+    {
+        var sourceFull = Resolve(path);
+        if (sourceFull == null) { tool.ExecResult = $"Error: '{path}' not found."; return; }
+
+        var sourceDir = Path.GetDirectoryName(sourceFull);
+
+        if (action == "delete")
+        {
+            if (!securityContext.HasFolderRight(sourceDir, (int)FolderRight.Edit))
+                { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+            //Copy to recycle bin before deleting
+            var bin = Repository.Instance.GetRecycleBinFolder(securityContext);
+            var binDest = Path.Combine(bin, $"{DateTime.UtcNow:yyyyMMddHHmmss}_{Path.GetFileName(sourceFull)}");
+            File.Copy(sourceFull, binDest, overwrite: true);
+            File.Delete(sourceFull);
+            tool.ExecResult = $"Deleted: {path}";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(dest)) { tool.ExecResult = "Error: 'destination' is required for this action."; return; }
+
+        var destFull = ResolveDestination(dest, GetSourceRoot(sourceFull));
+        var destDir  = Path.GetDirectoryName(destFull);
+
+        if (action == "rename" || action == "move")
+        {
+            // Write on source (to remove it) and write on destination
+            if (!securityContext.HasFolderRight(sourceDir, (int)FolderRight.Edit))
+                { tool.ExecResult = $"Error: write access denied to source '{path}'."; return; }
+            if (!securityContext.HasFolderRight(destDir, (int)FolderRight.Edit))
+                { tool.ExecResult = $"Error: write access denied to destination '{dest}'."; return; }
+            if (File.Exists(destFull)) { tool.ExecResult = $"Error: destination '{dest}' already exists."; return; }
+            if (!Directory.Exists(destDir)) Directory.CreateDirectory(destDir);
+            File.Move(sourceFull, destFull);
+            tool.ExecResult = $"{(action == "rename" ? "Renamed" : "Moved")}: {path} → {dest}";
+        }
+        else if (action == "copy")
+        {
+            // Read on source, write on destination
+            if (!securityContext.HasFolderRight(sourceDir, 1))
+                { tool.ExecResult = $"Error: read access denied to source '{path}'."; return; }
+            if (!securityContext.HasFolderRight(destDir, (int)FolderRight.Edit))
+                { tool.ExecResult = $"Error: write access denied to destination '{dest}'."; return; }
+            if (!Directory.Exists(destDir)) Directory.CreateDirectory(destDir);
+            if (sourceFull.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                var report = Report.LoadFromFile(sourceFull, repo, false);
+                report.InitGUIDs();
+                report.FilePath = destFull;
+                report.SaveToFile();
+            }
+            else
+            {
+                File.Copy(sourceFull, destFull, overwrite: false);
+            }
+            tool.ExecResult = $"Copied: {path} → {dest}";
+        }
+        else
+        {
+            tool.ExecResult = $"Error: unknown action '{action}'. Use delete, rename, move or copy.";
+        }
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+}

@@ -1,0 +1,87 @@
+@using System.IO
+@using System.Linq
+@using System.Threading
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var relativePath = args.GetProperty("path").GetString();
+    var modelName    = args.TryGetProperty("model_name", out var mnp) ? mnp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {relativePath})..");
+
+    // Resolve full path across repository roots
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+    {
+        var candidate = relativePath.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(kv.Value, relativePath.Substring(kv.Key.Length + 1))
+            : Path.Combine(kv.Value, relativePath);
+        if (File.Exists(candidate)) { fullPath = candidate; break; }
+    }
+
+    if (fullPath == null) { tool.ExecResult = $"Error: report '{relativePath}' not found."; return; }
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), 1))
+        { tool.ExecResult = $"Error: access denied to '{relativePath}'."; return; }
+
+    Report report;
+    try { report = Report.LoadFromFile(fullPath, repo); }
+    catch (Exception ex) { tool.ExecResult = $"Error loading report: {ex.Message}"; return; }
+
+    if (!string.IsNullOrEmpty(report.LoadErrors))
+        { tool.ExecResult = $"Error loading report '{relativePath}': {report.LoadErrors}"; return; }
+
+    try {
+        var execution = new ReportExecution() { Report = report };
+        execution.Execute();
+        while (report.Status != ReportStatus.Executed && !report.HasErrors && !report.Cancel)
+        {
+            if (tool.CurrentToolCall.CancelOperation?.Cancel == true) { report.Cancel = true; break; }
+            Thread.Sleep(500);
+        }
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error executing report: {ex.Message}"; return; }
+
+    if (report.HasErrors)
+        { tool.ExecResult = $"Error executing '{relativePath}':\r\n{report.ExecutionErrors}"; return; }
+
+    var models = report.Models.Where(m => string.IsNullOrEmpty(modelName) || m.Name == modelName).ToList();
+    if (models.Count == 0)
+    {
+        tool.ExecResult = string.IsNullOrEmpty(modelName)
+            ? "No models found in report."
+            : $"No model named '{modelName}' found. Available: {string.Join(", ", report.Models.Select(m => m.Name))}.";
+        return;
+    }
+
+    var sb = new System.Text.StringBuilder();
+    foreach (var model in models)
+    {
+        var (tableJson, aggJson) = model.ResultTableTranslatedJson;
+        sb.AppendLine($"=== Model: {model.Name} ===");
+        sb.AppendLine("PRE-AGGREGATED METRICS:");
+        sb.AppendLine(aggJson);
+        sb.AppendLine("DATA:");
+        sb.AppendLine(tableJson);
+        sb.AppendLine();
+    }
+    if (!string.IsNullOrWhiteSpace(report.ExecutionMessages))
+    {
+        sb.AppendLine("=== EXECUTION MESSAGES ===");
+        sb.AppendLine(report.ExecutionMessages);
+    }
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

@@ -1,0 +1,60 @@
+@using System.Text.Json
+@using System.Text
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var sql      = args.GetProperty("sql").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (sql: {sql})..");
+
+    // Guard: only SELECT statements are allowed
+    var sqlTrimmed = sql?.TrimStart() ?? "";
+    var firstWord  = sqlTrimmed.Split(new[]{' ','\t','\r','\n'}, StringSplitOptions.RemoveEmptyEntries)
+                                .FirstOrDefault()?.ToUpperInvariant() ?? "";
+    var forbidden  = new[]{"INSERT","UPDATE","DELETE","DROP","CREATE","ALTER","TRUNCATE","MERGE","EXEC","EXECUTE"};
+    if (forbidden.Contains(firstWord)) {
+        tool.ExecResult = $"Error: only SELECT statements are permitted. Got '{firstWord}'.";
+        return;
+    }
+
+    var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var source   = tool.GetExecSource(dsGuid);
+    if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+    var conn = tool.GetExecConnection(source, connGuid);
+    if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
+
+    var connection = conn.GetOpenConnection();
+    var helper     = new TaskDatabaseHelper();
+    try {
+        var table = helper.LoadDataTable(conn.ConnectionType,
+                                         conn.FullConnectionString,
+                                         sql, connection);
+        var sb = new StringBuilder();
+
+        // header row
+        var headers = new List<string>();
+        foreach (System.Data.DataColumn col in table.Columns) headers.Add(col.ColumnName);
+        sb.AppendLine(string.Join("\t", headers));
+
+        // data rows (capped at 50)
+        int rowCount = 0;
+        foreach (System.Data.DataRow row in table.Rows) {
+            if (++rowCount > 50) {
+                sb.AppendLine($"... ({table.Rows.Count - 50} more rows not shown)");
+                break;
+            }
+            var vals = new List<string>();
+            foreach (var v in row.ItemArray)
+                vals.Add(v == DBNull.Value ? "NULL" : v?.ToString() ?? "");
+            sb.AppendLine(string.Join("\t", vals));
+        }
+        if (table.Rows.Count == 0) sb.AppendLine("(no rows returned)");
+        tool.ExecResult = sb.ToString();
+    }
+    catch (Exception ex) { tool.ExecResult = $"Query error: {ex.Message}"; }
+    finally               { connection.Close(); }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

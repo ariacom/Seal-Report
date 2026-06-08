@@ -1,0 +1,37 @@
+@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo = Repository.Instance;
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+
+    var type     = args.GetProperty("type").GetString();
+    var date     = args.TryGetProperty("date",      out var dp)  ? dp.GetString()      : null;
+    var keyword  = args.TryGetProperty("keyword",   out var kp)  ? kp.GetString()      : null;
+    var maxLines = args.TryGetProperty("max_lines", out var mlp) ? mlp.GetInt32()      : 200;
+
+    DateTime logDate;
+    if (string.IsNullOrEmpty(date) || !DateTime.TryParse(date, out logDate))
+        logDate = DateTime.Today;
+
+    var fileName = $"{type}_{logDate:yyyy_MM_dd}.txt";
+    var filePath = Path.Combine(repo.LogsFolder, fileName);
+
+    if (!File.Exists(filePath))
+    {
+        tool.ExecResult = $"No log file found: {fileName}";
+        return;
+    }
+
+    var lines = File.ReadAllLines(filePath);
+    if (!string.IsNullOrWhiteSpace(keyword))
+        lines = lines.Where(l => l.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0).ToArray();
+
+    if (lines.Length > maxLines)
+        lines = lines.Skip(lines.Length - maxLines).ToArray();
+
+    tool.ExecResult = $"=== {fileName} ({lines.Length} lines) ===\r\n" + string.Join("\r\n", lines);
+}

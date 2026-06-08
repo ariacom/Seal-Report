@@ -1,0 +1,40 @@
+@using System.Text.Json
+@using System.Text
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var tableName = args.GetProperty("table").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table: {tableName})..");
+    var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid  = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var source    = tool.GetExecSource(dsGuid);
+    if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+    var conn = tool.GetExecConnection(source, connGuid);
+    if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
+
+    var connection = conn.GetOpenConnection();
+    try {
+        var schema = source.GetColumnsSchemaTable(connection, tableName);
+        if (schema.Rows.Count == 0) {
+            tool.ExecResult = $"No columns found for table '{tableName}'. Check the table name and schema prefix.";
+            return;
+        }
+
+        var sb = new StringBuilder();
+        sb.AppendLine("column_name\tdata_type\tis_nullable");
+        foreach (System.Data.DataRow row in schema.Rows) {
+            var colName  = schema.Columns.Contains("COLUMN_NAME") ? row["COLUMN_NAME"]?.ToString() : row[3]?.ToString();
+            var dataType = schema.Columns.Contains("DATA_TYPE")   ? row["DATA_TYPE"]?.ToString()
+                         : schema.Columns.Contains("TYPE_NAME")   ? row["TYPE_NAME"]?.ToString() : "";
+            var nullable = schema.Columns.Contains("IS_NULLABLE") ? row["IS_NULLABLE"]?.ToString() : "";
+            sb.AppendLine($"{colName}\t{dataType}\t{nullable}");
+        }
+        tool.ExecResult = sb.ToString();
+    }
+    catch (Exception ex) { tool.ExecResult = $"Schema error: {ex.Message}"; }
+    finally               { connection.Close(); }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

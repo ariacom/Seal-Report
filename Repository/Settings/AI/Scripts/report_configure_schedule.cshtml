@@ -1,0 +1,237 @@
+@using System.Text.Json
+@using System.IO
+@using System.Linq
+@using Seal.Model
+@using Seal.AI
+@using Microsoft.Win32.TaskScheduler
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path         = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
+    var action       = args.TryGetProperty("action",        out var acp) ? acp.GetString() : "configure";
+    var scheduleType = args.TryGetProperty("type",          out var stp) ? stp.GetString() : null;
+    var startStr     = args.TryGetProperty("start_datetime",out var sdp) ? sdp.GetString() : null;
+    var daysInterval = args.TryGetProperty("days_interval", out var dip) ? dip.GetInt32()  : 1;
+    var scheduleName = args.TryGetProperty("schedule_name", out var snp) ? snp.GetString() : null;
+    var scheduleGuid = args.TryGetProperty("schedule_guid", out var sgp) ? sgp.GetString() : null;
+
+    int[] weekdays = null;
+    if (args.TryGetProperty("weekdays", out var wdp) && wdp.ValueKind == JsonValueKind.Array)
+        weekdays = wdp.EnumerateArray().Select(e => e.GetInt32()).ToArray();
+
+    int[] months = null;
+    if (args.TryGetProperty("months", out var mp) && mp.ValueKind == JsonValueKind.Array)
+        months = mp.EnumerateArray().Select(e => e.GetInt32()).ToArray();
+
+    int[] days = null;
+    if (args.TryGetProperty("days", out var daysp) && daysp.ValueKind == JsonValueKind.Array)
+        days = daysp.EnumerateArray().Select(e => e.GetInt32()).ToArray();
+
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string Resolve(string relative)
+    {
+        foreach (var kv in roots)
+        {
+            var candidate = relative.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                ? Path.Combine(kv.Value, relative.Substring(kv.Key.Length + 1))
+                : Path.Combine(kv.Value, relative);
+            if (File.Exists(candidate)) return candidate;
+        }
+        return null;
+    }
+
+    try
+    {
+        var fullPath = Resolve(path);
+        if (fullPath == null) { tool.ExecResult = $"Error: report '{path}' not found."; return; }
+
+        var dir = Path.GetDirectoryName(fullPath);
+        if (!securityContext.HasFolderRight(dir, (int)FolderRight.Edit))
+            { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+
+        var report = Report.LoadFromFile(fullPath, repo, false);
+
+        // Collect folder device GUIDs
+        var folderDeviceGuids = new System.Collections.Generic.HashSet<string>(repo.Devices.OfType<OutputFolderDevice>().Select(d => d.GUID));
+        folderDeviceGuids.Add(OutputFolderDevice.DefaultGUID);
+
+        // ── DELETE branch ────────────────────────────────────────────────────────
+        // Mirrors report_configure_output: target a schedule by GUID (preferred) or by
+        // name. A target is required — never mass-delete when both are omitted.
+        if (string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase))
+        {
+            ReportSchedule toRemove;
+            if (!string.IsNullOrEmpty(scheduleGuid))
+            {
+                toRemove = report.Schedules.FirstOrDefault(s => string.Equals(s.GUID, scheduleGuid, StringComparison.OrdinalIgnoreCase));
+                if (toRemove == null) { tool.ExecResult = $"No schedule with GUID '{scheduleGuid}' found on '{path}'."; return; }
+            }
+            else if (!string.IsNullOrEmpty(scheduleName))
+            {
+                toRemove = report.Schedules.FirstOrDefault(s => string.Equals(s.Name, scheduleName, StringComparison.OrdinalIgnoreCase));
+                if (toRemove == null) { tool.ExecResult = $"No schedule named '{scheduleName}' found on '{path}'."; return; }
+            }
+            else
+            {
+                tool.ExecResult = "Error: provide schedule_guid (preferred) or schedule_name to delete a schedule.";
+                return;
+            }
+            var removedName = toRemove.Name;
+            var removedGuid = toRemove.GUID;
+            report.RemoveSchedule(toRemove);
+            report.SaveToFile();
+            tool.ExecResult = $"Schedule '{removedName}' (scheduleGUID='{removedGuid}') removed from '{path}'.";
+            return;
+        }
+
+        // ── CONFIGURE branch — validate required params ──────────────────────────
+        if (string.IsNullOrEmpty(scheduleType))
+            { tool.ExecResult = "Error: 'type' is required for action=configure."; return; }
+        if (string.IsNullOrEmpty(startStr))
+            { tool.ExecResult = "Error: 'start_datetime' is required for action=configure."; return; }
+
+        var output = report.Outputs.FirstOrDefault(o => folderDeviceGuids.Contains(o.OutputDeviceGUID));
+        if (output == null)
+            { tool.ExecResult = "Error: this report has no folder output. Call report_configure_output first."; return; }
+
+        // Parse start datetime
+        if (!DateTime.TryParse(startStr, out var startDt))
+            { tool.ExecResult = $"Error: cannot parse start_datetime '{startStr}'. Use ISO 8601 (e.g. 2025-06-01T07:00:00)."; return; }
+
+        // Map type to TriggerType (used by both Seal and WTS paths)
+        TriggerType triggerType;
+        switch (scheduleType.ToLowerInvariant())
+        {
+            case "daily":   triggerType = TriggerType.Daily;   break;
+            case "weekly":  triggerType = TriggerType.Weekly;  break;
+            case "monthly": triggerType = TriggerType.Monthly; break;
+            case "once":    triggerType = TriggerType.Time;    break;
+            default:
+                tool.ExecResult = $"Error: unknown type '{scheduleType}'. Use daily, weekly, monthly or once.";
+                return;
+        }
+
+        // Update an existing schedule when schedule_guid is provided, otherwise create
+        // a new one linked to the output.
+        ReportSchedule schedule;
+        if (!string.IsNullOrEmpty(scheduleGuid))
+        {
+            schedule = report.Schedules.FirstOrDefault(s => string.Equals(s.GUID, scheduleGuid, StringComparison.OrdinalIgnoreCase));
+            if (schedule == null) { tool.ExecResult = $"Error: no schedule with GUID '{scheduleGuid}' found on '{path}'."; return; }
+        }
+        else
+        {
+            schedule = report.AddSchedule(output);
+        }
+        if (!string.IsNullOrEmpty(scheduleName)) schedule.Name = scheduleName;
+
+        // ── Seal Scheduler path ──────────────────────────────────────────────────
+        // SealXxx properties are only meaningful when UseSealScheduler is true.
+        // They are stored on the SealSchedule object and persisted by
+        // SealReportScheduler.Instance.SaveSchedule() inside SynchronizeTask().
+        if (Repository.Instance.UseSealScheduler)
+        {
+            schedule.SealEnabled = true;
+            schedule.SealType    = triggerType;
+            schedule.SealStart   = startDt;
+            schedule.SealEnd     = startDt.AddYears(10);
+
+            if (triggerType == TriggerType.Daily)
+                schedule.SealDaysInterval = daysInterval;
+
+            if (triggerType == TriggerType.Weekly && weekdays != null && weekdays.Length > 0)
+                schedule.SealWeekdays = weekdays;
+
+            if (triggerType == TriggerType.Monthly)
+            {
+                if (months != null && months.Length > 0) schedule.SealMonths = months;
+                if (days   != null && days.Length   > 0) schedule.SealDays   = days;
+            }
+        }
+        // ── Windows Task Scheduler path ──────────────────────────────────────────
+        // The SealXxx properties have no effect here. The trigger must be written
+        // directly to the TaskDefinition and re-registered.
+        // schedule.Task creates the WTS task on first access if it doesn't exist yet.
+        else
+        {
+            var wtsTask   = schedule.Task;          // creates WTS task if missing
+            var definition = wtsTask.Definition;
+            definition.Triggers.Clear();
+
+            Trigger wTrigger;
+            switch (triggerType)
+            {
+                case TriggerType.Daily:
+                    var dt = new DailyTrigger { StartBoundary = startDt, Enabled = true };
+                    dt.DaysInterval = (short)daysInterval;
+                    wTrigger = dt;
+                    break;
+                case TriggerType.Weekly:
+                    var wt = new WeeklyTrigger { StartBoundary = startDt, Enabled = true };
+                    if (weekdays != null && weekdays.Length > 0)
+                    {
+                        // DaysOfWeek flags: Sunday=1, Monday=2, Tuesday=4 … Saturday=64 → bit = 1 << dayIndex
+                        DaysOfTheWeek dow = 0;
+                        foreach (var d in weekdays) dow |= (DaysOfTheWeek)(1 << d);
+                        wt.DaysOfWeek = dow;
+                    }
+                    wTrigger = wt;
+                    break;
+                case TriggerType.Monthly:
+                    var mt = new MonthlyTrigger { StartBoundary = startDt, Enabled = true };
+                    if (months != null && months.Length > 0)
+                    {
+                        // MonthsOfYear flags: Jan=1, Feb=2, Mar=4 … Dec=2048 → bit = 1 << (month-1)
+                        MonthsOfTheYear moy = 0;
+                        foreach (var m in months) moy |= (MonthsOfTheYear)(1 << (m - 1));
+                        mt.MonthsOfYear = moy;
+                    }
+                    if (days != null && days.Length > 0)
+                    {
+                        // DaysOfMonth is int[] of day numbers (1-31); day 32 = last day of month
+                        var domList = new System.Collections.Generic.List<int>();
+                        bool lastDay = false;
+                        foreach (var d in days)
+                        {
+                            if (d == 32) lastDay = true;
+                            else if (d >= 1 && d <= 31) domList.Add(d);
+                        }
+                        mt.DaysOfMonth = domList.ToArray();
+                        mt.RunOnLastDayOfMonth = lastDay;
+                    }
+                    wTrigger = mt;
+                    break;
+                default: // once
+                    wTrigger = new TimeTrigger { StartBoundary = startDt, Enabled = true };
+                    break;
+            }
+            definition.Triggers.Add(wTrigger);
+            schedule.RegisterTaskDefinition(definition);
+        }
+
+        report.SchedulesModified = true;
+        report.SaveToFile();
+
+        var schedulerLabel = Repository.Instance.UseSealScheduler ? "Seal Scheduler" : "Windows Task Scheduler";
+        var sb = new System.Text.StringBuilder();
+        var verb = string.IsNullOrEmpty(scheduleGuid) ? "added to" : "updated on";
+        sb.Append($"Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}') {verb} '{path}' [{schedulerLabel}]: type={scheduleType}, starts={startDt:yyyy-MM-dd HH:mm}");
+        if (triggerType == TriggerType.Daily)                                       sb.Append($", every {daysInterval} day(s)");
+        if (triggerType == TriggerType.Weekly  && weekdays != null)                 sb.Append($", weekdays=[{string.Join(",", weekdays)}]");
+        if (triggerType == TriggerType.Monthly && months   != null)                 sb.Append($", months=[{string.Join(",", months)}]");
+        if (triggerType == TriggerType.Monthly && days     != null)                 sb.Append($", days=[{string.Join(",", days)}]");
+        tool.ExecResult = sb.ToString();
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

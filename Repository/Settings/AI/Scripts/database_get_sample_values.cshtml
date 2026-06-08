@@ -1,0 +1,48 @@
+@using System.Text.Json
+@using System.Text
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args       = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var tableName  = args.GetProperty("table").GetString();
+    var columnName = args.GetProperty("column").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table: {tableName}, column: {columnName})..");
+    var dsGuid     = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid   = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var source     = tool.GetExecSource(dsGuid);
+    if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+    var conn = tool.GetExecConnection(source, connGuid);
+    if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
+
+    var connection = conn.GetOpenConnection();
+    var helper     = new TaskDatabaseHelper();
+    try {
+        // Note: square-bracket quoting is SQL Server syntax.
+        // For PostgreSQL use "double quotes"; for MySQL use `backticks`.
+        var sql = $"SELECT DISTINCT [{columnName}] FROM [{tableName}] " +
+                  $"WHERE [{columnName}] IS NOT NULL ORDER BY [{columnName}]";
+        var table = helper.LoadDataTable(conn.ConnectionType,
+                                         conn.FullConnectionString,
+                                         sql, connection);
+        if (table.Rows.Count == 0) {
+            tool.ExecResult = $"No non-null values found in {tableName}.{columnName}.";
+            return;
+        }
+
+        var values = new List<string>();
+        int cnt = 0;
+        foreach (System.Data.DataRow row in table.Rows) {
+            if (++cnt > 50) break;
+            values.Add(row[0]?.ToString() ?? "");
+        }
+        var result = string.Join(", ", values);
+        if (table.Rows.Count > 50)
+            result += $" ... ({table.Rows.Count} distinct values total, first 50 shown)";
+        tool.ExecResult = result;
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    finally               { connection.Close(); }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

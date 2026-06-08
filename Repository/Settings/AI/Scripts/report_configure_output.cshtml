@@ -1,0 +1,193 @@
+@using System.Text.Json
+@using System.IO
+@using System.Linq
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args       = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path       = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
+    var action     = args.TryGetProperty("action",        out var acp) ? acp.GetString() : "configure";
+    var deviceType = args.TryGetProperty("device_type",   out var dtp) ? dtp.GetString() : "folder";
+    var outputGuid = args.TryGetProperty("output_guid",   out var ogp) ? ogp.GetString() : null;
+    var folderPath = args.TryGetProperty("folder_path",   out var flp) ? flp.GetString() : null;
+    var fileName   = args.TryGetProperty("file_name",     out var fnp) ? fnp.GetString() : null;
+    var format     = args.TryGetProperty("output_format", out var fmp) ? fmp.GetString() : "Excel";
+    var outputName = args.TryGetProperty("output_name",   out var onp) ? onp.GetString() : null;
+    var deviceName = args.TryGetProperty("device_name",   out var dnp) ? dnp.GetString() : null;
+    var emailTo       = args.TryGetProperty("email_to",              out var etp) ? etp.GetString()  : null;
+    var emailCc       = args.TryGetProperty("email_cc",              out var ecp) ? ecp.GetString()  : null;
+    var emailBcc      = args.TryGetProperty("email_bcc",             out var ebp) ? ebp.GetString()  : null;
+    var emailSubject  = args.TryGetProperty("email_subject",         out var esp) ? esp.GetString()  : null;
+    var emailBody     = args.TryGetProperty("email_body",            out var emb) ? emb.GetString()  : null;
+    var emailHtmlBody = args.TryGetProperty("email_html_body",       out var ehb) && ehb.GetBoolean();
+    var emailSkipAtt  = args.TryGetProperty("email_skip_attachments",out var esa) && esa.GetBoolean();
+
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string Resolve(string relative)
+    {
+        foreach (var kv in roots)
+        {
+            var candidate = relative.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                ? Path.Combine(kv.Value, relative.Substring(kv.Key.Length + 1))
+                : Path.Combine(kv.Value, relative);
+            if (File.Exists(candidate)) return candidate;
+        }
+        return null;
+    }
+
+    // Helper: collect GUIDs of all folder devices
+    var folderDeviceGuids = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    foreach (var d in repo.Devices.OfType<OutputFolderDevice>()) folderDeviceGuids.Add(d.GUID);
+    folderDeviceGuids.Add(OutputFolderDevice.DefaultGUID);
+
+    try
+    {
+        var fullPath = Resolve(path);
+        if (fullPath == null) { tool.ExecResult = $"Error: report '{path}' not found."; return; }
+
+        var dir = Path.GetDirectoryName(fullPath);
+        if (!securityContext.HasFolderRight(dir, (int)FolderRight.Edit))
+            { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+
+        var report = Report.LoadFromFile(fullPath, repo, false);
+
+        // ── DELETE branch ────────────────────────────────────────────────────────
+        if (string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase))
+        {
+            List<ReportOutput> toRemove;
+            if (!string.IsNullOrEmpty(outputGuid))
+            {
+                toRemove = report.Outputs.Where(o => string.Equals(o.GUID, outputGuid, StringComparison.OrdinalIgnoreCase)).ToList();
+                if (toRemove.Count == 0) { tool.ExecResult = $"No output with GUID '{outputGuid}' found on '{path}'."; return; }
+            }
+            else if (!string.IsNullOrEmpty(outputName))
+            {
+                toRemove = report.Outputs.Where(o => string.Equals(o.Name, outputName, StringComparison.OrdinalIgnoreCase)).ToList();
+                if (toRemove.Count == 0) { tool.ExecResult = $"No output named '{outputName}' found on '{path}'."; return; }
+            }
+            else
+            {
+                toRemove = report.Outputs.ToList();
+                if (toRemove.Count == 0) { tool.ExecResult = $"No outputs found on '{path}' to delete."; return; }
+            }
+            foreach (var o in toRemove) report.RemoveOutput(o); // also removes linked schedules
+            report.SaveToFile();
+            var removed = string.Join(", ", toRemove.Select(o => $"'{o.Name}'"));
+            tool.ExecResult = $"Output(s) {removed} (and all linked schedules) removed from '{path}'.";
+            return;
+        }
+
+        // ── CONFIGURE branch ─────────────────────────────────────────────────────
+        ReportOutput output = null;
+
+        // If output_guid provided, find the existing output to update
+        if (!string.IsNullOrEmpty(outputGuid))
+        {
+            output = report.Outputs.FirstOrDefault(o => string.Equals(o.GUID, outputGuid, StringComparison.OrdinalIgnoreCase));
+            if (output == null) { tool.ExecResult = $"Error: no output with GUID '{outputGuid}' found on '{path}'."; return; }
+        }
+
+        // ── EMAIL branch ─────────────────────────────────────────────────────────
+        if (string.Equals(deviceType, "email", StringComparison.OrdinalIgnoreCase))
+        {
+            if (string.IsNullOrEmpty(emailTo) && output == null)
+                { tool.ExecResult = "Error: email_to is required for device_type=email."; return; }
+
+            if (output == null)
+            {
+                var emailDevice = string.IsNullOrEmpty(deviceName)
+                    ? repo.Devices.OfType<OutputEmailDevice>().FirstOrDefault()
+                    : repo.Devices.OfType<OutputEmailDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase));
+                if (emailDevice == null) { tool.ExecResult = "Error: no email device configured in the repository."; return; }
+                output = report.AddOutput(emailDevice);
+            }
+
+            if (!string.IsNullOrEmpty(outputName))   output.Name                 = outputName;
+            if (!string.IsNullOrEmpty(emailTo))       output.EmailTo              = emailTo;
+            if (!string.IsNullOrEmpty(emailCc))       output.EmailCC              = emailCc;
+            if (!string.IsNullOrEmpty(emailBcc))      output.EmailBCC             = emailBcc;
+            if (!string.IsNullOrEmpty(emailSubject))  output.EmailSubject         = emailSubject;
+            if (!string.IsNullOrEmpty(emailBody))     output.EmailBody            = emailBody;
+            if (emailHtmlBody)                         output.EmailHtmlBody        = true;
+            if (emailSkipAtt)                          output.EmailSkipAttachments = true;
+
+            var param = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
+            if (param != null) { param.Value = format; param.CustomValue = true; }
+
+            report.SaveToFile();
+            tool.ExecResult = $"Email output configured on '{path}': to='{output.EmailTo}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+            return;
+        }
+
+        // ── FOLDER branch (default) ───────────────────────────────────────────────
+        if (string.IsNullOrEmpty(folderPath) && output == null)
+            { tool.ExecResult = "Error: folder_path is required for device_type=folder."; return; }
+
+        if (output == null)
+        {
+            var device = string.IsNullOrEmpty(deviceName)
+                ? (repo.Devices.OfType<OutputFolderDevice>().FirstOrDefault() ?? OutputFolderDevice.Create())
+                : (repo.Devices.OfType<OutputFolderDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase)) ?? OutputFolderDevice.Create());
+            output = report.Outputs.FirstOrDefault(o => folderDeviceGuids.Contains(o.OutputDeviceGUID))
+                     ?? report.AddOutput(device);
+        }
+
+        if (!string.IsNullOrEmpty(outputName)) output.Name = outputName;
+
+        if (!string.IsNullOrEmpty(folderPath))
+        {
+            // ── Resolve folder_path to a keyword-based stored path ──────────────────
+            string resolvedFolderPath;
+            if (folderPath.StartsWith("Personal", StringComparison.OrdinalIgnoreCase))
+            {
+                if (securityContext.PersonalFolderRight == PersonalFolderRight.None)
+                    { tool.ExecResult = "Error: no right to create files in your personal folder."; return; }
+                var personalRoot = repo.GetPersonalFolder(securityContext);
+                var sub = folderPath.Substring("Personal".Length).TrimStart(Path.DirectorySeparatorChar, '/');
+                var userName = Path.GetFileName(personalRoot.TrimEnd(Path.DirectorySeparatorChar));
+                if (sub.StartsWith(userName + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                    sub = sub.Substring(userName.Length + 1);
+                else if (string.Equals(sub, userName, StringComparison.OrdinalIgnoreCase))
+                    sub = string.Empty;
+                var physPath = string.IsNullOrEmpty(sub) ? personalRoot : Path.Combine(personalRoot, sub);
+                resolvedFolderPath = physPath.Replace(repo.PersonalFolder, Repository.SealPersonalRepositoryKeyword);
+            }
+            else if (folderPath.StartsWith("Reports", StringComparison.OrdinalIgnoreCase))
+            {
+                var sub = folderPath.Substring("Reports".Length);
+                var swiSub = sub.Length > 0 ? sub : Path.DirectorySeparatorChar.ToString();
+                var secFolder = securityContext.FindSecurityFolder(swiSub);
+                if (secFolder != null && secFolder.FolderRight != FolderRight.Edit)
+                    { tool.ExecResult = $"Error: no write access to reports folder '{folderPath}'."; return; }
+                resolvedFolderPath = Repository.SealReportsRepositoryKeyword + sub;
+            }
+            else
+            {
+                resolvedFolderPath = folderPath;
+            }
+            output.FolderPath = resolvedFolderPath;
+        }
+
+        if (!string.IsNullOrEmpty(fileName)) output.FileName = fileName;
+
+        // Update report_format view parameter on the output
+        var param2 = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
+        if (param2 != null) { param2.Value = format; param2.CustomValue = true; }
+
+        report.SaveToFile();
+        tool.ExecResult = $"Output configured on '{path}': folder='{folderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

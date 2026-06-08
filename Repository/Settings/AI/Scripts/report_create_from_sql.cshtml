@@ -1,0 +1,100 @@
+@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args             = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path             = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
+    var displayName      = args.GetProperty("display_name").GetString();
+    var sql              = args.GetProperty("sql").GetString();
+    var sourceGuid       = args.TryGetProperty("source_guid",        out var snp) ? snp.GetString() : null;
+    var modelName        = args.TryGetProperty("model_name",        out var mnp) ? mnp.GetString() : null;
+    var description      = args.TryGetProperty("description",       out var dp)  ? dp.GetString()  : null;
+    var keepColumnNames  = args.TryGetProperty("keep_column_names", out var kp)  && kp.GetBoolean();
+    var overwrite        = args.TryGetProperty("overwrite",         out var op)  && op.GetBoolean();
+
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    // Resolve destination full path
+    string fullPath = null;
+    foreach (var kv in roots)
+        if (path.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            { fullPath = Path.Combine(kv.Value, path.Substring(kv.Key.Length + 1)); break; }
+    if (fullPath == null) fullPath = Path.Combine(repo.ReportsFolder, path);
+    if (!fullPath.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+        fullPath += "." + Repository.SealReportFileExtension;
+
+    if (File.Exists(fullPath) && !overwrite)
+        { tool.ExecResult = $"Error: '{path}' already exists. Set overwrite=true to replace it."; return; }
+
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), (int)FolderRight.Edit))
+        { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+
+    try
+    {
+        // Create the report shell (sources, default model, default HTML view)
+        var report = Report.Create(repo);
+        report.FilePath    = fullPath;
+        report.DisplayName = displayName;
+        if (!string.IsNullOrEmpty(description)) report.SetMetaInfo("Description", description);
+
+        // Pick the right ReportSource by MetaSource GUID
+        ReportSource reportSource = null;
+        if (!string.IsNullOrEmpty(sourceGuid))
+        {
+            reportSource = report.Sources.FirstOrDefault(s => s.MetaSourceGUID == sourceGuid);
+            if (reportSource == null)
+                { tool.ExecResult = $"Error: no source with GUID '{sourceGuid}' found. Available GUIDs: {string.Join(", ", report.Sources.Select(s => s.MetaSourceGUID))}"; return; }
+        }
+        else
+        {
+            reportSource = report.Sources.FirstOrDefault(s => s.IsDefault) ?? report.Sources.FirstOrDefault();
+        }
+        report.Sources.RemoveAll(i => i != reportSource);
+
+        // Configure the default model as a SQL model
+        var model = report.Models[0];
+        model.SourceGUID = reportSource.GUID;
+        if (!string.IsNullOrEmpty(modelName)) model.Name = modelName;
+        model.Table                  = MetaTable.Create();
+        model.Table.DynamicColumns   = true;
+        model.Table.KeepColumnNames  = keepColumnNames;
+        model.Table.Sql              = sql;
+        model.RefreshMetaTable(true);
+        
+        //Add elements
+        foreach (var col in model.Table.Columns)
+        {
+            var element = ReportElement.Create();
+            element.Source = model.Source;
+            element.Report = model.Report;
+            element.Model = model;
+            element.MetaColumnGUID = col.GUID;
+            element.MetaColumn = col;
+            element.Name = col.Name;
+            element.PivotPosition = PivotPosition.Row;
+            element.SetDefaults();
+            model.Elements.Add(element);
+        }
+
+        var dir = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+        report.SaveToFile(fullPath);
+
+        tool.ExecResult = $"Created: {path}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

@@ -1,0 +1,43 @@
+@using System.Text
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
+    var sb = new System.Text.StringBuilder();
+    foreach (var source in Repository.Instance.Sources)
+    {
+        var dbType = source.Connection?.DatabaseType.ToString() ?? "Unknown";
+        var desc   = string.IsNullOrEmpty(source.Description) ? "" : $" — {source.Description}";
+        sb.AppendLine($"## {source.Name}{desc} [{dbType}]{(source.IsDefault ? " (default)" : "")} (GUID: {source.GUID})");
+
+        // Connections
+        sb.AppendLine("  Connections:");
+        foreach (var conn in source.Connections)
+        {
+            var isDefault = source.Connection?.GUID == conn.GUID ? " (default)" : "";
+            sb.AppendLine($"    - {conn.Name}{isDefault} (GUID: {conn.GUID})");
+        }
+
+        // Tables
+        var tables = source.MetaData?.Tables;
+        if (tables == null || tables.Count == 0)
+        {
+            sb.AppendLine("  (no tables)");
+        }
+        else
+        {
+            sb.AppendLine("  Tables:");
+            foreach (var table in tables)
+            {
+                var label = table.DisplayName != table.Name && !string.IsNullOrEmpty(table.DisplayName)
+                    ? $"{table.Name} ({table.DisplayName})"
+                    : table.Name;
+                sb.AppendLine($"    - {label}");
+            }
+        }
+        sb.AppendLine();
+    }
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

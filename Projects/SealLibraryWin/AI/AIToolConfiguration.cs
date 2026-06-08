@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using Seal.Helpers;
@@ -32,7 +33,7 @@ namespace Seal.AI
                 GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("ParametersSchema").SetIsBrowsable(true);
-                GetProperty("ExecutionScript").SetIsBrowsable(true);
+                GetProperty("ExecutionScriptFile").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -89,22 +90,33 @@ namespace Seal.AI
         public string ParametersSchema { get; set; }
 
         /// <summary>
-        /// Razor/C# script executed when the AI calls this tool.
-        /// <para>
-        /// The Razor model is this <see cref="AIToolConfiguration"/> instance.
-        /// Use <c>@Model.CurrentToolCall.Arguments</c> to access the JSON arguments string
-        /// provided by the AI, and <c>@Model.CurrentToolCall.Id</c> / <c>@Model.CurrentToolCall.Name</c>
-        /// for call metadata.
-        /// </para>
-        /// <para>
-        /// The rendered output of the script is returned to the AI as the tool result.
-        /// </para>
+        /// File name of a Razor/C# script file, relative to <c>Settings\AI\Scripts</c>.
         /// </summary>
 #if WINDOWS
-        [Category("Execution"), DisplayName("Execution Script"), Description("Razor/C# script executed when the AI invokes this tool.\r\nAccess the AI-supplied arguments via @Model.CurrentToolCall.Arguments (a JSON string).\r\nThe rendered output of the script is sent back to the AI as the tool result."), Id(6, 3)]
+        [Category("Execution"), DisplayName("Execution Script File"), Description("File name of the execution script (e.g. my_tool.cshtml), located in Settings\\AI\\Scripts. Click the editor button to edit the script file content with syntax check (F8)."), Id(7, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
-        public string ExecutionScript { get; set; }
+        public string ExecutionScriptFile { get; set; }
+
+        /// <summary>
+        /// Reads <see cref="ExecutionScriptFile"/> from <c>Settings\AI\Scripts</c>.
+        /// Returns an empty string when no script file is configured.
+        /// </summary>
+        [XmlIgnore]
+        public string EffectiveExecutionScript
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(ExecutionScriptFile))
+                {
+                    var path = Path.IsPathRooted(ExecutionScriptFile)
+                        ? ExecutionScriptFile
+                        : Path.Combine(Repository.Instance.AIScriptsFolder, ExecutionScriptFile);
+                    return File.ReadAllText(path);
+                }
+                return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Set by <see cref="Execute"/> immediately before the script runs so that the script can
@@ -159,7 +171,7 @@ namespace Seal.AI
 
         /// <summary>
         /// Sets <see cref="CurrentToolCall"/> to <paramref name="toolCall"/>, clears
-        /// <see cref="ExecResult"/>, runs <see cref="ExecutionScript"/> via the Razor engine,
+        /// <see cref="ExecResult"/>, runs the <see cref="ExecutionScriptFile"/> via the Razor engine,
         /// and returns <see cref="ExecResult"/> as the tool result string to send back to the AI.
         /// Returns <see cref="string.Empty"/> if no script is configured.
         /// </summary>
@@ -167,8 +179,14 @@ namespace Seal.AI
         {
             CurrentToolCall = toolCall;
             ExecResult = string.Empty;
-            if (string.IsNullOrWhiteSpace(ExecutionScript)) return string.Empty;
-            RazorHelper.CompileExecute(ExecutionScript, this);
+            var script = EffectiveExecutionScript;
+            if (string.IsNullOrWhiteSpace(script)) return string.Empty;
+
+            //File-backed: cache the compiled script by file path and invalidate on file change
+            var path = Path.IsPathRooted(ExecutionScriptFile)
+                ? ExecutionScriptFile
+                : Path.Combine(Repository.Instance.AIScriptsFolder, ExecutionScriptFile);
+            RazorHelper.CompileExecute(script, this, GetType().Name + "_" + GUID, File.GetLastWriteTime(path));
             return ExecResult;
         }
     }

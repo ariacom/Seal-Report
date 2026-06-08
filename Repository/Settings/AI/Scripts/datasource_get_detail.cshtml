@@ -1,0 +1,55 @@
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var name   = args.GetProperty("name").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (name: {name})..");
+    var source = Repository.Instance.Sources.FirstOrDefault(i => i.Name == name);
+    if (source == null) { tool.ExecResult = $"Error: data source '{name}' not found."; return; }
+
+    var sb = new StringBuilder();
+
+    // --- Connection (no credentials) ---
+    sb.AppendLine($"# {source.Name}{(string.IsNullOrEmpty(source.Description) ? "" : $" — {source.Description}")}");
+    sb.AppendLine($"GUID           : {source.GUID}");
+    sb.AppendLine($"Database type  : {source.Connection?.DatabaseType}");
+    sb.AppendLine($"Connection type: {source.Connection?.ConnectionType}");
+    sb.AppendLine($"Is default     : {source.IsDefault}");
+    sb.AppendLine();
+
+    // --- Tables and columns ---
+    sb.AppendLine("## Tables");
+    foreach (var table in source.MetaData.Tables)
+    {
+        var tableName = string.IsNullOrEmpty(table.Alias) ? table.Name : $"{table.Name} (alias: {table.Alias})";
+        sb.AppendLine($"### {tableName}");
+        foreach (var col in table.Columns)
+        {
+            var label = col.DisplayName != col.Name && !string.IsNullOrEmpty(col.DisplayName)
+                        ? $"{col.Name} ({col.DisplayName})"
+                        : col.Name;
+            sb.AppendLine($"  {label} [{col.Type}{(col.IsAggregate ? ", aggregate" : "")}] (GUID: {col.GUID})");
+        }
+        sb.AppendLine();
+    }
+
+    // --- Joins ---
+    if (source.MetaData.Joins.Count > 0)
+    {
+        sb.AppendLine("## Joins");
+        foreach (var join in source.MetaData.Joins)
+        {
+            var left  = join.LeftTable?.AliasName  ?? "?";
+            var right = join.RightTable?.AliasName ?? "?";
+            sb.AppendLine($"  {left} → {right}");
+            if (!string.IsNullOrWhiteSpace(join.Clause))
+                sb.AppendLine($"    ON {join.Clause.Trim()}");
+        }
+    }
+
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

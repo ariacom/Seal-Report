@@ -1,0 +1,70 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
+    var sb              = new StringBuilder();
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var rawArgs = tool.CurrentToolCall.Arguments;
+    var args    = JsonDocument.Parse(string.IsNullOrWhiteSpace(rawArgs) ? "{}" : rawArgs).RootElement;
+    var filterFolders = args.TryGetProperty("folders", out var fp)
+        ? fp.EnumerateArray().Select(e => e.GetString()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList()
+        : new System.Collections.Generic.List<string>();
+    var extension = args.TryGetProperty("extension", out var ep) ? ep.GetString() : null;
+    if (!string.IsNullOrWhiteSpace(extension)) extension = extension.TrimStart('.');
+
+    string personalUserDir = securityContext.PersonalFolderRight != PersonalFolderRight.None
+        ? repo.GetPersonalFolder(securityContext)
+        : null;
+
+    foreach (var folder in securityContext.AllFolders)
+    {
+        if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
+        if (folder.right == 0) continue;
+
+        string physPath, displayPath;
+        if (folder.IsPersonal)
+        {
+            if (personalUserDir == null) continue;
+            physPath    = personalUserDir + folder.FinalPath;
+            displayPath = "Personal" + folder.FinalPath.TrimEnd(Path.DirectorySeparatorChar);
+        }
+        else
+        {
+            physPath    = repo.ReportsFolder + folder.path;
+            displayPath = "Reports" + folder.path.TrimEnd(Path.DirectorySeparatorChar);
+        }
+
+        if (!Directory.Exists(physPath)) continue;
+
+        if (filterFolders.Count > 0 && !filterFolders.Any(f =>
+                displayPath.IndexOf(f, StringComparison.OrdinalIgnoreCase) >= 0))
+            continue;
+
+        var pattern = string.IsNullOrWhiteSpace(extension) ? "*.*" : "*." + extension;
+        var files = Directory.GetFiles(physPath, pattern).OrderBy(f => f).ToList();
+        if (files.Count == 0) continue;
+
+        sb.AppendLine($"## {displayPath}");
+        foreach (var file in files)
+        {
+            if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
+            var fi      = new FileInfo(file);
+            var relPath = displayPath.TrimEnd(Path.DirectorySeparatorChar)
+                          + Path.DirectorySeparatorChar + fi.Name;
+            sb.AppendLine($"  - {relPath} ({fi.Length} bytes, modified {fi.LastWriteTime:yyyy-MM-dd HH:mm})");
+        }
+        sb.AppendLine();
+    }
+
+    if (sb.Length == 0) sb.AppendLine("No files found in accessible folders.");
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

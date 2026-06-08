@@ -1,0 +1,129 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var sb              = new StringBuilder();
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+
+    // Parse optional folder-filter argument
+    var rawArgs = tool.CurrentToolCall.Arguments;
+    var args    = JsonDocument.Parse(string.IsNullOrWhiteSpace(rawArgs) ? "{}" : rawArgs).RootElement;
+    var filterFolders = args.TryGetProperty("folders", out var fp)
+        ? fp.EnumerateArray().Select(e => e.GetString()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList()
+        : new System.Collections.Generic.List<string>();
+
+    if (securityContext == null)
+    {
+        tool.ExecResult = "Error: no security context available.";
+        return;
+    }
+
+    // Compute the user's personal directory root (null when no personal right).
+    string personalUserDir = securityContext.PersonalFolderRight != PersonalFolderRight.None
+        ? repo.GetPersonalFolder(securityContext)
+        : null;
+
+    // Folder tree built by SWIGetRootFolders – iterate every accessible folder.
+    // Skip folders with no right (hidden) and files-only folders (no reports shown).
+    foreach (var folder in securityContext.AllFolders)
+    {
+        if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
+        if (folder.right == 0) continue;  // no access – hidden from this user
+        if (folder.files)      continue;  // files-only folder, reports not shown
+
+        // Compute physical path and display path from the SWIFolder fields.
+        // Physical path is derived directly – never via GetFullPath() which may be null.
+        // Display paths match the convention used by report_get_detail / report_get_xml:
+        //   Reports\subfolder\...   or   Personal\username\subfolder\...
+        string physPath, displayPath;
+        if (folder.IsPersonal)
+        {
+            if (personalUserDir == null) continue;
+            var absDir  = personalUserDir + folder.FinalPath;
+            physPath    = absDir;
+            displayPath = "Personal" + folder.FinalPath;
+        }
+        else
+        {
+            physPath    = repo.ReportsFolder + folder.path;
+            displayPath = "Reports" + folder.path.TrimEnd(Path.DirectorySeparatorChar);
+        }
+
+        if (!Directory.Exists(physPath)) continue;
+
+        // Apply optional name filter
+        if (filterFolders.Count > 0 && !filterFolders.Any(f =>
+                displayPath.IndexOf(f, StringComparison.OrdinalIgnoreCase) >= 0))
+            continue;
+
+        // Scan this folder only (TopDirectoryOnly – every sub-folder is its own entry
+        // in AllFolders and will be processed separately, filtered by its own right).
+        foreach (var file in Directory.GetFiles(physPath, "*." + Repository.SealReportFileExtension).OrderBy(f => f))
+        {
+            if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
+            try
+            {
+                var report      = Report.LoadFromFile(file, repo, refreshEnums: false);
+                var relPath     = displayPath.TrimEnd(Path.DirectorySeparatorChar)
+                                  + Path.DirectorySeparatorChar + Path.GetFileName(file);
+                var displayName = !string.IsNullOrEmpty(report.DisplayName) && !report.DisplayName.StartsWith("@")
+                                  ? report.DisplayName
+                                  : Path.GetFileNameWithoutExtension(file);
+                var description = report.GetMetaInfo("Description") ?? "";
+
+                sb.Append($"## {relPath}");
+                if (displayName != Path.GetFileNameWithoutExtension(file)) sb.Append($" ({displayName})");
+                if (!string.IsNullOrEmpty(description)) sb.Append($" — {description}");
+                sb.AppendLine();
+
+                foreach (var model in report.Models)
+                {
+                    var cols = model.Elements.Select(e => e.DisplayNameEl).Distinct().ToList();
+                    if (cols.Count == 0) continue;
+                    sb.AppendLine($"  Model '{model.Name}': {string.Join(", ", cols)}");
+                }
+                // Outputs
+                if (report.Outputs.Count > 0)
+                {
+                    sb.AppendLine("  Outputs:");
+                    foreach (var output in report.Outputs)
+                    {
+                        var formatParam = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
+                        var fmt = formatParam != null ? formatParam.Value : "html";
+                        var folderDevGuids = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        foreach (var d in repo.Devices.OfType<OutputFolderDevice>()) folderDevGuids.Add(d.GUID);
+                        folderDevGuids.Add(OutputFolderDevice.DefaultGUID);
+                        var deviceType = folderDevGuids.Contains(output.OutputDeviceGUID) ? "folder" : "other";
+                        sb.AppendLine($"    Output '{output.Name}' [{deviceType}] (outputGUID='{output.GUID}'): folder='{output.FolderPath}', file='{output.FileName}', format='{fmt}'");
+                    }
+                }
+                // Schedules
+                if (report.Schedules.Count > 0)
+                {
+                    sb.AppendLine("  Schedules:");
+                    foreach (var schedule in report.Schedules)
+                    {
+                        string schedInfo;
+                        if (Repository.Instance.UseSealScheduler)
+                            schedInfo = $"type={schedule.SealType}, start={schedule.SealStart:yyyy-MM-dd HH:mm}, enabled={schedule.SealEnabled}";
+                        else
+                            schedInfo = $"Windows Task Scheduler (task: {schedule.TaskName})";
+                        sb.AppendLine($"    Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}'): {schedInfo}");
+                    }
+                }
+                sb.AppendLine();
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine($"## {Path.GetFileName(file)} — Error loading: {ex.Message}");
+                sb.AppendLine();
+            }
+        }
+    }
+    tool.ExecResult = sb.ToString();
+}

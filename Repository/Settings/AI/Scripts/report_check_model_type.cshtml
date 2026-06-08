@@ -1,0 +1,59 @@
+@using System.Text.Json
+@using System.Linq
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args    = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var request = args.GetProperty("request").GetString().ToLowerInvariant();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (request: {request})..");
+
+    // Patterns that genuinely require SQL (window functions, subqueries, set ops)
+    var sqlPatterns = new System.Collections.Generic.Dictionary<string, string[]>
+    {
+        ["window function (running/cumulative)"] = new[] {
+            "cumulative", "running total", "running sum", "running average", "running count",
+            "year-to-date", "ytd", "month-to-date", "mtd", "rolling total", "rolling average",
+            "rolling sum", "rolling window", "moving average", "moving sum"
+        },
+        ["window function (ranking)"] = new[] {
+            "rank", "ranking", "row number", "dense rank", "ntile", "percentile",
+            "top n per", "first per", "last per"
+        },
+        ["window function (offset)"] = new[] {
+            " lag ", " lead ", "previous row", "next row", "previous month", "next month",
+            "previous year", "next year", "prior period", "period over period", "mom", "yoy",
+            "month over month", "year over year"
+        },
+        ["subquery / CTE"] = new[] {
+            "subquery", "sub-query", "with clause", " cte ", "common table expression",
+            "nested query", "exists ", "not exists", "in (select", "having count",
+            "customers who have never", "customers without", "products never ordered",
+            "orders with no"
+        },
+        ["set operation"] = new[] {
+            " union ", " union all ", " intersect ", " except ", " minus "
+        },
+    };
+
+    var hits = new System.Collections.Generic.List<string>();
+    foreach (var kv in sqlPatterns)
+        foreach (var pattern in kv.Value)
+            if (request.Contains(pattern) && !hits.Contains(kv.Key))
+                hits.Add(kv.Key);
+
+    if (hits.Any())
+    {
+        tool.ExecResult =
+            $"MODEL TYPE: SQL — use report_create_from_sql.\n" +
+            $"REASON: the request contains patterns that require SQL and cannot be expressed with metadata columns:\n" +
+            string.Join("\n", hits.Select(h => $"  • {h}"));
+    }
+    else
+    {
+        tool.ExecResult =
+            "MODEL TYPE: Metadata — use report_create_from_xml.\n" +
+            "REASON: no SQL-requiring patterns detected (no window functions, subqueries, CTEs, or set operations). " +
+            "Standard aggregation, grouping, and filtering are native metadata model capabilities.";
+    }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

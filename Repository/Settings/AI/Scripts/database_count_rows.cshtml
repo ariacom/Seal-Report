@@ -1,0 +1,37 @@
+@using System.Text.Json
+@using Seal.Model
+@using Seal.Helpers
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var tableName = args.GetProperty("table").GetString();
+    var whereStr  = args.TryGetProperty("where", out var whereProp) ? whereProp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table: {tableName})..");
+    var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid  = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var source    = tool.GetExecSource(dsGuid);
+    if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+    var conn = tool.GetExecConnection(source, connGuid);
+    if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
+
+    var connection = conn.GetOpenConnection();
+    var helper     = new TaskDatabaseHelper();
+    try {
+        // Note: square-bracket quoting is SQL Server syntax.
+        // For PostgreSQL use "double quotes"; for MySQL use `backticks`.
+        var sql = $"SELECT COUNT(*) FROM [{tableName}]";
+        if (!string.IsNullOrWhiteSpace(whereStr)) sql += $" WHERE {whereStr}";
+
+        var table = helper.LoadDataTable(conn.ConnectionType,
+                                         conn.FullConnectionString,
+                                         sql, connection);
+        var count = table.Rows[0][0]?.ToString() ?? "0";
+        tool.ExecResult = string.IsNullOrWhiteSpace(whereStr)
+            ? $"{tableName}: {count} rows"
+            : $"{tableName} WHERE {whereStr}: {count} rows";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    finally               { connection.Close(); }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

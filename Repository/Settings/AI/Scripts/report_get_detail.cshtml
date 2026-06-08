@@ -1,0 +1,100 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var relativePath = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {relativePath})..");
+
+    // Resolve full path across all three repository roots
+    var roots = new System.Collections.Generic.Dictionary<string, string>
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+    {
+        var candidate = relativePath.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(kv.Value, relativePath.Substring(kv.Key.Length + 1))
+            : Path.Combine(kv.Value, relativePath);
+        if (File.Exists(candidate)) { fullPath = candidate; break; }
+    }
+
+    if (fullPath == null) { tool.ExecResult = $"Error: report '{relativePath}' not found."; return; }
+
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), 1))
+        { tool.ExecResult = $"Error: access denied to '{relativePath}'."; return; }
+
+    Report report;
+    try { report = Report.LoadFromFile(fullPath, repo, refreshEnums: false); }
+    catch (Exception ex) { tool.ExecResult = $"Error loading report: {ex.Message}"; return; }
+
+    var sb = new StringBuilder();
+
+    // Header
+    var displayName = !string.IsNullOrEmpty(report.DisplayName) && !report.DisplayName.StartsWith("@")
+                      ? report.DisplayName : Path.GetFileNameWithoutExtension(fullPath);
+    var description = report.GetMetaInfo("Description") ?? "";
+    sb.AppendLine($"# {displayName}");
+    sb.AppendLine($"Path: {relativePath}");
+    if (!string.IsNullOrEmpty(description)) sb.AppendLine($"Description: {description}");
+    sb.AppendLine();
+
+    // Input values (prompted restrictions at report level)
+    if (report.InputValues.Count > 0)
+    {
+        sb.AppendLine("## Input values");
+        foreach (var iv in report.InputValues)
+            sb.AppendLine($"  {iv.DisplayNameEl} [prompt={iv.Prompt}, required={iv.Required}]");
+        sb.AppendLine();
+    }
+
+    // Models
+    foreach (var model in report.Models)
+    {
+        var sourceName = model.Source?.Name ?? "?";
+        sb.AppendLine($"## Model '{model.Name}' (source: {sourceName})");
+
+        // Elements
+        if (model.Elements.Count > 0)
+        {
+            sb.AppendLine("  Elements:");
+            foreach (var el in model.Elements)
+            {
+                var agg = el.PivotPosition == PivotPosition.Data ? $", {el.AggregateFunction}" : "";
+                sb.AppendLine($"    {el.DisplayNameEl} [{el.PivotPosition}{agg}]");
+            }
+        }
+
+        // Restrictions
+        var allRestrictions = model.Restrictions.Concat(model.AggregateRestrictions).ToList();
+        if (allRestrictions.Count > 0)
+        {
+            sb.AppendLine("  Restrictions:");
+            foreach (var r in allRestrictions)
+            {
+                var flags = new System.Collections.Generic.List<string>();
+                if (r.Prompt != PromptType.None) flags.Add($"prompt={r.Prompt}");
+                if (r.Required) flags.Add("required");
+                var flagStr = flags.Count > 0 ? $" [{string.Join(", ", flags)}]" : "";
+                sb.AppendLine($"    {r.DisplayNameEl}{flagStr}");
+            }
+        }
+
+        sb.AppendLine();
+    }
+
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

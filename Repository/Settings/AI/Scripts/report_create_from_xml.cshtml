@@ -1,0 +1,152 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using System.Text.RegularExpressions
+@using System.Xml.Linq
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path      = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
+    var xml       = args.GetProperty("xml").GetString();
+    var overwrite = args.TryGetProperty("overwrite", out var op) && op.GetBoolean();
+
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+        if (path.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            { fullPath = Path.Combine(kv.Value, path.Substring(kv.Key.Length + 1)); break; }
+    if (fullPath == null) fullPath = Path.Combine(repo.ReportsFolder, path);
+    if (!fullPath.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+        fullPath += "." + Repository.SealReportFileExtension;
+
+    if (File.Exists(fullPath) && !overwrite)
+        { tool.ExecResult = $"Error: '{path}' already exists. Set overwrite=true to replace it."; return; }
+
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), (int)FolderRight.Edit))
+        { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
+
+    try
+    {
+        var doc = XDocument.Parse(xml);
+
+        // --- Validate / resolve metadata column references (guard against fabricated GUIDs) ---
+        Func<string, string> norm = s => (s ?? "").Replace("[", "").Replace("]", "").Trim().ToLowerInvariant();
+
+        var msGuid = doc.Descendants("MetaSourceGUID")
+                        .Select(e => e.Value == null ? null : e.Value.Trim())
+                        .FirstOrDefault(v => !string.IsNullOrEmpty(v));
+        var metaSource = repo.Sources.FirstOrDefault(s => string.Equals(s.GUID, msGuid, StringComparison.OrdinalIgnoreCase));
+        if (metaSource == null)
+        {
+            tool.ExecResult = $"Error: MetaSourceGUID '{msGuid}' does not match any data source. Use the GUID from datasource_list.";
+            return;
+        }
+
+        var validColGuids = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var colGuidByName = new System.Collections.Generic.Dictionary<string, string>();
+        foreach (var table in metaSource.MetaData.Tables)
+            foreach (var col in table.Columns)
+            {
+                validColGuids.Add(col.GUID);
+                colGuidByName[norm(col.Name)] = col.GUID;
+                if (!string.IsNullOrEmpty(col.DisplayName)) colGuidByName[norm(col.DisplayName)] = col.GUID;
+            }
+
+        var badRefs = new System.Collections.Generic.List<string>();
+        foreach (var mc in doc.Descendants("MetaColumnGUID").ToList())
+        {
+            var val = mc.Value == null ? "" : mc.Value.Trim();
+            if (validColGuids.Contains(val)) continue;
+
+            var refName = mc.Parent == null ? null : (string)mc.Parent.Element("Name");
+            string realGuid;
+            if (refName != null && colGuidByName.TryGetValue(norm(refName), out realGuid))
+            {
+                tool.CurrentToolCall.LogMessage($"Resolved MetaColumnGUID for '{refName.Trim()}': '{val}' -> '{realGuid}'");
+                mc.Value = realGuid;
+            }
+            else
+            {
+                badRefs.Add(refName != null ? $"'{refName.Trim()}' (supplied GUID '{val}')" : $"GUID '{val}'");
+            }
+        }
+        if (badRefs.Count > 0)
+        {
+            tool.ExecResult = "Error: these MetaColumnGUID values are not columns of source '" + metaSource.Name +
+                "': " + string.Join("; ", badRefs) +
+                ". Call datasource_get_detail and copy the exact column GUIDs - never invent or sequence GUIDs.";
+            return;
+        }
+
+        // Only regenerate internal cross-reference GUIDs.
+        // MetaSourceGUID and MetaColumnGUID must be preserved — they reference
+        // actual repository metadata objects and must be supplied correctly by the caller.
+        var internalNames = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "GUID", "ViewGUID", "SourceGUID", "ModelGUID"
+        };
+
+        // Build old→new map from all internal GUID elements
+        var guidMap = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var el in doc.Descendants())
+        {
+            if (!internalNames.Contains(el.Name.LocalName)) continue;
+            var val = el.Value?.Trim();
+            if (!string.IsNullOrEmpty(val) && !guidMap.ContainsKey(val))
+                guidMap[val] = Guid.NewGuid().ToString();
+        }
+
+        // Rewrite internal GUID elements with the new values
+        foreach (var el in doc.Descendants())
+        {
+            if (!internalNames.Contains(el.Name.LocalName)) continue;
+            var val = el.Value?.Trim();
+            if (!string.IsNullOrEmpty(val) && guidMap.TryGetValue(val, out var rep))
+                el.Value = rep;
+        }
+
+        // Rewrite GUID references inside <Restriction> and <AggregateRestriction> text.
+        // The format is [key] where key may be a real GUID or any short placeholder (e.g. f1).
+        // Match anything inside brackets and remap it if found in guidMap.
+        var restrictionNames = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "Restriction", "AggregateRestriction"
+        };
+        foreach (var el in doc.Descendants())
+        {
+            if (!restrictionNames.Contains(el.Name.LocalName) || string.IsNullOrEmpty(el.Value)) continue;
+            el.Value = Regex.Replace(el.Value,
+                @"\[([^\]]+)\]",
+                m => {
+                    var inner = m.Groups[1].Value;
+                    return guidMap.TryGetValue(inner, out var rep) ? "[" + rep + "]" : m.Value;
+                });
+        }
+
+        var sb = new StringBuilder();
+        if (doc.Declaration != null) { sb.Append(doc.Declaration).Append("\r\n"); }
+        sb.Append(doc.ToString());
+
+        var dir = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+        File.WriteAllText(fullPath, sb.ToString(), System.Text.Encoding.UTF8);
+
+        tool.ExecResult = $"Created: {path}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}
