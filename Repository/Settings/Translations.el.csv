@@ -1,0 +1,503 @@
+﻿Context;Reference;el
+NVD3;(right axis);(δεξιός άξονας)
+NVD3;Expanded;Ανεπτυγμένο
+NVD3;Grouped;Ομαδοποιημένο
+NVD3;Re-scale y-axis;Επανακλιμάκωση άξονα y
+NVD3;Stacked;Στοιβαγμένο
+NVD3;Stream;Ροή
+Report;!=;!=
+Report;# of % selected;# από % επιλεγμένα
+Report;(filtered from _MAX_);(φιλτραρισμένο από _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Απαιτείται τιμή για
+Report;All;Όλα
+Report;All selected;Όλα επιλεγμένα
+Report;and;και
+Report;Auto Fit columns;Αυτόματη προσαρμογή στηλών
+Report;Auto Scroll enabled;Αυτόματη κύλιση ενεργοποιημένη
+Report;Average of;Μέσος όρος του
+Report;Back to top;Επιστροφή στην κορυφή
+Report;Between;Μεταξύ
+Report;Cancel;Άκυρο
+Report;Cancelling report...;Ακύρωση αναφοράς...
+Report;Charts;Γραφήματα
+Report;Clear selection;Εκκαθάριση επιλογής
+Report;Close;Κλείσιμο
+Report;Contains;Περιέχει
+Report;Contains all;Περιέχει όλα
+Report;Contains any;Περιέχει οποιοδήποτε
+Report;Count Distinct of;Πλήθος διακριτών του
+Report;Count of;Πλήθος του
+Report;Decrement;Μείωση
+Report;Description;Περιγραφή
+Report;Display header footer;Εμφάνιση κεφαλίδας υποσέλιδου
+Report;Display: Execution messages;Εμφάνιση: Μηνύματα εκτέλεσης
+Report;Display: Execution messages;Εμφάνιση: Μηνύματα εκτέλεσης
+Report;Display: Information messages;Εμφάνιση: Μηνύματα πληροφοριών
+Report;Display: Information messages;Εμφάνιση: Μηνύματα πληροφοριών
+Report;Does not contain;Δεν περιέχει
+Report;Does not contain all;Δεν περιέχει όλα
+Report;Does not contain any;Δεν περιέχει κανένα
+Report;Drill <;Διερεύνηση <
+Report;Drill >;Διερεύνηση >
+Report;Duration;Διάρκεια
+Report;Duration (seconds);Διάρκεια (δευτερόλεπτα)
+Report;Email sent to '{0}';Το email στάλθηκε στο '{0}'
+Report;Ends with;Τελειώνει με
+Report;Equals;Ισούται
+Report;Execute;Εκτέλεση
+Report;Executing report...;Εκτέλεση αναφοράς...
+Report;Execution date;Ημερομηνία εκτέλεσης
+Report;Execution duration;Διάρκεια εκτέλεσης
+Report;execution messages;μηνύματα εκτέλεσης
+Report;Export messages...;Εξαγωγή μηνυμάτων...
+Report;Filter:;Φίλτρο:
+Report;Go to today;Μετάβαση στο σήμερα
+Report;Goal;Στόχος
+Report;Hide;Απόκρυψη
+Report;HTML Print: Show messages;Εκτύπωση HTML: Εμφάνιση μηνυμάτων
+Report;HTML Print: Show messages;Εκτύπωση HTML: Εμφάνιση μηνυμάτων
+Report;HTML Print: Show report information;Εκτύπωση HTML: Εμφάνιση πληροφοριών αναφοράς
+Report;HTML Print: Show report information;Εκτύπωση HTML: Εμφάνιση πληροφοριών αναφοράς
+Report;HTML to PDF;HTML σε PDF
+Report;Increment;Αύξηση
+Report;Information panel enabled;Πίνακας πληροφοριών ενεργοποιημένος
+Report;Information panel enabled and shown;Πίνακας πληροφοριών ενεργοποιημένος και εμφανιζόμενος
+Report;Information panel hidden;Πίνακας πληροφοριών κρυμμένος
+Report;Invalid date;Μη έγκυρη ημερομηνία
+Report;Invalid numeric value;Μη έγκυρη αριθμητική τιμή
+Report;Is between;Είναι μεταξύ
+Report;Is Blank;Είναι κενό
+Report;Is different from;Είναι διαφορετικό από
+Report;Is empty;Είναι άδειο
+Report;Is greater or equal than;Είναι μεγαλύτερο ή ίσο από
+Report;Is greater than;Είναι μεγαλύτερο από
+Report;Is not between;Δεν είναι μεταξύ
+Report;Is Not Blank;Δεν είναι κενό
+Report;Is not empty;Δεν είναι άδειο
+Report;Is not Null;Δεν είναι Null
+Report;Is Null;Είναι Null
+Report;Is smaller or equal than;Είναι μικρότερο ή ίσο από
+Report;Is smaller than;Είναι μικρότερο από
+Report;Landscape;Οριζόντιος
+Report;Logs;Αρχεία καταγραφής
+Report;Maximum of;Μέγιστο του
+Report;Messages panel enabled;Πίνακας μηνυμάτων ενεργοποιημένος
+Report;Messages panel enabled and shown;Πίνακας μηνυμάτων ενεργοποιημένος και εμφανιζόμενος
+Report;Messages panel enabled and shown only during execution;Πίνακας μηνυμάτων ενεργοποιημένος και εμφανιζόμενος μόνο κατά την εκτέλεση
+Report;Messages panel hidden;Πίνακας μηνυμάτων κρυμμένος
+Report;Minimum of;Ελάχιστο του
+Report;Model;Μοντέλο
+Report;Model loaded...;Το μοντέλο φορτώθηκε...
+Report;Models loaded...;Τα μοντέλα φορτώθηκαν...
+Report;New report;Νέα αναφορά
+Report;Next Century;Επόμενος αιώνας
+Report;Next Decade;Επόμενη δεκαετία
+Report;Next Month;Επόμενος μήνας
+Report;Next Year;Επόμενο έτος
+Report;No;Όχι
+Report;No records;Καμία εγγραφή
+Report;No records. The report output generation has been cancelled.;Καμία εγγραφή. Η δημιουργία αποτελέσματος αναφοράς ακυρώθηκε.
+Report;No reports;Καμία αναφορά
+Report;No rows;Καμία γραμμή
+Report;Not Between;Όχι μεταξύ
+Report;Not Contains;Δεν περιέχει
+Report;Now;Τώρα
+Report;Options;Επιλογές
+Report;or;ή
+Report;Page;Σελίδα
+Report;"Page &p; of &P;";"Σελίδα &p; από &P;"
+Report;Page orientation;Προσανατολισμός σελίδας
+Report;Page size;Μέγεθος σελίδας
+Report;Pages;Σελίδες
+Report;Pick Hour;Επιλογή ώρας
+Report;Pick Minute;Επιλογή λεπτού
+Report;Pick Second;Επιλογή δευτερολέπτου
+Report;Please enter a value;Παρακαλώ εισάγετε μια τιμή
+Report;Please enter at least a value;Παρακαλώ εισάγετε τουλάχιστον μία τιμή
+Report;Please find the report '{0}' in attachment.;Θα βρείτε την αναφορά '{0}' στο συνημμένο.
+Report;Please find your authentication code;Θα βρείτε τον κωδικό ταυτοποίησής σας
+Report;Please wait, the report result is being generated in another window;Παρακαλώ περιμένετε, το αποτέλεσμα της αναφοράς δημιουργείται σε άλλο παράθυρο
+Report;Previous Century;Προηγούμενος αιώνας
+Report;Previous Decade;Προηγούμενη δεκαετία
+Report;Previous Month;Προηγούμενος μήνας
+Report;Previous Year;Προηγούμενο έτος
+Report;Print: Page orientation;Εκτύπωση: Προσανατολισμός σελίδας
+Report;Print: Show logo;Εκτύπωση: Εμφάνιση λογότυπου
+Report;Processing;Επεξεργασία
+Report;Processing...;Επεξεργασία...
+Report;Records;Εγγραφές
+Report;Refresh;Ανανέωση
+Report;Report;Αναφορά
+Report;Report description;Περιγραφή αναφοράς
+Report;Report has been cancelled;Η αναφορά ακυρώθηκε
+Report;report information;πληροφορίες αναφοράς
+Report;report restrictions;περιορισμοί αναφοράς
+Report;Report result generated in '{0}';Το αποτέλεσμα της αναφοράς δημιουργήθηκε σε '{0}'
+Report;Report result options;Επιλογές αποτελέσματος αναφοράς
+Report;report result panel;πίνακας αποτελέσματος αναφοράς
+Report;Report summary;Σύνοψη αναφοράς
+Report;Restrictions;Περιορισμοί
+Report;Results;Αποτελέσματα
+Report;Scale;Κλίμακα
+Report;second;δευτερόλεπτο
+Report;seconds;δευτερόλεπτα
+Report;Select all;Επιλογή όλων
+Report;Select Decade;Επιλογή δεκαετίας
+Report;Select Month;Επιλογή μήνα
+Report;Select Time;Επιλογή ώρας
+Report;Select Year;Επιλογή έτους
+Report;Show;Εμφάνιση
+Report;Show _MENU_ reports;Εμφάνιση _MENU_ αναφορών
+Report;Show _MENU_ rows;Εμφάνιση _MENU_ γραμμών
+Report;Show messages;Εμφάνιση μηνυμάτων
+Report;Show messages;Εμφάνιση μηνυμάτων
+Report;Show report information;Εμφάνιση πληροφοριών αναφοράς
+Report;Show report information;Εμφάνιση πληροφοριών αναφοράς
+Report;Show/Hide Restrictions;Εμφάνιση/Απόκρυψη περιορισμών
+Report;Showing _START_ to _END_ of _TOTAL_;Εμφάνιση _START_ έως _END_ από _TOTAL_
+Report;Showing 0 to 0 of 0;Εμφάνιση 0 έως 0 από 0
+Report;Starting execution...;Έναρξη εκτέλεσης...
+Report;Starts with;Ξεκινά με
+Report;Subtotal;Μερικό σύνολο
+Report;Sum of;Άθροισμα του
+Report;Summary;Σύνοψη
+Report;Table of Contents;Πίνακας περιεχομένων
+Report;Tabs to show;Καρτέλες προς εμφάνιση
+Report;Task executed...;Η εργασία εκτελέστηκε...
+Report;Tasks executed...;Οι εργασίες εκτελέστηκαν...
+Report;The report has been generated.;Η αναφορά δημιουργήθηκε.
+Report;This report has execution errors. Please check details in the Logs Files...;Αυτή η αναφορά έχει σφάλματα εκτέλεσης. Παρακαλώ ελέγξτε τις λεπτομέρειες στα αρχεία καταγραφής...
+Report;ThisHour;ΑυτήΗΏρα
+Report;ThisMinute;ΑυτόΤοΛεπτό
+Report;ThisMonth;ΑυτόςΟΜήνας
+Report;ThisQuarter;ΑυτόΤοΤρίμηνο
+Report;ThisSemester;ΑυτόΤοΕξάμηνο
+Report;ThisWeek;ΑυτήΗΕβδομάδα
+Report;ThisYear;ΑυτόΤοΈτος
+Report;Today;Σήμερα
+Report;Toggle Period;Εναλλαγή περιόδου
+Report;Total;Σύνολο
+Report;Use the date format '{0}' or one of the following keywords:;Χρησιμοποιήστε τη μορφή ημερομηνίας '{0}' ή μία από τις παρακάτω λέξεις-κλειδιά:
+Report;View;Προβολή
+Report;View CSV Result;Προβολή αποτελέσματος CSV
+Report;View Excel Converter Result;Προβολή αποτελέσματος μετατροπέα Excel
+Report;View Excel Result;Προβολή αποτελέσματος Excel
+Report;View HTML Print Result;Προβολή αποτελέσματος εκτύπωσης HTML
+Report;View HTML Result;Προβολή αποτελέσματος HTML
+Report;View HTML to PDF Result;Προβολή αποτελέσματος HTML σε PDF
+Report;View Json Result;Προβολή αποτελέσματος Json
+Report;View PDF Converter Result;Προβολή αποτελέσματος μετατροπέα PDF
+Report;View PDF Result;Προβολή αποτελέσματος PDF
+Report;View report result file;Προβολή αρχείου αποτελέσματος αναφοράς
+Report;View Text Result;Προβολή αποτελέσματος κειμένου
+Report;View XML Result;Προβολή αποτελέσματος XML
+Report;Warning: The maximum number of records is reached;Προειδοποίηση: Έχει επιτευχθεί ο μέγιστος αριθμός εγγραφών
+Report;Yes;Ναι
+Web;Add;Προσθήκη
+Web;All;Όλα
+Web;Auto-Refresh (seconds);Αυτόματη ανανέωση (δευτερόλεπτα)
+Web;Back to login with user name and password;Επιστροφή στη σύνδεση με όνομα χρήστη και κωδικό
+Web;Cancel;Άκυρο
+Web;Change password;Αλλαγή κωδικού
+Web;Change password;Αλλαγή κωδικού
+Web;Change your password;Αλλάξτε τον κωδικό σας
+Web;Chart sort;Ταξινόμηση γραφήματος
+Web;Close;Κλείσιμο
+Web;Color;Χρώμα
+Web;Confirm your new password;Επιβεβαιώστε τον νέο κωδικό σας
+Web;Copy;Αντιγραφή
+Web;Create in folder;Δημιουργία σε φάκελο
+Web;Create new folder;Δημιουργία νέου φακέλου
+Web;CSS Format;Μορφή CSS
+Web;Culture;Τοπικές ρυθμίσεις
+Web;Current password;Τρέχων κωδικός
+Web;Cut;Αποκοπή
+Web;Data source connections;Συνδέσεις πηγής δεδομένων
+Web;Default view;Προεπιλεγμένη προβολή
+Web;Delete;Διαγραφή
+Web;Delete folder;Διαγραφή φακέλου
+Web;Description;Περιγραφή
+Web;Device;Συσκευή
+Web;Disconnect;Αποσύνδεση
+Web;Display options;Επιλογές εμφάνισης
+Web;Edit;Επεξεργασία
+Web;Edit configuration;Επεξεργασία διαμόρφωσης
+Web;Edit entry;Επεξεργασία καταχώρισης
+Web;Edit profile;Επεξεργασία προφίλ
+Web;Edition;Έκδοση
+Web;Email;Email
+Web;Enter password;Εισαγωγή κωδικού
+Web;Enter user name;Εισαγωγή ονόματος χρήστη
+Web;Enter your current password;Εισάγετε τον τρέχοντα κωδικό σας
+Web;Enter your new file name;Εισάγετε το νέο όνομα αρχείου σας
+Web;Enter your new password;Εισάγετε τον νέο κωδικό σας
+Web;Enter your security code;Εισάγετε τον κωδικό ασφαλείας σας
+Web;Enter your user identifier or email;Εισάγετε το αναγνωριστικό χρήστη ή το email σας
+Web;Error;Σφάλμα
+Web;Error: only files (and not reports) can be copied to this folder.;Σφάλμα: μόνο αρχεία (και όχι αναφορές) μπορούν να αντιγραφούν σε αυτόν τον φάκελο.
+Web;Error: the destination file name contains invalid characters.;Σφάλμα: το όνομα του αρχείου προορισμού περιέχει μη έγκυρους χαρακτήρες.
+Web;Error: the destination folder name contains invalid characters.;Σφάλμα: το όνομα του φακέλου προορισμού περιέχει μη έγκυρους χαρακτήρες.
+Web;Expand in Treeview;Ανάπτυξη στην προβολή δέντρου
+Web;Export;Εξαγωγή
+Web;Files only;Μόνο αρχεία
+Web;Folder Permissions;Δικαιώματα φακέλου
+Web;Folders;Φάκελοι
+Web;Forget your password ?;"Ξεχάσατε τον κωδικό σας;"
+Web;Group name;Όνομα ομάδας
+Web;Group name;Όνομα ομάδας
+Web;Groups;Ομάδες
+Web;Groups;Ομάδες
+Web;Height;Ύψος
+Web;Icon;Εικονίδιο
+Web;Information;Πληροφορίες
+Web;Invalid security code;Μη έγκυρος κωδικός ασφαλείας
+Web;Invalid user name or password;Μη έγκυρο όνομα χρήστη ή κωδικός
+Web;Is dynamic;Είναι δυναμικό
+Web;Last execution at;Τελευταία εκτέλεση στις
+Web;Licensed to;Άδεια χρήσης σε
+Web;Login;Σύνδεση
+Web;Login ID;Αναγνωριστικό σύνδεσης
+Web;Logins;Συνδέσεις
+Web;Logout;Αποσύνδεση
+Web;Logout the user;Αποσύνδεση χρήστη
+Web;Manage Folders;Διαχείριση φακέλων
+Web;Manage sub-folders;Διαχείριση υποφακέλων
+Web;Name;Όνομα
+Web;New;Νέο
+Web;New folder name;Όνομα νέου φακέλου
+Web;New folder path;Διαδρομή νέου φακέλου
+Web;New password;Νέος κωδικός
+Web;None;Κανένα
+Web;OK;OK
+Web;On startup;Κατά την εκκίνηση
+Web;Optional chart title;Προαιρετικός τίτλος γραφήματος
+Web;Optional menu name;Προαιρετικό όνομα μενού
+Web;Output;Έξοδος
+Web;Password;Κωδικός
+Web;Paste;Επικόλληση
+Web;PDF Conversion delay;Καθυστέρηση μετατροπής PDF
+Web;Personal;Προσωπικό
+Web;Personal folder;Προσωπικός φάκελος
+Web;Phone;Τηλέφωνο
+Web;Please wait;Παρακαλώ περιμένετε
+Web;Profile;Προφίλ
+Web;Profile information;Πληροφορίες προφίλ
+Web;Refresh;Ανανέωση
+Web;Re-init your password;Επαναφορά του κωδικού σας
+Web;Reload and execute;Επαναφόρτωση και εκτέλεση
+Web;Rename;Μετονομασία
+Web;Rename or move folder;Μετονομασία ή μετακίνηση φακέλου
+Web;Rename, move or copy;Μετονομασία, μετακίνηση ή αντιγραφή
+Web;Report;Αναφορά
+Web;Report execution mode;Λειτουργία εκτέλεσης αναφοράς
+Web;Report name;Όνομα αναφοράς
+Web;Report title;Τίτλος αναφοράς
+Web;Report title if different from report name;Τίτλος αναφοράς εάν διαφέρει από το όνομα αναφοράς
+Web;Reports;Αναφορές
+Web;Reports menu;Μενού αναφορών
+Web;Repository connection;Σύνδεση αποθετηρίου
+Web;Reset password;Επαναφορά κωδικού
+Web;Reset your password;Επαναφέρετε τον κωδικό σας
+Web;Save;Αποθήκευση
+Web;Search;Αναζήτηση
+Web;Security code;Κωδικός ασφαλείας
+Web;Show sub-folders;Εμφάνιση υποφακέλων
+Web;Startup report name;Όνομα αναφοράς εκκίνησης
+Web;The favorite has been updated;Το αγαπημένο ενημερώθηκε
+Web;Two-Factor Authentication;Έλεγχος ταυτότητας δύο παραγόντων
+Web;Type;Τύπος
+Web;Type a new password;Πληκτρολογήστε έναν νέο κωδικό
+Web;Upload;Μεταφόρτωση
+Web;User groups;Ομάδες χρηστών
+Web;User identifier or email;Αναγνωριστικό χρήστη ή email
+Web;User name;Όνομα χρήστη
+Web;Users;Χρήστες
+Web;Web product name;Όνομα προϊόντος Web
+Web;Width;Πλάτος
+WebJS;# of % selected;# από % επιλεγμένα
+WebJS;Actions;Ενέργειες
+WebJS;All selected;Όλα επιλεγμένα
+WebJS;Allow only execution in a new window;Να επιτρέπεται η εκτέλεση μόνο σε νέο παράθυρο
+WebJS;Cancel;Άκυρο
+WebJS;Configuration for;Διαμόρφωση για
+WebJS;Contains;Περιέχει
+WebJS;Contains all;Περιέχει όλα
+WebJS;Contains any;Περιέχει οποιοδήποτε
+WebJS;Copy;Αντιγραφή
+WebJS;Copy of;Αντίγραφο του
+WebJS;Copy to;Αντιγραφή σε
+WebJS;Default;Προεπιλογή
+WebJS;Default culture;Προεπιλεγμένες τοπικές ρυθμίσεις
+WebJS;Default mode;Προεπιλεγμένη λειτουργία
+WebJS;Default report connection;Προεπιλεγμένη σύνδεση αναφοράς
+WebJS;Default repository connection;Προεπιλεγμένη σύνδεση αποθετηρίου
+WebJS;Default startup;Προεπιλεγμένη εκκίνηση
+WebJS;Do not execute report;Να μην εκτελεστεί η αναφορά
+WebJS;Do you really want to delete the reports or files selected ?;"Θέλετε πραγματικά να διαγράψετε τις επιλεγμένες αναφορές ή αρχεία;"
+WebJS;Does not contain;Δεν περιέχει
+WebJS;Does not contain all;Δεν περιέχει όλα
+WebJS;Does not contain any;Δεν περιέχει κανένα
+WebJS;Download report;Λήψη αναφοράς
+WebJS;Edit report;Επεξεργασία αναφοράς
+WebJS;Edit reports / Manage files;Επεξεργασία αναφορών / Διαχείριση αρχείων
+WebJS;Edit schedules / View files;Επεξεργασία προγραμματισμών / Προβολή αρχείων
+WebJS;Ends with;Τελειώνει με
+WebJS;Equals;Ισούται
+WebJS;Error;Σφάλμα
+WebJS;Execute report in a new window;Εκτέλεση αναφοράς σε νέο παράθυρο
+WebJS;Execute report in the current window;Εκτέλεση αναφοράς στο τρέχον παράθυρο
+WebJS;Execute reports / View files;Εκτέλεση αναφορών / Προβολή αρχείων
+WebJS;Execute reports and outputs / View files;Εκτέλεση αναφορών και εξόδων / Προβολή αρχείων
+WebJS;Execute the last report;Εκτέλεση της τελευταίας αναφοράς
+WebJS;Execute the report;Εκτέλεση της αναφοράς
+WebJS;Favorites;Αγαπημένα
+WebJS;Folder;Φάκελος
+WebJS;Is between;Είναι μεταξύ
+WebJS;Is different from;Είναι διαφορετικό από
+WebJS;Is empty;Είναι άδειο
+WebJS;Is greater or equal than;Είναι μεγαλύτερο ή ίσο από
+WebJS;Is greater than;Είναι μεγαλύτερο από
+WebJS;Is not between;Δεν είναι μεταξύ
+WebJS;Is not empty;Δεν είναι άδειο
+WebJS;Is not Null;Δεν είναι Null
+WebJS;Is Null;Είναι Null
+WebJS;Is smaller or equal than;Είναι μικρότερο ή ίσο από
+WebJS;Is smaller than;Είναι μικρότερο από
+WebJS;Last modification;Τελευταία τροποποίηση
+WebJS;Mark as favorite;Σήμανση ως αγαπημένο
+WebJS;Model;Μοντέλο
+WebJS;New folder configuration;Διαμόρφωση νέου φακέλου
+WebJS;New group;Νέα ομάδα
+WebJS;New login;Νέα σύνδεση
+WebJS;No;Όχι
+WebJS;No download (except files) or upload;Χωρίς λήψη (εκτός αρχείων) ή μεταφόρτωση
+WebJS;No folder configuration;Χωρίς διαμόρφωση φακέλου
+WebJS;No login;Χωρίς σύνδεση
+WebJS;No personal folder;Χωρίς προσωπικό φάκελο
+WebJS;No right;Κανένα δικαίωμα
+WebJS;None;Κανένα
+WebJS;Not sorted;Χωρίς ταξινόμηση
+WebJS;OK;OK
+WebJS;Options;Επιλογές
+WebJS;Output;Έξοδος
+WebJS;Personal folder for files only;Προσωπικός φάκελος μόνο για αρχεία
+WebJS;Personal folder for reports and files;Προσωπικός φάκελος για αναφορές και αρχεία
+WebJS;Please wait;Παρακαλώ περιμένετε
+WebJS;Processing;Επεξεργασία
+WebJS;Profile;Προφίλ
+WebJS;Recents;Πρόσφατα
+WebJS;Report;Αναφορά
+WebJS;report(s) or file(s) cut in the clipboard;αναφορά(ές) ή αρχείο(α) αποκόπηκαν στο πρόχειρο
+WebJS;report(s) or file(s) have been deleted;αναφορά(ές) ή αρχείο(α) διαγράφηκαν
+WebJS;report(s) or file(s) processed;αναφορά(ές) ή αρχείο(α) επεξεργάστηκαν
+WebJS;report(s) or files(s) copied in the clipboard;αναφορά(ές) ή αρχείο(α) αντιγράφηκαν στο πρόχειρο
+WebJS;Reports;Αναφορές
+WebJS;Schedule;Προγραμματισμός
+WebJS;Server Version;Έκδοση διακομιστή
+WebJS;Show _MENU_ reports;Εμφάνιση _MENU_ αναφορών
+WebJS;Starts with;Ξεκινά με
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Η διαμόρφωση αποθηκεύτηκε. Παρακαλώ συνδεθείτε ξανά εάν επηρεάζεστε από την ασφάλεια.
+WebJS;The folder has been created;Ο φάκελος δημιουργήθηκε
+WebJS;The folder has been deleted;Ο φάκελος διαγράφηκε
+WebJS;The folder has been renamed;Ο φάκελος μετονομάστηκε
+WebJS;The folder has been updated;Ο φάκελος ενημερώθηκε
+WebJS;The report or file has been renamed;Η αναφορά ή το αρχείο μετονομάστηκε
+WebJS;Toggle Report or Folders view;Εναλλαγή προβολής αναφοράς ή φακέλων
+WebJS;Unexpected error on server;Μη αναμενόμενο σφάλμα στον διακομιστή
+WebJS;User can download reports;Ο χρήστης μπορεί να κατεβάσει αναφορές
+WebJS;User can download reports and upload reports and files;Ο χρήστης μπορεί να κατεβάσει αναφορές και να μεταφορτώσει αναφορές και αρχεία
+WebJS;View;Προβολή
+WebJS;View Folders;Προβολή φακέλων
+WebJS;View Report;Προβολή αναφοράς
+WebJS;View reports;Προβολή αναφορών
+WebJS;Views and outputs;Προβολές και έξοδοι
+WebJS;Warning;Προειδοποίηση
+WebJS;Web Interface Version;Έκδοση διεπαφής Web
+WebJS;Yes;Ναι
+WebJS;Yes (Folder is expanded in the tree view);Ναι (Ο φάκελος είναι ανεπτυγμένος στην προβολή δέντρου)
+WebJS;Yes (Only files can be stored);Ναι (Μόνο αρχεία μπορούν να αποθηκευτούν)
+WebJS;Yes (User can browse sub-folders);Ναι (Ο χρήστης μπορεί να περιηγηθεί σε υποφακέλους)
+WebJS;Yes (User can create and edit sub-folders);Ναι (Ο χρήστης μπορεί να δημιουργεί και να επεξεργάζεται υποφακέλους)
+WebJS;Yes (User can edit his profile);Ναι (Ο χρήστης μπορεί να επεξεργαστεί το προφίλ του)
+WebJS;Yes (User is administrator of the Web Server);Ναι (Ο χρήστης είναι διαχειριστής του διακομιστή Web)
+Web;Select assistant;Επιλογή βοηθού
+Web;Mark as favorite;Σήμανση ως αγαπημένο
+Web;Favorites;Αγαπημένα
+Web;No favorites yet;Δεν υπάρχουν αγαπημένα ακόμη
+Web;Recent;Πρόσφατα
+Web;No recent items;Δεν υπάρχουν πρόσφατα στοιχεία
+Web;New conversation;Νέα συνομιλία
+Web;Sample prompts;Δείγματα προτροπών
+Web;Sample Prompts;Δείγματα προτροπών
+Web;No sample prompts defined;Δεν έχουν οριστεί δείγματα προτροπών
+Web;AI Assistant;Βοηθός AI
+Web;Favorites & Recent;Αγαπημένα & Πρόσφατα
+Web;Hide panel;Απόκρυψη πίνακα
+Web;Ask the AI assistant…;Ρωτήστε τον βοηθό AI…
+Web;Confirm Deletion;Επιβεβαίωση διαγραφής
+Web;This action is irreversible. Are you sure you want to delete this item?;"Αυτή η ενέργεια είναι μη αναστρέψιμη. Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το στοιχείο;"
+Web;Data Source;Πηγή δεδομένων
+Web;Report Assistants;Βοηθοί αναφορών
+Web;Select Tables or Views;Επιλογή πινάκων ή προβολών
+Web;Filter tables...;Φιλτράρισμα πινάκων...
+Web;Select All;Επιλογή όλων
+Web;Deselect All;Αποεπιλογή όλων
+Web;tables selected;πίνακες επιλεγμένοι
+Web;Prompt Shortcuts;Συντομεύσεις προτροπών
+Web;How can Seal AI help you today ?;"Πώς μπορεί το Seal AI να σας βοηθήσει σήμερα;"
+Web;No current items available;Δεν υπάρχουν διαθέσιμα τρέχοντα στοιχεία
+Web;Current items will appear here when saved;Τα τρέχοντα στοιχεία θα εμφανιστούν εδώ όταν αποθηκευτούν
+Web;Drafts;Πρόχειρα
+Web;No draft items available;Δεν υπάρχουν διαθέσιμα πρόχειρα στοιχεία
+Web;Upload files or create new items with the assistant to see them here;Μεταφορτώστε αρχεία ή δημιουργήστε νέα στοιχεία με τον βοηθό για να τα δείτε εδώ
+Web;Item Details;Λεπτομέρειες στοιχείου
+Web;Loading detail. Please wait...;Φόρτωση λεπτομερειών. Παρακαλώ περιμένετε...
+Web;Select a row from the table to view its details;Επιλέξτε μια γραμμή από τον πίνακα για να δείτε τις λεπτομέρειές της
+Web;Check;Έλεγχος
+Web;Download;Λήψη
+Web;Reports Assistant;Βοηθός αναφορών
+Web;Connection type;Τύπος σύνδεσης
+Web;Connection string;Συμβολοσειρά σύνδεσης
+Web;Tables or views;Πίνακες ή προβολές
+Web;Report Assistant;Βοηθός αναφοράς
+Web;AI Provider;Πάροχος AI
+Web;AI model;Μοντέλο AI
+Web;AI model name (overrides default));Όνομα μοντέλου AI (παρακάμπτει την προεπιλογή))
+Web;Temperature;Θερμοκρασία
+Web;Model temperature;Θερμοκρασία μοντέλου
+Web;System prompt;Προτροπή συστήματος
+Web;Optional sytem prompt for the assistant;Προαιρετική προτροπή συστήματος για τον βοηθό
+Web;User prompt;Προτροπή χρήστη
+Web;Default user prompts (if empty default values configured are taken);Προεπιλεγμένες προτροπές χρήστη (εάν είναι κενές, λαμβάνονται οι διαμορφωμένες προεπιλεγμένες τιμές)
+Web;User Groups allowed (No selection means no restriction);Επιτρεπόμενες ομάδες χρηστών (Καμία επιλογή σημαίνει κανένας περιορισμός)
+Web;Scan options;Επιλογές σάρωσης
+Web;When to scan;Πότε να γίνει σάρωση
+Web;Cache duration (days);Διάρκεια προσωρινής μνήμης (ημέρες)
+Web;Cache duration (days) for scanned data;Διάρκεια προσωρινής μνήμης (ημέρες) για σαρωμένα δεδομένα
+Web;Tables to scan (no selection means all tables);Πίνακες προς σάρωση (καμία επιλογή σημαίνει όλοι οι πίνακες)
+Web;Records to scan;Εγγραφές προς σάρωση
+Web;Number of records used for scan;Αριθμός εγγραφών που χρησιμοποιούνται για τη σάρωση
+Web;Scan Data Now;Σάρωση δεδομένων τώρα
+Web;Execute;Εκτέλεση
+Web;Elements:;Στοιχεία:
+Web;Restrictions:;Περιορισμοί:
+WebJS;Hide AI Assistant;Απόκρυψη βοηθού AI
+WebJS;AI Assistant;Βοηθός AI
+WebJS;Running;Εκτελείται
+WebJS;Request cancelled.;Το αίτημα ακυρώθηκε.
+WebJS;Remove from favorites;Αφαίρεση από τα αγαπημένα
+WebJS;No sample prompts defined;Δεν έχουν οριστεί δείγματα προτροπών
+WebJS;Rename;Μετονομασία
+WebJS;Delete;Διαγραφή
+WebJS;No favorites yet;Δεν υπάρχουν αγαπημένα ακόμη
+WebJS;No recent items;Δεν υπάρχουν πρόσφατα στοιχεία
+Web;Configuration;Διαμόρφωση
+Web;Download/Upload;Λήψη/Μεταφόρτωση
+Web;Rights;Δικαιώματα
+Web;Assistants;Βοηθοί
+Web;Folder;Φάκελος
