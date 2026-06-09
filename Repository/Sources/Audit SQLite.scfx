@@ -205,6 +205,81 @@
           </MetaColumn>
         </Columns>
       </MetaTable>
+      <MetaTable>
+        <GUID>7e57ab1e-0000-4000-8000-000000000001</GUID>
+        <Name>sr_test_results</Name>
+        <Type>TABLE</Type>
+        <Columns>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000102</GUID>
+            <Name>sr_test_results.run_date</Name>
+            <Type>DateTime</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Run date</DisplayName>
+            <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
+            <Format>G</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000101</GUID>
+            <Name>sr_test_results.run_id</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Run id</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <EnumGUID>f1ac144f-dc41-49d0-b673-3776b14fd75a</EnumGUID>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000104</GUID>
+            <Name>sr_test_results.report_name</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Report</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000103</GUID>
+            <Name>sr_test_results.report_path</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Path</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000105</GUID>
+            <Name>sr_test_results.status</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Status</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <EnumGUID>7e57ab1e-0000-4000-8000-000000000201</EnumGUID>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000106</GUID>
+            <Name>sr_test_results.duration_seconds</Name>
+            <Type>Numeric</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Duration</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000107</GUID>
+            <Name>sr_test_results.error</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Error</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000108</GUID>
+            <Name>sr_test_results.messages_file</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Messages file</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
     </Tables>
     <Enums>
       <MetaEnum>
@@ -306,6 +381,42 @@ ORDER BY 1</Sql>
             <Val>Web (Report)</Val>
           </MetaEV>
         </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>7e57ab1e-0000-4000-8000-000000000201</GUID>
+        <Name>Test status</Name>
+        <Sql>SELECT DISTINCT
+sr_test_results.status, sr_test_results.status
+FROM sr_test_results
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>Success</Id>
+            <Val>Success</Val>
+            <Class>success</Class>
+          </MetaEV>
+          <MetaEV>
+            <Id>Error</Id>
+            <Val>Error</Val>
+            <Class>danger</Class>
+          </MetaEV>
+          <MetaEV>
+            <Id>LoadError</Id>
+            <Val>Load Error</Val>
+            <Class>warning</Class>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>f1ac144f-dc41-49d0-b673-3776b14fd75a</GUID>
+        <Name>Run</Name>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>true</IsDbRefresh>
+        <Sql>SELECT DISTINCT 
+run_id,
+run_date
+FROM sr_test_results 
+ORDER BY 2 DESC</Sql>
       </MetaEnum>
     </Enums>
   </MetaData>

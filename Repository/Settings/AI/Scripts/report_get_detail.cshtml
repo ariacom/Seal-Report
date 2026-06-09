@@ -95,6 +95,37 @@
         sb.AppendLine();
     }
 
+    // Outputs
+    if (report.Outputs.Count > 0)
+    {
+        sb.AppendLine("## Outputs");
+        foreach (var output in report.Outputs)
+        {
+            var formatParam = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
+            var fmt = formatParam != null ? formatParam.Value : "html";
+            string deviceType =
+                output.Device is OutputFolderDevice     ? "folder" :
+                output.Device is OutputEmailDevice      ? "email"  :
+                output.Device is OutputFileServerDevice ? "ftp"    : "other";
+            sb.AppendLine($"  Output '{output.Name}' [{deviceType}] (outputGUID='{output.GUID}', device='{output.Device?.Name}'): folder='{output.FolderPath}', file='{output.FileName}', format='{fmt}'");
+        }
+        sb.AppendLine();
+    }
+
+    // Schedules
+    if (report.Schedules.Count > 0)
+    {
+        sb.AppendLine("## Schedules");
+        foreach (var schedule in report.Schedules)
+        {
+            var schedInfo = Repository.Instance.UseSealScheduler
+                ? $"type={schedule.SealType}, start={schedule.SealStart:yyyy-MM-dd HH:mm}, enabled={schedule.SealEnabled}"
+                : $"Windows Task Scheduler (task: {schedule.TaskName})";
+            sb.AppendLine($"  Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}', outputGUID='{schedule.OutputGUID}'): {schedInfo}");
+        }
+        sb.AppendLine();
+    }
+
     tool.ExecResult = sb.ToString();
     tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }

@@ -23,6 +23,7 @@ namespace Seal.Forms
                 .Select(a => a.Name)
                 .OrderBy(n => n)
                 .ToList();
+            names.Insert(0, AIAssistantConfiguration.FirstEnabledName);
             return new StandardValuesCollection(names);
         }
 
@@ -32,6 +33,8 @@ namespace Seal.Forms
         {
             if (value != null)
             {
+                if (string.IsNullOrEmpty(value.ToString()))
+                    return AIAssistantConfiguration.FirstEnabledName;
                 var assistant = Repository.Instance.AIConfiguration.AIAssistants
                     .FirstOrDefault(a => a.GUID == value.ToString());
                 if (assistant != null) return assistant.Name;
@@ -45,6 +48,8 @@ namespace Seal.Forms
         {
             if (value != null)
             {
+                if (value.ToString() == AIAssistantConfiguration.FirstEnabledName)
+                    return "";
                 var assistant = Repository.Instance.AIConfiguration.AIAssistants
                     .FirstOrDefault(a => a.Name == value.ToString());
                 if (assistant != null) return assistant.GUID;

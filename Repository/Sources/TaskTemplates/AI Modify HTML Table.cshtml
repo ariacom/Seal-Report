@@ -12,6 +12,7 @@
     task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "", DisplayName = "Additional user prompt", Description = "Additional user information sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "view_name", Value = "", DisplayName = "View name", Description = "The name of the view whose HTML table should be modified. Must match exactly the view name in the report. Server pagination must be disabled in the root Execution view." });
     task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
+    task.Parameters.Add(new Parameter() { Name = "log_ai_tools", BoolValue = false, DisplayName = "Log tool calls", Description = "If enabled, logs the tool calls (arguments and results) executed by the assistant to the task execution log." });
 
     task.Script = @"@using Seal.AI;
 @using System.IO;
@@ -32,6 +33,7 @@
     var userAdditional = task.GetValue(""ai_user_additional"");
     var viewName = task.GetValue(""view_name"");
     var logRequests = task.GetBoolValue(""log_ai_requests"", false);
+    var logTools = task.GetBoolValue(""log_ai_tools"", false);
 
     system += $""\r\n{systemAdditional}"";
 
@@ -62,9 +64,11 @@
             task.LogMessage($""[AI Request {system.Length}] System:\r\n{system}"");
             task.LogMessage($""[AI Request {user.Length}] User:\r\n{user}"");
         }
+        ReportExecutionLog requestLog = logRequests ? report : null;
+        ReportExecutionLog toolsLog = logTools ? report : null;
         var assistant = new AIAssistant(assistantName);
         assistant.OverrideSystemPrompt(system);
-        var aiResult = assistant.Chat(user);
+        var aiResult = assistant.Chat(user, report, requestLog, toolsLog);
         if (logRequests) task.LogMessage($""[AI Response]\r\n{aiResult}"");
         element.InnerHtml = aiResult;
 

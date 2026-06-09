@@ -130,6 +130,35 @@
             return;
         }
 
+        // ── FTP / FILE SERVER branch ─────────────────────────────────────────────
+        if (string.Equals(deviceType, "ftp", StringComparison.OrdinalIgnoreCase))
+        {
+            if (output == null)
+            {
+                var ftpDevice = string.IsNullOrEmpty(deviceName)
+                    ? repo.Devices.OfType<OutputFileServerDevice>().FirstOrDefault()
+                    : repo.Devices.OfType<OutputFileServerDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase));
+                if (ftpDevice == null)
+                    { tool.ExecResult = string.IsNullOrEmpty(deviceName) ? "Error: no FTP/file server device configured in the repository." : $"Error: no FTP/file server device named '{deviceName}' found in the repository."; return; }
+                output = report.AddOutput(ftpDevice);
+            }
+
+            if (!string.IsNullOrEmpty(outputName)) output.Name = outputName;
+
+            // For a file server output, folder_path is the remote directory (default '/').
+            if (!string.IsNullOrEmpty(folderPath)) output.FolderPath = folderPath;
+            else if (string.IsNullOrEmpty(output.FolderPath)) output.FolderPath = "/";
+
+            if (!string.IsNullOrEmpty(fileName)) output.FileName = fileName;
+
+            var paramFtp = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
+            if (paramFtp != null) { paramFtp.Value = format; paramFtp.CustomValue = true; }
+
+            report.SaveToFile();
+            tool.ExecResult = $"FTP output configured on '{path}': device='{output.Device?.Name}', remoteFolder='{output.FolderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+            return;
+        }
+
         // ── FOLDER branch (default) ───────────────────────────────────────────────
         if (string.IsNullOrEmpty(folderPath) && output == null)
             { tool.ExecResult = "Error: folder_path is required for device_type=folder."; return; }
@@ -139,8 +168,12 @@
             var device = string.IsNullOrEmpty(deviceName)
                 ? (repo.Devices.OfType<OutputFolderDevice>().FirstOrDefault() ?? OutputFolderDevice.Create())
                 : (repo.Devices.OfType<OutputFolderDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase)) ?? OutputFolderDevice.Create());
-            output = report.Outputs.FirstOrDefault(o => folderDeviceGuids.Contains(o.OutputDeviceGUID))
-                     ?? report.AddOutput(device);
+            // Reuse a folder output matching the requested name; if a name is given and none
+            // matches, create a NEW one. Only reuse the first folder output when no name is given.
+            output = !string.IsNullOrEmpty(outputName)
+                ? report.Outputs.FirstOrDefault(o => folderDeviceGuids.Contains(o.OutputDeviceGUID) && string.Equals(o.Name, outputName, StringComparison.OrdinalIgnoreCase))
+                : report.Outputs.FirstOrDefault(o => folderDeviceGuids.Contains(o.OutputDeviceGUID));
+            if (output == null) output = report.AddOutput(device);
         }
 
         if (!string.IsNullOrEmpty(outputName)) output.Name = outputName;
@@ -174,6 +207,11 @@
             }
             else
             {
+                // Absolute or keyword-based path: it must resolve to a location inside an
+                // allowed root (Reports or Personal) with write access. Reject anything else (e.g. C:\temp).
+                var physical = Path.GetFullPath(repo.ReplaceRepositoryKeyword(folderPath));
+                if (!securityContext.HasFolderRight(physical, (int)FolderRight.Edit))
+                    { tool.ExecResult = $"Error: no write access to folder '{folderPath}'."; return; }
                 resolvedFolderPath = folderPath;
             }
             output.FolderPath = resolvedFolderPath;

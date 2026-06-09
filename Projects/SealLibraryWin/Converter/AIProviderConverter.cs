@@ -23,6 +23,12 @@ namespace Seal.Forms
                 .Select(p => p.Name)
                 .OrderBy(n => n)
                 .ToList();
+            // Offer the "<Default Provider>" sentinel only when editing an assistant,
+            // not in the server's own Default Provider field (which it would reference).
+            if (context?.Instance is AIAssistantConfiguration)
+                names.Insert(0, AIProviderConfiguration.DefaultProviderName);
+            else
+                names.Insert(0, AIProviderConfiguration.FirstEnabledName);
             return new StandardValuesCollection(names);
         }
 
@@ -32,6 +38,10 @@ namespace Seal.Forms
         {
             if (value != null)
             {
+                if (string.IsNullOrEmpty(value.ToString()) && !(context?.Instance is AIAssistantConfiguration))
+                    return AIProviderConfiguration.FirstEnabledName;
+                if (value.ToString() == AIProviderConfiguration.DefaultProviderGUID)
+                    return AIProviderConfiguration.DefaultProviderName;
                 var provider = Repository.Instance.AIConfiguration.AIProviders
                     .FirstOrDefault(p => p.GUID == value.ToString());
                 if (provider != null) return provider.Name;
@@ -45,6 +55,10 @@ namespace Seal.Forms
         {
             if (value != null)
             {
+                if (value.ToString() == AIProviderConfiguration.FirstEnabledName)
+                    return "";
+                if (value.ToString() == AIProviderConfiguration.DefaultProviderName)
+                    return AIProviderConfiguration.DefaultProviderGUID;
                 var provider = Repository.Instance.AIConfiguration.AIProviders
                     .FirstOrDefault(p => p.Name == value.ToString());
                 if (provider != null) return provider.GUID;

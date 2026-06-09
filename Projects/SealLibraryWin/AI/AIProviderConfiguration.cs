@@ -16,6 +16,24 @@ namespace Seal.AI
         public const string AIProviderKeysKeyName = "AI Provider Keys";
         public const string AIProviderKeysKeyValue = "wwk93484*%%&%&kjtgé+c$àé";
 
+        /// <summary>
+        /// Sentinel value for an assistant's <see cref="AIAssistantConfiguration.ProviderGUID"/> meaning
+        /// "use the server's Default Provider" (see <see cref="Seal.AI.AIServerConfiguration.DefaultProviderGUID"/>).
+        /// Real providers use <see cref="Guid"/> values, so this can never collide.
+        /// </summary>
+        public const string DefaultProviderGUID = "1";
+
+        /// <summary>
+        /// Display name shown in the property-grid dropdown for the default-provider sentinel.
+        /// </summary>
+        public const string DefaultProviderName = "<Default Provider>";
+
+        /// <summary>
+        /// Display name shown in the property-grid dropdown for an empty default provider,
+        /// meaning the first enabled provider is used.
+        /// </summary>
+        public const string FirstEnabledName = "<First Enabled>";
+
 #if WINDOWS
         #region Editor
         protected override void UpdateEditorAttributes()
@@ -26,6 +44,7 @@ namespace Seal.AI
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Type").SetIsBrowsable(true);
                 GetProperty("Model").SetIsBrowsable(true);
+                GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("EndPoint").SetIsBrowsable(true);
                 GetProperty("ClearProviderKey").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);

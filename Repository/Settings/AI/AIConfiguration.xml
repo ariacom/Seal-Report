@@ -82,14 +82,14 @@
       <GUID>f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c</GUID>
       <Name>report_configure_output</Name>
       <Description>Configures or removes an output on an existing report. Use action=configure (default) to add or update a delivery output; device_type selects the delivery method: folder (default), email, or ftp. Use action=delete to remove outputs and all their associated schedules — never use file_manage for this. Pass output_guid to target a specific output for update or delete; for folder outputs without a GUID the first folder output is reused. For delete: pass output_guid or output_name to remove a specific output; omit both to delete all. Returns outputGUID in the result — store it to pass to report_configure_schedule. Always call this before report_configure_schedule.</Description>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update an output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"device_type":{"type":"string","enum":["folder","email","ftp"],"description":"Delivery type: folder (default), email, or ftp."},"output_guid":{"type":"string","description":"GUID of an existing output to update or delete, as returned by a prior call. Use to target a specific output when the report has multiple."},"output_name":{"type":"string","description":"For action=configure: display name for this output (auto-generated if omitted). For action=delete: name of the specific output to remove. Omit to delete all outputs on the report."},"device_name":{"type":"string","description":"Name of the specific email or FTP device to use when multiple are configured."},"folder_path":{"type":"string","description":"Required for device_type=folder. Output folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date. Omit to use the report display name. Never include a file extension."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"email_to":{"type":"string","description":"Required for device_type=email. Recipient email address(es), semicolon-separated."},"email_cc":{"type":"string","description":"CC email address(es), semicolon-separated."},"email_bcc":{"type":"string","description":"BCC email address(es), semicolon-separated."},"email_subject":{"type":"string","description":"Email subject line. Defaults to the report name."},"email_body":{"type":"string","description":"Plain-text or HTML body for the email."},"email_html_body":{"type":"boolean","description":"If true, sends the report HTML as the email body (no attachment)."},"email_skip_attachments":{"type":"boolean","description":"If true, sends the email body only with no file attached."}},"required":["path"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update an output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"device_type":{"type":"string","enum":["folder","email","ftp"],"description":"Delivery type: folder (default), email, or ftp."},"output_guid":{"type":"string","description":"GUID of an existing output to update or delete, as returned by a prior call. Use to target a specific output when the report has multiple."},"output_name":{"type":"string","description":"For action=configure: display name for this output (auto-generated if omitted). For action=delete: name of the specific output to remove. Omit to delete all outputs on the report."},"device_name":{"type":"string","description":"Name of the specific email or FTP device to use when multiple are configured."},"folder_path":{"type":"string","description":"Required for device_type=folder; optional for device_type=ftp. For folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%. For ftp: the remote directory on the file server (default '/')."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date. Omit to use the report display name. Never include a file extension."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"email_to":{"type":"string","description":"Required for device_type=email. Recipient email address(es), semicolon-separated."},"email_cc":{"type":"string","description":"CC email address(es), semicolon-separated."},"email_bcc":{"type":"string","description":"BCC email address(es), semicolon-separated."},"email_subject":{"type":"string","description":"Email subject line. Defaults to the report name."},"email_body":{"type":"string","description":"Plain-text or HTML body for the email."},"email_html_body":{"type":"boolean","description":"If true, sends the report HTML as the email body (no attachment)."},"email_skip_attachments":{"type":"boolean","description":"If true, sends the email body only with no file attached."}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_configure_output.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d</GUID>
       <Name>report_configure_schedule</Name>
-      <Description>Adds, updates, or removes a recurring or one-time schedule on an existing report's folder output. Use action=configure (default) to add a new schedule, or pass schedule_guid to update an existing one. Use action=delete with schedule_guid (preferred) or schedule_name to remove a specific schedule — never use file_manage for this, and never omit both targets. Requires the report to already have a folder output — call report_configure_output first if none exists. Returns scheduleGUID in the result — store it to later modify or delete this schedule. Schedule GUIDs can also be discovered via report_list. Use when the user wants automated execution: "every morning at 7am", "weekly on Monday", "run daily", "schedule this report", "send every month on the 1st", "delete the schedule".</Description>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add a new schedule, or update an existing one when schedule_guid is provided. delete: remove the schedule identified by schedule_guid or schedule_name (does NOT delete the report file or its output)."},"schedule_guid":{"type":"string","description":"GUID of an existing schedule, as returned by a prior call or by report_list. Required to update a schedule; for delete, pass this (preferred) or schedule_name to target a specific schedule."},"type":{"type":"string","enum":["daily","weekly","monthly","once"],"description":"Required for action=configure. Recurrence type. Use once for a single one-time run."},"start_datetime":{"type":"string","description":"Required for action=configure. ISO 8601 date-time for the first or only run, e.g. 2025-06-01T07:00:00"},"days_interval":{"type":"integer","description":"For daily: interval in days between runs (default 1 = every day)."},"weekdays":{"type":"array","items":{"type":"integer"},"description":"For weekly: days of week to run. 0=Sunday, 1=Monday … 6=Saturday. E.g. [1,3] = Mon and Wed."},"months":{"type":"array","items":{"type":"integer"},"description":"For monthly: months to run (1=Jan … 12=Dec). Omit for every month."},"days":{"type":"array","items":{"type":"integer"},"description":"For monthly: days of month to run (1-31, 32=last day). E.g. [1] = 1st of each month."},"schedule_name":{"type":"string","description":"For action=configure: display name for the schedule (auto-generated if omitted). For action=delete: name of the specific schedule to remove when schedule_guid is not provided."}},"required":["path"]}</ParametersSchema>
+      <Description>Adds, updates, or removes a recurring or one-time schedule on an existing report's output. Use action=configure (default) to add a new schedule, or pass schedule_guid to update an existing one. Use action=delete with schedule_guid (preferred) or schedule_name to remove a specific schedule — never use file_manage for this, and never omit both targets. Requires the report to already have an output — call report_configure_output first if none exists. By default the schedule attaches to the first folder output; pass output_guid (as returned by report_configure_output) to bind it to a specific output such as an FTP or email output. Returns scheduleGUID in the result — store it to later modify or delete this schedule. Schedule GUIDs can also be discovered via report_list. Use when the user wants automated execution: "every morning at 7am", "weekly on Monday", "run daily", "schedule this report", "send every month on the 1st", "delete the schedule".</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add a new schedule, or update an existing one when schedule_guid is provided. delete: remove the schedule identified by schedule_guid or schedule_name (does NOT delete the report file or its output)."},"schedule_guid":{"type":"string","description":"GUID of an existing schedule, as returned by a prior call or by report_list. Required to update a schedule; for delete, pass this (preferred) or schedule_name to target a specific schedule."},"output_guid":{"type":"string","description":"GUID of the output to attach this schedule to, as returned by report_configure_output. Omit to use the first folder output. Pass it to schedule a specific output such as an FTP or email output."},"type":{"type":"string","enum":["daily","weekly","monthly","once"],"description":"Required for action=configure. Recurrence type. Use once for a single one-time run."},"start_datetime":{"type":"string","description":"Required for action=configure. ISO 8601 date-time for the first or only run, e.g. 2025-06-01T07:00:00"},"days_interval":{"type":"integer","description":"For daily: interval in days between runs (default 1 = every day)."},"weekdays":{"type":"array","items":{"type":"integer"},"description":"For weekly: days of week to run. 0=Sunday, 1=Monday … 6=Saturday. E.g. [1,3] = Mon and Wed."},"months":{"type":"array","items":{"type":"integer"},"description":"For monthly: months to run (1=Jan … 12=Dec). Omit for every month."},"days":{"type":"array","items":{"type":"integer"},"description":"For monthly: days of month to run (1-31, 32=last day). E.g. [1] = 1st of each month."},"schedule_name":{"type":"string","description":"For action=configure: display name for the schedule (auto-generated if omitted). For action=delete: name of the specific schedule to remove when schedule_guid is not provided."}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_configure_schedule.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -135,14 +135,14 @@
       <ExecutionScriptFile>log_read.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
   </AITools>
-  <DefaultProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</DefaultProviderGUID>
+  <DefaultProviderGUID />
   <DefaultAssistantGUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</DefaultAssistantGUID>
   <AIAssistants>
     <AIAssistantConfiguration>
       <GUID>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</GUID>
       <Name>Report Designer</Name>
       <Description />
-      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ProviderGUID>1</ProviderGUID>
       <ToolGUIDs>
         <GUID>975395e7-8f7f-47a8-84a7-dbf7bb3bec44</GUID>
         <GUID>f56c62db-9a53-413e-8df4-6dde496adff4</GUID>
@@ -169,7 +169,7 @@
       <GUID>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e</GUID>
       <Name>Schedule &amp; Output</Name>
       <Description />
-      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ProviderGUID>1</ProviderGUID>
       <ToolGUIDs>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
         <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
@@ -185,7 +185,7 @@
       <GUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</GUID>
       <Name>Data Analyst</Name>
       <Description />
-      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ProviderGUID>1</ProviderGUID>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
         <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
@@ -203,13 +203,25 @@
       <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</GUID>
       <Name>System Admin</Name>
       <Description />
-      <ProviderGUID>318dd7f4-3cc5-4f23-8922-9c9c30400f85</ProviderGUID>
+      <ProviderGUID>1</ProviderGUID>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
         <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
         <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
         <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
         <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
+        <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
+        <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
+        <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
+        <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+        <GUID>a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d</GUID>
+      </ToolGUIDs>
+      <DefaultSystemPrompt />
+      <SystemPromptFile>admin-system-prompt.md</SystemPromptFile>
+      <SamplePromptsFile>admin-sample-prompts.md</SamplePromptsFile>
+    </AIAssistantConfiguration>
+  </AIAssistants>
+</AIServerConfiguration>        <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
         <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
         <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>

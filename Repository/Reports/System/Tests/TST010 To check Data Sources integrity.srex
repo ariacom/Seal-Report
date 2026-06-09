@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>b1a7c010-0010-4a00-9000-000000000001</GUID>
+  <ViewGUID>b1a7c010-0010-4a00-9000-000000000501</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>b1a7c010-0010-4a00-9000-000000000101</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>b1a7c010-0010-4a00-9000-000000000301</GUID>
+      <Name>Model</Name>
+      <SourceGUID>b1a7c010-0010-4a00-9000-000000000101</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>b1a7c010-0010-4a00-9000-000000000401</GUID>
+      <Name>Check Sources</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>b1a7c010-0010-4a00-9000-000000000101</SourceGUID>
+      <Script>@using System.Linq;
+@using System.Collections.Generic;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var errors = new List&lt;string&gt;();
+
+    foreach (var source in Repository.Instance.Sources.OrderBy(i =&gt; i.Name)) {
+        if (report.Cancel) break;
+        report.LogMessage("Processing data source '{0}'", source.Name);
+        try {
+            foreach (MetaConnection item in source.Connections.OrderBy(i =&gt; i.Name)) {
+                if (report.Cancel) break;
+                report.LogMessage("Checking connection '{0}'", item.Name);
+                item.CheckConnection();
+                if (!string.IsNullOrEmpty(item.Error)) errors.Add($"[{source.Name}] Connection '{item.Name}': {item.Error}");
+            }
+            foreach (MetaTable item in source.MetaData.Tables.OrderBy(i =&gt; i.Name)) {
+                if (report.Cancel) break;
+                report.LogMessage("Checking table '{0}'", item.DisplayName);
+                item.CheckTable(null);
+                if (!string.IsNullOrEmpty(item.Error)) errors.Add($"[{source.Name}] Table '{item.Name}': {item.Error}");
+            }
+            foreach (MetaJoin item in source.MetaData.Joins.OrderBy(i =&gt; i.Name)) {
+                if (report.Cancel) break;
+                report.LogMessage("Checking join '{0}'", item.Name);
+                item.CheckJoin();
+                if (!string.IsNullOrEmpty(item.Error)) errors.Add($"[{source.Name}] Join '{item.Name}': {item.Error}");
+            }
+            foreach (MetaEnum enumItem in source.MetaData.Enums.Where(i =&gt; i.IsDynamic).OrderBy(i =&gt; i.Name)) {
+                if (report.Cancel) break;
+                report.LogMessage("Checking enum '{0}'", enumItem.Name);
+                enumItem.RefreshEnum(false);
+                if (!string.IsNullOrEmpty(enumItem.Error)) errors.Add($"[{source.Name}] Enum '{enumItem.Name}': {enumItem.Error}");
+            }
+        }
+        catch (Exception ex) {
+            errors.Add($"[{source.Name}] {ex.Message}");
+        }
+    }
+
+    if (errors.Count &gt; 0)
+        throw new Exception("Data source integrity errors found:" + Environment.NewLine + string.Join(Environment.NewLine, errors));
+
+    report.LogMessage("All data sources checked successfully.");
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>b1a7c010-0010-4a00-9000-000000000501</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>b1a7c010-0010-4a00-9000-000000000502</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>b1a7c010-0010-4a00-9000-000000000503</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b1a7c010-0010-4a00-9000-000000000504</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>b1a7c010-0010-4a00-9000-000000000505</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>b1a7c010-0010-4a00-9000-000000000301</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshownexec</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

@@ -45,9 +45,10 @@ namespace Seal.AI
                 ["messages"] = SerializeMessages(messages),
                 ["system"] = systemMessage,
                 ["max_tokens"] = _maxTokens > 0 ? _maxTokens : 4096,  // required by Anthropic
-                ["temperature"] = _temperature,
-                ["top_p"] = _topP
             };
+            // Send temperature OR top_p, never both: Sonnet 4.5+ returns 400 when both are specified.
+            if (_topP != 1.0f) body["top_p"] = _topP;
+            else body["temperature"] = _temperature;
 
             var response = SendRequest(body);
             var result = response?.Content?[0]?.Text
@@ -72,8 +73,6 @@ namespace Seal.AI
                 ["messages"] = SerializeMessages(messages),
                 ["system"] = systemMessage,
                 ["max_tokens"] = _maxTokens > 0 ? _maxTokens : 4096,
-                ["temperature"] = _temperature,
-                ["top_p"] = _topP,
                 ["tools"] = tools.Select(t => (object)new
                 {
                     name = t.Name,
@@ -83,6 +82,9 @@ namespace Seal.AI
                         : JsonSerializer.Deserialize<JsonElement>(t.ParametersSchema)
                 }).ToList()
             };
+            // Send temperature OR top_p, never both: Sonnet 4.5+ returns 400 when both are specified.
+            if (_topP != 1.0f) body["top_p"] = _topP;
+            else body["temperature"] = _temperature;
 
             var response = SendRequest(body);
 
@@ -118,18 +120,45 @@ namespace Seal.AI
 
         private AnthropicResponse SendRequest(Dictionary<string, object> body)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            var json = JsonSerializer.Serialize(body);
+            const int maxRetries = 5;
+
+            for (int attempt = 0; ; attempt++)
             {
-                Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
-            };
-            request.Headers.Add("x-api-key", _apiKey);
-            request.Headers.Add("anthropic-version", "2023-06-01");
+                var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
+                request.Headers.Add("x-api-key", _apiKey);
+                request.Headers.Add("anthropic-version", "2023-06-01");
 
-            var response = _httpClient.SendAsync(request).Result;
-            response.EnsureSuccessStatusCode();
+                var response = _httpClient.SendAsync(request).Result;
+                var content = response.Content.ReadAsStringAsync().Result;
 
-            return JsonSerializer.Deserialize<AnthropicResponse>(
-                response.Content.ReadAsStringAsync().Result);
+                if (response.IsSuccessStatusCode)
+                    return JsonSerializer.Deserialize<AnthropicResponse>(content);
+
+                // Retry on rate limit (429) and overload (529), honoring Retry-After.
+                bool retryable = (int)response.StatusCode == 429 || (int)response.StatusCode == 529;
+                if (retryable && attempt < maxRetries)
+                {
+                    System.Threading.Thread.Sleep(GetRetryDelay(response, attempt));
+                    continue;
+                }
+
+                throw new Exception($"Anthropic API {(int)response.StatusCode} ({response.ReasonPhrase}): {content}");
+            }
+        }
+
+        private static TimeSpan GetRetryDelay(HttpResponseMessage response, int attempt)
+        {
+            // Honor the Retry-After header (seconds) when Anthropic provides it.
+            if (response.Headers.TryGetValues("retry-after", out var values)
+                && int.TryParse(values.FirstOrDefault(), out var seconds) && seconds > 0)
+                return TimeSpan.FromSeconds(Math.Min(seconds, 60));
+
+            // Otherwise exponential backoff capped at 30s: 2, 4, 8, 16, 30.
+            return TimeSpan.FromSeconds(Math.Min(2 * Math.Pow(2, attempt), 30));
         }
 
         private static string GetRole(ChatMessage message) => message switch

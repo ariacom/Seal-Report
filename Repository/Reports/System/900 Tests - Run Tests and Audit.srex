@@ -1,0 +1,453 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>a9000000-0000-4000-8000-000000000001</GUID>
+  <ViewGUID>a9000000-0000-4000-8000-000000000501</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>a9000000-0000-4000-8000-000000000602</GUID>
+      <Type>Text</Type>
+      <DisplayName>Reports to test</DisplayName>
+      <EnumGUID>a9000000-0000-4000-8000-000000000601</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>a9000000-0000-4000-8000-000000000601</EnumGUIDEL>
+      <Prompt>Prompt</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>a9000000-0000-4000-8000-000000000601</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>a9000000-0000-4000-8000-000000000101</GUID>
+      <Name>Audit (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData>
+        <Enums>
+          <MetaEnum>
+            <GUID>a9000000-0000-4000-8000-000000000601</GUID>
+            <Name>Test Reports</Name>
+          </MetaEnum>
+        </Enums>
+      </MetaData>
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>a9000000-0000-4000-8000-000000000301</GUID>
+      <Name>Results</Name>
+      <SourceGUID>a9000000-0000-4000-8000-000000000101</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000311</GUID>
+          <Name>sr_test_results.run_date</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Descending</SortOrder>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000102</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000312</GUID>
+          <Name>sr_test_results.report_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000104</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000313</GUID>
+          <Name>sr_test_results.status</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000105</MetaColumnGUID>
+          <ContainsHtml>true</ContainsHtml>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000314</GUID>
+          <Name>sr_test_results.duration_seconds</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000106</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000315</GUID>
+          <Name>sr_test_results.report_path</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000103</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000316</GUID>
+          <Name>sr_test_results.error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000107</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000317</GUID>
+          <Name>sr_test_results.messages_file</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000108</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[a9000000-0000-4000-8000-000000000351]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>a9000000-0000-4000-8000-000000000351</GUID>
+          <Name>sr_test_results.run_id</Name>
+          <DisplayName>Run date</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000101</MetaColumnGUID>
+          <Prompt>PromptOneValue</Prompt>
+          <Value1 />
+          <FirstSelection>First</FirstSelection>
+          <TriggerExecution>true</TriggerExecution>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>a9000000-0000-4000-8000-000000000401</GUID>
+      <Name>Prepare run</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a9000000-0000-4000-8000-000000000101</SourceGUID>
+      <Script>@using System.Data
+@using System.Data.Common
+@{
+    ReportTask task = Model;
+    Report rootReport = task.Report;
+    Repository repository = rootReport.Repository;
+
+    var auditSource = repository.Sources.FirstOrDefault(i =&gt; i.Name.StartsWith("Audit"));
+    if (auditSource == null) throw new Exception("No data source with a name starting with 'Audit' was found.");
+
+    var helper = new TaskDatabaseHelper();
+    var connection = auditSource.Connection.GetOpenConnection();
+    try {
+        var command = helper.GetDbCommand(connection);
+        try {
+            command.CommandText = "select 1 from sr_test_results where 1=0";
+            command.ExecuteNonQuery();
+        }
+        catch {
+            //ANSI standard types (SQL Server / MySQL / Oracle compatible)
+            command.CommandText = @"create table sr_test_results (
+                run_id varchar(40),
+                run_date datetime,
+                report_path varchar(500),
+                report_name varchar(255),
+                status varchar(20),
+                duration_seconds int,
+                error varchar(2000),
+                messages_file varchar(500)
+            )";
+            command.ExecuteNonQuery();
+        }
+    }
+    finally {
+        connection.Close();
+    }
+
+    var sel = rootReport.GetInputValueByName("Reports to test");
+    var run = (sel != null &amp;&amp; sel.EnumValues.Count &gt; 0);
+    if (run) {
+        //One run id shared by all tests of this execution (read by the child task and the model)
+        rootReport.Tag = Guid.NewGuid().ToString();
+        rootReport.LogMessage("Test run prepared (run_id={0})", rootReport.Tag);
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>a9000000-0000-4000-8000-000000000402</GUID>
+      <Name>Loop on Tests reports</Name>
+      <Tasks>
+        <ReportTask>
+          <GUID>a9000000-0000-4000-8000-000000000403</GUID>
+          <Name>Execute test and audit</Name>
+          <Tasks />
+          <ExecProcessChildren>true</ExecProcessChildren>
+          <TemplateName>Default</TemplateName>
+          <SourceGUID>a9000000-0000-4000-8000-000000000101</SourceGUID>
+          <Script>@using System.IO
+@using System.Text
+@using System.Threading
+@using System.Data
+@using System.Data.Common
+@using System.Data.OleDb
+@using System.Data.Odbc
+@{
+    ReportTask task = Model;
+    Report rootReport = task.Report;
+    Repository repository = rootReport.Repository;
+
+    string runId = rootReport.Tag as string;
+    string reportPath = task.ExecInput as string;
+    if (string.IsNullOrEmpty(reportPath)) return;
+
+    //Skip reports not selected in the 'Reports to test' input value (if any selection)
+    var sel = rootReport.GetInputValueByName("Reports to test");
+    if (sel != null &amp;&amp; !sel.EnumValues.Contains(Path.GetFileName(reportPath))) return;
+
+    var runDate = DateTime.Now;
+    runDate = new DateTime(runDate.Year, runDate.Month, runDate.Day, runDate.Hour, runDate.Minute, runDate.Second);
+
+    string name = Path.GetFileNameWithoutExtension(reportPath);
+    string relativePath = reportPath.Replace(repository.ReportsFolder, "");
+    string status;
+    string error = null;
+    int duration = 0;
+    string messages = "";
+
+    rootReport.LogMessage("Executing test '{0}'", name);
+    Report report = Report.LoadFromFile(reportPath, repository);
+    if (!string.IsNullOrEmpty(report.LoadErrors)) {
+        status = "LoadError";
+        error = report.LoadErrors;
+        messages = report.LoadErrors;
+    }
+    else {
+        report.ExecutionInitiator = rootReport;
+        ReportExecution execution = new ReportExecution() { Report = report };
+        try {
+            execution.Execute();
+            while (report.Status != ReportStatus.Executed &amp;&amp; !report.HasErrors &amp;&amp; !report.Cancel) {
+                Thread.Sleep(200);
+                if (rootReport.Cancel) report.Cancel = true;
+            }
+        }
+        catch (Exception ex) {
+            report.ExecutionErrors = ex.Message;
+        }
+        duration = Convert.ToInt32(report.ExecutionFullDuration.TotalSeconds);
+        messages = report.ExecutionMessages;
+        status = report.HasErrors ? "Error" : "Success";
+        if (report.HasErrors) error = report.ExecutionErrors;
+    }
+
+    string messagesFile = WriteMessagesHtml(repository, name, runDate, status, messages, error);
+
+    var auditSource = repository.Sources.FirstOrDefault(i =&gt; i.Name.StartsWith("Audit"));
+    bool lockDatabase = (auditSource != null &amp;&amp; auditSource.Connection.ConnectionType == ConnectionType.SQLite);
+    InsertResult(auditSource, lockDatabase, rootReport, new object[] { runId, runDate, relativePath, name, status, duration, error, messagesFile });
+
+    rootReport.LogMessage("Test '{0}' -&gt; {1}", name, status);
+}
+
+@functions {
+    string WriteMessagesHtml(Repository repository, string name, DateTime runDate, string status, string messages, string error)
+    {
+        string outputFolder = Path.Combine(repository.ReportsFolder, "System\\Tests", "Output", name.Substring(0,6));
+        if (!Directory.Exists(outputFolder)) Directory.CreateDirectory(outputFolder);
+        string file = Path.Combine(outputFolder, "execution_" + runDate.ToString("yyyyMMddHHmmss") + ".html");
+
+        var sb = new StringBuilder();
+        sb.AppendLine("&lt;html&gt;&lt;head&gt;&lt;meta charset=\"utf-8\"&gt;&lt;title&gt;" + System.Net.WebUtility.HtmlEncode(name) + "&lt;/title&gt;&lt;/head&gt;&lt;body&gt;");
+        sb.AppendLine("&lt;h2&gt;" + System.Net.WebUtility.HtmlEncode(name) + "&lt;/h2&gt;");
+        sb.AppendLine("&lt;p&gt;&lt;b&gt;Date:&lt;/b&gt; " + runDate.ToString() + "&lt;br&gt;&lt;b&gt;Status:&lt;/b&gt; " + status + "&lt;/p&gt;");
+        if (!string.IsNullOrEmpty(error)) sb.AppendLine("&lt;h3&gt;Error&lt;/h3&gt;&lt;pre&gt;" + System.Net.WebUtility.HtmlEncode(error) + "&lt;/pre&gt;");
+        sb.AppendLine("&lt;h3&gt;Execution messages&lt;/h3&gt;&lt;pre&gt;" + System.Net.WebUtility.HtmlEncode(messages == null ? "" : messages) + "&lt;/pre&gt;");
+        sb.AppendLine("&lt;/body&gt;&lt;/html&gt;");
+        File.WriteAllText(file, sb.ToString());
+
+        return file.Replace(repository.ReportsFolder, "");
+    }
+
+    void InsertResult(MetaSource auditSource, bool lockDatabase, Report rootReport, object[] row)
+    {
+        if (auditSource == null) return;
+
+        Action action = () =&gt; {
+            var helper = new TaskDatabaseHelper();
+            var connection = auditSource.Connection.GetOpenConnection();
+            try {
+                var command = helper.GetDbCommand(connection);
+                command.CommandText = "insert into sr_test_results(run_id,run_date,report_path,report_name,status,duration_seconds,error,messages_file)";
+                if (command is OleDbCommand || command is OdbcCommand) {
+                    command.CommandText += " values(?,?,?,?,?,?,?,?)";
+                }
+                else {
+                    command.CommandText += " values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8)";
+                }
+
+                int index = 1;
+                AddParameter(command, index++, DbType.AnsiString, row[0]); //run_id
+                AddParameter(command, index++, DbType.DateTime, row[1]);   //run_date
+                AddParameter(command, index++, DbType.AnsiString, row[2]); //report_path
+                AddParameter(command, index++, DbType.AnsiString, row[3]); //report_name
+                AddParameter(command, index++, DbType.AnsiString, row[4]); //status
+                AddParameter(command, index++, DbType.Int32, row[5]);      //duration_seconds
+                AddParameter(command, index++, DbType.AnsiString, row[6]); //error
+                AddParameter(command, index++, DbType.AnsiString, row[7]); //messages_file
+                command.ExecuteNonQuery();
+            }
+            finally {
+                connection.Close();
+            }
+        };
+
+        if (lockDatabase) {
+            lock (rootReport) {
+                ExecuteWithRetry(action);
+            }
+        }
+        else {
+            action();
+        }
+    }
+
+    void ExecuteWithRetry(Action action, int maxRetryCount = 3, int delayMilliseconds = 200)
+    {
+        int retryCount = 0;
+        while (true) {
+            try {
+                action();
+                break;
+            }
+            catch (Exception ex) when (ex.Message.Contains("database is locked") &amp;&amp; retryCount &lt; maxRetryCount) {
+                retryCount++;
+                Thread.Sleep(delayMilliseconds);
+            }
+        }
+    }
+
+    void AddParameter(DbCommand command, int index, DbType type, object value)
+    {
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = "@p" + index.ToString();
+        parameter.DbType = type;
+        if (value == null) value = (object) DBNull.Value;
+        if (value is string &amp;&amp; ((string)value).Length &gt;= 2000) parameter.Value = ((string)value).Substring(0, 1999);
+        else parameter.Value = value;
+        command.Parameters.Add(parameter);
+    }
+}
+</Script>
+          <SortOrder>1</SortOrder>
+        </ReportTask>
+      </Tasks>
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Loop</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>folder</Name>
+          <Value>%SEALREPOSITORY%/Reports/System/Tests</Value>
+        </Parameter>
+        <Parameter>
+          <Name>filter</Name>
+          <Value>*.srex</Value>
+        </Parameter>
+      </Parameters>
+      <SourceGUID>a9000000-0000-4000-8000-000000000101</SourceGUID>
+      <BodyScript />
+      <Script />
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>a9000000-0000-4000-8000-000000000404</GUID>
+      <Name>Refresh and select run</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a9000000-0000-4000-8000-000000000101</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    //Select the run that was just executed in the model's run_id restriction
+    var runId = report.Tag as string;
+    if (!string.IsNullOrEmpty(runId)) {
+        //A new run was created by the loop: refresh the 'Run' enum so it includes it
+        var source = report.Sources.FirstOrDefault();
+        var runEnum = source == null ? null : source.MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Run");
+        if (runEnum != null) runEnum.RefreshEnum(false);
+
+        var r = report.Models.SelectMany(m =&gt; m.Restrictions).FirstOrDefault(i =&gt; i.Name == "sr_test_results.run_id");
+        if (r != null) {
+            r.Operator = Seal.Model.Operator.Equal;
+            r.EnumValues.Clear();
+            r.EnumValues.Add(runId);
+        }
+    }
+    
+    var sel = report.GetInputValueByName("Reports to test");
+    sel.EnumValues.Clear();
+}
+</Script>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>a9000000-0000-4000-8000-000000000501</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>a9000000-0000-4000-8000-000000000502</GUID>
+          <Name>Results</Name>
+          <Views>
+            <ReportView>
+              <GUID>a9000000-0000-4000-8000-000000000503</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>a9000000-0000-4000-8000-000000000504</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>a9000000-0000-4000-8000-000000000505</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>a9000000-0000-4000-8000-000000000301</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshownexec</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <InitScript>@using System.IO
+@{
+    Report report = Model;
+    var source = report.Sources.FirstOrDefault();
+    var list = source == null ? null : source.MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Test Reports");
+    if (list != null) {
+        list.Values.Clear();
+        var folder = Path.Combine(report.Repository.ReportsFolder, "System\\Tests");
+        if (Directory.Exists(folder)) {
+            foreach (var file in Directory.GetFiles(folder, "*.srex").Where(i =&gt; !Path.GetFileName(i).StartsWith("~")).OrderBy(i =&gt; i)) {
+                list.Values.Add(new MetaEV() { Id = Path.GetFileName(file), Val = Path.GetFileNameWithoutExtension(file) });
+            }
+        }
+    }
+}
+</InitScript>
+  <Cancel>false</Cancel>
+</Report>

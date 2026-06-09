@@ -21,6 +21,11 @@ namespace Seal.AI
     /// </summary>
     public class AIAssistantConfiguration : RootEditor
     {
+        /// <summary>
+        /// Display name shown in the property-grid dropdown for an empty default assistant,
+        /// meaning the first enabled assistant is used.
+        /// </summary>
+        public const string FirstEnabledName = "<First Enabled>";
 
 #if WINDOWS
         #region Editor
@@ -214,9 +219,17 @@ namespace Seal.AI
         /// </summary>
         public AIProviderConfiguration GetProviderConfiguration()
         {
-            if (string.IsNullOrEmpty(ProviderGUID)) return null;
+            var guid = ProviderGUID;
+            if (string.IsNullOrEmpty(guid)) return null;
+            if (guid == AIProviderConfiguration.DefaultProviderGUID)
+            {
+                guid = Repository.Instance.AIConfiguration.DefaultProviderGUID;
+                if (string.IsNullOrEmpty(guid))
+                    return Repository.Instance.AIConfiguration.AIProviders
+                        .FirstOrDefault(p => p.IsEnabled);
+            }
             return Repository.Instance.AIConfiguration.AIProviders
-                .FirstOrDefault(p => p.GUID == ProviderGUID);
+                .FirstOrDefault(p => p.GUID == guid);
         }
 
         /// <summary>

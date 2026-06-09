@@ -35,14 +35,17 @@ namespace Seal.Forms
 
         private void AIConfigurationEditorForm_Load(object sender, EventArgs e)
         {
-            infoTextBox.Text = @"Configure the AI Providers, Tools and Assistants used by the Report Server.
-
-AI Providers define the connection to an AI service (OpenAI, Anthropic, Azure, Ollama...).
-AI Tools define functions that can be called by the AI model during a conversation.
-AI Assistants combine a provider, an optional set of tools, and a default system prompt.
-
-Changes are saved to Settings\AI\AIConfiguration.xml in the repository.
-New values may require a restart of the Report Designer or the Web Server.";
+            infoTextBox.Text = string.Join(Environment.NewLine, new[]
+            {
+                @"Configure the AI Providers, Tools and Assistants used by the Report Server.",
+                "",
+                @"AI Providers define the connection to an AI service (OpenAI, Anthropic, Azure, Ollama...).",
+                @"AI Tools define functions that can be called by the AI model during a conversation.",
+                @"AI Assistants combine a provider, an optional set of tools, and a default system prompt.",
+                "",
+                @"Changes are saved to Settings\AI\AIConfiguration.xml in the repository.",
+                @"New values may require a restart of the Report Designer or the Web Server."
+            });
 
             Visible = true;
             ActiveControl = mainStatusStrip;

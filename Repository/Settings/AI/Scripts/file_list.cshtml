@@ -14,9 +14,15 @@
 
     var rawArgs = tool.CurrentToolCall.Arguments;
     var args    = JsonDocument.Parse(string.IsNullOrWhiteSpace(rawArgs) ? "{}" : rawArgs).RootElement;
-    var filterFolders = args.TryGetProperty("folders", out var fp)
-        ? fp.EnumerateArray().Select(e => e.GetString()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList()
-        : new System.Collections.Generic.List<string>();
+    // Accept "folders" as a JSON array or a single string (models often pass one directory).
+    var filterFolders = new System.Collections.Generic.List<string>();
+    if (args.TryGetProperty("folders", out var fp))
+    {
+        if (fp.ValueKind == JsonValueKind.Array)
+            filterFolders = fp.EnumerateArray().Select(e => e.GetString()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+        else if (fp.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(fp.GetString()))
+            filterFolders.Add(fp.GetString());
+    }
     var extension = args.TryGetProperty("extension", out var ep) ? ep.GetString() : null;
     if (!string.IsNullOrWhiteSpace(extension)) extension = extension.TrimStart('.');
 

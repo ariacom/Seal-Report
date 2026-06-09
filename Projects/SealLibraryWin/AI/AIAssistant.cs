@@ -52,8 +52,10 @@ namespace Seal.AI
             if (string.IsNullOrEmpty(assistantName))
             {
                 var defaultGuid = Repository.Instance.AIConfiguration.DefaultAssistantGUID;
-                Configuration = Repository.Instance.AIConfiguration.AIAssistants
-                    .Find(a => a.GUID == defaultGuid && a.IsEnabled)
+                var assistants = Repository.Instance.AIConfiguration.AIAssistants;
+                Configuration = (string.IsNullOrEmpty(defaultGuid)
+                        ? assistants.Find(a => a.IsEnabled)
+                        : assistants.Find(a => a.GUID == defaultGuid && a.IsEnabled))
                     ?? throw new System.Exception(
                         "No default AI assistant configuration found. " +
                         "Set Default Assistant in AI Configuration.");

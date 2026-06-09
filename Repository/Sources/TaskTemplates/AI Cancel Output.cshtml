@@ -12,6 +12,7 @@
     task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "Apply the condition and respond with your decision in JSON format.", DisplayName = "Additional user prompt", Description = "Additional instruction appended to the user prompt. Controls the expected response format — do not change this unless you know the required JSON structure." });
     task.Parameters.Add(new Parameter() { Name = "check_model", Value = "", DisplayName = "Model to check", Description = "The model name to check. If empty, all models of the report are taken." });
     task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
+    task.Parameters.Add(new Parameter() { Name = "log_ai_tools", BoolValue = false, DisplayName = "Log tool calls", Description = "If enabled, logs the tool calls (arguments and results) executed by the assistant to the task execution log." });
 
     task.Script = @"@using Seal.AI;
 @using Newtonsoft.Json.Linq;
@@ -31,6 +32,7 @@
     var userAdditional = task.GetValue(""ai_user_additional"");
     var modelName = task.GetValue(""check_model"");
     var logRequests = task.GetBoolValue(""log_ai_requests"", false);
+    var logTools = task.GetBoolValue(""log_ai_tools"", false);
 
     var dataJson = """";
     foreach (var model in report.Models.Where(i => string.IsNullOrEmpty(modelName) || i.Name == modelName)) {
@@ -53,9 +55,11 @@ DATA:
 		task.LogMessage($""[AI Request {system.Length}] System:\r\n{system}"");
 		task.LogMessage($""[AI Request {user.Length}] User:\r\n{user}"");
     }
+    ReportExecutionLog requestLog = logRequests ? report : null;
+    ReportExecutionLog toolsLog = logTools ? report : null;
     var assistant = new AIAssistant(assistantName);
     assistant.OverrideSystemPrompt(system);
-    var answer = assistant.Chat(user);
+    var answer = assistant.Chat(user, report, requestLog, toolsLog);
     if (logRequests) task.LogMessage($""[AI Response]\r\n{answer}"");
     JObject obj = JObject.Parse(answer);
 

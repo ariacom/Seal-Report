@@ -64,7 +64,10 @@ namespace Seal.AI
             if (string.IsNullOrEmpty(providerName))
             {
                 var defaultGuid = Seal.Model.Repository.Instance.AIConfiguration.DefaultProviderGUID;
-                config = Seal.Model.Repository.Instance.AIConfiguration.AIProviders.Find(p => p.GUID == defaultGuid)
+                var providers = Seal.Model.Repository.Instance.AIConfiguration.AIProviders;
+                config = (string.IsNullOrEmpty(defaultGuid)
+                        ? providers.Find(p => p.IsEnabled)
+                        : providers.Find(p => p.GUID == defaultGuid))
                     ?? throw new Exception("No default AI provider configuration found. Set Default Provider in AI Configuration.");
             }
             else

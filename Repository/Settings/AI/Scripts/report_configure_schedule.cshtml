@@ -19,6 +19,7 @@
     var daysInterval = args.TryGetProperty("days_interval", out var dip) ? dip.GetInt32()  : 1;
     var scheduleName = args.TryGetProperty("schedule_name", out var snp) ? snp.GetString() : null;
     var scheduleGuid = args.TryGetProperty("schedule_guid", out var sgp) ? sgp.GetString() : null;
+    var outputGuid   = args.TryGetProperty("output_guid",   out var ogp) ? ogp.GetString() : null;
 
     int[] weekdays = null;
     if (args.TryGetProperty("weekdays", out var wdp) && wdp.ValueKind == JsonValueKind.Array)
@@ -100,9 +101,22 @@
         if (string.IsNullOrEmpty(startStr))
             { tool.ExecResult = "Error: 'start_datetime' is required for action=configure."; return; }
 
-        var output = report.Outputs.FirstOrDefault(o => folderDeviceGuids.Contains(o.OutputDeviceGUID));
-        if (output == null)
-            { tool.ExecResult = "Error: this report has no folder output. Call report_configure_output first."; return; }
+        // Bind the schedule to a specific output when output_guid is given (e.g. an FTP
+        // or email output); otherwise fall back to the first folder output, then any output.
+        ReportOutput output;
+        if (!string.IsNullOrEmpty(outputGuid))
+        {
+            output = report.Outputs.FirstOrDefault(o => string.Equals(o.GUID, outputGuid, StringComparison.OrdinalIgnoreCase));
+            if (output == null)
+                { tool.ExecResult = $"Error: no output with GUID '{outputGuid}' found on '{path}'. Call report_configure_output first."; return; }
+        }
+        else
+        {
+            output = report.Outputs.FirstOrDefault(o => folderDeviceGuids.Contains(o.OutputDeviceGUID))
+                     ?? report.Outputs.FirstOrDefault();
+            if (output == null)
+                { tool.ExecResult = "Error: this report has no output. Call report_configure_output first."; return; }
+        }
 
         // Parse start datetime
         if (!DateTime.TryParse(startStr, out var startDt))

@@ -13,9 +13,15 @@
     // Parse optional folder-filter argument
     var rawArgs = tool.CurrentToolCall.Arguments;
     var args    = JsonDocument.Parse(string.IsNullOrWhiteSpace(rawArgs) ? "{}" : rawArgs).RootElement;
-    var filterFolders = args.TryGetProperty("folders", out var fp)
-        ? fp.EnumerateArray().Select(e => e.GetString()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList()
-        : new System.Collections.Generic.List<string>();
+    // Accept "folders" as a JSON array or a single string (models often pass one directory).
+    var filterFolders = new System.Collections.Generic.List<string>();
+    if (args.TryGetProperty("folders", out var fp))
+    {
+        if (fp.ValueKind == JsonValueKind.Array)
+            filterFolders = fp.EnumerateArray().Select(e => e.GetString()).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+        else if (fp.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(fp.GetString()))
+            filterFolders.Add(fp.GetString());
+    }
 
     if (securityContext == null)
     {
@@ -95,11 +101,11 @@
                     {
                         var formatParam = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
                         var fmt = formatParam != null ? formatParam.Value : "html";
-                        var folderDevGuids = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                        foreach (var d in repo.Devices.OfType<OutputFolderDevice>()) folderDevGuids.Add(d.GUID);
-                        folderDevGuids.Add(OutputFolderDevice.DefaultGUID);
-                        var deviceType = folderDevGuids.Contains(output.OutputDeviceGUID) ? "folder" : "other";
-                        sb.AppendLine($"    Output '{output.Name}' [{deviceType}] (outputGUID='{output.GUID}'): folder='{output.FolderPath}', file='{output.FileName}', format='{fmt}'");
+                        string deviceType =
+                            output.Device is OutputFolderDevice     ? "folder" :
+                            output.Device is OutputEmailDevice      ? "email"  :
+                            output.Device is OutputFileServerDevice ? "ftp"    : "other";
+                        sb.AppendLine($"    Output '{output.Name}' [{deviceType}] (outputGUID='{output.GUID}', device='{output.Device?.Name}'): folder='{output.FolderPath}', file='{output.FileName}', format='{fmt}'");
                     }
                 }
                 // Schedules

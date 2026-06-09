@@ -145,6 +145,24 @@
             Save to a given file path
             </summary>
         </member>
+        <member name="F:Seal.AI.AIProviderConfiguration.DefaultProviderGUID">
+            <summary>
+            Sentinel value for an assistant's <see cref="P:Seal.AI.AIAssistantConfiguration.ProviderGUID"/> meaning
+            "use the server's Default Provider" (see <see cref="P:Seal.AI.AIServerConfiguration.DefaultProviderGUID"/>).
+            Real providers use <see cref="T:System.Guid"/> values, so this can never collide.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIProviderConfiguration.DefaultProviderName">
+            <summary>
+            Display name shown in the property-grid dropdown for the default-provider sentinel.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIProviderConfiguration.FirstEnabledName">
+            <summary>
+            Display name shown in the property-grid dropdown for an empty default provider,
+            meaning the first enabled provider is used.
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIProviderConfiguration.GUID">
             <summary>
             Unique identifier for this provider configuration.
@@ -302,10 +320,20 @@
             Current security user for the tool execution
             </summary>
         </member>
+        <member name="F:Seal.AI.AIToolCall.ExecutionLog">
+            <summary>
+            Current log for the tool execution
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolCall.LogMessage(System.String,System.Object[])">
+            <summary>
+            Logs a message to the current <see cref="F:Seal.AI.AIToolCall.ExecutionLog"/> if one is set.
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIToolCall.CancelOperation">
             <summary>
             Optional cancellation source propagated from the outer
-            <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,System.Int32)"/> loop.  Execution scripts should
+            <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> loop.  Execution scripts should
             poll <c>CancelOperation?.Cancel</c> inside any long-running loop
             and abort early when it is <c>true</c>.
             </summary>
@@ -360,18 +388,15 @@
             Leave empty for tools that take no parameters.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIToolConfiguration.ExecutionScript">
+        <member name="P:Seal.AI.AIToolConfiguration.ExecutionScriptFile">
             <summary>
-            Razor/C# script executed when the AI calls this tool.
-            <para>
-            The Razor model is this <see cref="T:Seal.AI.AIToolConfiguration"/> instance.
-            Use <c>@Model.CurrentToolCall.Arguments</c> to access the JSON arguments string
-            provided by the AI, and <c>@Model.CurrentToolCall.Id</c> / <c>@Model.CurrentToolCall.Name</c>
-            for call metadata.
-            </para>
-            <para>
-            The rendered output of the script is returned to the AI as the tool result.
-            </para>
+            File name of a Razor/C# script file, relative to <c>Settings\AI\Scripts</c>.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIToolConfiguration.EffectiveExecutionScript">
+            <summary>
+            Reads <see cref="P:Seal.AI.AIToolConfiguration.ExecutionScriptFile"/> from <c>Settings\AI\Scripts</c>.
+            Returns an empty string when no script file is configured.
             </summary>
         </member>
         <member name="P:Seal.AI.AIToolConfiguration.CurrentToolCall">
@@ -410,7 +435,7 @@
         <member name="M:Seal.AI.AIToolConfiguration.Execute(Seal.AI.AIToolCall)">
             <summary>
             Sets <see cref="P:Seal.AI.AIToolConfiguration.CurrentToolCall"/> to <paramref name="toolCall"/>, clears
-            <see cref="P:Seal.AI.AIToolConfiguration.ExecResult"/>, runs <see cref="P:Seal.AI.AIToolConfiguration.ExecutionScript"/> via the Razor engine,
+            <see cref="P:Seal.AI.AIToolConfiguration.ExecResult"/>, runs the <see cref="P:Seal.AI.AIToolConfiguration.ExecutionScriptFile"/> via the Razor engine,
             and returns <see cref="P:Seal.AI.AIToolConfiguration.ExecResult"/> as the tool result string to send back to the AI.
             Returns <see cref="F:System.String.Empty"/> if no script is configured.
             </summary>
@@ -419,6 +444,12 @@
             <summary>
             Configuration for an AI assistant: ties together one provider, an optional subset of tools,
             and a default system prompt. Stored in <see cref="P:Seal.AI.AIServerConfiguration.AIAssistants"/>.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIAssistantConfiguration.FirstEnabledName">
+            <summary>
+            Display name shown in the property-grid dropdown for an empty default assistant,
+            meaning the first enabled assistant is used.
             </summary>
         </member>
         <member name="P:Seal.AI.AIAssistantConfiguration.GUID">
@@ -523,7 +554,7 @@
             <summary>
             Stateful AI assistant that owns a conversation history and delegates to
             an <see cref="T:Seal.AI.IAIProvider"/> for all model calls.
-            Initialise once per session or per conversation; call <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,System.Int32)"/>
+            Initialise once per session or per conversation; call <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/>
             for each user turn.
             </summary>
         </member>
@@ -558,7 +589,7 @@
             <see cref="T:Seal.AI.AIAssistantConfiguration"/> instance.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,System.Int32)">
+        <member name="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
             <summary>
             Appends a user message to the conversation history, calls the AI using
             the tools scoped to this assistant (via <see cref="M:Seal.AI.AIAssistantConfiguration.GetToolConfigurations"/>),
@@ -567,9 +598,9 @@
             Falls back to a plain <see cref="M:Seal.AI.IAIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})"/> call when no tools are configured.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.ChatHtml(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,System.Int32)">
+        <member name="M:Seal.AI.AIAssistant.ChatHtml(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
             <summary>
-            Same as <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,System.Int32)"/> but returns the reply sanitized as safe HTML.
+            Same as <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> but returns the reply sanitized as safe HTML.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAssistant.ChatSimple(System.String)">
@@ -584,7 +615,7 @@
             Replaces the leading system message in <see cref="P:Seal.AI.AIAssistant.Messages"/> with
             <paramref name="prompt"/>.  If <paramref name="prompt"/> is null or
             whitespace the existing system message (if any) is simply removed.
-            Call this before <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,System.Int32)"/> to inject a parameter-driven system
+            Call this before <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> to inject a parameter-driven system
             prompt that overrides the one from <see cref="P:Seal.AI.AIAssistantConfiguration.EffectiveSystemPrompt"/>.
             </summary>
         </member>
@@ -7231,6 +7262,11 @@
         <member name="P:Seal.Model.Repository.AISamplePromptsFolder">
             <summary>
             Folder for AI sample prompts files (Settings\AI\Prompts\Samples).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.AIScriptsFolder">
+            <summary>
+            Folder for AI tool execution script files (Settings\AI\Scripts).
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.SecurityFolder">

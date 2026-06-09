@@ -14,6 +14,7 @@ task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You wr
     task.Parameters.Add(new Parameter() { Name = "ai_user_prompt_words", NumericValue = 200, DisplayName = "Number of words", Description = "Maximum number of words for the summary." });
     task.Parameters.Add(new Parameter() { Name = "summary_model", Value = "", DisplayName = "Model to summarize", Description = "The model name to summarize. If empty, all the models of the report are taken and the summary is set to the report." });
     task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
+    task.Parameters.Add(new Parameter() { Name = "log_ai_tools", BoolValue = false, DisplayName = "Log tool calls", Description = "If enabled, logs the tool calls (arguments and results) executed by the assistant to the task execution log." });
 
     task.Script = @"@using Seal.AI;
 @{
@@ -30,6 +31,7 @@ task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You wr
     var userAdditional = task.GetValue(""ai_user_additional"");
     var modelName = task.GetValue(""summary_model"");
     var logRequests = task.GetBoolValue(""log_ai_requests"", false);
+    var logTools = task.GetBoolValue(""log_ai_tools"", false);
 
     var dataJson = """";
     foreach (var model in report.Models.Where(i => string.IsNullOrEmpty(modelName) || i.Name == modelName)) {
@@ -52,9 +54,11 @@ DATA:
 		task.LogMessage($""[AI Request {system.Length}] System:\r\n{system}"");
 		task.LogMessage($""[AI Request {user.Length}] User:\r\n{user}"");
     }
+    ReportExecutionLog requestLog = logRequests ? report : null;
+    ReportExecutionLog toolsLog = logTools ? report : null;
     var assistant = new AIAssistant(assistantName);
     assistant.OverrideSystemPrompt(system);
-    var summary = assistant.ChatHtml(user);
+    var summary = assistant.ChatHtml(user, report, requestLog, toolsLog);
 	if (string.IsNullOrEmpty(summary)) throw new Exception(""Got empty summary."");
     if (logRequests) task.LogMessage($""[AI Response]\r\n{summary}"");
     
