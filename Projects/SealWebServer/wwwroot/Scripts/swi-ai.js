@@ -72,12 +72,12 @@
     // ── Panel open / close ──────────────────────────────────────
     function openPanel() {
         $panel.addClass('ai-panel-open');
-        $toggle.addClass('ai-panel-open').attr('title', 'Hide AI Assistant');
+        $toggle.addClass('ai-panel-open').attr('title', SWIUtil.tr('Hide AI Assistant'));
         $('body').addClass('ai-panel-visible');
     }
     function closePanel() {
         $panel.removeClass('ai-panel-open');
-        $toggle.removeClass('ai-panel-open').attr('title', 'AI Assistant');
+        $toggle.removeClass('ai-panel-open').attr('title', SWIUtil.tr('AI Assistant'));
         $('body').removeClass('ai-panel-visible');
         closeDropdown();
     }
@@ -176,12 +176,12 @@
         $send.addClass('ai-panel-cancel-btn');
         $input.prop('disabled', true);
         $send.prop('disabled', false);
-        $send.attr('title', 'Cancel');
+        $send.attr('title', SWIUtil.tr('Cancel'));
         _runningDotIndex = 0;
-        $running.text('Running').show();
+        $running.text(SWIUtil.tr('Running')).show();
         _runningInterval = window.setInterval(function () {
             _runningDotIndex = (_runningDotIndex + 1) % _runningDots.length;
-            $running.text('Running' + _runningDots[_runningDotIndex]);
+            $running.text(SWIUtil.tr('Running') + _runningDots[_runningDotIndex]);
         }, 400);
     }
     $input.on('input', function () {
@@ -216,7 +216,7 @@
             }
             _requesting = false;
             setSendMode();
-            const $cancelled = $('<div>').addClass('ai-panel-bubble ai cancelled').text('Request cancelled.');
+            const $cancelled = $('<div>').addClass('ai-panel-bubble ai cancelled').text(SWIUtil.tr('Request cancelled.'));
             $messages.append($cancelled);
             $messages[0].scrollTop = $messages[0].scrollHeight;
             return;
@@ -286,7 +286,7 @@
         _isFavorite = state;
         $favBtn.find('i').toggleClass('fa-star', state).toggleClass('fa-star-o', !state);
         $favBtn.toggleClass('fav-active', state);
-        $favBtn.attr('title', state ? 'Remove from favorites' : 'Mark as favorite');
+        $favBtn.attr('title', state ? SWIUtil.tr('Remove from favorites') : SWIUtil.tr('Mark as favorite'));
     }
     $favBtn.on('click', function () {
         if (!_panelChatFileName)
@@ -342,7 +342,7 @@
             $list.empty();
             var prompts = data.prompts || [];
             if (prompts.length === 0) {
-                $list.append('<li class="ai-panel-dropdown-empty">No sample prompts defined</li>');
+                $list.append('<li class="ai-panel-dropdown-empty">' + SWIUtil.tr('No sample prompts defined') + '</li>');
             }
             else {
                 $.each(prompts, function (_, prompt) {
@@ -418,7 +418,7 @@
                 });
             });
             // Rename button
-            var $renameBtn = $('<button>').addClass('ai-chat-item-btn').attr('title', 'Rename')
+            var $renameBtn = $('<button>').addClass('ai-chat-item-btn').attr('title', SWIUtil.tr('Rename'))
                 .html('<i class="fa fa-pencil"></i>');
             $renameBtn.on('click', function (e) {
                 e.stopPropagation();
@@ -459,7 +459,7 @@
                 });
             });
             // Delete button
-            var $deleteBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-delete').attr('title', 'Delete')
+            var $deleteBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-delete').attr('title', SWIUtil.tr('Delete'))
                 .html('<i class="fa fa-trash"></i>');
             $deleteBtn.on('click', function (e) {
                 e.stopPropagation();
@@ -478,7 +478,7 @@
             });
             // Favorite toggle button
             var $favItemBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-fav')
-                .attr('title', isFavorite ? 'Remove from favorites' : 'Mark as favorite')
+                .attr('title', isFavorite ? SWIUtil.tr('Remove from favorites') : SWIUtil.tr('Mark as favorite'))
                 .html(isFavorite ? '<i class="fa fa-star"></i>' : '<i class="fa fa-star-o"></i>');
             if (isFavorite)
                 $favItemBtn.addClass('fav-active');
@@ -508,10 +508,10 @@
         },
         // Populate the two lists from menu data objects: [{name, path, ...}]
         setFavorites: function (items) {
-            buildList($('#ai-panel-fav-list'), items, 'No favorites yet', true);
+            buildList($('#ai-panel-fav-list'), items, SWIUtil.tr('No favorites yet'), true);
         },
         setRecents: function (items) {
-            buildList($('#ai-panel-mru-list'), items, 'No recent items', false);
+            buildList($('#ai-panel-mru-list'), items, SWIUtil.tr('No recent items'), false);
         }
     };
 }(jQuery));

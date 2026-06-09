@@ -1090,7 +1090,7 @@ namespace SealWebServer.Controllers
                     folders = SWIConfiguration.GetFolders(WebUser),
                     assistants = Repository.Instance.AIConfiguration.AIAssistants
                         .Where(a => a.IsEnabled)
-                        .Select(a => new StringPair { Key = a.GUID, Value = a.Name })
+                        .Select(a => new StringPair { Key = a.GUID, Value = Repository.RepositoryTranslate("AIAssistantName", "*", a.Name) })
                         .ToList()
                 };
 
@@ -1197,7 +1197,8 @@ namespace SealWebServer.Controllers
                 List<string> prompts = new List<string>();
                 if (assistant != null)
                 {
-                    prompts = assistant.Configuration.GetSamplePrompts();
+                    prompts = assistant.Configuration.GetSamplePrompts()
+                        .Select(p => Repository.RepositoryTranslate("AISamplePrompt", "*", p)).ToList();
                 }
 
                 return Json(new { prompts = prompts });
@@ -1538,7 +1539,7 @@ namespace SealWebServer.Controllers
 
                 return Json(new
                 {
-                    assistants = configs.Select(a => new { guid = a.GUID, name = a.Name, description = a.Description }).ToList(),
+                    assistants = configs.Select(a => new { guid = a.GUID, name = Repository.RepositoryTranslate("AIAssistantName", "*", a.Name), description = Repository.RepositoryTranslate("AIAssistantName", "*", a.Description) }).ToList(),
                     selectedGuid = selectedGuid
                 });
             }

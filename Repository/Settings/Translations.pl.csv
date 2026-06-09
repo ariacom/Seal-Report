@@ -14,288 +14,349 @@ Report;=;=
 Report;>;>
 Report;>=;> =
 Report;A value is required for;Wymagana jest wartość dla
+Report;All;Wszystkie
 Report;All selected;Wszystko wybrane
 Report;and;i
+Report;Auto Fit columns;Automatycznie dopasuj kolumny
+Report;Auto Scroll enabled;Automatyczne przewijanie włączone
 Report;Average of;Średnia z
 Report;Back to top;Powrót do góry
 Report;Between;pomiędzy
 Report;Cancel;Anuluj
 Report;Cancelling report...;Anulowanie raportu ...
 Report;Charts;Wykresy
+Report;Clear selection;Wyczyść wybór
+Report;Close;Zamknij
 Report;Contains;Zawiera
+Report;Contains all;Zawiera wszystkie
+Report;Contains any;Zawiera dowolne
+Report;Count Distinct of;Liczba unikalnych z
 Report;Count of;Liczba
+Report;Decrement;Zmniejsz
 Report;Description;Opis
+Report;Display header footer;Wyświetl nagłówek i stopkę
+Report;Display: Execution messages;Wyświetl: Komunikaty wykonania
+Report;Display: Execution messages;Wyświetl: Komunikaty wykonania
+Report;Display: Information messages;Wyświetl: Komunikaty informacyjne
+Report;Display: Information messages;Wyświetl: Komunikaty informacyjne
+Report;Does not contain;Nie zawiera
+Report;Does not contain all;Nie zawiera wszystkich
+Report;Does not contain any;Nie zawiera żadnego
 Report;Drill <;Drill <
 Report;Drill >;Wiertło>
+Report;Duration;Czas trwania
 Report;Duration (seconds);Czas trwania (sekundy)
+Report;Email sent to '{0}';Wiadomość e-mail wysłana do '{0}'
 Report;Ends with;Kończy się na
+Report;Equals;Równa się
 Report;Execute;Generuj
 Report;Executing report...;Wykonywanie raportu ...
 Report;Execution date;Data wykonania
 Report;Execution duration;Czas wykonania
 Report;execution messages;komunikaty wykonawcze
+Report;Export messages...;Eksportuj wiadomości ...
 Report;Filter:;Filtr:
+Report;Go to today;Przejdź do dzisiaj
+Report;Goal;Cel
 Report;Hide;Ukryć
+Report;HTML Print: Show messages;Druk HTML: Pokaż komunikaty
+Report;HTML Print: Show messages;Druk HTML: Pokaż komunikaty
+Report;HTML Print: Show report information;Druk HTML: Pokaż informacje o raporcie
+Report;HTML Print: Show report information;Druk HTML: Pokaż informacje o raporcie
+Report;HTML to PDF;HTML do PDF
+Report;Increment;Zwiększ
+Report;Information panel enabled;Panel informacyjny włączony
+Report;Information panel enabled and shown;Panel informacyjny włączony i wyświetlony
+Report;Information panel hidden;Panel informacyjny ukryty
 Report;Invalid date;Nieprawidłowa data
 Report;Invalid numeric value;Nieprawidłowa wartość liczbowa
+Report;Is between;Jest pomiędzy
+Report;Is Blank;Jest pusty
+Report;Is different from;Jest różny od
+Report;Is empty;Jest pusty
+Report;Is greater or equal than;Jest większa lub równa niż
+Report;Is greater than;Jest większy niż
+Report;Is not between;Nie ma między
+Report;Is Not Blank;Nie jest pusty
+Report;Is not empty;Nie jest pusty
+Report;Is not Null;Nie jest Null
+Report;Is Null;Jest Null
+Report;Is smaller or equal than;Jest mniejszy lub równy niż
+Report;Is smaller than;Jest mniejszy od
+Report;Landscape;Pozioma
+Report;Logs;Dzienniki
 Report;Maximum of;Maksymalnie
+Report;Messages panel enabled;Panel komunikatów włączony
+Report;Messages panel enabled and shown;Panel komunikatów włączony i wyświetlony
+Report;Messages panel enabled and shown only during execution;Panel komunikatów włączony i wyświetlony tylko podczas wykonania
+Report;Messages panel hidden;Panel komunikatów ukryty
 Report;Minimum of;Min
 Report;Model;Model
+Report;Model loaded...;Załadowany model ...
+Report;Models loaded...;Załadowane modele ...
 Report;New report;Nowy raport
+Report;Next Century;Następny wiek
+Report;Next Decade;Następne dziesięciolecie
+Report;Next Month;Następny miesiąc
+Report;Next Year;Następny rok
+Report;No;Nie
+Report;No records;Brak nagrań
 Report;No records. The report output generation has been cancelled.;Brak nagrań. Generowanie danych wyjściowych raportu zostało anulowane.
 Report;No reports;Brak raportów
 Report;No rows;Brak rzędów
 Report;Not Between;Nie pomiędzy
 Report;Not Contains;Nie zawiera
 Report;Now;Teraz
+Report;Options;Opcje
+Report;or;lub
 Report;Page;Strona
-Report;"Page &p; of &P;";"Strona i p; of & P;"
+Report;"Page &p; of &P;";"Strona &p; z &P;"
+Report;Page orientation;Orientacja strony
+Report;Page size;Rozmiar strony
 Report;Pages;Strony
+Report;Pick Hour;Wybierz godzinę
+Report;Pick Minute;Wybierz minutę
+Report;Pick Second;Wybierz sekundę
+Report;Please enter a value;Wprowadź wartość
+Report;Please enter at least a value;Wprowadź co najmniej jedną wartość
+Report;Please find the report '{0}' in attachment.;W załączeniu raport '{0}'.
+Report;Please find your authentication code;W załączeniu kod uwierzytelniający
+Report;Please wait, the report result is being generated in another window;Proszę czekać, wynik raportu jest generowany w innym oknie
+Report;Previous Century;Poprzedni wiek
+Report;Previous Decade;Poprzednie dziesięciolecie
+Report;Previous Month;Poprzedni miesiąc
+Report;Previous Year;Poprzedni rok
+Report;Print: Page orientation;Druk: Orientacja strony
+Report;Print: Show logo;Druk: Pokaż logo
 Report;Processing;Przetwarzanie
 Report;Processing...;Przetwarzanie...
-Report;Report;Raport
-Report;Model loaded...;Załadowany model ...
-Report;No records;Brak nagrań
-Report;Task executed...;Zadanie wykonane ...
-Report;Models loaded...;Załadowane modele ...
-Report;Tasks executed...;Zadania wykonane ...
-Report;Results;Wyniki
 Report;Records;Dokumentacja
+Report;Refresh;Odśwież
+Report;Report;Raport
+Report;Report description;Opis raportu
 Report;Report has been cancelled;Raport został anulowany
 Report;report information;raportuj informacje
 Report;report restrictions;zgłosić ograniczenia
 Report;Report result generated in '{0}';Zgłoś wynik wygenerowany w „{0}”
+Report;Report result options;Opcje wyniku raportu
 Report;report result panel;panel wyników raportu
+Report;Report summary;Podsumowanie raportu
 Report;Restrictions;Ograniczenia
+Report;Results;Wyniki
+Report;Scale;Skala
 Report;second;druga
 Report;seconds;sekundy
 Report;Select all;Zaznacz wszystko
+Report;Select Decade;Wybierz dziesięciolecie
+Report;Select Month;Wybierz miesiąc
+Report;Select Time;Wybierz godzinę
+Report;Select Year;Wybierz rok
 Report;Show;Pokazać
 Report;Show _MENU_ reports;Pokaż raporty _MENU_
 Report;Show _MENU_ rows;Pokaż _MENU_ wiersze
+Report;Show messages;Pokaż komunikaty
+Report;Show messages;Pokaż komunikaty
+Report;Show report information;Pokaż informacje o raporcie
+Report;Show report information;Pokaż informacje o raporcie
+Report;Show/Hide Restrictions;Pokaż/ukryj ograniczenia
 Report;Showing _START_ to _END_ of _TOTAL_;Pokazuje _START_ do _END_ z _TOTAL_
 Report;Showing 0 to 0 of 0;Pokazuje 0 do 0 z 0
 Report;Starting execution...;Rozpoczęcie wykonywania ...
 Report;Starts with;Zaczynać z
+Report;Subtotal;Suma częściowa
 Report;Sum of;Suma
 Report;Summary;streszczenie
+Report;Table of Contents;Spis treści
+Report;Tabs to show;Karty do wyświetlenia
+Report;Task executed...;Zadanie wykonane ...
+Report;Tasks executed...;Zadania wykonane ...
 Report;The report has been generated.;Raport został wygenerowany.
-Report;This report has execution errors. Please check details in the Windows Event Viewer...;Ten raport zawiera błędy wykonania. Sprawdź szczegóły w Podglądzie zdarzeń Windows ...
+Report;This report has execution errors. Please check details in the Logs Files...;Ten raport zawiera błędy wykonania. Sprawdź szczegóły w plikach dzienników...
+Report;ThisHour;Bieżąca godzina
+Report;ThisMinute;Bieżąca minuta
 Report;ThisMonth;Ten miesiąc
+Report;ThisQuarter;Bieżący kwartał
+Report;ThisSemester;Bieżące półrocze
 Report;ThisWeek;W tym tygodniu
 Report;ThisYear;W tym roku
 Report;Today;Dzisiaj
+Report;Toggle Period;Przełącz okres
 Report;Total;Całkowity
 Report;Use the date format '{0}' or one of the following keywords:;Użyj formatu daty „{0}” lub jednego z następujących słów kluczowych:
-Report;View Excel Result;Wyświetl wynik Excel
-Report;View HTML Result;Wyświetl wynik HTML
-Report;View PDF Result;Wyświetl wynik PDF
-Report;View Print Result;Wyświetl wynik wydruku
+Report;View;Widok
 Report;View CSV Result;Wyświetl wynik CSV
+Report;View Excel Converter Result;Pokaż wynik konwertera Excel
+Report;View Excel Result;Wyświetl wynik Excel
+Report;View HTML Print Result;Pokaż wynik druku HTML
+Report;View HTML Result;Wyświetl wynik HTML
+Report;View HTML to PDF Result;Pokaż wynik HTML do PDF
+Report;View Json Result;Pokaż wynik JSON
+Report;View PDF Converter Result;Pokaż wynik konwertera PDF
+Report;View PDF Result;Wyświetl wynik PDF
 Report;View report result file;Wyświetl plik wynikowy raportu
-Report;Equals;Równa się
-Report;Is between;Jest pomiędzy
-Report;Is different from;Jest różny od
-Report;Does not contain;Nie zawiera
-Report;Is empty;Jest pusty
-Report;Is greater or equal than;Jest większa lub równa niż
-Report;Is greater than;Jest większy niż
-Report;Is not between;Nie ma między
-Report;Is not empty;Nie jest pusty
-Report;Is not Null;Nie jest Null
-Report;Is Null;Jest Null
-Report;Is smaller or equal than;Jest mniejszy lub równy niż
-Report;Is smaller than;Jest mniejszy od
-Report;Auto Scroll enabled;Automatyczne przewijanie włączone
-Report;Export messages...;Eksportuj wiadomości ...
-Web;Actions;Akcje
-Web;Aggregate;Agregat
-Web;BCC;BCC
-Web;Body;Ciało
+Report;View Text Result;Pokaż wynik tekstowy
+Report;View XML Result;Pokaż wynik XML
+Report;Warning: The maximum number of records is reached;Ostrzeżenie: Osiągnięto maksymalną liczbę rekordów
+Report;Yes;Tak
+Web;Add;Dodaj
+Web;All;Wszystkie
+Web;Auto-Refresh (seconds);Automatyczne odświeżanie (sekundy)
+Web;Back to login with user name and password;Powrót do logowania z nazwą użytkownika i hasłem
 Web;Cancel;Anuluj
-Web;CC;CC
-Web;Chart axis;Oś wykresu
-Web;Chart height;Wysokość wykresu
-Web;Chart title;Tytuł wykresu
-Web;Chart JS;Wykres JS
-Web;Chart NVD3;Wykres NVD3
-Web;Chart Plotly;Wykres Plotly
-Web;Chart width;Szerokość wykresu
+Web;Change password;Zmień hasło
+Web;Change password;Zmień hasło
+Web;Change your password;Zmień swoje hasło
+Web;Chart sort;Rodzaj wykresu
 Web;Close;Zamknij
-Web;Connection;Połączenie
+Web;Color;Kolor
+Web;Confirm your new password;Potwierdź nowe hasło
 Web;Copy;Kopiuj
+Web;Create in folder;Utwórz w folderze
 Web;Create new folder;Stwórz nowy folder
+Web;CSS Format;Format CSS
+Web;Culture;Kultura
+Web;Current password;Bieżące hasło
 Web;Cut;Wytnij
-Web;Days;Dni
-Web;Days of the week;Dni tygodnia
-Web;Default body;Domyślne ciało
-Web;Default sender address;Domyślny adres nadawcy
-Web;Default subject;Domyślny temat
+Web;Data source connections;Połączenia źródeł danych
+Web;Default view;Widok domyślny
 Web;Delete;Kasuj
 Web;Delete folder;Usunięty folder
 Web;Description;Opis
 Web;Device;Urządzenie
 Web;Disconnect;Rozłączyć się
 Web;Display options;opcje wyświetlania
-Web;Elements;Elementy
-Web;End date;Data zakonczenia
-Web;End date is before start date;Data zakończenia przypada przed datą rozpoczęcia
-Web;Enter a password to protect the Zip file;Wprowadź hasło, aby chronić plik Zip
-Web;"Enter addresses separated by ;";"Wpisz adresy oddzielone;"
-Web;Enter password;Wprowadź hasło
-Web;Enter the file name without extension;Wprowadź nazwę pliku bez rozszerzenia
-Web;Enter user name;Wpisz nazwę użytkownika
-Web;Enter your new file name;Wprowadź nową nazwę pliku
-Web;Error;Błąd
-Web;Error: This report name exists already.;Błąd: ta nazwa raportu już istnieje.
-Web;Execute;Wykonać
-Web;Execute now;Wykonaj teraz
+Web;Edit;Edytuj
+Web;Edit configuration;Edytuj konfigurację
+Web;Edit entry;Edytuj wpis
+Web;Edit profile;Edytuj profil
 Web;Edition;Wydanie
-Web;Execution;Wykonanie
-Web;File name;Nazwa pliku
-Web;Folder;Folder
+Web;Email;E-mail
+Web;Enter password;Wprowadź hasło
+Web;Enter user name;Wpisz nazwę użytkownika
+Web;Enter your current password;Wprowadź bieżące hasło
+Web;Enter your new file name;Wprowadź nową nazwę pliku
+Web;Enter your new password;Wprowadź nowe hasło
+Web;Enter your security code;Wprowadź kod zabezpieczający
+Web;Enter your user identifier or email;Wprowadź identyfikator użytkownika lub adres e-mail
+Web;Error;Błąd
+Web;Error: only files (and not reports) can be copied to this folder.;Błąd: tylko pliki (a nie raporty) można skopiować do tego folderu.
+Web;Error: the destination file name contains invalid characters.;Błąd: nazwa pliku docelowego zawiera nieprawidłowe znaki.
+Web;Error: the destination folder name contains invalid characters.;Błąd: nazwa folderu docelowego zawiera nieprawidłowe znaki.
+Web;Expand in Treeview;Rozwiń w widoku drzewa
+Web;Export;Eksportuj
+Web;Files only;Tylko pliki
+Web;Folder Permissions;Uprawnienia folderu
 Web;Folders;Foldery
-Web;for a duration of;na czas
-Web;Format;Format
-Web;From;Z
-Web;Grid mode;Tryb siatki
-Web;Inconsistent duration or interval for the schedule. Check your entries.;Niespójny czas trwania lub interwał harmonogramu. Sprawdź swoje wpisy.
+Web;Forget your password ?;Zapomniałeś hasła ?
+Web;Group name;Nazwa grupy
+Web;Group name;Nazwa grupy
+Web;Groups;Grupy
+Web;Groups;Grupy
+Web;Height;Wysokość
+Web;Icon;Ikona
+Web;Information;Informacja
+Web;Invalid security code;Nieprawidłowy kod zabezpieczający
 Web;Invalid user name or password;Nieprawidłowa nazwa użytkownika lub hasło
-Web;Is enabled;Jest włączony
-Web;Is required;Jest wymagane
-Web;Is Multiline;Czy Multiline
-Web;Last;Ostatni, ubiegły, zeszły
-Web;Last modification;Ostatnia modyfikacja
+Web;Is dynamic;Jest dynamiczny
+Web;Last execution at;Ostatnie wykonanie o
 Web;Licensed to;Byc licencjonowanym
 Web;Login;Zaloguj Się
+Web;Login ID;Identyfikator logowania
+Web;Logins;Loginy
 Web;Logout;Wyloguj
 Web;Logout the user;Wyloguj użytkownika
-Web;Manage folders;Zarządzaj folderami
-Web;Months;Miesięcy
+Web;Manage Folders;Zarządzaj folderami
+Web;Manage sub-folders;Zarządzaj podfolderami
 Web;Name;Nazwa
 Web;New;Nowy
 Web;New folder name;Nazwa nowego folderu
-Web;No Email destination specified in the schedule;Brak adresu e-mail określonego w harmonogramie
-Web;No file name specified in the schedule;Brak nazwy pliku w harmonogramie
+Web;New folder path;Ścieżka nowego folderu
+Web;New password;Nowe hasło
+Web;None;Brak
 Web;OK;dobrze
-Web;Operator;Operator
-Web;"Optional addresses separated by ;";"Opcjonalne adresy rozdzielone;"
-Web;Optional title chart;Opcjonalny wykres tytułowy
-Web;Options;Opcje
+Web;On startup;Przy uruchomieniu
+Web;Optional chart title;Opcjonalny tytuł wykresu
+Web;Optional menu name;Opcjonalna nazwa menu
 Web;Output;Wydajność
 Web;Password;Hasło
 Web;Paste;Wklej
+Web;PDF Conversion delay;Opóźnienie konwersji PDF
 Web;Personal;Osobisty
-Web;Pivot mode;Tryb przestawny
+Web;Personal folder;Folder osobisty
+Web;Phone;Telefon
 Web;Please wait;Proszę czekać
 Web;Profile;Profil
 Web;Profile information;Informacje o Profilu
-Web;Prompt;Skłonić
-Web;Prompt at run-time;Pytaj w czasie wykonywania
-Web;Recur every;Powtarzaj co
 Web;Refresh;Odśwież
-Web;Remove;Usunąć
-Web;Remove all;Usuń wszystko
+Web;Re-init your password;Zresetuj swoje hasło
+Web;Reload and execute;Przeładuj i wykonaj
 Web;Rename;Zmień nazwę
-Web;Rename folder;Zmień nazwę folderu
-Web;Repeat every;Powtarzać każdy
+Web;Rename or move folder;Zmień nazwę lub przenieś folder
+Web;Rename, move or copy;Zmień nazwę, przenieś lub kopiuj
 Web;Report;Raport
+Web;Report execution mode;Tryb wykonania raportu
 Web;Report name;Nazwa raportu
 Web;Report title;Tytuł raportu
 Web;Report title if different from report name;Tytuł raportu, jeśli inny niż nazwa raportu
 Web;Reports;Raporty
-Web;Result as body;Wynik jako ciało
+Web;Reports menu;Menu raportów
+Web;Repository connection;Połączenie repozytorium
+Web;Reset password;Zresetuj hasło
+Web;Reset your password;Zresetuj swoje hasło
 Web;Save;Zapisać
-Web;Schedule;Harmonogram
 Web;Search;Szukaj
-Web;Show totals;Pokaż sumy
-Web;Show sub-totals;Pokaż sumy częściowe
-Web;Sort;Sortować
-Web;Start date;Data rozpoczęcia
-Web;Subject;Przedmiot
-Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;Maksymalna liczba użytkowników została osiągnięta dla Twojej licencji ({0}). Spróbuj zalogować się później ...
-Web;To;Do
-Web;Total aggr.;Total aggr.
+Web;Security code;Kod zabezpieczający
+Web;Show sub-folders;Pokaż podfoldery
+Web;Startup report name;Nazwa raportu startowego
+Web;The favorite has been updated;Ulubiony został zaktualizowany
+Web;Two-Factor Authentication;Uwierzytelnianie dwuskładnikowe
 Web;Type;Rodzaj
+Web;Type a new password;Wpisz nowe hasło
+Web;Upload;Prześlij
 Web;User groups;Grupy użytkowników
+Web;User identifier or email;Identyfikator użytkownika lub adres e-mail
 Web;User name;Nazwa Użytkownika
 Web;Users;Użytkownicy
-Web;Value;Wartość
-Web;Values;Wartości
-Web;Error: only files (and not reports) can be copied to this folder.;Błąd: tylko pliki (a nie raporty) można skopiować do tego folderu.
-Web;Zip attachments;Załączniki zip
-Web;Zip password;Hasło zip
-WebJS;Options;Opcje
-WebJS;No calculation option;Brak opcji obliczania
-WebJS;% of the row;% wiersza
-WebJS;% of the column;% kolumny
-WebJS;% of the total;% całkowitej
+Web;Web product name;Nazwa produktu Web
+Web;Width;Szerokość
 WebJS;# of % selected;#% wybrano
-WebJS;(filtered from _MAX_);(przefiltrowane z _MAX_)
-WebJS;No Output;Brak wyjścia
-WebJS;No Schedule;Brak harmonogramu
-WebJS;1 Decimal;1 dziesiętny
-WebJS;2 Decimals;2 miejsca dziesiętne
-WebJS;3 Decimals;3 miejsca dziesiętne
-WebJS;4 Decimals;4 miejsca po przecinku
-WebJS;Percentage;Odsetek
-WebJS;Percentage 1 Dec.;Procent 1 grudnia
-WebJS;Percentage 2 Dec.;Procent 2 grudnia
+WebJS;Actions;Akcje
 WebJS;All selected;Wszystko wybrane
-WebJS;Ascendant;Rosnąco
-WebJS;Automatic ascendant;Automatyczne rosnąco
-WebJS;Automatic descendant;Automatyczny malejąco
-WebJS;Average;Średni
-WebJS;Average of;Średnia z
-WebJS;Axis;Oś
-WebJS;Bar;Bar
+WebJS;Allow only execution in a new window;Zezwól tylko na wykonanie w nowym oknie
+WebJS;Cancel;Anuluj
+WebJS;Configuration for;Konfiguracja dla
 WebJS;Contains;Zawiera
-WebJS;Count;Liczyć
-WebJS;Count of;Podliczenie
-WebJS;CSV;CSV
-WebJS;Data tables responsive;Tabele danych reagują
-WebJS;Daily;Codziennie
-WebJS;day;dzień
-WebJS;days;dni
-WebJS;Decimal;Dziesiętny
+WebJS;Contains all;Zawiera wszystkie
+WebJS;Contains any;Zawiera dowolne
+WebJS;Copy;Kopiuj
+WebJS;Copy of;Kopia
+WebJS;Copy to;Kopiuj do
 WebJS;Default;Domyślna
+WebJS;Default culture;Domyślna kultura
+WebJS;Default mode;Tryb domyślny
 WebJS;Default report connection;Domyślne połączenie z raportem
 WebJS;Default repository connection;Domyślne połączenie z repozytorium
-WebJS;Descendant;Malejąco
+WebJS;Default startup;Domyślne uruchomienie
+WebJS;Do not execute report;Nie wykonuj raportu
 WebJS;Do you really want to delete the reports or files selected ?;Czy na pewno chcesz usunąć wybrane raporty lub pliki?
 WebJS;Does not contain;Nie zawiera
-WebJS;Drop your Column elements;Upuść elementy kolumny
-WebJS;Drop your Data;Upuść swoje dane
-WebJS;Drop your Data elements;Upuść elementy danych
-WebJS;Drop your Elements;Upuść swoje elementy
-WebJS;Drop your Page elements;Upuść elementy strony
-WebJS;Drop your Restrictions;Upuść swoje ograniczenia
-WebJS;Drop your Row elements;Upuść elementy wiersza
+WebJS;Does not contain all;Nie zawiera wszystkich
+WebJS;Does not contain any;Nie zawiera żadnego
+WebJS;Download report;Pobierz raport
 WebJS;Edit report;Edytuj raport
-WebJS;Email;E-mail
+WebJS;Edit reports / Manage files;Edytuj raporty / Zarządzaj plikami
+WebJS;Edit schedules / View files;Edytuj harmonogramy / Pokaż pliki
 WebJS;Ends with;Kończy się na
 WebJS;Equals;Równa się
 WebJS;Error;Błąd
-WebJS;Error : Unable to connect to the server;Błąd: Nie można połączyć się z serwerem
-WebJS;Excel;Excel
-WebJS;Filter;Filtr
+WebJS;Execute report in a new window;Wykonaj raport w nowym oknie
+WebJS;Execute report in the current window;Wykonaj raport w bieżącym oknie
+WebJS;Execute reports / View files;Wykonaj raporty / Pokaż pliki
+WebJS;Execute reports and outputs / View files;Wykonaj raporty i wyniki / Pokaż pliki
+WebJS;Execute the last report;Wykonaj ostatni raport
+WebJS;Execute the report;Wykonaj raport
+WebJS;Favorites;Ulubione
 WebJS;Folder;Folder
-WebJS;For rows;Dla rzędów
-WebJS;For columns;Dla kolumn
-WebJS;For rows and columns;Dla wierszy i kolumn
-WebJS;For rows (total only);Dla wierszy (tylko łącznie)
-WebJS;For rows and columns (total only);Dla wierszy i kolumn (tylko łącznie)
-WebJS;Force execution;Wymuszenie wykonania
-WebJS;Use full screen width;Użyj pełnej szerokości ekranu
-WebJS;General;Ogólne
-WebJS;General date long time;Ogólny termin długi czas
-WebJS;General date short time;Ogólny termin krótki czas
-WebJS;Horizontal Bar;Pasek poziomy
-WebJS;hour;godzina
-WebJS;hours;godziny
-WebJS;HTML;HTML
-WebJS;HTML Print;Drukuj HTML
-WebJS;Indefinitely;W sposób nieokreślony
 WebJS;Is between;Jest pomiędzy
 WebJS;Is different from;Jest różny od
 WebJS;Is empty;Jest pusty
@@ -307,93 +368,136 @@ WebJS;Is not Null;Nie jest Null
 WebJS;Is Null;Jest Null
 WebJS;Is smaller or equal than;Jest mniejszy lub równy niż
 WebJS;Is smaller than;Jest mniejszy od
-WebJS;Line;Linia
-WebJS;Long date;Długa data
-WebJS;Maximum;Maksymalny
-WebJS;Maximum of;Maksymalnie
-WebJS;Minimum;Minimum
-WebJS;Minimum of;Min
-WebJS;minute;minuta
-WebJS;minutes;minuty
-WebJS;Modified;Zmodyfikowany
-WebJS;Monthly;Miesięczny
-WebJS;New Output for;Nowe wyjście dla
-WebJS;New report;Nowy raport
-WebJS;New Schedule;Nowy harmonogram
+WebJS;Last modification;Ostatnia modyfikacja
+WebJS;Mark as favorite;Oznacz jako ulubione
+WebJS;Model;Model
+WebJS;New folder configuration;Konfiguracja nowego folderu
+WebJS;New group;Nowa grupa
+WebJS;New login;Nowy login
 WebJS;No;Nie
-WebJS;No prompt;Bez pytania
-WebJS;No report;Brak raportu
-WebJS;No schedule;Brak harmonogramu
-WebJS;No total;Brak sumy
-WebJS;No (axis values are linear);Nie (wartości osi są liniowe)
+WebJS;No download (except files) or upload;Brak pobierania (oprócz plików) ani przesyłania
+WebJS;No folder configuration;Brak konfiguracji folderu
+WebJS;No login;Brak loginu
+WebJS;No personal folder;Brak folderu osobistego
+WebJS;No right;Brak uprawnień
 WebJS;None;Żaden
 WebJS;Not sorted;Nie posortowane
-WebJS;Number;Numer
-WebJS;Number 1 dec.;Numer 1 dec.
-WebJS;Number 2 dec.;Numer 2 dec.
-WebJS;Number 3 dec.;Numer 3 dec.
-WebJS;Number 4 dec.;Numer 4 dec.
-WebJS;One time;Jeden raz
+WebJS;OK;OK
+WebJS;Options;Opcje
 WebJS;Output;Wydajność
-WebJS;PDF;PDF
-WebJS;PDF Print;Drukuj PDF
-WebJS;Pie;Ciasto
+WebJS;Personal folder for files only;Folder osobisty tylko na pliki
+WebJS;Personal folder for reports and files;Folder osobisty na raporty i pliki
 WebJS;Please wait;Proszę czekać
-WebJS;Please note that only schedules can be edited for this report.;Pamiętaj, że dla tego raportu można edytować tylko harmonogramy.
-WebJS;Scatter;Rozpraszać
-WebJS;Polar Area;Obszar polarny
-WebJS;Radar;Radar
-WebJS;Private (The output cannot be executed by other users);Prywatne (dane wyjściowe nie mogą być wykonywane przez innych użytkowników)
-WebJS;Private (The output cannot be edited by other users);Prywatne (Wyjście nie może być edytowane przez innych użytkowników)
-WebJS;Prompt at execution;Pytaj przy wykonywaniu
-WebJS;Prompt only one value;Pytaj tylko o jedną wartość
-WebJS;Public;Publiczny
-WebJS;Remove;Usunąć
-WebJS;Report has been modified, do you really want to close ?;Raport został zmodyfikowany, czy na pewno chcesz zamknąć?
-WebJS;Report saved;Raport zapisany
+WebJS;Processing;Przetwarzanie
+WebJS;Profile;Profil
+WebJS;Recents;Ostatnie
+WebJS;Report;Raport
 WebJS;report(s) or file(s) cut in the clipboard;raport (y) lub plik (i) wycięte w schowku
 WebJS;report(s) or file(s) have been deleted;raport (y) lub plik (i) zostały usunięte
 WebJS;report(s) or file(s) processed;raport (y) lub plik (i) przetworzone
 WebJS;report(s) or files(s) copied in the clipboard;raporty lub pliki skopiowane w schowku
+WebJS;Reports;Raporty
 WebJS;Schedule;Harmonogram
-WebJS;Select all;Zaznacz wszystko
 WebJS;Server Version;Wersja serwera
-WebJS;Short date;Krótka data
 WebJS;Show _MENU_ reports;Pokaż raporty _MENU_
-WebJS;Show execution message panel;Pokaż panel wiadomości o wykonaniu
-WebJS;Show information panel;Pokaż panel informacyjny
-WebJS;Show first header line;Pokaż pierwszą linię nagłówka
-WebJS;Show report result panel;Pokaż panel wyników raportu
-WebJS;Show restrictions panel;Pokaż panel ograniczeń
-WebJS;Showing _START_ to _END_ of _TOTAL_;Pokazuje _START_ do _END_ z _TOTAL_
-WebJS;Showing 0 to 0 of 0;Pokazuje 0 do 0 z 0
-WebJS;Splitter;Spliter
-WebJS;Stacked Area;Obszar ułożony
 WebJS;Starts with;Zaczynać z
-WebJS;Sum;Suma
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfiguracja została zapisana. Zaloguj się ponownie, jeśli dotyczą Cię zmiany zabezpieczeń.
 WebJS;The folder has been created;Folder został utworzony
 WebJS;The folder has been deleted;Folder został usunięty
 WebJS;The folder has been renamed;Nazwa folderu została zmieniona
 WebJS;The folder has been updated;Folder został zaktualizowany
 WebJS;The report or file has been renamed;Nazwa raportu lub pliku została zmieniona
-WebJS;Use data tables;Użyj tabel danych
+WebJS;Toggle Report or Folders view;Przełącz widok raportów lub folderów
+WebJS;Unexpected error on server;Nieoczekiwany błąd na serwerze
+WebJS;User can download reports;Użytkownik może pobierać raporty
+WebJS;User can download reports and upload reports and files;Użytkownik może pobierać raporty oraz przesyłać raporty i pliki
 WebJS;View;Widok
+WebJS;View Folders;Pokaż foldery
+WebJS;View Report;Pokaż raport
+WebJS;View reports;Pokaż raporty
 WebJS;Views and outputs;Widoki i wyjścia
 WebJS;Warning;Ostrzeżenie
 WebJS;Web Interface Version;Wersja interfejsu internetowego
-WebJS;Weekly;Co tydzień
-WebJS;weeks;tygodni
 WebJS;Yes;Tak
-WebJS;Yes (the attachments are zipped);Tak (załączniki są spakowane)
-WebJS;Yes (the HTML result is the body);Tak (wynik HTML to treść)
-WebJS;Yes (a new line with sub-totals is added when the value changes);Tak (nowa linia z sumami częściowymi jest dodawana po zmianie wartości)
-WebJS;Yes (element values are used for the axis);Tak (wartości elementu są używane dla osi)
-WebJS;No Sort;Brak sortowania
-WebJS;By point ascending;Według punktu rosnącego
-WebJS;By axis label ascending;Rosnąca etykieta osi
-WebJS;By point descending;Opuszczając punkt
-WebJS;By axis label descending;Przy malejącej etykiecie osi
-Web;Chart sort;Rodzaj wykresu
-WebJS;Show summary table;Pokaż tabelę podsumowań
-WebJS;Show page tables;Pokaż tabele stron
-WebJS;Show data tables;Pokaż tabele danych
+WebJS;Yes (Folder is expanded in the tree view);Tak (Folder jest rozwinięty w widoku drzewa)
+WebJS;Yes (Only files can be stored);Tak (Można przechowywać tylko pliki)
+WebJS;Yes (User can browse sub-folders);Tak (Użytkownik może przeglądać podfoldery)
+WebJS;Yes (User can create and edit sub-folders);Tak (Użytkownik może tworzyć i edytować podfoldery)
+WebJS;Yes (User can edit his profile);Tak (Użytkownik może edytować swój profil)
+WebJS;Yes (User is administrator of the Web Server);Tak (Użytkownik jest administratorem serwera Web)
+Web;Select assistant;Wybierz asystenta
+Web;Mark as favorite;Oznacz jako ulubione
+Web;Favorites;Ulubione
+Web;No favorites yet;Brak ulubionych
+Web;Recent;Ostatnie
+Web;No recent items;Brak ostatnich elementów
+Web;New conversation;Nowa rozmowa
+Web;Sample prompts;Przykładowe podpowiedzi
+Web;Sample Prompts;Przykładowe podpowiedzi
+Web;No sample prompts defined;Brak zdefiniowanych przykładowych podpowiedzi
+Web;AI Assistant;Asystent AI
+Web;Favorites & Recent;Ulubione i ostatnie
+Web;Hide panel;Ukryj panel
+Web;Ask the AI assistant…;Zapytaj asystenta AI…
+Web;Confirm Deletion;Potwierdź usunięcie
+Web;This action is irreversible. Are you sure you want to delete this item?;Ta operacja jest nieodwracalna. Czy na pewno chcesz usunąć ten element?
+Web;Data Source;Źródło danych
+Web;Report Assistants;Asystenci raportów
+Web;Select Tables or Views;Wybierz tabele lub widoki
+Web;Filter tables...;Filtruj tabele...
+Web;Select All;Zaznacz wszystko
+Web;Deselect All;Odznacz wszystko
+Web;tables selected;wybranych tabel
+Web;Prompt Shortcuts;Skróty podpowiedzi
+Web;How can Seal AI help you today ?;Jak Seal AI może Ci dzisiaj pomóc ?
+Web;No current items available;Brak dostępnych bieżących elementów
+Web;Current items will appear here when saved;Bieżące elementy pojawią się tutaj po zapisaniu
+Web;Drafts;Wersje robocze
+Web;No draft items available;Brak dostępnych wersji roboczych
+Web;Upload files or create new items with the assistant to see them here;Prześlij pliki lub utwórz nowe elementy za pomocą asystenta, aby zobaczyć je tutaj
+Web;Item Details;Szczegóły elementu
+Web;Loading detail. Please wait...;Wczytywanie szczegółów. Proszę czekać...
+Web;Select a row from the table to view its details;Wybierz wiersz z tabeli, aby zobaczyć jego szczegóły
+Web;Check;Sprawdź
+Web;Download;Pobierz
+Web;Reports Assistant;Asystent raportów
+Web;Connection type;Typ połączenia
+Web;Connection string;Ciąg połączenia
+Web;Tables or views;Tabele lub widoki
+Web;Report Assistant;Asystent raportu
+Web;AI Provider;Dostawca AI
+Web;AI model;Model AI
+Web;AI model name (overrides default));Nazwa modelu AI (zastępuje domyślną))
+Web;Temperature;Temperatura
+Web;Model temperature;Temperatura modelu
+Web;System prompt;Prompt systemowy
+Web;Optional sytem prompt for the assistant;Opcjonalny prompt systemowy dla asystenta
+Web;User prompt;Prompt użytkownika
+Web;Default user prompts (if empty default values configured are taken);Domyślne prompty użytkownika (jeśli puste, używane są skonfigurowane wartości domyślne)
+Web;User Groups allowed (No selection means no restriction);Dozwolone grupy użytkowników (brak wyboru oznacza brak ograniczeń)
+Web;Scan options;Opcje skanowania
+Web;When to scan;Kiedy skanować
+Web;Cache duration (days);Czas trwania pamięci podręcznej (dni)
+Web;Cache duration (days) for scanned data;Czas trwania pamięci podręcznej (dni) dla zeskanowanych danych
+Web;Tables to scan (no selection means all tables);Tabele do zeskanowania (brak wyboru oznacza wszystkie tabele)
+Web;Records to scan;Rekordy do zeskanowania
+Web;Number of records used for scan;Liczba rekordów użytych do skanowania
+Web;Scan Data Now;Skanuj dane teraz
+Web;Execute;Wykonać
+Web;Elements:;Elementy:
+Web;Restrictions:;Ograniczenia:
+WebJS;Hide AI Assistant;Ukryj asystenta AI
+WebJS;AI Assistant;Asystent AI
+WebJS;Running;Działa
+WebJS;Request cancelled.;Żądanie anulowane.
+WebJS;Remove from favorites;Usuń z ulubionych
+WebJS;No sample prompts defined;Brak zdefiniowanych przykładowych podpowiedzi
+WebJS;Rename;Zmień nazwę
+WebJS;Delete;Usuń
+WebJS;No favorites yet;Brak ulubionych
+WebJS;No recent items;Brak ostatnich elementów
+Web;Configuration;Konfiguracja
+Web;Download/Upload;Pobieranie/Przesyłanie
+Web;Rights;Uprawnienia
+Web;Assistants;Asystenci
+Web;Folder;Folder

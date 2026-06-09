@@ -1,0 +1,503 @@
+﻿Context;Reference;da
+NVD3;(right axis);(højre akse)
+NVD3;Expanded;Udvidet
+NVD3;Grouped;Grupperet
+NVD3;Re-scale y-axis;Skalér y-aksen igen
+NVD3;Stacked;Stablet
+NVD3;Stream;Strøm
+Report;!=;!=
+Report;# of % selected;# af % valgt
+Report;(filtered from _MAX_);(filtreret fra _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;En værdi er påkrævet for
+Report;All;Alle
+Report;All selected;Alle valgt
+Report;and;og
+Report;Auto Fit columns;Tilpas kolonner automatisk
+Report;Auto Scroll enabled;Automatisk rulning aktiveret
+Report;Average of;Gennemsnit af
+Report;Back to top;Tilbage til toppen
+Report;Between;Mellem
+Report;Cancel;Annuller
+Report;Cancelling report...;Annullerer rapport...
+Report;Charts;Diagrammer
+Report;Clear selection;Ryd valg
+Report;Close;Luk
+Report;Contains;Indeholder
+Report;Contains all;Indeholder alle
+Report;Contains any;Indeholder en eller flere
+Report;Count Distinct of;Antal entydige af
+Report;Count of;Antal af
+Report;Decrement;Formindsk
+Report;Description;Beskrivelse
+Report;Display header footer;Vis sidehoved og sidefod
+Report;Display: Execution messages;Vis: Udførelsesmeddelelser
+Report;Display: Execution messages;Vis: Udførelsesmeddelelser
+Report;Display: Information messages;Vis: Informationsmeddelelser
+Report;Display: Information messages;Vis: Informationsmeddelelser
+Report;Does not contain;Indeholder ikke
+Report;Does not contain all;Indeholder ikke alle
+Report;Does not contain any;Indeholder ikke nogen
+Report;Drill <;Detaljer <
+Report;Drill >;Detaljer >
+Report;Duration;Varighed
+Report;Duration (seconds);Varighed (sekunder)
+Report;Email sent to '{0}';E-mail sendt til '{0}'
+Report;Ends with;Slutter med
+Report;Equals;Lig med
+Report;Execute;Udfør
+Report;Executing report...;Udfører rapport...
+Report;Execution date;Udførelsesdato
+Report;Execution duration;Udførelsesvarighed
+Report;execution messages;udførelsesmeddelelser
+Report;Export messages...;Eksportér meddelelser...
+Report;Filter:;Filter:
+Report;Go to today;Gå til i dag
+Report;Goal;Mål
+Report;Hide;Skjul
+Report;HTML Print: Show messages;HTML-udskrift: Vis meddelelser
+Report;HTML Print: Show messages;HTML-udskrift: Vis meddelelser
+Report;HTML Print: Show report information;HTML-udskrift: Vis rapportinformation
+Report;HTML Print: Show report information;HTML-udskrift: Vis rapportinformation
+Report;HTML to PDF;HTML til PDF
+Report;Increment;Forøg
+Report;Information panel enabled;Informationspanel aktiveret
+Report;Information panel enabled and shown;Informationspanel aktiveret og vist
+Report;Information panel hidden;Informationspanel skjult
+Report;Invalid date;Ugyldig dato
+Report;Invalid numeric value;Ugyldig numerisk værdi
+Report;Is between;Er mellem
+Report;Is Blank;Er tom
+Report;Is different from;Er forskellig fra
+Report;Is empty;Er tom
+Report;Is greater or equal than;Er større end eller lig med
+Report;Is greater than;Er større end
+Report;Is not between;Er ikke mellem
+Report;Is Not Blank;Er ikke tom
+Report;Is not empty;Er ikke tom
+Report;Is not Null;Er ikke Null
+Report;Is Null;Er Null
+Report;Is smaller or equal than;Er mindre end eller lig med
+Report;Is smaller than;Er mindre end
+Report;Landscape;Liggende
+Report;Logs;Logfiler
+Report;Maximum of;Maksimum af
+Report;Messages panel enabled;Meddelelsespanel aktiveret
+Report;Messages panel enabled and shown;Meddelelsespanel aktiveret og vist
+Report;Messages panel enabled and shown only during execution;Meddelelsespanel aktiveret og kun vist under udførelse
+Report;Messages panel hidden;Meddelelsespanel skjult
+Report;Minimum of;Minimum af
+Report;Model;Model
+Report;Model loaded...;Model indlæst...
+Report;Models loaded...;Modeller indlæst...
+Report;New report;Ny rapport
+Report;Next Century;Næste århundrede
+Report;Next Decade;Næste årti
+Report;Next Month;Næste måned
+Report;Next Year;Næste år
+Report;No;Nej
+Report;No records;Ingen poster
+Report;No records. The report output generation has been cancelled.;Ingen poster. Genereringen af rapportoutput er blevet annulleret.
+Report;No reports;Ingen rapporter
+Report;No rows;Ingen rækker
+Report;Not Between;Ikke mellem
+Report;Not Contains;Indeholder ikke
+Report;Now;Nu
+Report;Options;Indstillinger
+Report;or;eller
+Report;Page;Side
+Report;"Page &p; of &P;";"Side &p; af &P;"
+Report;Page orientation;Sideretning
+Report;Page size;Sidestørrelse
+Report;Pages;Sider
+Report;Pick Hour;Vælg time
+Report;Pick Minute;Vælg minut
+Report;Pick Second;Vælg sekund
+Report;Please enter a value;Indtast en værdi
+Report;Please enter at least a value;Indtast mindst én værdi
+Report;Please find the report '{0}' in attachment.;Find rapporten '{0}' som vedhæftet fil.
+Report;Please find your authentication code;Find din godkendelseskode
+Report;Please wait, the report result is being generated in another window;Vent venligst, rapportresultatet genereres i et andet vindue
+Report;Previous Century;Forrige århundrede
+Report;Previous Decade;Forrige årti
+Report;Previous Month;Forrige måned
+Report;Previous Year;Forrige år
+Report;Print: Page orientation;Udskrift: Sideretning
+Report;Print: Show logo;Udskrift: Vis logo
+Report;Processing;Behandler
+Report;Processing...;Behandler...
+Report;Records;Poster
+Report;Refresh;Opdater
+Report;Report;Rapport
+Report;Report description;Rapportbeskrivelse
+Report;Report has been cancelled;Rapporten er blevet annulleret
+Report;report information;rapportinformation
+Report;report restrictions;rapportbegrænsninger
+Report;Report result generated in '{0}';Rapportresultat genereret i '{0}'
+Report;Report result options;Indstillinger for rapportresultat
+Report;report result panel;rapportresultatpanel
+Report;Report summary;Rapportoversigt
+Report;Restrictions;Begrænsninger
+Report;Results;Resultater
+Report;Scale;Skala
+Report;second;sekund
+Report;seconds;sekunder
+Report;Select all;Vælg alle
+Report;Select Decade;Vælg årti
+Report;Select Month;Vælg måned
+Report;Select Time;Vælg tidspunkt
+Report;Select Year;Vælg år
+Report;Show;Vis
+Report;Show _MENU_ reports;Vis _MENU_ rapporter
+Report;Show _MENU_ rows;Vis _MENU_ rækker
+Report;Show messages;Vis meddelelser
+Report;Show messages;Vis meddelelser
+Report;Show report information;Vis rapportinformation
+Report;Show report information;Vis rapportinformation
+Report;Show/Hide Restrictions;Vis/skjul begrænsninger
+Report;Showing _START_ to _END_ of _TOTAL_;Viser _START_ til _END_ af _TOTAL_
+Report;Showing 0 to 0 of 0;Viser 0 til 0 af 0
+Report;Starting execution...;Starter udførelse...
+Report;Starts with;Starter med
+Report;Subtotal;Subtotal
+Report;Sum of;Sum af
+Report;Summary;Oversigt
+Report;Table of Contents;Indholdsfortegnelse
+Report;Tabs to show;Faner der skal vises
+Report;Task executed...;Opgave udført...
+Report;Tasks executed...;Opgaver udført...
+Report;The report has been generated.;Rapporten er blevet genereret.
+Report;This report has execution errors. Please check details in the Logs Files...;Denne rapport har udførelsesfejl. Se detaljer i logfilerne...
+Report;ThisHour;Denne time
+Report;ThisMinute;Dette minut
+Report;ThisMonth;Denne måned
+Report;ThisQuarter;Dette kvartal
+Report;ThisSemester;Dette halvår
+Report;ThisWeek;Denne uge
+Report;ThisYear;Dette år
+Report;Today;I dag
+Report;Toggle Period;Skift periode
+Report;Total;Total
+Report;Use the date format '{0}' or one of the following keywords:;Brug datoformatet '{0}' eller et af følgende nøgleord:
+Report;View;Vis
+Report;View CSV Result;Vis CSV-resultat
+Report;View Excel Converter Result;Vis Excel-konverteringsresultat
+Report;View Excel Result;Vis Excel-resultat
+Report;View HTML Print Result;Vis HTML-udskriftsresultat
+Report;View HTML Result;Vis HTML-resultat
+Report;View HTML to PDF Result;Vis HTML til PDF-resultat
+Report;View Json Result;Vis Json-resultat
+Report;View PDF Converter Result;Vis PDF-konverteringsresultat
+Report;View PDF Result;Vis PDF-resultat
+Report;View report result file;Vis rapportresultatfil
+Report;View Text Result;Vis tekstresultat
+Report;View XML Result;Vis XML-resultat
+Report;Warning: The maximum number of records is reached;Advarsel: Det maksimale antal poster er nået
+Report;Yes;Ja
+Web;Add;Tilføj
+Web;All;Alle
+Web;Auto-Refresh (seconds);Automatisk opdatering (sekunder)
+Web;Back to login with user name and password;Tilbage til login med brugernavn og adgangskode
+Web;Cancel;Annuller
+Web;Change password;Skift adgangskode
+Web;Change password;Skift adgangskode
+Web;Change your password;Skift din adgangskode
+Web;Chart sort;Diagramsortering
+Web;Close;Luk
+Web;Color;Farve
+Web;Confirm your new password;Bekræft din nye adgangskode
+Web;Copy;Kopiér
+Web;Create in folder;Opret i mappe
+Web;Create new folder;Opret ny mappe
+Web;CSS Format;CSS-format
+Web;Culture;Kultur
+Web;Current password;Nuværende adgangskode
+Web;Cut;Klip
+Web;Data source connections;Datakildeforbindelser
+Web;Default view;Standardvisning
+Web;Delete;Slet
+Web;Delete folder;Slet mappe
+Web;Description;Beskrivelse
+Web;Device;Enhed
+Web;Disconnect;Afbryd forbindelse
+Web;Display options;Visningsindstillinger
+Web;Edit;Rediger
+Web;Edit configuration;Rediger konfiguration
+Web;Edit entry;Rediger post
+Web;Edit profile;Rediger profil
+Web;Edition;Udgave
+Web;Email;E-mail
+Web;Enter password;Indtast adgangskode
+Web;Enter user name;Indtast brugernavn
+Web;Enter your current password;Indtast din nuværende adgangskode
+Web;Enter your new file name;Indtast dit nye filnavn
+Web;Enter your new password;Indtast din nye adgangskode
+Web;Enter your security code;Indtast din sikkerhedskode
+Web;Enter your user identifier or email;Indtast din brugeridentifikator eller e-mail
+Web;Error;Fejl
+Web;Error: only files (and not reports) can be copied to this folder.;Fejl: kun filer (og ikke rapporter) kan kopieres til denne mappe.
+Web;Error: the destination file name contains invalid characters.;Fejl: destinationsfilnavnet indeholder ugyldige tegn.
+Web;Error: the destination folder name contains invalid characters.;Fejl: destinationsmappenavnet indeholder ugyldige tegn.
+Web;Expand in Treeview;Udvid i træstruktur
+Web;Export;Eksportér
+Web;Files only;Kun filer
+Web;Folder Permissions;Mappetilladelser
+Web;Folders;Mapper
+Web;Forget your password ?;Glemt din adgangskode?
+Web;Group name;Gruppenavn
+Web;Group name;Gruppenavn
+Web;Groups;Grupper
+Web;Groups;Grupper
+Web;Height;Højde
+Web;Icon;Ikon
+Web;Information;Information
+Web;Invalid security code;Ugyldig sikkerhedskode
+Web;Invalid user name or password;Ugyldigt brugernavn eller adgangskode
+Web;Is dynamic;Er dynamisk
+Web;Last execution at;Seneste udførelse kl.
+Web;Licensed to;Licenseret til
+Web;Login;Login
+Web;Login ID;Login-id
+Web;Logins;Logins
+Web;Logout;Log ud
+Web;Logout the user;Log brugeren ud
+Web;Manage Folders;Administrer mapper
+Web;Manage sub-folders;Administrer undermapper
+Web;Name;Navn
+Web;New;Ny
+Web;New folder name;Nyt mappenavn
+Web;New folder path;Ny mappesti
+Web;New password;Ny adgangskode
+Web;None;Ingen
+Web;OK;OK
+Web;On startup;Ved opstart
+Web;Optional chart title;Valgfri diagramtitel
+Web;Optional menu name;Valgfrit menunavn
+Web;Output;Output
+Web;Password;Adgangskode
+Web;Paste;Indsæt
+Web;PDF Conversion delay;Forsinkelse ved PDF-konvertering
+Web;Personal;Personlig
+Web;Personal folder;Personlig mappe
+Web;Phone;Telefon
+Web;Please wait;Vent venligst
+Web;Profile;Profil
+Web;Profile information;Profilinformation
+Web;Refresh;Opdater
+Web;Re-init your password;Nulstil din adgangskode
+Web;Reload and execute;Genindlæs og udfør
+Web;Rename;Omdøb
+Web;Rename or move folder;Omdøb eller flyt mappe
+Web;Rename, move or copy;Omdøb, flyt eller kopiér
+Web;Report;Rapport
+Web;Report execution mode;Rapportudførelsestilstand
+Web;Report name;Rapportnavn
+Web;Report title;Rapporttitel
+Web;Report title if different from report name;Rapporttitel hvis forskellig fra rapportnavn
+Web;Reports;Rapporter
+Web;Reports menu;Rapportmenu
+Web;Repository connection;Repository-forbindelse
+Web;Reset password;Nulstil adgangskode
+Web;Reset your password;Nulstil din adgangskode
+Web;Save;Gem
+Web;Search;Søg
+Web;Security code;Sikkerhedskode
+Web;Show sub-folders;Vis undermapper
+Web;Startup report name;Navn på opstartsrapport
+Web;The favorite has been updated;Favoritten er blevet opdateret
+Web;Two-Factor Authentication;Tofaktorgodkendelse
+Web;Type;Type
+Web;Type a new password;Indtast en ny adgangskode
+Web;Upload;Upload
+Web;User groups;Brugergrupper
+Web;User identifier or email;Brugeridentifikator eller e-mail
+Web;User name;Brugernavn
+Web;Users;Brugere
+Web;Web product name;Webproduktnavn
+Web;Width;Bredde
+WebJS;# of % selected;# af % valgt
+WebJS;Actions;Handlinger
+WebJS;All selected;Alle valgt
+WebJS;Allow only execution in a new window;Tillad kun udførelse i et nyt vindue
+WebJS;Cancel;Annuller
+WebJS;Configuration for;Konfiguration for
+WebJS;Contains;Indeholder
+WebJS;Contains all;Indeholder alle
+WebJS;Contains any;Indeholder en eller flere
+WebJS;Copy;Kopiér
+WebJS;Copy of;Kopi af
+WebJS;Copy to;Kopiér til
+WebJS;Default;Standard
+WebJS;Default culture;Standardkultur
+WebJS;Default mode;Standardtilstand
+WebJS;Default report connection;Standardrapportforbindelse
+WebJS;Default repository connection;Standard repository-forbindelse
+WebJS;Default startup;Standardopstart
+WebJS;Do not execute report;Udfør ikke rapport
+WebJS;Do you really want to delete the reports or files selected ?;Vil du virkelig slette de valgte rapporter eller filer?
+WebJS;Does not contain;Indeholder ikke
+WebJS;Does not contain all;Indeholder ikke alle
+WebJS;Does not contain any;Indeholder ikke nogen
+WebJS;Download report;Download rapport
+WebJS;Edit report;Rediger rapport
+WebJS;Edit reports / Manage files;Rediger rapporter / Administrer filer
+WebJS;Edit schedules / View files;Rediger tidsplaner / Vis filer
+WebJS;Ends with;Slutter med
+WebJS;Equals;Lig med
+WebJS;Error;Fejl
+WebJS;Execute report in a new window;Udfør rapport i et nyt vindue
+WebJS;Execute report in the current window;Udfør rapport i det aktuelle vindue
+WebJS;Execute reports / View files;Udfør rapporter / Vis filer
+WebJS;Execute reports and outputs / View files;Udfør rapporter og output / Vis filer
+WebJS;Execute the last report;Udfør den seneste rapport
+WebJS;Execute the report;Udfør rapporten
+WebJS;Favorites;Favoritter
+WebJS;Folder;Mappe
+WebJS;Is between;Er mellem
+WebJS;Is different from;Er forskellig fra
+WebJS;Is empty;Er tom
+WebJS;Is greater or equal than;Er større end eller lig med
+WebJS;Is greater than;Er større end
+WebJS;Is not between;Er ikke mellem
+WebJS;Is not empty;Er ikke tom
+WebJS;Is not Null;Er ikke Null
+WebJS;Is Null;Er Null
+WebJS;Is smaller or equal than;Er mindre end eller lig med
+WebJS;Is smaller than;Er mindre end
+WebJS;Last modification;Seneste ændring
+WebJS;Mark as favorite;Markér som favorit
+WebJS;Model;Model
+WebJS;New folder configuration;Konfiguration af ny mappe
+WebJS;New group;Ny gruppe
+WebJS;New login;Nyt login
+WebJS;No;Nej
+WebJS;No download (except files) or upload;Ingen download (undtagen filer) eller upload
+WebJS;No folder configuration;Ingen mappekonfiguration
+WebJS;No login;Intet login
+WebJS;No personal folder;Ingen personlig mappe
+WebJS;No right;Ingen rettighed
+WebJS;None;Ingen
+WebJS;Not sorted;Ikke sorteret
+WebJS;OK;OK
+WebJS;Options;Indstillinger
+WebJS;Output;Output
+WebJS;Personal folder for files only;Personlig mappe kun til filer
+WebJS;Personal folder for reports and files;Personlig mappe til rapporter og filer
+WebJS;Please wait;Vent venligst
+WebJS;Processing;Behandler
+WebJS;Profile;Profil
+WebJS;Recents;Seneste
+WebJS;Report;Rapport
+WebJS;report(s) or file(s) cut in the clipboard;rapport(er) eller fil(er) klippet til udklipsholderen
+WebJS;report(s) or file(s) have been deleted;rapport(er) eller fil(er) er blevet slettet
+WebJS;report(s) or file(s) processed;rapport(er) eller fil(er) behandlet
+WebJS;report(s) or files(s) copied in the clipboard;rapport(er) eller fil(er) kopieret til udklipsholderen
+WebJS;Reports;Rapporter
+WebJS;Schedule;Tidsplan
+WebJS;Server Version;Serverversion
+WebJS;Show _MENU_ reports;Vis _MENU_ rapporter
+WebJS;Starts with;Starter med
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfigurationen er blevet gemt. Log ind igen, hvis du er påvirket af sikkerheden.
+WebJS;The folder has been created;Mappen er blevet oprettet
+WebJS;The folder has been deleted;Mappen er blevet slettet
+WebJS;The folder has been renamed;Mappen er blevet omdøbt
+WebJS;The folder has been updated;Mappen er blevet opdateret
+WebJS;The report or file has been renamed;Rapporten eller filen er blevet omdøbt
+WebJS;Toggle Report or Folders view;Skift mellem rapport- og mappevisning
+WebJS;Unexpected error on server;Uventet fejl på serveren
+WebJS;User can download reports;Brugeren kan downloade rapporter
+WebJS;User can download reports and upload reports and files;Brugeren kan downloade rapporter og uploade rapporter og filer
+WebJS;View;Vis
+WebJS;View Folders;Vis mapper
+WebJS;View Report;Vis rapport
+WebJS;View reports;Vis rapporter
+WebJS;Views and outputs;Visninger og output
+WebJS;Warning;Advarsel
+WebJS;Web Interface Version;Webgrænsefladeversion
+WebJS;Yes;Ja
+WebJS;Yes (Folder is expanded in the tree view);Ja (Mappen er udvidet i træstrukturen)
+WebJS;Yes (Only files can be stored);Ja (Kun filer kan gemmes)
+WebJS;Yes (User can browse sub-folders);Ja (Brugeren kan gennemse undermapper)
+WebJS;Yes (User can create and edit sub-folders);Ja (Brugeren kan oprette og redigere undermapper)
+WebJS;Yes (User can edit his profile);Ja (Brugeren kan redigere sin profil)
+WebJS;Yes (User is administrator of the Web Server);Ja (Brugeren er administrator af webserveren)
+Web;Select assistant;Vælg assistent
+Web;Mark as favorite;Markér som favorit
+Web;Favorites;Favoritter
+Web;No favorites yet;Ingen favoritter endnu
+Web;Recent;Seneste
+Web;No recent items;Ingen seneste elementer
+Web;New conversation;Ny samtale
+Web;Sample prompts;Eksempelprompter
+Web;Sample Prompts;Eksempelprompter
+Web;No sample prompts defined;Ingen eksempelprompter defineret
+Web;AI Assistant;AI-assistent
+Web;Favorites & Recent;Favoritter og seneste
+Web;Hide panel;Skjul panel
+Web;Ask the AI assistant…;Spørg AI-assistenten…
+Web;Confirm Deletion;Bekræft sletning
+Web;This action is irreversible. Are you sure you want to delete this item?;Denne handling kan ikke fortrydes. Er du sikker på, at du vil slette dette element?
+Web;Data Source;Datakilde
+Web;Report Assistants;Rapportassistenter
+Web;Select Tables or Views;Vælg tabeller eller visninger
+Web;Filter tables...;Filtrér tabeller...
+Web;Select All;Vælg alle
+Web;Deselect All;Fravælg alle
+Web;tables selected;tabeller valgt
+Web;Prompt Shortcuts;Promptgenveje
+Web;How can Seal AI help you today ?;Hvordan kan Seal AI hjælpe dig i dag?
+Web;No current items available;Ingen aktuelle elementer tilgængelige
+Web;Current items will appear here when saved;Aktuelle elementer vises her, når de er gemt
+Web;Drafts;Kladder
+Web;No draft items available;Ingen kladdeelementer tilgængelige
+Web;Upload files or create new items with the assistant to see them here;Upload filer eller opret nye elementer med assistenten for at se dem her
+Web;Item Details;Elementdetaljer
+Web;Loading detail. Please wait...;Indlæser detalje. Vent venligst...
+Web;Select a row from the table to view its details;Vælg en række fra tabellen for at se dens detaljer
+Web;Check;Kontrollér
+Web;Download;Download
+Web;Reports Assistant;Rapportassistent
+Web;Connection type;Forbindelsestype
+Web;Connection string;Forbindelsesstreng
+Web;Tables or views;Tabeller eller visninger
+Web;Report Assistant;Rapportassistent
+Web;AI Provider;AI-udbyder
+Web;AI model;AI-model
+Web;AI model name (overrides default));AI-modelnavn (tilsidesætter standard))
+Web;Temperature;Temperatur
+Web;Model temperature;Modeltemperatur
+Web;System prompt;Systemprompt
+Web;Optional sytem prompt for the assistant;Valgfri systemprompt til assistenten
+Web;User prompt;Brugerprompt
+Web;Default user prompts (if empty default values configured are taken);Standardbrugerprompter (hvis tom anvendes de konfigurerede standardværdier)
+Web;User Groups allowed (No selection means no restriction);Tilladte brugergrupper (Intet valg betyder ingen begrænsning)
+Web;Scan options;Scanningsindstillinger
+Web;When to scan;Hvornår der skal scannes
+Web;Cache duration (days);Cachevarighed (dage)
+Web;Cache duration (days) for scanned data;Cachevarighed (dage) for scannede data
+Web;Tables to scan (no selection means all tables);Tabeller der skal scannes (intet valg betyder alle tabeller)
+Web;Records to scan;Poster der skal scannes
+Web;Number of records used for scan;Antal poster anvendt til scanning
+Web;Scan Data Now;Scan data nu
+Web;Execute;Udfør
+Web;Elements:;Elementer:
+Web;Restrictions:;Begrænsninger:
+WebJS;Hide AI Assistant;Skjul AI-assistent
+WebJS;AI Assistant;AI-assistent
+WebJS;Running;Kører
+WebJS;Request cancelled.;Anmodning annulleret.
+WebJS;Remove from favorites;Fjern fra favoritter
+WebJS;No sample prompts defined;Ingen eksempelprompter defineret
+WebJS;Rename;Omdøb
+WebJS;Delete;Slet
+WebJS;No favorites yet;Ingen favoritter endnu
+WebJS;No recent items;Ingen seneste elementer
+Web;Configuration;Konfiguration
+Web;Download/Upload;Download/Upload
+Web;Rights;Rettigheder
+Web;Assistants;Assistenter
+Web;Folder;Mappe

@@ -1,0 +1,503 @@
+﻿Context;Reference;sv
+NVD3;(right axis);(höger axel)
+NVD3;Expanded;Expanderad
+NVD3;Grouped;Grupperad
+NVD3;Re-scale y-axis;Skala om y-axeln
+NVD3;Stacked;Staplad
+NVD3;Stream;Ström
+Report;!=;!=
+Report;# of % selected;# av % markerade
+Report;(filtered from _MAX_);(filtrerat från _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Ett värde krävs för
+Report;All;Alla
+Report;All selected;Alla markerade
+Report;and;och
+Report;Auto Fit columns;Anpassa kolumner automatiskt
+Report;Auto Scroll enabled;Automatisk rullning aktiverad
+Report;Average of;Medelvärde av
+Report;Back to top;Tillbaka till början
+Report;Between;Mellan
+Report;Cancel;Avbryt
+Report;Cancelling report...;Avbryter rapport...
+Report;Charts;Diagram
+Report;Clear selection;Rensa markering
+Report;Close;Stäng
+Report;Contains;Innehåller
+Report;Contains all;Innehåller alla
+Report;Contains any;Innehåller något
+Report;Count Distinct of;Antal distinkta av
+Report;Count of;Antal av
+Report;Decrement;Minska
+Report;Description;Beskrivning
+Report;Display header footer;Visa sidhuvud och sidfot
+Report;Display: Execution messages;Visa: Körningsmeddelanden
+Report;Display: Execution messages;Visa: Körningsmeddelanden
+Report;Display: Information messages;Visa: Informationsmeddelanden
+Report;Display: Information messages;Visa: Informationsmeddelanden
+Report;Does not contain;Innehåller inte
+Report;Does not contain all;Innehåller inte alla
+Report;Does not contain any;Innehåller inte något
+Report;Drill <;Detaljgranska <
+Report;Drill >;Detaljgranska >
+Report;Duration;Varaktighet
+Report;Duration (seconds);Varaktighet (sekunder)
+Report;Email sent to '{0}';E-post skickad till '{0}'
+Report;Ends with;Slutar med
+Report;Equals;Lika med
+Report;Execute;Kör
+Report;Executing report...;Kör rapport...
+Report;Execution date;Körningsdatum
+Report;Execution duration;Körningstid
+Report;execution messages;körningsmeddelanden
+Report;Export messages...;Exportera meddelanden...
+Report;Filter:;Filter:
+Report;Go to today;Gå till idag
+Report;Goal;Mål
+Report;Hide;Dölj
+Report;HTML Print: Show messages;HTML-utskrift: Visa meddelanden
+Report;HTML Print: Show messages;HTML-utskrift: Visa meddelanden
+Report;HTML Print: Show report information;HTML-utskrift: Visa rapportinformation
+Report;HTML Print: Show report information;HTML-utskrift: Visa rapportinformation
+Report;HTML to PDF;HTML till PDF
+Report;Increment;Öka
+Report;Information panel enabled;Informationspanel aktiverad
+Report;Information panel enabled and shown;Informationspanel aktiverad och visad
+Report;Information panel hidden;Informationspanel dold
+Report;Invalid date;Ogiltigt datum
+Report;Invalid numeric value;Ogiltigt numeriskt värde
+Report;Is between;Är mellan
+Report;Is Blank;Är tom
+Report;Is different from;Skiljer sig från
+Report;Is empty;Är tom
+Report;Is greater or equal than;Är större än eller lika med
+Report;Is greater than;Är större än
+Report;Is not between;Är inte mellan
+Report;Is Not Blank;Är inte tom
+Report;Is not empty;Är inte tom
+Report;Is not Null;Är inte Null
+Report;Is Null;Är Null
+Report;Is smaller or equal than;Är mindre än eller lika med
+Report;Is smaller than;Är mindre än
+Report;Landscape;Liggande
+Report;Logs;Loggar
+Report;Maximum of;Maximum av
+Report;Messages panel enabled;Meddelandepanel aktiverad
+Report;Messages panel enabled and shown;Meddelandepanel aktiverad och visad
+Report;Messages panel enabled and shown only during execution;Meddelandepanel aktiverad och visad endast under körning
+Report;Messages panel hidden;Meddelandepanel dold
+Report;Minimum of;Minimum av
+Report;Model;Modell
+Report;Model loaded...;Modell laddad...
+Report;Models loaded...;Modeller laddade...
+Report;New report;Ny rapport
+Report;Next Century;Nästa århundrade
+Report;Next Decade;Nästa decennium
+Report;Next Month;Nästa månad
+Report;Next Year;Nästa år
+Report;No;Nej
+Report;No records;Inga poster
+Report;No records. The report output generation has been cancelled.;Inga poster. Genereringen av rapportutdata har avbrutits.
+Report;No reports;Inga rapporter
+Report;No rows;Inga rader
+Report;Not Between;Inte mellan
+Report;Not Contains;Innehåller inte
+Report;Now;Nu
+Report;Options;Alternativ
+Report;or;eller
+Report;Page;Sida
+Report;"Page &p; of &P;";"Sida &p; av &P;"
+Report;Page orientation;Sidorientering
+Report;Page size;Sidstorlek
+Report;Pages;Sidor
+Report;Pick Hour;Välj timme
+Report;Pick Minute;Välj minut
+Report;Pick Second;Välj sekund
+Report;Please enter a value;Ange ett värde
+Report;Please enter at least a value;Ange minst ett värde
+Report;Please find the report '{0}' in attachment.;Rapporten '{0}' finns i bifogad fil.
+Report;Please find your authentication code;Här är din autentiseringskod
+Report;Please wait, the report result is being generated in another window;Vänta, rapportresultatet genereras i ett annat fönster
+Report;Previous Century;Föregående århundrade
+Report;Previous Decade;Föregående decennium
+Report;Previous Month;Föregående månad
+Report;Previous Year;Föregående år
+Report;Print: Page orientation;Utskrift: Sidorientering
+Report;Print: Show logo;Utskrift: Visa logotyp
+Report;Processing;Bearbetar
+Report;Processing...;Bearbetar...
+Report;Records;Poster
+Report;Refresh;Uppdatera
+Report;Report;Rapport
+Report;Report description;Rapportbeskrivning
+Report;Report has been cancelled;Rapporten har avbrutits
+Report;report information;rapportinformation
+Report;report restrictions;rapportbegränsningar
+Report;Report result generated in '{0}';Rapportresultat genererat i '{0}'
+Report;Report result options;Alternativ för rapportresultat
+Report;report result panel;rapportresultatpanel
+Report;Report summary;Rapportsammanfattning
+Report;Restrictions;Begränsningar
+Report;Results;Resultat
+Report;Scale;Skala
+Report;second;sekund
+Report;seconds;sekunder
+Report;Select all;Markera alla
+Report;Select Decade;Välj decennium
+Report;Select Month;Välj månad
+Report;Select Time;Välj tid
+Report;Select Year;Välj år
+Report;Show;Visa
+Report;Show _MENU_ reports;Visa _MENU_ rapporter
+Report;Show _MENU_ rows;Visa _MENU_ rader
+Report;Show messages;Visa meddelanden
+Report;Show messages;Visa meddelanden
+Report;Show report information;Visa rapportinformation
+Report;Show report information;Visa rapportinformation
+Report;Show/Hide Restrictions;Visa/dölj begränsningar
+Report;Showing _START_ to _END_ of _TOTAL_;Visar _START_ till _END_ av _TOTAL_
+Report;Showing 0 to 0 of 0;Visar 0 till 0 av 0
+Report;Starting execution...;Startar körning...
+Report;Starts with;Börjar med
+Report;Subtotal;Delsumma
+Report;Sum of;Summa av
+Report;Summary;Sammanfattning
+Report;Table of Contents;Innehållsförteckning
+Report;Tabs to show;Flikar att visa
+Report;Task executed...;Uppgift utförd...
+Report;Tasks executed...;Uppgifter utförda...
+Report;The report has been generated.;Rapporten har genererats.
+Report;This report has execution errors. Please check details in the Logs Files...;Den här rapporten har körningsfel. Kontrollera detaljerna i loggfilerna...
+Report;ThisHour;DennaTimme
+Report;ThisMinute;DennaMinut
+Report;ThisMonth;DennaMånad
+Report;ThisQuarter;DettaKvartal
+Report;ThisSemester;DettaHalvår
+Report;ThisWeek;DennaVecka
+Report;ThisYear;DettaÅr
+Report;Today;Idag
+Report;Toggle Period;Växla period
+Report;Total;Totalt
+Report;Use the date format '{0}' or one of the following keywords:;Använd datumformatet '{0}' eller ett av följande nyckelord:
+Report;View;Visa
+Report;View CSV Result;Visa CSV-resultat
+Report;View Excel Converter Result;Visa Excel-konverterarresultat
+Report;View Excel Result;Visa Excel-resultat
+Report;View HTML Print Result;Visa HTML-utskriftsresultat
+Report;View HTML Result;Visa HTML-resultat
+Report;View HTML to PDF Result;Visa HTML till PDF-resultat
+Report;View Json Result;Visa Json-resultat
+Report;View PDF Converter Result;Visa PDF-konverterarresultat
+Report;View PDF Result;Visa PDF-resultat
+Report;View report result file;Visa rapportresultatfil
+Report;View Text Result;Visa textresultat
+Report;View XML Result;Visa XML-resultat
+Report;Warning: The maximum number of records is reached;Varning: Det maximala antalet poster har uppnåtts
+Report;Yes;Ja
+Web;Add;Lägg till
+Web;All;Alla
+Web;Auto-Refresh (seconds);Automatisk uppdatering (sekunder)
+Web;Back to login with user name and password;Tillbaka till inloggning med användarnamn och lösenord
+Web;Cancel;Avbryt
+Web;Change password;Ändra lösenord
+Web;Change password;Ändra lösenord
+Web;Change your password;Ändra ditt lösenord
+Web;Chart sort;Diagramsortering
+Web;Close;Stäng
+Web;Color;Färg
+Web;Confirm your new password;Bekräfta ditt nya lösenord
+Web;Copy;Kopiera
+Web;Create in folder;Skapa i mapp
+Web;Create new folder;Skapa ny mapp
+Web;CSS Format;CSS-format
+Web;Culture;Kultur
+Web;Current password;Nuvarande lösenord
+Web;Cut;Klipp ut
+Web;Data source connections;Datakällsanslutningar
+Web;Default view;Standardvy
+Web;Delete;Ta bort
+Web;Delete folder;Ta bort mapp
+Web;Description;Beskrivning
+Web;Device;Enhet
+Web;Disconnect;Koppla från
+Web;Display options;Visningsalternativ
+Web;Edit;Redigera
+Web;Edit configuration;Redigera konfiguration
+Web;Edit entry;Redigera post
+Web;Edit profile;Redigera profil
+Web;Edition;Utgåva
+Web;Email;E-post
+Web;Enter password;Ange lösenord
+Web;Enter user name;Ange användarnamn
+Web;Enter your current password;Ange ditt nuvarande lösenord
+Web;Enter your new file name;Ange ditt nya filnamn
+Web;Enter your new password;Ange ditt nya lösenord
+Web;Enter your security code;Ange din säkerhetskod
+Web;Enter your user identifier or email;Ange din användaridentifierare eller e-post
+Web;Error;Fel
+Web;Error: only files (and not reports) can be copied to this folder.;Fel: endast filer (inte rapporter) kan kopieras till den här mappen.
+Web;Error: the destination file name contains invalid characters.;Fel: målfilnamnet innehåller ogiltiga tecken.
+Web;Error: the destination folder name contains invalid characters.;Fel: målmappnamnet innehåller ogiltiga tecken.
+Web;Expand in Treeview;Expandera i trädvy
+Web;Export;Exportera
+Web;Files only;Endast filer
+Web;Folder Permissions;Mappbehörigheter
+Web;Folders;Mappar
+Web;Forget your password ?;Glömt ditt lösenord?
+Web;Group name;Gruppnamn
+Web;Group name;Gruppnamn
+Web;Groups;Grupper
+Web;Groups;Grupper
+Web;Height;Höjd
+Web;Icon;Ikon
+Web;Information;Information
+Web;Invalid security code;Ogiltig säkerhetskod
+Web;Invalid user name or password;Ogiltigt användarnamn eller lösenord
+Web;Is dynamic;Är dynamisk
+Web;Last execution at;Senaste körning kl.
+Web;Licensed to;Licensierad till
+Web;Login;Logga in
+Web;Login ID;Inloggnings-ID
+Web;Logins;Inloggningar
+Web;Logout;Logga ut
+Web;Logout the user;Logga ut användaren
+Web;Manage Folders;Hantera mappar
+Web;Manage sub-folders;Hantera undermappar
+Web;Name;Namn
+Web;New;Ny
+Web;New folder name;Nytt mappnamn
+Web;New folder path;Ny mappsökväg
+Web;New password;Nytt lösenord
+Web;None;Inget
+Web;OK;OK
+Web;On startup;Vid start
+Web;Optional chart title;Valfri diagramtitel
+Web;Optional menu name;Valfritt menynamn
+Web;Output;Utdata
+Web;Password;Lösenord
+Web;Paste;Klistra in
+Web;PDF Conversion delay;Fördröjning för PDF-konvertering
+Web;Personal;Personlig
+Web;Personal folder;Personlig mapp
+Web;Phone;Telefon
+Web;Please wait;Vänta
+Web;Profile;Profil
+Web;Profile information;Profilinformation
+Web;Refresh;Uppdatera
+Web;Re-init your password;Återställ ditt lösenord
+Web;Reload and execute;Ladda om och kör
+Web;Rename;Byt namn
+Web;Rename or move folder;Byt namn på eller flytta mapp
+Web;Rename, move or copy;Byt namn, flytta eller kopiera
+Web;Report;Rapport
+Web;Report execution mode;Rapportkörningsläge
+Web;Report name;Rapportnamn
+Web;Report title;Rapporttitel
+Web;Report title if different from report name;Rapporttitel om den skiljer sig från rapportnamnet
+Web;Reports;Rapporter
+Web;Reports menu;Rapportmeny
+Web;Repository connection;Lagringsplatsanslutning
+Web;Reset password;Återställ lösenord
+Web;Reset your password;Återställ ditt lösenord
+Web;Save;Spara
+Web;Search;Sök
+Web;Security code;Säkerhetskod
+Web;Show sub-folders;Visa undermappar
+Web;Startup report name;Namn på startrapport
+Web;The favorite has been updated;Favoriten har uppdaterats
+Web;Two-Factor Authentication;Tvåfaktorsautentisering
+Web;Type;Typ
+Web;Type a new password;Skriv ett nytt lösenord
+Web;Upload;Ladda upp
+Web;User groups;Användargrupper
+Web;User identifier or email;Användaridentifierare eller e-post
+Web;User name;Användarnamn
+Web;Users;Användare
+Web;Web product name;Webbproduktnamn
+Web;Width;Bredd
+WebJS;# of % selected;# av % markerade
+WebJS;Actions;Åtgärder
+WebJS;All selected;Alla markerade
+WebJS;Allow only execution in a new window;Tillåt endast körning i ett nytt fönster
+WebJS;Cancel;Avbryt
+WebJS;Configuration for;Konfiguration för
+WebJS;Contains;Innehåller
+WebJS;Contains all;Innehåller alla
+WebJS;Contains any;Innehåller något
+WebJS;Copy;Kopiera
+WebJS;Copy of;Kopia av
+WebJS;Copy to;Kopiera till
+WebJS;Default;Standard
+WebJS;Default culture;Standardkultur
+WebJS;Default mode;Standardläge
+WebJS;Default report connection;Standardanslutning för rapport
+WebJS;Default repository connection;Standardanslutning för lagringsplats
+WebJS;Default startup;Standardstart
+WebJS;Do not execute report;Kör inte rapport
+WebJS;Do you really want to delete the reports or files selected ?;Vill du verkligen ta bort de markerade rapporterna eller filerna?
+WebJS;Does not contain;Innehåller inte
+WebJS;Does not contain all;Innehåller inte alla
+WebJS;Does not contain any;Innehåller inte något
+WebJS;Download report;Ladda ner rapport
+WebJS;Edit report;Redigera rapport
+WebJS;Edit reports / Manage files;Redigera rapporter / Hantera filer
+WebJS;Edit schedules / View files;Redigera scheman / Visa filer
+WebJS;Ends with;Slutar med
+WebJS;Equals;Lika med
+WebJS;Error;Fel
+WebJS;Execute report in a new window;Kör rapport i ett nytt fönster
+WebJS;Execute report in the current window;Kör rapport i det aktuella fönstret
+WebJS;Execute reports / View files;Kör rapporter / Visa filer
+WebJS;Execute reports and outputs / View files;Kör rapporter och utdata / Visa filer
+WebJS;Execute the last report;Kör den senaste rapporten
+WebJS;Execute the report;Kör rapporten
+WebJS;Favorites;Favoriter
+WebJS;Folder;Mapp
+WebJS;Is between;Är mellan
+WebJS;Is different from;Skiljer sig från
+WebJS;Is empty;Är tom
+WebJS;Is greater or equal than;Är större än eller lika med
+WebJS;Is greater than;Är större än
+WebJS;Is not between;Är inte mellan
+WebJS;Is not empty;Är inte tom
+WebJS;Is not Null;Är inte Null
+WebJS;Is Null;Är Null
+WebJS;Is smaller or equal than;Är mindre än eller lika med
+WebJS;Is smaller than;Är mindre än
+WebJS;Last modification;Senaste ändring
+WebJS;Mark as favorite;Markera som favorit
+WebJS;Model;Modell
+WebJS;New folder configuration;Ny mappkonfiguration
+WebJS;New group;Ny grupp
+WebJS;New login;Ny inloggning
+WebJS;No;Nej
+WebJS;No download (except files) or upload;Ingen nedladdning (förutom filer) eller uppladdning
+WebJS;No folder configuration;Ingen mappkonfiguration
+WebJS;No login;Ingen inloggning
+WebJS;No personal folder;Ingen personlig mapp
+WebJS;No right;Ingen behörighet
+WebJS;None;Inget
+WebJS;Not sorted;Inte sorterad
+WebJS;OK;OK
+WebJS;Options;Alternativ
+WebJS;Output;Utdata
+WebJS;Personal folder for files only;Personlig mapp endast för filer
+WebJS;Personal folder for reports and files;Personlig mapp för rapporter och filer
+WebJS;Please wait;Vänta
+WebJS;Processing;Bearbetar
+WebJS;Profile;Profil
+WebJS;Recents;Senaste
+WebJS;Report;Rapport
+WebJS;report(s) or file(s) cut in the clipboard;rapport(er) eller fil(er) urklippta i Urklipp
+WebJS;report(s) or file(s) have been deleted;rapport(er) eller fil(er) har tagits bort
+WebJS;report(s) or file(s) processed;rapport(er) eller fil(er) bearbetade
+WebJS;report(s) or files(s) copied in the clipboard;rapport(er) eller fil(er) kopierade i Urklipp
+WebJS;Reports;Rapporter
+WebJS;Schedule;Schema
+WebJS;Server Version;Serverversion
+WebJS;Show _MENU_ reports;Visa _MENU_ rapporter
+WebJS;Starts with;Börjar med
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfigurationen har sparats. Logga in igen om du påverkas av säkerheten.
+WebJS;The folder has been created;Mappen har skapats
+WebJS;The folder has been deleted;Mappen har tagits bort
+WebJS;The folder has been renamed;Mappen har bytt namn
+WebJS;The folder has been updated;Mappen har uppdaterats
+WebJS;The report or file has been renamed;Rapporten eller filen har bytt namn
+WebJS;Toggle Report or Folders view;Växla mellan rapport- och mappvy
+WebJS;Unexpected error on server;Oväntat fel på servern
+WebJS;User can download reports;Användaren kan ladda ner rapporter
+WebJS;User can download reports and upload reports and files;Användaren kan ladda ner rapporter och ladda upp rapporter och filer
+WebJS;View;Visa
+WebJS;View Folders;Visa mappar
+WebJS;View Report;Visa rapport
+WebJS;View reports;Visa rapporter
+WebJS;Views and outputs;Vyer och utdata
+WebJS;Warning;Varning
+WebJS;Web Interface Version;Webbgränssnittsversion
+WebJS;Yes;Ja
+WebJS;Yes (Folder is expanded in the tree view);Ja (Mappen är expanderad i trädvyn)
+WebJS;Yes (Only files can be stored);Ja (Endast filer kan lagras)
+WebJS;Yes (User can browse sub-folders);Ja (Användaren kan bläddra i undermappar)
+WebJS;Yes (User can create and edit sub-folders);Ja (Användaren kan skapa och redigera undermappar)
+WebJS;Yes (User can edit his profile);Ja (Användaren kan redigera sin profil)
+WebJS;Yes (User is administrator of the Web Server);Ja (Användaren är administratör för webbservern)
+Web;Select assistant;Välj assistent
+Web;Mark as favorite;Markera som favorit
+Web;Favorites;Favoriter
+Web;No favorites yet;Inga favoriter ännu
+Web;Recent;Senaste
+Web;No recent items;Inga senaste objekt
+Web;New conversation;Ny konversation
+Web;Sample prompts;Exempelprompter
+Web;Sample Prompts;Exempelprompter
+Web;No sample prompts defined;Inga exempelprompter definierade
+Web;AI Assistant;AI-assistent
+Web;Favorites & Recent;Favoriter och senaste
+Web;Hide panel;Dölj panel
+Web;Ask the AI assistant…;Fråga AI-assistenten…
+Web;Confirm Deletion;Bekräfta borttagning
+Web;This action is irreversible. Are you sure you want to delete this item?;Den här åtgärden är oåterkallelig. Är du säker på att du vill ta bort det här objektet?
+Web;Data Source;Datakälla
+Web;Report Assistants;Rapportassistenter
+Web;Select Tables or Views;Välj tabeller eller vyer
+Web;Filter tables...;Filtrera tabeller...
+Web;Select All;Markera alla
+Web;Deselect All;Avmarkera alla
+Web;tables selected;tabeller markerade
+Web;Prompt Shortcuts;Promptgenvägar
+Web;How can Seal AI help you today ?;Hur kan Seal AI hjälpa dig idag?
+Web;No current items available;Inga aktuella objekt tillgängliga
+Web;Current items will appear here when saved;Aktuella objekt visas här när de sparas
+Web;Drafts;Utkast
+Web;No draft items available;Inga utkastobjekt tillgängliga
+Web;Upload files or create new items with the assistant to see them here;Ladda upp filer eller skapa nya objekt med assistenten för att se dem här
+Web;Item Details;Objektdetaljer
+Web;Loading detail. Please wait...;Laddar detalj. Vänta...
+Web;Select a row from the table to view its details;Välj en rad i tabellen för att visa dess detaljer
+Web;Check;Kontrollera
+Web;Download;Ladda ner
+Web;Reports Assistant;Rapportassistent
+Web;Connection type;Anslutningstyp
+Web;Connection string;Anslutningssträng
+Web;Tables or views;Tabeller eller vyer
+Web;Report Assistant;Rapportassistent
+Web;AI Provider;AI-leverantör
+Web;AI model;AI-modell
+Web;AI model name (overrides default));AI-modellnamn (åsidosätter standard))
+Web;Temperature;Temperatur
+Web;Model temperature;Modelltemperatur
+Web;System prompt;Systemprompt
+Web;Optional sytem prompt for the assistant;Valfri systemprompt för assistenten
+Web;User prompt;Användarprompt
+Web;Default user prompts (if empty default values configured are taken);Standardanvändarprompter (om tom används konfigurerade standardvärden)
+Web;User Groups allowed (No selection means no restriction);Tillåtna användargrupper (Ingen markering innebär ingen begränsning)
+Web;Scan options;Skanningsalternativ
+Web;When to scan;När ska skanning ske
+Web;Cache duration (days);Cachelängd (dagar)
+Web;Cache duration (days) for scanned data;Cachelängd (dagar) för skannad data
+Web;Tables to scan (no selection means all tables);Tabeller att skanna (ingen markering innebär alla tabeller)
+Web;Records to scan;Poster att skanna
+Web;Number of records used for scan;Antal poster som används för skanning
+Web;Scan Data Now;Skanna data nu
+Web;Execute;Kör
+Web;Elements:;Element:
+Web;Restrictions:;Begränsningar:
+WebJS;Hide AI Assistant;Dölj AI-assistent
+WebJS;AI Assistant;AI-assistent
+WebJS;Running;Körs
+WebJS;Request cancelled.;Begäran avbruten.
+WebJS;Remove from favorites;Ta bort från favoriter
+WebJS;No sample prompts defined;Inga exempelprompter definierade
+WebJS;Rename;Byt namn
+WebJS;Delete;Ta bort
+WebJS;No favorites yet;Inga favoriter ännu
+WebJS;No recent items;Inga senaste objekt
+Web;Configuration;Konfiguration
+Web;Download/Upload;Nedladdning/Uppladdning
+Web;Rights;Rättigheter
+Web;Assistants;Assistenter
+Web;Folder;Mapp

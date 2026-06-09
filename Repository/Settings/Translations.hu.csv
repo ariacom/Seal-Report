@@ -1,0 +1,503 @@
+﻿Context;Reference;hu
+NVD3;(right axis);(jobb tengely)
+NVD3;Expanded;Kibontva
+NVD3;Grouped;Csoportosítva
+NVD3;Re-scale y-axis;Y tengely újraskálázása
+NVD3;Stacked;Halmozott
+NVD3;Stream;Folyam
+Report;!=;!=
+Report;# of % selected;A kiválasztott % darabszáma
+Report;(filtered from _MAX_);(szűrve _MAX_ közül)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Érték megadása kötelező ehhez:
+Report;All;Mind
+Report;All selected;Mind kiválasztva
+Report;and;és
+Report;Auto Fit columns;Oszlopok automatikus illesztése
+Report;Auto Scroll enabled;Automatikus görgetés bekapcsolva
+Report;Average of;Átlag:
+Report;Back to top;Vissza a tetejére
+Report;Between;Között
+Report;Cancel;Mégse
+Report;Cancelling report...;Jelentés megszakítása...
+Report;Charts;Diagramok
+Report;Clear selection;Kijelölés törlése
+Report;Close;Bezárás
+Report;Contains;Tartalmazza
+Report;Contains all;Mindet tartalmazza
+Report;Contains any;Bármelyiket tartalmazza
+Report;Count Distinct of;Egyedi értékek száma:
+Report;Count of;Darabszám:
+Report;Decrement;Csökkentés
+Report;Description;Leírás
+Report;Display header footer;Fejléc és lábléc megjelenítése
+Report;Display: Execution messages;Megjelenítés: Végrehajtási üzenetek
+Report;Display: Execution messages;Megjelenítés: Végrehajtási üzenetek
+Report;Display: Information messages;Megjelenítés: Tájékoztató üzenetek
+Report;Display: Information messages;Megjelenítés: Tájékoztató üzenetek
+Report;Does not contain;Nem tartalmazza
+Report;Does not contain all;Nem tartalmazza mindet
+Report;Does not contain any;Egyiket sem tartalmazza
+Report;Drill <;Lefúrás <
+Report;Drill >;Lefúrás >
+Report;Duration;Időtartam
+Report;Duration (seconds);Időtartam (másodperc)
+Report;Email sent to '{0}';E-mail elküldve ide: '{0}'
+Report;Ends with;Végződik
+Report;Equals;Egyenlő
+Report;Execute;Végrehajtás
+Report;Executing report...;Jelentés végrehajtása...
+Report;Execution date;Végrehajtás dátuma
+Report;Execution duration;Végrehajtás időtartama
+Report;execution messages;végrehajtási üzenetek
+Report;Export messages...;Üzenetek exportálása...
+Report;Filter:;Szűrő:
+Report;Go to today;Ugrás a mai napra
+Report;Goal;Cél
+Report;Hide;Elrejtés
+Report;HTML Print: Show messages;HTML nyomtatás: Üzenetek megjelenítése
+Report;HTML Print: Show messages;HTML nyomtatás: Üzenetek megjelenítése
+Report;HTML Print: Show report information;HTML nyomtatás: Jelentésinformációk megjelenítése
+Report;HTML Print: Show report information;HTML nyomtatás: Jelentésinformációk megjelenítése
+Report;HTML to PDF;HTML PDF-be
+Report;Increment;Növelés
+Report;Information panel enabled;Információs panel bekapcsolva
+Report;Information panel enabled and shown;Információs panel bekapcsolva és megjelenítve
+Report;Information panel hidden;Információs panel elrejtve
+Report;Invalid date;Érvénytelen dátum
+Report;Invalid numeric value;Érvénytelen számérték
+Report;Is between;Tartományon belül van
+Report;Is Blank;Üres
+Report;Is different from;Eltér ettől
+Report;Is empty;Üres
+Report;Is greater or equal than;Nagyobb vagy egyenlő, mint
+Report;Is greater than;Nagyobb, mint
+Report;Is not between;Nincs a tartományon belül
+Report;Is Not Blank;Nem üres
+Report;Is not empty;Nem üres
+Report;Is not Null;Nem Null
+Report;Is Null;Null
+Report;Is smaller or equal than;Kisebb vagy egyenlő, mint
+Report;Is smaller than;Kisebb, mint
+Report;Landscape;Fekvő
+Report;Logs;Naplók
+Report;Maximum of;Maximum:
+Report;Messages panel enabled;Üzenetek panel bekapcsolva
+Report;Messages panel enabled and shown;Üzenetek panel bekapcsolva és megjelenítve
+Report;Messages panel enabled and shown only during execution;Üzenetek panel bekapcsolva és csak végrehajtás közben megjelenítve
+Report;Messages panel hidden;Üzenetek panel elrejtve
+Report;Minimum of;Minimum:
+Report;Model;Modell
+Report;Model loaded...;Modell betöltve...
+Report;Models loaded...;Modellek betöltve...
+Report;New report;Új jelentés
+Report;Next Century;Következő évszázad
+Report;Next Decade;Következő évtized
+Report;Next Month;Következő hónap
+Report;Next Year;Következő év
+Report;No;Nem
+Report;No records;Nincs rekord
+Report;No records. The report output generation has been cancelled.;Nincs rekord. A jelentés kimenetének előállítása megszakadt.
+Report;No reports;Nincs jelentés
+Report;No rows;Nincsenek sorok
+Report;Not Between;Nincs a tartományon belül
+Report;Not Contains;Nem tartalmazza
+Report;Now;Most
+Report;Options;Beállítások
+Report;or;vagy
+Report;Page;Oldal
+Report;"Page &p; of &P;";"&p; / &P; oldal"
+Report;Page orientation;Oldal tájolása
+Report;Page size;Oldalméret
+Report;Pages;Oldalak
+Report;Pick Hour;Óra kiválasztása
+Report;Pick Minute;Perc kiválasztása
+Report;Pick Second;Másodperc kiválasztása
+Report;Please enter a value;Adjon meg egy értéket
+Report;Please enter at least a value;Adjon meg legalább egy értéket
+Report;Please find the report '{0}' in attachment.;A(z) '{0}' jelentést a mellékletben találja.
+Report;Please find your authentication code;A hitelesítési kódját itt találja
+Report;Please wait, the report result is being generated in another window;Kérjük, várjon, a jelentés eredménye egy másik ablakban készül
+Report;Previous Century;Előző évszázad
+Report;Previous Decade;Előző évtized
+Report;Previous Month;Előző hónap
+Report;Previous Year;Előző év
+Report;Print: Page orientation;Nyomtatás: Oldal tájolása
+Report;Print: Show logo;Nyomtatás: Logó megjelenítése
+Report;Processing;Feldolgozás
+Report;Processing...;Feldolgozás...
+Report;Records;Rekordok
+Report;Refresh;Frissítés
+Report;Report;Jelentés
+Report;Report description;Jelentés leírása
+Report;Report has been cancelled;A jelentés megszakadt
+Report;report information;jelentésinformációk
+Report;report restrictions;jelentéskorlátozások
+Report;Report result generated in '{0}';Jelentés eredménye létrehozva itt: '{0}'
+Report;Report result options;Jelentés eredményének beállításai
+Report;report result panel;jelentés eredménypanel
+Report;Report summary;Jelentés összegzése
+Report;Restrictions;Korlátozások
+Report;Results;Eredmények
+Report;Scale;Skála
+Report;second;másodperc
+Report;seconds;másodperc
+Report;Select all;Mindet kijelöl
+Report;Select Decade;Évtized kiválasztása
+Report;Select Month;Hónap kiválasztása
+Report;Select Time;Idő kiválasztása
+Report;Select Year;Év kiválasztása
+Report;Show;Megjelenítés
+Report;Show _MENU_ reports;_MENU_ jelentés megjelenítése
+Report;Show _MENU_ rows;_MENU_ sor megjelenítése
+Report;Show messages;Üzenetek megjelenítése
+Report;Show messages;Üzenetek megjelenítése
+Report;Show report information;Jelentésinformációk megjelenítése
+Report;Show report information;Jelentésinformációk megjelenítése
+Report;Show/Hide Restrictions;Korlátozások megjelenítése/elrejtése
+Report;Showing _START_ to _END_ of _TOTAL_;_START_–_END_ megjelenítése, összesen _TOTAL_
+Report;Showing 0 to 0 of 0;0–0 megjelenítése, összesen 0
+Report;Starting execution...;Végrehajtás indítása...
+Report;Starts with;Kezdődik
+Report;Subtotal;Részösszeg
+Report;Sum of;Összeg:
+Report;Summary;Összegzés
+Report;Table of Contents;Tartalomjegyzék
+Report;Tabs to show;Megjelenítendő fülek
+Report;Task executed...;Feladat végrehajtva...
+Report;Tasks executed...;Feladatok végrehajtva...
+Report;The report has been generated.;A jelentés elkészült.
+Report;This report has execution errors. Please check details in the Logs Files...;A jelentés végrehajtási hibákat tartalmaz. A részleteket a naplófájlokban ellenőrizze...
+Report;ThisHour;EzAzÓra
+Report;ThisMinute;EzAPerc
+Report;ThisMonth;EzAHónap
+Report;ThisQuarter;EzANegyedév
+Report;ThisSemester;EzAFélév
+Report;ThisWeek;EzAHét
+Report;ThisYear;EzAzÉv
+Report;Today;Ma
+Report;Toggle Period;Időszak váltása
+Report;Total;Összesen
+Report;Use the date format '{0}' or one of the following keywords:;Használja a(z) '{0}' dátumformátumot vagy az alábbi kulcsszavak egyikét:
+Report;View;Megtekintés
+Report;View CSV Result;CSV eredmény megtekintése
+Report;View Excel Converter Result;Excel konverter eredmény megtekintése
+Report;View Excel Result;Excel eredmény megtekintése
+Report;View HTML Print Result;HTML nyomtatási eredmény megtekintése
+Report;View HTML Result;HTML eredmény megtekintése
+Report;View HTML to PDF Result;HTML PDF-be eredmény megtekintése
+Report;View Json Result;JSON eredmény megtekintése
+Report;View PDF Converter Result;PDF konverter eredmény megtekintése
+Report;View PDF Result;PDF eredmény megtekintése
+Report;View report result file;Jelentés eredményfájljának megtekintése
+Report;View Text Result;Szöveges eredmény megtekintése
+Report;View XML Result;XML eredmény megtekintése
+Report;Warning: The maximum number of records is reached;Figyelmeztetés: A rekordok maximális száma elérve
+Report;Yes;Igen
+Web;Add;Hozzáadás
+Web;All;Mind
+Web;Auto-Refresh (seconds);Automatikus frissítés (másodperc)
+Web;Back to login with user name and password;Vissza a felhasználónévvel és jelszóval történő bejelentkezéshez
+Web;Cancel;Mégse
+Web;Change password;Jelszó módosítása
+Web;Change password;Jelszó módosítása
+Web;Change your password;Jelszó módosítása
+Web;Chart sort;Diagram rendezése
+Web;Close;Bezárás
+Web;Color;Szín
+Web;Confirm your new password;Erősítse meg az új jelszavát
+Web;Copy;Másolás
+Web;Create in folder;Létrehozás mappában
+Web;Create new folder;Új mappa létrehozása
+Web;CSS Format;CSS formátum
+Web;Culture;Kultúra
+Web;Current password;Jelenlegi jelszó
+Web;Cut;Kivágás
+Web;Data source connections;Adatforrás-kapcsolatok
+Web;Default view;Alapértelmezett nézet
+Web;Delete;Törlés
+Web;Delete folder;Mappa törlése
+Web;Description;Leírás
+Web;Device;Eszköz
+Web;Disconnect;Leválasztás
+Web;Display options;Megjelenítési beállítások
+Web;Edit;Szerkesztés
+Web;Edit configuration;Konfiguráció szerkesztése
+Web;Edit entry;Bejegyzés szerkesztése
+Web;Edit profile;Profil szerkesztése
+Web;Edition;Kiadás
+Web;Email;E-mail
+Web;Enter password;Adja meg a jelszót
+Web;Enter user name;Adja meg a felhasználónevet
+Web;Enter your current password;Adja meg a jelenlegi jelszavát
+Web;Enter your new file name;Adja meg az új fájlnevet
+Web;Enter your new password;Adja meg az új jelszavát
+Web;Enter your security code;Adja meg a biztonsági kódját
+Web;Enter your user identifier or email;Adja meg a felhasználói azonosítóját vagy e-mail-címét
+Web;Error;Hiba
+Web;Error: only files (and not reports) can be copied to this folder.;Hiba: csak fájlokat (jelentéseket nem) lehet ebbe a mappába másolni.
+Web;Error: the destination file name contains invalid characters.;Hiba: a célfájl neve érvénytelen karaktereket tartalmaz.
+Web;Error: the destination folder name contains invalid characters.;Hiba: a célmappa neve érvénytelen karaktereket tartalmaz.
+Web;Expand in Treeview;Kibontás a fanézetben
+Web;Export;Exportálás
+Web;Files only;Csak fájlok
+Web;Folder Permissions;Mappa-jogosultságok
+Web;Folders;Mappák
+Web;Forget your password ?;Elfelejtette a jelszavát?
+Web;Group name;Csoport neve
+Web;Group name;Csoport neve
+Web;Groups;Csoportok
+Web;Groups;Csoportok
+Web;Height;Magasság
+Web;Icon;Ikon
+Web;Information;Információ
+Web;Invalid security code;Érvénytelen biztonsági kód
+Web;Invalid user name or password;Érvénytelen felhasználónév vagy jelszó
+Web;Is dynamic;Dinamikus
+Web;Last execution at;Utolsó végrehajtás ekkor
+Web;Licensed to;Licenc tulajdonosa
+Web;Login;Bejelentkezés
+Web;Login ID;Bejelentkezési azonosító
+Web;Logins;Bejelentkezések
+Web;Logout;Kijelentkezés
+Web;Logout the user;Felhasználó kijelentkeztetése
+Web;Manage Folders;Mappák kezelése
+Web;Manage sub-folders;Almappák kezelése
+Web;Name;Név
+Web;New;Új
+Web;New folder name;Új mappa neve
+Web;New folder path;Új mappa elérési útja
+Web;New password;Új jelszó
+Web;None;Nincs
+Web;OK;OK
+Web;On startup;Indításkor
+Web;Optional chart title;Választható diagramcím
+Web;Optional menu name;Választható menünév
+Web;Output;Kimenet
+Web;Password;Jelszó
+Web;Paste;Beillesztés
+Web;PDF Conversion delay;PDF-konverzió késleltetése
+Web;Personal;Személyes
+Web;Personal folder;Személyes mappa
+Web;Phone;Telefon
+Web;Please wait;Kérjük, várjon
+Web;Profile;Profil
+Web;Profile information;Profilinformációk
+Web;Refresh;Frissítés
+Web;Re-init your password;Jelszó újraindítása
+Web;Reload and execute;Újratöltés és végrehajtás
+Web;Rename;Átnevezés
+Web;Rename or move folder;Mappa átnevezése vagy áthelyezése
+Web;Rename, move or copy;Átnevezés, áthelyezés vagy másolás
+Web;Report;Jelentés
+Web;Report execution mode;Jelentés végrehajtási módja
+Web;Report name;Jelentés neve
+Web;Report title;Jelentés címe
+Web;Report title if different from report name;Jelentés címe, ha eltér a jelentés nevétől
+Web;Reports;Jelentések
+Web;Reports menu;Jelentések menü
+Web;Repository connection;Tárház-kapcsolat
+Web;Reset password;Jelszó visszaállítása
+Web;Reset your password;Jelszó visszaállítása
+Web;Save;Mentés
+Web;Search;Keresés
+Web;Security code;Biztonsági kód
+Web;Show sub-folders;Almappák megjelenítése
+Web;Startup report name;Indítási jelentés neve
+Web;The favorite has been updated;A kedvenc frissítve lett
+Web;Two-Factor Authentication;Kétfaktoros hitelesítés
+Web;Type;Típus
+Web;Type a new password;Adjon meg egy új jelszót
+Web;Upload;Feltöltés
+Web;User groups;Felhasználói csoportok
+Web;User identifier or email;Felhasználói azonosító vagy e-mail
+Web;User name;Felhasználónév
+Web;Users;Felhasználók
+Web;Web product name;Webtermék neve
+Web;Width;Szélesség
+WebJS;# of % selected;A kiválasztott % darabszáma
+WebJS;Actions;Műveletek
+WebJS;All selected;Mind kiválasztva
+WebJS;Allow only execution in a new window;Csak új ablakban történő végrehajtás engedélyezése
+WebJS;Cancel;Mégse
+WebJS;Configuration for;Konfiguráció ehhez:
+WebJS;Contains;Tartalmazza
+WebJS;Contains all;Mindet tartalmazza
+WebJS;Contains any;Bármelyiket tartalmazza
+WebJS;Copy;Másolás
+WebJS;Copy of;Másolata:
+WebJS;Copy to;Másolás ide
+WebJS;Default;Alapértelmezett
+WebJS;Default culture;Alapértelmezett kultúra
+WebJS;Default mode;Alapértelmezett mód
+WebJS;Default report connection;Alapértelmezett jelentéskapcsolat
+WebJS;Default repository connection;Alapértelmezett tárház-kapcsolat
+WebJS;Default startup;Alapértelmezett indítás
+WebJS;Do not execute report;Ne hajtsa végre a jelentést
+WebJS;Do you really want to delete the reports or files selected ?;Valóban törölni szeretné a kiválasztott jelentéseket vagy fájlokat?
+WebJS;Does not contain;Nem tartalmazza
+WebJS;Does not contain all;Nem tartalmazza mindet
+WebJS;Does not contain any;Egyiket sem tartalmazza
+WebJS;Download report;Jelentés letöltése
+WebJS;Edit report;Jelentés szerkesztése
+WebJS;Edit reports / Manage files;Jelentések szerkesztése / Fájlok kezelése
+WebJS;Edit schedules / View files;Ütemezések szerkesztése / Fájlok megtekintése
+WebJS;Ends with;Végződik
+WebJS;Equals;Egyenlő
+WebJS;Error;Hiba
+WebJS;Execute report in a new window;Jelentés végrehajtása új ablakban
+WebJS;Execute report in the current window;Jelentés végrehajtása az aktuális ablakban
+WebJS;Execute reports / View files;Jelentések végrehajtása / Fájlok megtekintése
+WebJS;Execute reports and outputs / View files;Jelentések és kimenetek végrehajtása / Fájlok megtekintése
+WebJS;Execute the last report;Az utolsó jelentés végrehajtása
+WebJS;Execute the report;A jelentés végrehajtása
+WebJS;Favorites;Kedvencek
+WebJS;Folder;Mappa
+WebJS;Is between;Tartományon belül van
+WebJS;Is different from;Eltér ettől
+WebJS;Is empty;Üres
+WebJS;Is greater or equal than;Nagyobb vagy egyenlő, mint
+WebJS;Is greater than;Nagyobb, mint
+WebJS;Is not between;Nincs a tartományon belül
+WebJS;Is not empty;Nem üres
+WebJS;Is not Null;Nem Null
+WebJS;Is Null;Null
+WebJS;Is smaller or equal than;Kisebb vagy egyenlő, mint
+WebJS;Is smaller than;Kisebb, mint
+WebJS;Last modification;Utolsó módosítás
+WebJS;Mark as favorite;Megjelölés kedvencként
+WebJS;Model;Modell
+WebJS;New folder configuration;Új mappakonfiguráció
+WebJS;New group;Új csoport
+WebJS;New login;Új bejelentkezés
+WebJS;No;Nem
+WebJS;No download (except files) or upload;Nincs letöltés (fájlok kivételével) vagy feltöltés
+WebJS;No folder configuration;Nincs mappakonfiguráció
+WebJS;No login;Nincs bejelentkezés
+WebJS;No personal folder;Nincs személyes mappa
+WebJS;No right;Nincs jogosultság
+WebJS;None;Nincs
+WebJS;Not sorted;Nincs rendezve
+WebJS;OK;OK
+WebJS;Options;Beállítások
+WebJS;Output;Kimenet
+WebJS;Personal folder for files only;Személyes mappa csak fájlokhoz
+WebJS;Personal folder for reports and files;Személyes mappa jelentésekhez és fájlokhoz
+WebJS;Please wait;Kérjük, várjon
+WebJS;Processing;Feldolgozás
+WebJS;Profile;Profil
+WebJS;Recents;Legutóbbiak
+WebJS;Report;Jelentés
+WebJS;report(s) or file(s) cut in the clipboard;jelentés(eke)t vagy fájl(oka)t vágott a vágólapra
+WebJS;report(s) or file(s) have been deleted;jelentés(ek) vagy fájl(ok) törölve
+WebJS;report(s) or file(s) processed;jelentés(ek) vagy fájl(ok) feldolgozva
+WebJS;report(s) or files(s) copied in the clipboard;jelentés(eke)t vagy fájl(oka)t másolt a vágólapra
+WebJS;Reports;Jelentések
+WebJS;Schedule;Ütemezés
+WebJS;Server Version;Szerververzió
+WebJS;Show _MENU_ reports;_MENU_ jelentés megjelenítése
+WebJS;Starts with;Kezdődik
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;A konfiguráció elmentve. Kérjük, jelentkezzen be újra, ha a biztonsági beállítások érintik.
+WebJS;The folder has been created;A mappa létrejött
+WebJS;The folder has been deleted;A mappa törölve lett
+WebJS;The folder has been renamed;A mappa át lett nevezve
+WebJS;The folder has been updated;A mappa frissítve lett
+WebJS;The report or file has been renamed;A jelentés vagy fájl át lett nevezve
+WebJS;Toggle Report or Folders view;Jelentés vagy mappa nézet váltása
+WebJS;Unexpected error on server;Váratlan hiba a szerveren
+WebJS;User can download reports;A felhasználó letöltheti a jelentéseket
+WebJS;User can download reports and upload reports and files;A felhasználó letöltheti a jelentéseket, valamint feltölthet jelentéseket és fájlokat
+WebJS;View;Megtekintés
+WebJS;View Folders;Mappák megtekintése
+WebJS;View Report;Jelentés megtekintése
+WebJS;View reports;Jelentések megtekintése
+WebJS;Views and outputs;Nézetek és kimenetek
+WebJS;Warning;Figyelmeztetés
+WebJS;Web Interface Version;Webes felület verziója
+WebJS;Yes;Igen
+WebJS;Yes (Folder is expanded in the tree view);Igen (A mappa ki van bontva a fanézetben)
+WebJS;Yes (Only files can be stored);Igen (Csak fájlok tárolhatók)
+WebJS;Yes (User can browse sub-folders);Igen (A felhasználó böngészheti az almappákat)
+WebJS;Yes (User can create and edit sub-folders);Igen (A felhasználó létrehozhat és szerkeszthet almappákat)
+WebJS;Yes (User can edit his profile);Igen (A felhasználó szerkesztheti a profilját)
+WebJS;Yes (User is administrator of the Web Server);Igen (A felhasználó a webszerver rendszergazdája)
+Web;Select assistant;Asszisztens kiválasztása
+Web;Mark as favorite;Megjelölés kedvencként
+Web;Favorites;Kedvencek
+Web;No favorites yet;Még nincsenek kedvencek
+Web;Recent;Legutóbbi
+Web;No recent items;Nincsenek legutóbbi elemek
+Web;New conversation;Új beszélgetés
+Web;Sample prompts;Mintaüzenetek
+Web;Sample Prompts;Mintaüzenetek
+Web;No sample prompts defined;Nincsenek megadva mintaüzenetek
+Web;AI Assistant;MI asszisztens
+Web;Favorites & Recent;Kedvencek és legutóbbiak
+Web;Hide panel;Panel elrejtése
+Web;Ask the AI assistant…;Kérdezze az MI asszisztenst…
+Web;Confirm Deletion;Törlés megerősítése
+Web;This action is irreversible. Are you sure you want to delete this item?;Ez a művelet visszafordíthatatlan. Biztosan törölni szeretné ezt az elemet?
+Web;Data Source;Adatforrás
+Web;Report Assistants;Jelentésasszisztensek
+Web;Select Tables or Views;Táblák vagy nézetek kiválasztása
+Web;Filter tables...;Táblák szűrése...
+Web;Select All;Mindet kijelöl
+Web;Deselect All;Kijelölés megszüntetése
+Web;tables selected;tábla kiválasztva
+Web;Prompt Shortcuts;Üzenet-parancsikonok
+Web;How can Seal AI help you today ?;Hogyan segíthet ma a Seal MI?
+Web;No current items available;Nincsenek elérhető aktuális elemek
+Web;Current items will appear here when saved;Az aktuális elemek itt jelennek meg, ha mentésre kerülnek
+Web;Drafts;Piszkozatok
+Web;No draft items available;Nincsenek elérhető piszkozatelemek
+Web;Upload files or create new items with the assistant to see them here;Töltsön fel fájlokat vagy hozzon létre új elemeket az asszisztenssel, hogy itt megjelenjenek
+Web;Item Details;Elem részletei
+Web;Loading detail. Please wait...;Részletek betöltése. Kérjük, várjon...
+Web;Select a row from the table to view its details;Válasszon egy sort a táblából a részletek megtekintéséhez
+Web;Check;Ellenőrzés
+Web;Download;Letöltés
+Web;Reports Assistant;Jelentésasszisztens
+Web;Connection type;Kapcsolat típusa
+Web;Connection string;Kapcsolati karakterlánc
+Web;Tables or views;Táblák vagy nézetek
+Web;Report Assistant;Jelentésasszisztens
+Web;AI Provider;MI szolgáltató
+Web;AI model;MI modell
+Web;AI model name (overrides default));MI modell neve (felülírja az alapértelmezettet))
+Web;Temperature;Hőmérséklet
+Web;Model temperature;Modell hőmérséklete
+Web;System prompt;Rendszerüzenet
+Web;Optional sytem prompt for the assistant;Választható rendszerüzenet az asszisztenshez
+Web;User prompt;Felhasználói üzenet
+Web;Default user prompts (if empty default values configured are taken);Alapértelmezett felhasználói üzenetek (ha üres, a beállított alapértelmezett értékek érvényesek)
+Web;User Groups allowed (No selection means no restriction);Engedélyezett felhasználói csoportok (nincs kiválasztás esetén nincs korlátozás)
+Web;Scan options;Vizsgálati beállítások
+Web;When to scan;Mikor vizsgáljon
+Web;Cache duration (days);Gyorsítótár időtartama (nap)
+Web;Cache duration (days) for scanned data;A vizsgált adatok gyorsítótárának időtartama (nap)
+Web;Tables to scan (no selection means all tables);Vizsgálandó táblák (nincs kiválasztás esetén minden tábla)
+Web;Records to scan;Vizsgálandó rekordok
+Web;Number of records used for scan;A vizsgálathoz használt rekordok száma
+Web;Scan Data Now;Adatok vizsgálata most
+Web;Execute;Végrehajtás
+Web;Elements:;Elemek:
+Web;Restrictions:;Korlátozások:
+WebJS;Hide AI Assistant;MI asszisztens elrejtése
+WebJS;AI Assistant;MI asszisztens
+WebJS;Running;Fut
+WebJS;Request cancelled.;A kérés megszakítva.
+WebJS;Remove from favorites;Eltávolítás a kedvencek közül
+WebJS;No sample prompts defined;Nincsenek megadva mintaüzenetek
+WebJS;Rename;Átnevezés
+WebJS;Delete;Törlés
+WebJS;No favorites yet;Még nincsenek kedvencek
+WebJS;No recent items;Nincsenek legutóbbi elemek
+Web;Configuration;Konfiguráció
+Web;Download/Upload;Letöltés/Feltöltés
+Web;Rights;Jogok
+Web;Assistants;Asszisztensek
+Web;Folder;Mappa

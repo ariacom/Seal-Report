@@ -1,0 +1,503 @@
+﻿Context;Reference;ro
+NVD3;(right axis);(axa dreaptă)
+NVD3;Expanded;Extins
+NVD3;Grouped;Grupat
+NVD3;Re-scale y-axis;Re-scalează axa y
+NVD3;Stacked;Stivuit
+NVD3;Stream;Flux
+Report;!=;!=
+Report;# of % selected;# din % selectate
+Report;(filtered from _MAX_);(filtrat din _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Este necesară o valoare pentru
+Report;All;Toate
+Report;All selected;Toate selectate
+Report;and;și
+Report;Auto Fit columns;Potrivire automată coloane
+Report;Auto Scroll enabled;Derulare automată activată
+Report;Average of;Media pentru
+Report;Back to top;Înapoi sus
+Report;Between;Între
+Report;Cancel;Anulează
+Report;Cancelling report...;Se anulează raportul...
+Report;Charts;Grafice
+Report;Clear selection;Șterge selecția
+Report;Close;Închide
+Report;Contains;Conține
+Report;Contains all;Conține toate
+Report;Contains any;Conține oricare
+Report;Count Distinct of;Numărare distinctă pentru
+Report;Count of;Numărare pentru
+Report;Decrement;Decrementare
+Report;Description;Descriere
+Report;Display header footer;Afișează antet subsol
+Report;Display: Execution messages;Afișează: Mesaje de execuție
+Report;Display: Execution messages;Afișează: Mesaje de execuție
+Report;Display: Information messages;Afișează: Mesaje de informare
+Report;Display: Information messages;Afișează: Mesaje de informare
+Report;Does not contain;Nu conține
+Report;Does not contain all;Nu conține toate
+Report;Does not contain any;Nu conține niciuna
+Report;Drill <;Detaliere <
+Report;Drill >;Detaliere >
+Report;Duration;Durată
+Report;Duration (seconds);Durată (secunde)
+Report;Email sent to '{0}';E-mail trimis către '{0}'
+Report;Ends with;Se termină cu
+Report;Equals;Egal
+Report;Execute;Execută
+Report;Executing report...;Se execută raportul...
+Report;Execution date;Data execuției
+Report;Execution duration;Durata execuției
+Report;execution messages;mesaje de execuție
+Report;Export messages...;Exportă mesaje...
+Report;Filter:;Filtru:
+Report;Go to today;Mergi la astăzi
+Report;Goal;Țintă
+Report;Hide;Ascunde
+Report;HTML Print: Show messages;Imprimare HTML: Afișează mesajele
+Report;HTML Print: Show messages;Imprimare HTML: Afișează mesajele
+Report;HTML Print: Show report information;Imprimare HTML: Afișează informațiile raportului
+Report;HTML Print: Show report information;Imprimare HTML: Afișează informațiile raportului
+Report;HTML to PDF;HTML în PDF
+Report;Increment;Incrementare
+Report;Information panel enabled;Panou de informații activat
+Report;Information panel enabled and shown;Panou de informații activat și afișat
+Report;Information panel hidden;Panou de informații ascuns
+Report;Invalid date;Dată invalidă
+Report;Invalid numeric value;Valoare numerică invalidă
+Report;Is between;Este între
+Report;Is Blank;Este necompletat
+Report;Is different from;Este diferit de
+Report;Is empty;Este gol
+Report;Is greater or equal than;Este mai mare sau egal cu
+Report;Is greater than;Este mai mare decât
+Report;Is not between;Nu este între
+Report;Is Not Blank;Nu este necompletat
+Report;Is not empty;Nu este gol
+Report;Is not Null;Nu este Null
+Report;Is Null;Este Null
+Report;Is smaller or equal than;Este mai mic sau egal cu
+Report;Is smaller than;Este mai mic decât
+Report;Landscape;Orizontal
+Report;Logs;Jurnale
+Report;Maximum of;Maximul pentru
+Report;Messages panel enabled;Panou de mesaje activat
+Report;Messages panel enabled and shown;Panou de mesaje activat și afișat
+Report;Messages panel enabled and shown only during execution;Panou de mesaje activat și afișat doar în timpul execuției
+Report;Messages panel hidden;Panou de mesaje ascuns
+Report;Minimum of;Minimul pentru
+Report;Model;Model
+Report;Model loaded...;Model încărcat...
+Report;Models loaded...;Modele încărcate...
+Report;New report;Raport nou
+Report;Next Century;Secolul următor
+Report;Next Decade;Deceniul următor
+Report;Next Month;Luna următoare
+Report;Next Year;Anul următor
+Report;No;Nu
+Report;No records;Nicio înregistrare
+Report;No records. The report output generation has been cancelled.;Nicio înregistrare. Generarea rezultatului raportului a fost anulată.
+Report;No reports;Niciun raport
+Report;No rows;Niciun rând
+Report;Not Between;Nu este între
+Report;Not Contains;Nu conține
+Report;Now;Acum
+Report;Options;Opțiuni
+Report;or;sau
+Report;Page;Pagină
+Report;"Page &p; of &P;";"Pagina &p; din &P;"
+Report;Page orientation;Orientarea paginii
+Report;Page size;Dimensiunea paginii
+Report;Pages;Pagini
+Report;Pick Hour;Alege ora
+Report;Pick Minute;Alege minutul
+Report;Pick Second;Alege secunda
+Report;Please enter a value;Vă rugăm introduceți o valoare
+Report;Please enter at least a value;Vă rugăm introduceți cel puțin o valoare
+Report;Please find the report '{0}' in attachment.;Găsiți raportul '{0}' în atașament.
+Report;Please find your authentication code;Găsiți codul dvs. de autentificare
+Report;Please wait, the report result is being generated in another window;Vă rugăm așteptați, rezultatul raportului este generat în altă fereastră
+Report;Previous Century;Secolul anterior
+Report;Previous Decade;Deceniul anterior
+Report;Previous Month;Luna anterioară
+Report;Previous Year;Anul anterior
+Report;Print: Page orientation;Imprimare: Orientarea paginii
+Report;Print: Show logo;Imprimare: Afișează logoul
+Report;Processing;Se procesează
+Report;Processing...;Se procesează...
+Report;Records;Înregistrări
+Report;Refresh;Reîmprospătează
+Report;Report;Raport
+Report;Report description;Descrierea raportului
+Report;Report has been cancelled;Raportul a fost anulat
+Report;report information;informațiile raportului
+Report;report restrictions;restricțiile raportului
+Report;Report result generated in '{0}';Rezultatul raportului generat în '{0}'
+Report;Report result options;Opțiuni rezultat raport
+Report;report result panel;panou rezultat raport
+Report;Report summary;Rezumatul raportului
+Report;Restrictions;Restricții
+Report;Results;Rezultate
+Report;Scale;Scară
+Report;second;secundă
+Report;seconds;secunde
+Report;Select all;Selectează tot
+Report;Select Decade;Selectează deceniul
+Report;Select Month;Selectează luna
+Report;Select Time;Selectează ora
+Report;Select Year;Selectează anul
+Report;Show;Afișează
+Report;Show _MENU_ reports;Afișează _MENU_ rapoarte
+Report;Show _MENU_ rows;Afișează _MENU_ rânduri
+Report;Show messages;Afișează mesajele
+Report;Show messages;Afișează mesajele
+Report;Show report information;Afișează informațiile raportului
+Report;Show report information;Afișează informațiile raportului
+Report;Show/Hide Restrictions;Afișează/Ascunde restricțiile
+Report;Showing _START_ to _END_ of _TOTAL_;Se afișează de la _START_ la _END_ din _TOTAL_
+Report;Showing 0 to 0 of 0;Se afișează de la 0 la 0 din 0
+Report;Starting execution...;Se pornește execuția...
+Report;Starts with;Începe cu
+Report;Subtotal;Subtotal
+Report;Sum of;Suma pentru
+Report;Summary;Rezumat
+Report;Table of Contents;Cuprins
+Report;Tabs to show;File de afișat
+Report;Task executed...;Sarcină executată...
+Report;Tasks executed...;Sarcini executate...
+Report;The report has been generated.;Raportul a fost generat.
+Report;This report has execution errors. Please check details in the Logs Files...;Acest raport are erori de execuție. Vă rugăm verificați detaliile în Fișierele jurnal...
+Report;ThisHour;OraAceasta
+Report;ThisMinute;MinutulAcesta
+Report;ThisMonth;LunaAceasta
+Report;ThisQuarter;TrimestrulAcesta
+Report;ThisSemester;SemestrulAcesta
+Report;ThisWeek;SăptămânaAceasta
+Report;ThisYear;AnulAcesta
+Report;Today;Astăzi
+Report;Toggle Period;Comută perioada
+Report;Total;Total
+Report;Use the date format '{0}' or one of the following keywords:;Folosiți formatul de dată '{0}' sau unul dintre următoarele cuvinte cheie:
+Report;View;Vizualizare
+Report;View CSV Result;Vizualizează rezultatul CSV
+Report;View Excel Converter Result;Vizualizează rezultatul convertorului Excel
+Report;View Excel Result;Vizualizează rezultatul Excel
+Report;View HTML Print Result;Vizualizează rezultatul imprimării HTML
+Report;View HTML Result;Vizualizează rezultatul HTML
+Report;View HTML to PDF Result;Vizualizează rezultatul HTML în PDF
+Report;View Json Result;Vizualizează rezultatul Json
+Report;View PDF Converter Result;Vizualizează rezultatul convertorului PDF
+Report;View PDF Result;Vizualizează rezultatul PDF
+Report;View report result file;Vizualizează fișierul cu rezultatul raportului
+Report;View Text Result;Vizualizează rezultatul text
+Report;View XML Result;Vizualizează rezultatul XML
+Report;Warning: The maximum number of records is reached;Avertisment: A fost atins numărul maxim de înregistrări
+Report;Yes;Da
+Web;Add;Adaugă
+Web;All;Toate
+Web;Auto-Refresh (seconds);Reîmprospătare automată (secunde)
+Web;Back to login with user name and password;Înapoi la autentificare cu nume de utilizator și parolă
+Web;Cancel;Anulează
+Web;Change password;Schimbă parola
+Web;Change password;Schimbă parola
+Web;Change your password;Schimbați-vă parola
+Web;Chart sort;Sortare grafic
+Web;Close;Închide
+Web;Color;Culoare
+Web;Confirm your new password;Confirmați noua parolă
+Web;Copy;Copiază
+Web;Create in folder;Creează în folder
+Web;Create new folder;Creează folder nou
+Web;CSS Format;Format CSS
+Web;Culture;Cultură
+Web;Current password;Parola curentă
+Web;Cut;Decupează
+Web;Data source connections;Conexiuni sursă de date
+Web;Default view;Vizualizare implicită
+Web;Delete;Șterge
+Web;Delete folder;Șterge folderul
+Web;Description;Descriere
+Web;Device;Dispozitiv
+Web;Disconnect;Deconectează
+Web;Display options;Opțiuni de afișare
+Web;Edit;Editează
+Web;Edit configuration;Editează configurația
+Web;Edit entry;Editează intrarea
+Web;Edit profile;Editează profilul
+Web;Edition;Ediție
+Web;Email;E-mail
+Web;Enter password;Introduceți parola
+Web;Enter user name;Introduceți numele de utilizator
+Web;Enter your current password;Introduceți parola dvs. curentă
+Web;Enter your new file name;Introduceți noul nume de fișier
+Web;Enter your new password;Introduceți noua dvs. parolă
+Web;Enter your security code;Introduceți codul dvs. de securitate
+Web;Enter your user identifier or email;Introduceți identificatorul de utilizator sau e-mailul
+Web;Error;Eroare
+Web;Error: only files (and not reports) can be copied to this folder.;Eroare: doar fișierele (nu și rapoartele) pot fi copiate în acest folder.
+Web;Error: the destination file name contains invalid characters.;Eroare: numele fișierului destinație conține caractere invalide.
+Web;Error: the destination folder name contains invalid characters.;Eroare: numele folderului destinație conține caractere invalide.
+Web;Expand in Treeview;Extinde în vizualizarea arborescentă
+Web;Export;Exportă
+Web;Files only;Doar fișiere
+Web;Folder Permissions;Permisiuni folder
+Web;Folders;Foldere
+Web;Forget your password ?;Ați uitat parola ?
+Web;Group name;Nume grup
+Web;Group name;Nume grup
+Web;Groups;Grupuri
+Web;Groups;Grupuri
+Web;Height;Înălțime
+Web;Icon;Pictogramă
+Web;Information;Informații
+Web;Invalid security code;Cod de securitate invalid
+Web;Invalid user name or password;Nume de utilizator sau parolă invalidă
+Web;Is dynamic;Este dinamic
+Web;Last execution at;Ultima execuție la
+Web;Licensed to;Licențiat către
+Web;Login;Autentificare
+Web;Login ID;ID autentificare
+Web;Logins;Autentificări
+Web;Logout;Deconectare
+Web;Logout the user;Deconectează utilizatorul
+Web;Manage Folders;Gestionează folderele
+Web;Manage sub-folders;Gestionează subfolderele
+Web;Name;Nume
+Web;New;Nou
+Web;New folder name;Nume folder nou
+Web;New folder path;Cale folder nou
+Web;New password;Parolă nouă
+Web;None;Niciunul
+Web;OK;OK
+Web;On startup;La pornire
+Web;Optional chart title;Titlu grafic opțional
+Web;Optional menu name;Nume meniu opțional
+Web;Output;Ieșire
+Web;Password;Parolă
+Web;Paste;Lipește
+Web;PDF Conversion delay;Întârziere conversie PDF
+Web;Personal;Personal
+Web;Personal folder;Folder personal
+Web;Phone;Telefon
+Web;Please wait;Vă rugăm așteptați
+Web;Profile;Profil
+Web;Profile information;Informații profil
+Web;Refresh;Reîmprospătează
+Web;Re-init your password;Reinițializați-vă parola
+Web;Reload and execute;Reîncarcă și execută
+Web;Rename;Redenumește
+Web;Rename or move folder;Redenumește sau mută folderul
+Web;Rename, move or copy;Redenumește, mută sau copiază
+Web;Report;Raport
+Web;Report execution mode;Mod de execuție raport
+Web;Report name;Nume raport
+Web;Report title;Titlu raport
+Web;Report title if different from report name;Titlul raportului dacă diferă de numele raportului
+Web;Reports;Rapoarte
+Web;Reports menu;Meniu rapoarte
+Web;Repository connection;Conexiune depozit
+Web;Reset password;Resetează parola
+Web;Reset your password;Resetați-vă parola
+Web;Save;Salvează
+Web;Search;Caută
+Web;Security code;Cod de securitate
+Web;Show sub-folders;Afișează subfolderele
+Web;Startup report name;Nume raport de pornire
+Web;The favorite has been updated;Favoritul a fost actualizat
+Web;Two-Factor Authentication;Autentificare cu doi factori
+Web;Type;Tip
+Web;Type a new password;Tastați o parolă nouă
+Web;Upload;Încarcă
+Web;User groups;Grupuri de utilizatori
+Web;User identifier or email;Identificator de utilizator sau e-mail
+Web;User name;Nume de utilizator
+Web;Users;Utilizatori
+Web;Web product name;Nume produs web
+Web;Width;Lățime
+WebJS;# of % selected;# din % selectate
+WebJS;Actions;Acțiuni
+WebJS;All selected;Toate selectate
+WebJS;Allow only execution in a new window;Permite doar execuția într-o fereastră nouă
+WebJS;Cancel;Anulează
+WebJS;Configuration for;Configurație pentru
+WebJS;Contains;Conține
+WebJS;Contains all;Conține toate
+WebJS;Contains any;Conține oricare
+WebJS;Copy;Copiază
+WebJS;Copy of;Copie a
+WebJS;Copy to;Copiază în
+WebJS;Default;Implicit
+WebJS;Default culture;Cultură implicită
+WebJS;Default mode;Mod implicit
+WebJS;Default report connection;Conexiune raport implicită
+WebJS;Default repository connection;Conexiune depozit implicită
+WebJS;Default startup;Pornire implicită
+WebJS;Do not execute report;Nu executa raportul
+WebJS;Do you really want to delete the reports or files selected ?;Doriți într-adevăr să ștergeți rapoartele sau fișierele selectate ?
+WebJS;Does not contain;Nu conține
+WebJS;Does not contain all;Nu conține toate
+WebJS;Does not contain any;Nu conține niciuna
+WebJS;Download report;Descarcă raportul
+WebJS;Edit report;Editează raportul
+WebJS;Edit reports / Manage files;Editează rapoarte / Gestionează fișiere
+WebJS;Edit schedules / View files;Editează programări / Vizualizează fișiere
+WebJS;Ends with;Se termină cu
+WebJS;Equals;Egal
+WebJS;Error;Eroare
+WebJS;Execute report in a new window;Execută raportul într-o fereastră nouă
+WebJS;Execute report in the current window;Execută raportul în fereastra curentă
+WebJS;Execute reports / View files;Execută rapoarte / Vizualizează fișiere
+WebJS;Execute reports and outputs / View files;Execută rapoarte și ieșiri / Vizualizează fișiere
+WebJS;Execute the last report;Execută ultimul raport
+WebJS;Execute the report;Execută raportul
+WebJS;Favorites;Favorite
+WebJS;Folder;Folder
+WebJS;Is between;Este între
+WebJS;Is different from;Este diferit de
+WebJS;Is empty;Este gol
+WebJS;Is greater or equal than;Este mai mare sau egal cu
+WebJS;Is greater than;Este mai mare decât
+WebJS;Is not between;Nu este între
+WebJS;Is not empty;Nu este gol
+WebJS;Is not Null;Nu este Null
+WebJS;Is Null;Este Null
+WebJS;Is smaller or equal than;Este mai mic sau egal cu
+WebJS;Is smaller than;Este mai mic decât
+WebJS;Last modification;Ultima modificare
+WebJS;Mark as favorite;Marchează ca favorit
+WebJS;Model;Model
+WebJS;New folder configuration;Configurație folder nou
+WebJS;New group;Grup nou
+WebJS;New login;Autentificare nouă
+WebJS;No;Nu
+WebJS;No download (except files) or upload;Fără descărcare (cu excepția fișierelor) sau încărcare
+WebJS;No folder configuration;Fără configurație folder
+WebJS;No login;Fără autentificare
+WebJS;No personal folder;Fără folder personal
+WebJS;No right;Niciun drept
+WebJS;None;Niciunul
+WebJS;Not sorted;Nesortat
+WebJS;OK;OK
+WebJS;Options;Opțiuni
+WebJS;Output;Ieșire
+WebJS;Personal folder for files only;Folder personal doar pentru fișiere
+WebJS;Personal folder for reports and files;Folder personal pentru rapoarte și fișiere
+WebJS;Please wait;Vă rugăm așteptați
+WebJS;Processing;Se procesează
+WebJS;Profile;Profil
+WebJS;Recents;Recente
+WebJS;Report;Raport
+WebJS;report(s) or file(s) cut in the clipboard;raport(oarte) sau fișier(e) decupate în clipboard
+WebJS;report(s) or file(s) have been deleted;raport(oarte) sau fișier(e) au fost șterse
+WebJS;report(s) or file(s) processed;raport(oarte) sau fișier(e) procesate
+WebJS;report(s) or files(s) copied in the clipboard;raport(oarte) sau fișier(e) copiate în clipboard
+WebJS;Reports;Rapoarte
+WebJS;Schedule;Programare
+WebJS;Server Version;Versiune server
+WebJS;Show _MENU_ reports;Afișează _MENU_ rapoarte
+WebJS;Starts with;Începe cu
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Configurația a fost salvată. Vă rugăm autentificați-vă din nou dacă sunteți afectat de securitate.
+WebJS;The folder has been created;Folderul a fost creat
+WebJS;The folder has been deleted;Folderul a fost șters
+WebJS;The folder has been renamed;Folderul a fost redenumit
+WebJS;The folder has been updated;Folderul a fost actualizat
+WebJS;The report or file has been renamed;Raportul sau fișierul a fost redenumit
+WebJS;Toggle Report or Folders view;Comută vizualizarea Rapoarte sau Foldere
+WebJS;Unexpected error on server;Eroare neașteptată pe server
+WebJS;User can download reports;Utilizatorul poate descărca rapoarte
+WebJS;User can download reports and upload reports and files;Utilizatorul poate descărca rapoarte și încărca rapoarte și fișiere
+WebJS;View;Vizualizare
+WebJS;View Folders;Vizualizează folderele
+WebJS;View Report;Vizualizează raportul
+WebJS;View reports;Vizualizează rapoarte
+WebJS;Views and outputs;Vizualizări și ieșiri
+WebJS;Warning;Avertisment
+WebJS;Web Interface Version;Versiune interfață web
+WebJS;Yes;Da
+WebJS;Yes (Folder is expanded in the tree view);Da (Folderul este extins în vizualizarea arborescentă)
+WebJS;Yes (Only files can be stored);Da (Doar fișierele pot fi stocate)
+WebJS;Yes (User can browse sub-folders);Da (Utilizatorul poate naviga în subfoldere)
+WebJS;Yes (User can create and edit sub-folders);Da (Utilizatorul poate crea și edita subfoldere)
+WebJS;Yes (User can edit his profile);Da (Utilizatorul își poate edita profilul)
+WebJS;Yes (User is administrator of the Web Server);Da (Utilizatorul este administrator al serverului web)
+Web;Select assistant;Selectează asistentul
+Web;Mark as favorite;Marchează ca favorit
+Web;Favorites;Favorite
+Web;No favorites yet;Niciun favorit încă
+Web;Recent;Recent
+Web;No recent items;Niciun element recent
+Web;New conversation;Conversație nouă
+Web;Sample prompts;Exemple de prompturi
+Web;Sample Prompts;Exemple de prompturi
+Web;No sample prompts defined;Niciun exemplu de prompt definit
+Web;AI Assistant;Asistent AI
+Web;Favorites & Recent;Favorite și recente
+Web;Hide panel;Ascunde panoul
+Web;Ask the AI assistant…;Întreabă asistentul AI…
+Web;Confirm Deletion;Confirmă ștergerea
+Web;This action is irreversible. Are you sure you want to delete this item?;Această acțiune este ireversibilă. Sigur doriți să ștergeți acest element?
+Web;Data Source;Sursă de date
+Web;Report Assistants;Asistenți de raport
+Web;Select Tables or Views;Selectează tabele sau vizualizări
+Web;Filter tables...;Filtrează tabelele...
+Web;Select All;Selectează tot
+Web;Deselect All;Deselectează tot
+Web;tables selected;tabele selectate
+Web;Prompt Shortcuts;Comenzi rapide pentru prompt
+Web;How can Seal AI help you today ?;Cum vă poate ajuta Seal AI astăzi ?
+Web;No current items available;Niciun element curent disponibil
+Web;Current items will appear here when saved;Elementele curente vor apărea aici când sunt salvate
+Web;Drafts;Schițe
+Web;No draft items available;Niciun element schiță disponibil
+Web;Upload files or create new items with the assistant to see them here;Încărcați fișiere sau creați elemente noi cu asistentul pentru a le vedea aici
+Web;Item Details;Detalii element
+Web;Loading detail. Please wait...;Se încarcă detaliul. Vă rugăm așteptați...
+Web;Select a row from the table to view its details;Selectați un rând din tabel pentru a-i vedea detaliile
+Web;Check;Verifică
+Web;Download;Descarcă
+Web;Reports Assistant;Asistent rapoarte
+Web;Connection type;Tip de conexiune
+Web;Connection string;Șir de conexiune
+Web;Tables or views;Tabele sau vizualizări
+Web;Report Assistant;Asistent raport
+Web;AI Provider;Furnizor AI
+Web;AI model;Model AI
+Web;AI model name (overrides default));Nume model AI (suprascrie valoarea implicită))
+Web;Temperature;Temperatură
+Web;Model temperature;Temperatura modelului
+Web;System prompt;Prompt de sistem
+Web;Optional sytem prompt for the assistant;Prompt de sistem opțional pentru asistent
+Web;User prompt;Prompt utilizator
+Web;Default user prompts (if empty default values configured are taken);Prompturi utilizator implicite (dacă este gol, sunt preluate valorile implicite configurate)
+Web;User Groups allowed (No selection means no restriction);Grupuri de utilizatori permise (Nicio selecție înseamnă fără restricție)
+Web;Scan options;Opțiuni de scanare
+Web;When to scan;Când să se scaneze
+Web;Cache duration (days);Durată cache (zile)
+Web;Cache duration (days) for scanned data;Durată cache (zile) pentru datele scanate
+Web;Tables to scan (no selection means all tables);Tabele de scanat (nicio selecție înseamnă toate tabelele)
+Web;Records to scan;Înregistrări de scanat
+Web;Number of records used for scan;Numărul de înregistrări folosite pentru scanare
+Web;Scan Data Now;Scanează datele acum
+Web;Execute;Execută
+Web;Elements:;Elemente:
+Web;Restrictions:;Restricții:
+WebJS;Hide AI Assistant;Ascunde asistentul AI
+WebJS;AI Assistant;Asistent AI
+WebJS;Running;Se execută
+WebJS;Request cancelled.;Cerere anulată.
+WebJS;Remove from favorites;Elimină din favorite
+WebJS;No sample prompts defined;Niciun exemplu de prompt definit
+WebJS;Rename;Redenumește
+WebJS;Delete;Șterge
+WebJS;No favorites yet;Niciun favorit încă
+WebJS;No recent items;Niciun element recent
+Web;Configuration;Configurație
+Web;Download/Upload;Descărcare/Încărcare
+Web;Rights;Drepturi
+Web;Assistants;Asistenți
+Web;Folder;Folder

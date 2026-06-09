@@ -1,0 +1,503 @@
+﻿Context;Reference;cs
+NVD3;(right axis);(pravá osa)
+NVD3;Expanded;Rozbalené
+NVD3;Grouped;Seskupené
+NVD3;Re-scale y-axis;Změnit měřítko osy y
+NVD3;Stacked;Skládané
+NVD3;Stream;Proudové
+Report;!=;!=
+Report;# of % selected;Vybráno # z %
+Report;(filtered from _MAX_);(filtrováno z _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Je vyžadována hodnota pro
+Report;All;Vše
+Report;All selected;Vybráno vše
+Report;and;a
+Report;Auto Fit columns;Automaticky přizpůsobit sloupce
+Report;Auto Scroll enabled;Automatické posouvání zapnuto
+Report;Average of;Průměr z
+Report;Back to top;Zpět nahoru
+Report;Between;Mezi
+Report;Cancel;Zrušit
+Report;Cancelling report...;Rušení sestavy...
+Report;Charts;Grafy
+Report;Clear selection;Vymazat výběr
+Report;Close;Zavřít
+Report;Contains;Obsahuje
+Report;Contains all;Obsahuje vše
+Report;Contains any;Obsahuje libovolné
+Report;Count Distinct of;Počet odlišných hodnot z
+Report;Count of;Počet z
+Report;Decrement;Snížit
+Report;Description;Popis
+Report;Display header footer;Zobrazit záhlaví a zápatí
+Report;Display: Execution messages;Zobrazit: Zprávy o provádění
+Report;Display: Execution messages;Zobrazit: Zprávy o provádění
+Report;Display: Information messages;Zobrazit: Informační zprávy
+Report;Display: Information messages;Zobrazit: Informační zprávy
+Report;Does not contain;Neobsahuje
+Report;Does not contain all;Neobsahuje vše
+Report;Does not contain any;Neobsahuje žádné
+Report;Drill <;Detail <
+Report;Drill >;Detail >
+Report;Duration;Doba trvání
+Report;Duration (seconds);Doba trvání (sekundy)
+Report;Email sent to '{0}';E-mail odeslán na '{0}'
+Report;Ends with;Končí na
+Report;Equals;Rovná se
+Report;Execute;Spustit
+Report;Executing report...;Provádění sestavy...
+Report;Execution date;Datum provedení
+Report;Execution duration;Doba provedení
+Report;execution messages;zprávy o provádění
+Report;Export messages...;Exportovat zprávy...
+Report;Filter:;Filtr:
+Report;Go to today;Přejít na dnešek
+Report;Goal;Cíl
+Report;Hide;Skrýt
+Report;HTML Print: Show messages;Tisk HTML: Zobrazit zprávy
+Report;HTML Print: Show messages;Tisk HTML: Zobrazit zprávy
+Report;HTML Print: Show report information;Tisk HTML: Zobrazit informace o sestavě
+Report;HTML Print: Show report information;Tisk HTML: Zobrazit informace o sestavě
+Report;HTML to PDF;HTML do PDF
+Report;Increment;Zvýšit
+Report;Information panel enabled;Informační panel zapnut
+Report;Information panel enabled and shown;Informační panel zapnut a zobrazen
+Report;Information panel hidden;Informační panel skryt
+Report;Invalid date;Neplatné datum
+Report;Invalid numeric value;Neplatná číselná hodnota
+Report;Is between;Je mezi
+Report;Is Blank;Je prázdné
+Report;Is different from;Je odlišné od
+Report;Is empty;Je prázdné
+Report;Is greater or equal than;Je větší nebo rovno než
+Report;Is greater than;Je větší než
+Report;Is not between;Není mezi
+Report;Is Not Blank;Není prázdné
+Report;Is not empty;Není prázdné
+Report;Is not Null;Není Null
+Report;Is Null;Je Null
+Report;Is smaller or equal than;Je menší nebo rovno než
+Report;Is smaller than;Je menší než
+Report;Landscape;Na šířku
+Report;Logs;Protokoly
+Report;Maximum of;Maximum z
+Report;Messages panel enabled;Panel zpráv zapnut
+Report;Messages panel enabled and shown;Panel zpráv zapnut a zobrazen
+Report;Messages panel enabled and shown only during execution;Panel zpráv zapnut a zobrazen pouze během provádění
+Report;Messages panel hidden;Panel zpráv skryt
+Report;Minimum of;Minimum z
+Report;Model;Model
+Report;Model loaded...;Model načten...
+Report;Models loaded...;Modely načteny...
+Report;New report;Nová sestava
+Report;Next Century;Další století
+Report;Next Decade;Další desetiletí
+Report;Next Month;Další měsíc
+Report;Next Year;Další rok
+Report;No;Ne
+Report;No records;Žádné záznamy
+Report;No records. The report output generation has been cancelled.;Žádné záznamy. Generování výstupu sestavy bylo zrušeno.
+Report;No reports;Žádné sestavy
+Report;No rows;Žádné řádky
+Report;Not Between;Není mezi
+Report;Not Contains;Neobsahuje
+Report;Now;Nyní
+Report;Options;Možnosti
+Report;or;nebo
+Report;Page;Stránka
+Report;"Page &p; of &P;";"Stránka &p; z &P;"
+Report;Page orientation;Orientace stránky
+Report;Page size;Velikost stránky
+Report;Pages;Stránky
+Report;Pick Hour;Vyberte hodinu
+Report;Pick Minute;Vyberte minutu
+Report;Pick Second;Vyberte sekundu
+Report;Please enter a value;Zadejte hodnotu
+Report;Please enter at least a value;Zadejte alespoň jednu hodnotu
+Report;Please find the report '{0}' in attachment.;Sestavu '{0}' naleznete v příloze.
+Report;Please find your authentication code;Váš ověřovací kód naleznete
+Report;Please wait, the report result is being generated in another window;Čekejte prosím, výsledek sestavy se generuje v jiném okně
+Report;Previous Century;Předchozí století
+Report;Previous Decade;Předchozí desetiletí
+Report;Previous Month;Předchozí měsíc
+Report;Previous Year;Předchozí rok
+Report;Print: Page orientation;Tisk: Orientace stránky
+Report;Print: Show logo;Tisk: Zobrazit logo
+Report;Processing;Zpracování
+Report;Processing...;Zpracování...
+Report;Records;Záznamy
+Report;Refresh;Obnovit
+Report;Report;Sestava
+Report;Report description;Popis sestavy
+Report;Report has been cancelled;Sestava byla zrušena
+Report;report information;informace o sestavě
+Report;report restrictions;omezení sestavy
+Report;Report result generated in '{0}';Výsledek sestavy vygenerován v '{0}'
+Report;Report result options;Možnosti výsledku sestavy
+Report;report result panel;panel výsledku sestavy
+Report;Report summary;Souhrn sestavy
+Report;Restrictions;Omezení
+Report;Results;Výsledky
+Report;Scale;Měřítko
+Report;second;sekunda
+Report;seconds;sekundy
+Report;Select all;Vybrat vše
+Report;Select Decade;Vyberte desetiletí
+Report;Select Month;Vyberte měsíc
+Report;Select Time;Vyberte čas
+Report;Select Year;Vyberte rok
+Report;Show;Zobrazit
+Report;Show _MENU_ reports;Zobrazit _MENU_ sestav
+Report;Show _MENU_ rows;Zobrazit _MENU_ řádků
+Report;Show messages;Zobrazit zprávy
+Report;Show messages;Zobrazit zprávy
+Report;Show report information;Zobrazit informace o sestavě
+Report;Show report information;Zobrazit informace o sestavě
+Report;Show/Hide Restrictions;Zobrazit/skrýt omezení
+Report;Showing _START_ to _END_ of _TOTAL_;Zobrazeno _START_ až _END_ z _TOTAL_
+Report;Showing 0 to 0 of 0;Zobrazeno 0 až 0 z 0
+Report;Starting execution...;Spouštění provádění...
+Report;Starts with;Začíná na
+Report;Subtotal;Mezisoučet
+Report;Sum of;Součet z
+Report;Summary;Souhrn
+Report;Table of Contents;Obsah
+Report;Tabs to show;Karty k zobrazení
+Report;Task executed...;Úloha provedena...
+Report;Tasks executed...;Úlohy provedeny...
+Report;The report has been generated.;Sestava byla vygenerována.
+Report;This report has execution errors. Please check details in the Logs Files...;Tato sestava obsahuje chyby provádění. Zkontrolujte podrobnosti v souborech protokolů...
+Report;ThisHour;TatoHodina
+Report;ThisMinute;TatoMinuta
+Report;ThisMonth;TentoMěsíc
+Report;ThisQuarter;TotoČtvrtletí
+Report;ThisSemester;TotoPololetí
+Report;ThisWeek;TentoTýden
+Report;ThisYear;TentoRok
+Report;Today;Dnes
+Report;Toggle Period;Přepnout období
+Report;Total;Celkem
+Report;Use the date format '{0}' or one of the following keywords:;Použijte formát data '{0}' nebo jedno z následujících klíčových slov:
+Report;View;Zobrazit
+Report;View CSV Result;Zobrazit výsledek CSV
+Report;View Excel Converter Result;Zobrazit výsledek konvertoru Excel
+Report;View Excel Result;Zobrazit výsledek Excel
+Report;View HTML Print Result;Zobrazit výsledek tisku HTML
+Report;View HTML Result;Zobrazit výsledek HTML
+Report;View HTML to PDF Result;Zobrazit výsledek HTML do PDF
+Report;View Json Result;Zobrazit výsledek JSON
+Report;View PDF Converter Result;Zobrazit výsledek konvertoru PDF
+Report;View PDF Result;Zobrazit výsledek PDF
+Report;View report result file;Zobrazit soubor s výsledkem sestavy
+Report;View Text Result;Zobrazit textový výsledek
+Report;View XML Result;Zobrazit výsledek XML
+Report;Warning: The maximum number of records is reached;Upozornění: Byl dosažen maximální počet záznamů
+Report;Yes;Ano
+Web;Add;Přidat
+Web;All;Vše
+Web;Auto-Refresh (seconds);Automatické obnovení (sekundy)
+Web;Back to login with user name and password;Zpět na přihlášení uživatelským jménem a heslem
+Web;Cancel;Zrušit
+Web;Change password;Změnit heslo
+Web;Change password;Změnit heslo
+Web;Change your password;Změňte své heslo
+Web;Chart sort;Řazení grafu
+Web;Close;Zavřít
+Web;Color;Barva
+Web;Confirm your new password;Potvrďte své nové heslo
+Web;Copy;Kopírovat
+Web;Create in folder;Vytvořit ve složce
+Web;Create new folder;Vytvořit novou složku
+Web;CSS Format;Formát CSS
+Web;Culture;Jazyk
+Web;Current password;Aktuální heslo
+Web;Cut;Vyjmout
+Web;Data source connections;Připojení k datovým zdrojům
+Web;Default view;Výchozí zobrazení
+Web;Delete;Smazat
+Web;Delete folder;Smazat složku
+Web;Description;Popis
+Web;Device;Zařízení
+Web;Disconnect;Odpojit
+Web;Display options;Možnosti zobrazení
+Web;Edit;Upravit
+Web;Edit configuration;Upravit konfiguraci
+Web;Edit entry;Upravit položku
+Web;Edit profile;Upravit profil
+Web;Edition;Edice
+Web;Email;E-mail
+Web;Enter password;Zadejte heslo
+Web;Enter user name;Zadejte uživatelské jméno
+Web;Enter your current password;Zadejte své aktuální heslo
+Web;Enter your new file name;Zadejte nový název souboru
+Web;Enter your new password;Zadejte své nové heslo
+Web;Enter your security code;Zadejte svůj bezpečnostní kód
+Web;Enter your user identifier or email;Zadejte svůj identifikátor uživatele nebo e-mail
+Web;Error;Chyba
+Web;Error: only files (and not reports) can be copied to this folder.;Chyba: do této složky lze kopírovat pouze soubory (nikoli sestavy).
+Web;Error: the destination file name contains invalid characters.;Chyba: název cílového souboru obsahuje neplatné znaky.
+Web;Error: the destination folder name contains invalid characters.;Chyba: název cílové složky obsahuje neplatné znaky.
+Web;Expand in Treeview;Rozbalit ve stromovém zobrazení
+Web;Export;Exportovat
+Web;Files only;Pouze soubory
+Web;Folder Permissions;Oprávnění složky
+Web;Folders;Složky
+Web;Forget your password ?;Zapomněli jste heslo?
+Web;Group name;Název skupiny
+Web;Group name;Název skupiny
+Web;Groups;Skupiny
+Web;Groups;Skupiny
+Web;Height;Výška
+Web;Icon;Ikona
+Web;Information;Informace
+Web;Invalid security code;Neplatný bezpečnostní kód
+Web;Invalid user name or password;Neplatné uživatelské jméno nebo heslo
+Web;Is dynamic;Je dynamické
+Web;Last execution at;Poslední provedení v
+Web;Licensed to;Licencováno pro
+Web;Login;Přihlásit se
+Web;Login ID;ID přihlášení
+Web;Logins;Přihlášení
+Web;Logout;Odhlásit se
+Web;Logout the user;Odhlásit uživatele
+Web;Manage Folders;Spravovat složky
+Web;Manage sub-folders;Spravovat podsložky
+Web;Name;Název
+Web;New;Nový
+Web;New folder name;Název nové složky
+Web;New folder path;Cesta nové složky
+Web;New password;Nové heslo
+Web;None;Žádné
+Web;OK;OK
+Web;On startup;Při spuštění
+Web;Optional chart title;Volitelný název grafu
+Web;Optional menu name;Volitelný název nabídky
+Web;Output;Výstup
+Web;Password;Heslo
+Web;Paste;Vložit
+Web;PDF Conversion delay;Prodleva převodu PDF
+Web;Personal;Osobní
+Web;Personal folder;Osobní složka
+Web;Phone;Telefon
+Web;Please wait;Čekejte prosím
+Web;Profile;Profil
+Web;Profile information;Informace o profilu
+Web;Refresh;Obnovit
+Web;Re-init your password;Znovu nastavit heslo
+Web;Reload and execute;Znovu načíst a spustit
+Web;Rename;Přejmenovat
+Web;Rename or move folder;Přejmenovat nebo přesunout složku
+Web;Rename, move or copy;Přejmenovat, přesunout nebo kopírovat
+Web;Report;Sestava
+Web;Report execution mode;Režim provádění sestavy
+Web;Report name;Název sestavy
+Web;Report title;Titul sestavy
+Web;Report title if different from report name;Titul sestavy, pokud se liší od názvu sestavy
+Web;Reports;Sestavy
+Web;Reports menu;Nabídka sestav
+Web;Repository connection;Připojení k úložišti
+Web;Reset password;Obnovit heslo
+Web;Reset your password;Obnovte své heslo
+Web;Save;Uložit
+Web;Search;Hledat
+Web;Security code;Bezpečnostní kód
+Web;Show sub-folders;Zobrazit podsložky
+Web;Startup report name;Název spouštěcí sestavy
+Web;The favorite has been updated;Oblíbená položka byla aktualizována
+Web;Two-Factor Authentication;Dvoufaktorové ověřování
+Web;Type;Typ
+Web;Type a new password;Zadejte nové heslo
+Web;Upload;Nahrát
+Web;User groups;Skupiny uživatelů
+Web;User identifier or email;Identifikátor uživatele nebo e-mail
+Web;User name;Uživatelské jméno
+Web;Users;Uživatelé
+Web;Web product name;Název webového produktu
+Web;Width;Šířka
+WebJS;# of % selected;Vybráno # z %
+WebJS;Actions;Akce
+WebJS;All selected;Vybráno vše
+WebJS;Allow only execution in a new window;Povolit pouze provádění v novém okně
+WebJS;Cancel;Zrušit
+WebJS;Configuration for;Konfigurace pro
+WebJS;Contains;Obsahuje
+WebJS;Contains all;Obsahuje vše
+WebJS;Contains any;Obsahuje libovolné
+WebJS;Copy;Kopírovat
+WebJS;Copy of;Kopie
+WebJS;Copy to;Kopírovat do
+WebJS;Default;Výchozí
+WebJS;Default culture;Výchozí jazyk
+WebJS;Default mode;Výchozí režim
+WebJS;Default report connection;Výchozí připojení sestavy
+WebJS;Default repository connection;Výchozí připojení úložiště
+WebJS;Default startup;Výchozí spuštění
+WebJS;Do not execute report;Nespouštět sestavu
+WebJS;Do you really want to delete the reports or files selected ?;Opravdu chcete smazat vybrané sestavy nebo soubory?
+WebJS;Does not contain;Neobsahuje
+WebJS;Does not contain all;Neobsahuje vše
+WebJS;Does not contain any;Neobsahuje žádné
+WebJS;Download report;Stáhnout sestavu
+WebJS;Edit report;Upravit sestavu
+WebJS;Edit reports / Manage files;Upravit sestavy / Spravovat soubory
+WebJS;Edit schedules / View files;Upravit plány / Zobrazit soubory
+WebJS;Ends with;Končí na
+WebJS;Equals;Rovná se
+WebJS;Error;Chyba
+WebJS;Execute report in a new window;Spustit sestavu v novém okně
+WebJS;Execute report in the current window;Spustit sestavu v aktuálním okně
+WebJS;Execute reports / View files;Spustit sestavy / Zobrazit soubory
+WebJS;Execute reports and outputs / View files;Spustit sestavy a výstupy / Zobrazit soubory
+WebJS;Execute the last report;Spustit poslední sestavu
+WebJS;Execute the report;Spustit sestavu
+WebJS;Favorites;Oblíbené
+WebJS;Folder;Složka
+WebJS;Is between;Je mezi
+WebJS;Is different from;Je odlišné od
+WebJS;Is empty;Je prázdné
+WebJS;Is greater or equal than;Je větší nebo rovno než
+WebJS;Is greater than;Je větší než
+WebJS;Is not between;Není mezi
+WebJS;Is not empty;Není prázdné
+WebJS;Is not Null;Není Null
+WebJS;Is Null;Je Null
+WebJS;Is smaller or equal than;Je menší nebo rovno než
+WebJS;Is smaller than;Je menší než
+WebJS;Last modification;Poslední úprava
+WebJS;Mark as favorite;Označit jako oblíbené
+WebJS;Model;Model
+WebJS;New folder configuration;Konfigurace nové složky
+WebJS;New group;Nová skupina
+WebJS;New login;Nové přihlášení
+WebJS;No;Ne
+WebJS;No download (except files) or upload;Žádné stahování (kromě souborů) ani nahrávání
+WebJS;No folder configuration;Žádná konfigurace složky
+WebJS;No login;Žádné přihlášení
+WebJS;No personal folder;Žádná osobní složka
+WebJS;No right;Žádné oprávnění
+WebJS;None;Žádné
+WebJS;Not sorted;Neseřazeno
+WebJS;OK;OK
+WebJS;Options;Možnosti
+WebJS;Output;Výstup
+WebJS;Personal folder for files only;Osobní složka pouze pro soubory
+WebJS;Personal folder for reports and files;Osobní složka pro sestavy a soubory
+WebJS;Please wait;Čekejte prosím
+WebJS;Processing;Zpracování
+WebJS;Profile;Profil
+WebJS;Recents;Nedávné
+WebJS;Report;Sestava
+WebJS;report(s) or file(s) cut in the clipboard;sestava(y) nebo soubor(y) vyjmuty do schránky
+WebJS;report(s) or file(s) have been deleted;sestava(y) nebo soubor(y) byly smazány
+WebJS;report(s) or file(s) processed;sestava(y) nebo soubor(y) zpracovány
+WebJS;report(s) or files(s) copied in the clipboard;sestava(y) nebo soubor(y) zkopírovány do schránky
+WebJS;Reports;Sestavy
+WebJS;Schedule;Plán
+WebJS;Server Version;Verze serveru
+WebJS;Show _MENU_ reports;Zobrazit _MENU_ sestav
+WebJS;Starts with;Začíná na
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfigurace byla uložena. Pokud se vás týká zabezpečení, přihlaste se prosím znovu.
+WebJS;The folder has been created;Složka byla vytvořena
+WebJS;The folder has been deleted;Složka byla smazána
+WebJS;The folder has been renamed;Složka byla přejmenována
+WebJS;The folder has been updated;Složka byla aktualizována
+WebJS;The report or file has been renamed;Sestava nebo soubor byly přejmenovány
+WebJS;Toggle Report or Folders view;Přepnout zobrazení sestav nebo složek
+WebJS;Unexpected error on server;Neočekávaná chyba na serveru
+WebJS;User can download reports;Uživatel může stahovat sestavy
+WebJS;User can download reports and upload reports and files;Uživatel může stahovat sestavy a nahrávat sestavy a soubory
+WebJS;View;Zobrazit
+WebJS;View Folders;Zobrazit složky
+WebJS;View Report;Zobrazit sestavu
+WebJS;View reports;Zobrazit sestavy
+WebJS;Views and outputs;Zobrazení a výstupy
+WebJS;Warning;Upozornění
+WebJS;Web Interface Version;Verze webového rozhraní
+WebJS;Yes;Ano
+WebJS;Yes (Folder is expanded in the tree view);Ano (Složka je rozbalena ve stromovém zobrazení)
+WebJS;Yes (Only files can be stored);Ano (Lze ukládat pouze soubory)
+WebJS;Yes (User can browse sub-folders);Ano (Uživatel může procházet podsložky)
+WebJS;Yes (User can create and edit sub-folders);Ano (Uživatel může vytvářet a upravovat podsložky)
+WebJS;Yes (User can edit his profile);Ano (Uživatel může upravovat svůj profil)
+WebJS;Yes (User is administrator of the Web Server);Ano (Uživatel je administrátorem webového serveru)
+Web;Select assistant;Vybrat asistenta
+Web;Mark as favorite;Označit jako oblíbené
+Web;Favorites;Oblíbené
+Web;No favorites yet;Zatím žádné oblíbené
+Web;Recent;Nedávné
+Web;No recent items;Žádné nedávné položky
+Web;New conversation;Nová konverzace
+Web;Sample prompts;Ukázkové výzvy
+Web;Sample Prompts;Ukázkové výzvy
+Web;No sample prompts defined;Nejsou definovány žádné ukázkové výzvy
+Web;AI Assistant;AI asistent
+Web;Favorites & Recent;Oblíbené a nedávné
+Web;Hide panel;Skrýt panel
+Web;Ask the AI assistant…;Zeptejte se AI asistenta…
+Web;Confirm Deletion;Potvrdit smazání
+Web;This action is irreversible. Are you sure you want to delete this item?;Tato akce je nevratná. Opravdu chcete tuto položku smazat?
+Web;Data Source;Datový zdroj
+Web;Report Assistants;Asistenti sestav
+Web;Select Tables or Views;Vyberte tabulky nebo zobrazení
+Web;Filter tables...;Filtrovat tabulky...
+Web;Select All;Vybrat vše
+Web;Deselect All;Zrušit výběr všech
+Web;tables selected;vybraných tabulek
+Web;Prompt Shortcuts;Zkratky výzev
+Web;How can Seal AI help you today ?;Jak vám může Seal AI dnes pomoci?
+Web;No current items available;Nejsou k dispozici žádné aktuální položky
+Web;Current items will appear here when saved;Aktuální položky se zde zobrazí po uložení
+Web;Drafts;Koncepty
+Web;No draft items available;Nejsou k dispozici žádné koncepty
+Web;Upload files or create new items with the assistant to see them here;Nahrajte soubory nebo vytvořte nové položky pomocí asistenta, aby se zde zobrazily
+Web;Item Details;Podrobnosti položky
+Web;Loading detail. Please wait...;Načítání podrobností. Čekejte prosím...
+Web;Select a row from the table to view its details;Vyberte řádek z tabulky pro zobrazení jeho podrobností
+Web;Check;Zkontrolovat
+Web;Download;Stáhnout
+Web;Reports Assistant;Asistent sestav
+Web;Connection type;Typ připojení
+Web;Connection string;Připojovací řetězec
+Web;Tables or views;Tabulky nebo zobrazení
+Web;Report Assistant;Asistent sestav
+Web;AI Provider;Poskytovatel AI
+Web;AI model;Model AI
+Web;AI model name (overrides default));Název modelu AI (přepíše výchozí))
+Web;Temperature;Teplota
+Web;Model temperature;Teplota modelu
+Web;System prompt;Systémová výzva
+Web;Optional sytem prompt for the assistant;Volitelná systémová výzva pro asistenta
+Web;User prompt;Uživatelská výzva
+Web;Default user prompts (if empty default values configured are taken);Výchozí uživatelské výzvy (pokud je prázdné, použijí se nakonfigurované výchozí hodnoty)
+Web;User Groups allowed (No selection means no restriction);Povolené skupiny uživatelů (Žádný výběr znamená bez omezení)
+Web;Scan options;Možnosti skenování
+Web;When to scan;Kdy skenovat
+Web;Cache duration (days);Doba platnosti mezipaměti (dny)
+Web;Cache duration (days) for scanned data;Doba platnosti mezipaměti (dny) pro skenovaná data
+Web;Tables to scan (no selection means all tables);Tabulky ke skenování (žádný výběr znamená všechny tabulky)
+Web;Records to scan;Záznamy ke skenování
+Web;Number of records used for scan;Počet záznamů použitých pro skenování
+Web;Scan Data Now;Skenovat data nyní
+Web;Execute;Spustit
+Web;Elements:;Prvky:
+Web;Restrictions:;Omezení:
+WebJS;Hide AI Assistant;Skrýt AI asistenta
+WebJS;AI Assistant;AI asistent
+WebJS;Running;Spuštěno
+WebJS;Request cancelled.;Požadavek zrušen.
+WebJS;Remove from favorites;Odebrat z oblíbených
+WebJS;No sample prompts defined;Nejsou definovány žádné ukázkové výzvy
+WebJS;Rename;Přejmenovat
+WebJS;Delete;Smazat
+WebJS;No favorites yet;Zatím žádné oblíbené
+WebJS;No recent items;Žádné nedávné položky
+Web;Configuration;Konfigurace
+Web;Download/Upload;Stažení/Nahrání
+Web;Rights;Práva
+Web;Assistants;Asistenti
+Web;Folder;Složka

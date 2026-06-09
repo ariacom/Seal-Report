@@ -1,0 +1,503 @@
+﻿Context;Reference;ko
+NVD3;(right axis);(우측 축)
+NVD3;Expanded;확장됨
+NVD3;Grouped;그룹화됨
+NVD3;Re-scale y-axis;y축 다시 조정
+NVD3;Stacked;누적
+NVD3;Stream;스트림
+Report;!=;!=
+Report;# of % selected;선택된 % 개수
+Report;(filtered from _MAX_);(_MAX_에서 필터링됨)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;다음 항목에 값이 필요합니다:
+Report;All;전체
+Report;All selected;모두 선택됨
+Report;and;그리고
+Report;Auto Fit columns;열 자동 맞춤
+Report;Auto Scroll enabled;자동 스크롤 사용
+Report;Average of;평균:
+Report;Back to top;맨 위로
+Report;Between;사이
+Report;Cancel;취소
+Report;Cancelling report...;보고서 취소 중...
+Report;Charts;차트
+Report;Clear selection;선택 해제
+Report;Close;닫기
+Report;Contains;포함
+Report;Contains all;모두 포함
+Report;Contains any;하나라도 포함
+Report;Count Distinct of;고유 개수:
+Report;Count of;개수:
+Report;Decrement;감소
+Report;Description;설명
+Report;Display header footer;머리글 바닥글 표시
+Report;Display: Execution messages;표시: 실행 메시지
+Report;Display: Execution messages;표시: 실행 메시지
+Report;Display: Information messages;표시: 정보 메시지
+Report;Display: Information messages;표시: 정보 메시지
+Report;Does not contain;포함하지 않음
+Report;Does not contain all;모두 포함하지 않음
+Report;Does not contain any;하나도 포함하지 않음
+Report;Drill <;드릴 <
+Report;Drill >;드릴 >
+Report;Duration;소요 시간
+Report;Duration (seconds);소요 시간(초)
+Report;Email sent to '{0}';'{0}'(으)로 이메일을 보냈습니다
+Report;Ends with;다음으로 끝남
+Report;Equals;같음
+Report;Execute;실행
+Report;Executing report...;보고서 실행 중...
+Report;Execution date;실행 날짜
+Report;Execution duration;실행 소요 시간
+Report;execution messages;실행 메시지
+Report;Export messages...;메시지 내보내기...
+Report;Filter:;필터:
+Report;Go to today;오늘로 이동
+Report;Goal;목표
+Report;Hide;숨기기
+Report;HTML Print: Show messages;HTML 인쇄: 메시지 표시
+Report;HTML Print: Show messages;HTML 인쇄: 메시지 표시
+Report;HTML Print: Show report information;HTML 인쇄: 보고서 정보 표시
+Report;HTML Print: Show report information;HTML 인쇄: 보고서 정보 표시
+Report;HTML to PDF;HTML을 PDF로
+Report;Increment;증가
+Report;Information panel enabled;정보 패널 사용
+Report;Information panel enabled and shown;정보 패널 사용 및 표시
+Report;Information panel hidden;정보 패널 숨김
+Report;Invalid date;잘못된 날짜
+Report;Invalid numeric value;잘못된 숫자 값
+Report;Is between;다음 사이에 있음
+Report;Is Blank;비어 있음
+Report;Is different from;다음과 다름
+Report;Is empty;비어 있음
+Report;Is greater or equal than;크거나 같음
+Report;Is greater than;큼
+Report;Is not between;다음 사이에 있지 않음
+Report;Is Not Blank;비어 있지 않음
+Report;Is not empty;비어 있지 않음
+Report;Is not Null;Null이 아님
+Report;Is Null;Null임
+Report;Is smaller or equal than;작거나 같음
+Report;Is smaller than;작음
+Report;Landscape;가로
+Report;Logs;로그
+Report;Maximum of;최대값:
+Report;Messages panel enabled;메시지 패널 사용
+Report;Messages panel enabled and shown;메시지 패널 사용 및 표시
+Report;Messages panel enabled and shown only during execution;실행 중에만 메시지 패널 사용 및 표시
+Report;Messages panel hidden;메시지 패널 숨김
+Report;Minimum of;최소값:
+Report;Model;모델
+Report;Model loaded...;모델을 로드했습니다...
+Report;Models loaded...;모델들을 로드했습니다...
+Report;New report;새 보고서
+Report;Next Century;다음 세기
+Report;Next Decade;다음 10년
+Report;Next Month;다음 달
+Report;Next Year;다음 해
+Report;No;아니요
+Report;No records;레코드 없음
+Report;No records. The report output generation has been cancelled.;레코드 없음. 보고서 출력 생성이 취소되었습니다.
+Report;No reports;보고서 없음
+Report;No rows;행 없음
+Report;Not Between;사이에 있지 않음
+Report;Not Contains;포함하지 않음
+Report;Now;지금
+Report;Options;옵션
+Report;or;또는
+Report;Page;페이지
+Report;"Page &p; of &P;";"&P; 페이지 중 &p; 페이지"
+Report;Page orientation;페이지 방향
+Report;Page size;페이지 크기
+Report;Pages;페이지
+Report;Pick Hour;시 선택
+Report;Pick Minute;분 선택
+Report;Pick Second;초 선택
+Report;Please enter a value;값을 입력하세요
+Report;Please enter at least a value;값을 하나 이상 입력하세요
+Report;Please find the report '{0}' in attachment.;첨부된 '{0}' 보고서를 확인하세요.
+Report;Please find your authentication code;인증 코드를 확인하세요
+Report;Please wait, the report result is being generated in another window;잠시 기다려 주세요, 다른 창에서 보고서 결과가 생성되고 있습니다
+Report;Previous Century;이전 세기
+Report;Previous Decade;이전 10년
+Report;Previous Month;이전 달
+Report;Previous Year;이전 해
+Report;Print: Page orientation;인쇄: 페이지 방향
+Report;Print: Show logo;인쇄: 로고 표시
+Report;Processing;처리 중
+Report;Processing...;처리 중...
+Report;Records;레코드
+Report;Refresh;새로 고침
+Report;Report;보고서
+Report;Report description;보고서 설명
+Report;Report has been cancelled;보고서가 취소되었습니다
+Report;report information;보고서 정보
+Report;report restrictions;보고서 제한
+Report;Report result generated in '{0}';'{0}'에 보고서 결과가 생성되었습니다
+Report;Report result options;보고서 결과 옵션
+Report;report result panel;보고서 결과 패널
+Report;Report summary;보고서 요약
+Report;Restrictions;제한
+Report;Results;결과
+Report;Scale;배율
+Report;second;초
+Report;seconds;초
+Report;Select all;모두 선택
+Report;Select Decade;10년 선택
+Report;Select Month;월 선택
+Report;Select Time;시간 선택
+Report;Select Year;연도 선택
+Report;Show;표시
+Report;Show _MENU_ reports;보고서 _MENU_개 표시
+Report;Show _MENU_ rows;행 _MENU_개 표시
+Report;Show messages;메시지 표시
+Report;Show messages;메시지 표시
+Report;Show report information;보고서 정보 표시
+Report;Show report information;보고서 정보 표시
+Report;Show/Hide Restrictions;제한 표시/숨기기
+Report;Showing _START_ to _END_ of _TOTAL_;_TOTAL_개 중 _START_~_END_ 표시
+Report;Showing 0 to 0 of 0;0개 중 0~0 표시
+Report;Starting execution...;실행 시작 중...
+Report;Starts with;다음으로 시작함
+Report;Subtotal;소계
+Report;Sum of;합계:
+Report;Summary;요약
+Report;Table of Contents;목차
+Report;Tabs to show;표시할 탭
+Report;Task executed...;작업을 실행했습니다...
+Report;Tasks executed...;작업들을 실행했습니다...
+Report;The report has been generated.;보고서가 생성되었습니다.
+Report;This report has execution errors. Please check details in the Logs Files...;이 보고서에 실행 오류가 있습니다. 로그 파일에서 세부 정보를 확인하세요...
+Report;ThisHour;이번 시간
+Report;ThisMinute;이번 분
+Report;ThisMonth;이번 달
+Report;ThisQuarter;이번 분기
+Report;ThisSemester;이번 반기
+Report;ThisWeek;이번 주
+Report;ThisYear;올해
+Report;Today;오늘
+Report;Toggle Period;기간 전환
+Report;Total;합계
+Report;Use the date format '{0}' or one of the following keywords:;날짜 형식 '{0}' 또는 다음 키워드 중 하나를 사용하세요:
+Report;View;보기
+Report;View CSV Result;CSV 결과 보기
+Report;View Excel Converter Result;Excel 변환기 결과 보기
+Report;View Excel Result;Excel 결과 보기
+Report;View HTML Print Result;HTML 인쇄 결과 보기
+Report;View HTML Result;HTML 결과 보기
+Report;View HTML to PDF Result;HTML to PDF 결과 보기
+Report;View Json Result;JSON 결과 보기
+Report;View PDF Converter Result;PDF 변환기 결과 보기
+Report;View PDF Result;PDF 결과 보기
+Report;View report result file;보고서 결과 파일 보기
+Report;View Text Result;텍스트 결과 보기
+Report;View XML Result;XML 결과 보기
+Report;Warning: The maximum number of records is reached;경고: 최대 레코드 수에 도달했습니다
+Report;Yes;예
+Web;Add;추가
+Web;All;전체
+Web;Auto-Refresh (seconds);자동 새로 고침(초)
+Web;Back to login with user name and password;사용자 이름과 비밀번호로 로그인으로 돌아가기
+Web;Cancel;취소
+Web;Change password;비밀번호 변경
+Web;Change password;비밀번호 변경
+Web;Change your password;비밀번호 변경
+Web;Chart sort;차트 정렬
+Web;Close;닫기
+Web;Color;색상
+Web;Confirm your new password;새 비밀번호 확인
+Web;Copy;복사
+Web;Create in folder;폴더에 만들기
+Web;Create new folder;새 폴더 만들기
+Web;CSS Format;CSS 형식
+Web;Culture;문화권
+Web;Current password;현재 비밀번호
+Web;Cut;잘라내기
+Web;Data source connections;데이터 원본 연결
+Web;Default view;기본 보기
+Web;Delete;삭제
+Web;Delete folder;폴더 삭제
+Web;Description;설명
+Web;Device;장치
+Web;Disconnect;연결 해제
+Web;Display options;표시 옵션
+Web;Edit;편집
+Web;Edit configuration;구성 편집
+Web;Edit entry;항목 편집
+Web;Edit profile;프로필 편집
+Web;Edition;에디션
+Web;Email;이메일
+Web;Enter password;비밀번호 입력
+Web;Enter user name;사용자 이름 입력
+Web;Enter your current password;현재 비밀번호 입력
+Web;Enter your new file name;새 파일 이름 입력
+Web;Enter your new password;새 비밀번호 입력
+Web;Enter your security code;보안 코드 입력
+Web;Enter your user identifier or email;사용자 식별자 또는 이메일 입력
+Web;Error;오류
+Web;Error: only files (and not reports) can be copied to this folder.;오류: 이 폴더에는 (보고서가 아닌) 파일만 복사할 수 있습니다.
+Web;Error: the destination file name contains invalid characters.;오류: 대상 파일 이름에 잘못된 문자가 포함되어 있습니다.
+Web;Error: the destination folder name contains invalid characters.;오류: 대상 폴더 이름에 잘못된 문자가 포함되어 있습니다.
+Web;Expand in Treeview;트리뷰에서 펼치기
+Web;Export;내보내기
+Web;Files only;파일만
+Web;Folder Permissions;폴더 권한
+Web;Folders;폴더
+Web;Forget your password ?;비밀번호를 잊으셨나요?
+Web;Group name;그룹 이름
+Web;Group name;그룹 이름
+Web;Groups;그룹
+Web;Groups;그룹
+Web;Height;높이
+Web;Icon;아이콘
+Web;Information;정보
+Web;Invalid security code;잘못된 보안 코드
+Web;Invalid user name or password;잘못된 사용자 이름 또는 비밀번호
+Web;Is dynamic;동적
+Web;Last execution at;마지막 실행 시각
+Web;Licensed to;라이선스 대상
+Web;Login;로그인
+Web;Login ID;로그인 ID
+Web;Logins;로그인
+Web;Logout;로그아웃
+Web;Logout the user;사용자 로그아웃
+Web;Manage Folders;폴더 관리
+Web;Manage sub-folders;하위 폴더 관리
+Web;Name;이름
+Web;New;새로 만들기
+Web;New folder name;새 폴더 이름
+Web;New folder path;새 폴더 경로
+Web;New password;새 비밀번호
+Web;None;없음
+Web;OK;OK
+Web;On startup;시작 시
+Web;Optional chart title;선택적 차트 제목
+Web;Optional menu name;선택적 메뉴 이름
+Web;Output;출력
+Web;Password;비밀번호
+Web;Paste;붙여넣기
+Web;PDF Conversion delay;PDF 변환 지연
+Web;Personal;개인
+Web;Personal folder;개인 폴더
+Web;Phone;전화번호
+Web;Please wait;잠시 기다려 주세요
+Web;Profile;프로필
+Web;Profile information;프로필 정보
+Web;Refresh;새로 고침
+Web;Re-init your password;비밀번호 다시 설정
+Web;Reload and execute;다시 로드하고 실행
+Web;Rename;이름 바꾸기
+Web;Rename or move folder;폴더 이름 바꾸기 또는 이동
+Web;Rename, move or copy;이름 바꾸기, 이동 또는 복사
+Web;Report;보고서
+Web;Report execution mode;보고서 실행 모드
+Web;Report name;보고서 이름
+Web;Report title;보고서 제목
+Web;Report title if different from report name;보고서 이름과 다른 경우 보고서 제목
+Web;Reports;보고서
+Web;Reports menu;보고서 메뉴
+Web;Repository connection;리포지토리 연결
+Web;Reset password;비밀번호 재설정
+Web;Reset your password;비밀번호 재설정
+Web;Save;저장
+Web;Search;검색
+Web;Security code;보안 코드
+Web;Show sub-folders;하위 폴더 표시
+Web;Startup report name;시작 보고서 이름
+Web;The favorite has been updated;즐겨찾기가 업데이트되었습니다
+Web;Two-Factor Authentication;2단계 인증
+Web;Type;유형
+Web;Type a new password;새 비밀번호 입력
+Web;Upload;업로드
+Web;User groups;사용자 그룹
+Web;User identifier or email;사용자 식별자 또는 이메일
+Web;User name;사용자 이름
+Web;Users;사용자
+Web;Web product name;웹 제품 이름
+Web;Width;너비
+WebJS;# of % selected;선택된 % 개수
+WebJS;Actions;작업
+WebJS;All selected;모두 선택됨
+WebJS;Allow only execution in a new window;새 창에서만 실행 허용
+WebJS;Cancel;취소
+WebJS;Configuration for;다음 항목의 구성
+WebJS;Contains;포함
+WebJS;Contains all;모두 포함
+WebJS;Contains any;하나라도 포함
+WebJS;Copy;복사
+WebJS;Copy of;복사본:
+WebJS;Copy to;다음 위치로 복사
+WebJS;Default;기본값
+WebJS;Default culture;기본 문화권
+WebJS;Default mode;기본 모드
+WebJS;Default report connection;기본 보고서 연결
+WebJS;Default repository connection;기본 리포지토리 연결
+WebJS;Default startup;기본 시작
+WebJS;Do not execute report;보고서를 실행하지 않음
+WebJS;Do you really want to delete the reports or files selected ?;선택한 보고서 또는 파일을 정말 삭제하시겠습니까?
+WebJS;Does not contain;포함하지 않음
+WebJS;Does not contain all;모두 포함하지 않음
+WebJS;Does not contain any;하나도 포함하지 않음
+WebJS;Download report;보고서 다운로드
+WebJS;Edit report;보고서 편집
+WebJS;Edit reports / Manage files;보고서 편집 / 파일 관리
+WebJS;Edit schedules / View files;일정 편집 / 파일 보기
+WebJS;Ends with;다음으로 끝남
+WebJS;Equals;같음
+WebJS;Error;오류
+WebJS;Execute report in a new window;새 창에서 보고서 실행
+WebJS;Execute report in the current window;현재 창에서 보고서 실행
+WebJS;Execute reports / View files;보고서 실행 / 파일 보기
+WebJS;Execute reports and outputs / View files;보고서 및 출력 실행 / 파일 보기
+WebJS;Execute the last report;마지막 보고서 실행
+WebJS;Execute the report;보고서 실행
+WebJS;Favorites;즐겨찾기
+WebJS;Folder;폴더
+WebJS;Is between;다음 사이에 있음
+WebJS;Is different from;다음과 다름
+WebJS;Is empty;비어 있음
+WebJS;Is greater or equal than;크거나 같음
+WebJS;Is greater than;큼
+WebJS;Is not between;다음 사이에 있지 않음
+WebJS;Is not empty;비어 있지 않음
+WebJS;Is not Null;Null이 아님
+WebJS;Is Null;Null임
+WebJS;Is smaller or equal than;작거나 같음
+WebJS;Is smaller than;작음
+WebJS;Last modification;마지막 수정
+WebJS;Mark as favorite;즐겨찾기로 표시
+WebJS;Model;모델
+WebJS;New folder configuration;새 폴더 구성
+WebJS;New group;새 그룹
+WebJS;New login;새 로그인
+WebJS;No;아니요
+WebJS;No download (except files) or upload;다운로드(파일 제외) 또는 업로드 불가
+WebJS;No folder configuration;폴더 구성 없음
+WebJS;No login;로그인 없음
+WebJS;No personal folder;개인 폴더 없음
+WebJS;No right;권한 없음
+WebJS;None;없음
+WebJS;Not sorted;정렬 안 됨
+WebJS;OK;OK
+WebJS;Options;옵션
+WebJS;Output;출력
+WebJS;Personal folder for files only;파일 전용 개인 폴더
+WebJS;Personal folder for reports and files;보고서 및 파일용 개인 폴더
+WebJS;Please wait;잠시 기다려 주세요
+WebJS;Processing;처리 중
+WebJS;Profile;프로필
+WebJS;Recents;최근
+WebJS;Report;보고서
+WebJS;report(s) or file(s) cut in the clipboard;개의 보고서 또는 파일을 클립보드에 잘라냄
+WebJS;report(s) or file(s) have been deleted;개의 보고서 또는 파일이 삭제됨
+WebJS;report(s) or file(s) processed;개의 보고서 또는 파일이 처리됨
+WebJS;report(s) or files(s) copied in the clipboard;개의 보고서 또는 파일을 클립보드에 복사함
+WebJS;Reports;보고서
+WebJS;Schedule;일정
+WebJS;Server Version;서버 버전
+WebJS;Show _MENU_ reports;보고서 _MENU_개 표시
+WebJS;Starts with;다음으로 시작함
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;구성이 저장되었습니다. 보안의 영향을 받는 경우 다시 로그인하세요.
+WebJS;The folder has been created;폴더가 생성되었습니다
+WebJS;The folder has been deleted;폴더가 삭제되었습니다
+WebJS;The folder has been renamed;폴더 이름이 변경되었습니다
+WebJS;The folder has been updated;폴더가 업데이트되었습니다
+WebJS;The report or file has been renamed;보고서 또는 파일 이름이 변경되었습니다
+WebJS;Toggle Report or Folders view;보고서 또는 폴더 보기 전환
+WebJS;Unexpected error on server;서버에서 예기치 않은 오류가 발생했습니다
+WebJS;User can download reports;사용자가 보고서를 다운로드할 수 있음
+WebJS;User can download reports and upload reports and files;사용자가 보고서를 다운로드하고 보고서 및 파일을 업로드할 수 있음
+WebJS;View;보기
+WebJS;View Folders;폴더 보기
+WebJS;View Report;보고서 보기
+WebJS;View reports;보고서 보기
+WebJS;Views and outputs;보기 및 출력
+WebJS;Warning;경고
+WebJS;Web Interface Version;웹 인터페이스 버전
+WebJS;Yes;예
+WebJS;Yes (Folder is expanded in the tree view);예(폴더가 트리뷰에서 펼쳐짐)
+WebJS;Yes (Only files can be stored);예(파일만 저장할 수 있음)
+WebJS;Yes (User can browse sub-folders);예(사용자가 하위 폴더를 탐색할 수 있음)
+WebJS;Yes (User can create and edit sub-folders);예(사용자가 하위 폴더를 만들고 편집할 수 있음)
+WebJS;Yes (User can edit his profile);예(사용자가 자신의 프로필을 편집할 수 있음)
+WebJS;Yes (User is administrator of the Web Server);예(사용자가 웹 서버의 관리자임)
+Web;Select assistant;어시스턴트 선택
+Web;Mark as favorite;즐겨찾기로 표시
+Web;Favorites;즐겨찾기
+Web;No favorites yet;아직 즐겨찾기가 없습니다
+Web;Recent;최근
+Web;No recent items;최근 항목 없음
+Web;New conversation;새 대화
+Web;Sample prompts;샘플 프롬프트
+Web;Sample Prompts;샘플 프롬프트
+Web;No sample prompts defined;정의된 샘플 프롬프트 없음
+Web;AI Assistant;AI 어시스턴트
+Web;Favorites & Recent;즐겨찾기 및 최근
+Web;Hide panel;패널 숨기기
+Web;Ask the AI assistant…;AI 어시스턴트에게 물어보세요…
+Web;Confirm Deletion;삭제 확인
+Web;This action is irreversible. Are you sure you want to delete this item?;이 작업은 되돌릴 수 없습니다. 이 항목을 정말 삭제하시겠습니까?
+Web;Data Source;데이터 원본
+Web;Report Assistants;보고서 어시스턴트
+Web;Select Tables or Views;테이블 또는 뷰 선택
+Web;Filter tables...;테이블 필터링...
+Web;Select All;모두 선택
+Web;Deselect All;모두 선택 해제
+Web;tables selected;개의 테이블이 선택됨
+Web;Prompt Shortcuts;프롬프트 단축키
+Web;How can Seal AI help you today ?;오늘 Seal AI가 무엇을 도와드릴까요?
+Web;No current items available;사용 가능한 현재 항목 없음
+Web;Current items will appear here when saved;저장하면 현재 항목이 여기에 표시됩니다
+Web;Drafts;초안
+Web;No draft items available;사용 가능한 초안 항목 없음
+Web;Upload files or create new items with the assistant to see them here;파일을 업로드하거나 어시스턴트로 새 항목을 만들면 여기에 표시됩니다
+Web;Item Details;항목 세부 정보
+Web;Loading detail. Please wait...;세부 정보를 로드하는 중입니다. 잠시 기다려 주세요...
+Web;Select a row from the table to view its details;세부 정보를 보려면 테이블에서 행을 선택하세요
+Web;Check;확인
+Web;Download;다운로드
+Web;Reports Assistant;보고서 어시스턴트
+Web;Connection type;연결 유형
+Web;Connection string;연결 문자열
+Web;Tables or views;테이블 또는 뷰
+Web;Report Assistant;보고서 어시스턴트
+Web;AI Provider;AI 공급자
+Web;AI model;AI 모델
+Web;AI model name (overrides default));AI 모델 이름(기본값 재정의)
+Web;Temperature;온도
+Web;Model temperature;모델 온도
+Web;System prompt;시스템 프롬프트
+Web;Optional sytem prompt for the assistant;어시스턴트를 위한 선택적 시스템 프롬프트
+Web;User prompt;사용자 프롬프트
+Web;Default user prompts (if empty default values configured are taken);기본 사용자 프롬프트(비어 있으면 구성된 기본값이 사용됨)
+Web;User Groups allowed (No selection means no restriction);허용된 사용자 그룹(선택하지 않으면 제한 없음)
+Web;Scan options;스캔 옵션
+Web;When to scan;스캔 시점
+Web;Cache duration (days);캐시 기간(일)
+Web;Cache duration (days) for scanned data;스캔된 데이터의 캐시 기간(일)
+Web;Tables to scan (no selection means all tables);스캔할 테이블(선택하지 않으면 모든 테이블)
+Web;Records to scan;스캔할 레코드
+Web;Number of records used for scan;스캔에 사용되는 레코드 수
+Web;Scan Data Now;지금 데이터 스캔
+Web;Execute;실행
+Web;Elements:;요소:
+Web;Restrictions:;제한:
+WebJS;Hide AI Assistant;AI 어시스턴트 숨기기
+WebJS;AI Assistant;AI 어시스턴트
+WebJS;Running;실행 중
+WebJS;Request cancelled.;요청이 취소되었습니다.
+WebJS;Remove from favorites;즐겨찾기에서 제거
+WebJS;No sample prompts defined;정의된 샘플 프롬프트 없음
+WebJS;Rename;이름 바꾸기
+WebJS;Delete;삭제
+WebJS;No favorites yet;아직 즐겨찾기가 없습니다
+WebJS;No recent items;최근 항목 없음
+Web;Configuration;구성
+Web;Download/Upload;다운로드/업로드
+Web;Rights;권한
+Web;Assistants;어시스턴트
+Web;Folder;폴더

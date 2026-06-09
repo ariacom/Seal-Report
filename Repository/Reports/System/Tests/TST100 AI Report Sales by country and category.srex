@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>d5c2068a-4f19-498e-8bf6-514518032721</GUID>
-  <ViewGUID>47a39945-28c1-4a7a-8307-400c4c4ffccb</ViewGUID>
+  <GUID>aab33159-f979-47db-9792-c128266185f1</GUID>
+  <ViewGUID>f92c2f15-79e5-4367-9ff3-d3c2e6f51c1d</ViewGUID>
   <Sources>
     <ReportSource>
-      <GUID>6498451a-db9b-41ae-b8ee-97261e254581</GUID>
+      <GUID>0b32b277-d29a-4a24-9f94-f7e677d74082</GUID>
       <Name>Audit SQLite (Repository)</Name>
       <ConnectionGUID>1</ConnectionGUID>
       <MetaData />
@@ -13,19 +13,19 @@
   </Sources>
   <Models>
     <ReportModel>
-      <GUID>b1354227-5bfd-41a9-940c-2d26f45d3f07</GUID>
+      <GUID>5e946bd8-5751-4eb3-a76a-c7e4bff73aed</GUID>
       <Name>Model</Name>
-      <SourceGUID>6498451a-db9b-41ae-b8ee-97261e254581</SourceGUID>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
     </ReportModel>
   </Models>
   <Tasks>
     <ReportTask>
-      <GUID>3dad690e-57fe-49af-9abc-a64983a39368</GUID>
+      <GUID>44199106-9b8c-42ef-b919-86f12adc6849</GUID>
       <Name>Init</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
-      <SourceGUID>6498451a-db9b-41ae-b8ee-97261e254581</SourceGUID>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
       <Script>@using Seal.AI;
 @using System.IO;
 
@@ -36,13 +36,13 @@
 
     //Single place defining the BASE output directory (subfolder = 6 first chars of the report name)
     var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
-    report.StringTag = $@"Reports\Tests\Output\{subDir}";
+    report.StringTag = $@"Reports\System\Tests\Output\{subDir}";
 
     //Ensure the base output directory physically exists BEFORE building the security folders.
     Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, report.StringTag));
 
     var user = new SecurityUser(repository.Security);
-    user.AddDefaultSecurityGroup();
+    user.AddSecurityGroup("Group System Tests");
     user.SetFolders();
     report.SecurityContext = user;
 }
@@ -50,16 +50,16 @@
       <SortOrder>0</SortOrder>
     </ReportTask>
     <ReportTask>
-      <GUID>38498fd5-05cc-495f-b35d-89f52fa7f907</GUID>
+      <GUID>f9b2e525-177a-4a32-9b6b-258f145a7228</GUID>
       <Name>Loop Providers</Name>
       <Tasks>
         <ReportTask>
-          <GUID>ad27bba0-7b57-49b0-a838-e829bf690d4b</GUID>
+          <GUID>a7c7ff21-0eae-4533-88ba-326985cff90d</GUID>
           <Name>Cleanup</Name>
           <Tasks />
           <ExecProcessChildren>true</ExecProcessChildren>
           <TemplateName>Default</TemplateName>
-          <SourceGUID>6498451a-db9b-41ae-b8ee-97261e254581</SourceGUID>
+          <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
           <Script>@using Seal.AI;
 @using System.IO;
 
@@ -101,14 +101,15 @@
           <SortOrder>1</SortOrder>
         </ReportTask>
         <ReportTask>
-          <GUID>d7edafe8-8536-4e34-a228-309d200d7a33</GUID>
+          <GUID>b21280a9-7542-499f-a7db-b81f77ab5fa4</GUID>
           <Name>Create report</Name>
           <Tasks />
           <ExecProcessChildren>true</ExecProcessChildren>
           <TemplateName>Default</TemplateName>
-          <SourceGUID>6498451a-db9b-41ae-b8ee-97261e254581</SourceGUID>
+          <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
           <Script>@using Seal.AI;
 @using System.IO;
+@using System.Linq;
 
 @{
     ReportTask task = Model;
@@ -128,15 +129,18 @@
         assistant.SecurityContext = report.SecurityContext;
 
         var request = $@"
-        Create a report named 'List of employees.srex' in directory {outputDir} using the Northwind data source.
-        The report model must list the employees with EXACTLY these five Row dimension elements, in this order:
-          - 'Last Name' (Employees.LastName)
-          - 'First Name' (Employees.FirstName)
-          - 'Title' (Employees.Title)
-          - 'City' (Employees.City)
-          - 'Country' (Employees.Country)
-        Sort the rows by Last Name ASCENDING. Do NOT aggregate any element, do NOT add a Data element, and do NOT add any restriction.
-        Each employee must appear exactly once (one row per employee).
+        Create a report named 'Sales by country and product category in 1997.srex' in directory {outputDir} using the Northwind data source.
+        Build a CROSS TAB (pivot) report model with EXACTLY these three elements:
+          - ROW dimension: 'Customer Country' (Customers.Country) - one row per country.
+          - COLUMN dimension: 'Category' (Products.CategoryID, the product category) - one column per category.
+          - DATA element: 'Amount' aggregated with Sum - the total sales amount at each country/category intersection.
+        Add EXACTLY four RESTRICTIONS and set EVERY one of them to be PROMPTED at execution:
+          - 'Order Date' (Orders.OrderDate), with a default keeping the whole year 1997 (between 1997-01-01 and 1997-12-31).
+          - 'Customer Country' (Customers.Country).
+          - 'Customer' (Customers.CompanyName).
+          - 'Employee' (Employees.LastName).
+        These four are RESTRICTIONS ONLY and must all be prompted at execution. 'Customer Country' is BOTH the row dimension AND a prompted restriction; do not add the other three as row, column, data or page elements.
+        Configure the model chart as a HORIZONTAL STACKED BAR chart: one horizontal bar per country, each bar split (stacked) by product category, using Amount as the value. Use 'Customer Country' as the chart axis and 'Category' as the chart splitter, and set the 'Amount' data element serie as a Bar serie.
     ";
         task.LogMessage(request);
         assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
@@ -147,167 +151,44 @@
         if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
         var reportFilePath = reportFiles[0];
 
-        request = $@"
-        Get the data of the report located at '{reportFilePath}'.
-        Check 1: the table has EXACTLY 9 employee rows.
-        Check 2: the set of values in the 'Last Name' column is EXACTLY this set of 9 names, regardless of order:
-          Buchanan, Callahan, Davolio, Dodsworth, Fuller, King, Leverling, Peacock, Suyama.
-        Order does NOT matter; only the row count and the set of last names matter.
-        If both checks succeed, answer with exactly 'CHECK OK'.
-        If any check fails, answer with exactly 'CHECK FAILED' followed by the reason.
-    ";
-        task.LogMessage(request);
-        var checkResult = assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
+        //Structural checks on the created report
+        var r = Report.LoadFromFile(reportFilePath, repository);
+        var model = r.Models.FirstOrDefault();
+        if (model == null) throw new Exception("No model found in the created report.");
 
-        if (checkResult == null || !checkResult.ToString().Contains("CHECK OK"))
-            throw new Exception($"Data check failed for '{reportFilePath}': {checkResult}");
+        var rows = model.GetElements(PivotPosition.Row).ToList();
+        var cols = model.GetElements(PivotPosition.Column).ToList();
+        var datas = model.GetElements(PivotPosition.Data).ToList();
+
+        if (rows.Count != 1 || rows[0].MetaColumn == null || rows[0].MetaColumn.DisplayName != "Customer Country")
+            throw new Exception($"Expected exactly one Row element 'Customer Country', found {rows.Count} ({string.Join(", ", rows.Select(e =&gt; e.MetaColumn?.DisplayName))}).");
+        if (cols.Count != 1 || cols[0].MetaColumn == null || cols[0].MetaColumn.DisplayName != "Category")
+            throw new Exception($"Expected exactly one Column element 'Category', found {cols.Count} ({string.Join(", ", cols.Select(e =&gt; e.MetaColumn?.DisplayName))}).");
+        if (datas.Count != 1 || datas[0].MetaColumn == null || datas[0].MetaColumn.DisplayName != "Amount" || datas[0].AggregateFunction != AggregateFunction.Sum)
+            throw new Exception($"Expected exactly one Data element 'Amount' aggregated with Sum, found {datas.Count}.");
+
+        //Restriction checks: exactly 4 restrictions, all prompted, on the expected columns
+        var prompted = model.Restrictions.Where(x =&gt; x.Prompt != PromptType.None).ToList();
+        if (model.Restrictions.Count != 4 || prompted.Count != 4)
+            throw new Exception($"Expected exactly 4 prompted restrictions, found {model.Restrictions.Count} restriction(s) ({prompted.Count} prompted).");
+        foreach (var disp in new[] { "Order Date", "Customer Country", "Customer", "Employee" })
+        {
+            if (!prompted.Any(x =&gt; x.MetaColumn != null &amp;&amp; x.MetaColumn.DisplayName == disp))
+                throw new Exception($"Missing prompted restriction on '{disp}'.");
+        }
+
+        //Chart checks: horizontal stacked bar = country as axis, category as splitter, Amount as a Bar serie
+        if (rows[0].SerieDefinition != SerieDefinition.Axis)
+            throw new Exception("Chart: 'Customer Country' must be the chart Axis.");
+        if (cols[0].SerieDefinition != SerieDefinition.Splitter)
+            throw new Exception("Chart: 'Category' must be the chart Splitter.");
+        if (!datas[0].IsSerie || datas[0].ChartJSSerie != ChartJSSerieDefinition.Bar)
+            throw new Exception("Chart: 'Amount' must define a Bar serie.");
     }
     catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
 }
 </Script>
           <SortOrder>2</SortOrder>
-        </ReportTask>
-        <ReportTask>
-          <GUID>c93aed60-171f-460f-acf1-acd1ca0fe01b</GUID>
-          <Name>Outputs and schedules</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>6498451a-db9b-41ae-b8ee-97261e254581</SourceGUID>
-          <Script>@using Seal.AI;
-@using System.IO;
-@using System.Linq;
-
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
-    var providerName = (string)ctx["ProviderName"];
-    var assistants = (Dictionary&lt;string, AIAssistantConfiguration&gt;)ctx["Assistants"];
-
-    try
-    {
-        task.LogMessage($"[{providerName}] Executing '{task.Name}'");
-
-        var assistant = new AIAssistant(assistants["Schedule &amp; Output"]);
-        assistant.SecurityContext = report.SecurityContext;
-
-        var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
-        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
-        var reportFilePath = reportFiles[0];
-
-        //==================== STEP 1: create 4 outputs (Email x1, FTP x1, Folder x2) ====================
-        var request = $@"
-        For the report located at '{reportFilePath}', create EXACTLY four outputs:
-          - ONE output named 'Email' using the device named 'Email Device' for user test@testemail.com, format Excel.
-          - ONE output named 'FTP' using the device named 'FTP Device', format PDF.
-          - ONE output named 'PDF' using the default Folder device, generating the normal file name in {outputDir}, format PDF.
-          - ONE output named 'Excel' using the default Folder device, generating the file name with a daily date in {outputDir}, format Excel.
-        Do NOT create any schedule at this step.
-    ";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
-
-        //Check: 1 Email + 1 FTP + 2 Folder = 4 outputs
-        var r = Report.LoadFromFile(reportFilePath, repository);
-        var emailCount = r.Outputs.Count(o =&gt; o.Device is OutputEmailDevice);
-        var ftpCount = r.Outputs.Count(o =&gt; o.Device is OutputFileServerDevice);
-        var folderCount = r.Outputs.Count(o =&gt; o.Device is OutputFolderDevice);
-        if (r.Outputs.Count != 4) throw new Exception($"STEP1 expected 4 outputs, found {r.Outputs.Count}.");
-        if (emailCount != 1) throw new Exception($"STEP1 expected 1 Email output, found {emailCount}.");
-        if (ftpCount != 1) throw new Exception($"STEP1 expected 1 FTP output, found {ftpCount}.");
-        if (folderCount != 2) throw new Exception($"STEP1 expected 2 Folder outputs, found {folderCount}.");
-
-        //==================== STEP 2: remove ONE Folder output ====================
-        request = $@"
-        For the report located at '{reportFilePath}', remove the output name 'PDF'. Keep the other Folder output and do not touch the Email or FTP outputs.
-    ";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
-
-        //Check: 1 Email + 1 FTP + 1 Folder = 3 outputs
-        r = Report.LoadFromFile(reportFilePath, repository);
-        emailCount = r.Outputs.Count(o =&gt; o.Device is OutputEmailDevice);
-        ftpCount = r.Outputs.Count(o =&gt; o.Device is OutputFileServerDevice);
-        folderCount = r.Outputs.Count(o =&gt; o.Device is OutputFolderDevice);
-        if (r.Outputs.Count != 3) throw new Exception($"STEP2 expected 3 outputs, found {r.Outputs.Count}.");
-        if (folderCount != 1) throw new Exception($"STEP2 expected 1 Folder output, found {folderCount}.");
-        if (emailCount != 1 || ftpCount != 1) throw new Exception($"STEP2 expected Email=1/FTP=1, found Email={emailCount}/FTP={ftpCount}.");
-
-        //==================== STEP 3: create 2 schedules on the FTP output ====================
-        request = $@"
-        For the report located at '{reportFilePath}', create TWO schedules on the output that uses the 'FTP Device'.
-        Schedule the first one every Monday at 10:45 and the second one every second day of the month at 11:45.
-    ";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
-
-        //Check: 2 schedules attached to the FTP output
-        r = Report.LoadFromFile(reportFilePath, repository);
-        var ftpSchedules = r.Schedules.Count(s =&gt; s.Output != null &amp;&amp; s.Output.Device is OutputFileServerDevice);
-        if (ftpSchedules != 2) throw new Exception($"STEP3 expected 2 FTP schedules, found {ftpSchedules}.");
-
-        //==================== STEP 4: remove ONE FTP schedule ====================
-        request = $@"
-        For the report located at '{reportFilePath}', remove EXACTLY ONE of the two schedules attached to the 'FTP Device' output. Keep the other one.
-    ";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
-
-        //Check: 1 schedule attached to the FTP output
-        r = Report.LoadFromFile(reportFilePath, repository);
-        ftpSchedules = r.Schedules.Count(s =&gt; s.Output != null &amp;&amp; s.Output.Device is OutputFileServerDevice);
-        if (ftpSchedules != 1) throw new Exception($"STEP4 expected 1 FTP schedule, found {ftpSchedules}.");
-    }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
-}
-</Script>
-          <SortOrder>3</SortOrder>
-        </ReportTask>
-        <ReportTask>
-          <GUID>7c0d7166-fbc3-4844-88a9-f8a786c8179e</GUID>
-          <Name>Schedule cleanup</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>6498451a-db9b-41ae-b8ee-97261e254581</SourceGUID>
-          <Script>@using Seal.AI;
-@using System.IO;
-
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
-    var providerName = (string)ctx["ProviderName"];
-    var assistants = (Dictionary&lt;string, AIAssistantConfiguration&gt;)ctx["Assistants"];
-
-    try
-    {
-        task.LogMessage($"[{providerName}] Executing '{task.Name}'");
-
-        var assistant = new AIAssistant(assistants["Schedule &amp; Output"]);
-        assistant.SecurityContext = report.SecurityContext;
-
-        var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
-    }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
-}
-</Script>
-          <SortOrder>4</SortOrder>
         </ReportTask>
       </Tasks>
       <ExecProcessChildren>true</ExecProcessChildren>
@@ -318,7 +199,7 @@
           <Value>0</Value>
         </Parameter>
       </Parameters>
-      <SourceGUID>6498451a-db9b-41ae-b8ee-97261e254581</SourceGUID>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
       <BodyScript />
       <Script>@using Seal.AI;
 @using System.IO;
@@ -458,49 +339,49 @@
   </Tasks>
   <Views>
     <ReportView>
-      <GUID>47a39945-28c1-4a7a-8307-400c4c4ffccb</GUID>
+      <GUID>f92c2f15-79e5-4367-9ff3-d3c2e6f51c1d</GUID>
       <Name>View</Name>
       <Views>
         <ReportView>
-          <GUID>bcb0eccc-a1d5-41c3-a911-6b50bf9d8b9f</GUID>
+          <GUID>30b34ea1-6b08-4629-af59-5bcf53a68f5f</GUID>
           <Name>Model</Name>
           <Views>
             <ReportView>
-              <GUID>9669fc2b-6763-426e-b5f9-bb26e945f3f0</GUID>
+              <GUID>d59798e4-4737-408c-8bbc-134904b4fadc</GUID>
               <Name>Container</Name>
               <Views>
                 <ReportView>
-                  <GUID>0698bdbb-f676-47f9-beeb-9ad1ee2be250</GUID>
+                  <GUID>8e7375db-56d8-42d9-ad2d-f359eb9c68c6</GUID>
                   <Name>Page Table</Name>
                   <TemplateName>Page Table</TemplateName>
                   <SortOrder>1</SortOrder>
                 </ReportView>
                 <ReportView>
-                  <GUID>0ab6aff9-e642-4c15-a268-146d3c200b50</GUID>
+                  <GUID>c5b88d5a-e8ce-4e12-a3fa-4802ca2da670</GUID>
                   <Name>Chart JS</Name>
                   <TemplateName>Chart JS</TemplateName>
                   <SortOrder>2</SortOrder>
                 </ReportView>
                 <ReportView>
-                  <GUID>ed63d00d-b040-4191-a1f6-df8ec08645f1</GUID>
+                  <GUID>a1dc8ab6-1cec-4d6d-8185-081f979b6ffa</GUID>
                   <Name>Chart Scottplot</Name>
                   <TemplateName>Chart Scottplot</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>
-                  <GUID>5a662c5b-8f98-4396-aa13-981c642449cf</GUID>
+                  <GUID>b35dd8d5-73fc-4b67-9d90-6effa8b19e5b</GUID>
                   <Name>Chart NVD3</Name>
                   <TemplateName>Chart NVD3</TemplateName>
                   <SortOrder>4</SortOrder>
                 </ReportView>
                 <ReportView>
-                  <GUID>f5abbe63-b147-4907-a8eb-3c0c696fbcc2</GUID>
+                  <GUID>3f8c6f9c-ab77-4f64-a923-ec6dcf1a9c18</GUID>
                   <Name>Chart Plotly</Name>
                   <TemplateName>Chart Plotly</TemplateName>
                   <SortOrder>5</SortOrder>
                 </ReportView>
                 <ReportView>
-                  <GUID>4e1f37d5-4127-4677-a397-630034f524df</GUID>
+                  <GUID>12cb1ac3-bb98-410b-88de-2f8e815433e8</GUID>
                   <Name>Data Table</Name>
                   <TemplateName>Data Table</TemplateName>
                   <SortOrder>6</SortOrder>
@@ -511,7 +392,7 @@
             </ReportView>
           </Views>
           <TemplateName>Model</TemplateName>
-          <ModelGUID>b1354227-5bfd-41a9-940c-2d26f45d3f07</ModelGUID>
+          <ModelGUID>5e946bd8-5751-4eb3-a76a-c7e4bff73aed</ModelGUID>
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>

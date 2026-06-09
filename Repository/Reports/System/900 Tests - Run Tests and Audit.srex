@@ -244,7 +244,7 @@
 @functions {
     string WriteMessagesHtml(Repository repository, string name, DateTime runDate, string status, string messages, string error)
     {
-        string outputFolder = Path.Combine(repository.ReportsFolder, "System\\Tests", "Output", name.Substring(0,6));
+        string outputFolder = Path.Combine(repository.ReportsFolder, "System", "Tests", "Output", name.Substring(0,6));
         if (!Directory.Exists(outputFolder)) Directory.CreateDirectory(outputFolder);
         string file = Path.Combine(outputFolder, "execution_" + runDate.ToString("yyyyMMddHHmmss") + ".html");
 

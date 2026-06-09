@@ -1,0 +1,503 @@
+﻿Context;Reference;vi
+NVD3;(right axis);(trục phải)
+NVD3;Expanded;Mở rộng
+NVD3;Grouped;Nhóm
+NVD3;Re-scale y-axis;Chia tỷ lệ lại trục y
+NVD3;Stacked;Xếp chồng
+NVD3;Stream;Luồng
+Report;!=;!=
+Report;# of % selected;# trong số % đã chọn
+Report;(filtered from _MAX_);(được lọc từ _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Cần nhập giá trị cho
+Report;All;Tất cả
+Report;All selected;Đã chọn tất cả
+Report;and;và
+Report;Auto Fit columns;Tự động căn chỉnh cột
+Report;Auto Scroll enabled;Đã bật cuộn tự động
+Report;Average of;Trung bình của
+Report;Back to top;Về đầu trang
+Report;Between;Giữa
+Report;Cancel;Hủy
+Report;Cancelling report...;Đang hủy báo cáo...
+Report;Charts;Biểu đồ
+Report;Clear selection;Xóa lựa chọn
+Report;Close;Đóng
+Report;Contains;Chứa
+Report;Contains all;Chứa tất cả
+Report;Contains any;Chứa bất kỳ
+Report;Count Distinct of;Đếm riêng biệt của
+Report;Count of;Đếm của
+Report;Decrement;Giảm
+Report;Description;Mô tả
+Report;Display header footer;Hiển thị đầu trang chân trang
+Report;Display: Execution messages;Hiển thị: Thông báo thực thi
+Report;Display: Execution messages;Hiển thị: Thông báo thực thi
+Report;Display: Information messages;Hiển thị: Thông báo thông tin
+Report;Display: Information messages;Hiển thị: Thông báo thông tin
+Report;Does not contain;Không chứa
+Report;Does not contain all;Không chứa tất cả
+Report;Does not contain any;Không chứa bất kỳ
+Report;Drill <;Truy sâu <
+Report;Drill >;Truy sâu >
+Report;Duration;Thời lượng
+Report;Duration (seconds);Thời lượng (giây)
+Report;Email sent to '{0}';Email đã gửi tới '{0}'
+Report;Ends with;Kết thúc bằng
+Report;Equals;Bằng
+Report;Execute;Thực thi
+Report;Executing report...;Đang thực thi báo cáo...
+Report;Execution date;Ngày thực thi
+Report;Execution duration;Thời lượng thực thi
+Report;execution messages;thông báo thực thi
+Report;Export messages...;Xuất thông báo...
+Report;Filter:;Bộ lọc:
+Report;Go to today;Đi tới hôm nay
+Report;Goal;Mục tiêu
+Report;Hide;Ẩn
+Report;HTML Print: Show messages;In HTML: Hiện thông báo
+Report;HTML Print: Show messages;In HTML: Hiện thông báo
+Report;HTML Print: Show report information;In HTML: Hiện thông tin báo cáo
+Report;HTML Print: Show report information;In HTML: Hiện thông tin báo cáo
+Report;HTML to PDF;HTML sang PDF
+Report;Increment;Tăng
+Report;Information panel enabled;Đã bật bảng thông tin
+Report;Information panel enabled and shown;Đã bật và hiển thị bảng thông tin
+Report;Information panel hidden;Đã ẩn bảng thông tin
+Report;Invalid date;Ngày không hợp lệ
+Report;Invalid numeric value;Giá trị số không hợp lệ
+Report;Is between;Nằm giữa
+Report;Is Blank;Để trống
+Report;Is different from;Khác với
+Report;Is empty;Rỗng
+Report;Is greater or equal than;Lớn hơn hoặc bằng
+Report;Is greater than;Lớn hơn
+Report;Is not between;Không nằm giữa
+Report;Is Not Blank;Không để trống
+Report;Is not empty;Không rỗng
+Report;Is not Null;Không phải Null
+Report;Is Null;Là Null
+Report;Is smaller or equal than;Nhỏ hơn hoặc bằng
+Report;Is smaller than;Nhỏ hơn
+Report;Landscape;Nằm ngang
+Report;Logs;Nhật ký
+Report;Maximum of;Tối đa của
+Report;Messages panel enabled;Đã bật bảng thông báo
+Report;Messages panel enabled and shown;Đã bật và hiển thị bảng thông báo
+Report;Messages panel enabled and shown only during execution;Đã bật và hiển thị bảng thông báo chỉ trong khi thực thi
+Report;Messages panel hidden;Đã ẩn bảng thông báo
+Report;Minimum of;Tối thiểu của
+Report;Model;Mô hình
+Report;Model loaded...;Đã tải mô hình...
+Report;Models loaded...;Đã tải các mô hình...
+Report;New report;Báo cáo mới
+Report;Next Century;Thế kỷ sau
+Report;Next Decade;Thập kỷ sau
+Report;Next Month;Tháng sau
+Report;Next Year;Năm sau
+Report;No;Không
+Report;No records;Không có bản ghi
+Report;No records. The report output generation has been cancelled.;Không có bản ghi. Việc tạo kết quả báo cáo đã bị hủy.
+Report;No reports;Không có báo cáo
+Report;No rows;Không có hàng nào
+Report;Not Between;Không nằm giữa
+Report;Not Contains;Không chứa
+Report;Now;Bây giờ
+Report;Options;Tùy chọn
+Report;or;hoặc
+Report;Page;Trang
+Report;"Page &p; of &P;";"Trang &p; của &P;"
+Report;Page orientation;Hướng trang
+Report;Page size;Khổ trang
+Report;Pages;Trang
+Report;Pick Hour;Chọn giờ
+Report;Pick Minute;Chọn phút
+Report;Pick Second;Chọn giây
+Report;Please enter a value;Vui lòng nhập một giá trị
+Report;Please enter at least a value;Vui lòng nhập ít nhất một giá trị
+Report;Please find the report '{0}' in attachment.;Vui lòng xem báo cáo '{0}' trong tệp đính kèm.
+Report;Please find your authentication code;Vui lòng tìm mã xác thực của bạn
+Report;Please wait, the report result is being generated in another window;Vui lòng đợi, kết quả báo cáo đang được tạo trong cửa sổ khác
+Report;Previous Century;Thế kỷ trước
+Report;Previous Decade;Thập kỷ trước
+Report;Previous Month;Tháng trước
+Report;Previous Year;Năm trước
+Report;Print: Page orientation;In: Hướng trang
+Report;Print: Show logo;In: Hiện logo
+Report;Processing;Đang xử lý
+Report;Processing...;Đang xử lý...
+Report;Records;Bản ghi
+Report;Refresh;Làm mới
+Report;Report;Báo cáo
+Report;Report description;Mô tả báo cáo
+Report;Report has been cancelled;Báo cáo đã bị hủy
+Report;report information;thông tin báo cáo
+Report;report restrictions;hạn chế báo cáo
+Report;Report result generated in '{0}';Kết quả báo cáo được tạo trong '{0}'
+Report;Report result options;Tùy chọn kết quả báo cáo
+Report;report result panel;bảng kết quả báo cáo
+Report;Report summary;Tóm tắt báo cáo
+Report;Restrictions;Hạn chế
+Report;Results;Kết quả
+Report;Scale;Tỷ lệ
+Report;second;giây
+Report;seconds;giây
+Report;Select all;Chọn tất cả
+Report;Select Decade;Chọn thập kỷ
+Report;Select Month;Chọn tháng
+Report;Select Time;Chọn thời gian
+Report;Select Year;Chọn năm
+Report;Show;Hiện
+Report;Show _MENU_ reports;Hiện _MENU_ báo cáo
+Report;Show _MENU_ rows;Hiện _MENU_ hàng
+Report;Show messages;Hiện thông báo
+Report;Show messages;Hiện thông báo
+Report;Show report information;Hiện thông tin báo cáo
+Report;Show report information;Hiện thông tin báo cáo
+Report;Show/Hide Restrictions;Hiện/Ẩn hạn chế
+Report;Showing _START_ to _END_ of _TOTAL_;Đang hiển thị _START_ đến _END_ trong tổng số _TOTAL_
+Report;Showing 0 to 0 of 0;Đang hiển thị 0 đến 0 trong tổng số 0
+Report;Starting execution...;Đang bắt đầu thực thi...
+Report;Starts with;Bắt đầu bằng
+Report;Subtotal;Tổng phụ
+Report;Sum of;Tổng của
+Report;Summary;Tóm tắt
+Report;Table of Contents;Mục lục
+Report;Tabs to show;Thẻ cần hiển thị
+Report;Task executed...;Đã thực thi tác vụ...
+Report;Tasks executed...;Đã thực thi các tác vụ...
+Report;The report has been generated.;Báo cáo đã được tạo.
+Report;This report has execution errors. Please check details in the Logs Files...;Báo cáo này có lỗi thực thi. Vui lòng kiểm tra chi tiết trong các tệp nhật ký...
+Report;ThisHour;Giờ này
+Report;ThisMinute;Phút này
+Report;ThisMonth;Tháng này
+Report;ThisQuarter;Quý này
+Report;ThisSemester;Nửa năm này
+Report;ThisWeek;Tuần này
+Report;ThisYear;Năm này
+Report;Today;Hôm nay
+Report;Toggle Period;Chuyển kỳ
+Report;Total;Tổng
+Report;Use the date format '{0}' or one of the following keywords:;Sử dụng định dạng ngày '{0}' hoặc một trong các từ khóa sau:
+Report;View;Xem
+Report;View CSV Result;Xem kết quả CSV
+Report;View Excel Converter Result;Xem kết quả chuyển đổi Excel
+Report;View Excel Result;Xem kết quả Excel
+Report;View HTML Print Result;Xem kết quả in HTML
+Report;View HTML Result;Xem kết quả HTML
+Report;View HTML to PDF Result;Xem kết quả HTML sang PDF
+Report;View Json Result;Xem kết quả Json
+Report;View PDF Converter Result;Xem kết quả chuyển đổi PDF
+Report;View PDF Result;Xem kết quả PDF
+Report;View report result file;Xem tệp kết quả báo cáo
+Report;View Text Result;Xem kết quả văn bản
+Report;View XML Result;Xem kết quả XML
+Report;Warning: The maximum number of records is reached;Cảnh báo: Đã đạt số lượng bản ghi tối đa
+Report;Yes;Có
+Web;Add;Thêm
+Web;All;Tất cả
+Web;Auto-Refresh (seconds);Tự động làm mới (giây)
+Web;Back to login with user name and password;Quay lại đăng nhập bằng tên người dùng và mật khẩu
+Web;Cancel;Hủy
+Web;Change password;Đổi mật khẩu
+Web;Change password;Đổi mật khẩu
+Web;Change your password;Đổi mật khẩu của bạn
+Web;Chart sort;Sắp xếp biểu đồ
+Web;Close;Đóng
+Web;Color;Màu
+Web;Confirm your new password;Xác nhận mật khẩu mới của bạn
+Web;Copy;Sao chép
+Web;Create in folder;Tạo trong thư mục
+Web;Create new folder;Tạo thư mục mới
+Web;CSS Format;Định dạng CSS
+Web;Culture;Văn hóa
+Web;Current password;Mật khẩu hiện tại
+Web;Cut;Cắt
+Web;Data source connections;Kết nối nguồn dữ liệu
+Web;Default view;Chế độ xem mặc định
+Web;Delete;Xóa
+Web;Delete folder;Xóa thư mục
+Web;Description;Mô tả
+Web;Device;Thiết bị
+Web;Disconnect;Ngắt kết nối
+Web;Display options;Tùy chọn hiển thị
+Web;Edit;Chỉnh sửa
+Web;Edit configuration;Chỉnh sửa cấu hình
+Web;Edit entry;Chỉnh sửa mục
+Web;Edit profile;Chỉnh sửa hồ sơ
+Web;Edition;Phiên bản
+Web;Email;Email
+Web;Enter password;Nhập mật khẩu
+Web;Enter user name;Nhập tên người dùng
+Web;Enter your current password;Nhập mật khẩu hiện tại của bạn
+Web;Enter your new file name;Nhập tên tệp mới của bạn
+Web;Enter your new password;Nhập mật khẩu mới của bạn
+Web;Enter your security code;Nhập mã bảo mật của bạn
+Web;Enter your user identifier or email;Nhập định danh người dùng hoặc email của bạn
+Web;Error;Lỗi
+Web;Error: only files (and not reports) can be copied to this folder.;Lỗi: chỉ có thể sao chép tệp (không phải báo cáo) vào thư mục này.
+Web;Error: the destination file name contains invalid characters.;Lỗi: tên tệp đích chứa ký tự không hợp lệ.
+Web;Error: the destination folder name contains invalid characters.;Lỗi: tên thư mục đích chứa ký tự không hợp lệ.
+Web;Expand in Treeview;Mở rộng trong cây thư mục
+Web;Export;Xuất
+Web;Files only;Chỉ tệp
+Web;Folder Permissions;Quyền thư mục
+Web;Folders;Thư mục
+Web;Forget your password ?;Quên mật khẩu?
+Web;Group name;Tên nhóm
+Web;Group name;Tên nhóm
+Web;Groups;Nhóm
+Web;Groups;Nhóm
+Web;Height;Chiều cao
+Web;Icon;Biểu tượng
+Web;Information;Thông tin
+Web;Invalid security code;Mã bảo mật không hợp lệ
+Web;Invalid user name or password;Tên người dùng hoặc mật khẩu không hợp lệ
+Web;Is dynamic;Là động
+Web;Last execution at;Lần thực thi cuối lúc
+Web;Licensed to;Được cấp phép cho
+Web;Login;Đăng nhập
+Web;Login ID;ID đăng nhập
+Web;Logins;Đăng nhập
+Web;Logout;Đăng xuất
+Web;Logout the user;Đăng xuất người dùng
+Web;Manage Folders;Quản lý thư mục
+Web;Manage sub-folders;Quản lý thư mục con
+Web;Name;Tên
+Web;New;Mới
+Web;New folder name;Tên thư mục mới
+Web;New folder path;Đường dẫn thư mục mới
+Web;New password;Mật khẩu mới
+Web;None;Không có
+Web;OK;OK
+Web;On startup;Khi khởi động
+Web;Optional chart title;Tiêu đề biểu đồ tùy chọn
+Web;Optional menu name;Tên menu tùy chọn
+Web;Output;Đầu ra
+Web;Password;Mật khẩu
+Web;Paste;Dán
+Web;PDF Conversion delay;Độ trễ chuyển đổi PDF
+Web;Personal;Cá nhân
+Web;Personal folder;Thư mục cá nhân
+Web;Phone;Điện thoại
+Web;Please wait;Vui lòng đợi
+Web;Profile;Hồ sơ
+Web;Profile information;Thông tin hồ sơ
+Web;Refresh;Làm mới
+Web;Re-init your password;Khởi tạo lại mật khẩu của bạn
+Web;Reload and execute;Tải lại và thực thi
+Web;Rename;Đổi tên
+Web;Rename or move folder;Đổi tên hoặc di chuyển thư mục
+Web;Rename, move or copy;Đổi tên, di chuyển hoặc sao chép
+Web;Report;Báo cáo
+Web;Report execution mode;Chế độ thực thi báo cáo
+Web;Report name;Tên báo cáo
+Web;Report title;Tiêu đề báo cáo
+Web;Report title if different from report name;Tiêu đề báo cáo nếu khác với tên báo cáo
+Web;Reports;Báo cáo
+Web;Reports menu;Menu báo cáo
+Web;Repository connection;Kết nối kho lưu trữ
+Web;Reset password;Đặt lại mật khẩu
+Web;Reset your password;Đặt lại mật khẩu của bạn
+Web;Save;Lưu
+Web;Search;Tìm kiếm
+Web;Security code;Mã bảo mật
+Web;Show sub-folders;Hiện thư mục con
+Web;Startup report name;Tên báo cáo khởi động
+Web;The favorite has been updated;Mục yêu thích đã được cập nhật
+Web;Two-Factor Authentication;Xác thực hai yếu tố
+Web;Type;Loại
+Web;Type a new password;Nhập mật khẩu mới
+Web;Upload;Tải lên
+Web;User groups;Nhóm người dùng
+Web;User identifier or email;Định danh người dùng hoặc email
+Web;User name;Tên người dùng
+Web;Users;Người dùng
+Web;Web product name;Tên sản phẩm web
+Web;Width;Chiều rộng
+WebJS;# of % selected;# trong số % đã chọn
+WebJS;Actions;Hành động
+WebJS;All selected;Đã chọn tất cả
+WebJS;Allow only execution in a new window;Chỉ cho phép thực thi trong cửa sổ mới
+WebJS;Cancel;Hủy
+WebJS;Configuration for;Cấu hình cho
+WebJS;Contains;Chứa
+WebJS;Contains all;Chứa tất cả
+WebJS;Contains any;Chứa bất kỳ
+WebJS;Copy;Sao chép
+WebJS;Copy of;Bản sao của
+WebJS;Copy to;Sao chép tới
+WebJS;Default;Mặc định
+WebJS;Default culture;Văn hóa mặc định
+WebJS;Default mode;Chế độ mặc định
+WebJS;Default report connection;Kết nối báo cáo mặc định
+WebJS;Default repository connection;Kết nối kho lưu trữ mặc định
+WebJS;Default startup;Khởi động mặc định
+WebJS;Do not execute report;Không thực thi báo cáo
+WebJS;Do you really want to delete the reports or files selected ?;Bạn có thực sự muốn xóa các báo cáo hoặc tệp đã chọn không?
+WebJS;Does not contain;Không chứa
+WebJS;Does not contain all;Không chứa tất cả
+WebJS;Does not contain any;Không chứa bất kỳ
+WebJS;Download report;Tải xuống báo cáo
+WebJS;Edit report;Chỉnh sửa báo cáo
+WebJS;Edit reports / Manage files;Chỉnh sửa báo cáo / Quản lý tệp
+WebJS;Edit schedules / View files;Chỉnh sửa lịch / Xem tệp
+WebJS;Ends with;Kết thúc bằng
+WebJS;Equals;Bằng
+WebJS;Error;Lỗi
+WebJS;Execute report in a new window;Thực thi báo cáo trong cửa sổ mới
+WebJS;Execute report in the current window;Thực thi báo cáo trong cửa sổ hiện tại
+WebJS;Execute reports / View files;Thực thi báo cáo / Xem tệp
+WebJS;Execute reports and outputs / View files;Thực thi báo cáo và đầu ra / Xem tệp
+WebJS;Execute the last report;Thực thi báo cáo cuối cùng
+WebJS;Execute the report;Thực thi báo cáo
+WebJS;Favorites;Yêu thích
+WebJS;Folder;Thư mục
+WebJS;Is between;Nằm giữa
+WebJS;Is different from;Khác với
+WebJS;Is empty;Rỗng
+WebJS;Is greater or equal than;Lớn hơn hoặc bằng
+WebJS;Is greater than;Lớn hơn
+WebJS;Is not between;Không nằm giữa
+WebJS;Is not empty;Không rỗng
+WebJS;Is not Null;Không phải Null
+WebJS;Is Null;Là Null
+WebJS;Is smaller or equal than;Nhỏ hơn hoặc bằng
+WebJS;Is smaller than;Nhỏ hơn
+WebJS;Last modification;Sửa đổi lần cuối
+WebJS;Mark as favorite;Đánh dấu yêu thích
+WebJS;Model;Mô hình
+WebJS;New folder configuration;Cấu hình thư mục mới
+WebJS;New group;Nhóm mới
+WebJS;New login;Đăng nhập mới
+WebJS;No;Không
+WebJS;No download (except files) or upload;Không tải xuống (trừ tệp) hoặc tải lên
+WebJS;No folder configuration;Không có cấu hình thư mục
+WebJS;No login;Không đăng nhập
+WebJS;No personal folder;Không có thư mục cá nhân
+WebJS;No right;Không có quyền
+WebJS;None;Không có
+WebJS;Not sorted;Chưa sắp xếp
+WebJS;OK;OK
+WebJS;Options;Tùy chọn
+WebJS;Output;Đầu ra
+WebJS;Personal folder for files only;Thư mục cá nhân chỉ cho tệp
+WebJS;Personal folder for reports and files;Thư mục cá nhân cho báo cáo và tệp
+WebJS;Please wait;Vui lòng đợi
+WebJS;Processing;Đang xử lý
+WebJS;Profile;Hồ sơ
+WebJS;Recents;Gần đây
+WebJS;Report;Báo cáo
+WebJS;report(s) or file(s) cut in the clipboard;báo cáo hoặc tệp đã cắt vào bộ nhớ tạm
+WebJS;report(s) or file(s) have been deleted;báo cáo hoặc tệp đã được xóa
+WebJS;report(s) or file(s) processed;báo cáo hoặc tệp đã được xử lý
+WebJS;report(s) or files(s) copied in the clipboard;báo cáo hoặc tệp đã sao chép vào bộ nhớ tạm
+WebJS;Reports;Báo cáo
+WebJS;Schedule;Lịch
+WebJS;Server Version;Phiên bản máy chủ
+WebJS;Show _MENU_ reports;Hiện _MENU_ báo cáo
+WebJS;Starts with;Bắt đầu bằng
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Cấu hình đã được lưu. Vui lòng đăng nhập lại nếu bạn bị ảnh hưởng bởi bảo mật.
+WebJS;The folder has been created;Thư mục đã được tạo
+WebJS;The folder has been deleted;Thư mục đã được xóa
+WebJS;The folder has been renamed;Thư mục đã được đổi tên
+WebJS;The folder has been updated;Thư mục đã được cập nhật
+WebJS;The report or file has been renamed;Báo cáo hoặc tệp đã được đổi tên
+WebJS;Toggle Report or Folders view;Chuyển đổi chế độ xem Báo cáo hoặc Thư mục
+WebJS;Unexpected error on server;Lỗi không mong muốn trên máy chủ
+WebJS;User can download reports;Người dùng có thể tải xuống báo cáo
+WebJS;User can download reports and upload reports and files;Người dùng có thể tải xuống báo cáo và tải lên báo cáo và tệp
+WebJS;View;Xem
+WebJS;View Folders;Xem thư mục
+WebJS;View Report;Xem báo cáo
+WebJS;View reports;Xem báo cáo
+WebJS;Views and outputs;Chế độ xem và đầu ra
+WebJS;Warning;Cảnh báo
+WebJS;Web Interface Version;Phiên bản giao diện web
+WebJS;Yes;Có
+WebJS;Yes (Folder is expanded in the tree view);Có (Thư mục được mở rộng trong cây thư mục)
+WebJS;Yes (Only files can be stored);Có (Chỉ có thể lưu trữ tệp)
+WebJS;Yes (User can browse sub-folders);Có (Người dùng có thể duyệt thư mục con)
+WebJS;Yes (User can create and edit sub-folders);Có (Người dùng có thể tạo và chỉnh sửa thư mục con)
+WebJS;Yes (User can edit his profile);Có (Người dùng có thể chỉnh sửa hồ sơ của mình)
+WebJS;Yes (User is administrator of the Web Server);Có (Người dùng là quản trị viên của Máy chủ Web)
+Web;Select assistant;Chọn trợ lý
+Web;Mark as favorite;Đánh dấu yêu thích
+Web;Favorites;Yêu thích
+Web;No favorites yet;Chưa có mục yêu thích nào
+Web;Recent;Gần đây
+Web;No recent items;Không có mục gần đây
+Web;New conversation;Cuộc trò chuyện mới
+Web;Sample prompts;Lời nhắc mẫu
+Web;Sample Prompts;Lời nhắc mẫu
+Web;No sample prompts defined;Chưa định nghĩa lời nhắc mẫu nào
+Web;AI Assistant;Trợ lý AI
+Web;Favorites & Recent;Yêu thích & Gần đây
+Web;Hide panel;Ẩn bảng
+Web;Ask the AI assistant…;Hỏi trợ lý AI…
+Web;Confirm Deletion;Xác nhận xóa
+Web;This action is irreversible. Are you sure you want to delete this item?;Hành động này không thể hoàn tác. Bạn có chắc chắn muốn xóa mục này không?
+Web;Data Source;Nguồn dữ liệu
+Web;Report Assistants;Trợ lý báo cáo
+Web;Select Tables or Views;Chọn bảng hoặc khung nhìn
+Web;Filter tables...;Lọc bảng...
+Web;Select All;Chọn tất cả
+Web;Deselect All;Bỏ chọn tất cả
+Web;tables selected;bảng đã chọn
+Web;Prompt Shortcuts;Phím tắt lời nhắc
+Web;How can Seal AI help you today ?;Seal AI có thể giúp gì cho bạn hôm nay?
+Web;No current items available;Không có mục hiện tại nào khả dụng
+Web;Current items will appear here when saved;Các mục hiện tại sẽ xuất hiện ở đây khi được lưu
+Web;Drafts;Bản nháp
+Web;No draft items available;Không có mục nháp nào khả dụng
+Web;Upload files or create new items with the assistant to see them here;Tải lên tệp hoặc tạo mục mới bằng trợ lý để xem chúng ở đây
+Web;Item Details;Chi tiết mục
+Web;Loading detail. Please wait...;Đang tải chi tiết. Vui lòng đợi...
+Web;Select a row from the table to view its details;Chọn một hàng từ bảng để xem chi tiết của nó
+Web;Check;Kiểm tra
+Web;Download;Tải xuống
+Web;Reports Assistant;Trợ lý báo cáo
+Web;Connection type;Loại kết nối
+Web;Connection string;Chuỗi kết nối
+Web;Tables or views;Bảng hoặc khung nhìn
+Web;Report Assistant;Trợ lý báo cáo
+Web;AI Provider;Nhà cung cấp AI
+Web;AI model;Mô hình AI
+Web;AI model name (overrides default));Tên mô hình AI (ghi đè mặc định))
+Web;Temperature;Nhiệt độ
+Web;Model temperature;Nhiệt độ mô hình
+Web;System prompt;Lời nhắc hệ thống
+Web;Optional sytem prompt for the assistant;Lời nhắc hệ thống tùy chọn cho trợ lý
+Web;User prompt;Lời nhắc người dùng
+Web;Default user prompts (if empty default values configured are taken);Lời nhắc người dùng mặc định (nếu để trống sẽ lấy các giá trị mặc định đã cấu hình)
+Web;User Groups allowed (No selection means no restriction);Nhóm người dùng được phép (Không chọn nghĩa là không hạn chế)
+Web;Scan options;Tùy chọn quét
+Web;When to scan;Khi nào quét
+Web;Cache duration (days);Thời lượng bộ nhớ đệm (ngày)
+Web;Cache duration (days) for scanned data;Thời lượng bộ nhớ đệm (ngày) cho dữ liệu đã quét
+Web;Tables to scan (no selection means all tables);Bảng cần quét (không chọn nghĩa là tất cả các bảng)
+Web;Records to scan;Bản ghi cần quét
+Web;Number of records used for scan;Số lượng bản ghi dùng để quét
+Web;Scan Data Now;Quét dữ liệu ngay
+Web;Execute;Thực thi
+Web;Elements:;Phần tử:
+Web;Restrictions:;Hạn chế:
+WebJS;Hide AI Assistant;Ẩn trợ lý AI
+WebJS;AI Assistant;Trợ lý AI
+WebJS;Running;Đang chạy
+WebJS;Request cancelled.;Yêu cầu đã bị hủy.
+WebJS;Remove from favorites;Xóa khỏi yêu thích
+WebJS;No sample prompts defined;Chưa định nghĩa lời nhắc mẫu nào
+WebJS;Rename;Đổi tên
+WebJS;Delete;Xóa
+WebJS;No favorites yet;Chưa có mục yêu thích nào
+WebJS;No recent items;Không có mục gần đây
+Web;Configuration;Cấu hình
+Web;Download/Upload;Tải xuống/Tải lên
+Web;Rights;Quyền
+Web;Assistants;Trợ lý
+Web;Folder;Thư mục

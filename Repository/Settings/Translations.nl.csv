@@ -1,0 +1,503 @@
+﻿Context;Reference;nl
+NVD3;(right axis);(rechteras)
+NVD3;Expanded;Uitgevouwen
+NVD3;Grouped;Gegroepeerd
+NVD3;Re-scale y-axis;Y-as herschalen
+NVD3;Stacked;Gestapeld
+NVD3;Stream;Stream
+Report;!=;!=
+Report;# of % selected;# van % geselecteerd
+Report;(filtered from _MAX_);(gefilterd uit _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Een waarde is vereist voor
+Report;All;Alle
+Report;All selected;Alle geselecteerd
+Report;and;en
+Report;Auto Fit columns;Kolommen automatisch passend maken
+Report;Auto Scroll enabled;Automatisch scrollen ingeschakeld
+Report;Average of;Gemiddelde van
+Report;Back to top;Terug naar boven
+Report;Between;Tussen
+Report;Cancel;Annuleren
+Report;Cancelling report...;Rapport annuleren...
+Report;Charts;Grafieken
+Report;Clear selection;Selectie wissen
+Report;Close;Sluiten
+Report;Contains;Bevat
+Report;Contains all;Bevat alle
+Report;Contains any;Bevat een van
+Report;Count Distinct of;Aantal unieke van
+Report;Count of;Aantal van
+Report;Decrement;Verlagen
+Report;Description;Beschrijving
+Report;Display header footer;Kop- en voettekst weergeven
+Report;Display: Execution messages;Weergeven: Uitvoeringsberichten
+Report;Display: Execution messages;Weergeven: Uitvoeringsberichten
+Report;Display: Information messages;Weergeven: Informatieberichten
+Report;Display: Information messages;Weergeven: Informatieberichten
+Report;Does not contain;Bevat niet
+Report;Does not contain all;Bevat niet alle
+Report;Does not contain any;Bevat geen van
+Report;Drill <;Inzoomen <
+Report;Drill >;Inzoomen >
+Report;Duration;Duur
+Report;Duration (seconds);Duur (seconden)
+Report;Email sent to '{0}';E-mail verzonden naar '{0}'
+Report;Ends with;Eindigt met
+Report;Equals;Is gelijk aan
+Report;Execute;Uitvoeren
+Report;Executing report...;Rapport uitvoeren...
+Report;Execution date;Uitvoeringsdatum
+Report;Execution duration;Uitvoeringsduur
+Report;execution messages;uitvoeringsberichten
+Report;Export messages...;Berichten exporteren...
+Report;Filter:;Filter:
+Report;Go to today;Ga naar vandaag
+Report;Goal;Doel
+Report;Hide;Verbergen
+Report;HTML Print: Show messages;HTML-afdruk: Berichten tonen
+Report;HTML Print: Show messages;HTML-afdruk: Berichten tonen
+Report;HTML Print: Show report information;HTML-afdruk: Rapportinformatie tonen
+Report;HTML Print: Show report information;HTML-afdruk: Rapportinformatie tonen
+Report;HTML to PDF;HTML naar PDF
+Report;Increment;Verhogen
+Report;Information panel enabled;Informatiepaneel ingeschakeld
+Report;Information panel enabled and shown;Informatiepaneel ingeschakeld en getoond
+Report;Information panel hidden;Informatiepaneel verborgen
+Report;Invalid date;Ongeldige datum
+Report;Invalid numeric value;Ongeldige numerieke waarde
+Report;Is between;Ligt tussen
+Report;Is Blank;Is leeg
+Report;Is different from;Is verschillend van
+Report;Is empty;Is leeg
+Report;Is greater or equal than;Is groter dan of gelijk aan
+Report;Is greater than;Is groter dan
+Report;Is not between;Ligt niet tussen
+Report;Is Not Blank;Is niet leeg
+Report;Is not empty;Is niet leeg
+Report;Is not Null;Is niet Null
+Report;Is Null;Is Null
+Report;Is smaller or equal than;Is kleiner dan of gelijk aan
+Report;Is smaller than;Is kleiner dan
+Report;Landscape;Liggend
+Report;Logs;Logboeken
+Report;Maximum of;Maximum van
+Report;Messages panel enabled;Berichtenpaneel ingeschakeld
+Report;Messages panel enabled and shown;Berichtenpaneel ingeschakeld en getoond
+Report;Messages panel enabled and shown only during execution;Berichtenpaneel ingeschakeld en alleen getoond tijdens uitvoering
+Report;Messages panel hidden;Berichtenpaneel verborgen
+Report;Minimum of;Minimum van
+Report;Model;Model
+Report;Model loaded...;Model geladen...
+Report;Models loaded...;Modellen geladen...
+Report;New report;Nieuw rapport
+Report;Next Century;Volgende eeuw
+Report;Next Decade;Volgend decennium
+Report;Next Month;Volgende maand
+Report;Next Year;Volgend jaar
+Report;No;Nee
+Report;No records;Geen records
+Report;No records. The report output generation has been cancelled.;Geen records. Het genereren van de rapportuitvoer is geannuleerd.
+Report;No reports;Geen rapporten
+Report;No rows;Geen rijen
+Report;Not Between;Niet tussen
+Report;Not Contains;Bevat niet
+Report;Now;Nu
+Report;Options;Opties
+Report;or;of
+Report;Page;Pagina
+Report;"Page &p; of &P;";"Pagina &p; van &P;"
+Report;Page orientation;Paginarichting
+Report;Page size;Paginaformaat
+Report;Pages;Pagina's
+Report;Pick Hour;Uur kiezen
+Report;Pick Minute;Minuut kiezen
+Report;Pick Second;Seconde kiezen
+Report;Please enter a value;Voer een waarde in
+Report;Please enter at least a value;Voer ten minste een waarde in
+Report;Please find the report '{0}' in attachment.;U vindt het rapport '{0}' in de bijlage.
+Report;Please find your authentication code;Hierbij uw authenticatiecode
+Report;Please wait, the report result is being generated in another window;Even geduld, het rapportresultaat wordt gegenereerd in een ander venster
+Report;Previous Century;Vorige eeuw
+Report;Previous Decade;Vorig decennium
+Report;Previous Month;Vorige maand
+Report;Previous Year;Vorig jaar
+Report;Print: Page orientation;Afdruk: Paginarichting
+Report;Print: Show logo;Afdruk: Logo tonen
+Report;Processing;Bezig met verwerken
+Report;Processing...;Bezig met verwerken...
+Report;Records;Records
+Report;Refresh;Vernieuwen
+Report;Report;Rapport
+Report;Report description;Rapportbeschrijving
+Report;Report has been cancelled;Rapport is geannuleerd
+Report;report information;rapportinformatie
+Report;report restrictions;rapportbeperkingen
+Report;Report result generated in '{0}';Rapportresultaat gegenereerd in '{0}'
+Report;Report result options;Opties voor rapportresultaat
+Report;report result panel;rapportresultaatpaneel
+Report;Report summary;Rapportsamenvatting
+Report;Restrictions;Beperkingen
+Report;Results;Resultaten
+Report;Scale;Schaal
+Report;second;seconde
+Report;seconds;seconden
+Report;Select all;Alles selecteren
+Report;Select Decade;Decennium selecteren
+Report;Select Month;Maand selecteren
+Report;Select Time;Tijd selecteren
+Report;Select Year;Jaar selecteren
+Report;Show;Tonen
+Report;Show _MENU_ reports;_MENU_ rapporten tonen
+Report;Show _MENU_ rows;_MENU_ rijen tonen
+Report;Show messages;Berichten tonen
+Report;Show messages;Berichten tonen
+Report;Show report information;Rapportinformatie tonen
+Report;Show report information;Rapportinformatie tonen
+Report;Show/Hide Restrictions;Beperkingen tonen/verbergen
+Report;Showing _START_ to _END_ of _TOTAL_;_START_ tot _END_ van _TOTAL_ weergeven
+Report;Showing 0 to 0 of 0;0 tot 0 van 0 weergeven
+Report;Starting execution...;Uitvoering starten...
+Report;Starts with;Begint met
+Report;Subtotal;Subtotaal
+Report;Sum of;Som van
+Report;Summary;Samenvatting
+Report;Table of Contents;Inhoudsopgave
+Report;Tabs to show;Te tonen tabbladen
+Report;Task executed...;Taak uitgevoerd...
+Report;Tasks executed...;Taken uitgevoerd...
+Report;The report has been generated.;Het rapport is gegenereerd.
+Report;This report has execution errors. Please check details in the Logs Files...;Dit rapport heeft uitvoeringsfouten. Controleer de details in de logbestanden...
+Report;ThisHour;DitUur
+Report;ThisMinute;DezeMinuut
+Report;ThisMonth;DezeMaand
+Report;ThisQuarter;DitKwartaal
+Report;ThisSemester;DitSemester
+Report;ThisWeek;DezeWeek
+Report;ThisYear;DitJaar
+Report;Today;Vandaag
+Report;Toggle Period;Periode wisselen
+Report;Total;Totaal
+Report;Use the date format '{0}' or one of the following keywords:;Gebruik het datumformaat '{0}' of een van de volgende trefwoorden:
+Report;View;Weergeven
+Report;View CSV Result;CSV-resultaat weergeven
+Report;View Excel Converter Result;Excel Converter-resultaat weergeven
+Report;View Excel Result;Excel-resultaat weergeven
+Report;View HTML Print Result;HTML-afdrukresultaat weergeven
+Report;View HTML Result;HTML-resultaat weergeven
+Report;View HTML to PDF Result;HTML naar PDF-resultaat weergeven
+Report;View Json Result;Json-resultaat weergeven
+Report;View PDF Converter Result;PDF Converter-resultaat weergeven
+Report;View PDF Result;PDF-resultaat weergeven
+Report;View report result file;Rapportresultaatbestand weergeven
+Report;View Text Result;Tekstresultaat weergeven
+Report;View XML Result;XML-resultaat weergeven
+Report;Warning: The maximum number of records is reached;Waarschuwing: Het maximale aantal records is bereikt
+Report;Yes;Ja
+Web;Add;Toevoegen
+Web;All;Alle
+Web;Auto-Refresh (seconds);Automatisch vernieuwen (seconden)
+Web;Back to login with user name and password;Terug naar aanmelden met gebruikersnaam en wachtwoord
+Web;Cancel;Annuleren
+Web;Change password;Wachtwoord wijzigen
+Web;Change password;Wachtwoord wijzigen
+Web;Change your password;Wijzig uw wachtwoord
+Web;Chart sort;Grafieksortering
+Web;Close;Sluiten
+Web;Color;Kleur
+Web;Confirm your new password;Bevestig uw nieuwe wachtwoord
+Web;Copy;Kopiëren
+Web;Create in folder;Maken in map
+Web;Create new folder;Nieuwe map maken
+Web;CSS Format;CSS-formaat
+Web;Culture;Cultuur
+Web;Current password;Huidig wachtwoord
+Web;Cut;Knippen
+Web;Data source connections;Gegevensbronverbindingen
+Web;Default view;Standaardweergave
+Web;Delete;Verwijderen
+Web;Delete folder;Map verwijderen
+Web;Description;Beschrijving
+Web;Device;Apparaat
+Web;Disconnect;Verbinding verbreken
+Web;Display options;Weergaveopties
+Web;Edit;Bewerken
+Web;Edit configuration;Configuratie bewerken
+Web;Edit entry;Vermelding bewerken
+Web;Edit profile;Profiel bewerken
+Web;Edition;Editie
+Web;Email;E-mail
+Web;Enter password;Voer wachtwoord in
+Web;Enter user name;Voer gebruikersnaam in
+Web;Enter your current password;Voer uw huidige wachtwoord in
+Web;Enter your new file name;Voer uw nieuwe bestandsnaam in
+Web;Enter your new password;Voer uw nieuwe wachtwoord in
+Web;Enter your security code;Voer uw beveiligingscode in
+Web;Enter your user identifier or email;Voer uw gebruikers-ID of e-mail in
+Web;Error;Fout
+Web;Error: only files (and not reports) can be copied to this folder.;Fout: alleen bestanden (en geen rapporten) kunnen naar deze map worden gekopieerd.
+Web;Error: the destination file name contains invalid characters.;Fout: de bestemmingsbestandsnaam bevat ongeldige tekens.
+Web;Error: the destination folder name contains invalid characters.;Fout: de bestemmingsmapnaam bevat ongeldige tekens.
+Web;Expand in Treeview;Uitvouwen in boomstructuur
+Web;Export;Exporteren
+Web;Files only;Alleen bestanden
+Web;Folder Permissions;Mapmachtigingen
+Web;Folders;Mappen
+Web;Forget your password ?;Wachtwoord vergeten?
+Web;Group name;Groepsnaam
+Web;Group name;Groepsnaam
+Web;Groups;Groepen
+Web;Groups;Groepen
+Web;Height;Hoogte
+Web;Icon;Pictogram
+Web;Information;Informatie
+Web;Invalid security code;Ongeldige beveiligingscode
+Web;Invalid user name or password;Ongeldige gebruikersnaam of wachtwoord
+Web;Is dynamic;Is dynamisch
+Web;Last execution at;Laatste uitvoering om
+Web;Licensed to;Gelicentieerd aan
+Web;Login;Aanmelden
+Web;Login ID;Aanmeld-ID
+Web;Logins;Aanmeldingen
+Web;Logout;Afmelden
+Web;Logout the user;De gebruiker afmelden
+Web;Manage Folders;Mappen beheren
+Web;Manage sub-folders;Submappen beheren
+Web;Name;Naam
+Web;New;Nieuw
+Web;New folder name;Nieuwe mapnaam
+Web;New folder path;Nieuw mappad
+Web;New password;Nieuw wachtwoord
+Web;None;Geen
+Web;OK;OK
+Web;On startup;Bij opstarten
+Web;Optional chart title;Optionele grafiektitel
+Web;Optional menu name;Optionele menunaam
+Web;Output;Uitvoer
+Web;Password;Wachtwoord
+Web;Paste;Plakken
+Web;PDF Conversion delay;PDF-conversievertraging
+Web;Personal;Persoonlijk
+Web;Personal folder;Persoonlijke map
+Web;Phone;Telefoon
+Web;Please wait;Even geduld
+Web;Profile;Profiel
+Web;Profile information;Profielinformatie
+Web;Refresh;Vernieuwen
+Web;Re-init your password;Uw wachtwoord opnieuw instellen
+Web;Reload and execute;Opnieuw laden en uitvoeren
+Web;Rename;Naam wijzigen
+Web;Rename or move folder;Map hernoemen of verplaatsen
+Web;Rename, move or copy;Hernoemen, verplaatsen of kopiëren
+Web;Report;Rapport
+Web;Report execution mode;Rapportuitvoeringsmodus
+Web;Report name;Rapportnaam
+Web;Report title;Rapporttitel
+Web;Report title if different from report name;Rapporttitel indien afwijkend van rapportnaam
+Web;Reports;Rapporten
+Web;Reports menu;Rapportenmenu
+Web;Repository connection;Repositoryverbinding
+Web;Reset password;Wachtwoord opnieuw instellen
+Web;Reset your password;Stel uw wachtwoord opnieuw in
+Web;Save;Opslaan
+Web;Search;Zoeken
+Web;Security code;Beveiligingscode
+Web;Show sub-folders;Submappen tonen
+Web;Startup report name;Naam opstartrapport
+Web;The favorite has been updated;De favoriet is bijgewerkt
+Web;Two-Factor Authentication;Tweefactorauthenticatie
+Web;Type;Type
+Web;Type a new password;Typ een nieuw wachtwoord
+Web;Upload;Uploaden
+Web;User groups;Gebruikersgroepen
+Web;User identifier or email;Gebruikers-ID of e-mail
+Web;User name;Gebruikersnaam
+Web;Users;Gebruikers
+Web;Web product name;Naam webproduct
+Web;Width;Breedte
+WebJS;# of % selected;# van % geselecteerd
+WebJS;Actions;Acties
+WebJS;All selected;Alle geselecteerd
+WebJS;Allow only execution in a new window;Alleen uitvoering in een nieuw venster toestaan
+WebJS;Cancel;Annuleren
+WebJS;Configuration for;Configuratie voor
+WebJS;Contains;Bevat
+WebJS;Contains all;Bevat alle
+WebJS;Contains any;Bevat een van
+WebJS;Copy;Kopiëren
+WebJS;Copy of;Kopie van
+WebJS;Copy to;Kopiëren naar
+WebJS;Default;Standaard
+WebJS;Default culture;Standaardcultuur
+WebJS;Default mode;Standaardmodus
+WebJS;Default report connection;Standaard rapportverbinding
+WebJS;Default repository connection;Standaard repositoryverbinding
+WebJS;Default startup;Standaard opstarten
+WebJS;Do not execute report;Rapport niet uitvoeren
+WebJS;Do you really want to delete the reports or files selected ?;Wilt u de geselecteerde rapporten of bestanden echt verwijderen?
+WebJS;Does not contain;Bevat niet
+WebJS;Does not contain all;Bevat niet alle
+WebJS;Does not contain any;Bevat geen van
+WebJS;Download report;Rapport downloaden
+WebJS;Edit report;Rapport bewerken
+WebJS;Edit reports / Manage files;Rapporten bewerken / Bestanden beheren
+WebJS;Edit schedules / View files;Planningen bewerken / Bestanden bekijken
+WebJS;Ends with;Eindigt met
+WebJS;Equals;Is gelijk aan
+WebJS;Error;Fout
+WebJS;Execute report in a new window;Rapport uitvoeren in een nieuw venster
+WebJS;Execute report in the current window;Rapport uitvoeren in het huidige venster
+WebJS;Execute reports / View files;Rapporten uitvoeren / Bestanden bekijken
+WebJS;Execute reports and outputs / View files;Rapporten en uitvoer uitvoeren / Bestanden bekijken
+WebJS;Execute the last report;Het laatste rapport uitvoeren
+WebJS;Execute the report;Het rapport uitvoeren
+WebJS;Favorites;Favorieten
+WebJS;Folder;Map
+WebJS;Is between;Ligt tussen
+WebJS;Is different from;Is verschillend van
+WebJS;Is empty;Is leeg
+WebJS;Is greater or equal than;Is groter dan of gelijk aan
+WebJS;Is greater than;Is groter dan
+WebJS;Is not between;Ligt niet tussen
+WebJS;Is not empty;Is niet leeg
+WebJS;Is not Null;Is niet Null
+WebJS;Is Null;Is Null
+WebJS;Is smaller or equal than;Is kleiner dan of gelijk aan
+WebJS;Is smaller than;Is kleiner dan
+WebJS;Last modification;Laatste wijziging
+WebJS;Mark as favorite;Markeren als favoriet
+WebJS;Model;Model
+WebJS;New folder configuration;Nieuwe mapconfiguratie
+WebJS;New group;Nieuwe groep
+WebJS;New login;Nieuwe aanmelding
+WebJS;No;Nee
+WebJS;No download (except files) or upload;Geen download (behalve bestanden) of upload
+WebJS;No folder configuration;Geen mapconfiguratie
+WebJS;No login;Geen aanmelding
+WebJS;No personal folder;Geen persoonlijke map
+WebJS;No right;Geen recht
+WebJS;None;Geen
+WebJS;Not sorted;Niet gesorteerd
+WebJS;OK;OK
+WebJS;Options;Opties
+WebJS;Output;Uitvoer
+WebJS;Personal folder for files only;Persoonlijke map alleen voor bestanden
+WebJS;Personal folder for reports and files;Persoonlijke map voor rapporten en bestanden
+WebJS;Please wait;Even geduld
+WebJS;Processing;Bezig met verwerken
+WebJS;Profile;Profiel
+WebJS;Recents;Recent
+WebJS;Report;Rapport
+WebJS;report(s) or file(s) cut in the clipboard;rapport(en) of bestand(en) geknipt naar het klembord
+WebJS;report(s) or file(s) have been deleted;rapport(en) of bestand(en) zijn verwijderd
+WebJS;report(s) or file(s) processed;rapport(en) of bestand(en) verwerkt
+WebJS;report(s) or files(s) copied in the clipboard;rapport(en) of bestand(en) gekopieerd naar het klembord
+WebJS;Reports;Rapporten
+WebJS;Schedule;Planning
+WebJS;Server Version;Serverversie
+WebJS;Show _MENU_ reports;_MENU_ rapporten tonen
+WebJS;Starts with;Begint met
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;De configuratie is opgeslagen. Meld u opnieuw aan als u door de beveiliging wordt beïnvloed.
+WebJS;The folder has been created;De map is gemaakt
+WebJS;The folder has been deleted;De map is verwijderd
+WebJS;The folder has been renamed;De map is hernoemd
+WebJS;The folder has been updated;De map is bijgewerkt
+WebJS;The report or file has been renamed;Het rapport of bestand is hernoemd
+WebJS;Toggle Report or Folders view;Weergave Rapport of Mappen wisselen
+WebJS;Unexpected error on server;Onverwachte fout op de server
+WebJS;User can download reports;Gebruiker kan rapporten downloaden
+WebJS;User can download reports and upload reports and files;Gebruiker kan rapporten downloaden en rapporten en bestanden uploaden
+WebJS;View;Weergeven
+WebJS;View Folders;Mappen weergeven
+WebJS;View Report;Rapport weergeven
+WebJS;View reports;Rapporten weergeven
+WebJS;Views and outputs;Weergaven en uitvoer
+WebJS;Warning;Waarschuwing
+WebJS;Web Interface Version;Versie webinterface
+WebJS;Yes;Ja
+WebJS;Yes (Folder is expanded in the tree view);Ja (Map is uitgevouwen in de boomstructuur)
+WebJS;Yes (Only files can be stored);Ja (Er kunnen alleen bestanden worden opgeslagen)
+WebJS;Yes (User can browse sub-folders);Ja (Gebruiker kan submappen doorbladeren)
+WebJS;Yes (User can create and edit sub-folders);Ja (Gebruiker kan submappen maken en bewerken)
+WebJS;Yes (User can edit his profile);Ja (Gebruiker kan zijn profiel bewerken)
+WebJS;Yes (User is administrator of the Web Server);Ja (Gebruiker is beheerder van de webserver)
+Web;Select assistant;Assistent selecteren
+Web;Mark as favorite;Markeren als favoriet
+Web;Favorites;Favorieten
+Web;No favorites yet;Nog geen favorieten
+Web;Recent;Recent
+Web;No recent items;Geen recente items
+Web;New conversation;Nieuw gesprek
+Web;Sample prompts;Voorbeeldprompts
+Web;Sample Prompts;Voorbeeldprompts
+Web;No sample prompts defined;Geen voorbeeldprompts gedefinieerd
+Web;AI Assistant;AI-assistent
+Web;Favorites & Recent;Favorieten en recent
+Web;Hide panel;Paneel verbergen
+Web;Ask the AI assistant…;Stel de AI-assistent een vraag…
+Web;Confirm Deletion;Verwijdering bevestigen
+Web;This action is irreversible. Are you sure you want to delete this item?;Deze actie is onomkeerbaar. Weet u zeker dat u dit item wilt verwijderen?
+Web;Data Source;Gegevensbron
+Web;Report Assistants;Rapportassistenten
+Web;Select Tables or Views;Tabellen of weergaven selecteren
+Web;Filter tables...;Tabellen filteren...
+Web;Select All;Alles selecteren
+Web;Deselect All;Alles deselecteren
+Web;tables selected;tabellen geselecteerd
+Web;Prompt Shortcuts;Promptsnelkoppelingen
+Web;How can Seal AI help you today ?;Hoe kan Seal AI u vandaag helpen?
+Web;No current items available;Geen huidige items beschikbaar
+Web;Current items will appear here when saved;Huidige items verschijnen hier wanneer ze zijn opgeslagen
+Web;Drafts;Concepten
+Web;No draft items available;Geen conceptitems beschikbaar
+Web;Upload files or create new items with the assistant to see them here;Upload bestanden of maak nieuwe items met de assistent om ze hier te zien
+Web;Item Details;Itemdetails
+Web;Loading detail. Please wait...;Detail laden. Even geduld...
+Web;Select a row from the table to view its details;Selecteer een rij uit de tabel om de details te bekijken
+Web;Check;Controleren
+Web;Download;Downloaden
+Web;Reports Assistant;Rapportenassistent
+Web;Connection type;Verbindingstype
+Web;Connection string;Verbindingsreeks
+Web;Tables or views;Tabellen of weergaven
+Web;Report Assistant;Rapportassistent
+Web;AI Provider;AI-provider
+Web;AI model;AI-model
+Web;AI model name (overrides default));AI-modelnaam (overschrijft standaard))
+Web;Temperature;Temperatuur
+Web;Model temperature;Modeltemperatuur
+Web;System prompt;Systeemprompt
+Web;Optional sytem prompt for the assistant;Optionele systeemprompt voor de assistent
+Web;User prompt;Gebruikersprompt
+Web;Default user prompts (if empty default values configured are taken);Standaard gebruikersprompts (indien leeg worden de geconfigureerde standaardwaarden gebruikt)
+Web;User Groups allowed (No selection means no restriction);Toegestane gebruikersgroepen (geen selectie betekent geen beperking)
+Web;Scan options;Scanopties
+Web;When to scan;Wanneer scannen
+Web;Cache duration (days);Cacheduur (dagen)
+Web;Cache duration (days) for scanned data;Cacheduur (dagen) voor gescande gegevens
+Web;Tables to scan (no selection means all tables);Te scannen tabellen (geen selectie betekent alle tabellen)
+Web;Records to scan;Te scannen records
+Web;Number of records used for scan;Aantal records gebruikt voor scan
+Web;Scan Data Now;Gegevens nu scannen
+Web;Execute;Uitvoeren
+Web;Elements:;Elementen:
+Web;Restrictions:;Beperkingen:
+WebJS;Hide AI Assistant;AI-assistent verbergen
+WebJS;AI Assistant;AI-assistent
+WebJS;Running;Bezig
+WebJS;Request cancelled.;Aanvraag geannuleerd.
+WebJS;Remove from favorites;Verwijderen uit favorieten
+WebJS;No sample prompts defined;Geen voorbeeldprompts gedefinieerd
+WebJS;Rename;Naam wijzigen
+WebJS;Delete;Verwijderen
+WebJS;No favorites yet;Nog geen favorieten
+WebJS;No recent items;Geen recente items
+Web;Configuration;Configuratie
+Web;Download/Upload;Downloaden/Uploaden
+Web;Rights;Rechten
+Web;Assistants;Assistenten
+Web;Folder;Map

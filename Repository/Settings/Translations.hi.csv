@@ -1,0 +1,503 @@
+﻿Context;Reference;hi
+NVD3;(right axis);(दायाँ अक्ष)
+NVD3;Expanded;विस्तारित
+NVD3;Grouped;समूहित
+NVD3;Re-scale y-axis;y-अक्ष पुनः मापें
+NVD3;Stacked;स्टैक्ड
+NVD3;Stream;स्ट्रीम
+Report;!=;!=
+Report;# of % selected;% का # चयनित
+Report;(filtered from _MAX_);(_MAX_ से फ़िल्टर किया गया)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;इसके लिए एक मान आवश्यक है
+Report;All;सभी
+Report;All selected;सभी चयनित
+Report;and;और
+Report;Auto Fit columns;कॉलम स्वतः फ़िट करें
+Report;Auto Scroll enabled;स्वतः स्क्रॉल सक्षम
+Report;Average of;का औसत
+Report;Back to top;शीर्ष पर वापस जाएँ
+Report;Between;के बीच
+Report;Cancel;रद्द करें
+Report;Cancelling report...;रिपोर्ट रद्द की जा रही है...
+Report;Charts;चार्ट
+Report;Clear selection;चयन साफ़ करें
+Report;Close;बंद करें
+Report;Contains;शामिल है
+Report;Contains all;सभी शामिल हैं
+Report;Contains any;कोई भी शामिल है
+Report;Count Distinct of;का विशिष्ट गणना
+Report;Count of;का गणना
+Report;Decrement;घटाएँ
+Report;Description;विवरण
+Report;Display header footer;हेडर फ़ुटर दिखाएँ
+Report;Display: Execution messages;प्रदर्शन: निष्पादन संदेश
+Report;Display: Execution messages;प्रदर्शन: निष्पादन संदेश
+Report;Display: Information messages;प्रदर्शन: सूचना संदेश
+Report;Display: Information messages;प्रदर्शन: सूचना संदेश
+Report;Does not contain;शामिल नहीं है
+Report;Does not contain all;सभी शामिल नहीं हैं
+Report;Does not contain any;कोई भी शामिल नहीं है
+Report;Drill <;ड्रिल <
+Report;Drill >;ड्रिल >
+Report;Duration;अवधि
+Report;Duration (seconds);अवधि (सेकंड)
+Report;Email sent to '{0}';'{0}' को ईमेल भेजा गया
+Report;Ends with;के साथ समाप्त होता है
+Report;Equals;बराबर है
+Report;Execute;निष्पादित करें
+Report;Executing report...;रिपोर्ट निष्पादित की जा रही है...
+Report;Execution date;निष्पादन तिथि
+Report;Execution duration;निष्पादन अवधि
+Report;execution messages;निष्पादन संदेश
+Report;Export messages...;संदेश निर्यात करें...
+Report;Filter:;फ़िल्टर:
+Report;Go to today;आज पर जाएँ
+Report;Goal;लक्ष्य
+Report;Hide;छिपाएँ
+Report;HTML Print: Show messages;HTML प्रिंट: संदेश दिखाएँ
+Report;HTML Print: Show messages;HTML प्रिंट: संदेश दिखाएँ
+Report;HTML Print: Show report information;HTML प्रिंट: रिपोर्ट जानकारी दिखाएँ
+Report;HTML Print: Show report information;HTML प्रिंट: रिपोर्ट जानकारी दिखाएँ
+Report;HTML to PDF;HTML से PDF
+Report;Increment;बढ़ाएँ
+Report;Information panel enabled;सूचना पैनल सक्षम
+Report;Information panel enabled and shown;सूचना पैनल सक्षम और दिखाया गया
+Report;Information panel hidden;सूचना पैनल छिपा हुआ
+Report;Invalid date;अमान्य तिथि
+Report;Invalid numeric value;अमान्य संख्यात्मक मान
+Report;Is between;के बीच है
+Report;Is Blank;रिक्त है
+Report;Is different from;से भिन्न है
+Report;Is empty;खाली है
+Report;Is greater or equal than;से अधिक या बराबर है
+Report;Is greater than;से अधिक है
+Report;Is not between;के बीच नहीं है
+Report;Is Not Blank;रिक्त नहीं है
+Report;Is not empty;खाली नहीं है
+Report;Is not Null;Null नहीं है
+Report;Is Null;Null है
+Report;Is smaller or equal than;से कम या बराबर है
+Report;Is smaller than;से कम है
+Report;Landscape;लैंडस्केप
+Report;Logs;लॉग
+Report;Maximum of;का अधिकतम
+Report;Messages panel enabled;संदेश पैनल सक्षम
+Report;Messages panel enabled and shown;संदेश पैनल सक्षम और दिखाया गया
+Report;Messages panel enabled and shown only during execution;संदेश पैनल सक्षम और केवल निष्पादन के दौरान दिखाया गया
+Report;Messages panel hidden;संदेश पैनल छिपा हुआ
+Report;Minimum of;का न्यूनतम
+Report;Model;मॉडल
+Report;Model loaded...;मॉडल लोड किया गया...
+Report;Models loaded...;मॉडल लोड किए गए...
+Report;New report;नई रिपोर्ट
+Report;Next Century;अगली शताब्दी
+Report;Next Decade;अगला दशक
+Report;Next Month;अगला महीना
+Report;Next Year;अगला वर्ष
+Report;No;नहीं
+Report;No records;कोई रिकॉर्ड नहीं
+Report;No records. The report output generation has been cancelled.;कोई रिकॉर्ड नहीं। रिपोर्ट आउटपुट निर्माण रद्द कर दिया गया है।
+Report;No reports;कोई रिपोर्ट नहीं
+Report;No rows;कोई पंक्ति नहीं
+Report;Not Between;के बीच नहीं
+Report;Not Contains;शामिल नहीं है
+Report;Now;अभी
+Report;Options;विकल्प
+Report;or;या
+Report;Page;पृष्ठ
+Report;"Page &p; of &P;";"&P; में से पृष्ठ &p;"
+Report;Page orientation;पृष्ठ अभिविन्यास
+Report;Page size;पृष्ठ आकार
+Report;Pages;पृष्ठ
+Report;Pick Hour;घंटा चुनें
+Report;Pick Minute;मिनट चुनें
+Report;Pick Second;सेकंड चुनें
+Report;Please enter a value;कृपया एक मान दर्ज करें
+Report;Please enter at least a value;कृपया कम से कम एक मान दर्ज करें
+Report;Please find the report '{0}' in attachment.;कृपया अनुलग्नक में रिपोर्ट '{0}' देखें।
+Report;Please find your authentication code;कृपया अपना प्रमाणीकरण कोड देखें
+Report;Please wait, the report result is being generated in another window;कृपया प्रतीक्षा करें, रिपोर्ट परिणाम दूसरी विंडो में उत्पन्न किया जा रहा है
+Report;Previous Century;पिछली शताब्दी
+Report;Previous Decade;पिछला दशक
+Report;Previous Month;पिछला महीना
+Report;Previous Year;पिछला वर्ष
+Report;Print: Page orientation;प्रिंट: पृष्ठ अभिविन्यास
+Report;Print: Show logo;प्रिंट: लोगो दिखाएँ
+Report;Processing;प्रसंस्करण
+Report;Processing...;प्रसंस्करण...
+Report;Records;रिकॉर्ड
+Report;Refresh;रीफ़्रेश करें
+Report;Report;रिपोर्ट
+Report;Report description;रिपोर्ट विवरण
+Report;Report has been cancelled;रिपोर्ट रद्द कर दी गई है
+Report;report information;रिपोर्ट जानकारी
+Report;report restrictions;रिपोर्ट प्रतिबंध
+Report;Report result generated in '{0}';रिपोर्ट परिणाम '{0}' में उत्पन्न किया गया
+Report;Report result options;रिपोर्ट परिणाम विकल्प
+Report;report result panel;रिपोर्ट परिणाम पैनल
+Report;Report summary;रिपोर्ट सारांश
+Report;Restrictions;प्रतिबंध
+Report;Results;परिणाम
+Report;Scale;स्केल
+Report;second;सेकंड
+Report;seconds;सेकंड
+Report;Select all;सभी चुनें
+Report;Select Decade;दशक चुनें
+Report;Select Month;महीना चुनें
+Report;Select Time;समय चुनें
+Report;Select Year;वर्ष चुनें
+Report;Show;दिखाएँ
+Report;Show _MENU_ reports;_MENU_ रिपोर्ट दिखाएँ
+Report;Show _MENU_ rows;_MENU_ पंक्तियाँ दिखाएँ
+Report;Show messages;संदेश दिखाएँ
+Report;Show messages;संदेश दिखाएँ
+Report;Show report information;रिपोर्ट जानकारी दिखाएँ
+Report;Show report information;रिपोर्ट जानकारी दिखाएँ
+Report;Show/Hide Restrictions;प्रतिबंध दिखाएँ/छिपाएँ
+Report;Showing _START_ to _END_ of _TOTAL_;_TOTAL_ में से _START_ से _END_ दिखा रहे हैं
+Report;Showing 0 to 0 of 0;0 में से 0 से 0 दिखा रहे हैं
+Report;Starting execution...;निष्पादन प्रारंभ हो रहा है...
+Report;Starts with;के साथ शुरू होता है
+Report;Subtotal;उप-योग
+Report;Sum of;का योग
+Report;Summary;सारांश
+Report;Table of Contents;विषय-सूची
+Report;Tabs to show;दिखाने के लिए टैब
+Report;Task executed...;कार्य निष्पादित किया गया...
+Report;Tasks executed...;कार्य निष्पादित किए गए...
+Report;The report has been generated.;रिपोर्ट उत्पन्न कर दी गई है।
+Report;This report has execution errors. Please check details in the Logs Files...;इस रिपोर्ट में निष्पादन त्रुटियाँ हैं। कृपया लॉग फ़ाइलों में विवरण जाँचें...
+Report;ThisHour;यह घंटा
+Report;ThisMinute;यह मिनट
+Report;ThisMonth;यह महीना
+Report;ThisQuarter;यह तिमाही
+Report;ThisSemester;यह छमाही
+Report;ThisWeek;यह सप्ताह
+Report;ThisYear;यह वर्ष
+Report;Today;आज
+Report;Toggle Period;अवधि टॉगल करें
+Report;Total;कुल
+Report;Use the date format '{0}' or one of the following keywords:;तिथि प्रारूप '{0}' या निम्नलिखित कीवर्ड में से किसी एक का उपयोग करें:
+Report;View;देखें
+Report;View CSV Result;CSV परिणाम देखें
+Report;View Excel Converter Result;Excel कनवर्टर परिणाम देखें
+Report;View Excel Result;Excel परिणाम देखें
+Report;View HTML Print Result;HTML प्रिंट परिणाम देखें
+Report;View HTML Result;HTML परिणाम देखें
+Report;View HTML to PDF Result;HTML से PDF परिणाम देखें
+Report;View Json Result;JSON परिणाम देखें
+Report;View PDF Converter Result;PDF कनवर्टर परिणाम देखें
+Report;View PDF Result;PDF परिणाम देखें
+Report;View report result file;रिपोर्ट परिणाम फ़ाइल देखें
+Report;View Text Result;टेक्स्ट परिणाम देखें
+Report;View XML Result;XML परिणाम देखें
+Report;Warning: The maximum number of records is reached;चेतावनी: रिकॉर्ड की अधिकतम संख्या पहुँच गई है
+Report;Yes;हाँ
+Web;Add;जोड़ें
+Web;All;सभी
+Web;Auto-Refresh (seconds);स्वतः-रीफ़्रेश (सेकंड)
+Web;Back to login with user name and password;उपयोगकर्ता नाम और पासवर्ड के साथ लॉगिन पर वापस जाएँ
+Web;Cancel;रद्द करें
+Web;Change password;पासवर्ड बदलें
+Web;Change password;पासवर्ड बदलें
+Web;Change your password;अपना पासवर्ड बदलें
+Web;Chart sort;चार्ट क्रमबद्ध करें
+Web;Close;बंद करें
+Web;Color;रंग
+Web;Confirm your new password;अपने नए पासवर्ड की पुष्टि करें
+Web;Copy;कॉपी करें
+Web;Create in folder;फ़ोल्डर में बनाएँ
+Web;Create new folder;नया फ़ोल्डर बनाएँ
+Web;CSS Format;CSS प्रारूप
+Web;Culture;संस्कृति
+Web;Current password;वर्तमान पासवर्ड
+Web;Cut;काटें
+Web;Data source connections;डेटा स्रोत कनेक्शन
+Web;Default view;डिफ़ॉल्ट दृश्य
+Web;Delete;हटाएँ
+Web;Delete folder;फ़ोल्डर हटाएँ
+Web;Description;विवरण
+Web;Device;डिवाइस
+Web;Disconnect;डिस्कनेक्ट करें
+Web;Display options;प्रदर्शन विकल्प
+Web;Edit;संपादित करें
+Web;Edit configuration;कॉन्फ़िगरेशन संपादित करें
+Web;Edit entry;प्रविष्टि संपादित करें
+Web;Edit profile;प्रोफ़ाइल संपादित करें
+Web;Edition;संस्करण
+Web;Email;ईमेल
+Web;Enter password;पासवर्ड दर्ज करें
+Web;Enter user name;उपयोगकर्ता नाम दर्ज करें
+Web;Enter your current password;अपना वर्तमान पासवर्ड दर्ज करें
+Web;Enter your new file name;अपना नया फ़ाइल नाम दर्ज करें
+Web;Enter your new password;अपना नया पासवर्ड दर्ज करें
+Web;Enter your security code;अपना सुरक्षा कोड दर्ज करें
+Web;Enter your user identifier or email;अपना उपयोगकर्ता पहचानकर्ता या ईमेल दर्ज करें
+Web;Error;त्रुटि
+Web;Error: only files (and not reports) can be copied to this folder.;त्रुटि: केवल फ़ाइलें (रिपोर्ट नहीं) इस फ़ोल्डर में कॉपी की जा सकती हैं।
+Web;Error: the destination file name contains invalid characters.;त्रुटि: गंतव्य फ़ाइल नाम में अमान्य वर्ण हैं।
+Web;Error: the destination folder name contains invalid characters.;त्रुटि: गंतव्य फ़ोल्डर नाम में अमान्य वर्ण हैं।
+Web;Expand in Treeview;ट्रीव्यू में विस्तृत करें
+Web;Export;निर्यात करें
+Web;Files only;केवल फ़ाइलें
+Web;Folder Permissions;फ़ोल्डर अनुमतियाँ
+Web;Folders;फ़ोल्डर
+Web;Forget your password ?;अपना पासवर्ड भूल गए?
+Web;Group name;समूह नाम
+Web;Group name;समूह नाम
+Web;Groups;समूह
+Web;Groups;समूह
+Web;Height;ऊँचाई
+Web;Icon;आइकन
+Web;Information;सूचना
+Web;Invalid security code;अमान्य सुरक्षा कोड
+Web;Invalid user name or password;अमान्य उपयोगकर्ता नाम या पासवर्ड
+Web;Is dynamic;गतिशील है
+Web;Last execution at;अंतिम निष्पादन
+Web;Licensed to;को लाइसेंस प्राप्त
+Web;Login;लॉगिन
+Web;Login ID;लॉगिन ID
+Web;Logins;लॉगिन
+Web;Logout;लॉगआउट
+Web;Logout the user;उपयोगकर्ता को लॉगआउट करें
+Web;Manage Folders;फ़ोल्डर प्रबंधित करें
+Web;Manage sub-folders;उप-फ़ोल्डर प्रबंधित करें
+Web;Name;नाम
+Web;New;नया
+Web;New folder name;नया फ़ोल्डर नाम
+Web;New folder path;नया फ़ोल्डर पथ
+Web;New password;नया पासवर्ड
+Web;None;कोई नहीं
+Web;OK;OK
+Web;On startup;प्रारंभ में
+Web;Optional chart title;वैकल्पिक चार्ट शीर्षक
+Web;Optional menu name;वैकल्पिक मेनू नाम
+Web;Output;आउटपुट
+Web;Password;पासवर्ड
+Web;Paste;पेस्ट करें
+Web;PDF Conversion delay;PDF रूपांतरण विलंब
+Web;Personal;व्यक्तिगत
+Web;Personal folder;व्यक्तिगत फ़ोल्डर
+Web;Phone;फ़ोन
+Web;Please wait;कृपया प्रतीक्षा करें
+Web;Profile;प्रोफ़ाइल
+Web;Profile information;प्रोफ़ाइल जानकारी
+Web;Refresh;रीफ़्रेश करें
+Web;Re-init your password;अपना पासवर्ड पुनः आरंभ करें
+Web;Reload and execute;पुनः लोड करें और निष्पादित करें
+Web;Rename;नाम बदलें
+Web;Rename or move folder;फ़ोल्डर का नाम बदलें या स्थानांतरित करें
+Web;Rename, move or copy;नाम बदलें, स्थानांतरित करें या कॉपी करें
+Web;Report;रिपोर्ट
+Web;Report execution mode;रिपोर्ट निष्पादन मोड
+Web;Report name;रिपोर्ट नाम
+Web;Report title;रिपोर्ट शीर्षक
+Web;Report title if different from report name;रिपोर्ट नाम से भिन्न होने पर रिपोर्ट शीर्षक
+Web;Reports;रिपोर्ट
+Web;Reports menu;रिपोर्ट मेनू
+Web;Repository connection;रिपॉज़िटरी कनेक्शन
+Web;Reset password;पासवर्ड रीसेट करें
+Web;Reset your password;अपना पासवर्ड रीसेट करें
+Web;Save;सहेजें
+Web;Search;खोजें
+Web;Security code;सुरक्षा कोड
+Web;Show sub-folders;उप-फ़ोल्डर दिखाएँ
+Web;Startup report name;प्रारंभिक रिपोर्ट नाम
+Web;The favorite has been updated;पसंदीदा अद्यतन कर दिया गया है
+Web;Two-Factor Authentication;दो-कारक प्रमाणीकरण
+Web;Type;प्रकार
+Web;Type a new password;एक नया पासवर्ड टाइप करें
+Web;Upload;अपलोड करें
+Web;User groups;उपयोगकर्ता समूह
+Web;User identifier or email;उपयोगकर्ता पहचानकर्ता या ईमेल
+Web;User name;उपयोगकर्ता नाम
+Web;Users;उपयोगकर्ता
+Web;Web product name;वेब उत्पाद नाम
+Web;Width;चौड़ाई
+WebJS;# of % selected;% का # चयनित
+WebJS;Actions;क्रियाएँ
+WebJS;All selected;सभी चयनित
+WebJS;Allow only execution in a new window;केवल नई विंडो में निष्पादन की अनुमति दें
+WebJS;Cancel;रद्द करें
+WebJS;Configuration for;के लिए कॉन्फ़िगरेशन
+WebJS;Contains;शामिल है
+WebJS;Contains all;सभी शामिल हैं
+WebJS;Contains any;कोई भी शामिल है
+WebJS;Copy;कॉपी करें
+WebJS;Copy of;की कॉपी
+WebJS;Copy to;में कॉपी करें
+WebJS;Default;डिफ़ॉल्ट
+WebJS;Default culture;डिफ़ॉल्ट संस्कृति
+WebJS;Default mode;डिफ़ॉल्ट मोड
+WebJS;Default report connection;डिफ़ॉल्ट रिपोर्ट कनेक्शन
+WebJS;Default repository connection;डिफ़ॉल्ट रिपॉज़िटरी कनेक्शन
+WebJS;Default startup;डिफ़ॉल्ट प्रारंभ
+WebJS;Do not execute report;रिपोर्ट निष्पादित न करें
+WebJS;Do you really want to delete the reports or files selected ?;क्या आप वाकई चयनित रिपोर्ट या फ़ाइलें हटाना चाहते हैं?
+WebJS;Does not contain;शामिल नहीं है
+WebJS;Does not contain all;सभी शामिल नहीं हैं
+WebJS;Does not contain any;कोई भी शामिल नहीं है
+WebJS;Download report;रिपोर्ट डाउनलोड करें
+WebJS;Edit report;रिपोर्ट संपादित करें
+WebJS;Edit reports / Manage files;रिपोर्ट संपादित करें / फ़ाइलें प्रबंधित करें
+WebJS;Edit schedules / View files;शेड्यूल संपादित करें / फ़ाइलें देखें
+WebJS;Ends with;के साथ समाप्त होता है
+WebJS;Equals;बराबर है
+WebJS;Error;त्रुटि
+WebJS;Execute report in a new window;रिपोर्ट को नई विंडो में निष्पादित करें
+WebJS;Execute report in the current window;रिपोर्ट को वर्तमान विंडो में निष्पादित करें
+WebJS;Execute reports / View files;रिपोर्ट निष्पादित करें / फ़ाइलें देखें
+WebJS;Execute reports and outputs / View files;रिपोर्ट और आउटपुट निष्पादित करें / फ़ाइलें देखें
+WebJS;Execute the last report;अंतिम रिपोर्ट निष्पादित करें
+WebJS;Execute the report;रिपोर्ट निष्पादित करें
+WebJS;Favorites;पसंदीदा
+WebJS;Folder;फ़ोल्डर
+WebJS;Is between;के बीच है
+WebJS;Is different from;से भिन्न है
+WebJS;Is empty;खाली है
+WebJS;Is greater or equal than;से अधिक या बराबर है
+WebJS;Is greater than;से अधिक है
+WebJS;Is not between;के बीच नहीं है
+WebJS;Is not empty;खाली नहीं है
+WebJS;Is not Null;Null नहीं है
+WebJS;Is Null;Null है
+WebJS;Is smaller or equal than;से कम या बराबर है
+WebJS;Is smaller than;से कम है
+WebJS;Last modification;अंतिम संशोधन
+WebJS;Mark as favorite;पसंदीदा के रूप में चिह्नित करें
+WebJS;Model;मॉडल
+WebJS;New folder configuration;नया फ़ोल्डर कॉन्फ़िगरेशन
+WebJS;New group;नया समूह
+WebJS;New login;नया लॉगिन
+WebJS;No;नहीं
+WebJS;No download (except files) or upload;कोई डाउनलोड नहीं (फ़ाइलों को छोड़कर) या अपलोड नहीं
+WebJS;No folder configuration;कोई फ़ोल्डर कॉन्फ़िगरेशन नहीं
+WebJS;No login;कोई लॉगिन नहीं
+WebJS;No personal folder;कोई व्यक्तिगत फ़ोल्डर नहीं
+WebJS;No right;कोई अधिकार नहीं
+WebJS;None;कोई नहीं
+WebJS;Not sorted;क्रमबद्ध नहीं
+WebJS;OK;OK
+WebJS;Options;विकल्प
+WebJS;Output;आउटपुट
+WebJS;Personal folder for files only;केवल फ़ाइलों के लिए व्यक्तिगत फ़ोल्डर
+WebJS;Personal folder for reports and files;रिपोर्ट और फ़ाइलों के लिए व्यक्तिगत फ़ोल्डर
+WebJS;Please wait;कृपया प्रतीक्षा करें
+WebJS;Processing;प्रसंस्करण
+WebJS;Profile;प्रोफ़ाइल
+WebJS;Recents;हाल के
+WebJS;Report;रिपोर्ट
+WebJS;report(s) or file(s) cut in the clipboard;रिपोर्ट या फ़ाइलें क्लिपबोर्ड में काटी गईं
+WebJS;report(s) or file(s) have been deleted;रिपोर्ट या फ़ाइलें हटा दी गई हैं
+WebJS;report(s) or file(s) processed;रिपोर्ट या फ़ाइलें संसाधित की गईं
+WebJS;report(s) or files(s) copied in the clipboard;रिपोर्ट या फ़ाइलें क्लिपबोर्ड में कॉपी की गईं
+WebJS;Reports;रिपोर्ट
+WebJS;Schedule;शेड्यूल
+WebJS;Server Version;सर्वर संस्करण
+WebJS;Show _MENU_ reports;_MENU_ रिपोर्ट दिखाएँ
+WebJS;Starts with;के साथ शुरू होता है
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;कॉन्फ़िगरेशन सहेज लिया गया है। यदि आप सुरक्षा से प्रभावित हैं तो कृपया फिर से लॉगिन करें।
+WebJS;The folder has been created;फ़ोल्डर बना दिया गया है
+WebJS;The folder has been deleted;फ़ोल्डर हटा दिया गया है
+WebJS;The folder has been renamed;फ़ोल्डर का नाम बदल दिया गया है
+WebJS;The folder has been updated;फ़ोल्डर अद्यतन कर दिया गया है
+WebJS;The report or file has been renamed;रिपोर्ट या फ़ाइल का नाम बदल दिया गया है
+WebJS;Toggle Report or Folders view;रिपोर्ट या फ़ोल्डर दृश्य टॉगल करें
+WebJS;Unexpected error on server;सर्वर पर अप्रत्याशित त्रुटि
+WebJS;User can download reports;उपयोगकर्ता रिपोर्ट डाउनलोड कर सकता है
+WebJS;User can download reports and upload reports and files;उपयोगकर्ता रिपोर्ट डाउनलोड कर सकता है और रिपोर्ट तथा फ़ाइलें अपलोड कर सकता है
+WebJS;View;देखें
+WebJS;View Folders;फ़ोल्डर देखें
+WebJS;View Report;रिपोर्ट देखें
+WebJS;View reports;रिपोर्ट देखें
+WebJS;Views and outputs;दृश्य और आउटपुट
+WebJS;Warning;चेतावनी
+WebJS;Web Interface Version;वेब इंटरफ़ेस संस्करण
+WebJS;Yes;हाँ
+WebJS;Yes (Folder is expanded in the tree view);हाँ (ट्री दृश्य में फ़ोल्डर विस्तृत है)
+WebJS;Yes (Only files can be stored);हाँ (केवल फ़ाइलें संग्रहीत की जा सकती हैं)
+WebJS;Yes (User can browse sub-folders);हाँ (उपयोगकर्ता उप-फ़ोल्डर ब्राउज़ कर सकता है)
+WebJS;Yes (User can create and edit sub-folders);हाँ (उपयोगकर्ता उप-फ़ोल्डर बना और संपादित कर सकता है)
+WebJS;Yes (User can edit his profile);हाँ (उपयोगकर्ता अपनी प्रोफ़ाइल संपादित कर सकता है)
+WebJS;Yes (User is administrator of the Web Server);हाँ (उपयोगकर्ता वेब सर्वर का व्यवस्थापक है)
+Web;Select assistant;सहायक चुनें
+Web;Mark as favorite;पसंदीदा के रूप में चिह्नित करें
+Web;Favorites;पसंदीदा
+Web;No favorites yet;अभी तक कोई पसंदीदा नहीं
+Web;Recent;हाल का
+Web;No recent items;कोई हाल का आइटम नहीं
+Web;New conversation;नई बातचीत
+Web;Sample prompts;नमूना प्रॉम्प्ट
+Web;Sample Prompts;नमूना प्रॉम्प्ट
+Web;No sample prompts defined;कोई नमूना प्रॉम्प्ट परिभाषित नहीं
+Web;AI Assistant;AI सहायक
+Web;Favorites & Recent;पसंदीदा और हाल के
+Web;Hide panel;पैनल छिपाएँ
+Web;Ask the AI assistant…;AI सहायक से पूछें…
+Web;Confirm Deletion;हटाने की पुष्टि करें
+Web;This action is irreversible. Are you sure you want to delete this item?;यह क्रिया अपरिवर्तनीय है। क्या आप वाकई इस आइटम को हटाना चाहते हैं?
+Web;Data Source;डेटा स्रोत
+Web;Report Assistants;रिपोर्ट सहायक
+Web;Select Tables or Views;तालिकाएँ या दृश्य चुनें
+Web;Filter tables...;तालिकाएँ फ़िल्टर करें...
+Web;Select All;सभी चुनें
+Web;Deselect All;सभी अचयनित करें
+Web;tables selected;तालिकाएँ चयनित
+Web;Prompt Shortcuts;प्रॉम्प्ट शॉर्टकट
+Web;How can Seal AI help you today ?;Seal AI आज आपकी कैसे मदद कर सकता है?
+Web;No current items available;कोई वर्तमान आइटम उपलब्ध नहीं
+Web;Current items will appear here when saved;सहेजे जाने पर वर्तमान आइटम यहाँ दिखाई देंगे
+Web;Drafts;ड्राफ़्ट
+Web;No draft items available;कोई ड्राफ़्ट आइटम उपलब्ध नहीं
+Web;Upload files or create new items with the assistant to see them here;उन्हें यहाँ देखने के लिए फ़ाइलें अपलोड करें या सहायक के साथ नए आइटम बनाएँ
+Web;Item Details;आइटम विवरण
+Web;Loading detail. Please wait...;विवरण लोड हो रहा है। कृपया प्रतीक्षा करें...
+Web;Select a row from the table to view its details;विवरण देखने के लिए तालिका से एक पंक्ति चुनें
+Web;Check;जाँचें
+Web;Download;डाउनलोड करें
+Web;Reports Assistant;रिपोर्ट सहायक
+Web;Connection type;कनेक्शन प्रकार
+Web;Connection string;कनेक्शन स्ट्रिंग
+Web;Tables or views;तालिकाएँ या दृश्य
+Web;Report Assistant;रिपोर्ट सहायक
+Web;AI Provider;AI प्रदाता
+Web;AI model;AI मॉडल
+Web;AI model name (overrides default));AI मॉडल नाम (डिफ़ॉल्ट को ओवरराइड करता है))
+Web;Temperature;तापमान
+Web;Model temperature;मॉडल तापमान
+Web;System prompt;सिस्टम प्रॉम्प्ट
+Web;Optional sytem prompt for the assistant;सहायक के लिए वैकल्पिक सिस्टम प्रॉम्प्ट
+Web;User prompt;उपयोगकर्ता प्रॉम्प्ट
+Web;Default user prompts (if empty default values configured are taken);डिफ़ॉल्ट उपयोगकर्ता प्रॉम्प्ट (यदि खाली है तो कॉन्फ़िगर किए गए डिफ़ॉल्ट मान लिए जाते हैं)
+Web;User Groups allowed (No selection means no restriction);अनुमत उपयोगकर्ता समूह (कोई चयन न होने का अर्थ है कोई प्रतिबंध नहीं)
+Web;Scan options;स्कैन विकल्प
+Web;When to scan;कब स्कैन करें
+Web;Cache duration (days);कैश अवधि (दिन)
+Web;Cache duration (days) for scanned data;स्कैन किए गए डेटा के लिए कैश अवधि (दिन)
+Web;Tables to scan (no selection means all tables);स्कैन करने के लिए तालिकाएँ (कोई चयन न होने का अर्थ है सभी तालिकाएँ)
+Web;Records to scan;स्कैन करने के लिए रिकॉर्ड
+Web;Number of records used for scan;स्कैन के लिए उपयोग किए गए रिकॉर्ड की संख्या
+Web;Scan Data Now;अभी डेटा स्कैन करें
+Web;Execute;निष्पादित करें
+Web;Elements:;तत्व:
+Web;Restrictions:;प्रतिबंध:
+WebJS;Hide AI Assistant;AI सहायक छिपाएँ
+WebJS;AI Assistant;AI सहायक
+WebJS;Running;चल रहा है
+WebJS;Request cancelled.;अनुरोध रद्द किया गया।
+WebJS;Remove from favorites;पसंदीदा से हटाएँ
+WebJS;No sample prompts defined;कोई नमूना प्रॉम्प्ट परिभाषित नहीं
+WebJS;Rename;नाम बदलें
+WebJS;Delete;हटाएँ
+WebJS;No favorites yet;अभी तक कोई पसंदीदा नहीं
+WebJS;No recent items;कोई हाल का आइटम नहीं
+Web;Configuration;कॉन्फ़िगरेशन
+Web;Download/Upload;डाउनलोड/अपलोड
+Web;Rights;अधिकार
+Web;Assistants;सहायक
+Web;Folder;फ़ोल्डर

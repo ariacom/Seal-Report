@@ -1,0 +1,503 @@
+﻿Context;Reference;th
+NVD3;(right axis);(แกนขวา)
+NVD3;Expanded;ขยาย
+NVD3;Grouped;จัดกลุ่ม
+NVD3;Re-scale y-axis;ปรับสเกลแกน y ใหม่
+NVD3;Stacked;ซ้อนกัน
+NVD3;Stream;สตรีม
+Report;!=;!=
+Report;# of % selected;# จาก % ที่เลือก
+Report;(filtered from _MAX_);(กรองจาก _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;จำเป็นต้องระบุค่าสำหรับ
+Report;All;ทั้งหมด
+Report;All selected;เลือกทั้งหมดแล้ว
+Report;and;และ
+Report;Auto Fit columns;ปรับขนาดคอลัมน์อัตโนมัติ
+Report;Auto Scroll enabled;เปิดใช้งานการเลื่อนอัตโนมัติ
+Report;Average of;ค่าเฉลี่ยของ
+Report;Back to top;กลับไปด้านบน
+Report;Between;ระหว่าง
+Report;Cancel;ยกเลิก
+Report;Cancelling report...;กำลังยกเลิกรายงาน...
+Report;Charts;แผนภูมิ
+Report;Clear selection;ล้างการเลือก
+Report;Close;ปิด
+Report;Contains;มีคำว่า
+Report;Contains all;มีทั้งหมด
+Report;Contains any;มีคำใดคำหนึ่ง
+Report;Count Distinct of;นับค่าที่ไม่ซ้ำของ
+Report;Count of;จำนวนของ
+Report;Decrement;ลด
+Report;Description;คำอธิบาย
+Report;Display header footer;แสดงส่วนหัวส่วนท้าย
+Report;Display: Execution messages;แสดง: ข้อความการดำเนินการ
+Report;Display: Execution messages;แสดง: ข้อความการดำเนินการ
+Report;Display: Information messages;แสดง: ข้อความข้อมูล
+Report;Display: Information messages;แสดง: ข้อความข้อมูล
+Report;Does not contain;ไม่มีคำว่า
+Report;Does not contain all;ไม่มีทั้งหมด
+Report;Does not contain any;ไม่มีคำใดคำหนึ่ง
+Report;Drill <;เจาะลึก <
+Report;Drill >;เจาะลึก >
+Report;Duration;ระยะเวลา
+Report;Duration (seconds);ระยะเวลา (วินาที)
+Report;Email sent to '{0}';ส่งอีเมลไปยัง '{0}' แล้ว
+Report;Ends with;ลงท้ายด้วย
+Report;Equals;เท่ากับ
+Report;Execute;ดำเนินการ
+Report;Executing report...;กำลังดำเนินการรายงาน...
+Report;Execution date;วันที่ดำเนินการ
+Report;Execution duration;ระยะเวลาการดำเนินการ
+Report;execution messages;ข้อความการดำเนินการ
+Report;Export messages...;ส่งออกข้อความ...
+Report;Filter:;ตัวกรอง:
+Report;Go to today;ไปที่วันนี้
+Report;Goal;เป้าหมาย
+Report;Hide;ซ่อน
+Report;HTML Print: Show messages;พิมพ์ HTML: แสดงข้อความ
+Report;HTML Print: Show messages;พิมพ์ HTML: แสดงข้อความ
+Report;HTML Print: Show report information;พิมพ์ HTML: แสดงข้อมูลรายงาน
+Report;HTML Print: Show report information;พิมพ์ HTML: แสดงข้อมูลรายงาน
+Report;HTML to PDF;HTML เป็น PDF
+Report;Increment;เพิ่ม
+Report;Information panel enabled;เปิดใช้งานแผงข้อมูล
+Report;Information panel enabled and shown;เปิดใช้งานและแสดงแผงข้อมูล
+Report;Information panel hidden;ซ่อนแผงข้อมูล
+Report;Invalid date;วันที่ไม่ถูกต้อง
+Report;Invalid numeric value;ค่าตัวเลขไม่ถูกต้อง
+Report;Is between;อยู่ระหว่าง
+Report;Is Blank;ว่างเปล่า
+Report;Is different from;แตกต่างจาก
+Report;Is empty;ว่างเปล่า
+Report;Is greater or equal than;มากกว่าหรือเท่ากับ
+Report;Is greater than;มากกว่า
+Report;Is not between;ไม่อยู่ระหว่าง
+Report;Is Not Blank;ไม่ว่างเปล่า
+Report;Is not empty;ไม่ว่างเปล่า
+Report;Is not Null;ไม่เป็นค่าว่าง
+Report;Is Null;เป็นค่าว่าง
+Report;Is smaller or equal than;น้อยกว่าหรือเท่ากับ
+Report;Is smaller than;น้อยกว่า
+Report;Landscape;แนวนอน
+Report;Logs;บันทึก
+Report;Maximum of;ค่าสูงสุดของ
+Report;Messages panel enabled;เปิดใช้งานแผงข้อความ
+Report;Messages panel enabled and shown;เปิดใช้งานและแสดงแผงข้อความ
+Report;Messages panel enabled and shown only during execution;เปิดใช้งานและแสดงแผงข้อความเฉพาะระหว่างการดำเนินการ
+Report;Messages panel hidden;ซ่อนแผงข้อความ
+Report;Minimum of;ค่าต่ำสุดของ
+Report;Model;โมเดล
+Report;Model loaded...;โหลดโมเดลแล้ว...
+Report;Models loaded...;โหลดโมเดลแล้ว...
+Report;New report;รายงานใหม่
+Report;Next Century;ศตวรรษถัดไป
+Report;Next Decade;ทศวรรษถัดไป
+Report;Next Month;เดือนถัดไป
+Report;Next Year;ปีถัดไป
+Report;No;ไม่
+Report;No records;ไม่มีระเบียน
+Report;No records. The report output generation has been cancelled.;ไม่มีระเบียน การสร้างผลลัพธ์รายงานถูกยกเลิกแล้ว
+Report;No reports;ไม่มีรายงาน
+Report;No rows;ไม่มีแถว
+Report;Not Between;ไม่อยู่ระหว่าง
+Report;Not Contains;ไม่มีคำว่า
+Report;Now;ตอนนี้
+Report;Options;ตัวเลือก
+Report;or;หรือ
+Report;Page;หน้า
+Report;"Page &p; of &P;";"หน้า &p; จาก &P;"
+Report;Page orientation;การวางแนวหน้า
+Report;Page size;ขนาดหน้า
+Report;Pages;หน้า
+Report;Pick Hour;เลือกชั่วโมง
+Report;Pick Minute;เลือกนาที
+Report;Pick Second;เลือกวินาที
+Report;Please enter a value;โปรดป้อนค่า
+Report;Please enter at least a value;โปรดป้อนอย่างน้อยหนึ่งค่า
+Report;Please find the report '{0}' in attachment.;โปรดดูรายงาน '{0}' ในเอกสารแนบ
+Report;Please find your authentication code;โปรดดูรหัสยืนยันตัวตนของคุณ
+Report;Please wait, the report result is being generated in another window;โปรดรอ ผลลัพธ์รายงานกำลังถูกสร้างในอีกหน้าต่างหนึ่ง
+Report;Previous Century;ศตวรรษก่อนหน้า
+Report;Previous Decade;ทศวรรษก่อนหน้า
+Report;Previous Month;เดือนก่อนหน้า
+Report;Previous Year;ปีก่อนหน้า
+Report;Print: Page orientation;พิมพ์: การวางแนวหน้า
+Report;Print: Show logo;พิมพ์: แสดงโลโก้
+Report;Processing;กำลังประมวลผล
+Report;Processing...;กำลังประมวลผล...
+Report;Records;ระเบียน
+Report;Refresh;รีเฟรช
+Report;Report;รายงาน
+Report;Report description;คำอธิบายรายงาน
+Report;Report has been cancelled;รายงานถูกยกเลิกแล้ว
+Report;report information;ข้อมูลรายงาน
+Report;report restrictions;ข้อจำกัดของรายงาน
+Report;Report result generated in '{0}';สร้างผลลัพธ์รายงานใน '{0}'
+Report;Report result options;ตัวเลือกผลลัพธ์รายงาน
+Report;report result panel;แผงผลลัพธ์รายงาน
+Report;Report summary;สรุปรายงาน
+Report;Restrictions;ข้อจำกัด
+Report;Results;ผลลัพธ์
+Report;Scale;สเกล
+Report;second;วินาที
+Report;seconds;วินาที
+Report;Select all;เลือกทั้งหมด
+Report;Select Decade;เลือกทศวรรษ
+Report;Select Month;เลือกเดือน
+Report;Select Time;เลือกเวลา
+Report;Select Year;เลือกปี
+Report;Show;แสดง
+Report;Show _MENU_ reports;แสดง _MENU_ รายงาน
+Report;Show _MENU_ rows;แสดง _MENU_ แถว
+Report;Show messages;แสดงข้อความ
+Report;Show messages;แสดงข้อความ
+Report;Show report information;แสดงข้อมูลรายงาน
+Report;Show report information;แสดงข้อมูลรายงาน
+Report;Show/Hide Restrictions;แสดง/ซ่อนข้อจำกัด
+Report;Showing _START_ to _END_ of _TOTAL_;กำลังแสดง _START_ ถึง _END_ จาก _TOTAL_
+Report;Showing 0 to 0 of 0;กำลังแสดง 0 ถึง 0 จาก 0
+Report;Starting execution...;กำลังเริ่มการดำเนินการ...
+Report;Starts with;เริ่มต้นด้วย
+Report;Subtotal;ยอดรวมย่อย
+Report;Sum of;ผลรวมของ
+Report;Summary;สรุป
+Report;Table of Contents;สารบัญ
+Report;Tabs to show;แท็บที่จะแสดง
+Report;Task executed...;ดำเนินการงานแล้ว...
+Report;Tasks executed...;ดำเนินการงานแล้ว...
+Report;The report has been generated.;สร้างรายงานเรียบร้อยแล้ว
+Report;This report has execution errors. Please check details in the Logs Files...;รายงานนี้มีข้อผิดพลาดในการดำเนินการ โปรดตรวจสอบรายละเอียดในไฟล์บันทึก...
+Report;ThisHour;ชั่วโมงนี้
+Report;ThisMinute;นาทีนี้
+Report;ThisMonth;เดือนนี้
+Report;ThisQuarter;ไตรมาสนี้
+Report;ThisSemester;ครึ่งปีนี้
+Report;ThisWeek;สัปดาห์นี้
+Report;ThisYear;ปีนี้
+Report;Today;วันนี้
+Report;Toggle Period;สลับช่วงเวลา
+Report;Total;รวม
+Report;Use the date format '{0}' or one of the following keywords:;ใช้รูปแบบวันที่ '{0}' หรือคีย์เวิร์ดใดคีย์เวิร์ดหนึ่งต่อไปนี้:
+Report;View;มุมมอง
+Report;View CSV Result;ดูผลลัพธ์ CSV
+Report;View Excel Converter Result;ดูผลลัพธ์ตัวแปลง Excel
+Report;View Excel Result;ดูผลลัพธ์ Excel
+Report;View HTML Print Result;ดูผลลัพธ์การพิมพ์ HTML
+Report;View HTML Result;ดูผลลัพธ์ HTML
+Report;View HTML to PDF Result;ดูผลลัพธ์ HTML เป็น PDF
+Report;View Json Result;ดูผลลัพธ์ Json
+Report;View PDF Converter Result;ดูผลลัพธ์ตัวแปลง PDF
+Report;View PDF Result;ดูผลลัพธ์ PDF
+Report;View report result file;ดูไฟล์ผลลัพธ์รายงาน
+Report;View Text Result;ดูผลลัพธ์ข้อความ
+Report;View XML Result;ดูผลลัพธ์ XML
+Report;Warning: The maximum number of records is reached;คำเตือน: ถึงจำนวนระเบียนสูงสุดแล้ว
+Report;Yes;ใช่
+Web;Add;เพิ่ม
+Web;All;ทั้งหมด
+Web;Auto-Refresh (seconds);รีเฟรชอัตโนมัติ (วินาที)
+Web;Back to login with user name and password;กลับไปเข้าสู่ระบบด้วยชื่อผู้ใช้และรหัสผ่าน
+Web;Cancel;ยกเลิก
+Web;Change password;เปลี่ยนรหัสผ่าน
+Web;Change password;เปลี่ยนรหัสผ่าน
+Web;Change your password;เปลี่ยนรหัสผ่านของคุณ
+Web;Chart sort;การเรียงลำดับแผนภูมิ
+Web;Close;ปิด
+Web;Color;สี
+Web;Confirm your new password;ยืนยันรหัสผ่านใหม่ของคุณ
+Web;Copy;คัดลอก
+Web;Create in folder;สร้างในโฟลเดอร์
+Web;Create new folder;สร้างโฟลเดอร์ใหม่
+Web;CSS Format;รูปแบบ CSS
+Web;Culture;วัฒนธรรม
+Web;Current password;รหัสผ่านปัจจุบัน
+Web;Cut;ตัด
+Web;Data source connections;การเชื่อมต่อแหล่งข้อมูล
+Web;Default view;มุมมองเริ่มต้น
+Web;Delete;ลบ
+Web;Delete folder;ลบโฟลเดอร์
+Web;Description;คำอธิบาย
+Web;Device;อุปกรณ์
+Web;Disconnect;ตัดการเชื่อมต่อ
+Web;Display options;ตัวเลือกการแสดงผล
+Web;Edit;แก้ไข
+Web;Edit configuration;แก้ไขการกำหนดค่า
+Web;Edit entry;แก้ไขรายการ
+Web;Edit profile;แก้ไขโปรไฟล์
+Web;Edition;รุ่น
+Web;Email;อีเมล
+Web;Enter password;ป้อนรหัสผ่าน
+Web;Enter user name;ป้อนชื่อผู้ใช้
+Web;Enter your current password;ป้อนรหัสผ่านปัจจุบันของคุณ
+Web;Enter your new file name;ป้อนชื่อไฟล์ใหม่ของคุณ
+Web;Enter your new password;ป้อนรหัสผ่านใหม่ของคุณ
+Web;Enter your security code;ป้อนรหัสความปลอดภัยของคุณ
+Web;Enter your user identifier or email;ป้อนตัวระบุผู้ใช้หรืออีเมลของคุณ
+Web;Error;ข้อผิดพลาด
+Web;Error: only files (and not reports) can be copied to this folder.;ข้อผิดพลาด: สามารถคัดลอกได้เฉพาะไฟล์ (ไม่ใช่รายงาน) ไปยังโฟลเดอร์นี้
+Web;Error: the destination file name contains invalid characters.;ข้อผิดพลาด: ชื่อไฟล์ปลายทางมีอักขระที่ไม่ถูกต้อง
+Web;Error: the destination folder name contains invalid characters.;ข้อผิดพลาด: ชื่อโฟลเดอร์ปลายทางมีอักขระที่ไม่ถูกต้อง
+Web;Expand in Treeview;ขยายในมุมมองแบบต้นไม้
+Web;Export;ส่งออก
+Web;Files only;เฉพาะไฟล์
+Web;Folder Permissions;สิทธิ์โฟลเดอร์
+Web;Folders;โฟลเดอร์
+Web;Forget your password ?;ลืมรหัสผ่านของคุณ ?
+Web;Group name;ชื่อกลุ่ม
+Web;Group name;ชื่อกลุ่ม
+Web;Groups;กลุ่ม
+Web;Groups;กลุ่ม
+Web;Height;ความสูง
+Web;Icon;ไอคอน
+Web;Information;ข้อมูล
+Web;Invalid security code;รหัสความปลอดภัยไม่ถูกต้อง
+Web;Invalid user name or password;ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
+Web;Is dynamic;เป็นแบบไดนามิก
+Web;Last execution at;ดำเนินการครั้งล่าสุดเมื่อ
+Web;Licensed to;ได้รับอนุญาตให้
+Web;Login;เข้าสู่ระบบ
+Web;Login ID;รหัสเข้าสู่ระบบ
+Web;Logins;การเข้าสู่ระบบ
+Web;Logout;ออกจากระบบ
+Web;Logout the user;ออกจากระบบผู้ใช้
+Web;Manage Folders;จัดการโฟลเดอร์
+Web;Manage sub-folders;จัดการโฟลเดอร์ย่อย
+Web;Name;ชื่อ
+Web;New;ใหม่
+Web;New folder name;ชื่อโฟลเดอร์ใหม่
+Web;New folder path;เส้นทางโฟลเดอร์ใหม่
+Web;New password;รหัสผ่านใหม่
+Web;None;ไม่มี
+Web;OK;OK
+Web;On startup;เมื่อเริ่มต้น
+Web;Optional chart title;ชื่อแผนภูมิ (ไม่บังคับ)
+Web;Optional menu name;ชื่อเมนู (ไม่บังคับ)
+Web;Output;ผลลัพธ์
+Web;Password;รหัสผ่าน
+Web;Paste;วาง
+Web;PDF Conversion delay;ความล่าช้าในการแปลง PDF
+Web;Personal;ส่วนตัว
+Web;Personal folder;โฟลเดอร์ส่วนตัว
+Web;Phone;โทรศัพท์
+Web;Please wait;โปรดรอ
+Web;Profile;โปรไฟล์
+Web;Profile information;ข้อมูลโปรไฟล์
+Web;Refresh;รีเฟรช
+Web;Re-init your password;ตั้งค่ารหัสผ่านของคุณใหม่
+Web;Reload and execute;โหลดและดำเนินการใหม่
+Web;Rename;เปลี่ยนชื่อ
+Web;Rename or move folder;เปลี่ยนชื่อหรือย้ายโฟลเดอร์
+Web;Rename, move or copy;เปลี่ยนชื่อ ย้าย หรือคัดลอก
+Web;Report;รายงาน
+Web;Report execution mode;โหมดการดำเนินการรายงาน
+Web;Report name;ชื่อรายงาน
+Web;Report title;ชื่อเรื่องรายงาน
+Web;Report title if different from report name;ชื่อเรื่องรายงานหากแตกต่างจากชื่อรายงาน
+Web;Reports;รายงาน
+Web;Reports menu;เมนูรายงาน
+Web;Repository connection;การเชื่อมต่อที่เก็บข้อมูล
+Web;Reset password;รีเซ็ตรหัสผ่าน
+Web;Reset your password;รีเซ็ตรหัสผ่านของคุณ
+Web;Save;บันทึก
+Web;Search;ค้นหา
+Web;Security code;รหัสความปลอดภัย
+Web;Show sub-folders;แสดงโฟลเดอร์ย่อย
+Web;Startup report name;ชื่อรายงานเริ่มต้น
+Web;The favorite has been updated;อัปเดตรายการโปรดแล้ว
+Web;Two-Factor Authentication;การยืนยันตัวตนแบบสองปัจจัย
+Web;Type;ประเภท
+Web;Type a new password;พิมพ์รหัสผ่านใหม่
+Web;Upload;อัปโหลด
+Web;User groups;กลุ่มผู้ใช้
+Web;User identifier or email;ตัวระบุผู้ใช้หรืออีเมล
+Web;User name;ชื่อผู้ใช้
+Web;Users;ผู้ใช้
+Web;Web product name;ชื่อผลิตภัณฑ์เว็บ
+Web;Width;ความกว้าง
+WebJS;# of % selected;# จาก % ที่เลือก
+WebJS;Actions;การดำเนินการ
+WebJS;All selected;เลือกทั้งหมดแล้ว
+WebJS;Allow only execution in a new window;อนุญาตให้ดำเนินการในหน้าต่างใหม่เท่านั้น
+WebJS;Cancel;ยกเลิก
+WebJS;Configuration for;การกำหนดค่าสำหรับ
+WebJS;Contains;มีคำว่า
+WebJS;Contains all;มีทั้งหมด
+WebJS;Contains any;มีคำใดคำหนึ่ง
+WebJS;Copy;คัดลอก
+WebJS;Copy of;สำเนาของ
+WebJS;Copy to;คัดลอกไปยัง
+WebJS;Default;ค่าเริ่มต้น
+WebJS;Default culture;วัฒนธรรมเริ่มต้น
+WebJS;Default mode;โหมดเริ่มต้น
+WebJS;Default report connection;การเชื่อมต่อรายงานเริ่มต้น
+WebJS;Default repository connection;การเชื่อมต่อที่เก็บข้อมูลเริ่มต้น
+WebJS;Default startup;การเริ่มต้นเริ่มต้น
+WebJS;Do not execute report;ไม่ดำเนินการรายงาน
+WebJS;Do you really want to delete the reports or files selected ?;คุณต้องการลบรายงานหรือไฟล์ที่เลือกจริงหรือไม่ ?
+WebJS;Does not contain;ไม่มีคำว่า
+WebJS;Does not contain all;ไม่มีทั้งหมด
+WebJS;Does not contain any;ไม่มีคำใดคำหนึ่ง
+WebJS;Download report;ดาวน์โหลดรายงาน
+WebJS;Edit report;แก้ไขรายงาน
+WebJS;Edit reports / Manage files;แก้ไขรายงาน / จัดการไฟล์
+WebJS;Edit schedules / View files;แก้ไขกำหนดการ / ดูไฟล์
+WebJS;Ends with;ลงท้ายด้วย
+WebJS;Equals;เท่ากับ
+WebJS;Error;ข้อผิดพลาด
+WebJS;Execute report in a new window;ดำเนินการรายงานในหน้าต่างใหม่
+WebJS;Execute report in the current window;ดำเนินการรายงานในหน้าต่างปัจจุบัน
+WebJS;Execute reports / View files;ดำเนินการรายงาน / ดูไฟล์
+WebJS;Execute reports and outputs / View files;ดำเนินการรายงานและผลลัพธ์ / ดูไฟล์
+WebJS;Execute the last report;ดำเนินการรายงานล่าสุด
+WebJS;Execute the report;ดำเนินการรายงาน
+WebJS;Favorites;รายการโปรด
+WebJS;Folder;โฟลเดอร์
+WebJS;Is between;อยู่ระหว่าง
+WebJS;Is different from;แตกต่างจาก
+WebJS;Is empty;ว่างเปล่า
+WebJS;Is greater or equal than;มากกว่าหรือเท่ากับ
+WebJS;Is greater than;มากกว่า
+WebJS;Is not between;ไม่อยู่ระหว่าง
+WebJS;Is not empty;ไม่ว่างเปล่า
+WebJS;Is not Null;ไม่เป็นค่าว่าง
+WebJS;Is Null;เป็นค่าว่าง
+WebJS;Is smaller or equal than;น้อยกว่าหรือเท่ากับ
+WebJS;Is smaller than;น้อยกว่า
+WebJS;Last modification;การแก้ไขล่าสุด
+WebJS;Mark as favorite;ทำเครื่องหมายเป็นรายการโปรด
+WebJS;Model;โมเดล
+WebJS;New folder configuration;การกำหนดค่าโฟลเดอร์ใหม่
+WebJS;New group;กลุ่มใหม่
+WebJS;New login;การเข้าสู่ระบบใหม่
+WebJS;No;ไม่
+WebJS;No download (except files) or upload;ห้ามดาวน์โหลด (ยกเว้นไฟล์) หรืออัปโหลด
+WebJS;No folder configuration;ไม่มีการกำหนดค่าโฟลเดอร์
+WebJS;No login;ไม่มีการเข้าสู่ระบบ
+WebJS;No personal folder;ไม่มีโฟลเดอร์ส่วนตัว
+WebJS;No right;ไม่มีสิทธิ์
+WebJS;None;ไม่มี
+WebJS;Not sorted;ไม่ได้เรียงลำดับ
+WebJS;OK;OK
+WebJS;Options;ตัวเลือก
+WebJS;Output;ผลลัพธ์
+WebJS;Personal folder for files only;โฟลเดอร์ส่วนตัวสำหรับไฟล์เท่านั้น
+WebJS;Personal folder for reports and files;โฟลเดอร์ส่วนตัวสำหรับรายงานและไฟล์
+WebJS;Please wait;โปรดรอ
+WebJS;Processing;กำลังประมวลผล
+WebJS;Profile;โปรไฟล์
+WebJS;Recents;รายการล่าสุด
+WebJS;Report;รายงาน
+WebJS;report(s) or file(s) cut in the clipboard;รายงานหรือไฟล์ที่ตัดไว้ในคลิปบอร์ด
+WebJS;report(s) or file(s) have been deleted;รายงานหรือไฟล์ถูกลบแล้ว
+WebJS;report(s) or file(s) processed;รายงานหรือไฟล์ที่ประมวลผลแล้ว
+WebJS;report(s) or files(s) copied in the clipboard;รายงานหรือไฟล์ที่คัดลอกไว้ในคลิปบอร์ด
+WebJS;Reports;รายงาน
+WebJS;Schedule;กำหนดการ
+WebJS;Server Version;เวอร์ชันเซิร์ฟเวอร์
+WebJS;Show _MENU_ reports;แสดง _MENU_ รายงาน
+WebJS;Starts with;เริ่มต้นด้วย
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;บันทึกการกำหนดค่าแล้ว โปรดเข้าสู่ระบบอีกครั้งหากคุณได้รับผลกระทบจากความปลอดภัย
+WebJS;The folder has been created;สร้างโฟลเดอร์แล้ว
+WebJS;The folder has been deleted;ลบโฟลเดอร์แล้ว
+WebJS;The folder has been renamed;เปลี่ยนชื่อโฟลเดอร์แล้ว
+WebJS;The folder has been updated;อัปเดตโฟลเดอร์แล้ว
+WebJS;The report or file has been renamed;เปลี่ยนชื่อรายงานหรือไฟล์แล้ว
+WebJS;Toggle Report or Folders view;สลับมุมมองรายงานหรือโฟลเดอร์
+WebJS;Unexpected error on server;เกิดข้อผิดพลาดที่ไม่คาดคิดบนเซิร์ฟเวอร์
+WebJS;User can download reports;ผู้ใช้สามารถดาวน์โหลดรายงานได้
+WebJS;User can download reports and upload reports and files;ผู้ใช้สามารถดาวน์โหลดรายงานและอัปโหลดรายงานและไฟล์ได้
+WebJS;View;มุมมอง
+WebJS;View Folders;ดูโฟลเดอร์
+WebJS;View Report;ดูรายงาน
+WebJS;View reports;ดูรายงาน
+WebJS;Views and outputs;มุมมองและผลลัพธ์
+WebJS;Warning;คำเตือน
+WebJS;Web Interface Version;เวอร์ชันส่วนต่อประสานเว็บ
+WebJS;Yes;ใช่
+WebJS;Yes (Folder is expanded in the tree view);ใช่ (ขยายโฟลเดอร์ในมุมมองแบบต้นไม้)
+WebJS;Yes (Only files can be stored);ใช่ (จัดเก็บได้เฉพาะไฟล์)
+WebJS;Yes (User can browse sub-folders);ใช่ (ผู้ใช้สามารถเรียกดูโฟลเดอร์ย่อยได้)
+WebJS;Yes (User can create and edit sub-folders);ใช่ (ผู้ใช้สามารถสร้างและแก้ไขโฟลเดอร์ย่อยได้)
+WebJS;Yes (User can edit his profile);ใช่ (ผู้ใช้สามารถแก้ไขโปรไฟล์ของตนได้)
+WebJS;Yes (User is administrator of the Web Server);ใช่ (ผู้ใช้เป็นผู้ดูแลระบบของเว็บเซิร์ฟเวอร์)
+Web;Select assistant;เลือกผู้ช่วย
+Web;Mark as favorite;ทำเครื่องหมายเป็นรายการโปรด
+Web;Favorites;รายการโปรด
+Web;No favorites yet;ยังไม่มีรายการโปรด
+Web;Recent;ล่าสุด
+Web;No recent items;ไม่มีรายการล่าสุด
+Web;New conversation;การสนทนาใหม่
+Web;Sample prompts;ตัวอย่างพรอมต์
+Web;Sample Prompts;ตัวอย่างพรอมต์
+Web;No sample prompts defined;ไม่ได้กำหนดตัวอย่างพรอมต์
+Web;AI Assistant;ผู้ช่วย AI
+Web;Favorites & Recent;รายการโปรดและล่าสุด
+Web;Hide panel;ซ่อนแผง
+Web;Ask the AI assistant…;ถามผู้ช่วย AI…
+Web;Confirm Deletion;ยืนยันการลบ
+Web;This action is irreversible. Are you sure you want to delete this item?;การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้?
+Web;Data Source;แหล่งข้อมูล
+Web;Report Assistants;ผู้ช่วยรายงาน
+Web;Select Tables or Views;เลือกตารางหรือมุมมอง
+Web;Filter tables...;กรองตาราง...
+Web;Select All;เลือกทั้งหมด
+Web;Deselect All;ยกเลิกการเลือกทั้งหมด
+Web;tables selected;ตารางที่เลือก
+Web;Prompt Shortcuts;ทางลัดพรอมต์
+Web;How can Seal AI help you today ?;Seal AI ช่วยคุณได้อย่างไรในวันนี้ ?
+Web;No current items available;ไม่มีรายการปัจจุบัน
+Web;Current items will appear here when saved;รายการปัจจุบันจะปรากฏที่นี่เมื่อบันทึกแล้ว
+Web;Drafts;ฉบับร่าง
+Web;No draft items available;ไม่มีรายการฉบับร่าง
+Web;Upload files or create new items with the assistant to see them here;อัปโหลดไฟล์หรือสร้างรายการใหม่ด้วยผู้ช่วยเพื่อดูที่นี่
+Web;Item Details;รายละเอียดรายการ
+Web;Loading detail. Please wait...;กำลังโหลดรายละเอียด โปรดรอ...
+Web;Select a row from the table to view its details;เลือกแถวจากตารางเพื่อดูรายละเอียด
+Web;Check;ตรวจสอบ
+Web;Download;ดาวน์โหลด
+Web;Reports Assistant;ผู้ช่วยรายงาน
+Web;Connection type;ประเภทการเชื่อมต่อ
+Web;Connection string;สตริงการเชื่อมต่อ
+Web;Tables or views;ตารางหรือมุมมอง
+Web;Report Assistant;ผู้ช่วยรายงาน
+Web;AI Provider;ผู้ให้บริการ AI
+Web;AI model;โมเดล AI
+Web;AI model name (overrides default));ชื่อโมเดล AI (แทนที่ค่าเริ่มต้น))
+Web;Temperature;อุณหภูมิ
+Web;Model temperature;อุณหภูมิของโมเดล
+Web;System prompt;พรอมต์ระบบ
+Web;Optional sytem prompt for the assistant;พรอมต์ระบบสำหรับผู้ช่วย (ไม่บังคับ)
+Web;User prompt;พรอมต์ผู้ใช้
+Web;Default user prompts (if empty default values configured are taken);พรอมต์ผู้ใช้เริ่มต้น (หากว่างจะใช้ค่าเริ่มต้นที่กำหนดค่าไว้)
+Web;User Groups allowed (No selection means no restriction);กลุ่มผู้ใช้ที่อนุญาต (ไม่เลือกหมายถึงไม่มีข้อจำกัด)
+Web;Scan options;ตัวเลือกการสแกน
+Web;When to scan;เวลาที่จะสแกน
+Web;Cache duration (days);ระยะเวลาแคช (วัน)
+Web;Cache duration (days) for scanned data;ระยะเวลาแคช (วัน) สำหรับข้อมูลที่สแกน
+Web;Tables to scan (no selection means all tables);ตารางที่จะสแกน (ไม่เลือกหมายถึงทุกตาราง)
+Web;Records to scan;ระเบียนที่จะสแกน
+Web;Number of records used for scan;จำนวนระเบียนที่ใช้สำหรับการสแกน
+Web;Scan Data Now;สแกนข้อมูลทันที
+Web;Execute;ดำเนินการ
+Web;Elements:;องค์ประกอบ:
+Web;Restrictions:;ข้อจำกัด:
+WebJS;Hide AI Assistant;ซ่อนผู้ช่วย AI
+WebJS;AI Assistant;ผู้ช่วย AI
+WebJS;Running;กำลังทำงาน
+WebJS;Request cancelled.;คำขอถูกยกเลิก
+WebJS;Remove from favorites;ลบออกจากรายการโปรด
+WebJS;No sample prompts defined;ไม่ได้กำหนดตัวอย่างพรอมต์
+WebJS;Rename;เปลี่ยนชื่อ
+WebJS;Delete;ลบ
+WebJS;No favorites yet;ยังไม่มีรายการโปรด
+WebJS;No recent items;ไม่มีรายการล่าสุด
+Web;Configuration;การกำหนดค่า
+Web;Download/Upload;ดาวน์โหลด/อัปโหลด
+Web;Rights;สิทธิ์
+Web;Assistants;ผู้ช่วย
+Web;Folder;โฟลเดอร์

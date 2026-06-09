@@ -13,387 +13,491 @@ Report;<=;<=
 Report;=;=
 Report;>;>
 Report;>=;>=
-Report;A value is required for;
+Report;A value is required for;È richiesto un valore per
+Report;All;Tutti
 Report;All selected;Seleziona tutto
 Report;and;e
+Report;Auto Fit columns;Adatta automaticamente le colonne
+Report;Auto Scroll enabled;Scorrimento automatico attivato
 Report;Average of;Media di
 Report;Back to top;Torna su
 Report;Between;Tra
 Report;Cancel;Annulla
 Report;Cancelling report...;Cancellazione...
 Report;Charts;Grafici
+Report;Clear selection;Cancella selezione
+Report;Close;Chiudi
 Report;Contains;Contiene
+Report;Contains all;Contiene tutti
+Report;Contains any;Contiene uno qualsiasi
+Report;Count Distinct of;Conteggio distinto di
 Report;Count of;Conteggio di
+Report;Decrement;Decrementa
 Report;Description;Descrizione
+Report;Display header footer;Mostra intestazione piè di pagina
+Report;Display: Execution messages;Mostra: Messaggi di esecuzione
+Report;Display: Execution messages;Mostra: Messaggi di esecuzione
+Report;Display: Information messages;Mostra: Messaggi informativi
+Report;Display: Information messages;Mostra: Messaggi informativi
+Report;Does not contain;Non contiene
+Report;Does not contain all;Non contiene tutti
+Report;Does not contain any;Non contiene nessuno
 Report;Drill <;Navigation <
 Report;Drill >;Navigation >
+Report;Duration;Durata
 Report;Duration (seconds);Durata
+Report;Email sent to '{0}';Email inviata a '{0}'
 Report;Ends with;Finisce con
+Report;Equals;Uguale a
 Report;Execute;Esegui
 Report;Executing report...;Esecuzione...
 Report;Execution date;Data di esecuzione
 Report;Execution duration;Durata esecuzione
 Report;execution messages;informazioni di esecuzione
+Report;Export messages...;Esporta messaggi...
 Report;Filter:;Filtro:
+Report;Go to today;Vai a oggi
+Report;Goal;Obiettivo
 Report;Hide;Nascondi
+Report;HTML Print: Show messages;Stampa HTML: Mostra messaggi
+Report;HTML Print: Show messages;Stampa HTML: Mostra messaggi
+Report;HTML Print: Show report information;Stampa HTML: Mostra informazioni report
+Report;HTML Print: Show report information;Stampa HTML: Mostra informazioni report
+Report;HTML to PDF;HTML in PDF
+Report;Increment;Incrementa
+Report;Information panel enabled;Pannello informazioni attivato
+Report;Information panel enabled and shown;Pannello informazioni attivato e mostrato
+Report;Information panel hidden;Pannello informazioni nascosto
 Report;Invalid date;Data non valida
 Report;Invalid numeric value;Valore numerico non corretto
+Report;Is between;È compreso tra
+Report;Is Blank;È vuoto
+Report;Is different from;È diverso da
+Report;Is empty;È vuoto
+Report;Is greater or equal than;È maggiore o uguale a
+Report;Is greater than;È maggiore di
+Report;Is not between;Non è compreso tra
+Report;Is Not Blank;Non è vuoto
+Report;Is not empty;Non è vuoto
+Report;Is not Null;Non è Null
+Report;Is Null;È Null
+Report;Is smaller or equal than;È minore o uguale a
+Report;Is smaller than;È minore di
+Report;Landscape;Orizzontale
+Report;Logs;Log
 Report;Maximum of;Massimo di
+Report;Messages panel enabled;Pannello messaggi attivato
+Report;Messages panel enabled and shown;Pannello messaggi attivato e mostrato
+Report;Messages panel enabled and shown only during execution;Pannello messaggi attivato e mostrato solo durante l'esecuzione
+Report;Messages panel hidden;Pannello messaggi nascosto
 Report;Minimum of;Minimo di 
 Report;Model;Modello
-Report;New report;
-Report;No records. The report output generation has been cancelled.;
+Report;Model loaded...;Modello caricato...
+Report;Models loaded...;Modelli caricati...
+Report;New report;Nuovo report
+Report;Next Century;Secolo successivo
+Report;Next Decade;Decennio successivo
+Report;Next Month;Mese successivo
+Report;Next Year;Anno successivo
+Report;No;No
+Report;No records;Nessun record
+Report;No records. The report output generation has been cancelled.;Nessun record. La generazione del risultato del report è stata annullata.
 Report;No reports;Nessun report
 Report;No rows;Nessuna riga
 Report;Not Between;Non compreso
 Report;Not Contains;Non contiene
 Report;Now;Ora
+Report;Options;Opzioni
+Report;or;o
 Report;Page;Pagina
 Report;"Page &p; of &P;";"Pagina &p; de &P;"
+Report;Page orientation;Orientamento pagina
+Report;Page size;Dimensione pagina
 Report;Pages;Pagine
+Report;Pick Hour;Scegli ora
+Report;Pick Minute;Scegli minuto
+Report;Pick Second;Scegli secondo
+Report;Please enter a value;Inserisci un valore
+Report;Please enter at least a value;Inserisci almeno un valore
+Report;Please find the report '{0}' in attachment.;Trova il report '{0}' in allegato.
+Report;Please find your authentication code;Trova il tuo codice di autenticazione
+Report;Please wait, the report result is being generated in another window;Attendere, il risultato del report è in fase di generazione in un'altra finestra
+Report;Previous Century;Secolo precedente
+Report;Previous Decade;Decennio precedente
+Report;Previous Month;Mese precedente
+Report;Previous Year;Anno precedente
+Report;Print: Page orientation;Stampa: Orientamento pagina
+Report;Print: Show logo;Stampa: Mostra logo
 Report;Processing;Processamento
 Report;Processing...;In corso
-Report;Report;
-Report;Model loaded...;
-Report;No records;
-Report;Task executed...;
-Report;Models loaded...;
-Report;Tasks executed...;
-Report;Results;
 Report;Records;Registra
+Report;Refresh;Aggiorna
+Report;Report;Report
+Report;Report description;Descrizione del report
 Report;Report has been cancelled;Il report è stato annullato
 Report;report information;informazioni
 Report;report restrictions;restrizioni report
 Report;Report result generated in '{0}';Il risultato del report è stato generato in '{0}'
+Report;Report result options;Opzioni del risultato del report
 Report;report result panel;pannello risultati report
+Report;Report summary;Riepilogo del report
 Report;Restrictions;Restrizioni
+Report;Results;Risultati
+Report;Scale;Scala
 Report;second;secondo
 Report;seconds;secondi
 Report;Select all;Seleziona tutto
+Report;Select Decade;Seleziona decennio
+Report;Select Month;Seleziona mese
+Report;Select Time;Seleziona ora
+Report;Select Year;Seleziona anno
 Report;Show;Mostra
 Report;Show _MENU_ reports;Mostra il _MENU_ reports
 Report;Show _MENU_ rows;Mostra _MENU_ righe
+Report;Show messages;Mostra messaggi
+Report;Show messages;Mostra messaggi
+Report;Show report information;Mostra informazioni report
+Report;Show report information;Mostra informazioni report
+Report;Show/Hide Restrictions;Mostra/Nascondi restrizioni
 Report;Showing _START_ to _END_ of _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_
 Report;Showing 0 to 0 of 0;Mostra 0 a 0 di 0
 Report;Starting execution...;Esecuzione...
 Report;Starts with;Inizia con
+Report;Subtotal;Subtotale
 Report;Sum of;Somma di
-Report;Summary;
+Report;Summary;Riepilogo
+Report;Table of Contents;Indice
+Report;Tabs to show;Schede da mostrare
+Report;Task executed...;Attività eseguita...
+Report;Tasks executed...;Attività eseguite...
 Report;The report has been generated.;Il report è stato generato
-Report;This report has execution errors. Please check details in the Windows Event Viewer...;Questo report produce degli errori durante l'esecuzione. Per favore controllare i dettagli nella finestra relativa alla visualizzazione Evento
+Report;This report has execution errors. Please check details in the Logs Files...;Questo report contiene errori di esecuzione. Controlla i dettagli nei file di log...
+Report;ThisHour;QuestaOra
+Report;ThisMinute;QuestoMinuto
 Report;ThisMonth;QuestoMese
+Report;ThisQuarter;QuestoTrimestre
+Report;ThisSemester;QuestoSemestre
 Report;ThisWeek;QuestaSettimana
 Report;ThisYear;QuestoAnno
 Report;Today;Oggi
+Report;Toggle Period;Cambia periodo
 Report;Total;Totale
 Report;Use the date format '{0}' or one of the following keywords:;Usa il formato data '{0}' in uno dei seguenti formati
-Report;View Excel Result;Vedi il risultato Excel
-Report;View HTML Result;Vedi il risulato HTML
-Report;View PDF Result;Vedi il risultato PDF
-Report;View Print Result;Vedi il risultato di stampa
+Report;View;Visualizza
 Report;View CSV Result;Vedi il risultato CSV
+Report;View Excel Converter Result;Visualizza risultato Excel Converter
+Report;View Excel Result;Vedi il risultato Excel
+Report;View HTML Print Result;Visualizza risultato Stampa HTML
+Report;View HTML Result;Vedi il risulato HTML
+Report;View HTML to PDF Result;Visualizza risultato HTML in PDF
+Report;View Json Result;Visualizza risultato Json
+Report;View PDF Converter Result;Visualizza risultato PDF Converter
+Report;View PDF Result;Vedi il risultato PDF
 Report;View report result file;Visualizza il file del risultato del report
-Report;Equals;
-Report;Is between;
-Report;Is different from;
-Report;Does not contain;
-Report;Is empty;
-Report;Is greater or equal than;
-Report;Is greater than;
-Report;Is not between;
-Report;Is not empty;
-Report;Is not Null;
-Report;Is Null;
-Report;Is smaller or equal than;
-Report;Is smaller than;
-Report;Auto Scroll enabled;
-Report;Export messages...;
-Web;Actions;
-Web;Aggregate;
-Web;BCC;
-Web;Body;
+Report;View Text Result;Visualizza risultato Testo
+Report;View XML Result;Visualizza risultato XML
+Report;Warning: The maximum number of records is reached;Avviso: è stato raggiunto il numero massimo di record
+Report;Yes;Sì
+Web;Add;Aggiungi
+Web;All;Tutti
+Web;Auto-Refresh (seconds);Aggiornamento automatico (secondi)
+Web;Back to login with user name and password;Torna al login con nome utente e password
 Web;Cancel;Annulla
-Web;CC;
-Web;Chart axis;
-Web;Chart height;
-Web;Chart title;
-Web;Chart JS;
-Web;Chart NVD3;
-Web;Chart Plotly;
-Web;Chart width;
+Web;Change password;Cambia password
+Web;Change password;Cambia password
+Web;Change your password;Cambia la tua password
+Web;Chart sort;Ordinamento grafico
 Web;Close;Chiuso
-Web;Connection;
-Web;Copy;
-Web;Create new folder;
-Web;Cut;
-Web;Days;
-Web;Days of the week;
-Web;Default body;
-Web;Default sender address;
-Web;Default subject;
-Web;Delete;
-Web;Delete folder;
-Web;Description;
-Web;Device;
-Web;Disconnect;
-Web;Display options;
-Web;Elements;
-Web;End date;
-Web;End date is before start date;
-Web;Enter a password to protect the Zip file;
-Web;"Enter addresses separated by ;";
-Web;Enter password;
-Web;Enter the file name without extension;
-Web;Enter user name;
-Web;Enter your new file name;
+Web;Color;Colore
+Web;Confirm your new password;Conferma la tua nuova password
+Web;Copy;Copia
+Web;Create in folder;Crea nella cartella
+Web;Create new folder;Crea nuova cartella
+Web;CSS Format;Formato CSS
+Web;Culture;Lingua
+Web;Current password;Password attuale
+Web;Cut;Taglia
+Web;Data source connections;Connessioni origine dati
+Web;Default view;Vista predefinita
+Web;Delete;Elimina
+Web;Delete folder;Elimina cartella
+Web;Description;Descrizione
+Web;Device;Dispositivo
+Web;Disconnect;Disconnetti
+Web;Display options;Opzioni di visualizzazione
+Web;Edit;Modifica
+Web;Edit configuration;Modifica configurazione
+Web;Edit entry;Modifica voce
+Web;Edit profile;Modifica profilo
+Web;Edition;Edizione
+Web;Email;Email
+Web;Enter password;Inserisci password
+Web;Enter user name;Inserisci nome utente
+Web;Enter your current password;Inserisci la tua password attuale
+Web;Enter your new file name;Inserisci il tuo nuovo nome file
+Web;Enter your new password;Inserisci la tua nuova password
+Web;Enter your security code;Inserisci il tuo codice di sicurezza
+Web;Enter your user identifier or email;Inserisci il tuo identificativo utente o email
 Web;Error;Errore
-Web;Error: This report name exists already.;
-Web;Execute;Esegui
-Web;Execute now;
-Web;Edition;
-Web;Execution;
-Web;File name;
-Web;Folder;Repertorio
-Web;Folders;
-Web;for a duration of;
-Web;Format;
-Web;From;
-Web;Grid mode;
-Web;Inconsistent duration or interval for the schedule. Check your entries.;
-Web;Invalid user name or password;
-Web;Is enabled;
-Web;Is required;
-Web;Is Multiline;
-Web;Last;Ultima
-Web;Last modification;Ultima modifica
-Web;Licensed to;
+Web;Error: only files (and not reports) can be copied to this folder.;Errore: solo i file (e non i report) possono essere copiati in questa cartella.
+Web;Error: the destination file name contains invalid characters.;Errore: il nome del file di destinazione contiene caratteri non validi.
+Web;Error: the destination folder name contains invalid characters.;Errore: il nome della cartella di destinazione contiene caratteri non validi.
+Web;Expand in Treeview;Espandi nella vista ad albero
+Web;Export;Esporta
+Web;Files only;Solo file
+Web;Folder Permissions;Permessi cartella
+Web;Folders;Cartelle
+Web;Forget your password ?;Hai dimenticato la password ?
+Web;Group name;Nome gruppo
+Web;Group name;Nome gruppo
+Web;Groups;Gruppi
+Web;Groups;Gruppi
+Web;Height;Altezza
+Web;Icon;Icona
+Web;Information;Informazioni
+Web;Invalid security code;Codice di sicurezza non valido
+Web;Invalid user name or password;Nome utente o password non validi
+Web;Is dynamic;È dinamico
+Web;Last execution at;Ultima esecuzione il
+Web;Licensed to;Concesso in licenza a
 Web;Login;Login
+Web;Login ID;ID accesso
+Web;Logins;Accessi
 Web;Logout;Uscita
 Web;Logout the user;Uscita utente
-Web;Manage folders;
-Web;Months;
+Web;Manage Folders;Gestisci cartelle
+Web;Manage sub-folders;Gestisci sottocartelle
 Web;Name;Nome
-Web;New;
-Web;New folder name;
-Web;No Email destination specified in the schedule;
-Web;No file name specified in the schedule;
-Web;OK;
-Web;Operator;
-Web;"Optional addresses separated by ;";
-Web;Optional title chart;
-Web;Options;
-Web;Output;
+Web;New;Nuovo
+Web;New folder name;Nome nuova cartella
+Web;New folder path;Percorso nuova cartella
+Web;New password;Nuova password
+Web;None;Nessuno
+Web;OK;OK
+Web;On startup;All'avvio
+Web;Optional chart title;Titolo grafico opzionale
+Web;Optional menu name;Nome menu opzionale
+Web;Output;Output
 Web;Password;Password
-Web;Paste;
-Web;Personal;
-Web;Pivot mode;
+Web;Paste;Incolla
+Web;PDF Conversion delay;Ritardo conversione PDF
+Web;Personal;Personale
+Web;Personal folder;Cartella personale
+Web;Phone;Telefono
 Web;Please wait;Attendere prego
-Web;Profile;
-Web;Profile information;
-Web;Prompt;
-Web;Prompt at run-time;
-Web;Recur every;
-Web;Refresh;
-Web;Remove;
-Web;Remove all;
-Web;Rename;
-Web;Rename folder;
-Web;Repeat every;
+Web;Profile;Profilo
+Web;Profile information;Informazioni profilo
+Web;Refresh;Aggiorna
+Web;Re-init your password;Reimposta la tua password
+Web;Reload and execute;Ricarica ed esegui
+Web;Rename;Rinomina
+Web;Rename or move folder;Rinomina o sposta cartella
+Web;Rename, move or copy;Rinomina, sposta o copia
 Web;Report;Report
+Web;Report execution mode;Modalità di esecuzione del report
 Web;Report name;Nome del report
-Web;Report title;
-Web;Report title if different from report name;
+Web;Report title;Titolo del report
+Web;Report title if different from report name;Titolo del report se diverso dal nome del report
 Web;Reports;Reports
-Web;Result as body;
+Web;Reports menu;Menu report
+Web;Repository connection;Connessione repository
+Web;Reset password;Reimposta password
+Web;Reset your password;Reimposta la tua password
 Web;Save;Salva
-Web;Schedule;
-Web;Search;
-Web;Show totals;
-Web;Show sub-totals;
-Web;Sort;
-Web;Start date;
-Web;Subject;
-Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;
-Web;To;
-Web;Total aggr.;
+Web;Search;Cerca
+Web;Security code;Codice di sicurezza
+Web;Show sub-folders;Mostra sottocartelle
+Web;Startup report name;Nome del report di avvio
+Web;The favorite has been updated;Il preferito è stato aggiornato
+Web;Two-Factor Authentication;Autenticazione a due fattori
 Web;Type;Tipo
+Web;Type a new password;Digita una nuova password
+Web;Upload;Carica
 Web;User groups;Gruppi utenti
+Web;User identifier or email;Identificativo utente o email
 Web;User name;Nome utente
-Web;Users;
-Web;Value;
-Web;Values;
-Web;Error: only files (and not reports) can be copied to this folder.;
-Web;Zip attachments;
-Web;Zip password;
-WebJS;Options;
-WebJS;No calculation option;
-WebJS;% of the row;
-WebJS;% of the column;
-WebJS;% of the total;
+Web;Users;Utenti
+Web;Web product name;Nome prodotto web
+Web;Width;Larghezza
 WebJS;# of % selected;# selezionati su %
-WebJS;(filtered from _MAX_);(filtrato da _MAX_)
-WebJS;No Output;
-WebJS;No Schedule;
-WebJS;1 Decimal;
-WebJS;2 Decimals;
-WebJS;3 Decimals;
-WebJS;4 Decimals;
-WebJS;Percentage;
-WebJS;Percentage 1 Dec.;
-WebJS;Percentage 2 Dec.;
+WebJS;Actions;Azioni
 WebJS;All selected;Seleziona tutto
-WebJS;Ascendant;
-WebJS;Automatic ascendant;
-WebJS;Automatic descendant;
-WebJS;Average;
-WebJS;Average of;
-WebJS;Axis;
-WebJS;Bar;
-WebJS;Contains;
-WebJS;Count;
-WebJS;Count of;
-WebJS;CSV;
-WebJS;Data tables responsive;
-WebJS;Daily;
-WebJS;day;
-WebJS;days;
-WebJS;Decimal;
-WebJS;Default;
-WebJS;Default report connection;
-WebJS;Default repository connection;
-WebJS;Descendant;
-WebJS;Do you really want to delete the reports or files selected ?;
-WebJS;Does not contain;
-WebJS;Drop your Column elements;
-WebJS;Drop your Data;
-WebJS;Drop your Data elements;
-WebJS;Drop your Elements;
-WebJS;Drop your Page elements;
-WebJS;Drop your Restrictions;
-WebJS;Drop your Row elements;
-WebJS;Edit report;
-WebJS;Email;
-WebJS;Ends with;
-WebJS;Equals;
-WebJS;Error;
-WebJS;Error : Unable to connect to the server;
-WebJS;Excel;
-WebJS;Filter;Filtro
+WebJS;Allow only execution in a new window;Consenti solo l'esecuzione in una nuova finestra
+WebJS;Cancel;Annulla
+WebJS;Configuration for;Configurazione per
+WebJS;Contains;Contiene
+WebJS;Contains all;Contiene tutti
+WebJS;Contains any;Contiene uno qualsiasi
+WebJS;Copy;Copia
+WebJS;Copy of;Copia di
+WebJS;Copy to;Copia in
+WebJS;Default;Predefinito
+WebJS;Default culture;Lingua predefinita
+WebJS;Default mode;Modalità predefinita
+WebJS;Default report connection;Connessione report predefinita
+WebJS;Default repository connection;Connessione repository predefinita
+WebJS;Default startup;Avvio predefinito
+WebJS;Do not execute report;Non eseguire il report
+WebJS;Do you really want to delete the reports or files selected ?;Vuoi davvero eliminare i report o i file selezionati ?
+WebJS;Does not contain;Non contiene
+WebJS;Does not contain all;Non contiene tutti
+WebJS;Does not contain any;Non contiene nessuno
+WebJS;Download report;Scarica report
+WebJS;Edit report;Modifica report
+WebJS;Edit reports / Manage files;Modifica report / Gestisci file
+WebJS;Edit schedules / View files;Modifica pianificazioni / Visualizza file
+WebJS;Ends with;Termina con
+WebJS;Equals;Uguale a
+WebJS;Error;Errore
+WebJS;Execute report in a new window;Esegui il report in una nuova finestra
+WebJS;Execute report in the current window;Esegui il report nella finestra corrente
+WebJS;Execute reports / View files;Esegui report / Visualizza file
+WebJS;Execute reports and outputs / View files;Esegui report e output / Visualizza file
+WebJS;Execute the last report;Esegui l'ultimo report
+WebJS;Execute the report;Esegui il report
+WebJS;Favorites;Preferiti
 WebJS;Folder;Repertorio
-WebJS;For rows;
-WebJS;For columns;
-WebJS;For rows and columns;
-WebJS;For rows (total only);
-WebJS;For rows and columns (total only);
-WebJS;Force execution;
-WebJS;Use full screen width;
-WebJS;General;
-WebJS;General date long time;
-WebJS;General date short time;
-WebJS;Horizontal Bar;
-WebJS;hour;
-WebJS;hours;
-WebJS;HTML;
-WebJS;HTML Print;
-WebJS;Indefinitely;
-WebJS;Is between;
-WebJS;Is different from;
-WebJS;Is empty;
-WebJS;Is greater or equal than;
-WebJS;Is greater than;
-WebJS;Is not between;
-WebJS;Is not empty;
-WebJS;Is not Null;
-WebJS;Is Null;
-WebJS;Is smaller or equal than;
-WebJS;Is smaller than;
-WebJS;Line;
-WebJS;Long date;
-WebJS;Maximum;
-WebJS;Maximum of;
-WebJS;Minimum;
-WebJS;Minimum of;
-WebJS;minute;
-WebJS;minutes;
-WebJS;Modified;
-WebJS;Monthly;
-WebJS;New Output for;
-WebJS;New report;
-WebJS;New Schedule;
-WebJS;No;
-WebJS;No prompt;
-WebJS;No report;
-WebJS;No schedule;
-WebJS;No total;
-WebJS;No (axis values are linear);
-WebJS;None;
-WebJS;Not sorted;
-WebJS;Number;
-WebJS;Number 1 dec.;
-WebJS;Number 2 dec.;
-WebJS;Number 3 dec.;
-WebJS;Number 4 dec.;
-WebJS;One time;
-WebJS;Output;
-WebJS;PDF;
-WebJS;PDF Print;
-WebJS;Pie;
+WebJS;Is between;È compreso tra
+WebJS;Is different from;È diverso da
+WebJS;Is empty;È vuoto
+WebJS;Is greater or equal than;È maggiore o uguale a
+WebJS;Is greater than;È maggiore di
+WebJS;Is not between;Non è compreso tra
+WebJS;Is not empty;Non è vuoto
+WebJS;Is not Null;Non è Null
+WebJS;Is Null;È Null
+WebJS;Is smaller or equal than;È minore o uguale a
+WebJS;Is smaller than;È minore di
+WebJS;Last modification;Ultima modifica
+WebJS;Mark as favorite;Segna come preferito
+WebJS;Model;Modello
+WebJS;New folder configuration;Configurazione nuova cartella
+WebJS;New group;Nuovo gruppo
+WebJS;New login;Nuovo accesso
+WebJS;No;No
+WebJS;No download (except files) or upload;Nessun download (eccetto i file) o upload
+WebJS;No folder configuration;Nessuna configurazione cartella
+WebJS;No login;Nessun accesso
+WebJS;No personal folder;Nessuna cartella personale
+WebJS;No right;Nessun permesso
+WebJS;None;Nessuno
+WebJS;Not sorted;Non ordinato
+WebJS;OK;OK
+WebJS;Options;Opzioni
+WebJS;Output;Output
+WebJS;Personal folder for files only;Cartella personale solo per file
+WebJS;Personal folder for reports and files;Cartella personale per report e file
 WebJS;Please wait;Attendere prego
-WebJS;Please note that only schedules can be edited for this report.;
-WebJS;Scatter;
-WebJS;Polar Area;
-WebJS;Radar;
-WebJS;Private (The output cannot be executed by other users);
-WebJS;Private (The output cannot be edited by other users);
-WebJS;Prompt at execution;
-WebJS;Prompt only one value;
-WebJS;Public;
-WebJS;Remove;
-WebJS;Report has been modified, do you really want to close ?;
-WebJS;Report saved;
-WebJS;report(s) or file(s) cut in the clipboard;
-WebJS;report(s) or file(s) have been deleted;
-WebJS;report(s) or file(s) processed;
-WebJS;report(s) or files(s) copied in the clipboard;
-WebJS;Schedule;
-WebJS;Select all;Seleziona tutto
-WebJS;Server Version;
-WebJS;Short date;
+WebJS;Processing;Elaborazione
+WebJS;Profile;Profilo
+WebJS;Recents;Recenti
+WebJS;Report;Report
+WebJS;report(s) or file(s) cut in the clipboard;report o file tagliati negli appunti
+WebJS;report(s) or file(s) have been deleted;report o file sono stati eliminati
+WebJS;report(s) or file(s) processed;report o file elaborati
+WebJS;report(s) or files(s) copied in the clipboard;report o file copiati negli appunti
+WebJS;Reports;Report
+WebJS;Schedule;Pianificazione
+WebJS;Server Version;Versione server
 WebJS;Show _MENU_ reports;Mostra il _MENU_ reports
-WebJS;Show execution message panel;
-WebJS;Show information panel;
-WebJS;Show first header line;
-WebJS;Show report result panel;
-WebJS;Show restrictions panel;
-WebJS;Showing _START_ to _END_ of _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_
-WebJS;Showing 0 to 0 of 0;Mostra 0 a 0 di 0
-WebJS;Splitter;
-WebJS;Stacked Area;
-WebJS;Starts with;
-WebJS;Sum;
-WebJS;The folder has been created;
-WebJS;The folder has been deleted;
-WebJS;The folder has been renamed;
-WebJS;The folder has been updated;
-WebJS;The report or file has been renamed;
-WebJS;Use data tables;
-WebJS;View;
-WebJS;Views and outputs;
-WebJS;Warning;
-WebJS;Web Interface Version;
-WebJS;Weekly;
-WebJS;weeks;
-WebJS;Yes;
-WebJS;Yes (the attachments are zipped);
-WebJS;Yes (the HTML result is the body);
-WebJS;Yes (a new line with sub-totals is added when the value changes);
-WebJS;Yes (element values are used for the axis);
-WebJS;No Sort;
-WebJS;By point ascending;
-WebJS;By axis label ascending;
-WebJS;By point descending;
-WebJS;By axis label descending;
-Web;Chart sort;
-WebJS;Show summary table;
-WebJS;Show page tables;
-WebJS;Show data tables;
+WebJS;Starts with;Inizia con
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;La configurazione è stata salvata. Effettua nuovamente il login se sei interessato dalla sicurezza.
+WebJS;The folder has been created;La cartella è stata creata
+WebJS;The folder has been deleted;La cartella è stata eliminata
+WebJS;The folder has been renamed;La cartella è stata rinominata
+WebJS;The folder has been updated;La cartella è stata aggiornata
+WebJS;The report or file has been renamed;Il report o il file è stato rinominato
+WebJS;Toggle Report or Folders view;Cambia vista Report o Cartelle
+WebJS;Unexpected error on server;Errore imprevisto sul server
+WebJS;User can download reports;L'utente può scaricare i report
+WebJS;User can download reports and upload reports and files;L'utente può scaricare i report e caricare report e file
+WebJS;View;Visualizza
+WebJS;View Folders;Visualizza cartelle
+WebJS;View Report;Visualizza report
+WebJS;View reports;Visualizza report
+WebJS;Views and outputs;Viste e output
+WebJS;Warning;Avviso
+WebJS;Web Interface Version;Versione interfaccia web
+WebJS;Yes;Sì
+WebJS;Yes (Folder is expanded in the tree view);Sì (la cartella è espansa nella vista ad albero)
+WebJS;Yes (Only files can be stored);Sì (possono essere memorizzati solo file)
+WebJS;Yes (User can browse sub-folders);Sì (l'utente può esplorare le sottocartelle)
+WebJS;Yes (User can create and edit sub-folders);Sì (l'utente può creare e modificare le sottocartelle)
+WebJS;Yes (User can edit his profile);Sì (l'utente può modificare il proprio profilo)
+WebJS;Yes (User is administrator of the Web Server);Sì (l'utente è amministratore del server web)
+Web;Select assistant;Seleziona assistente
+Web;Mark as favorite;Segna come preferito
+Web;Favorites;Preferiti
+Web;No favorites yet;Ancora nessun preferito
+Web;Recent;Recenti
+Web;No recent items;Nessun elemento recente
+Web;New conversation;Nuova conversazione
+Web;Sample prompts;Prompt di esempio
+Web;Sample Prompts;Prompt di esempio
+Web;No sample prompts defined;Nessun prompt di esempio definito
+Web;AI Assistant;Assistente IA
+Web;Favorites & Recent;Preferiti e recenti
+Web;Hide panel;Nascondi pannello
+Web;Ask the AI assistant…;Chiedi all'assistente IA…
+Web;Confirm Deletion;Conferma eliminazione
+Web;This action is irreversible. Are you sure you want to delete this item?;Questa azione è irreversibile. Sei sicuro di voler eliminare questo elemento?
+Web;Data Source;Origine dati
+Web;Report Assistants;Assistenti report
+Web;Select Tables or Views;Seleziona tabelle o viste
+Web;Filter tables...;Filtra tabelle...
+Web;Select All;Seleziona tutto
+Web;Deselect All;Deseleziona tutto
+Web;tables selected;tabelle selezionate
+Web;Prompt Shortcuts;Scorciatoie prompt
+Web;How can Seal AI help you today ?;Come può aiutarti Seal AI oggi ?
+Web;No current items available;Nessun elemento corrente disponibile
+Web;Current items will appear here when saved;Gli elementi correnti appariranno qui quando salvati
+Web;Drafts;Bozze
+Web;No draft items available;Nessuna bozza disponibile
+Web;Upload files or create new items with the assistant to see them here;Carica file o crea nuovi elementi con l'assistente per vederli qui
+Web;Item Details;Dettagli elemento
+Web;Loading detail. Please wait...;Caricamento dei dettagli. Attendere...
+Web;Select a row from the table to view its details;Seleziona una riga dalla tabella per visualizzarne i dettagli
+Web;Check;Controlla
+Web;Download;Scarica
+Web;Reports Assistant;Assistente report
+Web;Connection type;Tipo di connessione
+Web;Connection string;Stringa di connessione
+Web;Tables or views;Tabelle o viste
+Web;Report Assistant;Assistente report
+Web;AI Provider;Provider IA
+Web;AI model;Modello IA
+Web;AI model name (overrides default));Nome del modello IA (sostituisce il valore predefinito))
+Web;Temperature;Temperatura
+Web;Model temperature;Temperatura del modello
+Web;System prompt;Prompt di sistema
+Web;Optional sytem prompt for the assistant;Prompt di sistema opzionale per l'assistente
+Web;User prompt;Prompt utente
+Web;Default user prompts (if empty default values configured are taken);Prompt utente predefiniti (se vuoto vengono usati i valori predefiniti configurati)
+Web;User Groups allowed (No selection means no restriction);Gruppi utente consentiti (nessuna selezione significa nessuna restrizione)
+Web;Scan options;Opzioni di scansione
+Web;When to scan;Quando scansionare
+Web;Cache duration (days);Durata cache (giorni)
+Web;Cache duration (days) for scanned data;Durata cache (giorni) per i dati scansionati
+Web;Tables to scan (no selection means all tables);Tabelle da scansionare (nessuna selezione significa tutte le tabelle)
+Web;Records to scan;Record da scansionare
+Web;Number of records used for scan;Numero di record usati per la scansione
+Web;Scan Data Now;Scansiona dati ora
+Web;Execute;Esegui
+Web;Elements:;Elementi:
+Web;Restrictions:;Restrizioni:
+WebJS;Hide AI Assistant;Nascondi assistente IA
+WebJS;AI Assistant;Assistente IA
+WebJS;Running;In esecuzione
+WebJS;Request cancelled.;Richiesta annullata.
+WebJS;Remove from favorites;Rimuovi dai preferiti
+WebJS;No sample prompts defined;Nessun prompt di esempio definito
+WebJS;Rename;Rinomina
+WebJS;Delete;Elimina
+WebJS;No favorites yet;Ancora nessun preferito
+WebJS;No recent items;Nessun elemento recente
+Web;Configuration;Configurazione
+Web;Download/Upload;Scarica/Carica
+Web;Rights;Diritti
+Web;Assistants;Assistenti
+Web;Folder;Repertorio

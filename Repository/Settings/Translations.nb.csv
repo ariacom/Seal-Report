@@ -4,7 +4,7 @@ NVD3;Expanded;Utvidet
 NVD3;Grouped;Gruppert
 NVD3;Re-scale y-axis;Re-skaler y-aksis
 NVD3;Stacked;Stablet
-NVD3;Stream;
+NVD3;Stream;Strøm
 Report;!=;!=
 Report;# of % selected;# av % valgt
 Report;(filtered from _MAX_);(filtrert fra _MAX_)
@@ -14,288 +14,349 @@ Report;=;=
 Report;>;>
 Report;>=;>=
 Report;A value is required for;En verdi er påkrevet for
+Report;All;Alle
 Report;All selected;Alle valgt
 Report;and;og
+Report;Auto Fit columns;Tilpass kolonner automatisk
+Report;Auto Scroll enabled;Automatisk rulling aktivert
 Report;Average of;Gjennomsnitt av
 Report;Back to top;Tilbake til toppen
 Report;Between;Mellom
 Report;Cancel;Avbryt
 Report;Cancelling report...;Avbryter rapport
 Report;Charts;Grafer
+Report;Clear selection;Tøm utvalg
+Report;Close;Lukk
 Report;Contains;Inneholder
+Report;Contains all;Inneholder alle
+Report;Contains any;Inneholder noen
+Report;Count Distinct of;Antall unike av
 Report;Count of;Telling av
+Report;Decrement;Reduser
 Report;Description;Beskrivelse
+Report;Display header footer;Vis topp- og bunntekst
+Report;Display: Execution messages;Vis: Kjøringsmeldinger
+Report;Display: Execution messages;Vis: Kjøringsmeldinger
+Report;Display: Information messages;Vis: Informasjonsmeldinger
+Report;Display: Information messages;Vis: Informasjonsmeldinger
+Report;Does not contain;Inneholder ikke
+Report;Does not contain all;Inneholder ikke alle
+Report;Does not contain any;Inneholder ikke noen
 Report;Drill <;Nivå ut <
 Report;Drill >;Nivå inn >
+Report;Duration;Varighet
 Report;Duration (seconds);Brukt tid
+Report;Email sent to '{0}';E-post sendt til '{0}'
 Report;Ends with;Ender med
+Report;Equals;Tilsvarer
 Report;Execute;Utfør
 Report;Executing report...;Utfører rapport…
 Report;Execution date;Utført dato
 Report;Execution duration;Tidsforbruk
 Report;execution messages;Utførte meldinger
+Report;Export messages...;Eksporter meldinger...
 Report;Filter:;Filter:
+Report;Go to today;Gå til i dag
+Report;Goal;Mål
 Report;Hide;Skjul
+Report;HTML Print: Show messages;HTML-utskrift: Vis meldinger
+Report;HTML Print: Show messages;HTML-utskrift: Vis meldinger
+Report;HTML Print: Show report information;HTML-utskrift: Vis rapportinformasjon
+Report;HTML Print: Show report information;HTML-utskrift: Vis rapportinformasjon
+Report;HTML to PDF;HTML til PDF
+Report;Increment;Øk
+Report;Information panel enabled;Informasjonspanel aktivert
+Report;Information panel enabled and shown;Informasjonspanel aktivert og vist
+Report;Information panel hidden;Informasjonspanel skjult
 Report;Invalid date;Feil dato
 Report;Invalid numeric value;Feil nummerisk verdi
+Report;Is between;Er mellom
+Report;Is Blank;Er tom
+Report;Is different from;Er forskjellig fra
+Report;Is empty;Er tom
+Report;Is greater or equal than;Er større eller lik
+Report;Is greater than;Er større enn
+Report;Is not between;Er ikke mellom
+Report;Is Not Blank;Er ikke tom
+Report;Is not empty;Er ikke tom
+Report;Is not Null;Er ikke Null
+Report;Is Null;Er Null
+Report;Is smaller or equal than;Er mindre eller lik enn
+Report;Is smaller than;Er mindre enn
+Report;Landscape;Liggende
+Report;Logs;Logger
 Report;Maximum of;Maksimum av
+Report;Messages panel enabled;Meldingspanel aktivert
+Report;Messages panel enabled and shown;Meldingspanel aktivert og vist
+Report;Messages panel enabled and shown only during execution;Meldingspanel aktivert og vist kun under kjøring
+Report;Messages panel hidden;Meldingspanel skjult
 Report;Minimum of;Minimum
 Report;Model;Modell
+Report;Model loaded...;Modell lastet...
+Report;Models loaded...;Modeller lastet...
 Report;New report;Ny rapport
+Report;Next Century;Neste århundre
+Report;Next Decade;Neste tiår
+Report;Next Month;Neste måned
+Report;Next Year;Neste år
+Report;No;Nei
+Report;No records;Ingen poster
 Report;No records. The report output generation has been cancelled.;Ingen rader tilgjengelig. Rapporten er avbrutt.
 Report;No reports;Ingen rapporter
 Report;No rows;Ingen rad
 Report;Not Between;Ikke mellom
 Report;Not Contains;Inneholder ikke
 Report;Now;Nå
+Report;Options;Alternativer
+Report;or;eller
 Report;Page;Side
 Report;"Page &p; of &P;";"Side &p; av &P;"
+Report;Page orientation;Sideorientering
+Report;Page size;Sidestørrelse
 Report;Pages;Sider
+Report;Pick Hour;Velg time
+Report;Pick Minute;Velg minutt
+Report;Pick Second;Velg sekund
+Report;Please enter a value;Skriv inn en verdi
+Report;Please enter at least a value;Skriv inn minst én verdi
+Report;Please find the report '{0}' in attachment.;Du finner rapporten '{0}' som vedlegg.
+Report;Please find your authentication code;Her er autentiseringskoden din
+Report;Please wait, the report result is being generated in another window;Vennligst vent, rapportresultatet genereres i et annet vindu
+Report;Previous Century;Forrige århundre
+Report;Previous Decade;Forrige tiår
+Report;Previous Month;Forrige måned
+Report;Previous Year;Forrige år
+Report;Print: Page orientation;Utskrift: Sideorientering
+Report;Print: Show logo;Utskrift: Vis logo
 Report;Processing;Utfører
 Report;Processing...;Utfører…
-Report;Report;
-Report;Model loaded...;
-Report;No records;
-Report;Task executed...;
-Report;Models loaded...;
-Report;Tasks executed...;
-Report;Results;
 Report;Records;Rader
+Report;Refresh;Oppdater
+Report;Report;Rapport
+Report;Report description;Rapportbeskrivelse
 Report;Report has been cancelled;Rapport er blitt avbrutt
 Report;report information;rapportinformasjon
-Report;report restrictions;
+Report;report restrictions;rapportbegrensninger
 Report;Report result generated in '{0}';Rapport generert på '{0}'
-Report;report result panel;
+Report;Report result options;Alternativer for rapportresultat
+Report;report result panel;rapportresultatpanel
+Report;Report summary;Rapportsammendrag
 Report;Restrictions;Restriksjoner
+Report;Results;Resultater
+Report;Scale;Skala
 Report;second;sekund
 Report;seconds;sekunder
 Report;Select all;Velg alle
+Report;Select Decade;Velg tiår
+Report;Select Month;Velg måned
+Report;Select Time;Velg tid
+Report;Select Year;Velg år
 Report;Show;Vis
 Report;Show _MENU_ reports;Vis _MENU_ rapporter
 Report;Show _MENU_ rows;Vis _MENU_ rader
+Report;Show messages;Vis meldinger
+Report;Show messages;Vis meldinger
+Report;Show report information;Vis rapportinformasjon
+Report;Show report information;Vis rapportinformasjon
+Report;Show/Hide Restrictions;Vis/skjul begrensninger
 Report;Showing _START_ to _END_ of _TOTAL_;Viser _START_ til _END_ av _TOTAL_
 Report;Showing 0 to 0 of 0;Viser 0 to 0 av 0
 Report;Starting execution...;Starter utføring…
 Report;Starts with;Starter med
+Report;Subtotal;Delsum
 Report;Sum of;Sum av
-Report;Summary;
+Report;Summary;Sammendrag
+Report;Table of Contents;Innholdsfortegnelse
+Report;Tabs to show;Faner som skal vises
+Report;Task executed...;Oppgave utført...
+Report;Tasks executed...;Oppgaver utført...
 Report;The report has been generated.;Rapporten er ferdig.
-Report;This report has execution errors. Please check details in the Windows Event Viewer...;Rapporten kan ikke utføres. Vennligst sjekk detaljer i Windows Event Viewer…
+Report;This report has execution errors. Please check details in the Logs Files...;Denne rapporten har kjøringsfeil. Sjekk detaljene i loggfilene...
+Report;ThisHour;DenneTimen
+Report;ThisMinute;DetteMinuttet
 Report;ThisMonth;DenneMåned
+Report;ThisQuarter;DetteKvartalet
+Report;ThisSemester;DetteHalvåret
 Report;ThisWeek;DenneUken
 Report;ThisYear;DetteÅret
 Report;Today;I dag
+Report;Toggle Period;Veksle periode
 Report;Total;Totalt
 Report;Use the date format '{0}' or one of the following keywords:;Bruk datoformat '{0}' eller en av følgende nøkkelord:
-Report;View Excel Result;Vis i Excel
-Report;View HTML Result;Vis i HTML
-Report;View PDF Result;Vis i PDF
-Report;View Print Result;Vis for Print
+Report;View;Vis
 Report;View CSV Result;Vis i CSV
+Report;View Excel Converter Result;Vis Excel-konverteringsresultat
+Report;View Excel Result;Vis i Excel
+Report;View HTML Print Result;Vis HTML-utskriftsresultat
+Report;View HTML Result;Vis i HTML
+Report;View HTML to PDF Result;Vis HTML-til-PDF-resultat
+Report;View Json Result;Vis JSON-resultat
+Report;View PDF Converter Result;Vis PDF-konverteringsresultat
+Report;View PDF Result;Vis i PDF
 Report;View report result file;Vis oppsummering av rapport
-Report;Equals;Tilsvarer
-Report;Is between;Er mellom
-Report;Is different from;Er forskjellig fra
-Report;Does not contain;Inneholder ikke
-Report;Is empty;Er tom
-Report;Is greater or equal than;Er større eller lik
-Report;Is greater than;Er større enn
-Report;Is not between;Er ikke mellom
-Report;Is not empty;Er ikke tom
-Report;Is not Null;Er ikke Null
-Report;Is Null;Er Null
-Report;Is smaller or equal than;Er mindre eller lik enn
-Report;Is smaller than;Er mindre enn
-Report;Auto Scroll enabled;
-Report;Export messages...;
-Web;Actions;Handling
-Web;Aggregate;Summér
-Web;BCC;BCC
-Web;Body;Meldingstekst
+Report;View Text Result;Vis tekstresultat
+Report;View XML Result;Vis XML-resultat
+Report;Warning: The maximum number of records is reached;Advarsel: Maksimalt antall poster er nådd
+Report;Yes;Ja
+Web;Add;Legg til
+Web;All;Alle
+Web;Auto-Refresh (seconds);Automatisk oppdatering (sekunder)
+Web;Back to login with user name and password;Tilbake til innlogging med brukernavn og passord
 Web;Cancel;Avbryt
-Web;CC;CC
-Web;Chart axis;Diagram aksis
-Web;Chart height;Diagram høyde
-Web;Chart title;Diagram tittel
-Web;Chart JS;Diagram JS
-Web;Chart NVD3;Diagram NVD3
-Web;Chart Plotly;Diagram Plotly
-Web;Chart width;Diagram bredde
+Web;Change password;Endre passord
+Web;Change password;Endre passord
+Web;Change your password;Endre passordet ditt
+Web;Chart sort;Sorter på graf
 Web;Close;Avslutt
-Web;Connection;Tilkopling
+Web;Color;Farge
+Web;Confirm your new password;Bekreft det nye passordet ditt
 Web;Copy;Kopier
+Web;Create in folder;Opprett i mappe
 Web;Create new folder;Opprett ny mappe
+Web;CSS Format;CSS-format
+Web;Culture;Kultur
+Web;Current password;Nåværende passord
 Web;Cut;Klipp
-Web;Days;Dager
-Web;Days of the week;Dager i uken
-Web;Default body;Standard tekst
-Web;Default sender address;Standard avsender
-Web;Default subject;Standard emne
+Web;Data source connections;Datakildetilkoblinger
+Web;Default view;Standardvisning
 Web;Delete;Slett
 Web;Delete folder;Slett mappe
 Web;Description;Beskrivelse
 Web;Device;Enhet
 Web;Disconnect;Logg ut
 Web;Display options;Vis valg
-Web;Elements;Elementer
-Web;End date;Sluttdato
-Web;End date is before start date;Sluttdato er før startdato
-Web;Enter a password to protect the Zip file;Skriv et passord for å beskytte zip filen
-Web;"Enter addresses separated by ;";"Skriv inn adresser delt med ;"
-Web;Enter password;Skriv inn ditt passord
-Web;Enter the file name without extension;Skriv inn filnavnet uten filbeskrivelse
-Web;Enter user name;Skriv inn ditt brukernavn
-Web;Enter your new file name;Skriv inn ditt nye filnavn
-Web;Error;Feil
-Web;Error: This report name exists already.;Feil: Rapportnavnet eksisterer allerede
-Web;Execute;Utfør
-Web;Execute now;Utfør Planlagt nå
+Web;Edit;Rediger
+Web;Edit configuration;Rediger konfigurasjon
+Web;Edit entry;Rediger oppføring
+Web;Edit profile;Rediger profil
 Web;Edition;Versjon
-Web;Execution;Utført
-Web;File name;Filnavn
-Web;Folder;Mappe
+Web;Email;E-post
+Web;Enter password;Skriv inn ditt passord
+Web;Enter user name;Skriv inn ditt brukernavn
+Web;Enter your current password;Skriv inn ditt nåværende passord
+Web;Enter your new file name;Skriv inn ditt nye filnavn
+Web;Enter your new password;Skriv inn det nye passordet ditt
+Web;Enter your security code;Skriv inn sikkerhetskoden din
+Web;Enter your user identifier or email;Skriv inn brukeridentifikatoren eller e-posten din
+Web;Error;Feil
+Web;Error: only files (and not reports) can be copied to this folder.;Feil: Kun filer (og ikke rapporter) kan kopieres til denne folderen.
+Web;Error: the destination file name contains invalid characters.;Feil: målfilnavnet inneholder ugyldige tegn.
+Web;Error: the destination folder name contains invalid characters.;Feil: målmappenavnet inneholder ugyldige tegn.
+Web;Expand in Treeview;Utvid i trevisning
+Web;Export;Eksporter
+Web;Files only;Kun filer
+Web;Folder Permissions;Mapperettigheter
 Web;Folders;Mapper
-Web;for a duration of;For en varighet av
-Web;Format;Format
-Web;From;Fra
-Web;Grid mode;Grid mode
-Web;Inconsistent duration or interval for the schedule. Check your entries.;Feil på intervaller for handlingen. Sjekk dine valg.
+Web;Forget your password ?;Glemt passordet ditt?
+Web;Group name;Gruppenavn
+Web;Group name;Gruppenavn
+Web;Groups;Grupper
+Web;Groups;Grupper
+Web;Height;Høyde
+Web;Icon;Ikon
+Web;Information;Informasjon
+Web;Invalid security code;Ugyldig sikkerhetskode
 Web;Invalid user name or password;Feil brukernavn eller passord
-Web;Is enabled;Er aktivert
-Web;Is required;Er påkrevet
-Web;Is Multiline;
-Web;Last;Siste
-Web;Last modification;Sist endret
+Web;Is dynamic;Er dynamisk
+Web;Last execution at;Siste kjøring
 Web;Licensed to;Registrert til
 Web;Login;Logg inn
+Web;Login ID;Innloggings-ID
+Web;Logins;Innlogginger
 Web;Logout;Logg ut
 Web;Logout the user;Logg ut bruker
-Web;Manage folders;Behandle mapper
-Web;Months;Måneder
+Web;Manage Folders;Administrer mapper
+Web;Manage sub-folders;Administrer undermapper
 Web;Name;Navn
 Web;New;Ny
 Web;New folder name;Nytt mappenavn
-Web;No Email destination specified in the schedule;Ingen epostadresse spesifisert i handlingen
-Web;No file name specified in the schedule;Ingen filnavn spesifisert i handlingen
+Web;New folder path;Ny mappebane
+Web;New password;Nytt passord
+Web;None;Ingen
 Web;OK;OK
-Web;Operator;Operatør
-Web;"Optional addresses separated by ;";"Alternative adresser delt med ;"
-Web;Optional title chart;Alternativt navn på diagram
-Web;Options;Opsjoner
+Web;On startup;Ved oppstart
+Web;Optional chart title;Valgfri diagramtittel
+Web;Optional menu name;Valgfritt menynavn
 Web;Output;Output av
 Web;Password;Passord
 Web;Paste;Lim inn
+Web;PDF Conversion delay;Forsinkelse for PDF-konvertering
 Web;Personal;Personlig
-Web;Pivot mode;Pivot mode
+Web;Personal folder;Personlig mappe
+Web;Phone;Telefon
 Web;Please wait;Vennligst vent
 Web;Profile;Profil
 Web;Profile information;Beskrivelse av profil
-Web;Prompt;Spør
-Web;Prompt at run-time;Spør ved kjøring
-Web;Recur every;Gjentas hver
 Web;Refresh;Oppdater
-Web;Remove;Fjern
-Web;Remove all;Fjern alle
+Web;Re-init your password;Tilbakestill passordet ditt
+Web;Reload and execute;Last inn på nytt og kjør
 Web;Rename;Endre navn
-Web;Rename folder;Endre mappenavn
-Web;Repeat every;Genta hver
+Web;Rename or move folder;Gi nytt navn til eller flytt mappe
+Web;Rename, move or copy;Gi nytt navn, flytt eller kopier
 Web;Report;Rapport
+Web;Report execution mode;Kjøringsmodus for rapport
 Web;Report name;Navn på rapport
 Web;Report title;Tittel på rapport
 Web;Report title if different from report name;Tittel på rapport hvis forskjellig fra navn på rapport
 Web;Reports;Rapporter
-Web;Result as body;Resultat som tekst
+Web;Reports menu;Rapportmeny
+Web;Repository connection;Repositorytilkobling
+Web;Reset password;Tilbakestill passord
+Web;Reset your password;Tilbakestill passordet ditt
 Web;Save;Lagre
-Web;Schedule;Planlegg
 Web;Search;Søk
-Web;Show totals;Vis totaler
-Web;Show sub-totals;
-Web;Sort;Sorter
-Web;Start date;Start dato
-Web;Subject;Emne
-Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;Maksimalt antall brukere er oppnådd for din lisens ({0}). Vennligst forsøk å logge inn senere...
-Web;To;Til
-Web;Total aggr.;Total av
+Web;Security code;Sikkerhetskode
+Web;Show sub-folders;Vis undermapper
+Web;Startup report name;Navn på oppstartsrapport
+Web;The favorite has been updated;Favoritten er oppdatert
+Web;Two-Factor Authentication;Tofaktorautentisering
 Web;Type;Type
+Web;Type a new password;Skriv inn et nytt passord
+Web;Upload;Last opp
 Web;User groups;Brukergrupper
+Web;User identifier or email;Brukeridentifikator eller e-post
 Web;User name;Brukernavn
 Web;Users;Brukere
-Web;Value;Verdi
-Web;Values;Verdier
-Web;Error: only files (and not reports) can be copied to this folder.;Feil: Kun filer (og ikke rapporter) kan kopieres til denne folderen.
-Web;Zip attachments;Zip vedlegg
-Web;Zip password;Zip passord
-WebJS;Options;
-WebJS;No calculation option;
-WebJS;% of the row;
-WebJS;% of the column;
-WebJS;% of the total;
+Web;Web product name;Navn på webprodukt
+Web;Width;Bredde
 WebJS;# of % selected;# av % valgt
-WebJS;(filtered from _MAX_);(filtrert fra _MAX_)
-WebJS;No Output;Ingen målområde
-WebJS;No Schedule;Ingenting planlagt
-WebJS;1 Decimal;1 desimal
-WebJS;2 Decimals;2 desimaler
-WebJS;3 Decimals;3 desimaler
-WebJS;4 Decimals;4 desimaler
-WebJS;Percentage;
-WebJS;Percentage 1 Dec.;
-WebJS;Percentage 2 Dec.;
+WebJS;Actions;Handlinger
 WebJS;All selected;Alle valgt
-WebJS;Ascendant;Stigende
-WebJS;Automatic ascendant;Automatisk stignende
-WebJS;Automatic descendant;Automatisk synkende
-WebJS;Average;Gjennomsnitt
-WebJS;Average of;Gjennomsnitt av
-WebJS;Axis;Aksis
-WebJS;Bar;Bar
+WebJS;Allow only execution in a new window;Tillat kun kjøring i et nytt vindu
+WebJS;Cancel;Avbryt
+WebJS;Configuration for;Konfigurasjon for
 WebJS;Contains;Inneholder
-WebJS;Count;Tell
-WebJS;Count of;Telling av
-WebJS;CSV;CSV
-WebJS;Data tables responsive;
-WebJS;Daily;Daglig
-WebJS;day;dag
-WebJS;days;dager
-WebJS;Decimal;Desimal
+WebJS;Contains all;Inneholder alle
+WebJS;Contains any;Inneholder noen
+WebJS;Copy;Kopier
+WebJS;Copy of;Kopi av
+WebJS;Copy to;Kopier til
 WebJS;Default;Standard
+WebJS;Default culture;Standardkultur
+WebJS;Default mode;Standardmodus
 WebJS;Default report connection;Standard kopling for rapport
 WebJS;Default repository connection;Standard kopling for datasenter
-WebJS;Descendant;Synkende
+WebJS;Default startup;Standard oppstart
+WebJS;Do not execute report;Ikke kjør rapport
 WebJS;Do you really want to delete the reports or files selected ?;Ønsker du virkelig å slette rapportene eller filene valgt?
 WebJS;Does not contain;Inneholder ikke
-WebJS;Drop your Column elements;Slipp dine elementer for Kolonner
-WebJS;Drop your Data;Slipp dine Data
-WebJS;Drop your Data elements;Slipp dine elementer for Data
-WebJS;Drop your Elements;Slipp dine elementer
-WebJS;Drop your Page elements;Slipp dine elementer for Siden
-WebJS;Drop your Restrictions;Slipp dine Restriksjoner
-WebJS;Drop your Row elements;Slipp dine elementer for Rader
+WebJS;Does not contain all;Inneholder ikke alle
+WebJS;Does not contain any;Inneholder ikke noen
+WebJS;Download report;Last ned rapport
 WebJS;Edit report;Endre rapport
-WebJS;Email;Epost
+WebJS;Edit reports / Manage files;Rediger rapporter / Administrer filer
+WebJS;Edit schedules / View files;Rediger tidsplaner / Vis filer
 WebJS;Ends with;Ender med
 WebJS;Equals;Tilsvarer
 WebJS;Error;Feil
-WebJS;Error : Unable to connect to the server;Feil: Kan ikke kople til server
-WebJS;Excel;Excel
-WebJS;Filter;Filter
+WebJS;Execute report in a new window;Kjør rapport i et nytt vindu
+WebJS;Execute report in the current window;Kjør rapport i det gjeldende vinduet
+WebJS;Execute reports / View files;Kjør rapporter / Vis filer
+WebJS;Execute reports and outputs / View files;Kjør rapporter og utdata / Vis filer
+WebJS;Execute the last report;Kjør den siste rapporten
+WebJS;Execute the report;Kjør rapporten
+WebJS;Favorites;Favoritter
 WebJS;Folder;Mappe
-WebJS;For rows;For rader
-WebJS;For columns;For kolonner
-WebJS;For rows and columns;For rader og kolonner
-WebJS;For rows (total only);For rader
-WebJS;For rows and columns (total only);For rader og kolonner
-WebJS;Force execution;Tving utføring
-WebJS;Use full screen width;
-WebJS;General;Generell
-WebJS;General date long time;Generell dato lang tid
-WebJS;General date short time;Generell dato kort tid
-WebJS;Horizontal Bar;Horisontal Bar
-WebJS;hour;time
-WebJS;hours;timer
-WebJS;HTML;HTML
-WebJS;HTML Print;HTML Utskrift
-WebJS;Indefinitely;Uendelig
 WebJS;Is between;Er mellom
 WebJS;Is different from;Er forskjellig fra
 WebJS;Is empty;Er tom
@@ -307,93 +368,136 @@ WebJS;Is not Null;Er ikke Null
 WebJS;Is Null;Er Null
 WebJS;Is smaller or equal than;Er mindre eller lik enn
 WebJS;Is smaller than;Er mindre enn
-WebJS;Line;Linje
-WebJS;Long date;Lang dato
-WebJS;Maximum;Maskimum
-WebJS;Maximum of;Maksimum av
-WebJS;Minimum;Minimum
-WebJS;Minimum of;Minimum av
-WebJS;minute;minutt
-WebJS;minutes;minutter
-WebJS;Modified;Endret
-WebJS;Monthly;Månedlig
-WebJS;New Output for;Nytt målområde
-WebJS;New report;Ny rapport
-WebJS;New Schedule;Ny Plan
+WebJS;Last modification;Siste endring
+WebJS;Mark as favorite;Merk som favoritt
+WebJS;Model;Modell
+WebJS;New folder configuration;Konfigurasjon for ny mappe
+WebJS;New group;Ny gruppe
+WebJS;New login;Ny innlogging
 WebJS;No;Nei
-WebJS;No prompt;Ingen spørsmål
-WebJS;No report;Ingen rapport
-WebJS;No schedule;Ingen planlegging
-WebJS;No total;Ingen totaler
-WebJS;No (axis values are linear);
+WebJS;No download (except files) or upload;Ingen nedlasting (unntatt filer) eller opplasting
+WebJS;No folder configuration;Ingen mappekonfigurasjon
+WebJS;No login;Ingen innlogging
+WebJS;No personal folder;Ingen personlig mappe
+WebJS;No right;Ingen rettighet
 WebJS;None;Ingen
 WebJS;Not sorted;Ikke sortert
-WebJS;Number;Nummer
-WebJS;Number 1 dec.;Nummer 1 des.
-WebJS;Number 2 dec.;Nummer 2 des.
-WebJS;Number 3 dec.;Nummer 3 des.
-WebJS;Number 4 dec.;Nummer 4 des.
-WebJS;One time;En gang
+WebJS;OK;OK
+WebJS;Options;Alternativer
 WebJS;Output;Produksjon
-WebJS;PDF;PDF
-WebJS;PDF Print;PDF Utskrift
-WebJS;Pie;Kake
+WebJS;Personal folder for files only;Personlig mappe kun for filer
+WebJS;Personal folder for reports and files;Personlig mappe for rapporter og filer
 WebJS;Please wait;Vennligst vent
-WebJS;Please note that only schedules can be edited for this report.;Merk at kun planlagte hendelser kan endres for denne rapporten.
-WebJS;Scatter;Punkt
-WebJS;Polar Area;
-WebJS;Radar;
-WebJS;Private (The output cannot be executed by other users);Privat (kan ikke utføres av andre brukere)
-WebJS;Private (The output cannot be edited by other users);Privat (kan ikke endres av andre brukere)
-WebJS;Prompt at execution;Spør før utføring
-WebJS;Prompt only one value;Spør kun en gang
-WebJS;Public;Offentlig
-WebJS;Remove;Fjern
-WebJS;Report has been modified, do you really want to close ?;Rapporten er endret, ønsker du virkelig å avslutte?
-WebJS;Report saved;Rapport er lagret
+WebJS;Processing;Behandler
+WebJS;Profile;Profil
+WebJS;Recents;Nylige
+WebJS;Report;Rapport
 WebJS;report(s) or file(s) cut in the clipboard;rapport(er) eller fil(er) klippet til minne
 WebJS;report(s) or file(s) have been deleted;rapport(er) eller fil(er) er blitt slettet
 WebJS;report(s) or file(s) processed;rapport(er) eller fil(er) utført
 WebJS;report(s) or files(s) copied in the clipboard;rapport(er) eller fil(er) kopiert til minne
+WebJS;Reports;Rapporter
 WebJS;Schedule;Planlegg
-WebJS;Select all;Velg alle
 WebJS;Server Version;Server versjon
-WebJS;Short date;Kort dato
 WebJS;Show _MENU_ reports;Vis _MENU_ rapporter
-WebJS;Show execution message panel;Vis utførte meldinger
-WebJS;Show information panel;Vis informasjon
-WebJS;Show first header line;Vis informasjon
-WebJS;Show report result panel;Vis resultater av rapporter
-WebJS;Show restrictions panel;Vis begrensninger
-WebJS;Showing _START_ to _END_ of _TOTAL_;Viser _START_ til _END_ av _TOTAL_
-WebJS;Showing 0 to 0 of 0;Viser 0 to 0 av 0
-WebJS;Splitter;Separator
-WebJS;Stacked Area;Stablet område
 WebJS;Starts with;Starter med
-WebJS;Sum;Sum
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfigurasjonen er lagret. Logg inn på nytt hvis du er påvirket av sikkerheten.
 WebJS;The folder has been created;Mappen er blitt opprettet
 WebJS;The folder has been deleted;Mappen er blitt slettet
 WebJS;The folder has been renamed;Mappen har fått nytt navn
 WebJS;The folder has been updated;Mappen er blitt oppdatert
 WebJS;The report or file has been renamed;Rapporten eller filen har fått nytt navn
-WebJS;Use data tables;Use av
+WebJS;Toggle Report or Folders view;Veksle mellom rapport- og mappevisning
+WebJS;Unexpected error on server;Uventet feil på serveren
+WebJS;User can download reports;Brukeren kan laste ned rapporter
+WebJS;User can download reports and upload reports and files;Brukeren kan laste ned rapporter og laste opp rapporter og filer
 WebJS;View;Vis
+WebJS;View Folders;Vis mapper
+WebJS;View Report;Vis rapport
+WebJS;View reports;Vis rapporter
 WebJS;Views and outputs;Visning og Produksjoner
 WebJS;Warning;Advarsel
 WebJS;Web Interface Version;Web versjon
-WebJS;Weekly;Ukentlig
-WebJS;weeks;uker
 WebJS;Yes;Ja
-WebJS;Yes (the attachments are zipped);Ja (vedlegget er zippet)
-WebJS;Yes (the HTML result is the body);Ja (HTML resultatet er i meldingen)
-WebJS;Yes (a new line with sub-totals is added when the value changes);
-WebJS;Yes (element values are used for the axis);
-WebJS;No Sort;Ingen sortering
-WebJS;By point ascending;Etter Punkt i økende
-WebJS;By axis label ascending;Etter Axis etikett økende
-WebJS;By point descending;Etter Punkt synkende 
-WebJS;By axis label descending;Etter Axis etikett synkende
-Web;Chart sort;Sorter på graf
-WebJS;Show summary table;
-WebJS;Show page tables;
-WebJS;Show data tables;
+WebJS;Yes (Folder is expanded in the tree view);Ja (Mappen er utvidet i trevisningen)
+WebJS;Yes (Only files can be stored);Ja (Kun filer kan lagres)
+WebJS;Yes (User can browse sub-folders);Ja (Brukeren kan bla i undermapper)
+WebJS;Yes (User can create and edit sub-folders);Ja (Brukeren kan opprette og redigere undermapper)
+WebJS;Yes (User can edit his profile);Ja (Brukeren kan redigere profilen sin)
+WebJS;Yes (User is administrator of the Web Server);Ja (Brukeren er administrator av webserveren)
+Web;Select assistant;Velg assistent
+Web;Mark as favorite;Merk som favoritt
+Web;Favorites;Favoritter
+Web;No favorites yet;Ingen favoritter ennå
+Web;Recent;Nylig
+Web;No recent items;Ingen nylige elementer
+Web;New conversation;Ny samtale
+Web;Sample prompts;Eksempelforespørsler
+Web;Sample Prompts;Eksempelforespørsler
+Web;No sample prompts defined;Ingen eksempelforespørsler definert
+Web;AI Assistant;AI-assistent
+Web;Favorites & Recent;Favoritter og nylige
+Web;Hide panel;Skjul panel
+Web;Ask the AI assistant…;Spør AI-assistenten…
+Web;Confirm Deletion;Bekreft sletting
+Web;This action is irreversible. Are you sure you want to delete this item?;Denne handlingen kan ikke angres. Er du sikker på at du vil slette dette elementet?
+Web;Data Source;Datakilde
+Web;Report Assistants;Rapportassistenter
+Web;Select Tables or Views;Velg tabeller eller visninger
+Web;Filter tables...;Filtrer tabeller...
+Web;Select All;Velg alle
+Web;Deselect All;Fjern alle
+Web;tables selected;tabeller valgt
+Web;Prompt Shortcuts;Snarveier for forespørsler
+Web;How can Seal AI help you today ?;Hvordan kan Seal AI hjelpe deg i dag?
+Web;No current items available;Ingen gjeldende elementer tilgjengelig
+Web;Current items will appear here when saved;Gjeldende elementer vises her når de er lagret
+Web;Drafts;Utkast
+Web;No draft items available;Ingen utkastelementer tilgjengelig
+Web;Upload files or create new items with the assistant to see them here;Last opp filer eller opprett nye elementer med assistenten for å se dem her
+Web;Item Details;Elementdetaljer
+Web;Loading detail. Please wait...;Laster detalj. Vennligst vent...
+Web;Select a row from the table to view its details;Velg en rad fra tabellen for å se detaljene
+Web;Check;Sjekk
+Web;Download;Last ned
+Web;Reports Assistant;Rapportassistent
+Web;Connection type;Tilkoblingstype
+Web;Connection string;Tilkoblingsstreng
+Web;Tables or views;Tabeller eller visninger
+Web;Report Assistant;Rapportassistent
+Web;AI Provider;AI-leverandør
+Web;AI model;AI-modell
+Web;AI model name (overrides default));Navn på AI-modell (overstyrer standard))
+Web;Temperature;Temperatur
+Web;Model temperature;Modelltemperatur
+Web;System prompt;Systemforespørsel
+Web;Optional sytem prompt for the assistant;Valgfri systemforespørsel for assistenten
+Web;User prompt;Brukerforespørsel
+Web;Default user prompts (if empty default values configured are taken);Standard brukerforespørsler (hvis tom brukes konfigurerte standardverdier)
+Web;User Groups allowed (No selection means no restriction);Tillatte brukergrupper (Ingen valg betyr ingen begrensning)
+Web;Scan options;Skannealternativer
+Web;When to scan;Når skal det skannes
+Web;Cache duration (days);Hurtigbufferens varighet (dager)
+Web;Cache duration (days) for scanned data;Hurtigbufferens varighet (dager) for skannede data
+Web;Tables to scan (no selection means all tables);Tabeller som skal skannes (ingen valg betyr alle tabeller)
+Web;Records to scan;Poster som skal skannes
+Web;Number of records used for scan;Antall poster brukt til skanning
+Web;Scan Data Now;Skann data nå
+Web;Execute;Utfør
+Web;Elements:;Elementer:
+Web;Restrictions:;Begrensninger:
+WebJS;Hide AI Assistant;Skjul AI-assistent
+WebJS;AI Assistant;AI-assistent
+WebJS;Running;Kjører
+WebJS;Request cancelled.;Forespørsel avbrutt.
+WebJS;Remove from favorites;Fjern fra favoritter
+WebJS;No sample prompts defined;Ingen eksempelforespørsler definert
+WebJS;Rename;Gi nytt navn
+WebJS;Delete;Slett
+WebJS;No favorites yet;Ingen favoritter ennå
+WebJS;No recent items;Ingen nylige elementer
+Web;Configuration;Konfigurasjon
+Web;Download/Upload;Nedlasting/Opplasting
+Web;Rights;Rettigheter
+Web;Assistants;Assistenter
+Web;Folder;Mappe

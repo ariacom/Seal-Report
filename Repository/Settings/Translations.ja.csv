@@ -1,0 +1,503 @@
+﻿Context;Reference;ja
+NVD3;(right axis);(右軸)
+NVD3;Expanded;展開
+NVD3;Grouped;グループ化
+NVD3;Re-scale y-axis;Y軸を再スケール
+NVD3;Stacked;積み上げ
+NVD3;Stream;ストリーム
+Report;!=;!=
+Report;# of % selected;選択された % のうち #
+Report;(filtered from _MAX_);(_MAX_ から絞り込み)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;次の項目には値が必要です
+Report;All;すべて
+Report;All selected;すべて選択済み
+Report;and;かつ
+Report;Auto Fit columns;列を自動調整
+Report;Auto Scroll enabled;自動スクロール有効
+Report;Average of;平均:
+Report;Back to top;先頭に戻る
+Report;Between;範囲内
+Report;Cancel;キャンセル
+Report;Cancelling report...;レポートをキャンセルしています...
+Report;Charts;グラフ
+Report;Clear selection;選択をクリア
+Report;Close;閉じる
+Report;Contains;次を含む
+Report;Contains all;すべてを含む
+Report;Contains any;いずれかを含む
+Report;Count Distinct of;個別カウント:
+Report;Count of;カウント:
+Report;Decrement;減少
+Report;Description;説明
+Report;Display header footer;ヘッダーとフッターを表示
+Report;Display: Execution messages;表示: 実行メッセージ
+Report;Display: Execution messages;表示: 実行メッセージ
+Report;Display: Information messages;表示: 情報メッセージ
+Report;Display: Information messages;表示: 情報メッセージ
+Report;Does not contain;次を含まない
+Report;Does not contain all;すべてを含まない
+Report;Does not contain any;いずれも含まない
+Report;Drill <;ドリル <
+Report;Drill >;ドリル >
+Report;Duration;期間
+Report;Duration (seconds);期間 (秒)
+Report;Email sent to '{0}';'{0}' にメールを送信しました
+Report;Ends with;次で終わる
+Report;Equals;等しい
+Report;Execute;実行
+Report;Executing report...;レポートを実行しています...
+Report;Execution date;実行日時
+Report;Execution duration;実行時間
+Report;execution messages;実行メッセージ
+Report;Export messages...;メッセージをエクスポート...
+Report;Filter:;フィルター:
+Report;Go to today;今日へ移動
+Report;Goal;目標
+Report;Hide;非表示
+Report;HTML Print: Show messages;HTML 印刷: メッセージを表示
+Report;HTML Print: Show messages;HTML 印刷: メッセージを表示
+Report;HTML Print: Show report information;HTML 印刷: レポート情報を表示
+Report;HTML Print: Show report information;HTML 印刷: レポート情報を表示
+Report;HTML to PDF;HTML を PDF に変換
+Report;Increment;増加
+Report;Information panel enabled;情報パネル有効
+Report;Information panel enabled and shown;情報パネル有効かつ表示
+Report;Information panel hidden;情報パネル非表示
+Report;Invalid date;無効な日付
+Report;Invalid numeric value;無効な数値
+Report;Is between;範囲内である
+Report;Is Blank;空白である
+Report;Is different from;次と異なる
+Report;Is empty;空である
+Report;Is greater or equal than;以上である
+Report;Is greater than;より大きい
+Report;Is not between;範囲外である
+Report;Is Not Blank;空白でない
+Report;Is not empty;空でない
+Report;Is not Null;Null でない
+Report;Is Null;Null である
+Report;Is smaller or equal than;以下である
+Report;Is smaller than;より小さい
+Report;Landscape;横向き
+Report;Logs;ログ
+Report;Maximum of;最大:
+Report;Messages panel enabled;メッセージパネル有効
+Report;Messages panel enabled and shown;メッセージパネル有効かつ表示
+Report;Messages panel enabled and shown only during execution;メッセージパネル有効かつ実行中のみ表示
+Report;Messages panel hidden;メッセージパネル非表示
+Report;Minimum of;最小:
+Report;Model;モデル
+Report;Model loaded...;モデルを読み込みました...
+Report;Models loaded...;モデルを読み込みました...
+Report;New report;新規レポート
+Report;Next Century;次の世紀
+Report;Next Decade;次の10年
+Report;Next Month;翌月
+Report;Next Year;翌年
+Report;No;いいえ
+Report;No records;レコードなし
+Report;No records. The report output generation has been cancelled.;レコードなし。レポート出力の生成はキャンセルされました。
+Report;No reports;レポートなし
+Report;No rows;行なし
+Report;Not Between;範囲外
+Report;Not Contains;含まない
+Report;Now;現在
+Report;Options;オプション
+Report;or;または
+Report;Page;ページ
+Report;"Page &p; of &P;";"&P; ページ中 &p; ページ"
+Report;Page orientation;ページの向き
+Report;Page size;ページサイズ
+Report;Pages;ページ
+Report;Pick Hour;時を選択
+Report;Pick Minute;分を選択
+Report;Pick Second;秒を選択
+Report;Please enter a value;値を入力してください
+Report;Please enter at least a value;少なくとも1つの値を入力してください
+Report;Please find the report '{0}' in attachment.;添付のレポート '{0}' をご確認ください。
+Report;Please find your authentication code;認証コードをご確認ください
+Report;Please wait, the report result is being generated in another window;お待ちください。レポート結果は別ウィンドウで生成されています
+Report;Previous Century;前の世紀
+Report;Previous Decade;前の10年
+Report;Previous Month;前月
+Report;Previous Year;前年
+Report;Print: Page orientation;印刷: ページの向き
+Report;Print: Show logo;印刷: ロゴを表示
+Report;Processing;処理中
+Report;Processing...;処理中...
+Report;Records;レコード
+Report;Refresh;更新
+Report;Report;レポート
+Report;Report description;レポートの説明
+Report;Report has been cancelled;レポートはキャンセルされました
+Report;report information;レポート情報
+Report;report restrictions;レポート制限
+Report;Report result generated in '{0}';'{0}' にレポート結果を生成しました
+Report;Report result options;レポート結果オプション
+Report;report result panel;レポート結果パネル
+Report;Report summary;レポート概要
+Report;Restrictions;制限
+Report;Results;結果
+Report;Scale;スケール
+Report;second;秒
+Report;seconds;秒
+Report;Select all;すべて選択
+Report;Select Decade;10年を選択
+Report;Select Month;月を選択
+Report;Select Time;時刻を選択
+Report;Select Year;年を選択
+Report;Show;表示
+Report;Show _MENU_ reports;_MENU_ 件のレポートを表示
+Report;Show _MENU_ rows;_MENU_ 件の行を表示
+Report;Show messages;メッセージを表示
+Report;Show messages;メッセージを表示
+Report;Show report information;レポート情報を表示
+Report;Show report information;レポート情報を表示
+Report;Show/Hide Restrictions;制限の表示/非表示
+Report;Showing _START_ to _END_ of _TOTAL_;_TOTAL_ 件中 _START_ から _END_ を表示
+Report;Showing 0 to 0 of 0;0 件中 0 から 0 を表示
+Report;Starting execution...;実行を開始しています...
+Report;Starts with;次で始まる
+Report;Subtotal;小計
+Report;Sum of;合計:
+Report;Summary;概要
+Report;Table of Contents;目次
+Report;Tabs to show;表示するタブ
+Report;Task executed...;タスクを実行しました...
+Report;Tasks executed...;タスクを実行しました...
+Report;The report has been generated.;レポートが生成されました。
+Report;This report has execution errors. Please check details in the Logs Files...;このレポートには実行エラーがあります。詳細はログファイルをご確認ください...
+Report;ThisHour;今時
+Report;ThisMinute;今分
+Report;ThisMonth;今月
+Report;ThisQuarter;今四半期
+Report;ThisSemester;今学期
+Report;ThisWeek;今週
+Report;ThisYear;今年
+Report;Today;今日
+Report;Toggle Period;期間を切り替え
+Report;Total;合計
+Report;Use the date format '{0}' or one of the following keywords:;日付形式 '{0}' または次のキーワードのいずれかを使用してください:
+Report;View;表示
+Report;View CSV Result;CSV 結果を表示
+Report;View Excel Converter Result;Excel コンバーター結果を表示
+Report;View Excel Result;Excel 結果を表示
+Report;View HTML Print Result;HTML 印刷結果を表示
+Report;View HTML Result;HTML 結果を表示
+Report;View HTML to PDF Result;HTML to PDF 結果を表示
+Report;View Json Result;JSON 結果を表示
+Report;View PDF Converter Result;PDF コンバーター結果を表示
+Report;View PDF Result;PDF 結果を表示
+Report;View report result file;レポート結果ファイルを表示
+Report;View Text Result;テキスト結果を表示
+Report;View XML Result;XML 結果を表示
+Report;Warning: The maximum number of records is reached;警告: レコードの最大数に達しました
+Report;Yes;はい
+Web;Add;追加
+Web;All;すべて
+Web;Auto-Refresh (seconds);自動更新 (秒)
+Web;Back to login with user name and password;ユーザー名とパスワードでのログインに戻る
+Web;Cancel;キャンセル
+Web;Change password;パスワードを変更
+Web;Change password;パスワードを変更
+Web;Change your password;パスワードを変更してください
+Web;Chart sort;グラフの並べ替え
+Web;Close;閉じる
+Web;Color;色
+Web;Confirm your new password;新しいパスワードを確認
+Web;Copy;コピー
+Web;Create in folder;フォルダー内に作成
+Web;Create new folder;新規フォルダーを作成
+Web;CSS Format;CSS 形式
+Web;Culture;カルチャー
+Web;Current password;現在のパスワード
+Web;Cut;切り取り
+Web;Data source connections;データソース接続
+Web;Default view;既定のビュー
+Web;Delete;削除
+Web;Delete folder;フォルダーを削除
+Web;Description;説明
+Web;Device;デバイス
+Web;Disconnect;切断
+Web;Display options;表示オプション
+Web;Edit;編集
+Web;Edit configuration;構成を編集
+Web;Edit entry;エントリを編集
+Web;Edit profile;プロファイルを編集
+Web;Edition;エディション
+Web;Email;メール
+Web;Enter password;パスワードを入力
+Web;Enter user name;ユーザー名を入力
+Web;Enter your current password;現在のパスワードを入力してください
+Web;Enter your new file name;新しいファイル名を入力してください
+Web;Enter your new password;新しいパスワードを入力してください
+Web;Enter your security code;セキュリティコードを入力してください
+Web;Enter your user identifier or email;ユーザー識別子またはメールを入力してください
+Web;Error;エラー
+Web;Error: only files (and not reports) can be copied to this folder.;エラー: このフォルダーにはファイルのみコピーでき、レポートはコピーできません。
+Web;Error: the destination file name contains invalid characters.;エラー: コピー先のファイル名に無効な文字が含まれています。
+Web;Error: the destination folder name contains invalid characters.;エラー: コピー先のフォルダー名に無効な文字が含まれています。
+Web;Expand in Treeview;ツリービューで展開
+Web;Export;エクスポート
+Web;Files only;ファイルのみ
+Web;Folder Permissions;フォルダー権限
+Web;Folders;フォルダー
+Web;Forget your password ?;パスワードをお忘れですか?
+Web;Group name;グループ名
+Web;Group name;グループ名
+Web;Groups;グループ
+Web;Groups;グループ
+Web;Height;高さ
+Web;Icon;アイコン
+Web;Information;情報
+Web;Invalid security code;無効なセキュリティコード
+Web;Invalid user name or password;無効なユーザー名またはパスワード
+Web;Is dynamic;動的である
+Web;Last execution at;最終実行日時
+Web;Licensed to;ライセンス先
+Web;Login;ログイン
+Web;Login ID;ログイン ID
+Web;Logins;ログイン
+Web;Logout;ログアウト
+Web;Logout the user;ユーザーをログアウト
+Web;Manage Folders;フォルダーを管理
+Web;Manage sub-folders;サブフォルダーを管理
+Web;Name;名前
+Web;New;新規
+Web;New folder name;新規フォルダー名
+Web;New folder path;新規フォルダーパス
+Web;New password;新しいパスワード
+Web;None;なし
+Web;OK;OK
+Web;On startup;起動時
+Web;Optional chart title;任意のグラフタイトル
+Web;Optional menu name;任意のメニュー名
+Web;Output;出力
+Web;Password;パスワード
+Web;Paste;貼り付け
+Web;PDF Conversion delay;PDF 変換の遅延
+Web;Personal;個人
+Web;Personal folder;個人フォルダー
+Web;Phone;電話
+Web;Please wait;お待ちください
+Web;Profile;プロファイル
+Web;Profile information;プロファイル情報
+Web;Refresh;更新
+Web;Re-init your password;パスワードを再設定
+Web;Reload and execute;再読み込みして実行
+Web;Rename;名前を変更
+Web;Rename or move folder;フォルダーの名前変更または移動
+Web;Rename, move or copy;名前変更、移動、またはコピー
+Web;Report;レポート
+Web;Report execution mode;レポート実行モード
+Web;Report name;レポート名
+Web;Report title;レポートタイトル
+Web;Report title if different from report name;レポート名と異なる場合のレポートタイトル
+Web;Reports;レポート
+Web;Reports menu;レポートメニュー
+Web;Repository connection;リポジトリ接続
+Web;Reset password;パスワードをリセット
+Web;Reset your password;パスワードをリセットしてください
+Web;Save;保存
+Web;Search;検索
+Web;Security code;セキュリティコード
+Web;Show sub-folders;サブフォルダーを表示
+Web;Startup report name;起動レポート名
+Web;The favorite has been updated;お気に入りが更新されました
+Web;Two-Factor Authentication;二要素認証
+Web;Type;種類
+Web;Type a new password;新しいパスワードを入力
+Web;Upload;アップロード
+Web;User groups;ユーザーグループ
+Web;User identifier or email;ユーザー識別子またはメール
+Web;User name;ユーザー名
+Web;Users;ユーザー
+Web;Web product name;Web 製品名
+Web;Width;幅
+WebJS;# of % selected;選択された % のうち #
+WebJS;Actions;アクション
+WebJS;All selected;すべて選択済み
+WebJS;Allow only execution in a new window;新しいウィンドウでの実行のみ許可
+WebJS;Cancel;キャンセル
+WebJS;Configuration for;次の構成:
+WebJS;Contains;次を含む
+WebJS;Contains all;すべてを含む
+WebJS;Contains any;いずれかを含む
+WebJS;Copy;コピー
+WebJS;Copy of;次のコピー:
+WebJS;Copy to;次へコピー:
+WebJS;Default;既定
+WebJS;Default culture;既定のカルチャー
+WebJS;Default mode;既定のモード
+WebJS;Default report connection;既定のレポート接続
+WebJS;Default repository connection;既定のリポジトリ接続
+WebJS;Default startup;既定の起動
+WebJS;Do not execute report;レポートを実行しない
+WebJS;Do you really want to delete the reports or files selected ?;選択したレポートまたはファイルを本当に削除しますか?
+WebJS;Does not contain;次を含まない
+WebJS;Does not contain all;すべてを含まない
+WebJS;Does not contain any;いずれも含まない
+WebJS;Download report;レポートをダウンロード
+WebJS;Edit report;レポートを編集
+WebJS;Edit reports / Manage files;レポートを編集 / ファイルを管理
+WebJS;Edit schedules / View files;スケジュールを編集 / ファイルを表示
+WebJS;Ends with;次で終わる
+WebJS;Equals;等しい
+WebJS;Error;エラー
+WebJS;Execute report in a new window;新しいウィンドウでレポートを実行
+WebJS;Execute report in the current window;現在のウィンドウでレポートを実行
+WebJS;Execute reports / View files;レポートを実行 / ファイルを表示
+WebJS;Execute reports and outputs / View files;レポートと出力を実行 / ファイルを表示
+WebJS;Execute the last report;最後のレポートを実行
+WebJS;Execute the report;レポートを実行
+WebJS;Favorites;お気に入り
+WebJS;Folder;フォルダー
+WebJS;Is between;範囲内である
+WebJS;Is different from;次と異なる
+WebJS;Is empty;空である
+WebJS;Is greater or equal than;以上である
+WebJS;Is greater than;より大きい
+WebJS;Is not between;範囲外である
+WebJS;Is not empty;空でない
+WebJS;Is not Null;Null でない
+WebJS;Is Null;Null である
+WebJS;Is smaller or equal than;以下である
+WebJS;Is smaller than;より小さい
+WebJS;Last modification;最終更新
+WebJS;Mark as favorite;お気に入りに登録
+WebJS;Model;モデル
+WebJS;New folder configuration;新規フォルダー構成
+WebJS;New group;新規グループ
+WebJS;New login;新規ログイン
+WebJS;No;いいえ
+WebJS;No download (except files) or upload;ダウンロード (ファイルを除く) およびアップロードなし
+WebJS;No folder configuration;フォルダー構成なし
+WebJS;No login;ログインなし
+WebJS;No personal folder;個人フォルダーなし
+WebJS;No right;権限なし
+WebJS;None;なし
+WebJS;Not sorted;未並べ替え
+WebJS;OK;OK
+WebJS;Options;オプション
+WebJS;Output;出力
+WebJS;Personal folder for files only;ファイルのみの個人フォルダー
+WebJS;Personal folder for reports and files;レポートとファイル用の個人フォルダー
+WebJS;Please wait;お待ちください
+WebJS;Processing;処理中
+WebJS;Profile;プロファイル
+WebJS;Recents;最近の項目
+WebJS;Report;レポート
+WebJS;report(s) or file(s) cut in the clipboard;件のレポートまたはファイルをクリップボードに切り取りました
+WebJS;report(s) or file(s) have been deleted;件のレポートまたはファイルが削除されました
+WebJS;report(s) or file(s) processed;件のレポートまたはファイルを処理しました
+WebJS;report(s) or files(s) copied in the clipboard;件のレポートまたはファイルをクリップボードにコピーしました
+WebJS;Reports;レポート
+WebJS;Schedule;スケジュール
+WebJS;Server Version;サーバーバージョン
+WebJS;Show _MENU_ reports;_MENU_ 件のレポートを表示
+WebJS;Starts with;次で始まる
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;構成が保存されました。セキュリティの影響を受ける場合は再度ログインしてください。
+WebJS;The folder has been created;フォルダーが作成されました
+WebJS;The folder has been deleted;フォルダーが削除されました
+WebJS;The folder has been renamed;フォルダーの名前が変更されました
+WebJS;The folder has been updated;フォルダーが更新されました
+WebJS;The report or file has been renamed;レポートまたはファイルの名前が変更されました
+WebJS;Toggle Report or Folders view;レポート表示とフォルダー表示を切り替え
+WebJS;Unexpected error on server;サーバーで予期しないエラーが発生しました
+WebJS;User can download reports;ユーザーはレポートをダウンロードできます
+WebJS;User can download reports and upload reports and files;ユーザーはレポートをダウンロードし、レポートとファイルをアップロードできます
+WebJS;View;表示
+WebJS;View Folders;フォルダーを表示
+WebJS;View Report;レポートを表示
+WebJS;View reports;レポートを表示
+WebJS;Views and outputs;ビューと出力
+WebJS;Warning;警告
+WebJS;Web Interface Version;Web インターフェイスバージョン
+WebJS;Yes;はい
+WebJS;Yes (Folder is expanded in the tree view);はい (フォルダーはツリービューで展開されます)
+WebJS;Yes (Only files can be stored);はい (ファイルのみ保存できます)
+WebJS;Yes (User can browse sub-folders);はい (ユーザーはサブフォルダーを閲覧できます)
+WebJS;Yes (User can create and edit sub-folders);はい (ユーザーはサブフォルダーを作成および編集できます)
+WebJS;Yes (User can edit his profile);はい (ユーザーは自分のプロファイルを編集できます)
+WebJS;Yes (User is administrator of the Web Server);はい (ユーザーは Web サーバーの管理者です)
+Web;Select assistant;アシスタントを選択
+Web;Mark as favorite;お気に入りに登録
+Web;Favorites;お気に入り
+Web;No favorites yet;お気に入りはまだありません
+Web;Recent;最近
+Web;No recent items;最近の項目はありません
+Web;New conversation;新しい会話
+Web;Sample prompts;サンプルプロンプト
+Web;Sample Prompts;サンプルプロンプト
+Web;No sample prompts defined;サンプルプロンプトが定義されていません
+Web;AI Assistant;AI アシスタント
+Web;Favorites & Recent;お気に入りと最近
+Web;Hide panel;パネルを非表示
+Web;Ask the AI assistant…;AI アシスタントに質問…
+Web;Confirm Deletion;削除の確認
+Web;This action is irreversible. Are you sure you want to delete this item?;この操作は取り消せません。この項目を削除してもよろしいですか?
+Web;Data Source;データソース
+Web;Report Assistants;レポートアシスタント
+Web;Select Tables or Views;テーブルまたはビューを選択
+Web;Filter tables...;テーブルをフィルター...
+Web;Select All;すべて選択
+Web;Deselect All;すべて選択解除
+Web;tables selected;件のテーブルを選択
+Web;Prompt Shortcuts;プロンプトショートカット
+Web;How can Seal AI help you today ?;本日 Seal AI はどのようにお手伝いできますか?
+Web;No current items available;現在の項目はありません
+Web;Current items will appear here when saved;保存すると現在の項目がここに表示されます
+Web;Drafts;下書き
+Web;No draft items available;下書きの項目はありません
+Web;Upload files or create new items with the assistant to see them here;ファイルをアップロードするか、アシスタントで新しい項目を作成するとここに表示されます
+Web;Item Details;項目の詳細
+Web;Loading detail. Please wait...;詳細を読み込んでいます。お待ちください...
+Web;Select a row from the table to view its details;テーブルから行を選択して詳細を表示してください
+Web;Check;チェック
+Web;Download;ダウンロード
+Web;Reports Assistant;レポートアシスタント
+Web;Connection type;接続タイプ
+Web;Connection string;接続文字列
+Web;Tables or views;テーブルまたはビュー
+Web;Report Assistant;レポートアシスタント
+Web;AI Provider;AI プロバイダー
+Web;AI model;AI モデル
+Web;AI model name (overrides default));AI モデル名 (既定値を上書き))
+Web;Temperature;温度
+Web;Model temperature;モデルの温度
+Web;System prompt;システムプロンプト
+Web;Optional sytem prompt for the assistant;アシスタント用の任意のシステムプロンプト
+Web;User prompt;ユーザープロンプト
+Web;Default user prompts (if empty default values configured are taken);既定のユーザープロンプト (空の場合は構成済みの既定値が使用されます)
+Web;User Groups allowed (No selection means no restriction);許可するユーザーグループ (選択なしは制限なしを意味します)
+Web;Scan options;スキャンオプション
+Web;When to scan;スキャンのタイミング
+Web;Cache duration (days);キャッシュ期間 (日)
+Web;Cache duration (days) for scanned data;スキャンしたデータのキャッシュ期間 (日)
+Web;Tables to scan (no selection means all tables);スキャンするテーブル (選択なしはすべてのテーブルを意味します)
+Web;Records to scan;スキャンするレコード
+Web;Number of records used for scan;スキャンに使用するレコード数
+Web;Scan Data Now;今すぐデータをスキャン
+Web;Execute;実行
+Web;Elements:;要素:
+Web;Restrictions:;制限:
+WebJS;Hide AI Assistant;AI アシスタントを非表示
+WebJS;AI Assistant;AI アシスタント
+WebJS;Running;実行中
+WebJS;Request cancelled.;リクエストがキャンセルされました。
+WebJS;Remove from favorites;お気に入りから削除
+WebJS;No sample prompts defined;サンプルプロンプトが定義されていません
+WebJS;Rename;名前を変更
+WebJS;Delete;削除
+WebJS;No favorites yet;お気に入りはまだありません
+WebJS;No recent items;最近の項目はありません
+Web;Configuration;構成
+Web;Download/Upload;ダウンロード/アップロード
+Web;Rights;権限
+Web;Assistants;アシスタント
+Web;Folder;フォルダー

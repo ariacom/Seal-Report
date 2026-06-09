@@ -1,0 +1,503 @@
+﻿Context;Reference;id
+NVD3;(right axis);(sumbu kanan)
+NVD3;Expanded;Diperluas
+NVD3;Grouped;Dikelompokkan
+NVD3;Re-scale y-axis;Skala ulang sumbu-y
+NVD3;Stacked;Bertumpuk
+NVD3;Stream;Aliran
+Report;!=;!=
+Report;# of % selected;# dari % dipilih
+Report;(filtered from _MAX_);(difilter dari _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Nilai diperlukan untuk
+Report;All;Semua
+Report;All selected;Semua dipilih
+Report;and;dan
+Report;Auto Fit columns;Sesuaikan kolom otomatis
+Report;Auto Scroll enabled;Gulir otomatis diaktifkan
+Report;Average of;Rata-rata dari
+Report;Back to top;Kembali ke atas
+Report;Between;Antara
+Report;Cancel;Batal
+Report;Cancelling report...;Membatalkan laporan...
+Report;Charts;Bagan
+Report;Clear selection;Hapus pilihan
+Report;Close;Tutup
+Report;Contains;Mengandung
+Report;Contains all;Mengandung semua
+Report;Contains any;Mengandung salah satu
+Report;Count Distinct of;Hitung Berbeda dari
+Report;Count of;Jumlah dari
+Report;Decrement;Kurangi
+Report;Description;Deskripsi
+Report;Display header footer;Tampilkan header footer
+Report;Display: Execution messages;Tampilan: Pesan eksekusi
+Report;Display: Execution messages;Tampilan: Pesan eksekusi
+Report;Display: Information messages;Tampilan: Pesan informasi
+Report;Display: Information messages;Tampilan: Pesan informasi
+Report;Does not contain;Tidak mengandung
+Report;Does not contain all;Tidak mengandung semua
+Report;Does not contain any;Tidak mengandung salah satu
+Report;Drill <;Telusuri <
+Report;Drill >;Telusuri >
+Report;Duration;Durasi
+Report;Duration (seconds);Durasi (detik)
+Report;Email sent to '{0}';Email terkirim ke '{0}'
+Report;Ends with;Diakhiri dengan
+Report;Equals;Sama dengan
+Report;Execute;Jalankan
+Report;Executing report...;Menjalankan laporan...
+Report;Execution date;Tanggal eksekusi
+Report;Execution duration;Durasi eksekusi
+Report;execution messages;pesan eksekusi
+Report;Export messages...;Ekspor pesan...
+Report;Filter:;Filter:
+Report;Go to today;Buka hari ini
+Report;Goal;Target
+Report;Hide;Sembunyikan
+Report;HTML Print: Show messages;Cetak HTML: Tampilkan pesan
+Report;HTML Print: Show messages;Cetak HTML: Tampilkan pesan
+Report;HTML Print: Show report information;Cetak HTML: Tampilkan informasi laporan
+Report;HTML Print: Show report information;Cetak HTML: Tampilkan informasi laporan
+Report;HTML to PDF;HTML ke PDF
+Report;Increment;Tambah
+Report;Information panel enabled;Panel informasi diaktifkan
+Report;Information panel enabled and shown;Panel informasi diaktifkan dan ditampilkan
+Report;Information panel hidden;Panel informasi disembunyikan
+Report;Invalid date;Tanggal tidak valid
+Report;Invalid numeric value;Nilai numerik tidak valid
+Report;Is between;Berada di antara
+Report;Is Blank;Kosong
+Report;Is different from;Berbeda dari
+Report;Is empty;Kosong
+Report;Is greater or equal than;Lebih besar atau sama dengan
+Report;Is greater than;Lebih besar dari
+Report;Is not between;Tidak berada di antara
+Report;Is Not Blank;Tidak Kosong
+Report;Is not empty;Tidak kosong
+Report;Is not Null;Bukan Null
+Report;Is Null;Null
+Report;Is smaller or equal than;Lebih kecil atau sama dengan
+Report;Is smaller than;Lebih kecil dari
+Report;Landscape;Lanskap
+Report;Logs;Log
+Report;Maximum of;Maksimum dari
+Report;Messages panel enabled;Panel pesan diaktifkan
+Report;Messages panel enabled and shown;Panel pesan diaktifkan dan ditampilkan
+Report;Messages panel enabled and shown only during execution;Panel pesan diaktifkan dan ditampilkan hanya selama eksekusi
+Report;Messages panel hidden;Panel pesan disembunyikan
+Report;Minimum of;Minimum dari
+Report;Model;Model
+Report;Model loaded...;Model dimuat...
+Report;Models loaded...;Model dimuat...
+Report;New report;Laporan baru
+Report;Next Century;Abad Berikutnya
+Report;Next Decade;Dekade Berikutnya
+Report;Next Month;Bulan Berikutnya
+Report;Next Year;Tahun Berikutnya
+Report;No;Tidak
+Report;No records;Tidak ada catatan
+Report;No records. The report output generation has been cancelled.;Tidak ada catatan. Pembuatan keluaran laporan telah dibatalkan.
+Report;No reports;Tidak ada laporan
+Report;No rows;Tidak ada baris
+Report;Not Between;Tidak Berada di Antara
+Report;Not Contains;Tidak Mengandung
+Report;Now;Sekarang
+Report;Options;Opsi
+Report;or;atau
+Report;Page;Halaman
+Report;"Page &p; of &P;";"Halaman &p; dari &P;"
+Report;Page orientation;Orientasi halaman
+Report;Page size;Ukuran halaman
+Report;Pages;Halaman
+Report;Pick Hour;Pilih Jam
+Report;Pick Minute;Pilih Menit
+Report;Pick Second;Pilih Detik
+Report;Please enter a value;Silakan masukkan nilai
+Report;Please enter at least a value;Silakan masukkan setidaknya satu nilai
+Report;Please find the report '{0}' in attachment.;Silakan temukan laporan '{0}' pada lampiran.
+Report;Please find your authentication code;Silakan temukan kode autentikasi Anda
+Report;Please wait, the report result is being generated in another window;Mohon tunggu, hasil laporan sedang dibuat di jendela lain
+Report;Previous Century;Abad Sebelumnya
+Report;Previous Decade;Dekade Sebelumnya
+Report;Previous Month;Bulan Sebelumnya
+Report;Previous Year;Tahun Sebelumnya
+Report;Print: Page orientation;Cetak: Orientasi halaman
+Report;Print: Show logo;Cetak: Tampilkan logo
+Report;Processing;Memproses
+Report;Processing...;Memproses...
+Report;Records;Catatan
+Report;Refresh;Segarkan
+Report;Report;Laporan
+Report;Report description;Deskripsi laporan
+Report;Report has been cancelled;Laporan telah dibatalkan
+Report;report information;informasi laporan
+Report;report restrictions;pembatasan laporan
+Report;Report result generated in '{0}';Hasil laporan dibuat dalam '{0}'
+Report;Report result options;Opsi hasil laporan
+Report;report result panel;panel hasil laporan
+Report;Report summary;Ringkasan laporan
+Report;Restrictions;Pembatasan
+Report;Results;Hasil
+Report;Scale;Skala
+Report;second;detik
+Report;seconds;detik
+Report;Select all;Pilih semua
+Report;Select Decade;Pilih Dekade
+Report;Select Month;Pilih Bulan
+Report;Select Time;Pilih Waktu
+Report;Select Year;Pilih Tahun
+Report;Show;Tampilkan
+Report;Show _MENU_ reports;Tampilkan _MENU_ laporan
+Report;Show _MENU_ rows;Tampilkan _MENU_ baris
+Report;Show messages;Tampilkan pesan
+Report;Show messages;Tampilkan pesan
+Report;Show report information;Tampilkan informasi laporan
+Report;Show report information;Tampilkan informasi laporan
+Report;Show/Hide Restrictions;Tampilkan/Sembunyikan Pembatasan
+Report;Showing _START_ to _END_ of _TOTAL_;Menampilkan _START_ sampai _END_ dari _TOTAL_
+Report;Showing 0 to 0 of 0;Menampilkan 0 sampai 0 dari 0
+Report;Starting execution...;Memulai eksekusi...
+Report;Starts with;Diawali dengan
+Report;Subtotal;Subtotal
+Report;Sum of;Jumlah dari
+Report;Summary;Ringkasan
+Report;Table of Contents;Daftar Isi
+Report;Tabs to show;Tab untuk ditampilkan
+Report;Task executed...;Tugas dieksekusi...
+Report;Tasks executed...;Tugas dieksekusi...
+Report;The report has been generated.;Laporan telah dibuat.
+Report;This report has execution errors. Please check details in the Logs Files...;Laporan ini memiliki kesalahan eksekusi. Silakan periksa detail di File Log...
+Report;ThisHour;Jam Ini
+Report;ThisMinute;Menit Ini
+Report;ThisMonth;Bulan Ini
+Report;ThisQuarter;Kuartal Ini
+Report;ThisSemester;Semester Ini
+Report;ThisWeek;Minggu Ini
+Report;ThisYear;Tahun Ini
+Report;Today;Hari Ini
+Report;Toggle Period;Alihkan Periode
+Report;Total;Total
+Report;Use the date format '{0}' or one of the following keywords:;Gunakan format tanggal '{0}' atau salah satu kata kunci berikut:
+Report;View;Lihat
+Report;View CSV Result;Lihat Hasil CSV
+Report;View Excel Converter Result;Lihat Hasil Excel Converter
+Report;View Excel Result;Lihat Hasil Excel
+Report;View HTML Print Result;Lihat Hasil Cetak HTML
+Report;View HTML Result;Lihat Hasil HTML
+Report;View HTML to PDF Result;Lihat Hasil HTML ke PDF
+Report;View Json Result;Lihat Hasil Json
+Report;View PDF Converter Result;Lihat Hasil PDF Converter
+Report;View PDF Result;Lihat Hasil PDF
+Report;View report result file;Lihat file hasil laporan
+Report;View Text Result;Lihat Hasil Teks
+Report;View XML Result;Lihat Hasil XML
+Report;Warning: The maximum number of records is reached;Peringatan: Jumlah maksimum catatan telah tercapai
+Report;Yes;Ya
+Web;Add;Tambah
+Web;All;Semua
+Web;Auto-Refresh (seconds);Segarkan Otomatis (detik)
+Web;Back to login with user name and password;Kembali ke login dengan nama pengguna dan kata sandi
+Web;Cancel;Batal
+Web;Change password;Ubah kata sandi
+Web;Change password;Ubah kata sandi
+Web;Change your password;Ubah kata sandi Anda
+Web;Chart sort;Urutan bagan
+Web;Close;Tutup
+Web;Color;Warna
+Web;Confirm your new password;Konfirmasi kata sandi baru Anda
+Web;Copy;Salin
+Web;Create in folder;Buat di folder
+Web;Create new folder;Buat folder baru
+Web;CSS Format;Format CSS
+Web;Culture;Budaya
+Web;Current password;Kata sandi saat ini
+Web;Cut;Potong
+Web;Data source connections;Koneksi sumber data
+Web;Default view;Tampilan bawaan
+Web;Delete;Hapus
+Web;Delete folder;Hapus folder
+Web;Description;Deskripsi
+Web;Device;Perangkat
+Web;Disconnect;Putuskan koneksi
+Web;Display options;Opsi tampilan
+Web;Edit;Edit
+Web;Edit configuration;Edit konfigurasi
+Web;Edit entry;Edit entri
+Web;Edit profile;Edit profil
+Web;Edition;Edisi
+Web;Email;Email
+Web;Enter password;Masukkan kata sandi
+Web;Enter user name;Masukkan nama pengguna
+Web;Enter your current password;Masukkan kata sandi Anda saat ini
+Web;Enter your new file name;Masukkan nama file baru Anda
+Web;Enter your new password;Masukkan kata sandi baru Anda
+Web;Enter your security code;Masukkan kode keamanan Anda
+Web;Enter your user identifier or email;Masukkan pengenal pengguna atau email Anda
+Web;Error;Kesalahan
+Web;Error: only files (and not reports) can be copied to this folder.;Kesalahan: hanya file (dan bukan laporan) yang dapat disalin ke folder ini.
+Web;Error: the destination file name contains invalid characters.;Kesalahan: nama file tujuan mengandung karakter tidak valid.
+Web;Error: the destination folder name contains invalid characters.;Kesalahan: nama folder tujuan mengandung karakter tidak valid.
+Web;Expand in Treeview;Perluas di Tampilan Pohon
+Web;Export;Ekspor
+Web;Files only;Hanya file
+Web;Folder Permissions;Izin Folder
+Web;Folders;Folder
+Web;Forget your password ?;Lupa kata sandi Anda ?
+Web;Group name;Nama grup
+Web;Group name;Nama grup
+Web;Groups;Grup
+Web;Groups;Grup
+Web;Height;Tinggi
+Web;Icon;Ikon
+Web;Information;Informasi
+Web;Invalid security code;Kode keamanan tidak valid
+Web;Invalid user name or password;Nama pengguna atau kata sandi tidak valid
+Web;Is dynamic;Bersifat dinamis
+Web;Last execution at;Eksekusi terakhir pada
+Web;Licensed to;Dilisensikan kepada
+Web;Login;Login
+Web;Login ID;ID Login
+Web;Logins;Login
+Web;Logout;Logout
+Web;Logout the user;Logout pengguna
+Web;Manage Folders;Kelola Folder
+Web;Manage sub-folders;Kelola sub-folder
+Web;Name;Nama
+Web;New;Baru
+Web;New folder name;Nama folder baru
+Web;New folder path;Jalur folder baru
+Web;New password;Kata sandi baru
+Web;None;Tidak ada
+Web;OK;OK
+Web;On startup;Saat memulai
+Web;Optional chart title;Judul bagan opsional
+Web;Optional menu name;Nama menu opsional
+Web;Output;Keluaran
+Web;Password;Kata sandi
+Web;Paste;Tempel
+Web;PDF Conversion delay;Penundaan Konversi PDF
+Web;Personal;Pribadi
+Web;Personal folder;Folder pribadi
+Web;Phone;Telepon
+Web;Please wait;Mohon tunggu
+Web;Profile;Profil
+Web;Profile information;Informasi profil
+Web;Refresh;Segarkan
+Web;Re-init your password;Inisialisasi ulang kata sandi Anda
+Web;Reload and execute;Muat ulang dan jalankan
+Web;Rename;Ganti nama
+Web;Rename or move folder;Ganti nama atau pindahkan folder
+Web;Rename, move or copy;Ganti nama, pindahkan, atau salin
+Web;Report;Laporan
+Web;Report execution mode;Mode eksekusi laporan
+Web;Report name;Nama laporan
+Web;Report title;Judul laporan
+Web;Report title if different from report name;Judul laporan jika berbeda dari nama laporan
+Web;Reports;Laporan
+Web;Reports menu;Menu laporan
+Web;Repository connection;Koneksi repositori
+Web;Reset password;Atur ulang kata sandi
+Web;Reset your password;Atur ulang kata sandi Anda
+Web;Save;Simpan
+Web;Search;Cari
+Web;Security code;Kode keamanan
+Web;Show sub-folders;Tampilkan sub-folder
+Web;Startup report name;Nama laporan awal
+Web;The favorite has been updated;Favorit telah diperbarui
+Web;Two-Factor Authentication;Autentikasi Dua Faktor
+Web;Type;Tipe
+Web;Type a new password;Ketik kata sandi baru
+Web;Upload;Unggah
+Web;User groups;Grup pengguna
+Web;User identifier or email;Pengenal pengguna atau email
+Web;User name;Nama pengguna
+Web;Users;Pengguna
+Web;Web product name;Nama produk web
+Web;Width;Lebar
+WebJS;# of % selected;# dari % dipilih
+WebJS;Actions;Tindakan
+WebJS;All selected;Semua dipilih
+WebJS;Allow only execution in a new window;Izinkan eksekusi hanya di jendela baru
+WebJS;Cancel;Batal
+WebJS;Configuration for;Konfigurasi untuk
+WebJS;Contains;Mengandung
+WebJS;Contains all;Mengandung semua
+WebJS;Contains any;Mengandung salah satu
+WebJS;Copy;Salin
+WebJS;Copy of;Salinan dari
+WebJS;Copy to;Salin ke
+WebJS;Default;Bawaan
+WebJS;Default culture;Budaya bawaan
+WebJS;Default mode;Mode bawaan
+WebJS;Default report connection;Koneksi laporan bawaan
+WebJS;Default repository connection;Koneksi repositori bawaan
+WebJS;Default startup;Awal bawaan
+WebJS;Do not execute report;Jangan jalankan laporan
+WebJS;Do you really want to delete the reports or files selected ?;Apakah Anda benar-benar ingin menghapus laporan atau file yang dipilih ?
+WebJS;Does not contain;Tidak mengandung
+WebJS;Does not contain all;Tidak mengandung semua
+WebJS;Does not contain any;Tidak mengandung salah satu
+WebJS;Download report;Unduh laporan
+WebJS;Edit report;Edit laporan
+WebJS;Edit reports / Manage files;Edit laporan / Kelola file
+WebJS;Edit schedules / View files;Edit jadwal / Lihat file
+WebJS;Ends with;Diakhiri dengan
+WebJS;Equals;Sama dengan
+WebJS;Error;Kesalahan
+WebJS;Execute report in a new window;Jalankan laporan di jendela baru
+WebJS;Execute report in the current window;Jalankan laporan di jendela saat ini
+WebJS;Execute reports / View files;Jalankan laporan / Lihat file
+WebJS;Execute reports and outputs / View files;Jalankan laporan dan keluaran / Lihat file
+WebJS;Execute the last report;Jalankan laporan terakhir
+WebJS;Execute the report;Jalankan laporan
+WebJS;Favorites;Favorit
+WebJS;Folder;Folder
+WebJS;Is between;Berada di antara
+WebJS;Is different from;Berbeda dari
+WebJS;Is empty;Kosong
+WebJS;Is greater or equal than;Lebih besar atau sama dengan
+WebJS;Is greater than;Lebih besar dari
+WebJS;Is not between;Tidak berada di antara
+WebJS;Is not empty;Tidak kosong
+WebJS;Is not Null;Bukan Null
+WebJS;Is Null;Null
+WebJS;Is smaller or equal than;Lebih kecil atau sama dengan
+WebJS;Is smaller than;Lebih kecil dari
+WebJS;Last modification;Modifikasi terakhir
+WebJS;Mark as favorite;Tandai sebagai favorit
+WebJS;Model;Model
+WebJS;New folder configuration;Konfigurasi folder baru
+WebJS;New group;Grup baru
+WebJS;New login;Login baru
+WebJS;No;Tidak
+WebJS;No download (except files) or upload;Tidak ada unduhan (kecuali file) atau unggahan
+WebJS;No folder configuration;Tidak ada konfigurasi folder
+WebJS;No login;Tidak ada login
+WebJS;No personal folder;Tidak ada folder pribadi
+WebJS;No right;Tidak ada hak
+WebJS;None;Tidak ada
+WebJS;Not sorted;Tidak diurutkan
+WebJS;OK;OK
+WebJS;Options;Opsi
+WebJS;Output;Keluaran
+WebJS;Personal folder for files only;Folder pribadi hanya untuk file
+WebJS;Personal folder for reports and files;Folder pribadi untuk laporan dan file
+WebJS;Please wait;Mohon tunggu
+WebJS;Processing;Memproses
+WebJS;Profile;Profil
+WebJS;Recents;Terbaru
+WebJS;Report;Laporan
+WebJS;report(s) or file(s) cut in the clipboard;laporan atau file dipotong ke papan klip
+WebJS;report(s) or file(s) have been deleted;laporan atau file telah dihapus
+WebJS;report(s) or file(s) processed;laporan atau file diproses
+WebJS;report(s) or files(s) copied in the clipboard;laporan atau file disalin ke papan klip
+WebJS;Reports;Laporan
+WebJS;Schedule;Jadwal
+WebJS;Server Version;Versi Server
+WebJS;Show _MENU_ reports;Tampilkan _MENU_ laporan
+WebJS;Starts with;Diawali dengan
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfigurasi telah disimpan. Silakan login kembali jika Anda terdampak oleh keamanan.
+WebJS;The folder has been created;Folder telah dibuat
+WebJS;The folder has been deleted;Folder telah dihapus
+WebJS;The folder has been renamed;Folder telah diganti namanya
+WebJS;The folder has been updated;Folder telah diperbarui
+WebJS;The report or file has been renamed;Laporan atau file telah diganti namanya
+WebJS;Toggle Report or Folders view;Alihkan tampilan Laporan atau Folder
+WebJS;Unexpected error on server;Kesalahan tak terduga di server
+WebJS;User can download reports;Pengguna dapat mengunduh laporan
+WebJS;User can download reports and upload reports and files;Pengguna dapat mengunduh laporan dan mengunggah laporan dan file
+WebJS;View;Lihat
+WebJS;View Folders;Lihat Folder
+WebJS;View Report;Lihat Laporan
+WebJS;View reports;Lihat laporan
+WebJS;Views and outputs;Tampilan dan keluaran
+WebJS;Warning;Peringatan
+WebJS;Web Interface Version;Versi Antarmuka Web
+WebJS;Yes;Ya
+WebJS;Yes (Folder is expanded in the tree view);Ya (Folder diperluas dalam tampilan pohon)
+WebJS;Yes (Only files can be stored);Ya (Hanya file yang dapat disimpan)
+WebJS;Yes (User can browse sub-folders);Ya (Pengguna dapat menelusuri sub-folder)
+WebJS;Yes (User can create and edit sub-folders);Ya (Pengguna dapat membuat dan mengedit sub-folder)
+WebJS;Yes (User can edit his profile);Ya (Pengguna dapat mengedit profilnya)
+WebJS;Yes (User is administrator of the Web Server);Ya (Pengguna adalah administrator Server Web)
+Web;Select assistant;Pilih asisten
+Web;Mark as favorite;Tandai sebagai favorit
+Web;Favorites;Favorit
+Web;No favorites yet;Belum ada favorit
+Web;Recent;Terbaru
+Web;No recent items;Tidak ada item terbaru
+Web;New conversation;Percakapan baru
+Web;Sample prompts;Contoh prompt
+Web;Sample Prompts;Contoh Prompt
+Web;No sample prompts defined;Tidak ada contoh prompt yang ditentukan
+Web;AI Assistant;Asisten AI
+Web;Favorites & Recent;Favorit & Terbaru
+Web;Hide panel;Sembunyikan panel
+Web;Ask the AI assistant…;Tanyakan kepada asisten AI…
+Web;Confirm Deletion;Konfirmasi Penghapusan
+Web;This action is irreversible. Are you sure you want to delete this item?;Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin ingin menghapus item ini?
+Web;Data Source;Sumber Data
+Web;Report Assistants;Asisten Laporan
+Web;Select Tables or Views;Pilih Tabel atau Tampilan
+Web;Filter tables...;Filter tabel...
+Web;Select All;Pilih Semua
+Web;Deselect All;Batalkan Pilih Semua
+Web;tables selected;tabel dipilih
+Web;Prompt Shortcuts;Pintasan Prompt
+Web;How can Seal AI help you today ?;Bagaimana Seal AI dapat membantu Anda hari ini ?
+Web;No current items available;Tidak ada item saat ini yang tersedia
+Web;Current items will appear here when saved;Item saat ini akan muncul di sini ketika disimpan
+Web;Drafts;Draf
+Web;No draft items available;Tidak ada item draf yang tersedia
+Web;Upload files or create new items with the assistant to see them here;Unggah file atau buat item baru dengan asisten untuk melihatnya di sini
+Web;Item Details;Detail Item
+Web;Loading detail. Please wait...;Memuat detail. Mohon tunggu...
+Web;Select a row from the table to view its details;Pilih baris dari tabel untuk melihat detailnya
+Web;Check;Periksa
+Web;Download;Unduh
+Web;Reports Assistant;Asisten Laporan
+Web;Connection type;Tipe koneksi
+Web;Connection string;String koneksi
+Web;Tables or views;Tabel atau tampilan
+Web;Report Assistant;Asisten Laporan
+Web;AI Provider;Penyedia AI
+Web;AI model;Model AI
+Web;AI model name (overrides default));Nama model AI (menggantikan bawaan))
+Web;Temperature;Suhu
+Web;Model temperature;Suhu model
+Web;System prompt;Prompt sistem
+Web;Optional sytem prompt for the assistant;Prompt sistem opsional untuk asisten
+Web;User prompt;Prompt pengguna
+Web;Default user prompts (if empty default values configured are taken);Prompt pengguna bawaan (jika kosong, nilai bawaan yang dikonfigurasi akan digunakan)
+Web;User Groups allowed (No selection means no restriction);Grup Pengguna yang diizinkan (Tidak ada pilihan berarti tanpa batasan)
+Web;Scan options;Opsi pemindaian
+Web;When to scan;Kapan harus memindai
+Web;Cache duration (days);Durasi cache (hari)
+Web;Cache duration (days) for scanned data;Durasi cache (hari) untuk data yang dipindai
+Web;Tables to scan (no selection means all tables);Tabel yang akan dipindai (tidak ada pilihan berarti semua tabel)
+Web;Records to scan;Catatan yang akan dipindai
+Web;Number of records used for scan;Jumlah catatan yang digunakan untuk pemindaian
+Web;Scan Data Now;Pindai Data Sekarang
+Web;Execute;Jalankan
+Web;Elements:;Elemen:
+Web;Restrictions:;Pembatasan:
+WebJS;Hide AI Assistant;Sembunyikan Asisten AI
+WebJS;AI Assistant;Asisten AI
+WebJS;Running;Berjalan
+WebJS;Request cancelled.;Permintaan dibatalkan.
+WebJS;Remove from favorites;Hapus dari favorit
+WebJS;No sample prompts defined;Tidak ada contoh prompt yang ditentukan
+WebJS;Rename;Ganti nama
+WebJS;Delete;Hapus
+WebJS;No favorites yet;Belum ada favorit
+WebJS;No recent items;Tidak ada item terbaru
+Web;Configuration;Konfigurasi
+Web;Download/Upload;Unduh/Unggah
+Web;Rights;Hak
+Web;Assistants;Asisten
+Web;Folder;Folder

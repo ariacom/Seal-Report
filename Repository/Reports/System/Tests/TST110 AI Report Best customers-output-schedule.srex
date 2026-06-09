@@ -36,13 +36,13 @@
 
     //Single place defining the BASE output directory (subfolder = 6 first chars of the report name)
     var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
-    report.StringTag = $@"Reports\Tests\Output\{subDir}";
+    report.StringTag = $@"Reports\System\Tests\Output\{subDir}";
 
     //Ensure the base output directory physically exists BEFORE building the security folders.
     Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, report.StringTag));
 
     var user = new SecurityUser(repository.Security);
-    user.AddDefaultSecurityGroup();
+    user.AddSecurityGroup("Group System Tests");
     user.SetFolders();
     report.SecurityContext = user;
 }

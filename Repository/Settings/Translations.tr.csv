@@ -1,0 +1,503 @@
+﻿Context;Reference;tr
+NVD3;(right axis);(sağ eksen)
+NVD3;Expanded;Genişletilmiş
+NVD3;Grouped;Gruplanmış
+NVD3;Re-scale y-axis;Y eksenini yeniden ölçeklendir
+NVD3;Stacked;Yığılmış
+NVD3;Stream;Akış
+Report;!=;!=
+Report;# of % selected;% seçili sayısı
+Report;(filtered from _MAX_);(_MAX_ içinden filtrelendi)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Şunun için bir değer gerekli
+Report;All;Tümü
+Report;All selected;Tümü seçili
+Report;and;ve
+Report;Auto Fit columns;Sütunları otomatik sığdır
+Report;Auto Scroll enabled;Otomatik kaydırma etkin
+Report;Average of;Şunun ortalaması
+Report;Back to top;Başa dön
+Report;Between;Arasında
+Report;Cancel;İptal
+Report;Cancelling report...;Rapor iptal ediliyor...
+Report;Charts;Grafikler
+Report;Clear selection;Seçimi temizle
+Report;Close;Kapat
+Report;Contains;İçerir
+Report;Contains all;Tümünü içerir
+Report;Contains any;Herhangi birini içerir
+Report;Count Distinct of;Şunun benzersiz sayısı
+Report;Count of;Şunun sayısı
+Report;Decrement;Azalt
+Report;Description;Açıklama
+Report;Display header footer;Üstbilgi altbilgi göster
+Report;Display: Execution messages;Görüntüle: Çalıştırma mesajları
+Report;Display: Execution messages;Görüntüle: Çalıştırma mesajları
+Report;Display: Information messages;Görüntüle: Bilgi mesajları
+Report;Display: Information messages;Görüntüle: Bilgi mesajları
+Report;Does not contain;İçermez
+Report;Does not contain all;Tümünü içermez
+Report;Does not contain any;Herhangi birini içermez
+Report;Drill <;Detaya in <
+Report;Drill >;Detaya in >
+Report;Duration;Süre
+Report;Duration (seconds);Süre (saniye)
+Report;Email sent to '{0}';E-posta '{0}' adresine gönderildi
+Report;Ends with;İle biter
+Report;Equals;Eşittir
+Report;Execute;Çalıştır
+Report;Executing report...;Rapor çalıştırılıyor...
+Report;Execution date;Çalıştırma tarihi
+Report;Execution duration;Çalıştırma süresi
+Report;execution messages;çalıştırma mesajları
+Report;Export messages...;Mesajları dışa aktar...
+Report;Filter:;Filtre:
+Report;Go to today;Bugüne git
+Report;Goal;Hedef
+Report;Hide;Gizle
+Report;HTML Print: Show messages;HTML Yazdır: Mesajları göster
+Report;HTML Print: Show messages;HTML Yazdır: Mesajları göster
+Report;HTML Print: Show report information;HTML Yazdır: Rapor bilgilerini göster
+Report;HTML Print: Show report information;HTML Yazdır: Rapor bilgilerini göster
+Report;HTML to PDF;HTML'den PDF'e
+Report;Increment;Artır
+Report;Information panel enabled;Bilgi paneli etkin
+Report;Information panel enabled and shown;Bilgi paneli etkin ve gösteriliyor
+Report;Information panel hidden;Bilgi paneli gizli
+Report;Invalid date;Geçersiz tarih
+Report;Invalid numeric value;Geçersiz sayısal değer
+Report;Is between;Şu aralıkta
+Report;Is Blank;Boştur
+Report;Is different from;Şundan farklıdır
+Report;Is empty;Boştur
+Report;Is greater or equal than;Şundan büyük veya eşittir
+Report;Is greater than;Şundan büyüktür
+Report;Is not between;Şu aralıkta değildir
+Report;Is Not Blank;Boş değildir
+Report;Is not empty;Boş değildir
+Report;Is not Null;Null değildir
+Report;Is Null;Null'dır
+Report;Is smaller or equal than;Şundan küçük veya eşittir
+Report;Is smaller than;Şundan küçüktür
+Report;Landscape;Yatay
+Report;Logs;Günlükler
+Report;Maximum of;Şunun maksimumu
+Report;Messages panel enabled;Mesaj paneli etkin
+Report;Messages panel enabled and shown;Mesaj paneli etkin ve gösteriliyor
+Report;Messages panel enabled and shown only during execution;Mesaj paneli etkin ve yalnızca çalıştırma sırasında gösteriliyor
+Report;Messages panel hidden;Mesaj paneli gizli
+Report;Minimum of;Şunun minimumu
+Report;Model;Model
+Report;Model loaded...;Model yüklendi...
+Report;Models loaded...;Modeller yüklendi...
+Report;New report;Yeni rapor
+Report;Next Century;Sonraki Yüzyıl
+Report;Next Decade;Sonraki On Yıl
+Report;Next Month;Sonraki Ay
+Report;Next Year;Sonraki Yıl
+Report;No;Hayır
+Report;No records;Kayıt yok
+Report;No records. The report output generation has been cancelled.;Kayıt yok. Rapor çıktısı oluşturma işlemi iptal edildi.
+Report;No reports;Rapor yok
+Report;No rows;Satır yok
+Report;Not Between;Arasında Değil
+Report;Not Contains;İçermez
+Report;Now;Şimdi
+Report;Options;Seçenekler
+Report;or;veya
+Report;Page;Sayfa
+Report;"Page &p; of &P;";"Sayfa &p; / &P;"
+Report;Page orientation;Sayfa yönlendirmesi
+Report;Page size;Sayfa boyutu
+Report;Pages;Sayfalar
+Report;Pick Hour;Saat Seç
+Report;Pick Minute;Dakika Seç
+Report;Pick Second;Saniye Seç
+Report;Please enter a value;Lütfen bir değer girin
+Report;Please enter at least a value;Lütfen en az bir değer girin
+Report;Please find the report '{0}' in attachment.;Lütfen '{0}' raporunu ekte bulun.
+Report;Please find your authentication code;Lütfen kimlik doğrulama kodunuzu bulun
+Report;Please wait, the report result is being generated in another window;Lütfen bekleyin, rapor sonucu başka bir pencerede oluşturuluyor
+Report;Previous Century;Önceki Yüzyıl
+Report;Previous Decade;Önceki On Yıl
+Report;Previous Month;Önceki Ay
+Report;Previous Year;Önceki Yıl
+Report;Print: Page orientation;Yazdır: Sayfa yönlendirmesi
+Report;Print: Show logo;Yazdır: Logo göster
+Report;Processing;İşleniyor
+Report;Processing...;İşleniyor...
+Report;Records;Kayıtlar
+Report;Refresh;Yenile
+Report;Report;Rapor
+Report;Report description;Rapor açıklaması
+Report;Report has been cancelled;Rapor iptal edildi
+Report;report information;rapor bilgileri
+Report;report restrictions;rapor kısıtlamaları
+Report;Report result generated in '{0}';Rapor sonucu '{0}' içinde oluşturuldu
+Report;Report result options;Rapor sonucu seçenekleri
+Report;report result panel;rapor sonucu paneli
+Report;Report summary;Rapor özeti
+Report;Restrictions;Kısıtlamalar
+Report;Results;Sonuçlar
+Report;Scale;Ölçek
+Report;second;saniye
+Report;seconds;saniye
+Report;Select all;Tümünü seç
+Report;Select Decade;On Yıl Seç
+Report;Select Month;Ay Seç
+Report;Select Time;Saat Seç
+Report;Select Year;Yıl Seç
+Report;Show;Göster
+Report;Show _MENU_ reports;_MENU_ rapor göster
+Report;Show _MENU_ rows;_MENU_ satır göster
+Report;Show messages;Mesajları göster
+Report;Show messages;Mesajları göster
+Report;Show report information;Rapor bilgilerini göster
+Report;Show report information;Rapor bilgilerini göster
+Report;Show/Hide Restrictions;Kısıtlamaları Göster/Gizle
+Report;Showing _START_ to _END_ of _TOTAL_;_TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor
+Report;Showing 0 to 0 of 0;0 kayıttan 0 - 0 arası gösteriliyor
+Report;Starting execution...;Çalıştırma başlatılıyor...
+Report;Starts with;İle başlar
+Report;Subtotal;Ara toplam
+Report;Sum of;Şunun toplamı
+Report;Summary;Özet
+Report;Table of Contents;İçindekiler
+Report;Tabs to show;Gösterilecek sekmeler
+Report;Task executed...;Görev çalıştırıldı...
+Report;Tasks executed...;Görevler çalıştırıldı...
+Report;The report has been generated.;Rapor oluşturuldu.
+Report;This report has execution errors. Please check details in the Logs Files...;Bu raporda çalıştırma hataları var. Lütfen ayrıntıları Günlük Dosyalarında kontrol edin...
+Report;ThisHour;BuSaat
+Report;ThisMinute;BuDakika
+Report;ThisMonth;BuAy
+Report;ThisQuarter;BuÇeyrek
+Report;ThisSemester;BuYarıyıl
+Report;ThisWeek;BuHafta
+Report;ThisYear;BuYıl
+Report;Today;Bugün
+Report;Toggle Period;Dönemi Değiştir
+Report;Total;Toplam
+Report;Use the date format '{0}' or one of the following keywords:;'{0}' tarih formatını veya aşağıdaki anahtar kelimelerden birini kullanın:
+Report;View;Görüntüle
+Report;View CSV Result;CSV Sonucunu Görüntüle
+Report;View Excel Converter Result;Excel Dönüştürücü Sonucunu Görüntüle
+Report;View Excel Result;Excel Sonucunu Görüntüle
+Report;View HTML Print Result;HTML Yazdırma Sonucunu Görüntüle
+Report;View HTML Result;HTML Sonucunu Görüntüle
+Report;View HTML to PDF Result;HTML'den PDF'e Sonucunu Görüntüle
+Report;View Json Result;Json Sonucunu Görüntüle
+Report;View PDF Converter Result;PDF Dönüştürücü Sonucunu Görüntüle
+Report;View PDF Result;PDF Sonucunu Görüntüle
+Report;View report result file;Rapor sonuç dosyasını görüntüle
+Report;View Text Result;Metin Sonucunu Görüntüle
+Report;View XML Result;XML Sonucunu Görüntüle
+Report;Warning: The maximum number of records is reached;Uyarı: Maksimum kayıt sayısına ulaşıldı
+Report;Yes;Evet
+Web;Add;Ekle
+Web;All;Tümü
+Web;Auto-Refresh (seconds);Otomatik Yenileme (saniye)
+Web;Back to login with user name and password;Kullanıcı adı ve parola ile girişe dön
+Web;Cancel;İptal
+Web;Change password;Parola değiştir
+Web;Change password;Parola değiştir
+Web;Change your password;Parolanızı değiştirin
+Web;Chart sort;Grafik sıralaması
+Web;Close;Kapat
+Web;Color;Renk
+Web;Confirm your new password;Yeni parolanızı onaylayın
+Web;Copy;Kopyala
+Web;Create in folder;Klasörde oluştur
+Web;Create new folder;Yeni klasör oluştur
+Web;CSS Format;CSS Biçimi
+Web;Culture;Kültür
+Web;Current password;Mevcut parola
+Web;Cut;Kes
+Web;Data source connections;Veri kaynağı bağlantıları
+Web;Default view;Varsayılan görünüm
+Web;Delete;Sil
+Web;Delete folder;Klasörü sil
+Web;Description;Açıklama
+Web;Device;Aygıt
+Web;Disconnect;Bağlantıyı kes
+Web;Display options;Görüntüleme seçenekleri
+Web;Edit;Düzenle
+Web;Edit configuration;Yapılandırmayı düzenle
+Web;Edit entry;Girişi düzenle
+Web;Edit profile;Profili düzenle
+Web;Edition;Sürüm
+Web;Email;E-posta
+Web;Enter password;Parolayı girin
+Web;Enter user name;Kullanıcı adını girin
+Web;Enter your current password;Mevcut parolanızı girin
+Web;Enter your new file name;Yeni dosya adınızı girin
+Web;Enter your new password;Yeni parolanızı girin
+Web;Enter your security code;Güvenlik kodunuzu girin
+Web;Enter your user identifier or email;Kullanıcı tanımlayıcınızı veya e-postanızı girin
+Web;Error;Hata
+Web;Error: only files (and not reports) can be copied to this folder.;Hata: bu klasöre yalnızca dosyalar (raporlar değil) kopyalanabilir.
+Web;Error: the destination file name contains invalid characters.;Hata: hedef dosya adı geçersiz karakterler içeriyor.
+Web;Error: the destination folder name contains invalid characters.;Hata: hedef klasör adı geçersiz karakterler içeriyor.
+Web;Expand in Treeview;Ağaç Görünümünde Genişlet
+Web;Export;Dışa aktar
+Web;Files only;Yalnızca dosyalar
+Web;Folder Permissions;Klasör İzinleri
+Web;Folders;Klasörler
+Web;Forget your password ?;Parolanızı mı unuttunuz ?
+Web;Group name;Grup adı
+Web;Group name;Grup adı
+Web;Groups;Gruplar
+Web;Groups;Gruplar
+Web;Height;Yükseklik
+Web;Icon;Simge
+Web;Information;Bilgi
+Web;Invalid security code;Geçersiz güvenlik kodu
+Web;Invalid user name or password;Geçersiz kullanıcı adı veya parola
+Web;Is dynamic;Dinamiktir
+Web;Last execution at;Son çalıştırma
+Web;Licensed to;Lisans sahibi
+Web;Login;Giriş
+Web;Login ID;Giriş kimliği
+Web;Logins;Girişler
+Web;Logout;Çıkış
+Web;Logout the user;Kullanıcının çıkışını yap
+Web;Manage Folders;Klasörleri Yönet
+Web;Manage sub-folders;Alt klasörleri yönet
+Web;Name;Ad
+Web;New;Yeni
+Web;New folder name;Yeni klasör adı
+Web;New folder path;Yeni klasör yolu
+Web;New password;Yeni parola
+Web;None;Yok
+Web;OK;OK
+Web;On startup;Başlangıçta
+Web;Optional chart title;İsteğe bağlı grafik başlığı
+Web;Optional menu name;İsteğe bağlı menü adı
+Web;Output;Çıktı
+Web;Password;Parola
+Web;Paste;Yapıştır
+Web;PDF Conversion delay;PDF Dönüştürme gecikmesi
+Web;Personal;Kişisel
+Web;Personal folder;Kişisel klasör
+Web;Phone;Telefon
+Web;Please wait;Lütfen bekleyin
+Web;Profile;Profil
+Web;Profile information;Profil bilgileri
+Web;Refresh;Yenile
+Web;Re-init your password;Parolanızı yeniden başlatın
+Web;Reload and execute;Yeniden yükle ve çalıştır
+Web;Rename;Yeniden adlandır
+Web;Rename or move folder;Klasörü yeniden adlandır veya taşı
+Web;Rename, move or copy;Yeniden adlandır, taşı veya kopyala
+Web;Report;Rapor
+Web;Report execution mode;Rapor çalıştırma modu
+Web;Report name;Rapor adı
+Web;Report title;Rapor başlığı
+Web;Report title if different from report name;Rapor adından farklıysa rapor başlığı
+Web;Reports;Raporlar
+Web;Reports menu;Raporlar menüsü
+Web;Repository connection;Depo bağlantısı
+Web;Reset password;Parolayı sıfırla
+Web;Reset your password;Parolanızı sıfırlayın
+Web;Save;Kaydet
+Web;Search;Ara
+Web;Security code;Güvenlik kodu
+Web;Show sub-folders;Alt klasörleri göster
+Web;Startup report name;Başlangıç rapor adı
+Web;The favorite has been updated;Favori güncellendi
+Web;Two-Factor Authentication;İki Faktörlü Kimlik Doğrulama
+Web;Type;Tür
+Web;Type a new password;Yeni bir parola yazın
+Web;Upload;Yükle
+Web;User groups;Kullanıcı grupları
+Web;User identifier or email;Kullanıcı tanımlayıcısı veya e-posta
+Web;User name;Kullanıcı adı
+Web;Users;Kullanıcılar
+Web;Web product name;Web ürün adı
+Web;Width;Genişlik
+WebJS;# of % selected;% seçili sayısı
+WebJS;Actions;Eylemler
+WebJS;All selected;Tümü seçili
+WebJS;Allow only execution in a new window;Yalnızca yeni pencerede çalıştırmaya izin ver
+WebJS;Cancel;İptal
+WebJS;Configuration for;Şunun için yapılandırma
+WebJS;Contains;İçerir
+WebJS;Contains all;Tümünü içerir
+WebJS;Contains any;Herhangi birini içerir
+WebJS;Copy;Kopyala
+WebJS;Copy of;Şunun kopyası
+WebJS;Copy to;Şuraya kopyala
+WebJS;Default;Varsayılan
+WebJS;Default culture;Varsayılan kültür
+WebJS;Default mode;Varsayılan mod
+WebJS;Default report connection;Varsayılan rapor bağlantısı
+WebJS;Default repository connection;Varsayılan depo bağlantısı
+WebJS;Default startup;Varsayılan başlangıç
+WebJS;Do not execute report;Raporu çalıştırma
+WebJS;Do you really want to delete the reports or files selected ?;Seçili raporları veya dosyaları gerçekten silmek istiyor musunuz ?
+WebJS;Does not contain;İçermez
+WebJS;Does not contain all;Tümünü içermez
+WebJS;Does not contain any;Herhangi birini içermez
+WebJS;Download report;Raporu indir
+WebJS;Edit report;Raporu düzenle
+WebJS;Edit reports / Manage files;Raporları düzenle / Dosyaları yönet
+WebJS;Edit schedules / View files;Zamanlamaları düzenle / Dosyaları görüntüle
+WebJS;Ends with;İle biter
+WebJS;Equals;Eşittir
+WebJS;Error;Hata
+WebJS;Execute report in a new window;Raporu yeni pencerede çalıştır
+WebJS;Execute report in the current window;Raporu mevcut pencerede çalıştır
+WebJS;Execute reports / View files;Raporları çalıştır / Dosyaları görüntüle
+WebJS;Execute reports and outputs / View files;Raporları ve çıktıları çalıştır / Dosyaları görüntüle
+WebJS;Execute the last report;Son raporu çalıştır
+WebJS;Execute the report;Raporu çalıştır
+WebJS;Favorites;Favoriler
+WebJS;Folder;Klasör
+WebJS;Is between;Şu aralıkta
+WebJS;Is different from;Şundan farklıdır
+WebJS;Is empty;Boştur
+WebJS;Is greater or equal than;Şundan büyük veya eşittir
+WebJS;Is greater than;Şundan büyüktür
+WebJS;Is not between;Şu aralıkta değildir
+WebJS;Is not empty;Boş değildir
+WebJS;Is not Null;Null değildir
+WebJS;Is Null;Null'dır
+WebJS;Is smaller or equal than;Şundan küçük veya eşittir
+WebJS;Is smaller than;Şundan küçüktür
+WebJS;Last modification;Son değişiklik
+WebJS;Mark as favorite;Favori olarak işaretle
+WebJS;Model;Model
+WebJS;New folder configuration;Yeni klasör yapılandırması
+WebJS;New group;Yeni grup
+WebJS;New login;Yeni giriş
+WebJS;No;Hayır
+WebJS;No download (except files) or upload;İndirme yok (dosyalar hariç) veya yükleme yok
+WebJS;No folder configuration;Klasör yapılandırması yok
+WebJS;No login;Giriş yok
+WebJS;No personal folder;Kişisel klasör yok
+WebJS;No right;Yetki yok
+WebJS;None;Yok
+WebJS;Not sorted;Sıralanmamış
+WebJS;OK;OK
+WebJS;Options;Seçenekler
+WebJS;Output;Çıktı
+WebJS;Personal folder for files only;Yalnızca dosyalar için kişisel klasör
+WebJS;Personal folder for reports and files;Raporlar ve dosyalar için kişisel klasör
+WebJS;Please wait;Lütfen bekleyin
+WebJS;Processing;İşleniyor
+WebJS;Profile;Profil
+WebJS;Recents;Son Kullanılanlar
+WebJS;Report;Rapor
+WebJS;report(s) or file(s) cut in the clipboard;rapor veya dosya panoya kesildi
+WebJS;report(s) or file(s) have been deleted;rapor veya dosya silindi
+WebJS;report(s) or file(s) processed;rapor veya dosya işlendi
+WebJS;report(s) or files(s) copied in the clipboard;rapor veya dosya panoya kopyalandı
+WebJS;Reports;Raporlar
+WebJS;Schedule;Zamanlama
+WebJS;Server Version;Sunucu Sürümü
+WebJS;Show _MENU_ reports;_MENU_ rapor göster
+WebJS;Starts with;İle başlar
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Yapılandırma kaydedildi. Güvenlikten etkilendiyseniz lütfen tekrar giriş yapın.
+WebJS;The folder has been created;Klasör oluşturuldu
+WebJS;The folder has been deleted;Klasör silindi
+WebJS;The folder has been renamed;Klasör yeniden adlandırıldı
+WebJS;The folder has been updated;Klasör güncellendi
+WebJS;The report or file has been renamed;Rapor veya dosya yeniden adlandırıldı
+WebJS;Toggle Report or Folders view;Rapor veya Klasör görünümünü değiştir
+WebJS;Unexpected error on server;Sunucuda beklenmeyen hata
+WebJS;User can download reports;Kullanıcı raporları indirebilir
+WebJS;User can download reports and upload reports and files;Kullanıcı raporları indirebilir ve raporları ve dosyaları yükleyebilir
+WebJS;View;Görüntüle
+WebJS;View Folders;Klasörleri Görüntüle
+WebJS;View Report;Raporu Görüntüle
+WebJS;View reports;Raporları görüntüle
+WebJS;Views and outputs;Görünümler ve çıktılar
+WebJS;Warning;Uyarı
+WebJS;Web Interface Version;Web Arayüzü Sürümü
+WebJS;Yes;Evet
+WebJS;Yes (Folder is expanded in the tree view);Evet (Klasör ağaç görünümünde genişletilir)
+WebJS;Yes (Only files can be stored);Evet (Yalnızca dosyalar saklanabilir)
+WebJS;Yes (User can browse sub-folders);Evet (Kullanıcı alt klasörlere göz atabilir)
+WebJS;Yes (User can create and edit sub-folders);Evet (Kullanıcı alt klasörler oluşturabilir ve düzenleyebilir)
+WebJS;Yes (User can edit his profile);Evet (Kullanıcı profilini düzenleyebilir)
+WebJS;Yes (User is administrator of the Web Server);Evet (Kullanıcı Web Sunucusunun yöneticisidir)
+Web;Select assistant;Asistan seç
+Web;Mark as favorite;Favori olarak işaretle
+Web;Favorites;Favoriler
+Web;No favorites yet;Henüz favori yok
+Web;Recent;Son Kullanılan
+Web;No recent items;Son kullanılan öğe yok
+Web;New conversation;Yeni konuşma
+Web;Sample prompts;Örnek istemler
+Web;Sample Prompts;Örnek İstemler
+Web;No sample prompts defined;Tanımlı örnek istem yok
+Web;AI Assistant;Yapay Zeka Asistanı
+Web;Favorites & Recent;Favoriler ve Son Kullanılanlar
+Web;Hide panel;Paneli gizle
+Web;Ask the AI assistant…;Yapay zeka asistanına sorun…
+Web;Confirm Deletion;Silme Onayı
+Web;This action is irreversible. Are you sure you want to delete this item?;Bu işlem geri alınamaz. Bu öğeyi silmek istediğinizden emin misiniz?
+Web;Data Source;Veri Kaynağı
+Web;Report Assistants;Rapor Asistanları
+Web;Select Tables or Views;Tabloları veya Görünümleri Seç
+Web;Filter tables...;Tabloları filtrele...
+Web;Select All;Tümünü Seç
+Web;Deselect All;Tümünün Seçimini Kaldır
+Web;tables selected;tablo seçildi
+Web;Prompt Shortcuts;İstem Kısayolları
+Web;How can Seal AI help you today ?;Seal AI bugün size nasıl yardımcı olabilir ?
+Web;No current items available;Mevcut öğe yok
+Web;Current items will appear here when saved;Kaydedildiğinde mevcut öğeler burada görünür
+Web;Drafts;Taslaklar
+Web;No draft items available;Taslak öğe yok
+Web;Upload files or create new items with the assistant to see them here;Burada görmek için dosya yükleyin veya asistanla yeni öğeler oluşturun
+Web;Item Details;Öğe Ayrıntıları
+Web;Loading detail. Please wait...;Ayrıntı yükleniyor. Lütfen bekleyin...
+Web;Select a row from the table to view its details;Ayrıntılarını görüntülemek için tablodan bir satır seçin
+Web;Check;Kontrol et
+Web;Download;İndir
+Web;Reports Assistant;Raporlar Asistanı
+Web;Connection type;Bağlantı türü
+Web;Connection string;Bağlantı dizesi
+Web;Tables or views;Tablolar veya görünümler
+Web;Report Assistant;Rapor Asistanı
+Web;AI Provider;Yapay Zeka Sağlayıcısı
+Web;AI model;Yapay zeka modeli
+Web;AI model name (overrides default));Yapay zeka modeli adı (varsayılanı geçersiz kılar))
+Web;Temperature;Sıcaklık
+Web;Model temperature;Model sıcaklığı
+Web;System prompt;Sistem istemi
+Web;Optional sytem prompt for the assistant;Asistan için isteğe bağlı sistem istemi
+Web;User prompt;Kullanıcı istemi
+Web;Default user prompts (if empty default values configured are taken);Varsayılan kullanıcı istemleri (boşsa yapılandırılan varsayılan değerler alınır)
+Web;User Groups allowed (No selection means no restriction);İzin verilen Kullanıcı Grupları (Seçim yapılmaması kısıtlama olmadığı anlamına gelir)
+Web;Scan options;Tarama seçenekleri
+Web;When to scan;Ne zaman taranacak
+Web;Cache duration (days);Önbellek süresi (gün)
+Web;Cache duration (days) for scanned data;Taranan veriler için önbellek süresi (gün)
+Web;Tables to scan (no selection means all tables);Taranacak tablolar (seçim yapılmaması tüm tablolar anlamına gelir)
+Web;Records to scan;Taranacak kayıtlar
+Web;Number of records used for scan;Tarama için kullanılan kayıt sayısı
+Web;Scan Data Now;Verileri Şimdi Tara
+Web;Execute;Çalıştır
+Web;Elements:;Öğeler:
+Web;Restrictions:;Kısıtlamalar:
+WebJS;Hide AI Assistant;Yapay Zeka Asistanını Gizle
+WebJS;AI Assistant;Yapay Zeka Asistanı
+WebJS;Running;Çalışıyor
+WebJS;Request cancelled.;İstek iptal edildi.
+WebJS;Remove from favorites;Favorilerden kaldır
+WebJS;No sample prompts defined;Tanımlı örnek istem yok
+WebJS;Rename;Yeniden adlandır
+WebJS;Delete;Sil
+WebJS;No favorites yet;Henüz favori yok
+WebJS;No recent items;Son kullanılan öğe yok
+Web;Configuration;Yapılandırma
+Web;Download/Upload;İndirme/Yükleme
+Web;Rights;Haklar
+Web;Assistants;Asistanlar
+Web;Folder;Klasör
