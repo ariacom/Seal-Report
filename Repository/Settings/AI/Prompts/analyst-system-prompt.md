@@ -23,10 +23,11 @@ When you execute a report or the user asks to run one, include this tag on its o
 [EXECUTE_REPORT:Reports\FolderName\report_name.srex|Display Name]
 ```
 
-- Replace the path with the actual repository-relative path of the report.
+- Reproduce the path **exactly** as returned by `report_list`, including the `Reports\` or `Personal\` prefix and the `.srex` extension. Do not shorten, strip the prefix, or omit the extension.
 - Replace `Display Name` with a short, human-readable label (e.g. `Monthly Sales`).
 - The UI will render this tag as a clickable **▶ Execute** button — do not describe the tag to the user; just include it silently.
 - Only include the tag when you are confident the report path is correct. Never guess a path.
+- **Always emit the `[EXECUTE_REPORT:...]` tag whenever you run a report or mention one the user could run — even when replying in a language other than English. Never translate, reword, or replace the tag with prose. This applies in every language.**
 
 ---
 

@@ -1603,6 +1603,9 @@ $('<div>', {{
                 //When set, the editor edits the content of an external script file instead of the property value (which stays the file name)
                 bool editScriptFile = false;
                 string scriptFileName = null;
+                string scriptFolder = null;
+                string scriptExtension = null;
+                string scriptDefaultName = null;
 
                 if (context.Instance is ReportView)
                 {
@@ -2130,6 +2133,9 @@ $('<div>', {{
                         //Edit the content of the external script file (the property keeps the file name)
                         editScriptFile = true;
                         scriptFileName = valueToEdit;
+                        scriptFolder = Repository.Instance.AIScriptsFolder;
+                        scriptExtension = ".cshtml";
+                        scriptDefaultName = (context.Instance as AIToolConfiguration)?.Name;
                         template = razorAIToolExecutionScriptTemplate;
                         frm.ObjectForCheckSyntax = new AIToolConfiguration();
                         frm.Text = "Edit the AI Tool execution script file";
@@ -2141,7 +2147,57 @@ $('<div>', {{
                         {
                             var scriptPath = Path.IsPathRooted(scriptFileName)
                                 ? scriptFileName
-                                : Path.Combine(Repository.Instance.AIScriptsFolder, scriptFileName);
+                                : Path.Combine(scriptFolder, scriptFileName);
+                            if (File.Exists(scriptPath)) valueToEdit = File.ReadAllText(scriptPath);
+                        }
+                    }
+                }
+                else if (context.Instance is AIAssistantConfiguration)
+                {
+                    if (context.PropertyDescriptor.Name == "DefaultSystemPrompt")
+                    {
+                        frm.Text = "Default System Prompt";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "SystemPromptFile")
+                    {
+                        //Edit the content of the external system prompt file (the property keeps the file name)
+                        editScriptFile = true;
+                        scriptFileName = valueToEdit;
+                        scriptFolder = Repository.Instance.AIPromptsFolder;
+                        scriptExtension = ".md";
+                        scriptDefaultName = (context.Instance as AIAssistantConfiguration)?.Name;
+                        frm.Text = "Edit the System Prompt file";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+
+                        //Load the file content into the editor instead of the file name
+                        valueToEdit = "";
+                        if (!string.IsNullOrWhiteSpace(scriptFileName))
+                        {
+                            var scriptPath = Path.IsPathRooted(scriptFileName)
+                                ? scriptFileName
+                                : Path.Combine(scriptFolder, scriptFileName);
+                            if (File.Exists(scriptPath)) valueToEdit = File.ReadAllText(scriptPath);
+                        }
+                    }
+                    else if (context.PropertyDescriptor.Name == "SamplePromptsFile")
+                    {
+                        //Edit the content of the external sample prompts file (the property keeps the file name)
+                        editScriptFile = true;
+                        scriptFileName = valueToEdit;
+                        scriptFolder = Repository.Instance.AISamplePromptsFolder;
+                        scriptExtension = ".md";
+                        scriptDefaultName = (context.Instance as AIAssistantConfiguration)?.Name;
+                        frm.Text = "Edit the Sample Prompts file (one prompt per line, # for comments)";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+
+                        //Load the file content into the editor instead of the file name
+                        valueToEdit = "";
+                        if (!string.IsNullOrWhiteSpace(scriptFileName))
+                        {
+                            var scriptPath = Path.IsPathRooted(scriptFileName)
+                                ? scriptFileName
+                                : Path.Combine(scriptFolder, scriptFileName);
                             if (File.Exists(scriptPath)) valueToEdit = File.ReadAllText(scriptPath);
                         }
                     }
@@ -2197,22 +2253,22 @@ $('<div>', {{
 
                     if (editScriptFile)
                     {
-                        //Persist the edited content to the external script file; the property value stays the file name
+                        //Persist the edited content to the external file; the property value stays the file name
                         if (!string.IsNullOrWhiteSpace(frm.textBox.Text))
                         {
                             var fileName = scriptFileName;
                             if (string.IsNullOrWhiteSpace(fileName))
                             {
-                                //No file name yet: derive one from the tool name (fallback to a GUID)
-                                var toolName = (context.Instance as AIToolConfiguration)?.Name;
-                                if (string.IsNullOrWhiteSpace(toolName)) toolName = "ai_tool_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-                                foreach (var c in Path.GetInvalidFileNameChars()) toolName = toolName.Replace(c, '_');
-                                fileName = toolName + ".cshtml";
+                                //No file name yet: derive one from the object name (fallback to a GUID)
+                                var baseName = scriptDefaultName;
+                                if (string.IsNullOrWhiteSpace(baseName)) baseName = "ai_" + Guid.NewGuid().ToString("N").Substring(0, 8);
+                                foreach (var c in Path.GetInvalidFileNameChars()) baseName = baseName.Replace(c, '_');
+                                fileName = baseName + scriptExtension;
                             }
                             var scriptPath = Path.IsPathRooted(fileName)
                                 ? fileName
-                                : Path.Combine(Repository.Instance.AIScriptsFolder, fileName);
-                            if (!Directory.Exists(Repository.Instance.AIScriptsFolder)) Directory.CreateDirectory(Repository.Instance.AIScriptsFolder);
+                                : Path.Combine(scriptFolder, fileName);
+                            if (!Directory.Exists(scriptFolder)) Directory.CreateDirectory(scriptFolder);
                             File.WriteAllText(scriptPath, frm.textBox.Text);
                             value = Path.IsPathRooted(fileName) ? fileName : Path.GetFileName(fileName);
                         }

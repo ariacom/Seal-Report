@@ -497,7 +497,11 @@ WebJS;Delete;Ta bort
 WebJS;No favorites yet;Inga favoriter ännu
 WebJS;No recent items;Inga senaste objekt
 Web;Configuration;Konfiguration
+Web;Configuration and security;Konfiguration och säkerhet
 Web;Download/Upload;Nedladdning/Uppladdning
 Web;Rights;Rättigheter
 Web;Assistants;Assistenter
 Web;Folder;Mapp
+Web;Drag to resize;Dra för att ändra storlek
+WebJS;Copy and paste;Kopiera och klistra in
+WebJS;Copy, paste and send;Kopiera, klistra in och skicka

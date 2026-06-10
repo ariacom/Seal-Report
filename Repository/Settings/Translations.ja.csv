@@ -497,7 +497,11 @@ WebJS;Delete;削除
 WebJS;No favorites yet;お気に入りはまだありません
 WebJS;No recent items;最近の項目はありません
 Web;Configuration;構成
+Web;Configuration and security;構成とセキュリティ
 Web;Download/Upload;ダウンロード/アップロード
 Web;Rights;権限
 Web;Assistants;アシスタント
 Web;Folder;フォルダー
+Web;Drag to resize;ドラッグしてサイズ変更
+WebJS;Copy and paste;コピーして貼り付け
+WebJS;Copy, paste and send;コピー、貼り付けして送信

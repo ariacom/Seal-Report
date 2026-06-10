@@ -497,7 +497,11 @@ WebJS;Delete;Törlés
 WebJS;No favorites yet;Még nincsenek kedvencek
 WebJS;No recent items;Nincsenek legutóbbi elemek
 Web;Configuration;Konfiguráció
+Web;Configuration and security;Konfiguráció és biztonság
 Web;Download/Upload;Letöltés/Feltöltés
 Web;Rights;Jogok
 Web;Assistants;Asszisztensek
 Web;Folder;Mappa
+Web;Drag to resize;Húzza az átméretezéshez
+WebJS;Copy and paste;Másolás és beillesztés
+WebJS;Copy, paste and send;Másolás, beillesztés és küldés

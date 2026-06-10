@@ -1539,7 +1539,7 @@ namespace SealWebServer.Controllers
 
                 return Json(new
                 {
-                    assistants = configs.Select(a => new { guid = a.GUID, name = Repository.RepositoryTranslate("AIAssistantName", "*", a.Name), description = Repository.RepositoryTranslate("AIAssistantName", "*", a.Description) }).ToList(),
+                    assistants = configs.Select(a => new { guid = a.GUID, name = Repository.RepositoryTranslate("AIAssistantName", "*", a.Name), description = Repository.RepositoryTranslate("AIAssistantDescription", "*", a.Description) }).ToList(),
                     selectedGuid = selectedGuid
                 });
             }
@@ -1602,7 +1602,7 @@ namespace SealWebServer.Controllers
                 string reply;
                 try
                 {
-                    reply = assistant.Chat(message, cancelOp, Startup.DebugMode ? this : null);
+                    reply = assistant.Chat(message, cancelOp, this, Startup.DebugMode ? this : null);
                 }
                 finally
                 {
@@ -1618,6 +1618,11 @@ namespace SealWebServer.Controllers
                 // separator (e.g. "\foo.srex") or the personal prefix (":").
                 //   "Reports\..."  → "\..."   (strip "Reports" prefix, keep leading sep)
                 //   "Personal\..." → ":..."   (replace "Personal" with personal-root ":")
+                //   ":..."         → as-is    (already personal SWI format)
+                //   anything else  → "\..."   (model dropped the "Reports" prefix – treat
+                //                              as relative to the Reports root)
+                // The model also occasionally drops the ".srex" extension, so it is
+                // restored when missing.
                 var reportActions = new List<object>();
                 var cleanedReply = Regex.Replace(reply ?? string.Empty,
                     @"\[EXECUTE_REPORT:([^\]\|]+)\|([^\]]+)\]",
@@ -1629,8 +1634,13 @@ namespace SealWebServer.Controllers
                             swiPath = rawPath.Substring("Reports".Length);
                         else if (rawPath.StartsWith("Personal\\") || rawPath.StartsWith("Personal/"))
                             swiPath = ":" + rawPath.Substring("Personal".Length);
+                        else if (rawPath.StartsWith(":"))
+                            swiPath = rawPath; // already in personal SWI format
                         else
-                            swiPath = rawPath; // already in SWI format or unknown – pass through
+                            swiPath = (rawPath.StartsWith("\\") || rawPath.StartsWith("/")) ? rawPath : "\\" + rawPath;
+
+                        if (!swiPath.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+                            swiPath += "." + Repository.SealReportFileExtension;
 
                         reportActions.Add(new
                         {

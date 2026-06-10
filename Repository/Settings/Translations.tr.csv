@@ -497,7 +497,11 @@ WebJS;Delete;Sil
 WebJS;No favorites yet;Henüz favori yok
 WebJS;No recent items;Son kullanılan öğe yok
 Web;Configuration;Yapılandırma
+Web;Configuration and security;Yapılandırma ve güvenlik
 Web;Download/Upload;İndirme/Yükleme
 Web;Rights;Haklar
 Web;Assistants;Asistanlar
 Web;Folder;Klasör
+Web;Drag to resize;Yeniden boyutlandırmak için sürükleyin
+WebJS;Copy and paste;Kopyala ve yapıştır
+WebJS;Copy, paste and send;Kopyala, yapıştır ve gönder

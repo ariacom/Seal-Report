@@ -128,7 +128,8 @@ namespace Seal.AI
         /// When set, takes precedence over <see cref="DefaultSystemPrompt"/>.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\tSystem Prompt File"), Description("File name of the system prompt (e.g. my-prompt.md), located in Settings\\AI\\Prompts. When set, overrides Default System Prompt."), Id(8, 1)]
+        [Category("Definition"), DisplayName("\tSystem Prompt File"), Description("File name of the system prompt (e.g. my-prompt.md), located in Settings\\AI\\Prompts. When set, overrides Default System Prompt. Click the editor button to edit the file content."), Id(8, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string SystemPromptFile { get; set; }
 
@@ -137,7 +138,8 @@ namespace Seal.AI
         /// One prompt per line; blank lines and lines starting with <c>#</c> are ignored.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Sample Prompts File"), Description("File name of the sample prompts list (e.g. sample-prompts.md), located in Settings\\AI\\Prompts\\Samples. One prompt per line; lines starting with # are treated as comments."), Id(9, 1)]
+        [Category("Definition"), DisplayName("Sample Prompts File"), Description("File name of the sample prompts list (e.g. sample-prompts.md), located in Settings\\AI\\Prompts\\Samples. One prompt per line; lines starting with # are treated as comments. Click the editor button to edit the file content."), Id(9, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string SamplePromptsFile { get; set; }
 

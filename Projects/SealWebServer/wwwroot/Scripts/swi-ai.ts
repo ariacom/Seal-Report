@@ -36,11 +36,41 @@
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
-        // **bold**
-        text = text.replace(/\*\*([^*\r\n]+)\*\*/g, '<strong>$1</strong>');
-        // Line breaks
-        text = text.replace(/\r\n|\r|\n/g, '<br>');
-        return text;
+
+        // Inline formatting applied within a single (already escaped) line.
+        function inline(s: string): string {
+            // `inline code`
+            s = s.replace(/`([^`\r\n]+)`/g, '<code>$1</code>');
+            // **bold**
+            s = s.replace(/\*\*([^*\r\n]+)\*\*/g, '<strong>$1</strong>');
+            return s;
+        }
+
+        const lines = text.split(/\r\n|\r|\n/);
+        let html = '';
+        let inList = false;
+        const closeList = function () { if (inList) { html += '</ul>'; inList = false; } };
+
+        for (const line of lines) {
+            // # .. ###### headings
+            const h = /^(#{1,6})\s+(.*)$/.exec(line);
+            if (h) {
+                closeList();
+                html += '<div class="ai-h ai-h' + h[1].length + '">' + inline(h[2]) + '</div>';
+                continue;
+            }
+            // - or * bullet lists
+            const li = /^\s*[-*]\s+(.*)$/.exec(line);
+            if (li) {
+                if (!inList) { html += '<ul class="ai-list">'; inList = true; }
+                html += '<li>' + inline(li[1]) + '</li>';
+                continue;
+            }
+            closeList();
+            html += line.trim() === '' ? '<br>' : inline(line) + '<br>';
+        }
+        closeList();
+        return html;
     }
 
     // ── Report-action parser ────────────────────────────────────
@@ -65,6 +95,75 @@
             return '';
         });
         return { cleaned: cleaned.trim(), $actions };
+    }
+
+    // ── Clipboard helper ────────────────────────────────────────
+    function fallbackCopy(text: string): void {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+        document.body.removeChild(ta);
+    }
+    function copyToClipboard(text: string): void {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).catch(function () { fallbackCopy(text); });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    // ── Markdown → plain text (for copying AI replies) ──────────
+    function toPlainText(raw: string): string {
+        return (raw || '')
+            .replace(/^#{1,6}\s+/gm, '')          // strip heading markers
+            .replace(/\*\*([^*\r\n]+)\*\*/g, '$1') // strip bold markers
+            .replace(/`([^`\r\n]+)`/g, '$1');      // strip inline-code markers
+    }
+
+    // ── Bubble factories with hover action toolbars ─────────────
+    function bubbleActionBtn(iconClass: string, title: string, handler: () => void): JQuery {
+        return $('<button>')
+            .addClass('ai-bubble-action-btn')
+            .attr('title', title)
+            .html('<i class="fa ' + iconClass + '"></i>')
+            .on('click', function (e: JQuery.ClickEvent) {
+                e.stopPropagation();
+                handler();
+            });
+    }
+
+    function makeUserBubble(text: string): JQuery {
+        var $bubble  = $('<div>').addClass('ai-panel-bubble user').text(text);
+        var $actions = $('<div>').addClass('ai-bubble-actions');
+        bubbleActionBtn('fa-copy', SWIUtil.tr('Copy'), function () {
+            copyToClipboard(text);
+        }).appendTo($actions);
+        bubbleActionBtn('fa-clipboard', SWIUtil.tr('Copy and paste'), function () {
+            copyToClipboard(text);
+            $input.val(text).trigger('input');
+            $input.focus();
+        }).appendTo($actions);
+        bubbleActionBtn('fa-paper-plane', SWIUtil.tr('Copy, paste and send'), function () {
+            copyToClipboard(text);
+            $input.val(text).trigger('input');
+            if (!$send.prop('disabled')) $send.trigger('click');
+        }).appendTo($actions);
+        return $bubble.append($actions);
+    }
+
+    function makeAIBubble(html: string, rawText: string): JQuery {
+        var $bubble  = $('<div>').addClass('ai-panel-bubble ai').html(html);
+        var $actions = $('<div>').addClass('ai-bubble-actions');
+        bubbleActionBtn('fa-copy', SWIUtil.tr('Copy'), function () {
+            copyToClipboard(toPlainText(rawText));
+        }).appendTo($actions);
+        return $bubble.append($actions);
     }
 
     // ── Clear conversation (UI only) ────────────────────────────
@@ -92,6 +191,42 @@
     });
 
     $close.on('click', closePanel);
+
+    // ── Panel resize (drag handle) ──────────────────────────────
+    var MIN_PANEL_WIDTH = 300;
+    var MAX_PANEL_WIDTH = 1200;
+    var $resizer = $('#ai-panel-resizer');
+
+    function applyPanelWidth(px: number): void {
+        var clamped = Math.max(MIN_PANEL_WIDTH, Math.min(MAX_PANEL_WIDTH, px));
+        document.documentElement.style.setProperty('--ai-panel-width', clamped + 'px');
+    }
+
+    // Restore the saved width on load.
+    try {
+        var saved = window.localStorage.getItem('ai-panel-width');
+        if (saved) applyPanelWidth(parseInt(saved, 10));
+    } catch (e) { /* localStorage unavailable */ }
+
+    $resizer.on('mousedown', function (e: JQuery.MouseDownEvent) {
+        e.preventDefault();
+        $('body').addClass('ai-resizing');
+
+        function onMove(ev: MouseEvent): void {
+            applyPanelWidth(ev.clientX);
+        }
+        function onUp(): void {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+            $('body').removeClass('ai-resizing');
+            var current = getComputedStyle(document.documentElement)
+                .getPropertyValue('--ai-panel-width').trim();
+            try { window.localStorage.setItem('ai-panel-width', String(parseInt(current, 10))); }
+            catch (err) { /* localStorage unavailable */ }
+        }
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+    });
 
     // ── Assistant selector ──────────────────────────────────────
     // Fetches the assistants available to the current user. Shows the selectpicker
@@ -240,7 +375,7 @@
         if (!message) return;
 
         // Append user bubble immediately
-        const userBubble = $('<div>').addClass('ai-panel-bubble user').text(message);
+        const userBubble = makeUserBubble(message);
         $messages.append(userBubble);
         $messages[0].scrollTop = $messages[0].scrollHeight;
 
@@ -258,7 +393,7 @@
         _gateway.GetAIAssistantResponse(message, function (data: any) {
             if ($currentTyping) { $currentTyping.remove(); $currentTyping = null; }
             if (data.response) {
-                const aiBubble = $('<div>').addClass('ai-panel-bubble ai').html(formatResponse(data.response || ''));
+                const aiBubble = makeAIBubble(formatResponse(data.response || ''), data.response || '');
                 $messages.append(aiBubble);
             }
             // Render Execute buttons when the AI proposes running one or more reports
@@ -421,11 +556,11 @@
                     if (session && session.Messages) {
                         $.each(session.Messages, function (_: any, msg: any) {
                             if (msg.Type === 'UserChatMessage' && msg.Content) {
-                                $messages.append($('<div>').addClass('ai-panel-bubble user').text(msg.Content));
+                                $messages.append(makeUserBubble(msg.Content as string));
                             } else if (msg.Type === 'AssistantChatMessage' && msg.Content) {
                                 const { cleaned, $actions } = parseReportActions(msg.Content as string);
                                 if (cleaned) {
-                                    $messages.append($('<div>').addClass('ai-panel-bubble ai').html(formatResponse(cleaned)));
+                                    $messages.append(makeAIBubble(formatResponse(cleaned), cleaned));
                                 }
                                 if ($actions.children().length > 0) {
                                     $messages.append($actions);

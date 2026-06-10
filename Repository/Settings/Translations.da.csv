@@ -497,7 +497,11 @@ WebJS;Delete;Slet
 WebJS;No favorites yet;Ingen favoritter endnu
 WebJS;No recent items;Ingen seneste elementer
 Web;Configuration;Konfiguration
+Web;Configuration and security;Konfiguration og sikkerhed
 Web;Download/Upload;Download/Upload
 Web;Rights;Rettigheder
 Web;Assistants;Assistenter
 Web;Folder;Mappe
+Web;Drag to resize;Træk for at ændre størrelse
+WebJS;Copy and paste;Kopiér og indsæt
+WebJS;Copy, paste and send;Kopiér, indsæt og send

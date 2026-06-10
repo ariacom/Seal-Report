@@ -1,503 +1,507 @@
-﻿Context,Reference,zh
-NVD3,(right axis),（右轴）
-NVD3,Expanded,扩大
-NVD3,Grouped,分组
-NVD3,Re-scale y-axis,重新缩放Y轴
-NVD3,Stacked,堆积
-NVD3,Stream,流
-Report,!=,！=
-Report,# of % selected,# of % selected
-Report,(filtered from _MAX_),（从 _MAX_ 条记录中筛选）
-Report,<,<
-Report,<=,<=
-Report,=,=
-Report,>,>
-Report,>=,>=
-Report,A value is required for,需要一个值
-Report,All,全部
-Report,All selected,全部选定
-Report,and,and
-Report,Auto Fit columns,自动调整列宽
-Report,Auto Scroll enabled,自动滚动已启用
-Report,Average of,平均
-Report,Back to top,返回顶部
-Report,Between,Between
-Report,Cancel,取消
-Report,Cancelling report...,正在取消报告…
-Report,Charts,图表
-Report,Clear selection,清除选择
-Report,Close,关闭
-Report,Contains,包含
-Report,Contains all,包含全部
-Report,Contains any,包含任意
-Report,Count Distinct of,非重复计数：
-Report,Count of,的计数
-Report,Decrement,减少
-Report,Description,说明
-Report,Display header footer,显示页眉页脚
-Report,Display: Execution messages,显示：执行消息
-Report,Display: Execution messages,显示：执行消息
-Report,Display: Information messages,显示：信息消息
-Report,Display: Information messages,显示：信息消息
-Report,Does not contain,不包含
-Report,Does not contain all,不包含全部
-Report,Does not contain any,不包含任意
-Report,Drill <,Drill <
-Report,Drill >,Drill >
-Report,Duration,持续时间
-Report,Duration (seconds),持续时间（秒）
-Report,Email sent to '{0}',已发送邮件至 '{0}'
-Report,Ends with,以结尾
-Report,Equals,等于
-Report,Execute,执行
-Report,Executing report...,正在执行报告…
-Report,Execution date,执行日期
-Report,Execution duration,执行持续时间
-Report,execution messages,执行消息
-Report,Export messages...,导出邮件…
-Report,Filter:,过滤器：
-Report,Go to today,转到今天
-Report,Goal,目标
-Report,Hide,隐藏
-Report,HTML Print: Show messages,HTML 打印：显示消息
-Report,HTML Print: Show messages,HTML 打印：显示消息
-Report,HTML Print: Show report information,HTML 打印：显示报表信息
-Report,HTML Print: Show report information,HTML 打印：显示报表信息
-Report,HTML to PDF,HTML 转 PDF
-Report,Increment,增加
-Report,Information panel enabled,已启用信息面板
-Report,Information panel enabled and shown,信息面板已启用并显示
-Report,Information panel hidden,信息面板已隐藏
-Report,Invalid date,无效日期
-Report,Invalid numeric value,无效的数值
-Report,Is between,介于
-Report,Is Blank,为空白
-Report,Is different from,不同于
-Report,Is empty,是空的
-Report,Is greater or equal than,大于或等于
-Report,Is greater than,大于
-Report,Is not between,不是介于
-Report,Is Not Blank,不为空白
-Report,Is not empty,不是空的
-Report,Is not Null,不为空
-Report,Is Null,为空
-Report,Is smaller or equal than,小于或等于
-Report,Is smaller than,小于
-Report,Landscape,横向
-Report,Logs,日志
-Report,Maximum of,最大值
-Report,Messages panel enabled,已启用消息面板
-Report,Messages panel enabled and shown,消息面板已启用并显示
-Report,Messages panel enabled and shown only during execution,消息面板已启用，仅在执行期间显示
-Report,Messages panel hidden,消息面板已隐藏
-Report,Minimum of,最小值
-Report,Model,模型
-Report,Model loaded...,模型已加载…
-Report,Models loaded...,模型已加载…
-Report,New report,新建报告
-Report,Next Century,下一世纪
-Report,Next Decade,下一个十年
-Report,Next Month,下个月
-Report,Next Year,明年
-Report,No,否
-Report,No records,没有记录
-Report,No records. The report output generation has been cancelled.,没有记录。报告输出生成已取消。
-Report,No reports,没有报告
-Report,No rows,没有行
-Report,Not Between,不介于
-Report,Not Contains,不包含
-Report,Now,现在
-Report,Options,选项
-Report,or,或
-Report,Page,第页
-Report,Page &p; of &P;,第 &p; 页，共 &P; 页
-Report,Page orientation,页面方向
-Report,Page size,页面大小
-Report,Pages,页
-Report,Pick Hour,选择小时
-Report,Pick Minute,选择分钟
-Report,Pick Second,选择秒
-Report,Please enter a value,请输入一个值
-Report,Please enter at least a value,请至少输入一个值
-Report,Please find the report '{0}' in attachment.,请在附件中查阅报表 '{0}'。
-Report,Please find your authentication code,请查阅您的身份验证码
-Report,"Please wait, the report result is being generated in another window",请稍候，报表结果正在另一个窗口中生成
-Report,Previous Century,上一世纪
-Report,Previous Decade,上一个十年
-Report,Previous Month,上个月
-Report,Previous Year,去年
-Report,Print: Page orientation,打印：页面方向
-Report,Print: Show logo,打印：显示徽标
-Report,Processing,处理
-Report,Processing...,处理。。。
-Report,Records,记录
-Report,Refresh,刷新
-Report,Report,报告
-Report,Report description,报表说明
-Report,Report has been cancelled,报告已取消
-Report,report information,报告信息
-Report,report restrictions,报告限制
-Report,Report result generated in '{0}',在'{0}'中生成的报告结果
-Report,Report result options,报表结果选项
-Report,report result panel,报告结果面板
-Report,Report summary,报表摘要
-Report,Restrictions,限制
-Report,Results,结果
-Report,Scale,缩放
-Report,second,秒
-Report,seconds,秒
-Report,Select all,全选
-Report,Select Decade,选择十年
-Report,Select Month,选择月份
-Report,Select Time,选择时间
-Report,Select Year,选择年份
-Report,Show,显示
-Report,Show _MENU_ reports,显示 _MENU_ 个报表
-Report,Show _MENU_ rows,显示 _MENU_ 行
-Report,Show messages,显示消息
-Report,Show messages,显示消息
-Report,Show report information,显示报表信息
-Report,Show report information,显示报表信息
-Report,Show/Hide Restrictions,显示/隐藏限制条件
-Report,Showing _START_ to _END_ of _TOTAL_,Showing _START_ to _END_ of _TOTAL_
-Report,Showing 0 to 0 of 0,显示0到0
-Report,Starting execution...,开始执行…
-Report,Starts with,开始于
-Report,Subtotal,小计
-Report,Sum of,总计
-Report,Summary,总结
-Report,Table of Contents,目录
-Report,Tabs to show,要显示的选项卡
-Report,Task executed...,任务已执行…
-Report,Tasks executed...,任务已执行…
-Report,The report has been generated.,报告已生成。
-Report,This report has execution errors. Please check details in the Logs Files...,此报表存在执行错误。请在日志文件中查看详细信息...
-Report,ThisHour,本小时
-Report,ThisMinute,本分钟
-Report,ThisMonth,本月
-Report,ThisQuarter,本季度
-Report,ThisSemester,本半年
-Report,ThisWeek,本周
-Report,ThisYear,今年
-Report,Today,今天
-Report,Toggle Period,切换时段
-Report,Total,总计
-Report,Use the date format '{0}' or one of the following keywords:,使用日期格式 '{0}'或以下关键字之一：
-Report,View,查看
-Report,View CSV Result,查看csv结果
-Report,View Excel Converter Result,查看 Excel 转换结果
-Report,View Excel Result,查看Excel结果
-Report,View HTML Print Result,查看 HTML 打印结果
-Report,View HTML Result,查看HTML结果
-Report,View HTML to PDF Result,查看 HTML 转 PDF 结果
-Report,View Json Result,查看 Json 结果
-Report,View PDF Converter Result,查看 PDF 转换结果
-Report,View PDF Result,查看PDF结果
-Report,View report result file,查看报告结果文件
-Report,View Text Result,查看文本结果
-Report,View XML Result,查看 XML 结果
-Report,Warning: The maximum number of records is reached,警告：已达到最大记录数
-Report,Yes,是
-Web,Add,添加
-Web,All,全部
-Web,Auto-Refresh (seconds),自动刷新（秒）
-Web,Back to login with user name and password,返回使用用户名和密码登录
-Web,Cancel,取消
-Web,Change password,更改密码
-Web,Change password,更改密码
-Web,Change your password,更改您的密码
-Web,Chart sort,图表排序
-Web,Close,关闭
-Web,Color,颜色
-Web,Confirm your new password,确认您的新密码
-Web,Copy,复制
-Web,Create in folder,在文件夹中创建
-Web,Create new folder,创建新文件夹
-Web,CSS Format,CSS 格式
-Web,Culture,区域设置
-Web,Current password,当前密码
-Web,Cut,剪切
-Web,Data source connections,数据源连接
-Web,Default view,默认视图
-Web,Delete,删除
-Web,Delete folder,删除文件夹
-Web,Description,说明
-Web,Device,设备
-Web,Disconnect,断开
-Web,Display options,显示选项
-Web,Edit,编辑
-Web,Edit configuration,编辑配置
-Web,Edit entry,编辑条目
-Web,Edit profile,编辑个人资料
-Web,Edition,版本
-Web,Email,电子邮件
-Web,Enter password,输入密码
-Web,Enter user name,输入用户名
-Web,Enter your current password,输入您的当前密码
-Web,Enter your new file name,输入新文件名
-Web,Enter your new password,输入您的新密码
-Web,Enter your security code,输入您的安全码
-Web,Enter your user identifier or email,输入您的用户标识或电子邮件
-Web,Error,错误
-Web,Error: only files (and not reports) can be copied to this folder.,错误：只能将文件（而不是报告）复制到此文件夹。
-Web,Error: the destination file name contains invalid characters.,错误：目标文件名包含无效字符。
-Web,Error: the destination folder name contains invalid characters.,错误：目标文件夹名包含无效字符。
-Web,Expand in Treeview,在树状视图中展开
-Web,Export,导出
-Web,Files only,仅文件
-Web,Folder Permissions,文件夹权限
-Web,Folders,文件夹
-Web,Forget your password ?,忘记密码？
-Web,Group name,组名
-Web,Group name,组名
-Web,Groups,组
-Web,Groups,组
-Web,Height,高度
-Web,Icon,图标
-Web,Information,信息
-Web,Invalid security code,安全码无效
-Web,Invalid user name or password,用户名或密码无效
-Web,Is dynamic,为动态
-Web,Last execution at,上次执行于
-Web,Licensed to,授权给
-Web,Login,登录
-Web,Login ID,登录 ID
-Web,Logins,登录账号
-Web,Logout,注销
-Web,Logout the user,注销用户
-Web,Manage Folders,管理文件夹
-Web,Manage sub-folders,管理子文件夹
-Web,Name,姓名
-Web,New,新建
-Web,New folder name,新文件夹名称
-Web,New folder path,新文件夹路径
-Web,New password,新密码
-Web,None,无
-Web,OK,好啊
-Web,On startup,启动时
-Web,Optional chart title,可选图表标题
-Web,Optional menu name,可选菜单名称
-Web,Output,输出
-Web,Password,密码
-Web,Paste,粘贴
-Web,PDF Conversion delay,PDF 转换延迟
-Web,Personal,个人的
-Web,Personal folder,个人文件夹
-Web,Phone,电话
-Web,Please wait,请稍候
-Web,Profile,简况
-Web,Profile information,配置文件信息
-Web,Refresh,刷新
-Web,Re-init your password,重新初始化您的密码
-Web,Reload and execute,重新加载并执行
-Web,Rename,重命名
-Web,Rename or move folder,重命名或移动文件夹
-Web,"Rename, move or copy",重命名、移动或复制
-Web,Report,报告
-Web,Report execution mode,报表执行模式
-Web,Report name,报告名称
-Web,Report title,报告标题
-Web,Report title if different from report name,报告标题（如果与报告名称不同）
-Web,Reports,报告
-Web,Reports menu,报表菜单
-Web,Repository connection,存储库连接
-Web,Reset password,重置密码
-Web,Reset your password,重置您的密码
-Web,Save,保存
-Web,Search,搜索
-Web,Security code,安全码
-Web,Show sub-folders,显示子文件夹
-Web,Startup report name,启动报表名称
-Web,The favorite has been updated,收藏夹已更新
-Web,Two-Factor Authentication,双因素身份验证
-Web,Type,类型
-Web,Type a new password,输入新密码
-Web,Upload,上传
-Web,User groups,用户组
-Web,User identifier or email,用户标识或电子邮件
-Web,User name,用户名
-Web,Users,用户
-Web,Web product name,Web 产品名称
-Web,Width,宽度
-WebJS,# of % selected,#所选百分比
-WebJS,Actions,操作
-WebJS,All selected,全部选定
-WebJS,Allow only execution in a new window,仅允许在新窗口中执行
-WebJS,Cancel,取消
-WebJS,Configuration for,配置项：
-WebJS,Contains,包含
-WebJS,Contains all,包含全部
-WebJS,Contains any,包含任意
-WebJS,Copy,复制
-WebJS,Copy of,副本：
-WebJS,Copy to,复制到
-WebJS,Default,违约
-WebJS,Default culture,默认区域设置
-WebJS,Default mode,默认模式
-WebJS,Default report connection,默认报表连接
-WebJS,Default repository connection,默认存储库连接
-WebJS,Default startup,默认启动项
-WebJS,Do not execute report,不执行报表
-WebJS,Do you really want to delete the reports or files selected ?,是否确实要删除选定的报告或文件？
-WebJS,Does not contain,不包含
-WebJS,Does not contain all,不包含全部
-WebJS,Does not contain any,不包含任意
-WebJS,Download report,下载报表
-WebJS,Edit report,编辑报告
-WebJS,Edit reports / Manage files,编辑报表 / 管理文件
-WebJS,Edit schedules / View files,编辑计划 / 查看文件
-WebJS,Ends with,以结尾
-WebJS,Equals,等于
-WebJS,Error,错误
-WebJS,Execute report in a new window,在新窗口中执行报表
-WebJS,Execute report in the current window,在当前窗口中执行报表
-WebJS,Execute reports / View files,执行报表 / 查看文件
-WebJS,Execute reports and outputs / View files,执行报表和输出 / 查看文件
-WebJS,Execute the last report,执行上一个报表
-WebJS,Execute the report,执行报表
-WebJS,Favorites,收藏夹
-WebJS,Folder,文件夹
-WebJS,Is between,介于
-WebJS,Is different from,不同于
-WebJS,Is empty,是空的
-WebJS,Is greater or equal than,大于或等于
-WebJS,Is greater than,大于
-WebJS,Is not between,不是介于
-WebJS,Is not empty,不是空的
-WebJS,Is not Null,不为空
-WebJS,Is Null,为空
-WebJS,Is smaller or equal than,小于或等于
-WebJS,Is smaller than,小于
-WebJS,Last modification,上次修改
-WebJS,Mark as favorite,标记为收藏
-WebJS,Model,模型
-WebJS,New folder configuration,新建文件夹配置
-WebJS,New group,新建组
-WebJS,New login,新建登录账号
-WebJS,No,不
-WebJS,No download (except files) or upload,不允许下载（文件除外）或上传
-WebJS,No folder configuration,无文件夹配置
-WebJS,No login,无登录账号
-WebJS,No personal folder,无个人文件夹
-WebJS,No right,无权限
-WebJS,None,无
-WebJS,Not sorted,未排序
-WebJS,OK,OK
-WebJS,Options,选项
-WebJS,Output,输出
-WebJS,Personal folder for files only,仅供文件使用的个人文件夹
-WebJS,Personal folder for reports and files,供报表和文件使用的个人文件夹
-WebJS,Please wait,请稍候
-WebJS,Processing,正在处理
-WebJS,Profile,个人资料
-WebJS,Recents,最近使用
-WebJS,Report,报表
-WebJS,report(s) or file(s) cut in the clipboard,在剪贴板中剪切的报告或文件
-WebJS,report(s) or file(s) have been deleted,报告或文件已被删除
-WebJS,report(s) or file(s) processed,已处理的报告或文件
-WebJS,report(s) or files(s) copied in the clipboard,在剪贴板中复制的报告或文件
-WebJS,Reports,报表
-WebJS,Schedule,地铁列车时刻表
-WebJS,Server Version,服务器版本
-WebJS,Show _MENU_ reports,显示 _MENU_ 个报表
-WebJS,Starts with,开始于
-WebJS,The configuration has been saved. Please login again if you are impacted by the security.,配置已保存。如果受安全设置影响，请重新登录。
-WebJS,The folder has been created,文件夹已创建
-WebJS,The folder has been deleted,文件夹已被删除
-WebJS,The folder has been renamed,文件夹已重命名
-WebJS,The folder has been updated,文件夹已更新
-WebJS,The report or file has been renamed,报告或文件已重命名
-WebJS,Toggle Report or Folders view,切换报表或文件夹视图
-WebJS,Unexpected error on server,服务器发生意外错误
-WebJS,User can download reports,用户可以下载报表
-WebJS,User can download reports and upload reports and files,用户可以下载报表并上传报表和文件
-WebJS,View,视图
-WebJS,View Folders,查看文件夹
-WebJS,View Report,查看报表
-WebJS,View reports,查看报表
-WebJS,Views and outputs,视图和输出
-WebJS,Warning,警告
-WebJS,Web Interface Version,Web界面版本
-WebJS,Yes,是的
-WebJS,Yes (Folder is expanded in the tree view),是（文件夹在树状视图中展开）
-WebJS,Yes (Only files can be stored),是（仅可存储文件）
-WebJS,Yes (User can browse sub-folders),是（用户可以浏览子文件夹）
-WebJS,Yes (User can create and edit sub-folders),是（用户可以创建和编辑子文件夹）
-WebJS,Yes (User can edit his profile),是（用户可以编辑其个人资料）
-WebJS,Yes (User is administrator of the Web Server),是（用户是 Web 服务器的管理员）
-Web,Select assistant,选择助手
-Web,Mark as favorite,标记为收藏
-Web,Favorites,收藏夹
-Web,No favorites yet,暂无收藏
-Web,Recent,最近
-Web,No recent items,无最近项目
-Web,New conversation,新建对话
-Web,Sample prompts,示例提示
-Web,Sample Prompts,示例提示
-Web,No sample prompts defined,未定义示例提示
-Web,AI Assistant,AI 助手
-Web,Favorites & Recent,收藏与最近
-Web,Hide panel,隐藏面板
-Web,Ask the AI assistant…,向 AI 助手提问…
-Web,Confirm Deletion,确认删除
-Web,This action is irreversible. Are you sure you want to delete this item?,此操作不可逆。确定要删除此项目吗？
-Web,Data Source,数据源
-Web,Report Assistants,报表助手
-Web,Select Tables or Views,选择表或视图
-Web,Filter tables...,筛选表...
-Web,Select All,全选
-Web,Deselect All,取消全选
-Web,tables selected,个表已选择
-Web,Prompt Shortcuts,提示快捷方式
-Web,How can Seal AI help you today ?,Seal AI 今天能帮您做什么？
-Web,No current items available,无可用的当前项目
-Web,Current items will appear here when saved,保存后当前项目将显示在此处
-Web,Drafts,草稿
-Web,No draft items available,无可用的草稿项目
-Web,Upload files or create new items with the assistant to see them here,上传文件或使用助手创建项目以在此处查看
-Web,Item Details,项目详情
-Web,Loading detail. Please wait...,正在加载详情。请稍候...
-Web,Select a row from the table to view its details,从表中选择一行以查看其详情
-Web,Check,检查
-Web,Download,下载
-Web,Reports Assistant,报表助手
-Web,Connection type,连接类型
-Web,Connection string,连接字符串
-Web,Tables or views,表或视图
-Web,Report Assistant,报表助手
-Web,AI Provider,AI 提供商
-Web,AI model,AI 模型
-Web,AI model name (overrides default)),AI 模型名称（覆盖默认值）
-Web,Temperature,温度
-Web,Model temperature,模型温度
-Web,System prompt,系统提示
-Web,Optional sytem prompt for the assistant,可选的助手系统提示
-Web,User prompt,用户提示
-Web,Default user prompts (if empty default values configured are taken),默认用户提示（如果为空，则采用配置的默认值）
-Web,User Groups allowed (No selection means no restriction),允许的用户组（未选择表示无限制）
-Web,Scan options,扫描选项
-Web,When to scan,扫描时机
-Web,Cache duration (days),缓存时长（天）
-Web,Cache duration (days) for scanned data,扫描数据的缓存时长（天）
-Web,Tables to scan (no selection means all tables),要扫描的表（未选择表示所有表）
-Web,Records to scan,要扫描的记录
-Web,Number of records used for scan,用于扫描的记录数
-Web,Scan Data Now,立即扫描数据
-Web,Execute,执行
-Web,Elements:,元素：
-Web,Restrictions:,限制条件：
-WebJS,Hide AI Assistant,隐藏 AI 助手
-WebJS,AI Assistant,AI 助手
-WebJS,Running,正在运行
-WebJS,Request cancelled.,请求已取消。
-WebJS,Remove from favorites,从收藏夹中移除
-WebJS,No sample prompts defined,未定义示例提示
-WebJS,Rename,重命名
-WebJS,Delete,删除
-WebJS,No favorites yet,暂无收藏
-WebJS,No recent items,无最近项目
-Web,Configuration,配置
-Web,Download/Upload,下载/上传
-Web,Rights,权限
-Web,Assistants,助手
-Web,Folder,文件夹
+﻿Context;Reference;zh
+NVD3;(right axis);（右轴）
+NVD3;Expanded;扩大
+NVD3;Grouped;分组
+NVD3;Re-scale y-axis;重新缩放Y轴
+NVD3;Stacked;堆积
+NVD3;Stream;流
+Report;!=;！=
+Report;# of % selected;# of % selected
+Report;(filtered from _MAX_);（从 _MAX_ 条记录中筛选）
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;需要一个值
+Report;All;全部
+Report;All selected;全部选定
+Report;and;and
+Report;Auto Fit columns;自动调整列宽
+Report;Auto Scroll enabled;自动滚动已启用
+Report;Average of;平均
+Report;Back to top;返回顶部
+Report;Between;Between
+Report;Cancel;取消
+Report;Cancelling report...;正在取消报告…
+Report;Charts;图表
+Report;Clear selection;清除选择
+Report;Close;关闭
+Report;Contains;包含
+Report;Contains all;包含全部
+Report;Contains any;包含任意
+Report;Count Distinct of;非重复计数：
+Report;Count of;的计数
+Report;Decrement;减少
+Report;Description;说明
+Report;Display header footer;显示页眉页脚
+Report;Display: Execution messages;显示：执行消息
+Report;Display: Execution messages;显示：执行消息
+Report;Display: Information messages;显示：信息消息
+Report;Display: Information messages;显示：信息消息
+Report;Does not contain;不包含
+Report;Does not contain all;不包含全部
+Report;Does not contain any;不包含任意
+Report;Drill <;Drill <
+Report;Drill >;Drill >
+Report;Duration;持续时间
+Report;Duration (seconds);持续时间（秒）
+Report;Email sent to '{0}';已发送邮件至 '{0}'
+Report;Ends with;以结尾
+Report;Equals;等于
+Report;Execute;执行
+Report;Executing report...;正在执行报告…
+Report;Execution date;执行日期
+Report;Execution duration;执行持续时间
+Report;execution messages;执行消息
+Report;Export messages...;导出邮件…
+Report;Filter:;过滤器：
+Report;Go to today;转到今天
+Report;Goal;目标
+Report;Hide;隐藏
+Report;HTML Print: Show messages;HTML 打印：显示消息
+Report;HTML Print: Show messages;HTML 打印：显示消息
+Report;HTML Print: Show report information;HTML 打印：显示报表信息
+Report;HTML Print: Show report information;HTML 打印：显示报表信息
+Report;HTML to PDF;HTML 转 PDF
+Report;Increment;增加
+Report;Information panel enabled;已启用信息面板
+Report;Information panel enabled and shown;信息面板已启用并显示
+Report;Information panel hidden;信息面板已隐藏
+Report;Invalid date;无效日期
+Report;Invalid numeric value;无效的数值
+Report;Is between;介于
+Report;Is Blank;为空白
+Report;Is different from;不同于
+Report;Is empty;是空的
+Report;Is greater or equal than;大于或等于
+Report;Is greater than;大于
+Report;Is not between;不是介于
+Report;Is Not Blank;不为空白
+Report;Is not empty;不是空的
+Report;Is not Null;不为空
+Report;Is Null;为空
+Report;Is smaller or equal than;小于或等于
+Report;Is smaller than;小于
+Report;Landscape;横向
+Report;Logs;日志
+Report;Maximum of;最大值
+Report;Messages panel enabled;已启用消息面板
+Report;Messages panel enabled and shown;消息面板已启用并显示
+Report;Messages panel enabled and shown only during execution;消息面板已启用，仅在执行期间显示
+Report;Messages panel hidden;消息面板已隐藏
+Report;Minimum of;最小值
+Report;Model;模型
+Report;Model loaded...;模型已加载…
+Report;Models loaded...;模型已加载…
+Report;New report;新建报告
+Report;Next Century;下一世纪
+Report;Next Decade;下一个十年
+Report;Next Month;下个月
+Report;Next Year;明年
+Report;No;否
+Report;No records;没有记录
+Report;No records. The report output generation has been cancelled.;没有记录。报告输出生成已取消。
+Report;No reports;没有报告
+Report;No rows;没有行
+Report;Not Between;不介于
+Report;Not Contains;不包含
+Report;Now;现在
+Report;Options;选项
+Report;or;或
+Report;Page;第页
+Report;"Page &p; of &P;";"第 &p; 页，共 &P; 页"
+Report;Page orientation;页面方向
+Report;Page size;页面大小
+Report;Pages;页
+Report;Pick Hour;选择小时
+Report;Pick Minute;选择分钟
+Report;Pick Second;选择秒
+Report;Please enter a value;请输入一个值
+Report;Please enter at least a value;请至少输入一个值
+Report;Please find the report '{0}' in attachment.;请在附件中查阅报表 '{0}'。
+Report;Please find your authentication code;请查阅您的身份验证码
+Report;Please wait, the report result is being generated in another window;请稍候，报表结果正在另一个窗口中生成
+Report;Previous Century;上一世纪
+Report;Previous Decade;上一个十年
+Report;Previous Month;上个月
+Report;Previous Year;去年
+Report;Print: Page orientation;打印：页面方向
+Report;Print: Show logo;打印：显示徽标
+Report;Processing;处理
+Report;Processing...;处理。。。
+Report;Records;记录
+Report;Refresh;刷新
+Report;Report;报告
+Report;Report description;报表说明
+Report;Report has been cancelled;报告已取消
+Report;report information;报告信息
+Report;report restrictions;报告限制
+Report;Report result generated in '{0}';在'{0}'中生成的报告结果
+Report;Report result options;报表结果选项
+Report;report result panel;报告结果面板
+Report;Report summary;报表摘要
+Report;Restrictions;限制
+Report;Results;结果
+Report;Scale;缩放
+Report;second;秒
+Report;seconds;秒
+Report;Select all;全选
+Report;Select Decade;选择十年
+Report;Select Month;选择月份
+Report;Select Time;选择时间
+Report;Select Year;选择年份
+Report;Show;显示
+Report;Show _MENU_ reports;显示 _MENU_ 个报表
+Report;Show _MENU_ rows;显示 _MENU_ 行
+Report;Show messages;显示消息
+Report;Show messages;显示消息
+Report;Show report information;显示报表信息
+Report;Show report information;显示报表信息
+Report;Show/Hide Restrictions;显示/隐藏限制条件
+Report;Showing _START_ to _END_ of _TOTAL_;Showing _START_ to _END_ of _TOTAL_
+Report;Showing 0 to 0 of 0;显示0到0
+Report;Starting execution...;开始执行…
+Report;Starts with;开始于
+Report;Subtotal;小计
+Report;Sum of;总计
+Report;Summary;总结
+Report;Table of Contents;目录
+Report;Tabs to show;要显示的选项卡
+Report;Task executed...;任务已执行…
+Report;Tasks executed...;任务已执行…
+Report;The report has been generated.;报告已生成。
+Report;This report has execution errors. Please check details in the Logs Files...;此报表存在执行错误。请在日志文件中查看详细信息...
+Report;ThisHour;本小时
+Report;ThisMinute;本分钟
+Report;ThisMonth;本月
+Report;ThisQuarter;本季度
+Report;ThisSemester;本半年
+Report;ThisWeek;本周
+Report;ThisYear;今年
+Report;Today;今天
+Report;Toggle Period;切换时段
+Report;Total;总计
+Report;Use the date format '{0}' or one of the following keywords:;使用日期格式 '{0}'或以下关键字之一：
+Report;View;查看
+Report;View CSV Result;查看csv结果
+Report;View Excel Converter Result;查看 Excel 转换结果
+Report;View Excel Result;查看Excel结果
+Report;View HTML Print Result;查看 HTML 打印结果
+Report;View HTML Result;查看HTML结果
+Report;View HTML to PDF Result;查看 HTML 转 PDF 结果
+Report;View Json Result;查看 Json 结果
+Report;View PDF Converter Result;查看 PDF 转换结果
+Report;View PDF Result;查看PDF结果
+Report;View report result file;查看报告结果文件
+Report;View Text Result;查看文本结果
+Report;View XML Result;查看 XML 结果
+Report;Warning: The maximum number of records is reached;警告：已达到最大记录数
+Report;Yes;是
+Web;Add;添加
+Web;All;全部
+Web;Auto-Refresh (seconds);自动刷新（秒）
+Web;Back to login with user name and password;返回使用用户名和密码登录
+Web;Cancel;取消
+Web;Change password;更改密码
+Web;Change password;更改密码
+Web;Change your password;更改您的密码
+Web;Chart sort;图表排序
+Web;Close;关闭
+Web;Color;颜色
+Web;Confirm your new password;确认您的新密码
+Web;Copy;复制
+Web;Create in folder;在文件夹中创建
+Web;Create new folder;创建新文件夹
+Web;CSS Format;CSS 格式
+Web;Culture;区域设置
+Web;Current password;当前密码
+Web;Cut;剪切
+Web;Data source connections;数据源连接
+Web;Default view;默认视图
+Web;Delete;删除
+Web;Delete folder;删除文件夹
+Web;Description;说明
+Web;Device;设备
+Web;Disconnect;断开
+Web;Display options;显示选项
+Web;Edit;编辑
+Web;Edit configuration;编辑配置
+Web;Edit entry;编辑条目
+Web;Edit profile;编辑个人资料
+Web;Edition;版本
+Web;Email;电子邮件
+Web;Enter password;输入密码
+Web;Enter user name;输入用户名
+Web;Enter your current password;输入您的当前密码
+Web;Enter your new file name;输入新文件名
+Web;Enter your new password;输入您的新密码
+Web;Enter your security code;输入您的安全码
+Web;Enter your user identifier or email;输入您的用户标识或电子邮件
+Web;Error;错误
+Web;Error: only files (and not reports) can be copied to this folder.;错误：只能将文件（而不是报告）复制到此文件夹。
+Web;Error: the destination file name contains invalid characters.;错误：目标文件名包含无效字符。
+Web;Error: the destination folder name contains invalid characters.;错误：目标文件夹名包含无效字符。
+Web;Expand in Treeview;在树状视图中展开
+Web;Export;导出
+Web;Files only;仅文件
+Web;Folder Permissions;文件夹权限
+Web;Folders;文件夹
+Web;Forget your password ?;忘记密码？
+Web;Group name;组名
+Web;Group name;组名
+Web;Groups;组
+Web;Groups;组
+Web;Height;高度
+Web;Icon;图标
+Web;Information;信息
+Web;Invalid security code;安全码无效
+Web;Invalid user name or password;用户名或密码无效
+Web;Is dynamic;为动态
+Web;Last execution at;上次执行于
+Web;Licensed to;授权给
+Web;Login;登录
+Web;Login ID;登录 ID
+Web;Logins;登录账号
+Web;Logout;注销
+Web;Logout the user;注销用户
+Web;Manage Folders;管理文件夹
+Web;Manage sub-folders;管理子文件夹
+Web;Name;姓名
+Web;New;新建
+Web;New folder name;新文件夹名称
+Web;New folder path;新文件夹路径
+Web;New password;新密码
+Web;None;无
+Web;OK;好啊
+Web;On startup;启动时
+Web;Optional chart title;可选图表标题
+Web;Optional menu name;可选菜单名称
+Web;Output;输出
+Web;Password;密码
+Web;Paste;粘贴
+Web;PDF Conversion delay;PDF 转换延迟
+Web;Personal;个人的
+Web;Personal folder;个人文件夹
+Web;Phone;电话
+Web;Please wait;请稍候
+Web;Profile;简况
+Web;Profile information;配置文件信息
+Web;Refresh;刷新
+Web;Re-init your password;重新初始化您的密码
+Web;Reload and execute;重新加载并执行
+Web;Rename;重命名
+Web;Rename or move folder;重命名或移动文件夹
+Web;Rename, move or copy;重命名、移动或复制
+Web;Report;报告
+Web;Report execution mode;报表执行模式
+Web;Report name;报告名称
+Web;Report title;报告标题
+Web;Report title if different from report name;报告标题（如果与报告名称不同）
+Web;Reports;报告
+Web;Reports menu;报表菜单
+Web;Repository connection;存储库连接
+Web;Reset password;重置密码
+Web;Reset your password;重置您的密码
+Web;Save;保存
+Web;Search;搜索
+Web;Security code;安全码
+Web;Show sub-folders;显示子文件夹
+Web;Startup report name;启动报表名称
+Web;The favorite has been updated;收藏夹已更新
+Web;Two-Factor Authentication;双因素身份验证
+Web;Type;类型
+Web;Type a new password;输入新密码
+Web;Upload;上传
+Web;User groups;用户组
+Web;User identifier or email;用户标识或电子邮件
+Web;User name;用户名
+Web;Users;用户
+Web;Web product name;Web 产品名称
+Web;Width;宽度
+WebJS;# of % selected;#所选百分比
+WebJS;Actions;操作
+WebJS;All selected;全部选定
+WebJS;Allow only execution in a new window;仅允许在新窗口中执行
+WebJS;Cancel;取消
+WebJS;Configuration for;配置项：
+WebJS;Contains;包含
+WebJS;Contains all;包含全部
+WebJS;Contains any;包含任意
+WebJS;Copy;复制
+WebJS;Copy of;副本：
+WebJS;Copy to;复制到
+WebJS;Default;违约
+WebJS;Default culture;默认区域设置
+WebJS;Default mode;默认模式
+WebJS;Default report connection;默认报表连接
+WebJS;Default repository connection;默认存储库连接
+WebJS;Default startup;默认启动项
+WebJS;Do not execute report;不执行报表
+WebJS;Do you really want to delete the reports or files selected ?;是否确实要删除选定的报告或文件？
+WebJS;Does not contain;不包含
+WebJS;Does not contain all;不包含全部
+WebJS;Does not contain any;不包含任意
+WebJS;Download report;下载报表
+WebJS;Edit report;编辑报告
+WebJS;Edit reports / Manage files;编辑报表 / 管理文件
+WebJS;Edit schedules / View files;编辑计划 / 查看文件
+WebJS;Ends with;以结尾
+WebJS;Equals;等于
+WebJS;Error;错误
+WebJS;Execute report in a new window;在新窗口中执行报表
+WebJS;Execute report in the current window;在当前窗口中执行报表
+WebJS;Execute reports / View files;执行报表 / 查看文件
+WebJS;Execute reports and outputs / View files;执行报表和输出 / 查看文件
+WebJS;Execute the last report;执行上一个报表
+WebJS;Execute the report;执行报表
+WebJS;Favorites;收藏夹
+WebJS;Folder;文件夹
+WebJS;Is between;介于
+WebJS;Is different from;不同于
+WebJS;Is empty;是空的
+WebJS;Is greater or equal than;大于或等于
+WebJS;Is greater than;大于
+WebJS;Is not between;不是介于
+WebJS;Is not empty;不是空的
+WebJS;Is not Null;不为空
+WebJS;Is Null;为空
+WebJS;Is smaller or equal than;小于或等于
+WebJS;Is smaller than;小于
+WebJS;Last modification;上次修改
+WebJS;Mark as favorite;标记为收藏
+WebJS;Model;模型
+WebJS;New folder configuration;新建文件夹配置
+WebJS;New group;新建组
+WebJS;New login;新建登录账号
+WebJS;No;不
+WebJS;No download (except files) or upload;不允许下载（文件除外）或上传
+WebJS;No folder configuration;无文件夹配置
+WebJS;No login;无登录账号
+WebJS;No personal folder;无个人文件夹
+WebJS;No right;无权限
+WebJS;None;无
+WebJS;Not sorted;未排序
+WebJS;OK;OK
+WebJS;Options;选项
+WebJS;Output;输出
+WebJS;Personal folder for files only;仅供文件使用的个人文件夹
+WebJS;Personal folder for reports and files;供报表和文件使用的个人文件夹
+WebJS;Please wait;请稍候
+WebJS;Processing;正在处理
+WebJS;Profile;个人资料
+WebJS;Recents;最近使用
+WebJS;Report;报表
+WebJS;report(s) or file(s) cut in the clipboard;在剪贴板中剪切的报告或文件
+WebJS;report(s) or file(s) have been deleted;报告或文件已被删除
+WebJS;report(s) or file(s) processed;已处理的报告或文件
+WebJS;report(s) or files(s) copied in the clipboard;在剪贴板中复制的报告或文件
+WebJS;Reports;报表
+WebJS;Schedule;地铁列车时刻表
+WebJS;Server Version;服务器版本
+WebJS;Show _MENU_ reports;显示 _MENU_ 个报表
+WebJS;Starts with;开始于
+WebJS;The configuration has been saved. Please login again if you are impacted by the security.;配置已保存。如果受安全设置影响，请重新登录。
+WebJS;The folder has been created;文件夹已创建
+WebJS;The folder has been deleted;文件夹已被删除
+WebJS;The folder has been renamed;文件夹已重命名
+WebJS;The folder has been updated;文件夹已更新
+WebJS;The report or file has been renamed;报告或文件已重命名
+WebJS;Toggle Report or Folders view;切换报表或文件夹视图
+WebJS;Unexpected error on server;服务器发生意外错误
+WebJS;User can download reports;用户可以下载报表
+WebJS;User can download reports and upload reports and files;用户可以下载报表并上传报表和文件
+WebJS;View;视图
+WebJS;View Folders;查看文件夹
+WebJS;View Report;查看报表
+WebJS;View reports;查看报表
+WebJS;Views and outputs;视图和输出
+WebJS;Warning;警告
+WebJS;Web Interface Version;Web界面版本
+WebJS;Yes;是的
+WebJS;Yes (Folder is expanded in the tree view);是（文件夹在树状视图中展开）
+WebJS;Yes (Only files can be stored);是（仅可存储文件）
+WebJS;Yes (User can browse sub-folders);是（用户可以浏览子文件夹）
+WebJS;Yes (User can create and edit sub-folders);是（用户可以创建和编辑子文件夹）
+WebJS;Yes (User can edit his profile);是（用户可以编辑其个人资料）
+WebJS;Yes (User is administrator of the Web Server);是（用户是 Web 服务器的管理员）
+Web;Select assistant;选择助手
+Web;Mark as favorite;标记为收藏
+Web;Favorites;收藏夹
+Web;No favorites yet;暂无收藏
+Web;Recent;最近
+Web;No recent items;无最近项目
+Web;New conversation;新建对话
+Web;Sample prompts;示例提示
+Web;Sample Prompts;示例提示
+Web;No sample prompts defined;未定义示例提示
+Web;AI Assistant;AI 助手
+Web;Favorites & Recent;收藏与最近
+Web;Hide panel;隐藏面板
+Web;Ask the AI assistant…;向 AI 助手提问…
+Web;Confirm Deletion;确认删除
+Web;This action is irreversible. Are you sure you want to delete this item?;此操作不可逆。确定要删除此项目吗？
+Web;Data Source;数据源
+Web;Report Assistants;报表助手
+Web;Select Tables or Views;选择表或视图
+Web;Filter tables...;筛选表...
+Web;Select All;全选
+Web;Deselect All;取消全选
+Web;tables selected;个表已选择
+Web;Prompt Shortcuts;提示快捷方式
+Web;How can Seal AI help you today ?;Seal AI 今天能帮您做什么？
+Web;No current items available;无可用的当前项目
+Web;Current items will appear here when saved;保存后当前项目将显示在此处
+Web;Drafts;草稿
+Web;No draft items available;无可用的草稿项目
+Web;Upload files or create new items with the assistant to see them here;上传文件或使用助手创建项目以在此处查看
+Web;Item Details;项目详情
+Web;Loading detail. Please wait...;正在加载详情。请稍候...
+Web;Select a row from the table to view its details;从表中选择一行以查看其详情
+Web;Check;检查
+Web;Download;下载
+Web;Reports Assistant;报表助手
+Web;Connection type;连接类型
+Web;Connection string;连接字符串
+Web;Tables or views;表或视图
+Web;Report Assistant;报表助手
+Web;AI Provider;AI 提供商
+Web;AI model;AI 模型
+Web;AI model name (overrides default));AI 模型名称（覆盖默认值）
+Web;Temperature;温度
+Web;Model temperature;模型温度
+Web;System prompt;系统提示
+Web;Optional sytem prompt for the assistant;可选的助手系统提示
+Web;User prompt;用户提示
+Web;Default user prompts (if empty default values configured are taken);默认用户提示（如果为空，则采用配置的默认值）
+Web;User Groups allowed (No selection means no restriction);允许的用户组（未选择表示无限制）
+Web;Scan options;扫描选项
+Web;When to scan;扫描时机
+Web;Cache duration (days);缓存时长（天）
+Web;Cache duration (days) for scanned data;扫描数据的缓存时长（天）
+Web;Tables to scan (no selection means all tables);要扫描的表（未选择表示所有表）
+Web;Records to scan;要扫描的记录
+Web;Number of records used for scan;用于扫描的记录数
+Web;Scan Data Now;立即扫描数据
+Web;Execute;执行
+Web;Elements:;元素：
+Web;Restrictions:;限制条件：
+WebJS;Hide AI Assistant;隐藏 AI 助手
+WebJS;AI Assistant;AI 助手
+WebJS;Running;正在运行
+WebJS;Request cancelled.;请求已取消。
+WebJS;Remove from favorites;从收藏夹中移除
+WebJS;No sample prompts defined;未定义示例提示
+WebJS;Rename;重命名
+WebJS;Delete;删除
+WebJS;No favorites yet;暂无收藏
+WebJS;No recent items;无最近项目
+Web;Configuration;配置
+Web;Configuration and security;配置和安全
+Web;Download/Upload;下载/上传
+Web;Rights;权限
+Web;Assistants;助手
+Web;Folder;文件夹
+Web;Drag to resize;拖动以调整大小
+WebJS;Copy and paste;复制并粘贴
+WebJS;Copy, paste and send;复制、粘贴并发送

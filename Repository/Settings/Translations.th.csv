@@ -497,7 +497,11 @@ WebJS;Delete;ลบ
 WebJS;No favorites yet;ยังไม่มีรายการโปรด
 WebJS;No recent items;ไม่มีรายการล่าสุด
 Web;Configuration;การกำหนดค่า
+Web;Configuration and security;การกำหนดค่าและความปลอดภัย
 Web;Download/Upload;ดาวน์โหลด/อัปโหลด
 Web;Rights;สิทธิ์
 Web;Assistants;ผู้ช่วย
 Web;Folder;โฟลเดอร์
+Web;Drag to resize;ลากเพื่อปรับขนาด
+WebJS;Copy and paste;คัดลอกและวาง
+WebJS;Copy, paste and send;คัดลอก วาง และส่ง

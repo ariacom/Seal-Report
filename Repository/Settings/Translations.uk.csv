@@ -497,7 +497,11 @@ WebJS;Delete;Видалити
 WebJS;No favorites yet;Обраного ще немає
 WebJS;No recent items;Немає останніх елементів
 Web;Configuration;Конфігурація
+Web;Configuration and security;Конфігурація та безпека
 Web;Download/Upload;Завантаження/Вивантаження
 Web;Rights;Права
 Web;Assistants;Помічники
 Web;Folder;Папка
+Web;Drag to resize;Перетягніть, щоб змінити розмір
+WebJS;Copy and paste;Копіювати та вставити
+WebJS;Copy, paste and send;Копіювати, вставити та надіслати

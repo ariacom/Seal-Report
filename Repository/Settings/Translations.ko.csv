@@ -497,7 +497,11 @@ WebJS;Delete;삭제
 WebJS;No favorites yet;아직 즐겨찾기가 없습니다
 WebJS;No recent items;최근 항목 없음
 Web;Configuration;구성
+Web;Configuration and security;구성 및 보안
 Web;Download/Upload;다운로드/업로드
 Web;Rights;권한
 Web;Assistants;어시스턴트
 Web;Folder;폴더
+Web;Drag to resize;드래그하여 크기 조정
+WebJS;Copy and paste;복사하여 붙여넣기
+WebJS;Copy, paste and send;복사, 붙여넣기 및 보내기

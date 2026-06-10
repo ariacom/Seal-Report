@@ -538,10 +538,10 @@ table.dataTable {
     border: 1px solid #e0e0e0;
     border-radius: 6px;
     font-size: 14px;
-    padding: 10px 12px;
+    padding: 8px 12px;
     transition: border-color 0.2s ease;
     width: 100%;
-    height: 42px;
+    height: 38px;
     box-sizing: border-box;
 }
 
@@ -578,13 +578,13 @@ table.dataTable {
     #config-dialog .bootstrap-select .btn {
         border: 1px solid #e0e0e0 !important;
         border-radius: 6px !important;
-        padding: 10px 12px !important;
+        padding: 8px 12px !important;
         background-color: white !important;
         box-shadow: none !important;
         width: 100% !important;
         text-align: left !important;
         font-size: 14px !important;
-        height: 42px !important;
+        height: 38px !important;
         line-height: 1.4 !important;
         display: flex !important;
         align-items: center !important;
@@ -626,6 +626,7 @@ table.dataTable {
         color: #5f6368;
         background: none;
         border: none;
+        outline: none;
     }
 
     #config-dialog .nav-pills > li.active > a,
@@ -806,6 +807,25 @@ table.dataTable {
     width: 100%;
     box-sizing: border-box;
     overflow: auto;
+}
+
+/* Tighten spacing in the Groups tab so content fits without scrollbar */
+#config-group-detail-content .config-input-row {
+    margin-bottom: 8px;
+}
+
+#config-group-detail-content .config-groups-panel {
+    margin-bottom: 10px;
+}
+
+#config-group-detail-content .group-folder-panel {
+    margin-top: 12px;
+    padding-top: 10px;
+}
+
+#config-group-detail-content .config-section-header {
+    margin-bottom: 10px;
+    padding-bottom: 6px;
 }
 
 /* Responsive Design */
@@ -992,11 +1012,15 @@ table.dataTable {
    ============================================================ */
 
 /* Drawer */
+:root {
+    --ai-panel-width: 400px;
+}
+
 #ai-chat-panel {
     position: fixed;
     top: 51px;                        /* sits just below the fixed navbar */
     left: 0;
-    width: 400px;
+    width: var(--ai-panel-width);
     height: calc(100vh - 51px);
     background: #fff;
     border-right: 1px solid #e0e0e0;
@@ -1040,7 +1064,33 @@ table.dataTable {
 }
 
 #ai-panel-toggle.ai-panel-open {
-    left: 400px;
+    left: var(--ai-panel-width);
+}
+
+/* Drag handle to resize the panel — pinned to the right edge */
+.ai-panel-resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 100%;
+    cursor: ew-resize;
+    z-index: 502;
+    background: transparent;
+}
+
+.ai-panel-resizer:hover,
+body.ai-resizing .ai-panel-resizer {
+    background: #62a6ff;
+}
+
+/* Suppress width/offset transitions while actively dragging */
+body.ai-resizing #ai-chat-panel,
+body.ai-resizing #ai-panel-toggle,
+body.ai-resizing #main-container,
+body.ai-resizing #report-body,
+body.ai-resizing #footer-div {
+    transition: none !important;
 }
 
 
@@ -1090,10 +1140,14 @@ table.dataTable {
 }
 .ai-panel-title .bootstrap-select > .btn:hover,
 .ai-panel-title .bootstrap-select > .btn:focus,
-.ai-panel-title .bootstrap-select.open > .btn {
+.ai-panel-title .bootstrap-select > .btn:active,
+.ai-panel-title .bootstrap-select > .btn.active,
+.ai-panel-title .bootstrap-select.open > .btn,
+.ai-panel-title .bootstrap-select.open > .btn:focus {
     background: rgba(0, 0, 0, 0.06);
     border-radius: 4px;
-    outline: none;
+    outline: none !important;
+    box-shadow: none !important;
 }
 .ai-panel-title .bootstrap-select > .btn.disabled,
 .ai-panel-title .bootstrap-select > .btn[disabled] {
@@ -1103,6 +1157,13 @@ table.dataTable {
 }
 .ai-panel-title .bootstrap-select > .btn .caret {
     margin-left: 5px;
+}
+/* Open menu: remove the focus outline on options and widen the dropdown */
+.ai-panel-title .bootstrap-select .dropdown-menu a {
+    outline: none !important;
+}
+.ai-panel-title .bootstrap-select.ai-panel-assistant-select {
+    width: 220px !important;
 }
 
 #ai-panel-close {
@@ -1143,12 +1204,48 @@ table.dataTable {
 
 /* Chat bubbles */
 .ai-panel-bubble {
+    position: relative;
     max-width: 90%;
     padding: 9px 13px;
     border-radius: 12px;
     font-size: 13px;
     line-height: 1.55;
     word-break: break-word;
+}
+
+/* Hover action toolbar on bubbles (copy / paste / send) */
+.ai-bubble-actions {
+    position: absolute;
+    top: 100%;
+    margin-top: -6px;
+    display: none;
+    gap: 1px;
+    padding: 1px 2px;
+    background: #fff;
+    border: 1px solid #e3e3e6;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+    z-index: 5;
+}
+.ai-panel-bubble.user .ai-bubble-actions { right: 4px; }
+.ai-panel-bubble.ai   .ai-bubble-actions { right: 4px; }
+.ai-panel-bubble:hover .ai-bubble-actions { display: flex; }
+
+.ai-bubble-action-btn {
+    background: none;
+    border: none;
+    padding: 5px 9px;
+    cursor: pointer;
+    color: #888;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: color 0.12s, background 0.12s;
+}
+.ai-bubble-action-btn:hover {
+    color: #62a6ff;
+    background: rgba(98, 166, 255, 0.12);
 }
 
 .ai-panel-bubble.user {
@@ -1188,6 +1285,38 @@ table.dataTable {
     color: #bbb;
     font-style: italic;
     font-size: 12px;
+}
+
+/* AI response markdown formatting */
+.ai-panel-bubble.ai .ai-h {
+    font-weight: 600;
+    margin: 8px 0 3px;
+    line-height: 1.3;
+}
+.ai-panel-bubble.ai .ai-h:first-child {
+    margin-top: 0;
+}
+.ai-panel-bubble.ai .ai-h1 { font-size: 16px; }
+.ai-panel-bubble.ai .ai-h2 { font-size: 15px; }
+.ai-panel-bubble.ai .ai-h3 { font-size: 14px; }
+.ai-panel-bubble.ai .ai-h4,
+.ai-panel-bubble.ai .ai-h5,
+.ai-panel-bubble.ai .ai-h6 { font-size: 13px; }
+.ai-panel-bubble.ai .ai-list {
+    margin: 4px 0;
+    padding-left: 20px;
+}
+.ai-panel-bubble.ai .ai-list li {
+    margin: 2px 0;
+}
+.ai-panel-bubble.ai code {
+    background-color: #e6e6ea;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 12px;
+    font-family: Consolas, "Courier New", monospace;
+    color: #c0341d;
+    word-break: break-all;
 }
 
 /* Execute report actions — row of buttons below an AI bubble */
@@ -1516,10 +1645,10 @@ table.dataTable {
 
 body.ai-panel-visible #main-container,
 body.ai-panel-visible #report-body {
-    margin-left: 400px;
+    margin-left: var(--ai-panel-width);
 }
 
 body.ai-panel-visible #footer-div {
-    left: 320px;
-    width: calc(100% - 320px);
+    left: var(--ai-panel-width);
+    width: calc(100% - var(--ai-panel-width));
 }

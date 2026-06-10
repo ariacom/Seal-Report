@@ -399,7 +399,7 @@ namespace SWIUtil {
                 profile.sources.forEach(function (source : any) {
                     const $connectionDiv = $("<div class='row'>");
                     $connectionDiv.append($("<div class='col-sm-4' style='margin-top:8px'>").append($("<span>").html(source.name)));
-                    const $connectionSelect = $("<select id='" + source.GUID + "' data-width='100%'></select>");
+                    const $connectionSelect = $("<select id='" + source.GUID + "' data-container='body' data-width='100%'></select>");
                     source.connections.forEach(function (connection : any) {
                         $connectionSelect.append(SWIUtil.GetOption(connection.GUID, connection.name, source.connectionGUID));
                     });

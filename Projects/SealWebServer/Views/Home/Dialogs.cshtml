@@ -257,21 +257,21 @@
                 <div class="config-input-row">
                     <span class="config-input-label">@repository.TranslateWeb("Culture")</span>
                     <div class="config-input-field">
-                        <select id="culture-select" data-width="100%"></select>
+                        <select id="culture-select" data-live-search="true" data-container="body" data-width="100%"></select>
                     </div>
                 </div>
 
                 <div class="config-input-row">
                     <span class="config-input-label">@repository.TranslateWeb("Report execution mode")</span>
                     <div class="config-input-field">
-                        <select id="executionmode-select" data-width="100%"></select>
+                        <select id="executionmode-select" data-container="body" data-width="100%"></select>
                     </div>
                 </div>
 
                 <div class="config-input-row">
                     <span class="config-input-label">@repository.TranslateWeb("On startup")</span>
                     <div class="config-input-field">
-                        <select id="onstartup-select" data-width="100%"></select>
+                        <select id="onstartup-select" data-container="body" data-width="100%"></select>
                     </div>
                 </div>
 
@@ -307,7 +307,7 @@
                 </button>
                 <h4 class="modal-title">@repository.TranslateWeb("Configuration and security")</h4>
             </div>
-            <div class="modal-body" style="height:950px;width:800px;">
+            <div class="modal-body" style="width:800px;">
                 <div class="config-input-row">
                     <span class="config-input-label">@repository.TranslateWeb("Web product name")</span>
                     <input id="config-webproduct-name" type="text" class="form-control config-input-field" placeholder="@repository.TranslateWeb("Web product name")" />
@@ -320,7 +320,7 @@
 
                 <div id="detail-section-1">
                     <div class="tab-content">
-                        <div id="config-group-detail-content" class="tab-pane fade in active" style="height: 750px;">
+                        <div id="config-group-detail-content" class="tab-pane fade in active" style="height: 640px;">
                             <div class="config-groups-panel">
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Group name")</span>
@@ -403,7 +403,7 @@
                             </div>
                         </div>
 
-                        <div id="config-user-detail-content" class="tab-pane fade" style="height: 750px;">
+                        <div id="config-user-detail-content" class="tab-pane fade" style="height: 640px;">
                             <div class="config-logins-panel">
                                 <div class="config-input-row">
                                     <span class="config-input-label">@repository.TranslateWeb("Login ID")</span>

@@ -497,7 +497,11 @@ WebJS;Delete;Eliminar
 WebJS;No favorites yet;Aún no hay favoritos
 WebJS;No recent items;Sin elementos recientes
 Web;Configuration;Configuración
+Web;Configuration and security;Configuración y seguridad
 Web;Download/Upload;Descarga/Carga
 Web;Rights;Derechos
 Web;Assistants;Asistentes
 Web;Folder;Carpeta
+Web;Drag to resize;Arrastrar para cambiar el tamaño
+WebJS;Copy and paste;Copiar y pegar
+WebJS;Copy, paste and send;Copiar, pegar y enviar

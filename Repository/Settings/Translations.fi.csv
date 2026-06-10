@@ -497,7 +497,11 @@ WebJS;Delete;Poista
 WebJS;No favorites yet;Ei vielä suosikkeja
 WebJS;No recent items;Ei viimeisimpiä kohteita
 Web;Configuration;Määritys
+Web;Configuration and security;Määritys ja suojaus
 Web;Download/Upload;Lataus/Lähetys
 Web;Rights;Oikeudet
 Web;Assistants;Avustajat
 Web;Folder;Kansio
+Web;Drag to resize;Muuta kokoa vetämällä
+WebJS;Copy and paste;Kopioi ja liitä
+WebJS;Copy, paste and send;Kopioi, liitä ja lähetä

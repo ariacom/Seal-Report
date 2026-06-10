@@ -126,3 +126,6 @@ After configuring an output, include this tag on its own line:
 ```
 [EXECUTE_REPORT:Reports\FolderName\report_name.srex|Report Name : Output Name|outputGUID]
 ```
+
+- Reproduce the path **exactly** as returned by `report_list`, including the `Reports\` or `Personal\` prefix and the `.srex` extension. Do not shorten, strip the prefix, or omit the extension.
+- **Always emit the `[EXECUTE_REPORT:...]` tag whenever you configure an output or mention one the user could run — even when replying in a language other than English. Never translate, reword, or replace the tag with prose. This applies in every language.**

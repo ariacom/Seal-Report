@@ -497,7 +497,11 @@ WebJS;Delete;حذف
 WebJS;No favorites yet;لا توجد مفضلات بعد
 WebJS;No recent items;لا توجد عناصر حديثة
 Web;Configuration;الإعدادات
+Web;Configuration and security;الإعدادات والأمان
 Web;Download/Upload;تنزيل/تحميل
 Web;Rights;الصلاحيات
 Web;Assistants;المساعدون
 Web;Folder;المجلد
+Web;Drag to resize;اسحب لتغيير الحجم
+WebJS;Copy and paste;نسخ ولصق
+WebJS;Copy, paste and send;نسخ ولصق وإرسال
