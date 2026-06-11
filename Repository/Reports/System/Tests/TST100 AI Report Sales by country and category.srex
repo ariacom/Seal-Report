@@ -2,6 +2,42 @@
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>aab33159-f979-47db-9792-c128266185f1</GUID>
   <ViewGUID>f92c2f15-79e5-4367-9ff3-d3c2e6f51c1d</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>aab33159-0000-4000-8000-000000000001</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>aab33159-0000-4000-8000-000000000002</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
   <Sources>
     <ReportSource>
       <GUID>0b32b277-d29a-4a24-9f94-f7e677d74082</GUID>
@@ -28,86 +64,87 @@
       <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
       <Script>@using Seal.AI;
 @using System.IO;
+@using System.Linq;
 
 @{
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
 
-    //Single place defining the BASE output directory (subfolder = 6 first chars of the report name)
+    //Base output directory (subfolder = 6 first chars of the report name)
     var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
-    report.StringTag = $@"Reports\System\Tests\Output\{subDir}";
+    var baseDir = $@"Reports\System\Tests\Output\{subDir}";
 
-    //Ensure the base output directory physically exists BEFORE building the security folders.
-    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, report.StringTag));
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
 
+    //Dedicated output sub-folder for this provider (read by the next tasks from report.StringTag)
+    var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
+    var outputDir = Path.Combine(baseDir, safeName);
+    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
+    report.StringTag = outputDir;
+
+    //Default result (overwritten with the match rate by 'Check Pattern'); read by '900 Tests' from report.Tag2
+    report.Tag2 = new object[] { provider.Name, 0.0, "Error", null };
+
+    //Security context with write access to the output folder
     var user = new SecurityUser(repository.Security);
     user.AddSecurityGroup("Group System Tests");
     user.SetFolders();
     report.SecurityContext = user;
+
+    task.LogMessage($"Testing provider '{provider.Name}' -&gt; {outputDir}");
 }
 </Script>
-      <SortOrder>0</SortOrder>
+      <SortOrder>2</SortOrder>
     </ReportTask>
     <ReportTask>
-      <GUID>f9b2e525-177a-4a32-9b6b-258f145a7228</GUID>
-      <Name>Loop Providers</Name>
-      <Tasks>
-        <ReportTask>
-          <GUID>a7c7ff21-0eae-4533-88ba-326985cff90d</GUID>
-          <Name>Cleanup</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
-          <Script>@using Seal.AI;
-@using System.IO;
+      <GUID>a7c7ff21-0eae-4533-88ba-326985cff90d</GUID>
+      <Name>Cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <Script>@using System.IO;
 
 @{
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
-    var providerName = (string)ctx["ProviderName"];
-    var assistants = (Dictionary&lt;string, AIAssistantConfiguration&gt;)ctx["Assistants"];
+    var outputDir = report.StringTag;
 
     try
     {
-        task.LogMessage($"[{providerName}] Executing '{task.Name}'");
-
-        var assistant = new AIAssistant(assistants["Schedule &amp; Output"]);
-        assistant.SecurityContext = report.SecurityContext;
-
-        var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
-
-        assistant = new AIAssistant(assistants["System Admin"]);
-        assistant.SecurityContext = report.SecurityContext;
-        request = @$"Delete all reports and files stored in directory {outputDir}";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
-
-        //Check
-        if (Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir)).Length &gt; 0) throw new Exception($"Files still exist in '{outputDir}' after the assistant call.");
+        task.LogMessage($"Executing '{task.Name}'");
+        var dir = Path.Combine(repository.RepositoryPath, outputDir);
+        if (Directory.Exists(dir))
+            foreach (var f in Directory.GetFiles(dir)) File.Delete(f);
     }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
+    catch (Exception ex)
+    {
+        var pr = report.Tag2 as object[];
+        var pn = pr != null ? (string)pr[0] : null;
+        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
 }
 </Script>
-          <SortOrder>1</SortOrder>
-        </ReportTask>
-        <ReportTask>
-          <GUID>b21280a9-7542-499f-a7db-b81f77ab5fa4</GUID>
-          <Name>Create report</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
-          <Script>@using Seal.AI;
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>b21280a9-7542-499f-a7db-b81f77ab5fa4</GUID>
+      <Name>Create report</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <Script>@using Seal.AI;
 @using System.IO;
 @using System.Linq;
 
@@ -115,18 +152,26 @@
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
-    var providerName = (string)ctx["ProviderName"];
-    var assistants = (Dictionary&lt;string, AIAssistantConfiguration&gt;)ctx["Assistants"];
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
 
-    try
-    {
-        task.LogMessage($"[{providerName}] Executing '{task.Name}'");
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
 
-        var assistant = new AIAssistant(assistants["Report Designer"]);
-        assistant.SecurityContext = report.SecurityContext;
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    var assistantConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Report Designer"));
+    assistantConfig.ProviderGUID = provider.GUID;
+    var assistant = new AIAssistant(assistantConfig);
+    assistant.SecurityContext = report.SecurityContext;
 
         var request = $@"
         Create a report named 'Sales by country and product category in 1997.srex' in directory {outputDir} using the Northwind data source.
@@ -146,8 +191,8 @@
         Configure the model chart as a HORIZONTAL STACKED BAR chart: one horizontal bar per country, each bar split (stacked) by product category, using Amount as the value. Use 'Customer Country' as the chart axis and 'Category' as the chart splitter, and set the 'Amount' data element serie as a Bar serie.
         Force the report execution using the current restrictions.
     ";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+        if (chatLog != null) task.LogMessage(request);
+        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check report created and get its file path
@@ -188,20 +233,18 @@
             throw new Exception("Chart: 'Category' must be the chart Splitter.");
         if (!datas[0].IsSerie || datas[0].ChartJSSerie != ChartJSSerieDefinition.Bar)
             throw new Exception("Chart: 'Amount' must define a Bar serie.");
-    }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
 }
 </Script>
-          <SortOrder>2</SortOrder>
-        </ReportTask>
-        <ReportTask>
-          <GUID>c3f1a9d2-4b6e-4a21-9c2d-7e8f0a1b2c3d</GUID>
-          <Name>Check Pattern</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
-          <Script>@using Seal.Model;
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c3f1a9d2-4b6e-4a21-9c2d-7e8f0a1b2c3d</GUID>
+      <Name>Check Pattern</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <Script>@using Seal.Model;
 @using System.IO;
 @using System.Linq;
 
@@ -209,13 +252,10 @@
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
+    var outputDir = report.StringTag;
+    var providerName = (report.Tag2 as object[])?[0] as string;
 
-    try
-    {
-        task.LogMessage($"Executing '{task.Name}'");
+    task.LogMessage($"Executing '{task.Name}'");
 
         //Generic Check Pattern: pair every generated report with the expected (pattern) report and compare their definition.
         //Pattern directory = Reports\System\Tests\Pattern\&lt;6 first chars of the report name&gt; (e.g. 'TST100').
@@ -229,6 +269,8 @@
         if (patternFiles.Length == 0) throw new Exception($"No pattern report found in '{patternDir}'.");
 
         var failures = new List&lt;string&gt;();
+        var warnings = new List&lt;string&gt;();
+        var scores = new List&lt;double&gt;();
         foreach (var generatedFile in generatedFiles)
         {
             var key = Normalize(Path.GetFileNameWithoutExtension(generatedFile));
@@ -240,6 +282,7 @@
             var generated = Report.LoadFromFile(generatedFile, repository);
 
             var result = CheckPattern(expected, generated);
+            scores.Add(result.Score);
 
             task.LogMessage($"Check Pattern '{Path.GetFileName(generatedFile)}' vs '{Path.GetFileName(patternFile)}': {result.Status} ({result.Score}%)");
             foreach (var m in result.Messages) task.LogMessage("  - " + m);
@@ -247,11 +290,26 @@
             //Only FAILURE fails the test; WARNING is reported but does not cause an error.
             if (result.Status == "FAILURE")
                 failures.Add($"{Path.GetFileName(generatedFile)}: FAILURE ({result.Score}%) - {string.Join("; ", result.Messages)}");
+
+            //Collect WARNING messages (typically raised when the match rate is below 100% without a structural failure)
+            foreach (var m in result.Messages.Where(i =&gt; i.StartsWith("WARNING:")))
+                warnings.Add($"{Path.GetFileName(generatedFile)}: {m}");
         }
 
-        if (failures.Count &gt; 0) ctx["Error"] = string.Join(Environment.NewLine, failures);
-    }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
+        //Average pattern-match score across the generated report(s) = this provider's match rate (%)
+        var rate = scores.Count &gt; 0 ? Math.Round(scores.Average(), 1) : 0.0;
+        //Warning messages recorded by '900 Tests' (sr_test_results.warnings) - null when the report matches exactly
+        var warningText = warnings.Count &gt; 0 ? string.Join(Environment.NewLine, warnings) : null;
+
+        if (failures.Count &gt; 0)
+        {
+            //Record the failed result for '900 Tests' (report.Tag2), then fail the report
+            report.Tag2 = new object[] { providerName, rate, "Error", string.Join(Environment.NewLine, failures), warningText };
+            throw new Exception(string.Join(Environment.NewLine, failures));
+        }
+
+        //Record the provider match rate for the test runner ('900 Tests' reads report.Tag2)
+        report.Tag2 = new object[] { providerName, rate, "Success", null, warningText };
 }
 
 @functions {
@@ -340,153 +398,7 @@
     string RestrictionDefault(ReportRestriction r) =&gt; $"{r.Operator}|{r.Value1}|{r.Value2}|{r.Date1:yyyy-MM-dd}|{r.Date2:yyyy-MM-dd}";
 }
 </Script>
-          <SortOrder>3</SortOrder>
-        </ReportTask>
-      </Tasks>
-      <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>Loop</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>thread</Name>
-          <Value>0</Value>
-        </Parameter>
-      </Parameters>
-      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
-      <BodyScript />
-      <Script>@using Seal.AI;
-@using System.IO;
-@using System.Threading;
-@using System.Threading.Tasks;
-
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    var repository = report.Repository;
-    var config = Repository.Instance.AIConfiguration;
-    var baseDir = report.StringTag;
-
-    //Providers under test = every ENABLED AI provider defined in the AI Configuration
-    var providers = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
-    if (providers.Count == 0) throw new Exception("No enabled AI provider found to test.");
-
-    //Source assistant configurations (cloned per provider so nothing global is ever mutated)
-    var sourceAssistants = config.AIAssistants.Where(a =&gt; a.IsEnabled).ToList();
-
-    //Build one fully self-contained context per provider:
-    //  - its own output sub-folder
-    //  - its own cloned assistant configurations (forced to this provider)
-    //  - its own cloned set of test tasks (cloned here, single threaded)
-    var items = new List&lt;object&gt;();
-    foreach (var provider in providers)
-    {
-        var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
-        var providerDir = Path.Combine(baseDir, safeName);
-        Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, providerDir));
-
-        var assistants = new Dictionary&lt;string, AIAssistantConfiguration&gt;();
-        foreach (var a in sourceAssistants)
-        {
-            var clone = (AIAssistantConfiguration)Helper.Clone(a);
-            clone.ProviderGUID = provider.GUID;
-            assistants[a.Name] = clone;
-        }
-
-        var ctx = new Dictionary&lt;string, object&gt;();
-        ctx["ProviderName"] = provider.Name;
-        ctx["Provider"] = provider;
-        ctx["OutputDir"] = providerDir;
-        ctx["Assistants"] = assistants;
-
-        var childTasks = new List&lt;ReportTask&gt;();
-        foreach (var child in task.Tasks.Where(i =&gt; i.Enabled).OrderBy(i =&gt; i.SortOrder))
-        {
-            child.InitParameters();
-            var newTask = (ReportTask)Helper.Clone(child);
-            newTask.Report = report;
-            newTask.InitReferences();
-            newTask.IgnoreError = true;
-            newTask.ExecInput = ctx;
-            childTasks.Add(newTask);
-        }
-        ctx["Tasks"] = childTasks;
-        items.Add(ctx);
-    }
-
-    //All provider sub-folders now exist: grant the shared security context write access ONCE
-    report.SecurityContext.SetFolders();
-
-    //Number of parallel threads (Loop 'thread' parameter; 0 = one thread per provider)
-    var thread = task.GetNumericValue("thread");
-    if (thread &lt;= 0 || thread &gt; items.Count) thread = items.Count;
-    task.LogMessage($"Testing {items.Count} provider(s) using {thread} thread(s).");
-
-    var queue = new List&lt;object&gt;(items);
-    var results = new List&lt;string&gt;();
-    var sync = new object();
-
-    var workers = new List&lt;Task&gt;();
-    for (int i = 0; i &lt; thread; i++)
-    {
-        workers.Add(Task.Run(() =&gt; RunProvider(queue, results, sync)));
-        Thread.Sleep(50);
-    }
-    while (workers.Exists(w =&gt; !w.IsCompleted)) Thread.Sleep(100);
-
-    report.StringTag = baseDir;
-
-    var failures = results.Count(r =&gt; r.StartsWith("FAIL"));
-    var summary = $"Provider test summary ({results.Count - failures}/{results.Count} passed):" + Environment.NewLine + string.Join(Environment.NewLine, results.OrderBy(r =&gt; r));
-    task.LogMessage(summary);
-
-    //Fail the report only AFTER every provider has been tested
-    if (failures &gt; 0) throw new Exception(summary);
-}
-
-@functions {
-    void RunProvider(List&lt;object&gt; queue, List&lt;string&gt; results, object sync)
-    {
-        ReportTask task = Model;
-        Report report = task.Report;
-        while (true)
-        {
-            Dictionary&lt;string, object&gt; ctx = null;
-            lock (sync)
-            {
-                ctx = queue.FirstOrDefault() as Dictionary&lt;string, object&gt;;
-                if (ctx != null) queue.Remove(ctx);
-            }
-            if (ctx == null || report.Cancel) break;
-
-            var providerName = (string)ctx["ProviderName"];
-            task.LogMessage($"==================== START provider '{providerName}' -&gt; {ctx["OutputDir"]} ====================");
-
-            try
-            {
-                foreach (var child in (List&lt;ReportTask&gt;)ctx["Tasks"])
-                {
-                    if (report.Cancel) break;
-                    child.Execute();
-                    if (ctx.ContainsKey("Error")) break;
-                }
-            }
-            catch (Exception ex)
-            {
-                ctx["Error"] = ex.Message;
-            }
-
-            string line;
-            lock (sync)
-            {
-                if (ctx.ContainsKey("Error")) line = $"FAIL [{providerName}]: {ctx["Error"]}";
-                else line = $"PASS [{providerName}]";
-                results.Add(line);
-            }
-            task.LogMessage($"==================== END provider '{providerName}': {line} ====================");
-        }
-    }
-}
-</Script>
-      <SortOrder>1</SortOrder>
+      <SortOrder>5</SortOrder>
     </ReportTask>
   </Tasks>
   <Views>

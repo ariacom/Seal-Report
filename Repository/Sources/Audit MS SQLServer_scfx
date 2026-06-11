@@ -281,6 +281,31 @@
             <DisplayName>Messages file</DisplayName>
             <DisplayOrder>8</DisplayOrder>
           </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000109</GUID>
+            <Name>sr_test_results.provider_name</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Provider</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000110</GUID>
+            <Name>sr_test_results.match_rate</Name>
+            <Type>Numeric</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Match rate</DisplayName>
+            <DisplayOrder>10</DisplayOrder>
+            <Format>N1</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000111</GUID>
+            <Name>sr_test_results.warnings</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Warnings</DisplayName>
+            <DisplayOrder>11</DisplayOrder>
+          </MetaColumn>
         </Columns>
       </MetaTable>
     </Tables>
@@ -407,6 +432,42 @@ ORDER BY 1</Sql>
             <Id>LoadError</Id>
             <Val>Load Error</Val>
             <Class>table-warning</Class>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>aab33159-0000-4000-8000-000000000010</GUID>
+        <Name>AI Providers</Name>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>true</IsDbRefresh>
+        <Script>@using Seal.Model
+@using Seal.AI
+@using System.Linq
+@{
+    MetaEnum enumList = Model;
+    enumList.Values.Clear();
+    foreach (var provider in Repository.Instance.AIConfiguration.AIProviders.Where(p =&gt; p.IsEnabled).OrderBy(p =&gt; p.Name))
+    {
+        enumList.Values.Add(new MetaEV() { Id = provider.GUID, Val = provider.Name });
+    }
+}
+</Script>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>aab33159-0000-4000-8000-000000000011</GUID>
+        <Name>Test log levels</Name>
+        <Values>
+          <MetaEV>
+            <Id>Minimum</Id>
+            <Val>Minimum</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Chat</Id>
+            <Val>Chat Logs</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ChatAndTools</Id>
+            <Val>Chat and Tools Logs</Val>
           </MetaEV>
         </Values>
       </MetaEnum>

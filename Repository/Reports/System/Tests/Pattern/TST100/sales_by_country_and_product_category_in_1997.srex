@@ -89,7 +89,6 @@ AND [d6c0151c-7c89-4158-ae8f-5bf019171ee9]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <Operator>Contains</Operator>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>

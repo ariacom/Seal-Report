@@ -16,6 +16,37 @@
       <TypeRe>Text</TypeRe>
       <EnumGUIDRE>a9000000-0000-4000-8000-000000000601</EnumGUIDRE>
     </ReportRestriction>
+    <ReportRestriction>
+      <GUID>a9000000-0000-4000-8000-000000000603</GUID>
+      <Type>Text</Type>
+      <DisplayName>Providers to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>Prompt</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <FirstSelection>All</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>a9000000-0000-4000-8000-000000000604</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
   </InputValues>
   <Sources>
     <ReportSource>
@@ -56,12 +87,32 @@
           <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000104</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000318</GUID>
+          <Name>sr_test_results.provider_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000109</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
           <GUID>a9000000-0000-4000-8000-000000000313</GUID>
           <Name>sr_test_results.status</Name>
           <DisplayName />
+          <CssClass />
+          <CssStyle>text-align:center</CssStyle>
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000105</MetaColumnGUID>
+          <CssClassEl />
+          <CssStyleEl>text-align:center</CssStyleEl>
+          <CssTitle>true</CssTitle>
           <ContainsHtml>true</ContainsHtml>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000319</GUID>
+          <Name>sr_test_results.match_rate</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000110</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>a9000000-0000-4000-8000-000000000314</GUID>
@@ -72,25 +123,74 @@
           <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000106</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>a9000000-0000-4000-8000-000000000315</GUID>
-          <Name>sr_test_results.report_path</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000103</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>a9000000-0000-4000-8000-000000000316</GUID>
           <Name>sr_test_results.error</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000107</MetaColumnGUID>
+          <CellScript>@{
+    //Render line breaks (CR/LF) in the error text as HTML so multi-line errors display on several lines.
+    ResultCell cell = Model;
+    if (!cell.IsTitle &amp;&amp; cell.Value != null) {
+        var s = cell.Value.ToString();
+        if (!string.IsNullOrEmpty(s)) cell.FinalValue = System.Net.WebUtility.HtmlEncode(s).Replace("\r\n", "&lt;br&gt;").Replace("\n", "&lt;br&gt;");
+    }
+}
+</CellScript>
+          <ContainsHtml>true</ContainsHtml>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a9000000-0000-4000-8000-000000000320</GUID>
+          <Name>sr_test_results.warnings</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000111</MetaColumnGUID>
+          <CellScript>@{
+    //Render line breaks (CR/LF) in the warnings text as HTML so multiple warnings display on several lines.
+    ResultCell cell = Model;
+    if (!cell.IsTitle &amp;&amp; cell.Value != null) {
+        var s = cell.Value.ToString();
+        if (!string.IsNullOrEmpty(s)) cell.FinalValue = System.Net.WebUtility.HtmlEncode(s).Replace("\r\n", "&lt;br&gt;").Replace("\n", "&lt;br&gt;");
+    }
+}
+</CellScript>
+          <ContainsHtml>true</ContainsHtml>
         </ReportElement>
         <ReportElement>
           <GUID>a9000000-0000-4000-8000-000000000317</GUID>
           <Name>sr_test_results.messages_file</Name>
-          <DisplayName />
+          <DisplayName>Messages</DisplayName>
+          <CssStyle>text-align:center</CssStyle>
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000108</MetaColumnGUID>
+          <CellScript>@{
+    //Turn the messages file cell into a 'View' hyperlink opening the execution messages HTML file.
+    //The file is resolved and served by the 'Navigation Script' of this element, so it works both in the
+    //desktop Report Viewer and in the Web Server execution (the HTML file is then returned inline by the server).
+    //'FinalValue' only changes what is displayed; 'cell.Value' still holds the path read by the Navigation Script.
+    ResultCell cell = Model;
+    if (!cell.IsTitle &amp;&amp; cell.Value != null &amp;&amp; !string.IsNullOrEmpty(cell.Value.ToString())) {
+        cell.FinalValue = "&lt;span class='glyphicon glyphicon-list-alt' title='View messages'&gt;&lt;/span&gt;";
+        cell.AddNavigationFileDownload("View messages");
+    }
+}
+</CellScript>
+          <NavigationScript>@using System.IO
+@{
+    //'messages_file' stores a path relative to the repository 'Reports' folder.
+    //Resolve it to a full path so the HTML file can be downloaded/opened.
+    NavigationLink link = Model;
+    ResultCell cell = link.Cell;
+    Report report = cell.ContextModel.Report;
+
+    var relativePath = cell.Value == null ? "" : cell.Value.ToString();
+    if (!string.IsNullOrEmpty(relativePath)) {
+        link.ScriptResult = Path.Combine(report.Repository.ReportsFolder, relativePath.TrimStart('\\', '/'));
+    }
+}
+</NavigationScript>
+          <CssStyleEl>text-align:center</CssStyleEl>
+          <CssTitle>true</CssTitle>
         </ReportElement>
       </Elements>
       <Restriction>[a9000000-0000-4000-8000-000000000351]</Restriction>
@@ -145,10 +245,18 @@
                 status varchar(20),
                 duration_seconds int,
                 error varchar(2000),
-                messages_file varchar(500)
+                messages_file varchar(500),
+                provider_name varchar(255),
+                match_rate decimal(5,1),
+                warnings varchar(2000)
             )";
             command.ExecuteNonQuery();
         }
+
+        //Add columns introduced after the table was first created (ignored if they already exist)
+        AddColumnIfMissing(command, "provider_name", "varchar(255)");
+        AddColumnIfMissing(command, "match_rate", "decimal(5,1)");
+        AddColumnIfMissing(command, "warnings", "varchar(2000)");
     }
     finally {
         connection.Close();
@@ -160,6 +268,24 @@
         //One run id shared by all tests of this execution (read by the child task and the model)
         rootReport.Tag = Guid.NewGuid().ToString();
         rootReport.LogMessage("Test run prepared (run_id={0})", rootReport.Tag);
+    }
+}
+
+@functions {
+    //Ensure a column exists on sr_test_results, adding it if a previously created table predates it.
+    void AddColumnIfMissing(DbCommand command, string column, string type)
+    {
+        try {
+            command.CommandText = $"select {column} from sr_test_results where 1=0";
+            command.ExecuteNonQuery();
+        }
+        catch {
+            try {
+                command.CommandText = $"alter table sr_test_results add {column} {type}";
+                command.ExecuteNonQuery();
+            }
+            catch { /* column already exists or cannot be added: ignore */ }
+        }
     }
 }
 </Script>
@@ -188,6 +314,9 @@
     Report rootReport = task.Report;
     Repository repository = rootReport.Repository;
 
+    //GUID of the shared 'AI Providers' enumerated list (defined in the Audit data source)
+    const string AIProvidersEnumGUID = "aab33159-0000-4000-8000-000000000010";
+
     string runId = rootReport.Tag as string;
     string reportPath = task.ExecInput as string;
     if (string.IsNullOrEmpty(reportPath)) return;
@@ -196,62 +325,128 @@
     var sel = rootReport.GetInputValueByName("Reports to test");
     if (sel != null &amp;&amp; !sel.EnumValues.Contains(Path.GetFileName(reportPath))) return;
 
-    var runDate = DateTime.Now;
-    runDate = new DateTime(runDate.Year, runDate.Month, runDate.Day, runDate.Hour, runDate.Minute, runDate.Second);
-
     string name = Path.GetFileNameWithoutExtension(reportPath);
     string relativePath = reportPath.Replace(repository.ReportsFolder, "");
-    string status;
-    string error = null;
-    int duration = 0;
-    string messages = "";
-
-    rootReport.LogMessage("Executing test '{0}'", name);
-    Report report = Report.LoadFromFile(reportPath, repository);
-    if (!string.IsNullOrEmpty(report.LoadErrors)) {
-        status = "LoadError";
-        error = report.LoadErrors;
-        messages = report.LoadErrors;
-    }
-    else {
-        report.ExecutionInitiator = rootReport;
-        ReportExecution execution = new ReportExecution() { Report = report };
-        try {
-            execution.Execute();
-            while (report.Status != ReportStatus.Executed &amp;&amp; !report.HasErrors &amp;&amp; !report.Cancel) {
-                Thread.Sleep(200);
-                if (rootReport.Cancel) report.Cancel = true;
-            }
-        }
-        catch (Exception ex) {
-            report.ExecutionErrors = ex.Message;
-        }
-        duration = Convert.ToInt32(report.ExecutionFullDuration.TotalSeconds);
-        messages = report.ExecutionMessages;
-        status = report.HasErrors ? "Error" : "Success";
-        if (report.HasErrors) error = report.ExecutionErrors;
-    }
-
-    string messagesFile = WriteMessagesHtml(repository, name, runDate, status, messages, error);
 
     var auditSource = repository.Sources.FirstOrDefault(i =&gt; i.Name.StartsWith("Audit"));
     bool lockDatabase = (auditSource != null &amp;&amp; auditSource.Connection.ConnectionType == ConnectionType.SQLite);
-    InsertResult(auditSource, lockDatabase, rootReport, new object[] { runId, runDate, relativePath, name, status, duration, error, messagesFile });
 
-    rootReport.LogMessage("Test '{0}' -&gt; {1}", name, status);
+    //Detect whether the report to test exposes an input value bound to the 'AI Providers' enumerated list.
+    //If so, execute it ONCE PER PROVIDER selected in the root 'Providers to test' input value (one result row per provider);
+    //otherwise execute it a single time.
+    var probe = Report.LoadFromFile(reportPath, repository);
+    var hasProviderInput = string.IsNullOrEmpty(probe.LoadErrors) &amp;&amp; probe.InputValues.Any(i =&gt; i.EnumGUIDEL == AIProvidersEnumGUID);
+
+    var providersToRun = new List&lt;string&gt;();
+    if (hasProviderInput) {
+        var rootProviders = rootReport.GetInputValueByName("Providers to test");
+        if (rootProviders != null &amp;&amp; rootProviders.EnumValues.Count &gt; 0) providersToRun.AddRange(rootProviders.EnumValues);
+        else providersToRun.AddRange(Repository.Instance.AIConfiguration.AIProviders.Where(p =&gt; p.IsEnabled).Select(p =&gt; p.GUID));
+    }
+    if (providersToRun.Count == 0) providersToRun.Add(null); //single execution, no provider override
+
+    rootReport.LogMessage("Executing test '{0}' ({1} run(s))", name, providersToRun.Count);
+    foreach (var providerGUID in providersToRun) {
+        if (rootReport.Cancel) break;
+        RunAndAudit(repository, rootReport, auditSource, lockDatabase, runId, reportPath, name, relativePath, AIProvidersEnumGUID, providerGUID);
+    }
 }
 
 @functions {
-    string WriteMessagesHtml(Repository repository, string name, DateTime runDate, string status, string messages, string error)
+    //Execute the report once (optionally forcing a single AI provider) and record one row in sr_test_results.
+    void RunAndAudit(Repository repository, Report rootReport, MetaSource auditSource, bool lockDatabase, string runId, string reportPath, string name, string relativePath, string providersEnumGUID, string providerGUID)
+    {
+        var runDate = DateTime.Now;
+        runDate = new DateTime(runDate.Year, runDate.Month, runDate.Day, runDate.Hour, runDate.Minute, runDate.Second);
+
+        //providerGUID identifies the AI provider for this iteration (the 'AI Providers' enum stores provider GUIDs).
+        //Resolve its display name for logging, the messages file and the audit 'provider_name' column.
+        string providerName = providerGUID == null ? null
+            : (Repository.Instance.AIConfiguration.AIProviders.FirstOrDefault(p =&gt; p.GUID == providerGUID)?.Name ?? providerGUID);
+
+        string status;
+        string error = null;
+        int duration = 0;
+        string messages = "";
+
+        rootReport.LogMessage("Executing test '{0}'{1}", name, providerName == null ? "" : (" [" + providerName + "]"));
+
+        Report report = Report.LoadFromFile(reportPath, repository);
+        if (!string.IsNullOrEmpty(report.LoadErrors)) {
+            status = "LoadError";
+            error = report.LoadErrors;
+            messages = report.LoadErrors;
+        }
+        else {
+            report.ExecutionInitiator = rootReport;
+
+            //Propagate the shared input values (e.g. 'Log level') matched by name to the report being tested
+            foreach (var rootInput in rootReport.InputValues) {
+                var targetInput = report.GetInputValueByName(rootInput.DisplayNameEl);
+                if (targetInput == null) continue;
+                targetInput.CopyForPrompt(rootInput);
+                //Neutralize the tested report's own 'first selection' default so it does not override the propagated value
+                targetInput.FirstSelection = FirstEnumSelection.None;
+            }
+
+            //Force the single provider of this iteration on the report's 'AI Providers' input value (the enum stores GUIDs)
+            if (providerGUID != null) {
+                var providerInput = report.InputValues.FirstOrDefault(i =&gt; i.EnumGUIDEL == providersEnumGUID);
+                if (providerInput != null) {
+                    providerInput.EnumValues.Clear();
+                    providerInput.EnumValues.Add(providerGUID);
+                    providerInput.FirstSelection = FirstEnumSelection.None;
+                }
+            }
+
+            ReportExecution execution = new ReportExecution() { Report = report };
+            try {
+                execution.Execute();
+                while (report.Status != ReportStatus.Executed &amp;&amp; !report.HasErrors &amp;&amp; !report.Cancel) {
+                    Thread.Sleep(200);
+                    if (rootReport.Cancel) report.Cancel = true;
+                }
+            }
+            catch (Exception ex) {
+                report.ExecutionErrors = ex.Message;
+            }
+            duration = Convert.ToInt32(report.ExecutionFullDuration.TotalSeconds);
+            messages = report.ExecutionMessages;
+            status = report.HasErrors ? "Error" : "Success";
+            if (report.HasErrors) error = report.ExecutionErrors;
+        }
+
+        string messagesFile = WriteMessagesHtml(repository, name, providerName, runDate, status, messages, error);
+
+        //Prefer the report's own provider result (report.Tag2 = { name, rate, status, error });
+        //otherwise record this iteration's provider name (if any) with the execution status.
+        var pr = report.Tag2 as object[];
+        if (pr != null) {
+            var pName = (string)pr[0];
+            var pRate = pr[1] == null ? (object)null : Convert.ToDecimal(pr[1]); //match rate (%)
+            var pStatus = (string)pr[2];
+            var pError = pr.Length &gt; 3 ? (string)pr[3] : null;
+            var pWarnings = pr.Length &gt; 4 ? (string)pr[4] : null; //warning messages (e.g. match rate below 100%)
+            InsertResult(auditSource, lockDatabase, rootReport, new object[] { runId, runDate, relativePath, name, pStatus, duration, pError, messagesFile, pName, pRate, pWarnings });
+        }
+        else {
+            InsertResult(auditSource, lockDatabase, rootReport, new object[] { runId, runDate, relativePath, name, status, duration, error, messagesFile, providerName, null, null });
+        }
+
+        rootReport.LogMessage("Test '{0}'{1} -&gt; {2}", name, providerName == null ? "" : (" [" + providerName + "]"), status);
+    }
+
+    string WriteMessagesHtml(Repository repository, string name, string providerName, DateTime runDate, string status, string messages, string error)
     {
         string outputFolder = Path.Combine(repository.ReportsFolder, "System", "Tests", "Output", name.Substring(0,6));
         if (!Directory.Exists(outputFolder)) Directory.CreateDirectory(outputFolder);
-        string file = Path.Combine(outputFolder, "execution_" + runDate.ToString("yyyyMMddHHmmss") + ".html");
+        string suffix = string.IsNullOrEmpty(providerName) ? "" : "_" + string.Join("_", providerName.Split(Path.GetInvalidFileNameChars()));
+        string file = Path.Combine(outputFolder, "execution_" + runDate.ToString("yyyyMMddHHmmss") + suffix + ".html");
 
         var sb = new StringBuilder();
         sb.AppendLine("&lt;html&gt;&lt;head&gt;&lt;meta charset=\"utf-8\"&gt;&lt;title&gt;" + System.Net.WebUtility.HtmlEncode(name) + "&lt;/title&gt;&lt;/head&gt;&lt;body&gt;");
         sb.AppendLine("&lt;h2&gt;" + System.Net.WebUtility.HtmlEncode(name) + "&lt;/h2&gt;");
-        sb.AppendLine("&lt;p&gt;&lt;b&gt;Date:&lt;/b&gt; " + runDate.ToString() + "&lt;br&gt;&lt;b&gt;Status:&lt;/b&gt; " + status + "&lt;/p&gt;");
+        sb.AppendLine("&lt;p&gt;&lt;b&gt;Date:&lt;/b&gt; " + runDate.ToString() + (string.IsNullOrEmpty(providerName) ? "" : "&lt;br&gt;&lt;b&gt;Provider:&lt;/b&gt; " + System.Net.WebUtility.HtmlEncode(providerName)) + "&lt;br&gt;&lt;b&gt;Status:&lt;/b&gt; " + status + "&lt;/p&gt;");
         if (!string.IsNullOrEmpty(error)) sb.AppendLine("&lt;h3&gt;Error&lt;/h3&gt;&lt;pre&gt;" + System.Net.WebUtility.HtmlEncode(error) + "&lt;/pre&gt;");
         sb.AppendLine("&lt;h3&gt;Execution messages&lt;/h3&gt;&lt;pre&gt;" + System.Net.WebUtility.HtmlEncode(messages == null ? "" : messages) + "&lt;/pre&gt;");
         sb.AppendLine("&lt;/body&gt;&lt;/html&gt;");
@@ -269,12 +464,12 @@
             var connection = auditSource.Connection.GetOpenConnection();
             try {
                 var command = helper.GetDbCommand(connection);
-                command.CommandText = "insert into sr_test_results(run_id,run_date,report_path,report_name,status,duration_seconds,error,messages_file)";
+                command.CommandText = "insert into sr_test_results(run_id,run_date,report_path,report_name,status,duration_seconds,error,messages_file,provider_name,match_rate,warnings)";
                 if (command is OleDbCommand || command is OdbcCommand) {
-                    command.CommandText += " values(?,?,?,?,?,?,?,?)";
+                    command.CommandText += " values(?,?,?,?,?,?,?,?,?,?,?)";
                 }
                 else {
-                    command.CommandText += " values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8)";
+                    command.CommandText += " values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11)";
                 }
 
                 int index = 1;
@@ -286,6 +481,9 @@
                 AddParameter(command, index++, DbType.Int32, row[5]);      //duration_seconds
                 AddParameter(command, index++, DbType.AnsiString, row[6]); //error
                 AddParameter(command, index++, DbType.AnsiString, row[7]); //messages_file
+                AddParameter(command, index++, DbType.AnsiString, row[8]); //provider_name
+                AddParameter(command, index++, DbType.Decimal, row[9]);    //match_rate
+                AddParameter(command, index++, DbType.AnsiString, row[10]); //warnings
                 command.ExecuteNonQuery();
             }
             finally {
@@ -366,7 +564,7 @@
     if (!string.IsNullOrEmpty(runId)) {
         //A new run was created by the loop: refresh the 'Run' enum so it includes it
         var source = report.Sources.FirstOrDefault();
-        var runEnum = source == null ? null : source.MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Run");
+        var runEnum = source == null ? null : source.MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Test run");
         if (runEnum != null) runEnum.RefreshEnum(false);
 
         var r = report.Models.SelectMany(m =&gt; m.Restrictions).FirstOrDefault(i =&gt; i.Name == "sr_test_results.run_id");
@@ -375,6 +573,7 @@
             r.EnumValues.Clear();
             r.EnumValues.Add(runId);
         }
+        report.Tag = null;
     }
     
     var sel = report.GetInputValueByName("Reports to test");

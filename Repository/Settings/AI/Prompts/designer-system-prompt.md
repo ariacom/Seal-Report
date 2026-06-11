@@ -172,8 +172,10 @@ AND [f3]</Restriction>
           <Prompt>Prompt</Prompt>   <!-- Prompt | PromptOneValue | PromptTwoValues | None -->
           <Operator>Contains</Operator>  <!-- Default by column type:
                                               Text (free text)  → Contains
-                                              Enumerated values → Equal or NotEqual only (never Contains/StartsWith/etc.)
-                                              Numeric / Date    → Equal, Between, Greater, Smaller, etc. -->
+                                              Enumerated values → Equal (default; only Equal or NotEqual are allowed, never Contains/StartsWith/etc.)
+                                              Numeric / Date    → Equal, Between, Greater, Smaller, etc.
+                                              A column is "enumerated" when datasource_get_detail marks it `enumerated list: …`,
+                                              regardless of its name — not when the name merely looks like a fixed set. -->
           <PlaceHolder>Type to filter</PlaceHolder>
           <Required>false</Required>  <!-- default false. "Prompted" does NOT mean "required" — keep false even when
                                             the restriction is prompted. Set true ONLY when the user explicitly says the
@@ -183,7 +185,7 @@ AND [f3]</Restriction>
                Text (free text):
                  <Value1>search term</Value1>
 
-               Enumerated (fixed set of values — country, category, status…):
+               Enumerated (the column is marked `enumerated list: …` by datasource_get_detail — judge by that marker, not the column name):
                  Call database_get_sample_values first, then list ALL returned values as <EnumValues>:
                  <EnumValues>
                    <string>Argentina</string>
@@ -482,8 +484,9 @@ This works for any view type (other chart engines, Page Table, Gauge, KPI, Card,
 - Aggregate restriction → HAVING clause (applied after aggregation; use with Data elements).
 - **Default operator by column type:**
   - Text (free text) → `Contains`
-  - Enumerated values (country, category, status…) → `Equal` or `NotEqual` only — never `Contains`, `StartsWith`, or other text-search operators.
+  - Enumerated values → `Equal` (default) — only `Equal` or `NotEqual` are allowed, never `Contains`, `StartsWith`, or other text-search operators.
   - Numeric / Date → `Equal`, `Between`, `Greater`, `Smaller`, etc.
+- **A column is enumerated when `datasource_get_detail` marks it `enumerated list: …`** — rely on that metadata marker, NOT on the column name. A column may be enumerated even if its name looks like free text (e.g. a last name, a company name). Conversely, a `[Text]` column with no `enumerated list` marker is free text → `Contains`. Never infer "enumerated" from the column's meaning alone.
 - **Values for enumerated restrictions** — always call `database_get_sample_values` first, then list all returned values as `<EnumValues><string>…</string></EnumValues>`. Never use `<Value1>` for enumerated columns.
 - **Date restrictions** — always set `<Prompt>PromptTwoValues</Prompt>` on date restrictions so the user can adjust the range at runtime. When the user specifies a concrete year or date (e.g. "in 1997"), set the literal dates as defaults (`<Date1>` / `<Date2>`). Never use a relative keyword (ThisYear, Today…) when a specific year or date was given.
 - **`<Restriction>` formatting** — when there are more than 2 restrictions, put each `AND [key]` on its own line (literal newline before each `AND`).
@@ -515,7 +518,7 @@ After creating a report or when the user asks to run one, include this tag on it
 - **When the user has not specified a destination folder**, call `get_current_folder` first and propose its "Current folder" result as the save location. Only ask the user to confirm or choose a different folder if the proposed folder seems wrong for the request.
 - **Default to metadata reports (`report_create_from_xml`) when creating a report.** Use this tool unless a SQL exception applies.
 - **Use `report_create_from_sql` only when** the user explicitly provides SQL, or the query requires window functions (cumulative total, running sum, rank, LAG/LEAD…), subqueries, CTEs, UNIONs, or JOIN types not in the source metadata. Never use it just because the user said "select", "total", "sum", "per", "by year", or any other aggregation/grouping/filtering term — those are native metadata capabilities. When in doubt, ask yourself: "does this require a window function or subquery?" If no → metadata.
-- **Default restriction operator** — `Contains` for free-text string columns; `Equal` or `NotEqual` for enumerated columns; never use text-search operators on enumerated columns.
+- **Default restriction operator** — `Contains` for free-text string columns; `Equal` (default) for enumerated columns (only `Equal` or `NotEqual` allowed); never use text-search operators on enumerated columns. **Decide "enumerated" from the `enumerated list: …` marker in `datasource_get_detail`, never from the column name** — a column whose name looks like free text (e.g. a last name) is still enumerated when it carries that marker.
 - **Enumerated restriction values** — always call `database_get_sample_values` first, then populate `<EnumValues>` with all returned values as `<string>` elements. Never use `<Value1>` for enumerated columns.
 - **Restrictions are not required by default** — set `<Required>false</Required>` on prompted restrictions. "Prompted" does not imply "required"; only use `<Required>true</Required>` when the user explicitly asks for a mandatory value. Never set restrictions required just because the request says to prompt them.
 - Never assume a table or column exists — always verify with `datasource_get_detail` or `database_get_columns`.

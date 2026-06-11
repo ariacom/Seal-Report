@@ -31,7 +31,8 @@
             var label = col.DisplayName != col.Name && !string.IsNullOrEmpty(col.DisplayName)
                         ? $"{col.Name} ({col.DisplayName})"
                         : col.Name;
-            sb.AppendLine($"  {label} [{col.Type}{(col.IsAggregate ? ", aggregate" : "")}] (GUID: {col.GUID})");
+            var enumInfo = col.Enum != null ? $", enumerated list: {col.Enum.Name}" : "";
+            sb.AppendLine($"  {label} [{col.Type}{(col.IsAggregate ? ", aggregate" : "")}{enumInfo}] (GUID: {col.GUID})");
         }
         sb.AppendLine();
     }

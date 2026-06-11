@@ -2,6 +2,42 @@
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>84bb7b98-6974-4e78-bbab-9864e7f44832</GUID>
   <ViewGUID>fbc8de0c-3535-4736-8780-2f80df73f703</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>84bb7b98-0000-4000-8000-000000000001</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>84bb7b98-0000-4000-8000-000000000002</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
   <Sources>
     <ReportSource>
       <GUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</GUID>
@@ -28,103 +64,147 @@
       <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
       <Script>@using Seal.AI;
 @using System.IO;
+@using System.Linq;
 
 @{
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
 
-    //Single place defining the BASE output directory (subfolder = 6 first chars of the report name)
+    //Base output directory (subfolder = 6 first chars of the report name)
     var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
-    report.StringTag = $@"Reports\System\Tests\Output\{subDir}";
+    var baseDir = $@"Reports\System\Tests\Output\{subDir}";
 
-    //Ensure the base output directory physically exists BEFORE building the security folders.
-    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, report.StringTag));
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider.
+    //'900 Tests' executes this report ONCE PER PROVIDER by forcing the 'Provider to test' input value.
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
 
+    //Dedicated output sub-folder for this provider (read by the next tasks from report.StringTag)
+    var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
+    var outputDir = Path.Combine(baseDir, safeName);
+    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
+    report.StringTag = outputDir;
+
+    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2
+    report.Tag2 = new object[] { provider.Name, null, "Error", null };
+
+    //Security context with write access to the output folder
     var user = new SecurityUser(repository.Security);
     user.AddSecurityGroup("Group System Tests");
     user.SetFolders();
     report.SecurityContext = user;
+
+    task.LogMessage($"Testing provider '{provider.Name}' -&gt; {outputDir}");
 }
 </Script>
       <SortOrder>0</SortOrder>
     </ReportTask>
     <ReportTask>
-      <GUID>07a8f9e4-241e-40d8-b303-dce268bd76c6</GUID>
-      <Name>Loop Providers</Name>
-      <Tasks>
-        <ReportTask>
-          <GUID>f1102e88-89ac-46a2-8761-15af8bbd6f2f</GUID>
-          <Name>Cleanup</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
-          <Script>@using Seal.AI;
+      <GUID>f1102e88-89ac-46a2-8761-15af8bbd6f2f</GUID>
+      <Name>Cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@using Seal.AI;
 @using System.IO;
+@using System.Linq;
 
 @{
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
-    var providerName = (string)ctx["ProviderName"];
-    var assistants = (Dictionary&lt;string, AIAssistantConfiguration&gt;)ctx["Assistants"];
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
 
     try
     {
-        task.LogMessage($"[{providerName}] Executing '{task.Name}'");
-
-        var assistant = new AIAssistant(assistants["Schedule &amp; Output"]);
+        var schedConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Schedule &amp; Output"));
+        schedConfig.ProviderGUID = provider.GUID;
+        var assistant = new AIAssistant(schedConfig);
         assistant.SecurityContext = report.SecurityContext;
 
         var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+        if (chatLog != null) task.LogMessage(request);
+        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
-        assistant = new AIAssistant(assistants["System Admin"]);
+        var adminConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "System Admin"));
+        adminConfig.ProviderGUID = provider.GUID;
+        assistant = new AIAssistant(adminConfig);
         assistant.SecurityContext = report.SecurityContext;
         request = @$"Delete all reports and files stored in directory {outputDir}";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+        if (chatLog != null) task.LogMessage(request);
+        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check
         if (Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir)).Length &gt; 0) throw new Exception($"Files still exist in '{outputDir}' after the assistant call.");
     }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
+    catch (Exception ex)
+    {
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
 }
 </Script>
-          <SortOrder>1</SortOrder>
-        </ReportTask>
-        <ReportTask>
-          <GUID>38378b59-02a6-443a-a339-5200d8c444ee</GUID>
-          <Name>Create report</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
-          <Script>@using Seal.AI;
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>38378b59-02a6-443a-a339-5200d8c444ee</GUID>
+      <Name>Create report</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@using Seal.AI;
 @using System.IO;
+@using System.Linq;
 
 @{
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
-    var providerName = (string)ctx["ProviderName"];
-    var assistants = (Dictionary&lt;string, AIAssistantConfiguration&gt;)ctx["Assistants"];
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
 
     try
     {
-        task.LogMessage($"[{providerName}] Executing '{task.Name}'");
-
-        var assistant = new AIAssistant(assistants["Report Designer"]);
+        var designerConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Report Designer"));
+        designerConfig.ProviderGUID = provider.GUID;
+        var assistant = new AIAssistant(designerConfig);
         assistant.SecurityContext = report.SecurityContext;
 
         var request = $@"
@@ -136,8 +216,8 @@
         Group only by Customer so each customer appears once with its full-year total. Order the rows by total Amount descending and keep only the top 10, i.e. the 10 customers with the HIGHEST total amount (QUICK-Stop must be the first row, around 61,110).
         Do not add Order Date, Order Year, Order Month or any other column to the model.
     ";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+        if (chatLog != null) task.LogMessage(request);
+        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check report created and get its file path
@@ -153,43 +233,58 @@
         If both checks succeed, answer with exactly 'CHECK OK'.
         If any check fails, answer with exactly 'CHECK FAILED' followed by the reason.
     ";
-        task.LogMessage(request);
-        var checkResult = assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+        if (chatLog != null) task.LogMessage(request);
+        var checkResult = assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         if (checkResult == null || !checkResult.ToString().Contains("CHECK OK"))
             throw new Exception($"Data check failed for '{reportFilePath}': {checkResult}");
     }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
+    catch (Exception ex)
+    {
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
 }
 </Script>
-          <SortOrder>2</SortOrder>
-        </ReportTask>
-        <ReportTask>
-          <GUID>31687d2e-b13c-4cc3-8fe8-12d7c1c700b1</GUID>
-          <Name>Output and schedule</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
-          <Script>@using Seal.AI;
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>31687d2e-b13c-4cc3-8fe8-12d7c1c700b1</GUID>
+      <Name>Output and schedule</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@using Seal.AI;
 @using System.IO;
+@using System.Linq;
 
 @{
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
-    var providerName = (string)ctx["ProviderName"];
-    var assistants = (Dictionary&lt;string, AIAssistantConfiguration&gt;)ctx["Assistants"];
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
 
     try
     {
-        task.LogMessage($"[{providerName}] Executing '{task.Name}'");
-
-        var assistant = new AIAssistant(assistants["Schedule &amp; Output"]);
+        var schedConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Schedule &amp; Output"));
+        schedConfig.ProviderGUID = provider.GUID;
+        var assistant = new AIAssistant(schedConfig);
         assistant.SecurityContext = report.SecurityContext;
 
         var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
@@ -200,15 +295,15 @@
         Add an output folder in PDF to generate the report {reportFilePath}.
         Generate the file with a daily date in {outputDir}.
     ";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+        if (chatLog != null) task.LogMessage(request);
+        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         request = $@"
         Schedule it every monday at 10:45.
     ";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
+        if (chatLog != null) task.LogMessage(request);
+        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check
@@ -217,193 +312,86 @@
         if (outputReport.Outputs.First().Format != ReportFormat.PDF) throw new Exception($"No PDF output was created after the assistant call.");
         if (outputReport.Schedules.Count != 1) throw new Exception($"No schedule was created after the assistant call.");
     }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
-}
-</Script>
-          <SortOrder>3</SortOrder>
-        </ReportTask>
-        <ReportTask>
-          <GUID>efa78c0e-f3b1-465e-8795-e9f53d810447</GUID>
-          <Name>Schedule cleanup</Name>
-          <Tasks />
-          <ExecProcessChildren>true</ExecProcessChildren>
-          <TemplateName>Default</TemplateName>
-          <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
-          <Script>@using Seal.AI;
-@using System.IO;
-
-@{
-    ReportTask task = Model;
-    Report report = task.Report;
-    var repository = report.Repository;
-    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
-    if (ctx.ContainsKey("Error")) return;
-    var outputDir = (string)ctx["OutputDir"];
-    var providerName = (string)ctx["ProviderName"];
-    var assistants = (Dictionary&lt;string, AIAssistantConfiguration&gt;)ctx["Assistants"];
-
-    try
+    catch (Exception ex)
     {
-        task.LogMessage($"[{providerName}] Executing '{task.Name}'");
-
-        var assistant = new AIAssistant(assistants["Schedule &amp; Output"]);
-        assistant.SecurityContext = report.SecurityContext;
-
-        var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
-        task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
-        if (report.Cancel) return;
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
     }
-    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
 }
 </Script>
-          <SortOrder>4</SortOrder>
-        </ReportTask>
-      </Tasks>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>efa78c0e-f3b1-465e-8795-e9f53d810447</GUID>
+      <Name>Schedule cleanup</Name>
+      <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
-      <TemplateName>Loop</TemplateName>
-      <Parameters>
-        <Parameter>
-          <Name>thread</Name>
-          <Value>0</Value>
-        </Parameter>
-      </Parameters>
+      <TemplateName>Default</TemplateName>
       <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
-      <BodyScript />
       <Script>@using Seal.AI;
 @using System.IO;
-@using System.Threading;
-@using System.Threading.Tasks;
+@using System.Linq;
 
 @{
     ReportTask task = Model;
     Report report = task.Report;
     var repository = report.Repository;
     var config = Repository.Instance.AIConfiguration;
-    var baseDir = report.StringTag;
+    var outputDir = report.StringTag;
 
-    //Providers under test = every ENABLED AI provider defined in the AI Configuration
-    var providers = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
-    if (providers.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
 
-    //Source assistant configurations (cloned per provider so nothing global is ever mutated)
-    var sourceAssistants = config.AIAssistants.Where(a =&gt; a.IsEnabled).ToList();
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
 
-    //Build one fully self-contained context per provider:
-    //  - its own output sub-folder
-    //  - its own cloned assistant configurations (forced to this provider)
-    //  - its own cloned set of test tasks (cloned here, single threaded)
-    var items = new List&lt;object&gt;();
-    foreach (var provider in providers)
+    try
     {
-        var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
-        var providerDir = Path.Combine(baseDir, safeName);
-        Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, providerDir));
+        var schedConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Schedule &amp; Output"));
+        schedConfig.ProviderGUID = provider.GUID;
+        var assistant = new AIAssistant(schedConfig);
+        assistant.SecurityContext = report.SecurityContext;
 
-        var assistants = new Dictionary&lt;string, AIAssistantConfiguration&gt;();
-        foreach (var a in sourceAssistants)
-        {
-            var clone = (AIAssistantConfiguration)Helper.Clone(a);
-            clone.ProviderGUID = provider.GUID;
-            assistants[a.Name] = clone;
-        }
-
-        var ctx = new Dictionary&lt;string, object&gt;();
-        ctx["ProviderName"] = provider.Name;
-        ctx["Provider"] = provider;
-        ctx["OutputDir"] = providerDir;
-        ctx["Assistants"] = assistants;
-
-        var childTasks = new List&lt;ReportTask&gt;();
-        foreach (var child in task.Tasks.Where(i =&gt; i.Enabled).OrderBy(i =&gt; i.SortOrder))
-        {
-            child.InitParameters();
-            var newTask = (ReportTask)Helper.Clone(child);
-            newTask.Report = report;
-            newTask.InitReferences();
-            newTask.IgnoreError = true;
-            newTask.ExecInput = ctx;
-            childTasks.Add(newTask);
-        }
-        ctx["Tasks"] = childTasks;
-        items.Add(ctx);
+        var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
+        if (chatLog != null) task.LogMessage(request);
+        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
     }
-
-    //All provider sub-folders now exist: grant the shared security context write access ONCE
-    report.SecurityContext.SetFolders();
-
-    //Number of parallel threads (Loop 'thread' parameter; 0 = one thread per provider)
-    var thread = task.GetNumericValue("thread");
-    if (thread &lt;= 0 || thread &gt; items.Count) thread = items.Count;
-    task.LogMessage($"Testing {items.Count} provider(s) using {thread} thread(s).");
-
-    var queue = new List&lt;object&gt;(items);
-    var results = new List&lt;string&gt;();
-    var sync = new object();
-
-    var workers = new List&lt;Task&gt;();
-    for (int i = 0; i &lt; thread; i++)
+    catch (Exception ex)
     {
-        workers.Add(Task.Run(() =&gt; RunProvider(queue, results, sync)));
-        Thread.Sleep(50);
-    }
-    while (workers.Exists(w =&gt; !w.IsCompleted)) Thread.Sleep(100);
-
-    report.StringTag = baseDir;
-
-    var failures = results.Count(r =&gt; r.StartsWith("FAIL"));
-    var summary = $"Provider test summary ({results.Count - failures}/{results.Count} passed):" + Environment.NewLine + string.Join(Environment.NewLine, results.OrderBy(r =&gt; r));
-    task.LogMessage(summary);
-
-    //Fail the report only AFTER every provider has been tested
-    if (failures &gt; 0) throw new Exception(summary);
-}
-
-@functions {
-    void RunProvider(List&lt;object&gt; queue, List&lt;string&gt; results, object sync)
-    {
-        ReportTask task = Model;
-        Report report = task.Report;
-        while (true)
-        {
-            Dictionary&lt;string, object&gt; ctx = null;
-            lock (sync)
-            {
-                ctx = queue.FirstOrDefault() as Dictionary&lt;string, object&gt;;
-                if (ctx != null) queue.Remove(ctx);
-            }
-            if (ctx == null || report.Cancel) break;
-
-            var providerName = (string)ctx["ProviderName"];
-            task.LogMessage($"==================== START provider '{providerName}' -&gt; {ctx["OutputDir"]} ====================");
-
-            try
-            {
-                foreach (var child in (List&lt;ReportTask&gt;)ctx["Tasks"])
-                {
-                    if (report.Cancel) break;
-                    child.Execute();
-                    if (ctx.ContainsKey("Error")) break;
-                }
-            }
-            catch (Exception ex)
-            {
-                ctx["Error"] = ex.Message;
-            }
-
-            string line;
-            lock (sync)
-            {
-                if (ctx.ContainsKey("Error")) line = $"FAIL [{providerName}]: {ctx["Error"]}";
-                else line = $"PASS [{providerName}]";
-                results.Add(line);
-            }
-            task.LogMessage($"==================== END provider '{providerName}': {line} ====================");
-        }
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
     }
 }
 </Script>
-      <SortOrder>1</SortOrder>
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>84bb7b98-0000-4000-9000-000000000010</GUID>
+      <Name>Result</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a116fbc2-ca0a-4e6a-b6d4-8c393bb79a42</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    //All checks passed: record the success result read by '900 Tests' from report.Tag2
+    var pr = report.Tag2 as object[];
+    var providerName = pr != null ? (string)pr[0] : null;
+    report.Tag2 = new object[] { providerName, null, "Success", null };
+    task.LogMessage($"[{providerName}] Output and schedule checks passed.");
+}
+</Script>
+      <SortOrder>5</SortOrder>
     </ReportTask>
   </Tasks>
   <Views>

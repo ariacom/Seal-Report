@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SealReportRunner": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\_dev\\Seal-Report\\Repository\\Reports\\Search - Orders.srex\""
+    }
+  }
+}

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11626.88 stable
+VisualStudioVersion = 18.4.11626.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealReportDesigner", "SealReportDesigner\SealReportDesigner.csproj", "{5E5FBBF8-5E9E-434D-984B-621CDFC68A13}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealServerManager", "SealServerManager\SealServerManager.csproj", "{58D85F14-1341-484F-AF1E-0C0E67D07FBD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealTaskScheduler", "SealTaskScheduler\SealTaskScheduler.csproj", "{D9E687A7-F1FB-48CA-A81B-47FEFA3011CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealReportRunner", "SealReportRunner\SealReportRunner.csproj", "{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealWebServer", "SealWebServer\SealWebServer.csproj", "{4E1489D9-4D02-4566-9B22-635A2A1881F9}"
 EndProject
@@ -77,6 +79,14 @@ Global
 		{D9E687A7-F1FB-48CA-A81B-47FEFA3011CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9E687A7-F1FB-48CA-A81B-47FEFA3011CD}.Release|x64.ActiveCfg = Release|Any CPU
 		{D9E687A7-F1FB-48CA-A81B-47FEFA3011CD}.Release|x64.Build.0 = Release|Any CPU
+		{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}.Debug|x64.Build.0 = Debug|Any CPU
+		{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}.Release|x64.ActiveCfg = Release|Any CPU
+		{A7E3C9D1-2B4F-4E6A-9C1D-3F5B8A2E7D40}.Release|x64.Build.0 = Release|Any CPU
 		{4E1489D9-4D02-4566-9B22-635A2A1881F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E1489D9-4D02-4566-9B22-635A2A1881F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E1489D9-4D02-4566-9B22-635A2A1881F9}.Debug|x64.ActiveCfg = Debug|Any CPU
