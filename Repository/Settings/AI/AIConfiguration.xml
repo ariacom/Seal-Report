@@ -134,6 +134,20 @@
       <ParametersSchema>{"type":"object","properties":{"type":{"type":"string","enum":["events","executions","schedules"],"description":"Log file type: events, executions or schedules"},"date":{"type":"string","description":"Date in YYYY-MM-DD format. Defaults to today."},"keyword":{"type":"string","description":"Optional string filter: only lines containing this keyword (case-insensitive) are returned."},"max_lines":{"type":"integer","description":"Maximum number of lines to return. Defaults to 200."}},"required":["type"]}</ParametersSchema>
       <ExecutionScriptFile>log_read.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
+      <Name>view_get_parameters</Name>
+      <Description>Lists the configurable rendering parameters of a report's view (e.g. the "Chart JS" view), with each parameter's type, current value, default, allowed values and description. Call with only 'path' to list every view in the report; then call again with view_name (e.g. "Chart JS") to see that view's parameters. Use this before report_configure_view to discover valid parameter names and values. Read-only.</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"view_name":{"type":"string","description":"Name of the view to inspect (e.g. 'Chart JS', 'Page Table'). Omit to list all views in the report."},"template_name":{"type":"string","description":"Optional template name filter (e.g. 'Chart JS') when several views share a name."}},"required":["path"]}</ParametersSchema>
+      <ExecutionScriptFile>view_get_parameters.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>2a3b4c5d-6e7f-4890-9a1b-2c3d4e5f6a7b</GUID>
+      <Name>report_configure_view</Name>
+      <Description>Sets one or more rendering parameters on an existing report's view, in place, without rewriting the report. Use it to change how a view renders - for example to make a Chart JS view horizontal and stacked (chartjs_bar_horizontal=True, chartjs_bar_stacked=True), hide a legend, set a chart title, or switch a pie to a doughnut. Always call view_get_parameters first to discover valid parameter names and allowed values for the target view. Values are validated against each parameter's type and enumeration; parameters left at their default are not stored. For stacked bar charts the model must have a series Splitter (a Column element), otherwise there is a single series and nothing stacks.</Description>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"view_name":{"type":"string","description":"Name of the view to configure (e.g. 'Chart JS'). Required unless template_name is given."},"template_name":{"type":"string","description":"Template name of the view to configure (e.g. 'Chart JS'), used instead of or together with view_name to disambiguate."},"parameters":{"type":"object","description":"Object of parameter name/value pairs to set, e.g. {\"chartjs_bar_horizontal\":\"True\",\"chartjs_bar_stacked\":\"True\"}. Use view_get_parameters to discover valid names and values. Booleans are 'True'/'False'.","additionalProperties":{"type":"string"}}},"required":["path","parameters"]}</ParametersSchema>
+      <ExecutionScriptFile>report_configure_view.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
   </AITools>
   <DefaultProviderGUID />
   <DefaultAssistantGUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</DefaultAssistantGUID>
@@ -160,6 +174,8 @@
         <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
         <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+        <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
+        <GUID>2a3b4c5d-6e7f-4890-9a1b-2c3d4e5f6a7b</GUID>
       </ToolGUIDs>
       <DefaultSystemPrompt />
       <SystemPromptFile>designer-system-prompt.md</SystemPromptFile>
@@ -194,6 +210,7 @@
         <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
         <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+        <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
       </ToolGUIDs>
       <DefaultSystemPrompt />
       <SystemPromptFile>analyst-system-prompt.md</SystemPromptFile>

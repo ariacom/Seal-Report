@@ -1,0 +1,133 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var relativePath = args.GetProperty("path").GetString();
+    var viewName     = args.TryGetProperty("view_name",     out var vnp) ? vnp.GetString() : null;
+    var templateName = args.TryGetProperty("template_name", out var tnp) ? tnp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {relativePath}, view: {viewName ?? templateName})..");
+
+    if (string.IsNullOrEmpty(viewName) && string.IsNullOrEmpty(templateName))
+        { tool.ExecResult = "Error: view_name (or template_name) is required."; return; }
+    if (!args.TryGetProperty("parameters", out var paramsEl) || paramsEl.ValueKind != JsonValueKind.Object)
+        { tool.ExecResult = "Error: 'parameters' must be an object of name/value pairs, e.g. {\"chartjs_bar_horizontal\":\"True\"}."; return; }
+
+    // Collect requested name/value pairs (values normalised to string)
+    var requested = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, string>>();
+    foreach (var prop in paramsEl.EnumerateObject())
+    {
+        string val = prop.Value.ValueKind switch
+        {
+            JsonValueKind.True   => "True",
+            JsonValueKind.False  => "False",
+            JsonValueKind.Null   => "",
+            JsonValueKind.String => prop.Value.GetString(),
+            _                    => prop.Value.GetRawText(),
+        };
+        requested.Add(new System.Collections.Generic.KeyValuePair<string, string>(prop.Name, val));
+    }
+    if (requested.Count == 0) { tool.ExecResult = "Error: 'parameters' is empty - provide at least one name/value pair."; return; }
+
+    // Resolve full path across repository roots
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+    string fullPath = null;
+    foreach (var kv in roots)
+    {
+        var candidate = relativePath.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(kv.Value, relativePath.Substring(kv.Key.Length + 1))
+            : Path.Combine(kv.Value, relativePath);
+        if (File.Exists(candidate)) { fullPath = candidate; break; }
+    }
+    if (fullPath == null) { tool.ExecResult = $"Error: report '{relativePath}' not found."; return; }
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), (int)FolderRight.Edit))
+        { tool.ExecResult = $"Error: write access denied to '{relativePath}'."; return; }
+
+    try
+    {
+        var report = Report.LoadFromFile(fullPath, repo, false);
+
+        // Recursively collect every view
+        var allViews = new System.Collections.Generic.List<ReportView>();
+        Action<ReportView> walk = null;
+        walk = v => { if (v == null) return; allViews.Add(v); foreach (var c in v.Views) walk(c); };
+        foreach (var rv in report.Views) walk(rv);
+
+        var matches = allViews.Where(v =>
+            (string.IsNullOrEmpty(viewName)     || string.Equals(v.Name, viewName, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(templateName) || string.Equals(v.TemplateName, templateName, StringComparison.OrdinalIgnoreCase))
+        ).ToList();
+
+        if (matches.Count == 0)
+        {
+            var names = string.Join(", ", allViews.Select(v => $"'{v.Name}' [{v.TemplateName}]").Distinct());
+            tool.ExecResult = $"Error: no view matched '{viewName ?? templateName}' in '{relativePath}'. Available views: {names}.";
+            return;
+        }
+
+        var applied  = new System.Collections.Generic.List<string>();
+        var affected = new System.Collections.Generic.List<string>();
+
+        foreach (var v in matches)
+        {
+            try { v.InitParameters(false); }
+            catch (Exception ex) { tool.ExecResult = $"Error: cannot load parameters for view '{v.Name}' [{v.TemplateName}]: {ex.Message}"; return; }
+
+            foreach (var kv in requested)
+            {
+                var p = v.Parameters.FirstOrDefault(x => string.Equals(x.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
+                if (p == null)
+                {
+                    var available = string.Join(", ", v.Parameters.Select(x => x.Name));
+                    tool.ExecResult = $"Error: '{kv.Key}' is not a parameter of view '{v.Name}' [{v.TemplateName}]. Call view_get_parameters to list valid names. Available: {available}.";
+                    return;
+                }
+
+                // Validate value against type / enum definition
+                var raw = kv.Value ?? "";
+                if (p.Type == ViewParameterType.Boolean)
+                {
+                    if (!bool.TryParse(raw, out var b))
+                        { tool.ExecResult = $"Error: parameter '{p.Name}' is boolean - value must be True or False (got '{raw}')."; return; }
+                    raw = b ? "True" : "False";
+                }
+                else if (p.Type == ViewParameterType.Numeric)
+                {
+                    if (!int.TryParse(raw, out _))
+                        { tool.ExecResult = $"Error: parameter '{p.Name}' is numeric - value must be an integer (got '{raw}')."; return; }
+                }
+                else if (p.Type == ViewParameterType.Enum && p.UseOnlyEnumValues && p.Enums != null && p.Enums.Length > 0)
+                {
+                    var ids = p.EnumValues;
+                    if (!ids.Any(id => string.Equals(id, raw, StringComparison.OrdinalIgnoreCase)))
+                        { tool.ExecResult = $"Error: parameter '{p.Name}' must be one of: {string.Join(", ", ids)} (got '{raw}')."; return; }
+                }
+
+                p.Value = raw;
+                applied.Add($"{p.Name}={raw}");
+            }
+            affected.Add($"'{v.Name}' [{v.TemplateName}]");
+        }
+
+        report.SaveToFile();
+
+        var what = string.Join(", ", applied.Distinct());
+        var where = string.Join(", ", affected);
+        tool.ExecResult = $"Configured view(s) {where} in '{relativePath}': set {what}. Parameters left at their default value are not stored.";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

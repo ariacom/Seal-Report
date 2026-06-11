@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>5354d575-82c1-4f09-a29a-604ed989575a</GUID>
+  <DisplayName>Sales by country and product category in 1997</DisplayName>
+  <ViewGUID>0029f880-f51d-4172-9d0f-fdd531e3caae</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>03e3fc47-dca9-43fd-ad75-6e2cb7053062</GUID>
+      <Name>Northwind</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>7eda6241-16fe-4afa-bc62-1bd1f2b0d455</GUID>
+      <Name>Model</Name>
+      <SourceGUID>03e3fc47-dca9-43fd-ad75-6e2cb7053062</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>84d40b11-2d9f-40b9-a553-6ad66125a5bc</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>1 Ascendant</SortOrder>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6dd92c25-bc0f-45be-a3cb-4760f2cf3588</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Column</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fe2eab44-dbe4-4f64-96bd-c8ead91610ff</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>1 Descendant</SortOrder>
+          <ShowTotal>RowColumn</ShowTotal>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <SerieSortOrder>Descending</SerieSortOrder>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[ffac7967-afe2-47d0-9d35-e9f67c2d8ebe]
+AND [38a4a32e-aafc-4029-b0e6-4855d1f5aa91]
+AND [37579fd0-9bd6-4c7e-affd-98b115963c25]
+AND [d6c0151c-7c89-4158-ae8f-5bf019171ee9]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>ffac7967-afe2-47d0-9d35-e9f67c2d8ebe</GUID>
+          <Name>Orders.OrderDate</Name>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <Prompt>PromptTwoValues</Prompt>
+          <Operator>Between</Operator>
+          <Date1>1997-01-01T00:00:00</Date1>
+          <Date2>1997-12-31T00:00:00</Date2>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>38a4a32e-aafc-4029-b0e6-4855d1f5aa91</GUID>
+          <Name>Customers.Country</Name>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>37579fd0-9bd6-4c7e-affd-98b115963c25</GUID>
+          <Name>Customers.CompanyName</Name>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>d6c0151c-7c89-4158-ae8f-5bf019171ee9</GUID>
+          <Name>Employees.LastName</Name>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>0029f880-f51d-4172-9d0f-fdd531e3caae</GUID>
+      <Name>Sales by country and product category in 1997</Name>
+      <Views>
+        <ReportView>
+          <GUID>1c80b720-341f-483f-9e33-8dd53b779043</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>df542585-7457-46f9-b572-3fc189299c1a</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>205c3cf5-1f77-4fe0-9f8c-78604e6ddcfb</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>57eba9b0-171f-4a9a-912c-702254e39096</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_bar_horizontal</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_bar_stacked</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>d660dc4d-1534-47af-8575-d39701522c4d</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>793002a6-8eca-4aba-9616-80e3d5b750d7</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>e5ca4b04-dcf1-4db4-a009-058cbc263630</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>0069439f-c595-4508-96a1-80a76e8a39a2</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>data_warning_show</Name>
+                      <Value>false</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>data_tables_sort_configuration</Name>
+                      <Value>[{LAST},'desc']</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>7eda6241-16fe-4afa-bc62-1bd1f2b0d455</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>0</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

@@ -42,7 +42,6 @@
         <SecurityFolder />
         <SecurityFolder>
           <Path>\System</Path>
-          <UseSubFolders>false</UseSubFolders>
           <FolderRight>ExecuteReportOuput</FolderRight>
           <ExpandSubFolders>false</ExpandSubFolders>
         </SecurityFolder>

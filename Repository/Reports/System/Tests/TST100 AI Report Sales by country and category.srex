@@ -134,6 +134,9 @@
           - ROW dimension: 'Customer Country' (Customers.Country) - one row per country.
           - COLUMN dimension: 'Category' (Products.CategoryID, the product category) - one column per category.
           - DATA element: 'Amount' aggregated with Sum - the total sales amount at each country/category intersection.
+        Add totals for rows and columns.
+        Sort table by Totals descending (From top country to last country).
+        Sort chart by Country name, descending.
         Add EXACTLY four RESTRICTIONS and set EVERY one of them to be PROMPTED at execution:
           - 'Order Date' (Orders.OrderDate), with a default keeping the whole year 1997 (between 1997-01-01 and 1997-12-31).
           - 'Customer Country' (Customers.Country).
@@ -141,6 +144,7 @@
           - 'Employee' (Employees.LastName).
         These four are RESTRICTIONS ONLY and must all be prompted at execution. 'Customer Country' is BOTH the row dimension AND a prompted restriction; do not add the other three as row, column, data or page elements.
         Configure the model chart as a HORIZONTAL STACKED BAR chart: one horizontal bar per country, each bar split (stacked) by product category, using Amount as the value. Use 'Customer Country' as the chart axis and 'Category' as the chart splitter, and set the 'Amount' data element serie as a Bar serie.
+        Force the report execution using the current restrictions.
     ";
         task.LogMessage(request);
         assistant.Chat(request, cancelOperation: report, log: report, toolsLog: report);
@@ -189,6 +193,154 @@
 }
 </Script>
           <SortOrder>2</SortOrder>
+        </ReportTask>
+        <ReportTask>
+          <GUID>c3f1a9d2-4b6e-4a21-9c2d-7e8f0a1b2c3d</GUID>
+          <Name>Check Pattern</Name>
+          <Tasks />
+          <ExecProcessChildren>true</ExecProcessChildren>
+          <TemplateName>Default</TemplateName>
+          <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+          <Script>@using Seal.Model;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var ctx = (Dictionary&lt;string, object&gt;)task.ExecInput;
+    if (ctx.ContainsKey("Error")) return;
+    var outputDir = (string)ctx["OutputDir"];
+
+    try
+    {
+        task.LogMessage($"Executing '{task.Name}'");
+
+        //Generic Check Pattern: pair every generated report with the expected (pattern) report and compare their definition.
+        //Pattern directory = Reports\System\Tests\Pattern\&lt;6 first chars of the report name&gt; (e.g. 'TST100').
+        var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
+        var patternDir = Path.Combine(repository.RepositoryPath, "Reports", "System", "Tests", "Pattern", subDir);
+        if (!Directory.Exists(patternDir)) throw new Exception($"Pattern directory not found: '{patternDir}'.");
+
+        var generatedFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
+        if (generatedFiles.Length == 0) throw new Exception($"No generated report found in '{outputDir}'.");
+        var patternFiles = Directory.GetFiles(patternDir, "*.srex");
+        if (patternFiles.Length == 0) throw new Exception($"No pattern report found in '{patternDir}'.");
+
+        var failures = new List&lt;string&gt;();
+        foreach (var generatedFile in generatedFiles)
+        {
+            var key = Normalize(Path.GetFileNameWithoutExtension(generatedFile));
+            var patternFile = patternFiles.FirstOrDefault(p =&gt; Normalize(Path.GetFileNameWithoutExtension(p)) == key);
+            if (patternFile == null &amp;&amp; generatedFiles.Length == 1 &amp;&amp; patternFiles.Length == 1) patternFile = patternFiles[0];
+            if (patternFile == null) throw new Exception($"No pattern report matching '{Path.GetFileName(generatedFile)}' found in '{patternDir}'.");
+
+            var expected = Report.LoadFromFile(patternFile, repository);
+            var generated = Report.LoadFromFile(generatedFile, repository);
+
+            var result = CheckPattern(expected, generated);
+
+            task.LogMessage($"Check Pattern '{Path.GetFileName(generatedFile)}' vs '{Path.GetFileName(patternFile)}': {result.Status} ({result.Score}%)");
+            foreach (var m in result.Messages) task.LogMessage("  - " + m);
+
+            //Only FAILURE fails the test; WARNING is reported but does not cause an error.
+            if (result.Status == "FAILURE")
+                failures.Add($"{Path.GetFileName(generatedFile)}: FAILURE ({result.Score}%) - {string.Join("; ", result.Messages)}");
+        }
+
+        if (failures.Count &gt; 0) ctx["Error"] = string.Join(Environment.NewLine, failures);
+    }
+    catch (Exception ex) { ctx["Error"] = $"[{task.Name}] {ex.Message}"; }
+}
+
+@functions {
+    //Result of a pattern check between an expected (stored pattern) and a generated report.
+    public class PatternCheckResult
+    {
+        public string Status = "OK";   //OK, WARNING or FAILURE
+        public double Score = 100;     //100 = exact match
+        public List&lt;string&gt; Messages = new List&lt;string&gt;();
+    }
+
+    //Compare two reports. 'expected' is the pattern, 'generated' is the produced report.
+    //OK = exact match, WARNING = an expected property is missing/differs, FAILURE = model definition incorrect / report not well structured.
+    PatternCheckResult CheckPattern(Report expected, Report generated)
+    {
+        var res = new PatternCheckResult();
+        int total = 0, passed = 0;
+        bool fail = false, warn = false;
+
+        if (generated == null || !string.IsNullOrEmpty(generated.LoadErrors))
+        {
+            res.Status = "FAILURE"; res.Score = 0;
+            res.Messages.Add($"Generated report is not well structured: {generated?.LoadErrors ?? "report is null"}.");
+            return res;
+        }
+
+        Check(res, ref total, ref passed, ref fail, ref warn, generated.Models.Count == expected.Models.Count, true,
+            $"Model count: expected {expected.Models.Count}, found {generated.Models.Count}.");
+
+        for (int mi = 0; mi &lt; expected.Models.Count; mi++)
+        {
+            var em = expected.Models[mi];
+            var gm = generated.Models.FirstOrDefault(x =&gt; x.Name == em.Name) ?? (mi &lt; generated.Models.Count ? generated.Models[mi] : null);
+            if (gm == null) { Check(res, ref total, ref passed, ref fail, ref warn, false, true, $"Model '{em.Name}' is missing."); continue; }
+
+            //Expected elements: presence + pivot position + data aggregate are structural; other properties are WARNING.
+            foreach (var ee in em.Elements)
+            {
+                var k = ElementKey(ee);
+                var ge = gm.Elements.FirstOrDefault(x =&gt; ElementKey(x) == k);
+                Check(res, ref total, ref passed, ref fail, ref warn, ge != null, true, $"Element '{k}' (expected {ee.PivotPosition}) is missing in model '{em.Name}'.");
+                if (ge == null) continue;
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.PivotPosition == ee.PivotPosition, true, $"Element '{k}' position: expected {ee.PivotPosition}, found {ge.PivotPosition}.");
+                if (ee.PivotPosition == PivotPosition.Data)
+                    Check(res, ref total, ref passed, ref fail, ref warn, ge.AggregateFunction == ee.AggregateFunction, true, $"Element '{k}' aggregate: expected {ee.AggregateFunction}, found {ge.AggregateFunction}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.SortOrder == ee.SortOrder, false, $"Element '{k}' sort: expected '{ee.SortOrder}', found '{ge.SortOrder}'.");
+                Check(res, ref total, ref passed, ref fail, ref warn, (ge.Format ?? "") == (ee.Format ?? ""), false, $"Element '{k}' format: expected '{ee.Format}', found '{ge.Format}'.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.ShowTotal == ee.ShowTotal, false, $"Element '{k}' total: expected {ee.ShowTotal}, found {ge.ShowTotal}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.SerieDefinition == ee.SerieDefinition, false, $"Element '{k}' chart role: expected {ee.SerieDefinition}, found {ge.SerieDefinition}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.ChartJSSerie == ee.ChartJSSerie, false, $"Element '{k}' chart serie: expected {ee.ChartJSSerie}, found {ge.ChartJSSerie}.");
+            }
+            foreach (var ge in gm.Elements.Where(g =&gt; !em.Elements.Any(x =&gt; ElementKey(x) == ElementKey(g))))
+                Check(res, ref total, ref passed, ref fail, ref warn, false, false, $"Unexpected element '{ElementKey(ge)}' ({ge.PivotPosition}) in model '{em.Name}'.");
+
+            //Expected restrictions: presence is structural; operator/prompt/default value are WARNING.
+            foreach (var er in em.Restrictions)
+            {
+                var k = RestrictionKey(er);
+                var gr = gm.Restrictions.FirstOrDefault(x =&gt; RestrictionKey(x) == k);
+                Check(res, ref total, ref passed, ref fail, ref warn, gr != null, true, $"Restriction on '{k}' is missing in model '{em.Name}'.");
+                if (gr == null) continue;
+                Check(res, ref total, ref passed, ref fail, ref warn, gr.Operator == er.Operator, false, $"Restriction '{k}' operator: expected {er.Operator}, found {gr.Operator}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, gr.Prompt == er.Prompt, false, $"Restriction '{k}' prompt: expected {er.Prompt}, found {gr.Prompt}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, RestrictionDefault(gr) == RestrictionDefault(er), false, $"Restriction '{k}' default: expected '{RestrictionDefault(er)}', found '{RestrictionDefault(gr)}'.");
+            }
+            foreach (var gr in gm.Restrictions.Where(g =&gt; !em.Restrictions.Any(x =&gt; RestrictionKey(x) == RestrictionKey(g))))
+                Check(res, ref total, ref passed, ref fail, ref warn, false, false, $"Unexpected restriction on '{RestrictionKey(gr)}' in model '{em.Name}'.");
+        }
+
+        res.Score = total == 0 ? 100 : Math.Round(100.0 * passed / total, 1);
+        res.Status = fail ? "FAILURE" : ((warn || res.Score &lt; 100) ? "WARNING" : "OK");
+        return res;
+    }
+
+    void Check(PatternCheckResult res, ref int total, ref int passed, ref bool fail, ref bool warn, bool ok, bool structural, string message)
+    {
+        total++;
+        if (ok) { passed++; return; }
+        if (structural) { fail = true; res.Messages.Add("FAILURE: " + message); }
+        else { warn = true; res.Messages.Add("WARNING: " + message); }
+    }
+
+    string Normalize(string s) =&gt; new string((s ?? "").ToLowerInvariant().Where(char.IsLetterOrDigit).ToArray());
+    string ElementKey(ReportElement e) =&gt; (e.MetaColumn != null ? e.MetaColumn.DisplayName : null) ?? e.Name ?? e.GUID;
+    string RestrictionKey(ReportRestriction r) =&gt; (r.MetaColumn != null ? r.MetaColumn.DisplayName : null) ?? r.Name ?? r.GUID;
+    string RestrictionDefault(ReportRestriction r) =&gt; $"{r.Operator}|{r.Value1}|{r.Value2}|{r.Date1:yyyy-MM-dd}|{r.Date2:yyyy-MM-dd}";
+}
+</Script>
+          <SortOrder>3</SortOrder>
         </ReportTask>
       </Tasks>
       <ExecProcessChildren>true</ExecProcessChildren>

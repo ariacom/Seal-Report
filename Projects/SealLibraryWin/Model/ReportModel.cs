@@ -347,7 +347,7 @@ namespace Seal.Model
         /// Label for the sub total cell title
         /// </summary>
 #if WINDOWS
-        [Category("Model definition"), DisplayName("Total label"), Description("Label for the sub total cell title."), Id(15, 1)]
+        [Category("Model definition"), DisplayName("Subtotal label"), Description("Label for the sub total cell title."), Id(15, 1)]
         [DefaultValue("Subtotal")]
 #endif
         public string SubTotalLabel { get; set; } = "Subtotal";

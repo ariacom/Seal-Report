@@ -1,0 +1,110 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var relativePath = args.GetProperty("path").GetString();
+    var viewName     = args.TryGetProperty("view_name",     out var vnp) ? vnp.GetString() : null;
+    var templateName = args.TryGetProperty("template_name", out var tnp) ? tnp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {relativePath}, view: {viewName ?? templateName ?? "all"})..");
+
+    // Resolve full path across repository roots
+    var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Reports"]  = repo.ReportsFolder,
+        ["Personal"] = repo.GetPersonalFolder(securityContext),
+    };
+
+    string fullPath = null;
+    foreach (var kv in roots)
+    {
+        var candidate = relativePath.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(kv.Value, relativePath.Substring(kv.Key.Length + 1))
+            : Path.Combine(kv.Value, relativePath);
+        if (File.Exists(candidate)) { fullPath = candidate; break; }
+    }
+    if (fullPath == null) { tool.ExecResult = $"Error: report '{relativePath}' not found."; return; }
+
+    if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), (int)FolderRight.Execute))
+        { tool.ExecResult = $"Error: access denied to '{relativePath}'."; return; }
+
+    Report report;
+    try { report = Report.LoadFromFile(fullPath, repo, false); }
+    catch (Exception ex) { tool.ExecResult = $"Error loading report: {ex.Message}"; return; }
+
+    // Recursively collect every view in the report
+    var allViews = new System.Collections.Generic.List<ReportView>();
+    Action<ReportView> walk = null;
+    walk = v => { if (v == null) return; allViews.Add(v); foreach (var c in v.Views) walk(c); };
+    foreach (var rv in report.Views) walk(rv);
+
+    bool filtering = !string.IsNullOrEmpty(viewName) || !string.IsNullOrEmpty(templateName);
+    var matches = allViews.Where(v =>
+        (string.IsNullOrEmpty(viewName)     || string.Equals(v.Name, viewName, StringComparison.OrdinalIgnoreCase)) &&
+        (string.IsNullOrEmpty(templateName) || string.Equals(v.TemplateName, templateName, StringComparison.OrdinalIgnoreCase))
+    ).ToList();
+
+    var sb = new StringBuilder();
+
+    if (!filtering)
+    {
+        // No filter: list every view so the AI can pick one, then call again with view_name.
+        sb.AppendLine($"# Views of '{relativePath}'");
+        sb.AppendLine("Call this tool again with view_name (or template_name) to see a view's configurable parameters.");
+        sb.AppendLine();
+        foreach (var v in allViews)
+        {
+            int custom = 0;
+            try { v.InitParameters(false); custom = v.Parameters.Count(p => p.Value != null && p.Value != p.ConfigValue); } catch { }
+            sb.AppendLine($"- Name='{v.Name}', template='{v.TemplateName}' ({custom} customized parameter(s))");
+        }
+        tool.ExecResult = sb.ToString();
+        tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+        return;
+    }
+
+    if (matches.Count == 0)
+    {
+        var names = string.Join(", ", allViews.Select(v => $"'{v.Name}' [{v.TemplateName}]").Distinct());
+        tool.ExecResult = $"Error: no view matched in '{relativePath}'. Available views: {names}.";
+        return;
+    }
+
+    foreach (var v in matches)
+    {
+        try { v.InitParameters(false); }
+        catch (Exception ex) { sb.AppendLine($"## View '{v.Name}' [{v.TemplateName}] — could not load template parameters: {ex.Message}"); continue; }
+
+        sb.AppendLine($"## View '{v.Name}' [template: {v.TemplateName}]");
+        if (v.Parameters.Count == 0) { sb.AppendLine("  (no configurable parameters)"); sb.AppendLine(); continue; }
+
+        sb.AppendLine("  Parameters (name | type | current value | default | allowed values | description):");
+        foreach (var p in v.Parameters.OrderBy(p => p.Name))
+        {
+            var current = string.IsNullOrEmpty(p.Value) ? "(default)" : p.Value;
+            var def     = string.IsNullOrEmpty(p.ConfigValue) ? "" : p.ConfigValue;
+            string allowed = "";
+            if (p.Enums != null && p.Enums.Length > 0)
+            {
+                var ids = p.EnumValues;
+                allowed = (p.UseOnlyEnumValues ? "one of: " : "e.g.: ") + string.Join(", ", ids);
+            }
+            else if (p.Type == ViewParameterType.Boolean) allowed = "one of: True, False";
+            var desc = (p.Description ?? "").Replace("\r", " ").Replace("\n", " ");
+            sb.AppendLine($"  - {p.Name} | {p.Type} | {current} | {def} | {allowed} | {desc}");
+        }
+        sb.AppendLine();
+    }
+
+    sb.AppendLine("To change any of these, call report_configure_view with the report path, view_name and a parameters object of name/value pairs.");
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}
