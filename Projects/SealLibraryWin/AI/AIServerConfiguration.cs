@@ -22,7 +22,7 @@ using System.ComponentModel;
 namespace Seal.AI
 {
     /// <summary>
-    /// Dedicated configuration for AI Providers, Tools and Assistants.
+    /// Dedicated configuration for AI Providers, Tools and Agents.
     /// Serialized to Settings\AI\AIConfiguration.xml in the repository.
     /// </summary>
     public class AIServerConfiguration : RootComponent
@@ -57,9 +57,9 @@ namespace Seal.AI
                 GetProperty("ExternalAIProviders").SetIsBrowsable(true);
                 GetProperty("AIProviders").SetIsBrowsable(true);
                 GetProperty("AITools").SetIsBrowsable(true);
-                GetProperty("AIAssistants").SetIsBrowsable(true);
+                GetProperty("AIAgents").SetIsBrowsable(true);
                 GetProperty("DefaultProviderGUID").SetIsBrowsable(true);
-                GetProperty("DefaultAssistantGUID").SetIsBrowsable(true);
+                GetProperty("DefaultAgentGUID").SetIsBrowsable(true);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -140,33 +140,33 @@ namespace Seal.AI
             set { _defaultProviderGUID = value; }
         }
 
-        string _defaultAssistantGUID;
+        string _defaultAgentGUID;
         /// <summary>
-        /// GUID of the default AI assistant. Used when no assistant name is specified.
+        /// GUID of the default AI agent. Used when no agent name is specified.
         /// </summary>
 #if WINDOWS
-        [DisplayName("Default Assistant"), Description("The default AI assistant used when no assistant name is specified."), Category("AI Configuration"), Id(6, 1)]
-        [TypeConverter(typeof(AIAssistantConverter))]
+        [DisplayName("Default Agent"), Description("The default AI agent used when no agent name is specified."), Category("AI Configuration"), Id(6, 1)]
+        [TypeConverter(typeof(AIAgentConverter))]
 #endif
-        public string DefaultAssistantGUID
+        public string DefaultAgentGUID
         {
-            get { return _defaultAssistantGUID; }
-            set { _defaultAssistantGUID = value; }
+            get { return _defaultAgentGUID; }
+            set { _defaultAgentGUID = value; }
         }
 
-        List<AIAssistantConfiguration> _AIAssistants = new List<AIAssistantConfiguration>();
+        List<AIAgentConfiguration> _AIAgents = new List<AIAgentConfiguration>();
         /// <summary>
-        /// AI Assistants combining a provider, an optional set of tools, and a default system prompt.
+        /// AI Agents combining a provider, an optional set of tools, and a default system prompt.
         /// </summary>
 #if WINDOWS
-        [DisplayName("AI assistants"), Description("AI Assistants: each assistant ties together a provider, an optional subset of tools, and a default system prompt."), Category("AI Configuration"), Id(4, 1)]
+        [DisplayName("AI agents"), Description("AI Agents: each agent ties together a provider, an optional subset of tools, and a default system prompt."), Category("AI Configuration"), Id(4, 1)]
         [DefaultValue(false)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
-        public List<AIAssistantConfiguration> AIAssistants
+        public List<AIAgentConfiguration> AIAgents
         {
-            get { return _AIAssistants; }
-            set { _AIAssistants = value; }
+            get { return _AIAgents; }
+            set { _AIAgents = value; }
         }
 
         /// <summary>

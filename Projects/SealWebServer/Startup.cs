@@ -134,9 +134,9 @@ namespace SealWebServer
                     new { controller = "Home", action = "Main" }
                     );
                 endpoints.MapControllerRoute(
-                    name: "assistant",
-                    pattern: "{action=Assistant}",
-                    new { controller = "Home", action = "Assistant" }
+                    name: "agent",
+                    pattern: "{action=Agent}",
+                    new { controller = "Home", action = "Agent" }
                     );
             });
             applicationLifetime.ApplicationStopping.Register(OnShutdown);

@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);예(사용자가 하위 폴더를 탐색
 WebJS;Yes (User can create and edit sub-folders);예(사용자가 하위 폴더를 만들고 편집할 수 있음)
 WebJS;Yes (User can edit his profile);예(사용자가 자신의 프로필을 편집할 수 있음)
 WebJS;Yes (User is administrator of the Web Server);예(사용자가 웹 서버의 관리자임)
-Web;Select assistant;어시스턴트 선택
+Web;Select agent;어시스턴트 선택
 Web;Mark as favorite;즐겨찾기로 표시
 Web;Favorites;즐겨찾기
 Web;No favorites yet;아직 즐겨찾기가 없습니다
@@ -435,14 +435,14 @@ Web;New conversation;새 대화
 Web;Sample prompts;샘플 프롬프트
 Web;Sample Prompts;샘플 프롬프트
 Web;No sample prompts defined;정의된 샘플 프롬프트 없음
-Web;AI Assistant;AI 어시스턴트
+Web;AI Agent;AI 어시스턴트
 Web;Favorites & Recent;즐겨찾기 및 최근
 Web;Hide panel;패널 숨기기
-Web;Ask the AI assistant…;AI 어시스턴트에게 물어보세요…
+Web;Ask the AI agent…;AI 어시스턴트에게 물어보세요…
 Web;Confirm Deletion;삭제 확인
 Web;This action is irreversible. Are you sure you want to delete this item?;이 작업은 되돌릴 수 없습니다. 이 항목을 정말 삭제하시겠습니까?
 Web;Data Source;데이터 원본
-Web;Report Assistants;보고서 어시스턴트
+Web;Report Agents;보고서 어시스턴트
 Web;Select Tables or Views;테이블 또는 뷰 선택
 Web;Filter tables...;테이블 필터링...
 Web;Select All;모두 선택
@@ -454,24 +454,24 @@ Web;No current items available;사용 가능한 현재 항목 없음
 Web;Current items will appear here when saved;저장하면 현재 항목이 여기에 표시됩니다
 Web;Drafts;초안
 Web;No draft items available;사용 가능한 초안 항목 없음
-Web;Upload files or create new items with the assistant to see them here;파일을 업로드하거나 어시스턴트로 새 항목을 만들면 여기에 표시됩니다
+Web;Upload files or create new items with the agent to see them here;파일을 업로드하거나 어시스턴트로 새 항목을 만들면 여기에 표시됩니다
 Web;Item Details;항목 세부 정보
 Web;Loading detail. Please wait...;세부 정보를 로드하는 중입니다. 잠시 기다려 주세요...
 Web;Select a row from the table to view its details;세부 정보를 보려면 테이블에서 행을 선택하세요
 Web;Check;확인
 Web;Download;다운로드
-Web;Reports Assistant;보고서 어시스턴트
+Web;Reports Agent;보고서 어시스턴트
 Web;Connection type;연결 유형
 Web;Connection string;연결 문자열
 Web;Tables or views;테이블 또는 뷰
-Web;Report Assistant;보고서 어시스턴트
+Web;Report Agent;보고서 어시스턴트
 Web;AI Provider;AI 공급자
 Web;AI model;AI 모델
 Web;AI model name (overrides default));AI 모델 이름(기본값 재정의)
 Web;Temperature;온도
 Web;Model temperature;모델 온도
 Web;System prompt;시스템 프롬프트
-Web;Optional sytem prompt for the assistant;어시스턴트를 위한 선택적 시스템 프롬프트
+Web;Optional sytem prompt for the agent;어시스턴트를 위한 선택적 시스템 프롬프트
 Web;User prompt;사용자 프롬프트
 Web;Default user prompts (if empty default values configured are taken);기본 사용자 프롬프트(비어 있으면 구성된 기본값이 사용됨)
 Web;User Groups allowed (No selection means no restriction);허용된 사용자 그룹(선택하지 않으면 제한 없음)
@@ -486,8 +486,8 @@ Web;Scan Data Now;지금 데이터 스캔
 Web;Execute;실행
 Web;Elements:;요소:
 Web;Restrictions:;제한:
-WebJS;Hide AI Assistant;AI 어시스턴트 숨기기
-WebJS;AI Assistant;AI 어시스턴트
+WebJS;Hide AI Agent;AI 어시스턴트 숨기기
+WebJS;AI Agent;AI 어시스턴트
 WebJS;Running;실행 중
 WebJS;Request cancelled.;요청이 취소되었습니다.
 WebJS;Remove from favorites;즐겨찾기에서 제거
@@ -500,7 +500,7 @@ Web;Configuration;구성
 Web;Configuration and security;구성 및 보안
 Web;Download/Upload;다운로드/업로드
 Web;Rights;권한
-Web;Assistants;어시스턴트
+Web;Agents;어시스턴트
 Web;Folder;폴더
 Web;Drag to resize;드래그하여 크기 조정
 WebJS;Copy and paste;복사하여 붙여넣기

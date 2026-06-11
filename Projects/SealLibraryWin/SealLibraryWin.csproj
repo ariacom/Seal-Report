@@ -148,7 +148,7 @@
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load XML To Database.cshtml" Link="TaskTemplates\Load XML To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load Model To Database.cshtml" Link="TaskTemplates\Load Model To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Execute Report.cshtml" Link="TaskTemplates\Execute Report.cshtml" />
-		<None Include="..\..\Repository\Sources\TaskTemplates\AI Assistant.cshtml" Link="TaskTemplates\AI Assistant.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\AI Agent.cshtml" Link="TaskTemplates\AI Agent.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\AI Cancel Output.cshtml" Link="TaskTemplates\AI Cancel Output.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\AI Modify HTML Table.cshtml" Link="TaskTemplates\AI Modify HTML Table.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\AI Summary.cshtml" Link="TaskTemplates\AI Summary.cshtml" />

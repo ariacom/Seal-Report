@@ -52,45 +52,45 @@ namespace Seal.Forms
                         value = login.GroupIds; //indicates a modification
                     }
                 }
-                else if (context.Instance is AIAssistantConfiguration)
+                else if (context.Instance is AIAgentConfiguration)
                 {
-                    AIAssistantConfiguration assistant = context.Instance as AIAssistantConfiguration;
+                    AIAgentConfiguration agent = context.Instance as AIAgentConfiguration;
                     MultipleSelectForm frm = new MultipleSelectForm("Please select the tools", Repository.Instance.AIConfiguration.AITools, "Name");
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
                     {
-                        if (assistant.ToolGUIDs.Contains(((AIToolConfiguration)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
+                        if (agent.ToolGUIDs.Contains(((AIToolConfiguration)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
                     }
 
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        assistant.ToolGUIDs = new List<string>();
+                        agent.ToolGUIDs = new List<string>();
                         foreach (object item in frm.CheckedItems)
                         {
-                            assistant.ToolGUIDs.Add(((AIToolConfiguration)item).GUID);
+                            agent.ToolGUIDs.Add(((AIToolConfiguration)item).GUID);
                         }
-                        value = assistant.ToolGUIDs;
+                        value = agent.ToolGUIDs;
                     }
                 }
                 else if (context.Instance is SecurityGroup)
                 {
                     SecurityGroup group = context.Instance as SecurityGroup;
-                    var assistants = Repository.Instance.AIConfiguration.AIAssistants.Where(a => a.IsEnabled).OrderBy(a => a.Name).ToList();
-                    MultipleSelectForm frm = new MultipleSelectForm("Please select the AI Assistants", assistants, "Name");
+                    var agents = Repository.Instance.AIConfiguration.AIAgents.Where(a => a.IsEnabled).OrderBy(a => a.Name).ToList();
+                    MultipleSelectForm frm = new MultipleSelectForm("Please select the AI Agents", agents, "Name");
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
                     {
-                        if (group.AssistantGUIDs.Contains(((AIAssistantConfiguration)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
+                        if (group.AgentGUIDs.Contains(((AIAgentConfiguration)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
                     }
 
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        group.AssistantGUIDs = new List<string>();
+                        group.AgentGUIDs = new List<string>();
                         foreach (object item in frm.CheckedItems)
                         {
-                            group.AssistantGUIDs.Add(((AIAssistantConfiguration)item).GUID);
+                            group.AgentGUIDs.Add(((AIAgentConfiguration)item).GUID);
                         }
-                        value = group.AssistantGUIDs;
+                        value = group.AgentGUIDs;
                     }
                 }
                 else if (context.Instance is SealServerConfiguration)

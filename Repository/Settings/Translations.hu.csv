@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Igen (A felhasználó böngészheti az a
 WebJS;Yes (User can create and edit sub-folders);Igen (A felhasználó létrehozhat és szerkeszthet almappákat)
 WebJS;Yes (User can edit his profile);Igen (A felhasználó szerkesztheti a profilját)
 WebJS;Yes (User is administrator of the Web Server);Igen (A felhasználó a webszerver rendszergazdája)
-Web;Select assistant;Asszisztens kiválasztása
+Web;Select agent;Asszisztens kiválasztása
 Web;Mark as favorite;Megjelölés kedvencként
 Web;Favorites;Kedvencek
 Web;No favorites yet;Még nincsenek kedvencek
@@ -435,14 +435,14 @@ Web;New conversation;Új beszélgetés
 Web;Sample prompts;Mintaüzenetek
 Web;Sample Prompts;Mintaüzenetek
 Web;No sample prompts defined;Nincsenek megadva mintaüzenetek
-Web;AI Assistant;MI asszisztens
+Web;AI Agent;MI asszisztens
 Web;Favorites & Recent;Kedvencek és legutóbbiak
 Web;Hide panel;Panel elrejtése
-Web;Ask the AI assistant…;Kérdezze az MI asszisztenst…
+Web;Ask the AI agent…;Kérdezze az MI asszisztenst…
 Web;Confirm Deletion;Törlés megerősítése
 Web;This action is irreversible. Are you sure you want to delete this item?;Ez a művelet visszafordíthatatlan. Biztosan törölni szeretné ezt az elemet?
 Web;Data Source;Adatforrás
-Web;Report Assistants;Jelentésasszisztensek
+Web;Report Agents;Jelentésasszisztensek
 Web;Select Tables or Views;Táblák vagy nézetek kiválasztása
 Web;Filter tables...;Táblák szűrése...
 Web;Select All;Mindet kijelöl
@@ -454,24 +454,24 @@ Web;No current items available;Nincsenek elérhető aktuális elemek
 Web;Current items will appear here when saved;Az aktuális elemek itt jelennek meg, ha mentésre kerülnek
 Web;Drafts;Piszkozatok
 Web;No draft items available;Nincsenek elérhető piszkozatelemek
-Web;Upload files or create new items with the assistant to see them here;Töltsön fel fájlokat vagy hozzon létre új elemeket az asszisztenssel, hogy itt megjelenjenek
+Web;Upload files or create new items with the agent to see them here;Töltsön fel fájlokat vagy hozzon létre új elemeket az asszisztenssel, hogy itt megjelenjenek
 Web;Item Details;Elem részletei
 Web;Loading detail. Please wait...;Részletek betöltése. Kérjük, várjon...
 Web;Select a row from the table to view its details;Válasszon egy sort a táblából a részletek megtekintéséhez
 Web;Check;Ellenőrzés
 Web;Download;Letöltés
-Web;Reports Assistant;Jelentésasszisztens
+Web;Reports Agent;Jelentésasszisztens
 Web;Connection type;Kapcsolat típusa
 Web;Connection string;Kapcsolati karakterlánc
 Web;Tables or views;Táblák vagy nézetek
-Web;Report Assistant;Jelentésasszisztens
+Web;Report Agent;Jelentésasszisztens
 Web;AI Provider;MI szolgáltató
 Web;AI model;MI modell
 Web;AI model name (overrides default));MI modell neve (felülírja az alapértelmezettet))
 Web;Temperature;Hőmérséklet
 Web;Model temperature;Modell hőmérséklete
 Web;System prompt;Rendszerüzenet
-Web;Optional sytem prompt for the assistant;Választható rendszerüzenet az asszisztenshez
+Web;Optional sytem prompt for the agent;Választható rendszerüzenet az asszisztenshez
 Web;User prompt;Felhasználói üzenet
 Web;Default user prompts (if empty default values configured are taken);Alapértelmezett felhasználói üzenetek (ha üres, a beállított alapértelmezett értékek érvényesek)
 Web;User Groups allowed (No selection means no restriction);Engedélyezett felhasználói csoportok (nincs kiválasztás esetén nincs korlátozás)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Adatok vizsgálata most
 Web;Execute;Végrehajtás
 Web;Elements:;Elemek:
 Web;Restrictions:;Korlátozások:
-WebJS;Hide AI Assistant;MI asszisztens elrejtése
-WebJS;AI Assistant;MI asszisztens
+WebJS;Hide AI Agent;MI asszisztens elrejtése
+WebJS;AI Agent;MI asszisztens
 WebJS;Running;Fut
 WebJS;Request cancelled.;A kérés megszakítva.
 WebJS;Remove from favorites;Eltávolítás a kedvencek közül
@@ -500,7 +500,7 @@ Web;Configuration;Konfiguráció
 Web;Configuration and security;Konfiguráció és biztonság
 Web;Download/Upload;Letöltés/Feltöltés
 Web;Rights;Jogok
-Web;Assistants;Asszisztensek
+Web;Agents;Asszisztensek
 Web;Folder;Mappa
 Web;Drag to resize;Húzza az átméretezéshez
 WebJS;Copy and paste;Másolás és beillesztés

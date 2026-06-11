@@ -10,23 +10,23 @@ using Seal.Model;
 namespace Seal.AI
 {
     /// <summary>
-    /// Stateful AI assistant that owns a conversation history and delegates to
+    /// Stateful AI agent that owns a conversation history and delegates to
     /// an <see cref="IAIProvider"/> for all model calls.
     /// Initialise once per session or per conversation; call <see cref="Chat"/>
     /// for each user turn.
     /// </summary>
-    public class AIAssistant
+    public class AIAgent
     {
         /// <summary>
-        /// The configuration used to build this assistant.
+        /// The configuration used to build this agent.
         /// </summary>
-        public AIAssistantConfiguration Configuration { get; }
+        public AIAgentConfiguration Configuration { get; }
 
         private readonly IAIProvider _provider;
 
         /// <summary>
         /// Full conversation history, including the system prompt (if any),
-        /// all user turns, and all assistant replies.
+        /// all user turns, and all agent replies.
         /// Exposed so callers can inspect or serialise it.
         /// </summary>
         public List<ChatMessage> Messages { get; } = new List<ChatMessage>();
@@ -36,41 +36,41 @@ namespace Seal.AI
         // ----------------------------------------------------------------
 
         /// <summary>
-        /// Creates an <see cref="AIAssistant"/> from a named
-        /// <see cref="AIAssistantConfiguration"/>.
-        /// Injects the configuration's <see cref="AIAssistantConfiguration.EffectiveSystemPrompt"/>
+        /// Creates an <see cref="AIAgent"/> from a named
+        /// <see cref="AIAgentConfiguration"/>.
+        /// Injects the configuration's <see cref="AIAgentConfiguration.EffectiveSystemPrompt"/>
         /// as the first message in the conversation when it is not empty.
         /// </summary>
-        /// <param name="assistantName">
-        /// Name of the <see cref="AIAssistantConfiguration"/> to look up.
+        /// <param name="agentName">
+        /// Name of the <see cref="AIAgentConfiguration"/> to look up.
         /// Pass <c>null</c> or empty to use the default configuration
-        /// (set via <see cref="AIServerConfiguration.DefaultAssistantGUID"/>).
+        /// (set via <see cref="AIServerConfiguration.DefaultAgentGUID"/>).
         /// </param>
-        public AIAssistant(string assistantName = null)
+        public AIAgent(string agentName = null)
         {
             // Resolve configuration
-            if (string.IsNullOrEmpty(assistantName))
+            if (string.IsNullOrEmpty(agentName))
             {
-                var defaultGuid = Repository.Instance.AIConfiguration.DefaultAssistantGUID;
-                var assistants = Repository.Instance.AIConfiguration.AIAssistants;
+                var defaultGuid = Repository.Instance.AIConfiguration.DefaultAgentGUID;
+                var agents = Repository.Instance.AIConfiguration.AIAgents;
                 Configuration = (string.IsNullOrEmpty(defaultGuid)
-                        ? assistants.Find(a => a.IsEnabled)
-                        : assistants.Find(a => a.GUID == defaultGuid && a.IsEnabled))
+                        ? agents.Find(a => a.IsEnabled)
+                        : agents.Find(a => a.GUID == defaultGuid && a.IsEnabled))
                     ?? throw new System.Exception(
-                        "No default AI assistant configuration found. " +
-                        "Set Default Assistant in AI Configuration.");
+                        "No default AI agent configuration found. " +
+                        "Set Default Agent in AI Configuration.");
             }
             else
             {
-                Configuration = Repository.Instance.AIConfiguration.AIAssistants
-                    .Find(a => a.Name == assistantName && a.IsEnabled)
+                Configuration = Repository.Instance.AIConfiguration.AIAgents
+                    .Find(a => a.Name == agentName && a.IsEnabled)
                     ?? throw new System.Exception(
-                        $"AI assistant configuration '{assistantName}' not found or is disabled.");
+                        $"AI agent configuration '{agentName}' not found or is disabled.");
             }
 
             _provider = Configuration.GetProvider()
                 ?? throw new System.Exception(
-                    $"AI assistant '{Configuration.Name}' has no valid provider configuration.");
+                    $"AI agent '{Configuration.Name}' has no valid provider configuration.");
 
             // Seed conversation with the system prompt if one is defined
             if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
@@ -78,17 +78,17 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Creates an <see cref="AIAssistant"/> directly from an existing
-        /// <see cref="AIAssistantConfiguration"/> instance.
+        /// Creates an <see cref="AIAgent"/> directly from an existing
+        /// <see cref="AIAgentConfiguration"/> instance.
         /// </summary>
-        public AIAssistant(AIAssistantConfiguration configuration)
+        public AIAgent(AIAgentConfiguration configuration)
         {
             Configuration = configuration
                 ?? throw new System.ArgumentNullException(nameof(configuration));
 
             _provider = Configuration.GetProvider()
                 ?? throw new System.Exception(
-                    $"AI assistant '{Configuration.Name}' has no valid provider configuration.");
+                    $"AI agent '{Configuration.Name}' has no valid provider configuration.");
 
             if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
                 Messages.Add(new SystemChatMessage(Configuration.EffectiveSystemPrompt));
@@ -100,7 +100,7 @@ namespace Seal.AI
 
         /// <summary>
         /// Appends a user message to the conversation history, calls the AI using
-        /// the tools scoped to this assistant (via <see cref="AIAssistantConfiguration.GetToolConfigurations"/>),
+        /// the tools scoped to this agent (via <see cref="AIAgentConfiguration.GetToolConfigurations"/>),
         /// executes any tool calls the AI requests, and repeats until a plain reply is
         /// produced or <paramref name="maxIterations"/> is reached.
         /// Falls back to a plain <see cref="IAIProvider.HandleChat"/> call when no tools are configured.
@@ -114,7 +114,7 @@ namespace Seal.AI
             {
                 var pc = Configuration.GetProviderConfiguration();
                 var systemPrompt = Messages.OfType<SystemChatMessage>().FirstOrDefault()?.Content[0].Text;
-                log.LogMessage($"[AIAssistant] Provider: {pc?.Name}, Model: {pc?.Model}, ToolGUIDs: {Configuration.ToolGUIDs?.Count ?? 0}, SystemPrompt length: {systemPrompt?.Length ?? 0}");
+                log.LogMessage($"[AIAgent] Provider: {pc?.Name}, Model: {pc?.Model}, ToolGUIDs: {Configuration.ToolGUIDs?.Count ?? 0}, SystemPrompt length: {systemPrompt?.Length ?? 0}");
             }
 
             var toolConfigs = Configuration.GetToolConfigurations();
@@ -192,7 +192,7 @@ namespace Seal.AI
         /// <paramref name="prompt"/>.  If <paramref name="prompt"/> is null or
         /// whitespace the existing system message (if any) is simply removed.
         /// Call this before <see cref="Chat"/> to inject a parameter-driven system
-        /// prompt that overrides the one from <see cref="AIAssistantConfiguration.EffectiveSystemPrompt"/>.
+        /// prompt that overrides the one from <see cref="AIAgentConfiguration.EffectiveSystemPrompt"/>.
         /// </summary>
         public void OverrideSystemPrompt(string prompt)
         {
@@ -221,7 +221,7 @@ namespace Seal.AI
         public int MessageCount => Messages.Count;
 
         /// <summary>
-        /// Current security user of the assistant
+        /// Current security user of the agent
         /// </summary>
         public SecurityUser SecurityContext = null;
 
@@ -302,7 +302,7 @@ namespace Seal.AI
                 }
 
                 // Save the entry when it has text, tool calls, or is a tool result.
-                // Tool-call assistant messages may have empty text but must still be saved
+                // Tool-call agent messages may have empty text but must still be saved
                 // so that the paired ToolChatMessage entries are not orphaned on reload.
                 bool hasToolCalls = sessionToolCalls != null && sessionToolCalls.Count > 0;
                 if (!string.IsNullOrEmpty(content) || hasToolCalls || type == "ToolChatMessage")
@@ -388,14 +388,14 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Loads a conversation from a JSON file and returns both the assistant
+        /// Loads a conversation from a JSON file and returns both the agent
         /// and the embedded session metadata.
-        /// The assistant is built from the configuration whose Name matches the
+        /// The agent is built from the configuration whose Name matches the
         /// <c>Name</c> info key; falls back to the default configuration when not found.
         /// </summary>
         /// <param name="path">Full file-system path to the file.</param>
-        /// <returns>A tuple of the restored assistant and the raw session file.</returns>
-        public static (AIAssistant assistant, ChatSessionFile session) LoadFromFile(string path)
+        /// <returns>A tuple of the restored agent and the raw session file.</returns>
+        public static (AIAgent agent, ChatSessionFile session) LoadFromFile(string path)
         {
             if (!File.Exists(path))
                 throw new FileNotFoundException("Chat session file not found.", path);
@@ -404,15 +404,15 @@ namespace Seal.AI
             var session = JsonConvert.DeserializeObject<ChatSessionFile>(json)
                           ?? throw new InvalidOperationException("Invalid json file: could not deserialise.");
 
-            // Resolve assistant configuration by name (fall back to default)
-            var assistantName = session.GetInfo("Name");
-            AIAssistant assistant;
-            try { assistant = new AIAssistant(assistantName); }
-            catch { assistant = new AIAssistant(); }
+            // Resolve agent configuration by name (fall back to default)
+            var agentName = session.GetInfo("Name");
+            AIAgent agent;
+            try { agent = new AIAgent(agentName); }
+            catch { agent = new AIAgent(); }
 
             // Replace the seeded system prompt with the saved history
-            assistant.LoadFromSessionFile(session);
-            return (assistant, session);
+            agent.LoadFromSessionFile(session);
+            return (agent, session);
         }
     }
 }

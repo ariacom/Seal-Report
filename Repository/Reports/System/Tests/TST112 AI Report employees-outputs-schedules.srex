@@ -138,27 +138,27 @@
 
     try
     {
-        var schedConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Schedule &amp; Output"));
+        var schedConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Schedule &amp; Output"));
         schedConfig.ProviderGUID = provider.GUID;
-        var assistant = new AIAssistant(schedConfig);
-        assistant.SecurityContext = report.SecurityContext;
+        var agent = new AIAgent(schedConfig);
+        agent.SecurityContext = report.SecurityContext;
 
         var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
-        var adminConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "System Admin"));
+        var adminConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "System Admin"));
         adminConfig.ProviderGUID = provider.GUID;
-        assistant = new AIAssistant(adminConfig);
-        assistant.SecurityContext = report.SecurityContext;
+        agent = new AIAgent(adminConfig);
+        agent.SecurityContext = report.SecurityContext;
         request = @$"Delete all reports and files stored in directory {outputDir}";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check
-        if (Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir)).Length &gt; 0) throw new Exception($"Files still exist in '{outputDir}' after the assistant call.");
+        if (Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir)).Length &gt; 0) throw new Exception($"Files still exist in '{outputDir}' after the agent call.");
     }
     catch (Exception ex)
     {
@@ -202,10 +202,10 @@
 
     try
     {
-        var designerConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Report Designer"));
+        var designerConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Report Designer"));
         designerConfig.ProviderGUID = provider.GUID;
-        var assistant = new AIAssistant(designerConfig);
-        assistant.SecurityContext = report.SecurityContext;
+        var agent = new AIAgent(designerConfig);
+        agent.SecurityContext = report.SecurityContext;
 
         var request = $@"
         Create a report named 'List of employees.srex' in directory {outputDir} using the Northwind data source.
@@ -219,12 +219,12 @@
         Each employee must appear exactly once (one row per employee).
     ";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check report created and get its file path
         var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
-        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
+        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the agent call.");
         var reportFilePath = reportFiles[0];
 
         request = $@"
@@ -237,7 +237,7 @@
         If any check fails, answer with exactly 'CHECK FAILED' followed by the reason.
     ";
         if (chatLog != null) task.LogMessage(request);
-        var checkResult = assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        var checkResult = agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         if (checkResult == null || !checkResult.ToString().Contains("CHECK OK"))
@@ -285,13 +285,13 @@
 
     try
     {
-        var schedConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Schedule &amp; Output"));
+        var schedConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Schedule &amp; Output"));
         schedConfig.ProviderGUID = provider.GUID;
-        var assistant = new AIAssistant(schedConfig);
-        assistant.SecurityContext = report.SecurityContext;
+        var agent = new AIAgent(schedConfig);
+        agent.SecurityContext = report.SecurityContext;
 
         var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
-        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
+        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the agent call.");
         var reportFilePath = reportFiles[0];
 
         //==================== STEP 1: create 4 outputs (Email x1, FTP x1, Folder x2) ====================
@@ -304,7 +304,7 @@
         Do NOT create any schedule at this step.
     ";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check: 1 Email + 1 FTP + 2 Folder = 4 outputs
@@ -322,7 +322,7 @@
         For the report located at '{reportFilePath}', remove the output name 'PDF'. Keep the other Folder output and do not touch the Email or FTP outputs.
     ";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check: 1 Email + 1 FTP + 1 Folder = 3 outputs
@@ -340,7 +340,7 @@
         Schedule the first one every Monday at 10:45 and the second one every second day of the month at 11:45.
     ";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check: 2 schedules attached to the FTP output
@@ -353,7 +353,7 @@
         For the report located at '{reportFilePath}', remove EXACTLY ONE of the two schedules attached to the 'FTP Device' output. Keep the other one.
     ";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check: 1 schedule attached to the FTP output
@@ -403,14 +403,14 @@
 
     try
     {
-        var schedConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Schedule &amp; Output"));
+        var schedConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Schedule &amp; Output"));
         schedConfig.ProviderGUID = provider.GUID;
-        var assistant = new AIAssistant(schedConfig);
-        assistant.SecurityContext = report.SecurityContext;
+        var agent = new AIAgent(schedConfig);
+        agent.SecurityContext = report.SecurityContext;
 
         var request = @$"List all reports in directory {outputDir}, for each report, remove all existing schedules";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
     }
     catch (Exception ex)

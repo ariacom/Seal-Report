@@ -7,7 +7,7 @@
         <member name="T:Seal.AI.ICancelOperation">
             <summary>
             Provides a simple cancellation flag that can be checked during long-running
-            operations such as an AI assistant chat loop.
+            operations such as an AI agent chat loop.
             </summary>
         </member>
         <member name="P:Seal.AI.ICancelOperation.Cancel">
@@ -17,7 +17,7 @@
         </member>
         <member name="M:Seal.AI.IAIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
             <summary>
-            Sends <paramref name="messages"/> to the AI and returns the assistant reply.
+            Sends <paramref name="messages"/> to the AI and returns the agent reply.
             The reply is automatically appended to <paramref name="messages"/>.
             </summary>
         </member>
@@ -26,7 +26,7 @@
             Sends <paramref name="messages"/> together with available <paramref name="tools"/> to the AI.
             If the model decides to invoke one or more tools the descriptors are placed in
             <paramref name="toolCalls"/> and the method returns <see cref="F:System.String.Empty"/>;
-            the assistant message (with embedded tool-call data) is appended to <paramref name="messages"/>
+            the agent message (with embedded tool-call data) is appended to <paramref name="messages"/>
             automatically so the conversation can be continued after the caller executes the tools.
             If the model produces a text reply the reply is appended to <paramref name="messages"/> and returned.
             </summary>
@@ -42,7 +42,7 @@
         </member>
         <member name="M:Seal.AI.AIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
             <summary>
-            Sends <paramref name="messages"/> to the AI and returns the assistant reply.
+            Sends <paramref name="messages"/> to the AI and returns the agent reply.
             The reply is automatically appended to <paramref name="messages"/>.
             </summary>
         </member>
@@ -70,7 +70,7 @@
         </member>
         <member name="T:Seal.AI.AIServerConfiguration">
             <summary>
-            Dedicated configuration for AI Providers, Tools and Assistants.
+            Dedicated configuration for AI Providers, Tools and Agents.
             Serialized to Settings\AI\AIConfiguration.xml in the repository.
             </summary>
         </member>
@@ -120,14 +120,14 @@
             GUID of the default AI provider. Used when no provider name is specified.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIServerConfiguration.DefaultAssistantGUID">
+        <member name="P:Seal.AI.AIServerConfiguration.DefaultAgentGUID">
             <summary>
-            GUID of the default AI assistant. Used when no assistant name is specified.
+            GUID of the default AI agent. Used when no agent name is specified.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIServerConfiguration.AIAssistants">
+        <member name="P:Seal.AI.AIServerConfiguration.AIAgents">
             <summary>
-            AI Assistants combining a provider, an optional set of tools, and a default system prompt.
+            AI Agents combining a provider, an optional set of tools, and a default system prompt.
             </summary>
         </member>
         <member name="M:Seal.AI.AIServerConfiguration.LoadFromFile(System.String,System.Boolean)">
@@ -147,7 +147,7 @@
         </member>
         <member name="F:Seal.AI.AIProviderConfiguration.DefaultProviderGUID">
             <summary>
-            Sentinel value for an assistant's <see cref="P:Seal.AI.AIAssistantConfiguration.ProviderGUID"/> meaning
+            Sentinel value for an agent's <see cref="P:Seal.AI.AIAgentConfiguration.ProviderGUID"/> meaning
             "use the server's Default Provider" (see <see cref="P:Seal.AI.AIServerConfiguration.DefaultProviderGUID"/>).
             Real providers use <see cref="T:System.Guid"/> values, so this can never collide.
             </summary>
@@ -224,7 +224,7 @@
             <item><see cref="T:OpenAI.Chat.SystemChatMessage"/> entries are skipped (handled separately as the top-level <c>system</c> field).</item>
             <item>Consecutive <see cref="T:OpenAI.Chat.ToolChatMessage"/> entries are grouped into a single user message
             with <c>tool_result</c> content blocks, as required by Anthropic's alternating-turn rule.</item>
-            <item><see cref="T:Seal.AI.AssistantToolCallsChatMessage"/> entries become assistant messages with
+            <item><see cref="T:Seal.AI.AssistantToolCallsChatMessage"/> entries become agent messages with
             <c>tool_use</c> content blocks (plus an optional leading text block).</item>
             <item>All other messages become plain role/content objects.</item>
             </list>
@@ -256,7 +256,7 @@
         <member name="M:Seal.AI.OllamaProvider.SerializeMessage(OpenAI.Chat.ChatMessage)">
             <summary>
             Serializes a <see cref="T:OpenAI.Chat.ChatMessage"/> to an anonymous object suitable for the
-            Ollama REST API (OpenAI-compatible), handling plain messages, tool-call assistant
+            Ollama REST API (OpenAI-compatible), handling plain messages, tool-call agent
             turns, and tool results.
             </summary>
         </member>
@@ -277,7 +277,7 @@
         <member name="M:Seal.AI.OpenAIProvider.SerializeMessage(OpenAI.Chat.ChatMessage)">
             <summary>
             Serializes a <see cref="T:OpenAI.Chat.ChatMessage"/> to an anonymous object suitable for the
-            OpenAI REST API, handling plain messages, tool-call assistant turns, and tool results.
+            OpenAI REST API, handling plain messages, tool-call agent turns, and tool results.
             </summary>
         </member>
         <member name="T:Seal.AI.AITool">
@@ -333,7 +333,7 @@
         <member name="F:Seal.AI.AIToolCall.CancelOperation">
             <summary>
             Optional cancellation source propagated from the outer
-            <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> loop.  Execution scripts should
+            <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> loop.  Execution scripts should
             poll <c>CancelOperation?.Cancel</c> inside any long-running loop
             and abort early when it is <c>true</c>.
             </summary>
@@ -378,7 +378,7 @@
         </member>
         <member name="P:Seal.AI.AIToolConfiguration.IsEnabled">
             <summary>
-            When <c>false</c>, this tool is excluded from all assistant calls without being deleted.
+            When <c>false</c>, this tool is excluded from all agent calls without being deleted.
             </summary>
         </member>
         <member name="P:Seal.AI.AIToolConfiguration.ParametersSchema">
@@ -440,203 +440,203 @@
             Returns <see cref="F:System.String.Empty"/> if no script is configured.
             </summary>
         </member>
-        <member name="T:Seal.AI.AIAssistantConfiguration">
+        <member name="T:Seal.AI.AIAgentConfiguration">
             <summary>
-            Configuration for an AI assistant: ties together one provider, an optional subset of tools,
-            and a default system prompt. Stored in <see cref="P:Seal.AI.AIServerConfiguration.AIAssistants"/>.
+            Configuration for an AI agent: ties together one provider, an optional subset of tools,
+            and a default system prompt. Stored in <see cref="P:Seal.AI.AIServerConfiguration.AIAgents"/>.
             </summary>
         </member>
-        <member name="F:Seal.AI.AIAssistantConfiguration.FirstEnabledName">
+        <member name="F:Seal.AI.AIAgentConfiguration.FirstEnabledName">
             <summary>
-            Display name shown in the property-grid dropdown for an empty default assistant,
-            meaning the first enabled assistant is used.
+            Display name shown in the property-grid dropdown for an empty default agent,
+            meaning the first enabled agent is used.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.GUID">
+        <member name="P:Seal.AI.AIAgentConfiguration.GUID">
             <summary>
-            Unique identifier for this assistant configuration.
+            Unique identifier for this agent configuration.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.Name">
+        <member name="P:Seal.AI.AIAgentConfiguration.Name">
             <summary>
-            Display name of this assistant configuration.
+            Display name of this agent configuration.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.Description">
+        <member name="P:Seal.AI.AIAgentConfiguration.Description">
             <summary>
-            Short description of what this assistant can do.
+            Short description of what this agent can do.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.IsEnabled">
+        <member name="P:Seal.AI.AIAgentConfiguration.IsEnabled">
             <summary>
-            When <c>false</c>, this assistant is excluded from all operations without being deleted.
+            When <c>false</c>, this agent is excluded from all operations without being deleted.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.ProviderGUID">
+        <member name="P:Seal.AI.AIAgentConfiguration.ProviderGUID">
             <summary>
             GUID of the <see cref="T:Seal.AI.AIProviderConfiguration"/> to use.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.ToolGUIDs">
+        <member name="P:Seal.AI.AIAgentConfiguration.ToolGUIDs">
             <summary>
-            GUIDs of the <see cref="T:Seal.AI.AIToolConfiguration"/> instances available to this assistant.
+            GUIDs of the <see cref="T:Seal.AI.AIToolConfiguration"/> instances available to this agent.
             An empty list means all enabled tools are available.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.DefaultSystemPrompt">
+        <member name="P:Seal.AI.AIAgentConfiguration.DefaultSystemPrompt">
             <summary>
             Inline system prompt injected at the start of every conversation.
-            Ignored when <see cref="P:Seal.AI.AIAssistantConfiguration.SystemPromptFile"/> is set.
+            Ignored when <see cref="P:Seal.AI.AIAgentConfiguration.SystemPromptFile"/> is set.
             Leave empty to use no system prompt.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.SystemPromptFile">
+        <member name="P:Seal.AI.AIAgentConfiguration.SystemPromptFile">
             <summary>
             File name of a text file containing the system prompt, relative to <c>Settings\AI\Prompts</c>.
-            When set, takes precedence over <see cref="P:Seal.AI.AIAssistantConfiguration.DefaultSystemPrompt"/>.
+            When set, takes precedence over <see cref="P:Seal.AI.AIAgentConfiguration.DefaultSystemPrompt"/>.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.SamplePromptsFile">
+        <member name="P:Seal.AI.AIAgentConfiguration.SamplePromptsFile">
             <summary>
             File name of a text file containing sample user prompts, relative to <c>Settings\AI\Prompts\Samples</c>.
             One prompt per line; blank lines and lines starting with <c>#</c> are ignored.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.EffectiveSystemPrompt">
+        <member name="P:Seal.AI.AIAgentConfiguration.EffectiveSystemPrompt">
             <summary>
             Returns the effective system prompt at runtime.
-            Reads <see cref="P:Seal.AI.AIAssistantConfiguration.SystemPromptFile"/> from <c>Settings\AI\Prompts</c> when set;
-            otherwise returns <see cref="P:Seal.AI.AIAssistantConfiguration.DefaultSystemPrompt"/>.
+            Reads <see cref="P:Seal.AI.AIAgentConfiguration.SystemPromptFile"/> from <c>Settings\AI\Prompts</c> when set;
+            otherwise returns <see cref="P:Seal.AI.AIAgentConfiguration.DefaultSystemPrompt"/>.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistantConfiguration.GetSamplePrompts">
+        <member name="M:Seal.AI.AIAgentConfiguration.GetSamplePrompts">
             <summary>
-            Reads and returns the list of sample user prompts from <see cref="P:Seal.AI.AIAssistantConfiguration.SamplePromptsFile"/>.
+            Reads and returns the list of sample user prompts from <see cref="P:Seal.AI.AIAgentConfiguration.SamplePromptsFile"/>.
             Returns an empty list when the file is not set or does not exist.
             Blank lines and lines starting with <c>#</c> are skipped.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.Temperature">
+        <member name="P:Seal.AI.AIAgentConfiguration.Temperature">
             <summary>
             Sampling temperature (0.0 = deterministic, 1.0 = creative).
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.MaxTokens">
+        <member name="P:Seal.AI.AIAgentConfiguration.MaxTokens">
             <summary>
             Maximum number of tokens to generate in a single reply.
             Set to 0 to use the provider's default (parameter is not sent).
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistantConfiguration.TopP">
+        <member name="P:Seal.AI.AIAgentConfiguration.TopP">
             <summary>
             Nucleus sampling threshold (0.0–1.0). Use instead of Temperature.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistantConfiguration.GetProviderConfiguration">
+        <member name="M:Seal.AI.AIAgentConfiguration.GetProviderConfiguration">
             <summary>
-            Resolves and returns the <see cref="T:Seal.AI.AIProviderConfiguration"/> identified by <see cref="P:Seal.AI.AIAssistantConfiguration.ProviderGUID"/>.
-            Returns <c>null</c> when <see cref="P:Seal.AI.AIAssistantConfiguration.ProviderGUID"/> is empty or no matching configuration is found.
+            Resolves and returns the <see cref="T:Seal.AI.AIProviderConfiguration"/> identified by <see cref="P:Seal.AI.AIAgentConfiguration.ProviderGUID"/>.
+            Returns <c>null</c> when <see cref="P:Seal.AI.AIAgentConfiguration.ProviderGUID"/> is empty or no matching configuration is found.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistantConfiguration.GetToolConfigurations">
+        <member name="M:Seal.AI.AIAgentConfiguration.GetToolConfigurations">
             <summary>
-            Returns the list of enabled <see cref="T:Seal.AI.AIToolConfiguration"/> instances available to this assistant.
-            When <see cref="P:Seal.AI.AIAssistantConfiguration.ToolGUIDs"/> is empty, all enabled tools are returned.
+            Returns the list of enabled <see cref="T:Seal.AI.AIToolConfiguration"/> instances available to this agent.
+            When <see cref="P:Seal.AI.AIAgentConfiguration.ToolGUIDs"/> is empty, all enabled tools are returned.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistantConfiguration.GetProvider">
+        <member name="M:Seal.AI.AIAgentConfiguration.GetProvider">
             <summary>
-            Creates and returns the <see cref="T:Seal.AI.IAIProvider"/> for this assistant's provider configuration.
+            Creates and returns the <see cref="T:Seal.AI.IAIProvider"/> for this agent's provider configuration.
             Returns <c>null</c> when no matching provider configuration is found.
             </summary>
         </member>
-        <member name="T:Seal.AI.AIAssistant">
+        <member name="T:Seal.AI.AIAgent">
             <summary>
-            Stateful AI assistant that owns a conversation history and delegates to
+            Stateful AI agent that owns a conversation history and delegates to
             an <see cref="T:Seal.AI.IAIProvider"/> for all model calls.
-            Initialise once per session or per conversation; call <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/>
+            Initialise once per session or per conversation; call <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/>
             for each user turn.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistant.Configuration">
+        <member name="P:Seal.AI.AIAgent.Configuration">
             <summary>
-            The configuration used to build this assistant.
+            The configuration used to build this agent.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistant.Messages">
+        <member name="P:Seal.AI.AIAgent.Messages">
             <summary>
             Full conversation history, including the system prompt (if any),
-            all user turns, and all assistant replies.
+            all user turns, and all agent replies.
             Exposed so callers can inspect or serialise it.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.#ctor(System.String)">
+        <member name="M:Seal.AI.AIAgent.#ctor(System.String)">
             <summary>
-            Creates an <see cref="T:Seal.AI.AIAssistant"/> from a named
-            <see cref="T:Seal.AI.AIAssistantConfiguration"/>.
-            Injects the configuration's <see cref="P:Seal.AI.AIAssistantConfiguration.EffectiveSystemPrompt"/>
+            Creates an <see cref="T:Seal.AI.AIAgent"/> from a named
+            <see cref="T:Seal.AI.AIAgentConfiguration"/>.
+            Injects the configuration's <see cref="P:Seal.AI.AIAgentConfiguration.EffectiveSystemPrompt"/>
             as the first message in the conversation when it is not empty.
             </summary>
-            <param name="assistantName">
-            Name of the <see cref="T:Seal.AI.AIAssistantConfiguration"/> to look up.
+            <param name="agentName">
+            Name of the <see cref="T:Seal.AI.AIAgentConfiguration"/> to look up.
             Pass <c>null</c> or empty to use the default configuration
-            (set via <see cref="P:Seal.AI.AIServerConfiguration.DefaultAssistantGUID"/>).
+            (set via <see cref="P:Seal.AI.AIServerConfiguration.DefaultAgentGUID"/>).
             </param>
         </member>
-        <member name="M:Seal.AI.AIAssistant.#ctor(Seal.AI.AIAssistantConfiguration)">
+        <member name="M:Seal.AI.AIAgent.#ctor(Seal.AI.AIAgentConfiguration)">
             <summary>
-            Creates an <see cref="T:Seal.AI.AIAssistant"/> directly from an existing
-            <see cref="T:Seal.AI.AIAssistantConfiguration"/> instance.
+            Creates an <see cref="T:Seal.AI.AIAgent"/> directly from an existing
+            <see cref="T:Seal.AI.AIAgentConfiguration"/> instance.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
+        <member name="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
             <summary>
             Appends a user message to the conversation history, calls the AI using
-            the tools scoped to this assistant (via <see cref="M:Seal.AI.AIAssistantConfiguration.GetToolConfigurations"/>),
+            the tools scoped to this agent (via <see cref="M:Seal.AI.AIAgentConfiguration.GetToolConfigurations"/>),
             executes any tool calls the AI requests, and repeats until a plain reply is
             produced or <paramref name="maxIterations"/> is reached.
             Falls back to a plain <see cref="M:Seal.AI.IAIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})"/> call when no tools are configured.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.ChatHtml(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
+        <member name="M:Seal.AI.AIAgent.ChatHtml(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
             <summary>
-            Same as <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> but returns the reply sanitized as safe HTML.
+            Same as <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> but returns the reply sanitized as safe HTML.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.ChatSimple(System.String)">
+        <member name="M:Seal.AI.AIAgent.ChatSimple(System.String)">
             <summary>
             Sends a plain user message to the AI without any tools and returns
             the reply. Useful when you want a simple single-turn exchange that
             bypasses the agentic tool loop.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.OverrideSystemPrompt(System.String)">
+        <member name="M:Seal.AI.AIAgent.OverrideSystemPrompt(System.String)">
             <summary>
-            Replaces the leading system message in <see cref="P:Seal.AI.AIAssistant.Messages"/> with
+            Replaces the leading system message in <see cref="P:Seal.AI.AIAgent.Messages"/> with
             <paramref name="prompt"/>.  If <paramref name="prompt"/> is null or
             whitespace the existing system message (if any) is simply removed.
-            Call this before <see cref="M:Seal.AI.AIAssistant.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> to inject a parameter-driven system
-            prompt that overrides the one from <see cref="P:Seal.AI.AIAssistantConfiguration.EffectiveSystemPrompt"/>.
+            Call this before <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> to inject a parameter-driven system
+            prompt that overrides the one from <see cref="P:Seal.AI.AIAgentConfiguration.EffectiveSystemPrompt"/>.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.Clear">
+        <member name="M:Seal.AI.AIAgent.Clear">
             <summary>
             Resets the conversation history, re-seeding it with the system
             prompt when one is configured.
             </summary>
         </member>
-        <member name="P:Seal.AI.AIAssistant.MessageCount">
+        <member name="P:Seal.AI.AIAgent.MessageCount">
             <summary>
             Number of messages currently in the conversation (including the
             system prompt when present).
             </summary>
         </member>
-        <member name="F:Seal.AI.AIAssistant.SecurityContext">
+        <member name="F:Seal.AI.AIAgent.SecurityContext">
             <summary>
-            Current security user of the assistant
+            Current security user of the agent
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.ToSessionFile(System.Collections.Generic.List{Seal.Model.StringPair})">
+        <member name="M:Seal.AI.AIAgent.ToSessionFile(System.Collections.Generic.List{Seal.Model.StringPair})">
             <summary>
             Serialises the current conversation to a <see cref="T:Seal.Model.ChatSessionFile"/> object.
             </summary>
@@ -645,28 +645,28 @@
             Pass <c>null</c> to produce an empty Infos list.
             </param>
         </member>
-        <member name="M:Seal.AI.AIAssistant.SaveToFile(System.String,System.Collections.Generic.List{Seal.Model.StringPair})">
+        <member name="M:Seal.AI.AIAgent.SaveToFile(System.String,System.Collections.Generic.List{Seal.Model.StringPair})">
             <summary>
             Saves the current conversation to a JSON file.
             </summary>
             <param name="path">Full file-system path (including file name and extension).</param>
             <param name="infos">Session metadata to embed in the file.</param>
         </member>
-        <member name="M:Seal.AI.AIAssistant.LoadFromSessionFile(Seal.Model.ChatSessionFile)">
+        <member name="M:Seal.AI.AIAgent.LoadFromSessionFile(Seal.Model.ChatSessionFile)">
             <summary>
             Restores the conversation history from a <see cref="T:Seal.Model.ChatSessionFile"/>.
-            The current <see cref="P:Seal.AI.AIAssistant.Messages"/> list is cleared first.
+            The current <see cref="P:Seal.AI.AIAgent.Messages"/> list is cleared first.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAssistant.LoadFromFile(System.String)">
+        <member name="M:Seal.AI.AIAgent.LoadFromFile(System.String)">
             <summary>
-            Loads a conversation from a JSON file and returns both the assistant
+            Loads a conversation from a JSON file and returns both the agent
             and the embedded session metadata.
-            The assistant is built from the configuration whose Name matches the
+            The agent is built from the configuration whose Name matches the
             <c>Name</c> info key; falls back to the default configuration when not found.
             </summary>
             <param name="path">Full file-system path to the file.</param>
-            <returns>A tuple of the restored assistant and the raw session file.</returns>
+            <returns>A tuple of the restored agent and the raw session file.</returns>
         </member>
         <member name="M:Seal.Helpers.ObjectShredder`1.Shred(System.Collections.Generic.IEnumerable{`0},System.Data.DataTable,System.Nullable{System.Data.LoadOption})">
             <summary>
@@ -7145,7 +7145,7 @@
         </member>
         <member name="P:Seal.Model.Repository.AIConfiguration">
             <summary>
-            Current AI configuration (providers, tools, assistants)
+            Current AI configuration (providers, tools, agents)
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.ReloadAIConfiguration">
@@ -9312,9 +9312,9 @@
             Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.).
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityGroup.AssistantGUIDs">
+        <member name="P:Seal.Model.SecurityGroup.AgentGUIDs">
             <summary>
-            Web Report Server: The GUIDs of the AI Assistants assigned to users of this group. Leave empty to disable the AI Assistant for this group.
+            Web Report Server: The GUIDs of the AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.DownloadUpload">
@@ -9734,16 +9734,16 @@
             Default group of the user
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.AssistantConfigurations">
+        <member name="P:Seal.Model.SecurityUser.AgentConfigurations">
             <summary>
-            AI Assistant configurations assigned to this user via the DefaultGroup AssistantGUIDs.
-            Returns an empty list if no group is set or no enabled assistants are found.
+            AI Agent configurations assigned to this user via the DefaultGroup AgentGUIDs.
+            Returns an empty list if no group is set or no enabled agents are found.
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.AssistantConfiguration">
+        <member name="P:Seal.Model.SecurityUser.AgentConfiguration">
             <summary>
-            First AI Assistant configuration assigned to this user via the DefaultGroup AssistantGUIDs.
-            Returns null if no group is set or no enabled assistants are found.
+            First AI Agent configuration assigned to this user via the DefaultGroup AgentGUIDs.
+            Returns null if no group is set or no enabled agents are found.
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.FindSecurityFolder(System.String)">
@@ -10138,9 +10138,9 @@
             Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
             </summary>
         </member>
-        <member name="T:Seal.Model.AssistantFolders">
+        <member name="T:Seal.Model.AgentFolders">
             <summary>
-            Name of the hidden personal sub-folder used to store assistant chat sessions.
+            Name of the hidden personal sub-folder used to store agent chat sessions.
             The leading underscore signals to the web server that it must not appear
             in the folder browser.
             </summary>
@@ -10175,7 +10175,7 @@
         </member>
         <member name="P:Seal.Model.ChatSessionMessage.ToolCalls">
             <summary>
-            Tool calls requested by the assistant.
+            Tool calls requested by the agent.
             Only non-null for AssistantChatMessage entries where the AI invoked one or more tools.
             </summary>
         </member>
@@ -10192,7 +10192,7 @@
         </member>
         <member name="T:Seal.Model.ChatSessionInfo">
             <summary>
-            Summary of a single chat-session file returned by SAIGetAssistantChats.
+            Summary of a single chat-session file returned by SAIGetAgentChats.
             </summary>
         </member>
         <member name="T:Seal.Model.WebMainModel">

@@ -2152,7 +2152,7 @@ $('<div>', {{
                         }
                     }
                 }
-                else if (context.Instance is AIAssistantConfiguration)
+                else if (context.Instance is AIAgentConfiguration)
                 {
                     if (context.PropertyDescriptor.Name == "DefaultSystemPrompt")
                     {
@@ -2166,7 +2166,7 @@ $('<div>', {{
                         scriptFileName = valueToEdit;
                         scriptFolder = Repository.Instance.AIPromptsFolder;
                         scriptExtension = ".md";
-                        scriptDefaultName = (context.Instance as AIAssistantConfiguration)?.Name;
+                        scriptDefaultName = (context.Instance as AIAgentConfiguration)?.Name;
                         frm.Text = "Edit the System Prompt file";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
 
@@ -2187,7 +2187,7 @@ $('<div>', {{
                         scriptFileName = valueToEdit;
                         scriptFolder = Repository.Instance.AISamplePromptsFolder;
                         scriptExtension = ".md";
-                        scriptDefaultName = (context.Instance as AIAssistantConfiguration)?.Name;
+                        scriptDefaultName = (context.Instance as AIAgentConfiguration)?.Name;
                         frm.Text = "Edit the Sample Prompts file (one prompt per line, # for comments)";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
 

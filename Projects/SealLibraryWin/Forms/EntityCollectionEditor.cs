@@ -182,9 +182,9 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
-            else if (CollectionItemType == typeof(AIAssistantConfiguration))
+            else if (CollectionItemType == typeof(AIAgentConfiguration))
             {
-                frmCollectionEditorForm.Text = "AI Assistant Configuration Collection Editor";
+                frmCollectionEditorForm.Text = "AI Agent Configuration Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
@@ -272,9 +272,9 @@ namespace Seal.Forms
             {
                 ((SecurityLogin)instance).GUID = Helper.NewGUID();
             }
-            else if (instance is AIAssistantConfiguration)
+            else if (instance is AIAgentConfiguration)
             {
-                ((AIAssistantConfiguration)instance).ProviderGUID = AIProviderConfiguration.DefaultProviderGUID;
+                ((AIAgentConfiguration)instance).ProviderGUID = AIProviderConfiguration.DefaultProviderGUID;
             }
             return instance;
         }
@@ -333,7 +333,7 @@ namespace Seal.Forms
             }
             else if (value is AIProviderConfiguration) result = ((AIProviderConfiguration)value).Name;
             else if (value is AIToolConfiguration) result = ((AIToolConfiguration)value).Name;
-            else if (value is AIAssistantConfiguration) result = ((AIAssistantConfiguration)value).Name;
+            else if (value is AIAgentConfiguration) result = ((AIAgentConfiguration)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
     }

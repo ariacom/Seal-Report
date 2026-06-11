@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Kyllä (Käyttäjä voi selata alikansio
 WebJS;Yes (User can create and edit sub-folders);Kyllä (Käyttäjä voi luoda ja muokata alikansioita)
 WebJS;Yes (User can edit his profile);Kyllä (Käyttäjä voi muokata profiiliaan)
 WebJS;Yes (User is administrator of the Web Server);Kyllä (Käyttäjä on verkkopalvelimen ylläpitäjä)
-Web;Select assistant;Valitse avustaja
+Web;Select agent;Valitse avustaja
 Web;Mark as favorite;Merkitse suosikiksi
 Web;Favorites;Suosikit
 Web;No favorites yet;Ei vielä suosikkeja
@@ -435,14 +435,14 @@ Web;New conversation;Uusi keskustelu
 Web;Sample prompts;Esimerkkikehotteet
 Web;Sample Prompts;Esimerkkikehotteet
 Web;No sample prompts defined;Ei määritettyjä esimerkkikehotteita
-Web;AI Assistant;Tekoälyavustaja
+Web;AI Agent;Tekoälyavustaja
 Web;Favorites & Recent;Suosikit ja viimeisimmät
 Web;Hide panel;Piilota paneeli
-Web;Ask the AI assistant…;Kysy tekoälyavustajalta…
+Web;Ask the AI agent…;Kysy tekoälyavustajalta…
 Web;Confirm Deletion;Vahvista poisto
 Web;This action is irreversible. Are you sure you want to delete this item?;Tämä toiminto on peruuttamaton. Haluatko varmasti poistaa tämän kohteen?
 Web;Data Source;Tietolähde
-Web;Report Assistants;Raporttiavustajat
+Web;Report Agents;Raporttiavustajat
 Web;Select Tables or Views;Valitse taulut tai näkymät
 Web;Filter tables...;Suodata taulut...
 Web;Select All;Valitse kaikki
@@ -454,24 +454,24 @@ Web;No current items available;Ei nykyisiä kohteita saatavilla
 Web;Current items will appear here when saved;Nykyiset kohteet näkyvät tässä, kun ne on tallennettu
 Web;Drafts;Luonnokset
 Web;No draft items available;Ei luonnoskohteita saatavilla
-Web;Upload files or create new items with the assistant to see them here;Lähetä tiedostoja tai luo uusia kohteita avustajalla nähdäksesi ne tässä
+Web;Upload files or create new items with the agent to see them here;Lähetä tiedostoja tai luo uusia kohteita avustajalla nähdäksesi ne tässä
 Web;Item Details;Kohteen tiedot
 Web;Loading detail. Please wait...;Ladataan tietoja. Odota...
 Web;Select a row from the table to view its details;Valitse rivi taulukosta nähdäksesi sen tiedot
 Web;Check;Tarkista
 Web;Download;Lataa
-Web;Reports Assistant;Raporttiavustaja
+Web;Reports Agent;Raporttiavustaja
 Web;Connection type;Yhteystyyppi
 Web;Connection string;Yhteysmerkkijono
 Web;Tables or views;Taulut tai näkymät
-Web;Report Assistant;Raporttiavustaja
+Web;Report Agent;Raporttiavustaja
 Web;AI Provider;Tekoälypalveluntarjoaja
 Web;AI model;Tekoälymalli
 Web;AI model name (overrides default));Tekoälymallin nimi (ohittaa oletuksen))
 Web;Temperature;Lämpötila
 Web;Model temperature;Mallin lämpötila
 Web;System prompt;Järjestelmäkehote
-Web;Optional sytem prompt for the assistant;Valinnainen järjestelmäkehote avustajalle
+Web;Optional sytem prompt for the agent;Valinnainen järjestelmäkehote avustajalle
 Web;User prompt;Käyttäjäkehote
 Web;Default user prompts (if empty default values configured are taken);Oletuskäyttäjäkehotteet (jos tyhjä, käytetään määritettyjä oletusarvoja)
 Web;User Groups allowed (No selection means no restriction);Sallitut käyttäjäryhmät (Ei valintaa tarkoittaa, ettei rajoitusta ole)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Skannaa tiedot nyt
 Web;Execute;Suorita
 Web;Elements:;Elementit:
 Web;Restrictions:;Rajoitukset:
-WebJS;Hide AI Assistant;Piilota tekoälyavustaja
-WebJS;AI Assistant;Tekoälyavustaja
+WebJS;Hide AI Agent;Piilota tekoälyavustaja
+WebJS;AI Agent;Tekoälyavustaja
 WebJS;Running;Käynnissä
 WebJS;Request cancelled.;Pyyntö peruutettu.
 WebJS;Remove from favorites;Poista suosikeista
@@ -500,7 +500,7 @@ Web;Configuration;Määritys
 Web;Configuration and security;Määritys ja suojaus
 Web;Download/Upload;Lataus/Lähetys
 Web;Rights;Oikeudet
-Web;Assistants;Avustajat
+Web;Agents;Avustajat
 Web;Folder;Kansio
 Web;Drag to resize;Muuta kokoa vetämällä
 WebJS;Copy and paste;Kopioi ja liitä

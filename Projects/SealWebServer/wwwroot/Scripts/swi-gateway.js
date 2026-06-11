@@ -193,83 +193,83 @@ class SWIGateway {
             error: function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); }
         });
     }
-    GetUserAssistants(callback, errorcb) {
-        $.post(_server + "SWIGetUserAssistants", {})
+    GetUserAgents(callback, errorcb) {
+        $.post(_server + "SWIGetUserAgents", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    SelectAssistant(guid, callback, errorcb) {
-        $.post(_server + "SWISelectAssistant", { guid: guid })
+    SelectAgent(guid, callback, errorcb) {
+        $.post(_server + "SWISelectAgent", { guid: guid })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    ClearAIAssistant(callback, errorcb) {
-        $.post(_server + "SWIClearAIAssistant", {})
+    ClearAIAgent(callback, errorcb) {
+        $.post(_server + "SWIClearAIAgent", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    GetAIAssistantResponse(message, callback, errorcb) {
-        this._currentAIXHR = $.post(_server + "SWIGetAIAssistantResponse", {
+    GetAIAgentResponse(message, callback, errorcb) {
+        this._currentAIXHR = $.post(_server + "SWIGetAIAgentResponse", {
             message: message
         })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { if (status !== 'abort')
             SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    GetAIAssistantSamplePrompts(callback, errorcb) {
-        $.post(_server + "SWIGetAIAssistantSamplePrompts", {})
+    GetAIAgentSamplePrompts(callback, errorcb) {
+        $.post(_server + "SWIGetAIAgentSamplePrompts", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    CancelAIAssistantResponse(callback, errorcb) {
+    CancelAIAgentResponse(callback, errorcb) {
         if (this._currentAIXHR) {
             this._currentAIXHR.abort();
             this._currentAIXHR = null;
         }
-        $.post(_server + "SWICancelAIAssistantResponse", {})
+        $.post(_server + "SWICancelAIAgentResponse", {})
             .done(function (data) { if (callback)
             callback(data); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
     // ── Chat persistence (Recents / Favorites) ──────────────────
-    SaveAIAssistantChat(name, infos, callback, errorcb) {
-        $.post(_server + "SAISaveAssistantChat", {
+    SaveAIAgentChat(name, infos, callback, errorcb) {
+        $.post(_server + "SAISaveAgentChat", {
             name: name,
             infosJson: JSON.stringify(infos)
         })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    GetAIAssistantChats(callback, errorcb) {
-        $.post(_server + "SAIGetAssistantChats", {})
+    GetAIAgentChats(callback, errorcb) {
+        $.post(_server + "SAIGetAgentChats", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    MarkAIAssistantChatFavorite(name, callback, errorcb) {
-        $.post(_server + "SAIMarkAssistantChatFavorite", {
+    MarkAIAgentChatFavorite(name, callback, errorcb) {
+        $.post(_server + "SAIMarkAgentChatFavorite", {
             name: name
         })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    LoadAIAssistantChat(name, favorite, callback, errorcb) {
-        $.post(_server + "SAILoadAssistantChat", {
+    LoadAIAgentChat(name, favorite, callback, errorcb) {
+        $.post(_server + "SAILoadAgentChat", {
             name: name,
             favorite: favorite
         })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    DeleteAIAssistantChat(name, favorite, callback, errorcb) {
-        $.post(_server + "SAIDeleteAssistantChat", {
+    DeleteAIAgentChat(name, favorite, callback, errorcb) {
+        $.post(_server + "SAIDeleteAgentChat", {
             name: name,
             favorite: favorite
         })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    RenameAIAssistantChat(name, newName, favorite, callback, errorcb) {
-        $.post(_server + "SAIRenameAssistantChat", {
+    RenameAIAgentChat(name, newName, favorite, callback, errorcb) {
+        $.post(_server + "SAIRenameAgentChat", {
             name: name,
             newName: newName,
             favorite: favorite

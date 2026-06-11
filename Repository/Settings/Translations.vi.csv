@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Có (Người dùng có thể duyệt th
 WebJS;Yes (User can create and edit sub-folders);Có (Người dùng có thể tạo và chỉnh sửa thư mục con)
 WebJS;Yes (User can edit his profile);Có (Người dùng có thể chỉnh sửa hồ sơ của mình)
 WebJS;Yes (User is administrator of the Web Server);Có (Người dùng là quản trị viên của Máy chủ Web)
-Web;Select assistant;Chọn trợ lý
+Web;Select agent;Chọn trợ lý
 Web;Mark as favorite;Đánh dấu yêu thích
 Web;Favorites;Yêu thích
 Web;No favorites yet;Chưa có mục yêu thích nào
@@ -435,14 +435,14 @@ Web;New conversation;Cuộc trò chuyện mới
 Web;Sample prompts;Lời nhắc mẫu
 Web;Sample Prompts;Lời nhắc mẫu
 Web;No sample prompts defined;Chưa định nghĩa lời nhắc mẫu nào
-Web;AI Assistant;Trợ lý AI
+Web;AI Agent;Trợ lý AI
 Web;Favorites & Recent;Yêu thích & Gần đây
 Web;Hide panel;Ẩn bảng
-Web;Ask the AI assistant…;Hỏi trợ lý AI…
+Web;Ask the AI agent…;Hỏi trợ lý AI…
 Web;Confirm Deletion;Xác nhận xóa
 Web;This action is irreversible. Are you sure you want to delete this item?;Hành động này không thể hoàn tác. Bạn có chắc chắn muốn xóa mục này không?
 Web;Data Source;Nguồn dữ liệu
-Web;Report Assistants;Trợ lý báo cáo
+Web;Report Agents;Trợ lý báo cáo
 Web;Select Tables or Views;Chọn bảng hoặc khung nhìn
 Web;Filter tables...;Lọc bảng...
 Web;Select All;Chọn tất cả
@@ -454,24 +454,24 @@ Web;No current items available;Không có mục hiện tại nào khả dụng
 Web;Current items will appear here when saved;Các mục hiện tại sẽ xuất hiện ở đây khi được lưu
 Web;Drafts;Bản nháp
 Web;No draft items available;Không có mục nháp nào khả dụng
-Web;Upload files or create new items with the assistant to see them here;Tải lên tệp hoặc tạo mục mới bằng trợ lý để xem chúng ở đây
+Web;Upload files or create new items with the agent to see them here;Tải lên tệp hoặc tạo mục mới bằng trợ lý để xem chúng ở đây
 Web;Item Details;Chi tiết mục
 Web;Loading detail. Please wait...;Đang tải chi tiết. Vui lòng đợi...
 Web;Select a row from the table to view its details;Chọn một hàng từ bảng để xem chi tiết của nó
 Web;Check;Kiểm tra
 Web;Download;Tải xuống
-Web;Reports Assistant;Trợ lý báo cáo
+Web;Reports Agent;Trợ lý báo cáo
 Web;Connection type;Loại kết nối
 Web;Connection string;Chuỗi kết nối
 Web;Tables or views;Bảng hoặc khung nhìn
-Web;Report Assistant;Trợ lý báo cáo
+Web;Report Agent;Trợ lý báo cáo
 Web;AI Provider;Nhà cung cấp AI
 Web;AI model;Mô hình AI
 Web;AI model name (overrides default));Tên mô hình AI (ghi đè mặc định))
 Web;Temperature;Nhiệt độ
 Web;Model temperature;Nhiệt độ mô hình
 Web;System prompt;Lời nhắc hệ thống
-Web;Optional sytem prompt for the assistant;Lời nhắc hệ thống tùy chọn cho trợ lý
+Web;Optional sytem prompt for the agent;Lời nhắc hệ thống tùy chọn cho trợ lý
 Web;User prompt;Lời nhắc người dùng
 Web;Default user prompts (if empty default values configured are taken);Lời nhắc người dùng mặc định (nếu để trống sẽ lấy các giá trị mặc định đã cấu hình)
 Web;User Groups allowed (No selection means no restriction);Nhóm người dùng được phép (Không chọn nghĩa là không hạn chế)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Quét dữ liệu ngay
 Web;Execute;Thực thi
 Web;Elements:;Phần tử:
 Web;Restrictions:;Hạn chế:
-WebJS;Hide AI Assistant;Ẩn trợ lý AI
-WebJS;AI Assistant;Trợ lý AI
+WebJS;Hide AI Agent;Ẩn trợ lý AI
+WebJS;AI Agent;Trợ lý AI
 WebJS;Running;Đang chạy
 WebJS;Request cancelled.;Yêu cầu đã bị hủy.
 WebJS;Remove from favorites;Xóa khỏi yêu thích
@@ -500,7 +500,7 @@ Web;Configuration;Cấu hình
 Web;Configuration and security;Cấu hình và bảo mật
 Web;Download/Upload;Tải xuống/Tải lên
 Web;Rights;Quyền
-Web;Assistants;Trợ lý
+Web;Agents;Trợ lý
 Web;Folder;Thư mục
 Web;Drag to resize;Kéo để thay đổi kích thước
 WebJS;Copy and paste;Sao chép và dán

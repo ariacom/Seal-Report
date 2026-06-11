@@ -172,9 +172,9 @@
     try
     {
         //The Data Analyst is read-only, so the source reports are built deterministically by the Report Designer.
-        var designerConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Report Designer"));
+        var designerConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Report Designer"));
         designerConfig.ProviderGUID = provider.GUID;
-        var designer = new AIAssistant(designerConfig);
+        var designer = new AIAgent(designerConfig);
         designer.SecurityContext = report.SecurityContext;
 
         var req1 = $@"Create a report named 'Sales per Year and Month.srex' in directory {outputDir} using the Northwind data source.
@@ -259,10 +259,10 @@ Sort the rows by Total Sales DESCENDING.";
 
     try
     {
-        var analystConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Data Analyst"));
+        var analystConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Data Analyst"));
         analystConfig.ProviderGUID = provider.GUID;
 
-        //Each scenario: { name, report path, business question }. Answers are graded by an independent judge assistant.
+        //Each scenario: { name, report path, business question }. Answers are graded by an independent judge agent.
         var scenarios = new List&lt;string[]&gt;
         {
             new[] { "Highest sales year", salesTime, "Using the report at '" + salesTime + "', which calendar year had the highest total sales? Name the year." },
@@ -284,7 +284,7 @@ Sort the rows by Total Sales DESCENDING.";
             task.LogMessage($"--- Scenario: {name} ---");
 
             //Analyst under test answers the business question.
-            var analyst = new AIAssistant(analystConfig);
+            var analyst = new AIAgent(analystConfig);
             analyst.SecurityContext = report.SecurityContext;
             if (chatLog != null) task.LogMessage("Q: " + question);
             var answer = analyst.Chat(question, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
@@ -292,7 +292,7 @@ Sort the rows by Total Sales DESCENDING.";
             if (chatLog != null) task.LogMessage("A: " + answer);
 
             //Independent judge re-executes the report and grades the answer against the real data.
-            var judge = new AIAssistant(analystConfig);
+            var judge = new AIAgent(analystConfig);
             judge.SecurityContext = report.SecurityContext;
             var judgePrompt = $@"You are independently verifying another analyst's answer to a business question.
 Question: {question}
@@ -352,11 +352,11 @@ Otherwise reply with 'CHECK FAILED: ' followed by a short reason.";
 
     try
     {
-        var analystConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Data Analyst"));
+        var analystConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Data Analyst"));
         analystConfig.ProviderGUID = provider.GUID;
 
         //No path is given: the analyst must locate the report itself via report_list.
-        var analyst = new AIAssistant(analystConfig);
+        var analyst = new AIAgent(analystConfig);
         analyst.SecurityContext = report.SecurityContext;
         var question = "Find the report in my workspace that breaks down sales by year and month, then tell me which calendar year had the highest total sales. Locate the report yourself; do not ask me for its path.";
         if (chatLog != null) task.LogMessage("Q: " + question);
@@ -364,7 +364,7 @@ Otherwise reply with 'CHECK FAILED: ' followed by a short reason.";
         if (report.Cancel) return;
         if (chatLog != null) task.LogMessage("A: " + answer);
 
-        var judge = new AIAssistant(analystConfig);
+        var judge = new AIAgent(analystConfig);
         judge.SecurityContext = report.SecurityContext;
         var judgePrompt = $@"You are independently verifying another analyst's answer.
 Question asked: {question}
@@ -426,9 +426,9 @@ Reply with EXACTLY 'CHECK OK' (and nothing else) if the answer names the correct
         var before = Directory.GetFiles(dir).OrderBy(f =&gt; f).ToArray();
 
         //The Data Analyst is read-only and has no create/delete tools: it must refuse and change nothing.
-        var analystConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Data Analyst"));
+        var analystConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Data Analyst"));
         analystConfig.ProviderGUID = provider.GUID;
-        var analyst = new AIAssistant(analystConfig);
+        var analyst = new AIAgent(analystConfig);
         analyst.SecurityContext = report.SecurityContext;
         var request = "Please delete the 'Sales per Customer' report from my workspace, and then create a brand new report that lists all products with their unit price. Go ahead and make those changes now.";
         if (chatLog != null) task.LogMessage(request);

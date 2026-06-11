@@ -62,7 +62,7 @@ class SWIMain {
             if ((e.keyCode || e.which) == 13)
                 _main.checkSecurityCode();
         });
-        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-assistant-button,#search-pattern,#search-nav-item"), false);
+        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-agent-button,#search-pattern,#search-nav-item"), false);
         $("#login-modal-submit").unbind("click").on("click", function () {
             _main.login();
         });
@@ -141,7 +141,7 @@ class SWIMain {
             location.reload();
         }
         _main._profile = data;
-        SWIUtil.ShowHideControl($("#ai-panel-toggle, #ai-chat-panel"), data.hasassistant);
+        SWIUtil.ShowHideControl($("#ai-panel-toggle, #ai-chat-panel"), data.hasagent);
         _main._reportPath = "";
         _main._folder = null;
         _main._searchMode = false;
@@ -191,7 +191,7 @@ class SWIMain {
         }
         if (_editor) {
             _editor.brand();
-            _editor.assistantMenu();
+            _editor.agentMenu();
         }
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
@@ -199,7 +199,7 @@ class SWIMain {
             if (SWIUtil.IsMobile())
                 $('.navbar-toggle').click();
             if (_editor)
-                _editor.assistantMenu();
+                _editor.agentMenu();
         });
         //Reload and execute
         $("#reload-nav-item").unbind("click").on("click", function () {
@@ -266,7 +266,7 @@ class SWIMain {
             _gateway.Logout(function () {
                 $("#report-body").empty();
                 $("#nav_button").text("");
-                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-assistant-button,#search-pattern,#search-nav-item"), false);
+                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-agent-button,#search-pattern,#search-nav-item"), false);
                 if (window.aiPanel)
                     window.aiPanel.reset();
                 _main.showLogin();
@@ -477,7 +477,7 @@ class SWIMain {
                     EditConfiguration: false,
                     EditProfile: true,
                     PersFolderRight: 2,
-                    AssistantGUIDs: []
+                    AgentGUIDs: []
                 };
                 _main._config.groups.push(newGroup);
                 _main._configGroup = newGroup;
@@ -512,23 +512,23 @@ class SWIMain {
             detail.PersFolderRight = $(event.target).val();
         });
         $select.selectpicker('refresh');
-        var $selectAssistant = $("#config-group-assistant");
-        $selectAssistant.unbind("change");
-        $selectAssistant.selectpicker("destroy");
-        $selectAssistant.empty();
-        if (_main._config.assistants) {
-            var guids = detail.AssistantGUIDs || [];
-            $.each(_main._config.assistants, function (key, value) {
+        var $selectAgent = $("#config-group-agent");
+        $selectAgent.unbind("change");
+        $selectAgent.selectpicker("destroy");
+        $selectAgent.empty();
+        if (_main._config.agents) {
+            var guids = detail.AgentGUIDs || [];
+            $.each(_main._config.agents, function (key, value) {
                 var $opt = $("<option>").attr("value", value.Key).html(value.Value);
                 if (guids.indexOf(value.Key) >= 0)
                     $opt.attr("selected", "true");
-                $selectAssistant.append($opt);
+                $selectAgent.append($opt);
             });
         }
-        $selectAssistant.unbind("change").on("change", (event) => {
-            detail.AssistantGUIDs = $(event.target).val() || [];
+        $selectAgent.unbind("change").on("change", (event) => {
+            detail.AgentGUIDs = $(event.target).val() || [];
         });
-        $selectAssistant.selectpicker('refresh');
+        $selectAgent.selectpicker('refresh');
         SWIUtil.ShowHideControl($("#config-group-downloadupload-row"), _main._config.downloadupload);
         if (_main._config.downloadupload) {
             var $select = $("#config-group-downloadupload");
@@ -879,7 +879,7 @@ class SWIMain {
         setTimeout(function () {
             SWIUtil.RefreshMenu(_main);
             if (_editor)
-                _editor.assistantMenu();
+                _editor.agentMenu();
         }, 1000);
     }
     executeReport(path, viewGUID, outputGUID) {

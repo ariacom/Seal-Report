@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Ja (Användaren kan bläddra i undermapp
 WebJS;Yes (User can create and edit sub-folders);Ja (Användaren kan skapa och redigera undermappar)
 WebJS;Yes (User can edit his profile);Ja (Användaren kan redigera sin profil)
 WebJS;Yes (User is administrator of the Web Server);Ja (Användaren är administratör för webbservern)
-Web;Select assistant;Välj assistent
+Web;Select agent;Välj assistent
 Web;Mark as favorite;Markera som favorit
 Web;Favorites;Favoriter
 Web;No favorites yet;Inga favoriter ännu
@@ -435,14 +435,14 @@ Web;New conversation;Ny konversation
 Web;Sample prompts;Exempelprompter
 Web;Sample Prompts;Exempelprompter
 Web;No sample prompts defined;Inga exempelprompter definierade
-Web;AI Assistant;AI-assistent
+Web;AI Agent;AI-assistent
 Web;Favorites & Recent;Favoriter och senaste
 Web;Hide panel;Dölj panel
-Web;Ask the AI assistant…;Fråga AI-assistenten…
+Web;Ask the AI agent…;Fråga AI-assistenten…
 Web;Confirm Deletion;Bekräfta borttagning
 Web;This action is irreversible. Are you sure you want to delete this item?;Den här åtgärden är oåterkallelig. Är du säker på att du vill ta bort det här objektet?
 Web;Data Source;Datakälla
-Web;Report Assistants;Rapportassistenter
+Web;Report Agents;Rapportassistenter
 Web;Select Tables or Views;Välj tabeller eller vyer
 Web;Filter tables...;Filtrera tabeller...
 Web;Select All;Markera alla
@@ -454,24 +454,24 @@ Web;No current items available;Inga aktuella objekt tillgängliga
 Web;Current items will appear here when saved;Aktuella objekt visas här när de sparas
 Web;Drafts;Utkast
 Web;No draft items available;Inga utkastobjekt tillgängliga
-Web;Upload files or create new items with the assistant to see them here;Ladda upp filer eller skapa nya objekt med assistenten för att se dem här
+Web;Upload files or create new items with the agent to see them here;Ladda upp filer eller skapa nya objekt med assistenten för att se dem här
 Web;Item Details;Objektdetaljer
 Web;Loading detail. Please wait...;Laddar detalj. Vänta...
 Web;Select a row from the table to view its details;Välj en rad i tabellen för att visa dess detaljer
 Web;Check;Kontrollera
 Web;Download;Ladda ner
-Web;Reports Assistant;Rapportassistent
+Web;Reports Agent;Rapportassistent
 Web;Connection type;Anslutningstyp
 Web;Connection string;Anslutningssträng
 Web;Tables or views;Tabeller eller vyer
-Web;Report Assistant;Rapportassistent
+Web;Report Agent;Rapportassistent
 Web;AI Provider;AI-leverantör
 Web;AI model;AI-modell
 Web;AI model name (overrides default));AI-modellnamn (åsidosätter standard))
 Web;Temperature;Temperatur
 Web;Model temperature;Modelltemperatur
 Web;System prompt;Systemprompt
-Web;Optional sytem prompt for the assistant;Valfri systemprompt för assistenten
+Web;Optional sytem prompt for the agent;Valfri systemprompt för assistenten
 Web;User prompt;Användarprompt
 Web;Default user prompts (if empty default values configured are taken);Standardanvändarprompter (om tom används konfigurerade standardvärden)
 Web;User Groups allowed (No selection means no restriction);Tillåtna användargrupper (Ingen markering innebär ingen begränsning)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Skanna data nu
 Web;Execute;Kör
 Web;Elements:;Element:
 Web;Restrictions:;Begränsningar:
-WebJS;Hide AI Assistant;Dölj AI-assistent
-WebJS;AI Assistant;AI-assistent
+WebJS;Hide AI Agent;Dölj AI-assistent
+WebJS;AI Agent;AI-assistent
 WebJS;Running;Körs
 WebJS;Request cancelled.;Begäran avbruten.
 WebJS;Remove from favorites;Ta bort från favoriter
@@ -500,7 +500,7 @@ Web;Configuration;Konfiguration
 Web;Configuration and security;Konfiguration och säkerhet
 Web;Download/Upload;Nedladdning/Uppladdning
 Web;Rights;Rättigheter
-Web;Assistants;Assistenter
+Web;Agents;Assistenter
 Web;Folder;Mapp
 Web;Drag to resize;Dra för att ändra storlek
 WebJS;Copy and paste;Kopiera och klistra in

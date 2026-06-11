@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Sí (El usuario puede explorar subcarpet
 WebJS;Yes (User can create and edit sub-folders);Sí (El usuario puede crear y editar subcarpetas)
 WebJS;Yes (User can edit his profile);Sí (El usuario puede editar su perfil)
 WebJS;Yes (User is administrator of the Web Server);Sí (El usuario es administrador del servidor web)
-Web;Select assistant;Seleccionar asistente
+Web;Select agent;Seleccionar asistente
 Web;Mark as favorite;Marcar como favorito
 Web;Favorites;Favoritos
 Web;No favorites yet;Aún no hay favoritos
@@ -435,14 +435,14 @@ Web;New conversation;Nueva conversación
 Web;Sample prompts;Indicaciones de ejemplo
 Web;Sample Prompts;Indicaciones de ejemplo
 Web;No sample prompts defined;No hay indicaciones de ejemplo definidas
-Web;AI Assistant;Asistente de IA
+Web;AI Agent;Asistente de IA
 Web;Favorites & Recent;Favoritos y recientes
 Web;Hide panel;Ocultar panel
-Web;Ask the AI assistant…;Pregunte al asistente de IA…
+Web;Ask the AI agent…;Pregunte al asistente de IA…
 Web;Confirm Deletion;Confirmar eliminación
 Web;This action is irreversible. Are you sure you want to delete this item?;Esta acción es irreversible. ¿Está seguro de que desea eliminar este elemento?
 Web;Data Source;Origen de datos
-Web;Report Assistants;Asistentes de informes
+Web;Report Agents;Asistentes de informes
 Web;Select Tables or Views;Seleccionar tablas o vistas
 Web;Filter tables...;Filtrar tablas...
 Web;Select All;Seleccionar todo
@@ -454,24 +454,24 @@ Web;No current items available;No hay elementos actuales disponibles
 Web;Current items will appear here when saved;Los elementos actuales aparecerán aquí cuando se guarden
 Web;Drafts;Borradores
 Web;No draft items available;No hay borradores disponibles
-Web;Upload files or create new items with the assistant to see them here;Cargue archivos o cree nuevos elementos con el asistente para verlos aquí
+Web;Upload files or create new items with the agent to see them here;Cargue archivos o cree nuevos elementos con el asistente para verlos aquí
 Web;Item Details;Detalles del elemento
 Web;Loading detail. Please wait...;Cargando detalle. Espere...
 Web;Select a row from the table to view its details;Seleccione una fila de la tabla para ver sus detalles
 Web;Check;Comprobar
 Web;Download;Descargar
-Web;Reports Assistant;Asistente de informes
+Web;Reports Agent;Asistente de informes
 Web;Connection type;Tipo de conexión
 Web;Connection string;Cadena de conexión
 Web;Tables or views;Tablas o vistas
-Web;Report Assistant;Asistente de informes
+Web;Report Agent;Asistente de informes
 Web;AI Provider;Proveedor de IA
 Web;AI model;Modelo de IA
 Web;AI model name (overrides default));Nombre del modelo de IA (anula el predeterminado))
 Web;Temperature;Temperatura
 Web;Model temperature;Temperatura del modelo
 Web;System prompt;Indicación del sistema
-Web;Optional sytem prompt for the assistant;Indicación del sistema opcional para el asistente
+Web;Optional sytem prompt for the agent;Indicación del sistema opcional para el asistente
 Web;User prompt;Indicación del usuario
 Web;Default user prompts (if empty default values configured are taken);Indicaciones del usuario predeterminadas (si está vacío se toman los valores predeterminados configurados)
 Web;User Groups allowed (No selection means no restriction);Grupos de usuarios permitidos (Sin selección significa sin restricción)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Escanear datos ahora
 Web;Execute;Ejecuta
 Web;Elements:;Elementos:
 Web;Restrictions:;Restricciones:
-WebJS;Hide AI Assistant;Ocultar asistente de IA
-WebJS;AI Assistant;Asistente de IA
+WebJS;Hide AI Agent;Ocultar asistente de IA
+WebJS;AI Agent;Asistente de IA
 WebJS;Running;Ejecutando
 WebJS;Request cancelled.;Solicitud cancelada.
 WebJS;Remove from favorites;Quitar de favoritos
@@ -500,7 +500,7 @@ Web;Configuration;Configuración
 Web;Configuration and security;Configuración y seguridad
 Web;Download/Upload;Descarga/Carga
 Web;Rights;Derechos
-Web;Assistants;Asistentes
+Web;Agents;Asistentes
 Web;Folder;Carpeta
 Web;Drag to resize;Arrastrar para cambiar el tamaño
 WebJS;Copy and paste;Copiar y pegar

@@ -1,4 +1,4 @@
-# Sample prompts for the Seal Report AI Assistant
+# Sample prompts for the Seal Report AI Agent
 # One prompt per line. Blank lines and lines starting with # are ignored.
 
 # --- Data exploration ---

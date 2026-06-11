@@ -60,7 +60,7 @@ namespace Seal.AI
 
         /// <summary>
         /// Optional cancellation source propagated from the outer
-        /// <see cref="AIAssistant.Chat"/> loop.  Execution scripts should
+        /// <see cref="AIAgent.Chat"/> loop.  Execution scripts should
         /// poll <c>CancelOperation?.Cancel</c> inside any long-running loop
         /// and abort early when it is <c>true</c>.
         /// </summary>

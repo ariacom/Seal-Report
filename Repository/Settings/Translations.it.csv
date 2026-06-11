@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Sì (l'utente può esplorare le sottocar
 WebJS;Yes (User can create and edit sub-folders);Sì (l'utente può creare e modificare le sottocartelle)
 WebJS;Yes (User can edit his profile);Sì (l'utente può modificare il proprio profilo)
 WebJS;Yes (User is administrator of the Web Server);Sì (l'utente è amministratore del server web)
-Web;Select assistant;Seleziona assistente
+Web;Select agent;Seleziona assistente
 Web;Mark as favorite;Segna come preferito
 Web;Favorites;Preferiti
 Web;No favorites yet;Ancora nessun preferito
@@ -435,14 +435,14 @@ Web;New conversation;Nuova conversazione
 Web;Sample prompts;Prompt di esempio
 Web;Sample Prompts;Prompt di esempio
 Web;No sample prompts defined;Nessun prompt di esempio definito
-Web;AI Assistant;Assistente IA
+Web;AI Agent;Assistente IA
 Web;Favorites & Recent;Preferiti e recenti
 Web;Hide panel;Nascondi pannello
-Web;Ask the AI assistant…;Chiedi all'assistente IA…
+Web;Ask the AI agent…;Chiedi all'assistente IA…
 Web;Confirm Deletion;Conferma eliminazione
 Web;This action is irreversible. Are you sure you want to delete this item?;Questa azione è irreversibile. Sei sicuro di voler eliminare questo elemento?
 Web;Data Source;Origine dati
-Web;Report Assistants;Assistenti report
+Web;Report Agents;Assistenti report
 Web;Select Tables or Views;Seleziona tabelle o viste
 Web;Filter tables...;Filtra tabelle...
 Web;Select All;Seleziona tutto
@@ -454,24 +454,24 @@ Web;No current items available;Nessun elemento corrente disponibile
 Web;Current items will appear here when saved;Gli elementi correnti appariranno qui quando salvati
 Web;Drafts;Bozze
 Web;No draft items available;Nessuna bozza disponibile
-Web;Upload files or create new items with the assistant to see them here;Carica file o crea nuovi elementi con l'assistente per vederli qui
+Web;Upload files or create new items with the agent to see them here;Carica file o crea nuovi elementi con l'assistente per vederli qui
 Web;Item Details;Dettagli elemento
 Web;Loading detail. Please wait...;Caricamento dei dettagli. Attendere...
 Web;Select a row from the table to view its details;Seleziona una riga dalla tabella per visualizzarne i dettagli
 Web;Check;Controlla
 Web;Download;Scarica
-Web;Reports Assistant;Assistente report
+Web;Reports Agent;Assistente report
 Web;Connection type;Tipo di connessione
 Web;Connection string;Stringa di connessione
 Web;Tables or views;Tabelle o viste
-Web;Report Assistant;Assistente report
+Web;Report Agent;Assistente report
 Web;AI Provider;Provider IA
 Web;AI model;Modello IA
 Web;AI model name (overrides default));Nome del modello IA (sostituisce il valore predefinito))
 Web;Temperature;Temperatura
 Web;Model temperature;Temperatura del modello
 Web;System prompt;Prompt di sistema
-Web;Optional sytem prompt for the assistant;Prompt di sistema opzionale per l'assistente
+Web;Optional sytem prompt for the agent;Prompt di sistema opzionale per l'assistente
 Web;User prompt;Prompt utente
 Web;Default user prompts (if empty default values configured are taken);Prompt utente predefiniti (se vuoto vengono usati i valori predefiniti configurati)
 Web;User Groups allowed (No selection means no restriction);Gruppi utente consentiti (nessuna selezione significa nessuna restrizione)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Scansiona dati ora
 Web;Execute;Esegui
 Web;Elements:;Elementi:
 Web;Restrictions:;Restrizioni:
-WebJS;Hide AI Assistant;Nascondi assistente IA
-WebJS;AI Assistant;Assistente IA
+WebJS;Hide AI Agent;Nascondi assistente IA
+WebJS;AI Agent;Assistente IA
 WebJS;Running;In esecuzione
 WebJS;Request cancelled.;Richiesta annullata.
 WebJS;Remove from favorites;Rimuovi dai preferiti
@@ -500,7 +500,7 @@ Web;Configuration;Configurazione
 Web;Configuration and security;Configurazione e sicurezza
 Web;Download/Upload;Scarica/Carica
 Web;Rights;Diritti
-Web;Assistants;Assistenti
+Web;Agents;Assistenti
 Web;Folder;Repertorio
 Web;Drag to resize;Trascina per ridimensionare
 WebJS;Copy and paste;Copia e incolla

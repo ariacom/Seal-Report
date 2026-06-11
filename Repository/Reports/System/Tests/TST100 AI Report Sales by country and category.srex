@@ -168,10 +168,10 @@
 
     task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
 
-    var assistantConfig = (AIAssistantConfiguration)Helper.Clone(config.AIAssistants.First(a =&gt; a.Name == "Report Designer"));
-    assistantConfig.ProviderGUID = provider.GUID;
-    var assistant = new AIAssistant(assistantConfig);
-    assistant.SecurityContext = report.SecurityContext;
+    var agentConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Report Designer"));
+    agentConfig.ProviderGUID = provider.GUID;
+    var agent = new AIAgent(agentConfig);
+    agent.SecurityContext = report.SecurityContext;
 
         var request = $@"
         Create a report named 'Sales by country and product category in 1997.srex' in directory {outputDir} using the Northwind data source.
@@ -192,12 +192,12 @@
         Force the report execution using the current restrictions.
     ";
         if (chatLog != null) task.LogMessage(request);
-        assistant.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
         //Check report created and get its file path
         var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
-        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the assistant call.");
+        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the agent call.");
         var reportFilePath = reportFiles[0];
 
         //Structural checks on the created report

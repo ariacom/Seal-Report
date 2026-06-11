@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Так (Користувач може п
 WebJS;Yes (User can create and edit sub-folders);Так (Користувач може створювати та редагувати підпапки)
 WebJS;Yes (User can edit his profile);Так (Користувач може редагувати свій профіль)
 WebJS;Yes (User is administrator of the Web Server);Так (Користувач є адміністратором вебсервера)
-Web;Select assistant;Вибрати асистента
+Web;Select agent;Вибрати асистента
 Web;Mark as favorite;Позначити як обране
 Web;Favorites;Обране
 Web;No favorites yet;Обраного ще немає
@@ -435,14 +435,14 @@ Web;New conversation;Нова розмова
 Web;Sample prompts;Зразки запитів
 Web;Sample Prompts;Зразки запитів
 Web;No sample prompts defined;Зразки запитів не визначено
-Web;AI Assistant;AI-асистент
+Web;AI Agent;AI-асистент
 Web;Favorites & Recent;Обране та останні
 Web;Hide panel;Сховати панель
-Web;Ask the AI assistant…;Запитайте AI-асистента…
+Web;Ask the AI agent…;Запитайте AI-асистента…
 Web;Confirm Deletion;Підтвердити видалення
 Web;This action is irreversible. Are you sure you want to delete this item?;Цю дію неможливо скасувати. Ви впевнені, що хочете видалити цей елемент?
 Web;Data Source;Джерело даних
-Web;Report Assistants;Асистенти звітів
+Web;Report Agents;Асистенти звітів
 Web;Select Tables or Views;Виберіть таблиці або подання
 Web;Filter tables...;Фільтрувати таблиці...
 Web;Select All;Вибрати все
@@ -454,24 +454,24 @@ Web;No current items available;Немає доступних поточних е
 Web;Current items will appear here when saved;Поточні елементи з'являться тут після збереження
 Web;Drafts;Чернетки
 Web;No draft items available;Немає доступних чернеток
-Web;Upload files or create new items with the assistant to see them here;Вивантажте файли або створіть нові елементи за допомогою асистента, щоб побачити їх тут
+Web;Upload files or create new items with the agent to see them here;Вивантажте файли або створіть нові елементи за допомогою асистента, щоб побачити їх тут
 Web;Item Details;Деталі елемента
 Web;Loading detail. Please wait...;Завантаження деталей. Будь ласка, зачекайте...
 Web;Select a row from the table to view its details;Виберіть рядок із таблиці, щоб переглянути його деталі
 Web;Check;Перевірити
 Web;Download;Завантажити
-Web;Reports Assistant;Асистент звітів
+Web;Reports Agent;Асистент звітів
 Web;Connection type;Тип підключення
 Web;Connection string;Рядок підключення
 Web;Tables or views;Таблиці або подання
-Web;Report Assistant;Асистент звіту
+Web;Report Agent;Асистент звіту
 Web;AI Provider;Постачальник AI
 Web;AI model;Модель AI
 Web;AI model name (overrides default));Назва моделі AI (перевизначає за замовчуванням))
 Web;Temperature;Температура
 Web;Model temperature;Температура моделі
 Web;System prompt;Системний запит
-Web;Optional sytem prompt for the assistant;Необов'язковий системний запит для асистента
+Web;Optional sytem prompt for the agent;Необов'язковий системний запит для асистента
 Web;User prompt;Запит користувача
 Web;Default user prompts (if empty default values configured are taken);Запити користувача за замовчуванням (якщо порожньо, беруться налаштовані значення за замовчуванням)
 Web;User Groups allowed (No selection means no restriction);Дозволені групи користувачів (Відсутність вибору означає без обмежень)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Сканувати дані зараз
 Web;Execute;Виконати
 Web;Elements:;Елементи:
 Web;Restrictions:;Обмеження:
-WebJS;Hide AI Assistant;Сховати AI-асистента
-WebJS;AI Assistant;AI-асистент
+WebJS;Hide AI Agent;Сховати AI-асистента
+WebJS;AI Agent;AI-асистент
 WebJS;Running;Виконується
 WebJS;Request cancelled.;Запит скасовано.
 WebJS;Remove from favorites;Видалити з обраного
@@ -500,7 +500,7 @@ Web;Configuration;Конфігурація
 Web;Configuration and security;Конфігурація та безпека
 Web;Download/Upload;Завантаження/Вивантаження
 Web;Rights;Права
-Web;Assistants;Помічники
+Web;Agents;Помічники
 Web;Folder;Папка
 Web;Drag to resize;Перетягніть, щоб змінити розмір
 WebJS;Copy and paste;Копіювати та вставити

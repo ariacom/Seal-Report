@@ -299,7 +299,7 @@ namespace Seal.Model
 
         Seal.AI.AIServerConfiguration _aiConfiguration = null;
         /// <summary>
-        /// Current AI configuration (providers, tools, assistants)
+        /// Current AI configuration (providers, tools, agents)
         /// </summary>
         public Seal.AI.AIServerConfiguration AIConfiguration
         {

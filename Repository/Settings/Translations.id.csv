@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Ya (Pengguna dapat menelusuri sub-folder
 WebJS;Yes (User can create and edit sub-folders);Ya (Pengguna dapat membuat dan mengedit sub-folder)
 WebJS;Yes (User can edit his profile);Ya (Pengguna dapat mengedit profilnya)
 WebJS;Yes (User is administrator of the Web Server);Ya (Pengguna adalah administrator Server Web)
-Web;Select assistant;Pilih asisten
+Web;Select agent;Pilih asisten
 Web;Mark as favorite;Tandai sebagai favorit
 Web;Favorites;Favorit
 Web;No favorites yet;Belum ada favorit
@@ -435,14 +435,14 @@ Web;New conversation;Percakapan baru
 Web;Sample prompts;Contoh prompt
 Web;Sample Prompts;Contoh Prompt
 Web;No sample prompts defined;Tidak ada contoh prompt yang ditentukan
-Web;AI Assistant;Asisten AI
+Web;AI Agent;Asisten AI
 Web;Favorites & Recent;Favorit & Terbaru
 Web;Hide panel;Sembunyikan panel
-Web;Ask the AI assistant…;Tanyakan kepada asisten AI…
+Web;Ask the AI agent…;Tanyakan kepada asisten AI…
 Web;Confirm Deletion;Konfirmasi Penghapusan
 Web;This action is irreversible. Are you sure you want to delete this item?;Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin ingin menghapus item ini?
 Web;Data Source;Sumber Data
-Web;Report Assistants;Asisten Laporan
+Web;Report Agents;Asisten Laporan
 Web;Select Tables or Views;Pilih Tabel atau Tampilan
 Web;Filter tables...;Filter tabel...
 Web;Select All;Pilih Semua
@@ -454,24 +454,24 @@ Web;No current items available;Tidak ada item saat ini yang tersedia
 Web;Current items will appear here when saved;Item saat ini akan muncul di sini ketika disimpan
 Web;Drafts;Draf
 Web;No draft items available;Tidak ada item draf yang tersedia
-Web;Upload files or create new items with the assistant to see them here;Unggah file atau buat item baru dengan asisten untuk melihatnya di sini
+Web;Upload files or create new items with the agent to see them here;Unggah file atau buat item baru dengan asisten untuk melihatnya di sini
 Web;Item Details;Detail Item
 Web;Loading detail. Please wait...;Memuat detail. Mohon tunggu...
 Web;Select a row from the table to view its details;Pilih baris dari tabel untuk melihat detailnya
 Web;Check;Periksa
 Web;Download;Unduh
-Web;Reports Assistant;Asisten Laporan
+Web;Reports Agent;Asisten Laporan
 Web;Connection type;Tipe koneksi
 Web;Connection string;String koneksi
 Web;Tables or views;Tabel atau tampilan
-Web;Report Assistant;Asisten Laporan
+Web;Report Agent;Asisten Laporan
 Web;AI Provider;Penyedia AI
 Web;AI model;Model AI
 Web;AI model name (overrides default));Nama model AI (menggantikan bawaan))
 Web;Temperature;Suhu
 Web;Model temperature;Suhu model
 Web;System prompt;Prompt sistem
-Web;Optional sytem prompt for the assistant;Prompt sistem opsional untuk asisten
+Web;Optional sytem prompt for the agent;Prompt sistem opsional untuk asisten
 Web;User prompt;Prompt pengguna
 Web;Default user prompts (if empty default values configured are taken);Prompt pengguna bawaan (jika kosong, nilai bawaan yang dikonfigurasi akan digunakan)
 Web;User Groups allowed (No selection means no restriction);Grup Pengguna yang diizinkan (Tidak ada pilihan berarti tanpa batasan)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Pindai Data Sekarang
 Web;Execute;Jalankan
 Web;Elements:;Elemen:
 Web;Restrictions:;Pembatasan:
-WebJS;Hide AI Assistant;Sembunyikan Asisten AI
-WebJS;AI Assistant;Asisten AI
+WebJS;Hide AI Agent;Sembunyikan Asisten AI
+WebJS;AI Agent;Asisten AI
 WebJS;Running;Berjalan
 WebJS;Request cancelled.;Permintaan dibatalkan.
 WebJS;Remove from favorites;Hapus dari favorit
@@ -500,7 +500,7 @@ Web;Configuration;Konfigurasi
 Web;Configuration and security;Konfigurasi dan keamanan
 Web;Download/Upload;Unduh/Unggah
 Web;Rights;Hak
-Web;Assistants;Asisten
+Web;Agents;Asisten
 Web;Folder;Folder
 Web;Drag to resize;Seret untuk mengubah ukuran
 WebJS;Copy and paste;Salin dan tempel

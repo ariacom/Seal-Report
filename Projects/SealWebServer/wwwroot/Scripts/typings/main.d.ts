@@ -35,5 +35,5 @@ interface JQuery {
 interface ReportEditorInterface {
     brand(): void;
     init(): void;
-    assistantMenu(): void;
+    agentMenu(): void;
 }

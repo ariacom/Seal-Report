@@ -164,8 +164,8 @@ namespace Seal.Model
             string folderPath = folder.GetFullPath();
             foreach (string subFolder in Directory.GetDirectories(folderPath))
             {
-                // _Assistant is a hidden system folder – never expose it in the browser
-                if (folder.IsPersonal && Path.GetFileName(subFolder) == AssistantFolders.FolderName) continue;
+                // _Agents is a hidden system folder – never expose it in the browser
+                if (folder.IsPersonal && Path.GetFileName(subFolder) == AgentFolders.FolderName) continue;
 
                 SWIFolder sub = GetFolder(folder.Combine(subFolder));
                 //Add if right on this folder, or a sub folder is defined with this root
@@ -553,29 +553,29 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// AI Assistant configurations assigned to this user via the DefaultGroup AssistantGUIDs.
-        /// Returns an empty list if no group is set or no enabled assistants are found.
+        /// AI Agent configurations assigned to this user via the DefaultGroup AgentGUIDs.
+        /// Returns an empty list if no group is set or no enabled agents are found.
         /// </summary>
-        public List<AIAssistantConfiguration> AssistantConfigurations
+        public List<AIAgentConfiguration> AgentConfigurations
         {
             get
             {
                 var group = DefaultGroup;
-                if (group == null) return new List<AIAssistantConfiguration>();
-                return group.AssistantGUIDs
-                    .Select(guid => Repository.Instance.AIConfiguration.AIAssistants.Find(a => a.GUID == guid && a.IsEnabled))
+                if (group == null) return new List<AIAgentConfiguration>();
+                return group.AgentGUIDs
+                    .Select(guid => Repository.Instance.AIConfiguration.AIAgents.Find(a => a.GUID == guid && a.IsEnabled))
                     .Where(a => a != null)
                     .ToList();
             }
         }
 
         /// <summary>
-        /// First AI Assistant configuration assigned to this user via the DefaultGroup AssistantGUIDs.
-        /// Returns null if no group is set or no enabled assistants are found.
+        /// First AI Agent configuration assigned to this user via the DefaultGroup AgentGUIDs.
+        /// Returns null if no group is set or no enabled agents are found.
         /// </summary>
-        public AIAssistantConfiguration AssistantConfiguration
+        public AIAgentConfiguration AgentConfiguration
         {
-            get { return AssistantConfigurations.FirstOrDefault(); }
+            get { return AgentConfigurations.FirstOrDefault(); }
         }
 
         /// <summary>

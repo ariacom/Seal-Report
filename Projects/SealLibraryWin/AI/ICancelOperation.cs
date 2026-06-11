@@ -6,7 +6,7 @@ namespace Seal.AI
 {
     /// <summary>
     /// Provides a simple cancellation flag that can be checked during long-running
-    /// operations such as an AI assistant chat loop.
+    /// operations such as an AI agent chat loop.
     /// </summary>
     public interface ICancelOperation
     {

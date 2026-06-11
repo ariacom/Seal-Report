@@ -16,14 +16,14 @@ using DynamicTypeDescriptor;
 namespace Seal.AI
 {
     /// <summary>
-    /// Configuration for an AI assistant: ties together one provider, an optional subset of tools,
-    /// and a default system prompt. Stored in <see cref="Seal.AI.AIServerConfiguration.AIAssistants"/>.
+    /// Configuration for an AI agent: ties together one provider, an optional subset of tools,
+    /// and a default system prompt. Stored in <see cref="Seal.AI.AIServerConfiguration.AIAgents"/>.
     /// </summary>
-    public class AIAssistantConfiguration : RootEditor
+    public class AIAgentConfiguration : RootEditor
     {
         /// <summary>
-        /// Display name shown in the property-grid dropdown for an empty default assistant,
-        /// meaning the first enabled assistant is used.
+        /// Display name shown in the property-grid dropdown for an empty default agent,
+        /// meaning the first enabled agent is used.
         /// </summary>
         public const string FirstEnabledName = "<First Enabled>";
 
@@ -52,16 +52,16 @@ namespace Seal.AI
 #endif
 
         /// <summary>
-        /// Unique identifier for this assistant configuration.
+        /// Unique identifier for this agent configuration.
         /// </summary>
         public string GUID { get; set; } = Guid.NewGuid().ToString();
 
-        string _name = "Assistant";
+        string _name = "Agent";
         /// <summary>
-        /// Display name of this assistant configuration.
+        /// Display name of this agent configuration.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\tAssistant name"), Description("Display name of this AI assistant."), Id(1, 1)]
+        [Category("Definition"), DisplayName("\t\tAgent name"), Description("Display name of this AI agent."), Id(1, 1)]
 #endif
         public string Name
         {
@@ -71,10 +71,10 @@ namespace Seal.AI
 
         string _description = "";
         /// <summary>
-        /// Short description of what this assistant can do.
+        /// Short description of what this agent can do.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\tDescription"), Description("Short description of what this assistant can do."), Id(2, 1)]
+        [Category("Definition"), DisplayName("\t\tDescription"), Description("Short description of what this agent can do."), Id(2, 1)]
 #endif
         public string Description
         {
@@ -83,10 +83,10 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// When <c>false</c>, this assistant is excluded from all operations without being deleted.
+        /// When <c>false</c>, this agent is excluded from all operations without being deleted.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\tIs Enabled"), Description("When false, this assistant is excluded from all operations."), Id(4, 1)]
+        [Category("Definition"), DisplayName("\t\tIs Enabled"), Description("When false, this agent is excluded from all operations."), Id(4, 1)]
         [DefaultValue(true)]
 #endif
         public bool IsEnabled { get; set; } = true;
@@ -95,17 +95,17 @@ namespace Seal.AI
         /// GUID of the <see cref="AIProviderConfiguration"/> to use.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\tProvider"), Description("The AI provider to use for this assistant."), Id(5, 1)]
+        [Category("Definition"), DisplayName("\t\tProvider"), Description("The AI provider to use for this agent."), Id(5, 1)]
         [TypeConverter(typeof(AIProviderConverter))]
 #endif
         public string ProviderGUID { get; set; }
 
         /// <summary>
-        /// GUIDs of the <see cref="AIToolConfiguration"/> instances available to this assistant.
+        /// GUIDs of the <see cref="AIToolConfiguration"/> instances available to this agent.
         /// An empty list means all enabled tools are available.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\tTools"), Description("The tools available to this assistant. Leave empty to make all enabled tools available."), Id(6, 1)]
+        [Category("Definition"), DisplayName("\t\tTools"), Description("The tools available to this agent. Leave empty to make all enabled tools available."), Id(6, 1)]
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         [XmlArray("ToolGUIDs")]
@@ -235,7 +235,7 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Returns the list of enabled <see cref="AIToolConfiguration"/> instances available to this assistant.
+        /// Returns the list of enabled <see cref="AIToolConfiguration"/> instances available to this agent.
         /// When <see cref="ToolGUIDs"/> is empty, all enabled tools are returned.
         /// </summary>
         public List<AIToolConfiguration> GetToolConfigurations()
@@ -247,7 +247,7 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Creates and returns the <see cref="IAIProvider"/> for this assistant's provider configuration.
+        /// Creates and returns the <see cref="IAIProvider"/> for this agent's provider configuration.
         /// Returns <c>null</c> when no matching provider configuration is found.
         /// </summary>
         public IAIProvider GetProvider()

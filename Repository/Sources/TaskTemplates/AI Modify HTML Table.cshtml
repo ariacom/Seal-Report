@@ -5,14 +5,14 @@
     task.TemplateDescription = "Uses AI to modify the HTML of a rendered table in the report output.";
     task.Step = ExecutionStep.AfterRendering;
 
-    task.Parameters.Add(new Parameter() { Name = "ai_assistant_name", Value = "", DisplayName = "AI Assistant name", Description = "The AI Assistant name. If empty, the default assistant is used (if configured).", Enums = (from a in Repository.Instance.AIConfiguration.AIAssistants where a.IsEnabled select a.Name).ToArray(), UseOnlyEnumValues = false });
-    task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You are an HTML editing assistant.\r\nThe user will give you an HTML part and editing instructions.\r\nReturn ONLY the complete modified HTML — no explanation, no markdown fences, no commentary. The output must be valid, well-formed HTML.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
+    task.Parameters.Add(new Parameter() { Name = "ai_agent_name", Value = "", DisplayName = "AI Agent name", Description = "The AI Agent name. If empty, the default agent is used (if configured).", Enums = (from a in Repository.Instance.AIConfiguration.AIAgents where a.IsEnabled select a.Name).ToArray(), UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You are an HTML editing agent.\r\nThe user will give you an HTML part and editing instructions.\r\nReturn ONLY the complete modified HTML — no explanation, no markdown fences, no commentary. The output must be valid, well-formed HTML.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "ai_system_additional", TextValue = "", DisplayName = "Additional system prompt", Description = "Additional system information for the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "Highlight cells where the amount exceeds 1000 using a red color gradient from lowest to highest value.", DisplayName = "AI User prompt", Description = "Instructions describing how to modify the HTML table (e.g. highlight cells, reformat values, add styles)." });
     task.Parameters.Add(new Parameter() { Name = "ai_user_additional", TextValue = "", DisplayName = "Additional user prompt", Description = "Additional user information sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "view_name", Value = "", DisplayName = "View name", Description = "The name of the view whose HTML table should be modified. Must match exactly the view name in the report. Server pagination must be disabled in the root Execution view." });
     task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
-    task.Parameters.Add(new Parameter() { Name = "log_ai_tools", BoolValue = false, DisplayName = "Log tool calls", Description = "If enabled, logs the tool calls (arguments and results) executed by the assistant to the task execution log." });
+    task.Parameters.Add(new Parameter() { Name = "log_ai_tools", BoolValue = false, DisplayName = "Log tool calls", Description = "If enabled, logs the tool calls (arguments and results) executed by the agent to the task execution log." });
 
     task.Script = @"@using Seal.AI;
 @using System.IO;
@@ -26,7 +26,7 @@
 
     if (report.Format != ReportFormat.html && report.Format != ReportFormat.print) return;
 
-    var assistantName = task.GetValue(""ai_assistant_name"");
+    var agentName = task.GetValue(""ai_agent_name"");
     var system = task.GetValue(""ai_system_prompt"");
     var systemAdditional = task.GetValue(""ai_system_additional"");
     var user = task.GetValue(""ai_user_prompt"");
@@ -66,9 +66,9 @@
         }
         ReportExecutionLog requestLog = logRequests ? report : null;
         ReportExecutionLog toolsLog = logTools ? report : null;
-        var assistant = new AIAssistant(assistantName);
-        assistant.OverrideSystemPrompt(system);
-        var aiResult = assistant.Chat(user, report, requestLog, toolsLog);
+        var agent = new AIAgent(agentName);
+        agent.OverrideSystemPrompt(system);
+        var aiResult = agent.Chat(user, report, requestLog, toolsLog);
         if (logRequests) task.LogMessage($""[AI Response]\r\n{aiResult}"");
         element.InnerHtml = aiResult;
 

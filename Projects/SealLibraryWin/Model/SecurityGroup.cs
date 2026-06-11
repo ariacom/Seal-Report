@@ -48,7 +48,7 @@ namespace Seal.Model
                 GetProperty("Weight").SetIsBrowsable(true);
                 GetProperty("EditConfiguration").SetIsBrowsable(true);
                 GetProperty("EditProfile").SetIsBrowsable(true);
-                GetProperty("AssistantGUIDs").SetIsBrowsable(true);
+                GetProperty("AgentGUIDs").SetIsBrowsable(true);
                 GetProperty("DownloadUpload").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
@@ -223,14 +223,14 @@ namespace Seal.Model
         public bool EditProfile { get; set; } = true;
 
         /// <summary>
-        /// Web Report Server: The GUIDs of the AI Assistants assigned to users of this group. Leave empty to disable the AI Assistant for this group.
+        /// Web Report Server: The GUIDs of the AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\t\tAI Assistants"), Description("Web Report Server: The AI Assistants assigned to users of this group. Leave empty to disable the AI Assistant for this group."), Id(4, 5)]
+        [Category("Default Options"), DisplayName("\t\tAI Agents"), Description("Web Report Server: The AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group."), Id(4, 5)]
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
-        public List<string> AssistantGUIDs { get; set; } = new List<string>();
-        public bool ShouldSerializeAssistantGUIDs() { return AssistantGUIDs.Count > 0; }
+        public List<string> AgentGUIDs { get; set; } = new List<string>();
+        public bool ShouldSerializeAgentGUIDs() { return AgentGUIDs.Count > 0; }
 
         /// <summary>
         /// Web Report Server: If true, the user can download reports or upload files or reports in the published folders.

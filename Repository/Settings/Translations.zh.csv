@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);是（用户可以浏览子文件夹）
 WebJS;Yes (User can create and edit sub-folders);是（用户可以创建和编辑子文件夹）
 WebJS;Yes (User can edit his profile);是（用户可以编辑其个人资料）
 WebJS;Yes (User is administrator of the Web Server);是（用户是 Web 服务器的管理员）
-Web;Select assistant;选择助手
+Web;Select agent;选择助手
 Web;Mark as favorite;标记为收藏
 Web;Favorites;收藏夹
 Web;No favorites yet;暂无收藏
@@ -435,14 +435,14 @@ Web;New conversation;新建对话
 Web;Sample prompts;示例提示
 Web;Sample Prompts;示例提示
 Web;No sample prompts defined;未定义示例提示
-Web;AI Assistant;AI 助手
+Web;AI Agent;AI 助手
 Web;Favorites & Recent;收藏与最近
 Web;Hide panel;隐藏面板
-Web;Ask the AI assistant…;向 AI 助手提问…
+Web;Ask the AI agent…;向 AI 助手提问…
 Web;Confirm Deletion;确认删除
 Web;This action is irreversible. Are you sure you want to delete this item?;此操作不可逆。确定要删除此项目吗？
 Web;Data Source;数据源
-Web;Report Assistants;报表助手
+Web;Report Agents;报表助手
 Web;Select Tables or Views;选择表或视图
 Web;Filter tables...;筛选表...
 Web;Select All;全选
@@ -454,24 +454,24 @@ Web;No current items available;无可用的当前项目
 Web;Current items will appear here when saved;保存后当前项目将显示在此处
 Web;Drafts;草稿
 Web;No draft items available;无可用的草稿项目
-Web;Upload files or create new items with the assistant to see them here;上传文件或使用助手创建项目以在此处查看
+Web;Upload files or create new items with the agent to see them here;上传文件或使用助手创建项目以在此处查看
 Web;Item Details;项目详情
 Web;Loading detail. Please wait...;正在加载详情。请稍候...
 Web;Select a row from the table to view its details;从表中选择一行以查看其详情
 Web;Check;检查
 Web;Download;下载
-Web;Reports Assistant;报表助手
+Web;Reports Agent;报表助手
 Web;Connection type;连接类型
 Web;Connection string;连接字符串
 Web;Tables or views;表或视图
-Web;Report Assistant;报表助手
+Web;Report Agent;报表助手
 Web;AI Provider;AI 提供商
 Web;AI model;AI 模型
 Web;AI model name (overrides default));AI 模型名称（覆盖默认值）
 Web;Temperature;温度
 Web;Model temperature;模型温度
 Web;System prompt;系统提示
-Web;Optional sytem prompt for the assistant;可选的助手系统提示
+Web;Optional sytem prompt for the agent;可选的助手系统提示
 Web;User prompt;用户提示
 Web;Default user prompts (if empty default values configured are taken);默认用户提示（如果为空，则采用配置的默认值）
 Web;User Groups allowed (No selection means no restriction);允许的用户组（未选择表示无限制）
@@ -486,8 +486,8 @@ Web;Scan Data Now;立即扫描数据
 Web;Execute;执行
 Web;Elements:;元素：
 Web;Restrictions:;限制条件：
-WebJS;Hide AI Assistant;隐藏 AI 助手
-WebJS;AI Assistant;AI 助手
+WebJS;Hide AI Agent;隐藏 AI 助手
+WebJS;AI Agent;AI 助手
 WebJS;Running;正在运行
 WebJS;Request cancelled.;请求已取消。
 WebJS;Remove from favorites;从收藏夹中移除
@@ -500,7 +500,7 @@ Web;Configuration;配置
 Web;Configuration and security;配置和安全
 Web;Download/Upload;下载/上传
 Web;Rights;权限
-Web;Assistants;助手
+Web;Agents;助手
 Web;Folder;文件夹
 Web;Drag to resize;拖动以调整大小
 WebJS;Copy and paste;复制并粘贴

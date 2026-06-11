@@ -294,7 +294,7 @@ table.dataTable {
         animation-duration: 1s;
     }
 
-#assistant-nav-item {
+#agent-nav-item {
     font-size: 20px;
 }
 
@@ -1123,7 +1123,7 @@ body.ai-resizing #footer-div {
     font-size: 16px;
 }
 
-/* Assistant selectpicker in the panel header */
+/* Agent selectpicker in the panel header */
 .ai-panel-title .bootstrap-select {
     margin: 0;
 }
@@ -1162,7 +1162,7 @@ body.ai-resizing #footer-div {
 .ai-panel-title .bootstrap-select .dropdown-menu a {
     outline: none !important;
 }
-.ai-panel-title .bootstrap-select.ai-panel-assistant-select {
+.ai-panel-title .bootstrap-select.ai-panel-agent-select {
     width: 220px !important;
 }
 

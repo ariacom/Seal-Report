@@ -174,7 +174,7 @@ namespace Seal.AI
         /// <item><see cref="SystemChatMessage"/> entries are skipped (handled separately as the top-level <c>system</c> field).</item>
         /// <item>Consecutive <see cref="ToolChatMessage"/> entries are grouped into a single user message
         /// with <c>tool_result</c> content blocks, as required by Anthropic's alternating-turn rule.</item>
-        /// <item><see cref="AssistantToolCallsChatMessage"/> entries become assistant messages with
+        /// <item><see cref="AssistantToolCallsChatMessage"/> entries become agent messages with
         /// <c>tool_use</c> content blocks (plus an optional leading text block).</item>
         /// <item>All other messages become plain role/content objects.</item>
         /// </list>

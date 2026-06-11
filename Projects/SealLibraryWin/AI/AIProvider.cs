@@ -7,7 +7,7 @@ namespace Seal.AI
     public interface IAIProvider
     {
         /// <summary>
-        /// Sends <paramref name="messages"/> to the AI and returns the assistant reply.
+        /// Sends <paramref name="messages"/> to the AI and returns the agent reply.
         /// The reply is automatically appended to <paramref name="messages"/>.
         /// </summary>
         string HandleChat(List<ChatMessage> messages);
@@ -16,7 +16,7 @@ namespace Seal.AI
         /// Sends <paramref name="messages"/> together with available <paramref name="tools"/> to the AI.
         /// If the model decides to invoke one or more tools the descriptors are placed in
         /// <paramref name="toolCalls"/> and the method returns <see cref="string.Empty"/>;
-        /// the assistant message (with embedded tool-call data) is appended to <paramref name="messages"/>
+        /// the agent message (with embedded tool-call data) is appended to <paramref name="messages"/>
         /// automatically so the conversation can be continued after the caller executes the tools.
         /// If the model produces a text reply the reply is appended to <paramref name="messages"/> and returned.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Seal.AI
         protected abstract void Initialize(string endpoint, string key, string model, float temperature, int maxTokens, float topP);
 
         /// <summary>
-        /// Sends <paramref name="messages"/> to the AI and returns the assistant reply.
+        /// Sends <paramref name="messages"/> to the AI and returns the agent reply.
         /// The reply is automatically appended to <paramref name="messages"/>.
         /// </summary>
         public abstract string HandleChat(List<ChatMessage> messages);

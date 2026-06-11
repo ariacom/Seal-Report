@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Ja (Brukeren kan bla i undermapper)
 WebJS;Yes (User can create and edit sub-folders);Ja (Brukeren kan opprette og redigere undermapper)
 WebJS;Yes (User can edit his profile);Ja (Brukeren kan redigere profilen sin)
 WebJS;Yes (User is administrator of the Web Server);Ja (Brukeren er administrator av webserveren)
-Web;Select assistant;Velg assistent
+Web;Select agent;Velg assistent
 Web;Mark as favorite;Merk som favoritt
 Web;Favorites;Favoritter
 Web;No favorites yet;Ingen favoritter ennå
@@ -435,14 +435,14 @@ Web;New conversation;Ny samtale
 Web;Sample prompts;Eksempelforespørsler
 Web;Sample Prompts;Eksempelforespørsler
 Web;No sample prompts defined;Ingen eksempelforespørsler definert
-Web;AI Assistant;AI-assistent
+Web;AI Agent;AI-assistent
 Web;Favorites & Recent;Favoritter og nylige
 Web;Hide panel;Skjul panel
-Web;Ask the AI assistant…;Spør AI-assistenten…
+Web;Ask the AI agent…;Spør AI-assistenten…
 Web;Confirm Deletion;Bekreft sletting
 Web;This action is irreversible. Are you sure you want to delete this item?;Denne handlingen kan ikke angres. Er du sikker på at du vil slette dette elementet?
 Web;Data Source;Datakilde
-Web;Report Assistants;Rapportassistenter
+Web;Report Agents;Rapportassistenter
 Web;Select Tables or Views;Velg tabeller eller visninger
 Web;Filter tables...;Filtrer tabeller...
 Web;Select All;Velg alle
@@ -454,24 +454,24 @@ Web;No current items available;Ingen gjeldende elementer tilgjengelig
 Web;Current items will appear here when saved;Gjeldende elementer vises her når de er lagret
 Web;Drafts;Utkast
 Web;No draft items available;Ingen utkastelementer tilgjengelig
-Web;Upload files or create new items with the assistant to see them here;Last opp filer eller opprett nye elementer med assistenten for å se dem her
+Web;Upload files or create new items with the agent to see them here;Last opp filer eller opprett nye elementer med assistenten for å se dem her
 Web;Item Details;Elementdetaljer
 Web;Loading detail. Please wait...;Laster detalj. Vennligst vent...
 Web;Select a row from the table to view its details;Velg en rad fra tabellen for å se detaljene
 Web;Check;Sjekk
 Web;Download;Last ned
-Web;Reports Assistant;Rapportassistent
+Web;Reports Agent;Rapportassistent
 Web;Connection type;Tilkoblingstype
 Web;Connection string;Tilkoblingsstreng
 Web;Tables or views;Tabeller eller visninger
-Web;Report Assistant;Rapportassistent
+Web;Report Agent;Rapportassistent
 Web;AI Provider;AI-leverandør
 Web;AI model;AI-modell
 Web;AI model name (overrides default));Navn på AI-modell (overstyrer standard))
 Web;Temperature;Temperatur
 Web;Model temperature;Modelltemperatur
 Web;System prompt;Systemforespørsel
-Web;Optional sytem prompt for the assistant;Valgfri systemforespørsel for assistenten
+Web;Optional sytem prompt for the agent;Valgfri systemforespørsel for assistenten
 Web;User prompt;Brukerforespørsel
 Web;Default user prompts (if empty default values configured are taken);Standard brukerforespørsler (hvis tom brukes konfigurerte standardverdier)
 Web;User Groups allowed (No selection means no restriction);Tillatte brukergrupper (Ingen valg betyr ingen begrensning)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Skann data nå
 Web;Execute;Utfør
 Web;Elements:;Elementer:
 Web;Restrictions:;Begrensninger:
-WebJS;Hide AI Assistant;Skjul AI-assistent
-WebJS;AI Assistant;AI-assistent
+WebJS;Hide AI Agent;Skjul AI-assistent
+WebJS;AI Agent;AI-assistent
 WebJS;Running;Kjører
 WebJS;Request cancelled.;Forespørsel avbrutt.
 WebJS;Remove from favorites;Fjern fra favoritter
@@ -500,7 +500,7 @@ Web;Configuration;Konfigurasjon
 Web;Configuration and security;Konfigurasjon og sikkerhet
 Web;Download/Upload;Nedlasting/Opplasting
 Web;Rights;Rettigheter
-Web;Assistants;Assistenter
+Web;Agents;Assistenter
 Web;Folder;Mappe
 Web;Drag to resize;Dra for å endre størrelse
 WebJS;Copy and paste;Kopier og lim inn

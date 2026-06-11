@@ -34,7 +34,7 @@ namespace Seal.Model
         public ExecutionMode groupexecutionmode;
         public List<SWIMetaSource> sources;
         public string sessionId;
-        public bool hasassistant;
+        public bool hasagent;
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ namespace Seal.Model
         public List<SecurityGroup> groups;
         public List<SecurityLogin> logins;
         public bool downloadupload = true;
-        public List<StringPair> assistants;
+        public List<StringPair> agents;
 
         public static List<StringPair> GetFolders(SecurityUser user)
         {
@@ -311,17 +311,17 @@ namespace Seal.Model
     }
 
     // ---------------------------------------------------------------
-    // Assistant chat session serialisation (files)
+    // Agent chat session serialisation (files)
     // ---------------------------------------------------------------
 
     /// <summary>
-    /// Name of the hidden personal sub-folder used to store assistant chat sessions.
+    /// Name of the hidden personal sub-folder used to store agent chat sessions.
     /// The leading underscore signals to the web server that it must not appear
     /// in the folder browser.
     /// </summary>
-    public static class AssistantFolders
+    public static class AgentFolders
     {
-        public const string FolderName  = "_Assistant";
+        public const string FolderName  = "_Agents";
         public const string Recents     = "Recents";
         public const string Favorites   = "Favorites";
         public const string FileExt     = ".json";
@@ -352,7 +352,7 @@ namespace Seal.Model
         /// <summary>Tool call id – only set for ToolChatMessage entries.</summary>
         public string ToolCallId { get; set; }
         /// <summary>
-        /// Tool calls requested by the assistant.
+        /// Tool calls requested by the agent.
         /// Only non-null for AssistantChatMessage entries where the AI invoked one or more tools.
         /// </summary>
         public List<ChatSessionToolCall> ToolCalls { get; set; }
@@ -381,7 +381,7 @@ namespace Seal.Model
     }
 
     /// <summary>
-    /// Summary of a single chat-session file returned by SAIGetAssistantChats.
+    /// Summary of a single chat-session file returned by SAIGetAgentChats.
     /// </summary>
     public class ChatSessionInfo
     {

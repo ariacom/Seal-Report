@@ -8,7 +8,7 @@ using Seal.Model;
 namespace Seal.Forms
 {
     /// <summary>
-    /// TypeConverter for <see cref="AIAssistantConfiguration.ProviderGUID"/>: displays
+    /// TypeConverter for <see cref="AIAgentConfiguration.ProviderGUID"/>: displays
     /// <see cref="AIProviderConfiguration.Name"/> values in the property-grid dropdown
     /// while storing and returning the corresponding <see cref="AIProviderConfiguration.GUID"/>.
     /// </summary>
@@ -23,9 +23,9 @@ namespace Seal.Forms
                 .Select(p => p.Name)
                 .OrderBy(n => n)
                 .ToList();
-            // Offer the "<Default Provider>" sentinel only when editing an assistant,
+            // Offer the "<Default Provider>" sentinel only when editing an agent,
             // not in the server's own Default Provider field (which it would reference).
-            if (context?.Instance is AIAssistantConfiguration)
+            if (context?.Instance is AIAgentConfiguration)
                 names.Insert(0, AIProviderConfiguration.DefaultProviderName);
             else
                 names.Insert(0, AIProviderConfiguration.FirstEnabledName);
@@ -38,7 +38,7 @@ namespace Seal.Forms
         {
             if (value != null)
             {
-                if (string.IsNullOrEmpty(value.ToString()) && !(context?.Instance is AIAssistantConfiguration))
+                if (string.IsNullOrEmpty(value.ToString()) && !(context?.Instance is AIAgentConfiguration))
                     return AIProviderConfiguration.FirstEnabledName;
                 if (value.ToString() == AIProviderConfiguration.DefaultProviderGUID)
                     return AIProviderConfiguration.DefaultProviderName;

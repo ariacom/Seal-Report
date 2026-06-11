@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Evet (Kullanıcı alt klasörlere göz a
 WebJS;Yes (User can create and edit sub-folders);Evet (Kullanıcı alt klasörler oluşturabilir ve düzenleyebilir)
 WebJS;Yes (User can edit his profile);Evet (Kullanıcı profilini düzenleyebilir)
 WebJS;Yes (User is administrator of the Web Server);Evet (Kullanıcı Web Sunucusunun yöneticisidir)
-Web;Select assistant;Asistan seç
+Web;Select agent;Asistan seç
 Web;Mark as favorite;Favori olarak işaretle
 Web;Favorites;Favoriler
 Web;No favorites yet;Henüz favori yok
@@ -435,14 +435,14 @@ Web;New conversation;Yeni konuşma
 Web;Sample prompts;Örnek istemler
 Web;Sample Prompts;Örnek İstemler
 Web;No sample prompts defined;Tanımlı örnek istem yok
-Web;AI Assistant;Yapay Zeka Asistanı
+Web;AI Agent;Yapay Zeka Asistanı
 Web;Favorites & Recent;Favoriler ve Son Kullanılanlar
 Web;Hide panel;Paneli gizle
-Web;Ask the AI assistant…;Yapay zeka asistanına sorun…
+Web;Ask the AI agent…;Yapay zeka asistanına sorun…
 Web;Confirm Deletion;Silme Onayı
 Web;This action is irreversible. Are you sure you want to delete this item?;Bu işlem geri alınamaz. Bu öğeyi silmek istediğinizden emin misiniz?
 Web;Data Source;Veri Kaynağı
-Web;Report Assistants;Rapor Asistanları
+Web;Report Agents;Rapor Asistanları
 Web;Select Tables or Views;Tabloları veya Görünümleri Seç
 Web;Filter tables...;Tabloları filtrele...
 Web;Select All;Tümünü Seç
@@ -454,24 +454,24 @@ Web;No current items available;Mevcut öğe yok
 Web;Current items will appear here when saved;Kaydedildiğinde mevcut öğeler burada görünür
 Web;Drafts;Taslaklar
 Web;No draft items available;Taslak öğe yok
-Web;Upload files or create new items with the assistant to see them here;Burada görmek için dosya yükleyin veya asistanla yeni öğeler oluşturun
+Web;Upload files or create new items with the agent to see them here;Burada görmek için dosya yükleyin veya asistanla yeni öğeler oluşturun
 Web;Item Details;Öğe Ayrıntıları
 Web;Loading detail. Please wait...;Ayrıntı yükleniyor. Lütfen bekleyin...
 Web;Select a row from the table to view its details;Ayrıntılarını görüntülemek için tablodan bir satır seçin
 Web;Check;Kontrol et
 Web;Download;İndir
-Web;Reports Assistant;Raporlar Asistanı
+Web;Reports Agent;Raporlar Asistanı
 Web;Connection type;Bağlantı türü
 Web;Connection string;Bağlantı dizesi
 Web;Tables or views;Tablolar veya görünümler
-Web;Report Assistant;Rapor Asistanı
+Web;Report Agent;Rapor Asistanı
 Web;AI Provider;Yapay Zeka Sağlayıcısı
 Web;AI model;Yapay zeka modeli
 Web;AI model name (overrides default));Yapay zeka modeli adı (varsayılanı geçersiz kılar))
 Web;Temperature;Sıcaklık
 Web;Model temperature;Model sıcaklığı
 Web;System prompt;Sistem istemi
-Web;Optional sytem prompt for the assistant;Asistan için isteğe bağlı sistem istemi
+Web;Optional sytem prompt for the agent;Asistan için isteğe bağlı sistem istemi
 Web;User prompt;Kullanıcı istemi
 Web;Default user prompts (if empty default values configured are taken);Varsayılan kullanıcı istemleri (boşsa yapılandırılan varsayılan değerler alınır)
 Web;User Groups allowed (No selection means no restriction);İzin verilen Kullanıcı Grupları (Seçim yapılmaması kısıtlama olmadığı anlamına gelir)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Verileri Şimdi Tara
 Web;Execute;Çalıştır
 Web;Elements:;Öğeler:
 Web;Restrictions:;Kısıtlamalar:
-WebJS;Hide AI Assistant;Yapay Zeka Asistanını Gizle
-WebJS;AI Assistant;Yapay Zeka Asistanı
+WebJS;Hide AI Agent;Yapay Zeka Asistanını Gizle
+WebJS;AI Agent;Yapay Zeka Asistanı
 WebJS;Running;Çalışıyor
 WebJS;Request cancelled.;İstek iptal edildi.
 WebJS;Remove from favorites;Favorilerden kaldır
@@ -500,7 +500,7 @@ Web;Configuration;Yapılandırma
 Web;Configuration and security;Yapılandırma ve güvenlik
 Web;Download/Upload;İndirme/Yükleme
 Web;Rights;Haklar
-Web;Assistants;Asistanlar
+Web;Agents;Asistanlar
 Web;Folder;Klasör
 Web;Drag to resize;Yeniden boyutlandırmak için sürükleyin
 WebJS;Copy and paste;Kopyala ve yapıştır

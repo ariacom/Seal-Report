@@ -8,22 +8,22 @@ using Seal.Model;
 namespace Seal.Forms
 {
     /// <summary>
-    /// TypeConverter for <see cref="AIServerConfiguration.DefaultAssistantGUID"/>: displays
-    /// <see cref="AIAssistantConfiguration.Name"/> values in the property-grid dropdown
-    /// while storing and returning the corresponding <see cref="AIAssistantConfiguration.GUID"/>.
+    /// TypeConverter for <see cref="AIServerConfiguration.DefaultAgentGUID"/>: displays
+    /// <see cref="AIAgentConfiguration.Name"/> values in the property-grid dropdown
+    /// while storing and returning the corresponding <see cref="AIAgentConfiguration.GUID"/>.
     /// </summary>
-    public class AIAssistantConverter : StringConverter
+    public class AIAgentConverter : StringConverter
     {
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context) => true;
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) => true;
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            var names = Repository.Instance.AIConfiguration.AIAssistants
+            var names = Repository.Instance.AIConfiguration.AIAgents
                 .Select(a => a.Name)
                 .OrderBy(n => n)
                 .ToList();
-            names.Insert(0, AIAssistantConfiguration.FirstEnabledName);
+            names.Insert(0, AIAgentConfiguration.FirstEnabledName);
             return new StandardValuesCollection(names);
         }
 
@@ -34,10 +34,10 @@ namespace Seal.Forms
             if (value != null)
             {
                 if (string.IsNullOrEmpty(value.ToString()))
-                    return AIAssistantConfiguration.FirstEnabledName;
-                var assistant = Repository.Instance.AIConfiguration.AIAssistants
+                    return AIAgentConfiguration.FirstEnabledName;
+                var agent = Repository.Instance.AIConfiguration.AIAgents
                     .FirstOrDefault(a => a.GUID == value.ToString());
-                if (assistant != null) return assistant.Name;
+                if (agent != null) return agent.Name;
             }
             return base.ConvertTo(context, culture, value, destType);
         }
@@ -48,11 +48,11 @@ namespace Seal.Forms
         {
             if (value != null)
             {
-                if (value.ToString() == AIAssistantConfiguration.FirstEnabledName)
+                if (value.ToString() == AIAgentConfiguration.FirstEnabledName)
                     return "";
-                var assistant = Repository.Instance.AIConfiguration.AIAssistants
+                var agent = Repository.Instance.AIConfiguration.AIAgents
                     .FirstOrDefault(a => a.Name == value.ToString());
-                if (assistant != null) return assistant.GUID;
+                if (agent != null) return agent.GUID;
             }
             return base.ConvertFrom(context, culture, value);
         }

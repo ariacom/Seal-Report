@@ -17,7 +17,7 @@ namespace Seal.AI
         public const string AIProviderKeysKeyValue = "wwk93484*%%&%&kjtgé+c$àé";
 
         /// <summary>
-        /// Sentinel value for an assistant's <see cref="AIAssistantConfiguration.ProviderGUID"/> meaning
+        /// Sentinel value for an agent's <see cref="AIAgentConfiguration.ProviderGUID"/> meaning
         /// "use the server's Default Provider" (see <see cref="Seal.AI.AIServerConfiguration.DefaultProviderGUID"/>).
         /// Real providers use <see cref="Guid"/> values, so this can never collide.
         /// </summary>

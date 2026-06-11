@@ -17,7 +17,7 @@
     var $samplesBtn  = $('#ai-panel-samples-btn');
     var $samplesDrop = $('#ai-panel-samples-dropdown');
     var $samplesWrap = $samplesBtn.parent(); // .ai-panel-samples-wrap
-    var $assistantSelect = $('#ai-panel-assistant-select');
+    var $agentSelect = $('#ai-panel-agent-select');
     // Move dropdown to <body> so position:fixed is relative to the viewport,
     // not the transformed #ai-chat-panel (transform creates a new stacking context
     // that traps fixed-position descendants).
@@ -175,13 +175,13 @@
     // ── Panel open / close ──────────────────────────────────────
     function openPanel(): void {
         $panel.addClass('ai-panel-open');
-        $toggle.addClass('ai-panel-open').attr('title', SWIUtil.tr('Hide AI Assistant'));
+        $toggle.addClass('ai-panel-open').attr('title', SWIUtil.tr('Hide AI Agent'));
         $('body').addClass('ai-panel-visible');
     }
 
     function closePanel(): void {
         $panel.removeClass('ai-panel-open');
-        $toggle.removeClass('ai-panel-open').attr('title', SWIUtil.tr('AI Assistant'));
+        $toggle.removeClass('ai-panel-open').attr('title', SWIUtil.tr('AI Agent'));
         $('body').removeClass('ai-panel-visible');
         closeDropdown();
     }
@@ -228,39 +228,39 @@
         document.addEventListener('mouseup', onUp);
     });
 
-    // ── Assistant selector ──────────────────────────────────────
-    // Fetches the assistants available to the current user. Shows the selectpicker
-    // in the header always (≥ 1 assistant). When only one is available the control
+    // ── Agent selector ──────────────────────────────────────
+    // Fetches the agents available to the current user. Shows the selectpicker
+    // in the header always (≥ 1 agent). When only one is available the control
     // is disabled so it acts as a plain title label.
-    var _assistantsLoaded: boolean = false;
+    var _agentsLoaded: boolean = false;
 
-    function loadAssistants(): void {
-        if (_assistantsLoaded) return;
-        _assistantsLoaded = true;
-        _gateway.GetUserAssistants(function (data: any) {
-            var assistants: Array<{ guid: string; name: string; description: string }> = data.assistants || [];
-            if (assistants.length === 0) return;
+    function loadAgents(): void {
+        if (_agentsLoaded) return;
+        _agentsLoaded = true;
+        _gateway.GetUserAgents(function (data: any) {
+            var agents: Array<{ guid: string; name: string; description: string }> = data.agents || [];
+            if (agents.length === 0) return;
 
             // Rebuild the options.
-            ($assistantSelect as any).selectpicker('destroy');
-            $assistantSelect.empty();
-            $.each(assistants, function (_, a: { guid: string; name: string; description: string }) {
-                $('<option>').val(a.guid).text(a.name).appendTo($assistantSelect);
+            ($agentSelect as any).selectpicker('destroy');
+            $agentSelect.empty();
+            $.each(agents, function (_, a: { guid: string; name: string; description: string }) {
+                $('<option>').val(a.guid).text(a.name).appendTo($agentSelect);
             });
 
             // Disable when there is only one choice — serves as a read-only title.
-            $assistantSelect.prop('disabled', assistants.length === 1);
+            $agentSelect.prop('disabled', agents.length === 1);
 
             // Initialise / refresh the selectpicker.
-            ($assistantSelect as any).selectpicker({ width: 'auto' });
+            ($agentSelect as any).selectpicker({ width: 'auto' });
             if (data.selectedGuid) {
-                $assistantSelect.val(data.selectedGuid);
-                ($assistantSelect as any).selectpicker('refresh');
+                $agentSelect.val(data.selectedGuid);
+                ($agentSelect as any).selectpicker('refresh');
             }
 
             // Apply Bootstrap tooltips to the rendered dropdown items.
-            var $dropdownItems = $assistantSelect.closest('.bootstrap-select').find('.dropdown-menu li');
-            $.each(assistants, function (i: number, a: { guid: string; name: string; description: string }) {
+            var $dropdownItems = $agentSelect.closest('.bootstrap-select').find('.dropdown-menu li');
+            $.each(agents, function (i: number, a: { guid: string; name: string; description: string }) {
                 if (a.description) {
                     ($dropdownItems.eq(i) as any).tooltip({ title: a.description, placement: 'right', container: 'body', trigger: 'hover' });
                 }
@@ -268,24 +268,24 @@
         });
     }
 
-    $assistantSelect.on('change', function () {
-        var guid = ($assistantSelect.val() as string);
+    $agentSelect.on('change', function () {
+        var guid = ($agentSelect.val() as string);
         if (!guid) return;
-        _gateway.SelectAssistant(guid, function () {
-            // Clear the conversation: the new assistant has no prior context.
-            _gateway.ClearAIAssistant(function () {
+        _gateway.SelectAgent(guid, function () {
+            // Clear the conversation: the new agent has no prior context.
+            _gateway.ClearAIAgent(function () {
                 clearConversation();
                 _panelChatFileName = '';
                 setFavorite(false);
-                // Refresh history lists so they reflect the newly selected assistant.
+                // Refresh history lists so they reflect the newly selected agent.
                 refreshHistoryLists();
             });
         });
     });
 
-    // Load the assistant list the first time the panel is opened.
+    // Load the agent list the first time the panel is opened.
     $toggle.on('click', function () {
-        if ($panel.hasClass('ai-panel-open')) loadAssistants();
+        if ($panel.hasClass('ai-panel-open')) loadAgents();
     });
 
     // ── Chat persistence state ──────────────────────────────────
@@ -294,7 +294,7 @@
 
     // ── New conversation button ─────────────────────────────────
     $newBtn.on('click', function () {
-        _gateway.ClearAIAssistant(function () {
+        _gateway.ClearAIAgent(function () {
             clearConversation();
             _panelChatFileName = '';
             setFavorite(false);
@@ -361,7 +361,7 @@
     $send.on('click', function () {
         // ── Cancel mode: interrupt the in-flight request ──────────
         if (_requesting) {
-            _gateway.CancelAIAssistantResponse(null, null);
+            _gateway.CancelAIAgentResponse(null, null);
             if ($currentTyping) { $currentTyping.remove(); $currentTyping = null; }
             _requesting = false;
             setSendMode();
@@ -390,7 +390,7 @@
         _requesting = true;
         setCancelMode();
 
-        _gateway.GetAIAssistantResponse(message, function (data: any) {
+        _gateway.GetAIAgentResponse(message, function (data: any) {
             if ($currentTyping) { $currentTyping.remove(); $currentTyping = null; }
             if (data.response) {
                 const aiBubble = makeAIBubble(formatResponse(data.response || ''), data.response || '');
@@ -418,7 +418,7 @@
             // Auto-save to Recents after every exchange
             // On the first save use the user's message as a friendly name
             var saveName = _panelChatFileName || sanitizeFileName(message);
-            _gateway.SaveAIAssistantChat(saveName, _panelChatInfos, function (saved: any) {
+            _gateway.SaveAIAgentChat(saveName, _panelChatInfos, function (saved: any) {
                 if (saved && saved.fileName) _panelChatFileName = saved.fileName;
             });
         }, function (_err: any) {
@@ -442,7 +442,7 @@
         if (!_panelChatFileName) return;
         var newState = !_isFavorite;
         setFavorite(newState);
-        _gateway.MarkAIAssistantChatFavorite(_panelChatFileName, function (data: any) {
+        _gateway.MarkAIAgentChatFavorite(_panelChatFileName, function (data: any) {
             if (data && typeof data.isFavorite !== 'undefined') setFavorite(data.isFavorite);
         });
     });
@@ -478,11 +478,13 @@
     function positionSamplesDropdown(): void {
         var rect = ($samplesBtn[0] as HTMLElement).getBoundingClientRect();
         var dropW = 600;
-        var top  = rect.top - 600;
+        // Anchor the dropdown's bottom just above the button; it grows upward
+        // (avoids a gap when the content is shorter than the max-height).
+        var bottom = window.innerHeight - rect.top + 6;
         // Open to the right; clamp left so it stays inside the viewport
         var left = rect.right + 6;
         if (left + dropW > window.innerWidth - 8) left = window.innerWidth - dropW - 8;
-        $samplesDrop.css({ top: top + 'px', left: left + 'px', right: 'auto', bottom: 'auto' });
+        $samplesDrop.css({ bottom: bottom + 'px', left: left + 'px', right: 'auto', top: 'auto' });
     }
 
     $samplesBtn.on('click', function () {
@@ -490,7 +492,7 @@
             closeSamplesDropdown();
             return;
         }
-        _gateway.GetAIAssistantSamplePrompts(function (data: any) {
+        _gateway.GetAIAgentSamplePrompts(function (data: any) {
             var $list = $('#ai-panel-samples-list');
             $list.empty();
             var prompts: string[] = data.prompts || [];
@@ -523,7 +525,7 @@
 
     // ── Helper: refresh the history dropdown lists ──────────────
     function refreshHistoryLists(): void {
-        _gateway.GetAIAssistantChats(function (data: any) {
+        _gateway.GetAIAgentChats(function (data: any) {
             var toMenuItems = function (list: any[]): MenuItem[] {
                 return (list || []).map(function (s: any): MenuItem {
                     return { name: s.Name || s.FileName, path: s.FileName };
@@ -549,7 +551,7 @@
             $label.on('click', function () {
                 closeDropdown();
                 if (!item.path) return;
-                _gateway.LoadAIAssistantChat(item.path, isFavorite, function (session: any) {
+                _gateway.LoadAIAgentChat(item.path, isFavorite, function (session: any) {
                     clearConversation();
                     _panelChatFileName = item.path as string;
                     setFavorite(isFavorite);
@@ -589,7 +591,7 @@
                         $input.replaceWith($label);
                         return;
                     }
-                    _gateway.RenameAIAssistantChat(item.path as string, newName, isFavorite, function (data: any) {
+                    _gateway.RenameAIAgentChat(item.path as string, newName, isFavorite, function (data: any) {
                         if (data && data.fileName) {
                             item.path = data.fileName;
                             item.name = data.name || newName;
@@ -616,7 +618,7 @@
                 .html('<i class="fa fa-trash"></i>');
             $deleteBtn.on('click', function (e: JQuery.ClickEvent) {
                 e.stopPropagation();
-                _gateway.DeleteAIAssistantChat(item.path as string, isFavorite, function () {
+                _gateway.DeleteAIAgentChat(item.path as string, isFavorite, function () {
                     $li.remove();
                     // If deleting the currently open chat, reset the panel state
                     if (_panelChatFileName === item.path) {
@@ -637,7 +639,7 @@
             if (isFavorite) $favItemBtn.addClass('fav-active');
             $favItemBtn.on('click', function (e: JQuery.ClickEvent) {
                 e.stopPropagation();
-                _gateway.MarkAIAssistantChatFavorite(item.path as string, function () {
+                _gateway.MarkAIAgentChatFavorite(item.path as string, function () {
                     refreshHistoryLists();
                 });
             });

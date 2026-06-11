@@ -150,9 +150,9 @@
     </AIToolConfiguration>
   </AITools>
   <DefaultProviderGUID />
-  <DefaultAssistantGUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</DefaultAssistantGUID>
-  <AIAssistants>
-    <AIAssistantConfiguration>
+  <DefaultAgentGUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</DefaultAgentGUID>
+  <AIAgents>
+    <AIAgentConfiguration>
       <GUID>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</GUID>
       <Name>Report Designer</Name>
       <Description>Designs and builds reports from natural-language requests: explores data sources, validates SQL, and creates SQL-based or metadata-based reports.</Description>
@@ -180,8 +180,8 @@
       <DefaultSystemPrompt />
       <SystemPromptFile>designer-system-prompt.md</SystemPromptFile>
       <SamplePromptsFile>designer-sample-prompts.md</SamplePromptsFile>
-    </AIAssistantConfiguration>
-    <AIAssistantConfiguration>
+    </AIAgentConfiguration>
+    <AIAgentConfiguration>
       <GUID>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e</GUID>
       <Name>Schedule &amp; Output</Name>
       <Description>Configures report delivery and automation: sets up folder, email, and FTP outputs and manages recurring or one-time execution schedules.</Description>
@@ -196,8 +196,8 @@
       <DefaultSystemPrompt />
       <SystemPromptFile>scheduler-system-prompt.md</SystemPromptFile>
       <SamplePromptsFile>scheduler-sample-prompts.md</SamplePromptsFile>
-    </AIAssistantConfiguration>
-    <AIAssistantConfiguration>
+    </AIAgentConfiguration>
+    <AIAgentConfiguration>
       <GUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</GUID>
       <Name>Data Analyst</Name>
       <Description>Answers data questions by running existing reports and exploring data sources read-only, summarizing results without modifying any report.</Description>
@@ -215,8 +215,8 @@
       <DefaultSystemPrompt />
       <SystemPromptFile>analyst-system-prompt.md</SystemPromptFile>
       <SamplePromptsFile>analyst-sample-prompts.md</SamplePromptsFile>
-    </AIAssistantConfiguration>
-    <AIAssistantConfiguration>
+    </AIAgentConfiguration>
+    <AIAgentConfiguration>
       <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</GUID>
       <Name>System Admin</Name>
       <Description>Handles administration and troubleshooting: reads event, execution, and schedule logs, inspects reports and sources, and manages repository files.</Description>
@@ -236,6 +236,6 @@
       <DefaultSystemPrompt />
       <SystemPromptFile>admin-system-prompt.md</SystemPromptFile>
       <SamplePromptsFile>admin-sample-prompts.md</SamplePromptsFile>
-    </AIAssistantConfiguration>
-  </AIAssistants>
+    </AIAgentConfiguration>
+  </AIAgents>
 </AIServerConfiguration>

@@ -44,7 +44,7 @@
     @await Html.PartialAsync("~/Views/Home/Menu.cshtml")
 
     <!-- AI Chat Panel toggle button -->
-    <button id="ai-panel-toggle" title="@repository.TranslateWeb("AI Assistant")">
+    <button id="ai-panel-toggle" title="@repository.TranslateWeb("AI Agent")">
         <i class="fa fa-comments"></i>
     </button>
 
@@ -53,7 +53,7 @@
         <div class="ai-panel-header">
             <div class="ai-panel-title">
                 <i class="fa fa-comments"></i>
-                <select id="ai-panel-assistant-select" class="ai-panel-assistant-select" style="display:none;" title="@repository.TranslateWeb("Select assistant")"></select>
+                <select id="ai-panel-agent-select" class="ai-panel-agent-select" style="display:none;" title="@repository.TranslateWeb("Select agent")"></select>
             </div>
             <div class="ai-panel-header-actions">
                 <!-- Favorite toggle -->
@@ -97,7 +97,7 @@
             <!-- conversation bubbles appended here -->
         </div>
         <div class="ai-panel-input-area">
-            <textarea id="ai-panel-input" class="ai-panel-input" rows="3" placeholder="@repository.TranslateWeb("Ask the AI assistant…")"></textarea>
+            <textarea id="ai-panel-input" class="ai-panel-input" rows="3" placeholder="@repository.TranslateWeb("Ask the AI agent…")"></textarea>
             <div class="ai-panel-actions">
                 <span id="ai-panel-running"></span>
                 <!-- Sample prompts picker -->

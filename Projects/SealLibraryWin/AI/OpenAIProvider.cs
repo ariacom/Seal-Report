@@ -132,7 +132,7 @@ namespace Seal.AI
 
         /// <summary>
         /// Serializes a <see cref="ChatMessage"/> to an anonymous object suitable for the
-        /// OpenAI REST API, handling plain messages, tool-call assistant turns, and tool results.
+        /// OpenAI REST API, handling plain messages, tool-call agent turns, and tool results.
         /// </summary>
         private static object SerializeMessage(ChatMessage m)
         {
@@ -153,7 +153,7 @@ namespace Seal.AI
                     };
                 case SystemChatMessage:
                     return new { role = "system", content = m.Content[0].Text };
-                // SDK-native assistant message with tool calls (e.g. loaded from a saved session).
+                // SDK-native agent message with tool calls (e.g. loaded from a saved session).
                 case AssistantChatMessage asst when asst.ToolCalls?.Count > 0:
                     return new
                     {

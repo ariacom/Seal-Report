@@ -149,7 +149,7 @@ namespace SealWebServer.Controllers
                 sessionId = HttpContext.Session.GetString(SessionIdKey),
                 changepassword = !string.IsNullOrEmpty(Repository.Security.ChangePasswordScript),
                 showresetpassword = !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript) && !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2),
-                hasassistant = WebUser.AssistantConfiguration != null
+                hasagent = WebUser.AgentConfiguration != null
             };
 
             if (!string.IsNullOrEmpty(profile.startupreport))
@@ -941,8 +941,8 @@ namespace SealWebServer.Controllers
                 setSessionValue(SessionUser, null);
                 setSessionValue(SessionNavigationContext, null);
                 setSessionValue(SessionUploadedFiles, null);
-                setSessionValue(SessionAssistant, null);
-                setSessionValue(SessionAssistantConfiguration, null);
+                setSessionValue(SessionAgent, null);
+                setSessionValue(SessionAgentConfiguration, null);
                 CreateWebUser();
 
                 //SignOut
@@ -1088,9 +1088,9 @@ namespace SealWebServer.Controllers
                     logins = Repository.Security.Logins,
                     downloadupload = Repository.Configuration.EnableDownloadUpload,
                     folders = SWIConfiguration.GetFolders(WebUser),
-                    assistants = Repository.Instance.AIConfiguration.AIAssistants
+                    agents = Repository.Instance.AIConfiguration.AIAgents
                         .Where(a => a.IsEnabled)
-                        .Select(a => new StringPair { Key = a.GUID, Value = Repository.RepositoryTranslate("AIAssistantName", "*", a.Name) })
+                        .Select(a => new StringPair { Key = a.GUID, Value = Repository.RepositoryTranslate("AIAgentName", "*", a.Name) })
                         .ToList()
                 };
 
@@ -1163,16 +1163,16 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Clears the AI Assistant conversation history stored in the current session.
+        /// Clears the AI Agent conversation history stored in the current session.
         /// </summary>
-        public ActionResult SWIClearAIAssistant(string sessionId)
+        public ActionResult SWIClearAIAgent(string sessionId)
         {
-            writeDebug("SWIClearAIAssistant");
+            writeDebug("SWIClearAIAgent");
             try
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
-                Assistant.Clear();
+                Agent.Clear();
                 return Json(new { });
             }
             catch (Exception ex)
@@ -1182,22 +1182,22 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Returns the list of sample prompts defined for the current session's AI Assistant.
-        /// Falls back to the default assistant configuration when no conversation has started yet.
+        /// Returns the list of sample prompts defined for the current session's AI Agent.
+        /// Falls back to the default agent configuration when no conversation has started yet.
         /// </summary>
-        public ActionResult SWIGetAIAssistantSamplePrompts(string sessionId)
+        public ActionResult SWIGetAIAgentSamplePrompts(string sessionId)
         {
-            writeDebug("SWIGetAIAssistantSamplePrompts");
+            writeDebug("SWIGetAIAgentSamplePrompts");
             try
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
 
-                var assistant = Assistant;
+                var agent = Agent;
                 List<string> prompts = new List<string>();
-                if (assistant != null)
+                if (agent != null)
                 {
-                    prompts = assistant.Configuration.GetSamplePrompts()
+                    prompts = agent.Configuration.GetSamplePrompts()
                         .Select(p => Repository.RepositoryTranslate("AISamplePrompt", "*", p)).ToList();
                 }
 
@@ -1210,36 +1210,36 @@ namespace SealWebServer.Controllers
         }
 
         // ----------------------------------------------------------------
-        //  Assistant chat persistence  (_Assistant/{GUID}/Recents + _Assistant/{GUID}/Favorites)
+        //  Agent chat persistence  (_Agents/{GUID}/Recents + _Agents/{GUID}/Favorites)
         // ----------------------------------------------------------------
 
         /// <summary>
-        /// Returns the GUID of the currently active assistant without creating an
-        /// <see cref="AIAssistant"/> instance.  Respects the user-selected GUID stored in
-        /// <see cref="SessionAssistantConfiguration"/>; falls back to the first assistant in
+        /// Returns the GUID of the currently active agent without creating an
+        /// <see cref="AIAgent"/> instance.  Respects the user-selected GUID stored in
+        /// <see cref="SessionAgentConfiguration"/>; falls back to the first agent in
         /// the user's security group.
         /// </summary>
-        string CurrentAssistantGUID
+        string CurrentAgentGUID
         {
             get
             {
-                var selectedGuid = getSessionValue(SessionAssistantConfiguration) as string;
+                var selectedGuid = getSessionValue(SessionAgentConfiguration) as string;
                 if (!string.IsNullOrEmpty(selectedGuid) &&
-                    WebUser.AssistantConfigurations.Any(a => a.GUID == selectedGuid))
+                    WebUser.AgentConfigurations.Any(a => a.GUID == selectedGuid))
                     return selectedGuid;
-                return WebUser.AssistantConfiguration?.GUID ?? string.Empty;
+                return WebUser.AgentConfiguration?.GUID ?? string.Empty;
             }
         }
 
         /// <summary>
-        /// Returns the full path to one of the _Assistant/{GUID} sub-folders (Recents or Favorites)
-        /// for the current user and the currently active assistant, creating it on demand.
+        /// Returns the full path to one of the _Agents/{GUID} sub-folders (Recents or Favorites)
+        /// for the current user and the currently active agent, creating it on demand.
         /// </summary>
-        string GetAssistantSubFolder(string subFolder)
+        string GetAgentSubFolder(string subFolder)
         {
-            var guid = CurrentAssistantGUID;
+            var guid = CurrentAgentGUID;
             var path = Path.Combine(Repository.GetPersonalFolder(WebUser),
-                                    AssistantFolders.FolderName,
+                                    AgentFolders.FolderName,
                                     guid,
                                     subFolder);
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
@@ -1247,36 +1247,36 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Saves the current assistant conversation (taken from the server session) to a
-        /// file in _Assistant/{GUID}/Recents.  Old entries beyond <paramref name="maxRecents"/>
+        /// Saves the current agent conversation (taken from the server session) to a
+        /// file in _Agents/{GUID}/Recents.  Old entries beyond <paramref name="maxRecents"/>
         /// are pruned (oldest-first).
         /// </summary>
         /// <param name="name">Human-readable chat name used as the file name.</param>
         /// <param name="infosJson">JSON-serialised array of StringPair objects (Type, Name, Description, Instance …).</param>
-        public ActionResult SAISaveAssistantChat(string name, string infosJson, string sessionId, int maxRecents = 20)
+        public ActionResult SAISaveAgentChat(string name, string infosJson, string sessionId, int maxRecents = 20)
         {
-            writeDebug("SAISaveAssistantChat");
+            writeDebug("SAISaveAgentChat");
             try
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
                 if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
 
-                var assistant = Assistant;
-                if (assistant == null) throw new Exception("No active assistant session to save.");
+                var agent = Agent;
+                if (agent == null) throw new Exception("No active agent session to save.");
 
                 var infos = string.IsNullOrWhiteSpace(infosJson)
                     ? new List<StringPair>()
                     : JsonConvert.DeserializeObject<List<StringPair>>(infosJson) ?? new List<StringPair>();
 
-                var recentsFolder = GetAssistantSubFolder(AssistantFolders.Recents);
-                var fileName = Helper.CleanFileName(name) + AssistantFolders.FileExt;
+                var recentsFolder = GetAgentSubFolder(AgentFolders.Recents);
+                var fileName = Helper.CleanFileName(name) + AgentFolders.FileExt;
                 var filePath = Path.Combine(recentsFolder, fileName);
 
-                assistant.SaveToFile(filePath, infos);
+                agent.SaveToFile(filePath, infos);
 
                 // Prune: keep only the most-recent maxRecents files
-                var files = Directory.GetFiles(recentsFolder, "*" + AssistantFolders.FileExt)
+                var files = Directory.GetFiles(recentsFolder, "*" + AgentFolders.FileExt)
                                      .Select(f => new FileInfo(f))
                                      .OrderByDescending(f => f.LastWriteTime)
                                      .ToList();
@@ -1292,12 +1292,12 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Returns the list of saved chat sessions from _Assistant/{GUID}/Recents and
-        /// _Assistant/{GUID}/Favorites for the current user and currently active assistant.
+        /// Returns the list of saved chat sessions from _Agents/{GUID}/Recents and
+        /// _Agents/{GUID}/Favorites for the current user and currently active agent.
         /// </summary>
-        public ActionResult SAIGetAssistantChats(string sessionId)
+        public ActionResult SAIGetAgentChats(string sessionId)
         {
-            writeDebug("SAIGetAssistantChats");
+            writeDebug("SAIGetAgentChats");
             try
             {
                 SetSessionId(sessionId);
@@ -1305,8 +1305,8 @@ namespace SealWebServer.Controllers
 
                 List<ChatSessionInfo> ReadFolder(string subFolder, bool isFavorite)
                 {
-                    var folder = GetAssistantSubFolder(subFolder);
-                    return Directory.GetFiles(folder, "*" + AssistantFolders.FileExt)
+                    var folder = GetAgentSubFolder(subFolder);
+                    return Directory.GetFiles(folder, "*" + AgentFolders.FileExt)
                         .Select(f =>
                         {
                             try
@@ -1333,8 +1333,8 @@ namespace SealWebServer.Controllers
 
                 return Json(new
                 {
-                    recents = ReadFolder(AssistantFolders.Recents, false),
-                    favorites = ReadFolder(AssistantFolders.Favorites, true)
+                    recents = ReadFolder(AgentFolders.Recents, false),
+                    favorites = ReadFolder(AgentFolders.Favorites, true)
                 });
             }
             catch (Exception ex)
@@ -1348,18 +1348,18 @@ namespace SealWebServer.Controllers
         /// If the file is in Recents it is moved (copied) to Favorites, and vice-versa.
         /// The original file is removed after a successful copy.
         /// </summary>
-        public ActionResult SAIMarkAssistantChatFavorite(string name, string sessionId)
+        public ActionResult SAIMarkAgentChatFavorite(string name, string sessionId)
         {
-            writeDebug("SAIMarkAssistantChatFavorite");
+            writeDebug("SAIMarkAgentChatFavorite");
             try
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
                 if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
 
-                var fileName = Helper.CleanFileName(name) + AssistantFolders.FileExt;
-                var recentsPath = Path.Combine(GetAssistantSubFolder(AssistantFolders.Recents), fileName);
-                var favoritesPath = Path.Combine(GetAssistantSubFolder(AssistantFolders.Favorites), fileName);
+                var fileName = Helper.CleanFileName(name) + AgentFolders.FileExt;
+                var recentsPath = Path.Combine(GetAgentSubFolder(AgentFolders.Recents), fileName);
+                var favoritesPath = Path.Combine(GetAgentSubFolder(AgentFolders.Favorites), fileName);
 
                 bool nowFavorite;
                 if (System.IO.File.Exists(recentsPath))
@@ -1397,18 +1397,18 @@ namespace SealWebServer.Controllers
         /// Loads a chat-session file and returns its raw <see cref="ChatSessionFile"/>
         /// so the client can replay the conversation history.
         /// </summary>
-        public ActionResult SAILoadAssistantChat(string name, bool favorite, string sessionId)
+        public ActionResult SAILoadAgentChat(string name, bool favorite, string sessionId)
         {
-            writeDebug("SAILoadAssistantChat");
+            writeDebug("SAILoadAgentChat");
             try
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
                 if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
 
-                var subFolder = favorite ? AssistantFolders.Favorites : AssistantFolders.Recents;
-                var filePath = Path.Combine(GetAssistantSubFolder(subFolder),
-                                             Helper.CleanFileName(name) + AssistantFolders.FileExt);
+                var subFolder = favorite ? AgentFolders.Favorites : AgentFolders.Recents;
+                var filePath = Path.Combine(GetAgentSubFolder(subFolder),
+                                             Helper.CleanFileName(name) + AgentFolders.FileExt);
 
                 if (!System.IO.File.Exists(filePath))
                     throw new Exception($"Chat session '{name}' not found.");
@@ -1417,11 +1417,11 @@ namespace SealWebServer.Controllers
                 var session = JsonConvert.DeserializeObject<ChatSessionFile>(raw)
                               ?? throw new Exception("Invalid json file.");
 
-                // Restore the assistant in the current session
-                var assistant = Assistant;
-                if (assistant != null)
+                // Restore the agent in the current session
+                var agent = Agent;
+                if (agent != null)
                 {
-                    assistant.LoadFromSessionFile(session);
+                    agent.LoadFromSessionFile(session);
                 }
 
                 return Json(session);
@@ -1435,18 +1435,18 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Deletes a saved chat session from Recents or Favorites.
         /// </summary>
-        public ActionResult SAIDeleteAssistantChat(string name, bool favorite, string sessionId)
+        public ActionResult SAIDeleteAgentChat(string name, bool favorite, string sessionId)
         {
-            writeDebug("SAIDeleteAssistantChat");
+            writeDebug("SAIDeleteAgentChat");
             try
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
                 if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
 
-                var subFolder = favorite ? AssistantFolders.Favorites : AssistantFolders.Recents;
-                var filePath = Path.Combine(GetAssistantSubFolder(subFolder),
-                                            Helper.CleanFileName(name) + AssistantFolders.FileExt);
+                var subFolder = favorite ? AgentFolders.Favorites : AgentFolders.Recents;
+                var filePath = Path.Combine(GetAgentSubFolder(subFolder),
+                                            Helper.CleanFileName(name) + AgentFolders.FileExt);
 
                 if (!System.IO.File.Exists(filePath))
                     throw new Exception($"Chat session '{name}' not found.");
@@ -1464,9 +1464,9 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Renames a saved chat session within its current folder (Recents or Favorites).
         /// </summary>
-        public ActionResult SAIRenameAssistantChat(string name, string newName, bool favorite, string sessionId)
+        public ActionResult SAIRenameAgentChat(string name, string newName, bool favorite, string sessionId)
         {
-            writeDebug("SAIRenameAssistantChat");
+            writeDebug("SAIRenameAgentChat");
             try
             {
                 SetSessionId(sessionId);
@@ -1474,11 +1474,11 @@ namespace SealWebServer.Controllers
                 if (string.IsNullOrWhiteSpace(name)) throw new Exception("name is required");
                 if (string.IsNullOrWhiteSpace(newName)) throw new Exception("newName is required");
 
-                var subFolder = favorite ? AssistantFolders.Favorites : AssistantFolders.Recents;
-                var folder = GetAssistantSubFolder(subFolder);
-                var oldPath = Path.Combine(folder, Helper.CleanFileName(name) + AssistantFolders.FileExt);
+                var subFolder = favorite ? AgentFolders.Favorites : AgentFolders.Recents;
+                var folder = GetAgentSubFolder(subFolder);
+                var oldPath = Path.Combine(folder, Helper.CleanFileName(name) + AgentFolders.FileExt);
                 var cleanNew = Helper.CleanFileName(newName);
-                var newPath = Path.Combine(folder, cleanNew + AssistantFolders.FileExt);
+                var newPath = Path.Combine(folder, cleanNew + AgentFolders.FileExt);
 
                 if (!System.IO.File.Exists(oldPath))
                     throw new Exception($"Chat session '{name}' not found.");
@@ -1495,51 +1495,51 @@ namespace SealWebServer.Controllers
             }
         }
 
-        AIAssistant Assistant
+        AIAgent Agent
         {
             get
             {
-                var assistant = getSessionValue(SessionAssistant) as AIAssistant;
-                if (assistant == null)
+                var agent = getSessionValue(SessionAgent) as AIAgent;
+                if (agent == null)
                 {
-                    // Use the user-selected assistant GUID if set, otherwise fall back to the first available.
-                    var selectedGuid = getSessionValue(SessionAssistantConfiguration) as string;
+                    // Use the user-selected agent GUID if set, otherwise fall back to the first available.
+                    var selectedGuid = getSessionValue(SessionAgentConfiguration) as string;
                     var config = (!string.IsNullOrEmpty(selectedGuid))
-                        ? WebUser.AssistantConfigurations.FirstOrDefault(a => a.GUID == selectedGuid)
+                        ? WebUser.AgentConfigurations.FirstOrDefault(a => a.GUID == selectedGuid)
                         : null;
-                    config = config ?? WebUser.AssistantConfiguration;
+                    config = config ?? WebUser.AgentConfiguration;
 
-                    if (config == null) throw new Exception("No assistant configured for the user.");
+                    if (config == null) throw new Exception("No agent configured for the user.");
 
-                    assistant = new AIAssistant(config)
+                    agent = new AIAgent(config)
                     {
                         SecurityContext = WebUser
                     };
-                    setSessionValue(SessionAssistant, assistant);
+                    setSessionValue(SessionAgent, agent);
                 }
-                return assistant;
+                return agent;
             }
         }
 
         /// <summary>
-        /// Returns the list of AI Assistants available to the current user (from their security group AssistantGUIDs),
-        /// together with the currently selected assistant GUID.
+        /// Returns the list of AI Agents available to the current user (from their security group AgentGUIDs),
+        /// together with the currently selected agent GUID.
         /// </summary>
-        public ActionResult SWIGetUserAssistants(string sessionId)
+        public ActionResult SWIGetUserAgents(string sessionId)
         {
-            writeDebug("SWIGetUserAssistants");
+            writeDebug("SWIGetUserAgents");
             try
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
 
-                var configs = WebUser.AssistantConfigurations;
-                var selectedGuid = getSessionValue(SessionAssistantConfiguration) as string
+                var configs = WebUser.AgentConfigurations;
+                var selectedGuid = getSessionValue(SessionAgentConfiguration) as string
                     ?? configs.FirstOrDefault()?.GUID;
 
                 return Json(new
                 {
-                    assistants = configs.Select(a => new { guid = a.GUID, name = Repository.RepositoryTranslate("AIAssistantName", "*", a.Name), description = Repository.RepositoryTranslate("AIAssistantDescription", "*", a.Description) }).ToList(),
+                    agents = configs.Select(a => new { guid = a.GUID, name = Repository.RepositoryTranslate("AIAgentName", "*", a.Name), description = Repository.RepositoryTranslate("AIAgentDescription", "*", a.Description) }).ToList(),
                     selectedGuid = selectedGuid
                 });
             }
@@ -1550,24 +1550,24 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Selects an AI Assistant for the current session by GUID.
-        /// The GUID must belong to one of the assistants allowed for the user.
-        /// Clears the active session assistant so the next request picks up the new configuration.
+        /// Selects an AI Agent for the current session by GUID.
+        /// The GUID must belong to one of the agents allowed for the user.
+        /// Clears the active session agent so the next request picks up the new configuration.
         /// </summary>
-        public ActionResult SWISelectAssistant(string guid, string sessionId)
+        public ActionResult SWISelectAgent(string guid, string sessionId)
         {
-            writeDebug("SWISelectAssistant");
+            writeDebug("SWISelectAgent");
             try
             {
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
 
-                var config = WebUser.AssistantConfigurations.FirstOrDefault(a => a.GUID == guid);
-                if (config == null) throw new Exception("Invalid or unauthorised assistant GUID.");
+                var config = WebUser.AgentConfigurations.FirstOrDefault(a => a.GUID == guid);
+                if (config == null) throw new Exception("Invalid or unauthorised agent GUID.");
 
-                // Clear the cached assistant instance so it is recreated with the new configuration.
-                setSessionValue(SessionAssistant, null);
-                setSessionValue(SessionAssistantConfiguration, guid);
+                // Clear the cached agent instance so it is recreated with the new configuration.
+                setSessionValue(SessionAgent, null);
+                setSessionValue(SessionAgentConfiguration, guid);
 
                 return Json(new { });
             }
@@ -1579,13 +1579,13 @@ namespace SealWebServer.Controllers
 
 
         /// <summary>
-        /// Sends a user message to the AI Assistant and returns the AI response.
-        /// An <see cref="AIAssistant"/> instance is maintained in the session (keyed by
-        /// <see cref="SessionAssistant"/>) so that follow-up questions retain context.
+        /// Sends a user message to the AI Agent and returns the AI response.
+        /// An <see cref="AIAgent"/> instance is maintained in the session (keyed by
+        /// <see cref="SessionAgent"/>) so that follow-up questions retain context.
         /// </summary>
-        public ActionResult SWIGetAIAssistantResponse(string message, string sessionId)
+        public ActionResult SWIGetAIAgentResponse(string message, string sessionId)
         {
-            writeDebug("SWIGetAIAssistantResponse");
+            writeDebug("SWIGetAIAgentResponse");
             try
             {
                 SetSessionId(sessionId);
@@ -1593,16 +1593,16 @@ namespace SealWebServer.Controllers
 
                 if (string.IsNullOrEmpty(message)) throw new Exception("Error: message must be supplied");
 
-                // Retrieve or initialise the per-session assistant
-                var assistant = Assistant;
+                // Retrieve or initialise the per-session agent
+                var agent = Agent;
 
-                // Register a fresh cancel flag so SWICancelAIAssistantResponse can interrupt Chat()
+                // Register a fresh cancel flag so SWICancelAIAgentResponse can interrupt Chat()
                 var cancelOp = new CancellationFlagOperation();
                 _aiCancelTokens[SessionKey] = cancelOp;
                 string reply;
                 try
                 {
-                    reply = assistant.Chat(message, cancelOp, this, Startup.DebugMode ? this : null);
+                    reply = agent.Chat(message, cancelOp, this, Startup.DebugMode ? this : null);
                 }
                 finally
                 {
@@ -1658,7 +1658,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                WebHelper.WriteWebException(ex, "SWIGetAIAssistantResponse");
+                WebHelper.WriteWebException(ex, "SWIGetAIAgentResponse");
                 return Json(new { response = "Error: " + getExceptionMessage(ex) });
             }
         }
@@ -1666,15 +1666,15 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Signals the in-progress AI chat call for this session to stop at the next safe
         /// iteration boundary (i.e. sets the <see cref="ICancelOperation.Cancel"/> flag that
-        /// <see cref="AIAssistant.Chat"/> checks between tool-call iterations).
+        /// <see cref="AIAgent.Chat"/> checks between tool-call iterations).
         /// </summary>
-        public ActionResult SWICancelAIAssistantResponse(string sessionId)
+        public ActionResult SWICancelAIAgentResponse(string sessionId)
         {
-            writeDebug("SWICancelAIAssistantResponse");
+            writeDebug("SWICancelAIAgentResponse");
             try
             {
                 // Intentionally no checkSWIAuthentication() here: this action runs
-                // concurrently with SWIGetAIAssistantResponse on the same session, and
+                // concurrently with SWIGetAIAgentResponse on the same session, and
                 // the underlying _sessions dictionary is not thread-safe. SessionKey only
                 // reads from the ASP.NET Core cookie store, which is safe to call here.
                 if (_aiCancelTokens.TryGetValue(SessionKey, out var cancelOp))

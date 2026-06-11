@@ -32,8 +32,8 @@ namespace SealWebServer.Controllers
         public const string SessionUser = "SessionUser";
         public const string SessionNavigationContext = "SessionNavigationContext";
         public const string SessionUploadedFiles = "SessionUploadedFiles";
-        public const string SessionAssistant = "SessionAssistant";
-        public const string SessionAssistantConfiguration = "SessionAssistantConfiguration";
+        public const string SessionAgent = "SessionAgent";
+        public const string SessionAgentConfiguration = "SessionAgentConfiguration";
 
 
         const string _loginContent = "<html><script>window.top.location.href='Main';</script></html>";
@@ -1002,8 +1002,8 @@ namespace SealWebServer.Controllers
 
             foreach (string subFolder in Directory.GetDirectories(folder.GetFullPath()))
             {
-                // _Assistant is a hidden system folder – skip it during searches too
-                if (folder.IsPersonal && Path.GetFileName(subFolder) == AssistantFolders.FolderName) continue;
+                // _Agents is a hidden system folder – skip it during searches too
+                if (folder.IsPersonal && Path.GetFileName(subFolder) == AgentFolders.FolderName) continue;
 
                 SWIFolder sub = getFolder(folder.Combine(subFolder));
                 if (sub.right > 0) searchFolder(sub, pattern, files);

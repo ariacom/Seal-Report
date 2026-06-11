@@ -77,13 +77,12 @@ DataTableEditor*.cshtml
 _ed.*.css
 _ed.*.js
 /Repository/Sources/_OLD
-/Repository/Sources/Assistants
 *.slc
 *.srl
 TranslationsWebDesigner.xlsx
 sealweb-editor.css
 sealweb-assistant.css
-Assistant.cshtml
+Agent.cshtml
 ModelDetailEntity.*
 
 # =========================

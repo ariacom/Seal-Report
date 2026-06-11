@@ -132,7 +132,7 @@ namespace Seal.AI
 
         /// <summary>
         /// Serializes a <see cref="ChatMessage"/> to an anonymous object suitable for the
-        /// Ollama REST API (OpenAI-compatible), handling plain messages, tool-call assistant
+        /// Ollama REST API (OpenAI-compatible), handling plain messages, tool-call agent
         /// turns, and tool results.
         /// </summary>
         private static object SerializeMessage(ChatMessage m)

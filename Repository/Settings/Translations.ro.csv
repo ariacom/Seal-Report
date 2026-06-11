@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Da (Utilizatorul poate naviga în subfol
 WebJS;Yes (User can create and edit sub-folders);Da (Utilizatorul poate crea și edita subfoldere)
 WebJS;Yes (User can edit his profile);Da (Utilizatorul își poate edita profilul)
 WebJS;Yes (User is administrator of the Web Server);Da (Utilizatorul este administrator al serverului web)
-Web;Select assistant;Selectează asistentul
+Web;Select agent;Selectează asistentul
 Web;Mark as favorite;Marchează ca favorit
 Web;Favorites;Favorite
 Web;No favorites yet;Niciun favorit încă
@@ -435,14 +435,14 @@ Web;New conversation;Conversație nouă
 Web;Sample prompts;Exemple de prompturi
 Web;Sample Prompts;Exemple de prompturi
 Web;No sample prompts defined;Niciun exemplu de prompt definit
-Web;AI Assistant;Asistent AI
+Web;AI Agent;Asistent AI
 Web;Favorites & Recent;Favorite și recente
 Web;Hide panel;Ascunde panoul
-Web;Ask the AI assistant…;Întreabă asistentul AI…
+Web;Ask the AI agent…;Întreabă asistentul AI…
 Web;Confirm Deletion;Confirmă ștergerea
 Web;This action is irreversible. Are you sure you want to delete this item?;Această acțiune este ireversibilă. Sigur doriți să ștergeți acest element?
 Web;Data Source;Sursă de date
-Web;Report Assistants;Asistenți de raport
+Web;Report Agents;Asistenți de raport
 Web;Select Tables or Views;Selectează tabele sau vizualizări
 Web;Filter tables...;Filtrează tabelele...
 Web;Select All;Selectează tot
@@ -454,24 +454,24 @@ Web;No current items available;Niciun element curent disponibil
 Web;Current items will appear here when saved;Elementele curente vor apărea aici când sunt salvate
 Web;Drafts;Schițe
 Web;No draft items available;Niciun element schiță disponibil
-Web;Upload files or create new items with the assistant to see them here;Încărcați fișiere sau creați elemente noi cu asistentul pentru a le vedea aici
+Web;Upload files or create new items with the agent to see them here;Încărcați fișiere sau creați elemente noi cu asistentul pentru a le vedea aici
 Web;Item Details;Detalii element
 Web;Loading detail. Please wait...;Se încarcă detaliul. Vă rugăm așteptați...
 Web;Select a row from the table to view its details;Selectați un rând din tabel pentru a-i vedea detaliile
 Web;Check;Verifică
 Web;Download;Descarcă
-Web;Reports Assistant;Asistent rapoarte
+Web;Reports Agent;Asistent rapoarte
 Web;Connection type;Tip de conexiune
 Web;Connection string;Șir de conexiune
 Web;Tables or views;Tabele sau vizualizări
-Web;Report Assistant;Asistent raport
+Web;Report Agent;Asistent raport
 Web;AI Provider;Furnizor AI
 Web;AI model;Model AI
 Web;AI model name (overrides default));Nume model AI (suprascrie valoarea implicită))
 Web;Temperature;Temperatură
 Web;Model temperature;Temperatura modelului
 Web;System prompt;Prompt de sistem
-Web;Optional sytem prompt for the assistant;Prompt de sistem opțional pentru asistent
+Web;Optional sytem prompt for the agent;Prompt de sistem opțional pentru asistent
 Web;User prompt;Prompt utilizator
 Web;Default user prompts (if empty default values configured are taken);Prompturi utilizator implicite (dacă este gol, sunt preluate valorile implicite configurate)
 Web;User Groups allowed (No selection means no restriction);Grupuri de utilizatori permise (Nicio selecție înseamnă fără restricție)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Scanează datele acum
 Web;Execute;Execută
 Web;Elements:;Elemente:
 Web;Restrictions:;Restricții:
-WebJS;Hide AI Assistant;Ascunde asistentul AI
-WebJS;AI Assistant;Asistent AI
+WebJS;Hide AI Agent;Ascunde asistentul AI
+WebJS;AI Agent;Asistent AI
 WebJS;Running;Se execută
 WebJS;Request cancelled.;Cerere anulată.
 WebJS;Remove from favorites;Elimină din favorite
@@ -500,7 +500,7 @@ Web;Configuration;Configurație
 Web;Configuration and security;Configurație și securitate
 Web;Download/Upload;Descărcare/Încărcare
 Web;Rights;Drepturi
-Web;Assistants;Asistenți
+Web;Agents;Asistenți
 Web;Folder;Folder
 Web;Drag to resize;Trageți pentru redimensionare
 WebJS;Copy and paste;Copiați și lipiți

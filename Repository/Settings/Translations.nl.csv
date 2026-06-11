@@ -425,7 +425,7 @@ WebJS;Yes (User can browse sub-folders);Ja (Gebruiker kan submappen doorbladeren
 WebJS;Yes (User can create and edit sub-folders);Ja (Gebruiker kan submappen maken en bewerken)
 WebJS;Yes (User can edit his profile);Ja (Gebruiker kan zijn profiel bewerken)
 WebJS;Yes (User is administrator of the Web Server);Ja (Gebruiker is beheerder van de webserver)
-Web;Select assistant;Assistent selecteren
+Web;Select agent;Assistent selecteren
 Web;Mark as favorite;Markeren als favoriet
 Web;Favorites;Favorieten
 Web;No favorites yet;Nog geen favorieten
@@ -435,14 +435,14 @@ Web;New conversation;Nieuw gesprek
 Web;Sample prompts;Voorbeeldprompts
 Web;Sample Prompts;Voorbeeldprompts
 Web;No sample prompts defined;Geen voorbeeldprompts gedefinieerd
-Web;AI Assistant;AI-assistent
+Web;AI Agent;AI-assistent
 Web;Favorites & Recent;Favorieten en recent
 Web;Hide panel;Paneel verbergen
-Web;Ask the AI assistant…;Stel de AI-assistent een vraag…
+Web;Ask the AI agent…;Stel de AI-assistent een vraag…
 Web;Confirm Deletion;Verwijdering bevestigen
 Web;This action is irreversible. Are you sure you want to delete this item?;Deze actie is onomkeerbaar. Weet u zeker dat u dit item wilt verwijderen?
 Web;Data Source;Gegevensbron
-Web;Report Assistants;Rapportassistenten
+Web;Report Agents;Rapportassistenten
 Web;Select Tables or Views;Tabellen of weergaven selecteren
 Web;Filter tables...;Tabellen filteren...
 Web;Select All;Alles selecteren
@@ -454,24 +454,24 @@ Web;No current items available;Geen huidige items beschikbaar
 Web;Current items will appear here when saved;Huidige items verschijnen hier wanneer ze zijn opgeslagen
 Web;Drafts;Concepten
 Web;No draft items available;Geen conceptitems beschikbaar
-Web;Upload files or create new items with the assistant to see them here;Upload bestanden of maak nieuwe items met de assistent om ze hier te zien
+Web;Upload files or create new items with the agent to see them here;Upload bestanden of maak nieuwe items met de assistent om ze hier te zien
 Web;Item Details;Itemdetails
 Web;Loading detail. Please wait...;Detail laden. Even geduld...
 Web;Select a row from the table to view its details;Selecteer een rij uit de tabel om de details te bekijken
 Web;Check;Controleren
 Web;Download;Downloaden
-Web;Reports Assistant;Rapportenassistent
+Web;Reports Agent;Rapportenassistent
 Web;Connection type;Verbindingstype
 Web;Connection string;Verbindingsreeks
 Web;Tables or views;Tabellen of weergaven
-Web;Report Assistant;Rapportassistent
+Web;Report Agent;Rapportassistent
 Web;AI Provider;AI-provider
 Web;AI model;AI-model
 Web;AI model name (overrides default));AI-modelnaam (overschrijft standaard))
 Web;Temperature;Temperatuur
 Web;Model temperature;Modeltemperatuur
 Web;System prompt;Systeemprompt
-Web;Optional sytem prompt for the assistant;Optionele systeemprompt voor de assistent
+Web;Optional sytem prompt for the agent;Optionele systeemprompt voor de assistent
 Web;User prompt;Gebruikersprompt
 Web;Default user prompts (if empty default values configured are taken);Standaard gebruikersprompts (indien leeg worden de geconfigureerde standaardwaarden gebruikt)
 Web;User Groups allowed (No selection means no restriction);Toegestane gebruikersgroepen (geen selectie betekent geen beperking)
@@ -486,8 +486,8 @@ Web;Scan Data Now;Gegevens nu scannen
 Web;Execute;Uitvoeren
 Web;Elements:;Elementen:
 Web;Restrictions:;Beperkingen:
-WebJS;Hide AI Assistant;AI-assistent verbergen
-WebJS;AI Assistant;AI-assistent
+WebJS;Hide AI Agent;AI-assistent verbergen
+WebJS;AI Agent;AI-assistent
 WebJS;Running;Bezig
 WebJS;Request cancelled.;Aanvraag geannuleerd.
 WebJS;Remove from favorites;Verwijderen uit favorieten
@@ -500,7 +500,7 @@ Web;Configuration;Configuratie
 Web;Configuration and security;Configuratie en beveiliging
 Web;Download/Upload;Downloaden/Uploaden
 Web;Rights;Rechten
-Web;Assistants;Assistenten
+Web;Agents;Assistenten
 Web;Folder;Map
 Web;Drag to resize;Sleep om het formaat te wijzigen
 WebJS;Copy and paste;Kopiëren en plakken

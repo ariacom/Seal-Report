@@ -2,15 +2,15 @@
 @{
     ReportTask task = Model;
 
-    task.TemplateDescription = "Runs an AI Assistant with its configured tools using a system and user prompt. The response is stored in the report parameter 'ai_assistant_response'.";
+    task.TemplateDescription = "Runs an AI Agent with its configured tools using a system and user prompt. The response is stored in the report parameter 'ai_agent_response'.";
     task.Step = ExecutionStep.BeforeRendering;
 
     //Parameters for this task
-    task.Parameters.Add(new Parameter() { Name = "ai_assistant_name", Value = "", DisplayName = "AI Assistant name", Description = "The AI Assistant name. If empty, the default assistant is used (if configured).", Enums = (from a in Repository.Instance.AIConfiguration.AIAssistants where a.IsEnabled select a.Name).ToArray(), UseOnlyEnumValues = false });
-    task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You are a helpful assistant integrated in a business reporting system.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider. If empty, the assistant's configured system prompt is used." });
+    task.Parameters.Add(new Parameter() { Name = "ai_agent_name", Value = "", DisplayName = "AI Agent name", Description = "The AI Agent name. If empty, the default agent is used (if configured).", Enums = (from a in Repository.Instance.AIConfiguration.AIAgents where a.IsEnabled select a.Name).ToArray(), UseOnlyEnumValues = false });
+    task.Parameters.Add(new Parameter() { Name = "ai_system_prompt", Value = "You are a helpful agent integrated in a business reporting system.", DisplayName = "AI System prompt", Description = "The system prompt sent to the AI provider. If empty, the agent's configured system prompt is used." });
     task.Parameters.Add(new Parameter() { Name = "ai_user_prompt", Value = "", DisplayName = "AI User prompt", Description = "The user prompt sent to the AI provider." });
     task.Parameters.Add(new Parameter() { Name = "log_ai_requests", BoolValue = false, DisplayName = "Log requests and responses", Description = "If enabled, logs the full system prompt, user prompt and AI response to the task execution log." });
-    task.Parameters.Add(new Parameter() { Name = "log_ai_tools", BoolValue = false, DisplayName = "Log tool calls", Description = "If enabled, logs the tool calls (arguments and results) executed by the assistant to the task execution log." });
+    task.Parameters.Add(new Parameter() { Name = "log_ai_tools", BoolValue = false, DisplayName = "Log tool calls", Description = "If enabled, logs the tool calls (arguments and results) executed by the agent to the task execution log." });
 
     task.Script = @"@using Seal.AI;
 @{
@@ -19,7 +19,7 @@
 
     task.LogMessage($""Executing '{task.Name}'"");
 
-    var assistantName = task.GetValue(""ai_assistant_name"");
+    var agentName = task.GetValue(""ai_agent_name"");
     var system = task.GetValue(""ai_system_prompt"");
     var user = task.GetValue(""ai_user_prompt"");
     var logRequests = task.GetBoolValue(""log_ai_requests"", false);
@@ -36,14 +36,14 @@
     ReportExecutionLog requestLog = logRequests ? report : null;
     ReportExecutionLog toolsLog = logTools ? report : null;
 
-    var assistant = new AIAssistant(assistantName);
-    if (!string.IsNullOrEmpty(system)) assistant.OverrideSystemPrompt(system);
-    var answer = assistant.Chat(user, report, requestLog, toolsLog);
-    if (string.IsNullOrEmpty(answer)) throw new Exception(""Got empty response from the AI assistant."");
+    var agent = new AIAgent(agentName);
+    if (!string.IsNullOrEmpty(system)) agent.OverrideSystemPrompt(system);
+    var answer = agent.Chat(user, report, requestLog, toolsLog);
+    if (string.IsNullOrEmpty(answer)) throw new Exception(""Got empty response from the AI agent."");
 
     if (logRequests) task.LogMessage($""[AI Response]\r\n{answer}"");
 
-    report.ExecutionView.SetParameter(""ai_assistant_response"", answer);
+    report.ExecutionView.SetParameter(""ai_agent_response"", answer);
 }
 ";
 
