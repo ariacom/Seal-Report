@@ -131,16 +131,17 @@ Workflow:
           <DisplayName />           <!-- leave empty to inherit the column display name -->
           <DisplayOrder>1</DisplayOrder> <!-- left-to-right column position in the output table; 1 = leftmost -->
           <PivotPosition>Row</PivotPosition>   <!-- Row | Column | Data | Page -->
-          <SortOrder>1 Ascendant</SortOrder>
-          <!-- Sort applied to result rows for this element:
-               Not sorted      → no sort (default if omitted)
-               {n} Ascendant   → ascending, explicit priority n (lower n = sorted first); e.g. "1 Ascendant"
-               {n} Descendant  → descending, explicit priority n; e.g. "1 Descendant"
-               Never use "Automatic Ascendant" or "Automatic Descendant" — always use explicit numeric priorities.
+          <!-- <SortOrder> is OPTIONAL. Omit it to keep the default "Automatic Ascendant".
+               Add it with an explicit priority ONLY on the element(s) the user asks to sort by:
+               Automatic Ascendant → ascending, automatic priority — the DEFAULT when the tag is omitted
+               {n} Ascendant       → ascending, explicit priority n (lower n = sorted first); e.g. "1 Ascendant"
+               {n} Descendant      → descending, explicit priority n; e.g. "1 Descendant"
+               Not sorted          → no sort contribution from this element
                Typical patterns:
-                 • Dimension columns (Row) you want ordered → "1 Ascendant" (or "2 Ascendant" for secondary sort)
-                 • Measure (Data) you want to rank by      → "1 Descendant" (e.g. top customers by revenue)
-                 • Columns not involved in sorting         → Not sorted -->
+                 • No ordering requested                   → omit <SortOrder> on every element (Automatic Ascendant)
+                 • Dimension column the user wants ordered → "1 Ascendant" (or "2 Ascendant" for a secondary key)
+                 • Measure (Data) to rank by               → "1 Descendant" (e.g. top customers by revenue)
+                 • Columns not part of a requested sort    → leave default (Automatic Ascendant) -->
           <AggregateFunction>Sum</AggregateFunction>  <!-- Sum|Count|Avg|Min|Max|CountDistinct; required for Data -->
           <Format>d</Format>        <!-- optional: N0 integer, N2 decimal, d date -->
           <!-- Chart fields — only needed when the report includes a chart:
@@ -260,7 +261,7 @@ AND [f3]</Restriction>
              Values: html | print | Excel | PDF | HTML2PDF | csv | Text | XML | Json -->
         <!-- restrictions_per_row ("Restrictions: Number of restrictions per row"): default 4.
              OMIT this parameter when the model has 4 or fewer prompted restrictions — the default 4 already fits them on one row.
-             Add it set to 6 ONLY when there are MORE than 4 prompted restrictions, so they pack onto fewer rows:
+             REQUIRED set to 6 whenever there are MORE than 4 prompted restrictions, so they pack onto fewer rows:
              <Parameter><Name>restrictions_per_row</Name><Value>6</Value></Parameter> -->
         <!-- force_execution: default false (the report waits for the user to run it). OMIT it by default.
              Add it set to True ONLY when the user explicitly wants the report to execute immediately on
@@ -331,22 +332,25 @@ AND [f3]</Restriction>
 
 The format is one or more `[columnIndex,'dir']` pairs (0-based index; `'asc'`/`'desc'`); `{LAST}` resolves to the last column index and `{LAST}-1` to the one before it. Sorting by the total column only makes sense when a **row total** exists, so ensure the Data element uses `<ShowTotal>Row</ShowTotal>` or `<ShowTotal>RowColumn</ShowTotal>` (otherwise the last column is a normal data column, not a total). This parameter affects the **`Data Table`** view only; the per-element `<SortOrder>` still governs the `Page Table` view.
 
+When sorting by the total column, use **only** `data_tables_sort_configuration` — do **not** also add an explicit `<SortOrder>` on the measure element for this. Leave the elements at their default `Automatic Ascendant` so the total sort is expressed in exactly one place.
+
 ### Column sort order (`<SortOrder>` inside `<ReportElement>`)
 
 Controls how result rows are sorted on a per-element basis. Set on each `<ReportElement>` individually.
 
 | Value | Effect |
 |---|---|
-| `Not sorted` | No sort contribution from this element (default when omitted) |
+| `Automatic Ascendant` | Ascending with automatic priority — **the default when `<SortOrder>` is omitted** |
+| `Not sorted` | No sort contribution from this element |
 | `{n} Ascendant` | Ascending with explicit priority n — lower n = sorted first (e.g. `1 Ascendant`) |
 | `{n} Descendant` | Descending with explicit priority n (e.g. `1 Descendant`) |
 
 **Rules:**
-- Always set `<SortOrder>` explicitly — do not omit it and rely on defaults.
-- **Never use `Automatic Ascendant` or `Automatic Descendant`** — always use explicit numeric priorities (`{n} Ascendant` / `{n} Descendant`).
-- When the user asks for a "top N" or "best/worst" ranking, set the measure (Data element) to `1 Descendant` (or `1 Ascendant` for bottom). Leave dimension columns as `Not sorted`.
-- When the user asks to sort by a dimension (e.g. "alphabetical", "by date"), set that dimension to `1 Ascendant` and leave measure elements as `Not sorted`.
-- Use explicit numeric priorities (`1`, `2`, `3`…) whenever more than one element contributes to the sort — first sort key gets `1`, second gets `2`, etc.
+- **Do not force a sort the user didn't ask for.** When the request says nothing about ordering, omit `<SortOrder>` on every element — they keep the default `Automatic Ascendant`. Never assign sequential `1, 2, 3…` priorities just to fill in a value.
+- Set an explicit `{n} Ascendant` / `{n} Descendant` **only on the element(s) the user actually wants to sort by**, and leave every other element at the default.
+- When the user asks for a "top N" or "best/worst" ranking, set the measure (Data element) to `1 Descendant` (or `1 Ascendant` for bottom). Leave the other elements at the default.
+- When the user asks to sort by a dimension (e.g. "alphabetical", "by date"), set that dimension to `1 Ascendant` and leave the others at the default.
+- Use explicit numeric priorities (`1`, `2`, `3`…) only when more than one element contributes to a requested sort — first sort key gets `1`, second gets `2`, etc.
 
 **Column display order (`<DisplayOrder>`):**
 Controls the left-to-right position of each column in the output table. Assign consecutive integers starting from 1. Dimension columns (Row) typically appear before measure columns (Data).
@@ -534,7 +538,7 @@ After creating a report or when the user asks to run one, include this tag on it
 - **Always include `<MaxNumberOfRecords>` on every `<ReportModel>`.** Set it to `0` (no limit) by default. Only set a positive integer when the user explicitly asks to limit the number of records (e.g. "top 10", "first 100 rows"). **Whenever `<MaxNumberOfRecords>` is a positive value (a deliberate limit such as Top 10), also set `data_warning_show` to `false` on the `Data Table` sub-view** — the record limit is intentional, so the "maximum number of records is reached" warning must not be shown. Add `<Parameters><Parameter><Name>data_warning_show</Name><Value>false</Value></Parameter></Parameters>` to the `Data Table` view. Leave the warning at its default (omit the parameter) when `<MaxNumberOfRecords>` is `0`.
 - **Cross-tab models** — when a `<ReportModel>` has at least one `Row` element **and** at least one `Column` element, add `<ShowFirstLine>false</ShowFirstLine>` to that model ("Show first header line"). Omit it (default `true`) for any model that is not a cross-tab.
 - **Sort by the total column** — when the user asks to sort by the Total column, set `data_tables_sort_configuration` on the `Data Table` view to `[{LAST},'desc']` (descending) or `[{LAST},'asc']` (ascending). Make sure a row total exists (`<ShowTotal>Row</ShowTotal>` or `RowColumn`), otherwise the last column is not a total.
-- **Restrictions per row** — `restrictions_per_row` ("Restrictions: Number of restrictions per row") defaults to `4`. Omit it when the model has 4 or fewer prompted restrictions; only add it set to `6` when there are more than 4 prompted restrictions.
+- **Restrictions per row (REQUIRED when more than 4 prompted restrictions)** — `restrictions_per_row` ("Restrictions: Number of restrictions per row") defaults to `4`. **Count the prompted restrictions in the model. If that count is greater than 4 you MUST add `<Parameter><Name>restrictions_per_row</Name><Value>6</Value></Parameter>` to the root `Report` view's `<Parameters>`** so they pack onto fewer rows — `6` is not the default, so this is a required, non-redundant parameter in that case. Omit it only when there are 4 or fewer prompted restrictions.
 - **report_format** — defaults to `html`; omit it for html reports. Add it only when the user wants a different default format (Excel, PDF, csv…). It goes **only in the root `Report` view's `<Parameters>`** (alongside `force_execution`) — never on a sub-view such as `Data Table` or `Chart JS`, where it has no effect.
 - **force_execution** — defaults to `false` (the report waits for the user to run it); omit it by default. Set `force_execution=True` only when the user explicitly wants the report to execute immediately on first open even though restrictions are prompted.
 - **Avoid redundant parameters** — never emit a `<Parameter>` whose value equals the template/model default (it is stripped on save and only adds noise). Only include a parameter when its value differs from the default.

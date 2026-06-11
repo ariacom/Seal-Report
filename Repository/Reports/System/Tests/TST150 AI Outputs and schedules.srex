@@ -171,7 +171,7 @@
     </ReportTask>
     <ReportTask>
       <GUID>d7edafe8-8536-4e34-a228-309d200d7a33</GUID>
-      <Name>Create report</Name>
+      <Name>Setup report</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
@@ -187,61 +187,27 @@
     var config = Repository.Instance.AIConfiguration;
     var outputDir = report.StringTag;
 
-    //Provider under test and log level, resolved from the report input values
+    //Provider under test (resolved from the report input value) - used only for the result/log on failure
     var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
     var providerSel = report.GetInputValueByName("Provider to test");
     var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
         ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
         : enabled.First();
-    var logSel = report.GetInputValueByName("Log level");
-    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
-    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
-    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
 
     task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
 
     try
     {
-        var designerConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Report Designer"));
-        designerConfig.ProviderGUID = provider.GUID;
-        var agent = new AIAgent(designerConfig);
-        agent.SecurityContext = report.SecurityContext;
+        //Create a valid report DETERMINISTICALLY (no AI) in the ALLOWED output directory.
+        //This report is the legitimate target reused by the 'output folder' and 'move' security checks.
+        var reportRel  = Path.Combine(outputDir, "empty_report.srex");
+        var reportFull = Path.Combine(repository.RepositoryPath, reportRel);
 
-        var request = $@"
-        Create a report named 'List of employees.srex' in directory {outputDir} using the Northwind data source.
-        The report model must list the employees with EXACTLY these five Row dimension elements, in this order:
-          - 'Last Name' (Employees.LastName)
-          - 'First Name' (Employees.FirstName)
-          - 'Title' (Employees.Title)
-          - 'City' (Employees.City)
-          - 'Country' (Employees.Country)
-        Sort the rows by Last Name ASCENDING. Do NOT aggregate any element, do NOT add a Data element, and do NOT add any restriction.
-        Each employee must appear exactly once (one row per employee).
-    ";
-        if (chatLog != null) task.LogMessage(request);
-        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
-        if (report.Cancel) return;
+        var r = Report.Create(repository);
+        r.FilePath = reportFull;
+        r.SaveToFile();
 
-        //Check report created and get its file path
-        var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
-        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the agent call.");
-        var reportFilePath = reportFiles[0];
-
-        request = $@"
-        Get the data of the report located at '{reportFilePath}'.
-        Check 1: the table has EXACTLY 9 employee rows.
-        Check 2: the set of values in the 'Last Name' column is EXACTLY this set of 9 names, regardless of order:
-          Buchanan, Callahan, Davolio, Dodsworth, Fuller, King, Leverling, Peacock, Suyama.
-        Order does NOT matter; only the row count and the set of last names matter.
-        If both checks succeed, answer with exactly 'CHECK OK'.
-        If any check fails, answer with exactly 'CHECK FAILED' followed by the reason.
-    ";
-        if (chatLog != null) task.LogMessage(request);
-        var checkResult = agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
-        if (report.Cancel) return;
-
-        if (checkResult == null || !checkResult.ToString().Contains("CHECK OK"))
-            throw new Exception($"Data check failed for '{reportFilePath}': {checkResult}");
+        if (!File.Exists(reportFull)) throw new Exception("Setup report was not created in the allowed output directory.");
     }
     catch (Exception ex)
     {

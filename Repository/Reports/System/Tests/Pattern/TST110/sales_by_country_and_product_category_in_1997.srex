@@ -24,7 +24,6 @@
           <Name>Customers.Country</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>1 Ascendant</SortOrder>
           <SerieDefinition>Axis</SerieDefinition>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
@@ -34,7 +33,6 @@
           <DisplayName />
           <DisplayOrder>2</DisplayOrder>
           <PivotPosition>Column</PivotPosition>
-          <SortOrder>Not sorted</SortOrder>
           <SerieDefinition>Splitter</SerieDefinition>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
@@ -45,7 +43,6 @@
           <DisplayOrder>3</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
-          <SortOrder>1 Descendant</SortOrder>
           <ShowTotal>RowColumn</ShowTotal>
           <ChartJSSerie>Bar</ChartJSSerie>
           <SerieSortType>AxisLabel</SerieSortType>

@@ -164,14 +164,22 @@
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>7e57ab1e-0000-4000-8000-000000000108</MetaColumnGUID>
           <CellScript>@{
-    //Turn the messages file cell into a 'View' hyperlink opening the execution messages HTML file.
-    //The file is resolved and served by the 'Navigation Script' of this element, so it works both in the
-    //desktop Report Viewer and in the Web Server execution (the HTML file is then returned inline by the server).
-    //'FinalValue' only changes what is displayed; 'cell.Value' still holds the path read by the Navigation Script.
+    //Turn the messages file cell into a 'View' link opening the execution messages HTML file.
+    //Web Server: open the file in a new browser tab through the 'SWViewFile' endpoint. 'messages_file' is stored
+    //as a path relative to the repository 'Reports' folder, which is exactly what 'SWViewFile?path=' expects.
+    //Desktop Report Viewer (no WebUrl): keep a file download navigation; the path is resolved by the
+    //'Navigation Script' of this element and the file is opened by the viewer.
+    //'FinalValue' only changes what is displayed; 'cell.Value' still holds the path used to build the link.
     ResultCell cell = Model;
     if (!cell.IsTitle &amp;&amp; cell.Value != null &amp;&amp; !string.IsNullOrEmpty(cell.Value.ToString())) {
+        Report report = cell.ContextModel.Report;
+        if (!string.IsNullOrEmpty(report.WebUrl)) {
+            cell.AddNavigationHyperLink(report.WebUrl + "SWViewFile?path=" + System.Net.WebUtility.UrlEncode(cell.Value.ToString()), "View messages");
+        }
+        else {
+            cell.AddNavigationFileDownload("View messages");
+        }
         cell.FinalValue = "&lt;span class='glyphicon glyphicon-list-alt' title='View messages'&gt;&lt;/span&gt;";
-        cell.AddNavigationFileDownload("View messages");
     }
 }
 </CellScript>
@@ -191,6 +199,7 @@
 </NavigationScript>
           <CssStyleEl>text-align:center</CssStyleEl>
           <CssTitle>true</CssTitle>
+          <ContainsHtml>true</ContainsHtml>
         </ReportElement>
       </Elements>
       <Restriction>[a9000000-0000-4000-8000-000000000351]</Restriction>

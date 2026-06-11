@@ -77,20 +77,10 @@
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>d5edbd23-500d-4c0b-8f8b-aed37b719679</GUID>
-          <Name>Suppliers.CompanyName</Name>
-          <Category>Master</Category>
-          <DisplayName>Supplier</DisplayName>
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>eeefaf8e-e3b2-4b37-8240-c2fda6bf5937</GUID>
           <Name>Shippers.CompanyName</Name>
           <Category>Master</Category>
-          <DisplayName>Shipper</DisplayName>
+          <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -142,6 +132,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Orders.OrderDate</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <Format>d</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
@@ -159,6 +150,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -171,6 +163,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -183,6 +176,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Customers.CompanyName</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -197,6 +191,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Customers.ContactName</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -211,6 +206,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Suppliers.CompanyName</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -225,6 +221,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Shippers.CompanyName</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -239,6 +236,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Name>Orders.ShipCountry</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -268,6 +266,7 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -282,6 +281,7 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -296,6 +296,7 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <Name>[Order Details].Quantity</Name>
           <Category>Master</Category>
           <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
@@ -368,7 +369,6 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
-      <ShowInMenu>true</ShowInMenu>
       <Parameters>
         <Parameter>
           <Name>restrictions_per_row</Name>

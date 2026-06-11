@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>9f557aec-f873-4703-8bf5-b20af79bf9b2</GUID>
+  <DisplayName>Orders Search</DisplayName>
+  <ViewGUID>cdce40f4-0d54-40aa-b860-43a732d3a3fd</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>acfb64e0-5c36-4016-bdb3-24d0ee510c5f</GUID>
+      <Name>Northwind</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>493bd6dc-0a65-4925-8f8f-8315f57b16ac</GUID>
+      <Name>Model</Name>
+      <SourceGUID>acfb64e0-5c36-4016-bdb3-24d0ee510c5f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>e5effa02-c4e0-429c-a467-d8291a6b7338</GUID>
+          <Name>Orders.OrderDate</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1d3fe5cf-bf51-4033-863a-4f555a83f278</GUID>
+          <Name>Orders.OrderID</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4bc793f0-619e-4916-b25b-fa874108c0a4</GUID>
+          <Name>Customers.CompanyName</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>84a63b81-8f0e-42e8-800e-311dcf09dd0e</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>632768f5-637c-4c49-a222-7b50e90227ef</GUID>
+          <Name>Customers.ContactName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5806229a-375e-4c98-aaa8-9fe534476333</GUID>
+          <Name>Shippers.CompanyName</Name>
+          <DisplayName />
+          <DisplayOrder>5</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>222305f3-ea28-42ef-a6ef-68d8b7d4206e</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <DisplayOrder>6</DisplayOrder>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a83f7571-3eda-4e73-ae7e-0dc0bba8e8d7</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>435dda00-9901-4c28-aa68-8209d3998726</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName />
+          <DisplayOrder>7</DisplayOrder>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[654e08b9-d5e6-40e5-b901-a5863d3def82]
+AND [a02f71c6-dcf6-44d7-8519-ceac192131fe]
+AND [6d7b3d5f-2715-4f16-8f82-eab11486b08b]
+AND [07d33fb6-b544-4282-90e1-5c64c58746f4]
+AND [14ac1b9a-7ee6-4098-97a1-6587602e56ee]
+AND [112eba52-37de-4dc4-b3d2-9a7f86032cd8]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>654e08b9-d5e6-40e5-b901-a5863d3def82</GUID>
+          <Name>Orders.OrderDate</Name>
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <Prompt>PromptTwoValues</Prompt>
+          <Operator>Between</Operator>
+          <Date1>1997-01-01T00:00:00</Date1>
+          <Date2>1997-12-31T00:00:00</Date2>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>a02f71c6-dcf6-44d7-8519-ceac192131fe</GUID>
+          <Name>Customers.CompanyName</Name>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <PlaceHolder>Type to filter</PlaceHolder>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>6d7b3d5f-2715-4f16-8f82-eab11486b08b</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>07d33fb6-b544-4282-90e1-5c64c58746f4</GUID>
+          <Name>Customers.ContactName</Name>
+          <DisplayName />
+          <DisplayOrder>6</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>6</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>14ac1b9a-7ee6-4098-97a1-6587602e56ee</GUID>
+          <Name>Shippers.CompanyName</Name>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <PlaceHolder>Type to filter</PlaceHolder>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>112eba52-37de-4dc4-b3d2-9a7f86032cd8</GUID>
+          <Name>Orders.OrderID</Name>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>cdce40f4-0d54-40aa-b860-43a732d3a3fd</GUID>
+      <Name>Orders Search</Name>
+      <Views>
+        <ReportView>
+          <GUID>6741c107-76d7-40a5-90ab-f71d36e0baf4</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>1fd8cf57-3c30-4f78-90f1-52268987b96e</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>09ecdf5e-7789-43d0-9ea8-00ac6aaa6e1e</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>ae503949-3536-47e3-b58a-acfd0dd42492</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>25ca134e-e325-466e-9c7b-0a6cfb1e0aad</GUID>
+                  <Name>Chart NVD3</Name>
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>0cff2ae9-d7f5-48cc-8a73-9fa7ccd590a2</GUID>
+                  <Name>Chart Scottplot</Name>
+                  <TemplateName>Chart Scottplot</TemplateName>
+                  <SortOrder>4</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>60cde29a-fb45-4ce2-8509-e26bbe83f7ba</GUID>
+                  <Name>Chart Plotly</Name>
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <SortOrder>5</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>4d2796ed-7f4d-42ad-94b9-5e717acf313b</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>6</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>493bd6dc-0a65-4925-8f8f-8315f57b16ac</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>restrictions_per_row</Name>
+          <Value>6</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>0</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

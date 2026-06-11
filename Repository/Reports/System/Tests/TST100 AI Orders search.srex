@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>aab33159-f979-47db-9792-c128266185f1</GUID>
-  <ViewGUID>f92c2f15-79e5-4367-9ff3-d3c2e6f51c1d</ViewGUID>
+  <GUID>b1d4e7a0-3c5f-4e21-9a8b-1c2d3e4f5a60</GUID>
+  <ViewGUID>b1d4e7a0-3c5f-4e21-9a8b-1c2d3e4f5a61</ViewGUID>
   <InputValues>
     <ReportRestriction>
-      <GUID>aab33159-0000-4000-8000-000000000001</GUID>
+      <GUID>b1d4e7a0-0000-4000-8000-000000000001</GUID>
       <Type>Text</Type>
       <DisplayName>Provider to test</DisplayName>
       <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
@@ -20,7 +20,7 @@
       <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
     </ReportRestriction>
     <ReportRestriction>
-      <GUID>aab33159-0000-4000-8000-000000000002</GUID>
+      <GUID>b1d4e7a0-0000-4000-8000-000000000002</GUID>
       <Type>Text</Type>
       <DisplayName>Log level</DisplayName>
       <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
@@ -40,7 +40,7 @@
   </InputValues>
   <Sources>
     <ReportSource>
-      <GUID>0b32b277-d29a-4a24-9f94-f7e677d74082</GUID>
+      <GUID>7a1b2c3d-4e5f-4061-8a9b-0c1d2e3f4a50</GUID>
       <Name>Audit SQLite (Repository)</Name>
       <ConnectionGUID>1</ConnectionGUID>
       <MetaData />
@@ -49,19 +49,19 @@
   </Sources>
   <Models>
     <ReportModel>
-      <GUID>5e946bd8-5751-4eb3-a76a-c7e4bff73aed</GUID>
+      <GUID>6f5e4d3c-2b1a-4098-8765-4321fedcba98</GUID>
       <Name>Model</Name>
-      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <SourceGUID>7a1b2c3d-4e5f-4061-8a9b-0c1d2e3f4a50</SourceGUID>
     </ReportModel>
   </Models>
   <Tasks>
     <ReportTask>
-      <GUID>44199106-9b8c-42ef-b919-86f12adc6849</GUID>
+      <GUID>1b9a8c7d-6e5f-4a3b-8c1d-0e9f8a7b6c5d</GUID>
       <Name>Init</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
-      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <SourceGUID>7a1b2c3d-4e5f-4061-8a9b-0c1d2e3f4a50</SourceGUID>
       <Script>@using Seal.AI;
 @using System.IO;
 @using System.Linq;
@@ -105,12 +105,12 @@
       <SortOrder>2</SortOrder>
     </ReportTask>
     <ReportTask>
-      <GUID>a7c7ff21-0eae-4533-88ba-326985cff90d</GUID>
+      <GUID>2c8b9d6e-5f4a-4b3c-9d2e-9f8a7b6c5d4e</GUID>
       <Name>Cleanup</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
-      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <SourceGUID>7a1b2c3d-4e5f-4061-8a9b-0c1d2e3f4a50</SourceGUID>
       <Script>@using System.IO;
 
 @{
@@ -138,12 +138,12 @@
       <SortOrder>3</SortOrder>
     </ReportTask>
     <ReportTask>
-      <GUID>b21280a9-7542-499f-a7db-b81f77ab5fa4</GUID>
+      <GUID>3d7c8e5f-4a6b-4c2d-9e1f-8a7b6c5d4e3f</GUID>
       <Name>Create report</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
-      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <SourceGUID>7a1b2c3d-4e5f-4061-8a9b-0c1d2e3f4a50</SourceGUID>
       <Script>@using Seal.AI;
 @using System.IO;
 @using System.Linq;
@@ -174,21 +174,28 @@
     agent.SecurityContext = report.SecurityContext;
 
         var request = $@"
-        Create a report named 'Sales by country and product category in 1997.srex' in directory {outputDir} using the Northwind data source.
-        Build a CROSS TAB (pivot) report model with EXACTLY these three elements:
-          - ROW dimension: 'Customer Country' (Customers.Country) - one row per country.
-          - COLUMN dimension: 'Category' (Products.CategoryID, the product category) - one column per category.
-          - DATA element: 'Amount' aggregated with Sum - the total sales amount at each country/category intersection.
-        Add totals for rows and columns.
-        Sort table by Totals descending (From top country to last country).
-        Sort chart by Country name, descending.
-        Add EXACTLY four RESTRICTIONS and set EVERY one of them to be PROMPTED at execution:
-          - 'Order Date' (Orders.OrderDate), with a default keeping the whole year 1997 (between 1997-01-01 and 1997-12-31).
-          - 'Customer Country' (Customers.Country).
+        Create a report named 'Orders search.srex' in directory {outputDir} using the Northwind data source.
+        Build a DETAIL (flat list) report model - NOT a cross tab. The model must have NO column dimension and NO page dimension.
+        Add EXACTLY these six ROW elements (one displayed column each, in this order):
+          - 'Order Date' (Orders.OrderDate).
+          - 'Order ID' (Orders.OrderID).
           - 'Customer' (Customers.CompanyName).
-          - 'Employee' (Employees.LastName).
-        These four are RESTRICTIONS ONLY and must all be prompted at execution. 'Customer Country' is BOTH the row dimension AND a prompted restriction; do not add the other three as row, column, data or page elements.
-        Configure the model chart as a HORIZONTAL STACKED BAR chart: one horizontal bar per country, each bar split (stacked) by product category, using Amount as the value. Use 'Customer Country' as the chart axis and 'Category' as the chart splitter, and set the 'Amount' data element serie as a Bar serie.
+          - 'Customer Country' (Customers.Country).
+          - 'Customer Contact' (Customers.ContactName).
+          - 'Shipper' (Shippers.CompanyName, the shipping company).
+        Add EXACTLY these three DATA elements (numeric measures), each aggregated with Sum and showing a column total:
+          - 'Amount' ((1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice) - the net sales amount.
+          - 'Discount' ([Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice) - the discounted amount.
+          - 'Quantity' ([Order Details].Quantity) - the number of units ordered.
+        Add EXACTLY these six RESTRICTIONS and set EVERY one of them to be PROMPTED at execution:
+          - 'Order Date' (Orders.OrderDate), Between operator, prompting two values (from / to), with a default keeping the whole year 1997 (between 1997-01-01 and 1997-12-31).
+          - 'Customer' (Customers.CompanyName), with the 'Contains' operator (free text filter).
+          - 'Customer Country' (Customers.Country).
+          - 'Customer Contact' (Customers.ContactName), with the 'Contains' operator (free text filter).
+          - 'Shipper' (Shippers.CompanyName), with the 'Contains' operator (free text filter).
+          - 'Order ID' (Orders.OrderID).
+        These six are RESTRICTIONS and must all be prompted at execution. 'Customer', 'Customer Country', 'Customer Contact', 'Shipper' and 'Order ID' are each BOTH a row element AND a prompted restriction.
+        Do not add any chart serie and do not add a column or page dimension: this is a plain detail list, keep the default table view.
         Force the report execution using the current restrictions.
     ";
         if (chatLog != null) task.LogMessage(request);
@@ -209,41 +216,44 @@
         var cols = model.GetElements(PivotPosition.Column).ToList();
         var datas = model.GetElements(PivotPosition.Data).ToList();
 
-        if (rows.Count != 1 || rows[0].MetaColumn == null || rows[0].MetaColumn.DisplayName != "Customer Country")
-            throw new Exception($"Expected exactly one Row element 'Customer Country', found {rows.Count} ({string.Join(", ", rows.Select(e =&gt; e.MetaColumn?.DisplayName))}).");
-        if (cols.Count != 1 || cols[0].MetaColumn == null || cols[0].MetaColumn.DisplayName != "Category")
-            throw new Exception($"Expected exactly one Column element 'Category', found {cols.Count} ({string.Join(", ", cols.Select(e =&gt; e.MetaColumn?.DisplayName))}).");
-        if (datas.Count != 1 || datas[0].MetaColumn == null || datas[0].MetaColumn.DisplayName != "Amount" || datas[0].AggregateFunction != AggregateFunction.Sum)
-            throw new Exception($"Expected exactly one Data element 'Amount' aggregated with Sum, found {datas.Count}.");
+        //Detail list: there must be NO column (and no page) dimension
+        if (cols.Count != 0)
+            throw new Exception($"Expected a flat detail list with no Column element, found {cols.Count} ({string.Join(", ", cols.Select(e =&gt; e.MetaColumn?.DisplayName))}).");
 
-        //Restriction checks: exactly 4 restrictions, all prompted, on the expected columns
+        //Expected row elements are all present
+        foreach (var disp in new[] { "Order Date", "Order ID", "Customer", "Customer Country", "Customer Contact", "Shipper" })
+        {
+            if (!rows.Any(e =&gt; e.MetaColumn != null &amp;&amp; e.MetaColumn.DisplayName == disp))
+                throw new Exception($"Missing Row element '{disp}'. Found rows: {string.Join(", ", rows.Select(e =&gt; e.MetaColumn?.DisplayName))}.");
+        }
+
+        //Expected data measures, each aggregated with Sum
+        foreach (var disp in new[] { "Amount", "Discount", "Quantity" })
+        {
+            var d = datas.FirstOrDefault(e =&gt; e.MetaColumn != null &amp;&amp; e.MetaColumn.DisplayName == disp);
+            if (d == null) throw new Exception($"Missing Data element '{disp}'. Found datas: {string.Join(", ", datas.Select(e =&gt; e.MetaColumn?.DisplayName))}.");
+            if (d.AggregateFunction != AggregateFunction.Sum)
+                throw new Exception($"Data element '{disp}' must be aggregated with Sum, found {d.AggregateFunction}.");
+        }
+
+        //Restriction checks: the six expected restrictions, all prompted, on the expected columns
         var prompted = model.Restrictions.Where(x =&gt; x.Prompt != PromptType.None).ToList();
-        if (model.Restrictions.Count != 4 || prompted.Count != 4)
-            throw new Exception($"Expected exactly 4 prompted restrictions, found {model.Restrictions.Count} restriction(s) ({prompted.Count} prompted).");
-        foreach (var disp in new[] { "Order Date", "Customer Country", "Customer", "Employee" })
+        foreach (var disp in new[] { "Order Date", "Customer", "Customer Country", "Customer Contact", "Shipper", "Order ID" })
         {
             if (!prompted.Any(x =&gt; x.MetaColumn != null &amp;&amp; x.MetaColumn.DisplayName == disp))
                 throw new Exception($"Missing prompted restriction on '{disp}'.");
         }
-
-        //Chart checks: horizontal stacked bar = country as axis, category as splitter, Amount as a Bar serie
-        if (rows[0].SerieDefinition != SerieDefinition.Axis)
-            throw new Exception("Chart: 'Customer Country' must be the chart Axis.");
-        if (cols[0].SerieDefinition != SerieDefinition.Splitter)
-            throw new Exception("Chart: 'Category' must be the chart Splitter.");
-        if (!datas[0].IsSerie || datas[0].ChartJSSerie != ChartJSSerieDefinition.Bar)
-            throw new Exception("Chart: 'Amount' must define a Bar serie.");
 }
 </Script>
       <SortOrder>4</SortOrder>
     </ReportTask>
     <ReportTask>
-      <GUID>c3f1a9d2-4b6e-4a21-9c2d-7e8f0a1b2c3d</GUID>
+      <GUID>4e6d9f4a-3b7c-4d1e-8f2a-7b6c5d4e3f2a</GUID>
       <Name>Check Pattern</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
-      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <SourceGUID>7a1b2c3d-4e5f-4061-8a9b-0c1d2e3f4a50</SourceGUID>
       <Script>@using Seal.Model;
 @using System.IO;
 @using System.Linq;
@@ -379,6 +389,19 @@
                 Check(res, ref total, ref passed, ref fail, ref warn, false, false, $"Unexpected restriction on '{RestrictionKey(gr)}' in model '{em.Name}'.");
         }
 
+        //Report-level view parameters declared in the pattern (e.g. restrictions_per_row, force_execution): a different/missing value is a WARNING.
+        var ev = expected.Views.FirstOrDefault();
+        var gv = generated.Views.FirstOrDefault();
+        if (ev != null &amp;&amp; gv != null)
+        {
+            foreach (var ep in ev.Parameters.Where(p =&gt; !string.IsNullOrEmpty(p.Value)))
+            {
+                var gval = gv.GetValue(ep.Name);
+                Check(res, ref total, ref passed, ref fail, ref warn, gval == ep.Value, false,
+                    $"Report view parameter '{ep.Name}': expected '{ep.Value}', found '{(string.IsNullOrEmpty(gval) ? "(not set)" : gval)}'.");
+            }
+        }
+
         res.Score = total == 0 ? 100 : Math.Round(100.0 * passed / total, 1);
         res.Status = fail ? "FAILURE" : ((warn || res.Score &lt; 100) ? "WARNING" : "OK");
         return res;
@@ -403,52 +426,28 @@
   </Tasks>
   <Views>
     <ReportView>
-      <GUID>f92c2f15-79e5-4367-9ff3-d3c2e6f51c1d</GUID>
+      <GUID>b1d4e7a0-3c5f-4e21-9a8b-1c2d3e4f5a61</GUID>
       <Name>View</Name>
       <Views>
         <ReportView>
-          <GUID>30b34ea1-6b08-4629-af59-5bcf53a68f5f</GUID>
+          <GUID>5f5e6a7b-8c9d-4e0f-9a1b-2c3d4e5f6a7b</GUID>
           <Name>Model</Name>
           <Views>
             <ReportView>
-              <GUID>d59798e4-4737-408c-8bbc-134904b4fadc</GUID>
+              <GUID>6a4f5b6c-7d8e-4f90-8a1b-2c3d4e5f6a7c</GUID>
               <Name>Container</Name>
               <Views>
                 <ReportView>
-                  <GUID>8e7375db-56d8-42d9-ad2d-f359eb9c68c6</GUID>
+                  <GUID>7b3e4c5d-6e7f-4081-9a2b-3c4d5e6f7a8d</GUID>
                   <Name>Page Table</Name>
                   <TemplateName>Page Table</TemplateName>
                   <SortOrder>1</SortOrder>
                 </ReportView>
                 <ReportView>
-                  <GUID>c5b88d5a-e8ce-4e12-a3fa-4802ca2da670</GUID>
-                  <Name>Chart JS</Name>
-                  <TemplateName>Chart JS</TemplateName>
-                  <SortOrder>2</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>a1dc8ab6-1cec-4d6d-8185-081f979b6ffa</GUID>
-                  <Name>Chart Scottplot</Name>
-                  <TemplateName>Chart Scottplot</TemplateName>
-                  <SortOrder>3</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>b35dd8d5-73fc-4b67-9d90-6effa8b19e5b</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
-                  <SortOrder>4</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>3f8c6f9c-ab77-4f64-a923-ec6dcf1a9c18</GUID>
-                  <Name>Chart Plotly</Name>
-                  <TemplateName>Chart Plotly</TemplateName>
-                  <SortOrder>5</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>12cb1ac3-bb98-410b-88de-2f8e815433e8</GUID>
+                  <GUID>c0890716-1b2c-4536-8f70-8b9caddcecd2</GUID>
                   <Name>Data Table</Name>
                   <TemplateName>Data Table</TemplateName>
-                  <SortOrder>6</SortOrder>
+                  <SortOrder>2</SortOrder>
                 </ReportView>
               </Views>
               <TemplateName>Container</TemplateName>
@@ -456,7 +455,7 @@
             </ReportView>
           </Views>
           <TemplateName>Model</TemplateName>
-          <ModelGUID>5e946bd8-5751-4eb3-a76a-c7e4bff73aed</ModelGUID>
+          <ModelGUID>6f5e4d3c-2b1a-4098-8765-4321fedcba98</ModelGUID>
           <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
