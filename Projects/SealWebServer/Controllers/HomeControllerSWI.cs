@@ -1253,7 +1253,7 @@ namespace SealWebServer.Controllers
         /// </summary>
         /// <param name="name">Human-readable chat name used as the file name.</param>
         /// <param name="infosJson">JSON-serialised array of StringPair objects (Type, Name, Description, Instance …).</param>
-        public ActionResult SAISaveAgentChat(string name, string infosJson, string sessionId, int maxRecents = 20)
+        public ActionResult SAISaveAgentChat(string name, string infosJson, string sessionId, int maxRecents = 20, bool generateName = false)
         {
             writeDebug("SAISaveAgentChat");
             try
@@ -1269,6 +1269,20 @@ namespace SealWebServer.Controllers
                     ? new List<StringPair>()
                     : JsonConvert.DeserializeObject<List<StringPair>>(infosJson) ?? new List<StringPair>();
 
+                // On the first save, ask the AI to summarise the conversation into a friendly
+                // title. Falls back to the caller-supplied name when generation fails.
+                if (generateName)
+                {
+                    var title = agent.GenerateTitle();
+                    if (!string.IsNullOrWhiteSpace(title))
+                    {
+                        name = title;
+                        var nameInfo = infos.FirstOrDefault(i => i.Key == "Name");
+                        if (nameInfo != null) nameInfo.Value = title;
+                        else infos.Add(new StringPair { Key = "Name", Value = title });
+                    }
+                }
+
                 var recentsFolder = GetAgentSubFolder(AgentFolders.Recents);
                 var fileName = Helper.CleanFileName(name) + AgentFolders.FileExt;
                 var filePath = Path.Combine(recentsFolder, fileName);
@@ -1283,7 +1297,7 @@ namespace SealWebServer.Controllers
                 for (int i = maxRecents; i < files.Count; i++)
                     files[i].Delete();
 
-                return Json(new { fileName = Path.GetFileNameWithoutExtension(fileName) });
+                return Json(new { fileName = Path.GetFileNameWithoutExtension(fileName), name = name });
             }
             catch (Exception ex)
             {

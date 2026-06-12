@@ -12,6 +12,25 @@
     var connGuid  = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
     var source    = tool.GetExecSource(dsGuid);
     if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+
+    // NoSQL source
+    if (source.IsNoSQL) {
+        var ntable = source.MetaData.Tables.FirstOrDefault(t => t.Name == tableName || t.DisplayName == tableName || t.Alias == tableName);
+        if (ntable == null) { tool.ExecResult = $"No table '{tableName}' found in NoSQL source '{source.Name}'."; return; }
+        if (ntable.IsMongoDb) {
+            tool.ExecResult = $"An exact row count is not available for MongoDB source '{source.Name}' via this tool (only a limited document preview is loaded). To get a precise count, build a report with a Count aggregate (report_create_from_xml) and run it with report_execute_get_data.";
+        } else {
+            try {
+                var ndt   = ntable.BuildNoSQLTable(true);
+                var nnote = string.IsNullOrWhiteSpace(whereStr) ? "" : " (note: the 'where' filter is not applied to NoSQL sources)";
+                tool.ExecResult = $"{tableName}: {ndt.Rows.Count} rows{nnote}";
+            }
+            catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+        }
+        tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+        return;
+    }
+
     var conn = tool.GetExecConnection(source, connGuid);
     if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
 

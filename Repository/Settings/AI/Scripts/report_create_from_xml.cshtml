@@ -58,30 +58,50 @@
 
         var validColGuids = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var colGuidByName = new System.Collections.Generic.Dictionary<string, string>();
+        var colNameByGuid = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var table in metaSource.MetaData.Tables)
             foreach (var col in table.Columns)
             {
                 validColGuids.Add(col.GUID);
                 colGuidByName[norm(col.Name)] = col.GUID;
                 if (!string.IsNullOrEmpty(col.DisplayName)) colGuidByName[norm(col.DisplayName)] = col.GUID;
+                colNameByGuid[col.GUID] = col.Name;
             }
 
         var badRefs = new System.Collections.Generic.List<string>();
         foreach (var mc in doc.Descendants("MetaColumnGUID").ToList())
         {
             var val = mc.Value == null ? "" : mc.Value.Trim();
-            if (validColGuids.Contains(val)) continue;
-
-            var refName = mc.Parent == null ? null : (string)mc.Parent.Element("Name");
-            string realGuid;
-            if (refName != null && colGuidByName.TryGetValue(norm(refName), out realGuid))
+            if (!validColGuids.Contains(val))
             {
-                tool.CurrentToolCall.LogMessage($"Resolved MetaColumnGUID for '{refName.Trim()}': '{val}' -> '{realGuid}'");
-                mc.Value = realGuid;
+                var refName = mc.Parent == null ? null : (string)mc.Parent.Element("Name");
+                string realGuid;
+                if (refName != null && colGuidByName.TryGetValue(norm(refName), out realGuid))
+                {
+                    tool.CurrentToolCall.LogMessage($"Resolved MetaColumnGUID for '{refName.Trim()}': '{val}' -> '{realGuid}'");
+                    mc.Value = realGuid;
+                    val = realGuid;
+                }
+                else
+                {
+                    badRefs.Add(refName != null ? $"'{refName.Trim()}' (supplied GUID '{val}')" : $"GUID '{val}'");
+                    continue;
+                }
             }
-            else
+
+            // NoSQL sources resolve each element/restriction in memory by matching its <Name>
+            // to a result-table column, whose name is the metadata column's raw field name
+            // (e.g. 'year', 'transactions.amount'). A table-qualified name like 'transactions.year'
+            // matches nothing and the report fails. Force <Name> to the raw field name.
+            if (metaSource.IsNoSQL && mc.Parent != null && colNameByGuid.TryGetValue(val, out var rawName))
             {
-                badRefs.Add(refName != null ? $"'{refName.Trim()}' (supplied GUID '{val}')" : $"GUID '{val}'");
+                var nameEl = mc.Parent.Element("Name");
+                if (nameEl == null) mc.Parent.AddFirst(new XElement("Name", rawName));
+                else if (nameEl.Value != rawName)
+                {
+                    tool.CurrentToolCall.LogMessage($"NoSQL: corrected element Name '{nameEl.Value}' -> '{rawName}'");
+                    nameEl.Value = rawName;
+                }
             }
         }
         if (badRefs.Count > 0)

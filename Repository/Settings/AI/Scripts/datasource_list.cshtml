@@ -9,7 +9,7 @@
     {
         var dbType = source.Connection?.DatabaseType.ToString() ?? "Unknown";
         var desc   = string.IsNullOrEmpty(source.Description) ? "" : $" — {source.Description}";
-        sb.AppendLine($"## {source.Name}{desc} [{dbType}]{(source.IsDefault ? " (default)" : "")} (GUID: {source.GUID})");
+        sb.AppendLine($"## {source.Name}{desc} [{dbType}]{(source.IsNoSQL ? " / NoSQL" : "")}{(source.IsDefault ? " (default)" : "")} (GUID: {source.GUID})");
 
         // Connections
         sb.AppendLine("  Connections:");

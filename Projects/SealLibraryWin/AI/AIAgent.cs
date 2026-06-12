@@ -183,6 +183,43 @@ namespace Seal.AI
             return _provider.HandleChat(Messages);
         }
 
+        /// <summary>
+        /// Asks the AI to summarise the current conversation as a short, friendly
+        /// title (a few words). Uses the same provider/model as the conversation,
+        /// without tools, and works on a copy of <see cref="Messages"/> so the
+        /// persisted history is never modified. Returns <c>null</c> when no
+        /// conversation exists yet or on any failure, so callers can fall back to
+        /// their default naming.
+        /// </summary>
+        public string GenerateTitle()
+        {
+            try
+            {
+                // Need at least one real exchange to summarise.
+                if (!Messages.OfType<UserChatMessage>().Any()) return null;
+
+                var temp = new List<ChatMessage>(Messages)
+                {
+                    new UserChatMessage(
+                        "Summarize this conversation as a short title of 3 to 6 words. " +
+                        "Reply with the title only: plain text, no quotes, no trailing punctuation.")
+                };
+
+                var title = _provider.HandleChat(temp);
+                if (string.IsNullOrWhiteSpace(title)) return null;
+
+                // Keep the first line only and strip surrounding quotes.
+                title = title.Split('\n')[0].Trim().Trim('"', '\'', '`').Trim();
+                if (title.Length > 60) title = title.Substring(0, 60).Trim();
+
+                return string.IsNullOrWhiteSpace(title) ? null : title;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         // ----------------------------------------------------------------
         //  Conversation management
         // ----------------------------------------------------------------

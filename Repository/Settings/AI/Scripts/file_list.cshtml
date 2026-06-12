@@ -34,6 +34,9 @@
     {
         if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
         if (folder.right == 0) continue;
+        // Skip the personal recycle bin (Personal\BIN) – deleted files must not be scanned/used.
+        if (folder.IsPersonal && folder.FinalPath.TrimStart(Path.DirectorySeparatorChar)
+                .Split(Path.DirectorySeparatorChar).FirstOrDefault() == "BIN") continue;
 
         string physPath, displayPath;
         if (folder.IsPersonal)

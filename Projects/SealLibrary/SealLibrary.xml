@@ -610,6 +610,16 @@
             bypasses the agentic tool loop.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIAgent.GenerateTitle">
+            <summary>
+            Asks the AI to summarise the current conversation as a short, friendly
+            title (a few words). Uses the same provider/model as the conversation,
+            without tools, and works on a copy of <see cref="P:Seal.AI.AIAgent.Messages"/> so the
+            persisted history is never modified. Returns <c>null</c> when no
+            conversation exists yet or on any failure, so callers can fall back to
+            their default naming.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIAgent.OverrideSystemPrompt(System.String)">
             <summary>
             Replaces the leading system message in <see cref="P:Seal.AI.AIAgent.Messages"/> with

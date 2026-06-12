@@ -232,10 +232,11 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
     // ── Chat persistence (Recents / Favorites) ──────────────────
-    SaveAIAgentChat(name, infos, callback, errorcb) {
+    SaveAIAgentChat(name, infos, callback, errorcb, generateName) {
         $.post(_server + "SAISaveAgentChat", {
             name: name,
-            infosJson: JSON.stringify(infos)
+            infosJson: JSON.stringify(infos),
+            generateName: generateName === true
         })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });

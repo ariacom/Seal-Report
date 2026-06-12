@@ -266,10 +266,11 @@ class SWIGateway {
 
     // ── Chat persistence (Recents / Favorites) ──────────────────
 
-    public SaveAIAgentChat(name: string, infos: { Key: string; Value: string }[], callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public SaveAIAgentChat(name: string, infos: { Key: string; Value: string }[], callback: (data: any) => void, errorcb?: (data: any) => void, generateName?: boolean) {
         $.post(_server + "SAISaveAgentChat", {
             name: name,
-            infosJson: JSON.stringify(infos)
+            infosJson: JSON.stringify(infos),
+            generateName: generateName === true
         })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });

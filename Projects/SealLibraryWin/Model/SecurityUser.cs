@@ -131,7 +131,7 @@ namespace Seal.Model
                 var folderLeafName = Path.GetFileName(result.FinalPath);
                 if (folderLeafName == "BIN") result.type = "bin";
                 if (result.FinalPath == "") result.type = "personal";
-                result.name = (result.FinalPath == "" ? prefix : folderLeafName);
+                result.name = (result.FinalPath == "" ? prefix : (result.type == "bin" ? Security.Repository.TranslateWeb("BIN") : folderLeafName));
                 result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
                 result.right = (int)FolderRight.Edit;
                 result.files = (PersonalFolderRight == PersonalFolderRight.Files);

@@ -59,6 +59,15 @@ You have access to all available tools. Follow the rules below carefully.
 - **Never end the SQL with a semicolon** — the query is wrapped inside a `FROM (…) AS sub` at runtime; a trailing `;` will cause a syntax error.
 - **Computed column aliases must use CamelCase** — write `SUM(x) AS TotalSales`, never `SUM(x) AS [Total Sales]` or `SUM(x) AS "Total Sales"`. Square brackets and quoted identifiers are only for referencing existing table/column names that require quoting.
 
+### NoSQL / MongoDB sources
+Some data sources are **NoSQL** (e.g. MongoDB). `datasource_list` marks them `/ NoSQL` and `datasource_get_detail` shows `Storage: NoSQL`. Handle them differently from SQL sources:
+- **Never write SQL for them.** `database_execute_query` rejects NoSQL sources, and the SQL-dialect rules above do not apply — there is no SQL engine.
+- **Inspect** them with `database_get_columns` (the source's defined fields and types) and `database_get_sample_values` (distinct sample values). For MongoDB these read a preview of up to ~100 documents.
+- `database_count_rows` does **not** return an exact count for MongoDB (only a preview is loaded); for other NoSQL sources it returns the full row count. For an exact MongoDB count, create a report with a Count aggregate and run it.
+- **Always create NoSQL reports with `report_create_from_xml`** (metadata model) — never `report_create_from_sql`. Aggregation, grouping and filtering work exactly as for SQL sources.
+- When calling `report_check_model_type`, pass the source's `source_guid` so it detects a NoSQL source and confirms the metadata route.
+- **Element and restriction `<Name>` must be the column's RAW field name — NOT the `Table.Column` form.** A NoSQL model is resolved in memory: each `<ReportElement>` / `<ReportRestriction>` is matched to a result-table column whose name is the metadata column's exact field name (the value shown before the `(GUID: …)` by `datasource_get_detail`, e.g. `year`, `account_id`, `transactions.amount`). Use that bare field name verbatim as the `<Name>` — **never** prefix it with the table name. For example, with table `transactions` and field `year`, write `<Name>year</Name>`, NOT `<Name>transactions.year</Name>`; a table-qualified name does not match any column and the report fails with *"Column '…' does not belong to table …"*. (This applies only to NoSQL sources — SQL sources keep the `Table.Column` form. `report_create_from_xml` also auto-corrects the name for NoSQL, but generate it correctly.)
+
 ### Creating a report — choose the right tool
 
 **Step 0 — always call `report_check_model_type` first** with the user's request before deciding which creation tool to use. Follow its recommendation.
@@ -127,7 +136,7 @@ Workflow:
       <Elements>
         <ReportElement>
           <GUID>e1</GUID>
-          <Name>Table.Column</Name>
+          <Name>Table.Column</Name>  <!-- SQL sources only. For NoSQL/MongoDB use the column's RAW field name (e.g. year, transactions.amount) — never Table.Column. See "NoSQL / MongoDB sources". -->
           <DisplayName />           <!-- leave empty to inherit the column display name -->
           <DisplayOrder>1</DisplayOrder> <!-- left-to-right column position in the output table; 1 = leftmost -->
           <PivotPosition>Row</PivotPosition>   <!-- Row | Column | Data | Page -->

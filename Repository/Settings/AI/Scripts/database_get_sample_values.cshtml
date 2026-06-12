@@ -13,6 +13,35 @@
     var connGuid   = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
     var source     = tool.GetExecSource(dsGuid);
     if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+
+    // NoSQL source: read distinct values from the materialized table (LINQ over the DataTable)
+    if (source.IsNoSQL) {
+        var ntable = source.MetaData.Tables.FirstOrDefault(t => t.Name == tableName || t.DisplayName == tableName || t.Alias == tableName);
+        if (ntable == null) { tool.ExecResult = $"No table '{tableName}' found in NoSQL source '{source.Name}'."; return; }
+        try {
+            // Mirror the framework pattern: MongoDB loads a definition preview (~100 docs); other NoSQL loads full data
+            var ndt = ntable.BuildNoSQLTable(!ntable.IsMongoDb);
+            if (!ndt.Columns.Contains(columnName)) { tool.ExecResult = $"No column '{columnName}' found in table '{tableName}'."; return; }
+            var seen     = new System.Collections.Generic.HashSet<string>();
+            var distinct = new System.Collections.Generic.List<string>();
+            foreach (System.Data.DataRow row in ndt.Rows) {
+                var v = row[columnName];
+                if (v == DBNull.Value) continue;
+                var s = v?.ToString() ?? "";
+                if (seen.Add(s)) distinct.Add(s);
+            }
+            if (distinct.Count == 0) { tool.ExecResult = $"No non-null values found in {tableName}.{columnName}."; return; }
+            distinct.Sort();
+            var nres = string.Join(", ", distinct.Take(50));
+            if (distinct.Count > 50) nres += $" ... ({distinct.Count} distinct values total, first 50 shown)";
+            if (ntable.IsMongoDb) nres += " (values observed in a preview of up to 100 documents)";
+            tool.ExecResult = nres;
+        }
+        catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+        tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+        return;
+    }
+
     var conn = tool.GetExecConnection(source, connGuid);
     if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
 

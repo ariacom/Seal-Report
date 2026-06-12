@@ -23,6 +23,13 @@
     var connGuid = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
     var source   = tool.GetExecSource(dsGuid);
     if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+
+    // NoSQL sources have no SQL engine
+    if (source.IsNoSQL) {
+        tool.ExecResult = $"Error: data source '{source.Name}' is a NoSQL source; raw SQL is not supported. Use database_get_columns and database_get_sample_values to inspect it, and create reports with report_create_from_xml.";
+        return;
+    }
+
     var conn = tool.GetExecConnection(source, connGuid);
     if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
 

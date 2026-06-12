@@ -61,7 +61,7 @@
       <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
       <Name>report_check_model_type</Name>
       <Description>Analyses a report request and returns whether it requires a SQL model (report_create_from_sql) or a metadata model (report_create_from_xml), with the reasoning. Always call this before creating any report.</Description>
-      <ParametersSchema>{"type":"object","properties":{"request":{"type":"string","description":"The user's report request, exactly as stated."}},"required":["request"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"request":{"type":"string","description":"The user's report request, exactly as stated."},"source_guid":{"type":"string","description":"GUID of the target data source, as returned by datasource_list. Pass it so a NoSQL source is detected and routed to report_create_from_xml. Omit to analyse the request text only."}},"required":["request"]}</ParametersSchema>
       <ExecutionScriptFile>report_check_model_type.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>

@@ -12,6 +12,20 @@
     var connGuid  = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
     var source    = tool.GetExecSource(dsGuid);
     if (source == null) { tool.ExecResult = "Error: no data source configured."; return; }
+
+    // NoSQL source: columns come from the table definition, not a SQL schema query
+    if (source.IsNoSQL) {
+        var ntable = source.MetaData.Tables.FirstOrDefault(t => t.Name == tableName || t.DisplayName == tableName || t.Alias == tableName);
+        if (ntable == null) { tool.ExecResult = $"No table '{tableName}' found in NoSQL source '{source.Name}'."; return; }
+        if (ntable.Columns.Count == 0) { tool.ExecResult = $"No columns defined for table '{tableName}'."; return; }
+        var nsb = new StringBuilder();
+        nsb.AppendLine("column_name\tdata_type\tis_nullable");
+        foreach (var col in ntable.Columns) nsb.AppendLine($"{col.Name}\t{col.Type}\t");
+        tool.ExecResult = nsb.ToString();
+        tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+        return;
+    }
+
     var conn = tool.GetExecConnection(source, connGuid);
     if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
 

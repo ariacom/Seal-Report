@@ -41,6 +41,9 @@
         if (tool.CurrentToolCall.CancelOperation?.Cancel == true) break;
         if (folder.right == 0) continue;  // no access – hidden from this user
         if (folder.files)      continue;  // files-only folder, reports not shown
+        // Skip the personal recycle bin (Personal\BIN) – deleted reports must not be scanned/used.
+        if (folder.IsPersonal && folder.FinalPath.TrimStart(Path.DirectorySeparatorChar)
+                .Split(Path.DirectorySeparatorChar).FirstOrDefault() == "BIN") continue;
 
         // Compute physical path and display path from the SWIFolder fields.
         // Physical path is derived directly – never via GetFullPath() which may be null.

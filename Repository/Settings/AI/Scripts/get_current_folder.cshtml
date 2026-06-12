@@ -41,6 +41,9 @@
     {
         if ((FolderRight)folder.right != FolderRight.Edit) continue;
         if (folder.files) continue;
+        // Skip the personal recycle bin (Personal\BIN) – never offer it as a writable target.
+        if (folder.IsPersonal && folder.FinalPath.TrimStart(Path.DirectorySeparatorChar)
+                .Split(Path.DirectorySeparatorChar).FirstOrDefault() == "BIN") continue;
 
         string displayPath = folder.IsPersonal
             ? "Personal" + folder.FinalPath.TrimEnd(Path.DirectorySeparatorChar)

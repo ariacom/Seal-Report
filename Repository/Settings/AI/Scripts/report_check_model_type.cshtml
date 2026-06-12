@@ -1,11 +1,26 @@
 @using System.Text.Json
 @using System.Linq
+@using Seal.Model
 @using Seal.AI
 @{
     AIToolConfiguration tool = Model;
     var args    = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var request = args.GetProperty("request").GetString().ToLowerInvariant();
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (request: {request})..");
+
+    // NoSQL sources never use a SQL model — route straight to the metadata tool
+    var srcGuid = args.TryGetProperty("source_guid", out var sgp) ? sgp.GetString() : null;
+    if (!string.IsNullOrEmpty(srcGuid)) {
+        var src = Repository.Instance.Sources.FirstOrDefault(s => s.GUID == srcGuid);
+        if (src != null && src.IsNoSQL) {
+            tool.ExecResult =
+                "MODEL TYPE: Metadata (NoSQL) — use report_create_from_xml.\n" +
+                "REASON: the selected data source is a NoSQL source (no SQL engine). report_create_from_sql is not applicable; " +
+                "build the report from metadata columns. Aggregation, grouping and filtering are handled by the metadata model.";
+            tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+            return;
+        }
+    }
 
     // Patterns that genuinely require SQL (window functions, subqueries, set ops)
     var sqlPatterns = new System.Collections.Generic.Dictionary<string, string[]>

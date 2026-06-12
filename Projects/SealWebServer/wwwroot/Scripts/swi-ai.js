@@ -400,13 +400,15 @@
             _requesting = false;
             setSendMode();
             $input.focus();
-            // Auto-save to Recents after every exchange
-            // On the first save use the user's message as a friendly name
+            // Auto-save to Recents after every exchange.
+            // On the first save, ask the AI to generate a friendly summary name
+            // (the sanitized user message is sent as a fallback).
+            var isFirstSave = !_panelChatFileName;
             var saveName = _panelChatFileName || sanitizeFileName(message);
             _gateway.SaveAIAgentChat(saveName, _panelChatInfos, function (saved) {
                 if (saved && saved.fileName)
                     _panelChatFileName = saved.fileName;
-            });
+            }, undefined, isFirstSave);
         }, function (_err) {
             if ($currentTyping) {
                 $currentTyping.remove();
