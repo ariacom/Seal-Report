@@ -76,6 +76,8 @@
             }
             else if (row.Index() >= dataStartRow)
             {
+                //Skip empty rows (e.g. MediaWiki 'mw-empty-elt' placeholder rows)
+                if (cells.Length == 0) continue;
                 //Add row data
                 var newRow = table.NewRow();
                 int cellIndex = 0;
@@ -88,6 +90,8 @@
                     }
                     else
                     {
+                        //Guard against rows with fewer cells than expected
+                        if (cellIndex >= cells.Length) break;
                         var cell = cells[cellIndex];
 
                         var rowspan = cell.GetAttribute(""rowspan"");

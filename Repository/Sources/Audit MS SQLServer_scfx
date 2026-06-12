@@ -12,6 +12,7 @@
       <UserName />
     </MetaConnection>
   </Connections>
+  <Description>Audit database</Description>
   <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>
   <MetaData>
     <Tables>
@@ -25,7 +26,7 @@
             <Name>sr_audit.event_date</Name>
             <Type>DateTime</Type>
             <Category>Audit</Category>
-            <DisplayName>Date</DisplayName>
+            <DisplayName>Date time</DisplayName>
             <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
             <Format>G</Format>
           </MetaColumn>
@@ -44,7 +45,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>User</DisplayName>
-            <DisplayOrder>6</DisplayOrder>
+            <DisplayOrder>7</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>963c0203-23ea-4558-be75-ffa167656cab</GUID>
@@ -52,7 +53,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>User groups</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
+            <DisplayOrder>8</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</GUID>
@@ -60,7 +61,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Execution name</DisplayName>
-            <DisplayOrder>9</DisplayOrder>
+            <DisplayOrder>10</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</GUID>
@@ -76,7 +77,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Execution view</DisplayName>
-            <DisplayOrder>11</DisplayOrder>
+            <DisplayOrder>12</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</GUID>
@@ -84,7 +85,7 @@
             <Type>Numeric</Type>
             <Category>Audit</Category>
             <DisplayName>Execution duration</DisplayName>
-            <DisplayOrder>12</DisplayOrder>
+            <DisplayOrder>13</DisplayOrder>
             <Format>N0</Format>
           </MetaColumn>
           <MetaColumn>
@@ -93,7 +94,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Error</DisplayName>
-            <DisplayOrder>5</DisplayOrder>
+            <DisplayOrder>6</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</GUID>
@@ -101,7 +102,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Output type</DisplayName>
-            <DisplayOrder>13</DisplayOrder>
+            <DisplayOrder>14</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>db1a144e-d051-486c-a668-9926a38b7f73</GUID>
@@ -109,7 +110,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Output name</DisplayName>
-            <DisplayOrder>14</DisplayOrder>
+            <DisplayOrder>15</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>8457637b-d72b-48bf-8fb1-118adfeef0be</GUID>
@@ -117,7 +118,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Schedule name</DisplayName>
-            <DisplayOrder>16</DisplayOrder>
+            <DisplayOrder>17</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>db93240e-46a2-43a2-8b0a-079915daee93</GUID>
@@ -125,7 +126,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Output information</DisplayName>
-            <DisplayOrder>15</DisplayOrder>
+            <DisplayOrder>16</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</GUID>
@@ -133,7 +134,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Execution context</DisplayName>
-            <DisplayOrder>10</DisplayOrder>
+            <DisplayOrder>11</DisplayOrder>
             <EnumGUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</EnumGUID>
           </MetaColumn>
           <MetaColumn>
@@ -142,7 +143,7 @@
             <Type>DateTime</Type>
             <Category>Audit</Category>
             <DisplayName>Event year</DisplayName>
-            <DisplayOrder>17</DisplayOrder>
+            <DisplayOrder>19</DisplayOrder>
             <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
             <Format>yyyy</Format>
             <DrillChildren>
@@ -155,7 +156,7 @@
             <Type>DateTime</Type>
             <Category>Audit</Category>
             <DisplayName>Event month</DisplayName>
-            <DisplayOrder>18</DisplayOrder>
+            <DisplayOrder>20</DisplayOrder>
             <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
             <Format>MM/yyyy</Format>
             <DrillChildren>
@@ -168,7 +169,7 @@
             <Type>DateTime</Type>
             <Category>Audit</Category>
             <DisplayName>Event day</DisplayName>
-            <DisplayOrder>19</DisplayOrder>
+            <DisplayOrder>22</DisplayOrder>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
           </MetaColumn>
@@ -186,7 +187,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>User session</DisplayName>
-            <DisplayOrder>8</DisplayOrder>
+            <DisplayOrder>9</DisplayOrder>
           </MetaColumn>
           <MetaColumn>
             <GUID>8f4337f8-57f0-4d68-91cb-c1b797fbbd81</GUID>
@@ -194,7 +195,7 @@
             <Type>Numeric</Type>
             <Category>Audit</Category>
             <DisplayName>Detail Numeric</DisplayName>
-            <DisplayOrder>4</DisplayOrder>
+            <DisplayOrder>5</DisplayOrder>
             <Format>N0</Format>
           </MetaColumn>
           <MetaColumn>
@@ -203,8 +204,7 @@
             <Type>Text</Type>
             <Category>Audit</Category>
             <DisplayName>Event week</DisplayName>
-            <DisplayOrder>18</DisplayOrder>
-            <Format>d</Format>
+            <DisplayOrder>21</DisplayOrder>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -219,7 +219,6 @@
             <Type>DateTime</Type>
             <Category>Test Results</Category>
             <DisplayName>Run date</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
             <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
             <Format>G</Format>
           </MetaColumn>
@@ -230,6 +229,7 @@
             <Category>Test Results</Category>
             <DisplayName>Run id</DisplayName>
             <DisplayOrder>2</DisplayOrder>
+            <EnumGUID>f1ac144f-dc41-49d0-b673-3776b14fd75a</EnumGUID>
           </MetaColumn>
           <MetaColumn>
             <GUID>7e57ab1e-0000-4000-8000-000000000104</GUID>
@@ -296,7 +296,7 @@
             <Category>Test Results</Category>
             <DisplayName>Match rate</DisplayName>
             <DisplayOrder>10</DisplayOrder>
-            <Format>N1</Format>
+            <Format>N0</Format>
           </MetaColumn>
           <MetaColumn>
             <GUID>7e57ab1e-0000-4000-8000-000000000111</GUID>
@@ -421,19 +421,35 @@ ORDER BY 1</Sql>
           <MetaEV>
             <Id>Success</Id>
             <Val>Success</Val>
-            <Class>table-success</Class>
+            <Class>success</Class>
           </MetaEV>
           <MetaEV>
             <Id>Error</Id>
             <Val>Error</Val>
-            <Class>table-danger</Class>
+            <Class>danger</Class>
+          </MetaEV>
+          <MetaEV>
+            <Id>Warning</Id>
+            <Val>Warning</Val>
+            <Class>warning</Class>
           </MetaEV>
           <MetaEV>
             <Id>LoadError</Id>
             <Val>Load Error</Val>
-            <Class>table-warning</Class>
+            <Class>warning</Class>
           </MetaEV>
         </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>f1ac144f-dc41-49d0-b673-3776b14fd75a</GUID>
+        <Name>Test run</Name>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>true</IsDbRefresh>
+        <Sql>SELECT DISTINCT TOP 20
+run_id,
+run_date
+FROM sr_test_results
+ORDER BY 2 DESC</Sql>
       </MetaEnum>
       <MetaEnum>
         <GUID>aab33159-0000-4000-8000-000000000010</GUID>

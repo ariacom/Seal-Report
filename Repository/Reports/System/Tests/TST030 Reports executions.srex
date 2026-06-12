@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>b1a7c010-0030-4a00-9000-000000000001</GUID>
+  <ViewGUID>b1a7c010-0030-4a00-9000-000000000501</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>b1a7c010-0030-4a00-9000-000000000101</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>b1a7c010-0030-4a00-9000-000000000301</GUID>
+      <Name>Model</Name>
+      <SourceGUID>b1a7c010-0030-4a00-9000-000000000101</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>b1a7c010-0030-4a00-9000-000000000401</GUID>
+      <Name>Check Reports Executions</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>b1a7c010-0030-4a00-9000-000000000101</SourceGUID>
+      <Script>@using System;
+@using System.IO;
+@using System.Linq;
+@using System.Threading;
+@using System.Collections.Generic;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var errors = new List&lt;string&gt;();
+    int count = 0;
+
+    //Per report execution timeout (seconds)
+    const int TimeoutSeconds = 120;
+
+    //Do not execute the test reports themselves (this 'Tests' folder) to avoid recursion / AI provider calls.
+    var skipFolder = Path.GetDirectoryName(report.FilePath);
+
+    CheckFolder(report, repository.ReportsFolder, skipFolder, errors, ref count, TimeoutSeconds);
+
+    report.LogMessage("Executed {0} report(s).", count);
+    if (errors.Count &gt; 0)
+        throw new Exception($"Report execution errors ({errors.Count}):" + Environment.NewLine + string.Join(Environment.NewLine, errors));
+    report.LogMessage("All {0} report(s) executed successfully.", count);
+}
+
+@functions {
+    //Reports excluded from execution: scratch 'work' reports and reports that need an external resource
+    //not available in a standard test environment (MongoDB, FTP, web download, OLAP/MDX, AI provider,
+    //SQL Server admin/ETL tasks, publication / scheduling side effects). Matched as lowercase path substrings.
+    static readonly string[] SkipContains = new[] {
+        @"\work\",
+        "mongo db",
+        @"\06-etl tasks\",
+        @"\07-ai tasks\",
+        @"\04-ms sqlserver\",
+        "mdx olap",
+        "file download",
+        "fields upload",
+        "500 publication",
+        "510 publication",
+        "800 schedule - sequencer",
+    };
+
+    bool IsSkipped(string reportPath)
+    {
+        var p = reportPath.Replace('/', '\\').ToLowerInvariant();
+        return SkipContains.Any(s =&gt; p.Contains(s));
+    }
+
+    //Recurse the reports folder, skipping the test reports folder.
+    void CheckFolder(Report rootReport, string folder, string skipFolder, List&lt;string&gt; errors, ref int count, int timeoutSeconds)
+    {
+        foreach (var reportPath in Directory.GetFiles(folder, "*.srex"))
+        {
+            if (rootReport.Cancel) return;
+            CheckExecution(rootReport, reportPath, errors, ref count, timeoutSeconds);
+        }
+        foreach (var subFolder in Directory.GetDirectories(folder))
+        {
+            if (rootReport.Cancel) return;
+            if (string.Equals(subFolder.TrimEnd('\\'), skipFolder.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase)) continue;
+            CheckFolder(rootReport, subFolder, skipFolder, errors, ref count, timeoutSeconds);
+        }
+    }
+
+    //Execute the default view of a single report and record any execution error.
+    void CheckExecution(Report rootReport, string reportPath, List&lt;string&gt; errors, ref int count, int timeoutSeconds)
+    {
+        var repository = rootReport.Repository;
+        var rel = reportPath.Replace(repository.ReportsFolder, "");
+        if (IsSkipped(reportPath)) { rootReport.LogMessage("Skipping '{0}'", rel); return; }
+        count++;
+        rootReport.LogMessage("Executing '{0}'", rel);
+
+        Report rep;
+        try { rep = Report.LoadFromFile(reportPath, repository); }
+        catch (Exception ex) { errors.Add($"[{rel}] load exception: {ex.Message}"); return; }
+        if (!string.IsNullOrEmpty(rep.LoadErrors)) { errors.Add($"[{rel}] load error: {rep.LoadErrors}"); return; }
+
+        //Disable the report tasks to avoid side effects (file generation, emails, ...).
+        //Render the default view only, with real data so data-dependent views (gauges, invoice
+        //templates, ...) execute correctly. Note: CheckingExecution must NOT be set here - it injects
+        //'AND (1=0)' into the model SQL (empty result) and breaks views that require values.
+        foreach (var t in rep.Tasks) t.Enabled = false;
+        //Do not open the result in an external viewer (e.g. PDF) during the test.
+        rep.SkipExternalViewer = true;
+        rep.CurrentViewGUID = rep.ViewGUID;
+
+        var execution = new ReportExecution() { Report = rep };
+        try
+        {
+            execution.Execute();
+            int cnt = timeoutSeconds;
+            while (--cnt &gt; 0 &amp;&amp; rep.IsExecuting &amp;&amp; !rootReport.Cancel) Thread.Sleep(1000);
+            if (rep.IsExecuting)
+            {
+                rep.CancelExecution();
+                errors.Add($"[{rel}] execution timeout ({timeoutSeconds}s).");
+                return;
+            }
+        }
+        catch (Exception ex) { errors.Add($"[{rel}] execution exception: {ex.Message}"); return; }
+
+        if (rep.HasErrors) errors.Add($"[{rel}] {rep.ExecutionErrors}");
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>b1a7c010-0030-4a00-9000-000000000501</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>b1a7c010-0030-4a00-9000-000000000502</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>b1a7c010-0030-4a00-9000-000000000503</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b1a7c010-0030-4a00-9000-000000000504</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>b1a7c010-0030-4a00-9000-000000000505</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>b1a7c010-0030-4a00-9000-000000000301</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

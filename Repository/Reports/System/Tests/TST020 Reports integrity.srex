@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>b1a7c010-0020-4a00-9000-000000000001</GUID>
+  <ViewGUID>b1a7c010-0020-4a00-9000-000000000501</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>b1a7c010-0020-4a00-9000-000000000101</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>b1a7c010-0020-4a00-9000-000000000301</GUID>
+      <Name>Model</Name>
+      <SourceGUID>b1a7c010-0020-4a00-9000-000000000101</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>b1a7c010-0020-4a00-9000-000000000401</GUID>
+      <Name>Check Reports Integrity</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>b1a7c010-0020-4a00-9000-000000000101</SourceGUID>
+      <Script>@using System;
+@using System.IO;
+@using System.Linq;
+@using System.Collections.Generic;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var errors = new List&lt;string&gt;();
+    int count = 0;
+
+    //Do not check the test reports themselves (this 'Tests' folder), to keep the test self-contained.
+    var skipFolder = Path.GetDirectoryName(report.FilePath);
+
+    CheckFolder(report, repository.ReportsFolder, skipFolder, errors, ref count);
+
+    report.LogMessage("Checked integrity of {0} report(s).", count);
+    if (errors.Count &gt; 0)
+        throw new Exception($"Report integrity errors ({errors.Count}):" + Environment.NewLine + string.Join(Environment.NewLine, errors));
+    report.LogMessage("All {0} report(s) passed the integrity checks.", count);
+}
+
+@functions {
+    //Reports excluded from the checks: scratch 'work' reports and reports that need an external resource
+    //not available in a standard test environment (MongoDB, FTP, web download, OLAP/MDX, AI provider,
+    //SQL Server admin/ETL tasks, publication / scheduling side effects). Matched as lowercase path substrings.
+    static readonly string[] SkipContains = new[] {
+        @"\work\",
+        "mongo db",
+        @"\06-etl tasks\",
+        @"\07-ai tasks\",
+        @"\04-ms sqlserver\",
+        "mdx olap",
+        "file download",
+        "fields upload",
+        "500 publication",
+        "510 publication",
+        "800 schedule - sequencer",
+    };
+
+    bool IsSkipped(string reportPath)
+    {
+        var p = reportPath.Replace('/', '\\').ToLowerInvariant();
+        return SkipContains.Any(s =&gt; p.Contains(s));
+    }
+
+    //Recurse the reports folder, skipping the test reports folder.
+    void CheckFolder(Report rootReport, string folder, string skipFolder, List&lt;string&gt; errors, ref int count)
+    {
+        foreach (var reportPath in Directory.GetFiles(folder, "*.srex"))
+        {
+            if (rootReport.Cancel) return;
+            CheckReport(rootReport, reportPath, errors, ref count);
+        }
+        foreach (var subFolder in Directory.GetDirectories(folder))
+        {
+            if (rootReport.Cancel) return;
+            if (string.Equals(subFolder.TrimEnd('\\'), skipFolder.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase)) continue;
+            CheckFolder(rootReport, subFolder, skipFolder, errors, ref count);
+        }
+    }
+
+    //Integrity of a single report: load, scripts compile, every element/restriction is in the data source, SQL builds.
+    void CheckReport(Report rootReport, string reportPath, List&lt;string&gt; errors, ref int count)
+    {
+        var repository = rootReport.Repository;
+        var rel = reportPath.Replace(repository.ReportsFolder, "");
+        if (IsSkipped(reportPath)) { rootReport.LogMessage("Skipping '{0}'", rel); return; }
+        count++;
+        rootReport.LogMessage("Checking '{0}'", rel);
+
+        Report rep;
+        try { rep = Report.LoadFromFile(reportPath, repository); }
+        catch (Exception ex) { errors.Add($"[{rel}] load exception: {ex.Message}"); return; }
+        if (!string.IsNullOrEmpty(rep.LoadErrors)) { errors.Add($"[{rel}] load error: {rep.LoadErrors}"); return; }
+
+        //1. All scripts compile
+        try { CompileScripts(rep); }
+        catch (RazorEngine.Templating.TemplateCompilationException ex) { errors.Add($"[{rel}] script does not compile: {Helper.GetExceptionMessage(ex)}"); }
+        catch (Exception ex) { errors.Add($"[{rel}] script error: {ex.Message}"); }
+
+        //2. Initialize for execution (resolves sources, models and enumerated lists)
+        try { rep.InitForExecution(); }
+        catch (Exception ex) { errors.Add($"[{rel}] initialization error: {ex.Message}"); return; }
+
+        //3. SQL builds and every element / restriction resolves to a data source column
+        foreach (var model in rep.Models)
+        {
+            bool sqlOk = true;
+            try { model.BuildQuery(); }
+            catch (Exception ex) { errors.Add($"[{rel}] model '{model.Name}': SQL build error: {ex.Message}"); sqlOk = false; }
+
+            if (!sqlOk) continue; //skip the column checks when the query did not build (avoids cascading errors)
+
+            foreach (var el in model.Elements)
+            {
+                if (!el.IsCommonRestrictionValue &amp;&amp; !string.IsNullOrEmpty(el.MetaColumnGUID) &amp;&amp; el.MetaColumn == null)
+                    errors.Add($"[{rel}] model '{model.Name}': element '{el.DisplayNameEl}' is not in the data source.");
+            }
+            foreach (var r in model.Restrictions.Union(model.AggregateRestrictions))
+            {
+                if (!r.IsCommonRestrictionValue &amp;&amp; !string.IsNullOrEmpty(r.MetaColumnGUID) &amp;&amp; r.MetaColumn == null)
+                    errors.Add($"[{rel}] model '{model.Name}': restriction '{r.DisplayNameEl}' is not in the data source.");
+            }
+        }
+    }
+
+    //Compile every report script (only the non empty ones). Mirrors '310 Reports - Check Executions'.
+    void CompileScripts(Report rep)
+    {
+        Comp(rep.InitScript, rep.GetType());
+        Comp(rep.NavigationScript, typeof(NavigationLink));
+        foreach (var t in rep.Tasks) Comp(t.Script, t.GetType());
+        foreach (var model in rep.Models)
+        {
+            Comp(model.PreLoadScript, model.GetType());
+            Comp(model.LoadScript, model.GetType());
+            Comp(model.FinalScript, model.GetType());
+            foreach (var el in model.Elements)
+            {
+                Comp(el.CellScript, typeof(ResultCell));
+                Comp(el.NavigationScript, typeof(NavigationLink));
+            }
+        }
+        foreach (var o in rep.Outputs)
+        {
+            Comp(o.PreScript, o.GetType());
+            Comp(o.PostScript, o.GetType());
+        }
+    }
+
+    void Comp(string script, Type modelType)
+    {
+        if (string.IsNullOrWhiteSpace(script)) return;
+        RazorHelper.Compile(RazorHelper.GetFullScript(script), modelType, Guid.NewGuid().ToString());
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>b1a7c010-0020-4a00-9000-000000000501</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>b1a7c010-0020-4a00-9000-000000000502</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>b1a7c010-0020-4a00-9000-000000000503</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b1a7c010-0020-4a00-9000-000000000504</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>b1a7c010-0020-4a00-9000-000000000505</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>b1a7c010-0020-4a00-9000-000000000301</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

@@ -2607,7 +2607,7 @@ ORDER BY 1</Sql>
     {
         DocumentOperation doc = null;
         //collect reports to run and merge, path is relative to reports directory ("//samples/somreport.srex")
-        List&lt;string&gt; reports = new List&lt;string&gt; { "Renderer PDF with Barcode - Invoice.srex", "Renderer PDF - Invoice.srex"};
+        List&lt;string&gt; reports = new List&lt;string&gt; { "Samples/07- PDF/Renderer PDF with Barcode - Invoice.srex", "Renderer PDF - Invoice.srex"};
         //define list to collect output locations for mergeing
         List&lt;string&gt; locations = new List&lt;string&gt;();
         

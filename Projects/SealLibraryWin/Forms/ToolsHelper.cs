@@ -329,7 +329,8 @@ namespace Seal.Forms
                     int cnt = 0;
                     foreach (MetaConnection item in source.Connections.OrderBy(i => i.Name))
                     {
-                        if (source.IsNoSQL && !item.ConnectionString.ToLower().Contains("provider=")) continue;
+                        if (string.IsNullOrEmpty(item.ConnectionString)) continue;
+                        if (source.IsNoSQL && !string.IsNullOrEmpty(item.ConnectionString) && !item.ConnectionString.ToLower().Contains("provider=")) continue;
 
                         if (log.IsJobCancelled()) return;
                         log.LogNoCR("Checking connection '{0}':", item.Name);

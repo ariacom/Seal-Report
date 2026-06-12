@@ -116,7 +116,7 @@
       <Parameters>
         <Parameter>
           <Name>messages_mode</Name>
-          <Value>enabledshownexec</Value>
+          <Value>enabledshown</Value>
         </Parameter>
       </Parameters>
       <SortOrder>1</SortOrder>

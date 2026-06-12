@@ -316,6 +316,25 @@
         <string>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</string>
       </AgentGUIDs>
     </SecurityGroup>
+    <SecurityGroup>
+      <GUID>1ee675a360d946a7a1243c43cbb96f10</GUID>
+      <Name>Group Data Analyst Tests</Name>
+      <Folders>
+        <SecurityFolder>
+          <UseSubFolders>false</UseSubFolders>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\Samples</Path>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <SqlModel>true</SqlModel>
+      <Weight>1</Weight>
+      <AgentGUIDs>
+        <string>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</string>
+      </AgentGUIDs>
+    </SecurityGroup>
   </Groups>
   <Logins>
     <SecurityLogin>

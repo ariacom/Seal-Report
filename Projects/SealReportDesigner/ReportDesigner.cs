@@ -699,6 +699,7 @@ namespace Seal
             _report = Report.LoadFromFile(path, _repository, true, true);
             if (_report != null)
             {
+                resetExpandedValues();
                 addMRU(path);
                 IsModified = false;
                 init();
@@ -730,6 +731,7 @@ namespace Seal
 
                 if (_repository == null || _repository.MustReload()) _repository = Repository.Create();
                 _report = Report.Create(_repository);
+                resetExpandedValues();
                 IsModified = true;
                 mainTreeView.SelectedNode = null;
                 init();
@@ -873,6 +875,14 @@ namespace Seal
             { "xml configuration", false }
         };
 
+        //Reset the sticky expanded states to their defaults (e.g. when a report is loaded or reloaded)
+        private void resetExpandedValues()
+        {
+            foreach (var key in _expandedValues.Keys.ToList()) _expandedValues[key] = (key == "template configuration");
+            //Clear the property grid so the next selection does not re-capture the previous report's expanded states
+            mainPropertyGrid.SelectedObject = null;
+        }
+
         private void mainTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (_lastDragOverNode != null) return;
@@ -945,11 +955,34 @@ namespace Seal
             item = Helper.GetGridEntry(mainPropertyGrid, "task parameters");
             if (item != null) item.Expanded = true;
 
+            //Auto-expand renderer configuration nodes having a non default value (e.g. custom script or parameter)
+            if (selectedEntity is ReportView rendererView)
+            {
+                expandRendererConfiguration(rendererView.ExcelRenderer, "excel configuration");
+                expandRendererConfiguration(rendererView.PDFRenderer, "pdf configuration");
+                expandRendererConfiguration(rendererView.HTML2PDFRenderer, "html to pdf configuration");
+                expandRendererConfiguration(rendererView.CSVRenderer, "csv configuration");
+                expandRendererConfiguration(rendererView.TextRenderer, "text configuration");
+                expandRendererConfiguration(rendererView.XMLRenderer, "xml configuration");
+                expandRendererConfiguration(rendererView.JsonRenderer, "json configuration");
+            }
+
             toolStripHelper.SetHelperButtons(selectedEntity);
             //init shortcuts
             initTreeContextMenuStrip();
 
             enableControls();
+        }
+
+        private void expandRendererConfiguration(RootRenderer renderer, string key)
+        {
+            //A renderer is customized when it uses a custom template (script) or has at least one parameter with a non default value
+            bool isCustom = renderer.UseCustomTemplate
+                || !string.IsNullOrEmpty(renderer.CustomTemplate)
+                || renderer.Parameters.Any(p => p.Value != null && p.Value != p.ConfigValue);
+            if (!isCustom) return;
+            var entry = Helper.GetGridEntry(mainPropertyGrid, key);
+            if (entry != null) entry.Expanded = true;
         }
 
         private void mainTreeView_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)

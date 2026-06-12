@@ -426,6 +426,11 @@ ORDER BY 1</Sql>
             <Class>danger</Class>
           </MetaEV>
           <MetaEV>
+            <Id>Warning</Id>
+            <Val>Warning</Val>
+            <Class>warning</Class>
+          </MetaEV>
+          <MetaEV>
             <Id>LoadError</Id>
             <Val>Load Error</Val>
             <Class>warning</Class>

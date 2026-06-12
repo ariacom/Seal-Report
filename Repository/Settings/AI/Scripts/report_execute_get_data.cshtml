@@ -44,6 +44,8 @@
         { tool.ExecResult = $"Error loading report '{relativePath}': {report.LoadErrors}"; return; }
 
     try {
+        //Data-fetch only: never launch the OS external result viewer (PDF, Excel, ...).
+        report.SkipExternalViewer = true;
         var execution = new ReportExecution() { Report = report };
         execution.Execute();
         while (report.Status != ReportStatus.Executed && !report.HasErrors && !report.Cancel)

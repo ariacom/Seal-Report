@@ -549,7 +549,7 @@ namespace Seal.Model
             {
                 if (ConnectionType != ConnectionType.MongoDB)
                 {
-                    GetOpenConnection();
+                    if (!string.IsNullOrEmpty(FullConnectionString)) GetOpenConnection();
                 }
                 else
                 {
