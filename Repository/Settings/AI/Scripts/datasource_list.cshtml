@@ -5,7 +5,7 @@
     AIToolConfiguration tool = Model;
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
     var sb = new System.Text.StringBuilder();
-    foreach (var source in Repository.Instance.Sources)
+    foreach (var source in tool.GetAvailableSources())
     {
         var dbType = source.Connection?.DatabaseType.ToString() ?? "Unknown";
         var desc   = string.IsNullOrEmpty(source.Description) ? "" : $" — {source.Description}";

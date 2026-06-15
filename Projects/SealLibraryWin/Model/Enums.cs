@@ -473,14 +473,6 @@ namespace Seal.Model
     }
 
 
-    public enum EditorRight
-    {
-        [Description("Cannot be selected")]
-        NoSelection,
-        [Description("Can be selected")]
-        Selection,
-    }
-
     public enum FailoverEmailMode
     {
         [Description("Only for the first failure")]

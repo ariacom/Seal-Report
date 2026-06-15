@@ -424,7 +424,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the user has right to edit SQL models
+        /// True if the user has the right to edit SQL models and to query the database (raw SQL) with the AI Tools. True if at least one of the user's groups enables SQL Models.
         /// </summary>
         public bool SqlModel
         {
@@ -587,159 +587,32 @@ namespace Seal.Model
             return Security.FindSecurityFolder(SecurityGroups, folder);
         }
 
-        private List<SecurityColumn> _securityColumns = null;
         /// <summary>
-        /// List of columns that can or cannot be edited with the Web Report Designer
+        /// True if the AI tools can access the given data source for this user.
+        /// Data sources are restricted through the DataSourceGUIDs of the user's security groups.
+        /// If none of the groups defines a restriction (all lists are empty), all data sources are allowed.
+        /// Otherwise the source is allowed when at least one group lists its GUID (additive rights).
         /// </summary>
-        public List<SecurityColumn> SecurityColumns
+        public bool CanAccessSource(MetaSource source)
         {
-            get
-            {
-                if (_securityColumns == null) InitEditionRights();
-                return _securityColumns;
-            }
+            if (source == null) return false;
+            //A group with an empty list (or no group at all) grants access to all data sources
+            if (SecurityGroups.Count == 0 || SecurityGroups.Exists(g => g.DataSourceGUIDs.Count == 0)) return true;
+            return SecurityGroups.Exists(g => g.DataSourceGUIDs.Contains(source.GUID));
         }
 
         /// <summary>
-        /// True if the column can be selected 
+        /// True if the AI tools can use the given output device for this user.
+        /// Output devices are restricted through the OutputDeviceGUIDs of the user's security groups.
+        /// If none of the groups defines a restriction (all lists are empty), all output devices are allowed.
+        /// Otherwise the device is allowed when at least one group lists its GUID (additive rights).
         /// </summary>
-        public bool CanSelectColumn(MetaColumn column)
+        public bool CanAccessDevice(OutputDevice device)
         {
-            var sourceName = column.Source.Name;
-            if (column.Source is ReportSource) sourceName = ((ReportSource)column.Source).MetaSourceName;
-
-            var result = SecurityColumns.Exists(i =>
-                (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
-                (string.IsNullOrEmpty(i.Tag) || i.Tag == column.Tag) &&
-                (string.IsNullOrEmpty(i.Category) || i.Category == column.Category) &&
-                i.Right == EditorRight.Selection
-                );
-            if (result) return true;
-
-            return !SecurityColumns.Exists(i =>
-                (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
-                (string.IsNullOrEmpty(i.Tag) || i.Tag == column.Tag) &&
-                (string.IsNullOrEmpty(i.Category) || i.Category == column.Category) &&
-                i.Right == EditorRight.NoSelection
-                );
-        }
-
-
-        private List<SecuritySource> _securitySources = null;
-        /// <summary>
-        /// List of data source that can or cannot be edited with the Web Report Designer
-        /// </summary>
-        public List<SecuritySource> SecuritySources
-        {
-            get
-            {
-                if (_securitySources == null) InitEditionRights();
-                return _securitySources;
-            }
-        }
-
-        /// <summary>
-        /// True if the data source can be selected 
-        /// </summary>
-        public bool CanSelectSource(MetaSource item)
-        {
-            var sourceName = item.Name;
-            if (item is ReportSource) sourceName = ((ReportSource)item).MetaSourceName;
-
-            var result = SecuritySources.Exists(i =>
-                (string.IsNullOrEmpty(i.Name) || i.Name == sourceName) &&
-                i.Right == EditorRight.Selection
-                );
-            if (result) return true;
-
-            return !SecuritySources.Exists(i =>
-                (string.IsNullOrEmpty(i.Name) || i.Name == sourceName) &&
-                i.Right == EditorRight.NoSelection
-                );
-        }
-
-
-        private List<SecurityDevice> _securityDevices = null;
-        /// <summary>
-        /// List of devices that can or cannot be edited with the Web Report Designer
-        /// </summary>
-        public List<SecurityDevice> SecurityDevices
-        {
-            get
-            {
-                if (_securityDevices == null) InitEditionRights();
-                return _securityDevices;
-            }
-        }
-
-        /// <summary>
-        /// True if the device can be selected 
-        /// </summary>
-        public bool CanSelectDevice(OutputDevice item)
-        {
-            var result = SecurityDevices.Exists(i =>
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) &&
-                i.Right == EditorRight.Selection
-                );
-            if (result) return true;
-
-            return !SecurityDevices.Exists(i =>
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) &&
-                i.Right == EditorRight.NoSelection
-                );
-        }
-
-
-        private List<SecurityConnection> _securityConnections = null;
-        /// <summary>
-        /// List of connections that can or cannot be edited with the Web Report Designer
-        /// </summary>
-        public List<SecurityConnection> SecurityConnections
-        {
-            get
-            {
-                if (_securityConnections == null) InitEditionRights();
-                return _securityConnections;
-            }
-        }
-
-        /// <summary>
-        /// True if the connection can be selected 
-        /// </summary>
-        public bool CanSelectConnection(MetaConnection item)
-        {
-            var sourceName = item.Source.Name;
-            if (item.Source is ReportSource) sourceName = ((ReportSource)item.Source).MetaSourceName;
-            var result = SecurityConnections.Exists(i =>
-                (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) &&
-                i.Right == EditorRight.Selection
-                );
-            if (result) return true;
-
-            return !SecurityConnections.Exists(i =>
-                (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) &&
-                i.Right == EditorRight.NoSelection
-                );
-        }
-
-
-
-        private void InitEditionRights()
-        {
-            _securityConnections = new List<SecurityConnection>();
-            _securityDevices = new List<SecurityDevice>();
-            _securitySources = new List<SecuritySource>();
-            _securityColumns = new List<SecurityColumn>();
-
-            foreach (var sgroup in SecurityGroups)
-            {
-                _securityConnections.AddRange(sgroup.Connections);
-                _securityDevices.AddRange(sgroup.Devices);
-                _securitySources.AddRange(sgroup.Sources);
-                _securityColumns.AddRange(sgroup.Columns);
-            }
+            if (device == null) return false;
+            //A group with an empty list (or no group at all) grants access to all output devices
+            if (SecurityGroups.Count == 0 || SecurityGroups.Exists(g => g.OutputDeviceGUIDs.Count == 0)) return true;
+            return SecurityGroups.Exists(g => g.OutputDeviceGUIDs.Contains(device.GUID));
         }
 
         /// <summary>

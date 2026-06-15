@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -133,16 +134,30 @@ namespace Seal.AI
         public string ExecResult { get; set; }
 
         /// <summary>
-        /// Resolves the data source to use when executing this tool call.
-        /// If <paramref name="datasourceGuid"/> is provided, returns the source with that GUID;
-        /// otherwise returns the default source.
-        /// Returns <c>null</c> when no matching source is found.
+        /// Returns the data sources the current security context is allowed to access with the AI tools.
+        /// When no security context is set, or the context defines no restriction, all repository sources are returned.
+        /// Restrictions are defined through the DataSourceGUIDs of the user's security groups.
+        /// </summary>
+        public IEnumerable<MetaSource> GetAvailableSources()
+        {
+            var sources = Repository.Instance.Sources;
+            var user = CurrentToolCall?.SecurityContext;
+            return user == null ? sources : sources.Where(s => user.CanAccessSource(s));
+        }
+
+        /// <summary>
+        /// Resolves the data source to use when executing this tool call, restricted to the sources
+        /// the current security context is allowed to access (see <see cref="GetAvailableSources"/>).
+        /// If <paramref name="datasourceGuid"/> is provided, returns the allowed source with that GUID;
+        /// otherwise returns the default allowed source (or the first allowed source).
+        /// Returns <c>null</c> when no matching allowed source is found.
         /// </summary>
         public MetaSource GetExecSource(string datasourceGuid = null)
         {
+            var available = GetAvailableSources();
             return string.IsNullOrEmpty(datasourceGuid)
-                ? Repository.Instance.Sources.Where(i => i.IsDefault).FirstOrDefault()
-                : Repository.Instance.Sources.FirstOrDefault(s => s.GUID == datasourceGuid);
+                ? available.FirstOrDefault(i => i.IsDefault) ?? available.FirstOrDefault()
+                : available.FirstOrDefault(s => s.GUID == datasourceGuid);
         }
 
         /// <summary>
@@ -157,6 +172,18 @@ namespace Seal.AI
             return string.IsNullOrEmpty(connectionGuid)
                 ? source.Connection
                 : source.Connections.FirstOrDefault(c => c.GUID == connectionGuid);
+        }
+
+        /// <summary>
+        /// Returns the output devices the current security context is allowed to use with the AI tools.
+        /// When no security context is set, or the context defines no restriction, all repository devices are returned.
+        /// Restrictions are defined through the OutputDeviceGUIDs of the user's security groups.
+        /// </summary>
+        public IEnumerable<OutputDevice> GetAvailableDevices()
+        {
+            var devices = Repository.Instance.Devices;
+            var user = CurrentToolCall?.SecurityContext;
+            return user == null ? devices : devices.Where(d => user.CanAccessDevice(d));
         }
 
         /// <summary>

@@ -51,6 +51,12 @@
       <FolderDetailScript />
       <MenuScript />
       <SqlModel>true</SqlModel>
+      <DataSourceGUIDs>
+        <string>3d80412e-03a4-4a96-818a-a2aecef4c813</string>
+      </DataSourceGUIDs>
+      <OutputDeviceGUIDs>
+        <string>d84b6d14-cab2-4d90-b9e1-2cf65f471441</string>
+      </OutputDeviceGUIDs>
       <Weight>1</Weight>
       <EditConfiguration>true</EditConfiguration>
       <AgentGUIDs>
@@ -113,33 +119,6 @@
       <Folders>
         <SecurityFolder />
       </Folders>
-      <Devices>
-        <SecurityDevice>
-          <Name>Folder Device</Name>
-        </SecurityDevice>
-      </Devices>
-      <Sources>
-        <SecuritySource>
-          <Name>RSS No SQL Source</Name>
-        </SecuritySource>
-      </Sources>
-      <Connections>
-        <SecurityConnection>
-          <Name>connection</Name>
-        </SecurityConnection>
-      </Connections>
-      <Columns>
-        <SecurityColumn>
-          <Source>Northwind</Source>
-          <Tag />
-          <Category>Products</Category>
-        </SecurityColumn>
-        <SecurityColumn>
-          <Source>Northwind</Source>
-          <Tag />
-          <Category>Customers</Category>
-        </SecurityColumn>
-      </Columns>
       <Weight>1</Weight>
       <Culture />
     </SecurityGroup>

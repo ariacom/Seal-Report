@@ -37,11 +37,7 @@
   <Class Name="Seal.Model.SecurityGroup">
     <Position X="8.75" Y="3.25" Width="2" />
     <Members>
-      <Method Name="ShouldSerializeColumns" Hidden="true" />
-      <Method Name="ShouldSerializeConnections" Hidden="true" />
-      <Method Name="ShouldSerializeDevices" Hidden="true" />
       <Method Name="ShouldSerializeFolders" Hidden="true" />
-      <Method Name="ShouldSerializeSources" Hidden="true" />
       <Method Name="UpdateEditorAttributes" Hidden="true" />
     </Members>
     <Compartments>
@@ -59,10 +55,6 @@
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Folders" />
-      <Property Name="Connections" />
-      <Property Name="Columns" />
-      <Property Name="Devices" />
-      <Property Name="Sources" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Seal.Model.SecurityFolder" Collapsed="true">
@@ -90,34 +82,6 @@
     <ShowAsCollectionAssociation>
       <Field Name="SecurityGroups" />
     </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Seal.Model.SecurityConnection" Collapsed="true">
-    <Position X="12.5" Y="4" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAEAAAAgAAAAAAAAAAAAQAABAAAAAAAACAAAAAAAA=</HashCode>
-      <FileName>Model\SecurityConnection.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Seal.Model.SecurityColumn" Collapsed="true">
-    <Position X="12.5" Y="3.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAEAAAAgAgAAAAAAAAAAAAABAAAAAAAACAAAAACAA=</HashCode>
-      <FileName>Model\SecurityColumn.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Seal.Model.SecurityDevice" Collapsed="true">
-    <Position X="12.5" Y="5.5" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAAAAAAAAAAAQAABAAAAAAAACAAAAAAAA=</HashCode>
-      <FileName>Model\SecurityDevice.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Seal.Model.SecuritySource" Collapsed="true">
-    <Position X="12.5" Y="6.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAAAAAAAAAAAQAABAAAAAAAACAAAAAAAA=</HashCode>
-      <FileName>Model\SecuritySource.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

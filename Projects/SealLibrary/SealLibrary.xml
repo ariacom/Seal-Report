@@ -411,12 +411,20 @@
             <see cref="M:Seal.AI.AIToolConfiguration.Execute(Seal.AI.AIToolCall)"/> returns this value after the Razor engine has run.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIToolConfiguration.GetAvailableSources">
+            <summary>
+            Returns the data sources the current security context is allowed to access with the AI tools.
+            When no security context is set, or the context defines no restriction, all repository sources are returned.
+            Restrictions are defined through the DataSourceGUIDs of the user's security groups.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIToolConfiguration.GetExecSource(System.String)">
             <summary>
-            Resolves the data source to use when executing this tool call.
-            If <paramref name="datasourceGuid"/> is provided, returns the source with that GUID;
-            otherwise returns the default source.
-            Returns <c>null</c> when no matching source is found.
+            Resolves the data source to use when executing this tool call, restricted to the sources
+            the current security context is allowed to access (see <see cref="M:Seal.AI.AIToolConfiguration.GetAvailableSources"/>).
+            If <paramref name="datasourceGuid"/> is provided, returns the allowed source with that GUID;
+            otherwise returns the default allowed source (or the first allowed source).
+            Returns <c>null</c> when no matching allowed source is found.
             </summary>
         </member>
         <member name="M:Seal.AI.AIToolConfiguration.GetExecConnection(Seal.Model.MetaSource,System.String)">
@@ -425,6 +433,13 @@
             If <paramref name="connectionGuid"/> is provided, returns the connection with that GUID;
             otherwise returns the source's current default connection.
             Returns <c>null</c> when <paramref name="source"/> is <c>null</c> or no matching connection is found.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolConfiguration.GetAvailableDevices">
+            <summary>
+            Returns the output devices the current security context is allowed to use with the AI tools.
+            When no security context is set, or the context defines no restriction, all repository devices are returned.
+            Restrictions are defined through the OutputDeviceGUIDs of the user's security groups.
             </summary>
         </member>
         <member name="M:Seal.AI.AIToolConfiguration.ToAITool">
@@ -9117,81 +9132,6 @@
             Defines a pattern to replace in a file 
             </summary>
         </member>
-        <member name="T:Seal.Model.SecurityColumn">
-            <summary>
-            A SecurityColumn defines the security applied to a column for the Web Report Designer
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityColumn.Source">
-            <summary>
-            The name of the data source containing the column (optional)
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityColumn.Tag">
-            <summary>
-            The name of the security tag (must match with the tags defined in the columns)
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityColumn.Category">
-            <summary>
-            The name of the category (must match with categories defined in the columns)
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityColumn.Right">
-            <summary>
-            The right applied for the columns having this security tag or this category
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityColumn.DisplayName">
-            <summary>
-            Display name
-            </summary>
-        </member>
-        <member name="T:Seal.Model.SecurityConnection">
-            <summary>
-            A SecurityConnection defines the security applied to a connection for the Web Report Designer
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityConnection.Source">
-            <summary>
-            The name of the data source containing the connection (optional)
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityConnection.Name">
-            <summary>
-            The name of the connection
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityConnection.Right">
-            <summary>
-            /The right applied for the connection having this name
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityConnection.DisplayName">
-            <summary>
-            Display name
-            </summary>
-        </member>
-        <member name="T:Seal.Model.SecurityDevice">
-            <summary>
-            A SecurityDevice defines the security applied to a device for the Web Report Designer
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityDevice.Name">
-            <summary>
-            The name of the device
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityDevice.Right">
-            <summary>
-            The right applied for the device having this name
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityDevice.DisplayName">
-            <summary>
-            Display name
-            </summary>
-        </member>
         <member name="T:Seal.Model.SecurityFolder">
             <summary>
             A SecurityFolder defines the security applied to a published folder
@@ -9284,27 +9224,17 @@
         </member>
         <member name="P:Seal.Model.SecurityGroup.SqlModel">
             <summary>
-            For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
+            If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied.
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityGroup.Devices">
+        <member name="P:Seal.Model.SecurityGroup.DataSourceGUIDs">
             <summary>
-            For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default, all devices can be selected.
+            For the AI Tools: The data sources (identified by their GUID) that the AI tools can access for this group. If the list is empty, all data sources are allowed.
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityGroup.Sources">
+        <member name="P:Seal.Model.SecurityGroup.OutputDeviceGUIDs">
             <summary>
-            For the Web Report Designer: Data sources rights for the group. Set rights to data source through their names. By default, all sources can be selected.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityGroup.Connections">
-            <summary>
-            For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default, all connections can be selected.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityGroup.Columns">
-            <summary>
-            For the Web Report Designer: Columns rights for the group. Set rights to columns through the security tags or categories assigned. By default, all columns can be selected.
+            For the AI Tools: The output devices (identified by their GUID) that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.Weight">
@@ -9465,26 +9395,6 @@
         <member name="M:Seal.Model.SecurityProvider.LoadProviders(System.String)">
             <summary>
             List of available SecurityProvider
-            </summary>
-        </member>
-        <member name="T:Seal.Model.SecuritySource">
-            <summary>
-            A SecuritySource defines the security applied to a data source for the Web Report Designer
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecuritySource.Name">
-            <summary>
-            The name of the data source
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecuritySource.Right">
-            <summary>
-            The right applied for the data source having this name
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecuritySource.DisplayName">
-            <summary>
-            Display name
             </summary>
         </member>
         <member name="T:Seal.Model.SecurityUser">
@@ -9706,7 +9616,7 @@
         </member>
         <member name="P:Seal.Model.SecurityUser.SqlModel">
             <summary>
-            True if the user has right to edit SQL models
+            True if the user has the right to edit SQL models and to query the database (raw SQL) with the AI Tools. True if at least one of the user's groups enables SQL Models.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityUser.ShowFoldersView">
@@ -9761,44 +9671,20 @@
             Find a security folder from a given name
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.SecurityColumns">
+        <member name="M:Seal.Model.SecurityUser.CanAccessSource(Seal.Model.MetaSource)">
             <summary>
-            List of columns that can or cannot be edited with the Web Report Designer
+            True if the AI tools can access the given data source for this user.
+            Data sources are restricted through the DataSourceGUIDs of the user's security groups.
+            If none of the groups defines a restriction (all lists are empty), all data sources are allowed.
+            Otherwise the source is allowed when at least one group lists its GUID (additive rights).
             </summary>
         </member>
-        <member name="M:Seal.Model.SecurityUser.CanSelectColumn(Seal.Model.MetaColumn)">
+        <member name="M:Seal.Model.SecurityUser.CanAccessDevice(Seal.Model.OutputDevice)">
             <summary>
-            True if the column can be selected 
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityUser.SecuritySources">
-            <summary>
-            List of data source that can or cannot be edited with the Web Report Designer
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SecurityUser.CanSelectSource(Seal.Model.MetaSource)">
-            <summary>
-            True if the data source can be selected 
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityUser.SecurityDevices">
-            <summary>
-            List of devices that can or cannot be edited with the Web Report Designer
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SecurityUser.CanSelectDevice(Seal.Model.OutputDevice)">
-            <summary>
-            True if the device can be selected 
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityUser.SecurityConnections">
-            <summary>
-            List of connections that can or cannot be edited with the Web Report Designer
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SecurityUser.CanSelectConnection(Seal.Model.MetaConnection)">
-            <summary>
-            True if the connection can be selected 
+            True if the AI tools can use the given output device for this user.
+            Output devices are restricted through the OutputDeviceGUIDs of the user's security groups.
+            If none of the groups defines a restriction (all lists are empty), all output devices are allowed.
+            Otherwise the device is allowed when at least one group lists its GUID (additive rights).
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.AddDefaultSecurityGroup">

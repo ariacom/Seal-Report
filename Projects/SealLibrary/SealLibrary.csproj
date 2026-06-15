@@ -132,14 +132,10 @@
 		<Compile Include="..\SealLibraryWin\Model\SealSchedule.cs" Link="Model\SealSchedule.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealSecurity.cs" Link="Model\SealSecurity.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealServerConfiguration.cs" Link="Model\SealServerConfiguration.cs" />
-		<Compile Include="..\SealLibraryWin\Model\SecurityColumn.cs" Link="Model\SecurityColumn.cs" />
-		<Compile Include="..\SealLibraryWin\Model\SecurityConnection.cs" Link="Model\SecurityConnection.cs" />
-		<Compile Include="..\SealLibraryWin\Model\SecurityDevice.cs" Link="Model\SecurityDevice.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityFolder.cs" Link="Model\SecurityFolder.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityGroup.cs" Link="Model\SecurityGroup.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityLogin.cs" Link="Model\SecurityLogin.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityProvider.cs" Link="Model\SecurityProvider.cs" />
-		<Compile Include="..\SealLibraryWin\Model\SecuritySource.cs" Link="Model\SecuritySource.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityUser.cs" Link="Model\SecurityUser.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityUserProfile.cs" Link="Model\SecurityUserProfile.cs" />
 		<Compile Include="..\SealLibraryWin\Model\StringPair.cs" Link="Model\StringPair.cs" />

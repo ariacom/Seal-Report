@@ -107,9 +107,9 @@
             if (output == null)
             {
                 var emailDevice = string.IsNullOrEmpty(deviceName)
-                    ? repo.Devices.OfType<OutputEmailDevice>().FirstOrDefault()
-                    : repo.Devices.OfType<OutputEmailDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase));
-                if (emailDevice == null) { tool.ExecResult = "Error: no email device configured in the repository."; return; }
+                    ? tool.GetAvailableDevices().OfType<OutputEmailDevice>().FirstOrDefault()
+                    : tool.GetAvailableDevices().OfType<OutputEmailDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase));
+                if (emailDevice == null) { tool.ExecResult = string.IsNullOrEmpty(deviceName) ? "Error: no email device available (none configured in the repository or allowed by your security)." : $"Error: no email device named '{deviceName}' available (not found or not allowed by your security)."; return; }
                 output = report.AddOutput(emailDevice);
             }
 
@@ -136,10 +136,10 @@
             if (output == null)
             {
                 var ftpDevice = string.IsNullOrEmpty(deviceName)
-                    ? repo.Devices.OfType<OutputFileServerDevice>().FirstOrDefault()
-                    : repo.Devices.OfType<OutputFileServerDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase));
+                    ? tool.GetAvailableDevices().OfType<OutputFileServerDevice>().FirstOrDefault()
+                    : tool.GetAvailableDevices().OfType<OutputFileServerDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase));
                 if (ftpDevice == null)
-                    { tool.ExecResult = string.IsNullOrEmpty(deviceName) ? "Error: no FTP/file server device configured in the repository." : $"Error: no FTP/file server device named '{deviceName}' found in the repository."; return; }
+                    { tool.ExecResult = string.IsNullOrEmpty(deviceName) ? "Error: no FTP/file server device available (none configured in the repository or allowed by your security)." : $"Error: no FTP/file server device named '{deviceName}' available (not found or not allowed by your security)."; return; }
                 output = report.AddOutput(ftpDevice);
             }
 
@@ -165,9 +165,10 @@
 
         if (output == null)
         {
+            // The implicit/default folder device (local folder write) stays allowed; it is gated by folder rights below.
             var device = string.IsNullOrEmpty(deviceName)
-                ? (repo.Devices.OfType<OutputFolderDevice>().FirstOrDefault() ?? OutputFolderDevice.Create())
-                : (repo.Devices.OfType<OutputFolderDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase)) ?? OutputFolderDevice.Create());
+                ? (tool.GetAvailableDevices().OfType<OutputFolderDevice>().FirstOrDefault() ?? OutputFolderDevice.Create())
+                : (tool.GetAvailableDevices().OfType<OutputFolderDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase)) ?? OutputFolderDevice.Create());
             // Reuse a folder output matching the requested name; if a name is given and none
             // matches, create a NEW one. Only reuse the first folder output when no name is given.
             output = !string.IsNullOrEmpty(outputName)

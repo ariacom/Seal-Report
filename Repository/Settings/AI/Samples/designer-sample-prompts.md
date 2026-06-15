@@ -8,6 +8,7 @@ Show me a sample of data from [table]
 How many rows are in [table]?
 
 # --- Create reports ---
+Give ideas of interesting reports for [source]
 For [source], create a report showing total sales by category
 For [source], build a monthly sales trend report for this year
 For [source], create a top 10 customers report ranked by revenue

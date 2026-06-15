@@ -676,61 +676,6 @@
     
     log.LogMessage("Processing " + metaTable.Name);
 
-    //List of users has been built in a task
-    if (report != null) {
-        var users = report.Tag as List&lt;SecurityUser&gt;;
-        if (users != null) {
-            foreach (var user in users) {
-                foreach (var item in user.SecurityDevices) {
-                    table.Rows.Add(
-                        user.Name, 
-                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                        user.SecurityGroupsDisplay,
-                        "Web Report Designer", 
-                        "Device", 
-                        item.DisplayName, 
-                        Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                        );   
-                }
-                
-                foreach (var item in user.SecuritySources) {
-                    table.Rows.Add(
-                        user.Name, 
-                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                        user.SecurityGroupsDisplay,
-                        "Web Report Designer", 
-                        "Data Source", 
-                        item.DisplayName, 
-                        Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                        );   
-                }
-                
-                foreach (var item in user.SecurityConnections) {
-                    table.Rows.Add(
-                       user.Name, 
-                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                        user.SecurityGroupsDisplay,
-                        "Web Report Designer", 
-                        "Connection", 
-                        item.DisplayName, 
-                        Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                        );   
-                }
-                
-                foreach (var item in user.SecurityColumns) {
-                    table.Rows.Add(
-                        user.Name, 
-                        user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "",
-                        user.SecurityGroupsDisplay,
-                        "Web Report Designer", 
-                        "Column", 
-                        item.DisplayName, 
-                        Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                        );   
-                }        
-            }
-        }
-    }
     log.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
 </LoadScript>

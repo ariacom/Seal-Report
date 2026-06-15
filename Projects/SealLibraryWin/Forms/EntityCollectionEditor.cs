@@ -106,34 +106,6 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
-            else if (CollectionItemType == typeof(SecurityColumn))
-            {
-                frmCollectionEditorForm.Text = "Security Column Collection Editor";
-                allowAdd = true;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
-            else if (CollectionItemType == typeof(SecuritySource))
-            {
-                frmCollectionEditorForm.Text = "Security Data Source Collection Editor";
-                allowAdd = true;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
-            else if (CollectionItemType == typeof(SecurityDevice))
-            {
-                frmCollectionEditorForm.Text = "Security Device Collection Editor";
-                allowAdd = true;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
-            else if (CollectionItemType == typeof(SecurityConnection))
-            {
-                frmCollectionEditorForm.Text = "Security Connection Collection Editor";
-                allowAdd = true;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
             else if (CollectionItemType == typeof(SubReport))
             {
                 frmCollectionEditorForm.Text = "Sub-Report Collection Editor";
@@ -319,10 +291,6 @@ namespace Seal.Forms
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;
             else if (value is SecurityLogin) result = ((SecurityLogin)value).Id;
             else if (value is SecurityFolder) result = ((SecurityFolder)value).Path;
-            else if (value is SecurityColumn) result = ((SecurityColumn)value).DisplayName;
-            else if (value is SecuritySource) result = ((SecuritySource)value).DisplayName;
-            else if (value is SecurityDevice) result = ((SecurityDevice)value).DisplayName;
-            else if (value is SecurityConnection) result = ((SecurityConnection)value).DisplayName;
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;
             else if (value is SealServerConfiguration.FileReplacePattern) result = ((SealServerConfiguration.FileReplacePattern)value).ToString();

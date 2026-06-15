@@ -35,11 +35,9 @@ namespace Seal.Model
                 GetProperty("FolderDetailScript").SetIsBrowsable(true);
                 GetProperty("MenuScript").SetIsBrowsable(true);
 
-                GetProperty("Columns").SetIsBrowsable(true);
                 GetProperty("SqlModel").SetIsBrowsable(true);
-                GetProperty("Devices").SetIsBrowsable(true);
-                GetProperty("Connections").SetIsBrowsable(true);
-                GetProperty("Sources").SetIsBrowsable(true);
+                GetProperty("DataSourceGUIDs").SetIsBrowsable(true);
+                GetProperty("OutputDeviceGUIDs").SetIsBrowsable(true);
 
                 GetProperty("OnStartup").SetIsBrowsable(true);
                 GetProperty("StartupReport").SetIsBrowsable(true);
@@ -148,53 +146,33 @@ namespace Seal.Model
         public string MenuScript { get; set; }
 
         /// <summary>
-        /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
+        /// If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied.
         /// </summary>
 #if WINDOWS
-        [Category("Web Report Designer Security"), DisplayName("\t\t\tSQL Models"), Description("For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer. Note that dynamic filters set for security purpose will not be applied."), Id(1, 2)]
+        [Category("Tools Security"), DisplayName("\t\t\tSQL Models"), Description("If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied. Note that dynamic filters set for security purpose will not be applied."), Id(1, 2)]
         [DefaultValue(false)]
 #endif
         public bool SqlModel { get; set; } = false;
 
         /// <summary>
-        /// For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default, all devices can be selected.
+        /// For the AI Tools: The data sources (identified by their GUID) that the AI tools can access for this group. If the list is empty, all data sources are allowed.
         /// </summary>
 #if WINDOWS
-        [Category("Web Report Designer Security"), DisplayName("\t\tDevices"), Description("For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default, all devices can be selected."), Id(3, 2)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        [Category("Tools Security"), DisplayName("\t\tAI Tools Data Sources"), Description("The data sources that the AI tools can access for this group. If the list is empty, all data sources are allowed."), Id(2, 2)]
+        [Editor(typeof(SecurityDataSourcesEditor), typeof(UITypeEditor))]
 #endif
-        public List<SecurityDevice> Devices { get; set; } = new List<SecurityDevice>();
-        public bool ShouldSerializeDevices() { return Devices.Count > 0; }
+        public List<string> DataSourceGUIDs { get; set; } = new List<string>();
+        public bool ShouldSerializeDataSourceGUIDs() { return DataSourceGUIDs.Count > 0; }
 
         /// <summary>
-        /// For the Web Report Designer: Data sources rights for the group. Set rights to data source through their names. By default, all sources can be selected.
+        /// For the AI Tools: The output devices (identified by their GUID) that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed.
         /// </summary>
 #if WINDOWS
-        [Category("Web Report Designer Security"), DisplayName("\t\tSources"), Description("For the Web Report Designer: Data sources rights for the group. Set rights to data source through their names. By default, all sources can be selected."), Id(4, 2)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        [Category("Tools Security"), DisplayName("\tAI Tools Output Devices"), Description("The output devices that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed."), Id(3, 2)]
+        [Editor(typeof(SecurityDevicesEditor), typeof(UITypeEditor))]
 #endif
-        public List<SecuritySource> Sources { get; set; } = new List<SecuritySource>();
-        public bool ShouldSerializeSources() { return Sources.Count > 0; }
-
-        /// <summary>
-        /// For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default, all connections can be selected.
-        /// </summary>
-#if WINDOWS
-        [Category("Web Report Designer Security"), DisplayName("\tConnections"), Description("For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default, all connections can be selected."), Id(5, 2)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-#endif
-        public List<SecurityConnection> Connections { get; set; } = new List<SecurityConnection>();
-        public bool ShouldSerializeConnections() { return Connections.Count > 0; }
-
-        /// <summary>
-        /// For the Web Report Designer: Columns rights for the group. Set rights to columns through the security tags or categories assigned. By default, all columns can be selected.
-        /// </summary>
-#if WINDOWS
-        [Category("Web Report Designer Security"), DisplayName("Columns"), Description("For the Web Report Designer: Columns rights for the group. Set rights to columns through the security tags or categories assigned. By default, all columns can be selected."), Id(6, 2)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-#endif
-        public List<SecurityColumn> Columns { get; set; } = new List<SecurityColumn>();
-        public bool ShouldSerializeColumns() { return Columns.Count > 0; }
+        public List<string> OutputDeviceGUIDs { get; set; } = new List<string>();
+        public bool ShouldSerializeOutputDeviceGUIDs() { return OutputDeviceGUIDs.Count > 0; }
 
         /// <summary>
         /// Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user.

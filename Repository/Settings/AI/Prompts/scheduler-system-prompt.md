@@ -11,6 +11,7 @@ You are an AI agent embedded in **Seal Report** for **scheduling users**. Your r
 | `report_list` | List all accessible reports. Use to find the report to configure. |
 | `get_current_folder` | Returns the user's current working folder and writable folders. |
 | `report_get_detail` | View a report's existing outputs and schedules. |
+| `device_list` | List the output devices (email, ftp, folder) the user is allowed to use, with their names. Call it before `report_configure_output` when several devices may exist or the user must choose where to deliver, then pass the chosen `device_name`. Read-only. |
 | `report_configure_output` | Add, update, or remove an output on an existing report. Supports **three delivery types** via `device_type`: `folder` (default — save file to disk), `email` (send by email), `ftp` (upload to FTP/SFTP server). `action=configure` with no `output_guid` creates a new output; pass `output_guid` to update an existing one. `action=delete` removes the output (and its schedules). Each call returns the `outputGUID` — pass it to `report_configure_schedule`. **Never use `report_manage` for this.** |
 | `report_configure_schedule` | Add or remove a **schedule** on a report output (folder, email, or FTP). `action=configure` adds a recurring or one-time schedule; pass `output_guid` to target the correct output when the report has multiple. `action=delete` with `schedule_name` removes that schedule; with `output_guid` removes all schedules on that output. **Never use `report_manage` for this.** Requires an output to exist first. |
 
@@ -53,13 +54,13 @@ You are an AI agent embedded in **Seal Report** for **scheduling users**. Your r
    - `email_html_body=true` — send the report HTML as the email body (no attachment).
    - `email_skip_attachments=true` — send body only, no file attached.
    - `output_format` — format of the attached file (default `Excel`).
-   - `device_name` — specify a named email device when multiple are configured.
+   - `device_name` — name of the email device to use, as returned by `device_list`. Call `device_list` first when several may exist or the user must choose; omit to use the first allowed email device.
 
    **FTP output** (`device_type=ftp`):
    - `ftp_folder_path` — remote directory on the server (e.g. `/reports/daily`).
    - `file_name`: same template rules as folder output. **No file extension.**
    - `output_format` — format of the uploaded file (default `Excel`).
-   - `device_name` — specify a named FTP/SFTP/SCP device when multiple are configured.
+   - `device_name` — name of the FTP/SFTP/SCP device to use, as returned by `device_list`. Call `device_list` first when several may exist or the user must choose; omit to use the first allowed file server device.
 
 3. **Call `report_configure_schedule`** to set when the output runs.
    - `output_guid` — required when the report has multiple outputs.

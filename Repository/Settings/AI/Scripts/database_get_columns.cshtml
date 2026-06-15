@@ -5,6 +5,10 @@
 @using Seal.AI
 @{
     AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+    if (!securityContext.SqlModel) { tool.ExecResult = "Error: you are not allowed to query the database (SQL Models are disabled for your security group)."; return; }
+
     var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var tableName = args.GetProperty("table").GetString();
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table: {tableName})..");

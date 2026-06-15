@@ -1,0 +1,45 @@
+@using System.Text
+@using System.Linq
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
+    var sb = new System.Text.StringBuilder();
+
+    var devices = tool.GetAvailableDevices().ToList();
+    if (devices.Count == 0)
+    {
+        tool.ExecResult = "No output device is available for the current user.";
+        tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+        return;
+    }
+
+    sb.AppendLine("Output devices available for the current user. Pass device_name to report_configure_output to select one (device_type must match the listed type).");
+    sb.AppendLine();
+
+    foreach (var device in devices)
+    {
+        if (device is OutputEmailDevice email)
+        {
+            sb.AppendLine($"## {email.Name} [type: email] (GUID: {email.GUID})");
+            if (!string.IsNullOrEmpty(email.Server)) sb.AppendLine($"  - SMTP server: {email.Server}:{email.Port}");
+        }
+        else if (device is OutputFileServerDevice ftp)
+        {
+            sb.AppendLine($"## {ftp.Name} [type: ftp] (GUID: {ftp.GUID})");
+            sb.AppendLine($"  - {ftp.Protocol} server: {ftp.HostName}{(ftp.PortNumber > 0 ? ":" + ftp.PortNumber : "")}");
+        }
+        else if (device is OutputFolderDevice folder)
+        {
+            sb.AppendLine($"## {folder.Name} [type: folder] (GUID: {folder.GUID})");
+        }
+        else
+        {
+            sb.AppendLine($"## {device.Name} [type: {device.GetType().Name}] (GUID: {device.GUID})");
+        }
+    }
+
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

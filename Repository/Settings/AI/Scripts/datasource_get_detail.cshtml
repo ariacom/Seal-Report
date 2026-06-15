@@ -7,8 +7,8 @@
     var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var name   = args.GetProperty("name").GetString();
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (name: {name})..");
-    var source = Repository.Instance.Sources.FirstOrDefault(i => i.Name == name);
-    if (source == null) { tool.ExecResult = $"Error: data source '{name}' not found."; return; }
+    var source = tool.GetAvailableSources().FirstOrDefault(i => i.Name == name);
+    if (source == null) { tool.ExecResult = $"Error: data source '{name}' not found or not allowed."; return; }
 
     var sb = new StringBuilder();
 

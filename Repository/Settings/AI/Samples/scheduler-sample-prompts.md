@@ -2,6 +2,7 @@
 # One prompt per line. Blank lines and lines starting with # are ignored.
 
 # --- Outputs ---
+Show me the output devices I can use
 Create an Excel output for [report name] saved in my Personal folder
 Create a PDF output for [report name] saved in C:\Reports\Daily
 Change the output format of [report name] to CSV

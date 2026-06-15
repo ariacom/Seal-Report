@@ -51,7 +51,7 @@ Security groups define:
 which repository folders are published,
 if the user can view reports,
 if the user has personal folders,
-which columns, data sources, connections or devices can be selected with the Web Report Designer,
+whether SQL Models can be edited with the Web Report Designer and which data sources the AI Tools can access,
 
 The security provider performs the authentication and select the security groups of the user.
 
@@ -62,12 +62,9 @@ Rules applied if a user belongs to several groups:
 - Tree View: Show all folders: true if one group has this flag set to true
 - Folders, Folder Detail and Menu Scripts are executed sequentially sorted by group name
 
-Web Report Designer Security
+Designer and Tools Security
 - SQL Models: True if true in one group
-- Devices: Can be selected if it is specified in one group, then cannot be selected if it is specified in one group
-- Sources: Can be selected if it is specified in one group, then cannot be selected if it is specified in one group
-- Connections: Can be selected if it is specified in one group, then cannot be selected if it is specified in one group
-- Columns: Can be selected if it is specified in one group, then cannot be selected if it is specified in one group
+- AI Tools Data Sources: a data source is allowed if it is listed in at least one group (union of all groups); if no group defines any restriction, all data sources are allowed
 
 - Default options (Edit Profile, Culture, Logo, Startup) are taken from the group having the highest weight.
 ";
