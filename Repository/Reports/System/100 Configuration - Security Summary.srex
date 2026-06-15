@@ -279,16 +279,15 @@
 
     DataTable table = new DataTable();
     table.Columns.Add(new DataColumn("group_name", typeof(string)));
-    table.Columns.Add(new DataColumn("editor_type", typeof(string)));
     table.Columns.Add(new DataColumn("item_type", typeof(string)));
-    table.Columns.Add(new DataColumn("item_definition", typeof(string)));
-    table.Columns.Add(new DataColumn("right", typeof(string)));
+    table.Columns.Add(new DataColumn("item_name", typeof(string)));
     metaTable.NoSQLTable = table;
     log.LogMessage("{0} column(s) defined", table.Columns.Count);
 }
 </DefinitionScript>
             <LoadScript>@using System.Data
 @using System.IO
+@using System.Linq
 @{
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
@@ -296,44 +295,19 @@
 
     log.LogMessage("Processing " + metaTable.Name);
     foreach (var group in Repository.Instance.Security.Groups) {
-        foreach (var item in group.Devices) {
-            table.Rows.Add(
-                group.Name, 
-                "Web Report Designer", 
-                "Device", 
-                item.DisplayName, 
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                );   
+        //AI Agents available for the group (empty list = the AI Agent is disabled for the group)
+        foreach (var agent in Repository.Instance.AIConfiguration.AIAgents.Where(a =&gt; group.AgentGUIDs.Contains(a.GUID))) {
+            table.Rows.Add(group.Name, "AI Agent", agent.Name);
         }
-        
-        foreach (var item in group.Sources) {
-            table.Rows.Add(
-                group.Name, 
-                "Web Report Designer", 
-                "Data Source", 
-                item.DisplayName, 
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                );   
+
+        //Data Sources the AI Tools can access (empty list = all data sources allowed)
+        foreach (var source in Repository.Instance.Sources.Where(s =&gt; group.DataSourceGUIDs.Count == 0 || group.DataSourceGUIDs.Contains(s.GUID))) {
+            table.Rows.Add(group.Name, "Data Source", source.Name);
         }
-        
-        foreach (var item in group.Connections) {
-            table.Rows.Add(
-                group.Name, 
-                "Web Report Designer", 
-                "Connection", 
-                item.DisplayName, 
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                );   
-        }
-        
-        foreach (var item in group.Columns) {
-            table.Rows.Add(
-                group.Name, 
-                "Web Report Designer", 
-                "Column", 
-                item.DisplayName, 
-                Helper.GetEnumDescription(item.Right.GetType(), item.Right)
-                );   
+
+        //Output Devices the AI Tools can use (empty list = all output devices allowed)
+        foreach (var device in Repository.Instance.Devices.Where(d =&gt; group.OutputDeviceGUIDs.Count == 0 || group.OutputDeviceGUIDs.Contains(d.GUID))) {
+            table.Rows.Add(group.Name, "Output Device", device.Name);
         }
     }
     log.LogMessage("{0} record(s) loaded", table.Rows.Count);
@@ -350,36 +324,20 @@
                 <DisplayName>Group name</DisplayName>
               </MetaColumn>
               <MetaColumn>
-                <GUID>20433306-f478-45fe-adc1-2c4d4c5419a9</GUID>
-                <Name>editor_type</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Editor type</DisplayName>
-                <DisplayOrder>2</DisplayOrder>
-              </MetaColumn>
-              <MetaColumn>
-                <GUID>429046b7-dded-4914-846e-f52ac2d6f22c</GUID>
-                <Name>right</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Right</DisplayName>
-                <DisplayOrder>5</DisplayOrder>
-              </MetaColumn>
-              <MetaColumn>
                 <GUID>06f8dc35-634a-42c2-8811-8b8f4e1740f0</GUID>
                 <Name>item_type</Name>
                 <Type>Text</Type>
                 <Category>Master</Category>
-                <DisplayName>Item type</DisplayName>
-                <DisplayOrder>3</DisplayOrder>
+                <DisplayName>Type</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>fae48a1b-1e48-4fec-8d67-3ef090d2cfc7</GUID>
-                <Name>item_definition</Name>
+                <Name>item_name</Name>
                 <Type>Text</Type>
                 <Category>Master</Category>
-                <DisplayName>Item definition</DisplayName>
-                <DisplayOrder>4</DisplayOrder>
+                <DisplayName>Name</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
               </MetaColumn>
             </Columns>
           </MetaTable>
@@ -657,25 +615,49 @@
     table.Columns.Add(new DataColumn("user_name", typeof(string)));
     table.Columns.Add(new DataColumn("account_name", typeof(string)));
     table.Columns.Add(new DataColumn("user_groups", typeof(string)));
-    table.Columns.Add(new DataColumn("editor_type", typeof(string)));
     table.Columns.Add(new DataColumn("item_type", typeof(string)));
-    table.Columns.Add(new DataColumn("item_definition", typeof(string)));
-    table.Columns.Add(new DataColumn("right", typeof(string)));
+    table.Columns.Add(new DataColumn("item_name", typeof(string)));
     metaTable.NoSQLTable = table;
     log.LogMessage("{0} column(s) defined", table.Columns.Count);
 }
 </DefinitionScript>
             <LoadScript>@using System.Data
 @using System.IO
+@using System.Linq
 @{
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
     ReportExecutionLog log = metaTable;
     ReportModel reportModel = metaTable.NoSQLModel;
     Report report = (reportModel != null ? reportModel.Report : null);
-    
+
     log.LogMessage("Processing " + metaTable.Name);
 
+    //List of users has been built in a task
+    if (report != null) {
+        var users = report.Tag as List&lt;SecurityUser&gt;;
+        if (users != null) {
+            foreach (var user in users) {
+                string account = user.UserPrincipal != null ? user.UserPrincipal.SamAccountName : "";
+                string groups = user.SecurityGroupsDisplay;
+
+                //AI Agents available to the user (resolved from the default group)
+                foreach (var agent in user.AgentConfigurations) {
+                    table.Rows.Add(user.Name, account, groups, "AI Agent", agent.Name);
+                }
+
+                //Data Sources the AI Tools can access (a group with an empty list grants access to all)
+                foreach (var source in Repository.Instance.Sources.Where(s =&gt; user.CanAccessSource(s))) {
+                    table.Rows.Add(user.Name, account, groups, "Data Source", source.Name);
+                }
+
+                //Output Devices the AI Tools can use (a group with an empty list grants access to all)
+                foreach (var device in Repository.Instance.Devices.Where(d =&gt; user.CanAccessDevice(d))) {
+                    table.Rows.Add(user.Name, account, groups, "Output Device", device.Name);
+                }
+            }
+        }
+    }
     log.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
 </LoadScript>
@@ -698,36 +680,20 @@
                 <DisplayOrder>2</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
-                <GUID>9893ee64-186a-4866-bb11-0dbbafa798de</GUID>
-                <Name>editor_type</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Editor type</DisplayName>
-                <DisplayOrder>4</DisplayOrder>
-              </MetaColumn>
-              <MetaColumn>
                 <GUID>8dc3cad7-dda3-4013-a381-16d0451d128e</GUID>
                 <Name>item_type</Name>
                 <Type>Text</Type>
                 <Category>Master</Category>
-                <DisplayName>Item type</DisplayName>
-                <DisplayOrder>5</DisplayOrder>
+                <DisplayName>Type</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>c58758ea-4aa9-45dc-9791-d0fcdf60436d</GUID>
-                <Name>item_definition</Name>
+                <Name>item_name</Name>
                 <Type>Text</Type>
                 <Category>Master</Category>
-                <DisplayName>Item definition</DisplayName>
-                <DisplayOrder>6</DisplayOrder>
-              </MetaColumn>
-              <MetaColumn>
-                <GUID>110f2496-d67a-4964-9d7f-9b76b4c953e3</GUID>
-                <Name>right</Name>
-                <Type>Text</Type>
-                <Category>Master</Category>
-                <DisplayName>Right</DisplayName>
-                <DisplayOrder>7</DisplayOrder>
+                <DisplayName>Name</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>29f0af22-9550-47ae-807b-6fd7e60a2fda</GUID>
@@ -929,14 +895,6 @@
           <MetaColumnGUID>12c6c351-8bc9-49e9-9467-3750a7f279e4</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>79786e79-7ccc-4d4e-a036-386c75ced632</GUID>
-          <Name>editor_type</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20433306-f478-45fe-adc1-2c4d4c5419a9</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>e98ff373-218d-44dc-8f80-7d16b183d74a</GUID>
           <Name>item_type</Name>
           <DisplayName />
@@ -946,19 +904,11 @@
         </ReportElement>
         <ReportElement>
           <GUID>cbbd16de-bd4d-4d7b-b781-4ff1c9d407bc</GUID>
-          <Name>item_definition</Name>
+          <Name>item_name</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>fae48a1b-1e48-4fec-8d67-3ef090d2cfc7</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>43b92925-b5d9-4223-90ad-32b00eae01bb</GUID>
-          <Name>right</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>429046b7-dded-4914-846e-f52ac2d6f22c</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>
@@ -1155,14 +1105,6 @@
           <MetaColumnGUID>29f0af22-9550-47ae-807b-6fd7e60a2fda</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>acefdf6c-b105-4c2e-b74a-ac2e918521a2</GUID>
-          <Name>editor_type</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>9893ee64-186a-4866-bb11-0dbbafa798de</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
           <GUID>9e310ad6-b7b6-4236-b8e6-3ad0b3657ff6</GUID>
           <Name>item_type</Name>
           <DisplayName />
@@ -1172,19 +1114,11 @@
         </ReportElement>
         <ReportElement>
           <GUID>cd1c2daf-9fe5-4d54-b364-27c7868c5e43</GUID>
-          <Name>item_definition</Name>
+          <Name>item_name</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>c58758ea-4aa9-45dc-9791-d0fcdf60436d</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>973864a0-26ef-4cd0-b51b-b999f6e1e590</GUID>
-          <Name>right</Name>
-          <DisplayName />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>110f2496-d67a-4964-9d7f-9b76b4c953e3</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>

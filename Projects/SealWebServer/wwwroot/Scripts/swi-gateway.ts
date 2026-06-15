@@ -254,6 +254,14 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public RewindAIAgent(userMessageIndex: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIRewindAIAgent", {
+            userMessageIndex: userMessageIndex
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public CancelAIAgentResponse(callback: ((data: any) => void) | null, errorcb?: ((data: any) => void) | null) {
         if (this._currentAIXHR) {
             this._currentAIXHR.abort();

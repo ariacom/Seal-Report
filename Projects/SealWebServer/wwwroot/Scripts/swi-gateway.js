@@ -221,6 +221,13 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    RewindAIAgent(userMessageIndex, callback, errorcb) {
+        $.post(_server + "SWIRewindAIAgent", {
+            userMessageIndex: userMessageIndex
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
     CancelAIAgentResponse(callback, errorcb) {
         if (this._currentAIXHR) {
             this._currentAIXHR.abort();

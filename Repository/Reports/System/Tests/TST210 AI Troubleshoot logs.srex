@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c1a2b3d4-0210-4e10-9a10-000000000210</GUID>
+  <ViewGUID>c1a2b3d4-0210-4e10-9a10-000000000211</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0210-4000-8000-000000000001</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0210-4000-8000-000000000002</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>c1a2b3d4-0210-4061-8a9b-0c1d2e3f4a50</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>c1a2b3d4-0210-4098-8765-4321fedcba98</GUID>
+      <Name>Model</Name>
+      <SourceGUID>c1a2b3d4-0210-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>c1a2b3d4-0210-4a00-9000-000000000001</GUID>
+      <Name>Init</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0210-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider.
+    //'900 Tests' executes this report ONCE PER PROVIDER by forcing the 'Provider to test' input value.
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+
+    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2
+    report.Tag2 = new object[] { provider.Name, null, "Error", null };
+
+    //Security context (the troubleshoot-with-logs skill reads log files via the log_read tool)
+    var user = new SecurityUser(repository.Security);
+    user.AddSecurityGroup("Group System Tests");
+    user.SetFolders();
+    report.SecurityContext = user;
+
+    task.LogMessage($"Testing the System Admin troubleshoot-with-logs skill with provider '{provider.Name}'.");
+}
+</Script>
+      <SortOrder>0</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0210-4a00-9000-000000000002</GUID>
+      <Name>Cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0210-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+
+    //Remove any seeded log file left by a previous run (the action task re-creates it).
+    try
+    {
+        task.LogMessage($"Executing '{task.Name}'");
+        var seeded = Path.Combine(repository.LogsFolder, "executions_2000_01_01.txt");
+        if (File.Exists(seeded)) File.Delete(seeded);
+    }
+    catch (Exception ex)
+    {
+        var pr = report.Tag2 as object[];
+        var pn = pr != null ? (string)pr[0] : null;
+        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0210-4a00-9000-000000000003</GUID>
+      <Name>Seed log file</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0210-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using System.IO;
+@using System.Text;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+
+    //Write a CONTROLLED report-executions log for a date with no real activity (2000-01-01),
+    //so the test is deterministic and never touches the live log files. It contains EXACTLY
+    //seven lines carrying the unique marker 'TST210MARKER' (the value the agent must count).
+    try
+    {
+        task.LogMessage($"Executing '{task.Name}'");
+        var seeded = Path.Combine(repository.LogsFolder, "executions_2000_01_01.txt");
+        if (!Directory.Exists(repository.LogsFolder)) Directory.CreateDirectory(repository.LogsFolder);
+
+        var sb = new StringBuilder();
+        sb.AppendLine("Report execution log (seeded by TST210 - safe to delete).");
+        sb.AppendLine("Report 'Daily Sales' executed successfully.");
+        for (int i = 1; i &lt;= 7; i++)
+            sb.AppendLine($"Execution Error: report failed to render. marker TST210MARKER occurrence number {(i == 1 ? "one" : i == 2 ? "two" : i == 3 ? "three" : i == 4 ? "four" : i == 5 ? "five" : i == 6 ? "six" : "seven")}.");
+        sb.AppendLine("Report 'Weekly Summary' executed successfully.");
+        sb.AppendLine("End of seeded log.");
+        File.WriteAllText(seeded, sb.ToString());
+
+        if (!File.Exists(seeded)) throw new Exception("Seeded log file was not created.");
+    }
+    catch (Exception ex)
+    {
+        var pr = report.Tag2 as object[];
+        var pn = pr != null ? (string)pr[0] : null;
+        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0210-4a00-9000-000000000004</GUID>
+      <Name>Troubleshoot question</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0210-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+@using System.Text;
+@using System.Globalization;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    try
+    {
+        //The System Admin agent must load the troubleshoot-with-logs skill and use the log_read tool
+        //to read the seeded report-executions log, then count the marker lines.
+        var adminConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "System Admin"));
+        adminConfig.ProviderGUID = provider.GUID;
+        var agent = new AIAgent(adminConfig);
+        agent.SecurityContext = report.SecurityContext;
+
+        var request = @"I am troubleshooting report executions. Read the report EXECUTIONS log for the date 2000-01-01 and tell me how many log lines contain the marker text 'TST210MARKER'. Reply with only the number.";
+        if (chatLog != null) task.LogMessage(request);
+        var answer = agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+        if (chatLog != null &amp;&amp; answer != null) task.LogMessage("A: " + answer);
+
+        //Deterministic check: the seeded file contains exactly seven marker lines.
+        if (!AnswerMatches(answer, new[] { "7", "seven" }))
+        {
+            var got = answer == null ? "" : answer.ToString();
+            if (got.Length &gt; 200) got = got.Substring(0, 200) + "...";
+            throw new Exception($"Expected the agent to report 7 marker lines, got: {got}");
+        }
+
+        task.LogMessage($"[{provider.Name}] log_read returned the correct marker count (7).");
+    }
+    catch (Exception ex)
+    {
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+
+@functions {
+    //Case- and accent-insensitive 'contains any token' test (same approach as TST300).
+    bool AnswerMatches(object answer, string[] tokens)
+    {
+        if (answer == null) return false;
+        var hay = Normalize(answer.ToString());
+        foreach (var t in tokens) {
+            if (string.IsNullOrEmpty(t)) continue;
+            if (hay.Contains(Normalize(t))) return true;
+        }
+        return false;
+    }
+
+    string Normalize(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return "";
+        var formD = s.ToLowerInvariant().Normalize(NormalizationForm.FormD);
+        var sb = new StringBuilder();
+        foreach (var c in formD) {
+            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark) sb.Append(c);
+        }
+        return sb.ToString().Normalize(NormalizationForm.FormC);
+    }
+}
+</Script>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0210-4a00-9000-000000000006</GUID>
+      <Name>Result</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0210-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    //All checks passed: record the success result read by '900 Tests' from report.Tag2
+    var pr = report.Tag2 as object[];
+    var providerName = pr != null ? (string)pr[0] : null;
+    report.Tag2 = new object[] { providerName, null, "Success", null };
+    task.LogMessage($"[{providerName}] Troubleshoot-with-logs check passed.");
+}
+</Script>
+      <SortOrder>5</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>c1a2b3d4-0210-4e10-9a10-000000000211</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>c1a2b3d4-0210-4e10-9a10-000000000212</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>c1a2b3d4-0210-4e10-9a10-000000000213</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c1a2b3d4-0210-4e10-9a10-000000000214</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>c1a2b3d4-0210-4e10-9a10-000000000215</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>c1a2b3d4-0210-4098-8765-4321fedcba98</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

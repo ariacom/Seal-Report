@@ -1,0 +1,347 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c1a2b3d4-0160-4e60-9a60-000000000160</GUID>
+  <ViewGUID>c1a2b3d4-0160-4e60-9a60-000000000161</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0160-4000-8000-000000000001</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0160-4000-8000-000000000002</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>c1a2b3d4-0160-4061-8a9b-0c1d2e3f4a50</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>c1a2b3d4-0160-4098-8765-4321fedcba98</GUID>
+      <Name>Model</Name>
+      <SourceGUID>c1a2b3d4-0160-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>c1a2b3d4-0160-4a00-9000-000000000001</GUID>
+      <Name>Init</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0160-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+
+    //Base output directory (subfolder = 6 first chars of the report name)
+    var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
+    var baseDir = $@"Reports\System\Tests\Output\{subDir}";
+
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider.
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+
+    //Dedicated output sub-folder for this provider (read by the next tasks from report.StringTag)
+    var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
+    var outputDir = Path.Combine(baseDir, safeName);
+    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
+    report.StringTag = outputDir;
+
+    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2
+    report.Tag2 = new object[] { provider.Name, null, "Error", null };
+
+    //Security context with Edit access to the output folder (\System\Tests)
+    var user = new SecurityUser(repository.Security);
+    user.AddSecurityGroup("Group System Tests");
+    user.SetFolders();
+    report.SecurityContext = user;
+
+    task.LogMessage($"Testing the manage-report-files happy path with provider '{provider.Name}' -&gt; {outputDir}");
+}
+</Script>
+      <SortOrder>0</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0160-4a00-9000-000000000002</GUID>
+      <Name>Cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0160-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = report.StringTag;
+
+    try
+    {
+        task.LogMessage($"Executing '{task.Name}'");
+        var dir = Path.Combine(repository.RepositoryPath, outputDir);
+        if (Directory.Exists(dir))
+        {
+            foreach (var f in Directory.GetFiles(dir, "*", SearchOption.AllDirectories)) File.Delete(f);
+            var archive = Path.Combine(dir, "archive");
+            if (Directory.Exists(archive)) Directory.Delete(archive, true);
+        }
+    }
+    catch (Exception ex)
+    {
+        var pr = report.Tag2 as object[];
+        var pn = pr != null ? (string)pr[0] : null;
+        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0160-4a00-9000-000000000003</GUID>
+      <Name>Setup report</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0160-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = report.StringTag;
+
+    try
+    {
+        task.LogMessage($"Executing '{task.Name}'");
+
+        //Create a valid report DETERMINISTICALLY (no AI) and an 'archive' destination sub-folder.
+        var reportFull = Path.Combine(repository.RepositoryPath, outputDir, "empty_report.srex");
+        var r = Report.Create(repository);
+        r.FilePath = reportFull;
+        r.SaveToFile();
+        if (!File.Exists(reportFull)) throw new Exception("Setup report was not created.");
+
+        Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir, "archive"));
+    }
+    catch (Exception ex)
+    {
+        var pr = report.Tag2 as object[];
+        var pn = pr != null ? (string)pr[0] : null;
+        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0160-4a00-9000-000000000004</GUID>
+      <Name>Rename move copy</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0160-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    var fullOut = Path.Combine(repository.RepositoryPath, outputDir);
+
+    //Relative paths (the format file_list / file_manage expect) precomputed to keep the requests simple.
+    var emptyRel    = Path.Combine(outputDir, "empty_report.srex");
+    var renamedRel  = Path.Combine(outputDir, "renamed_report.srex");
+    var copyRel     = Path.Combine(outputDir, "copy_report.srex");
+    var archiveDir  = Path.Combine(outputDir, "archive");
+    var movedRel    = Path.Combine(archiveDir, "copy_report.srex");
+
+    try
+    {
+        var agent = MakeAgent(config, provider.GUID, report);
+
+        //==================== STEP 1: rename empty_report -&gt; renamed_report (same folder) ====================
+        var request = $@"Rename the report file '{emptyRel}' to 'renamed_report.srex'. Keep it in the same folder.";
+        if (chatLog != null) task.LogMessage(request);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+
+        if (!File.Exists(Path.Combine(fullOut, "renamed_report.srex"))) throw new Exception("STEP1 rename: 'renamed_report.srex' was not created.");
+        if (File.Exists(Path.Combine(fullOut, "empty_report.srex"))) throw new Exception("STEP1 rename: source 'empty_report.srex' still exists after rename.");
+
+        //==================== STEP 2: copy renamed_report -&gt; copy_report (same folder) ====================
+        agent = MakeAgent(config, provider.GUID, report);
+        request = $@"Copy the report file '{renamedRel}' to '{copyRel}'.";
+        if (chatLog != null) task.LogMessage(request);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+
+        if (!File.Exists(Path.Combine(fullOut, "copy_report.srex"))) throw new Exception("STEP2 copy: 'copy_report.srex' was not created.");
+        if (!File.Exists(Path.Combine(fullOut, "renamed_report.srex"))) throw new Exception("STEP2 copy: source 'renamed_report.srex' disappeared (copy must keep the source).");
+
+        //==================== STEP 3: move copy_report into the 'archive' sub-folder ====================
+        agent = MakeAgent(config, provider.GUID, report);
+        request = $@"Move (do not copy) the report file '{copyRel}' to the new location '{movedRel}' (the 'archive' sub-folder). After the move the file must NO LONGER exist at '{copyRel}'.";
+        if (chatLog != null) task.LogMessage(request);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+
+        if (!File.Exists(Path.Combine(fullOut, "archive", "copy_report.srex"))) throw new Exception("STEP3 move: file was not moved into 'archive'.");
+        if (File.Exists(Path.Combine(fullOut, "copy_report.srex"))) throw new Exception("STEP3 move: source 'copy_report.srex' still exists after move.");
+
+        task.LogMessage($"[{provider.Name}] rename / copy / move all succeeded.");
+    }
+    catch (Exception ex)
+    {
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+
+@functions {
+    //Build a fresh System Admin agent (carries the manage-report-files skill) bound to the provider under test.
+    AIAgent MakeAgent(Seal.AI.AIServerConfiguration config, string providerGUID, Report report)
+    {
+        var adminConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "System Admin"));
+        adminConfig.ProviderGUID = providerGUID;
+        var agent = new AIAgent(adminConfig);
+        agent.SecurityContext = report.SecurityContext;
+        return agent;
+    }
+}
+</Script>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0160-4a00-9000-000000000006</GUID>
+      <Name>Result</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0160-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    var pr = report.Tag2 as object[];
+    var providerName = pr != null ? (string)pr[0] : null;
+    report.Tag2 = new object[] { providerName, null, "Success", null };
+    task.LogMessage($"[{providerName}] manage-report-files happy path passed.");
+}
+</Script>
+      <SortOrder>5</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>c1a2b3d4-0160-4e60-9a60-000000000161</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>c1a2b3d4-0160-4e60-9a60-000000000162</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>c1a2b3d4-0160-4e60-9a60-000000000163</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c1a2b3d4-0160-4e60-9a60-000000000164</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>c1a2b3d4-0160-4e60-9a60-000000000165</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>c1a2b3d4-0160-4098-8765-4321fedcba98</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

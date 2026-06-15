@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>d1304e30-0000-4000-9000-0000000000a0</GUID>
+  <ViewGUID>d1304e30-0000-4000-9000-0000000000a1</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>d1304e30-0000-4000-9000-0000000000a2</GUID>
+      <Name>Mongo DB (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData />
+      <MetaSourceGUID>1f7b6741-c62f-4903-90ed-2fe3229190a7</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>d1304e30-0000-4000-9000-0000000000a3</GUID>
+      <Name>sales per year</Name>
+      <SourceGUID>d1304e30-0000-4000-9000-0000000000a2</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>57e31c20-18d1-4e30-a46c-0734ab19dce7</GUID>
+          <Name>transactions</Name>
+          <TemplateName>Mongo DB</TemplateName>
+          <MongoStagesScript>@using MongoDB.Bson
+@{
+    MetaTable metaTable = Model;
+
+    //Elements
+    metaTable.MongoStages.Add(
+        new BsonDocument(
+            "$project",
+            new BsonDocument {
+{"year",1},
+{"total",1},
+{"_id",1},
+            }
+    ));
+}</MongoStagesScript>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>d1304e30-0000-4000-9000-0000000000a4</GUID>
+          <Name>year</Name>
+          <DisplayName />
+          <Format>D0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9f55edb5-5559-4020-9ca7-721bc1baa093</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d1304e30-0000-4000-9000-0000000000a5</GUID>
+          <Name>total</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>RowColumn</ShowTotal>
+          <MetaColumnGUID>f8bbbcb7-2396-4695-a73b-0d56c247bd7c</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>d1304e30-0000-4000-9000-0000000000a1</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>d1304e30-0000-4000-9000-0000000000a6</GUID>
+          <Name>sales per year</Name>
+          <Views>
+            <ReportView>
+              <GUID>d1304e30-0000-4000-9000-0000000000a7</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>d1304e30-0000-4000-9000-0000000000a8</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>d1304e30-0000-4000-9000-0000000000a9</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>d1304e30-0000-4000-9000-0000000000a3</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

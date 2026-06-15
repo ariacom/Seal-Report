@@ -1,0 +1,406 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c1a2b3d4-0130-4e30-9a13-000000000130</GUID>
+  <ViewGUID>c1a2b3d4-0130-4e30-9a13-000000000131</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0130-4000-8000-000000000001</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0130-4000-8000-000000000002</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>c1a2b3d4-0130-4061-8a9b-0c1d2e3f4a50</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>c1a2b3d4-0130-4098-8765-4321fedcba98</GUID>
+      <Name>Model</Name>
+      <SourceGUID>c1a2b3d4-0130-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>c1a2b3d4-0130-4a00-9000-000000000001</GUID>
+      <Name>Init</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0130-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+
+    //Base output directory (subfolder = 6 first chars of the report name)
+    var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
+    var baseDir = $@"Reports\System\Tests\Output\{subDir}";
+
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider.
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+
+    //Dedicated output sub-folder for this provider (read by the next tasks from report.StringTag)
+    var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
+    var outputDir = Path.Combine(baseDir, safeName);
+    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
+    report.StringTag = outputDir;
+
+    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2.
+    //Slots: provider, rate, status (Success/Warning/Error), error detail, warning detail.
+    report.Tag2 = new object[] { provider.Name, null, "Error", null, null };
+
+    //Security context with Edit access to the output folder (\System\Tests)
+    var user = new SecurityUser(repository.Security);
+    user.AddSecurityGroup("Group System Tests");
+    user.SetFolders();
+    report.SecurityContext = user;
+
+    task.LogMessage($"Testing the build-nosql-report skill with provider '{provider.Name}' -&gt; {outputDir}");
+}
+</Script>
+      <SortOrder>0</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0130-4a00-9000-000000000002</GUID>
+      <Name>Cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0130-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = report.StringTag;
+
+    try
+    {
+        task.LogMessage($"Executing '{task.Name}'");
+        //Clean the WHOLE TST130 output tree (every provider sub-folder) so a previous run's artifacts
+        //never pollute report_list / report_get_xml for the agent under test.
+        var baseDir = Path.GetDirectoryName(Path.Combine(repository.RepositoryPath, outputDir));
+        if (Directory.Exists(baseDir))
+            foreach (var f in Directory.GetFiles(baseDir, "*", SearchOption.AllDirectories)) File.Delete(f);
+    }
+    catch (Exception ex)
+    {
+        var pr = report.Tag2 as object[];
+        var pn = pr != null ? (string)pr[0] : null;
+        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}", null };
+        throw;
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0130-4a00-9000-000000000003</GUID>
+      <Name>Create NoSQL report</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0130-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using Seal.Model;
+@using System.IO;
+@using System.Linq;
+@using System.Threading;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
+
+    //GUID of the NoSQL 'Mongo DB' data source (sample_analytics).
+    const string MongoSourceGUID = "1f7b6741-c62f-4903-90ed-2fe3229190a7";
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    //Precondition (infrastructure): the Mongo DB NoSQL source must be configured - a genuine Error if missing.
+    var mongo = repository.Sources.FirstOrDefault(s =&gt; s.GUID == MongoSourceGUID || s.Name == "Mongo DB");
+    if (mongo == null)
+    {
+        var msg0 = "The 'Mongo DB' NoSQL data source is not configured in this repository.";
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {msg0}", null };
+        throw new Exception(msg0);
+    }
+
+    //Whether the agent builds a VALID NoSQL report depends on the model's capability (it must produce a
+    //correct .srex bound to the Mongo source). Following the suite convention (weaker models produce
+    //WARNINGs, not hard failures), a shortfall here is recorded as a Warning - green, reported, non-fatal -
+    //while a fully valid, executing report bound to Mongo with the expected fields is a Success.
+    try
+    {
+        //The Report Designer agent must load build-nosql-report and create a METADATA report (no SQL) on Mongo.
+        var designerConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Report Designer"));
+        designerConfig.ProviderGUID = provider.GUID;
+        var agent = new AIAgent(designerConfig);
+        agent.SecurityContext = report.SecurityContext;
+
+        var request = $@"
+        Create a report named 'Customer sales per year.srex' in directory {outputDir} using the 'Mongo DB' data source.
+        'Mongo DB' is a NoSQL / MongoDB source: do NOT write any SQL.
+        From the 'transactions' collection, build a 'sales per year' report with EXACTLY two elements (use the RAW field names):
+          - 'year' (field 'year') as a ROW dimension - one row per year,
+          - 'total' (field 'total') as a DATA measure aggregated with Sum, showing the column total - the total sales amount.
+        No Column/Page element, no chart, no restriction.
+        Important: do NOT invent the report file structure. Base the new report on a real report template obtained with report_get_xml,
+        set its source MetaSourceGUID to the Mongo DB source, and set each element MetaColumnGUID to the matching 'transactions' field
+        (raw field names 'year' and 'total'), then create it with report_create_from_xml.
+    ";
+        if (chatLog != null) task.LogMessage(request);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+
+        //Locate the created report
+        var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
+        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the agent call.");
+        var reportFilePath = reportFiles[0];
+
+        var r = Report.LoadFromFile(reportFilePath, repository);
+        if (!string.IsNullOrEmpty(r.LoadErrors)) throw new Exception($"Created report does not load: {r.LoadErrors}");
+        var model = r.Models.FirstOrDefault();
+        if (model == null) throw new Exception("No model found in the created report.");
+
+        //Structural checks: bound to the Mongo source, and NOT a SQL model (NoSQL must use metadata, never SQL).
+        var rptSource = r.Sources.FirstOrDefault(s =&gt; s.GUID == model.SourceGUID);
+        if (rptSource == null || rptSource.MetaSourceGUID != MongoSourceGUID)
+            throw new Exception($"The report model is not bound to the Mongo DB source (found '{rptSource?.Name}').");
+        if (model.Table != null &amp;&amp; !string.IsNullOrWhiteSpace(model.Table.Sql))
+            throw new Exception("The NoSQL report must NOT contain raw SQL, but model.Table.Sql is set.");
+
+        //Expected fields: 'year' as a Row dimension and 'total' as a Sum Data measure (sales per year).
+        var elements = model.Elements.ToList();
+        var yearEl = elements.FirstOrDefault(e =&gt; e.Name == "year" || (e.MetaColumn != null &amp;&amp; e.MetaColumn.Name == "year"));
+        var totalEl = elements.FirstOrDefault(e =&gt; e.Name == "total" || (e.MetaColumn != null &amp;&amp; e.MetaColumn.Name == "total"));
+        if (yearEl == null) throw new Exception($"Missing 'year' element. Found: {string.Join(", ", elements.Select(e =&gt; e.MetaColumn?.Name ?? e.Name))}.");
+        if (totalEl == null) throw new Exception($"Missing 'total' element. Found: {string.Join(", ", elements.Select(e =&gt; e.MetaColumn?.Name ?? e.Name))}.");
+        if (yearEl.PivotPosition != PivotPosition.Row) throw new Exception($"'year' must be a Row dimension, found {yearEl.PivotPosition}.");
+        if (totalEl.PivotPosition != PivotPosition.Data) throw new Exception($"'total' must be a Data measure, found {totalEl.PivotPosition}.");
+        if (totalEl.AggregateFunction != AggregateFunction.Sum) throw new Exception($"'total' must be aggregated with Sum, found {totalEl.AggregateFunction}.");
+
+        //Pattern compare against the expected 'Customer sales per year' report. Definition-only:
+        //MongoDB is NOT executed here (the demo Atlas cluster is unreachable from the test host);
+        //CheckPattern resolves the metadata columns from the source offline.
+        var patternFile = Path.Combine(repository.RepositoryPath, "Reports", "System", "Tests", "Pattern", "TST130", "customer_sales_per_year.srex");
+        if (!File.Exists(patternFile)) throw new Exception($"Pattern report not found: '{patternFile}'.");
+        var expected = Report.LoadFromFile(patternFile, repository);
+        var pc = CheckPattern(expected, r);
+        task.LogMessage($"Check Pattern: {pc.Status} ({pc.Score}%)");
+        foreach (var m in pc.Messages) task.LogMessage("  - " + m);
+        if (pc.Status == "FAILURE") throw new Exception($"Pattern mismatch ({pc.Score}%): {string.Join("; ", pc.Messages)}");
+
+        report.Tag2 = new object[] { provider.Name, pc.Score, "Success", null, null };
+        task.LogMessage($"[{provider.Name}] NoSQL 'sales per year' report created and matches the pattern ({pc.Score}%). (MongoDB not executed: Atlas unreachable from the test host.)");
+    }
+    catch (Exception ex)
+    {
+        if (report.Cancel) return;
+        //Model-capability shortfall (invalid/incomplete report, wrong fields, pattern mismatch): record as a
+        //non-fatal Warning - weaker models often fail to emit a valid NoSQL .srex (see report comments).
+        report.Tag2 = new object[] { provider.Name, null, "Warning", null, $"[{task.Name}] {ex.Message}" };
+        task.LogMessage($"[{provider.Name}] WARNING - build-nosql-report did not produce a valid report matching the pattern: {ex.Message}");
+    }
+}
+
+@functions {
+    //--- Generic report pattern check (same logic as TST100/TST110) -------------------------------------
+    public class PatternCheckResult
+    {
+        public string Status = "OK";   //OK, WARNING or FAILURE
+        public double Score = 100;     //100 = exact match
+        public List&lt;string&gt; Messages = new List&lt;string&gt;();
+    }
+
+    PatternCheckResult CheckPattern(Report expected, Report generated)
+    {
+        var res = new PatternCheckResult();
+        int total = 0, passed = 0;
+        bool fail = false, warn = false;
+
+        if (generated == null || !string.IsNullOrEmpty(generated.LoadErrors))
+        {
+            res.Status = "FAILURE"; res.Score = 0;
+            res.Messages.Add($"Generated report is not well structured: {generated?.LoadErrors ?? "report is null"}.");
+            return res;
+        }
+
+        Check(res, ref total, ref passed, ref fail, ref warn, generated.Models.Count == expected.Models.Count, true,
+            $"Model count: expected {expected.Models.Count}, found {generated.Models.Count}.");
+
+        for (int mi = 0; mi &lt; expected.Models.Count; mi++)
+        {
+            var em = expected.Models[mi];
+            var gm = generated.Models.FirstOrDefault(x =&gt; x.Name == em.Name) ?? (mi &lt; generated.Models.Count ? generated.Models[mi] : null);
+            if (gm == null) { Check(res, ref total, ref passed, ref fail, ref warn, false, true, $"Model '{em.Name}' is missing."); continue; }
+
+            foreach (var ee in em.Elements)
+            {
+                var k = ElementKey(ee);
+                var ge = gm.Elements.FirstOrDefault(x =&gt; ElementKey(x) == k);
+                Check(res, ref total, ref passed, ref fail, ref warn, ge != null, true, $"Element '{k}' (expected {ee.PivotPosition}) is missing in model '{em.Name}'.");
+                if (ge == null) continue;
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.PivotPosition == ee.PivotPosition, true, $"Element '{k}' position: expected {ee.PivotPosition}, found {ge.PivotPosition}.");
+                if (ee.PivotPosition == PivotPosition.Data)
+                    Check(res, ref total, ref passed, ref fail, ref warn, ge.AggregateFunction == ee.AggregateFunction, true, $"Element '{k}' aggregate: expected {ee.AggregateFunction}, found {ge.AggregateFunction}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, (ge.Format ?? "") == (ee.Format ?? ""), false, $"Element '{k}' format: expected '{ee.Format}', found '{ge.Format}'.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.ShowTotal == ee.ShowTotal, false, $"Element '{k}' total: expected {ee.ShowTotal}, found {ge.ShowTotal}.");
+            }
+            foreach (var ge in gm.Elements.Where(g =&gt; !em.Elements.Any(x =&gt; ElementKey(x) == ElementKey(g))))
+                Check(res, ref total, ref passed, ref fail, ref warn, false, false, $"Unexpected element '{ElementKey(ge)}' ({ge.PivotPosition}) in model '{em.Name}'.");
+        }
+
+        res.Score = total == 0 ? 100 : Math.Round(100.0 * passed / total, 1);
+        res.Status = fail ? "FAILURE" : ((warn || res.Score &lt; 100) ? "WARNING" : "OK");
+        return res;
+    }
+
+    void Check(PatternCheckResult res, ref int total, ref int passed, ref bool fail, ref bool warn, bool ok, bool structural, string message)
+    {
+        total++;
+        if (ok) { passed++; return; }
+        if (structural) { fail = true; res.Messages.Add("FAILURE: " + message); }
+        else { warn = true; res.Messages.Add("WARNING: " + message); }
+    }
+
+    string ElementKey(ReportElement e) =&gt; (e.MetaColumn != null ? e.MetaColumn.DisplayName : null) ?? e.Name ?? e.GUID;
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0130-4a00-9000-000000000005</GUID>
+      <Name>Result</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0130-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    //Status was set by 'Create NoSQL report': Success (valid executing report) or Warning (model could
+    //not build a valid NoSQL report). Re-throw only on Error (infrastructure); Warning/Success stay green.
+    var pr = report.Tag2 as object[];
+    var providerName = pr != null ? (string)pr[0] : null;
+    var status = pr != null &amp;&amp; pr.Length &gt; 2 ? (string)pr[2] : "Error";
+    var errorDetail = pr != null &amp;&amp; pr.Length &gt; 3 ? (string)pr[3] : null;
+
+    if (status == "Error")
+    {
+        task.LogMessage($"[{providerName}] build-nosql-report test FAILED.");
+        throw new Exception(errorDetail ?? "build-nosql-report test failed.");
+    }
+    task.LogMessage($"[{providerName}] build-nosql-report test {status}.");
+}
+</Script>
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>c1a2b3d4-0130-4e30-9a13-000000000131</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>c1a2b3d4-0130-4e30-9a13-000000000132</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>c1a2b3d4-0130-4e30-9a13-000000000133</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c1a2b3d4-0130-4e30-9a13-000000000134</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>c1a2b3d4-0130-4e30-9a13-000000000135</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>c1a2b3d4-0130-4098-8765-4321fedcba98</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

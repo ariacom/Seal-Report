@@ -115,6 +115,12 @@
             that is run when the AI model decides to call the tool.
             </summary>
         </member>
+        <member name="P:Seal.AI.AIServerConfiguration.AISkills">
+            <summary>
+            AI Skills available to AI agents. Each skill bundles an instructions file (loaded on demand)
+            and an optional set of tools that become available once the skill is loaded.
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIServerConfiguration.DefaultProviderGUID">
             <summary>
             GUID of the default AI provider. Used when no provider name is specified.
@@ -495,7 +501,13 @@
         <member name="P:Seal.AI.AIAgentConfiguration.ToolGUIDs">
             <summary>
             GUIDs of the <see cref="T:Seal.AI.AIToolConfiguration"/> instances available to this agent.
-            An empty list means all enabled tools are available.
+            An empty list means no tools are available.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.SkillGUIDs">
+            <summary>
+            GUIDs of the <see cref="T:Seal.AI.AISkillConfiguration"/> instances available to this agent.
+            An empty list means no skills are available.
             </summary>
         </member>
         <member name="P:Seal.AI.AIAgentConfiguration.DefaultSystemPrompt">
@@ -556,13 +568,79 @@
         <member name="M:Seal.AI.AIAgentConfiguration.GetToolConfigurations">
             <summary>
             Returns the list of enabled <see cref="T:Seal.AI.AIToolConfiguration"/> instances available to this agent.
-            When <see cref="P:Seal.AI.AIAgentConfiguration.ToolGUIDs"/> is empty, all enabled tools are returned.
+            When <see cref="P:Seal.AI.AIAgentConfiguration.ToolGUIDs"/> is empty, no tools are returned.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgentConfiguration.GetSkillConfigurations">
+            <summary>
+            Returns the list of enabled <see cref="T:Seal.AI.AISkillConfiguration"/> instances available to this agent.
+            When <see cref="P:Seal.AI.AIAgentConfiguration.SkillGUIDs"/> is empty, no skills are returned.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgentConfiguration.GetProvider">
             <summary>
             Creates and returns the <see cref="T:Seal.AI.IAIProvider"/> for this agent's provider configuration.
             Returns <c>null</c> when no matching provider configuration is found.
+            </summary>
+        </member>
+        <member name="T:Seal.AI.AISkillConfiguration">
+            <summary>
+            Configuration for a single AI skill: a packaged set of instructions (loaded on demand)
+            plus an optional set of tools that become available once the skill is loaded.
+            Stored in <see cref="P:Seal.AI.AIServerConfiguration.AISkills"/> and edited through the Server Manager.
+            </summary>
+            <remarks>
+            Unlike an <see cref="T:Seal.AI.AIToolConfiguration"/> (a callable function), a skill carries no
+            parameter schema and runs no script. Only its <see cref="P:Seal.AI.AISkillConfiguration.Name"/> and <see cref="P:Seal.AI.AISkillConfiguration.Description"/>
+            are exposed to the AI model up front (via the built-in <c>load_skill</c> tool catalog).
+            The full <see cref="P:Seal.AI.AISkillConfiguration.EffectiveInstructions"/> body is returned to the model only when it
+            decides the skill is relevant and calls <c>load_skill</c> — progressive disclosure.
+            </remarks>
+        </member>
+        <member name="P:Seal.AI.AISkillConfiguration.GUID">
+            <summary>
+            Unique identifier for this skill configuration.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AISkillConfiguration.Name">
+            <summary>
+            Unique skill name presented to the AI model and used as the <c>skill_name</c> argument
+            of the built-in <c>load_skill</c> tool. Use kebab-case (e.g. <c>build-report-from-sql</c>).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AISkillConfiguration.Description">
+            <summary>
+            Short description of what the skill does and when to use it. Always visible to the AI
+            model in the <c>load_skill</c> catalog, so it must be enough for the model to decide
+            whether to load the skill.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AISkillConfiguration.IsEnabled">
+            <summary>
+            When <c>false</c>, this skill is excluded from all agents without being deleted.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AISkillConfiguration.InstructionsFile">
+            <summary>
+            File name of the instructions file, relative to <c>Settings\AI\Skills</c>.
+            The full text is returned to the AI model when the skill is loaded.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AISkillConfiguration.ToolGUIDs">
+            <summary>
+            GUIDs of the <see cref="T:Seal.AI.AIToolConfiguration"/> instances that become available to the
+            agent once this skill is loaded. Leave empty for an instruction-only skill.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AISkillConfiguration.EffectiveInstructions">
+            <summary>
+            Reads <see cref="P:Seal.AI.AISkillConfiguration.InstructionsFile"/> from <c>Settings\AI\Skills</c> as plain text.
+            Returns an empty string when no instructions file is configured.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AISkillConfiguration.GetToolConfigurations">
+            <summary>
+            Returns the list of enabled <see cref="T:Seal.AI.AIToolConfiguration"/> instances activated by this skill.
             </summary>
         </member>
         <member name="T:Seal.AI.AIAgent">
@@ -604,13 +682,52 @@
             <see cref="T:Seal.AI.AIAgentConfiguration"/> instance.
             </summary>
         </member>
+        <member name="F:Seal.AI.AIAgent.LoadSkillToolName">
+            <summary>
+            Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
             <summary>
             Appends a user message to the conversation history, calls the AI using
-            the tools scoped to this agent (via <see cref="M:Seal.AI.AIAgentConfiguration.GetToolConfigurations"/>),
+            the tools scoped to this agent (via <see cref="M:Seal.AI.AIAgentConfiguration.GetToolConfigurations"/>)
+            plus a built-in <c>load_skill</c> tool when the agent has skills
+            (via <see cref="M:Seal.AI.AIAgentConfiguration.GetSkillConfigurations"/>),
             executes any tool calls the AI requests, and repeats until a plain reply is
             produced or <paramref name="maxIterations"/> is reached.
-            Falls back to a plain <see cref="M:Seal.AI.IAIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})"/> call when no tools are configured.
+            Falls back to a plain <see cref="M:Seal.AI.IAIProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})"/> call when no tools and no skills are configured.
+            </summary>
+            <remarks>
+            Skills use progressive disclosure: only each skill's name and description are exposed up front
+            (in the <c>load_skill</c> tool's catalog). When the AI calls <c>load_skill</c>, the skill's full
+            instructions are returned as the tool result and the skill's own tools are merged into the active
+            tool set for the rest of the conversation.
+            </remarks>
+        </member>
+        <member name="M:Seal.AI.AIAgent.BuildLoadSkillTool(System.Collections.Generic.List{Seal.AI.AISkillConfiguration})">
+            <summary>
+            Builds the synthetic <c>load_skill</c> tool. Its description embeds the live catalog of the
+            agent's skills (name: description) and its single <c>skill_name</c> parameter is constrained to
+            the available skill names.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.LoadSkill(Seal.AI.AIToolCall,System.Collections.Generic.List{Seal.AI.AISkillConfiguration},System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,Seal.AI.AIToolConfiguration},System.Boolean@)">
+            <summary>
+            Resolves the skill requested by a <c>load_skill</c> tool call, returns its instructions as the
+            tool result, and merges the skill's tools into <paramref name="activeToolConfigs"/> the first
+            time it is loaded. Sets <paramref name="toolsChanged"/> to <c>true</c> when new tools were added.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.ExtractSkillName(System.String)">
+            <summary>
+            Extracts the <c>skill_name</c> argument from a <c>load_skill</c> tool call's JSON arguments.
+            Returns <c>null</c> when it cannot be parsed.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.IsSkillAlreadyLoaded(System.String)">
+            <summary>
+            Returns <c>true</c> when a <c>load_skill</c> call for <paramref name="skillName"/> already appears
+            in the conversation history, so its tools can be pre-activated on a resumed session.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.ChatHtml(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
@@ -642,6 +759,17 @@
             whitespace the existing system message (if any) is simply removed.
             Call this before <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> to inject a parameter-driven system
             prompt that overrides the one from <see cref="P:Seal.AI.AIAgentConfiguration.EffectiveSystemPrompt"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.RewindToUserMessage(System.Int32)">
+            <summary>
+            Rewinds the conversation to just before the user turn at
+            <paramref name="userMessageIndex"/> (0-based, counting only user messages).
+            Removes that user message and every message that followed it — including the
+            assistant replies, tool calls and tool results — so the conversation returns to
+            the state it had before that message was sent.
+            Returns the text of the removed user message (so the caller can re-populate the
+            input box), or <c>null</c> when the index is out of range.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.Clear">
@@ -7292,6 +7420,11 @@
         <member name="P:Seal.Model.Repository.AIScriptsFolder">
             <summary>
             Folder for AI tool execution script files (Settings\AI\Scripts).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.AISkillsFolder">
+            <summary>
+            Folder for AI skill instruction files (Settings\AI\Skills).
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.SecurityFolder">

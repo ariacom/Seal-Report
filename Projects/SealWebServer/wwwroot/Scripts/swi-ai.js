@@ -156,6 +156,11 @@
             if (!$send.prop('disabled'))
                 $send.trigger('click');
         }).appendTo($actions);
+        // Rewind: drop this user turn and everything after it, then refill the input
+        // so the message can be edited and re-sent.
+        bubbleActionBtn('fa-undo', SWIUtil.tr('Rewind to here'), function () {
+            rewindToBubble($bubble, text);
+        }).appendTo($actions);
         return $bubble.append($actions);
     }
     function makeAIBubble(html, rawText) {
@@ -165,6 +170,29 @@
             copyToClipboard(toPlainText(rawText));
         }).appendTo($actions);
         return $bubble.append($actions);
+    }
+    // ── Rewind conversation to a user bubble ────────────────────
+    // Removes the selected user turn and everything after it (both in the UI and in the
+    // server-side agent history), then puts the message text back into the input box so it
+    // can be edited and re-sent. The bubble's position among the user bubbles maps 1:1 to
+    // the agent's UserChatMessage list, so we send that 0-based index to the server.
+    function rewindToBubble($bubble, text) {
+        if (_requesting)
+            return;
+        var index = $bubble.prevAll('.ai-panel-bubble.user').length;
+        _gateway.RewindAIAgent(index, function () {
+            $bubble.nextAll().remove();
+            $bubble.remove();
+            $input.val(text).trigger('input');
+            $input.focus();
+            // Keep the saved chat in sync with the truncated conversation.
+            if (_panelChatFileName) {
+                _gateway.SaveAIAgentChat(_panelChatFileName, _panelChatInfos, function (saved) {
+                    if (saved && saved.fileName)
+                        _panelChatFileName = saved.fileName;
+                }, undefined, false);
+            }
+        });
     }
     // ── Clear conversation (UI only) ────────────────────────────
     function clearConversation() {

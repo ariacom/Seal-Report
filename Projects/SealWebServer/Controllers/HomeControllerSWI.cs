@@ -1182,6 +1182,27 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Rewinds the current AI Agent conversation to just before the selected user turn:
+        /// removes that user message and everything after it from the session history.
+        /// Returns the removed user message text so the caller can re-populate the input box.
+        /// </summary>
+        public ActionResult SWIRewindAIAgent(int userMessageIndex, string sessionId)
+        {
+            writeDebug("SWIRewindAIAgent");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                var message = Agent.RewindToUserMessage(userMessageIndex);
+                return Json(new { message = message ?? "" });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
         /// Returns the list of sample prompts defined for the current session's AI Agent.
         /// Falls back to the default agent configuration when no conversation has started yet.
         /// </summary>
@@ -1623,8 +1644,9 @@ namespace SealWebServer.Controllers
                     _aiCancelTokens.TryRemove(SessionKey, out _);
                 }
 
-                // Parse [EXECUTE_REPORT:path|name] tags out of the reply and return them
-                // as structured actions so the UI can render clickable Execute buttons.
+                // Parse [EXECUTE_REPORT:path|name|outputGUID] tags out of the reply and
+                // return them as structured actions so the UI can render clickable Execute
+                // buttons. The outputGUID segment is optional (a plain report run omits it).
                 //
                 // The AI uses report_list display paths (e.g. "Reports\foo.srex",
                 // "Personal\user\foo.srex"). SWExecuteReport expects the SWI format where
@@ -1639,7 +1661,7 @@ namespace SealWebServer.Controllers
                 // restored when missing.
                 var reportActions = new List<object>();
                 var cleanedReply = Regex.Replace(reply ?? string.Empty,
-                    @"\[EXECUTE_REPORT:([^\]\|]+)\|([^\]]+)\]",
+                    @"\[EXECUTE_REPORT:([^\]\|]+)\|([^\]\|]+)(?:\|([^\]]*))?\]",
                     match =>
                     {
                         var rawPath = match.Groups[1].Value.Trim();
@@ -1659,7 +1681,8 @@ namespace SealWebServer.Controllers
                         reportActions.Add(new
                         {
                             path = swiPath,
-                            name = match.Groups[2].Value.Trim()
+                            name = match.Groups[2].Value.Trim(),
+                            outputGUID = match.Groups[3].Value.Trim()
                         });
                         return string.Empty;
                     });

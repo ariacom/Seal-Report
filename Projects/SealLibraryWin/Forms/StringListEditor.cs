@@ -52,6 +52,26 @@ namespace Seal.Forms
                         value = login.GroupIds; //indicates a modification
                     }
                 }
+                else if (context.Instance is AIAgentConfiguration && context.PropertyDescriptor.Name == "SkillGUIDs")
+                {
+                    AIAgentConfiguration agent = context.Instance as AIAgentConfiguration;
+                    MultipleSelectForm frm = new MultipleSelectForm("Please select the skills", Repository.Instance.AIConfiguration.AISkills, "Name");
+                    //select existing values
+                    for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
+                    {
+                        if (agent.SkillGUIDs.Contains(((AISkillConfiguration)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
+                    }
+
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        agent.SkillGUIDs = new List<string>();
+                        foreach (object item in frm.CheckedItems)
+                        {
+                            agent.SkillGUIDs.Add(((AISkillConfiguration)item).GUID);
+                        }
+                        value = agent.SkillGUIDs;
+                    }
+                }
                 else if (context.Instance is AIAgentConfiguration)
                 {
                     AIAgentConfiguration agent = context.Instance as AIAgentConfiguration;
@@ -70,6 +90,26 @@ namespace Seal.Forms
                             agent.ToolGUIDs.Add(((AIToolConfiguration)item).GUID);
                         }
                         value = agent.ToolGUIDs;
+                    }
+                }
+                else if (context.Instance is AISkillConfiguration)
+                {
+                    AISkillConfiguration skill = context.Instance as AISkillConfiguration;
+                    MultipleSelectForm frm = new MultipleSelectForm("Please select the tools", Repository.Instance.AIConfiguration.AITools, "Name");
+                    //select existing values
+                    for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
+                    {
+                        if (skill.ToolGUIDs.Contains(((AIToolConfiguration)frm.checkedListBox.Items[i]).GUID)) frm.checkedListBox.SetItemChecked(i, true);
+                    }
+
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        skill.ToolGUIDs = new List<string>();
+                        foreach (object item in frm.CheckedItems)
+                        {
+                            skill.ToolGUIDs.Add(((AIToolConfiguration)item).GUID);
+                        }
+                        value = skill.ToolGUIDs;
                     }
                 }
                 else if (context.Instance is SecurityGroup)

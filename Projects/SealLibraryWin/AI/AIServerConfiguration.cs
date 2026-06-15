@@ -57,6 +57,7 @@ namespace Seal.AI
                 GetProperty("ExternalAIProviders").SetIsBrowsable(true);
                 GetProperty("AIProviders").SetIsBrowsable(true);
                 GetProperty("AITools").SetIsBrowsable(true);
+                GetProperty("AISkills").SetIsBrowsable(true);
                 GetProperty("AIAgents").SetIsBrowsable(true);
                 GetProperty("DefaultProviderGUID").SetIsBrowsable(true);
                 GetProperty("DefaultAgentGUID").SetIsBrowsable(true);
@@ -126,12 +127,28 @@ namespace Seal.AI
             set { _AITools = value; }
         }
 
+        List<AISkillConfiguration> _AISkills = new List<AISkillConfiguration>();
+        /// <summary>
+        /// AI Skills available to AI agents. Each skill bundles an instructions file (loaded on demand)
+        /// and an optional set of tools that become available once the skill is loaded.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("AI skills"), Description("AI Skills available to AI agents. Each skill bundles an instructions file (loaded on demand) and an optional set of tools that become available once the skill is loaded."), Category("AI Configuration"), Id(4, 1)]
+        [DefaultValue(false)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+#endif
+        public List<AISkillConfiguration> AISkills
+        {
+            get { return _AISkills; }
+            set { _AISkills = value; }
+        }
+
         string _defaultProviderGUID;
         /// <summary>
         /// GUID of the default AI provider. Used when no provider name is specified.
         /// </summary>
 #if WINDOWS
-        [DisplayName("Default Provider"), Description("The default AI provider used when no provider name is specified."), Category("AI Configuration"), Id(5, 1)]
+        [DisplayName("Default Provider"), Description("The default AI provider used when no provider name is specified."), Category("AI Configuration"), Id(6, 1)]
         [TypeConverter(typeof(AIProviderConverter))]
 #endif
         public string DefaultProviderGUID
@@ -145,7 +162,7 @@ namespace Seal.AI
         /// GUID of the default AI agent. Used when no agent name is specified.
         /// </summary>
 #if WINDOWS
-        [DisplayName("Default Agent"), Description("The default AI agent used when no agent name is specified."), Category("AI Configuration"), Id(6, 1)]
+        [DisplayName("Default Agent"), Description("The default AI agent used when no agent name is specified."), Category("AI Configuration"), Id(7, 1)]
         [TypeConverter(typeof(AIAgentConverter))]
 #endif
         public string DefaultAgentGUID
@@ -159,7 +176,7 @@ namespace Seal.AI
         /// AI Agents combining a provider, an optional set of tools, and a default system prompt.
         /// </summary>
 #if WINDOWS
-        [DisplayName("AI agents"), Description("AI Agents: each agent ties together a provider, an optional subset of tools, and a default system prompt."), Category("AI Configuration"), Id(4, 1)]
+        [DisplayName("AI agents"), Description("AI Agents: each agent ties together a provider, an optional subset of tools, and a default system prompt."), Category("AI Configuration"), Id(5, 1)]
         [DefaultValue(false)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif

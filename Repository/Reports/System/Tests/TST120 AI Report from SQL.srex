@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c1a2b3d4-0120-4e20-9a12-000000000120</GUID>
+  <ViewGUID>c1a2b3d4-0120-4e20-9a12-000000000121</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0120-4000-8000-000000000001</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0120-4000-8000-000000000002</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>c1a2b3d4-0120-4061-8a9b-0c1d2e3f4a50</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>c1a2b3d4-0120-4098-8765-4321fedcba98</GUID>
+      <Name>Model</Name>
+      <SourceGUID>c1a2b3d4-0120-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>c1a2b3d4-0120-4a00-9000-000000000001</GUID>
+      <Name>Init</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0120-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+
+    //Base output directory (subfolder = 6 first chars of the report name)
+    var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
+    var baseDir = $@"Reports\System\Tests\Output\{subDir}";
+
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider.
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+
+    //Dedicated output sub-folder for this provider (read by the next tasks from report.StringTag)
+    var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
+    var outputDir = Path.Combine(baseDir, safeName);
+    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
+    report.StringTag = outputDir;
+
+    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2
+    report.Tag2 = new object[] { provider.Name, null, "Error", null };
+
+    //Security context with Edit access to the output folder and SQL models enabled (Group System Tests).
+    var user = new SecurityUser(repository.Security);
+    user.AddSecurityGroup("Group System Tests");
+    user.SetFolders();
+    report.SecurityContext = user;
+
+    task.LogMessage($"Testing the build-report-from-sql skill with provider '{provider.Name}' -&gt; {outputDir}");
+}
+</Script>
+      <SortOrder>0</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0120-4a00-9000-000000000002</GUID>
+      <Name>Cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0120-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = report.StringTag;
+
+    try
+    {
+        task.LogMessage($"Executing '{task.Name}'");
+        var dir = Path.Combine(repository.RepositoryPath, outputDir);
+        if (Directory.Exists(dir))
+            foreach (var f in Directory.GetFiles(dir)) File.Delete(f);
+    }
+    catch (Exception ex)
+    {
+        var pr = report.Tag2 as object[];
+        var pn = pr != null ? (string)pr[0] : null;
+        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0120-4a00-9000-000000000003</GUID>
+      <Name>Create SQL report</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0120-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using Seal.Model;
+@using System.IO;
+@using System.Linq;
+@using System.Threading;
+@using System.Globalization;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    try
+    {
+        //Ground truth computed directly from Northwind (NO AI): top customer by net sales in 1997.
+        var northwind = repository.Sources.FirstOrDefault(s =&gt; s.Name == "Northwind");
+        if (northwind == null) throw new Exception("Northwind data source not found in the repository.");
+        var expectedTop = AsString(QueryScalar(northwind, "select top 1 c.CompanyName from Orders o inner join [Order Details] od on o.OrderID=od.OrderID inner join Customers c on o.CustomerID=c.CustomerID where o.OrderDate &gt;= '1997-01-01' and o.OrderDate &lt; '1998-01-01' group by c.CompanyName order by SUM((1-od.Discount)*od.Quantity*od.UnitPrice) desc"));
+        if (string.IsNullOrEmpty(expectedTop)) throw new Exception("Could not compute the expected top customer from Northwind.");
+        task.LogMessage($"Ground truth top customer 1997: '{expectedTop}'");
+
+        //The Report Designer agent must load build-report-from-sql and create a RAW-SQL model report.
+        var designerConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Report Designer"));
+        designerConfig.ProviderGUID = provider.GUID;
+        var agent = new AIAgent(designerConfig);
+        agent.SecurityContext = report.SecurityContext;
+
+        var request = $@"
+        Create a report named 'Top customers 1997.srex' in directory {outputDir} using the Northwind data source.
+        This MUST be a RAW-SQL report (a SQL model built from a SELECT statement), NOT a metadata report.
+        Write a SQL SELECT that returns, for orders in calendar year 1997, the FIVE customers with the highest total net sales:
+          - one column 'CustomerName' = the customer company name (Customers.CompanyName),
+          - one column 'TotalSales'  = SUM of net sales, where net sales = (1 - [Order Details].Discount) * [Order Details].Quantity * [Order Details].UnitPrice.
+        Join Orders, [Order Details] and Customers; filter OrderDate to the year 1997; group by the customer company name;
+        order by TotalSales descending; and return only the top 5 rows.
+        Validate the SQL before saving the report.
+    ";
+        if (chatLog != null) task.LogMessage(request);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+
+        //Locate the created report
+        var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
+        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the agent call.");
+        var reportFilePath = reportFiles[0];
+
+        //Structural check: it must be a SQL model (raw SQL stored on the model table).
+        var r = Report.LoadFromFile(reportFilePath, repository);
+        if (!string.IsNullOrEmpty(r.LoadErrors)) throw new Exception($"Created report does not load: {r.LoadErrors}");
+        var model = r.Models.FirstOrDefault();
+        if (model == null) throw new Exception("No model found in the created report.");
+        if (model.Table == null || string.IsNullOrWhiteSpace(model.Table.Sql))
+            throw new Exception("The created report is not a SQL model (model.Table.Sql is empty) - build-report-from-sql must produce a raw-SQL model.");
+
+        //Execute the report and verify it returns data whose top customer matches the ground truth.
+        r.SecurityContext = report.SecurityContext;
+        r.SkipExternalViewer = true;
+        var execution = new ReportExecution() { Report = r };
+        execution.Execute();
+        while (r.Status != ReportStatus.Executed &amp;&amp; !r.HasErrors &amp;&amp; !r.Cancel) Thread.Sleep(300);
+        if (r.HasErrors) throw new Exception($"The created SQL report failed to execute: {r.ExecutionErrors}");
+
+        var rt = model.ResultTable;
+        if (rt == null || rt.Rows.Count == 0) throw new Exception("The created SQL report returned no rows.");
+
+        //The top customer (ground truth) must appear in the result set.
+        bool found = false;
+        foreach (System.Data.DataRow row in rt.Rows)
+            foreach (var cell in row.ItemArray)
+                if (cell != null &amp;&amp; Normalize(cell.ToString()).Contains(Normalize(expectedTop))) { found = true; break; }
+        if (!found)
+            throw new Exception($"The result does not contain the expected top customer '{expectedTop}'. Returned {rt.Rows.Count} row(s).");
+
+        task.LogMessage($"[{provider.Name}] SQL report created, executed, and top customer '{expectedTop}' confirmed ({rt.Rows.Count} rows).");
+    }
+    catch (Exception ex)
+    {
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+
+@functions {
+    //Run a scalar query against a Seal data source and return the single value (same approach as TST300).
+    object QueryScalar(MetaSource source, string sql)
+    {
+        var helper = new TaskDatabaseHelper();
+        var connection = source.Connection.GetOpenConnection();
+        try {
+            var command = helper.GetDbCommand(connection);
+            command.CommandText = sql;
+            return command.ExecuteScalar();
+        }
+        finally { connection.Close(); }
+    }
+
+    string AsString(object value) =&gt; value == null || value == DBNull.Value ? null : Convert.ToString(value, CultureInfo.InvariantCulture);
+
+    string Normalize(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return "";
+        return new string(s.ToLowerInvariant().Where(c =&gt; !char.IsWhiteSpace(c)).ToArray());
+    }
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0120-4a00-9000-000000000005</GUID>
+      <Name>Result</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0120-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    var pr = report.Tag2 as object[];
+    var providerName = pr != null ? (string)pr[0] : null;
+    report.Tag2 = new object[] { providerName, null, "Success", null };
+    task.LogMessage($"[{providerName}] build-report-from-sql check passed.");
+}
+</Script>
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>c1a2b3d4-0120-4e20-9a12-000000000121</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>c1a2b3d4-0120-4e20-9a12-000000000122</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>c1a2b3d4-0120-4e20-9a12-000000000123</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c1a2b3d4-0120-4e20-9a12-000000000124</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>c1a2b3d4-0120-4e20-9a12-000000000125</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>c1a2b3d4-0120-4098-8765-4321fedcba98</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

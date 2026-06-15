@@ -39,6 +39,7 @@ namespace Seal.AI
                 GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("ProviderGUID").SetIsBrowsable(true);
                 GetProperty("ToolGUIDs").SetIsBrowsable(true);
+                GetProperty("SkillGUIDs").SetIsBrowsable(true);
                 GetProperty("DefaultSystemPrompt").SetIsBrowsable(true);
                 GetProperty("SystemPromptFile").SetIsBrowsable(true);
                 GetProperty("SamplePromptsFile").SetIsBrowsable(true);
@@ -75,6 +76,7 @@ namespace Seal.AI
         /// </summary>
 #if WINDOWS
         [Category("Definition"), DisplayName("\t\tDescription"), Description("Short description of what this agent can do."), Id(2, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string Description
         {
@@ -102,10 +104,10 @@ namespace Seal.AI
 
         /// <summary>
         /// GUIDs of the <see cref="AIToolConfiguration"/> instances available to this agent.
-        /// An empty list means all enabled tools are available.
+        /// An empty list means no tools are available.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\tTools"), Description("The tools available to this agent. Leave empty to make all enabled tools available."), Id(6, 1)]
+        [Category("Definition"), DisplayName("\t\tTools"), Description("The tools available to this agent. An empty list disables all tools."), Id(6, 1)]
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         [XmlArray("ToolGUIDs")]
@@ -113,12 +115,24 @@ namespace Seal.AI
         public List<string> ToolGUIDs { get; set; } = new List<string>();
 
         /// <summary>
+        /// GUIDs of the <see cref="AISkillConfiguration"/> instances available to this agent.
+        /// An empty list means no skills are available.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\t\tSkills"), Description("The skills available to this agent. An empty list disables all skills."), Id(7, 1)]
+        [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
+#endif
+        [XmlArray("SkillGUIDs")]
+        [XmlArrayItem("GUID")]
+        public List<string> SkillGUIDs { get; set; } = new List<string>();
+
+        /// <summary>
         /// Inline system prompt injected at the start of every conversation.
         /// Ignored when <see cref="SystemPromptFile"/> is set.
         /// Leave empty to use no system prompt.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\tDefault System Prompt"), Description("Inline system prompt. Ignored when System Prompt File is set. Leave empty for none."), Id(7, 1)]
+        [Category("Definition"), DisplayName("\tDefault System Prompt"), Description("Inline system prompt. Ignored when System Prompt File is set. Leave empty for none."), Id(8, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string DefaultSystemPrompt { get; set; }
@@ -128,7 +142,7 @@ namespace Seal.AI
         /// When set, takes precedence over <see cref="DefaultSystemPrompt"/>.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\tSystem Prompt File"), Description("File name of the system prompt (e.g. my-prompt.md), located in Settings\\AI\\Prompts. When set, overrides Default System Prompt. Click the editor button to edit the file content."), Id(8, 1)]
+        [Category("Definition"), DisplayName("\tSystem Prompt File"), Description("File name of the system prompt (e.g. my-prompt.md), located in Settings\\AI\\Prompts. When set, overrides Default System Prompt. Click the editor button to edit the file content."), Id(9, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string SystemPromptFile { get; set; }
@@ -138,7 +152,7 @@ namespace Seal.AI
         /// One prompt per line; blank lines and lines starting with <c>#</c> are ignored.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Sample Prompts File"), Description("File name of the sample prompts list (e.g. sample-prompts.md), located in Settings\\AI\\Prompts\\Samples. One prompt per line; lines starting with # are treated as comments. Click the editor button to edit the file content."), Id(9, 1)]
+        [Category("Definition"), DisplayName("Sample Prompts File"), Description("File name of the sample prompts list (e.g. sample-prompts.md), located in Settings\\AI\\Prompts\\Samples. One prompt per line; lines starting with # are treated as comments. Click the editor button to edit the file content."), Id(10, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string SamplePromptsFile { get; set; }
@@ -236,14 +250,26 @@ namespace Seal.AI
 
         /// <summary>
         /// Returns the list of enabled <see cref="AIToolConfiguration"/> instances available to this agent.
-        /// When <see cref="ToolGUIDs"/> is empty, all enabled tools are returned.
+        /// When <see cref="ToolGUIDs"/> is empty, no tools are returned.
         /// </summary>
         public List<AIToolConfiguration> GetToolConfigurations()
         {
-            var allEnabled = Repository.Instance.AIConfiguration.AITools.Where(t => t.IsEnabled);
             if (ToolGUIDs == null || ToolGUIDs.Count == 0)
-                return allEnabled.ToList();
-            return allEnabled.Where(t => ToolGUIDs.Contains(t.GUID)).ToList();
+                return new List<AIToolConfiguration>();
+            return Repository.Instance.AIConfiguration.AITools
+                .Where(t => t.IsEnabled && ToolGUIDs.Contains(t.GUID)).ToList();
+        }
+
+        /// <summary>
+        /// Returns the list of enabled <see cref="AISkillConfiguration"/> instances available to this agent.
+        /// When <see cref="SkillGUIDs"/> is empty, no skills are returned.
+        /// </summary>
+        public List<AISkillConfiguration> GetSkillConfigurations()
+        {
+            if (SkillGUIDs == null || SkillGUIDs.Count == 0)
+                return new List<AISkillConfiguration>();
+            return Repository.Instance.AIConfiguration.AISkills
+                .Where(s => s.IsEnabled && SkillGUIDs.Contains(s.GUID)).ToList();
         }
 
         /// <summary>

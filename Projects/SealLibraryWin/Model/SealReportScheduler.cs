@@ -187,7 +187,7 @@ namespace Seal.Model
                             if (!File.Exists(path))
                             {
                                 //Try in debug folder
-                                path = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net8.0", Repository.SealTaskScheduler);
+                                path = Path.Combine($@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net{Environment.Version.Major}.0", Repository.SealTaskScheduler);
                             }
                             
 #endif

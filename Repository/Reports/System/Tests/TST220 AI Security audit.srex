@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c1a2b3d4-0220-4e20-9a20-000000000220</GUID>
+  <ViewGUID>c1a2b3d4-0220-4e20-9a20-000000000221</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0220-4000-8000-000000000001</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>c1a2b3d4-0220-4000-8000-000000000002</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>c1a2b3d4-0220-4061-8a9b-0c1d2e3f4a50</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>c1a2b3d4-0220-4098-8765-4321fedcba98</GUID>
+      <Name>Model</Name>
+      <SourceGUID>c1a2b3d4-0220-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>c1a2b3d4-0220-4a00-9000-000000000001</GUID>
+      <Name>Init</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0220-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider.
+    //'900 Tests' executes this report ONCE PER PROVIDER by forcing the 'Provider to test' input value.
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+
+    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2
+    report.Tag2 = new object[] { provider.Name, null, "Error", null };
+
+    //Read-only context with Execute right on the System reports (Group System Tests grants \System Execute).
+    var user = new SecurityUser(repository.Security);
+    user.AddSecurityGroup("Group System Tests");
+    user.SetFolders();
+    report.SecurityContext = user;
+
+    task.LogMessage($"Testing the System Admin audit-security-and-activity skill with provider '{provider.Name}'.");
+}
+</Script>
+      <SortOrder>0</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0220-4a00-9000-000000000002</GUID>
+      <Name>Security audit question</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0220-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+@using System.Text;
+@using System.Globalization;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    try
+    {
+        //Ground truth: distinctive security group names that ARE defined in Security.xml.
+        //The agent must run a System security/audit report (e.g. '100 Configuration - Security Summary')
+        //to enumerate the groups - it cannot know these test group names without reading the configuration.
+        var distinctiveGroups = new[] { "Group System Tests", "Group Data Analyst Tests", "Group (Demo)" };
+        var present = distinctiveGroups.Where(g =&gt; repository.Security.Groups.Any(sg =&gt; sg.Name == g)).ToArray();
+        if (present.Length &lt; 2) throw new Exception("Test pre-condition failed: fewer than 2 distinctive groups exist in Security.xml.");
+
+        //The System Admin agent must load audit-security-and-activity and execute the security summary report.
+        var adminConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "System Admin"));
+        adminConfig.ProviderGUID = provider.GUID;
+        var agent = new AIAgent(adminConfig);
+        agent.SecurityContext = report.SecurityContext;
+
+        var request = @"Using the built-in security/audit reports of this Seal Report server, list the names of all the security GROUPS that are defined. Give me each group name exactly as configured.";
+        if (chatLog != null) task.LogMessage(request);
+        var answer = agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+        if (chatLog != null &amp;&amp; answer != null) task.LogMessage("A: " + answer);
+
+        //Deterministic check: the answer must name at least two distinctive groups it could only know
+        //by actually running the security report (proves the audit-security-and-activity skill worked).
+        var matched = present.Count(g =&gt; ContainsToken(answer, g));
+        if (matched &lt; 2)
+        {
+            var got = answer == null ? "" : answer.ToString();
+            if (got.Length &gt; 300) got = got.Substring(0, 300) + "...";
+            throw new Exception($"Expected the agent to name at least 2 of [{string.Join(", ", present)}] from the security report, matched {matched}. Got: {got}");
+        }
+
+        task.LogMessage($"[{provider.Name}] Security audit returned {matched} expected group name(s).");
+    }
+    catch (Exception ex)
+    {
+        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+
+@functions {
+    //Case- and accent-insensitive 'contains the token' test (same approach as TST300).
+    bool ContainsToken(object answer, string token)
+    {
+        if (answer == null || string.IsNullOrEmpty(token)) return false;
+        return Normalize(answer.ToString()).Contains(Normalize(token));
+    }
+
+    string Normalize(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return "";
+        var formD = s.ToLowerInvariant().Normalize(NormalizationForm.FormD);
+        var sb = new StringBuilder();
+        foreach (var c in formD) {
+            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark) sb.Append(c);
+        }
+        return sb.ToString().Normalize(NormalizationForm.FormC);
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>c1a2b3d4-0220-4a00-9000-000000000003</GUID>
+      <Name>Result</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c1a2b3d4-0220-4061-8a9b-0c1d2e3f4a50</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    //All checks passed: record the success result read by '900 Tests' from report.Tag2
+    var pr = report.Tag2 as object[];
+    var providerName = pr != null ? (string)pr[0] : null;
+    report.Tag2 = new object[] { providerName, null, "Success", null };
+    task.LogMessage($"[{providerName}] Audit-security-and-activity check passed.");
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>c1a2b3d4-0220-4e20-9a20-000000000221</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>c1a2b3d4-0220-4e20-9a20-000000000222</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>c1a2b3d4-0220-4e20-9a20-000000000223</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c1a2b3d4-0220-4e20-9a20-000000000224</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>c1a2b3d4-0220-4e20-9a20-000000000225</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>c1a2b3d4-0220-4098-8765-4321fedcba98</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

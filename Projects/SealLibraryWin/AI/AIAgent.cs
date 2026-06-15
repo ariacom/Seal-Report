@@ -99,29 +99,65 @@ namespace Seal.AI
         // ----------------------------------------------------------------
 
         /// <summary>
+        /// Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
+        /// </summary>
+        internal const string LoadSkillToolName = "load_skill";
+
+        /// <summary>
         /// Appends a user message to the conversation history, calls the AI using
-        /// the tools scoped to this agent (via <see cref="AIAgentConfiguration.GetToolConfigurations"/>),
+        /// the tools scoped to this agent (via <see cref="AIAgentConfiguration.GetToolConfigurations"/>)
+        /// plus a built-in <c>load_skill</c> tool when the agent has skills
+        /// (via <see cref="AIAgentConfiguration.GetSkillConfigurations"/>),
         /// executes any tool calls the AI requests, and repeats until a plain reply is
         /// produced or <paramref name="maxIterations"/> is reached.
-        /// Falls back to a plain <see cref="IAIProvider.HandleChat"/> call when no tools are configured.
+        /// Falls back to a plain <see cref="IAIProvider.HandleChat"/> call when no tools and no skills are configured.
         /// </summary>
+        /// <remarks>
+        /// Skills use progressive disclosure: only each skill's name and description are exposed up front
+        /// (in the <c>load_skill</c> tool's catalog). When the AI calls <c>load_skill</c>, the skill's full
+        /// instructions are returned as the tool result and the skill's own tools are merged into the active
+        /// tool set for the rest of the conversation.
+        /// </remarks>
         public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10)
         {
             var messageCountBefore = Messages.Count;
             Messages.Add(new UserChatMessage(userMessage));
 
+            var toolConfigs = Configuration.GetToolConfigurations();
+            var skillConfigs = Configuration.GetSkillConfigurations();
+
             if (log != null)
             {
                 var pc = Configuration.GetProviderConfiguration();
                 var systemPrompt = Messages.OfType<SystemChatMessage>().FirstOrDefault()?.Content[0].Text;
-                log.LogMessage($"[AIAgent] Provider: {pc?.Name}, Model: {pc?.Model}, ToolGUIDs: {Configuration.ToolGUIDs?.Count ?? 0}, SystemPrompt length: {systemPrompt?.Length ?? 0}");
+                log.LogMessage($"[AIAgent] Provider: {pc?.Name}, Model: {pc?.Model}, ToolGUIDs: {Configuration.ToolGUIDs?.Count ?? 0}, Skills: {skillConfigs.Count}, SystemPrompt length: {systemPrompt?.Length ?? 0}");
             }
 
-            var toolConfigs = Configuration.GetToolConfigurations();
-            if (toolConfigs.Count == 0)
+            // No tools and no skills — plain chat, no tool loop.
+            if (toolConfigs.Count == 0 && skillConfigs.Count == 0)
                 return _provider.HandleChat(Messages);
 
-            var tools = toolConfigs.Select(t => t.ToAITool()).ToList();
+            // Tools currently callable, keyed by name. Starts with the agent's base tools and grows as
+            // skills are loaded. Pre-activate the tools of any skill already loaded earlier in this
+            // conversation (e.g. a reloaded session) so unlocked tools survive across turns.
+            var activeToolConfigs = new Dictionary<string, AIToolConfiguration>();
+            foreach (var t in toolConfigs) activeToolConfigs[t.Name] = t;
+
+            var loadedSkills = new HashSet<string>();
+            foreach (var s in skillConfigs)
+            {
+                if (IsSkillAlreadyLoaded(s.Name) && loadedSkills.Add(s.Name))
+                    foreach (var t in s.GetToolConfigurations()) activeToolConfigs[t.Name] = t;
+            }
+
+            List<AITool> BuildTools()
+            {
+                var list = activeToolConfigs.Values.Select(t => t.ToAITool()).ToList();
+                if (skillConfigs.Count > 0) list.Add(BuildLoadSkillTool(skillConfigs));
+                return list;
+            }
+
+            var tools = BuildTools();
 
             for (int i = 0; i < maxIterations; i++)
             {
@@ -134,21 +170,35 @@ namespace Seal.AI
                 if (toolCalls == null || toolCalls.Count == 0)
                     return reply;
 
+                bool toolsChanged = false;
+
                 // Execute every requested tool and append the results to the conversation
                 foreach (var toolCall in toolCalls)
                 {
                     if (cancelOperation?.Cancel == true) break;
 
+                    // Built-in skill loader: return the skill instructions and unlock its tools.
+                    if (toolCall.Name == LoadSkillToolName)
+                    {
+                        var skillResult = LoadSkill(toolCall, skillConfigs, loadedSkills, activeToolConfigs, ref toolsChanged);
+                        if (log != null) log.LogMessage($"****** Skill Load {i}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{skillResult}");
+                        Messages.Add(new ToolChatMessage(toolCall.Id, skillResult));
+                        continue;
+                    }
+
                     toolCall.SecurityContext = SecurityContext;
                     toolCall.ExecutionLog = toolsLog;
                     toolCall.CancelOperation = cancelOperation;
 
-                    var toolConfig = toolConfigs.FirstOrDefault(t => t.IsEnabled && t.Name == toolCall.Name);
+                    var toolConfig = activeToolConfigs.TryGetValue(toolCall.Name, out var tc) ? tc : null;
                     var result = toolConfig?.Execute(toolCall) ?? string.Empty;
                     if (log != null) log.LogMessage($"****** Tool Call {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{result}");
                     Messages.Add(new ToolChatMessage(toolCall.Id, result));
                 }
                 if (cancelOperation?.Cancel == true) break;
+
+                // A skill unlocked new tools — rebuild the tool list for the next iteration.
+                if (toolsChanged) tools = BuildTools();
                 // Continue: send again with the tool results now in the history
             }
 
@@ -159,6 +209,116 @@ namespace Seal.AI
                 return "";
             }
             return _provider.HandleChat(Messages);
+        }
+
+        /// <summary>
+        /// Builds the synthetic <c>load_skill</c> tool. Its description embeds the live catalog of the
+        /// agent's skills (name: description) and its single <c>skill_name</c> parameter is constrained to
+        /// the available skill names.
+        /// </summary>
+        private static AITool BuildLoadSkillTool(List<AISkillConfiguration> skillConfigs)
+        {
+            var catalog = string.Join("\n", skillConfigs.Select(s => $"- {s.Name}: {s.Description}"));
+            var description =
+                "Load the detailed instructions for a skill before performing related work. " +
+                "Call this as soon as a user request matches one of the skills below; the full instructions " +
+                "(and any tools the skill needs) become available after loading. Available skills:\n" + catalog;
+
+            var schema = JsonConvert.SerializeObject(new
+            {
+                type = "object",
+                properties = new
+                {
+                    skill_name = new
+                    {
+                        type = "string",
+                        description = "Name of the skill to load.",
+                        @enum = skillConfigs.Select(s => s.Name).ToList()
+                    }
+                },
+                required = new[] { "skill_name" }
+            });
+
+            return new AITool { Name = LoadSkillToolName, Description = description, ParametersSchema = schema };
+        }
+
+        /// <summary>
+        /// Resolves the skill requested by a <c>load_skill</c> tool call, returns its instructions as the
+        /// tool result, and merges the skill's tools into <paramref name="activeToolConfigs"/> the first
+        /// time it is loaded. Sets <paramref name="toolsChanged"/> to <c>true</c> when new tools were added.
+        /// </summary>
+        private string LoadSkill(AIToolCall toolCall, List<AISkillConfiguration> skillConfigs, HashSet<string> loadedSkills, Dictionary<string, AIToolConfiguration> activeToolConfigs, ref bool toolsChanged)
+        {
+            var skillName = ExtractSkillName(toolCall.Arguments);
+            var skill = skillConfigs.FirstOrDefault(s => s.Name == skillName);
+            if (skill == null)
+                return $"Unknown skill '{skillName}'. Available skills: {string.Join(", ", skillConfigs.Select(s => s.Name))}.";
+
+            // Unlock the skill's tools the first time it is loaded.
+            if (loadedSkills.Add(skill.Name))
+            {
+                foreach (var t in skill.GetToolConfigurations())
+                {
+                    if (!activeToolConfigs.ContainsKey(t.Name))
+                    {
+                        activeToolConfigs[t.Name] = t;
+                        toolsChanged = true;
+                    }
+                }
+            }
+
+            try
+            {
+                var instructions = skill.EffectiveInstructions;
+                return string.IsNullOrWhiteSpace(instructions)
+                    ? $"Skill '{skill.Name}' has no instructions configured."
+                    : instructions;
+            }
+            catch (Exception ex)
+            {
+                return $"Unable to load skill '{skill.Name}': {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Extracts the <c>skill_name</c> argument from a <c>load_skill</c> tool call's JSON arguments.
+        /// Returns <c>null</c> when it cannot be parsed.
+        /// </summary>
+        private static string ExtractSkillName(string arguments)
+        {
+            if (string.IsNullOrWhiteSpace(arguments)) return null;
+            try
+            {
+                var obj = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(arguments);
+                return obj?["skill_name"]?.ToString();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns <c>true</c> when a <c>load_skill</c> call for <paramref name="skillName"/> already appears
+        /// in the conversation history, so its tools can be pre-activated on a resumed session.
+        /// </summary>
+        private bool IsSkillAlreadyLoaded(string skillName)
+        {
+            foreach (var m in Messages)
+            {
+                // AssistantToolCallsChatMessage (raw-HTTP providers) extends AssistantChatMessage — check first.
+                if (m is AssistantToolCallsChatMessage atcm)
+                {
+                    if (atcm.AIToolCalls.Any(tc => tc.Name == LoadSkillToolName && ExtractSkillName(tc.Arguments) == skillName))
+                        return true;
+                }
+                else if (m is AssistantChatMessage asst && asst.ToolCalls != null)
+                {
+                    if (asst.ToolCalls.Any(tc => tc.FunctionName == LoadSkillToolName && ExtractSkillName(tc.FunctionArguments?.ToString()) == skillName))
+                        return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -238,6 +398,36 @@ namespace Seal.AI
 
             if (!string.IsNullOrWhiteSpace(prompt))
                 Messages.Insert(0, new SystemChatMessage(prompt));
+        }
+
+        /// <summary>
+        /// Rewinds the conversation to just before the user turn at
+        /// <paramref name="userMessageIndex"/> (0-based, counting only user messages).
+        /// Removes that user message and every message that followed it — including the
+        /// assistant replies, tool calls and tool results — so the conversation returns to
+        /// the state it had before that message was sent.
+        /// Returns the text of the removed user message (so the caller can re-populate the
+        /// input box), or <c>null</c> when the index is out of range.
+        /// </summary>
+        public string RewindToUserMessage(int userMessageIndex)
+        {
+            if (userMessageIndex < 0) return null;
+
+            int count = 0;
+            for (int i = 0; i < Messages.Count; i++)
+            {
+                if (Messages[i] is UserChatMessage usr)
+                {
+                    if (count == userMessageIndex)
+                    {
+                        var text = usr.Content.Count > 0 ? usr.Content[0].Text : string.Empty;
+                        Messages.RemoveRange(i, Messages.Count - i);
+                        return text;
+                    }
+                    count++;
+                }
+            }
+            return null;
         }
 
         /// <summary>

@@ -2154,7 +2154,12 @@ $('<div>', {{
                 }
                 else if (context.Instance is AIAgentConfiguration)
                 {
-                    if (context.PropertyDescriptor.Name == "DefaultSystemPrompt")
+                    if (context.PropertyDescriptor.Name == "Description")
+                    {
+                        frm.Text = "Description";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "DefaultSystemPrompt")
                     {
                         frm.Text = "Default System Prompt";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
@@ -2189,6 +2194,35 @@ $('<div>', {{
                         scriptExtension = ".md";
                         scriptDefaultName = (context.Instance as AIAgentConfiguration)?.Name;
                         frm.Text = "Edit the Sample Prompts file (one prompt per line, # for comments)";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+
+                        //Load the file content into the editor instead of the file name
+                        valueToEdit = "";
+                        if (!string.IsNullOrWhiteSpace(scriptFileName))
+                        {
+                            var scriptPath = Path.IsPathRooted(scriptFileName)
+                                ? scriptFileName
+                                : Path.Combine(scriptFolder, scriptFileName);
+                            if (File.Exists(scriptPath)) valueToEdit = File.ReadAllText(scriptPath);
+                        }
+                    }
+                }
+                else if (context.Instance is AISkillConfiguration)
+                {
+                    if (context.PropertyDescriptor.Name == "Description")
+                    {
+                        frm.Text = "Description";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    else if (context.PropertyDescriptor.Name == "InstructionsFile")
+                    {
+                        //Edit the content of the external skill instructions file (the property keeps the file name)
+                        editScriptFile = true;
+                        scriptFileName = valueToEdit;
+                        scriptFolder = Repository.Instance.AISkillsFolder;
+                        scriptExtension = ".md";
+                        scriptDefaultName = (context.Instance as AISkillConfiguration)?.Name;
+                        frm.Text = "Edit the Skill Instructions file";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
 
                         //Load the file content into the editor instead of the file name

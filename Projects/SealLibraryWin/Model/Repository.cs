@@ -96,7 +96,7 @@ namespace Seal.Model
             get
             {
 #if DEBUG
-                return Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net8.0", SealTaskScheduler);
+                return Path.Combine($@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net{Environment.Version.Major}.0", SealTaskScheduler);
 #else
                 return Path.Combine(Configuration.InstallationDirectory + "\\" + CoreInstallationSubDirectory, SealTaskScheduler);
 #endif
@@ -750,6 +750,7 @@ namespace Seal.Model
                 if (!Directory.Exists(AIPromptsFolder)) Directory.CreateDirectory(AIPromptsFolder);
                 if (!Directory.Exists(AISamplePromptsFolder)) Directory.CreateDirectory(AISamplePromptsFolder);
                 if (!Directory.Exists(AIScriptsFolder)) Directory.CreateDirectory(AIScriptsFolder);
+                if (!Directory.Exists(AISkillsFolder)) Directory.CreateDirectory(AISkillsFolder);
             }
             catch { }
         }
@@ -840,6 +841,14 @@ namespace Seal.Model
         public string AIScriptsFolder
         {
             get { return Path.Combine(SettingsFolder, "AI", "Scripts"); }
+        }
+
+        /// <summary>
+        /// Folder for AI skill instruction files (Settings\AI\Skills).
+        /// </summary>
+        public string AISkillsFolder
+        {
+            get { return Path.Combine(SettingsFolder, "AI", "Skills"); }
         }
 
         /// <summary>

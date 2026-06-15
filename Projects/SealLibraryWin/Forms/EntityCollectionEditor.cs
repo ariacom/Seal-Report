@@ -154,6 +154,13 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(AISkillConfiguration))
+            {
+                frmCollectionEditorForm.Text = "AI Skill Configuration Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
             else if (CollectionItemType == typeof(AIAgentConfiguration))
             {
                 frmCollectionEditorForm.Text = "AI Agent Configuration Collection Editor";
@@ -274,6 +281,20 @@ namespace Seal.Forms
                     MessageBox.Show(string.Format("Unable to delete the script file:\r\n{0}", ex.Message), "Delete script file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+            else if (instance is AISkillConfiguration skill && !string.IsNullOrWhiteSpace(skill.InstructionsFile))
+            {
+                var path = Path.IsPathRooted(skill.InstructionsFile)
+                    ? skill.InstructionsFile
+                    : Path.Combine(Repository.Instance.AISkillsFolder, skill.InstructionsFile);
+                try
+                {
+                    File.Delete(path);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("Unable to delete the instructions file:\r\n{0}", ex.Message), "Delete instructions file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
 
         protected override string GetDisplayText(object value)
@@ -301,6 +322,7 @@ namespace Seal.Forms
             }
             else if (value is AIProviderConfiguration) result = ((AIProviderConfiguration)value).Name;
             else if (value is AIToolConfiguration) result = ((AIToolConfiguration)value).Name;
+            else if (value is AISkillConfiguration) result = ((AISkillConfiguration)value).Name;
             else if (value is AIAgentConfiguration) result = ((AIAgentConfiguration)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
