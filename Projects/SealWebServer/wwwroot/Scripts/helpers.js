@@ -214,15 +214,7 @@ function initWidgetsRestrictions(parent) {
         $('.panel-widget').css("overflow", "auto");
         $('.panel-widget').css("z-index", "1");
     });
-    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").unbind("dp.show").on("dp.show", function (e) {
-        $('.panel-widget').css("overflow", "visible");
-        $('.panel-widget').css("z-index", "0");
-        $(this).closest(".panel-widget").css("z-index", "1");
-    });
-    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").unbind("dp.hide").on("dp.hide", function (e) {
-        $('.panel-widget').css("overflow", "auto");
-        $('.panel-widget').css("z-index", "1");
-    });
+    //Flatpickr renders its calendar on document.body (not clipped by the widget overflow), so no show/hide overflow handling is needed.
 }
 function initScrollReport() {
     //scroll

@@ -25,7 +25,10 @@
     }
     <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
-    <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
+    @foreach (var asset in Seal.Model.ClientAssets.FlatpickrCss)
+    {
+        <link rel="stylesheet" href="~/@asset.Path" />
+    }
     @foreach (var asset in Seal.Model.ClientAssets.BootstrapCss)
     {
         <link rel="stylesheet" href="~/@asset.Path" />
@@ -200,7 +203,14 @@
         <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
         <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
     }
-    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    @foreach (var asset in Seal.Model.ClientAssets.FlatpickrJs)
+    {
+        <script src="~/@asset.Path"></script>
+    }
+    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
+    {
+        <script src="~/@("lib/flatpickr/l10n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+    }
     <script src="~/Scripts/datetime-moment.js"></script>
 
     <!-- common libraries -->

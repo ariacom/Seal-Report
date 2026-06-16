@@ -45,12 +45,17 @@
       ]
     },
     {
-      "provider": "jsdelivr",
-      "library": "@eonasdan/tempus-dominus@6.10.4",
-      "destination": "wwwroot/lib/tempus-dominus/",
+      "library": "flatpickr@4.6.13",
+      "destination": "wwwroot/lib/flatpickr/",
       "files": [
-        "dist/css/tempus-dominus.min.css",
-        "dist/js/tempus-dominus.min.js"
+        "flatpickr.min.css",
+        "flatpickr.min.js",
+        "l10n/de.js",
+        "l10n/es.js",
+        "l10n/fr.js",
+        "l10n/it.js",
+        "l10n/nl.js",
+        "l10n/pt.js"
       ]
     }
   ]

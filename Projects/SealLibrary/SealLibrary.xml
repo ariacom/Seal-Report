@@ -891,6 +891,13 @@
             Array of string from a value having CR/LF
             </summary>
         </member>
+        <member name="M:Seal.Helpers.Helper.ToFlatpickrFormat(System.Globalization.CultureInfo,System.String)">
+            <summary>
+            Converts a .NET date/time format pattern to a Flatpickr format string.
+            Flatpickr uses its own single-letter tokens (e.g. minutes = 'i', month = 'm'/'n', AM/PM = 'K'),
+            so every token is mapped explicitly. Milliseconds/timezone/era have no Flatpickr token and are dropped.
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.Helper.AddEmailAddresses(System.Net.Mail.MailAddressCollection,System.String)">
             <summary>
             Add email address to a MailAddressCollection
@@ -1061,6 +1068,79 @@
         <member name="P:Seal.Model.CategoryFolder.Path">
             <summary>
             The full path of the of the category. This can be modified to change globally all the category names of the columns. The category path can be specified using the '/' character (e.g. '/Master/Name1/Name2')
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ClientAssetType">
+            <summary>
+            Kind of a client-side asset.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ClientAssetType.CSS">
+            <summary>A CSS style sheet.</summary>
+        </member>
+        <member name="F:Seal.Model.ClientAssetType.Script">
+            <summary>A JavaScript file.</summary>
+        </member>
+        <member name="T:Seal.Model.ClientAsset">
+            <summary>
+            A versioned client-side asset (CSS or JavaScript library).
+            This is the single source of truth shared by the Web Report Server shell and the report
+            rendering engine, so a library version is declared once.
+            Physical files are pinned and restored by libman.json into wwwroot/lib for the web application,
+            and copied into Repository/Views/lib for report rendering.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ClientAsset.Type">
+            <summary>CSS or Script.</summary>
+        </member>
+        <member name="P:Seal.Model.ClientAsset.Path">
+            <summary>
+            Path relative to the web root / Views folder, e.g. "lib/bootstrap/css/bootstrap.min.css".
+            Resolved against wwwroot by the web application, and against Repository/Views by the rendering engine
+            (see Report.AttachCSSPath / AttachScriptPath).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ClientAsset.Cdn">
+            <summary>
+            Optional CDN URL, used by the rendering engine when the repository is not configured as local.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ClientAsset.#ctor(Seal.Model.ClientAssetType,System.String,System.String)">
+            <summary>
+            Creates a client asset definition.
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ClientAssets">
+            <summary>
+            Central, ordered registry of the Bootstrap 5 client stack.
+            Load order is significant: jQuery (currently bundled in datatables) then Bootstrap.
+            bootstrap.bundle.min.js already includes Popper, so Popper is not loaded separately for the core.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ClientAssets.BootstrapCss">
+            <summary>Bootstrap 5 core style sheet, loaded by every page.</summary>
+        </member>
+        <member name="F:Seal.Model.ClientAssets.BootstrapJs">
+            <summary>
+            Bootstrap 5 core JavaScript: the bundle (includes Popper) followed by the jQuery
+            compatibility bridge that re-adds the removed $.fn.modal/tooltip/collapse/... plugins
+            and re-dispatches component events through jQuery for the existing application code.
+            The bridge must load right after the bundle and before the application scripts.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ClientAssets.FlatpickrCss">
+            <summary>Flatpickr style sheet (lightweight Bootstrap-5-compatible date/time picker, replaces bootstrap-datetimepicker).</summary>
+        </member>
+        <member name="F:Seal.Model.ClientAssets.FlatpickrJs">
+            <summary>
+            Flatpickr JavaScript (date/time picker). Dependency-free (no jQuery/moment), exposes the global
+            "flatpickr". Localization comes from per-language l10n files loaded on demand by the views.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ClientAssets.FontAwesomeCss">
+            <summary>
+            Font Awesome 6 (Free) style sheets. all.min.css provides the icons; v4-shims.min.css keeps
+            legacy "fa fa-name" (Font Awesome 4) class names working during the migration.
             </summary>
         </member>
         <member name="T:Seal.Model.ExecutionLogInterface">
@@ -2915,6 +2995,30 @@
             Parameters are used to configure report templates, outputs and repository security
             </summary>
         </member>
+        <member name="F:Seal.Model.Parameter.Glyphicons">
+            <summary>
+            Legacy Bootstrap 3 Glyphicon names still allowed as stored values (e.g. widget_icon).
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Parameter.GlyphiconToFontAwesome">
+            <summary>
+            Maps each legacy Bootstrap 3 Glyphicon name to its Font Awesome 6 (Free) equivalent.
+            Used to migrate stored icon values (e.g. widget_icon) after the Bootstrap 5 / FA6 migration,
+            which dropped the Glyphicons font.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Parameter.FontAwesomeIcons">
+            <summary>
+            Distinct, sorted list of Font Awesome 6 icon classes available as icon enum values.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Parameter.GetFontAwesomeIcon(System.String)">
+            <summary>
+            Resolves a stored icon value to a Font Awesome 6 class. Values already in Font Awesome
+            form (containing "fa-") are returned unchanged; legacy Bootstrap 3 Glyphicon names
+            (optionally prefixed with "glyphicon-") are mapped; anything unknown falls back to a default icon.
+            </summary>
+        </member>
         <member name="P:Seal.Model.Parameter.Type">
             <summary>
             Parameter type
@@ -3711,9 +3815,28 @@
             For a Script File, insert the attached script file name or it content according to execution context 
             </summary>
         </member>
+        <member name="M:Seal.Model.Report.AttachAssets(System.Collections.Generic.IEnumerable{Seal.Model.ClientAsset})">
+            <summary>
+            Insert a set of client assets (CSS or Script) defined in a central manifest (see ClientAssets),
+            honoring the same CDN / file reference / inlined-content modes as AttachCSSFile and AttachScriptFile.
+            Each asset is referenced by a path relative to the web root / Views folder (e.g. "lib/bootstrap/...").
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.AttachScriptPath(System.String,System.String)">
+            <summary>
+            Insert a Script file referenced by a path relative to the Views folder / web root
+            (e.g. "lib/bootstrap/js/bootstrap.bundle.min.js"), according to the execution context.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.AttachCSSPath(System.String,System.String)">
+            <summary>
+            Insert a CSS file referenced by a path relative to the Views folder / web root
+            (e.g. "lib/bootstrap/css/bootstrap.min.css"), according to the execution context.
+            </summary>
+        </member>
         <member name="M:Seal.Model.Report.AttachCSSFiles(System.String)">
             <summary>
-            For CSS Files, insert the attached file names or their contents according to execution context 
+            For CSS Files, insert the attached file names or their contents according to execution context
             </summary>
         </member>
         <member name="M:Seal.Model.Report.AttachCSSFile(System.String,System.String)">
@@ -7274,6 +7397,16 @@
         <member name="P:Seal.Model.Repository.MomentJSShortDateTimeFormat">
             <summary>
             Short Date Time format for MomentJS
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.FlatpickrShortDateFormat">
+            <summary>
+            Short Date format for the Flatpickr date/time picker
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.FlatpickrShortDateTimeFormat">
+            <summary>
+            Short Date Time format for the Flatpickr date/time picker
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.SetCultureInfo(System.String)">

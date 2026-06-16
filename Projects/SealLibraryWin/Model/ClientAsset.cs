@@ -79,6 +79,23 @@ namespace Seal.Model
             new ClientAsset(ClientAssetType.Script, "lib/bs5-compat/bs5-jquery-bridge.js")
         };
 
+        /// <summary>Flatpickr style sheet (lightweight Bootstrap-5-compatible date/time picker, replaces bootstrap-datetimepicker).</summary>
+        public static readonly List<ClientAsset> FlatpickrCss = new List<ClientAsset>
+        {
+            new ClientAsset(ClientAssetType.CSS, "lib/flatpickr/flatpickr.min.css",
+                "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css")
+        };
+
+        /// <summary>
+        /// Flatpickr JavaScript (date/time picker). Dependency-free (no jQuery/moment), exposes the global
+        /// "flatpickr". Localization comes from per-language l10n files loaded on demand by the views.
+        /// </summary>
+        public static readonly List<ClientAsset> FlatpickrJs = new List<ClientAsset>
+        {
+            new ClientAsset(ClientAssetType.Script, "lib/flatpickr/flatpickr.min.js",
+                "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js")
+        };
+
         /// <summary>
         /// Font Awesome 6 (Free) style sheets. all.min.css provides the icons; v4-shims.min.css keeps
         /// legacy "fa fa-name" (Font Awesome 4) class names working during the migration.

@@ -22,7 +22,7 @@
         <!--CSS-->
     @Raw(report.AttachCSSFile("datatables.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.7/b-3.2.6/date-1.6.3/fc-5.0.5/fh-4.0.6/r-3.0.8/sc-2.4.3/sl-3.1.3/datatables.min.css"))
         @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css"))
-        @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css"))
+        @Raw(report.AttachAssets(Seal.Model.ClientAssets.FlatpickrCss))
         @Raw(report.AttachAssets(Seal.Model.ClientAssets.BootstrapCss))
         @Raw(report.AttachAssets(Seal.Model.ClientAssets.FontAwesomeCss))
 
@@ -39,7 +39,11 @@
             @Raw(report.AttachScriptFile("i18n\\moment." + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
             @Raw(report.AttachScriptFile("i18n\\selectpicker." + view.CultureInfo.TwoLetterISOLanguageName + ".min.js"))
         }
-        @Raw(report.AttachScriptFile("bootstrap-datetimepicker.min.js"))
+        @Raw(report.AttachAssets(Seal.Model.ClientAssets.FlatpickrJs))
+        @if (view.CultureInfo.TwoLetterISOLanguageName != "en")
+        {
+            @Raw(report.AttachScriptPath("lib/flatpickr/l10n/" + view.CultureInfo.TwoLetterISOLanguageName + ".js", "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
+        }
 
         @Raw(report.AttachScriptFile("datetime-moment.js"))
         @if (report.HasChart)

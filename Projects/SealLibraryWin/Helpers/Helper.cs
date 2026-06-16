@@ -404,6 +404,50 @@ namespace Seal.Helpers
             return ConvertFormat(culture, datetimeFormat, tokenMap);
         }
 
+        /// <summary>
+        /// Converts a .NET date/time format pattern to a Flatpickr format string.
+        /// Flatpickr uses its own single-letter tokens (e.g. minutes = 'i', month = 'm'/'n', AM/PM = 'K'),
+        /// so every token is mapped explicitly. Milliseconds/timezone/era have no Flatpickr token and are dropped.
+        /// </summary>
+        public static string ToFlatpickrFormat(CultureInfo culture, string datetimeFormat)
+        {
+            var tokenMap = new (string CSharp, string Flatpickr)[]
+            {
+        ("dddd", "l"),      // full weekday name
+        ("ddd",  "D"),      // short weekday name
+        ("dd",   "d"),      // day 2 digits
+        ("d",    "j"),      // day 1-2 digits
+        ("yyyy", "Y"),      // year 4 digits
+        ("yyy",  "Y"),      // year 4 digits (fallback)
+        ("yy",   "y"),      // year 2 digits
+        ("y",    "Y"),      // year minimal -> 4 digits
+        ("MMMM", "F"),      // full month name
+        ("MMM",  "M"),      // short month name
+        ("MM",   "m"),      // month 2 digits
+        ("M",    "n"),      // month 1-2 digits
+        ("HH",   "H"),      // hour 24
+        ("H",    "H"),      // hour 24 (Flatpickr has no no-leading-zero token)
+        ("hh",   "h"),      // hour 12
+        ("h",    "h"),      // hour 12
+        ("mm",   "i"),      // minutes
+        ("m",    "i"),      // minutes
+        ("ss",   "S"),      // seconds 2 digits
+        ("s",    "s"),      // seconds
+        ("fff",  ""),       // milliseconds — no Flatpickr token
+        ("ff",   ""),       // milliseconds — no Flatpickr token
+        ("f",    ""),       // milliseconds — no Flatpickr token
+        ("tt",   "K"),      // AM/PM
+        ("t",    "K"),      // AM/PM
+        ("zzz",  ""),       // timezone — no Flatpickr token
+        ("zz",   ""),       // timezone — no Flatpickr token
+        ("z",    ""),       // timezone — no Flatpickr token
+        ("K",    ""),       // timezone — no Flatpickr token
+        ("g",    ""),       // era — no Flatpickr token
+            };
+
+            return ConvertFormat(culture, datetimeFormat, tokenMap);
+        }
+
         public static string ToDateFnsFormat(CultureInfo culture, string datetimeFormat)
         {
             string format = datetimeFormat;

@@ -229,6 +229,28 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Short Date format for the Flatpickr date/time picker
+        /// </summary>
+        public string FlatpickrShortDateFormat
+        {
+            get
+            {
+                return Helper.ToFlatpickrFormat(CultureInfo, CultureInfo.DateTimeFormat.ShortDatePattern);
+            }
+        }
+
+        /// <summary>
+        /// Short Date Time format for the Flatpickr date/time picker
+        /// </summary>
+        public string FlatpickrShortDateTimeFormat
+        {
+            get
+            {
+                return Helper.ToFlatpickrFormat(CultureInfo, CultureInfo.DateTimeFormat.ShortDatePattern + ' ' + CultureInfo.DateTimeFormat.LongTimePattern);
+            }
+        }
+
+        /// <summary>
         /// Set culture from a name, returns true if the change is done.
         /// </summary>
         public bool SetCultureInfo(string cultureName)

@@ -76,25 +76,25 @@
         }
 
         function processInitDateTimePicker(parent) {
-            //Date Picker
-            $(parent + ".datepicker_datetime").datetimepicker({
-                showClose: true,
-                showClear: true,
-                format: shortDateTimeFormat,
-                tooltips: dtTooltips,
-                useCurrent: false
-            });
-
-            $(parent + ".datepicker_date").datetimepicker({
-                showClose: true,
-                showClear: true,
-                format: shortDateFormat,
-                tooltips: dtTooltips,
-                useCurrent: false
-            });
-
-            $(parent + ".datepicker_date," + parent + ".datepicker_datetime").datetimepicker({
-                locale: '@view.CultureInfo.TwoLetterISOLanguageName'
+            //Date Picker (Flatpickr). Initialized on the input-group wrapper in wrap mode (the input carries
+            //data-input, the calendar button carries data-toggle). Flatpickr fires a native "change" event on
+            //the input, which the existing .form-control / input.trigger change handlers already process.
+            if (typeof flatpickr === "undefined") return;
+            var sel = (parent || "");
+            var locale = (flatpickr.l10ns && flatpickr.l10ns['@view.CultureInfo.TwoLetterISOLanguageName']) ? '@view.CultureInfo.TwoLetterISOLanguageName' : "default";
+            document.querySelectorAll(sel + ".datepicker_datetime, " + sel + ".datepicker_date").forEach(function (el) {
+                if (el._flatpickr) return; //already initialized
+                var isDateTime = el.classList.contains("datepicker_datetime");
+                var fmt = isDateTime ? flatpickrDateTimeFormat : flatpickrDateFormat;
+                flatpickr(el, {
+                    wrap: true,
+                    allowInput: true,
+                    dateFormat: fmt,
+                    enableTime: isDateTime,
+                    enableSeconds: isDateTime && (fmt.indexOf('S') !== -1 || fmt.indexOf('s') !== -1),
+                    time_24hr: fmt.indexOf('K') === -1,
+                    locale: locale
+                });
             });
         }
 
@@ -135,36 +135,11 @@
         var decimalSeparator = '@Raw(view.CultureInfo.NumberFormat.NumberDecimalSeparator)';
         var shortDateFormat = '@Raw(repository.MomentJSShortDateFormat)';
         var shortDateTimeFormat = '@Raw(repository.MomentJSShortDateTimeFormat)';
+        //Flatpickr uses its own format tokens (see Helper.ToFlatpickrFormat); the moment formats above stay for DataTables sorting.
+        var flatpickrDateFormat = '@Raw(repository.FlatpickrShortDateFormat)';
+        var flatpickrDateTimeFormat = '@Raw(repository.FlatpickrShortDateTimeFormat)';
         var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
         var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
-
-        var dtTooltips = {
-            today: '@Raw(report.TranslateToJS("Go to today")))',
-            clear: '@Raw(report.TranslateToJS("Clear selection"))',
-            close: '@Raw(report.TranslateToJS("Close"))',
-            selectMonth: '@Raw(report.TranslateToJS("Select Month"))',
-            prevMonth: '@Raw(report.TranslateToJS("Previous Month"))',
-            nextMonth: '@Raw(report.TranslateToJS("Next Month"))',
-            selectYear: '@Raw(report.TranslateToJS("Select Year"))',
-            prevYear: '@Raw(report.TranslateToJS("Previous Year"))',
-            nextYear: '@Raw(report.TranslateToJS("Next Year"))',
-            selectDecade: '@Raw(report.TranslateToJS("Select Decade"))',
-            prevDecade: '@Raw(report.TranslateToJS("Previous Decade"))',
-            nextDecade: '@Raw(report.TranslateToJS("Next Decade"))',
-            prevCentury: '@Raw(report.TranslateToJS("Previous Century"))',
-            nextCentury: '@Raw(report.TranslateToJS("Next Century"))',
-            pickHour: '@Raw(report.TranslateToJS("Pick Hour"))',
-            incrementHour: '@Raw(report.TranslateToJS("Increment"))',
-            decrementHour: '@Raw(report.TranslateToJS("Decrement"))',
-            pickMinute: '@Raw(report.TranslateToJS("Pick Minute"))',
-            incrementMinute: '@Raw(report.TranslateToJS("Increment"))',
-            decrementMinute: '@Raw(report.TranslateToJS("Decrement"))',
-            pickSecond: '@Raw(report.TranslateToJS("Pick Second"))',
-            incrementSecond: '@Raw(report.TranslateToJS("Increment"))',
-            decrementSecond: '@Raw(report.TranslateToJS("Decrement"))',
-            togglePeriod: '@Raw(report.TranslateToJS("Toggle Period"))',
-            selectTime: '@Raw(report.TranslateToJS("Select Time"))'
-        };
 
         //d3 formatting
         String.prototype.replaceAll = function (find, replace) {

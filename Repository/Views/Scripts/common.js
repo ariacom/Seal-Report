@@ -140,10 +140,7 @@ function initRestrictions(parent) {
     $(parent + ".operator_select").selectpicker('refresh');
 
     processInitDateTimePicker(parent);
-
-    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").unbind("dp.change").on("dp.change", function (e) {
-        restrictionSelectChange(this.children[0]);
-    });
+    //Flatpickr fires a native "change" event on the input, handled by the .form-control change binding above.
 
     //trigger enum from select
     $(parent + ".enum").unbind('changed.bs.select').on('changed.bs.select', function (e) {
@@ -193,15 +190,7 @@ function initRestrictions(parent) {
             executeFromTrigger($(this));
         }
     })
-    //trigger input: date picker
-    setTimeout(function () {
-        $(parent + ".datepicker_date.trigger," + parent + ".datepicker_datetime.trigger").unbind("dp.change").on("dp.change", function (e) {
-            var input = $(this.children[0]);
-            if (input && (!e.date || e.date !== e.oldDate) && input.attr("name")) {
-                executeFromTrigger($(this));
-            }
-        });
-    }, 500);
+    //trigger input: date picker — Flatpickr fires a native "change" on the input, handled by the input.trigger change binding above.
 
     //dynamic filter for enums
     $(parent + ".enum_dynamic").unbind("shown.bs.select").on('shown.bs.select', function () {
