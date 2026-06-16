@@ -66,11 +66,17 @@ namespace Seal.Model
                 "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css")
         };
 
-        /// <summary>Bootstrap 5 core JavaScript bundle (includes Popper), loaded by every page.</summary>
+        /// <summary>
+        /// Bootstrap 5 core JavaScript: the bundle (includes Popper) followed by the jQuery
+        /// compatibility bridge that re-adds the removed $.fn.modal/tooltip/collapse/... plugins
+        /// and re-dispatches component events through jQuery for the existing application code.
+        /// The bridge must load right after the bundle and before the application scripts.
+        /// </summary>
         public static readonly List<ClientAsset> BootstrapJs = new List<ClientAsset>
         {
             new ClientAsset(ClientAssetType.Script, "lib/bootstrap/js/bootstrap.bundle.min.js",
-                "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js")
+                "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"),
+            new ClientAsset(ClientAssetType.Script, "lib/bs5-compat/bs5-jquery-bridge.js")
         };
 
         /// <summary>
