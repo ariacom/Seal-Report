@@ -11,8 +11,19 @@
  * Must load AFTER jQuery and bootstrap.bundle, and BEFORE the application scripts.
  */
 (function (factory) {
-    if (typeof window.jQuery !== "undefined" && typeof window.bootstrap !== "undefined") {
-        factory(window.jQuery, window.bootstrap);
+    function boot() {
+        if (typeof window.jQuery !== "undefined" && typeof window.bootstrap !== "undefined") {
+            factory(window.jQuery, window.bootstrap);
+        }
+    }
+    // Bootstrap 5 attaches its own jQuery plugins ($.fn.modal = jQueryInterface) on
+    // DOMContentLoaded, and that interface ignores the no-argument call (".modal()" only
+    // inits, never shows). We must install our shim AFTER Bootstrap's deferred attach, so
+    // defer to DOMContentLoaded as well (our handler registers after Bootstrap's, thus wins).
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+    } else {
+        boot();
     }
 })(function ($, bootstrap) {
     "use strict";
