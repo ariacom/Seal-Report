@@ -600,14 +600,15 @@ namespace SealWebServer.Controllers
                 var file = getFileDetail(path);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
 
-                string newPath = getFullPath(path);
+                int effRight = file.right;
+                string newPath = file.isshortcut ? getFullPath(resolveShortcut(path, out effRight)) : getFullPath(path);
                 if (!System.IO.File.Exists(newPath)) throw new Exception("Report path not found");
                 Repository repository = Repository;
                 Report report = Report.LoadFromFile(newPath, repository, false);
                 SWIReportDetail result = new SWIReportDetail
                 {
                     views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToList(),
-                    outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || string.IsNullOrEmpty(j.UserName) || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToList() : new List<SWIOutput>()
+                    outputs = ((FolderRight)effRight >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || string.IsNullOrEmpty(j.UserName) || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToList() : new List<SWIOutput>()
                 };
                 if (result.views.Count == 0 && result.outputs.Count == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToList();
 
@@ -640,7 +641,9 @@ namespace SealWebServer.Controllers
                         if ((FolderRight)folder.right != FolderRight.Edit) throw new Exception("Error: no right to edit in this folder");
 
                         var file = getFileDetail(path);
-                        if ((FolderRight)file.right != FolderRight.Edit) throw new Exception("Error: no right to edit this report or file");
+                        //the management right of a shortcut (.srln) is the right on its own folder, not the resolved target
+                        int manageRight = file.isshortcut ? folder.right : file.right;
+                        if ((FolderRight)manageRight != FolderRight.Edit) throw new Exception("Error: no right to edit this report or file");
 
                         string fullPath = getFullPath(path);
                         if (FileHelper.IsReportFile(fullPath) && FileHelper.ReportHasSchedule(fullPath))
@@ -691,7 +694,9 @@ namespace SealWebServer.Controllers
 
                 var file = getFileDetail(source);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-                if (!copy && (FolderRight)file.right != FolderRight.Edit) throw new Exception("Error: no right to edit this report or file");
+                //the management right of a shortcut (.srln) is the right on its own folder, not the resolved target
+                int manageRight = file.isshortcut ? folderSource.right : file.right;
+                if (!copy && (FolderRight)manageRight != FolderRight.Edit) throw new Exception("Error: no right to edit this report or file");
 
                 SWIFolder folderDest = getParentFolder(destination);
                 if ((FolderRight)folderDest.right != FolderRight.Edit) throw new Exception("Error: no right to edit on the destination folder");
@@ -701,11 +706,11 @@ namespace SealWebServer.Controllers
                 string destinationPath = getFullPath(destination);
                 if (!System.IO.File.Exists(sourcePath)) throw new Exception("Error: source path is incorrect");
                 if (FileHelper.HasInvalidFileNameChars(Path.GetFileName(destinationPath))) throw new Exception(Translate("Error: the destination file name contains invalid characters."));
-                if (folderDest.files && FileHelper.IsReportFile(sourcePath)) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
+                if (folderDest.files && (FileHelper.IsReportFile(sourcePath) || (file.isshortcut && file.isreport))) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
                 if (System.IO.File.Exists(destinationPath) && copy) destinationPath = FileHelper.GetUniqueFileName(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + " - Copy" + Path.GetExtension(destinationPath), Path.GetExtension(destinationPath));
 
                 bool hasSchedule = (FileHelper.IsReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
-                if (file.isreport)
+                if (file.isreport && !file.isshortcut)
                 {
                     if (copy)
                     {
@@ -739,6 +744,55 @@ namespace SealWebServer.Controllers
 
                 checkRecentFiles();
                 WebUser.SaveProfile();
+
+                return Json(new object { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Create a shortcut (.srln) in a folder referencing a source report or file.
+        /// </summary>
+        public ActionResult SWICreateShortcut(string source, string destination, string sessionId)
+        {
+            writeDebug("SWICreateShortcut");
+            try
+            {
+                SetSessionId(sessionId);
+
+                //the source must be readable
+                SWIFolder folderSource = getParentFolder(source);
+                if (folderSource.right == 0) throw new Exception("Error: no right on this folder");
+
+                var file = getFileDetail(source);
+                if (file.right == 0) throw new Exception("Error: no right on this report or file");
+                if (file.isshortcut) throw new Exception(Translate("Error: a shortcut cannot reference another shortcut."));
+
+                //the destination folder must be editable
+                SWIFolder folderDest = getParentFolder(destination);
+                if ((FolderRight)folderDest.right != FolderRight.Edit) throw new Exception("Error: no right to edit on the destination folder");
+
+                string sourceFullPath = getFullPath(source);
+                if (!System.IO.File.Exists(sourceFullPath)) throw new Exception("Error: source path is incorrect");
+                if (folderDest.files && FileHelper.IsReportFile(sourceFullPath)) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
+
+                //build a unique .srln file named after the source
+                string destDir = Path.GetDirectoryName(getFullPath(destination));
+                string shortcutFileName = Path.GetFileNameWithoutExtension(sourceFullPath) + "." + Repository.SealReportShortcutFileExtension;
+                if (FileHelper.HasInvalidFileNameChars(shortcutFileName)) throw new Exception(Translate("Error: the destination file name contains invalid characters."));
+                string finalFullPath = FileHelper.GetUniqueFileName(destDir, shortcutFileName, "." + Repository.SealReportShortcutFileExtension);
+
+                var shortcut = new ReportShortcut()
+                {
+                    TargetPath = FileHelper.ConvertOSFilePath(source),
+                    CreatedBy = WebUser.Name
+                };
+                shortcut.SaveToFile(finalFullPath);
+
+                Audit.LogAudit(AuditType.ShortcutCreate, WebUser, sourceFullPath, string.Format("Create shortcut '{0}'", finalFullPath));
 
                 return Json(new object { });
             }
@@ -814,13 +868,15 @@ namespace SealWebServer.Controllers
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
-                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)folder.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this folder");
 
                 var file = getFileDetail(path);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)file.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this report");
 
-                string filePath = getFullPath(path);
+                int effRight = file.right;
+                string execPath = file.isshortcut ? resolveShortcut(path, out effRight) : path;
+                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)effRight == FolderRight.Execute) throw new Exception("Error: no right to execute output on this report");
+
+                string filePath = getFullPath(execPath);
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report or file does not exist");
                 repository = Repository.CreateFast();
                 report = Report.LoadFromFile(filePath, repository);
@@ -829,7 +885,7 @@ namespace SealWebServer.Controllers
                 var execution = initReportExecution(report, viewGUID, outputGUID, false);
                 execution.RenderHTMLDisplayForViewer();
 
-                WebUser.Profile.SetRecentReports(path, report, viewGUID, outputGUID);
+                WebUser.Profile.SetRecentReports(execPath, report, viewGUID, outputGUID);
                 WebUser.SaveProfile();
 
                 if (fromMenu != null && fromMenu.Value) return Json(System.IO.File.ReadAllText(report.HTMLDisplayFilePath));
@@ -858,7 +914,9 @@ namespace SealWebServer.Controllers
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
                 if ((file.isreport && WebUser.DownloadUploadRight == DownloadUpload.None) || !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: no right to download report or file.");
                 if (file.isreport && !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: upload and download are not allowed for the server.");
-                return getFileResult(getFullPath(path), null);
+                int effRight;
+                string viewPath = file.isshortcut ? resolveShortcut(path, out effRight) : path;
+                return getFileResult(getFullPath(viewPath), null);
             }
             catch (Exception ex)
             {
@@ -911,7 +969,14 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getFolder(path);
                 if ((FolderRight)folder.right == FolderRight.None) throw new Exception("Error: no right on this folder");
 
-                WebUser.Profile.MarkFavorite(path);
+                //favorites are recorded against the resolved target for shortcuts
+                string favPath = path;
+                if (FileHelper.IsShortcutFile(FileHelper.ConvertOSFilePath(path)))
+                {
+                    int effRight;
+                    favPath = resolveShortcut(path, out effRight);
+                }
+                WebUser.Profile.MarkFavorite(favPath);
                 WebUser.SaveProfile();
 
                 return Json(new { Message = Translate("The favorite has been updated") });

@@ -540,6 +540,7 @@ namespace Seal.Model
         FileMove,
         FileCopy,
         FileDelete,
+        ShortcutCreate,
         FolderCreate,
         FolderRename,
         FolderDelete,

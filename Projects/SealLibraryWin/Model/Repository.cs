@@ -37,6 +37,7 @@ namespace Seal.Model
         public const string SealRootProductName = "Seal";
         public const string SealConfigurationFileExtension = "scfx";
         public const string SealReportFileExtension = "srex";
+        public const string SealReportShortcutFileExtension = "srln";
         public const string SealTaskScheduler = "SealTaskScheduler.exe";
         public const string SealReportDesigner = "SealReportDesigner.exe";
         public const string SealServerManager = "SealServerManager.exe";

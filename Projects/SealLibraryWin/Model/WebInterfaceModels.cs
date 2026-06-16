@@ -216,6 +216,21 @@ namespace Seal.Model
         public bool isfavorite;
 
         /// <summary>
+        /// True if the file is a shortcut (.srln) referencing a target report or file
+        /// </summary>
+        public bool isshortcut;
+
+        /// <summary>
+        /// For a shortcut, the repository relative path of the resolved target (null otherwise)
+        /// </summary>
+        public string targetpath;
+
+        /// <summary>
+        /// For a shortcut, true if the target report or file cannot be resolved (broken link)
+        /// </summary>
+        public bool broken;
+
+        /// <summary>
         /// Right applied on the file/report:
         /// 0: No right
         /// 1: Execute reports / View files

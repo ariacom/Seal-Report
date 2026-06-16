@@ -416,6 +416,11 @@ namespace Seal.Helpers
             return path.EndsWith("." + Repository.SealReportFileExtension);
         }
 
+        public static bool IsShortcutFile(string path)
+        {
+            return path.EndsWith("." + Repository.SealReportShortcutFileExtension);
+        }
+
         public static bool ReportHasSchedule(string path)
         {
             string content = File.ReadAllText(path);
