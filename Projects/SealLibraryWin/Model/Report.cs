@@ -2003,7 +2003,84 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// For CSS Files, insert the attached file names or their contents according to execution context 
+        /// Insert a set of client assets (CSS or Script) defined in a central manifest (see ClientAssets),
+        /// honoring the same CDN / file reference / inlined-content modes as AttachCSSFile and AttachScriptFile.
+        /// Each asset is referenced by a path relative to the web root / Views folder (e.g. "lib/bootstrap/...").
+        /// </summary>
+        public string AttachAssets(IEnumerable<ClientAsset> assets)
+        {
+            string result = "";
+            if (assets == null) return result;
+            foreach (var asset in assets)
+            {
+                if (asset == null || string.IsNullOrEmpty(asset.Path)) continue;
+                result += (asset.Type == ClientAssetType.CSS ? AttachCSSPath(asset.Path, asset.Cdn) : AttachScriptPath(asset.Path, asset.Cdn)) + "\r\n";
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Insert a Script file referenced by a path relative to the Views folder / web root
+        /// (e.g. "lib/bootstrap/js/bootstrap.bundle.min.js"), according to the execution context.
+        /// </summary>
+        public string AttachScriptPath(string relativePath, string cdnPath = "")
+        {
+            relativePath = relativePath.Replace('\\', '/');
+            string sourceFilePath = Path.Combine(Repository.ViewsFolder, FileHelper.ConvertOSFilePath(relativePath));
+            if (!File.Exists(sourceFilePath)) return "";
+
+            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<script type='text/javascript' src='{0}'></script>", cdnPath);
+
+            if (GenerateHTMLDisplay)
+            {
+                if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
+                {
+                    return string.Format("<script type='text/javascript' src='{0}{1}'></script>", WebUrl, relativePath);
+                }
+                //reference local file
+                string fileReference = Helper.HtmlGetFilePath(sourceFilePath);
+                return string.Format("<script type='text/javascript' src='{0}'></script>", fileReference);
+            }
+
+            //generating result file, set the script directly in the result
+            string result = "<script type='text/javascript'>\r\n";
+            result += Repository.Configuration.GetAttachedFileContent(sourceFilePath);
+            result += "\r\n</script>\r\n";
+            return result;
+        }
+
+        /// <summary>
+        /// Insert a CSS file referenced by a path relative to the Views folder / web root
+        /// (e.g. "lib/bootstrap/css/bootstrap.min.css"), according to the execution context.
+        /// </summary>
+        public string AttachCSSPath(string relativePath, string cdnPath = "")
+        {
+            relativePath = relativePath.Replace('\\', '/');
+            string sourceFilePath = Path.Combine(Repository.ViewsFolder, FileHelper.ConvertOSFilePath(relativePath));
+            if (!File.Exists(sourceFilePath)) return "";
+
+            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", cdnPath);
+
+            if (GenerateHTMLDisplay)
+            {
+                if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
+                {
+                    return string.Format("<link type='text/css' href='{0}{1}' rel='stylesheet'/>", WebUrl, relativePath);
+                }
+                //reference local file
+                string fileReference = Helper.HtmlGetFilePath(sourceFilePath);
+                return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", fileReference);
+            }
+
+            //generating result file, set the CSS directly in the result
+            string result = "<style type='text/css'>\r\n";
+            result += Repository.Configuration.GetAttachedFileContent(sourceFilePath);
+            result += "\r\n</style>\r\n";
+            return result;
+        }
+
+        /// <summary>
+        /// For CSS Files, insert the attached file names or their contents according to execution context
         /// </summary>
         public string AttachCSSFiles(string fileNames)
         {

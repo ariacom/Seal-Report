@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "css/bootstrap.min.css",
+        "css/bootstrap.min.css.map",
+        "js/bootstrap.bundle.min.js",
+        "js/bootstrap.bundle.min.js.map"
+      ]
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/lib/jquery/",
+      "files": [ "jquery.min.js" ]
+    },
+    {
+      "library": "popper.js@2.11.8",
+      "destination": "wwwroot/lib/popper/",
+      "files": [ "umd/popper.min.js" ]
+    },
+    {
+      "library": "tom-select@2.4.3",
+      "destination": "wwwroot/lib/tom-select/",
+      "files": [
+        "css/tom-select.bootstrap5.min.css",
+        "js/tom-select.complete.min.js"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "@eonasdan/tempus-dominus@6.10.4",
+      "destination": "wwwroot/lib/tempus-dominus/",
+      "files": [
+        "dist/css/tempus-dominus.min.css",
+        "dist/js/tempus-dominus.min.js"
+      ]
+    }
+  ]
+}

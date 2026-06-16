@@ -23,6 +23,10 @@
     <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
     <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
+    @foreach (var asset in Seal.Model.ClientAssets.BootstrapCss)
+    {
+        <link rel="stylesheet" href="~/@asset.Path" />
+    }
     <link rel="stylesheet" href="~/Content/sealweb.css" />
     <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebCssFiles))
@@ -181,6 +185,10 @@
     </div>
 
     <script src="~/Scripts/datatables.min.js"></script>
+    @foreach (var asset in Seal.Model.ClientAssets.BootstrapJs)
+    {
+        <script src="~/@asset.Path"></script>
+    }
     <script src="~/Scripts/jstree.min.js"></script>
     <script src="~/Scripts/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
