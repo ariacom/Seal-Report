@@ -62,6 +62,12 @@
             });
             return this; // keep jQuery chaining
         };
+
+        // Bootstrap exposes the component class (with its static .Default config) as
+        // $.fn[name].Constructor. Plugins such as bootstrap-select read
+        // $.fn.dropdown.Constructor.Default, which would be undefined once we override the
+        // plugin, so re-expose it here.
+        $.fn[name].Constructor = def.ctor;
     });
 
     // Re-dispatch Bootstrap 5 native component events through jQuery so that
