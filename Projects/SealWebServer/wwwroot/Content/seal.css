@@ -173,11 +173,18 @@ body {
     text-align: left !important;
 }
 
-/* Bootstrap 5 compatibility: the DataTables bs-3.3.7 build still bundles Bootstrap 3
-   CSS, whose ".fade { opacity: 0 }" (made visible via .in) conflicts with Bootstrap 5
-   (which toggles visibility via .show). Without this, BS5 modals/alerts/tooltips stay
-   opacity:0 and never appear. This restores BS5 fade semantics.
-   TODO: remove once DataTables is rebuilt for Bootstrap 5 (drops the bundled BS3 CSS). */
+/* Bootstrap 5 compatibility shims.
+   Bootstrap 5 removed Bootstrap 3 utility classes that the Seal Report views still use
+   (toggled in JS via add/removeClass). They used to be provided by the Bootstrap 3
+   stylesheet bundled in the old DataTables bs-3.3.7 build; the DataTables BS5 rebuild
+   dropped that bundle, so they must be defined here. Without .hidden, elements such as
+   the "generating in another window" message, the progress panel and the nav badge
+   never hide. */
+.hidden {
+    display: none !important;
+}
+
+/* Restore BS5 fade semantics (BS5 drives visibility via .show, not BS3's .in). */
 .fade {
     opacity: 1;
 }
