@@ -16,6 +16,17 @@
     transition: opacity 1s linear;
 }
 
+/* Bootstrap 5 migration: the Seal Web Interface reveals navbar groups with jQuery
+   .show(), which sets inline "display: block" on the <ul class="navbar-nav navbar-right">
+   and overrides Bootstrap 5's flex, stacking the icons vertically (some <li> also carry
+   .d-flex / .d-sm-block !important utilities, so forcing the <li> display is not enough).
+   Force the shown <ul> back to a horizontal flex row so every <li> is a flex item in one row. */
+#bar_top .navbar-nav.navbar-right[style*="display: block"] {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+}
+
 /* light buttons */
 .lighticon-menu .lightbutton {
     display: inline-block;
