@@ -1139,8 +1139,7 @@
         </member>
         <member name="F:Seal.Model.ClientAssets.FontAwesomeCss">
             <summary>
-            Font Awesome 6 (Free) style sheets. all.min.css provides the icons; v4-shims.min.css keeps
-            legacy "fa fa-name" (Font Awesome 4) class names working during the migration.
+            Font Awesome 6 (Free) style sheets. all.min.css provides the icons.
             </summary>
         </member>
         <member name="T:Seal.Model.ExecutionLogInterface">

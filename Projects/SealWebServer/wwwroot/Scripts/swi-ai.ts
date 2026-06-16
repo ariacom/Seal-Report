@@ -278,12 +278,14 @@
             // Disable when there is only one choice — serves as a read-only title.
             $agentSelect.prop('disabled', agents.length === 1);
 
-            // Initialise / refresh the selectpicker.
-            ($agentSelect as any).selectpicker({ width: 'auto' });
+            // Select the current agent on the underlying <select> BEFORE building the
+            // picker. bootstrap-select 1.14 buildData() appends to its internal data
+            // model, so a separate selectpicker('refresh') after init would list every
+            // agent twice. Set the value first, then initialise the picker exactly once.
             if (data.selectedGuid) {
                 $agentSelect.val(data.selectedGuid);
-                ($agentSelect as any).selectpicker('refresh');
             }
+            ($agentSelect as any).selectpicker({ width: 'auto' });
 
             // Apply Bootstrap tooltips to the rendered dropdown items.
             var $dropdownItems = $agentSelect.closest('.bootstrap-select').find('.dropdown-menu li');
@@ -463,7 +465,7 @@
 
     function setFavorite(state: boolean): void {
         _isFavorite = state;
-        $favBtn.find('i').toggleClass('fa-star', state).toggleClass('fa-star-o', !state);
+        $favBtn.find('i').toggleClass('fas', state).toggleClass('far', !state);
         $favBtn.toggleClass('fav-active', state);
         $favBtn.attr('title', state ? SWIUtil.tr('Remove from favorites') : SWIUtil.tr('Mark as favorite'));
     }
@@ -664,7 +666,7 @@
             // Favorite toggle button
             var $favItemBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-fav')
                 .attr('title', isFavorite ? SWIUtil.tr('Remove from favorites') : SWIUtil.tr('Mark as favorite'))
-                .html(isFavorite ? '<i class="fa fa-star"></i>' : '<i class="fa fa-star-o"></i>');
+                .html(isFavorite ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>');
             if (isFavorite) $favItemBtn.addClass('fav-active');
             $favItemBtn.on('click', function (e: JQuery.ClickEvent) {
                 e.stopPropagation();

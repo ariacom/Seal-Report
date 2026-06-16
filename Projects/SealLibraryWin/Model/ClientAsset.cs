@@ -97,15 +97,12 @@ namespace Seal.Model
         };
 
         /// <summary>
-        /// Font Awesome 6 (Free) style sheets. all.min.css provides the icons; v4-shims.min.css keeps
-        /// legacy "fa fa-name" (Font Awesome 4) class names working during the migration.
+        /// Font Awesome 6 (Free) style sheets. all.min.css provides the icons.
         /// </summary>
         public static readonly List<ClientAsset> FontAwesomeCss = new List<ClientAsset>
         {
             new ClientAsset(ClientAssetType.CSS, "lib/fontawesome/css/all.min.css",
-                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"),
-            new ClientAsset(ClientAssetType.CSS, "lib/fontawesome/css/v4-shims.min.css",
-                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/v4-shims.min.css")
+                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css")
         };
     }
 }

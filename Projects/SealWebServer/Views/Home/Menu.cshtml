@@ -31,8 +31,8 @@
             <!-- LEFT: reports menu + contextual breadcrumb; me-auto pushes everything else to the right -->
             <ul class="navbar-nav me-auto align-items-center">
                 <li class="nav-item dropdown">
-                    <a id="menu-main-button" href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="@repository.TranslateWeb("Reports menu")">
-                        <span class="fa-solid fa-bars btn btn-sm btn-primary" aria-hidden="true"></span>
+                    <a id="menu-main-button" href="#" class="nav-link p-0" data-bs-toggle="dropdown" title="@repository.TranslateWeb("Reports menu")">
+                        <span class="btn btn-sm btn-primary"><span class="fa-solid fa-bars" aria-hidden="true"></span></span>
                     </a>
                     <ul id="menu-main" class="dropdown-menu">
                     </ul>
@@ -41,7 +41,11 @@
                 <li class="nav-item"><a id="nav_button" href="#" class="nav-link"></a></li>
                 <li class="nav-item d-flex align-items-center"><span id="nav_badge" class="badge hidden">@repository.TranslateReport("Nav")</span></li>
             </ul>
-            <!-- CONTEXT (folder view): search -->
+            <!-- CONTEXT (folder view): refresh / manage folders, then search -->
+            <ul class="navbar-nav navbar-right align-items-center">
+                <li class="nav-item folderview"><a id="refresh-nav-item" class="nav-link navbar-white" title="@repository.TranslateWeb("Refresh")"><i class="fa-solid fa-arrows-rotate"></i></a></li>
+                <li class="nav-item folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="nav-link navbar-white"><i class="fa-solid fa-folder-open"></i></a></li>
+            </ul>
             <form class="d-flex folderview navbar-right me-2" style="display:none;">
                 <div class="input-group">
                     <input id="search-pattern" type="text" class="form-control form-control-sm" style="width:120px" placeholder="@repository.TranslateWeb("Search")" />
@@ -56,7 +60,7 @@
             <button id="restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2" title="@repository.TranslateReport("Show/Hide Restrictions")">
                 <span class="fa-solid fa-filter"></span>
             </button>
-            <!-- CONTEXT: report tabs (report view) + refresh/folders (folder view) -->
+            <!-- CONTEXT: report tabs (report view) -->
             <ul class="navbar-nav navbar-right align-items-center">
                 <li class="nav-item"><a id="report_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#report_div">@repository.TranslateReport("Report")</a></li>
                 <li class="nav-item"><a id="information_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#information_div">@repository.TranslateReport("Information")</a></li>
@@ -74,8 +78,6 @@
                         }
                     </ul>
                 </li>
-                <li class="nav-item folderview"><a id="refresh-nav-item" class="nav-link navbar-white" title="@repository.TranslateWeb("Refresh")"><i class="fa-solid fa-arrows-rotate"></i></a></li>
-                <li class="nav-item folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="nav-link navbar-white"><i class="fa-solid fa-folder-open"></i></a></li>
             </ul>
             <!-- FAR RIGHT: account / utility cluster (with a divider) -->
             <ul id="navbar-right-menu" class="navbar-nav navbar-right align-items-center">

@@ -1133,6 +1133,8 @@ body.ai-resizing #footer-div {
     font-size: 15px;
     font-weight: 600;
     color: #333;
+    flex: 1 1 auto;
+    min-width: 0;          /* allow the title to shrink so the action buttons stay inside the panel */
 }
 
 .ai-panel-title .fa {
@@ -1154,6 +1156,7 @@ body.ai-resizing #footer-div {
     color: #333;
     height: auto;
     line-height: 1.4;
+    overflow: hidden;      /* truncate the agent name here (the menu is a sibling, so it isn't clipped) */
 }
 .ai-panel-title .bootstrap-select > .btn:hover,
 .ai-panel-title .bootstrap-select > .btn:focus,
@@ -1175,12 +1178,22 @@ body.ai-resizing #footer-div {
 .ai-panel-title .bootstrap-select > .btn .caret {
     margin-left: 5px;
 }
+/* Truncate a long agent name instead of pushing the header action buttons out */
+.ai-panel-title .bootstrap-select > .btn .filter-option,
+.ai-panel-title .bootstrap-select > .btn .filter-option-inner,
+.ai-panel-title .bootstrap-select > .btn .filter-option-inner-inner {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 /* Open menu: remove the focus outline on options and widen the dropdown */
 .ai-panel-title .bootstrap-select .dropdown-menu a {
     outline: none !important;
 }
 .ai-panel-title .bootstrap-select.ai-panel-agent-select {
-    width: 220px !important;
+    width: auto !important;
+    max-width: 220px;
+    min-width: 0;          /* permit the selectpicker to shrink within the title */
 }
 
 #ai-panel-close {
@@ -1476,6 +1489,7 @@ body.ai-resizing #footer-div {
     display: flex;
     align-items: center;
     gap: 4px;
+    flex-shrink: 0;        /* never collapse the action buttons out past the panel edge */
 }
 
 /* Shared icon button (fav, history) */
@@ -1653,7 +1667,7 @@ body.ai-resizing #footer-div {
 /* Push main content right when the panel is open */
 #main-container,
 #report-body {
-    transition: margin-left 0.28s ease;
+    transition: margin-left 0.28s ease, width 0.28s ease;
 }
 
 #footer-div {
@@ -1663,6 +1677,7 @@ body.ai-resizing #footer-div {
 body.ai-panel-visible #main-container,
 body.ai-panel-visible #report-body {
     margin-left: var(--ai-panel-width);
+    width: calc(100% - var(--ai-panel-width));
 }
 
 body.ai-panel-visible #footer-div {

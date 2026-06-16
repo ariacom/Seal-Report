@@ -861,12 +861,18 @@ class SWIMain {
     }
 
     private resize() {
+        const wh = $(window).height() ?? 0;
         if (!SWIUtil.IsMobile()) {
-            $("#folder-tree").height($(window).height() ?? 0 - 80);
-            $("#file-table-view").height($(window).height() ?? 0 - 125);
+            //Size each scrollable panel from its actual top to the bottom of the viewport,
+            //so the panel itself scrolls and the window never overflows (no spurious scrollbar).
+            const bottomMargin = 12;
+            const $tree = $("#folder-tree");
+            if ($tree.is(":visible")) $tree.height(wh - ($tree.offset()?.top ?? 0) - bottomMargin);
+            const $table = $("#file-table-view");
+            if ($table.is(":visible")) $table.height(wh - ($table.offset()?.top ?? 0) - bottomMargin);
         }
         else {
-            $("#folder-tree").css("max-height", ($(window).height() ?? 0 / 2 - 45));
+            $("#folder-tree").css("max-height", wh / 2 - 45);
         }
     }
 
@@ -912,6 +918,9 @@ class SWIMain {
         $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d").css("outline", "none");
 
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
+
+        //the visible view just changed (folders <-> report): re-size the scrollable panels
+        _main.resize();
     }
 
     private toJSTreeFolderData(data: any, result: any, parent: string) {

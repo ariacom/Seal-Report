@@ -27,7 +27,6 @@
       "destination": "wwwroot/lib/fontawesome/",
       "files": [
         "css/all.min.css",
-        "css/v4-shims.min.css",
         "webfonts/fa-solid-900.woff2",
         "webfonts/fa-solid-900.ttf",
         "webfonts/fa-regular-400.woff2",
