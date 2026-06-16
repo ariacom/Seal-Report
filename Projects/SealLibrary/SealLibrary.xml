@@ -6227,6 +6227,52 @@
             Editor Helper: Edit the Schedule with the MMC Task Scheduler
             </summary>
         </member>
+        <member name="T:Seal.Model.ReportShortcut">
+            <summary>
+            A ReportShortcut is a lightweight file (.srln) that references a real report (.srex) or a file located elsewhere in the repository.
+            In the Web Report Server it is resolved to its target and behaves like the target (execute, view, edit, download...).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportShortcut.GUID">
+            <summary>
+            Identifier of the shortcut
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportShortcut.TargetPath">
+            <summary>
+            Repository relative path of the target report or file (e.g. /Sales/Orders.srex)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportShortcut.Name">
+            <summary>
+            Optional display name override. If empty, the target file name is used.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportShortcut.CreatedBy">
+            <summary>
+            Login of the user who created the shortcut
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportShortcut.FilePath">
+            <summary>
+            Current file path of the shortcut (not serialized)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportShortcut.LoadFromFile(System.String)">
+            <summary>
+            Load a shortcut from a file
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportShortcut.SaveToFile">
+            <summary>
+            Save the shortcut to its file
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportShortcut.SaveToFile(System.String)">
+            <summary>
+            Save the shortcut to a file
+            </summary>
+        </member>
         <member name="T:Seal.Model.ReportSource">
             <summary>
             A ReportSource is a MetaSource dedicated for report executions
@@ -10120,6 +10166,21 @@
         <member name="F:Seal.Model.SWIFile.isfavorite">
             <summary>
             True if the report is a favorite
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIFile.isshortcut">
+            <summary>
+            True if the file is a shortcut (.srln) referencing a target report or file
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIFile.targetpath">
+            <summary>
+            For a shortcut, the repository relative path of the resolved target (null otherwise)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIFile.broken">
+            <summary>
+            For a shortcut, true if the target report or file cannot be resolved (broken link)
             </summary>
         </member>
         <member name="F:Seal.Model.SWIFile.right">

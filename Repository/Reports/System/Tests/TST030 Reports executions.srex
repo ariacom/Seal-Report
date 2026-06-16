@@ -69,6 +69,7 @@
         "500 publication",
         "510 publication",
         "800 schedule - sequencer",
+        "renderer pdf with merge",
     };
 
     bool IsSkipped(string reportPath)
