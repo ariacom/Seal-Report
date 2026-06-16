@@ -231,7 +231,7 @@ AND [06a2ff61-513e-4d8d-add5-88d2eb62d401]</Restriction>
             &lt;input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'&gt;
         &lt;/a&gt;
         &amp;nbsp;
-        &lt;span class='label label-info' id="upload-file-info"&gt;&lt;/span&gt;
+        &lt;span class='badge text-bg-info' id="upload-file-info"&gt;&lt;/span&gt;
     &lt;/div&gt;
 
         

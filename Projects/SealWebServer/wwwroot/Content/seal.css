@@ -192,3 +192,11 @@ body {
 .fade:not(.show) {
     opacity: 0;
 }
+
+/* BS5 dropped the extra-small button size; restored for the KPI "very small" button option. */
+.btn-xs {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}

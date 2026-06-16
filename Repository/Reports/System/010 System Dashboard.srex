@@ -814,7 +814,7 @@ AND [ccf5db51-89b4-4366-8ffc-b6444c43e395]</Restriction>
                 </Parameter>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>user</Value>
+                  <Value>fa-solid fa-user</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -914,7 +914,7 @@ AND [ccf5db51-89b4-4366-8ffc-b6444c43e395]</Restriction>
                 </Parameter>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>cog</Value>
+                  <Value>fa-solid fa-gear</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -1014,7 +1014,7 @@ glyphicon glyphicon-remove</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>warning-sign</Value>
+                  <Value>fa-solid fa-triangle-exclamation</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -1097,7 +1097,7 @@ glyphicon glyphicon-remove</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>tag</Value>
+                  <Value>fa-solid fa-tag</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -1142,7 +1142,7 @@ glyphicon glyphicon-remove</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>tag</Value>
+                  <Value>fa-solid fa-tag</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -1217,7 +1217,7 @@ glyphicon glyphicon-remove</Value>
               <Parameters>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>list-alt</Value>
+                  <Value>fa-solid fa-rectangle-list</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>

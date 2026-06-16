@@ -5,14 +5,26 @@
     ReportView view = report.CurrentView;
     Repository repository = report.Repository;
     var title = report.TranslateViewName(view.GetBoolValue("widget_name_as_title") ? view.Name : view.GetValue("widget_title"));
+
+    //Bootstrap 5: the Bootstrap 3 'panel' became 'card'. Map the stored widget_color to BS5 contextual classes
+    //(legacy 'default' -> 'secondary'); an empty color renders a plain card. 'panel-widget' is kept as a marker class used by helpers.js.
+    var widgetColor = view.GetValue("widget_color");
+    if (widgetColor == "default") widgetColor = "secondary";
+    var borderClass = string.IsNullOrEmpty(widgetColor) ? "" : " border-" + widgetColor;
+    var headerBgClass = string.IsNullOrEmpty(widgetColor) ? "" : " text-bg-" + widgetColor;
+    //Bootstrap 5 / Font Awesome 6: resolve the stored icon (legacy Glyphicon name or a Font Awesome class).
+    var widgetIcon = Parameter.GetFontAwesomeIcon(view.GetValue("widget_icon"));
 }
 
-<div class='panel panel-@view.GetValue("widget_color") panel-widget' @Raw(view.AddAttribute("style", "widget_css")) >
+<div class='card panel-widget@(borderClass)' @Raw(view.AddAttribute("style", "widget_css")) >
     @if (!string.IsNullOrEmpty(title))
     {
-        <div class='panel-heading text-left' @Raw(view.AddAttribute("style", "widget_heading_css")) >
-            <span class='glyphicon glyphicon-@view.GetValue("widget_icon")'></span>
-            <h3 class='panel-title' style='display:inline'>
+        <div class='card-header text-start@(headerBgClass)' @Raw(view.AddAttribute("style", "widget_heading_css")) >
+            @if (!string.IsNullOrEmpty(widgetIcon))
+            {
+                <span class='@widgetIcon'></span>
+            }
+            <h3 class='card-title' style='display:inline'>
                 @if (!string.IsNullOrEmpty(view.GetValue("widget_exec_view")))
                 {
                     <a class="widget-title" style="cursor:pointer" path="@Raw(report.RelativeFilePath)" viewGUID="@view.GetValue("widget_exec_view")">@title</a>
@@ -26,15 +38,15 @@
                     @Raw(title)
                 }
             </h3>
-        </div> <!--panel-heading-->
+        </div> <!--card-header-->
     }
-    <div class='panel-body' @Raw(view.AddAttribute("style", "widget_body_css")) >
+    <div class='card-body' @Raw(view.AddAttribute("style", "widget_body_css")) >
         @foreach (var childView in view.Views)
         {
             @Raw(childView.Parse())
         }
-    </div> <!--panel-body-->
-</div> <!--panel-->
+    </div> <!--card-body-->
+</div> <!--card-->
 
 @if (report.PrintLayout && view.GetBoolValue("print_break_after_view"))
 {

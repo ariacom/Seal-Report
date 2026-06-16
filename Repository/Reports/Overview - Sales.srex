@@ -1442,7 +1442,7 @@ col-sm-12</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_icon</Name>
-                          <Value>signal</Value>
+                          <Value>fa-solid fa-signal</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_color</Name>
@@ -1503,7 +1503,7 @@ col-sm-12</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_icon</Name>
-                          <Value>globe</Value>
+                          <Value>fa-solid fa-globe</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_color</Name>
@@ -1556,7 +1556,7 @@ col-sm-12</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_icon</Name>
-                          <Value>stats</Value>
+                          <Value>fa-solid fa-chart-column</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_color</Name>
@@ -1657,10 +1657,10 @@ glyphicon glyphicon-export</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_goal_color</Name>
-                                      <Value>label-danger|-10
-label-warning|0
-label-primary|1
-label-success</Value>
+                                      <Value>text-bg-danger|-10
+text-bg-warning|0
+text-bg-primary|1
+text-bg-success</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_goal_icon</Name>
@@ -1704,7 +1704,7 @@ glyphicon glyphicon-ok</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_icon</Name>
-                          <Value>tags</Value>
+                          <Value>fa-solid fa-tags</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_color</Name>
@@ -1808,10 +1808,10 @@ glyphicon glyphicon-export</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_goal_color</Name>
-                                      <Value>label-danger|-10
-label-warning|0
-label-primary|1
-label-success</Value>
+                                      <Value>text-bg-danger|-10
+text-bg-warning|0
+text-bg-primary|1
+text-bg-success</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_goal_icon</Name>
@@ -1855,7 +1855,7 @@ glyphicon glyphicon-ok</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_icon</Name>
-                          <Value>user</Value>
+                          <Value>fa-solid fa-user</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_color</Name>
@@ -1920,7 +1920,7 @@ glyphicon glyphicon-ok</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_icon</Name>
-                          <Value>globe</Value>
+                          <Value>fa-solid fa-globe</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_color</Name>
@@ -1961,10 +1961,10 @@ glyphicon glyphicon-export</Value>
                                 </Parameter>
                                 <Parameter>
                                   <Name>kpi_goal_color</Name>
-                                  <Value>label-danger|-10
-label-warning|0
-label-primary|1
-label-success</Value>
+                                  <Value>text-bg-danger|-10
+text-bg-warning|0
+text-bg-primary|1
+text-bg-success</Value>
                                 </Parameter>
                                 <Parameter>
                                   <Name>kpi_goal_icon</Name>
@@ -2030,7 +2030,7 @@ glyphicon glyphicon-ok</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_icon</Name>
-                          <Value>cog</Value>
+                          <Value>fa-solid fa-gear</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_color</Name>
@@ -2111,7 +2111,7 @@ glyphicon glyphicon-ok</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_icon</Name>
-                          <Value>tags</Value>
+                          <Value>fa-solid fa-tags</Value>
                         </Parameter>
                         <Parameter>
                           <Name>widget_color</Name>
