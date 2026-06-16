@@ -22,18 +22,18 @@
                 {
                     @if (!(authenticationConfig?.HideLoginPassword ?? false))
                     {
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="username"><span class="fa-solid fa-user"></span> @repository.TranslateWeb("User name")</label>
                             <input type="text" class="form-control" id="username" name="username" placeholder="@repository.TranslateWeb("Enter user name")" />
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="password"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Password")</label>
                             <input type="password" class="form-control" id="password" placeholder="@repository.TranslateWeb("Enter password")" />
                         </div>
 
                         <a id="login-password-reset" href="">@repository.TranslateWeb("Forget your password ?")</a>
                     }
-                    <button id="login-modal-submit" class="btn btn-default btn-success btn-block"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login")</button>
+                    <button id="login-modal-submit" class="btn btn-secondary btn-success btn-block"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login")</button>
                 }
                 @if (authenticationConfig?.Enabled ?? false)
                 {
@@ -59,12 +59,12 @@
                 <div style="margin-bottom:20px;">
                     <span id="security-code-message" class="label label-warning" style="font-size:14px;"></span>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="securitycode"><span class="fa-solid fa-lock"></span> @repository.TranslateWeb("Security code")</label>
                     <input type="text" class="form-control" id="securitycode" name="securitycode" placeholder="@repository.TranslateWeb("Enter your security code")" />
                 </div>
                 <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
-                <button id="security-modal-submit" class="btn btn-default btn-success btn-block"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login")</button>
+                <button id="security-modal-submit" class="btn btn-secondary btn-success btn-block"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login")</button>
             </div>
             <div class="modal-footer" style="text-align:left">
                 <span id="security-modal-error" class="label label-danger" style="font-size: 12px;"></span>
@@ -79,16 +79,16 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header btn-warning" style="color:white;text-align:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <h4 style="color:white;"><span class="fa-solid fa-triangle-exclamation"></span> @repository.TranslateWeb("Reset your password")</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="password-reset-name"><span class="fa-solid fa-user"></span> @repository.TranslateWeb("Enter your user identifier or email")</label>
                     <input type="text" class="form-control" id="password-reset-name" name="password-reset-name" placeholder="@repository.TranslateWeb("User identifier or email")" />
                     <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 </div>
-                <button id="password-reset-submit" class="btn btn-default btn-warning btn-block"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Reset password")</button>
+                <button id="password-reset-submit" class="btn btn-secondary btn-warning btn-block"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Reset password")</button>
             </div>
         </div>
     </div>
@@ -100,19 +100,19 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header btn-warning" style="color:white;text-align:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <h4 style="color:white;"><span class="fa-solid fa-triangle-exclamation"></span> @repository.TranslateWeb("Re-init your password")</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="password-reset1"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Enter your new password")</label>
                     <input type="password" class="form-control" id="password-reset1" name="password-reset1" placeholder="@repository.TranslateWeb("New password")" />
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="password-reset2"><span class="fa-solid fa-eye-slash"></span> @repository.TranslateWeb("Confirm your new password")</label>
                     <input type="password" class="form-control" id="password-reset2" name="password-reset2" placeholder="@repository.TranslateWeb("New password")" />
                 </div>
-                <button id="password-reset-submit2" class="btn btn-default btn-warning btn-block"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Change password")</button>
+                <button id="password-reset-submit2" class="btn btn-secondary btn-warning btn-block"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Change password")</button>
             </div>
         </div>
     </div>
@@ -124,23 +124,23 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header btn-warning" style="color:white;text-align:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <h4 style="color:white;"><span class="fa-solid fa-triangle-exclamation"></span> @repository.TranslateWeb("Change your password")</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="password-change"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Enter your current password")</label>
                     <input type="password" class="form-control" id="password-change" name="password-change" placeholder="@repository.TranslateWeb("Current password")" />
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="password-change1"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Enter your new password")</label>
                     <input type="password" class="form-control" id="password-change1" name="password-change1" placeholder="@repository.TranslateWeb("New password")" />
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="password-change2"><span class="fa-solid fa-eye-slash"></span> @repository.TranslateWeb("Confirm your new password")</label>
                     <input type="password" class="form-control" id="password-change2" name="password-change2" placeholder="@repository.TranslateWeb("New password")" />
                 </div>
-                <button id="change-password-submit" class="btn btn-default btn-warning btn-block"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Change password")</button>
+                <button id="change-password-submit" class="btn btn-secondary btn-warning btn-block"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Change password")</button>
             </div>
         </div>
     </div>
@@ -152,24 +152,24 @@
     <div class="modal-dialog">
         <div class="modal-content" style="top:60px">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <h4 class="modal-title">@repository.TranslateWeb("Manage Folders")</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group">
+                <div class="mb-3">
                     <input class="form-control" style="display:inline;width:50%;" id="create-folder-name" placeholder="@repository.TranslateWeb("New folder name")" />
                     <button id="folder-create" type="button" class="btn btn-primary">@repository.TranslateWeb("Create new folder")</button>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <input class="form-control" style="display:inline;width:50%;" id="rename-folder-name" placeholder="@repository.TranslateWeb("New folder path")" />
                     <button id="folder-rename" type="button" class="btn btn-primary">@repository.TranslateWeb("Rename or move folder")</button>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <button id="folder-delete" type="button" class="btn btn-primary">@repository.TranslateWeb("Delete folder")</button>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Close")</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@repository.TranslateWeb("Close")</button>
             </div>
         </div>
     </div>
@@ -193,14 +193,14 @@
     <div class="modal-dialog">
         <div class="modal-content" style="top: 60px;">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
                 <h4 id="message-title" class="modal-title"></h4>
             </div>
             <div class="modal-body">
                 <span id="message-text"></span>
             </div>
             <div class="modal-footer">
-                <button id="message-cancel-button" type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                <button id="message-cancel-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
                 <button id="message-ok-button" type="button" class="btn btn-primary">@repository.TranslateWeb("OK")</button>
             </div>
         </div>
@@ -212,14 +212,14 @@
     <div class="modal-dialog">
         <div class="modal-content" style="top:60px">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
                 <h4 class="modal-title">@repository.TranslateWeb("Enter your new file name")</h4>
             </div>
             <div class="modal-body">
                 <input id="report-name" type="text" class="form-control" placeholder="@repository.TranslateReport("New report")" />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
                 <button id="report-name-save" type="button" class="btn btn-primary">@repository.TranslateWeb("Save")</button>
             </div>
         </div>
@@ -232,9 +232,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
                 <h4 class="modal-title">@repository.TranslateWeb("Profile information")</h4>
             </div>
             <div class="modal-body" style="max-height:90vh;overflow-y:auto;width:100%;max-width:800px;">
@@ -249,7 +247,7 @@
                 </div>
                 <div id="profile-change-password-option" class="config-input-row">
                     <span class="config-input-label">@repository.TranslateWeb("Change password")</span>
-                    <button id="profile-change-password" type="button" class="btn btn-default">@repository.TranslateWeb("Change password")</button>
+                    <button id="profile-change-password" type="button" class="btn btn-secondary">@repository.TranslateWeb("Change password")</button>
                 </div>
 
                 <hr />
@@ -288,9 +286,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="profile-cancel" type="button" class="btn btn-default edit-profile" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                <button id="profile-cancel" type="button" class="btn btn-secondary edit-profile" data-bs-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
                 <button id="profile-save" type="button" class="btn btn-primary edit-profile">@repository.TranslateWeb("Save")</button>
-                <button id="profile-close" type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Close")</button>
+                <button id="profile-close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">@repository.TranslateWeb("Close")</button>
             </div>
         </div>
     </div>
@@ -302,9 +300,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
                 <h4 class="modal-title">@repository.TranslateWeb("Configuration and security")</h4>
             </div>
             <div class="modal-body" style="width:800px;">
@@ -314,8 +310,8 @@
                 </div>
 
                 <ul id="config-tab-control" class="nav nav-pills">
-                    <li class="active"><a data-toggle="pill" href="#config-group-detail-content">@repository.TranslateWeb("Groups")</a></li>
-                    <li class="agents-panel"><a data-toggle="pill" href="#config-user-detail-content">@repository.TranslateWeb("Logins")</a></li>
+                    <li class="active"><a data-bs-toggle="pill" href="#config-group-detail-content">@repository.TranslateWeb("Groups")</a></li>
+                    <li class="agents-panel"><a data-bs-toggle="pill" href="#config-user-detail-content">@repository.TranslateWeb("Logins")</a></li>
                 </ul>
 
                 <div id="detail-section-1">
@@ -327,7 +323,7 @@
                                     <div class="input-group config-input-field dropdown">
                                         <input id="config-group-name" type="text" class="form-control" />
                                         <div class="input-group-btn">
-                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
                                             <ul id="config-groups-dropdown" class="dropdown-menu" style="left:auto;right:0;"></ul>
@@ -368,7 +364,7 @@
                                     <div class="input-group config-input-field dropdown">
                                         <input id="config-group-folder-name" type="text" class="form-control" />
                                         <div class="input-group-btn">
-                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
                                             <ul id="config-group-folders-dropdown" class="dropdown-menu" style="left:auto;right:0;"></ul>
@@ -410,7 +406,7 @@
                                     <div class="input-group config-input-field dropdown">
                                         <input id="config-login-id" type="text" class="form-control" />
                                         <div class="input-group-btn">
-                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
                                             <ul id="config-logins-dropdown" class="dropdown-menu" style="left:auto;right:0;"></ul>
@@ -448,7 +444,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="config-cancel" type="button" class="btn btn-default edit-config" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                <button id="config-cancel" type="button" class="btn btn-secondary edit-config" data-bs-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
                 <button id="config-save" type="button" class="btn btn-primary edit-config">@repository.TranslateWeb("Save")</button>
             </div>
         </div>

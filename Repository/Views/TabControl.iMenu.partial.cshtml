@@ -25,7 +25,7 @@
                 }
             }
 
-            <li><a data-toggle="@(view.GetValue("tab_style"))" href='#@(childView.IdSuffix)_tab_page' @Raw(childView.AddAttribute("style", "tab_page_css"))>@Raw(childView.ViewName + suffix)</a></li>
+            <li><a data-bs-toggle="@(view.GetValue("tab_style"))" href='#@(childView.IdSuffix)_tab_page' @Raw(childView.AddAttribute("style", "tab_page_css"))>@Raw(childView.ViewName + suffix)</a></li>
         }
     </ul>
 }

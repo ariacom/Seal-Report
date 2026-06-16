@@ -38,7 +38,7 @@
         <div class="modal-dialog" style="width: 900px; max-width: 95vw;">
             <div class="modal-content" style="top:60px;">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <h4 class="modal-title">@report.Translate("Report result options")</h4>
                 </div>
                 <div class="modal-body" style="height:600px;overflow:auto;">
@@ -46,8 +46,8 @@
                     {
                         var name = parameter.ResultOptionName;
                         
-                        <div class="form-group" style='height:25px'>
-                            <label class="control-label col-sm-6" style="text-align:left;overflow:hidden;cursor:default;margin-top:10px;" for='@name'>
+                        <div class="mb-3" style='height:25px'>
+                            <label class="form-label col-sm-6" style="text-align:left;overflow:hidden;cursor:default;margin-top:10px;" for='@name'>
                                 @Raw(Helper.ToHtml(parameter.ResultOptionDisplayName))
                             </label>                    
                         
@@ -64,13 +64,11 @@
                                 </select>
                             }
                             else if (parameter.Type == ViewParameterType.Boolean) {
-                                <div class="btn-group col-sm-6" data-toggle="buttons" id='@name'>
-                                    <label class="btn btn-default @(parameter.BoolValue ? "active" : "")">
-                                        <input type="radio" name='@name' id='@name' class='result-options-input' value='True' @(parameter.BoolValue ? "checked" : "")>@report.Translate("Yes")
-                                    </label>
-                                    <label class="btn btn-default @(!parameter.BoolValue ? "active" : "")">
-                                        <input type="radio" name='@name' id='@name' class='result-options-input' value='False' @(!parameter.BoolValue ? "checked" : "")>@report.Translate("No")
-                                    </label>
+                                <div class="btn-group col-sm-6" id='@name'>
+                                    <input type="radio" class="btn-check result-options-input" name='@name' id='@(name)_true' value='True' autocomplete="off" @(parameter.BoolValue ? "checked" : "")>
+                                    <label class="btn btn-secondary" for='@(name)_true'>@report.Translate("Yes")</label>
+                                    <input type="radio" class="btn-check result-options-input" name='@name' id='@(name)_false' value='False' autocomplete="off" @(!parameter.BoolValue ? "checked" : "")>
+                                    <label class="btn btn-secondary" for='@(name)_false'>@report.Translate("No")</label>
                                 </div>
                             }
                             else if (parameter.Type == ViewParameterType.Numeric) {
@@ -87,7 +85,7 @@
                     }
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">@report.Translate("Close")</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@report.Translate("Close")</button>
                 </div>
             </div>
         </div>

@@ -30,7 +30,7 @@
     <ul id="tc_@(view.IdSuffix)" class="nav nav-@(view.GetValue("model_menu_style"))s @(view.GetValue("model_menu_type") != "top" ? "nav-stacked" : "")  @(view.GetBoolValue("model_menu_justified") ? "nav-justified" : "")">
         @if (view.GetBoolValue("show_summary_table"))
         {
-            <li class="active"><a data-toggle="@view.GetValue("model_menu_style")" href='#@(view.IdSuffix + "_summary")'>@report.Translate("Summary")</a></li>
+            <li class="active"><a data-bs-toggle="@view.GetValue("model_menu_style")" href='#@(view.IdSuffix + "_summary")'>@report.Translate("Summary")</a></li>
         }
         @for (int row = 1; row <reportModel.SummaryTable.RowCount && row < reportModel.Pages.Count + 1; row++)
         {
@@ -48,7 +48,7 @@
             if (view.GetBoolValue("model_show_count")) val += $" ({page.DataTable.BodyEndRow - page.DataTable.BodyStartRow})";
 
             <li class='@(row==1 && !view.GetBoolValue("show_summary_table") ? "active" :"")'>
-                <a data-toggle="@view.GetValue("model_menu_style")" href='#@(view.IdSuffix + page.PageId)'>@Raw(val)</a>
+                <a data-bs-toggle="@view.GetValue("model_menu_style")" href='#@(view.IdSuffix + page.PageId)'>@Raw(val)</a>
             </li>
         }
     </ul>
