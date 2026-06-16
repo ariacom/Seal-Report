@@ -8,75 +8,72 @@
     var menuStyle = "";
 </script>
 
-<nav id="bar_top" class="navbar navbar-default navbar-inverse navbar-fixed-top" style="transition:top 0.3s;">
+<nav id="bar_top" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="transition:top 0.3s;">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">@repository.TranslateWeb("Toggle navigation")</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div>
-                <a id="brand-id" class="navbar-brand hidden-xs" href="#">@repository.Configuration.WebProductName</a>
-                <ul style="float:left;margin:0;padding:10px 0px;list-style:none">
-                    <li class="dropdown">
-                        <a id="menu-main-button" href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:10px 5px" title="@repository.TranslateWeb("Reports menu")">
-                            <span class="fa-solid fa-bars btn btn-sm btn-primary" aria-hidden="true"></span>
-                        </a>
-                        <ul id="menu-main" class="dropdown-menu">
-                        </ul>
-                    </li>
-                </ul>
-                <span id="nav_cr" style="display:none;font-size:small;padding-top:5px;text-align:center;" class="navbar-brand"></span>
-                <a id="nav_button" href="#" class="navbar-brand"></a>
-                <span id="nav_badge" class="badge navbar-left hidden">@repository.TranslateReport("Nav")</span>
-            </div>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
-            <ul id="navbar-right-menu" class="nav navbar-nav pull-xs-right navbar-right">
-                <li class="nav-item"><a id="profile-nav-item" class="navbar-white fa fa-user" style="font-size:20px" title="@repository.TranslateWeb("Profile")"></a></li>
-                <li class="nav-item hidden-xs"><a id="config-nav-item" class="navbar-white fa fa-cog" style="font-size:20px" title="@repository.TranslateWeb("Configuration")"></a></li>
-                @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
-                {
-                        <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="navbar-white fa fa-info" style="font-size:20px" title="@repository.TranslateWeb("Information")"></a></li>
-                }
-                <li class="nav-item"><a id="disconnect-nav-item" class="navbar-white fa fa-sign-out" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"></a></li>
+        <a id="brand-id" class="navbar-brand d-none d-sm-block" href="#">@repository.Configuration.WebProductName</a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="@repository.TranslateWeb("Toggle navigation")">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbar" class="collapse navbar-collapse">
+            <!-- LEFT: reports menu + contextual breadcrumb; me-auto pushes everything else to the right -->
+            <ul class="navbar-nav me-auto align-items-center">
+                <li class="nav-item dropdown">
+                    <a id="menu-main-button" href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="@repository.TranslateWeb("Reports menu")">
+                        <span class="fa-solid fa-bars btn btn-sm btn-primary" aria-hidden="true"></span>
+                    </a>
+                    <ul id="menu-main" class="dropdown-menu">
+                    </ul>
+                </li>
+                <li class="nav-item d-flex align-items-center"><span id="nav_cr" class="navbar-text px-2" style="display:none;font-size:small;text-align:center;"></span></li>
+                <li class="nav-item"><a id="nav_button" href="#" class="nav-link"></a></li>
+                <li class="nav-item d-flex align-items-center"><span id="nav_badge" class="badge hidden">@repository.TranslateReport("Nav")</span></li>
             </ul>
-            <form class="navbar-form navbar-right folderview" style="display:none;">
+            <!-- CONTEXT (folder view): search -->
+            <form class="d-flex folderview navbar-right me-lg-2" style="display:none;">
                 <div class="input-group">
-                    <input id="search-pattern" type="text" class="form-control input-sm col-sm-1" style="width:120px" placeholder="@repository.TranslateWeb("Search")" />
-                    <span class="input-group-btn">
-                        <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="fa-solid fa-magnifying-glass"></span></button>
-                    </span>
+                    <input id="search-pattern" type="text" class="form-control form-control-sm" style="width:120px" placeholder="@repository.TranslateWeb("Search")" />
+                    <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="fa-solid fa-magnifying-glass"></span></button>
                 </div>
             </form>
-            <button id="reload-nav-item" class="btn btn-primary navbar-btn navbar-right reportview" title="@repository.TranslateWeb("Reload and execute")">
+            <!-- CONTEXT (report view): report actions -->
+            <button id="reload-nav-item" class="btn btn-primary reportview navbar-right me-lg-2" title="@repository.TranslateWeb("Reload and execute")">
                 <span class="fa-solid fa-play"></span>
             </button>
-            <button id="execute_button" class="btn btn-success navbar-btn navbar-right reportview">@repository.TranslateReport("Execute")</button>
-            <button id="restrictions_button" type="button" class="btn btn-info navbar-btn navbar-right reportview" title="@repository.TranslateReport("Show/Hide Restrictions")">
+            <button id="execute_button" class="btn btn-success reportview navbar-right me-lg-2">@repository.TranslateReport("Execute")</button>
+            <button id="restrictions_button" type="button" class="btn btn-info reportview navbar-right me-lg-2" title="@repository.TranslateReport("Show/Hide Restrictions")">
                 <span class="fa-solid fa-filter"></span>
             </button>
-            <ul class="nav navbar-nav pull-xs-right navbar-right">
-                <li><a id="report_button" class="sr_tab reportview" data-toggle="tab" href="#report_div">@repository.TranslateReport("Report")</a></li>
-                <li><a id="information_button" class="sr_tab reportview" data-toggle="tab" href="#information_div">@repository.TranslateReport("Information")</a></li>
-                <li><a id="message_button" class="sr_tab reportview" data-toggle="tab" href="#message_div">@repository.TranslateReport("Messages")</a></li>
-                <li id="results_menu" class="dropdown reportview">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <!-- CONTEXT: report tabs (report view) + refresh/folders (folder view) -->
+            <ul class="navbar-nav navbar-right align-items-center">
+                <li class="nav-item"><a id="report_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#report_div">@repository.TranslateReport("Report")</a></li>
+                <li class="nav-item"><a id="information_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#information_div">@repository.TranslateReport("Information")</a></li>
+                <li class="nav-item"><a id="message_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#message_div">@repository.TranslateReport("Messages")</a></li>
+                <li id="results_menu" class="nav-item dropdown reportview">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
                         @repository.TranslateReport("Results")
-                        <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a id="ResultOptions" href="#">@repository.TranslateReport("Options")...</a></li>
-                        <li class="divider"></li>
+                        <li><a id="ResultOptions" class="dropdown-item" href="#">@repository.TranslateReport("Options")...</a></li>
+                        <li><hr class="dropdown-divider"></li>
                         @foreach (var format in repository.ResultAllowedFormats)
                         {
-                            <li><a id="ViewResult" format="@format" class="result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
+                            <li><a id="ViewResult" format="@format" class="dropdown-item result_item" href="#">@repository.TranslateReport("View " + Helper.GetEnumDescription(typeof(ReportFormat), format) + " Result")</a></li>
                         }
                     </ul>
                 </li>
-                <li class="nav-item folderview"><a id="refresh-nav-item" class="navbar-white fa fa-refresh" title="@repository.TranslateWeb("Refresh")"></a></li>
-                <li class="nav-item folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="navbar-white fa fa-folder-open"></a></li>
+                <li class="nav-item folderview"><a id="refresh-nav-item" class="nav-link navbar-white" title="@repository.TranslateWeb("Refresh")"><i class="fa-solid fa-arrows-rotate"></i></a></li>
+                <li class="nav-item folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="nav-link navbar-white"><i class="fa-solid fa-folder-open"></i></a></li>
+            </ul>
+            <!-- FAR RIGHT: account / utility cluster (with a divider) -->
+            <ul id="navbar-right-menu" class="navbar-nav navbar-right align-items-center">
+                <li class="nav-item d-none d-lg-flex align-items-center"><div class="vr mx-2" style="min-height:24px;opacity:.4;"></div></li>
+                @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
+                {
+                        <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Information")"><i class="fa-solid fa-info"></i></a></li>
+                }
+                <li class="nav-item"><a id="profile-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Profile")"><i class="fa-solid fa-user"></i></a></li>
+                <li class="nav-item d-none d-sm-block"><a id="config-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Configuration")"><i class="fa-solid fa-gear"></i></a></li>
+                <li class="nav-item"><a id="disconnect-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"><i class="fa-solid fa-right-from-bracket"></i></a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->

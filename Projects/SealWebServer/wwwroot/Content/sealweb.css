@@ -2,6 +2,12 @@
     text-align: right;
 }
 
+/* Bootstrap 5 migration: shim for the BS3 ".hidden" utility (removed in BS4+),
+   still toggled by markup and the Seal Web Interface JS. */
+.hidden {
+    display: none !important;
+}
+
 .folderview, .reportview, .navbar-right {
     display: none;
 }
