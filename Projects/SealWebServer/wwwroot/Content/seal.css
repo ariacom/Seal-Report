@@ -172,3 +172,16 @@ body {
 .text-left {
     text-align: left !important;
 }
+
+/* Bootstrap 5 compatibility: the DataTables bs-3.3.7 build still bundles Bootstrap 3
+   CSS, whose ".fade { opacity: 0 }" (made visible via .in) conflicts with Bootstrap 5
+   (which toggles visibility via .show). Without this, BS5 modals/alerts/tooltips stay
+   opacity:0 and never appear. This restores BS5 fade semantics.
+   TODO: remove once DataTables is rebuilt for Bootstrap 5 (drops the bundled BS3 CSS). */
+.fade {
+    opacity: 1;
+}
+
+.fade:not(.show) {
+    opacity: 0;
+}
