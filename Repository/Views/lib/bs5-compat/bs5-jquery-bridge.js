@@ -70,6 +70,14 @@
         $.fn[name].Constructor = def.ctor;
     });
 
+    // bootstrap-select 1.14 + Bootstrap 5: its virtual-scroll windowing miscalculates the
+    // inner menu margins (e.g. margin-top: 19232px), pushing the options off-screen so the
+    // menu appears blank until scrolled. The Seal Report lists are small, so disable virtual
+    // scrolling globally; all options then render in normal flow.
+    if ($.fn.selectpicker && $.fn.selectpicker.Constructor && $.fn.selectpicker.Constructor.DEFAULTS) {
+        $.fn.selectpicker.Constructor.DEFAULTS.virtualScroll = false;
+    }
+
     // Re-dispatch Bootstrap 5 native component events through jQuery so that
     // handlers bound with namespaced names ($el.on('hidden.bs.modal', ...)) fire.
     var events = ["show", "shown", "hide", "hidden", "hidePrevented",
