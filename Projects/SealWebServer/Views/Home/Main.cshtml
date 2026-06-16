@@ -19,7 +19,10 @@
     <link href="~/Images/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
 
     <link rel="stylesheet" href="~/Content/datatables.min.css" />
-    <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
+    @foreach (var asset in Seal.Model.ClientAssets.FontAwesomeCss)
+    {
+        <link rel="stylesheet" href="~/@asset.Path" />
+    }
     <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
     <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
