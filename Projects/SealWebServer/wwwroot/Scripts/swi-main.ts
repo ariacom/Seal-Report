@@ -443,6 +443,31 @@ class SWIMain {
             }
         });
 
+        //Paste as shortcut
+        $("#report-shortcut-lightbutton").unbind("click").on("click", (event) => {
+            if (!SWIUtil.IsEnabled($(event.currentTarget as HTMLElement))) return;
+            $outputPanel.hide();
+
+            if (_main._clipboard.length > 0) {
+                $waitDialog.modal();
+                _main._clipboard.forEach(function (value, index) {
+                    var newName: string | undefined = value.split(dirSeparator).pop();
+                    var folder: string | undefined = _main._folder.path;
+                    var destination: string = (folder != dirSeparator ? folder : "") + dirSeparator + newName;
+                    _gateway.CreateShortcut(value, destination, function () {
+                        if (index == _main._clipboard.length - 1) {
+                            setTimeout(function () {
+                                _main.ReloadReportsTable();
+                                _main.refreshMenus();
+                                $waitDialog.modal('hide');
+                                SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("shortcut(s) created"), 5000);
+                            }, 2000);
+                        }
+                    });
+                });
+            }
+        });
+
 
         //Upload
         $("#report-upload-lightbutton").unbind("click").on("click", function (e) {
@@ -899,6 +924,7 @@ class SWIMain {
         SWIUtil.EnableButton($("#report-cut-lightbutton"), checked != 0 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-copy-lightbutton"), checked != 0 && right > 0);
         SWIUtil.EnableButton($("#report-paste-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
+        SWIUtil.EnableButton($("#report-shortcut-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
         SWIUtil.ShowHideControl($("#report-upload-lightbutton"), _main._profile && _main._profile.downloadupload > 1 && right >= folderRightEdit);
 
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
@@ -1069,15 +1095,21 @@ class SWIMain {
 
             $tr = $("<tr>");
             $tableBody.append($tr);
+            //the checkbox (cut/copy/delete/rename) always acts on the file itself; for a shortcut the actions act on the resolved target
             if (_main._canEdit) $tr.append($("<td class='hidden-xs' style='padding:8px'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
-            var $nameTd = $("<td>").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
+            var actionPath = (file.isshortcut && !file.broken && file.targetpath) ? file.targetpath : file.path;
+            var $nameTd = $("<td>").data("path", actionPath).data("name", file.name).data("isReport", file.isreport);
             var $nameWrapper = $("<div>").addClass("report-name-cell");
-            $nameWrapper.append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isreport).text(file.name));
-            var $td = $("<div>").addClass("report-actions").data("path", file.path).data("name", file.name).data("isReport", file.isreport);
+            if (file.isshortcut) {
+                var scTitle = file.broken ? SWIUtil.tr("Shortcut target not found") : (SWIUtil.tr("Shortcut to") + " " + file.targetpath);
+                $nameWrapper.append($("<span>").addClass("report-shortcut-icon glyphicon " + (file.broken ? "glyphicon-warning-sign report-broken" : "glyphicon-share-alt")).prop("title", scTitle));
+            }
+            $nameWrapper.append($("<a>").addClass("report-name" + (file.broken ? " report-broken" : "")).data("path", actionPath).data("isReport", file.isreport).text(file.name));
+            var $td = $("<div>").addClass("report-actions").data("path", actionPath).data("name", file.name).data("isReport", file.isreport);
             $nameWrapper.append($td);
             $nameTd.append($nameWrapper);
             $tr.append($nameTd);
-            if (file.isreport) {
+            if (file.isreport && !file.broken) {
                 if (_main._reportIcon !== null) {
                     var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current window" : "Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
                     iconButton.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
@@ -1119,6 +1151,10 @@ class SWIMain {
         $(".report-name").unbind("click").on("click", function (e) {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
+            if ($target.hasClass("report-broken")) {
+                SWIUtil.ShowMessage("alert-danger", SWIUtil.tr("Shortcut target not found"), 5000);
+                return;
+            }
             const path = $target.data("path");
             const name = $target.data("name");
             if ($target.data("isReport")) {

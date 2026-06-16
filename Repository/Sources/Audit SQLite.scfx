@@ -442,10 +442,11 @@ ORDER BY 1</Sql>
         <Name>Test run</Name>
         <IsDynamic>true</IsDynamic>
         <IsDbRefresh>true</IsDbRefresh>
-        <Sql>SELECT DISTINCT
+        <Sql>SELECT
 run_id,
-run_date
+strftime('%Y-%m-%d %H:%M:%S', MIN(run_date))
 FROM sr_test_results
+GROUP BY run_id
 ORDER BY 2 DESC
 LIMIT 20</Sql>
       </MetaEnum>

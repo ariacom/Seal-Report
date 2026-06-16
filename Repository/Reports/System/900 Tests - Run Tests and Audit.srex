@@ -271,6 +271,7 @@
         connection.Close();
     }
 
+    rootReport.Tag = null;
     var sel = rootReport.GetInputValueByName("Reports to test");
     var run = (sel != null &amp;&amp; sel.EnumValues.Count &gt; 0);
     if (run) {

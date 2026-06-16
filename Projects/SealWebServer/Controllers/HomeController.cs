@@ -937,10 +937,15 @@ namespace SealWebServer.Controllers
                         name = Repository.TranslateFileName(newPath) + (FileHelper.IsReportFile(newPath) ? "" : Path.GetExtension(newPath)),
                         last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
                         isreport = FileHelper.IsReportFile(newPath),
-                        isfavorite = WebUser.Profile.Favorites.Exists(i => i.Path == path),
                         right = folder.right
                     };
-                    file.isfavorite = WebUser.Profile.Favorites.Exists(i => i.Path == file.path);
+                    if (FileHelper.IsShortcutFile(newPath))
+                    {
+                        fillShortcut(folder, newPath, file);
+                        //a files only folder does not list shortcuts resolving to a report
+                        if (folder.files && file.isreport) continue;
+                    }
+                    file.isfavorite = WebUser.Profile.Favorites.Exists(i => i.Path == (file.targetpath ?? file.path));
                     files.Add(file);
                 }
             }
@@ -977,6 +982,65 @@ namespace SealWebServer.Controllers
             return fileDetail;
         }
 
+        /// <summary>
+        /// Resolves a shortcut file (.srln) to its target repository path.
+        /// Sets effectiveRight to min(shortcut folder right, target folder right).
+        /// Throws if the shortcut is broken, points to another shortcut, or the user has no right on either side.
+        /// </summary>
+        string resolveShortcut(string path, out int effectiveRight)
+        {
+            path = FileHelper.ConvertOSFilePath(path);
+
+            SWIFolder shortcutFolder = getParentFolder(path);
+            if (shortcutFolder.right == 0) throw new Exception("Error: no right on this folder");
+
+            string shortcutFullPath = getFullPath(path);
+            if (!System.IO.File.Exists(shortcutFullPath)) throw new Exception("Error: shortcut not found");
+
+            var shortcut = ReportShortcut.LoadFromFile(shortcutFullPath);
+            string targetPath = string.IsNullOrEmpty(shortcut.TargetPath) ? "" : FileHelper.ConvertOSFilePath(shortcut.TargetPath);
+            if (string.IsNullOrEmpty(targetPath)) throw new Exception("Error: the shortcut has no target");
+            if (FileHelper.IsShortcutFile(targetPath)) throw new Exception("Error: a shortcut cannot reference another shortcut");
+
+            SWIFolder targetFolder = getFolder(SWIFolder.GetParentPath(targetPath));
+            if (targetFolder.right == 0) throw new Exception("Error: no right on the shortcut target");
+
+            if (!System.IO.File.Exists(getFullPath(targetPath))) throw new Exception("Error: the shortcut target cannot be found");
+
+            effectiveRight = Math.Min(shortcutFolder.right, targetFolder.right);
+            return targetPath;
+        }
+
+        /// <summary>
+        /// Fills a SWIFile representing a shortcut (.srln) with the resolved target metadata for display.
+        /// Does not throw: a shortcut that cannot be resolved is flagged as broken.
+        /// </summary>
+        void fillShortcut(SWIFolder folder, string shortcutFullPath, SWIFile file)
+        {
+            file.isshortcut = true;
+            try
+            {
+                var shortcut = ReportShortcut.LoadFromFile(shortcutFullPath);
+                string targetPath = string.IsNullOrEmpty(shortcut.TargetPath) ? "" : FileHelper.ConvertOSFilePath(shortcut.TargetPath);
+                if (string.IsNullOrEmpty(targetPath) || FileHelper.IsShortcutFile(targetPath)) throw new Exception();
+
+                SWIFolder targetFolder = getFolder(SWIFolder.GetParentPath(targetPath));
+                string targetFullPath = getFullPath(targetPath);
+                if (targetFolder.right == 0 || !System.IO.File.Exists(targetFullPath)) throw new Exception();
+
+                file.targetpath = targetPath;
+                file.isreport = FileHelper.IsReportFile(targetPath);
+                file.right = Math.Min(folder.right, targetFolder.right);
+                file.name = !string.IsNullOrEmpty(shortcut.Name) ? shortcut.Name : Repository.TranslateFileName(targetFullPath) + (file.isreport ? "" : Path.GetExtension(targetFullPath));
+            }
+            catch
+            {
+                file.broken = true;
+                file.isreport = false;
+                file.right = folder.right;
+            }
+        }
+
         void fillFolder(SWIFolder folder)
         {
             WebUser.FillFolder(folder);
@@ -995,6 +1059,9 @@ namespace SealWebServer.Controllers
                     name = folder.fullname + (folder.fullname.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString()) + file.name,
                     last = file.last,
                     isreport = file.isreport,
+                    isshortcut = file.isshortcut,
+                    targetpath = file.targetpath,
+                    broken = file.broken,
                     right = file.right
                 });
 

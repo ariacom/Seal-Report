@@ -191,7 +191,12 @@ namespace Seal.AI
                     toolCall.CancelOperation = cancelOperation;
 
                     var toolConfig = activeToolConfigs.TryGetValue(toolCall.Name, out var tc) ? tc : null;
-                    var result = toolConfig?.Execute(toolCall) ?? string.Empty;
+                    // The tool is not active yet. It almost always belongs to a skill that has not been
+                    // loaded: returning an empty result silently misleads the model (it reads it as "no
+                    // data" and answers wrong). Return an actionable error so it loads the skill and retries.
+                    var result = toolConfig != null
+                        ? (toolConfig.Execute(toolCall) ?? string.Empty)
+                        : $"Error: tool '{toolCall.Name}' is not available. If it belongs to a skill, call '{LoadSkillToolName}' to load that skill first, then retry.";
                     if (log != null) log.LogMessage($"****** Tool Call {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{result}");
                     Messages.Add(new ToolChatMessage(toolCall.Id, result));
                 }
