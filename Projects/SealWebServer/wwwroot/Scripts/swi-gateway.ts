@@ -126,6 +126,14 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public CreateShortcut(source: string, destination: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWICreateShortcut", {
+            source: source, destination: destination
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public GetRootFolders(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetRootFolders", {
         })

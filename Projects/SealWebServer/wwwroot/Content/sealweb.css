@@ -169,6 +169,21 @@ a {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+/* Shortcut (.srln) indicator and broken-target state */
+.report-shortcut-icon {
+    flex: 0 0 auto;
+    margin-right: 6px;
+    font-size: 0.85em;
+    color: #888;
+}
+.report-shortcut-icon.report-broken {
+    color: #c0392b;
+}
+.report-name.report-broken {
+    color: #999;
+    cursor: default;
+    font-style: italic;
+}
 .report-actions {
     position: absolute;
     right: 0;

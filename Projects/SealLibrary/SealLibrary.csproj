@@ -112,6 +112,7 @@
 		<Compile Include="..\SealLibraryWin\Model\ReportOutput.cs" Link="Model\ReportOutput.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ReportRestriction.cs" Link="Model\ReportRestriction.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ReportSchedule.cs" Link="Model\ReportSchedule.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ReportShortcut.cs" Link="Model\ReportShortcut.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ReportSource.cs" Link="Model\ReportSource.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ReportTask.cs" Link="Model\ReportTask.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ReportTaskTemplate.cs" Link="Model\ReportTaskTemplate.cs" />

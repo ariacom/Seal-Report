@@ -445,10 +445,11 @@ ORDER BY 1</Sql>
         <Name>Test run</Name>
         <IsDynamic>true</IsDynamic>
         <IsDbRefresh>true</IsDbRefresh>
-        <Sql>SELECT DISTINCT TOP 20
+        <Sql>SELECT TOP 20
 run_id,
-run_date
+CONVERT(varchar(19), MIN(run_date), 120)
 FROM sr_test_results
+GROUP BY run_id
 ORDER BY 2 DESC</Sql>
       </MetaEnum>
       <MetaEnum>
