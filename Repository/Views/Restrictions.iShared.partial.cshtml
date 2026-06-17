@@ -51,7 +51,7 @@
                                 if (restriction.Operator == Operator.ValueOnly || restriction.OperatorStyle == RestrictionOperatorStyle.NotModifiable)
                                 {
                                     var opLabel = restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(restriction.Operator);
-                                    <button type="button" class="btn btn-secondary form-control" style="text-align:left;overflow:hidden;cursor:default;" title="@Raw(Helper.ToHtml(opLabel))">
+                                    <button type="button" class="btn form-control operator_label" style="text-align:left;overflow:hidden;cursor:default;" title="@Raw(Helper.ToHtml(opLabel))">
                                         @Raw(Helper.ToHtml(opLabel))
                                     </button>
 
@@ -62,7 +62,7 @@
                             {
                                 if (restriction.EnumLayout == RestrictionLayout.RadioToggleButton)
                                 {
-                                    <div class="btn-group" id='@restriction.OptionValueHtmlId'>
+                                    <div class="btn-group enum-toggle-group" id='@restriction.OptionValueHtmlId'>
                                         @foreach (var enumDef in restriction.PromptedEnumValues)
                                         {
                                             <input type="@(restriction.Prompt == PromptType.PromptOneValue ? "radio" : "checkbox")" class="btn-check @(trigger ? "trigger_enum" : "")" name='@restriction.OptionValueHtmlId' id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' autocomplete="off" @(restriction.EnumValues.Contains(enumDef.Id) ? "checked" : "")>

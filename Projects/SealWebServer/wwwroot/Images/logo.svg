@@ -94,4 +94,12 @@
            transform="translate(1076.959,214.9717)"><path
              d="m 0,0 0.031,-22.937 -30.323,-0.042 0.159,-115.851 -27.991,-0.038 -0.159,115.851 -30.323,-0.042 -0.032,22.937 z"
              style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
-             id="path62" /></g></g></g></g></svg>
+             id="path62" /></g></g></g></g><g
+     id="aiSparkle"
+     inkscape:label="AI sparkle"><path
+       d="M330,5 Q340,65 400,75 Q340,85 330,145 Q320,85 260,75 Q320,65 330,5 Z"
+       style="fill:#36748f;fill-opacity:1;stroke:none"
+       id="pathSparkleMain" /><path
+       d="M420,6 Q424,28 446,32 Q424,36 420,58 Q416,36 394,32 Q416,28 420,6 Z"
+       style="fill:#36748f;fill-opacity:1;stroke:none"
+       id="pathSparkleSmall" /></g></svg>

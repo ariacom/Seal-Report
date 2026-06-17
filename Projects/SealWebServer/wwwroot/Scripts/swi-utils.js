@@ -1,6 +1,41 @@
 "use strict";
 var SWIUtil;
 (function (SWIUtil) {
+    // Native Bootstrap 5 helpers. Bootstrap 5 dropped the jQuery plugin API
+    // ($.fn.modal/tooltip/dropdown/alert/...); these thin wrappers call the native
+    // bootstrap.* API on the underlying DOM element so the calling code stays jQuery-based.
+    function bs() { return window.bootstrap; }
+    function ShowModal($el) {
+        var el = $el.get(0);
+        if (el)
+            bs().Modal.getOrCreateInstance(el).show();
+    }
+    SWIUtil.ShowModal = ShowModal;
+    function HideModal($el) {
+        var el = $el.get(0);
+        if (el)
+            bs().Modal.getOrCreateInstance(el).hide();
+    }
+    SWIUtil.HideModal = HideModal;
+    function ToggleDropdown($el) {
+        var el = $el.get(0);
+        if (el)
+            bs().Dropdown.getOrCreateInstance(el).toggle();
+    }
+    SWIUtil.ToggleDropdown = ToggleDropdown;
+    function HideTooltip($el) {
+        var el = $el.get(0);
+        if (!el)
+            return;
+        var t = bs().Tooltip.getInstance(el);
+        if (t)
+            t.hide();
+    }
+    SWIUtil.HideTooltip = HideTooltip;
+    function CloseAlerts($els) {
+        $els.each(function () { bs().Alert.getOrCreateInstance(this).close(); });
+    }
+    SWIUtil.CloseAlerts = CloseAlerts;
     function tr(reference) {
         var result = tra[reference];
         if (!result || result == "")
@@ -29,19 +64,32 @@ var SWIUtil;
     SWIUtil.GetDirectoryName = GetDirectoryName;
     function ShowMessage(alertClass, message, timeout) {
         setTimeout(function () {
-            $waitDialog.modal('hide');
+            SWIUtil.HideModal($waitDialog);
             SWIUtil.HideMessages();
-            var $alert = $("<div class='alert sr-alert " + alertClass + "'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><p>" + message + "</p></div>");
+            //Contextual Font Awesome 6 icon matching the alert level
+            var icon = "fa-circle-info";
+            if (alertClass.indexOf("alert-success") >= 0)
+                icon = "fa-circle-check";
+            else if (alertClass.indexOf("alert-danger") >= 0)
+                icon = "fa-circle-exclamation";
+            else if (alertClass.indexOf("alert-warning") >= 0)
+                icon = "fa-triangle-exclamation";
+            var $alert = $("<div class='alert sr-alert " + alertClass + "' role='alert'>"
+                + "<span class='sr-alert-icon fa-solid " + icon + "'></span>"
+                + "<p class='sr-alert-text'>" + message + "</p>"
+                + "<button type='button' class='btn-close sr-alert-close' aria-label='close'></button>"
+                + "</div>");
+            $alert.find(".sr-alert-close").on("click", function () { SWIUtil.CloseAlerts($alert); });
             $("body").append($alert);
             if (timeout == 0)
                 timeout = 15000;
             if (timeout > 0)
-                setTimeout(function () { $alert.alert('close'); }, timeout);
+                setTimeout(function () { SWIUtil.CloseAlerts($alert); }, timeout);
         }, 200);
     }
     SWIUtil.ShowMessage = ShowMessage;
     function HideMessages() {
-        $('.sr-alert').alert('close');
+        SWIUtil.CloseAlerts($('.sr-alert'));
     }
     SWIUtil.HideMessages = HideMessages;
     function EnableButton(button, enabled) {
@@ -98,7 +146,7 @@ var SWIUtil;
     }
     SWIUtil.GetOption = GetOption;
     function GetAnchorWithIcon(text, id, type, icon) {
-        var $a = $("<a/>").text(text);
+        var $a = $("<a/>").addClass("dropdown-item").text(text);
         $a.html("<i class='" + icon + "'></i> " + $a.html());
         if (id)
             $a.prop("id", id);
@@ -139,22 +187,25 @@ var SWIUtil;
         return "";
     }
     SWIUtil.GetAggregateName = GetAggregateName;
+    // Bootstrap 5 responsive breakpoints (Bootstrap 5 dropped the .hidden-xs/.visible-* probe
+    // classes the old detection relied on, so resolve the breakpoint from the viewport width).
     function FindBootstrapEnvironment() {
-        var envs = ['xs', 'sm', 'md', 'lg'];
-        var $el = $('<div>');
-        $el.appendTo($('body'));
-        for (var i = envs.length - 1; i >= 0; i--) {
-            var env = envs[i];
-            $el.addClass('hidden-' + env);
-            if ($el.is(':hidden')) {
-                $el.remove();
-                return env;
-            }
-        }
+        var width = window.innerWidth;
+        if (width < 576)
+            return 'xs';
+        if (width < 768)
+            return 'sm';
+        if (width < 992)
+            return 'md';
+        if (width < 1200)
+            return 'lg';
+        if (width < 1400)
+            return 'xl';
+        return 'xxl';
     }
     SWIUtil.FindBootstrapEnvironment = FindBootstrapEnvironment;
     function IsMobile() {
-        return SWIUtil.FindBootstrapEnvironment() == "xs";
+        return window.innerWidth < 768;
     }
     SWIUtil.IsMobile = IsMobile;
     function StartSpinning() {
@@ -216,11 +267,44 @@ var SWIUtil;
     function addReportMenu(main, parent, value) {
         let aref = $("<a href='#'>").addClass('menu-report').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
         if (main && main._reportIcon !== null)
-            aref.append($("<span class='external-navigation glyphicon glyphicon-" + main._reportIcon + "'></span>"));
+            aref.append($("<span class='external-navigation " + main._reportIcon + "'></span>"));
         aref.addClass(value.classes);
         parent.append($("<li class='menu-reports'>").append(aref));
     }
     SWIUtil.addReportMenu = addReportMenu;
+    // Styled Favorites/Recents row (mirrors the AI chat dropdown look): a clickable
+    // report link plus hover-revealed action buttons (favorite toggle, remove from recents).
+    function addFavRecentMenu(main, parent, value, isFavorite) {
+        const li = $("<li class='menu-reports menu-fav-item'>");
+        const aref = $("<a href='#'>").addClass('menu-report menu-fav-link').attr('path', value.path).attr('viewGUID', value.viewGUID).attr('outputGUID', value.outputGUID).html(value.name);
+        if (main && main._reportIcon !== null)
+            aref.append($("<span class='external-navigation " + main._reportIcon + "'></span>"));
+        aref.addClass(value.classes);
+        li.append(aref);
+        const actions = $("<span class='menu-fav-actions'>");
+        const starBtn = $("<button type='button' class='menu-fav-btn menu-fav-star'>")
+            .attr('path', value.path)
+            .attr('title', isFavorite ? SWIUtil.tr("Remove from favorites") : SWIUtil.tr("Mark as favorite"))
+            .html(isFavorite ? "<i class='fas fa-star'></i>" : "<i class='far fa-star'></i>");
+        actions.append(starBtn);
+        if (isFavorite) {
+            const renameBtn = $("<button type='button' class='menu-fav-btn menu-fav-rename'>")
+                .attr('path', value.path)
+                .attr('title', SWIUtil.tr("Rename"))
+                .html("<i class='fa fa-pencil'></i>");
+            actions.append(renameBtn);
+        }
+        if (!isFavorite) {
+            const removeBtn = $("<button type='button' class='menu-fav-btn menu-fav-remove'>")
+                .attr('path', value.path)
+                .attr('title', SWIUtil.tr("Remove from recents"))
+                .html("<i class='fa fa-trash'></i>");
+            actions.append(removeBtn);
+        }
+        li.append(actions);
+        parent.append(li);
+    }
+    SWIUtil.addFavRecentMenu = addFavRecentMenu;
     function initMenu(main, parent, items) {
         items.forEach(function (value) {
             if (value.path) {
@@ -250,16 +334,16 @@ var SWIUtil;
             parent.children(".menu-reports").remove();
             //Favorites
             if (menu.favorites.length > 0) {
-                parent.append($("<li class='menu-divider menu-reports'>").html('<i class="fa fa-star" style="color:#f5a623;margin-right:5px;"></i>' + SWIUtil.tr("Favorites")));
+                parent.append($("<li class='menu-fav-label menu-reports'>").html('<i class="fa fa-star"></i><span>' + SWIUtil.tr("Favorites") + '</span>'));
                 menu.favorites.forEach(function (value) {
-                    SWIUtil.addReportMenu(main, parent, value);
+                    SWIUtil.addFavRecentMenu(main, parent, value, true);
                 });
             }
             //Recent reports
             if (menu.recentreports.length > 0) {
-                parent.append($("<li class='menu-divider menu-reports'>").html('<i class="fa fa-clock-o" style="margin-right:5px;"></i>' + SWIUtil.tr("Recents")));
+                parent.append($("<li class='menu-fav-label menu-reports'>").html('<i class="far fa-clock"></i><span>' + SWIUtil.tr("Recents") + '</span>'));
                 menu.recentreports.forEach(function (value) {
-                    SWIUtil.addReportMenu(main, parent, value);
+                    SWIUtil.addFavRecentMenu(main, parent, value, false);
                 });
                 if (main && main._reportPath != "")
                     parent.append($("<li class='menu-divider-recent-report divider menu-reports'>"));
@@ -274,13 +358,13 @@ var SWIUtil;
             });
             $("#nav_button").unbind("mouseover").on("mouseover", function () {
                 if ($("#menu-main").parent().hasClass("open"))
-                    $("#menu-main").dropdown('toggle');
+                    SWIUtil.ToggleDropdown($("#menu-main"));
             });
             //Execute reports from menu
             $("a.menu-report").unbind("click").on("click", (event) => {
                 const $a = $(event.currentTarget);
                 if (main && !_main._newWindow) {
-                    $waitDialog.modal();
+                    SWIUtil.ShowModal($waitDialog);
                     main.executeReportFromMenu($a.attr("path"), $a.attr("viewGUID"), $a.attr("outputGUID"), $a.text());
                 }
                 else {
@@ -294,8 +378,70 @@ var SWIUtil;
                 }
                 else {
                     main.executeReportFromMenu(parent.attr("path"), parent.attr("viewGUID"), parent.attr("outputGUID"), parent.text());
-                    $("#menu-main").dropdown('toggle');
+                    SWIUtil.ToggleDropdown($("#menu-main"));
                 }
+                return false;
+            });
+            //Favorite toggle from the menu (stopPropagation keeps the dropdown open)
+            $("#menu-main .menu-fav-star").unbind("click").on("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                _gateway.MarkFavorite($(this).attr("path"), function () {
+                    SWIUtil.RefreshMenu(main);
+                });
+                return false;
+            });
+            //Remove a report from the recents list
+            $("#menu-main .menu-fav-remove").unbind("click").on("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                _gateway.RemoveRecentReport($(this).attr("path"), function () {
+                    SWIUtil.RefreshMenu(main);
+                });
+                return false;
+            });
+            //Rename a favorite: inline edit of the personal label (the report file is not changed)
+            $("#menu-main .menu-fav-rename").unbind("click").on("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const path = $(this).attr("path");
+                const li = $(this).closest("li.menu-fav-item");
+                const link = li.find("a.menu-fav-link");
+                if (li.find("input.menu-fav-rename-input").length > 0)
+                    return false;
+                const currentName = link.contents().filter(function () { return this.nodeType === 3; }).text().trim() || link.text().trim();
+                const input = $("<input type='text' class='menu-fav-rename-input'>").attr("maxlength", 60).val(currentName);
+                link.hide();
+                li.prepend(input);
+                input[0].focus();
+                input[0].select();
+                let done = false;
+                function finish(commit) {
+                    if (done)
+                        return;
+                    done = true;
+                    const newName = input.val().trim();
+                    input.remove();
+                    link.show();
+                    if (commit && newName && newName !== currentName) {
+                        _gateway.RenameFavoriteReport(path, newName, function () {
+                            SWIUtil.RefreshMenu(main);
+                        });
+                    }
+                }
+                input.on("click", function (e) { e.stopPropagation(); });
+                input.on("blur", function () { finish(true); });
+                input.on("keydown", function (ev) {
+                    if (ev.key === "Enter") {
+                        ev.preventDefault();
+                        finish(true);
+                    }
+                    else if (ev.key === "Escape") {
+                        ev.preventDefault();
+                        finish(false);
+                    }
+                    ev.stopPropagation();
+                });
                 return false;
             });
             if (main)
@@ -318,25 +464,25 @@ var SWIUtil;
             $("#profile-user").val(profile.name);
             $("#profile-groups").val(profile.group.replaceAll(";", "\r"));
             SWIUtil.ShowHideControl($("#profile-change-password-option"), profile.editprofile && profile.changepassword);
-            $waitDialog.modal('hide');
+            SWIUtil.HideModal($waitDialog);
             if (profile.editprofile && profile.changepassword) {
                 $("#profile-change-password").unbind("click").on("click", function (e) {
-                    $("#profile-dialog").modal('hide');
+                    SWIUtil.HideModal($("#profile-dialog"));
                     $("#change-password-submit").unbind("click").on("click", function () {
                         _gateway.ChangePassword($("#password-change").val(), $("#password-change1").val(), $("#password-change2").val(), function (data) {
                             if (data.error)
                                 SWIUtil.ShowMessage("alert-danger", data.error, -1);
                             else {
-                                $("#change-password-modal").modal('hide');
+                                SWIUtil.HideModal($("#change-password-modal"));
                                 SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
                             }
                         });
                     });
-                    $("#change-password-modal").modal();
+                    SWIUtil.ShowModal($("#change-password-modal"));
                 });
             }
             $("#profile-save").unbind("click").on("click", function (e) {
-                $("#profile-dialog").modal('hide');
+                SWIUtil.HideModal($("#profile-dialog"));
                 if (profile.editprofile) {
                     var onstartup = $("#onstartup-select").val();
                     var startupreport = profile.startupreport;
@@ -359,6 +505,7 @@ var SWIUtil;
             SWIUtil.ShowHideControl($(".edit-profile"), profile.editprofile);
             SWIUtil.ShowHideControl($("#profile-close"), !profile.editprofile);
             var $select = $("#onstartup-select");
+            $select.selectpicker("destroy");
             $select.empty();
             $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default startup"), profile.onstartup));
             $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Do not execute report"), profile.onstartup));
@@ -367,34 +514,39 @@ var SWIUtil;
                 $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Execute the report") + " '" + profile.report + "'", profile.onstartup));
             if (_main._lastReport.name && _main._lastReport.name != profile.startupreportname)
                 $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Execute the report") + " '" + _main._lastReport.path + "'", profile.onstartup));
-            $select.selectpicker('refresh');
+            $select.selectpicker();
             $("#onstartup-reportname").val(profile.startupreportname);
             $select = $("#executionmode-select");
+            $select.selectpicker("destroy");
             $select.empty();
             $select.append(SWIUtil.GetOption("0", SWIUtil.tr("Default mode"), profile.executionmode));
             $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute report in a new window"), profile.executionmode));
             $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute report in the current window"), profile.executionmode));
             $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Allow only execution in a new window"), profile.executionmode));
-            $select.selectpicker('refresh');
+            $select.selectpicker();
             $select = $("#culture-select");
+            var showCulturePicker = function () {
+                // Rebuild the picker from scratch: select the value on the underlying
+                // <select> first, then initialise bootstrap-select exactly once. A
+                // selectpicker('refresh') after (re)init runs buildData() a second time,
+                // which appends to the picker's internal model and doubles the rendered
+                // text/options (1.14-beta3 behaviour) - see swi-ai.ts agent dropdown.
+                $select.selectpicker("destroy");
+                $select.val(profile.culture);
+                $select.selectpicker();
+                SWIUtil.ShowModal($("#profile-dialog"));
+            };
             if ($select.children("option").length == 0) {
                 _gateway.GetCultures(function (data) {
                     $select.append(SWIUtil.GetOption("", SWIUtil.tr("Default culture"), profile.culture));
                     for (var i = 0; i < data.length; i++) {
                         $select.append(SWIUtil.GetOption(data[i].id, data[i].val, profile.culture));
                     }
-                    $select.selectpicker('refresh');
-                    $("#profile-dialog").modal();
-                    if (SWIUtil.IsMobile())
-                        $('.navbar-toggle').click();
+                    showCulturePicker();
                 });
             }
             else {
-                $select.val(profile.culture).change();
-                $select.selectpicker('refresh');
-                $("#profile-dialog").modal();
-                if (SWIUtil.IsMobile())
-                    $('.navbar-toggle').click();
+                showCulturePicker();
             }
             const $connections = $("#default-connections");
             $("#default-connections").empty();
@@ -414,7 +566,7 @@ var SWIUtil;
                     });
                     $connectionDiv.append($("<div class='col-sm-8' style='padding-bottom:5px;'>").append($connectionSelect));
                     $connections.append($connectionDiv);
-                    $connectionSelect.selectpicker('refresh');
+                    $connectionSelect.selectpicker();
                 });
             }
         });
@@ -444,7 +596,9 @@ var SWIUtil;
         $select.unbind("change").on("change", (event) => {
             handler($(event.target).val() == "1");
         });
-        $select.selectpicker('refresh');
+        // Initialise once after destroy: a 'refresh' here would run buildData() twice
+        // and double the rendered text/options (bootstrap-select 1.14-beta3).
+        $select.selectpicker();
         return $select;
     }
     SWIUtil.InitBoolSelect = InitBoolSelect;

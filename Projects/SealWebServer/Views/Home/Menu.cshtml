@@ -19,6 +19,14 @@
         flex-direction: row;
         align-items: center;
     }
+    /* Darker background for the Favorites/Recents section labels (reports menu + AI
+       chat dropdown). Inlined here so it overrides the cached sealweb.css regardless
+       of file cache. */
+    #menu-main li.menu-fav-label,
+    .ai-panel-dropdown-label {
+        background: #e6e6e6 !important;
+        color: #333 !important;
+    }
 </style>
 
 <nav id="bar_top" class="navbar navbar-expand navbar-dark bg-dark fixed-top" style="transition:top 0.3s;">
@@ -39,29 +47,24 @@
                 </li>
                 <li class="nav-item d-flex align-items-center"><span id="nav_cr" class="navbar-text px-2" style="display:none;font-size:small;text-align:center;"></span></li>
                 <li class="nav-item"><a id="nav_button" href="#" class="nav-link"></a></li>
-                <li class="nav-item d-flex align-items-center"><span id="nav_badge" class="badge hidden">@repository.TranslateReport("Nav")</span></li>
+                <li class="nav-item d-flex align-items-center"><span id="nav_badge" class="badge d-none">@repository.TranslateReport("Nav")</span></li>
             </ul>
             <!-- CONTEXT (folder view): refresh / manage folders, then search -->
             <ul class="navbar-nav navbar-right align-items-center">
                 <li class="nav-item folderview"><a id="refresh-nav-item" class="nav-link navbar-white" title="@repository.TranslateWeb("Refresh")"><i class="fa-solid fa-arrows-rotate"></i></a></li>
                 <li class="nav-item folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="nav-link navbar-white"><i class="fa-solid fa-folder-open"></i></a></li>
             </ul>
-            <form class="d-flex folderview navbar-right me-2" style="display:none;">
+            <!-- NOTE: no "d-flex" here — it is display:flex !important and would override the
+                 jQuery .hide() (inline display:none) used to hide .folderview in report view,
+                 leaving the search box visible while a report is executed in the main window. -->
+            <form class="folderview navbar-right me-2" style="display:none;">
                 <div class="input-group">
                     <input id="search-pattern" type="text" class="form-control form-control-sm" style="width:120px" placeholder="@repository.TranslateWeb("Search")" />
                     <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="fa-solid fa-magnifying-glass"></span></button>
                 </div>
             </form>
-            <!-- CONTEXT (report view): report actions -->
-            <button id="reload-nav-item" class="btn btn-primary reportview navbar-right me-2" title="@repository.TranslateWeb("Reload and execute")">
-                <span class="fa-solid fa-play"></span>
-            </button>
-            <button id="execute_button" class="btn btn-success reportview navbar-right me-2">@repository.TranslateReport("Execute")</button>
-            <button id="restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2" title="@repository.TranslateReport("Show/Hide Restrictions")">
-                <span class="fa-solid fa-filter"></span>
-            </button>
             <!-- CONTEXT: report tabs (report view) -->
-            <ul class="navbar-nav navbar-right align-items-center">
+            <ul class="navbar-nav navbar-right align-items-center" role="tablist">
                 <li class="nav-item"><a id="report_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#report_div">@repository.TranslateReport("Report")</a></li>
                 <li class="nav-item"><a id="information_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#information_div">@repository.TranslateReport("Information")</a></li>
                 <li class="nav-item"><a id="message_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#message_div">@repository.TranslateReport("Messages")</a></li>
@@ -79,15 +82,23 @@
                     </ul>
                 </li>
             </ul>
+            <!-- CONTEXT (report view): report actions — after the tabs, ordered restrictions, Execute, reload -->
+            <button id="restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2" title="@repository.TranslateReport("Show/Hide Restrictions")">
+                <span class="fa-solid fa-filter"></span>
+            </button>
+            <button id="execute_button" class="btn btn-success reportview navbar-right me-2">@repository.TranslateReport("Execute")</button>
+            <button id="reload-nav-item" class="btn btn-primary reportview navbar-right me-2" title="@repository.TranslateWeb("Reload and execute")">
+                <span class="fa-solid fa-play"></span>
+            </button>
             <!-- FAR RIGHT: account / utility cluster (with a divider) -->
             <ul id="navbar-right-menu" class="navbar-nav navbar-right align-items-center">
                 <li class="nav-item d-flex align-items-center"><div class="vr mx-2" style="min-height:24px;opacity:.4;"></div></li>
+                <li class="nav-item"><a id="profile-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Profile")"><i class="fa-solid fa-user"></i></a></li>
+                <li class="nav-item d-none d-sm-flex align-items-center"><a id="config-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Configuration")"><i class="fa-solid fa-gear"></i></a></li>
                 @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
                 {
                         <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Information")"><i class="fa-solid fa-info"></i></a></li>
                 }
-                <li class="nav-item"><a id="profile-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Profile")"><i class="fa-solid fa-user"></i></a></li>
-                <li class="nav-item d-none d-sm-block"><a id="config-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Configuration")"><i class="fa-solid fa-gear"></i></a></li>
                 <li class="nav-item"><a id="disconnect-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"><i class="fa-solid fa-right-from-bracket"></i></a></li>
             </ul>
         </div><!--/.nav-collapse -->

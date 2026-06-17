@@ -82,7 +82,9 @@ function setEnumMessage(id) {
             $message = $("<li>").attr("id", "enum-message").addClass("no-results");
         }
         $message.text($enum.attr("message"));
-        $enum.parent().children("div").children("ul").append($message);
+        // bootstrap-select 1.14 (BS5) nests the options <ul> inside a <div class="inner">,
+        // so it is no longer a direct child of .dropdown-menu — target the inner <ul> directly.
+        $enum.parent().find("ul.inner").append($message);
     }
 }
 
@@ -194,9 +196,9 @@ function showNavMenu() {
 }
 
 function setProgressBarMessage(selector, progression, message, classname) {
-    $(selector).css('width', progression + '%').css('min-width', '120px').attr('aria-valuenow', progression);
+    $(selector).css('width', progression + '%').attr('aria-valuenow', progression);
     $(selector).html(message);
-    $(selector).removeClass("progress-bar-danger").removeClass("progress-bar-warning").removeClass("progress-bar-success").removeClass("progress-bar-primary");
+    $(selector).removeClass("bg-danger bg-warning bg-success bg-primary bg-info");
     $(selector).addClass(classname);
 }
 
@@ -220,29 +222,21 @@ function initScrollReport() {
     //scroll
     $(window).unbind("scroll").scroll(function () {
         //back to top
-        if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
-        else $('#back-to-top').fadeOut();
+        $('#back-to-top').toggleClass('show', $(this).scrollTop() > 50);
         //nav bar
         showHideNavbar();
         //alerts
-        $('.sr-alert').alert('close');
+        $('.sr-alert').each(function () { bootstrap.Alert.getOrCreateInstance(this).close(); });
     });
 
     $('#back-to-top').unbind("click").on("click", function () {
-        $('#back-to-top').tooltip('hide');
-        $('body,html').animate({
-            scrollTop: 0
-        }, 800);
+        (function (b) { if (b) { var t = bootstrap.Tooltip.getInstance(b); if (t) t.hide(); } })($('#back-to-top')[0]);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         return false;
     });
 
-    $('#back-to-top-close').unbind("click").on("click", function () {
-        $('#back-to-top').tooltip('hide');
-        $('#back-to-top').fadeOut();
-        return false;
-    });
-
-    $('#back-to-top').tooltip('show');
+    //instantiate the hover tooltip (never auto-shown)
+    (function (b) { if (b) bootstrap.Tooltip.getOrCreateInstance(b); })($('#back-to-top')[0]);
 }
 
 function initResize(printLayout) {

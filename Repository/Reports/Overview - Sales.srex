@@ -1640,7 +1640,7 @@ col-sm-12</Value>
                                   <Parameters>
                                     <Parameter>
                                       <Name>kpi_button_css</Name>
-                                      <Value>margin-top:5px;cursor:default;width:190px</Value>
+                                      <Value>margin-top:5px;cursor:default;width:220px</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_trend_color</Name>
@@ -1651,9 +1651,9 @@ btn-success</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_trend_icon</Name>
-                                      <Value>glyphicon glyphicon-import|0
-glyphicon glyphicon-option-horizontal|1
-glyphicon glyphicon-export</Value>
+                                      <Value>fa-solid fa-arrow-trend-down|0
+fa-solid fa-arrow-right-long|1
+fa-solid fa-arrow-trend-up</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_goal_color</Name>
@@ -1791,7 +1791,7 @@ glyphicon glyphicon-ok</Value>
                                   <Parameters>
                                     <Parameter>
                                       <Name>kpi_button_css</Name>
-                                      <Value>margin-top:5px;cursor:default;width:190px</Value>
+                                      <Value>margin-top:5px;cursor:default;width:210px</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_trend_color</Name>
@@ -1802,9 +1802,9 @@ btn-success</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_trend_icon</Name>
-                                      <Value>glyphicon glyphicon-import|0
-glyphicon glyphicon-option-horizontal|1
-glyphicon glyphicon-export</Value>
+                                      <Value>fa-solid fa-arrow-trend-down|0
+fa-solid fa-arrow-right-long|1
+fa-solid fa-arrow-trend-up</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_goal_color</Name>
@@ -1955,9 +1955,9 @@ btn-success</Value>
                                 </Parameter>
                                 <Parameter>
                                   <Name>kpi_trend_icon</Name>
-                                  <Value>glyphicon glyphicon-import|0
-glyphicon glyphicon-option-horizontal|1
-glyphicon glyphicon-export</Value>
+                                  <Value>fa-solid fa-arrow-trend-down|0
+fa-solid fa-arrow-right-long|1
+fa-solid fa-arrow-trend-up</Value>
                                 </Parameter>
                                 <Parameter>
                                   <Name>kpi_goal_color</Name>
@@ -2198,7 +2198,6 @@ col-sm-8;</Value>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
-      <ShowInMenu>true</ShowInMenu>
       <Parameters>
         <Parameter>
           <Name>restriction_button</Name>

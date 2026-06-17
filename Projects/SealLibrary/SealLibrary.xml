@@ -1122,10 +1122,11 @@
         </member>
         <member name="F:Seal.Model.ClientAssets.BootstrapJs">
             <summary>
-            Bootstrap 5 core JavaScript: the bundle (includes Popper) followed by the jQuery
-            compatibility bridge that re-adds the removed $.fn.modal/tooltip/collapse/... plugins
-            and re-dispatches component events through jQuery for the existing application code.
-            The bridge must load right after the bundle and before the application scripts.
+            Bootstrap 5 core JavaScript: the bundle (includes Popper) followed by the
+            bootstrap-select Bootstrap 5 integration (configures the selectpicker dependency
+            and patches two BS5-specific bootstrap-select bugs). The application code calls the
+            native bootstrap.* API directly, so no jQuery-plugin compatibility bridge is loaded.
+            The integration must load right after the bundle and before the application scripts.
             </summary>
         </member>
         <member name="F:Seal.Model.ClientAssets.FlatpickrCss">
@@ -7683,6 +7684,11 @@
         <member name="P:Seal.Model.Repository.PersonalFolder">
             <summary>
             SpecialsFolder Personal folder
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Repository.RecycleBinFolderName">
+            <summary>
+            Name of the recycle bin sub-folder created in each user's personal folder.
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.GetRecycleBinFolder(Seal.Model.SecurityUser)">

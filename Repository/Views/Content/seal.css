@@ -1,3 +1,134 @@
+/* ============================================================
+   Bootstrap 5 theme colours reset to the Bootstrap 3 palette
+   ------------------------------------------------------------
+   BS5 ships brighter brand hues (primary #0d6efd, success #198754,
+   info #0dcaf0, warning #ffc107, danger #dc3545). Seal Report keeps
+   the historical BS3 look, so we remap the theme-colour CSS variables
+   (consumed by .bg-*, .text-*, .border-*, .text-bg-*, badges, links,
+   alerts, list-group, tables) back to the BS3 values, then re-skin the
+   .btn-* classes whose colours are baked-in literals in the precompiled
+   bootstrap.min.css. Loaded after bootstrap.min.css, so these win.
+   ============================================================ */
+:root {
+    /* primary #337ab7 | success #5cb85c | info #5bc0de | warning #f0ad4e | danger #d9534f */
+    --bs-primary: #337ab7;
+    --bs-primary-rgb: 51, 122, 183;
+    --bs-success: #5cb85c;
+    --bs-success-rgb: 92, 184, 92;
+    --bs-info: #5bc0de;
+    --bs-info-rgb: 91, 192, 222;
+    --bs-warning: #f0ad4e;
+    --bs-warning-rgb: 240, 173, 78;
+    --bs-danger: #d9534f;
+    --bs-danger-rgb: 217, 83, 79;
+
+    /* links follow the BS3 primary */
+    --bs-link-color: #337ab7;
+    --bs-link-color-rgb: 51, 122, 183;
+    --bs-link-hover-color: #23527c;
+    --bs-link-hover-color-rgb: 35, 82, 124;
+
+    /* subtle / emphasis variants used by .alert-*, .list-group-item-*, .table-* */
+    --bs-primary-text-emphasis: #143049;
+    --bs-primary-bg-subtle: #d6e4f0;
+    --bs-primary-border-subtle: #adcae2;
+    --bs-success-text-emphasis: #244a24;
+    --bs-success-bg-subtle: #def0de;
+    --bs-success-border-subtle: #bde2bd;
+    --bs-info-text-emphasis: #244d59;
+    --bs-info-bg-subtle: #def3f8;
+    --bs-info-border-subtle: #bde6f2;
+    --bs-warning-text-emphasis: #60451f;
+    --bs-warning-bg-subtle: #fcefdc;
+    --bs-warning-border-subtle: #f9dfb8;
+    --bs-danger-text-emphasis: #572120;
+    --bs-danger-bg-subtle: #f7dddc;
+    --bs-danger-border-subtle: #f0bbb9;
+}
+
+/* Solid buttons — BS5 bakes the colours into .btn-* literals, so re-skin
+   them via the per-button CSS variables to the BS3 button palette. */
+.btn-primary {
+    --bs-btn-bg: #337ab7;
+    --bs-btn-border-color: #2e6da4;
+    --bs-btn-hover-bg: #286090;
+    --bs-btn-hover-border-color: #204d74;
+    --bs-btn-active-bg: #204d74;
+    --bs-btn-active-border-color: #122b40;
+    --bs-btn-disabled-bg: #337ab7;
+    --bs-btn-disabled-border-color: #2e6da4;
+}
+.btn-success {
+    --bs-btn-bg: #5cb85c;
+    --bs-btn-border-color: #4cae4c;
+    --bs-btn-hover-bg: #449d44;
+    --bs-btn-hover-border-color: #398439;
+    --bs-btn-active-bg: #398439;
+    --bs-btn-active-border-color: #255625;
+    --bs-btn-disabled-bg: #5cb85c;
+    --bs-btn-disabled-border-color: #4cae4c;
+}
+.btn-info {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #5bc0de;
+    --bs-btn-border-color: #46b8da;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #31b0d5;
+    --bs-btn-hover-border-color: #269abc;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #269abc;
+    --bs-btn-active-border-color: #1b6d85;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #5bc0de;
+    --bs-btn-disabled-border-color: #46b8da;
+}
+.btn-warning {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #f0ad4e;
+    --bs-btn-border-color: #eea236;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #ec971f;
+    --bs-btn-hover-border-color: #d58512;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #d58512;
+    --bs-btn-active-border-color: #985f0d;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #f0ad4e;
+    --bs-btn-disabled-border-color: #eea236;
+}
+.btn-danger {
+    --bs-btn-bg: #d9534f;
+    --bs-btn-border-color: #d43f3a;
+    --bs-btn-hover-bg: #c9302c;
+    --bs-btn-hover-border-color: #ac2925;
+    --bs-btn-active-bg: #ac2925;
+    --bs-btn-active-border-color: #761c19;
+    --bs-btn-disabled-bg: #d9534f;
+    --bs-btn-disabled-border-color: #d43f3a;
+}
+
+/* Outline buttons follow the same BS3 hues */
+.btn-outline-primary { --bs-btn-color: #337ab7; --bs-btn-border-color: #337ab7; --bs-btn-hover-bg: #337ab7; --bs-btn-hover-border-color: #337ab7; --bs-btn-active-bg: #337ab7; --bs-btn-active-border-color: #337ab7; }
+.btn-outline-success { --bs-btn-color: #5cb85c; --bs-btn-border-color: #5cb85c; --bs-btn-hover-bg: #5cb85c; --bs-btn-hover-border-color: #5cb85c; --bs-btn-active-bg: #5cb85c; --bs-btn-active-border-color: #5cb85c; }
+.btn-outline-info    { --bs-btn-color: #5bc0de; --bs-btn-border-color: #5bc0de; --bs-btn-hover-bg: #5bc0de; --bs-btn-hover-border-color: #5bc0de; --bs-btn-active-bg: #5bc0de; --bs-btn-active-border-color: #5bc0de; }
+.btn-outline-warning { --bs-btn-color: #f0ad4e; --bs-btn-border-color: #f0ad4e; --bs-btn-hover-bg: #f0ad4e; --bs-btn-hover-border-color: #f0ad4e; --bs-btn-active-bg: #f0ad4e; --bs-btn-active-border-color: #f0ad4e; }
+.btn-outline-danger  { --bs-btn-color: #d9534f; --bs-btn-border-color: #d9534f; --bs-btn-hover-bg: #d9534f; --bs-btn-hover-border-color: #d9534f; --bs-btn-active-bg: #d9534f; --bs-btn-active-border-color: #d9534f; }
+
+/* Pagination (e.g. DataTables): BS5 hardcodes the active bg to its bright #0d6efd
+   rather than var(--bs-primary), so re-skin it to the BS3 primary explicitly. */
+.pagination {
+    --bs-pagination-color: #337ab7;
+    --bs-pagination-hover-color: #23527c;
+    --bs-pagination-active-bg: #337ab7;
+    --bs-pagination-active-border-color: #337ab7;
+}
+
+/* Nav pills (e.g. report tab control): BS5 hardcodes the active pill bg to its
+   bright #0d6efd rather than var(--bs-primary), so re-skin it to the BS3 primary. */
+.nav-pills {
+    --bs-nav-pills-link-active-bg: #337ab7;
+}
+
 body {
     min-height: 400px;
 }
@@ -49,15 +180,177 @@ body {
 .back-to-top {
     cursor: pointer;
     position: fixed;
-    bottom: 0;
+    bottom: 20px;
     right: 20px;
-    display: none;
     z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #36748f;
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.2s ease;
+}
+
+.back-to-top:hover,
+.back-to-top:focus {
+    background-color: #2b5d72;
+    color: #fff;
+    text-decoration: none;
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .navigation_icon {
     font-size: 10px;
     margin-left: 2px;
+}
+
+/* Widget (panel) header title link.
+   The widget title can be an <a> (drill to a view/report). Inside the coloured
+   .card-header (text-bg-*) the default blue underlined link is unreadable, so it
+   inherits the header's contrast colour and drops the underline — matching the
+   Bootstrap 3 panel-heading look (white title on a coloured bar). */
+.card-header .widget-title {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.card-header .widget-title:hover {
+    text-decoration: underline;
+}
+
+/* Report header bar (#bar_top)
+   - bottom border so the fixed top bar is clearly separated from the body below
+   - tabs stretched to the full bar height so the active tab reads as a
+     full-height highlighted tab rather than a short floating pill */
+#bar_top {
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+#bar_top.navbar {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* stretch the tab chain (container > collapse > nav-nav > item > link) to the
+   full bar height; keep the brand title / badge and the action buttons
+   vertically centered */
+#bar_top > .container,
+#bar_top > .container-fluid {
+    align-items: stretch;
+}
+
+#bar_top .navbar-brand,
+#bar_top #nav_badge {
+    display: flex;
+    align-items: center;
+}
+
+#bar_top .navbar-collapse {
+    align-self: stretch;
+}
+
+/* Vertically center the action buttons (filter / Execute) within the full-height
+   bar. They are direct flex children of the stretched .navbar-collapse, which
+   defaults to align-items: stretch, so without this they cling to the top. */
+#bar_top .navbar-collapse > .btn {
+    align-self: center;
+}
+
+#bar_top .navbar-nav {
+    align-self: stretch;
+    align-items: stretch !important; /* override the .align-items-center utility */
+}
+
+#bar_top .navbar-nav .nav-item {
+    display: flex;
+}
+
+/* Vertically center the tab label within the full-height tab. NOTE: display must
+   NOT be !important here -- the report-view tabs (#report_button /
+   #information_button / #message_button / #results_menu carry .reportview) are
+   shown/hidden by inline styles: Report.iBody.partial.cshtml sets "display: flex"
+   to show a tab (matching this rule, so the label centers) and "display: none" to
+   hide it. An !important display:flex would override that inline "display: none"
+   and force the tabs to stay visible in folder view. */
+#bar_top .navbar-nav .nav-link {
+    display: flex;
+    align-items: center;
+}
+
+/* Active report header tab: full-height highlight (light navbar -- report execution header) */
+#bar_top .nav-link.sr_tab.active {
+    background-color: rgba(0, 0, 0, .06);
+    color: var(--bs-emphasis-color);
+}
+
+/* Dark SWI navbar (Menu.cshtml, #bar_top.navbar-dark): the rule above uses
+   --bs-emphasis-color (dark) for the active tab, which renders the selected
+   Report/Information/Messages label invisible against the dark bar. Force a light
+   highlight instead. */
+#bar_top.navbar-dark .nav-link.sr_tab.active {
+    background-color: rgba(255, 255, 255, .15);
+    color: #fff;
+}
+
+/* The Results tab carries a dropdown caret, which otherwise pushes its label to
+   the left of the tab. Pin the caret to the right edge and center the label so
+   it matches the plain tabs (Report / Information / Messages). */
+#bar_top .navbar-nav .nav-link.dropdown-toggle {
+    position: relative;
+    justify-content: center;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+#bar_top .navbar-nav .nav-link.dropdown-toggle::after {
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+}
+
+/* Restriction operator dropdown: same visible border as the value inputs so
+   the operator is clearly framed (matches the value fields next to it). */
+.restrictions_group .operator_select {
+    border: 1px solid var(--bs-border-color);
+}
+
+/* Non-modifiable operator label: a read-only field, not a heavy solid button.
+   Light gray fill + same border as the value inputs so it sits flush with the
+   operator dropdown and value fields beside it. */
+.restrictions_group .operator_label {
+    border: 1px solid var(--bs-border-color);
+    background-color: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
+}
+
+/* Discreet focus state for restriction inputs/operators: soft border tint and a
+   very light glow instead of Bootstrap's heavy 0.25rem blue ring. */
+.restrictions_group .form-control:focus,
+.restrictions_group .operator_select:focus {
+    border-color: #a8c7fa;
+    box-shadow: 0 0 0 .12rem rgba(13, 110, 253, .12);
+}
+
+/* Small blank gap between the header bar and the restrictions panel below it. */
+#restrictions_div {
+    margin-top: 8px;
 }
 
 @media print {
@@ -97,13 +390,40 @@ body {
 }
 
 .external-navigation {
-    border-radius: 8px;
-    padding: 4px 12px;
-    margin-left: 10px;
+    border-radius: 6px;
+    padding: 2px 6px;
+    margin-left: auto;
+    font-size: 0.85em;
+    opacity: 0.65;
 }
 .external-navigation:hover {
-    background-color: darkgrey;
+    opacity: 1;
 }
+
+/* Navigation menus (cell drill/sub-report popup + breadcrumb menu) */
+#nav_popupmenu,
+#nav_menu {
+    min-width: 200px;
+    max-width: 360px;
+    padding: 4px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    #nav_popupmenu .dropdown-item,
+    #nav_menu .dropdown-item {
+        display: flex;
+        align-items: center;
+        border-radius: 6px;
+        padding: 6px 10px;
+        white-space: normal;
+        cursor: pointer;
+    }
+
+    #nav_popupmenu li,
+    #nav_menu li {
+        cursor: pointer;
+    }
 
 .disabled {
     pointer-events: none;
@@ -122,12 +442,12 @@ body {
 }
 
 .cell-identifier {
-    color: #337ab7;
+    color: #337ab7 !important;
     font-weight: bold;
 }
 
 .cell-identifier-underline {
-    color: #337ab7;
+    color: #337ab7 !important;
 	text-decoration: underline
 }
 
@@ -136,27 +456,27 @@ body {
 }
 
 .cell-datetime {
-    color: darkgreen;
+    color: darkgreen !important;
     text-align: right !important;
 }
 
 .cell-datetime-closed {
-    color: red;
+    color: red !important;
     text-align: right !important;
 }
 
 .cell-numeric {
-    color: darkblue;
+    color: darkblue !important;
     text-align: right !important;
 }
 
 .cell-numeric-positive {
-    color: darkblue;
+    color: darkblue !important;
     text-align: right !important;
 }
 
 .cell-numeric-negative {
-    color: red;
+    color: red !important;
     text-align: right !important;
 }
 
@@ -172,21 +492,253 @@ body {
     text-align: left !important;
 }
 
-/* Bootstrap 5 compatibility shims.
-   Bootstrap 5 removed Bootstrap 3 utility classes that the Seal Report views still use
-   (toggled in JS via add/removeClass). They used to be provided by the Bootstrap 3
-   stylesheet bundled in the old DataTables bs-3.3.7 build; the DataTables BS5 rebuild
-   dropped that bundle, so they must be defined here. Without .hidden, elements such as
-   the "generating in another window" message, the progress panel and the nav badge
-   never hide. */
-.hidden {
-    display: none !important;
-}
-
-/* BS5 dropped the extra-small button size; restored for the KPI "very small" button option. */
+/* Extra-small button size for the KPI "very small" button option (kpi_button_size).
+   Bootstrap 5 has no btn-xs; this is a small Seal Report utility. The "btn-xs" value is
+   persisted in KPI widget definitions, so the class name is kept stable. */
 .btn-xs {
     padding: 1px 5px;
     font-size: 12px;
     line-height: 1.5;
     border-radius: 3px;
+}
+
+/* Report execution progress (Bootstrap 5 rework).
+   Replaces the removed BS3 contextual/striped classes: the bars are styled via
+   .bg-* + .progress-bar-animated and made a bit taller/rounded with spacing so
+   the timer + task/model messages stay readable while a report executes. */
+#progress_panel {
+    border: 0;
+    border-radius: .5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+    margin-bottom: 12px;
+}
+
+#progress_panel .card-body {
+    padding: 14px 16px;
+}
+
+#progress_panel .progress {
+    display: flex;
+    width: 100%;
+    height: 1.9rem;
+    border-radius: .5rem;
+    background-color: #e7eaee;
+    margin-bottom: 10px;
+}
+
+#progress_panel .progress:last-child {
+    margin-bottom: 0;
+}
+
+#progress_panel .progress-bar {
+    /* The fill never shrinks below its own label (min-width: max-content), so the
+       message stays fully inside the coloured bar even at low progression; it still
+       grows with the progression width beyond that. */
+    min-width: max-content;
+    justify-content: flex-start;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.9rem;
+    white-space: nowrap;
+    color: #fff;
+    transition: width .4s ease;
+}
+
+#progress_panel .progress-bar:empty {
+    /* No label yet (e.g. the tasks/models bars at "Starting execution...", set to 0%
+       with an empty message): drop the min-width:max-content + padding above so a 0%
+       bar collapses to nothing instead of showing a coloured stub. */
+    min-width: 0;
+    padding: 0;
+}
+
+/* report execution spinner shown next to the title in the top bar */
+#nav_button .spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: .15em;
+    margin-left: 5px;
+}
+
+/* Multi-select dropdown "All / None" actions box (bootstrap-select actionsBox).
+   Default bootstrap-select renders two full-width btn-light buttons that look like
+   plain text on the white menu. Re-style them as compact, right-aligned text links
+   above the option list. Labels come from bootstrap-select ("All"/"None") and its
+   per-language selectpicker i18n files. */
+.bs-actionsbox {
+    padding: 2px 10px 6px;
+}
+.bs-actionsbox .btn-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+}
+.bs-actionsbox .btn-group button.actions-btn {
+    width: auto;
+    flex: 0 0 auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--bs-link-color, #0d6efd);
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+.bs-actionsbox .btn-group button.actions-btn:hover,
+.bs-actionsbox .btn-group button.actions-btn:focus {
+    background: transparent;
+    box-shadow: none;
+    text-decoration: underline;
+    color: var(--bs-link-hover-color, #0a58ca);
+}
+
+/* Restriction / result-option Yes-No toggle buttons (BS5 btn-check + btn-secondary
+   pattern). The default checked state only slightly darkens an already-gray button,
+   so it is hard to tell what is selected. Make the checked option a solid blue and
+   mute the unchecked one for a clear, obvious contrast. */
+.btn-group > .btn-check + .btn.btn-secondary {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    color: #6c757d;
+    font-weight: 400;
+}
+.btn-group > .btn-check + .btn.btn-secondary:hover {
+    background-color: #dde1e5;
+    color: #495057;
+}
+.btn-group > .btn-check:checked + .btn.btn-secondary {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    color: #fff;
+    font-weight: 600;
+}
+.btn-group > .btn-check:checked + .btn.btn-secondary:hover {
+    background-color: #2e6da4;
+    border-color: #2b669a;
+    color: #fff;
+}
+.btn-group > .btn-check:focus-visible + .btn.btn-secondary {
+    box-shadow: 0 0 0 0.2rem rgba(51, 122, 183, 0.4);
+}
+
+/* The "Radio or toggle buttons" enum layout can have many values; allow the
+   group to wrap to several rows instead of overflowing and clipping. Wrapped
+   buttons render as separate rounded chips (the joined radius cannot span rows). */
+.btn-group.enum-toggle-group {
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.btn-group.enum-toggle-group > .btn {
+    margin-left: 0;
+    border-radius: 0.25rem;
+}
+
+/* ============================================================
+   Dashboard widget layout density (Bootstrap 5 card / .panel-widget)
+   ------------------------------------------------------------
+   Bootstrap 5's larger base typography (1rem body text, 1.75rem h3) makes the
+   dashboard widgets bulkier than the old Bootstrap 3 panels: the header title is
+   oversized and the KPI buttons wrap onto a second line (e.g. the trend % drops
+   below the value) instead of fitting on one. Restore the compact BS3 panel
+   proportions, scoped to .panel-widget so the rest of the report typography is
+   left untouched. (Header/KPI *colours* are handled separately.) */
+
+/* Header — BS3 panel-heading padding and panel-title size (vs the BS5 h3 1.75rem). */
+.panel-widget > .card-header {
+    padding: 10px 15px;
+}
+.panel-widget > .card-header .card-title {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Body — BS3 panel-body padding. The font-size is intentionally left at the
+   report base so embedded views (e.g. DataTables) render at full size; the KPI
+   buttons get their compact 14px from the .panel-widget .btn rule below. */
+.panel-widget > .card-body {
+    padding: 15px;
+}
+
+/* KPI buttons (and their value/trend badge) — BS3 14px so the header + value +
+   trend % stay on a single line. .btn pins its own font-size via --bs-btn-font-size
+   (1rem), so the body font-size above does not reach it; set it explicitly. */
+.panel-widget .btn {
+    font-size: 14px;
+}
+
+/* Widget header colours — Bootstrap 3 panel-heading palette.
+   BS5 text-bg-success/danger/warning render as solid saturated bars with white
+   text; the historical BS3 look used pale tinted headers with dark coloured text
+   for these three (primary kept its solid blue bar). Restore the pale BS3 heading
+   tints, scoped to the widget header so the solid text-bg-* badges used elsewhere
+   (e.g. the KPI goal badges) are left untouched. text-bg-* sets background-color
+   and color with !important, so the overrides need it too. */
+.panel-widget > .card-header.text-bg-success {
+    background-color: #dff0d8 !important; /* BS3 panel-success heading */
+    color: #3c763d !important;
+}
+.panel-widget > .card-header.text-bg-danger {
+    background-color: #f2dede !important; /* BS3 panel-danger heading */
+    color: #a94442 !important;
+}
+.panel-widget > .card-header.text-bg-warning {
+    background-color: #fcf8e3 !important; /* BS3 panel-warning heading */
+    color: #8a6d3b !important;
+}
+.panel-widget > .card-header.text-bg-info {
+    background-color: #d9edf7 !important; /* BS3 panel-info heading */
+    color: #31708f !important;
+}
+
+/* Matching pale BS3 panel border tints for the card outline and the header
+   divider (the .border-* class on the card sets border-color with !important). */
+.panel-widget.border-success { border-color: #d6e9c6 !important; }
+.panel-widget.border-danger  { border-color: #ebccd1 !important; }
+.panel-widget.border-warning { border-color: #faebcc !important; }
+.panel-widget.border-info    { border-color: #bce8f1 !important; }
+.panel-widget.border-success > .card-header { border-bottom-color: #d6e9c6; }
+.panel-widget.border-danger  > .card-header { border-bottom-color: #ebccd1; }
+.panel-widget.border-warning > .card-header { border-bottom-color: #faebcc; }
+.panel-widget.border-info    > .card-header { border-bottom-color: #bce8f1; }
+
+/* KPI trend % badge — Bootstrap 5's bare .badge has no background (BS3 gave it a
+   pill), so the trend % rendered as plain text. Restore the pill as a translucent
+   light overlay so it reads as a clear (lighter) pill over any trend button colour.
+   Scoped to the badge *inside* the KPI button, so the separate goal badge
+   (badge text-bg-*) keeps its solid contextual colour. */
+.panel-widget .btn .badge {
+    background-color: rgba(255, 255, 255, .85);
+    color: #333;
+    border-radius: 10px;
+}
+
+/* Report data tables — restore the Bootstrap 3 look. Saved report views still
+   carry the BS3 class names `table-condensed` (compact rows) and the header row
+   class `active` (shaded header), neither of which BS5 honours (renamed to
+   `table-sm` / `table-active`). Rather than rewrite every stored report, re-skin
+   the stable marker class `table-report` here so existing reports keep the
+   historical compact, shaded-header look. table-striped / table-hover still
+   work natively in BS5 and are left to Bootstrap. */
+/* Header row styled identically to the totals/footer row: same gray-200 base, the
+   same `table-active` tint, and bold text. No extra header underline so the header
+   line matches the total line exactly. */
+table.table-report > thead > tr > th {
+    background-color: #e9ecef;        /* same shade as the totals/footer row */
+    color: #212529;
+    font-weight: bold;                /* match the totals/footer row */
+    vertical-align: bottom;
+}
+
+/* Shaded totals/footer row (saved reports tag it with the now-dead `active`). */
+table.table-report > tfoot > tr > td {
+    background-color: #e9ecef;
+}
+
+/* Compact rows — tighter than BS3 .table-condensed (BS5 default is .5rem). */
+table.table-report > thead > tr > th,
+table.table-report > tbody > tr > td,
+table.table-report > tfoot > tr > td {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.85em;
 }

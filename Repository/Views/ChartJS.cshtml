@@ -98,7 +98,8 @@
                     backgroundColor: @Raw(color),
                     borderWidth: 1,
                     pointRadius: @Raw(view.GetValue("chartjs_point_radius")),
-                    steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
+                    stepped: @Raw(view.GetValue("chartjs_stepped_line")),
+                    tension: @Raw(view.GetValue("chartjs_line_tension")),
                     fill: @Raw(view.GetValue("chartjs_fill")),
                     datalabels: {
                         align: '@view.GetValue("chartjs_label_align")',

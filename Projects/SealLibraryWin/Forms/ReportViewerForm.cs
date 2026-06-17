@@ -175,7 +175,7 @@ namespace Seal.Forms
 
         private async void setProgressBarInformation(string id, int progression, string message, string barClass)
         {
-            await webBrowser.CoreWebView2.ExecuteScriptAsync($"setProgressBarMessage('#{id}',{progression},'{message}','progress-bar-{barClass}');");
+            await webBrowser.CoreWebView2.ExecuteScriptAsync($"setProgressBarMessage('#{id}',{progression},'{message}','bg-{barClass}');");
         }
 
         private void initFromForm(string formValues)

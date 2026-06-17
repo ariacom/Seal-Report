@@ -78,7 +78,8 @@
                 buttonColor = getValueFromRange(view.GetValue("kpi_trend_color"), view.GetBoolValue("kpi_trend_color_useval") ? Convert.ToDouble(valueEnd) : val);
                 newWidgetColor = buttonColor.Replace("btn-", "");
                 buttonIcon = getValueFromRange(view.GetValue("kpi_trend_icon"), view.GetBoolValue("kpi_trend_icon_useval") ? Convert.ToDouble(valueEnd) : val);
-                newWidgetIcon = buttonIcon;
+                //Bootstrap 5 / Font Awesome 6: map a legacy Glyphicon trend icon to its FA6 class (forwarded to the parent widget icon).
+                newWidgetIcon = Parameter.GetFontAwesomeIcon(buttonIcon);
 
                 //Check if a Goal is defined
                 for (int colGoal = 0; colGoal < table.ColumnCount; colGoal++)
@@ -101,7 +102,7 @@
                 }
 
                 <span class="text-center btn @buttonColor @buttonSize" title="@Raw(headerValue)" style="@Raw(view.GetValue("kpi_button_css"))">
-                    <span class="@buttonIcon" aria-hidden="true"></span>
+                    <span class="@Parameter.GetFontAwesomeIcon(buttonIcon)" aria-hidden="true"></span>
                     @Raw(view.GetBoolValue("kpi_show_header") ? " " + headerValue + " " : "")
                     <strong>@Raw(view.GetBoolValue("kpi_show_value") ? lastValue : "")</strong>
                     @if (trendPercentage != null)
@@ -113,8 +114,8 @@
                 if (!string.IsNullOrEmpty(goalValue))
                 {
                     <br />
-                    <span class="text-center badge @goalColor" title="@Raw(headerValue)" style="@Raw(view.GetValue("kpi_goal_css"))">
-                        <span class="@goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null && view.GetValue("kpi_goal_pct_format") != "none" ? string.Format(view.GetValue("kpi_goal_pct_format"), goalPercentage.Value) : "")
+                    <span class="text-center badge text-white @goalColor" title="@Raw(headerValue)" style="@Raw(view.GetValue("kpi_goal_css"))">
+                        <span class="@Parameter.GetFontAwesomeIcon(goalIcon)" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null && view.GetValue("kpi_goal_pct_format") != "none" ? string.Format(view.GetValue("kpi_goal_pct_format"), goalPercentage.Value) : "")
                     </span>
                     <br />
                 }

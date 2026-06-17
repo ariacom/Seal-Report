@@ -189,6 +189,21 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    RemoveRecentReport(path, callback, errorcb) {
+        $.post(_server + "SWIRemoveRecentReport", {
+            path: path
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    RenameFavoriteReport(path, newName, callback, errorcb) {
+        $.post(_server + "SWIRenameFavoriteReport", {
+            path: path,
+            newName: newName
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
     UploadFile(data, callback, errorcb) {
         $.ajax({
             url: _server + "SWUploadFile",

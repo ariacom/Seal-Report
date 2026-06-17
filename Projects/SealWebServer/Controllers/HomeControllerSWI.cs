@@ -546,6 +546,11 @@ namespace SealWebServer.Controllers
                 SetSessionId(sessionId);
                 SWIFolder folder = getFolder(path);
                 if (folder.manage == 0) throw new Exception("Error: no right to create in this folder");
+                //Forbid creating the recycle bin itself or any sub-folder inside it (system folder)
+                var binPath = Repository.GetRecycleBinFolder(WebUser);
+                var newFolderPath = folder.GetFullPath();
+                if (newFolderPath.Equals(binPath, StringComparison.OrdinalIgnoreCase) || newFolderPath.StartsWith(binPath + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                    throw new Exception("Error: cannot create a folder in the recycle bin");
                 if (FileHelper.HasInvalidFileNameChars(Path.GetFileName(path))) throw new Exception(Translate("Error: the destination folder name contains invalid characters."));
                 Directory.CreateDirectory(folder.GetFullPath());
                 Audit.LogAudit(AuditType.FolderCreate, WebUser, folder.GetFullPath());
@@ -980,6 +985,57 @@ namespace SealWebServer.Controllers
                 WebUser.SaveProfile();
 
                 return Json(new { Message = Translate("The favorite has been updated") });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Remove a report from the recent reports list.
+        /// </summary>
+        public ActionResult SWIRemoveRecentReport(string path, string sessionId)
+        {
+            writeDebug("SWIRemoveRecentReport");
+            try
+            {
+                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+
+                string recentPath = FileHelper.ConvertOSFilePath(path);
+                WebUser.Profile.RecentReports.RemoveAll(i => i == null || i.Path == recentPath);
+                WebUser.SaveProfile();
+
+                return Json(new { Message = Translate("The recent report has been removed") });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Rename the personal display label of a favorite report. Only the entry stored in the
+        /// user's profile is changed; the underlying report file is not modified.
+        /// </summary>
+        public ActionResult SWIRenameFavoriteReport(string path, string newName, string sessionId)
+        {
+            writeDebug("SWIRenameFavoriteReport");
+            try
+            {
+                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+
+                newName = (newName ?? "").Trim();
+                if (string.IsNullOrEmpty(newName)) throw new Exception("Error: the name cannot be empty");
+
+                string favPath = FileHelper.ConvertOSFilePath(path);
+                var item = WebUser.Profile.Favorites.FirstOrDefault(i => i != null && i.Path == favPath);
+                if (item == null) throw new Exception("Error: favorite not found");
+
+                item.Name = newName;
+                WebUser.SaveProfile();
+
+                return Json(new { name = newName, Message = Translate("The favorite has been renamed") });
             }
             catch (Exception ex)
             {

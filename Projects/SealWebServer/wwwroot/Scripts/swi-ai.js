@@ -278,14 +278,27 @@
             if (data.selectedGuid) {
                 $agentSelect.val(data.selectedGuid);
             }
-            $agentSelect.selectpicker({ width: 'auto' });
-            // Apply Bootstrap tooltips to the rendered dropdown items.
-            var $dropdownItems = $agentSelect.closest('.bootstrap-select').find('.dropdown-menu li');
-            $.each(agents, function (i, a) {
-                if (a.description) {
-                    $dropdownItems.eq(i).tooltip({ title: a.description, placement: 'right', container: 'body', trigger: 'hover' });
-                }
+            // Apply description tooltips to the dropdown items. bootstrap-select renders
+            // the menu rows LAZILY on first open (the <ul> is empty until then), so the
+            // items don't exist right after init nor on the 'loaded' event. Attach on the
+            // 'shown' event — and re-attach on every open, because bootstrap-select may
+            // rebuild the rows (which discards previously attached tooltips). Setting the
+            // native title attribute first guarantees a tooltip even if Bootstrap's Tooltip
+            // is unavailable; Bootstrap's Tooltip then upgrades it to a styled one and
+            // consumes the attribute (getOrCreateInstance keeps re-attaching idempotent).
+            $agentSelect.on('shown.bs.select', function () {
+                var $items = $agentSelect.closest('.bootstrap-select').find('.dropdown-menu li a.dropdown-item');
+                $.each(agents, function (i, a) {
+                    if (!a.description)
+                        return;
+                    var el = $items.get(i);
+                    if (!el)
+                        return;
+                    el.setAttribute('title', a.description);
+                    window.bootstrap.Tooltip.getOrCreateInstance(el, { title: a.description, placement: 'right', container: 'body', trigger: 'hover' });
+                });
             });
+            $agentSelect.selectpicker({ width: 'auto' });
         });
     }
     $agentSelect.on('change', function () {

@@ -1025,11 +1025,16 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Name of the recycle bin sub-folder created in each user's personal folder.
+        /// </summary>
+        public const string RecycleBinFolderName = "BIN";
+
+        /// <summary>
         /// Returns the recycle bin folder path for a user (PersonalFolder/{user}/BIN), creating it if needed
         /// </summary>
         public string GetRecycleBinFolder(SecurityUser user)
         {
-            var bin = Path.Combine(GetPersonalFolder(user), "BIN");
+            var bin = Path.Combine(GetPersonalFolder(user), RecycleBinFolderName);
             if (!Directory.Exists(bin)) Directory.CreateDirectory(bin);
             return bin;
         }

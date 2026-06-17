@@ -17,18 +17,11 @@
             </a>
         }
         <a id="nav_button" href="#" class="navbar-brand" style="cursor: default">@report.ExecutionName</a>
-        <span id="nav_badge" class="badge hidden">@report.Translate("Nav")</span>
+        <span id="nav_badge" class="badge d-none">@report.Translate("Nav")</span>
         <div id="navbarCollapse" class="collapse navbar-collapse">
-            @if (report.GenerateHTMLDisplay)
-            {
-                <button id="execute_button" class="btn btn-success ms-auto me-2">@report.Translate("Execute")</button>
-                <button id="restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show/Hide Restrictions")">
-                    <span class="fa-solid fa-filter"></span>
-                </button>
-            }
             @if (report.GenerateHTMLDisplay || !report.PrintLayout)
             {
-                <ul class="navbar-nav align-items-center@(report.GenerateHTMLDisplay ? "" : " ms-auto")">
+                <ul class="navbar-nav align-items-center ms-auto" role="tablist">
                     <li class="nav-item"><a id="report_button" class="nav-link sr_tab" data-bs-toggle="tab" href="#@(view.ViewId)_div">@report.Translate("Report")</a></li>
                     <li class="nav-item"><a id="information_button" class="nav-link sr_tab" data-bs-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
                     <li class="nav-item"><a id="message_button" class="nav-link sr_tab" data-bs-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
@@ -46,6 +39,13 @@
                         </ul>
                     </li>
                 </ul>
+            }
+            @if (report.GenerateHTMLDisplay)
+            {
+                <button id="restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show/Hide Restrictions")">
+                    <span class="fa-solid fa-filter"></span>
+                </button>
+                <button id="execute_button" class="btn btn-success">@report.Translate("Execute")</button>
             }
         </div>
     </div>

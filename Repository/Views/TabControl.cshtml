@@ -13,7 +13,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#tc_@(view.IdSuffix) li:eq(@view.GetNumericValue("tab_selected_index")) a').tab('show');
+        var _tab = $('#tc_@(view.IdSuffix) li:eq(@view.GetNumericValue("tab_selected_index")) a').get(0); if (_tab) bootstrap.Tab.getOrCreateInstance(_tab).show();
         $('#tc_@(view.IdSuffix) a').click(function (e) {
             if (@Helper.ToJS(report.GenerateHTMLDisplay)) processSubmitViewParameter("tab_selected_index", $($(this).attr('href')).index(), "@view.ViewId", false);
             @if (report.HasNVD3Chart)

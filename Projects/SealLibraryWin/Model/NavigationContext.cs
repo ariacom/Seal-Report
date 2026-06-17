@@ -188,11 +188,11 @@ namespace Seal.Model
                 if (!string.IsNullOrEmpty(navigation.Execution.Report.WebUrl)) 
                 {
                     //Execution from Web
-                    links += string.Format("<li><a href='#' execution_guid='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Link.Href), HttpUtility.HtmlEncode(navigation.Link.Text));
+                    links += string.Format("<li><a class='dropdown-item' href='#' execution_guid='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Link.Href), HttpUtility.HtmlEncode(navigation.Link.Text));
                 }
                 else
                 {
-                    links += string.Format("<li><a href='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Execution.Report.ResultFilePath), HttpUtility.HtmlEncode(navigation.Link.Text));
+                    links += string.Format("<li><a class='dropdown-item' href='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Execution.Report.ResultFilePath), HttpUtility.HtmlEncode(navigation.Link.Text));
                 }
             }
             return links;

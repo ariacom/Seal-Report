@@ -67,16 +67,17 @@ namespace Seal.Model
         };
 
         /// <summary>
-        /// Bootstrap 5 core JavaScript: the bundle (includes Popper) followed by the jQuery
-        /// compatibility bridge that re-adds the removed $.fn.modal/tooltip/collapse/... plugins
-        /// and re-dispatches component events through jQuery for the existing application code.
-        /// The bridge must load right after the bundle and before the application scripts.
+        /// Bootstrap 5 core JavaScript: the bundle (includes Popper) followed by the
+        /// bootstrap-select Bootstrap 5 integration (configures the selectpicker dependency
+        /// and patches two BS5-specific bootstrap-select bugs). The application code calls the
+        /// native bootstrap.* API directly, so no jQuery-plugin compatibility bridge is loaded.
+        /// The integration must load right after the bundle and before the application scripts.
         /// </summary>
         public static readonly List<ClientAsset> BootstrapJs = new List<ClientAsset>
         {
             new ClientAsset(ClientAssetType.Script, "lib/bootstrap/js/bootstrap.bundle.min.js",
                 "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"),
-            new ClientAsset(ClientAssetType.Script, "lib/bs5-compat/bs5-jquery-bridge.js")
+            new ClientAsset(ClientAssetType.Script, "lib/bootstrap-select/bootstrap-select-bs5.js")
         };
 
         /// <summary>Flatpickr style sheet (lightweight Bootstrap-5-compatible date/time picker, replaces bootstrap-datetimepicker).</summary>

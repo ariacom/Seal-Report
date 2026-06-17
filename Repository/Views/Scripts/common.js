@@ -93,7 +93,7 @@ function executeFromTrigger(source /* trigger from a control */, form /* trigger
                 if (button) button.removeClass("btn-success").addClass("btn-warning");
                 if (container) {
                     container.addClass("disabled");
-                    container.children(".glyphicon").css("display", "inline");
+                    container.children(".spinning").css("display", "inline");
                 }
                 $.post(_urlPrefix + action, form.serialize() + "&execution_guid=" + form.attr("execguid") + "&form_id=" + form.attr("id"))
                     .done(function (data) {
@@ -108,7 +108,7 @@ function executeFromTrigger(source /* trigger from a control */, form /* trigger
                         if (button) button.removeClass("btn-warning").addClass("btn-success");
                         if (container) {
                             container.removeClass("disabled");
-                            container.children(".glyphicon").css("display", "none");
+                            container.children(".spinning").css("display", "none");
                         }
                         _inExecution = false;
                     });
@@ -136,8 +136,13 @@ function initRestrictions(parent) {
         restrictionSelectChange(this);
     });
 
-    //Select Picker
-    $(parent + ".operator_select").selectpicker('refresh');
+    //Select Picker: build the operator picker exactly once. Calling selectpicker('refresh') on a
+    //not-yet-initialised <select> makes bootstrap-select 1.14-beta3 run buildData() twice (constructor
+    //+ refresh), which appends to its model and doubles the rendered button text (e.g.
+    //"Category EqualsCategory Equals"). Destroy any prior instance, then initialise once.
+    var $operatorSelect = $(parent + ".operator_select");
+    $operatorSelect.selectpicker('destroy');
+    $operatorSelect.selectpicker();
 
     processInitDateTimePicker(parent);
     //Flatpickr fires a native "change" event on the input, handled by the .form-control change binding above.
@@ -386,17 +391,17 @@ function executeTimer() {
                     else if (data.progression_message != null) {
                         $("#favicon").attr("href", _urlPrefix + "Images/faviconWebServer" + (_iconExecuting ? "2" : "") + ".ico");
                         _iconExecuting = !_iconExecuting;
-                        setProgressBarMessage("#progress_bar", data.progression, data.progression_message, "progress-bar-success");
-                        setProgressBarMessage("#progress_bar_tasks", data.progression_tasks, data.progression_tasks_message, "progress-bar-primary");
-                        setProgressBarMessage("#progress_bar_models", data.progression_models, data.progression_models_message, "progress-bar-info");
+                        setProgressBarMessage("#progress_bar", data.progression, data.progression_message, "bg-success");
+                        setProgressBarMessage("#progress_bar_tasks", data.progression_tasks, data.progression_tasks_message, "bg-primary");
+                        setProgressBarMessage("#progress_bar_models", data.progression_models, data.progression_models_message, "bg-info");
                         if (data.execution_messages != null && $messages.length) {
-                            $messages.removeClass('hidden');
+                            $messages.removeClass('d-none');
                             $messages.html(data.execution_messages);
                             scrollMessages(_printLayout);
                         }
                     }
                     else if (data.error != null) {
-                        setProgressBarMessage("#progress_bar", 100, data.error, "progress-bar-danger");
+                        setProgressBarMessage("#progress_bar", 100, data.error, "bg-danger");
                         clearInterval(_executionTimer);
                         $("#execute_button").css("display", "none");
                     }
@@ -404,7 +409,7 @@ function executeTimer() {
         }
         else {
             window.chrome.webview.hostObjects.sync.dotnet.RefreshReport();
-            $messages.removeClass('hidden');
+            $messages.removeClass('d-none');
         }
     }
 }
@@ -469,7 +474,7 @@ function executeReport(nav, formName) {
 
         var messages = $("#execution_messages");
         if (messages.length) {
-            messages.addClass('hidden');
+            messages.addClass('d-none');
             messages.html("");
         }
 
@@ -496,7 +501,7 @@ function executeReport(nav, formName) {
         else window.chrome.webview.hostObjects.sync.dotnet.ExecuteReport(form.serialize());
     }
     //spinner
-    if ($("#nav_button").children().length == 0) $("#nav_button").append($("<i class='fa fa-spinner fa-spin fa-sm'></i>"));
+    if ($("#nav_button").children().length == 0) $("#nav_button").append($("<span class='spinner-border spinner-border-sm ms-2 align-middle' role='status' aria-hidden='true' style='opacity:.6'></span>"));
     //disable controls during execution
     $('#restrictions_div').addClass("disabled");
     $('.view').css("display", "none");
@@ -528,13 +533,13 @@ function mainInit() {
 
     //restriction button
     $("#restrictions_button").unbind("click").on("click", function () {
-        var showRestriction = !$("#restrictions_div").hasClass("in");
+        var showRestriction = !$("#restrictions_div").hasClass("show");
         var hasContentDiv = $("#content_div").length > 0;
         if (_generateHTMLDisplay) processSubmitViewParameter("restriction_button", showRestriction);
 
         if (hasContentDiv) {
             setTimeout(function () {
-                $("#restrictions_div").collapse('toggle');
+                bootstrap.Collapse.getOrCreateInstance(document.getElementById('restrictions_div')).toggle();
                 $("#restrictions_button").toggleClass("active");
             }, showRestriction ? 400 : 10);
 
@@ -549,7 +554,7 @@ function mainInit() {
             }, showRestriction ? 10 : 400);
         }
         else {
-            $("#restrictions_div").collapse('toggle');
+            bootstrap.Collapse.getOrCreateInstance(document.getElementById('restrictions_div')).toggle();
             $("#restrictions_button").toggleClass("active");
         }
     });
@@ -591,6 +596,11 @@ function mainInit() {
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
     });
 
+    //highlight the tab whose pane is shown on initial render (report generated, not only on click)
+    $(".sr_tab").each(function () {
+        $(this).toggleClass("active", $($(this).attr("href")).hasClass("active"));
+    });
+
     //result links
     $(".result_item").unbind("click").on("click", function () {
         var form = $("#header_form");
@@ -600,8 +610,8 @@ function mainInit() {
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
 
-        $("#view_result_message").removeClass('hidden');
-        setTimeout(function () { $("#view_result_message").addClass('hidden'); }, 4000)
+        $("#view_result_message").removeClass('d-none');
+        setTimeout(function () { $("#view_result_message").addClass('d-none'); }, 4000)
     });
 
     //navigation
@@ -648,10 +658,10 @@ function mainInit() {
                 $("#nav_menu").hide();
             });
 
-        $("#nav_badge").removeClass("hidden");
+        $("#nav_badge").removeClass("d-none");
     }
     else {
-        $("#nav_badge").addClass("hidden");
+        $("#nav_badge").addClass("d-none");
     }
     initNavCells();
 
