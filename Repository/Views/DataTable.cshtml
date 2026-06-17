@@ -98,7 +98,7 @@
                     {
                         if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                         ResultCell cell = table[row, col];
-                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue) @Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(view, row, col) && report.GenerateHTMLDisplay ? "<span class='navigation_icon glyphicon glyphicon-new-window'></span>" : "")</th>
+                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue) @Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(view, row, col) && report.GenerateHTMLDisplay ? "<span class='navigation_icon fa-solid fa-up-right-from-square'></span>" : "")</th>
                     }
                 </tr>
             }

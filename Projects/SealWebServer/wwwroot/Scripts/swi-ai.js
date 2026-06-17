@@ -271,19 +271,34 @@
             });
             // Disable when there is only one choice — serves as a read-only title.
             $agentSelect.prop('disabled', agents.length === 1);
-            // Initialise / refresh the selectpicker.
-            $agentSelect.selectpicker({ width: 'auto' });
+            // Select the current agent on the underlying <select> BEFORE building the
+            // picker. bootstrap-select 1.14 buildData() appends to its internal data
+            // model, so a separate selectpicker('refresh') after init would list every
+            // agent twice. Set the value first, then initialise the picker exactly once.
             if (data.selectedGuid) {
                 $agentSelect.val(data.selectedGuid);
-                $agentSelect.selectpicker('refresh');
             }
-            // Apply Bootstrap tooltips to the rendered dropdown items.
-            var $dropdownItems = $agentSelect.closest('.bootstrap-select').find('.dropdown-menu li');
-            $.each(agents, function (i, a) {
-                if (a.description) {
-                    $dropdownItems.eq(i).tooltip({ title: a.description, placement: 'right', container: 'body', trigger: 'hover' });
-                }
+            // Apply description tooltips to the dropdown items. bootstrap-select renders
+            // the menu rows LAZILY on first open (the <ul> is empty until then), so the
+            // items don't exist right after init nor on the 'loaded' event. Attach on the
+            // 'shown' event — and re-attach on every open, because bootstrap-select may
+            // rebuild the rows (which discards previously attached tooltips). Setting the
+            // native title attribute first guarantees a tooltip even if Bootstrap's Tooltip
+            // is unavailable; Bootstrap's Tooltip then upgrades it to a styled one and
+            // consumes the attribute (getOrCreateInstance keeps re-attaching idempotent).
+            $agentSelect.on('shown.bs.select', function () {
+                var $items = $agentSelect.closest('.bootstrap-select').find('.dropdown-menu li a.dropdown-item');
+                $.each(agents, function (i, a) {
+                    if (!a.description)
+                        return;
+                    var el = $items.get(i);
+                    if (!el)
+                        return;
+                    el.setAttribute('title', a.description);
+                    window.bootstrap.Tooltip.getOrCreateInstance(el, { title: a.description, placement: 'right', container: 'body', trigger: 'hover' });
+                });
             });
+            $agentSelect.selectpicker({ width: 'auto' });
         });
     }
     $agentSelect.on('change', function () {
@@ -451,7 +466,7 @@
     var _isFavorite = false;
     function setFavorite(state) {
         _isFavorite = state;
-        $favBtn.find('i').toggleClass('fa-star', state).toggleClass('fa-star-o', !state);
+        $favBtn.find('i').toggleClass('fas', state).toggleClass('far', !state);
         $favBtn.toggleClass('fav-active', state);
         $favBtn.attr('title', state ? SWIUtil.tr('Remove from favorites') : SWIUtil.tr('Mark as favorite'));
     }
@@ -648,7 +663,7 @@
             // Favorite toggle button
             var $favItemBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-fav')
                 .attr('title', isFavorite ? SWIUtil.tr('Remove from favorites') : SWIUtil.tr('Mark as favorite'))
-                .html(isFavorite ? '<i class="fa fa-star"></i>' : '<i class="fa fa-star-o"></i>');
+                .html(isFavorite ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>');
             if (isFavorite)
                 $favItemBtn.addClass('fav-active');
             $favItemBtn.on('click', function (e) {

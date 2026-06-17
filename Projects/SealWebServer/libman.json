@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "css/bootstrap.min.css",
+        "css/bootstrap.min.css.map",
+        "js/bootstrap.bundle.min.js",
+        "js/bootstrap.bundle.min.js.map"
+      ]
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/lib/jquery/",
+      "files": [ "jquery.min.js" ]
+    },
+    {
+      "library": "popper.js@2.11.8",
+      "destination": "wwwroot/lib/popper/",
+      "files": [ "umd/popper.min.js" ]
+    },
+    {
+      "library": "font-awesome@6.7.2",
+      "destination": "wwwroot/lib/fontawesome/",
+      "files": [
+        "css/all.min.css",
+        "webfonts/fa-solid-900.woff2",
+        "webfonts/fa-solid-900.ttf",
+        "webfonts/fa-regular-400.woff2",
+        "webfonts/fa-regular-400.ttf",
+        "webfonts/fa-brands-400.woff2",
+        "webfonts/fa-brands-400.ttf"
+      ]
+    },
+    {
+      "library": "tom-select@2.4.3",
+      "destination": "wwwroot/lib/tom-select/",
+      "files": [
+        "css/tom-select.bootstrap5.min.css",
+        "js/tom-select.complete.min.js"
+      ]
+    },
+    {
+      "library": "flatpickr@4.6.13",
+      "destination": "wwwroot/lib/flatpickr/",
+      "files": [
+        "flatpickr.min.css",
+        "flatpickr.min.js",
+        "l10n/de.js",
+        "l10n/es.js",
+        "l10n/fr.js",
+        "l10n/it.js",
+        "l10n/nl.js",
+        "l10n/pt.js"
+      ]
+    }
+  ]
+}

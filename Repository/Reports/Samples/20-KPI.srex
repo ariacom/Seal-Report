@@ -573,7 +573,7 @@ glyphicon glyphicon-ok
               <Parameters>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>arrow-down</Value>
+                  <Value>fa-solid fa-arrow-down</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -739,7 +739,7 @@ glyphicon glyphicon-ok
                           <TemplateName>Free</TemplateName>
                           <UseCustomTemplate>true</UseCustomTemplate>
                           <CustomTemplate>&lt;div class="text-center" style="margin-top:10px"&gt;
-&lt;span class="label label-primary" style="font-size:10pt"&gt;A footer sample...&lt;/span&gt;
+&lt;span class="badge text-bg-primary" style="font-size:10pt"&gt;A footer sample...&lt;/span&gt;
 &lt;/div&gt;</CustomTemplate>
                           <SortOrder>4</SortOrder>
                         </ReportView>
@@ -775,7 +775,7 @@ glyphicon glyphicon-ok
               <Parameters>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>eject</Value>
+                  <Value>fa-solid fa-eject</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -859,7 +859,7 @@ glyphicon glyphicon-ok
               <Parameters>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>adjust</Value>
+                  <Value>fa-solid fa-circle-half-stroke</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>

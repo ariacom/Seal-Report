@@ -49,7 +49,7 @@ class SWIMain {
         $propertiesPanel = $("#properties-panel");
         $elementDropDown = $("#element-dropdown");
         $("#menu-main-button").hide();
-        $waitDialog.modal('show');
+        SWIUtil.ShowModal($waitDialog);
         $("#search-pattern").keypress(function (e) {
             if ((e.keyCode || e.which) == 13)
                 _main.search();
@@ -71,13 +71,13 @@ class SWIMain {
         });
         $("#login-password-reset").unbind("click").on("click", function (e) {
             e.preventDefault();
-            $loginModal.modal('hide');
+            SWIUtil.HideModal($loginModal);
             $("#password-reset-name").text("");
-            $passwordResetModal.modal();
+            SWIUtil.ShowModal($passwordResetModal);
         });
         $("#password-reset-submit").unbind("click").on("click", function () {
             _gateway.ResetPassword($("#password-reset-name").val(), function (data) {
-                $passwordResetModal.modal('hide');
+                SWIUtil.HideModal($passwordResetModal);
                 SWIUtil.ShowMessage("alert-success", SWIUtil.tr("If your identifier is valid, an email has been sent to reset your password."), 5000);
                 _main.showLogin();
             });
@@ -91,13 +91,13 @@ class SWIMain {
         const token = new URLSearchParams(window.location.search).get('ptoken');
         const guid = new URLSearchParams(window.location.search).get('guid');
         if (token && guid) {
-            $waitDialog.modal('hide');
+            SWIUtil.HideModal($waitDialog);
             $("#password-reset-submit2").unbind("click").on("click", function () {
                 _gateway.ResetPassword2(guid, token, $("#password-reset1").val(), $("#password-reset2").val(), function (data) {
                     if (data.error)
                         SWIUtil.ShowMessage("alert-danger", data.error, -1);
                     else {
-                        $passwordResetModal2.modal('hide');
+                        SWIUtil.HideModal($passwordResetModal2);
                         SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
                         _main.showLogin();
                     }
@@ -106,7 +106,7 @@ class SWIMain {
                         SWIUtil.ShowMessage("alert-danger", data.error, -1);
                 });
             });
-            $passwordResetModal2.modal();
+            SWIUtil.ShowModal($passwordResetModal2);
             return;
         }
         _gateway.GetUserProfile(function (data) {
@@ -149,7 +149,7 @@ class SWIMain {
         _main._clipboardCut = false;
         _main.clearFilesTable();
         _main._newWindow = (_main._profile.executionmode === 1 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 1));
-        _main._reportIcon = (_main._newWindow ? "log-in" : "new-window");
+        _main._reportIcon = (_main._newWindow ? "fa-solid fa-right-to-bracket" : "fa-solid fa-up-right-from-square");
         //disable current window, 0=Default, 1=NewWindow, 2=SameWindow, 3=AlwaysNewWindow
         if (_main._profile.executionmode === 3 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 3)) {
             _main._newWindow = true;
@@ -165,7 +165,7 @@ class SWIMain {
         $("#reload-nav-item,#execute_button,#restrictions_button").addClass("reportview");
         $("#search-pattern").val("");
         $("body").children(".modal-backdrop").remove();
-        $loginModal.modal('hide');
+        SWIUtil.HideModal($loginModal);
         SWIUtil.HideMessages();
         $(".navbar-right").show();
         $("#footer-div").hide();
@@ -196,14 +196,12 @@ class SWIMain {
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
             _main.ReloadReportsTable();
-            if (SWIUtil.IsMobile())
-                $('.navbar-toggle').click();
             if (_editor)
                 _editor.agentMenu();
         });
         //Reload and execute
         $("#reload-nav-item").unbind("click").on("click", function () {
-            $waitDialog.modal();
+            SWIUtil.ShowModal($waitDialog);
             _main.executeReportFromMenu(_main._lastReport.path, _main._lastReport.viewGUID, _main._lastReport.outputGUID, _main._lastReport.name);
         });
         //Folders
@@ -214,7 +212,7 @@ class SWIMain {
             SWIUtil.ShowHideControl($("#folder-rename").parent(), _main._folder.manage == 2);
             SWIUtil.ShowHideControl($("#folder-delete").parent(), _main._folder.isEmpty && _main._folder.manage == 2);
             $("#folder-create").unbind("click").on("click", function () {
-                $("#folder-dialog").modal('hide');
+                SWIUtil.HideModal($("#folder-dialog"));
                 var newpath = _main._folder.path + (_main._folder.path == dirSeparator ? "" : dirSeparator) + $("#create-folder-name").val();
                 _gateway.CreateFolder(newpath, function () {
                     _main._profile.folder = newpath;
@@ -223,7 +221,7 @@ class SWIMain {
                 });
             });
             $("#folder-rename").unbind("click").on("click", function () {
-                $("#folder-dialog").modal('hide');
+                SWIUtil.HideModal($("#folder-dialog"));
                 var newpath = $("#rename-folder-name").val();
                 _gateway.RenameFolder(_main._folder.path, newpath, function () {
                     _main._profile.folder = newpath;
@@ -232,14 +230,14 @@ class SWIMain {
                 });
             });
             $("#folder-delete").unbind("click").on("click", function () {
-                $("#folder-dialog").modal('hide');
+                SWIUtil.HideModal($("#folder-dialog"));
                 _gateway.DeleteFolder(_main._folder.path, function () {
                     _main._profile.folder = SWIUtil.GetDirectoryName(_main._folder.path);
                     _main.loadFolderTree();
                     SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been deleted"), 5000);
                 });
             });
-            $("#folder-dialog").modal();
+            SWIUtil.ShowModal($("#folder-dialog"));
         });
         //Search
         $("#search-pattern").unbind("keypress").on("keypress", function (e) {
@@ -270,8 +268,6 @@ class SWIMain {
                 if (window.aiPanel)
                     window.aiPanel.reset();
                 _main.showLogin();
-                if (SWIUtil.IsMobile())
-                    $('.navbar-toggle').click();
             });
         });
         //Delete reports
@@ -285,8 +281,8 @@ class SWIMain {
             $("#message-cancel-button").html(SWIUtil.tr("Cancel"));
             $("#message-ok-button").html(SWIUtil.tr("OK"));
             $("#message-ok-button").unbind("click").on("click", function () {
-                $("#message-dialog").modal('hide');
-                $waitDialog.modal();
+                SWIUtil.HideModal($("#message-dialog"));
+                SWIUtil.ShowModal($waitDialog);
                 var paths = "";
                 $(".report-checkbox:checked").each(function (key, value) {
                     paths += $(value).data("path") + "\n";
@@ -295,10 +291,10 @@ class SWIMain {
                     SWIUtil.ShowMessage("alert-success", checked + " " + SWIUtil.tr("report(s) or file(s) have been deleted"), 5000);
                     _main.ReloadReportsTable();
                     _main.refreshMenus();
-                    $waitDialog.modal('hide');
+                    SWIUtil.HideModal($waitDialog);
                 });
             });
-            $("#message-dialog").modal();
+            SWIUtil.ShowModal($("#message-dialog"));
         });
         //Rename
         $("#report-rename-lightbutton").unbind("click").on("click", (event) => {
@@ -310,19 +306,19 @@ class SWIMain {
                 var filename = source.split(dirSeparator).pop();
                 var extension = filename.split('.').pop();
                 $("#report-name-save").unbind("click").on("click", function () {
-                    $waitDialog.modal();
+                    SWIUtil.ShowModal($waitDialog);
                     var folder = _main._folder.path;
                     var destination = (folder != dirSeparator ? folder : "") + dirSeparator + $("#report-name").val() + "." + extension;
-                    $("#report-name-dialog").modal('hide');
+                    SWIUtil.HideModal($("#report-name-dialog"));
                     _gateway.MoveFile(source, destination, false, function () {
                         _main.ReloadReportsTable();
                         _main.refreshMenus();
-                        $waitDialog.modal('hide');
+                        SWIUtil.HideModal($waitDialog);
                         SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The report or file has been renamed"), 5000);
                     });
                 });
                 $("#report-name").val(filename?.replace(/\.[^/.]+$/, ""));
-                $("#report-name-dialog").modal();
+                SWIUtil.ShowModal($("#report-name-dialog"));
             }
         });
         //Copy
@@ -357,7 +353,7 @@ class SWIMain {
                 return;
             $outputPanel.hide();
             if (_main._clipboard.length > 0) {
-                $waitDialog.modal();
+                SWIUtil.ShowModal($waitDialog);
                 _main._clipboard.forEach(function (value, index) {
                     var newName = value.split(dirSeparator).pop();
                     var folder = _main._folder.path;
@@ -367,7 +363,7 @@ class SWIMain {
                             setTimeout(function () {
                                 _main.ReloadReportsTable();
                                 _main.refreshMenus();
-                                $waitDialog.modal('hide');
+                                SWIUtil.HideModal($waitDialog);
                                 SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or file(s) processed"), 5000);
                             }, 2000);
                         }
@@ -381,7 +377,7 @@ class SWIMain {
                 return;
             $outputPanel.hide();
             if (_main._clipboard.length > 0) {
-                $waitDialog.modal();
+                SWIUtil.ShowModal($waitDialog);
                 _main._clipboard.forEach(function (value, index) {
                     var newName = value.split(dirSeparator).pop();
                     var folder = _main._folder.path;
@@ -391,7 +387,7 @@ class SWIMain {
                             setTimeout(function () {
                                 _main.ReloadReportsTable();
                                 _main.refreshMenus();
-                                $waitDialog.modal('hide');
+                                SWIUtil.HideModal($waitDialog);
                                 SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("shortcut(s) created"), 5000);
                             }, 2000);
                         }
@@ -438,7 +434,7 @@ class SWIMain {
         }
         else {
             _main.toggleFoldersReport(false);
-            $waitDialog.modal('hide');
+            SWIUtil.HideModal($waitDialog);
         }
         SWIUtil.InitVersion();
     }
@@ -453,18 +449,18 @@ class SWIMain {
                 _main.initDropDownLogins();
                 $("#config-save").unbind("click").on("click", function (e) {
                     if (profile.editconfiguration) {
-                        $waitDialog.modal();
+                        SWIUtil.ShowModal($waitDialog);
                         _gateway.SetConfiguration(JSON.stringify(_main._config), function () {
                             SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The configuration has been saved. Please login again if you are impacted by the security."), 5000);
-                            $waitDialog.modal('hide');
-                            $("#config-dialog").modal('hide');
+                            SWIUtil.HideModal($waitDialog);
+                            SWIUtil.HideModal($("#config-dialog"));
                         }, function (data) {
                             SWIUtil.ShowMessage("alert-danger", data.error, 0);
-                            $waitDialog.modal('hide');
+                            SWIUtil.HideModal($waitDialog);
                         });
                     }
                 });
-                $("#config-dialog").modal();
+                SWIUtil.ShowModal($("#config-dialog"));
             });
         });
     }
@@ -480,12 +476,12 @@ class SWIMain {
             $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Name, value.Name, "select", fa)));
         });
         if ($ddname.children().length > 0)
-            $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New group"), "", "group", "glyphicon glyphicon-plus-sign")));
+            $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
+        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New group"), "", "group", "fa-solid fa-circle-plus")));
         if (_main._configGroup && _main._config.groups.length > 1) {
             if ($ddname.children().length > 0)
-                $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, "", "remove", "glyphicon glyphicon-minus-sign")));
+                $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, "", "remove", "fa-solid fa-circle-minus")));
         }
         $("#config-groups-dropdown > li > a").unbind("click").on("click", (event) => {
             var type = $(event.currentTarget).prop("type");
@@ -535,7 +531,7 @@ class SWIMain {
         $select.unbind("change").on("change", (event) => {
             detail.PersFolderRight = $(event.target).val();
         });
-        $select.selectpicker('refresh');
+        $select.selectpicker();
         var $selectAgent = $("#config-group-agent");
         $selectAgent.unbind("change");
         $selectAgent.selectpicker("destroy");
@@ -552,7 +548,7 @@ class SWIMain {
         $selectAgent.unbind("change").on("change", (event) => {
             detail.AgentGUIDs = $(event.target).val() || [];
         });
-        $selectAgent.selectpicker('refresh');
+        $selectAgent.selectpicker();
         SWIUtil.ShowHideControl($("#config-group-downloadupload-row"), _main._config.downloadupload);
         if (_main._config.downloadupload) {
             var $select = $("#config-group-downloadupload");
@@ -565,7 +561,7 @@ class SWIMain {
             $select.unbind("change").on("change", (event) => {
                 detail.DownloadUpload = $(event.target).val();
             });
-            $select.selectpicker('refresh');
+            $select.selectpicker();
         }
         _main.initDropDownGroupsFolders();
     }
@@ -581,12 +577,12 @@ class SWIMain {
             $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Path, value.Path, "select", fa)));
         });
         if ($ddname.children().length > 0)
-            $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New folder configuration"), "", "folder", "glyphicon glyphicon-plus-sign")));
+            $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
+        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New folder configuration"), "", "folder", "fa-solid fa-circle-plus")));
         if (_main._configGroupFolder && _main._configGroup.Folders.length > 0) {
             if ($ddname.children().length > 0)
-                $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroupFolder.Path, "", "remove", "glyphicon glyphicon-minus-sign")));
+                $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroupFolder.Path, "", "remove", "fa-solid fa-circle-minus")));
         }
         $("#config-group-folders-dropdown > li > a").unbind("click").on("click", (event) => {
             var type = $(event.target).prop("type");
@@ -634,7 +630,7 @@ class SWIMain {
                 _main._configGroupFolder.Path = $(event.target).val();
                 _main.initDropDownGroupsFolders();
             });
-            $select.selectpicker('refresh');
+            $select.selectpicker();
             var $select = $("#config-group-folder-right");
             $select.unbind("change");
             $select.selectpicker("destroy");
@@ -647,7 +643,7 @@ class SWIMain {
             $select.unbind("change").on("change", (event) => {
                 _main._configGroupFolder.FolderRight = $(event.target).val();
             });
-            $select.selectpicker('refresh');
+            $select.selectpicker();
             SWIUtil.InitBoolSelect("#config-group-folder-manage", detail.ManageFolder, SWIUtil.tr("Yes (User can create and edit sub-folders)"), SWIUtil.tr("No"), function (val) { detail.ManageFolder = val; });
             SWIUtil.InitBoolSelect("#config-group-folder-showsub", detail.UseSubFolders, SWIUtil.tr("Yes (User can browse sub-folders)"), SWIUtil.tr("No"), function (val) { detail.UseSubFolders = val; });
             SWIUtil.InitBoolSelect("#config-group-folder-expand", detail.ExpandSubFolders, SWIUtil.tr("Yes (Folder is expanded in the tree view)"), SWIUtil.tr("No"), function (val) { detail.ExpandSubFolders = val; });
@@ -666,12 +662,12 @@ class SWIMain {
             $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Id, value.Id, "select", fa)));
         });
         if ($ddname.children().length > 0)
-            $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New login"), "", "login", "glyphicon glyphicon-plus-sign")));
+            $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
+        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New login"), "", "login", "fa-solid fa-circle-plus")));
         if (_main._configLogin) {
             if ($ddname.children().length > 0)
-                $ddname.append($("<li/>").attr("role", "separator").addClass("divider"));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, "", "remove", "glyphicon glyphicon-minus-sign")));
+                $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
+            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, "", "remove", "fa-solid fa-circle-minus")));
         }
         $("#config-logins-dropdown > li > a").unbind("click").on("click", (event) => {
             var type = $(event.target).prop("type");
@@ -718,43 +714,41 @@ class SWIMain {
             select.unbind("change").on("change", (event) => {
                 _main._configLogin.GroupIds = $(event.target).val();
             });
-            select.selectpicker('refresh');
+            select.selectpicker();
         }
     }
     search() {
-        $waitDialog.modal();
+        SWIUtil.ShowModal($waitDialog);
         _gateway.Search(_main._folder.path, $("#search-pattern").val(), function (data) {
             _main._searchMode = true;
             _main.buildReportsTable(data);
-            $waitDialog.modal('hide');
-            if (SWIUtil.IsMobile())
-                $('.navbar-toggle').click();
+            SWIUtil.HideModal($waitDialog);
         });
     }
     loginFailure(data, firstTry) {
-        $waitDialog.modal('hide');
+        SWIUtil.HideModal($waitDialog);
         if (!firstTry)
             $("#login-modal-error").text(data.error);
         _main.showLogin();
         _main.enableControls();
     }
     showLogin() {
-        $waitDialog.modal('hide');
+        SWIUtil.HideModal($waitDialog);
         $("body").children(".modal-backdrop").remove();
         $("#footer-div").show();
-        $loginModal.modal();
+        SWIUtil.ShowModal($loginModal);
     }
     showSecurityCode(data) {
         if (data)
             $("#security-code-message").text(data.message);
-        $waitDialog.modal('hide');
+        SWIUtil.HideModal($waitDialog);
         $("body").children(".modal-backdrop").remove();
         $securityModal.show();
-        $securityModal.modal();
+        SWIUtil.ShowModal($securityModal);
     }
     login() {
-        $loginModal.modal('hide');
-        $waitDialog.modal();
+        SWIUtil.HideModal($loginModal);
+        SWIUtil.ShowModal($waitDialog);
         _gateway.Login($("#username").val(), $("#password").val(), function (data) {
             $("#password").val("");
             if (data.securitycoderequired) {
@@ -768,8 +762,8 @@ class SWIMain {
         });
     }
     checkSecurityCode() {
-        $securityModal.modal('hide');
-        $waitDialog.modal();
+        SWIUtil.HideModal($securityModal);
+        SWIUtil.ShowModal($waitDialog);
         _gateway.CheckSecurityCode($("#securitycode").val(), function (data) {
             $("#securitycode").val("");
             $("#security-modal-error").text("");
@@ -780,19 +774,27 @@ class SWIMain {
                 _main.loginSuccess(data);
             }
         }, function (data) {
-            $waitDialog.modal('hide');
+            SWIUtil.HideModal($waitDialog);
             $("#security-modal-error").text(data.error);
             _main.showSecurityCode(null);
             _main.enableControls();
         });
     }
     resize() {
+        const wh = $(window).height() ?? 0;
         if (!SWIUtil.IsMobile()) {
-            $("#folder-tree").height($(window).height() ?? 0 - 80);
-            $("#file-table-view").height($(window).height() ?? 0 - 125);
+            //Size each scrollable panel from its actual top to the bottom of the viewport,
+            //so the panel itself scrolls and the window never overflows (no spurious scrollbar).
+            const bottomMargin = 12;
+            const $tree = $("#folder-tree");
+            if ($tree.is(":visible"))
+                $tree.height(wh - ($tree.offset()?.top ?? 0) - bottomMargin);
+            const $table = $("#file-table-view");
+            if ($table.is(":visible"))
+                $table.height(wh - ($table.offset()?.top ?? 0) - bottomMargin);
         }
         else {
-            $("#folder-tree").css("max-height", ($(window).height() ?? 0 / 2 - 45));
+            $("#folder-tree").css("max-height", wh / 2 - 45);
         }
     }
     enableControls() {
@@ -807,7 +809,7 @@ class SWIMain {
             showFolders = _main._profile.showfolders;
         }
         $outputPanel.hide();
-        $('#back-to-top').tooltip('hide');
+        SWIUtil.HideTooltip($('#back-to-top'));
         SWIUtil.EnableButton($("#report-edit-lightbutton"), right >= folderRightEdit && !files);
         SWIUtil.ShowHideControl($("#report-edit-lightbutton"), hasEditor);
         const checked = $(".report-checkbox:checked").length;
@@ -832,6 +834,8 @@ class SWIMain {
         //title color
         $("#nav_button").css("color", reportShown ? "#fff" : "#9d9d9d").css("outline", "none");
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
+        //the visible view just changed (folders <-> report): re-size the scrollable panels
+        _main.resize();
     }
     toJSTreeFolderData(data, result, parent) {
         for (let i = 0; i < data.length; i++) {
@@ -857,16 +861,16 @@ class SWIMain {
                 },
                 types: {
                     "default": {
-                        "icon": "fa fa-folder-o"
+                        "icon": "fa-regular fa-folder"
                     },
                     "bin": {
-                        "icon": "fa fa-trash-o"
+                        "icon": "fa-regular fa-trash-can"
                     },
                     "personal": {
-                        "icon": "fa fa-user"
+                        "icon": "fa-solid fa-user"
                     },
                     "reports": {
-                        "icon": "fa fa-bar-chart"
+                        "icon": "fa-solid fa-chart-bar"
                     }
                 },
                 plugins: ["types", "wholerow"]
@@ -934,7 +938,7 @@ class SWIMain {
             $("#report-body").html(data);
             initScrollReport();
             _main.enableControls();
-            $waitDialog.modal('hide');
+            SWIUtil.HideModal($waitDialog);
             setTimeout(function () {
                 _main.refreshMenus();
                 _main._lastReport.name = $("#nav_button").text();
@@ -959,9 +963,9 @@ class SWIMain {
         var $tr = $("<tr>");
         $tableHead.append($tr);
         if (_main._canEdit)
-            $tr.append($("<th style='width:22px;' class='nosort hidden-xs'><input id='selectall-checkbox' type='checkbox'/></th>"));
+            $tr.append($("<th style='width:22px;' class='nosort d-none d-sm-table-cell'><input id='selectall-checkbox' type='checkbox'/></th>"));
         $tr.append($("<th>").html(SWIUtil.tr("Report")));
-        $tr.append($("<th style='width:170px;min-width:170px;text-align:right' class='hidden-xs'>").html(SWIUtil.tr("Last modification")));
+        $tr.append($("<th style='width:200px;min-width:200px;text-align:right;white-space:nowrap' class='d-none d-sm-table-cell'>").html(SWIUtil.tr("Last modification")));
         //Body
         for (var i = 0; i < data.files.length; i++) {
             var file = data.files[i];
@@ -971,13 +975,13 @@ class SWIMain {
             $tableBody.append($tr);
             //the checkbox (cut/copy/delete/rename) always acts on the file itself; for a shortcut the actions act on the resolved target
             if (_main._canEdit)
-                $tr.append($("<td class='hidden-xs' style='padding:8px'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
+                $tr.append($("<td class='d-none d-sm-table-cell' style='padding:8px'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
             var actionPath = (file.isshortcut && !file.broken && file.targetpath) ? file.targetpath : file.path;
             var $nameTd = $("<td>").data("path", actionPath).data("name", file.name).data("isReport", file.isreport);
             var $nameWrapper = $("<div>").addClass("report-name-cell");
             if (file.isshortcut) {
                 var scTitle = file.broken ? SWIUtil.tr("Shortcut target not found") : (SWIUtil.tr("Shortcut to") + " " + file.targetpath);
-                $nameWrapper.append($("<span>").addClass("report-shortcut-icon glyphicon " + (file.broken ? "glyphicon-warning-sign report-broken" : "glyphicon-share-alt")).prop("title", scTitle));
+                $nameWrapper.append($("<span>").addClass("report-shortcut-icon " + (file.broken ? "fa-solid fa-triangle-exclamation report-broken" : "fa-solid fa-share-nodes")).prop("title", scTitle));
             }
             $nameWrapper.append($("<a>").addClass("report-name" + (file.broken ? " report-broken" : "")).data("path", actionPath).data("isReport", file.isreport).text(file.name));
             var $td = $("<div>").addClass("report-actions").data("path", actionPath).data("name", file.name).data("isReport", file.isreport);
@@ -986,31 +990,31 @@ class SWIMain {
             $tr.append($nameTd);
             if (file.isreport && !file.broken) {
                 if (_main._reportIcon !== null) {
-                    var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current window" : "Execute report in a new window")).addClass("btn btn-default btn-table report-execute");
-                    iconButton.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
+                    var iconButton = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2(_main._newWindow ? "Execute report in the current window" : "Execute report in a new window")).addClass("btn btn-secondary btn-table report-execute");
+                    iconButton.append($("<span class='" + _main._reportIcon + "'></span>"));
                     $td.append(iconButton);
                 }
-                var button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Views and outputs")).addClass("btn btn-default btn-table report-output");
-                button.append($("<span class='glyphicon glyphicon-th-list'></span>"));
+                var button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Views and outputs")).addClass("btn btn-secondary btn-table report-output");
+                button.append($("<span class='fa-solid fa-table-list'></span>"));
                 $td.append(button);
                 if (file.right >= folderRightSchedule && hasEditor) {
-                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Edit report")).addClass("btn btn-default btn-table report-edit hidden-xs");
-                    button.append($("<span class='glyphicon glyphicon-pencil'></span>"));
+                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Edit report")).addClass("btn btn-secondary btn-table report-edit d-none d-sm-inline-block");
+                    button.append($("<span class='fa-solid fa-pencil'></span>"));
                     $td.append(button);
                 }
                 if (_main._profile.downloadupload > 0) {
-                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-default btn-table report-download hidden-xs");
-                    button.append($("<span class='glyphicon glyphicon-download'></span>"));
+                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-secondary btn-table report-download d-none d-sm-inline-block");
+                    button.append($("<span class='fa-solid fa-circle-down'></span>"));
                     $td.append(button);
                 }
-                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Mark as favorite")).addClass("btn btn-default btn-table report-favorite hidden-xs");
+                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Mark as favorite")).addClass("btn btn-secondary btn-table report-favorite d-none d-sm-inline-block");
                 if (file.isfavorite)
-                    button.append($("<span class='glyphicon glyphicon-star'></span>"));
+                    button.append($("<span class='fa-solid fa-star'></span>"));
                 else
-                    button.append($("<span class='glyphicon glyphicon-star-empty'></span>"));
+                    button.append($("<span class='fa-regular fa-star'></span>"));
                 $td.append(button);
             }
-            $tr.append($("<td>").css("text-align", "right").addClass("hidden-xs").text(file.last));
+            $tr.append($("<td>").css({ "text-align": "right", "white-space": "nowrap" }).addClass("d-none d-sm-table-cell").text(file.last));
         }
         if (_main._canEdit) {
             var $cb = $("#selectall-checkbox");
@@ -1037,7 +1041,7 @@ class SWIMain {
                     _main.executeReport(path, "", "");
                 }
                 else {
-                    $waitDialog.modal();
+                    SWIUtil.ShowModal($waitDialog);
                     _main.executeReportFromMenu(path, "", "", name);
                 }
             }
@@ -1066,8 +1070,8 @@ class SWIMain {
             _gateway.MarkFavorite(path, function (data) {
                 SWIUtil.ShowMessage("alert-success", data.Message, 5000);
                 var icon = $(e.currentTarget).children("span");
-                icon.toggleClass("glyphicon-star");
-                icon.toggleClass("glyphicon-star-empty");
+                icon.toggleClass("fa-solid");
+                icon.toggleClass("fa-regular");
                 SWIUtil.RefreshMenu(_main);
             });
         });
@@ -1077,7 +1081,7 @@ class SWIMain {
             var $tableBody = $("#output-panel-content");
             var top = ($target.offset()?.top ?? 0) - 30;
             $tableBody.empty();
-            $tableBody.append($("<div class='output-item output-loading'>").append($("<i>").addClass("fa fa-spinner fa-spin fa-1x fa-fw")).append($("<span>").html(" " + SWIUtil.tr("Please wait") + "...")));
+            $tableBody.append($("<div class='output-item output-loading'>").append($("<span class='spinner-border spinner-border-sm me-1 align-middle' role='status' aria-hidden='true'>")).append($("<span>").html(" " + SWIUtil.tr("Please wait") + "...")));
             $outputPanel.css({
                 'display': 'inline',
                 'position': 'absolute',
@@ -1100,8 +1104,8 @@ class SWIMain {
                     $item.append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayname));
                     $item.append($("<span>").addClass("output-type-badge").html(SWIUtil.tr("View")));
                     if (_main._reportIcon !== null) {
-                        var button = $("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
-                        button.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
+                        var button = $("<button>").data("viewguid", data.views[i].guid).data("name", data.views[i].displayname).prop("type", "button").addClass("btn btn-secondary btn-table output-execute");
+                        button.append($("<span class='" + _main._reportIcon + "'></span>"));
                         $item.append(button);
                     }
                     $tableBody.append($item);
@@ -1111,8 +1115,8 @@ class SWIMain {
                     $item.append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayname));
                     $item.append($("<span>").addClass("output-type-badge output-type-output").html(SWIUtil.tr("Output")));
                     if (_main._reportIcon !== null) {
-                        var button = $("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-default btn-table output-execute");
-                        button.append($("<span class='glyphicon glyphicon-" + _main._reportIcon + "'></span>"));
+                        var button = $("<button>").data("outputguid", data.outputs[i].guid).data("name", data.outputs[i].displayname).prop("type", "button").addClass("btn btn-secondary btn-table output-execute");
+                        button.append($("<span class='" + _main._reportIcon + "'></span>"));
                         $item.append(button);
                     }
                     $tableBody.append($item);
@@ -1126,14 +1130,14 @@ class SWIMain {
                         _main.executeReport($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
                     }
                     else {
-                        $waitDialog.modal();
+                        SWIUtil.ShowModal($waitDialog);
                         _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name"));
                     }
                 });
                 $(".output-name").unbind("click").on("click", function (e) {
                     $outputPanel.hide();
                     if (!_main._newWindow) {
-                        $waitDialog.modal();
+                        SWIUtil.ShowModal($waitDialog);
                         _main.executeReportFromMenu($target.parent().data("path"), $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), $target.parent().data("name"));
                     }
                     else {

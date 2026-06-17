@@ -129,9 +129,14 @@ namespace Seal.Model
                 result.expand = false;
                 string prefix = Security.Repository.GetPersonalFolderName(this);
                 var folderLeafName = Path.GetFileName(result.FinalPath);
-                if (folderLeafName == "BIN") result.type = "bin";
+                if (folderLeafName == Repository.RecycleBinFolderName)
+                {
+                    result.type = "bin";
+                    //The recycle bin is a system folder: forbid creating sub-folders in it, as well as renaming or deleting it (manage = 0 = not user-managed)
+                    result.manage = 0;
+                }
                 if (result.FinalPath == "") result.type = "personal";
-                result.name = (result.FinalPath == "" ? prefix : (result.type == "bin" ? Security.Repository.TranslateWeb("BIN") : folderLeafName));
+                result.name = (result.FinalPath == "" ? prefix : (result.type == "bin" ? Security.Repository.TranslateWeb(Repository.RecycleBinFolderName) : folderLeafName));
                 result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
                 result.right = (int)FolderRight.Edit;
                 result.files = (PersonalFolderRight == PersonalFolderRight.Files);

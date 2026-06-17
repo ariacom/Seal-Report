@@ -83,6 +83,7 @@
 		<Compile Include="..\SealLibraryWin\Helpers\TaskHelper.cs" Link="Helpers\TaskHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Audit.cs" Link="Model\Audit.cs" />
 		<Compile Include="..\SealLibraryWin\Model\CategoryFolder.cs" Link="Model\CategoryFolder.cs" />
+		<Compile Include="..\SealLibraryWin\Model\ClientAsset.cs" Link="Model\ClientAsset.cs" />
 		<Compile Include="..\SealLibraryWin\Model\EditorTableDefinition.cs" Link="Model\EditorTableDefinition.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Enums.cs" Link="Model\Enums.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ExecutionInterface.cs" Link="Model\ExecutionInterface.cs" />

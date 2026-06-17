@@ -94,7 +94,7 @@
               <Parameters>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>search</Value>
+                  <Value>fa-solid fa-magnifying-glass</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -138,7 +138,7 @@
               <Parameters>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>search</Value>
+                  <Value>fa-solid fa-magnifying-glass</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -187,7 +187,7 @@
               <Parameters>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>folder-open</Value>
+                  <Value>fa-solid fa-folder-open</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>
@@ -238,7 +238,7 @@
               <Parameters>
                 <Parameter>
                   <Name>widget_icon</Name>
-                  <Value>folder-open</Value>
+                  <Value>fa-solid fa-folder-open</Value>
                 </Parameter>
                 <Parameter>
                   <Name>widget_color</Name>

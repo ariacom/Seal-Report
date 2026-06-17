@@ -10,6 +10,17 @@
     transition: opacity 1s linear;
 }
 
+/* Bootstrap 5 migration: the Seal Web Interface reveals navbar groups with jQuery
+   .show(), which sets inline "display: block" on the <ul class="navbar-nav navbar-right">
+   and overrides Bootstrap 5's flex, stacking the icons vertically (some <li> also carry
+   .d-flex / .d-sm-block !important utilities, so forcing the <li> display is not enough).
+   Force the shown <ul> back to a horizontal flex row so every <li> is a flex item in one row. */
+#bar_top .navbar-nav.navbar-right[style*="display: block"] {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+}
+
 /* light buttons */
 .lighticon-menu .lightbutton {
     display: inline-block;
@@ -59,6 +70,7 @@ a {
     color: #000 !important;
     padding: 0px;
     cursor: pointer;
+    text-decoration: none;
 }
 
     .report-name:hover, .output-name:hover {
@@ -75,7 +87,19 @@ a {
 
 #file-table-body td {
     vertical-align: middle;
-    padding: 4px;
+    padding: 2px 4px;
+    font-size: 0.85em;
+}
+
+/* Shaded, compact header to match the report data tables (BS5 .table thead has
+   no background of its own). */
+#file-table > thead > tr > th {
+    background-color: transparent;
+    color: #212529;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    font-size: 0.85em;
+    padding: 3px 4px;
 }
 
 /* Output panel — popover style */
@@ -313,8 +337,10 @@ table.dataTable {
     font-size: 20px;
 }
 
-#nav_button .fa-spin {
-    opacity: 0.6;
+#nav_button .spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: .15em;
     margin-left: 5px;
 }
 
@@ -377,36 +403,44 @@ table.dataTable {
     width: auto !important;
     min-width: 300px;
     max-width: 600px;
-    padding: 16px 20px;
+    padding: 14px 16px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
+    gap: 12px;
     border: none;
     z-index: 10000;
     opacity: 1;
     animation: none;
 }
 
-    .sr-alert .close {
-        position: absolute;
-        right: 12px;
-        top: 12px;
-        opacity: 0.7;
+    .sr-alert .sr-alert-icon {
+        flex: 0 0 auto;
         font-size: 18px;
-        padding: 5px;
+        line-height: 1;
+        opacity: 0.9;
     }
 
-        .sr-alert .close:hover {
-            opacity: 1;
-        }
-
-    .sr-alert p {
+    .sr-alert .sr-alert-text {
+        flex: 1 1 auto;
         margin: 0;
         font-weight: 500;
         font-size: 14px;
-        padding-right: 20px;
+        line-height: 1.35;
     }
+
+    .sr-alert .sr-alert-close {
+        flex: 0 0 auto;
+        margin-left: 4px;
+        padding: 4px;
+        opacity: 0.6;
+        font-size: 11px;
+    }
+
+        .sr-alert .sr-alert-close:hover {
+            opacity: 1;
+        }
 
 .alert-success {
     background-color: #d4edda;
@@ -471,6 +505,105 @@ table.dataTable {
     text-transform: uppercase;
 }
 
+/* Favorites / Recents section label in the reports menu (mirrors the AI chat dropdown) */
+#menu-main li.menu-fav-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 8px 14px 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #e6e6e6;
+    cursor: default;
+}
+
+#menu-main li.menu-fav-label .fa-star {
+    color: #f5a623;
+}
+
+#menu-main li.menu-fav-label .fa-clock {
+    color: #62a6ff;
+}
+
+/* Favorites / Recents row with hover-revealed action buttons */
+#menu-main li.menu-fav-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 6px 0 0;
+    transition: background-color 0.12s;
+}
+
+#menu-main li.menu-fav-item:hover {
+    background: #f0f5ff;
+}
+
+#menu-main a.menu-fav-link {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 5px 14px;
+    color: #333;
+    text-decoration: none;
+}
+
+#menu-main li.menu-fav-item:hover a.menu-fav-link {
+    color: #62a6ff;
+}
+
+.menu-fav-actions {
+    display: none;
+    flex-shrink: 0;
+    gap: 2px;
+    align-items: center;
+}
+
+#menu-main li.menu-fav-item:hover .menu-fav-actions {
+    display: flex;
+}
+
+.menu-fav-btn {
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    cursor: pointer;
+    color: #888;
+    font-size: 12px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: color 0.12s, background 0.12s;
+}
+
+.menu-fav-star:hover {
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.12);
+}
+
+.menu-fav-remove:hover {
+    color: #e05252;
+    background: rgba(224, 82, 82, 0.1);
+}
+
+.menu-fav-rename:hover {
+    color: #337ab7;
+    background: rgba(51, 122, 183, 0.12);
+}
+
+#menu-main input.menu-fav-rename-input {
+    flex: 1;
+    min-width: 0;
+    margin: 2px 10px;
+    padding: 2px 6px;
+    font-size: 14px;
+    border: 1px solid #62a6ff;
+    border-radius: 3px;
+    outline: none;
+}
+
 /* Configuration Dialog Layout */
 #config-dialog .modal-dialog {
     width: 800px;
@@ -500,8 +633,24 @@ table.dataTable {
 #config-dialog .modal-body {
     padding: 24px;
     max-height: 74vh;
-    overflow-y: auto;
+    /* Flex column: product-name row + tabs stay pinned, only the active tab
+       content scrolls. Avoids a second body-level scrollbar stacking on top
+       of the tab-content scroll. */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
+
+    /* Keep the header rows (product name, tab pills) at natural height */
+    #config-dialog .modal-body > .config-input-row,
+    #config-dialog .modal-body > #config-tab-control {
+        flex-shrink: 0;
+    }
+
+    #config-dialog #detail-section-1 {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
 
 #config-dialog .modal-footer {
     padding: 16px 24px;
@@ -644,9 +793,9 @@ table.dataTable {
         outline: none;
     }
 
-    #config-dialog .nav-pills > li.active > a,
-    #config-dialog .nav-pills > li.active > a:hover,
-    #config-dialog .nav-pills > li.active > a:focus {
+    #config-dialog .nav-pills .nav-link.active,
+    #config-dialog .nav-pills .nav-link.active:hover,
+    #config-dialog .nav-pills .nav-link.active:focus {
         color: #62a6ff;
         background-color: transparent;
         border-bottom: 2px solid #62a6ff;
@@ -692,12 +841,12 @@ table.dataTable {
 }
 
 #config-dialog .btn-primary:not(.bootstrap-select .btn) {
-    background-color: #62a6ff;
+    background-color: #337ab7;
     color: white;
 }
 
     #config-dialog .btn-primary:not(.bootstrap-select .btn):hover {
-        background-color: #4a90e2;
+        background-color: #286090;
     }
 
 #config-dialog .btn-default:not(.bootstrap-select .btn) {
@@ -767,9 +916,12 @@ table.dataTable {
 }
 
     #config-dialog .input-group-btn .btn {
+        height: 42px !important;
+        display: flex;
+        align-items: center;
         border-left: none !important;
         border-radius: 0 6px 6px 0 !important;
-        padding: 10px 12px !important;
+        padding: 0 12px !important;
         border: 1px solid #e0e0e0 !important;
     }
 
@@ -809,10 +961,14 @@ table.dataTable {
 
 #config-dialog .tab-content {
     overflow: hidden;
+    /* Fill the flex space left by #detail-section-1 (no magic numbers); the
+       active tab pane below is the single scroll region. */
+    height: 100%;
 }
 
 #config-dialog .tab-pane {
     width: 100%;
+    height: 100%;
     box-sizing: border-box;
 }
 
@@ -820,6 +976,7 @@ table.dataTable {
 #config-group-detail-content,
 #config-user-detail-content {
     width: 100%;
+    height: 100%;
     box-sizing: border-box;
     overflow: auto;
 }
@@ -884,6 +1041,10 @@ table.dataTable {
     margin: 20px auto;
 }
 
+#profile-dialog .modal-dialog {
+    max-width: 800px;
+}
+
 #profile-dialog .modal-content,
 #folder-dialog .modal-content {
     border-radius: 12px;
@@ -897,6 +1058,9 @@ table.dataTable {
     padding: 20px 24px;
     border-bottom: 1px solid #e0e0e0;
     border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 #profile-dialog .modal-title,
@@ -975,13 +1139,13 @@ table.dataTable {
 
 #profile-dialog .btn-primary,
 #folder-dialog .btn-primary {
-    background-color: #62a6ff;
+    background-color: #337ab7;
     color: white;
 }
 
     #profile-dialog .btn-primary:hover,
     #folder-dialog .btn-primary:hover {
-        background-color: #4a90e2;
+        background-color: #286090;
     }
 
 #profile-dialog .btn-default,
@@ -1131,6 +1295,8 @@ body.ai-resizing #footer-div {
     font-size: 15px;
     font-weight: 600;
     color: #333;
+    flex: 1 1 auto;
+    min-width: 0;          /* allow the title to shrink so the action buttons stay inside the panel */
 }
 
 .ai-panel-title .fa {
@@ -1152,6 +1318,7 @@ body.ai-resizing #footer-div {
     color: #333;
     height: auto;
     line-height: 1.4;
+    overflow: hidden;      /* truncate the agent name here (the menu is a sibling, so it isn't clipped) */
 }
 .ai-panel-title .bootstrap-select > .btn:hover,
 .ai-panel-title .bootstrap-select > .btn:focus,
@@ -1173,12 +1340,22 @@ body.ai-resizing #footer-div {
 .ai-panel-title .bootstrap-select > .btn .caret {
     margin-left: 5px;
 }
+/* Truncate a long agent name instead of pushing the header action buttons out */
+.ai-panel-title .bootstrap-select > .btn .filter-option,
+.ai-panel-title .bootstrap-select > .btn .filter-option-inner,
+.ai-panel-title .bootstrap-select > .btn .filter-option-inner-inner {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 /* Open menu: remove the focus outline on options and widen the dropdown */
 .ai-panel-title .bootstrap-select .dropdown-menu a {
     outline: none !important;
 }
 .ai-panel-title .bootstrap-select.ai-panel-agent-select {
-    width: 220px !important;
+    width: auto !important;
+    max-width: 220px;
+    min-width: 0;          /* permit the selectpicker to shrink within the title */
 }
 
 #ai-panel-close {
@@ -1474,6 +1651,7 @@ body.ai-resizing #footer-div {
     display: flex;
     align-items: center;
     gap: 4px;
+    flex-shrink: 0;        /* never collapse the action buttons out past the panel edge */
 }
 
 /* Shared icon button (fav, history) */
@@ -1534,16 +1712,23 @@ body.ai-resizing #footer-div {
     padding: 8px 0 4px;
 }
 
+/* First section's grey label sits flush with the rounded top of the dropdown
+   (no white gap above FAVORITES) */
+.ai-panel-dropdown-section:first-child {
+    padding-top: 0;
+}
+
 .ai-panel-dropdown-label {
     font-size: 11px;
     font-weight: 700;
-    color: #888;
+    color: #333;
     text-transform: uppercase;
     letter-spacing: 0.6px;
-    padding: 0 14px 6px;
+    padding: 6px 14px;
     display: flex;
     align-items: center;
     gap: 5px;
+    background: #e6e6e6;
 }
 
 .ai-panel-dropdown-label .fa {
@@ -1642,16 +1827,10 @@ body.ai-resizing #footer-div {
     color: #aaa !important;
 }
 
-.ai-panel-dropdown-divider {
-    height: 1px;
-    background: #e8e8e8;
-    margin: 2px 0;
-}
-
 /* Push main content right when the panel is open */
 #main-container,
 #report-body {
-    transition: margin-left 0.28s ease;
+    transition: margin-left 0.28s ease, width 0.28s ease;
 }
 
 #footer-div {
@@ -1661,6 +1840,7 @@ body.ai-resizing #footer-div {
 body.ai-panel-visible #main-container,
 body.ai-panel-visible #report-body {
     margin-left: var(--ai-panel-width);
+    width: calc(100% - var(--ai-panel-width));
 }
 
 body.ai-panel-visible #footer-div {

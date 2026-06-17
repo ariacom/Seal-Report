@@ -216,6 +216,23 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public RemoveRecentReport(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIRemoveRecentReport", {
+            path: path
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public RenameFavoriteReport(path: string, newName: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIRenameFavoriteReport", {
+            path: path,
+            newName: newName
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public UploadFile(data: FormData, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.ajax({
             url: _server + "SWUploadFile",

@@ -20,23 +20,30 @@
         </title>
 
         <!--CSS-->
-    @Raw(report.AttachCSSFile("datatables.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://datatables.net/download/#bs-3.3.7/jq-3.7.0/dt-2.3.7/b-3.2.6/date-1.6.3/fc-5.0.5/fh-4.0.6/r-3.0.8/sc-2.4.3/sl-3.1.3/datatables.min.css"))
-        @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
-        @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css"))
+    @Raw(report.AttachCSSFile("datatables.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.7/b-3.2.6/date-1.6.3/fc-5.0.5/fh-4.0.6/r-3.0.8/sc-2.4.3/sl-3.1.3/datatables.min.css"))
+        @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css"))
+        @Raw(report.AttachAssets(Seal.Model.ClientAssets.FlatpickrCss))
+        @Raw(report.AttachAssets(Seal.Model.ClientAssets.BootstrapCss))
+        @Raw(report.AttachAssets(Seal.Model.ClientAssets.FontAwesomeCss))
 
         @Raw(report.AttachCSSFiles(repository.Configuration.CssFiles))
         @Raw(report.AttachCSSFile("seal.css"))
 
         <!--Scripts-->
-    @Raw(report.AttachScriptFile("datatables.min.js", "https://datatables.net/download/#bs-3.3.7/jq-3.7.0/dt-2.3.7/b-3.2.6/date-1.6.3/fc-5.0.5/fh-4.0.6/r-3.0.8/sc-2.4.3/sl-3.1.3/datatables.min.js"))
-        @Raw(report.AttachScriptFile("bootstrap-select.min.js", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"))
+    @Raw(report.AttachScriptFile("datatables.min.js", "https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.7/b-3.2.6/date-1.6.3/fc-5.0.5/fh-4.0.6/r-3.0.8/sc-2.4.3/sl-3.1.3/datatables.min.js"))
+        @Raw(report.AttachAssets(Seal.Model.ClientAssets.BootstrapJs))
+        @Raw(report.AttachScriptFile("bootstrap-select.min.js", "https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"))
         @Raw(report.AttachScriptFile("moment.min.js"))
         @if (view.CultureInfo.TwoLetterISOLanguageName != "en")
         {
             @Raw(report.AttachScriptFile("i18n\\moment." + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
             @Raw(report.AttachScriptFile("i18n\\selectpicker." + view.CultureInfo.TwoLetterISOLanguageName + ".min.js"))
         }
-        @Raw(report.AttachScriptFile("bootstrap-datetimepicker.min.js"))
+        @Raw(report.AttachAssets(Seal.Model.ClientAssets.FlatpickrJs))
+        @if (view.CultureInfo.TwoLetterISOLanguageName != "en")
+        {
+            @Raw(report.AttachScriptPath("lib/flatpickr/l10n/" + view.CultureInfo.TwoLetterISOLanguageName + ".js", "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
+        }
 
         @Raw(report.AttachScriptFile("datetime-moment.js"))
         @if (report.HasChart)

@@ -3580,8 +3580,8 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
 
-        const string InternalLink = "<span class='external-navigation glyphicon glyphicon-log-in'></span>";
-        const string ExternalLink = "<span class='external-navigation glyphicon glyphicon-new-window'></span>";
+        const string InternalLink = "<span class='external-navigation fa-solid fa-right-to-bracket'></span>";
+        const string ExternalLink = "<span class='external-navigation fa-solid fa-up-right-from-square'></span>";
         /// <summary>
         /// HTML Navigation for the report result
         /// </summary>
@@ -3611,7 +3611,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             newWindow = true;
                         }
                     }
-                    navigation += string.Format("<li nav='{0}' nw='{3}'><a href='#'>{1}{2}</a></li>", link.FullHref, link.Text, secondLink, newWindow);
+                    navigation += string.Format("<li nav='{0}' nw='{3}'><a class='dropdown-item' href='#'>{1}{2}</a></li>", link.FullHref, link.Text, secondLink, newWindow);
                 }
                 navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", navigation));
             }

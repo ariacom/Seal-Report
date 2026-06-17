@@ -19,10 +19,20 @@
     <link href="~/Images/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
 
     <link rel="stylesheet" href="~/Content/datatables.min.css" />
-    <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
+    @foreach (var asset in Seal.Model.ClientAssets.FontAwesomeCss)
+    {
+        <link rel="stylesheet" href="~/@asset.Path" />
+    }
     <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
-    <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
+    @foreach (var asset in Seal.Model.ClientAssets.FlatpickrCss)
+    {
+        <link rel="stylesheet" href="~/@asset.Path" />
+    }
+    @foreach (var asset in Seal.Model.ClientAssets.BootstrapCss)
+    {
+        <link rel="stylesheet" href="~/@asset.Path" />
+    }
     <link rel="stylesheet" href="~/Content/sealweb.css" />
     <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebCssFiles))
@@ -58,12 +68,12 @@
             <div class="ai-panel-header-actions">
                 <!-- Favorite toggle -->
                 <button id="ai-panel-fav-btn" class="ai-panel-icon-btn" title="@repository.TranslateWeb("Mark as favorite")">
-                    <i class="fa fa-star-o"></i>
+                    <i class="far fa-star"></i>
                 </button>
                 <!-- Favorites / MRU dropdown -->
                 <div class="ai-panel-dropdown-wrap">
                     <button id="ai-panel-history-btn" class="ai-panel-icon-btn" title="@repository.TranslateWeb("Favorites & Recent")">
-                        <i class="fa fa-clock-o"></i><i class="fa fa-caret-down ai-caret"></i>
+                        <i class="far fa-clock"></i><i class="fa fa-caret-down ai-caret"></i>
                     </button>
                     <div id="ai-panel-history-dropdown" class="ai-panel-dropdown" style="display:none;">
                         <div class="ai-panel-dropdown-section">
@@ -74,10 +84,9 @@
                                 <li class="ai-panel-dropdown-empty">@repository.TranslateWeb("No favorites yet")</li>
                             </ul>
                         </div>
-                        <div class="ai-panel-dropdown-divider"></div>
                         <div class="ai-panel-dropdown-section">
                             <div class="ai-panel-dropdown-label">
-                                <i class="fa fa-clock-o"></i> @repository.TranslateWeb("Recent")
+                                <i class="far fa-clock"></i> @repository.TranslateWeb("Recent")
                             </div>
                             <ul id="ai-panel-mru-list" class="ai-panel-dropdown-list">
                                 <li class="ai-panel-dropdown-empty">@repository.TranslateWeb("No recent items")</li>
@@ -103,12 +112,12 @@
                 <!-- Sample prompts picker -->
                 <div class="ai-panel-dropdown-wrap ai-panel-samples-wrap">
                     <button id="ai-panel-samples-btn" class="ai-panel-icon-btn ai-panel-samples-btn" title="@repository.TranslateWeb("Sample prompts")">
-                        <i class="fa fa-lightbulb-o"></i>
+                        <i class="far fa-lightbulb"></i>
                     </button>
                     <div id="ai-panel-samples-dropdown" class="ai-panel-dropdown ai-panel-samples-dropdown" style="display:none;">
                         <div class="ai-panel-dropdown-section">
                             <div class="ai-panel-dropdown-label">
-                                <i class="fa fa-lightbulb-o"></i> @repository.TranslateWeb("Sample Prompts")
+                                <i class="far fa-lightbulb"></i> @repository.TranslateWeb("Sample Prompts")
                             </div>
                             <ul id="ai-panel-samples-list" class="ai-panel-dropdown-list">
                                 <li class="ai-panel-dropdown-empty">@repository.TranslateWeb("No sample prompts defined")</li>
@@ -134,7 +143,7 @@
 
             <div id="file-view" class="col-sm-8" style="padding-right:0px">
                 <!-- Report Menus -->
-                <div id="file-menu" class="lighticon-menu hidden-xs" style="margin-bottom:10px">
+                <div id="file-menu" class="lighticon-menu d-none d-sm-block" style="margin-bottom:10px">
                     <div id="report-edit-lightbutton" class="lightbutton report-edit" title="@repository.TranslateWeb("New")"><span class="lightbutton-icon fa fa-file-o"></span></div>
                     <div id="report-cut-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Cut")"><span class="lightbutton-icon fa fa-cut"></span></div>
                     <div id="report-copy-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Copy")"><span class="lightbutton-icon fa fa-copy"></span></div>
@@ -150,7 +159,7 @@
                         <tbody id="file-table-body"></tbody>
                     </table>
                 </div>
-                    <form id="upload-file-form" class="hidden">
+                    <form id="upload-file-form" class="d-none">
                         <input id="upload-file" type="file" name="file" />
                     </form>
             </div>
@@ -182,6 +191,10 @@
     </div>
 
     <script src="~/Scripts/datatables.min.js"></script>
+    @foreach (var asset in Seal.Model.ClientAssets.BootstrapJs)
+    {
+        <script src="~/@asset.Path"></script>
+    }
     <script src="~/Scripts/jstree.min.js"></script>
     <script src="~/Scripts/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
@@ -190,7 +203,14 @@
         <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
         <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
     }
-    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    @foreach (var asset in Seal.Model.ClientAssets.FlatpickrJs)
+    {
+        <script src="~/@asset.Path"></script>
+    }
+    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
+    {
+        <script src="~/@("lib/flatpickr/l10n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+    }
     <script src="~/Scripts/datetime-moment.js"></script>
 
     <!-- common libraries -->
