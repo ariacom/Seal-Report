@@ -947,9 +947,15 @@
         </member>
         <member name="F:Seal.Helpers.RazorHelper.UseRazorCore">
             <summary>
-            When true, Razor scripts are compiled/run with the maintained RazorEngineCore backend (see RazorCoreEngine)
-            instead of the legacy Antaris RazorEngine.NetCore fork. Enable via the SEAL_RAZOR_CORE=1 environment variable.
+            When true (now the default), Razor scripts are compiled/run with the maintained RazorEngineCore backend
+            (see RazorCoreEngine) instead of the legacy Antaris RazorEngine.NetCore fork. Resolution order:
+            the SEAL_RAZOR_CORE environment variable wins if set ("1" forces on, anything else forces off as a
+            kill-switch), otherwise the server Configuration (UseRazorEngineCore, applied in Repository.Init), which
+            itself defaults to true.
             </summary>
+        </member>
+        <member name="P:Seal.Helpers.RazorHelper.RazorCoreForcedByEnv">
+            <summary>True if the SEAL_RAZOR_CORE environment variable explicitly forces the backend on or off.</summary>
         </member>
         <member name="M:Seal.Helpers.RazorHelper.GetCoreKey(System.String,System.Object,System.String)">
             <summary>Logical cache key used by the RazorEngineCore backend (no on-disk path substitution).</summary>
@@ -9274,7 +9280,7 @@
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.UseRazorEngineCore">
             <summary>
-            If true, Razor scripts are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. The 'SEAL_RAZOR_CORE' environment variable set to 1 forces this on regardless of this setting.
+            If true (the default), Razor scripts are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. Set to false to fall back to the legacy engine. The 'SEAL_RAZOR_CORE' environment variable, if set, overrides this setting ('1' forces on, anything else forces off).
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.EnableDownloadUpload">

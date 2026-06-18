@@ -551,8 +551,9 @@ namespace Seal.Model
                 RazorHelper.RazorCacheDirectory = Configuration.IsUsingSealLibraryWin ? RazorCacheWinFolder : RazorCacheFolder;
             }
 
-            //Razor engine backend (the SEAL_RAZOR_CORE env var, applied at static init, forces this on for testing)
-            if (Configuration.UseRazorEngineCore) RazorHelper.UseRazorCore = true;
+            //Razor engine backend: the SEAL_RAZOR_CORE env var (applied at static init) wins as a kill-switch;
+            //otherwise the configuration decides (defaults to the RazorEngineCore backend).
+            if (!RazorHelper.RazorCoreForcedByEnv) RazorHelper.UseRazorCore = Configuration.UseRazorEngineCore;
 
             //Data sources
             if (Sources.Count == 0)

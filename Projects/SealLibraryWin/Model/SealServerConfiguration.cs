@@ -272,14 +272,14 @@ namespace Seal.Model
         public bool ShouldSerializeEnableRazorCache() { return !EnableRazorCache; }
 
         /// <summary>
-        /// If true, Razor scripts are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. The 'SEAL_RAZOR_CORE' environment variable set to 1 forces this on regardless of this setting.
+        /// If true (the default), Razor scripts are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. Set to false to fall back to the legacy engine. The 'SEAL_RAZOR_CORE' environment variable, if set, overrides this setting ('1' forces on, anything else forces off).
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("Use RazorEngineCore"), Description("If true, Razor scripts (Views, Tables, Tasks, Security Providers and report scripts) are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. The 'SEAL_RAZOR_CORE' environment variable set to 1 forces this on regardless of this setting."), Id(24, 1)]
-        [DefaultValue(false)]
+        [Category("Server Settings"), DisplayName("Use RazorEngineCore"), Description("If true (the default), Razor scripts (Views, Tables, Tasks, Security Providers and report scripts) are compiled and executed with the maintained RazorEngineCore engine. Set to false to fall back to the legacy RazorEngine. The 'SEAL_RAZOR_CORE' environment variable, if set, overrides this setting ('1' forces on, anything else forces off)."), Id(24, 1)]
+        [DefaultValue(true)]
 #endif
-        public bool UseRazorEngineCore { get; set; } = false;
-        public bool ShouldSerializeUseRazorEngineCore() { return UseRazorEngineCore; }
+        public bool UseRazorEngineCore { get; set; } = true;
+        public bool ShouldSerializeUseRazorEngineCore() { return !UseRazorEngineCore; }
 
         /// <summary>
         /// If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.

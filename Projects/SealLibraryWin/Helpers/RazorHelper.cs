@@ -59,10 +59,22 @@ namespace Seal.Helpers
         public static string RazorCacheDirectory = "";
 
         /// <summary>
-        /// When true, Razor scripts are compiled/run with the maintained RazorEngineCore backend (see RazorCoreEngine)
-        /// instead of the legacy Antaris RazorEngine.NetCore fork. Enable via the SEAL_RAZOR_CORE=1 environment variable.
+        /// When true (now the default), Razor scripts are compiled/run with the maintained RazorEngineCore backend
+        /// (see RazorCoreEngine) instead of the legacy Antaris RazorEngine.NetCore fork. Resolution order:
+        /// the SEAL_RAZOR_CORE environment variable wins if set ("1" forces on, anything else forces off as a
+        /// kill-switch), otherwise the server Configuration (UseRazorEngineCore, applied in Repository.Init), which
+        /// itself defaults to true.
         /// </summary>
-        public static bool UseRazorCore = Environment.GetEnvironmentVariable("SEAL_RAZOR_CORE") == "1";
+        public static bool UseRazorCore = ResolveRazorCoreDefault();
+
+        /// <summary>True if the SEAL_RAZOR_CORE environment variable explicitly forces the backend on or off.</summary>
+        public static bool RazorCoreForcedByEnv => Environment.GetEnvironmentVariable("SEAL_RAZOR_CORE") != null;
+
+        static bool ResolveRazorCoreDefault()
+        {
+            var env = Environment.GetEnvironmentVariable("SEAL_RAZOR_CORE");
+            return env == null ? true : env == "1";
+        }
 
         /// <summary>Logical cache key used by the RazorEngineCore backend (no on-disk path substitution).</summary>
         static string GetCoreKey(string script, object model, string key)
