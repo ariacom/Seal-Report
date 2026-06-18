@@ -57,6 +57,19 @@ namespace Seal.Helpers
     {
         //Directory location for cached assemblies
         public static string RazorCacheDirectory = "";
+
+        /// <summary>
+        /// When true, Razor scripts are compiled/run with the maintained RazorEngineCore backend (see RazorCoreEngine)
+        /// instead of the legacy Antaris RazorEngine.NetCore fork. Enable via the SEAL_RAZOR_CORE=1 environment variable.
+        /// </summary>
+        public static bool UseRazorCore = Environment.GetEnvironmentVariable("SEAL_RAZOR_CORE") == "1";
+
+        /// <summary>Logical cache key used by the RazorEngineCore backend (no on-disk path substitution).</summary>
+        static string GetCoreKey(string script, object model, string key)
+        {
+            if (!string.IsNullOrEmpty(key)) return key;
+            return model != null ? model.GetType().ToString() + "_" + GetFullScript(script) : script;
+        }
         public static EventLogEntryType _01; //Necessary to compile Security Scripts
         static int _loadTries = 3;
         /// <summary>
@@ -239,6 +252,18 @@ namespace Seal.Helpers
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
+                if (UseRazorCore)
+                {
+                    var coreKey = GetCoreKey(script, model, key);
+                    if (!RazorCoreEngine.IsTemplateCached(coreKey))
+                    {
+                        if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
+                        RazorCoreEngine.Compile(GetFullScript(script), coreKey, RazorCacheDirectory, lastModification);
+                    }
+                    var coreResult = RazorCoreEngine.Run(coreKey, model);
+                    return string.IsNullOrEmpty(coreResult) ? "" : coreResult;
+                }
+
                 var initialKey = key;
                 bool saveAssemblyCache = GetFinalKey(script, model, ref key, lastModification);
 
@@ -258,14 +283,23 @@ namespace Seal.Helpers
             return script;
         }
 
+        static Exception InvalidScript()
+        {
+            var ex = new Exception("Invalid script detected.");
+            Helper.WriteLogException("Compile", ex);
+            return ex;
+        }
+
         static object lockObject = new object();
         static public void Compile(string script, Type modelType, string key)
         {
-            if (Validator != null && !Validator.CheckScript(script))
+            if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
+
+            if (UseRazorCore)
             {
-                var ex = new Exception("Invalid script detected.");
-                Helper.WriteLogException("Compile", ex);
-                throw ex;
+                if (!string.IsNullOrEmpty(script) && !RazorCoreEngine.IsTemplateCached(key))
+                    RazorCoreEngine.Compile(script, key, RazorCacheDirectory, null);
+                return;
             }
 
             lock (lockObject)
@@ -282,6 +316,17 @@ namespace Seal.Helpers
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
+                if (UseRazorCore)
+                {
+                    var coreKey = GetCoreKey(script, model, key);
+                    if (!RazorCoreEngine.IsTemplateCached(coreKey))
+                    {
+                        if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
+                        RazorCoreEngine.Compile(script, coreKey, RazorCacheDirectory, lastModification);
+                    }
+                    return coreKey;
+                }
+
                 var initialKey = key;
                 bool saveAssemblyCache = GetFinalKey(script, model, ref key, lastModification);
                 if (!(Engine.Razor.IsTemplateCached(key, model.GetType())))

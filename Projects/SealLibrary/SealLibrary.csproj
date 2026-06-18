@@ -79,6 +79,7 @@
 		<Compile Include="..\SealLibraryWin\Helpers\Impersonator.cs" Link="Helpers\Impersonator.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\RazorHelper.cs" Link="Helpers\RazorHelper.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\RazorCoreEngine.cs" Link="Helpers\RazorCoreEngine.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\TaskDatabaseHelper.cs" Link="Helpers\TaskDatabaseHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\TaskHelper.cs" Link="Helpers\TaskHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Audit.cs" Link="Model\Audit.cs" />
@@ -219,6 +220,7 @@
 		<PackageReference Include="MailKit" Version="4.16.0" />
 		<PackageReference Include="MimeKit" Version="4.16.0" />
 		<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
+		<PackageReference Include="RazorEngineCore" Version="2026.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>

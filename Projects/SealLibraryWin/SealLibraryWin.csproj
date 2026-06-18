@@ -115,6 +115,7 @@
 		<PackageReference Include="MailKit" Version="4.16.0" />
 		<PackageReference Include="MimeKit" Version="4.16.0" />
 		<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
+		<PackageReference Include="RazorEngineCore" Version="2026.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>

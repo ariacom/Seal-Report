@@ -945,6 +945,15 @@
             Example: john.doe@example.com → jo****e@example.com
             </summary>
         </member>
+        <member name="F:Seal.Helpers.RazorHelper.UseRazorCore">
+            <summary>
+            When true, Razor scripts are compiled/run with the maintained RazorEngineCore backend (see RazorCoreEngine)
+            instead of the legacy Antaris RazorEngine.NetCore fork. Enable via the SEAL_RAZOR_CORE=1 environment variable.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorHelper.GetCoreKey(System.String,System.Object,System.String)">
+            <summary>Logical cache key used by the RazorEngineCore backend (no on-disk path substitution).</summary>
+        </member>
         <member name="M:Seal.Helpers.RazorHelper.LoadRazorAssemblies">
             <summary>
             Force the load of the assemblies
@@ -958,6 +967,55 @@
         <member name="M:Seal.Helpers.ScriptValidator.CheckScript(System.String)">
             <summary>
             Check is the script is valid, may be used to control/limit the scripts executed
+            </summary>
+        </member>
+        <member name="T:Seal.Helpers.RawContent">
+            <summary>
+            Marker for content that must be emitted RAW (not HTML-encoded), mirroring the fork's IEncodedString/RawString.
+            Produced by SealCoreTemplateBase.Raw(...) and .Include(...).
+            </summary>
+        </member>
+        <member name="T:Seal.Helpers.SealCoreTemplateBase">
+            <summary>
+            Base template every Seal Razor template/partial compiles against when RazorHelper.UseRazorCore is on.
+            Reproduces the Antaris fork contract used by Seal templates:
+             - bare @expr is HTML-encoded by default; @Raw(...) is emitted raw
+             - @Include(key, model) resolves a previously-compiled partial BY KEY and emits it raw (nestable)
+             - a dynamic ViewBag shared down the include chain
+            </summary>
+        </member>
+        <member name="P:Seal.Helpers.SealCoreTemplateBase.ViewBag">
+            <summary>Dynamic state bag, shared with included partials (fork parity).</summary>
+        </member>
+        <member name="M:Seal.Helpers.SealCoreTemplateBase.Write(System.Object)">
+            <summary>@expr -> HTML-encode unless it is already raw content.</summary>
+        </member>
+        <member name="M:Seal.Helpers.SealCoreTemplateBase.Raw(System.Object)">
+            <summary>@Raw(...) -> emit as-is.</summary>
+        </member>
+        <member name="M:Seal.Helpers.SealCoreTemplateBase.Include(System.String,System.Object,System.Type)">
+            <summary>@Include(key, model) -> run the partial cached under 'name' and emit its output raw.</summary>
+        </member>
+        <member name="T:Seal.Helpers.RazorCoreEngine">
+            <summary>
+            RazorEngineCore-backed replacement for the bits of the Antaris fork that Seal uses:
+            a string-keyed compiled-template cache with optional on-disk persistence (RazorCacheDirectory).
+            Reached only via RazorHelper when UseRazorCore is enabled.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.CacheFileName(System.String)">
+            <summary>Stable, filesystem-safe file name for a (possibly path-like) cache key.</summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.Compile(System.String,System.String,System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Compile 'script' under 'key' (no-op if already cached). When cacheDir is set, a persisted
+            assembly is reused (and invalidated by lastModification), mirroring GetGlobalAssemblyCache/SaveAssemblyInCache.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.ToTemplateCompilationException(RazorEngineCore.RazorEngineCompilationException,System.String)">
+            <summary>
+            Map a RazorEngineCore compilation failure onto the fork's TemplateCompilationException so that
+            every existing catch site (Helper.GetExceptionMessage, ReportView, SecurityProvider, user scripts, ...) keeps working.
             </summary>
         </member>
         <member name="F:Seal.Helpers.TaskDatabaseHelper.ColumnCharLength">
