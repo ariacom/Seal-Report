@@ -16,15 +16,14 @@
     <title>@repository.Configuration.WebProductName </title>
     <meta charset="utf-8" />
 
-    <link href="~/Images/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/img/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
 
-    <link rel="stylesheet" href="~/Content/datatables.min.css" />
+    <link rel="stylesheet" href="~/lib/datatables/datatables.min.css" />
     @foreach (var asset in Seal.Model.ClientAssets.FontAwesomeCss)
     {
         <link rel="stylesheet" href="~/@asset.Path" />
     }
-    <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
-    <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-select/bootstrap-select.min.css" />
     @foreach (var asset in Seal.Model.ClientAssets.FlatpickrCss)
     {
         <link rel="stylesheet" href="~/@asset.Path" />
@@ -33,17 +32,17 @@
     {
         <link rel="stylesheet" href="~/@asset.Path" />
     }
-    <link rel="stylesheet" href="~/Content/sealweb.css" />
-    <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
+    <link rel="stylesheet" href="~/css/sealweb.css" />
+    <link rel="stylesheet" href="~/lib/nvd3/nv.d3.min.css" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebCssFiles))
     {
-        <link rel="stylesheet" href="~/Content/@fileName" />
+        <link rel="stylesheet" href="~/css/@fileName" />
     }
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.CssFiles))
     {
-        <link rel="stylesheet" href="~/Content/@fileName" />
+        <link rel="stylesheet" href="~/css/@fileName" />
     }
-    <link rel="stylesheet" href="~/Content/seal.css" />
+    <link rel="stylesheet" href="~/css/seal.css" />
 </head>
 <body>
     <!--disable autofill for Chrome-->
@@ -138,7 +137,7 @@
     <div id="main-container" class="container-fluid folderview" style="padding-top:62px;display:none;">
         <div class="row">
             <div id="folder-view" class="col-sm-4" style="padding-right:0px">
-                <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;border-radius:10px;"></div>
+                <div class="swi-tree" id="folder-tree" role="tree" style="overflow:auto;border-radius:10px;"></div>
             </div>
 
             <div id="file-view" class="col-sm-8" style="padding-right:0px">
@@ -190,18 +189,17 @@
         </div>
     </div>
 
-    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/lib/datatables/datatables.min.js"></script>
     @foreach (var asset in Seal.Model.ClientAssets.BootstrapJs)
     {
         <script src="~/@asset.Path"></script>
     }
-    <script src="~/Scripts/jstree.min.js"></script>
-    <script src="~/Scripts/bootstrap-select.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    <script src="~/lib/bootstrap-select/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="~/lib/moment/moment.min.js"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
-        <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
+        <script src="~/lib/moment/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        <script src="~/lib/bootstrap-select/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
     }
     @foreach (var asset in Seal.Model.ClientAssets.FlatpickrJs)
     {
@@ -211,27 +209,27 @@
     {
         <script src="~/@("lib/flatpickr/l10n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
     }
-    <script src="~/Scripts/datetime-moment.js"></script>
+    <script src="~/js/datetime-moment.js"></script>
 
     <!-- common libraries -->
-    <script src="~/Scripts/helpers.js"></script>
-    <script src="~/Scripts/common.js"></script>
-    <script src="~/Scripts/gauge.min.js"></script>
-    <script src="~/Scripts/d3.min.js"></script>
+    <script src="~/js/helpers.js"></script>
+    <script src="~/js/common.js"></script>
+    <script src="~/lib/gauge/gauge.min.js"></script>
+    <script src="~/lib/d3/d3.min.js"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        <script src="~/Scripts/d3-time.v1.min.js"></script>
-        <script src="~/Scripts/d3-time-format.v2.min.js"></script>
-        <script src="~/Scripts/@("d3/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        <script src="~/lib/d3/d3-time.v1.min.js"></script>
+        <script src="~/lib/d3/d3-time-format.v2.min.js"></script>
+        <script src="~/lib/d3/@("i18n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
     }
 
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebScriptFiles))
     {
-        <script type='text/javascript' src='~/Scripts/@fileName'></script>
+        <script type='text/javascript' src='~/js/@fileName'></script>
     }
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
     {
-        <script type='text/javascript' src='~/Scripts/@fileName'></script>
+        <script type='text/javascript' src='~/js/@fileName'></script>
     }
 
     <script type="text/javascript">
@@ -319,22 +317,14 @@
 
     @if (!model.HasMinifiedScripts())
     {
-        <script src="~/Scripts/swi-utils.js"></script>
-        <script src="~/Scripts/swi-gateway.js"></script>
-        <script src="~/Scripts/swi-main.js"></script>
-        <script src="~/Scripts/swi-ai.js"></script>
-
-        if (model.HasEditor)
-        {
-            <script src="~/Scripts/swi-gateway-editor.js"></script>
-            <script src="~/Scripts/swi-button-group.js"></script>
-            <script src="~/Scripts/swi-editor.js"></script>
-            <script src="~/Scripts/swi-properties.js"></script>
-        }
+        <script src="~/js/swi-utils.js"></script>
+        <script src="~/js/swi-gateway.js"></script>
+        <script src="~/js/swi-main.js"></script>
+        <script src="~/js/swi-ai.js"></script>
     }
     else
     {
-        <script src="~/Scripts/swi.js"></script>
+        <script src="~/js/swi.js"></script>
     }
 
     @Html.Raw(RazorHelper.CompileExecute(repository.Configuration.WebMainAdditionalScript, model))

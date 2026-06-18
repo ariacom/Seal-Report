@@ -7633,12 +7633,12 @@
         </member>
         <member name="P:Seal.Model.Repository.ViewScriptsFolder">
             <summary>
-            View Scripts folder
+            View Scripts folder (first-party application scripts; third-party libraries live under the 'lib' folder)
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.ViewContentFolder">
             <summary>
-            View Content folder
+            View Content folder (first-party application style sheets; third-party libraries live under the 'lib' folder)
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.AssembliesFolder">

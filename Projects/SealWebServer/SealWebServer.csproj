@@ -54,32 +54,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Remove="Views\Home\Agent.cshtml" />
-		<Content Remove="Views\Home\MainAssistant.cshtml" />
-		<Content Remove="Views\Home\MainEditor.cshtml" />
-		<Content Remove="Views\Home\MenuBig.cshtml" />
-		<Content Remove="wwwroot\Content\sealweb-editor.css" />
-		<Content Remove="wwwroot\Content\_ed.editor.bootstrap.min.css" />
-		<Content Remove="wwwroot\Scripts\swi-assistant.js" />
-		<Content Remove="wwwroot\Scripts\swi-assistant.js.map" />
-		<Content Remove="wwwroot\Scripts\swi-editor.js" />
-		<Content Remove="wwwroot\Scripts\swi-editor.js.map" />
-		<Content Remove="wwwroot\Scripts\swi-gateway-assistant.js" />
-		<Content Remove="wwwroot\Scripts\swi-gateway-assistant.js.map" />
-		<Content Remove="wwwroot\Scripts\swi-gateway-editor.js" />
-		<Content Remove="wwwroot\Scripts\swi-gateway-editor.js.map" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-assistant.ts" />
-	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-button-group.ts" />
-	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-editor.ts" />
-	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-gateway-assistant.ts" />
-	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-gateway-editor.ts" />
-	  <TypeScriptCompile Remove="wwwroot\Scripts\swi-properties.ts" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="wwwroot\WebInterfaceAPI.html" />
 		<None Include="wwwroot\WebInterfaceSamples.html" />
 	</ItemGroup>
@@ -114,4 +88,14 @@
     </ItemGroup>
   </Target>
   <!-- End of Fix-->
+
+  <!--
+    Keep the report-rendering asset tree (Repository\Views) in sync with the canonical
+    web-application asset tree (wwwroot). Refreshes the third-party libraries and shared
+    first-party helpers only; see sync-view-assets.ps1 for the exact scope.
+  -->
+  <Target Name="SyncViewAssets" BeforeTargets="Build">
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\sync-view-assets.ps1&quot;"
+          ContinueOnError="true" />
+  </Target>
 </Project>

@@ -312,24 +312,24 @@
 
 @if (report.HasChartJSChart)
 {
-    @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js"))
-    @Raw(report.AttachScriptFile("chartjs-plugin-datalabels.min.js", "https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"))
-    @Raw(report.AttachScriptFile("chartjs-adapter-date-fns.min.js", "https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-date-fns/3.0.0/chartjs-adapter-date-fns.min.js"))
+    @Raw(report.AttachScriptPath("lib/chartjs/Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js"))
+    @Raw(report.AttachScriptPath("lib/chartjs/chartjs-plugin-datalabels.min.js", "https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"))
+    @Raw(report.AttachScriptPath("lib/chartjs/chartjs-adapter-date-fns.min.js", "https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-date-fns/3.0.0/chartjs-adapter-date-fns.min.js"))
 }
 
 @if (report.HasPlotlyChart)
 {
-    @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.1.1/plotly.min.js"))
+    @Raw(report.AttachScriptPath("lib/plotly/plotly-latest.min.js", "https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.1.1/plotly.min.js"))
     if (view.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        @Raw(report.AttachScriptFile("plotly\\plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
+        @Raw(report.AttachScriptPath("lib/plotly/i18n/plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
     }
 }
 
 @if (report.HasNVD3Chart)
 {
-    @Raw(report.AttachScriptFile("nv.d3.min.js"))
-    @Raw(report.AttachCSSFile("nv.d3.min.css"))
+    @Raw(report.AttachScriptPath("lib/nvd3/nv.d3.min.js"))
+    @Raw(report.AttachCSSPath("lib/nvd3/nv.d3.min.css"))
     <script>
         function nvd3TranslateText(text)
         {

@@ -1932,7 +1932,7 @@ namespace Seal.Model
         {
             if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
             {
-                return string.Format("{0}Images/{1}", WebUrl, fileName);
+                return string.Format("{0}img/{1}", WebUrl, fileName);
             }
             return Helper.HtmlGetFilePath(Path.Combine(Repository.ViewImagesFolder, fileName));
         }
@@ -1944,7 +1944,7 @@ namespace Seal.Model
         {
             if (ExecutionContext == ReportExecutionContext.WebReport)
             {
-                return string.Format("{0}Images/{1}", WebUrl, fileName);
+                return string.Format("{0}img/{1}", WebUrl, fileName);
             }
 
             if (GenerateHTMLDisplay)
@@ -1985,7 +1985,7 @@ namespace Seal.Model
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
-                    return string.Format("<script type='text/javascript' src='{0}Scripts/{1}'></script>", WebUrl, fileName);
+                    return string.Format("<script type='text/javascript' src='{0}js/{1}'></script>", WebUrl, fileName);
                 }
                 else
                 {
@@ -2107,7 +2107,7 @@ namespace Seal.Model
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
-                    return string.Format("<link type='text/css' href='{0}Content/{1}' rel='stylesheet'/>", WebUrl, fileName);
+                    return string.Format("<link type='text/css' href='{0}css/{1}' rel='stylesheet'/>", WebUrl, fileName);
                 }
                 else
                 {

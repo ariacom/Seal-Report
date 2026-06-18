@@ -133,7 +133,7 @@ namespace Seal.Model
         /// The logo file name used by the report templates
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images' and in the \\Images sub-folder of the Web publication directory. If empty, the Web Product Name is used as prefix."), Id(1, 1)]
+        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\img' and in the \\img sub-folder of the Web publication directory. If empty, the Web Product Name is used as prefix."), Id(1, 1)]
         [DefaultValue("logo.svg")]
 #endif
         public string LogoName { get; set; } = "logo.svg";

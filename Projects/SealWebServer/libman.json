@@ -36,14 +36,6 @@
       ]
     },
     {
-      "library": "tom-select@2.4.3",
-      "destination": "wwwroot/lib/tom-select/",
-      "files": [
-        "css/tom-select.bootstrap5.min.css",
-        "js/tom-select.complete.min.js"
-      ]
-    },
-    {
       "library": "flatpickr@4.6.13",
       "destination": "wwwroot/lib/flatpickr/",
       "files": [

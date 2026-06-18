@@ -911,23 +911,23 @@ namespace Seal.Model
         /// </summary>
         public string ViewImagesFolder
         {
-            get { return Path.Combine(ViewsFolder, "Images"); }
+            get { return Path.Combine(ViewsFolder, "img"); }
         }
 
         /// <summary>
-        /// View Scripts folder
+        /// View Scripts folder (first-party application scripts; third-party libraries live under the 'lib' folder)
         /// </summary>
         public string ViewScriptsFolder
         {
-            get { return Path.Combine(ViewsFolder, "Scripts"); }
+            get { return Path.Combine(ViewsFolder, "js"); }
         }
 
         /// <summary>
-        /// View Content folder
+        /// View Content folder (first-party application style sheets; third-party libraries live under the 'lib' folder)
         /// </summary>
         public string ViewContentFolder
         {
-            get { return Path.Combine(ViewsFolder, "Content"); }
+            get { return Path.Combine(ViewsFolder, "css"); }
         }
 
         /// <summary>
