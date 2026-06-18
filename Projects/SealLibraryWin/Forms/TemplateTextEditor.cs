@@ -1013,6 +1013,34 @@ $('<div>', {{
 }
 ";
 
+        //Sample proposed in the editor for the 'Razor Forbidden Tokens' configuration property: the active built-in deny-list plus
+        //commented suggestions the admin can enable by removing the leading //. Lines starting with // are ignored at runtime.
+        static readonly string razorForbiddenTokensSample =
+            "// One forbidden substring per line (case-insensitive). Lines starting with // are ignored.\r\n" +
+            "// A Razor script containing any of these substrings is rejected before compilation.\r\n" +
+            "// Leave this list unchanged to use the built-in defaults below.\r\n" +
+            "\r\n" +
+            "// --- Built-in default deny-list (active) ---\r\n" +
+            string.Join("\r\n", DefaultScriptValidator.DefaultForbiddenTokens) + "\r\n" +
+            "\r\n" +
+            "// --- More suggestions (remove the // to enable) ---\r\n" +
+            "// System.IO.File\r\n" +
+            "// System.IO.Directory\r\n" +
+            "// System.IO.Path\r\n" +
+            "// System.Net.WebClient\r\n" +
+            "// System.Net.Http\r\n" +
+            "// System.Net.Sockets\r\n" +
+            "// System.Reflection\r\n" +
+            "// AppDomain\r\n" +
+            "// Activator.CreateInstance\r\n" +
+            "// System.Runtime.Loader\r\n" +
+            "// Microsoft.CSharp\r\n" +
+            "// CSharpCodeProvider\r\n" +
+            "// System.Management\r\n" +
+            "// Environment.SetEnvironmentVariable\r\n" +
+            "// cmd.exe\r\n" +
+            "// powershell";
+
         static readonly Tuple<string, string>[] tasksSamples =
         {
             new Tuple<string, string>(
@@ -2108,6 +2136,14 @@ $('<div>', {{
                         template = Audit.AuditScriptTemplate;
                         frm.ObjectForCheckSyntax = new Audit();
                         frm.Text = "Edit the script executed when a an audit event occurs";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "RazorForbiddenTokens")
+                    {
+                        //Simple multi-line list (one forbidden substring per line) with proposed sample keywords.
+                        //C# lexer so the // comments and the .NET type tokens are syntax-highlighted.
+                        template = razorForbiddenTokensSample;
+                        frm.Text = "Edit the Razor forbidden tokens (one substring per line)";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

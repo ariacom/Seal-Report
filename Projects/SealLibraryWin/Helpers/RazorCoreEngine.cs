@@ -64,6 +64,13 @@ namespace Seal.Helpers
         static readonly ConcurrentDictionary<string, IRazorEngineCompiledTemplate<SealCoreTemplateBase>> _cache = new();
         static readonly object _lock = new object();
 
+        /// <summary>
+        /// Version stamp folded into every persisted cache file name so a compiled assembly built
+        /// against an older base template / helper API is never reused after a Seal upgrade.
+        /// </summary>
+        static readonly string _engineVersion =
+            typeof(SealCoreTemplateBase).Assembly.GetName().Version?.ToString() ?? "0";
+
         public static bool IsTemplateCached(string key) => !string.IsNullOrEmpty(key) && _cache.ContainsKey(key);
 
         /// <summary>
@@ -80,11 +87,18 @@ namespace Seal.Helpers
             finally { SynchronizationContext.SetSynchronizationContext(ctx); }
         }
 
-        /// <summary>Stable, filesystem-safe file name for a (possibly path-like) cache key.</summary>
-        static string CacheFileName(string key)
+        /// <summary>
+        /// Stable, filesystem-safe file name BOUND TO THE SCRIPT CONTENT (not the logical cache key).
+        /// Binding the name to the content (plus the engine version) means any change to the script
+        /// yields a different file, so a stale or mismatched persisted assembly is never silently
+        /// trusted, and a DLL compiled for one script can never be reused for a different script that
+        /// happens to share a key. (The repository 'Assemblies' tree — including this RazorCache
+        /// folder — is loaded as in-process code and must be writable only by the service account.)
+        /// </summary>
+        static string CacheFileName(string script)
         {
             using var sha = SHA256.Create();
-            var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(key));
+            var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(_engineVersion + "\0" + (script ?? "")));
             return Convert.ToHexString(hash) + ".dll";
         }
 
@@ -100,7 +114,7 @@ namespace Seal.Helpers
             {
                 if (_cache.ContainsKey(key)) return;
 
-                string dll = string.IsNullOrEmpty(cacheDir) ? null : Path.Combine(cacheDir, CacheFileName(key));
+                string dll = string.IsNullOrEmpty(cacheDir) ? null : Path.Combine(cacheDir, CacheFileName(script));
 
                 // 1) reuse a persisted assembly if present and not stale
                 if (dll != null && File.Exists(dll))
