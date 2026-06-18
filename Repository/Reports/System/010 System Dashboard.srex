@@ -712,12 +712,6 @@ AND [ccf5db51-89b4-4366-8ffc-b6444c43e395]</Restriction>
                 log.LogMessage("Error loading the report: {0}\r\n{1}", reportPath, ex.Message);
             }
         }
-        //Search in sub-folders
-        foreach (string subFolder in Directory.GetDirectories(folder))
-        {
-            if (currentReport.Cancel) return;
-            SearchReports(currentReport, subFolder);
-        }                            
     }
 } 
 
@@ -1238,8 +1232,6 @@ glyphicon glyphicon-remove</Value>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
-      <ShowInMenu>true</ShowInMenu>
-      <MenuName>System Dashboard</MenuName>
       <Parameters>
         <Parameter>
           <Name>restriction_button</Name>
