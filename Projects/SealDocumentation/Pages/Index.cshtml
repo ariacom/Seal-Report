@@ -365,10 +365,10 @@
                                     <strong>Assemblies:</strong> additional DLL (*.dll) that can be referenced in all Razor scripts. You can add your own assemblies in this folder and call them from any script compiled and executed during a report execution (e.g. in a Task).
                                 </li>
                                 <li>
-                                    <strong>Assemblies\Dynamics:</strong> additional source code files (*.cs) to be compiled and loaded. You can then reference the <b>Classes</b> compiled from any script (e.g. in a Task).
+                                    <strong>Assemblies\Dynamics:</strong> additional source code files (*.cs) to be compiled and loaded. You can then reference the <b>Classes</b> compiled from any script (e.g. in a Task). The compiled assemblies are stored in the <b>Net</b> (non-Windows runtime) and <b>Win</b> (Windows applications) sub-folders.
                                 </li>
                                 <li>
-                                    <strong>Assemblies\RazorCache:</strong> Cache folder to store the assemblies compiled from static template files (Views, Tables and Tasks).
+                                    <strong>Assemblies\RazorCache\Net:</strong> Cache folder to store the assemblies compiled from static template files (Views, Tables and Tasks) for the .NET (non-Windows) runtime.
                                 </li>
                                 <li>
                                     <strong>Assemblies\RazorCache\Win:</strong> Cache folder to store the assemblies compiled from static template files (Views, Tables and Tasks) for SealLibraryWin (Windows applications).

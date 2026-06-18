@@ -548,7 +548,18 @@ namespace Seal.Model
             //Razor cache directory
             if (Configuration.EnableRazorCache)
             {
-                RazorHelper.RazorCacheDirectory = Configuration.IsUsingSealLibraryWin ? RazorCacheWinFolder : RazorCacheFolder;
+                RazorHelper.RazorCacheDirectory = Configuration.IsUsingSealLibraryWin ? RazorCacheWinFolder : RazorCacheNetFolder;
+            }
+
+            //Optional Razor script validation (defense-in-depth). Off by default; a host app may set its own Validator beforehand, which then wins.
+            if (Configuration.EnableRazorScriptValidation && RazorHelper.Validator == null)
+            {
+                //Forbidden tokens are edited as a multi-line list: one substring per line, // lines are comments
+                var forbiddenTokens = (Configuration.RazorForbiddenTokens ?? "")
+                    .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(i => i.Trim())
+                    .Where(i => i.Length > 0 && !i.StartsWith("//"));
+                RazorHelper.Validator = new DefaultScriptValidator(forbiddenTokens);
             }
 
             //Data sources
@@ -630,9 +641,16 @@ namespace Seal.Model
 
                 if (!DynamicAssembliesLoaded)
                 {
+                    //Force the load of every available assembly BEFORE compiling the Dynamics classes.
+                    //GetAssemblies() below only sees assemblies already loaded into the AppDomain; .NET loads
+                    //lazily, so without this a Dynamics .cs referencing an as-yet-untouched assembly (e.g. Json,
+                    //Mongo, SshNet, ScottPlot...) would fail to compile with "type is defined in an assembly that
+                    //is not referenced". This is the same complete reference set Razor scripts compile against.
+                    RazorHelper.LoadRazorAssemblies();
+
                     //Load extra dynamic assemblies
                     var csFiles = Directory.GetFiles(DynamicsFolder, "*.cs");
-                    var dynamicFolder = Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsFolder;
+                    var dynamicFolder = Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsNetFolder;
                     foreach (var csFile in csFiles.OrderBy(i => i))
                     {
                         try
@@ -710,8 +728,11 @@ namespace Seal.Model
 
         Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            string assemblyPath = Path.Combine(AssembliesFolder, new AssemblyName(args.Name).Name + ".dll");
-            if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(DynamicsFolder, new AssemblyName(args.Name).Name + ".dll");
+            var name = new AssemblyName(args.Name).Name + ".dll";
+            string assemblyPath = Path.Combine(AssembliesFolder, name);
+            //Dynamic assemblies live in the runtime sub-folder (Net/Win); fall back to the Dynamics root for back-compat
+            if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsNetFolder, name);
+            if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(DynamicsFolder, name);
             if (!File.Exists(assemblyPath)) return null;
             Assembly assembly = Assembly.LoadFrom(assemblyPath);
             return assembly;
@@ -761,9 +782,10 @@ namespace Seal.Model
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
                 if (!Directory.Exists(AssembliesFolder)) Directory.CreateDirectory(AssembliesFolder);
-                if (!Directory.Exists(DynamicsWinFolder)) Directory.CreateDirectory(DynamicsWinFolder);
                 if (!Directory.Exists(DynamicsFolder)) Directory.CreateDirectory(DynamicsFolder);
-                if (!Directory.Exists(RazorCacheFolder)) Directory.CreateDirectory(RazorCacheFolder);
+                if (!Directory.Exists(DynamicsNetFolder)) Directory.CreateDirectory(DynamicsNetFolder);
+                if (!Directory.Exists(DynamicsWinFolder)) Directory.CreateDirectory(DynamicsWinFolder);
+                if (!Directory.Exists(RazorCacheNetFolder)) Directory.CreateDirectory(RazorCacheNetFolder);
                 if (!Directory.Exists(RazorCacheWinFolder)) Directory.CreateDirectory(RazorCacheWinFolder);
                 if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
                 if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
@@ -941,7 +963,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Dynamic assemblies folder
+        /// Dynamic assemblies folder: holds the source .cs files (shared by all runtimes). Compiled assemblies go to the Net/Win sub-folders.
         /// </summary>
         public string DynamicsFolder
         {
@@ -952,7 +974,18 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Dynamic assemblies folder for Windows applications
+        /// Dynamic assemblies folder for the .NET (non-Windows) runtime: holds the compiled assemblies.
+        /// </summary>
+        public string DynamicsNetFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "Dynamics\\Net");
+            }
+        }
+
+        /// <summary>
+        /// Dynamic assemblies folder for Windows applications: holds the compiled assemblies.
         /// </summary>
         public string DynamicsWinFolder
         {
@@ -963,7 +996,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Razor cache folder for compiled assemblies
+        /// Razor cache parent folder. Compiled assemblies are stored in the Net/Win sub-folders.
         /// </summary>
         public string RazorCacheFolder
         {
@@ -974,7 +1007,18 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Razor cache folder for compiled assemblies for Windows applications
+        /// Razor cache folder for compiled assemblies for the .NET (non-Windows) runtime.
+        /// </summary>
+        public string RazorCacheNetFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "RazorCache\\Net");
+            }
+        }
+
+        /// <summary>
+        /// Razor cache folder for compiled assemblies for Windows applications.
         /// </summary>
         public string RazorCacheWinFolder
         {

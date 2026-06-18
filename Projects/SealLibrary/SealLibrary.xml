@@ -963,6 +963,25 @@
             Check is the script is valid, may be used to control/limit the scripts executed
             </summary>
         </member>
+        <member name="T:Seal.Helpers.DefaultScriptValidator">
+            <summary>
+            Optional, opt-in deny-list validator (defense-in-depth) wired by Repository.Init when
+            SealServerConfiguration.EnableRazorScriptValidation is true. DISABLED by default because
+            Seal scripts may legitimately use file/process/reflection APIs (e.g. report tasks).
+            IMPORTANT: a substring deny-list on a Turing-complete language can be bypassed — this is
+            only a speed-bump. The real security boundary remains "who is allowed to author/edit
+            Razor scripts (reports, meta sources, security providers, dynamics)".
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.DefaultScriptValidator.DefaultForbiddenTokens">
+            <summary>Conservative starter deny-list, used when no custom tokens are configured.</summary>
+        </member>
+        <member name="M:Seal.Helpers.DefaultScriptValidator.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <param name="forbiddenTokens">Custom forbidden substrings; when null/empty the built-in starter list is used.</param>
+        </member>
+        <member name="M:Seal.Helpers.DefaultScriptValidator.CheckScript(System.String)">
+            <summary>Reject the script if it contains any forbidden token (case-insensitive).</summary>
+        </member>
         <member name="T:Seal.Helpers.RawContent">
             <summary>
             Marker for content that must be emitted RAW (not HTML-encoded), mirroring the fork's IEncodedString/RawString.
@@ -997,6 +1016,12 @@
             Reached only via RazorHelper when UseRazorCore is enabled.
             </summary>
         </member>
+        <member name="F:Seal.Helpers.RazorCoreEngine._engineVersion">
+            <summary>
+            Version stamp folded into every persisted cache file name so a compiled assembly built
+            against an older base template / helper API is never reused after a Seal upgrade.
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.RazorCoreEngine.NoSyncContext``1(System.Func{``0})">
             <summary>
             Run a RazorEngineCore call with no ambient SynchronizationContext. RazorEngineCore's synchronous
@@ -1005,7 +1030,14 @@
             </summary>
         </member>
         <member name="M:Seal.Helpers.RazorCoreEngine.CacheFileName(System.String)">
-            <summary>Stable, filesystem-safe file name for a (possibly path-like) cache key.</summary>
+            <summary>
+            Stable, filesystem-safe file name BOUND TO THE SCRIPT CONTENT (not the logical cache key).
+            Binding the name to the content (plus the engine version) means any change to the script
+            yields a different file, so a stale or mismatched persisted assembly is never silently
+            trusted, and a DLL compiled for one script can never be reused for a different script that
+            happens to share a key. (The repository 'Assemblies' tree — including this RazorCache
+            folder — is loaded as in-process code and must be writable only by the service account.)
+            </summary>
         </member>
         <member name="M:Seal.Helpers.RazorCoreEngine.Compile(System.String,System.String,System.String,System.Nullable{System.DateTime})">
             <summary>
@@ -7707,22 +7739,32 @@
         </member>
         <member name="P:Seal.Model.Repository.DynamicsFolder">
             <summary>
-            Dynamic assemblies folder
+            Dynamic assemblies folder: holds the source .cs files (shared by all runtimes). Compiled assemblies go to the Net/Win sub-folders.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.DynamicsNetFolder">
+            <summary>
+            Dynamic assemblies folder for the .NET (non-Windows) runtime: holds the compiled assemblies.
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.DynamicsWinFolder">
             <summary>
-            Dynamic assemblies folder for Windows applications
+            Dynamic assemblies folder for Windows applications: holds the compiled assemblies.
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.RazorCacheFolder">
             <summary>
-            Razor cache folder for compiled assemblies
+            Razor cache parent folder. Compiled assemblies are stored in the Net/Win sub-folders.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.RazorCacheNetFolder">
+            <summary>
+            Razor cache folder for compiled assemblies for the .NET (non-Windows) runtime.
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.RazorCacheWinFolder">
             <summary>
-            Razor cache folder for compiled assemblies for Windows applications
+            Razor cache folder for compiled assemblies for Windows applications.
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.SealConverterPath">
@@ -9271,6 +9313,16 @@
         <member name="P:Seal.Model.SealServerConfiguration.EnableRazorCache">
             <summary>
             If true, standard razor script used for templates (Views, Tables, Tasks and Security Providers) are compiled and stored in the 'Assemblies\\RazorCache' repository folder. This speed-up the application start-up.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.EnableRazorScriptValidation">
+            <summary>
+            If true, Razor scripts are checked against a deny-list of API tokens before compilation (defense-in-depth). Disabled by default as scripts may legitimately use file/process/reflection APIs. The primary control remains restricting who can edit scripts.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.RazorForbiddenTokens">
+            <summary>
+            Case-insensitive substrings forbidden in Razor scripts when 'Enable Razor Script Validation' is true, one per line. Lines starting with // are ignored. If empty, a conservative built-in starter list is used.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.EnableDownloadUpload">

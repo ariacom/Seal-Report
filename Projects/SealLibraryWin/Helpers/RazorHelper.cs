@@ -3,6 +3,7 @@
 // Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
+using System.Collections.Generic;
 using System.Data;
 #if WINDOWS
 using System.Windows.Forms;
@@ -169,10 +170,12 @@ namespace Seal.Helpers
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
+                //Validate on every call, not only on (re)compilation: a script already in the
+                //in-memory or on-disk cache must not be able to skip validation.
+                if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
                 var coreKey = GetCoreKey(script, model, key);
                 if (!RazorCoreEngine.IsTemplateCached(coreKey))
                 {
-                    if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
                     RazorCoreEngine.Compile(GetFullScript(script), coreKey, RazorCacheDirectory, lastModification);
                 }
                 var result = RazorCoreEngine.Run(coreKey, model);
@@ -199,10 +202,11 @@ namespace Seal.Helpers
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
+                //Validate on every call (see CompileExecute): a cached script must not bypass validation.
+                if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
                 var coreKey = GetCoreKey(script, model, key);
                 if (!RazorCoreEngine.IsTemplateCached(coreKey))
                 {
-                    if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
                     RazorCoreEngine.Compile(script, coreKey, RazorCacheDirectory, lastModification);
                 }
                 return coreKey;
@@ -226,5 +230,49 @@ namespace Seal.Helpers
             return true;
         }
 
+    }
+
+    /// <summary>
+    /// Optional, opt-in deny-list validator (defense-in-depth) wired by Repository.Init when
+    /// SealServerConfiguration.EnableRazorScriptValidation is true. DISABLED by default because
+    /// Seal scripts may legitimately use file/process/reflection APIs (e.g. report tasks).
+    /// IMPORTANT: a substring deny-list on a Turing-complete language can be bypassed — this is
+    /// only a speed-bump. The real security boundary remains "who is allowed to author/edit
+    /// Razor scripts (reports, meta sources, security providers, dynamics)".
+    /// </summary>
+    public class DefaultScriptValidator : ScriptValidator
+    {
+        /// <summary>Conservative starter deny-list, used when no custom tokens are configured.</summary>
+        public static readonly string[] DefaultForbiddenTokens = new[]
+        {
+            "System.Diagnostics.Process", "Process.Start",
+            "System.Reflection.Emit", "Assembly.Load", "Assembly.LoadFrom", "Assembly.LoadFile",
+            "System.Runtime.InteropServices", "DllImport", "Marshal.",
+            "Microsoft.Win32.Registry", "Environment.Exit", "Environment.FailFast",
+        };
+
+        readonly string[] _forbidden;
+
+        /// <param name="forbiddenTokens">Custom forbidden substrings; when null/empty the built-in starter list is used.</param>
+        public DefaultScriptValidator(IEnumerable<string> forbiddenTokens = null)
+        {
+            var tokens = forbiddenTokens?.Where(t => !string.IsNullOrWhiteSpace(t)).ToArray();
+            _forbidden = (tokens != null && tokens.Length > 0) ? tokens : DefaultForbiddenTokens;
+        }
+
+        /// <summary>Reject the script if it contains any forbidden token (case-insensitive).</summary>
+        public override bool CheckScript(string script)
+        {
+            if (string.IsNullOrEmpty(script)) return true;
+            foreach (var token in _forbidden)
+            {
+                if (script.IndexOf(token, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Helper.WriteLogEntry("Seal Razor", EventLogEntryType.Warning, $"A Razor script was rejected by the script validator (forbidden token '{token}').");
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

@@ -103,6 +103,8 @@ namespace Seal.Model
                 GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication); 
                 GetProperty("AlternateTempDirectory").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableRazorCache").SetIsBrowsable(!ForPublication);
+                GetProperty("EnableRazorScriptValidation").SetIsBrowsable(!ForPublication);
+                GetProperty("RazorForbiddenTokens").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableDownloadUpload").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportFormats").SetIsBrowsable(!ForPublication);
 
@@ -211,7 +213,7 @@ namespace Seal.Model
         /// If true, the User Personal Folder (located in the 'SpecialFolders\\Personal' repository sub-folder) containing the profile and personal files is built with the host name. This allows multiple Web sites on the same installation.
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("Use host name to define the Personal Folder name"), Description("If true, the User Personal Folder (located in the 'SpecialFolders\\Personal' repository sub-folder) containing the profile and personal files is built with the host name. This allows multiple Web sites on the same installation."), Id(10, 1)]
+        [Category("Server Settings"), DisplayName("Use host name for Personal Folder"), Description("If true, the User Personal Folder (located in the 'SpecialFolders\\Personal' repository sub-folder) containing the profile and personal files is built with the host name. This allows multiple Web sites on the same installation."), Id(10, 1)]
         [DefaultValue(false)]
 #endif
         public bool HostForPersonalFolder { get; set; } = false;
@@ -269,6 +271,26 @@ namespace Seal.Model
 #endif
         public bool EnableRazorCache { get; set; } = true;
         public bool ShouldSerializeEnableRazorCache() { return !EnableRazorCache; }
+
+        /// <summary>
+        /// If true, Razor scripts are checked against a deny-list of API tokens before compilation (defense-in-depth). Disabled by default as scripts may legitimately use file/process/reflection APIs. The primary control remains restricting who can edit scripts.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Enable Razor Script Validation"), Description("If true, Razor scripts are checked against a deny-list of API tokens before compilation (defense-in-depth). Disabled by default as scripts may legitimately use file/process/reflection APIs. The tokens can be set with 'Razor Forbidden Tokens'; if none are set, a conservative built-in starter list is used."), Id(24, 1)]
+        [DefaultValue(false)]
+#endif
+        public bool EnableRazorScriptValidation { get; set; } = false;
+        public bool ShouldSerializeEnableRazorScriptValidation() { return EnableRazorScriptValidation; }
+
+        /// <summary>
+        /// Case-insensitive substrings forbidden in Razor scripts when 'Enable Razor Script Validation' is true, one per line. Lines starting with // are ignored. If empty, a conservative built-in starter list is used.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Razor Forbidden Tokens"), Description("Case-insensitive substrings forbidden in Razor scripts when 'Enable Razor Script Validation' is true, one per line (lines starting with // are ignored). If empty, a conservative built-in starter list is used (Process.Start, Assembly.Load, Marshal, etc.)."), Id(25, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string RazorForbiddenTokens { get; set; } = "";
+        public bool ShouldSerializeRazorForbiddenTokens() { return !string.IsNullOrEmpty(RazorForbiddenTokens); }
 
         /// <summary>
         /// If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.
