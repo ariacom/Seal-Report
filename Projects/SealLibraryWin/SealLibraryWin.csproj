@@ -115,6 +115,9 @@
 		<PackageReference Include="MailKit" Version="4.16.0" />
 		<PackageReference Include="MimeKit" Version="4.16.0" />
 		<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
+		<PackageReference Include="RazorEngineCore" Version="2026.1.1" />
+		<PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -282,7 +285,4 @@
 		<Folder Include="Views\Scripts\" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\RazorEngine.NetCore\RazorEngine.NetCore.csproj" />
-	</ItemGroup>
 </Project>

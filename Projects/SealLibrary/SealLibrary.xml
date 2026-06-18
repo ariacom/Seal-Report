@@ -945,6 +945,9 @@
             Example: john.doe@example.com → jo****e@example.com
             </summary>
         </member>
+        <member name="M:Seal.Helpers.RazorHelper.GetCoreKey(System.String,System.Object,System.String)">
+            <summary>Logical cache key used by the RazorEngineCore backend.</summary>
+        </member>
         <member name="M:Seal.Helpers.RazorHelper.LoadRazorAssemblies">
             <summary>
             Force the load of the assemblies
@@ -958,6 +961,62 @@
         <member name="M:Seal.Helpers.ScriptValidator.CheckScript(System.String)">
             <summary>
             Check is the script is valid, may be used to control/limit the scripts executed
+            </summary>
+        </member>
+        <member name="T:Seal.Helpers.RawContent">
+            <summary>
+            Marker for content that must be emitted RAW (not HTML-encoded), mirroring the fork's IEncodedString/RawString.
+            Produced by SealCoreTemplateBase.Raw(...) and .Include(...).
+            </summary>
+        </member>
+        <member name="T:Seal.Helpers.SealCoreTemplateBase">
+            <summary>
+            Base template every Seal Razor template/partial compiles against when RazorHelper.UseRazorCore is on.
+            Reproduces the Antaris fork contract used by Seal templates:
+             - bare @expr is HTML-encoded by default; @Raw(...) is emitted raw
+             - @Include(key, model) resolves a previously-compiled partial BY KEY and emits it raw (nestable)
+             - a dynamic ViewBag shared down the include chain
+            </summary>
+        </member>
+        <member name="P:Seal.Helpers.SealCoreTemplateBase.ViewBag">
+            <summary>Dynamic state bag, shared with included partials (fork parity).</summary>
+        </member>
+        <member name="M:Seal.Helpers.SealCoreTemplateBase.Write(System.Object)">
+            <summary>@expr -> HTML-encode unless it is already raw content.</summary>
+        </member>
+        <member name="M:Seal.Helpers.SealCoreTemplateBase.Raw(System.Object)">
+            <summary>@Raw(...) -> emit as-is.</summary>
+        </member>
+        <member name="M:Seal.Helpers.SealCoreTemplateBase.Include(System.String,System.Object,System.Type)">
+            <summary>@Include(key, model) -> run the partial cached under 'name' and emit its output raw.</summary>
+        </member>
+        <member name="T:Seal.Helpers.RazorCoreEngine">
+            <summary>
+            RazorEngineCore-backed replacement for the bits of the Antaris fork that Seal uses:
+            a string-keyed compiled-template cache with optional on-disk persistence (RazorCacheDirectory).
+            Reached only via RazorHelper when UseRazorCore is enabled.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.NoSyncContext``1(System.Func{``0})">
+            <summary>
+            Run a RazorEngineCore call with no ambient SynchronizationContext. RazorEngineCore's synchronous
+            Compile/SaveToFile/LoadFromFile/Run wrap async work with GetAwaiter().GetResult(); on a UI thread
+            (WinForms designer) the captured context would deadlock. Clearing it lets continuations run inline.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.CacheFileName(System.String)">
+            <summary>Stable, filesystem-safe file name for a (possibly path-like) cache key.</summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.Compile(System.String,System.String,System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Compile 'script' under 'key' (no-op if already cached). When cacheDir is set, a persisted
+            assembly is reused (and invalidated by lastModification), mirroring GetGlobalAssemblyCache/SaveAssemblyInCache.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.ToTemplateCompilationException(RazorEngineCore.RazorEngineCompilationException,System.String)">
+            <summary>
+            Map a RazorEngineCore compilation failure onto the fork's TemplateCompilationException so that
+            every existing catch site (Helper.GetExceptionMessage, ReportView, SecurityProvider, user scripts, ...) keeps working.
             </summary>
         </member>
         <member name="F:Seal.Helpers.TaskDatabaseHelper.ColumnCharLength">
@@ -10695,6 +10754,37 @@
         <member name="P:Seal.Renderer.HTML2PDFRenderer.Result">
             <summary>
             Current result objects used by the Renderer
+            </summary>
+        </member>
+        <member name="T:RazorEngine.Engine">
+            <summary>Compatibility shim for the dropped RazorEngine fork.</summary>
+        </member>
+        <member name="P:RazorEngine.Engine.AlternateTemporaryDirectory">
+            <summary>
+            No-op kept for backward compatibility: the legacy engine used this as its temporary compile
+            directory. RazorEngineCore compiles in memory, so the value is unused.
+            </summary>
+        </member>
+        <member name="T:RazorEngine.Compilation.CompilationData">
+            <summary>Compatibility shim: carries the generated source code for a compilation error.</summary>
+        </member>
+        <member name="P:RazorEngine.Compilation.CompilationData.SourceCode">
+            <summary>The generated C# source code (used by the designer to map errors to lines).</summary>
+        </member>
+        <member name="T:RazorEngine.Templating.TemplateParsingException">
+            <summary>
+            Compatibility shim for a Razor parsing error. RazorEngineCore surfaces parse errors as
+            TemplateCompilationException, so this is no longer thrown, but the type is kept so existing
+            catch sites (e.g. the designer's FormHelper) still compile.
+            </summary>
+        </member>
+        <member name="T:RazorEngine.Templating.RazorEngineCompilerError">
+            <summary>Compatibility shim describing a single compiler error.</summary>
+        </member>
+        <member name="T:RazorEngine.Templating.TemplateCompilationException">
+            <summary>
+            Compatibility shim raised when a Razor script fails to compile. Kept in the original namespace so
+            existing catch sites and user report scripts (e.g. TST020) keep working after the fork was dropped.
             </summary>
         </member>
     </members>
