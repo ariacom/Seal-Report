@@ -3,8 +3,6 @@
 // Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
 //
 using System;
-using RazorEngine;
-using RazorEngine.Templating;
 using System.Data;
 #if WINDOWS
 using System.Windows.Forms;
@@ -58,25 +56,7 @@ namespace Seal.Helpers
         //Directory location for cached assemblies
         public static string RazorCacheDirectory = "";
 
-        /// <summary>
-        /// When true (now the default), Razor scripts are compiled/run with the maintained RazorEngineCore backend
-        /// (see RazorCoreEngine) instead of the legacy Antaris RazorEngine.NetCore fork. Resolution order:
-        /// the SEAL_RAZOR_CORE environment variable wins if set ("1" forces on, anything else forces off as a
-        /// kill-switch), otherwise the server Configuration (UseRazorEngineCore, applied in Repository.Init), which
-        /// itself defaults to true.
-        /// </summary>
-        public static bool UseRazorCore = ResolveRazorCoreDefault();
-
-        /// <summary>True if the SEAL_RAZOR_CORE environment variable explicitly forces the backend on or off.</summary>
-        public static bool RazorCoreForcedByEnv => Environment.GetEnvironmentVariable("SEAL_RAZOR_CORE") != null;
-
-        static bool ResolveRazorCoreDefault()
-        {
-            var env = Environment.GetEnvironmentVariable("SEAL_RAZOR_CORE");
-            return env == null ? true : env == "1";
-        }
-
-        /// <summary>Logical cache key used by the RazorEngineCore backend (no on-disk path substitution).</summary>
+        /// <summary>Logical cache key used by the RazorEngineCore backend.</summary>
         static string GetCoreKey(string script, object model, string key)
         {
             if (!string.IsNullOrEmpty(key)) return key;
@@ -185,111 +165,17 @@ namespace Seal.Helpers
             return result;
         }
 
-        static public string GetGlobalAssemblyCache(string key, DateTime lastModification)
-        {
-            //Find a global assembly for this key
-            var result = "";
-            if (!string.IsNullOrEmpty(RazorCacheDirectory))
-            {
-                foreach (var f in Directory.GetFiles(RazorCacheDirectory, key + "_*.dll"))
-                {
-                    if (lastModification > File.GetLastWriteTime(f))
-                    {
-                        try
-                        {
-                            File.Delete(f);
-                        }
-                        catch { }
-                    }
-                    else
-                    {
-                        result = f;
-                    }
-                }
-            }
-            return result;
-        }
-
-
-        static public bool GetFinalKey(string script, object model, ref string key, DateTime? lastModification)
-        {
-            bool saveAssemblyCache = false;
-            if (!string.IsNullOrEmpty(key) && lastModification != null)
-            {
-                //Set the dll path in the keyName if exists
-                key = GetGlobalAssemblyCache(key, lastModification.Value);
-                saveAssemblyCache = string.IsNullOrEmpty(key);
-            }
-
-            if (string.IsNullOrEmpty(key))
-            {
-                if (model != null)
-                {
-                    key = model.GetType().ToString() + "_" + GetFullScript(script);
-                }
-                else
-                {
-                    key = script;
-                }
-            }
-
-            return saveAssemblyCache;
-        }
-
-        static public void SaveAssemblyInCache(string initialKey, object model, string key)
-        {
-            //Save the dll in global cache
-            var template = Engine.Razor.GetTemplate(key, model.GetType());
-            if (template != null)
-            {
-                try
-                {
-                    var dll = template.TemplateAssembly.Location;
-                    var className = Path.GetFileNameWithoutExtension(dll).Split("_").Last();
-                    if (File.Exists(dll))
-                    {
-                        File.Copy(dll, Path.Combine(RazorCacheDirectory, initialKey + "_" + className + ".dll"));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Helper.WriteLogException("CompileExecute", ex);
-                }
-            }
-
-        }
-
-
         static public string CompileExecute(string script, object model, string key = null, DateTime? lastModification = null)
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
-                if (UseRazorCore)
+                var coreKey = GetCoreKey(script, model, key);
+                if (!RazorCoreEngine.IsTemplateCached(coreKey))
                 {
-                    var coreKey = GetCoreKey(script, model, key);
-                    if (!RazorCoreEngine.IsTemplateCached(coreKey))
-                    {
-                        if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
-                        RazorCoreEngine.Compile(GetFullScript(script), coreKey, RazorCacheDirectory, lastModification);
-                    }
-                    var coreResult = RazorCoreEngine.Run(coreKey, model);
-                    return string.IsNullOrEmpty(coreResult) ? "" : coreResult;
+                    if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
+                    RazorCoreEngine.Compile(GetFullScript(script), coreKey, RazorCacheDirectory, lastModification);
                 }
-
-                var initialKey = key;
-                bool saveAssemblyCache = GetFinalKey(script, model, ref key, lastModification);
-
-                if (!(Engine.Razor.IsTemplateCached(key, model.GetType())))
-                {
-                    Compile(GetFullScript(script), model.GetType(), key);
-
-                    if (!string.IsNullOrEmpty(RazorCacheDirectory) && saveAssemblyCache)
-                    {
-                        SaveAssemblyInCache(initialKey, model, key);
-                    }
-                }
-
-                string result = Engine.Razor.Run(key, model.GetType(), model);
+                var result = RazorCoreEngine.Run(coreKey, model);
                 return string.IsNullOrEmpty(result) ? "" : result;
             }
             return script;
@@ -302,56 +188,25 @@ namespace Seal.Helpers
             return ex;
         }
 
-        static object lockObject = new object();
         static public void Compile(string script, Type modelType, string key)
         {
             if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
-
-            if (UseRazorCore)
-            {
-                if (!string.IsNullOrEmpty(script) && !RazorCoreEngine.IsTemplateCached(key))
-                    RazorCoreEngine.Compile(script, key, RazorCacheDirectory, null);
-                return;
-            }
-
-            lock (lockObject)
-            {
-                if (!string.IsNullOrEmpty(script) && !Engine.Razor.IsTemplateCached(key, modelType))
-                {
-                    LoadRazorAssemblies();
-                    Engine.Razor.Compile(script, key, modelType);
-                }
-            }
+            if (!string.IsNullOrEmpty(script) && !RazorCoreEngine.IsTemplateCached(key))
+                RazorCoreEngine.Compile(script, key, RazorCacheDirectory, null);
         }
 
         static public string CompilePartial(string script, object model, string key, DateTime? lastModification)
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
-                if (UseRazorCore)
+                var coreKey = GetCoreKey(script, model, key);
+                if (!RazorCoreEngine.IsTemplateCached(coreKey))
                 {
-                    var coreKey = GetCoreKey(script, model, key);
-                    if (!RazorCoreEngine.IsTemplateCached(coreKey))
-                    {
-                        if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
-                        RazorCoreEngine.Compile(script, coreKey, RazorCacheDirectory, lastModification);
-                    }
-                    return coreKey;
+                    if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
+                    RazorCoreEngine.Compile(script, coreKey, RazorCacheDirectory, lastModification);
                 }
-
-                var initialKey = key;
-                bool saveAssemblyCache = GetFinalKey(script, model, ref key, lastModification);
-                if (!(Engine.Razor.IsTemplateCached(key, model.GetType())))
-                {
-                    Compile(script, model.GetType(), key);
-
-                    if (saveAssemblyCache)
-                    {
-                        SaveAssemblyInCache(initialKey, model, key);
-                    }
-                }
+                return coreKey;
             }
-
             return key;
         }
 

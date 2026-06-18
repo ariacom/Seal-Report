@@ -945,20 +945,8 @@
             Example: john.doe@example.com → jo****e@example.com
             </summary>
         </member>
-        <member name="F:Seal.Helpers.RazorHelper.UseRazorCore">
-            <summary>
-            When true (now the default), Razor scripts are compiled/run with the maintained RazorEngineCore backend
-            (see RazorCoreEngine) instead of the legacy Antaris RazorEngine.NetCore fork. Resolution order:
-            the SEAL_RAZOR_CORE environment variable wins if set ("1" forces on, anything else forces off as a
-            kill-switch), otherwise the server Configuration (UseRazorEngineCore, applied in Repository.Init), which
-            itself defaults to true.
-            </summary>
-        </member>
-        <member name="P:Seal.Helpers.RazorHelper.RazorCoreForcedByEnv">
-            <summary>True if the SEAL_RAZOR_CORE environment variable explicitly forces the backend on or off.</summary>
-        </member>
         <member name="M:Seal.Helpers.RazorHelper.GetCoreKey(System.String,System.Object,System.String)">
-            <summary>Logical cache key used by the RazorEngineCore backend (no on-disk path substitution).</summary>
+            <summary>Logical cache key used by the RazorEngineCore backend.</summary>
         </member>
         <member name="M:Seal.Helpers.RazorHelper.LoadRazorAssemblies">
             <summary>
@@ -9285,11 +9273,6 @@
             If true, standard razor script used for templates (Views, Tables, Tasks and Security Providers) are compiled and stored in the 'Assemblies\\RazorCache' repository folder. This speed-up the application start-up.
             </summary>
         </member>
-        <member name="P:Seal.Model.SealServerConfiguration.UseRazorEngineCore">
-            <summary>
-            If true (the default), Razor scripts are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. Set to false to fall back to the legacy engine. The 'SEAL_RAZOR_CORE' environment variable, if set, overrides this setting ('1' forces on, anything else forces off).
-            </summary>
-        </member>
         <member name="P:Seal.Model.SealServerConfiguration.EnableDownloadUpload">
             <summary>
             If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.
@@ -10771,6 +10754,37 @@
         <member name="P:Seal.Renderer.HTML2PDFRenderer.Result">
             <summary>
             Current result objects used by the Renderer
+            </summary>
+        </member>
+        <member name="T:RazorEngine.Engine">
+            <summary>Compatibility shim for the dropped RazorEngine fork.</summary>
+        </member>
+        <member name="P:RazorEngine.Engine.AlternateTemporaryDirectory">
+            <summary>
+            No-op kept for backward compatibility: the legacy engine used this as its temporary compile
+            directory. RazorEngineCore compiles in memory, so the value is unused.
+            </summary>
+        </member>
+        <member name="T:RazorEngine.Compilation.CompilationData">
+            <summary>Compatibility shim: carries the generated source code for a compilation error.</summary>
+        </member>
+        <member name="P:RazorEngine.Compilation.CompilationData.SourceCode">
+            <summary>The generated C# source code (used by the designer to map errors to lines).</summary>
+        </member>
+        <member name="T:RazorEngine.Templating.TemplateParsingException">
+            <summary>
+            Compatibility shim for a Razor parsing error. RazorEngineCore surfaces parse errors as
+            TemplateCompilationException, so this is no longer thrown, but the type is kept so existing
+            catch sites (e.g. the designer's FormHelper) still compile.
+            </summary>
+        </member>
+        <member name="T:RazorEngine.Templating.RazorEngineCompilerError">
+            <summary>Compatibility shim describing a single compiler error.</summary>
+        </member>
+        <member name="T:RazorEngine.Templating.TemplateCompilationException">
+            <summary>
+            Compatibility shim raised when a Razor script fails to compile. Kept in the original namespace so
+            existing catch sites and user report scripts (e.g. TST020) keep working after the fork was dropped.
             </summary>
         </member>
     </members>
