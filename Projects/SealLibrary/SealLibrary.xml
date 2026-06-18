@@ -9272,6 +9272,11 @@
             If true, standard razor script used for templates (Views, Tables, Tasks and Security Providers) are compiled and stored in the 'Assemblies\\RazorCache' repository folder. This speed-up the application start-up.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.UseRazorEngineCore">
+            <summary>
+            If true, Razor scripts are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. The 'SEAL_RAZOR_CORE' environment variable set to 1 forces this on regardless of this setting.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.EnableDownloadUpload">
             <summary>
             If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.

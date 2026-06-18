@@ -103,6 +103,7 @@ namespace Seal.Model
                 GetProperty("WebScriptFiles").SetIsBrowsable(!ForPublication); 
                 GetProperty("AlternateTempDirectory").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableRazorCache").SetIsBrowsable(!ForPublication);
+                GetProperty("UseRazorEngineCore").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableDownloadUpload").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportFormats").SetIsBrowsable(!ForPublication);
 
@@ -269,6 +270,16 @@ namespace Seal.Model
 #endif
         public bool EnableRazorCache { get; set; } = true;
         public bool ShouldSerializeEnableRazorCache() { return !EnableRazorCache; }
+
+        /// <summary>
+        /// If true, Razor scripts are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. The 'SEAL_RAZOR_CORE' environment variable set to 1 forces this on regardless of this setting.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Use RazorEngineCore"), Description("If true, Razor scripts (Views, Tables, Tasks, Security Providers and report scripts) are compiled and executed with the maintained RazorEngineCore engine instead of the legacy RazorEngine. The 'SEAL_RAZOR_CORE' environment variable set to 1 forces this on regardless of this setting."), Id(24, 1)]
+        [DefaultValue(false)]
+#endif
+        public bool UseRazorEngineCore { get; set; } = false;
+        public bool ShouldSerializeUseRazorEngineCore() { return UseRazorEngineCore; }
 
         /// <summary>
         /// If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.
