@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using RazorEngineCore;
 
 namespace Seal.Helpers
@@ -65,6 +66,20 @@ namespace Seal.Helpers
 
         public static bool IsTemplateCached(string key) => !string.IsNullOrEmpty(key) && _cache.ContainsKey(key);
 
+        /// <summary>
+        /// Run a RazorEngineCore call with no ambient SynchronizationContext. RazorEngineCore's synchronous
+        /// Compile/SaveToFile/LoadFromFile/Run wrap async work with GetAwaiter().GetResult(); on a UI thread
+        /// (WinForms designer) the captured context would deadlock. Clearing it lets continuations run inline.
+        /// </summary>
+        static T NoSyncContext<T>(Func<T> func)
+        {
+            var ctx = SynchronizationContext.Current;
+            if (ctx == null) return func();
+            SynchronizationContext.SetSynchronizationContext(null);
+            try { return func(); }
+            finally { SynchronizationContext.SetSynchronizationContext(ctx); }
+        }
+
         /// <summary>Stable, filesystem-safe file name for a (possibly path-like) cache key.</summary>
         static string CacheFileName(string key)
         {
@@ -98,7 +113,7 @@ namespace Seal.Helpers
                     {
                         try
                         {
-                            _cache[key] = RazorEngineCompiledTemplate<SealCoreTemplateBase>.LoadFromFile(dll);
+                            _cache[key] = NoSyncContext(() => RazorEngineCompiledTemplate<SealCoreTemplateBase>.LoadFromFile(dll));
                             return;
                         }
                         catch { /* fall through to recompile */ }
@@ -110,7 +125,7 @@ namespace Seal.Helpers
                 IRazorEngineCompiledTemplate<SealCoreTemplateBase> compiled;
                 try
                 {
-                    compiled = _engine.Compile<SealCoreTemplateBase>(script, b =>
+                    compiled = NoSyncContext(() => _engine.Compile<SealCoreTemplateBase>(script, b =>
                     {
                         // default namespaces (parity with the fork's TemplateServiceConfiguration)
                         b.AddUsing("System");
@@ -125,7 +140,7 @@ namespace Seal.Helpers
                             if (string.IsNullOrEmpty(loc) || !seen.Add(loc)) continue;
                             try { b.AddAssemblyReference(a); } catch { }
                         }
-                    });
+                    }));
                 }
                 catch (RazorEngineCompilationException ex)
                 {
@@ -137,7 +152,7 @@ namespace Seal.Helpers
                 // 3) persist for next time
                 if (dll != null)
                 {
-                    try { Directory.CreateDirectory(cacheDir); compiled.SaveToFile(dll); } catch { }
+                    try { Directory.CreateDirectory(cacheDir); NoSyncContext<object>(() => { compiled.SaveToFile(dll); return null; }); } catch { }
                 }
             }
         }
@@ -146,7 +161,7 @@ namespace Seal.Helpers
         {
             if (!_cache.TryGetValue(key, out var t))
                 throw new ArgumentException($"No template could be resolved with name '{key}'. The partial must be compiled before it is included.");
-            var result = t.Run(i => { i.Model = model; i.ViewBag = viewBag; });
+            var result = NoSyncContext(() => t.Run(i => { i.Model = model; i.ViewBag = viewBag; }));
             return result ?? "";
         }
 

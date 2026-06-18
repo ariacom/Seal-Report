@@ -1009,6 +1009,13 @@
             Reached only via RazorHelper when UseRazorCore is enabled.
             </summary>
         </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.NoSyncContext``1(System.Func{``0})">
+            <summary>
+            Run a RazorEngineCore call with no ambient SynchronizationContext. RazorEngineCore's synchronous
+            Compile/SaveToFile/LoadFromFile/Run wrap async work with GetAwaiter().GetResult(); on a UI thread
+            (WinForms designer) the captured context would deadlock. Clearing it lets continuations run inline.
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.RazorCoreEngine.CacheFileName(System.String)">
             <summary>Stable, filesystem-safe file name for a (possibly path-like) cache key.</summary>
         </member>
