@@ -1,10 +1,4 @@
 ﻿Context;Reference;he
-NVD3;(right axis);(ציר ימני)
-NVD3;Expanded;מורחב
-NVD3;Grouped;מקובץ
-NVD3;Re-scale y-axis;שנה קנה מידה של ציר ה-y
-NVD3;Stacked;מוערם
-NVD3;Stream;זרם
 Report;!=;!=
 Report;# of % selected;# מתוך % נבחרו
 Report;(filtered from _MAX_);(מסונן מתוך _MAX_)

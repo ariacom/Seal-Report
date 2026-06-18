@@ -37,7 +37,7 @@
           <Category>Master</Category>
           <Format>yyyy</Format>
           <PivotPosition>Page</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -48,7 +48,7 @@
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <AxisUseValues>false</AxisUseValues>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -59,7 +59,7 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -242,8 +242,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>02dbb367-29d5-461e-8f04-97257a457d11</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>
@@ -323,8 +323,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>3d672d0f-f012-439a-8f5f-0560e85b48b2</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

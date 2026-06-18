@@ -1,10 +1,4 @@
 ﻿Context;Reference;de
-NVD3;(right axis);(rechte Achse)
-NVD3;Expanded;Erweitert
-NVD3;Grouped;Gruppiert
-NVD3;Re-scale y-axis;Y-Achse neu skalieren
-NVD3;Stacked;Gestapelt
-NVD3;Stream;Stream
 Report;!=;!=
 Report;# of % selected;# von % ausgewählt
 Report;(filtered from _MAX_);(gefiltert von _MAX_)

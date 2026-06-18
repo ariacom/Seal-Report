@@ -32,7 +32,7 @@
           <DisplayName />
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -43,7 +43,7 @@
           <Format>d</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -53,7 +53,7 @@
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -63,7 +63,7 @@
           <DisplayName>Customer Contact</DisplayName>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -73,7 +73,7 @@
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -83,7 +83,7 @@
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -136,7 +136,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <Format>d</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Between</Operator>
@@ -153,7 +153,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
@@ -166,7 +166,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
@@ -179,7 +179,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
@@ -194,7 +194,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
@@ -209,7 +209,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
@@ -224,7 +224,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
@@ -239,7 +239,7 @@ AND [ba141f62-cf32-4f3c-95e4-7b74fc33f064]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <DisplayOrderRE>0</DisplayOrderRE>
@@ -269,7 +269,7 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <DisplayOrder>0</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Between</Operator>
@@ -284,7 +284,7 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <DisplayOrder>0</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Between</Operator>
@@ -299,7 +299,7 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <DisplayOrder>0</DisplayOrder>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Between</Operator>
@@ -336,8 +336,8 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
                 </ReportView>
                 <ReportView>
                   <GUID>fa399369-0bbd-4507-a494-d8fdc6985a90</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

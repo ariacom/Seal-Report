@@ -1,10 +1,4 @@
 ﻿Context;Reference;ja
-NVD3;(right axis);(右軸)
-NVD3;Expanded;展開
-NVD3;Grouped;グループ化
-NVD3;Re-scale y-axis;Y軸を再スケール
-NVD3;Stacked;積み上げ
-NVD3;Stream;ストリーム
 Report;!=;!=
 Report;# of % selected;選択された % のうち #
 Report;(filtered from _MAX_);(_MAX_ から絞り込み)

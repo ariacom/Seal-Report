@@ -169,8 +169,8 @@ AND [06a2ff61-513e-4d8d-add5-88d2eb62d401]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>1272c3ef-b837-473b-9d1e-f128bc591ae3</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

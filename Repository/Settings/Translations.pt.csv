@@ -1,10 +1,4 @@
 ﻿Context;Reference;pt
-NVD3;(right axis);(eixo direito)
-NVD3;Expanded;Expandido
-NVD3;Grouped;Agrupado
-NVD3;Re-scale y-axis;Redimesionar eixo y
-NVD3;Stacked;Empilhado
-NVD3;Stream;Fluxo
 Report;!=;!=
 Report;# of % selected;# do % selecionado
 Report;(filtered from _MAX_);(filtrado de _MAX_)

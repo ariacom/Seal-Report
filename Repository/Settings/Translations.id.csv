@@ -1,10 +1,4 @@
 ﻿Context;Reference;id
-NVD3;(right axis);(sumbu kanan)
-NVD3;Expanded;Diperluas
-NVD3;Grouped;Dikelompokkan
-NVD3;Re-scale y-axis;Skala ulang sumbu-y
-NVD3;Stacked;Bertumpuk
-NVD3;Stream;Aliran
 Report;!=;!=
 Report;# of % selected;# dari % dipilih
 Report;(filtered from _MAX_);(difilter dari _MAX_)

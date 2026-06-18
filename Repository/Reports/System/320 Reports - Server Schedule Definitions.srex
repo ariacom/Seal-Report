@@ -607,8 +607,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>2bb39d2d-7c37-4192-9f78-4a22f3860dae</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

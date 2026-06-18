@@ -1,10 +1,4 @@
 ﻿Context;Reference;sv
-NVD3;(right axis);(höger axel)
-NVD3;Expanded;Expanderad
-NVD3;Grouped;Grupperad
-NVD3;Re-scale y-axis;Skala om y-axeln
-NVD3;Stacked;Staplad
-NVD3;Stream;Ström
 Report;!=;!=
 Report;# of % selected;# av % markerade
 Report;(filtered from _MAX_);(filtrerat från _MAX_)

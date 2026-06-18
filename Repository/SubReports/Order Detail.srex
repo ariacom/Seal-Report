@@ -31,7 +31,7 @@
           <Category>Master</Category>
           <Format>N0</Format>
           <PivotPosition>Page</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -40,7 +40,7 @@
           <Category>Master</Category>
           <Format>d</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -49,7 +49,7 @@
           <Category>Master</Category>
           <Format>d</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>ab168a45-6852-44b7-8eff-378968669f14</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -58,7 +58,7 @@
           <Category>Master</Category>
           <Format>d</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>ce574340-1504-4bf7-9228-c64f79cf9803</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -67,7 +67,7 @@
           <Category>Master</Category>
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -76,7 +76,7 @@
           <Category>Master</Category>
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>b5dee061-380a-4dac-a74d-fd573de1a07c</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -84,7 +84,7 @@
           <Name>Orders.ShipName</Name>
           <Category>Master</Category>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -92,7 +92,7 @@
           <Name>Orders.ShipAddress</Name>
           <Category>Master</Category>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>2003a407-ab31-4514-bc83-8e9479c42e2d</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -100,7 +100,7 @@
           <Name>Orders.ShipCity</Name>
           <Category>Master</Category>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>e93c456c-40d9-494e-ba21-711177339870</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -108,7 +108,7 @@
           <Name>Orders.ShipRegion</Name>
           <Category>Master</Category>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -116,7 +116,7 @@
           <Name>Orders.ShipPostalCode</Name>
           <Category>Master</Category>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -124,7 +124,7 @@
           <Name>Orders.ShipCountry</Name>
           <Category>Master</Category>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -133,7 +133,7 @@
           <Category>Master</Category>
           <Format>yyyy</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -142,7 +142,7 @@
           <Category>Master</Category>
           <Format>MM/yyyy</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -151,7 +151,7 @@
           <Category>Master</Category>
           <PivotPosition>Page</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
         </ReportElement>
       </Elements>
@@ -162,7 +162,7 @@
           <Category>Master</Category>
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -181,7 +181,7 @@
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -190,7 +190,7 @@
           <Category>Master</Category>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -199,7 +199,7 @@
           <Category>Master</Category>
           <Format>N2</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -208,7 +208,7 @@
           <Category>Master</Category>
           <Format>N2</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>f2cf72ab-afdc-4d0e-ba73-80c3d6f47eea</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -250,7 +250,7 @@
           <Category>Master</Category>
           <Format>N0</Format>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -308,8 +308,8 @@
                         </ReportView>
                         <ReportView>
                           <GUID>39aa4419-58ef-4404-89d6-c6c079e5c727</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>

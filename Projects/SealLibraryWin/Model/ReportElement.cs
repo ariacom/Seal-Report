@@ -82,7 +82,7 @@ namespace Seal.Model
                     GetProperty("DateTimeStandardFormat").SetIsBrowsable(!IsEnum && IsDateTime && (TypeEd == ColumnType.DateTime || Type == ColumnType.Default));
 
                     GetProperty("SerieDefinition").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column);
-                    GetProperty("Nvd3Serie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("EChartsSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ChartJSSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("PlotlySerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ScottPlotSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
@@ -549,7 +549,7 @@ namespace Seal.Model
         /// </summary>
         public bool IsSerie
         {
-            get { return _nvd3Serie != NVD3SerieDefinition.None || _chartJSSerie != ChartJSSerieDefinition.None || _plotlySerie != PlotlySerieDefinition.None || _scottPlotSerie != ScottPlotSerieDefinition.None; }
+            get { return _eChartsSerie != EChartsSerieDefinition.None || _chartJSSerie != ChartJSSerieDefinition.None || _plotlySerie != PlotlySerieDefinition.None || _scottPlotSerie != ScottPlotSerieDefinition.None; }
         }
 
         /// <summary>
@@ -601,21 +601,21 @@ namespace Seal.Model
             }
         }
 
-        NVD3SerieDefinition _nvd3Serie = NVD3SerieDefinition.None;
+        EChartsSerieDefinition _eChartsSerie = EChartsSerieDefinition.None;
         /// <summary>
-        /// Definition of the serie for the element in the NVD3 chart
+        /// Definition of the serie for the element in the ECharts chart
         /// </summary>
 #if WINDOWS
-        [DefaultValue(NVD3SerieDefinition.None)]
-        [Category("Chart"), DisplayName("NVD3 serie"), Description("Definition of the serie for the element in the NVD3 chart."), Id(4, 2)]
+        [DefaultValue(EChartsSerieDefinition.None)]
+        [Category("Chart"), DisplayName("ECharts serie"), Description("Definition of the serie for the element in the ECharts chart."), Id(4, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
-        public NVD3SerieDefinition Nvd3Serie
+        public EChartsSerieDefinition EChartsSerie
         {
-            get { return _nvd3Serie; }
+            get { return _eChartsSerie; }
             set
             {
-                _nvd3Serie = value;
+                _eChartsSerie = value;
                 UpdateEditorAttributes();
             }
         }
@@ -1154,7 +1154,7 @@ namespace Seal.Model
         /// <summary>
         /// D3 Format for a charts
         /// </summary>
-        public string GetD3Format(CultureInfo culture, string NVD3ChartType)
+        public string GetD3Format(CultureInfo culture)
         {
             //try to convert from .net to d3 format... from https://github.com/mbostock/d3/wiki/Formatting
             if (IsNumeric)

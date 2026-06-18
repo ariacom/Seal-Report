@@ -1,10 +1,4 @@
 ﻿Context;Reference;vi
-NVD3;(right axis);(trục phải)
-NVD3;Expanded;Mở rộng
-NVD3;Grouped;Nhóm
-NVD3;Re-scale y-axis;Chia tỷ lệ lại trục y
-NVD3;Stacked;Xếp chồng
-NVD3;Stream;Luồng
 Report;!=;!=
 Report;# of % selected;# trong số % đã chọn
 Report;(filtered from _MAX_);(được lọc từ _MAX_)

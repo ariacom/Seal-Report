@@ -25,14 +25,6 @@
           <PivotPosition>Data</PivotPosition>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
-        <ReportElement>
-          <GUID>7c423e5e-659a-4eef-aa31-c2cefc4e2aed</GUID>
-          <Name>Employees.LastName</Name>
-          <DisplayName />
-          <PivotPosition>Page</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-        </ReportElement>
       </Elements>
       <Restriction>[75406e49-9052-49ff-9dba-c251e5602d46]</Restriction>
       <Restrictions>
@@ -139,13 +131,9 @@
               <Views>
                 <ReportView>
                   <GUID>8aa7fd80-c29a-405f-9c74-868bb362de9b</GUID>
-                  <Name>Gauge labels and zones</Name>
+                  <Name>Gauge color zones</Name>
                   <TemplateName>Gauge</TemplateName>
                   <Parameters>
-                    <Parameter>
-                      <Name>preview_text_css</Name>
-                      <Value>font-size:3em;font-weight:bold;color:green;</Value>
-                    </Parameter>
                     <Parameter>
                       <Name>gauge_width</Name>
                       <Value>250</Value>
@@ -155,33 +143,14 @@
                       <Value>25000</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_animation</Name>
-                      <Value>100</Value>
+                      <Name>gauge_value_color</Name>
+                      <Value>green</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_ticks</Name>
-                      <Value>divisions:5,
-divWidth:1.1,
-divLength:0.7,
-divColor:'#333333',
-subDivisions:5,
-subLength:0.5,
-subWidth:0.6,
-subColor:'#666666'
-</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_staticlabels</Name>
-                      <Value>font:'12px sans-serif',
-labels:[0,10000,15000,25000],
-fractionDigits:0
-</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_staticzones</Name>
-                      <Value>{strokeStyle:'#30B32D',min:0,max:10000,height:1},
-{strokeStyle:'#FFDD00',min:10000,max:20000,height:1.2},
-{strokeStyle:'#F03E3E',min:20000,max:25000,height:1.4}
+                      <Name>gauge_colors</Name>
+                      <Value>[0.4,'#30B32D'],
+[0.8,'#FFDD00'],
+[1,'#F03E3E']
 </Value>
                     </Parameter>
                   </Parameters>
@@ -189,7 +158,7 @@ fractionDigits:0
                 </ReportView>
                 <ReportView>
                   <GUID>8c63915e-46c5-4b0e-a123-1f72d299f686</GUID>
-                  <Name>Gauge percent</Name>
+                  <Name>Gauge progress</Name>
                   <TemplateName>Gauge</TemplateName>
                   <Parameters>
                     <Parameter>
@@ -197,22 +166,22 @@ fractionDigits:0
                       <Value>25000</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_ticks</Name>
-                      <Value>divisions:4,
-divWidth:1.1,
-divLength:0.7,
-divColor:'#333333',
-subDivisions:5,
-subLength:0.5,
-subWidth:0.6,
-subColor:'#666666'
-</Value>
+                      <Name>gauge_show_progress</Name>
+                      <Value>True</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_percentcolors</Name>
-                      <Value>[0.0,'#a9d70b'],
-[0.50,'#f9c802'],
-[1.0,'#ff0000']
+                      <Name>gauge_show_pointer</Name>
+                      <Value>False</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_axisline_width</Name>
+                      <Value>10</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_colors</Name>
+                      <Value>[0.5,'#a9d70b'],
+[0.75,'#f9c802'],
+[1,'#ff0000']
 </Value>
                     </Parameter>
                   </Parameters>
@@ -222,6 +191,12 @@ subColor:'#666666'
                   <GUID>7c0615e8-15fe-496f-8b03-b0492c83aa77</GUID>
                   <Name>Gauge</Name>
                   <TemplateName>Gauge</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>gauge_max</Name>
+                      <Value>25000</Value>
+                    </Parameter>
+                  </Parameters>
                   <SortOrder>1</SortOrder>
                 </ReportView>
                 <ReportView>
@@ -238,7 +213,7 @@ subColor:'#666666'
                   <Name>Text3</Name>
                   <TemplateName>Free</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>Gauge with step for dynamic ticks and labels
+                  <CustomTemplate>Half gauge with a title
 </CustomTemplate>
                   <SortOrder>7</SortOrder>
                 </ReportView>
@@ -247,13 +222,12 @@ subColor:'#666666'
                   <Name>Text2</Name>
                   <TemplateName>Free</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>Gauge
- with ticks and percent colors</CustomTemplate>
+                  <CustomTemplate>Gauge with a progress arc and color zones</CustomTemplate>
                   <SortOrder>6</SortOrder>
                 </ReportView>
                 <ReportView>
                   <GUID>308de1e3-1c3b-420f-9b9f-66a5cfd92b16</GUID>
-                  <Name>Gauge step</Name>
+                  <Name>Gauge half</Name>
                   <TemplateName>Gauge</TemplateName>
                   <Parameters>
                     <Parameter>
@@ -265,27 +239,16 @@ subColor:'#666666'
                       <Value>25000</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_step</Name>
-                      <Value>5000</Value>
+                      <Name>gauge_start_angle</Name>
+                      <Value>180</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_ticks</Name>
-                      <Value>divisions:{DIVISION},
-divWidth:1.1,
-divLength:0.7,
-divColor:'#333333',
-subDivisions:5,
-subLength:0.5,
-subWidth:0.6,
-subColor:'#666666'
-</Value>
+                      <Name>gauge_end_angle</Name>
+                      <Value>0</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_staticlabels</Name>
-                      <Value>font:'12px sans-serif',
-labels:[{LABELS}],
-fractionDigits:0
-</Value>
+                      <Name>gauge_title</Name>
+                      <Value>Sales</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>3</SortOrder>
@@ -295,7 +258,7 @@ fractionDigits:0
                   <Name>Text4</Name>
                   <TemplateName>Free</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>Gauge with ticks, static labels and zones
+                  <CustomTemplate>Gauge with color zones
 </CustomTemplate>
                   <SortOrder>8</SortOrder>
                 </ReportView>
@@ -340,27 +303,16 @@ col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-cen
                       <Value>300</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_step</Name>
-                      <Value>10000</Value>
+                      <Name>gauge_height</Name>
+                      <Value>300</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_ticks</Name>
-                      <Value>divisions:{DIVISION},
-divWidth:1.1,
-divLength:0.7,
-divColor:'#333333',
-subDivisions:5,
-subLength:0.5,
-subWidth:0.6,
-subColor:'#666666'
-</Value>
+                      <Name>gauge_show_progress</Name>
+                      <Value>True</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>gauge_staticlabels</Name>
-                      <Value>font:'12px sans-serif',
-labels:[{LABELS}],
-fractionDigits:0
-</Value>
+                      <Name>gauge_title</Name>
+                      <Value>Sales</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>

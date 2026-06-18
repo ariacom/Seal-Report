@@ -294,13 +294,13 @@
                             <h4>Charts</h4>
                             <p>
                                 Charts axis and series are also defined in the report model.<br />
-                                Three JavaScript Chart libraries are supported by Seal Report: <strong>Chart JS</strong>, <strong>NVD3 Chart</strong> and <strong>Plotly Chart</strong>. <br />
+                                Three JavaScript Chart libraries are supported by Seal Report: <strong>Chart JS</strong>, <strong>ECharts</strong> and <strong>Plotly Chart</strong>. <br />
                                 A Chart library to generate static images is also available: <strong>ScottPlot Chart</strong>. <br />
                                 According to the library chosen, the look and functionalities are different but we recommand to use <strong>Chart JS</strong> first (for maintenance and performances reasons).<br>
                                 The <strong>ScottPlot Chart</strong> library can be used to get the best rendering for the PDF format.<br>
                             </p>
                             <div class="bs-callout bs-callout-warning">
-                                To define a simple chart, select one <b>Row/Column</b> element and set the <code>Serie Definition</code> property to <b>Axis</b>, then select a <b>Data</b> element and define the serie with <code>Chart JS serie</code> or <code>NVD3 serie</code> or <code>Plotly serie</code>.
+                                To define a simple chart, select one <b>Row/Column</b> element and set the <code>Serie Definition</code> property to <b>Axis</b>, then select a <b>Data</b> element and define the serie with <code>Chart JS serie</code> or <code>ECharts serie</code> or <code>Plotly serie</code>.
                             </div>
                             <p>
                                 Instead of being an axis, a dimension can be a <b>Splitter</b> to create several series when the value changes (<eg>e.g. to create one serie per country</eg>).<br /><br />
@@ -505,7 +505,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>Page Table</b>: Render the Page table of the page result.</li>
                                 <li><b>Data Table</b>: Render the Data table of the page result (use of the <a href="https://datatables.net/" target="_blank">DataTables</a> JavaScript Component).</li>
                                 <li><b>Chart JS:</b> Render the Chart JS series of the page result</li>
-                                <li><b>NVD3 Chart</b>: Render the NVD3 series of the page result</li>
+                                <li><b>ECharts Chart</b>: Render the ECharts series of the page result</li>
                                 <li><b>Plotly Chart</b>: Render the Plotly series of the page result</li>
                                 <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optional columns to define the goal if the column name has the _GOAL suffix).</li>
                                 <li><b>Gauge</b>: Display a Gauge built from a data table result having at least 1 row and 1 column for the value. 3 optionals columns can be used to set minimum, maximum and animation speed.</li>

@@ -33,7 +33,7 @@
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <PivotPosition>Page</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <EnumGUIDEL />
         </ReportElement>
@@ -43,7 +43,7 @@
           <Category>Master</Category>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -54,7 +54,7 @@
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</MetaColumnGUID>
           <EnumGUIDEL />
         </ReportElement>
@@ -65,7 +65,7 @@
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</MetaColumnGUID>
           <EnumGUIDEL />
         </ReportElement>
@@ -76,7 +76,7 @@
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID>
           <EnumGUIDEL />
         </ReportElement>
@@ -87,7 +87,7 @@
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>6fa87b3b-048f-4680-9516-35679cba84bf</MetaColumnGUID>
           <EnumGUIDEL />
         </ReportElement>
@@ -115,8 +115,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>857c2879-a06a-4542-9de9-a43e06c25572</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

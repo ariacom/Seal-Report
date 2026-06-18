@@ -318,28 +318,26 @@ namespace Seal.Model
         NVD3Serie,
     };
 
-    public enum NVD3SerieDefinition
+    public enum EChartsSerieDefinition
     {
         [Description("No Serie")]
         None,
-        [Description("Scatter")]
-        ScatterChart,
         [Description("Line")]
         Line,
+        [Description("Area")]
+        Area,
         [Description("Bar")]
-        MultiBarChart,
-        [Description("Pie")]
-        PieChart,
-        [Description("Stacked Area")]
-        StackedAreaChart,
+        Bar,
         [Description("Horizontal Bar")]
-        MultiBarHorizontalChart,
-        [Description("Line with focus")]
-        LineWithFocusChart,
-        [Description("Cumulative Line")]
-        CumulativeLineChart,
-       [Description("Discrete Bar")]
-       DiscreteBarChart,
+        HorizontalBar,
+        [Description("Stacked Bar")]
+        StackedBar,
+        [Description("Pie")]
+        Pie,
+        [Description("Scatter")]
+        Scatter,
+        [Description("Radar")]
+        Radar,
     };
 
     public enum ChartJSSerieDefinition
@@ -685,7 +683,7 @@ namespace Seal.Model
     public enum ResultPageIdentifierType
     {
         ChartJSCanvas,
-        ChartNVD3Canvas,
+        ChartEChartsCanvas,
         ChartPlotlyCanvas,
         GaugeCanvas,
     }

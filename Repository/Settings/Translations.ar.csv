@@ -1,10 +1,4 @@
 ﻿Context;Reference;ar
-NVD3;(right axis);(المحور الأيمن)
-NVD3;Expanded;موسّع
-NVD3;Grouped;مجمّع
-NVD3;Re-scale y-axis;إعادة قياس المحور y
-NVD3;Stacked;مكدّس
-NVD3;Stream;دفق
 Report;!=;!=
 Report;# of % selected;# من % محدد
 Report;(filtered from _MAX_);(تمت التصفية من _MAX_)

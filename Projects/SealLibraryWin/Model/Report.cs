@@ -1122,16 +1122,25 @@ namespace Seal.Model
         [XmlIgnore]
         public bool HasChart
         {
-            get { return HasNVD3Chart || HasChartJSChart || HasPlotlyChart || HasScottPlotChart; }
+            get { return HasEChartsChart || HasChartJSChart || HasPlotlyChart || HasScottPlotChart; }
         }
 
         /// <summary>
-        /// True if the report has NVD3 chart
+        /// True if the report has ECharts chart
         /// </summary>
         [XmlIgnore]
-        public bool HasNVD3Chart
+        public bool HasEChartsChart
         {
-            get { return Models.Exists(i => i.HasNVD3Serie); }
+            get { return Models.Exists(i => i.HasEChartsSerie); }
+        }
+
+        /// <summary>
+        /// True if the report has a Gauge view (built with ECharts)
+        /// </summary>
+        [XmlIgnore]
+        public bool HasGauge
+        {
+            get { return AllViews.Exists(i => i.TemplateName == ReportViewTemplate.GaugeName); }
         }
 
         /// <summary>

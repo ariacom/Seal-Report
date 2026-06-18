@@ -127,6 +127,11 @@ namespace Seal.Model
         {
             CSVRenderer.View = this;
 
+            //Silently drop child views whose template no longer exists in the repository (e.g. a removed chart engine like NVD3).
+            //This keeps older reports loadable instead of throwing when the template cannot be found. The drop is not
+            //reported as a load error so report integrity checks are not impacted.
+            Views.RemoveAll(i => !RepositoryServer.ViewTemplates.Any(t => t.Name == i.TemplateName && t.RendererType == ""));
+
             foreach (var childView in Views)
             {
                 childView.ParentView = this;
@@ -231,7 +236,7 @@ namespace Seal.Model
                 Report.AddChildView(containerView, ReportViewTemplate.PageTableName);
                 Report.AddChildView(containerView, ReportViewTemplate.ChartJSName);
                 Report.AddChildView(containerView, ReportViewTemplate.ChartScottplotName);
-                Report.AddChildView(containerView, ReportViewTemplate.ChartNVD3Name);
+                Report.AddChildView(containerView, ReportViewTemplate.ChartEChartsName);
                 Report.AddChildView(containerView, ReportViewTemplate.ChartPlotlyName);
                 Report.AddChildView(containerView, ReportViewTemplate.DataTableName);
             }
@@ -1524,7 +1529,7 @@ namespace Seal.Model
 
         private void initAxisProperties(List<ResultCell[]> XDimensions)
         {
-            bool hasPie = Model.Elements.Exists(i => (i.Nvd3Serie == NVD3SerieDefinition.PieChart || i.ChartJSSerie == ChartJSSerieDefinition.Pie || i.ChartJSSerie == ChartJSSerieDefinition.PolarArea || i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);
+            bool hasPie = Model.Elements.Exists(i => (i.EChartsSerie == EChartsSerieDefinition.Pie || i.ChartJSSerie == ChartJSSerieDefinition.Pie || i.ChartJSSerie == ChartJSSerieDefinition.PolarArea || i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);
             var dimensions = XDimensions.FirstOrDefault();
             if (dimensions != null)
             {
@@ -1535,7 +1540,7 @@ namespace Seal.Model
                     {
                         Model.ExecChartIsNumericAxis = dimensions[0].Element.IsNumeric;
                         Model.ExecChartIsDateTimeAxis = dimensions[0].Element.IsDateTime;
-                        Model.ExecD3XAxisFormat = dimensions[0].Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
+                        Model.ExecD3XAxisFormat = dimensions[0].Element.GetD3Format(CultureInfo);
                         Model.ExecMomentJSXAxisFormat = dimensions[0].Element.GetMomentJSFormat(CultureInfo); ;
                         Model.ExecDateFnsXAxisFormat = dimensions[0].Element.GetDateFnsFormat(CultureInfo);
                     }
@@ -1673,12 +1678,12 @@ namespace Seal.Model
 
                 if (string.IsNullOrEmpty(Model.ExecD3PrimaryYAxisFormat) && resultSerie.Element.YAxisType == AxisType.Primary)
                 {
-                    Model.ExecD3PrimaryYAxisFormat = resultSerie.Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
+                    Model.ExecD3PrimaryYAxisFormat = resultSerie.Element.GetD3Format(CultureInfo);
                     Model.ExecAxisPrimaryYIsDateTime = resultSerie.Element.IsDateTime;
                 }
                 else if (string.IsNullOrEmpty(Model.ExecD3SecondaryYAxisFormat) && resultSerie.Element.YAxisType == AxisType.Secondary)
                 {
-                    Model.ExecD3SecondaryYAxisFormat = resultSerie.Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
+                    Model.ExecD3SecondaryYAxisFormat = resultSerie.Element.GetD3Format(CultureInfo);
                     Model.ExecAxisSecondaryYIsDateTime = resultSerie.Element.IsDateTime;
                 }
 
@@ -1726,7 +1731,7 @@ namespace Seal.Model
                         yValue = ((double)yValue).ToString(CultureInfo.InvariantCulture.NumberFormat);
                     }
 
-                    if (yValue == null && GetBoolValue(Parameter.NVD3AddNullPointParameter))
+                    if (yValue == null && GetBoolValue(Parameter.ChartAddNullPointParameter))
                     {
                         yValue = "0";
                     }
@@ -1785,7 +1790,7 @@ namespace Seal.Model
                 {
                     if (Model.HasSerie && !page.ChartInitDone)
                     {
-                        Model.CheckNVD3ChartIntegrity();
+                        Model.CheckEChartsChartIntegrity();
                         Model.CheckPlotlyChartIntegrity();
                         Model.CheckChartJSIntegrity();
                         Model.CheckScottPlotChartIntegrity();

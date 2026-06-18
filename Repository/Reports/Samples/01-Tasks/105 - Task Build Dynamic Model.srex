@@ -291,8 +291,8 @@ task.LogMessage($"Elements-&gt; '{sqlModel.Elements.Count}' Restrs-&gt;{sqlModel
                 </ReportView>
                 <ReportView>
                   <GUID>1a6102bf-edb5-4e6f-9438-efeb0121a9fa</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>4</SortOrder>
                 </ReportView>
                 <ReportView>

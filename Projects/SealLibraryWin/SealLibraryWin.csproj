@@ -154,8 +154,8 @@
 		<None Include="..\..\Repository\Sources\TaskTemplates\AI Summary.cshtml" Link="TaskTemplates\AI Summary.cshtml" />
 		<None Include="..\..\Repository\Views\ChartJS.config.cshtml" Link="Views\ChartJS.config.cshtml" />
 		<None Include="..\..\Repository\Views\ChartJS.cshtml" Link="Views\ChartJS.cshtml" />
-		<None Include="..\..\Repository\Views\ChartNVD3.config.cshtml" Link="Views\ChartNVD3.config.cshtml" />
-		<None Include="..\..\Repository\Views\ChartNVD3.cshtml" Link="Views\ChartNVD3.cshtml" />
+		<None Include="..\..\Repository\Views\ChartEcharts.config.cshtml" Link="Views\ChartEcharts.config.cshtml" />
+		<None Include="..\..\Repository\Views\ChartEcharts.cshtml" Link="Views\ChartEcharts.cshtml" />
 		<None Include="..\..\Repository\Views\ChartPlotly.config.cshtml" Link="Views\ChartPlotly.config.cshtml" />
 		<None Include="..\..\Repository\Views\ChartPlotly.cshtml" Link="Views\ChartPlotly.cshtml" />
 		<None Include="..\..\Repository\Views\ChartScottplot.config.cshtml" Link="Views\ChartScottplot.config.cshtml" />
@@ -194,7 +194,7 @@
 		<None Include="..\..\Repository\Views\Restrictions.config.cshtml" Link="Views\Restrictions.config.cshtml" />
 		<None Include="..\..\Repository\Views\Restrictions.cshtml" Link="Views\Restrictions.cshtml" />
 		<None Include="..\..\Repository\Views\Restrictions.iShared.partial.cshtml" Link="Views\Restrictions.iShared.partial.cshtml" />
-		<None Include="..\..\Repository\Views\Scripts\chartNVD3.js" Link="Views\Scripts\chartNVD3.js" />
+		<None Include="..\..\Repository\Views\js\chartEcharts.js" Link="Views\js\chartEcharts.js" />
 		<None Include="..\..\Repository\Views\Scripts\common.js" Link="Views\Scripts\common.js" />
 		<None Include="..\..\Repository\Views\Scripts\helpers.js" Link="Views\Scripts\helpers.js" />
 		<None Include="..\..\Repository\Views\TabControl.config.cshtml" Link="Views\TabControl.config.cshtml" />
@@ -259,8 +259,8 @@
 		<None Include="..\..\Repository\Views\Renderers\PDF\Widget.cshtml" Link="Views\Renderers\PDF\Widget.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\ChartJS.config.cshtml" Link="Views\Renderers\PDF\ChartJS.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\ChartJS.cshtml" Link="Views\Renderers\PDF\ChartJS.cshtml" />
-		<None Include="..\..\Repository\Views\Renderers\PDF\ChartNVD3.config.cshtml" Link="Views\Renderers\PDF\ChartNVD3.config.cshtml" />
-		<None Include="..\..\Repository\Views\Renderers\PDF\ChartNVD3.cshtml" Link="Views\Renderers\PDF\ChartNVD3.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartEcharts.config.cshtml" Link="Views\Renderers\PDF\ChartEcharts.config.cshtml" />
+		<None Include="..\..\Repository\Views\Renderers\PDF\ChartEcharts.cshtml" Link="Views\Renderers\PDF\ChartEcharts.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\ChartPlotly.config.cshtml" Link="Views\Renderers\PDF\ChartPlotly.config.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\ChartPlotly.cshtml" Link="Views\Renderers\PDF\ChartPlotly.cshtml" />
 		<None Include="..\..\Repository\Views\Renderers\PDF\Gauge.config.cshtml" Link="Views\Renderers\PDF\Gauge.config.cshtml" />

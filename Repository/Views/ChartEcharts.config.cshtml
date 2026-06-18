@@ -1,0 +1,28 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+    Template.Description = "Render the Apache ECharts series of the page result.";
+
+    //If true, the view is a child of a report model view
+    Template.IsModelViewChild = true;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "echarts_width", DisplayName = "Chart width", Description = "The chart width. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "500px", "600px", "50%", "80%", "100%" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_height", TextValue = "400px", DisplayName = "Chart height", Description = "The chart height. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "500px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_title", DisplayName = "Chart title", Description = "Optional title displayed for the ECharts chart. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_xaxis_title", DisplayName = "X Axis: Title", Description = "Optional title displayed for the X Axis. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_xaxis_count", DisplayName = "X Axis: Number of values", NumericValue = 0, Description = "Number of X Axis values to display in the chart (e.g. to show the top 10 values). If 0, all the values are shown." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_yaxis_title", DisplayName = "Y Axis: Title", Description = "Optional title displayed for the Y Axis. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_yaxis2_title", DisplayName = "Secondary Y Axis: Title", Description = "Optional title displayed for the secondary Y Axis. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_show_legend", DisplayName = "Show legend", BoolValue = true, Description = "If true, the legend is displayed in the chart." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_legend_orientation", DisplayName = "Legend orientation", Description = "The orientation of the legend in the chart. Either Horizontal or Vertical.", Value = "horizontal", Enums = new string[] { "horizontal|Horizontal", "vertical|Vertical" } });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_show_datalabels", DisplayName = "Show data labels", BoolValue = false, Description = "If true, the value of each point is displayed on the chart." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_show_toolbox", DisplayName = "Show toolbox", BoolValue = false, Description = "If true, the ECharts toolbox (save as image, data view, zoom) is displayed in the chart." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_line_smooth", DisplayName = "Line: Smooth", BoolValue = false, Description = "If true, Line and Area series are drawn with smooth curves." });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_pie_radius", DisplayName = "Pie: Radius", Value = "70%", Description = "Radius of the pie. Use a single value for a pie (e.g. '70%') or two values 'inner,outer' for a doughnut (e.g. '40%,70%').", Enums = new string[] { "70%", "40%,70%", "50%,70%", "60%,80%" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_pie_roseType", DisplayName = "Pie: Rose type", Value = "", Description = "If set, the pie is drawn as a Nightingale rose diagram.", Enums = new string[] { "|None", "radius|Radius", "area|Area" } });
+    Template.Parameters.Add(new Parameter() { Name = "echarts_colors", DisplayName = "Colors", Description = "The list of colors used for the series (JavaScript array of strings). If empty, the default ECharts palette is used.", Value = "", Enums = new string[] { "|ECharts (default)", ReportViewTemplate.GoogleColors + "|Google", ReportViewTemplate.D3Colors + "|D3" }, UseOnlyEnumValues = false });
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model", "Container", "Container Grid Flex", "Widget", "Tab Page" };
+}

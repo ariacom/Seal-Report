@@ -1,0 +1,222 @@
+@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    if (page == null) { return; }
+    var series = page.Series.Where(i => i.Element.EChartsSerie != EChartsSerieDefinition.None).OrderBy(i => i, new ResultSerieComparer());
+}
+
+@if (reportModel.HasEChartsSerie && series.Count() > 0 && modelView.GetBoolValue("show_charts"))
+{
+    <!--Chart ECharts-->
+    bool chartOk = false;
+    var axisCount = view.GetNumericValue("echarts_xaxis_count");
+    string chartId = "cec" + Guid.NewGuid().ToString().Replace("-", "");
+    if (modelView.InitPageChart(page))
+    {
+        page.SetIdentifier(ResultPageIdentifierType.ChartEChartsCanvas, chartId);
+        var chartType = reportModel.ExecEChartsChartType;
+        var xAxisType = reportModel.ExecChartIsDateTimeAxis ? "time" : (reportModel.ExecChartIsNumericAxis ? "value" : "category");
+        var hasSecondary = series.Any(i => i.Element.YAxisType == AxisType.Secondary);
+        var xLabels = string.Join(",", axisCount > 0 ? page.ChartXLabels.Take(axisCount) : page.ChartXLabels);
+        var height = view.GetValue("echarts_height");
+        if (string.IsNullOrEmpty(height)) { height = "400px"; }
+
+        <div id="@chartId" style="page-break-inside:avoid;@Helper.AddIfNotEmpty("width:", view.GetValue("echarts_width"), ";")height:@height;"></div>
+
+        <script>
+            $(document).ready(function () {
+                var dom = document.getElementById('@chartId');
+                var myChart = echarts.init(dom);
+
+                var chartType = '@chartType';
+                if (!chartType) chartType = 'line';
+                var xAxisType = '@xAxisType';
+                var yIsTime = @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime);
+                var hasSecondary = @Helper.ToJS(hasSecondary);
+
+                var smooth = @view.GetBoolValueJS("echarts_line_smooth");
+                var showLabels = @view.GetBoolValueJS("echarts_show_datalabels");
+                var showLegend = @view.GetBoolValueJS("echarts_show_legend");
+                var showToolbox = @view.GetBoolValueJS("echarts_show_toolbox");
+                var legendOrient = '@view.GetValue("echarts_legend_orientation")';
+                var pieRadius = '@view.GetValue("echarts_pie_radius")';
+                var pieRoseType = '@view.GetValue("echarts_pie_roseType")';
+                var colorList = @Raw(string.IsNullOrEmpty(view.GetValue("echarts_colors")) ? "null" : view.GetValue("echarts_colors"));
+
+                var xLabels = [@Raw(xLabels)];
+                var navigations = [@Raw(string.Join(",", page.ChartNavigations))];
+                var title = '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("echarts_title"))))';
+                var xTitle = '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("echarts_xaxis_title"))))';
+                var yTitle = '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("echarts_yaxis_title"))))';
+                var y2Title = '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("echarts_yaxis2_title"))))';
+                var primaryYFormat = '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))';
+                var secondaryYFormat = '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))';
+
+                var rawSeries = [
+                    @foreach (ResultSerie serie in series)
+                    {
+                        var yvals = axisCount > 0 ? string.Join(",", serie.ChartYSerieValues.Split(',').Take(axisCount)) : serie.ChartYSerieValues;
+                        <text>
+                        {
+                            name: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
+                            y: [@Raw(yvals)],
+                            @if (reportModel.ExecChartIsNumericAxis)
+                            {
+                                var xvals = axisCount > 0 ? string.Join(",", serie.ChartXSerieValues.Split(',').Take(axisCount)) : serie.ChartXSerieValues;
+                                <text>x: [@Raw(xvals)],</text>
+                            }
+                            @if (reportModel.ExecChartIsDateTimeAxis)
+                            {
+                                var xdates = axisCount > 0 ? string.Join(",", serie.ChartXDateTimeSerieValues.Split(',').Take(axisCount)) : serie.ChartXDateTimeSerieValues;
+                                <text>xd: [@Raw(xdates)],</text>
+                            }
+                            @if (reportModel.ExecAxisPrimaryYIsDateTime)
+                            {
+                                var ydates = axisCount > 0 ? string.Join(",", serie.ChartYDateSerieValues.Split(',').Take(axisCount)) : serie.ChartYDateSerieValues;
+                                <text>yd: [@Raw(ydates)],</text>
+                            }
+                            mixType: '@serie.EChartsMixedChartType',
+                            isArea: @Helper.ToJS(serie.EChartsIsArea),
+                            isStacked: @Helper.ToJS(serie.EChartsIsStacked),
+                            secondary: @Helper.ToJS(serie.Element.YAxisType == AxisType.Secondary)
+                        },
+                        </text>
+                    }
+                ];
+
+                function fmt(v, fmtStr) {
+                    if (v === null || v === undefined || v === '' || isNaN(v)) return v;
+                    if (!fmtStr) return v;
+                    try { return d3.format(fmtStr)(v).valueFormat(); } catch (e) { return v; }
+                }
+                function fmtY(v, secondary) { return fmt(v, secondary ? secondaryYFormat : primaryYFormat); }
+
+                function pointData(s) {
+                    var data = [];
+                    for (var k = 0; k < s.y.length; k++) {
+                        var yv = (yIsTime && s.yd) ? s.yd[k] : s.y[k];
+                        if (xAxisType === 'category') data.push(yv);
+                        else if (xAxisType === 'value') data.push([s.x[k], yv]);
+                        else data.push([s.xd[k], yv]);
+                    }
+                    return data;
+                }
+
+                var legend = showLegend ? { type: 'scroll', orient: legendOrient, top: title ? 30 : 5 } : null;
+                var toolbox = showToolbox ? { feature: { dataZoom: { yAxisIndex: 'none' }, dataView: { readOnly: true }, restore: {}, saveAsImage: {} } } : null;
+
+                var option = {
+                    title: title ? { text: title, left: 'center' } : undefined,
+                    legend: legend || undefined,
+                    toolbox: toolbox || undefined,
+                    tooltip: {}
+                };
+                //Only set a palette when one is provided: assigning color:undefined would wipe ECharts' default palette and draw the series with no color (invisible).
+                if (colorList) option.color = colorList;
+
+                if (chartType === 'pie') {
+                    if (legend) legend.data = xLabels;
+                    option.tooltip = { trigger: 'item', formatter: function (p) { return p.name + '<br/>' + fmtY(p.value) + ' (' + p.percent + '%)'; } };
+                    var radius = pieRadius.indexOf(',') >= 0 ? pieRadius.split(',') : pieRadius;
+                    option.series = [{
+                        type: 'pie',
+                        radius: radius,
+                        roseType: pieRoseType || undefined,
+                        data: xLabels.map(function (l, i) { return { name: l, value: rawSeries[0].y[i] }; }),
+                        label: { show: true, formatter: '{b}: {d}%' }
+                    }];
+                }
+                else if (chartType === 'radar') {
+                    if (legend) legend.data = rawSeries.map(function (s) { return s.name; });
+                    option.tooltip = { trigger: 'item' };
+                    var indicators = xLabels.map(function (l, i) {
+                        var mx = 0;
+                        for (var s = 0; s < rawSeries.length; s++) { var v = rawSeries[s].y[i]; if (v > mx) { mx = v; } }
+                        return { name: l, max: mx };
+                    });
+                    option.radar = { indicator: indicators };
+                    option.series = [{
+                        type: 'radar',
+                        data: rawSeries.map(function (s) { return { name: s.name, value: s.y, areaStyle: s.isArea ? {} : undefined }; })
+                    }];
+                }
+                else if (chartType === 'horizontalBar') {
+                    if (legend) legend.data = rawSeries.map(function (s) { return s.name; });
+                    option.tooltip = { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return fmtY(v); } };
+                    option.xAxis = { type: 'value', name: xTitle || undefined, axisLabel: { formatter: function (v) { return fmtY(v); } } };
+                    option.yAxis = { type: 'category', data: xLabels, name: yTitle || undefined };
+                    option.series = rawSeries.map(function (s) {
+                        var ser = { name: s.name, type: 'bar', data: s.y };
+                        if (s.isStacked) { ser.stack = 'total'; }
+                        if (showLabels) { ser.label = { show: true, position: 'right', formatter: function (p) { return fmtY(p.value); } }; }
+                        return ser;
+                    });
+                }
+                else {
+                    //Cartesian charts: line, area, bar, stackedBar, scatter, mixed
+                    if (legend) legend.data = rawSeries.map(function (s) { return s.name; });
+                    option.tooltip = (chartType === 'scatter') ?
+                        { trigger: 'item', valueFormatter: function (v) { return fmtY(v); } } :
+                        { trigger: 'axis', valueFormatter: function (v) { return fmtY(v); } };
+
+                    option.xAxis = {
+                        type: xAxisType,
+                        data: xAxisType === 'category' ? xLabels : undefined,
+                        name: xTitle || undefined
+                    };
+                    option.yAxis = [{ type: yIsTime ? 'time' : 'value', name: yTitle || undefined, axisLabel: { formatter: function (v) { return fmtY(v, false); } } }];
+                    if (hasSecondary) {
+                        option.yAxis.push({ type: 'value', name: y2Title || undefined, axisLabel: { formatter: function (v) { return fmtY(v, true); } } });
+                    }
+
+                    option.series = rawSeries.map(function (s) {
+                        var t = 'line';
+                        if (chartType === 'mixed') { t = s.mixType; }
+                        else if (chartType === 'bar' || chartType === 'stackedBar') { t = 'bar'; }
+                        else if (chartType === 'scatter') { t = 'scatter'; }
+                        var ser = {
+                            name: s.name,
+                            type: t,
+                            yAxisIndex: (hasSecondary && s.secondary) ? 1 : 0,
+                            data: pointData(s)
+                        };
+                        var isArea = (chartType === 'area') || (chartType === 'mixed' && s.isArea);
+                        if (t === 'line') { ser.smooth = smooth; if (isArea) { ser.areaStyle = {}; } }
+                        var isStacked = (chartType === 'stackedBar') || (chartType === 'mixed' && s.isStacked);
+                        if (t === 'bar' && isStacked) { ser.stack = 'total'; }
+                        if (showLabels) {
+                            ser.label = { show: true, formatter: function (p) { var val = (p.value instanceof Array) ? p.value[p.value.length - 1] : p.value; return fmtY(val, s.secondary); } };
+                        }
+                        return ser;
+                    });
+                }
+
+                myChart.setOption(option);
+                registerEChartsChart(myChart);
+
+                if (@Helper.ToJS(report.GenerateHTMLDisplay)) {
+                    myChart.on('click', function (params) {
+                        var idx = params.dataIndex;
+                        if (idx !== undefined && idx !== null && idx !== -1 && navigations[idx]) {
+                            var ev = (params.event && params.event.event) ? params.event.event : params.event;
+                            showPopupNavMenu(ev, navigations[idx], true, '@report.ExecutionGUID');
+                        }
+                    });
+                }
+            });//document.ready
+        </script>
+        chartOk = true;
+    }
+    if (!chartOk)
+    {
+        <div class="alert alert-danger" role="alert">
+            @Raw(Helper.ToHtml(view.Error))
+        </div>
+        view.Error = "";
+    }
+}

@@ -541,8 +541,8 @@
                         </ReportView>
                         <ReportView>
                           <GUID>c67109c7-4a86-490b-ab5d-d9603c8c5f06</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>
@@ -602,8 +602,8 @@
                         </ReportView>
                         <ReportView>
                           <GUID>7b19915c-7079-4bc0-97f4-d56e27d64c50</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>
@@ -663,8 +663,8 @@
                         </ReportView>
                         <ReportView>
                           <GUID>b6c80cef-4a34-4373-bfa6-64077fb1cca5</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>
@@ -724,8 +724,8 @@
                         </ReportView>
                         <ReportView>
                           <GUID>7ac065fb-8990-4173-9490-402029798864</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>

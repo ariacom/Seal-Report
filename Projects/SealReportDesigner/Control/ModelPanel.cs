@@ -659,7 +659,7 @@ namespace Seal.Controls
                     ReportElement newElement = button.Tag as ReportElement;
                     newElement.AggregateFunction = element.AggregateFunction;
                     newElement.CalculationOption = element.CalculationOption;
-                    newElement.Nvd3Serie = element.Nvd3Serie;
+                    newElement.EChartsSerie = element.EChartsSerie;
                     newElement.ChartJSSerie = element.ChartJSSerie;
                     newElement.ScottPlotSerie = element.ScottPlotSerie;
                     newElement.PlotlySerie = element.PlotlySerie;

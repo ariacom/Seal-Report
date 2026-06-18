@@ -150,21 +150,15 @@
         if (def2 == ScottPlotSerieDefinition.Scatter) return eChartType.XYScatter;
         if (def2 == ScottPlotSerieDefinition.Pie) return eChartType.Pie;
 
-        view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartNVD3Name);
-        if (view != null)
-        {
-            stacked = view.GetBoolValue("nvd3_bar_stacked");
-        }
-        var def3 = element.Nvd3Serie;
-        if (def3 == NVD3SerieDefinition.ScatterChart) return eChartType.XYScatter;
-        if (def3 == NVD3SerieDefinition.PieChart) return eChartType.Pie;
-        if (def3 == NVD3SerieDefinition.Line) return eChartType.Line;
-        if (def3 == NVD3SerieDefinition.MultiBarChart) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
-        if (def3 == NVD3SerieDefinition.StackedAreaChart) return eChartType.AreaStacked;
-        if (def3 == NVD3SerieDefinition.MultiBarHorizontalChart) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
-        if (def3 == NVD3SerieDefinition.LineWithFocusChart) return eChartType.Line;
-        if (def3 == NVD3SerieDefinition.CumulativeLineChart) return eChartType.LineStacked;
-        if (def3 == NVD3SerieDefinition.DiscreteBarChart) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
+        var def3 = element.EChartsSerie;
+        if (def3 == EChartsSerieDefinition.Scatter) return eChartType.XYScatter;
+        if (def3 == EChartsSerieDefinition.Pie) return eChartType.Pie;
+        if (def3 == EChartsSerieDefinition.Line) return eChartType.Line;
+        if (def3 == EChartsSerieDefinition.Area) return eChartType.AreaStacked;
+        if (def3 == EChartsSerieDefinition.Bar) return eChartType.ColumnClustered;
+        if (def3 == EChartsSerieDefinition.StackedBar) return eChartType.ColumnStacked;
+        if (def3 == EChartsSerieDefinition.HorizontalBar) return eChartType.BarClustered;
+        if (def3 == EChartsSerieDefinition.Radar) return eChartType.Radar;
 
         view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartPlotlyName);
         if (view != null)

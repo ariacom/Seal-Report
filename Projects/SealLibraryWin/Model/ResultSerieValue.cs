@@ -61,7 +61,7 @@ namespace Seal.Model
         {
             get
             {
-                bool hasMultipleSerieDef = Element.Model.Elements.Exists(i => i != Element && i.PivotPosition == PivotPosition.Data && ((i.ChartJSSerie != ChartJSSerieDefinition.None && Element.ChartJSSerie != ChartJSSerieDefinition.None) || (i.Nvd3Serie != NVD3SerieDefinition.None && Element.Nvd3Serie != NVD3SerieDefinition.None) || (i.PlotlySerie != PlotlySerieDefinition.None || Element.PlotlySerie != PlotlySerieDefinition.None)));
+                bool hasMultipleSerieDef = Element.Model.Elements.Exists(i => i != Element && i.PivotPosition == PivotPosition.Data && ((i.ChartJSSerie != ChartJSSerieDefinition.None && Element.ChartJSSerie != ChartJSSerieDefinition.None) || (i.EChartsSerie != EChartsSerieDefinition.None && Element.EChartsSerie != EChartsSerieDefinition.None) || (i.PlotlySerie != PlotlySerieDefinition.None || Element.PlotlySerie != PlotlySerieDefinition.None)));
                 if (!hasMultipleSerieDef) return string.IsNullOrEmpty(SplitterValues) ? Element.DisplayNameElTranslated : SplitterValues;
                 return Element.DisplayNameElTranslated + (string.IsNullOrEmpty(SplitterValues) ? "" : ": " + SplitterValues);
             }
@@ -85,18 +85,35 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// For NVD3 serie, returns the chart type
+        /// For an ECharts mixed cartesian chart, returns the per-serie chart type
         /// </summary>
-        public string NVD3MultiChartType
+        public string EChartsMixedChartType
         {
             get
             {
-                if (Element.Nvd3Serie == NVD3SerieDefinition.Line) return "line";
-                else if (Element.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart) return "area";
-                else if (Element.Nvd3Serie == NVD3SerieDefinition.MultiBarChart) return "bar";
-                else if (Element.Nvd3Serie == NVD3SerieDefinition.ScatterChart) return "scatter";
-                return "";
+                if (Element.EChartsSerie == EChartsSerieDefinition.Line) return "line";
+                else if (Element.EChartsSerie == EChartsSerieDefinition.Area) return "line";
+                else if (Element.EChartsSerie == EChartsSerieDefinition.Bar) return "bar";
+                else if (Element.EChartsSerie == EChartsSerieDefinition.StackedBar) return "bar";
+                else if (Element.EChartsSerie == EChartsSerieDefinition.Scatter) return "scatter";
+                return "line";
             }
+        }
+
+        /// <summary>
+        /// True if the ECharts serie should be drawn as an area (line with areaStyle)
+        /// </summary>
+        public bool EChartsIsArea
+        {
+            get { return Element.EChartsSerie == EChartsSerieDefinition.Area; }
+        }
+
+        /// <summary>
+        /// True if the ECharts serie is stacked
+        /// </summary>
+        public bool EChartsIsStacked
+        {
+            get { return Element.EChartsSerie == EChartsSerieDefinition.StackedBar; }
         }
 
         public string ChartXYSerieValues;

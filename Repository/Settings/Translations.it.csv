@@ -1,10 +1,4 @@
 ﻿Context;Reference;it
-NVD3;(right axis);(l'asse di destra)
-NVD3;Expanded;Espanso
-NVD3;Grouped;Raggruppata
-NVD3;Re-scale y-axis;Riscala l'asse y
-NVD3;Stacked;Impilato/a
-NVD3;Stream;Flusso
 Report;!=;!=
 Report;# of % selected;# selezionati su %
 Report;(filtered from _MAX_);(filtrato da _MAX_)

@@ -1,10 +1,4 @@
 ﻿Context;Reference;ko
-NVD3;(right axis);(우측 축)
-NVD3;Expanded;확장됨
-NVD3;Grouped;그룹화됨
-NVD3;Re-scale y-axis;y축 다시 조정
-NVD3;Stacked;누적
-NVD3;Stream;스트림
 Report;!=;!=
 Report;# of % selected;선택된 % 개수
 Report;(filtered from _MAX_);(_MAX_에서 필터링됨)

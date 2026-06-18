@@ -32,7 +32,7 @@
           <DisplayName />
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -44,7 +44,7 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -184,7 +184,7 @@
           <Format>yyyy</Format>
           <PivotPosition>Page</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
         </ReportElement>
       </Elements>
@@ -197,7 +197,7 @@
           <Format>yyyy</Format>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
           <Operator>GreaterEqual</Operator>
           <Date1>1995-01-01T00:00:00</Date1>
@@ -227,8 +227,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>5f5f5810-92e5-4a17-a334-610d698df2d5</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>4</SortOrder>
                 </ReportView>
                 <ReportView>

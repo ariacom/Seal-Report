@@ -1,10 +1,4 @@
 ﻿Context;Reference;ro
-NVD3;(right axis);(axa dreaptă)
-NVD3;Expanded;Extins
-NVD3;Grouped;Grupat
-NVD3;Re-scale y-axis;Re-scalează axa y
-NVD3;Stacked;Stivuit
-NVD3;Stream;Flux
 Report;!=;!=
 Report;# of % selected;# din % selectate
 Report;(filtered from _MAX_);(filtrat din _MAX_)

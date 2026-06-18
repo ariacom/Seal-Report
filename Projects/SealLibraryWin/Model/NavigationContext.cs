@@ -202,7 +202,7 @@ namespace Seal.Model
         {
             string initialLabel = element.DisplayNameEl;
             element.ChangeColumnGUID(newGUID);
-            view.ReplaceInParameterValues("nvd3_chart_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
+            view.ReplaceInParameterValues("echarts_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
             view.ReplaceInParameterValues("chartjs_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
             view.ReplaceInParameterValues("plotly_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
         }

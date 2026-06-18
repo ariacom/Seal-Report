@@ -1,10 +1,4 @@
 ﻿Context;Reference;zh
-NVD3;(right axis);（右轴）
-NVD3;Expanded;扩大
-NVD3;Grouped;分组
-NVD3;Re-scale y-axis;重新缩放Y轴
-NVD3;Stacked;堆积
-NVD3;Stream;流
 Report;!=;！=
 Report;# of % selected;# of % selected
 Report;(filtered from _MAX_);（从 _MAX_ 条记录中筛选）

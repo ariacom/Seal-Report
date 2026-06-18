@@ -67,7 +67,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -100,7 +100,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -133,7 +133,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -166,7 +166,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -199,7 +199,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -232,7 +232,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -265,7 +265,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -298,7 +298,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -331,7 +331,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -364,7 +364,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
@@ -398,7 +398,7 @@
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <XAxisType>Primary</XAxisType>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>

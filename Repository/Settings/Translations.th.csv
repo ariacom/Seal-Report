@@ -1,10 +1,4 @@
 ﻿Context;Reference;th
-NVD3;(right axis);(แกนขวา)
-NVD3;Expanded;ขยาย
-NVD3;Grouped;จัดกลุ่ม
-NVD3;Re-scale y-axis;ปรับสเกลแกน y ใหม่
-NVD3;Stacked;ซ้อนกัน
-NVD3;Stream;สตรีม
 Report;!=;!=
 Report;# of % selected;# จาก % ที่เลือก
 Report;(filtered from _MAX_);(กรองจาก _MAX_)

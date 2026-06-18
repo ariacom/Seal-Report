@@ -1,10 +1,4 @@
 ﻿Context;Reference;fi
-NVD3;(right axis);(oikea akseli)
-NVD3;Expanded;Laajennettu
-NVD3;Grouped;Ryhmitelty
-NVD3;Re-scale y-axis;Skaalaa y-akseli uudelleen
-NVD3;Stacked;Pinottu
-NVD3;Stream;Virtaus
 Report;!=;!=
 Report;# of % selected;# / % valittu
 Report;(filtered from _MAX_);(suodatettu _MAX_:sta)

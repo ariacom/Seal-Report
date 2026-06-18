@@ -36,7 +36,7 @@ if ($LASTEXITCODE -ge 8) { throw "robocopy failed syncing lib (exit $LASTEXITCOD
 $shared = @(
     "js\common.js",
     "js\helpers.js",
-    "js\chartNVD3.js",
+    "js\chartEcharts.js",
     "js\datetime-moment.js",
     "css\seal.css"
 )

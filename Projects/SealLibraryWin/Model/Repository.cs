@@ -265,7 +265,6 @@ namespace Seal.Model
                 {
                     result = true;
                     _cultureInfo = new CultureInfo(newCulture.Name);
-                    _nvd3Translations = null;
                     _jsTranslations = null;
                     initCultureSeparators();
                 }
@@ -1265,36 +1264,6 @@ namespace Seal.Model
                 return _jsTranslations;
             }
         }
-
-        Dictionary<string, string> _nvd3Translations = null;
-        /// <summary>
-        /// Current NVD3 translations (for NVD3 charts)
-        /// </summary>
-        public Dictionary<string, string> NVD3Translations
-        {
-            get
-            {
-                if (_nvd3Translations == null)
-                {
-                    lock (this)
-                    {
-                        _nvd3Translations = new Dictionary<string, string>();
-                        foreach (var translation in Translations.Values.Where(i => i.Context == "NVD3"))
-                        {
-                            var value = translation.Reference;
-                            if (translation.Translations.ContainsKey(CultureInfo.TwoLetterISOLanguageName))
-                            {
-                                value = translation.Translations[CultureInfo.TwoLetterISOLanguageName];
-                                if (string.IsNullOrEmpty(value)) value = translation.Reference;
-                            }
-                            if (!_nvd3Translations.ContainsKey(translation.Reference)) _nvd3Translations.Add(translation.Reference, value);
-                        }
-                    }
-                }
-                return _nvd3Translations;
-            }
-        }
-
 
         public List<string> GetInstalledTranslationLanguages()
         {

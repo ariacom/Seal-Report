@@ -1,10 +1,4 @@
 ﻿Context;Reference;el
-NVD3;(right axis);(δεξιός άξονας)
-NVD3;Expanded;Ανεπτυγμένο
-NVD3;Grouped;Ομαδοποιημένο
-NVD3;Re-scale y-axis;Επανακλιμάκωση άξονα y
-NVD3;Stacked;Στοιβαγμένο
-NVD3;Stream;Ροή
 Report;!=;!=
 Report;# of % selected;# από % επιλεγμένα
 Report;(filtered from _MAX_);(φιλτραρισμένο από _MAX_)

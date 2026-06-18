@@ -683,14 +683,14 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the model has a NVD3 serie
+        /// True if the model has an ECharts serie
         /// </summary>
         [XmlIgnore]
-        public bool HasNVD3Serie
+        public bool HasEChartsSerie
         {
             get
             {
-                return Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.PivotPosition == PivotPosition.Data);
+                return Elements.Exists(i => i.EChartsSerie != EChartsSerieDefinition.None && i.PivotPosition == PivotPosition.Data);
             }
         }
 
@@ -1218,10 +1218,10 @@ model.ResultTable = query2.CopyToDataTable2();
         public string ExecDateFnsXAxisFormat;
 
         /// <summary>
-        /// NVD3 chart type
+        /// ECharts chart type
         /// </summary>
         [XmlIgnore]
-        public string ExecNVD3ChartType;
+        public string ExecEChartsChartType;
 
         /// <summary>
         /// Plotly chart type
@@ -1248,80 +1248,49 @@ model.ResultTable = query2.CopyToDataTable2();
         public bool ExecResultPagesBuilt = false;
 
         /// <summary>
-        /// Check NVD3 Chart and set the ExecNVD3ChartType property
+        /// Check ECharts Chart and set the ExecEChartsChartType property
         /// </summary>
-        public void CheckNVD3ChartIntegrity()
+        public void CheckEChartsChartIntegrity()
         {
-            if (string.IsNullOrEmpty(ExecNVD3ChartType) && HasNVD3Serie)
+            if (string.IsNullOrEmpty(ExecEChartsChartType) && HasEChartsSerie)
             {
-                bool hasArea = false, hasBar = false, hasLine = false;
-
-                //Check and choose the right chart
-                if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.ScatterChart))
+                //Pie, Scatter and Radar cannot be mixed with another type
+                if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie == EChartsSerieDefinition.Pie))
                 {
-                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.ScatterChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Scatter Serie with another type.");
-                    ExecNVD3ChartType = "scatterChart";
+                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie != EChartsSerieDefinition.None && i.EChartsSerie != EChartsSerieDefinition.Pie)) throw new Exception("Invalid chart configuration: Cannot mix ECharts Pie Serie with another type.");
+                    ExecEChartsChartType = "pie";
                 }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.PieChart))
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie == EChartsSerieDefinition.Scatter))
                 {
-                    ExecNVD3ChartType = "pieChart";
+                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie != EChartsSerieDefinition.None && i.EChartsSerie != EChartsSerieDefinition.Scatter)) throw new Exception("Invalid chart configuration: Cannot mix ECharts Scatter Serie with another type.");
+                    ExecEChartsChartType = "scatter";
                 }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.MultiBarHorizontalChart))
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie == EChartsSerieDefinition.Radar))
                 {
-                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.MultiBarHorizontalChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Horizontal Bar Serie with another type.");
-                    ExecNVD3ChartType = "multiBarHorizontalChart";
+                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie != EChartsSerieDefinition.None && i.EChartsSerie != EChartsSerieDefinition.Radar)) throw new Exception("Invalid chart configuration: Cannot mix ECharts Radar Serie with another type.");
+                    ExecEChartsChartType = "radar";
                 }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.LineWithFocusChart))
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie == EChartsSerieDefinition.HorizontalBar))
                 {
-                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.LineWithFocusChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Line with focus Serie with another type.");
-                    ExecNVD3ChartType = "lineWithFocusChart";
+                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie != EChartsSerieDefinition.None && i.EChartsSerie != EChartsSerieDefinition.HorizontalBar)) throw new Exception("Invalid chart configuration: Cannot mix ECharts Horizontal Bar Serie with another type.");
+                    ExecEChartsChartType = "horizontalBar";
                 }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.DiscreteBarChart))
+                else
                 {
-                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.DiscreteBarChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Discrete Bar Serie with another type.");
-                    ExecNVD3ChartType = "discreteBarChart";
-                }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.CumulativeLineChart))
-                {
-                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.CumulativeLineChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Cumulative Line Serie with another type.");
-                    ExecNVD3ChartType = "cumulativeLineChart";
-                }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart))
-                {
-                    hasArea = true;
-                    if (!Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.StackedAreaChart))
+                    //Line, Area, Bar and Stacked Bar can be combined: a single type is kept if homogeneous, otherwise the chart is a "mixed" cartesian chart
+                    var cartesianTypes = Elements.Where(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie != EChartsSerieDefinition.None).Select(i => i.EChartsSerie).Distinct().ToList();
+                    if (cartesianTypes.Count == 1)
                     {
-                        //if primary and secondary axis are used, keep the multi chart 
-                        if (!(Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart && i.YAxisType == AxisType.Primary) &&
-                            Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart && i.YAxisType == AxisType.Secondary)))
-                            ExecNVD3ChartType = "stackedAreaChart";
+                        switch (cartesianTypes[0])
+                        {
+                            case EChartsSerieDefinition.Line: ExecEChartsChartType = "line"; break;
+                            case EChartsSerieDefinition.Area: ExecEChartsChartType = "area"; break;
+                            case EChartsSerieDefinition.Bar: ExecEChartsChartType = "bar"; break;
+                            case EChartsSerieDefinition.StackedBar: ExecEChartsChartType = "stackedBar"; break;
+                        }
                     }
+                    else ExecEChartsChartType = "mixed";
                 }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.Line))
-                {
-                    hasLine = true;
-                    if (!Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.Line))
-                    {
-                        //if primary and secondary axis are used, keep the multi chart 
-                        if (!(Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.Line && i.YAxisType == AxisType.Primary) &&
-                            Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.Line && i.YAxisType == AxisType.Secondary)))
-                            ExecNVD3ChartType = "lineChart";
-                    }
-                }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart))
-                {
-                    hasBar = true;
-                    if (!Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.MultiBarChart))
-                    {
-                        //if primary and secondary axis are used, keep the multi chart 
-                        if (!(Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart && i.YAxisType == AxisType.Primary) &&
-                            Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart && i.YAxisType == AxisType.Secondary)))
-                            ExecNVD3ChartType = "multiBarChart";
-                    }
-                }
-
-                //If mix of Line, Bar and Area -> we go for multiChart
-                if (string.IsNullOrEmpty(ExecNVD3ChartType) && (hasArea || hasBar || hasLine)) ExecNVD3ChartType = "multiChart";
             }
         }
 

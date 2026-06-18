@@ -45,7 +45,7 @@
     {
         //Add a chart JS view for Excel rendering
         ReportView chartView = view.FindViewFromTemplate(ReportViewTemplate.ChartScottplotName);
-        if (chartView == null) chartView = view.FindViewFromTemplate(ReportViewTemplate.ChartNVD3Name);
+        if (chartView == null) chartView = view.FindViewFromTemplate(ReportViewTemplate.ChartEChartsName);
         if (chartView == null) chartView = view.FindViewFromTemplate(ReportViewTemplate.ChartPlotlyName);
         if (chartView != null) {
             var newView = report.AddChildView(chartView.ParentView, ReportViewTemplate.ChartJSName);

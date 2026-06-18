@@ -774,8 +774,8 @@ from sys.tables</PreSQL>
                 </ReportView>
                 <ReportView>
                   <GUID>f5c9e0ea-3514-4544-a436-aed92b451e8e</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

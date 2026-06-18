@@ -44,7 +44,7 @@
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Bar</ChartJSSerie>
           <ScottPlotSerie>Bar</ScottPlotSerie>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <EChartsSerie>Bar</EChartsSerie>
           <PlotlySerie>Bar</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -74,7 +74,7 @@
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Line</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>Line</Nvd3Serie>
+          <EChartsSerie>Line</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -104,7 +104,7 @@
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Scatter</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -134,7 +134,7 @@
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Pie</ChartJSSerie>
           <ScottPlotSerie>Pie</ScottPlotSerie>
-          <Nvd3Serie>PieChart</Nvd3Serie>
+          <EChartsSerie>Pie</EChartsSerie>
           <PlotlySerie>Pie</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -182,7 +182,7 @@
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Bar</ChartJSSerie>
           <ScottPlotSerie>Bar</ScottPlotSerie>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <EChartsSerie>Bar</EChartsSerie>
           <PlotlySerie>Bar</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -240,7 +240,7 @@
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Line</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>Line</Nvd3Serie>
+          <EChartsSerie>Line</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -298,7 +298,7 @@
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Scatter</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -368,7 +368,7 @@
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Scatter</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -440,7 +440,7 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Scatter</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <EChartsSerie>Scatter</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -512,7 +512,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Bar</ChartJSSerie>
           <ScottPlotSerie>Bar</ScottPlotSerie>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <EChartsSerie>Bar</EChartsSerie>
           <PlotlySerie>Bar</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -527,7 +527,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <CalculationOption>PercentageAll</CalculationOption>
           <ChartJSSerie>Bar</ChartJSSerie>
           <ScottPlotSerie>Bar</ScottPlotSerie>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <EChartsSerie>Bar</EChartsSerie>
           <PlotlySerie>Bar</PlotlySerie>
           <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
@@ -576,7 +576,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Line</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>Line</Nvd3Serie>
+          <EChartsSerie>Line</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -591,7 +591,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <CalculationOption>PercentageAll</CalculationOption>
           <ChartJSSerie>Line</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>Line</Nvd3Serie>
+          <EChartsSerie>Line</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
@@ -640,7 +640,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Bar</ChartJSSerie>
           <ScottPlotSerie>Bar</ScottPlotSerie>
-          <Nvd3Serie>MultiBarHorizontalChart</Nvd3Serie>
+          <EChartsSerie>HorizontalBar</EChartsSerie>
           <PlotlySerie>Bar</PlotlySerie>
           <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -703,12 +703,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>08b7d244-8c15-4a0a-bff0-87cac4f177f1</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -831,12 +831,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>dd1a1ee4-0ae5-4a6e-b71f-c47ac1fe6d47</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -934,12 +934,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>e667b78c-7c11-43c8-943a-e6aad9ca6191</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1061,12 +1061,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>b57574df-4308-439c-b133-6ba4512d6838</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1156,12 +1156,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>626b5cc5-dea4-4b57-87c9-b0a6e14d7de7</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1239,12 +1239,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>ca1f17a7-6703-4adf-9b0b-8dc30e2c27de</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1322,12 +1322,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>937a0d40-33f8-4a6f-9d32-b1b99338f45a</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1437,12 +1437,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>ab9a1afe-2ab2-4786-a33d-4ba57db99c1d</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1528,12 +1528,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>464d89b0-78d1-4d02-aa31-a4e4d2c95363</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1619,12 +1619,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>ee0b62c4-ebb3-4fae-bf2d-e6d69879a31a</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1706,12 +1706,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>6c64d7c1-0cb1-4a37-8465-a76088f0bce4</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1797,12 +1797,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>5ad17ed2-50e8-4fb7-a324-a8cf8c309d22</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
@@ -1900,12 +1900,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>16300795-afae-43fc-bf47-faefa9c6015d</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_title</Name>
-                      <Value>Chart NVD3</Value>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts</Value>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_bar_stacked</Name>

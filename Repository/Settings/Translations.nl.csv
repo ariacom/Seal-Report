@@ -1,10 +1,4 @@
 ﻿Context;Reference;nl
-NVD3;(right axis);(rechteras)
-NVD3;Expanded;Uitgevouwen
-NVD3;Grouped;Gegroepeerd
-NVD3;Re-scale y-axis;Y-as herschalen
-NVD3;Stacked;Gestapeld
-NVD3;Stream;Stream
 Report;!=;!=
 Report;# of % selected;# van % geselecteerd
 Report;(filtered from _MAX_);(gefilterd uit _MAX_)

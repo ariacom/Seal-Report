@@ -330,8 +330,8 @@ OR [112390c6-5573-42f2-adf5-7798794db3ab]</Restriction>
                 </ReportView>
                 <ReportView>
                   <GUID>ed153070-4048-4394-aee9-9979009663e1</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

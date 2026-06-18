@@ -1,4 +1,4 @@
-﻿@using PuppeteerSharp
+@using PuppeteerSharp
 @using PuppeteerSharp.Media
 @using QuestPDF.Fluent
 @using QuestPDF.Infrastructure
@@ -22,7 +22,7 @@
 
     try
     {
-        foreach (var id in page.GetIdentifiers(ResultPageIdentifierType.ChartNVD3Canvas))
+        foreach (var id in page.GetIdentifiers(ResultPageIdentifierType.ChartEChartsCanvas))
         {
             string canvasSelector = "#" + id;
 
@@ -63,7 +63,7 @@
                 });
             }
         }
-        page.ClearIdentifiers(ResultPageIdentifierType.ChartNVD3Canvas);
+        page.ClearIdentifiers(ResultPageIdentifierType.ChartEChartsCanvas);
     }
     catch (Exception ex)
     {

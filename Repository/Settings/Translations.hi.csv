@@ -1,10 +1,4 @@
 ﻿Context;Reference;hi
-NVD3;(right axis);(दायाँ अक्ष)
-NVD3;Expanded;विस्तारित
-NVD3;Grouped;समूहित
-NVD3;Re-scale y-axis;y-अक्ष पुनः मापें
-NVD3;Stacked;स्टैक्ड
-NVD3;Stream;स्ट्रीम
 Report;!=;!=
 Report;# of % selected;% का # चयनित
 Report;(filtered from _MAX_);(_MAX_ से फ़िल्टर किया गया)

@@ -37,7 +37,7 @@
           <ShowTotal>Column</ShowTotal>
           <ChartJSSerie>Bar</ChartJSSerie>
           <ScottPlotSerie>Bar</ScottPlotSerie>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <EChartsSerie>Bar</EChartsSerie>
           <PlotlySerie>Bar</PlotlySerie>
           <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -54,7 +54,7 @@
           <ShowTotal>Column</ShowTotal>
           <ChartJSSerie>Line</ChartJSSerie>
           <ScottPlotSerie>Scatter</ScottPlotSerie>
-          <Nvd3Serie>Line</Nvd3Serie>
+          <EChartsSerie>Line</EChartsSerie>
           <PlotlySerie>Scatter</PlotlySerie>
           <SerieSortOrder>Descending</SerieSortOrder>
           <YAxisType>Secondary</YAxisType>
@@ -132,8 +132,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>c8e2a38a-4d13-4a50-b4dd-b8f1fe4f7a5e</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

@@ -1,10 +1,4 @@
 ﻿Context;Reference;tr
-NVD3;(right axis);(sağ eksen)
-NVD3;Expanded;Genişletilmiş
-NVD3;Grouped;Gruplanmış
-NVD3;Re-scale y-axis;Y eksenini yeniden ölçeklendir
-NVD3;Stacked;Yığılmış
-NVD3;Stream;Akış
 Report;!=;!=
 Report;# of % selected;% seçili sayısı
 Report;(filtered from _MAX_);(_MAX_ içinden filtrelendi)

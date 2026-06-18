@@ -1,4 +1,4 @@
-﻿@using Seal.Model
+@using Seal.Model
 @using Seal.Helpers
 @{
     Report report = Model;
@@ -8,8 +8,9 @@
     ResultPage page = report.CurrentPage;
     if (page == null) { return; }
 
-    string gaugeId = "g" + Helper.NewGUID(), previewTextId = "pv" + gaugeId, gaugeContainerId = "co" + gaugeId;
-    page.SetIdentifier(ResultPageIdentifierType.GaugeCanvas, gaugeContainerId);
+    string gaugeId = "g" + Helper.NewGUID();
+    //The container is identified for the PDF renderer (screenshot of the bounding box)
+    page.SetIdentifier(ResultPageIdentifierType.GaugeCanvas, gaugeId);
 
     ResultTable table = page.DataTable;
     string value = null, min = null, max = null, animation = null;
@@ -17,71 +18,96 @@
     {
         value = table[table.BodyStartRow, 0].Value.ToString();
         if (table.ColumnCount > 1) {
-            min = table[table.BodyStartRow, 1].Value.ToString();            
+            min = table[table.BodyStartRow, 1].Value.ToString();
         }
         if (table.ColumnCount > 2) {
-            max = table[table.BodyStartRow, 2].Value.ToString();     
+            max = table[table.BodyStartRow, 2].Value.ToString();
         }
         if (table.ColumnCount > 3) {
-            animation = table[table.BodyStartRow, 3].Value.ToString();        
+            animation = table[table.BodyStartRow, 3].Value.ToString();
         }
-    }
-
-    min = min ?? view.GetValue("gauge_min");
-    max = max ?? view.GetValue("gauge_max");
-    animation= animation ?? view.GetValue("gauge_animation");
-
-    string dynamicLabels = "";
-    int mini, maxi;
-    int step = view.GetNumericValue("gauge_step"), division = 0;
-    if (step > 0 && int.TryParse(min, out mini) && int.TryParse(max, out maxi))
-    {
-        for (var i = mini; i<=maxi; i += step)
-        {
-            dynamicLabels += (i != mini ? ",": "") + $"{i}";
-        }
-
-        division = (maxi - mini) / step;
-    }
-    var labels = view.GetValue("gauge_staticlabels");
-    if (!string.IsNullOrEmpty(labels))
-    {
-        labels = labels.Replace("{LABELS}", dynamicLabels);
-    }
-    var ticks = view.GetValue("gauge_ticks");
-    if (!string.IsNullOrEmpty(ticks))
-    {
-        ticks = ticks.Replace("{DIVISION}", division.ToString());
     }
 
     if (value == null)
     {
         throw new Exception("No value in the result table of the model.");
     }
+
+    min = min ?? view.GetValue("gauge_min");
+    max = max ?? view.GetValue("gauge_max");
+    animation = animation ?? view.GetValue("gauge_animation");
+
+    //If no maximum is defined, the value is used as the maximum
+    if (string.IsNullOrEmpty(min)) { min = "0"; }
+    if (string.IsNullOrEmpty(max)) { max = value; }
+    if (string.IsNullOrEmpty(animation)) { animation = "1000"; }
+
+    int width = view.GetNumericValue("gauge_width"); if (width <= 0) { width = 250; }
+    int height = view.GetNumericValue("gauge_height"); if (height <= 0) { height = 250; }
+    int fontSize = view.GetNumericValue("gauge_value_fontsize");
+
+    var colors = view.GetValue("gauge_colors");
+    var advanced = view.GetValue("gauge_options");
 }
 
-<div id="@gaugeContainerId" class="@Raw(view.GetValue("gauge_class"))" style="@Raw(view.GetValue("gauge_css"))">
-      <div id="@previewTextId" class="@Raw(view.GetValue("preview_text_class"))" style="@Raw(view.GetValue("preview_text_css"))"></div>
-      <canvas id="@gaugeId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("gauge_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("gauge_height"), "'"))></canvas>
-</div>
+<div id="@gaugeId" class="@Raw(view.GetValue("gauge_class"))" style="@Raw(Helper.AddIfNotEmpty("", view.GetValue("gauge_css"), ";"))margin-left:auto;margin-right:auto;width:@(width)px;height:@(height)px;"></div>
 
 <script>
 $(document).ready(function () {
-    //check https://github.com/bernii/gauge.js
-    var opts = {
-        @Raw(view.GetValue("gauge_options"))
-        @Raw(Helper.AddIfNotEmpty("pointer:{", view.GetValue("gauge_pointer"), "},\r\n")) 
-        @Raw(Helper.AddIfNotEmpty("renderTicks:{", ticks, "},\r\n")) 
-        @Raw(Helper.AddIfNotEmpty("percentColors:[", view.GetValue("gauge_percentcolors"), "],\r\n")) 
-        @Raw(Helper.AddIfNotEmpty("staticLabels:{", labels, "},\r\n")) 
-        @Raw(Helper.AddIfNotEmpty("staticZones:[", view.GetValue("gauge_staticzones"), "],\r\n")) 
+    var dom = document.getElementById('@gaugeId');
+    var myChart = echarts.init(dom);
+
+    var axisColor = @Raw(string.IsNullOrEmpty(colors) ? "[[1, '#5470c6']]" : "[" + colors + "]");
+    var valueColor = '@Raw(Helper.ToJS(view.GetValue("gauge_value_color")))';
+
+    var series = {
+        type: 'gauge',
+        min: @min,
+        max: @max,
+        splitNumber: @view.GetNumericValue("gauge_splitnumber"),
+        startAngle: @view.GetNumericValue("gauge_start_angle"),
+        endAngle: @view.GetNumericValue("gauge_end_angle"),
+        axisLine: { lineStyle: { width: @view.GetNumericValue("gauge_axisline_width"), color: axisColor } },
+        progress: { show: @view.GetBoolValueJS("gauge_show_progress"), width: @view.GetNumericValue("gauge_axisline_width") },
+        pointer: { show: @view.GetBoolValueJS("gauge_show_pointer") },
+        axisTick: { show: @view.GetBoolValueJS("gauge_show_ticks") },
+        splitLine: { show: @view.GetBoolValueJS("gauge_show_splitline") },
+        axisLabel: { show: @view.GetBoolValueJS("gauge_show_axislabel") },
+        title: { show: @Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("gauge_title"))) },
+        detail: {
+            valueAnimation: true,
+            formatter: '@Raw(Helper.ToJS(view.GetValue("gauge_value_format")))'
+        },
+        data: [{ value: @value, name: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("gauge_title"))))' }]
+    };
+    if (valueColor) series.detail.color = valueColor;
+    @if (fontSize > 0)
+    {
+        <text>series.detail.fontSize = @fontSize;</text>
+    }
+
+    //Deep-merge the advanced ECharts gauge options provided by the user
+    @if (!string.IsNullOrEmpty(advanced))
+    {
+        <text>
+        (function deepMerge(target, source) {
+            for (var k in source) {
+                if (source[k] && typeof source[k] === 'object' && !(source[k] instanceof Array) && target[k] && typeof target[k] === 'object') {
+                    deepMerge(target[k], source[k]);
+                } else {
+                    target[k] = source[k];
+                }
+            }
+        })(series, { @Raw(advanced) });
+        </text>
+    }
+
+    var option = {
+        animationDuration: @animation,
+        series: [series]
     };
 
-    var @(gaugeId) = new Gauge(document.getElementById("@gaugeId"), @view.GetValue("gauge_height"), @view.GetValue("gauge_width")).setOptions(opts); 
-    @(gaugeId).setTextField(document.getElementById("@previewTextId"));
-    @Raw(Helper.AddIfNotEmpty(gaugeId + ".setMinValue(", min, ");"))
-    @Raw(Helper.AddIfNotEmpty(gaugeId + ".maxValue=", max, ";"))
-    @(gaugeId).animationSpeed = @animation; 
-    @(gaugeId).set(@value); 
+    myChart.setOption(option);
+    registerEChartsChart(myChart);
 });
 </script>

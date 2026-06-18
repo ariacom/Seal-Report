@@ -1,10 +1,4 @@
 ﻿Context;Reference;pl
-NVD3;(right axis);(prawa oś)
-NVD3;Expanded;Rozwinięty
-NVD3;Grouped;Zgrupowane
-NVD3;Re-scale y-axis;Skaluj oś y
-NVD3;Stacked;Stackowane
-NVD3;Stream;Strumień
 Report;!=;!=
 Report;# of % selected;#% wybrano
 Report;(filtered from _MAX_);(przefiltrowane z _MAX_)

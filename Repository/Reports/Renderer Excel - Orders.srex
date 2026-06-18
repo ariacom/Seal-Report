@@ -261,8 +261,8 @@ AND [42918017-8733-4588-8633-233c334bbde3]</Restriction>
                         </ReportView>
                         <ReportView>
                           <GUID>6f6d2f6b-4734-4dd0-915f-a512a907ef41</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>4</SortOrder>
                         </ReportView>
                         <ReportView>
@@ -322,8 +322,8 @@ AND [42918017-8733-4588-8633-233c334bbde3]</Restriction>
                         </ReportView>
                         <ReportView>
                           <GUID>6d5225c4-709e-4abf-a07b-ce3ea97ab122</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>4</SortOrder>
                         </ReportView>
                         <ReportView>

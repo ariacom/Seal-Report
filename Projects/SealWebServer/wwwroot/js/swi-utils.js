@@ -312,7 +312,7 @@ var SWIUtil;
             }
             else {
                 const li = $("<li class='menu-reports dropdown dropdown-submenu'>");
-                const label = $("<a href='#' class='dropdown-toggle' data-toggle='dropdown'>").html(value.name);
+                const label = $("<a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>").html(value.name);
                 li.append(label);
                 parent.append(li);
                 li.addClass(value.classes);

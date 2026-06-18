@@ -190,8 +190,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>a554b6b3-2516-4d33-b9d3-a1d0e2026835</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>

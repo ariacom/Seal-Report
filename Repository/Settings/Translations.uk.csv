@@ -1,10 +1,4 @@
 ﻿Context;Reference;uk
-NVD3;(right axis);(права вісь)
-NVD3;Expanded;Розгорнуто
-NVD3;Grouped;Згруповано
-NVD3;Re-scale y-axis;Змінити масштаб осі Y
-NVD3;Stacked;З накопиченням
-NVD3;Stream;Потік
 Report;!=;!=
 Report;# of % selected;# з % вибрано
 Report;(filtered from _MAX_);(відфільтровано з _MAX_)

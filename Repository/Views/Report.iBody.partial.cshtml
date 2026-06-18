@@ -11,10 +11,10 @@
     function processShowMsgDuringExec() {
         var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode") == "enabledshownexec");
         if (showMsgDuringExec) {
-            $("#@view.ViewId").removeClass("active in");
+            $("#@view.ViewId").removeClass("active show");
             $("#report_button").parent().removeClass("active");
             $("#information_button").parent().removeClass("active");
-            $("#message_div").addClass("active in");
+            $("#message_div").addClass("active show");
             $("#message_button").parent().addClass("active");
         }
     }
@@ -57,15 +57,15 @@
             $("#message_button").parent().removeClass("active");
             if (showMessages) {
                 $("#message_button").parent().addClass("active");
-                $("#message_div").addClass("active in");
+                $("#message_div").addClass("active show");
             }
             else if (showInformation) {
                 $("#information_button").parent().addClass("active");
-                $("#information_div").addClass("active in");
+                $("#information_div").addClass("active show");
             }
             else {
                 $("#report_button").parent().addClass("active");
-                $("#@view.ViewId").addClass("active in");
+                $("#@view.ViewId").addClass("active show");
             }
         }
 
@@ -326,21 +326,10 @@
     }
 }
 
-@if (report.HasNVD3Chart)
+@if (report.HasEChartsChart || report.HasGauge)
 {
-    @Raw(report.AttachScriptPath("lib/nvd3/nv.d3.min.js"))
-    @Raw(report.AttachCSSPath("lib/nvd3/nv.d3.min.css"))
-    <script>
-        function nvd3TranslateText(text)
-        {
-        @foreach (var translation in repository.NVD3Translations)
-        {
-            <text>if (text == '@Raw(Helper.ToJS(translation.Key))') return '@Raw(Helper.ToJS(translation.Value))';</text>
-        }
-            return text;
-        }
-    </script>
-    @Raw(report.AttachScriptFile("chartNVD3.js"))
+    @Raw(report.AttachScriptPath("lib/echarts/echarts.min.js", "https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"))
+    @Raw(report.AttachScriptFile("chartEcharts.js"))
 }
 
 <!--back to top-->

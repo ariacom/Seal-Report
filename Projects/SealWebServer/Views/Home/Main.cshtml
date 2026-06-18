@@ -33,7 +33,6 @@
         <link rel="stylesheet" href="~/@asset.Path" />
     }
     <link rel="stylesheet" href="~/css/sealweb.css" />
-    <link rel="stylesheet" href="~/lib/nvd3/nv.d3.min.css" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebCssFiles))
     {
         <link rel="stylesheet" href="~/css/@fileName" />
@@ -214,7 +213,6 @@
     <!-- common libraries -->
     <script src="~/js/helpers.js"></script>
     <script src="~/js/common.js"></script>
-    <script src="~/lib/gauge/gauge.min.js"></script>
     <script src="~/lib/d3/d3.min.js"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {

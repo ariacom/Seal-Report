@@ -256,8 +256,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>4448bd50-10dd-4db5-9607-46753bc75651</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>4</SortOrder>
                 </ReportView>
                 <ReportView>

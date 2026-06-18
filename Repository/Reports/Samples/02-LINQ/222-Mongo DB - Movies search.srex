@@ -420,8 +420,8 @@ new BsonDocument("cast", new BsonDocument("$in", new BsonArray {new BsonRegularE
                         </ReportView>
                         <ReportView>
                           <GUID>a531f46d-caa6-4c88-b846-ae677dff7358</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>
@@ -475,8 +475,8 @@ new BsonDocument("cast", new BsonDocument("$in", new BsonArray {new BsonRegularE
                         </ReportView>
                         <ReportView>
                           <GUID>c9a02653-e7a3-454d-9d95-841dae6dfb09</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>

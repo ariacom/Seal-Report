@@ -621,8 +621,8 @@
                         </ReportView>
                         <ReportView>
                           <GUID>8523c239-0372-433c-b6b9-7cca02df3567</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>
@@ -676,8 +676,8 @@
                         </ReportView>
                         <ReportView>
                           <GUID>94bfa290-97f9-4c4e-bb33-e0750058c959</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>
@@ -731,8 +731,8 @@
                         </ReportView>
                         <ReportView>
                           <GUID>9878e9d4-9abe-4ff5-90af-ed12b5adf614</GUID>
-                          <Name>Chart NVD3</Name>
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
                           <SortOrder>3</SortOrder>
                         </ReportView>
                         <ReportView>

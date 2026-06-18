@@ -130,8 +130,8 @@
                 </ReportView>
                 <ReportView>
                   <GUID>c4ceaf6f0e7444e486f0403de23a913e</GUID>
-                  <Name>Chart NVD3</Name>
-                  <TemplateName>Chart NVD3</TemplateName>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
                   <SortOrder>4</SortOrder>
                 </ReportView>
                 <ReportView>

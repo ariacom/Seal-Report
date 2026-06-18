@@ -1,10 +1,4 @@
 ﻿Context;Reference;cs
-NVD3;(right axis);(pravá osa)
-NVD3;Expanded;Rozbalené
-NVD3;Grouped;Seskupené
-NVD3;Re-scale y-axis;Změnit měřítko osy y
-NVD3;Stacked;Skládané
-NVD3;Stream;Proudové
 Report;!=;!=
 Report;# of % selected;Vybráno # z %
 Report;(filtered from _MAX_);(filtrováno z _MAX_)

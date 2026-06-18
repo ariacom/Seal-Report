@@ -104,7 +104,7 @@ namespace Seal.Model
 
             //Check if JavaScript charts are involved, if so render the HTML first, so it can be used in the renderers (HTMLResultFilePath)
             if (Report.Format == ReportFormat.PDF &&
-                (Report.HasNVD3Chart || Report.HasChartJSChart || Report.HasPlotlyChart || Report.AllViews.Exists(i => i.TemplateName == ReportViewTemplate.GaugeName))
+                (Report.HasEChartsChart || Report.HasChartJSChart || Report.HasPlotlyChart || Report.HasGauge)
                 ) generatePrintResult = true;
 
             //PDF conversion requires Print Result
@@ -1741,7 +1741,7 @@ namespace Seal.Model
             foreach (ResultPage page in model.Pages)
             {
                 if (Report.Cancel) break;
-                model.ExecNVD3ChartType = "";
+                model.ExecEChartsChartType = "";
                 model.ExecChartJSType = "";
                 model.ExecPlotlyChartType = "";
                 page.ChartInitDone = false;

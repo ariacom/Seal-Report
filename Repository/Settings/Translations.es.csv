@@ -1,10 +1,4 @@
 ﻿Context;Reference;es
-NVD3;(right axis);(eje derecho)
-NVD3;Expanded;Expandido
-NVD3;Grouped;Agrupado
-NVD3;Re-scale y-axis;Reescalar eje y
-NVD3;Stacked;Apilado
-NVD3;Stream;Flujo
 Report;!=;!=
 Report;# of % selected;# de % seleccionado
 Report;(filtered from _MAX_);(filtrado desde _MAX_)

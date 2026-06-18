@@ -14,9 +14,9 @@
         var _tab = $('#tc_@(view.IdSuffix) li:eq(@view.GetNumericValue("model_menu_index")) a').get(0); if (_tab) bootstrap.Tab.getOrCreateInstance(_tab).show();
         $('#tc_@(view.IdSuffix) a').click(function (e) {
             if (@Helper.ToJS(report.GenerateHTMLDisplay)) processSubmitViewParameter("model_menu_index", $($(this).attr('href'), '@view.ViewId').index(), false);
-            @if (report.HasNVD3Chart)
+            @if (report.HasEChartsChart)
             {<text>
-            redrawNVD3Charts();
+            resizeEChartsCharts();
             </text>
             }
             redrawDataTables();
@@ -27,7 +27,7 @@
 
 @if (reportModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") != "none")
 {
-    <ul id="tc_@(view.IdSuffix)" class="nav nav-@(view.GetValue("model_menu_style"))s @(view.GetValue("model_menu_type") != "top" ? "nav-stacked" : "")  @(view.GetBoolValue("model_menu_justified") ? "nav-justified" : "")">
+    <ul id="tc_@(view.IdSuffix)" class="nav nav-@(view.GetValue("model_menu_style"))s @(view.GetValue("model_menu_type") != "top" ? "flex-column" : "")  @(view.GetBoolValue("model_menu_justified") ? "nav-justified" : "")">
         @if (view.GetBoolValue("show_summary_table"))
         {
             <li class="nav-item"><a class="nav-link active" data-bs-toggle="@view.GetValue("model_menu_style")" href='#@(view.IdSuffix + "_summary")'>@report.Translate("Summary")</a></li>

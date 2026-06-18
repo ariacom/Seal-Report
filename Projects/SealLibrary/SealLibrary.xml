@@ -2995,11 +2995,6 @@
             Parameters are used to configure report templates, outputs and repository security
             </summary>
         </member>
-        <member name="F:Seal.Model.Parameter.Glyphicons">
-            <summary>
-            Legacy Bootstrap 3 Glyphicon names still allowed as stored values (e.g. widget_icon).
-            </summary>
-        </member>
         <member name="F:Seal.Model.Parameter.GlyphiconToFontAwesome">
             <summary>
             Maps each legacy Bootstrap 3 Glyphicon name to its Font Awesome 6 (Free) equivalent.
@@ -3631,9 +3626,14 @@
             True if the report has chart
             </summary>
         </member>
-        <member name="P:Seal.Model.Report.HasNVD3Chart">
+        <member name="P:Seal.Model.Report.HasEChartsChart">
             <summary>
-            True if the report has NVD3 chart
+            True if the report has ECharts chart
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.HasGauge">
+            <summary>
+            True if the report has a Gauge view (built with ECharts)
             </summary>
         </member>
         <member name="P:Seal.Model.Report.HasChartJSChart">
@@ -4342,9 +4342,9 @@
             Definition of the serie for the element in the Chart JS chart
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportElement.Nvd3Serie">
+        <member name="P:Seal.Model.ReportElement.EChartsSerie">
             <summary>
-            Definition of the serie for the element in the NVD3 chart
+            Definition of the serie for the element in the ECharts chart
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.PlotlySerie">
@@ -4552,7 +4552,7 @@
             True if navigation occured
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportElement.GetD3Format(System.Globalization.CultureInfo,System.String)">
+        <member name="M:Seal.Model.ReportElement.GetD3Format(System.Globalization.CultureInfo)">
             <summary>
             D3 Format for a charts
             </summary>
@@ -4948,9 +4948,9 @@
             True if the model has a secondary axis for a serie
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportModel.HasNVD3Serie">
+        <member name="P:Seal.Model.ReportModel.HasEChartsSerie">
             <summary>
-            True if the model has a NVD3 serie
+            True if the model has an ECharts serie
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.HasChartJSSerie">
@@ -5173,9 +5173,9 @@
             Format for Date FNS chart X axis
             </summary>
         </member>
-        <member name="F:Seal.Model.ReportModel.ExecNVD3ChartType">
+        <member name="F:Seal.Model.ReportModel.ExecEChartsChartType">
             <summary>
-            NVD3 chart type
+            ECharts chart type
             </summary>
         </member>
         <member name="F:Seal.Model.ReportModel.ExecPlotlyChartType">
@@ -5198,9 +5198,9 @@
             True if the result pages have been built
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportModel.CheckNVD3ChartIntegrity">
+        <member name="M:Seal.Model.ReportModel.CheckEChartsChartIntegrity">
             <summary>
-            Check NVD3 Chart and set the ExecNVD3ChartType property
+            Check ECharts Chart and set the ExecEChartsChartType property
             </summary>
         </member>
         <member name="M:Seal.Model.ReportModel.CheckPlotlyChartIntegrity">
@@ -7776,11 +7776,6 @@
             Current JavaScript translations
             </summary>
         </member>
-        <member name="P:Seal.Model.Repository.NVD3Translations">
-            <summary>
-            Current NVD3 translations (for NVD3 charts)
-            </summary>
-        </member>
         <member name="M:Seal.Model.Repository.Translate(System.String,System.String)">
             <summary>
             Translate a reference text in a context
@@ -8482,9 +8477,19 @@
             True is the splitted element is sort ASC, false for DESC 
             </summary>
         </member>
-        <member name="P:Seal.Model.ResultSerie.NVD3MultiChartType">
+        <member name="P:Seal.Model.ResultSerie.EChartsMixedChartType">
             <summary>
-            For NVD3 serie, returns the chart type
+            For an ECharts mixed cartesian chart, returns the per-serie chart type
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultSerie.EChartsIsArea">
+            <summary>
+            True if the ECharts serie should be drawn as an area (line with areaStyle)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultSerie.EChartsIsStacked">
+            <summary>
+            True if the ECharts serie is stacked
             </summary>
         </member>
         <member name="M:Seal.Model.ResultSerie.CompareSeries(Seal.Model.ResultSerie,Seal.Model.ResultSerie)">
