@@ -674,7 +674,7 @@ namespace Seal.Model
                                 }
 
                                 refs = refs.Concat(AppDomain.CurrentDomain.GetAssemblies()
-                                    .Where(a => !a.IsDynamic && a.Location != dllPath)
+                                    .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location) && a.Location != dllPath)
                                     .Select(a => MetadataReference.CreateFromFile(a.Location)))
                                 .Distinct().ToList();
 
