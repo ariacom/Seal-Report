@@ -44,8 +44,22 @@
           <Path>\System</Path>
           <FolderRight>ExecuteReportOuput</FolderRight>
           <ExpandSubFolders>false</ExpandSubFolders>
+          <Icon>fa-solid fa-gear</Icon>
         </SecurityFolder>
       </Folders>
+      <RepositoryFolders>
+        <SecurityRepositoryFolder>
+          <Path>\Logs</Path>
+          <FolderRight>ReadWrite</FolderRight>
+          <ManageFolder>true</ManageFolder>
+          <DownloadUpload>DownloadUpload</DownloadUpload>
+        </SecurityRepositoryFolder>
+        <SecurityRepositoryFolder>
+          <Path>\Sources</Path>
+          <FolderRight>ReadOnly</FolderRight>
+          <DownloadUpload>Download</DownloadUpload>
+        </SecurityRepositoryFolder>
+      </RepositoryFolders>
       <PersFolderRight>Reports</PersFolderRight>
       <FoldersScript />
       <FolderDetailScript />
@@ -59,7 +73,6 @@
         <string>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</string>
         <string>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</string>
       </AgentGUIDs>
-      <DownloadUpload>DownloadUpload</DownloadUpload>
       <Culture />
       <StartupReport />
     </SecurityGroup>

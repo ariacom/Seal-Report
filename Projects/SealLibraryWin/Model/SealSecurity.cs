@@ -267,6 +267,8 @@ namespace Seal.Model
         public SecurityFolder FindSecurityFolder(List<SecurityGroup> groups, string folder)
         {
             SecurityFolder result = null;
+            //Weight of the group that provided the current tree view icon (to break ties when several groups define the folder)
+            int iconWeight = int.MinValue;
             foreach (var group in groups)
             {
                 string folderRoot = folder;
@@ -289,16 +291,83 @@ namespace Seal.Model
                         //Merge the groupFolder find in this group with the current result
                         //Highest right is applied..
                         result.FolderRight = (FolderRight)Math.Max((int)result.FolderRight, (int)current.FolderRight);
+                        result.DownloadUpload = (DownloadUpload)Math.Max((int)result.DownloadUpload, (int)current.DownloadUpload);
                         result.ExpandSubFolders = result.ExpandSubFolders || current.ExpandSubFolders;
                         result.ManageFolder = result.ManageFolder && current.ManageFolder;
                     }
                     else
                     {
                         result = (SecurityFolder)Helper.Clone(current);
+                        result.Icon = null;
+                    }
+
+                    //The tree view icon is the one set on the folder by the group having the highest weight.
+                    //It applies only to the folder where it is explicitly defined; sub-folders inherited via
+                    //UseSubFolders keep the default icon.
+                    if (current.Path == folder && !string.IsNullOrEmpty(current.Icon) && group.Weight > iconWeight)
+                    {
+                        result.Icon = current.Icon;
+                        iconWeight = group.Weight;
                     }
 
                     //set IsDefined flag
                     if (current.Path == folder) result.IsDefined = true;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the SecurityRepositoryFolder applying to a given repository-relative path (normalized, leading separator,
+        /// no Repository prefix), merging the rights of all matching groups. Folders pointing at or inside the 'Reports' tree
+        /// are ignored (conflict with the Report Folders configuration). Returns null when no group grants a right.
+        /// </summary>
+        public SecurityRepositoryFolder FindRepositorySecurityFolder(List<SecurityGroup> groups, string finalPath)
+        {
+            finalPath = SecurityRepositoryFolder.Normalize(finalPath);
+            if (SecurityRepositoryFolder.IsUnderReports(finalPath)) return null;
+
+            SecurityRepositoryFolder result = null;
+            int iconWeight = int.MinValue;
+            foreach (var group in groups)
+            {
+                string folderRoot = finalPath;
+                SecurityRepositoryFolder current = null;
+                while (current == null && !string.IsNullOrEmpty(folderRoot))
+                {
+                    current = group.RepositoryFolders.FirstOrDefault(i => i.FolderRight != RepositoryFolderRight.None && SecurityRepositoryFolder.Normalize(i.Path) == folderRoot);
+                    folderRoot = Path.GetDirectoryName(folderRoot);
+                }
+                if (current != null && SecurityRepositoryFolder.Normalize(current.Path) != finalPath && !current.UseSubFolders)
+                {
+                    //cannot use this parent
+                    current = null;
+                }
+
+                if (current != null)
+                {
+                    bool isExact = SecurityRepositoryFolder.Normalize(current.Path) == finalPath;
+                    if (result != null)
+                    {
+                        //Highest right is applied
+                        result.FolderRight = (RepositoryFolderRight)Math.Max((int)result.FolderRight, (int)current.FolderRight);
+                        result.DownloadUpload = (DownloadUpload)Math.Max((int)result.DownloadUpload, (int)current.DownloadUpload);
+                        result.ManageFolder = result.ManageFolder || current.ManageFolder;
+                    }
+                    else
+                    {
+                        result = (SecurityRepositoryFolder)Helper.Clone(current);
+                        result.Icon = null;
+                    }
+
+                    //The tree view icon is the one set on the folder by the group having the highest weight (only where explicitly defined).
+                    if (isExact && !string.IsNullOrEmpty(current.Icon) && group.Weight > iconWeight)
+                    {
+                        result.Icon = current.Icon;
+                        iconWeight = group.Weight;
+                    }
+
+                    if (isExact) result.IsDefined = true;
                 }
             }
             return result;

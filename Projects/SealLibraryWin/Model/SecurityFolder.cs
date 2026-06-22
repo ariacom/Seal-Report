@@ -32,6 +32,8 @@ namespace Seal.Model
                 GetProperty("ExpandSubFolders").SetIsBrowsable(true);
                 GetProperty("ManageFolder").SetIsBrowsable(true);
                 GetProperty("FilesOnly").SetIsBrowsable(true);
+                GetProperty("DownloadUpload").SetIsBrowsable(true);
+                GetProperty("Icon").SetIsBrowsable(true);
 
 
                 GetProperty("ManageFolder").SetIsReadOnly(!_useSubFolders);
@@ -99,6 +101,17 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Defines if the user can download reports/files or upload files and reports in this folder. DANGER ZONE: enabling Upload lets web users upload files and reports into the repository; an uploaded report may contain tasks that run code on the server.
+        /// </summary>
+#if WINDOWS
+        [Category("Danger Zone"), DisplayName("Upload/Download"), Description("Defines if the user can download reports/files or upload files and reports in this folder.\r\n⚠ DANGER ZONE: setting 'Download and Upload' lets web users upload files and reports into this repository folder. An uploaded report may contain tasks that execute code on the server. Only allow Upload on folders and groups you fully trust."), Id(1, 9)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(DownloadUpload.None)]
+#endif
+        public DownloadUpload DownloadUpload { get; set; } = DownloadUpload.None;
+        public bool ShouldSerializeDownloadUpload() { return DownloadUpload != DownloadUpload.None; }
+
+        /// <summary>
         /// If true, all the Sub-folders displayed in the Tree View are expanded by default
         /// </summary>
 #if WINDOWS
@@ -117,7 +130,17 @@ namespace Seal.Model
         public bool FilesOnly { get; set; } = false;
 
         /// <summary>
-        /// Helper: is true if defined in a group 
+        /// Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-building'); legacy Glyphicon names are also accepted. If empty, the default folder icon is used.
+        /// </summary>
+#if WINDOWS
+        [Category("Options"), DisplayName("Tree View icon"), Description("Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-building'); legacy Glyphicon names are also accepted. If empty, the default folder icon is used."), Id(4, 2)]
+        [Editor(typeof(FontAwesomeIconEditor), typeof(System.Drawing.Design.UITypeEditor))]
+#endif
+        public string Icon { get; set; }
+        public bool ShouldSerializeIcon() { return !string.IsNullOrEmpty(Icon); }
+
+        /// <summary>
+        /// Helper: is true if defined in a group
         /// </summary>
         [XmlIgnore]
         public bool IsDefined = false;

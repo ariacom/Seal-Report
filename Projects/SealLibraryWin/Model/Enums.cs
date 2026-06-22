@@ -470,6 +470,19 @@ namespace Seal.Model
         Reports,
     }
 
+    /// <summary>
+    /// Right applied on a Repository Folder (a folder published anywhere under the repository root, outside the Reports tree).
+    /// </summary>
+    public enum RepositoryFolderRight
+    {
+        [Description("No right")]
+        None,
+        [Description("Read only (view and download files)")]
+        ReadOnly,
+        [Description("Read write (manage files)")]
+        ReadWrite,
+    }
+
 
     public enum FailoverEmailMode
     {

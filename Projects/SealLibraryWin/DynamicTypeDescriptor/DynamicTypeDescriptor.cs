@@ -1847,6 +1847,16 @@ namespace DynamicTypeDescriptor
             m_Attributes.Add(attr);
         }
 
+        //Assigns (or clears, when editorType is null) the UITypeEditor used to edit this property at runtime.
+        public void SetEditor(System.Type editorType)
+        {
+            m_Attributes.RemoveAll(a => a is System.ComponentModel.EditorAttribute);
+            if (editorType != null)
+            {
+                m_Attributes.Add(new System.ComponentModel.EditorAttribute(editorType, typeof(System.Drawing.Design.UITypeEditor)));
+            }
+        }
+
         private string m_KeyPrefix = String.Empty;
 
         internal string KeyPrefix

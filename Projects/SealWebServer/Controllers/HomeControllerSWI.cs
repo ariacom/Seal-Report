@@ -137,7 +137,6 @@ namespace SealWebServer.Controllers
                 showfolders = WebUser.ShowFoldersView,
                 editconfiguration = WebUser.EditConfiguration,
                 editprofile = WebUser.EditProfile,
-                downloadupload = Repository.Configuration.EnableDownloadUpload ? WebUser.DownloadUploadRight : DownloadUpload.None,
                 usertag = WebUser.Tag,
                 onstartup = WebUser.Profile.OnStartup,
                 startupreport = WebUser.Profile.StartUpReport,
@@ -917,8 +916,8 @@ namespace SealWebServer.Controllers
 
                 var file = getFileDetail(path);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-                if ((file.isreport && WebUser.DownloadUploadRight == DownloadUpload.None) || !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: no right to download report or file.");
-                if (file.isreport && !Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: upload and download are not allowed for the server.");
+                if (!Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: upload and download are not allowed for the server.");
+                if (file.isreport && folder.downloadupload < (int)DownloadUpload.Download) throw new Exception("Error: no right to download report or file.");
                 int effRight;
                 string viewPath = file.isshortcut ? resolveShortcut(path, out effRight) : path;
                 return getFileResult(getFullPath(viewPath), null);
@@ -944,6 +943,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getFolder(path);
                 if (Request.Form.Files.Count == 0) throw new Exception("No file to upload");
                 if ((FolderRight)folder.right != FolderRight.Edit) throw new Exception("Error: no right to upload file on this folder");
+                if (folder.downloadupload < (int)DownloadUpload.DownloadUpload) throw new Exception("Error: upload is not allowed on this folder");
 
 
                 var file = Request.Form.Files[0];

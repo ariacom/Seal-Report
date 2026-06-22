@@ -31,6 +31,7 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Folders").SetIsBrowsable(true);
+                GetProperty("RepositoryFolders").SetIsBrowsable(true);
                 GetProperty("FoldersScript").SetIsBrowsable(true);
                 GetProperty("FolderDetailScript").SetIsBrowsable(true);
                 GetProperty("MenuScript").SetIsBrowsable(true);
@@ -47,7 +48,6 @@ namespace Seal.Model
                 GetProperty("EditConfiguration").SetIsBrowsable(true);
                 GetProperty("EditProfile").SetIsBrowsable(true);
                 GetProperty("AgentGUIDs").SetIsBrowsable(true);
-                GetProperty("DownloadUpload").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
                 GetProperty("PersFolderRight").SetIsBrowsable(true);
@@ -81,14 +81,25 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// The folder configurations for this group used for Web Publication of reports. By default, repository folders have no right.
+        /// The report folder configurations for this group used for Web Publication of reports (relative to the repository 'Reports' folder). By default, report folders have no right.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\t\tFolders"), Description("The folder configurations for this group used for Web Publication of reports. By default, repository folders have no right."), Id(2, 1)]
+        [Category("Definition"), DisplayName("\t\t\tReport Folders"), Description("The report folder configurations for this group used for Web Publication of reports (relative to the repository 'Reports' folder). By default, report folders have no right."), Id(2, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SecurityFolder> Folders { get; set; } = new List<SecurityFolder>();
         public bool ShouldSerializeFolders() { return Folders.Count > 0; }
+
+        /// <summary>
+        /// DANGER ZONE: The repository folder configurations for this group. Unlike Report Folders, these can publish ANY folder located under the
+        /// repository root (Views, Sources, Settings, Security...), outside the 'Reports' tree. By default, repository folders have no right.
+        /// </summary>
+#if WINDOWS
+        [Category("Danger Zone"), DisplayName("Repository Folders"), Description("⚠ DANGER ZONE: The repository folders published for this group. Unlike Report Folders, these can publish ANY folder located under the repository root (Views, Sources, Settings, Security...), outside the 'Reports' tree. Exposing such folders - especially with Upload enabled - can leak sensitive data or allow remote code execution (uploaded server-executed templates). A folder pointing at or inside the 'Reports' tree is forbidden here and ignored at runtime; use 'Report Folders' for that. By default, repository folders have no right."), Id(1, 9)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+#endif
+        public List<SecurityRepositoryFolder> RepositoryFolders { get; set; } = new List<SecurityRepositoryFolder>();
+        public bool ShouldSerializeRepositoryFolders() { return RepositoryFolders.Count > 0; }
 
         /// <summary>
         /// Define the right of the dedicated personal folder for each user of the group
@@ -209,16 +220,6 @@ namespace Seal.Model
 #endif
         public List<string> AgentGUIDs { get; set; } = new List<string>();
         public bool ShouldSerializeAgentGUIDs() { return AgentGUIDs.Count > 0; }
-
-        /// <summary>
-        /// Web Report Server: If true, the user can download reports or upload files or reports in the published folders.
-        /// </summary>
-#if WINDOWS
-        [DefaultValue(DownloadUpload.None)]
-        [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("\t\tUpload/Download"), Description("Web Report Server: Defines if the user can download reports or upload files or reports in the published folders."), Id(5, 5)]
-#endif
-        public DownloadUpload DownloadUpload { get; set; } = DownloadUpload.None;
 
         /// <summary>
         /// The culture used for users belonging to the group. If empty, the default culture is used.

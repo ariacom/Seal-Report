@@ -21,7 +21,6 @@ namespace Seal.Model
         public bool showfolders;
         public bool editconfiguration;
         public bool editprofile;
-        public DownloadUpload downloadupload;
         public bool changepassword;
         public bool showresetpassword;
         public string usertag;
@@ -69,6 +68,7 @@ namespace Seal.Model
     public class SWIFolder
     {
         private static string PersonalPrefix = ":";
+        private static string RepositoryPrefix = "~";
 
         /// <summary>
         /// Relative folder path including name
@@ -111,6 +111,19 @@ namespace Seal.Model
         public bool files = false;
 
         /// <summary>
+        /// Download/Upload capability granted on the folder files/reports:
+        /// 0: None
+        /// 1: Download
+        /// 2: Download and Upload
+        /// </summary>
+        public int downloadupload = 0;
+
+        /// <summary>
+        /// Optional Font Awesome icon class for the folder node in the tree view. If empty, the default icon for the folder type is used.
+        /// </summary>
+        public string icon = null;
+
+        /// <summary>
         /// Sub-folders management:
         /// 0 do not manage sub-folders
         /// 1 manage sub-folders only as they are defined by the security (no rename or delete allowed)
@@ -140,15 +153,28 @@ namespace Seal.Model
             get { return path.StartsWith(PersonalPrefix); }
         }
 
+        /// <summary>
+        /// True if the folder is published from a Repository Folder (rooted at the repository, outside the Reports tree).
+        /// </summary>
+        public bool IsRepository
+        {
+            get { return path.StartsWith(RepositoryPrefix); }
+        }
+
         public string FinalPath
         {
-            get { return path.StartsWith(PersonalPrefix) ? path.Substring(1) : path; }
+            get { return (path.StartsWith(PersonalPrefix) || path.StartsWith(RepositoryPrefix)) ? path.Substring(1) : path; }
         }
 
         //Helpers
         public static string GetPersonalRoot()
         {
             return PersonalPrefix;
+        }
+
+        public static string GetRepositoryRoot()
+        {
+            return RepositoryPrefix;
         }
 
         public static string GetParentPath(string path)

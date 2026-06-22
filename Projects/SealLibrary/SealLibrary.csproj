@@ -138,6 +138,7 @@
 		<Compile Include="..\SealLibraryWin\Model\SealSecurity.cs" Link="Model\SealSecurity.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealServerConfiguration.cs" Link="Model\SealServerConfiguration.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityFolder.cs" Link="Model\SecurityFolder.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SecurityRepositoryFolder.cs" Link="Model\SecurityRepositoryFolder.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityGroup.cs" Link="Model\SecurityGroup.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityLogin.cs" Link="Model\SecurityLogin.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityProvider.cs" Link="Model\SecurityProvider.cs" />

@@ -628,21 +628,6 @@ class SWIMain {
         });
         $selectAgent.selectpicker();
 
-        SWIUtil.ShowHideControl($("#config-group-downloadupload-row"), _main._config.downloadupload)
-        if (_main._config.downloadupload) {
-            var $select = $("#config-group-downloadupload");
-            $select.unbind("change");
-            $select.selectpicker("destroy");
-            $select.empty();
-            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No download (except files) or upload"), detail.DownloadUpload));
-            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("User can download reports"), detail.DownloadUpload));
-            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("User can download reports and upload reports and files"), detail.DownloadUpload));
-            $select.unbind("change").on("change", (event) => {
-                detail.DownloadUpload = $(event.target).val();
-            });
-            $select.selectpicker();
-        }
-
         _main.initDropDownGroupsFolders();
     }
 
@@ -677,6 +662,8 @@ class SWIMain {
                     FolderRight: 4,
                     ManageFolder: true,
                     UseSubFolders: true,
+                    DownloadUpload: 0,
+                    Icon: "",
                 };
                 _main._configGroup.Folders.push(newFolder);
                 _main._configGroupFolder = newFolder;
@@ -736,6 +723,23 @@ class SWIMain {
             SWIUtil.InitBoolSelect("#config-group-folder-expand", detail.ExpandSubFolders, SWIUtil.tr("Yes (Folder is expanded in the tree view)"), SWIUtil.tr("No"), function (val) { detail.ExpandSubFolders = val; });
             SWIUtil.InitBoolSelect("#config-group-folder-filesonly", detail.FilesOnly, SWIUtil.tr("Yes (Only files can be stored)"), SWIUtil.tr("No"), function (val) { detail.FilesOnly = val; });
 
+            var $select = $("#config-group-folder-downloadupload");
+            $select.unbind("change");
+            $select.selectpicker("destroy");
+            $select.empty();
+            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No download (except files) or upload"), detail.DownloadUpload));
+            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("User can download reports"), detail.DownloadUpload));
+            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("User can download reports and upload reports and files"), detail.DownloadUpload));
+            $select.unbind("change").on("change", (event) => {
+                detail.DownloadUpload = $(event.target).val();
+            });
+            $select.selectpicker();
+
+            var $icon = $("#config-group-folder-icon");
+            $icon.val(detail.Icon || "");
+            $icon.unbind("change").on("change", (event) => {
+                detail.Icon = $(event.target).val();
+            });
         }
     }
 
@@ -919,7 +923,7 @@ class SWIMain {
         SWIUtil.EnableButton($("#report-copy-lightbutton"), checked != 0 && right > 0);
         SWIUtil.EnableButton($("#report-paste-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-shortcut-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
-        SWIUtil.ShowHideControl($("#report-upload-lightbutton"), _main._profile && _main._profile.downloadupload > 1 && right >= folderRightEdit);
+        SWIUtil.ShowHideControl($("#report-upload-lightbutton"), _main._folder && _main._folder.downloadupload > 1 && right >= folderRightEdit);
 
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
@@ -1086,7 +1090,7 @@ class SWIMain {
                     button.append($("<span class='fa-solid fa-pencil'></span>"));
                     $td.append(button);
                 }
-                if (_main._profile.downloadupload > 0) {
+                if (_main._folder && _main._folder.downloadupload > 0) {
                     button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-secondary btn-table report-download d-none d-sm-inline-block");
                     button.append($("<span class='fa-solid fa-circle-down'></span>"));
                     $td.append(button);
@@ -1354,7 +1358,8 @@ class SWIFolderTree {
         "default": "fa-regular fa-folder",
         "bin": "fa-regular fa-trash-can",
         "personal": "fa-solid fa-user",
-        "reports": "fa-solid fa-chart-bar"
+        "reports": "fa-solid fa-chart-bar",
+        "repository": "fa-regular fa-folder"
     };
 
     constructor(container: HTMLElement) {
@@ -1391,7 +1396,7 @@ class SWIFolderTree {
                 row.appendChild(toggle);
 
                 var icon = document.createElement("span");
-                icon.className = "swi-tree-icon " + (self._icons[f.type] || self._icons["default"]);
+                icon.className = "swi-tree-icon " + (f.icon ? f.icon : (self._icons[f.type] || self._icons["default"]));
                 row.appendChild(icon);
 
                 var label = document.createElement("span");

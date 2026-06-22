@@ -106,6 +106,13 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(SecurityRepositoryFolder))
+            {
+                frmCollectionEditorForm.Text = "Repository Folder Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
             else if (CollectionItemType == typeof(SubReport))
             {
                 frmCollectionEditorForm.Text = "Sub-Report Collection Editor";
@@ -311,6 +318,7 @@ namespace Seal.Forms
             else if (value is Parameter) result = ((Parameter)value).DisplayName;
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;
             else if (value is SecurityLogin) result = ((SecurityLogin)value).Id;
+            else if (value is SecurityRepositoryFolder) result = ((SecurityRepositoryFolder)value).Path;
             else if (value is SecurityFolder) result = ((SecurityFolder)value).Path;
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;

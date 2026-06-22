@@ -55,6 +55,11 @@ namespace Seal.Model
                     //property.SetCategory(parameter.Category.ToString());
                     property.DefaultValue = parameter.ConfigObject;
                     property.SetIsBrowsable(true);
+                    //Icon / color parameters get a preview editor; reset it for the others as the descriptors are reused.
+                    Type previewEditor = null;
+                    if (parameter.IsFontAwesomeIcon) previewEditor = typeof(FontAwesomeIconEditor);
+                    else if (ColorParameterEditor.IsColorParameter(parameter)) previewEditor = typeof(ColorParameterEditor);
+                    property.SetEditor(previewEditor);
                 }
                 else
                 {

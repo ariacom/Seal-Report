@@ -94,6 +94,7 @@ namespace Seal.Model
         {
             path = FileHelper.ConvertOSFilePath(path);
             if (path.StartsWith(SWIFolder.GetPersonalRoot())) return Security.Repository.GetPersonalFolder(this) + path.Substring(1);
+            else if (path.StartsWith(SWIFolder.GetRepositoryRoot())) return Security.Repository.RepositoryPath + path.Substring(1);
             else return Security.Repository.ReportsFolder + path;
         }
 
@@ -121,7 +122,28 @@ namespace Seal.Model
             result.sql = SqlModel;
             result.SetFullPath(GetFullPath(path));
 
-            if (result.IsPersonal)
+            if (result.IsRepository)
+            {
+                //Repository folder (Danger Zone): published anywhere under the repository root, outside the Reports tree
+                result.type = "repository";
+                result.files = true; //repository folders manage files only (no report execution)
+                var leaf = Path.GetFileName(result.FinalPath.TrimEnd(Path.DirectorySeparatorChar));
+                result.name = string.IsNullOrEmpty(leaf) ? Security.Repository.TranslateWeb("Repository") : leaf;
+                result.fullname = Security.Repository.TranslateWeb("Repository") + result.FinalPath;
+                SecurityRepositoryFolder repoFolder = FindRepositorySecurityFolder(result.FinalPath);
+                if (repoFolder != null)
+                {
+                    //Manage sub-folders only when sub-folders are shown and the folder is writable
+                    bool manageFolder = repoFolder.ManageFolder && repoFolder.FolderRight == RepositoryFolderRight.ReadWrite;
+                    result.SetManageFlag(repoFolder.UseSubFolders, manageFolder, repoFolder.IsDefined);
+                    result.expand = false;
+                    //Map the simple repository right to the internal FolderRight used by the web file management
+                    result.right = (int)(repoFolder.FolderRight == RepositoryFolderRight.ReadWrite ? FolderRight.Edit : FolderRight.Execute);
+                    result.downloadupload = Security.Repository.Configuration.EnableDownloadUpload ? (int)repoFolder.DownloadUpload : 0;
+                    if (!string.IsNullOrEmpty(repoFolder.Icon)) result.icon = Parameter.GetFontAwesomeIcon(repoFolder.Icon);
+                }
+            }
+            else if (result.IsPersonal)
             {
                 //Personal
                 if (PersonalFolderRight == PersonalFolderRight.None) throw new Exception("Error: this user has no personal folder");
@@ -140,6 +162,8 @@ namespace Seal.Model
                 result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
                 result.right = (int)FolderRight.Edit;
                 result.files = (PersonalFolderRight == PersonalFolderRight.Files);
+                //Personal folders are fully owned by the user (Edit right): allow download and upload when the server enables it
+                result.downloadupload = Security.Repository.Configuration.EnableDownloadUpload ? (int)DownloadUpload.DownloadUpload : 0;
             }
             else
             {
@@ -153,6 +177,10 @@ namespace Seal.Model
                     result.expand = securityFolder.ExpandSubFolders;
                     result.right = (int)securityFolder.FolderRight;
                     result.files = securityFolder.FilesOnly;
+                    //Download/upload right is defined per folder in the security, gated by the server configuration
+                    result.downloadupload = Security.Repository.Configuration.EnableDownloadUpload ? (int)securityFolder.DownloadUpload : 0;
+                    //Optional tree view icon defined on the folder (group with the highest weight wins when several define it)
+                    if (!string.IsNullOrEmpty(securityFolder.Icon)) result.icon = Parameter.GetFontAwesomeIcon(securityFolder.Icon);
                 }
             }
             return result;
@@ -225,6 +253,28 @@ namespace Seal.Model
             else
             {
                 AddValidFolders(folder, result);
+            }
+
+            //Repository folders (Danger Zone): one top-level node per distinct configured folder, outside the Reports tree
+            var repoRoots = new List<string>();
+            foreach (var group in SecurityGroups)
+            {
+                foreach (var repoFolder in group.RepositoryFolders)
+                {
+                    if (repoFolder.FolderRight == RepositoryFolderRight.None) continue;
+                    var norm = SecurityRepositoryFolder.Normalize(repoFolder.Path);
+                    //Conflict safety net: ignore anything pointing at or inside the Reports tree
+                    if (SecurityRepositoryFolder.IsUnderReports(norm)) continue;
+                    if (repoRoots.Contains(norm)) continue;
+                    repoRoots.Add(norm);
+
+                    var repoNode = GetFolder(SWIFolder.GetRepositoryRoot() + norm);
+                    if (repoNode.right > 0 && Directory.Exists(repoNode.GetFullPath()))
+                    {
+                        FillFolder(repoNode);
+                        result.Add(repoNode);
+                    }
+                }
             }
 
             //Folders Script
@@ -408,26 +458,6 @@ namespace Seal.Model
             }
         }
 
-        private DownloadUpload? _downloadUpload = null;
-        /// <summary>
-        /// Right for the personal folder
-        /// </summary>
-        public DownloadUpload DownloadUploadRight
-        {
-            get
-            {
-                if (_downloadUpload == null)
-                {
-                    foreach (var group in SecurityGroups)
-                    {
-                        if (_downloadUpload == null || _downloadUpload < group.DownloadUpload) _downloadUpload = group.DownloadUpload;
-                    }
-                    if (_downloadUpload == null) _downloadUpload = DownloadUpload.None;
-                }
-                return _downloadUpload.Value;
-            }
-        }
-
         /// <summary>
         /// True if the user has the right to edit SQL models and to query the database (raw SQL) with the AI Tools. True if at least one of the user's groups enables SQL Models.
         /// </summary>
@@ -590,6 +620,15 @@ namespace Seal.Model
         {
             if (Security == null) return null;
             return Security.FindSecurityFolder(SecurityGroups, folder);
+        }
+
+        /// <summary>
+        /// Find a repository security folder from a given repository-relative path (without the Repository prefix)
+        /// </summary>
+        public SecurityRepositoryFolder FindRepositorySecurityFolder(string finalPath)
+        {
+            if (Security == null) return null;
+            return Security.FindRepositorySecurityFolder(SecurityGroups, finalPath);
         }
 
         /// <summary>
@@ -895,6 +934,13 @@ namespace Seal.Model
                 swiPath = string.Equals(physDir, pud, StringComparison.OrdinalIgnoreCase)
                     ? SWIFolder.GetPersonalRoot()
                     : SWIFolder.GetPersonalRoot() + physDir.Substring(pud.Length);
+            }
+            else if (physDir.StartsWith(repo.RepositoryPath, StringComparison.OrdinalIgnoreCase))
+            {
+                //Repository folder (Danger Zone) - rooted at the repository, outside the Reports/Personal trees
+                swiPath = string.Equals(physDir, repo.RepositoryPath, StringComparison.OrdinalIgnoreCase)
+                    ? SWIFolder.GetRepositoryRoot()
+                    : SWIFolder.GetRepositoryRoot() + physDir.Substring(repo.RepositoryPath.Length);
             }
             else return false; // unknown root – deny
 

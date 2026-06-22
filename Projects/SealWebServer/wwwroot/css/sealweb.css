@@ -216,6 +216,8 @@ a {
     display: flex;
     align-items: center;
     padding-left: 20px;
+}
+.report-actions:not(:empty) {
     background: linear-gradient(to right, transparent, #fff 25%);
 }
 
@@ -225,7 +227,7 @@ a {
         opacity: 0;
         pointer-events: none;
     }
-    #file-table-body tr:hover .report-actions {
+    #file-table-body tr:hover .report-actions:not(:empty) {
         opacity: 1;
         pointer-events: auto;
         background: linear-gradient(to right, transparent, #f5f5f5 25%);

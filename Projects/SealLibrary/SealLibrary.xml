@@ -1234,6 +1234,11 @@
             Font Awesome 6 (Free) style sheets. all.min.css provides the icons.
             </summary>
         </member>
+        <member name="T:Seal.Model.RepositoryFolderRight">
+            <summary>
+            Right applied on a Repository Folder (a folder published anywhere under the repository root, outside the Reports tree).
+            </summary>
+        </member>
         <member name="T:Seal.Model.ExecutionLogInterface">
             <summary>
             Log interface used during the report execution
@@ -3198,6 +3203,17 @@
         <member name="P:Seal.Model.Parameter.EnumValue">
             <summary>
             The enum parameter value
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Parameter.IsFontAwesomeIcon">
+            <summary>
+            True if this parameter holds a Font Awesome icon class (all its enum values are Font Awesome classes).
+            Detected by content rather than by reference, because view parameters get a copy of the enum list.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Parameter.IconValue">
+            <summary>
+            The Font Awesome icon parameter value, edited with a glyph preview in the property grid.
             </summary>
         </member>
         <member name="F:Seal.Model.Parameter.ConfigValue">
@@ -9129,6 +9145,13 @@
             Returns a SecurityFolder from a given name
             </summary>
         </member>
+        <member name="M:Seal.Model.SealSecurity.FindRepositorySecurityFolder(System.Collections.Generic.List{Seal.Model.SecurityGroup},System.String)">
+            <summary>
+            Returns the SecurityRepositoryFolder applying to a given repository-relative path (normalized, leading separator,
+            no Repository prefix), merging the rights of all matching groups. Folders pointing at or inside the 'Reports' tree
+            are ignored (conflict with the Report Folders configuration). Returns null when no group grants a right.
+            </summary>
+        </member>
         <member name="M:Seal.Model.SealSecurity.InitSecurity">
             <summary>
             Init security defaults and integrities
@@ -9590,6 +9613,11 @@
             The right applied on the reports and files of the folder
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityFolder.DownloadUpload">
+            <summary>
+            Defines if the user can download reports/files or upload files and reports in this folder. DANGER ZONE: enabling Upload lets web users upload files and reports into the repository; an uploaded report may contain tasks that run code on the server.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityFolder.ExpandSubFolders">
             <summary>
             If true, all the Sub-folders displayed in the Tree View are expanded by default
@@ -9600,9 +9628,69 @@
             If true, only files can be viewed or managed in the folder (reports are not shown and can not be created)
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityFolder.Icon">
+            <summary>
+            Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-building'); legacy Glyphicon names are also accepted. If empty, the default folder icon is used.
+            </summary>
+        </member>
         <member name="F:Seal.Model.SecurityFolder.IsDefined">
             <summary>
-            Helper: is true if defined in a group 
+            Helper: is true if defined in a group
+            </summary>
+        </member>
+        <member name="T:Seal.Model.SecurityRepositoryFolder">
+            <summary>
+            A SecurityRepositoryFolder defines the security applied to a folder published anywhere under the
+            repository root (outside the 'Reports' tree). This is a DANGER ZONE feature: it can expose sensitive
+            repository folders (Views, Sources, Settings, Security...) to web users.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityRepositoryFolder.Path">
+            <summary>
+            The folder path to publish, relative to the repository root (e.g. 'Views\\MyTheme'). It must NOT point at
+            or inside the 'Reports' folder, which is managed by the 'Report Folders' configuration.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityRepositoryFolder.FolderRight">
+            <summary>
+            The right applied on the files of the folder. By default, repository folders have no right.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityRepositoryFolder.UseSubFolders">
+            <summary>
+            If true, sub-folders are also published with the same definition
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityRepositoryFolder.ManageFolder">
+            <summary>
+            If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown and the Right is 'Read write'.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityRepositoryFolder.DownloadUpload">
+            <summary>
+            Defines if the user can download files or upload files in this folder.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityRepositoryFolder.Icon">
+            <summary>
+            Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-database'); legacy Glyphicon names are also accepted. If empty, the default repository folder icon is used.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityRepositoryFolder.IsDefined">
+            <summary>
+            Helper: is true if defined in a group
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityRepositoryFolder.Normalize(System.String)">
+            <summary>
+            Returns the path normalized to compare with a SWIFolder repository-relative path:
+            OS separators, a leading separator and no trailing separator (the repository root is a single separator).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityRepositoryFolder.IsUnderReports(System.String)">
+            <summary>
+            True if the given (normalized) repository-relative path points at the 'Reports' folder or any of its sub-folders.
+            Such folders are managed by the 'Report Folders' configuration and must be ignored here.
             </summary>
         </member>
         <member name="T:Seal.Model.SecurityGroup">
@@ -9622,7 +9710,13 @@
         </member>
         <member name="P:Seal.Model.SecurityGroup.Folders">
             <summary>
-            The folder configurations for this group used for Web Publication of reports. By default, repository folders have no right.
+            The report folder configurations for this group used for Web Publication of reports (relative to the repository 'Reports' folder). By default, report folders have no right.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityGroup.RepositoryFolders">
+            <summary>
+            DANGER ZONE: The repository folder configurations for this group. Unlike Report Folders, these can publish ANY folder located under the
+            repository root (Views, Sources, Settings, Security...), outside the 'Reports' tree. By default, repository folders have no right.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.PersFolderRight">
@@ -9688,11 +9782,6 @@
         <member name="P:Seal.Model.SecurityGroup.AgentGUIDs">
             <summary>
             Web Report Server: The GUIDs of the AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityGroup.DownloadUpload">
-            <summary>
-            Web Report Server: If true, the user can download reports or upload files or reports in the published folders.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.Culture">
@@ -10042,11 +10131,6 @@
             Right for the personal folder
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.DownloadUploadRight">
-            <summary>
-            Right for the personal folder
-            </summary>
-        </member>
         <member name="P:Seal.Model.SecurityUser.SqlModel">
             <summary>
             True if the user has the right to edit SQL models and to query the database (raw SQL) with the AI Tools. True if at least one of the user's groups enables SQL Models.
@@ -10102,6 +10186,11 @@
         <member name="M:Seal.Model.SecurityUser.FindSecurityFolder(System.String)">
             <summary>
             Find a security folder from a given name
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.FindRepositorySecurityFolder(System.String)">
+            <summary>
+            Find a repository security folder from a given repository-relative path (without the Repository prefix)
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.CanAccessSource(Seal.Model.MetaSource)">
@@ -10374,6 +10463,19 @@
             If true, only files can be displayed in this folder
             </summary>
         </member>
+        <member name="F:Seal.Model.SWIFolder.downloadupload">
+            <summary>
+            Download/Upload capability granted on the folder files/reports:
+            0: None
+            1: Download
+            2: Download and Upload
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIFolder.icon">
+            <summary>
+            Optional Font Awesome icon class for the folder node in the tree view. If empty, the default icon for the folder type is used.
+            </summary>
+        </member>
         <member name="F:Seal.Model.SWIFolder.manage">
             <summary>
             Sub-folders management:
@@ -10390,6 +10492,11 @@
         <member name="F:Seal.Model.SWIFolder.folders">
             <summary>
             List of folder children.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SWIFolder.IsRepository">
+            <summary>
+            True if the folder is published from a Repository Folder (rooted at the repository, outside the Reports tree).
             </summary>
         </member>
         <member name="T:Seal.Model.SWIFile">

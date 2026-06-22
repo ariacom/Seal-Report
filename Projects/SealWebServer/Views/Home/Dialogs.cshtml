@@ -198,8 +198,8 @@
     <div class="modal-dialog">
         <div class="modal-content" style="top: 60px;">
             <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
                 <h4 id="message-title" class="modal-title"></h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
             </div>
             <div class="modal-body">
                 <span id="message-text"></span>
@@ -217,8 +217,8 @@
     <div class="modal-dialog">
         <div class="modal-content" style="top:60px">
             <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
                 <h4 class="modal-title">@repository.TranslateWeb("Enter your new file name")</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
             </div>
             <div class="modal-body">
                 <input id="report-name" type="text" class="form-control" placeholder="@repository.TranslateReport("New report")" />
@@ -353,10 +353,6 @@
                                 <select class="form-control config-input-field" id="config-group-agent" multiple data-container="body"></select>
                             </div>
 
-                            <div id="config-group-downloadupload-row" class="config-input-row">
-                                <span class="config-input-label">@repository.TranslateWeb("Download/Upload")</span>
-                                <select class="form-control config-input-field" id="config-group-downloadupload" data-container="body"></select>
-                            </div>
 
                             <div class="group-folder-panel">
                                 <h5 class="config-section-header">@repository.TranslateWeb("Folder Permissions")</h5>
@@ -392,6 +388,16 @@
                                 <div class="config-input-row config-group-folder">
                                     <span class="config-input-label">@repository.TranslateWeb("Files only")</span>
                                     <select class="form-control config-input-field" id="config-group-folder-filesonly" data-container="body"></select>
+                                </div>
+
+                                <div class="config-input-row config-group-folder">
+                                    <span class="config-input-label">@repository.TranslateWeb("Download/Upload")</span>
+                                    <select class="form-control config-input-field" id="config-group-folder-downloadupload" data-container="body"></select>
+                                </div>
+
+                                <div class="config-input-row config-group-folder">
+                                    <span class="config-input-label">@repository.TranslateWeb("Tree View icon")</span>
+                                    <input id="config-group-folder-icon" type="text" class="form-control config-input-field" placeholder="fa-solid fa-building" />
                                 </div>
                             </div>
                         </div>

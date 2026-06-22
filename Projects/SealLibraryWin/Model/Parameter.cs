@@ -138,7 +138,10 @@ namespace Seal.Model
                 GetProperty("TextValue").SetIsBrowsable(Type == ViewParameterType.Text);
                 GetProperty("BoolValue").SetIsBrowsable(Type == ViewParameterType.Boolean);
                 GetProperty("NumericValue").SetIsBrowsable(Type == ViewParameterType.Numeric);
-                GetProperty("EnumValue").SetIsBrowsable(Type == ViewParameterType.Enum);
+                //Font Awesome icon parameters use a dedicated value editor with a glyph preview; other enums keep the standard combobox.
+                bool isIcon = IsFontAwesomeIcon;
+                GetProperty("EnumValue").SetIsBrowsable(Type == ViewParameterType.Enum && !isIcon);
+                GetProperty("IconValue").SetIsBrowsable(Type == ViewParameterType.Enum && isIcon);
                 GetProperty("DoubleValue").SetIsBrowsable(Type == ViewParameterType.Double);
                 GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("HelperResetParameterValue").SetIsBrowsable(true);
@@ -155,6 +158,7 @@ namespace Seal.Model
                     GetProperty("NumericValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
                     GetProperty("DoubleValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
                     GetProperty("EnumValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
+                    GetProperty("IconValue").SetIsReadOnly(!((OutputParameter)this).CustomValue);
                 }
 
                 TypeDescriptor.Refresh(this);
@@ -422,6 +426,40 @@ namespace Seal.Model
             {
                 Value = value;
             }
+        }
+
+        /// <summary>
+        /// True if this parameter holds a Font Awesome icon class (all its enum values are Font Awesome classes).
+        /// Detected by content rather than by reference, because view parameters get a copy of the enum list.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsFontAwesomeIcon
+        {
+            get
+            {
+                if (_enums == null || _enums.Length == 0) return false;
+                foreach (var e in _enums)
+                {
+                    if (string.IsNullOrEmpty(e)) continue;
+                    var v = e.Contains("|") ? e.Split('|')[0] : e;
+                    if (!v.TrimStart().StartsWith("fa-", StringComparison.OrdinalIgnoreCase)) return false;
+                }
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// The Font Awesome icon parameter value, edited with a glyph preview in the property grid.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Value"), Description("The icon parameter value. Pick a Font Awesome class; the glyph is previewed in the swatch."), Category("Definition")]
+        [Editor(typeof(FontAwesomeIconEditor), typeof(UITypeEditor))]
+#endif
+        [XmlIgnore]
+        public string IconValue
+        {
+            get { return Value; }
+            set { Value = value; }
         }
 
         [XmlIgnore]
