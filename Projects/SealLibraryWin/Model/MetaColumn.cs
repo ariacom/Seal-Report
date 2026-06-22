@@ -38,7 +38,6 @@ namespace Seal.Model
                 GetProperty("Type").SetIsBrowsable(true);
                 GetProperty("IsAggregate").SetIsBrowsable(IsSQL);
                 GetProperty("Category").SetIsBrowsable(true);
-                GetProperty("Tag").SetIsBrowsable(true);
                 GetProperty("DisplayName").SetIsBrowsable(true);
                 GetProperty("DisplayOrder").SetIsBrowsable(true);
                 GetProperty("CssClass").SetIsBrowsable(true);
@@ -156,11 +155,8 @@ namespace Seal.Model
 
         private string _tag;
         /// <summary>
-        /// Tag used to define the security of the Web Report Designer (Columns of the Security Groups defined in the Web Security)
+        /// Free Tag
         /// </summary>
-#if WINDOWS
-        [Category("Security"), DisplayName("Security tag"), Description("Tag used to define the security of the Web Report Designer (Columns of the Security Groups defined in the Web Security)."), Id(2, 2)]
-#endif
         public string Tag
         {
             get { return string.IsNullOrEmpty(_tag) ? "" : _tag; }
