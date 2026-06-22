@@ -150,14 +150,19 @@
         if (def2 == ScottPlotSerieDefinition.Scatter) return eChartType.XYScatter;
         if (def2 == ScottPlotSerieDefinition.Pie) return eChartType.Pie;
 
+        view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartEChartsName);
+        if (view != null)
+        {
+            horizontal = view.GetBoolValue("echarts_bar_horizontal");
+            stacked = view.GetBoolValue("echarts_bar_stacked");
+        }
         var def3 = element.EChartsSerie;
         if (def3 == EChartsSerieDefinition.Scatter) return eChartType.XYScatter;
         if (def3 == EChartsSerieDefinition.Pie) return eChartType.Pie;
         if (def3 == EChartsSerieDefinition.Line) return eChartType.Line;
         if (def3 == EChartsSerieDefinition.Area) return eChartType.AreaStacked;
-        if (def3 == EChartsSerieDefinition.Bar) return eChartType.ColumnClustered;
-        if (def3 == EChartsSerieDefinition.StackedBar) return eChartType.ColumnStacked;
-        if (def3 == EChartsSerieDefinition.HorizontalBar) return eChartType.BarClustered;
+        if (def3 == EChartsSerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
+        if (def3 == EChartsSerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
         if (def3 == EChartsSerieDefinition.Radar) return eChartType.Radar;
 
         view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartPlotlyName);

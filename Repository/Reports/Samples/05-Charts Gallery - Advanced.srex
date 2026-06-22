@@ -134,6 +134,7 @@
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <ChartJSSerie>Radar</ChartJSSerie>
+          <EChartsSerie>Radar</EChartsSerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -967,6 +968,10 @@
                       <TemplateName>Chart JS</TemplateName>
                       <Parameters>
                         <Parameter>
+                          <Name>chartjs_title</Name>
+                          <Value>Chart JS</Value>
+                        </Parameter>
+                        <Parameter>
                           <Name>chartjs_label_display</Name>
                           <Value>auto</Value>
                         </Parameter>
@@ -993,6 +998,12 @@
                       <GUID>10516ba0-fd4f-4578-9275-a8e9ad8a2984</GUID>
                       <Name>Chart Echarts</Name>
                       <TemplateName>Chart Echarts</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>echarts_title</Name>
+                          <Value>Chart ECharts</Value>
+                        </Parameter>
+                      </Parameters>
                       <SortOrder>2</SortOrder>
                     </ReportView>
                     <ReportView>
@@ -1056,6 +1067,10 @@
                       <TemplateName>Chart JS</TemplateName>
                       <Parameters>
                         <Parameter>
+                          <Name>chartjs_title</Name>
+                          <Value>Chart JS</Value>
+                        </Parameter>
+                        <Parameter>
                           <Name>chartjs_label_display</Name>
                           <Value>auto</Value>
                         </Parameter>
@@ -1070,6 +1085,12 @@
                       <GUID>82504e3b-7ca0-4962-8202-0d89091b64e1</GUID>
                       <Name>Chart Echarts</Name>
                       <TemplateName>Chart Echarts</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>echarts_title</Name>
+                          <Value>Chart ECharts</Value>
+                        </Parameter>
+                      </Parameters>
                       <SortOrder>2</SortOrder>
                     </ReportView>
                     <ReportView>
@@ -1166,14 +1187,28 @@
               </Views>
               <TemplateName>Model</TemplateName>
               <ModelGUID>d40f9cbe-00d1-4042-9497-84f8c4049e6a</ModelGUID>
-              <SortOrder>3</SortOrder>
+              <SortOrder>4</SortOrder>
             </ReportView>
             <ReportView>
-              <GUID>afaef1b6-4cc4-4015-9604-5a97d39ba4e2</GUID>
-              <Name>MARKERS</Name>
+              <GUID>7c9138ad-b8f2-486a-8e64-861e8beb5e69</GUID>
+              <Name>RADAR</Name>
+              <Views>
+                <ReportView>
+                  <GUID>653ce3ff-5f0d-4e6f-b6ec-6d0132713043</GUID>
+                  <Name>Chart Echarts</Name>
+                  <TemplateName>Chart Echarts</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>echarts_title</Name>
+                      <Value>Chart ECharts: Radar</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
               <TemplateName>Model</TemplateName>
-              <ModelGUID>d40f9cbe-00d1-4042-9497-84f8c4049e6a</ModelGUID>
-              <SortOrder>4</SortOrder>
+              <ModelGUID>0c02ccd6-67c9-46e5-bbda-6b068863504e</ModelGUID>
+              <SortOrder>3</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Container</TemplateName>

@@ -40,6 +40,8 @@
                 var hasSecondary = @Helper.ToJS(hasSecondary);
 
                 var smooth = @view.GetBoolValueJS("echarts_line_smooth");
+                var barHorizontal = @view.GetBoolValueJS("echarts_bar_horizontal");
+                var barStacked = @view.GetBoolValueJS("echarts_bar_stacked");
                 var showLabels = @view.GetBoolValueJS("echarts_show_datalabels");
                 var showLegend = @view.GetBoolValueJS("echarts_show_legend");
                 var showToolbox = @view.GetBoolValueJS("echarts_show_toolbox");
@@ -82,7 +84,6 @@
                             }
                             mixType: '@serie.EChartsMixedChartType',
                             isArea: @Helper.ToJS(serie.EChartsIsArea),
-                            isStacked: @Helper.ToJS(serie.EChartsIsStacked),
                             secondary: @Helper.ToJS(serie.Element.YAxisType == AxisType.Secondary)
                         },
                         </text>
@@ -111,6 +112,8 @@
                 var toolbox = showToolbox ? { feature: { dataZoom: { yAxisIndex: 'none' }, dataView: { readOnly: true }, restore: {}, saveAsImage: {} } } : null;
 
                 var option = {
+                    //ECharts defaults to the CJK font "Microsoft YaHei", which renders Latin punctuation (e.g. the thousand separator U+2019) full-width, leaving a big gap after the separator. Force the page's Latin sans-serif stack so numbers format tightly (matching the ChartJS/Plotly charts).
+                    textStyle: { fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" },
                     title: title ? { text: title, left: 'center' } : undefined,
                     legend: legend || undefined,
                     toolbox: toolbox || undefined,
@@ -145,29 +148,34 @@
                         data: rawSeries.map(function (s) { return { name: s.name, value: s.y, areaStyle: s.isArea ? {} : undefined }; })
                     }];
                 }
-                else if (chartType === 'horizontalBar') {
+                else if (chartType === 'bar' && barHorizontal) {
+                    //Horizontal bar: category on the Y Axis, value on the X Axis (orientation set via the echarts_bar_horizontal flag)
                     if (legend) legend.data = rawSeries.map(function (s) { return s.name; });
                     option.tooltip = { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return fmtY(v); } };
+                    option.grid = { containLabel: true };
                     option.xAxis = { type: 'value', name: xTitle || undefined, axisLabel: { formatter: function (v) { return fmtY(v); } } };
                     option.yAxis = { type: 'category', data: xLabels, name: yTitle || undefined };
                     option.series = rawSeries.map(function (s) {
                         var ser = { name: s.name, type: 'bar', data: s.y };
-                        if (s.isStacked) { ser.stack = 'total'; }
+                        if (barStacked) { ser.stack = 'total'; }
                         if (showLabels) { ser.label = { show: true, position: 'right', formatter: function (p) { return fmtY(p.value); } }; }
                         return ser;
                     });
                 }
                 else {
-                    //Cartesian charts: line, area, bar, stackedBar, scatter, mixed
+                    //Cartesian charts: line, area, bar, scatter, mixed
                     if (legend) legend.data = rawSeries.map(function (s) { return s.name; });
                     option.tooltip = (chartType === 'scatter') ?
                         { trigger: 'item', valueFormatter: function (v) { return fmtY(v); } } :
                         { trigger: 'axis', valueFormatter: function (v) { return fmtY(v); } };
 
+                    option.grid = { containLabel: true };
                     option.xAxis = {
                         type: xAxisType,
                         data: xAxisType === 'category' ? xLabels : undefined,
-                        name: xTitle || undefined
+                        name: xTitle || undefined,
+                        //By default ECharts hides category labels that would overlap (interval:'auto'); force every label to show and rotate them so they fit, matching the ChartJS rendering. containLabel reserves the extra height.
+                        axisLabel: xAxisType === 'category' ? { interval: 0, rotate: 45 } : undefined
                     };
                     option.yAxis = [{ type: yIsTime ? 'time' : 'value', name: yTitle || undefined, axisLabel: { formatter: function (v) { return fmtY(v, false); } } }];
                     if (hasSecondary) {
@@ -177,7 +185,7 @@
                     option.series = rawSeries.map(function (s) {
                         var t = 'line';
                         if (chartType === 'mixed') { t = s.mixType; }
-                        else if (chartType === 'bar' || chartType === 'stackedBar') { t = 'bar'; }
+                        else if (chartType === 'bar') { t = 'bar'; }
                         else if (chartType === 'scatter') { t = 'scatter'; }
                         var ser = {
                             name: s.name,
@@ -187,8 +195,8 @@
                         };
                         var isArea = (chartType === 'area') || (chartType === 'mixed' && s.isArea);
                         if (t === 'line') { ser.smooth = smooth; if (isArea) { ser.areaStyle = {}; } }
-                        var isStacked = (chartType === 'stackedBar') || (chartType === 'mixed' && s.isStacked);
-                        if (t === 'bar' && isStacked) { ser.stack = 'total'; }
+                        //Stacking applies to a pure (vertical) Bar chart via the echarts_bar_stacked flag
+                        if (t === 'bar' && chartType === 'bar' && barStacked) { ser.stack = 'total'; }
                         if (showLabels) {
                             ser.label = { show: true, formatter: function (p) { var val = (p.value instanceof Array) ? p.value[p.value.length - 1] : p.value; return fmtY(val, s.secondary); } };
                         }

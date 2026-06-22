@@ -1270,14 +1270,10 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie != EChartsSerieDefinition.None && i.EChartsSerie != EChartsSerieDefinition.Radar)) throw new Exception("Invalid chart configuration: Cannot mix ECharts Radar Serie with another type.");
                     ExecEChartsChartType = "radar";
                 }
-                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie == EChartsSerieDefinition.HorizontalBar))
-                {
-                    if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie != EChartsSerieDefinition.None && i.EChartsSerie != EChartsSerieDefinition.HorizontalBar)) throw new Exception("Invalid chart configuration: Cannot mix ECharts Horizontal Bar Serie with another type.");
-                    ExecEChartsChartType = "horizontalBar";
-                }
                 else
                 {
-                    //Line, Area, Bar and Stacked Bar can be combined: a single type is kept if homogeneous, otherwise the chart is a "mixed" cartesian chart
+                    //Line, Area and Bar can be combined: a single type is kept if homogeneous, otherwise the chart is a "mixed" cartesian chart.
+                    //Bar orientation (horizontal) and stacking are handled in the view via the echarts_bar_horizontal / echarts_bar_stacked flags.
                     var cartesianTypes = Elements.Where(i => i.PivotPosition == PivotPosition.Data && i.EChartsSerie != EChartsSerieDefinition.None).Select(i => i.EChartsSerie).Distinct().ToList();
                     if (cartesianTypes.Count == 1)
                     {
@@ -1286,7 +1282,6 @@ model.ResultTable = query2.CopyToDataTable2();
                             case EChartsSerieDefinition.Line: ExecEChartsChartType = "line"; break;
                             case EChartsSerieDefinition.Area: ExecEChartsChartType = "area"; break;
                             case EChartsSerieDefinition.Bar: ExecEChartsChartType = "bar"; break;
-                            case EChartsSerieDefinition.StackedBar: ExecEChartsChartType = "stackedBar"; break;
                         }
                     }
                     else ExecEChartsChartType = "mixed";

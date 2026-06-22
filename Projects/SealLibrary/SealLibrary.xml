@@ -8610,11 +8610,6 @@
             True if the ECharts serie should be drawn as an area (line with areaStyle)
             </summary>
         </member>
-        <member name="P:Seal.Model.ResultSerie.EChartsIsStacked">
-            <summary>
-            True if the ECharts serie is stacked
-            </summary>
-        </member>
         <member name="M:Seal.Model.ResultSerie.CompareSeries(Seal.Model.ResultSerie,Seal.Model.ResultSerie)">
             <summary>
             Compares 2 ResultSerie objects

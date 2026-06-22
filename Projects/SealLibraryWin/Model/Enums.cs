@@ -328,10 +328,6 @@ namespace Seal.Model
         Area,
         [Description("Bar")]
         Bar,
-        [Description("Horizontal Bar")]
-        HorizontalBar,
-        [Description("Stacked Bar")]
-        StackedBar,
         [Description("Pie")]
         Pie,
         [Description("Scatter")]

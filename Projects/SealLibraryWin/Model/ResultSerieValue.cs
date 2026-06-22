@@ -94,7 +94,6 @@ namespace Seal.Model
                 if (Element.EChartsSerie == EChartsSerieDefinition.Line) return "line";
                 else if (Element.EChartsSerie == EChartsSerieDefinition.Area) return "line";
                 else if (Element.EChartsSerie == EChartsSerieDefinition.Bar) return "bar";
-                else if (Element.EChartsSerie == EChartsSerieDefinition.StackedBar) return "bar";
                 else if (Element.EChartsSerie == EChartsSerieDefinition.Scatter) return "scatter";
                 return "line";
             }
@@ -106,14 +105,6 @@ namespace Seal.Model
         public bool EChartsIsArea
         {
             get { return Element.EChartsSerie == EChartsSerieDefinition.Area; }
-        }
-
-        /// <summary>
-        /// True if the ECharts serie is stacked
-        /// </summary>
-        public bool EChartsIsStacked
-        {
-            get { return Element.EChartsSerie == EChartsSerieDefinition.StackedBar; }
         }
 
         public string ChartXYSerieValues;
