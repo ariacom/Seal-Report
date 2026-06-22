@@ -221,9 +221,7 @@ Web;Device;Apparaat
 Web;Disconnect;Verbinding verbreken
 Web;Display options;Weergaveopties
 Web;Edit;Bewerken
-Web;Edit configuration;Configuratie bewerken
 Web;Edit entry;Vermelding bewerken
-Web;Edit profile;Profiel bewerken
 Web;Edition;Editie
 Web;Email;E-mail
 Web;Enter password;Voer wachtwoord in
@@ -237,14 +235,9 @@ Web;Error;Fout
 Web;Error: only files (and not reports) can be copied to this folder.;Fout: alleen bestanden (en geen rapporten) kunnen naar deze map worden gekopieerd.
 Web;Error: the destination file name contains invalid characters.;Fout: de bestemmingsbestandsnaam bevat ongeldige tekens.
 Web;Error: the destination folder name contains invalid characters.;Fout: de bestemmingsmapnaam bevat ongeldige tekens.
-Web;Expand in Treeview;Uitvouwen in boomstructuur
 Web;Export;Exporteren
-Web;Files only;Alleen bestanden
-Web;Folder Permissions;Mapmachtigingen
 Web;Folders;Mappen
 Web;Forget your password ?;Wachtwoord vergeten?
-Web;Group name;Groepsnaam
-Web;Group name;Groepsnaam
 Web;Groups;Groepen
 Web;Groups;Groepen
 Web;Height;Hoogte
@@ -256,12 +249,10 @@ Web;Is dynamic;Is dynamisch
 Web;Last execution at;Laatste uitvoering om
 Web;Licensed to;Gelicentieerd aan
 Web;Login;Aanmelden
-Web;Login ID;Aanmeld-ID
 Web;Logins;Aanmeldingen
 Web;Logout;Afmelden
 Web;Logout the user;De gebruiker afmelden
 Web;Manage Folders;Mappen beheren
-Web;Manage sub-folders;Submappen beheren
 Web;Name;Naam
 Web;New;Nieuw
 Web;New folder name;Nieuwe mapnaam
@@ -277,7 +268,6 @@ Web;Password;Wachtwoord
 Web;Paste;Plakken
 Web;PDF Conversion delay;PDF-conversievertraging
 Web;Personal;Persoonlijk
-Web;Personal folder;Persoonlijke map
 Web;Phone;Telefoon
 Web;Please wait;Even geduld
 Web;Profile;Profiel
@@ -301,7 +291,6 @@ Web;Reset your password;Stel uw wachtwoord opnieuw in
 Web;Save;Opslaan
 Web;Search;Zoeken
 Web;Security code;Beveiligingscode
-Web;Show sub-folders;Submappen tonen
 Web;Startup report name;Naam opstartrapport
 Web;The favorite has been updated;De favoriet is bijgewerkt
 Web;Two-Factor Authentication;Tweefactorauthenticatie
@@ -312,14 +301,12 @@ Web;User groups;Gebruikersgroepen
 Web;User identifier or email;Gebruikers-ID of e-mail
 Web;User name;Gebruikersnaam
 Web;Users;Gebruikers
-Web;Web product name;Naam webproduct
 Web;Width;Breedte
 WebJS;# of % selected;# van % geselecteerd
 WebJS;Actions;Acties
 WebJS;All selected;Alle geselecteerd
 WebJS;Allow only execution in a new window;Alleen uitvoering in een nieuw venster toestaan
 WebJS;Cancel;Annuleren
-WebJS;Configuration for;Configuratie voor
 WebJS;Contains;Bevat
 WebJS;Contains all;Bevat alle
 WebJS;Contains any;Bevat een van
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Is kleiner dan
 WebJS;Last modification;Laatste wijziging
 WebJS;Mark as favorite;Markeren als favoriet
 WebJS;Model;Model
-WebJS;New folder configuration;Nieuwe mapconfiguratie
-WebJS;New group;Nieuwe groep
-WebJS;New login;Nieuwe aanmelding
 WebJS;No;Nee
-WebJS;No download (except files) or upload;Geen download (behalve bestanden) of upload
-WebJS;No folder configuration;Geen mapconfiguratie
-WebJS;No login;Geen aanmelding
 WebJS;No personal folder;Geen persoonlijke map
 WebJS;No right;Geen recht
 WebJS;None;Geen
@@ -396,7 +377,6 @@ WebJS;Schedule;Planning
 WebJS;Server Version;Serverversie
 WebJS;Show _MENU_ reports;_MENU_ rapporten tonen
 WebJS;Starts with;Begint met
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;De configuratie is opgeslagen. Meld u opnieuw aan als u door de beveiliging wordt beïnvloed.
 WebJS;The folder has been created;De map is gemaakt
 WebJS;The folder has been deleted;De map is verwijderd
 WebJS;The folder has been renamed;De map is hernoemd
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;De map is bijgewerkt
 WebJS;The report or file has been renamed;Het rapport of bestand is hernoemd
 WebJS;Toggle Report or Folders view;Weergave Rapport of Mappen wisselen
 WebJS;Unexpected error on server;Onverwachte fout op de server
-WebJS;User can download reports;Gebruiker kan rapporten downloaden
-WebJS;User can download reports and upload reports and files;Gebruiker kan rapporten downloaden en rapporten en bestanden uploaden
 WebJS;View;Weergeven
 WebJS;View Folders;Mappen weergeven
 WebJS;View Report;Rapport weergeven
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Weergaven en uitvoer
 WebJS;Warning;Waarschuwing
 WebJS;Web Interface Version;Versie webinterface
 WebJS;Yes;Ja
-WebJS;Yes (Folder is expanded in the tree view);Ja (Map is uitgevouwen in de boomstructuur)
-WebJS;Yes (Only files can be stored);Ja (Er kunnen alleen bestanden worden opgeslagen)
-WebJS;Yes (User can browse sub-folders);Ja (Gebruiker kan submappen doorbladeren)
-WebJS;Yes (User can create and edit sub-folders);Ja (Gebruiker kan submappen maken en bewerken)
-WebJS;Yes (User can edit his profile);Ja (Gebruiker kan zijn profiel bewerken)
-WebJS;Yes (User is administrator of the Web Server);Ja (Gebruiker is beheerder van de webserver)
 Web;Select agent;Assistent selecteren
 Web;Mark as favorite;Markeren als favoriet
 Web;Favorites;Favorieten
@@ -492,11 +464,12 @@ WebJS;Delete;Verwijderen
 WebJS;No favorites yet;Nog geen favorieten
 WebJS;No recent items;Geen recente items
 Web;Configuration;Configuratie
-Web;Configuration and security;Configuratie en beveiliging
-Web;Download/Upload;Downloaden/Uploaden
 Web;Rights;Rechten
 Web;Agents;Assistenten
 Web;Folder;Map
 Web;Drag to resize;Sleep om het formaat te wijzigen
 WebJS;Copy and paste;Kopiëren en plakken
 WebJS;Copy, paste and send;Kopiëren, plakken en verzenden
+Web;Empty recycle bin;Prullenbak legen
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Weet u zeker dat u alle items in de prullenbak permanent wilt verwijderen?
+WebJS;The recycle bin has been emptied;De prullenbak is geleegd

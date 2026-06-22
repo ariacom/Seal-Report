@@ -221,9 +221,7 @@ Web;Device;Zařízení
 Web;Disconnect;Odpojit
 Web;Display options;Možnosti zobrazení
 Web;Edit;Upravit
-Web;Edit configuration;Upravit konfiguraci
 Web;Edit entry;Upravit položku
-Web;Edit profile;Upravit profil
 Web;Edition;Edice
 Web;Email;E-mail
 Web;Enter password;Zadejte heslo
@@ -237,14 +235,9 @@ Web;Error;Chyba
 Web;Error: only files (and not reports) can be copied to this folder.;Chyba: do této složky lze kopírovat pouze soubory (nikoli sestavy).
 Web;Error: the destination file name contains invalid characters.;Chyba: název cílového souboru obsahuje neplatné znaky.
 Web;Error: the destination folder name contains invalid characters.;Chyba: název cílové složky obsahuje neplatné znaky.
-Web;Expand in Treeview;Rozbalit ve stromovém zobrazení
 Web;Export;Exportovat
-Web;Files only;Pouze soubory
-Web;Folder Permissions;Oprávnění složky
 Web;Folders;Složky
 Web;Forget your password ?;Zapomněli jste heslo?
-Web;Group name;Název skupiny
-Web;Group name;Název skupiny
 Web;Groups;Skupiny
 Web;Groups;Skupiny
 Web;Height;Výška
@@ -256,12 +249,10 @@ Web;Is dynamic;Je dynamické
 Web;Last execution at;Poslední provedení v
 Web;Licensed to;Licencováno pro
 Web;Login;Přihlásit se
-Web;Login ID;ID přihlášení
 Web;Logins;Přihlášení
 Web;Logout;Odhlásit se
 Web;Logout the user;Odhlásit uživatele
 Web;Manage Folders;Spravovat složky
-Web;Manage sub-folders;Spravovat podsložky
 Web;Name;Název
 Web;New;Nový
 Web;New folder name;Název nové složky
@@ -277,7 +268,6 @@ Web;Password;Heslo
 Web;Paste;Vložit
 Web;PDF Conversion delay;Prodleva převodu PDF
 Web;Personal;Osobní
-Web;Personal folder;Osobní složka
 Web;Phone;Telefon
 Web;Please wait;Čekejte prosím
 Web;Profile;Profil
@@ -301,7 +291,6 @@ Web;Reset your password;Obnovte své heslo
 Web;Save;Uložit
 Web;Search;Hledat
 Web;Security code;Bezpečnostní kód
-Web;Show sub-folders;Zobrazit podsložky
 Web;Startup report name;Název spouštěcí sestavy
 Web;The favorite has been updated;Oblíbená položka byla aktualizována
 Web;Two-Factor Authentication;Dvoufaktorové ověřování
@@ -312,14 +301,12 @@ Web;User groups;Skupiny uživatelů
 Web;User identifier or email;Identifikátor uživatele nebo e-mail
 Web;User name;Uživatelské jméno
 Web;Users;Uživatelé
-Web;Web product name;Název webového produktu
 Web;Width;Šířka
 WebJS;# of % selected;Vybráno # z %
 WebJS;Actions;Akce
 WebJS;All selected;Vybráno vše
 WebJS;Allow only execution in a new window;Povolit pouze provádění v novém okně
 WebJS;Cancel;Zrušit
-WebJS;Configuration for;Konfigurace pro
 WebJS;Contains;Obsahuje
 WebJS;Contains all;Obsahuje vše
 WebJS;Contains any;Obsahuje libovolné
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Je menší než
 WebJS;Last modification;Poslední úprava
 WebJS;Mark as favorite;Označit jako oblíbené
 WebJS;Model;Model
-WebJS;New folder configuration;Konfigurace nové složky
-WebJS;New group;Nová skupina
-WebJS;New login;Nové přihlášení
 WebJS;No;Ne
-WebJS;No download (except files) or upload;Žádné stahování (kromě souborů) ani nahrávání
-WebJS;No folder configuration;Žádná konfigurace složky
-WebJS;No login;Žádné přihlášení
 WebJS;No personal folder;Žádná osobní složka
 WebJS;No right;Žádné oprávnění
 WebJS;None;Žádné
@@ -396,7 +377,6 @@ WebJS;Schedule;Plán
 WebJS;Server Version;Verze serveru
 WebJS;Show _MENU_ reports;Zobrazit _MENU_ sestav
 WebJS;Starts with;Začíná na
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfigurace byla uložena. Pokud se vás týká zabezpečení, přihlaste se prosím znovu.
 WebJS;The folder has been created;Složka byla vytvořena
 WebJS;The folder has been deleted;Složka byla smazána
 WebJS;The folder has been renamed;Složka byla přejmenována
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Složka byla aktualizována
 WebJS;The report or file has been renamed;Sestava nebo soubor byly přejmenovány
 WebJS;Toggle Report or Folders view;Přepnout zobrazení sestav nebo složek
 WebJS;Unexpected error on server;Neočekávaná chyba na serveru
-WebJS;User can download reports;Uživatel může stahovat sestavy
-WebJS;User can download reports and upload reports and files;Uživatel může stahovat sestavy a nahrávat sestavy a soubory
 WebJS;View;Zobrazit
 WebJS;View Folders;Zobrazit složky
 WebJS;View Report;Zobrazit sestavu
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Zobrazení a výstupy
 WebJS;Warning;Upozornění
 WebJS;Web Interface Version;Verze webového rozhraní
 WebJS;Yes;Ano
-WebJS;Yes (Folder is expanded in the tree view);Ano (Složka je rozbalena ve stromovém zobrazení)
-WebJS;Yes (Only files can be stored);Ano (Lze ukládat pouze soubory)
-WebJS;Yes (User can browse sub-folders);Ano (Uživatel může procházet podsložky)
-WebJS;Yes (User can create and edit sub-folders);Ano (Uživatel může vytvářet a upravovat podsložky)
-WebJS;Yes (User can edit his profile);Ano (Uživatel může upravovat svůj profil)
-WebJS;Yes (User is administrator of the Web Server);Ano (Uživatel je administrátorem webového serveru)
 Web;Select agent;Vybrat asistenta
 Web;Mark as favorite;Označit jako oblíbené
 Web;Favorites;Oblíbené
@@ -492,11 +464,12 @@ WebJS;Delete;Smazat
 WebJS;No favorites yet;Zatím žádné oblíbené
 WebJS;No recent items;Žádné nedávné položky
 Web;Configuration;Konfigurace
-Web;Configuration and security;Konfigurace a zabezpečení
-Web;Download/Upload;Stažení/Nahrání
 Web;Rights;Práva
 Web;Agents;Asistenti
 Web;Folder;Složka
 Web;Drag to resize;Přetažením změníte velikost
 WebJS;Copy and paste;Kopírovat a vložit
 WebJS;Copy, paste and send;Kopírovat, vložit a odeslat
+Web;Empty recycle bin;Vyprázdnit koš
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Opravdu chcete trvale odstranit všechny položky v koši?
+WebJS;The recycle bin has been emptied;Koš byl vyprázdněn

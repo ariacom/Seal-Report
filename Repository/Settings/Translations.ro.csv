@@ -221,9 +221,7 @@ Web;Device;Dispozitiv
 Web;Disconnect;Deconectează
 Web;Display options;Opțiuni de afișare
 Web;Edit;Editează
-Web;Edit configuration;Editează configurația
 Web;Edit entry;Editează intrarea
-Web;Edit profile;Editează profilul
 Web;Edition;Ediție
 Web;Email;E-mail
 Web;Enter password;Introduceți parola
@@ -237,14 +235,9 @@ Web;Error;Eroare
 Web;Error: only files (and not reports) can be copied to this folder.;Eroare: doar fișierele (nu și rapoartele) pot fi copiate în acest folder.
 Web;Error: the destination file name contains invalid characters.;Eroare: numele fișierului destinație conține caractere invalide.
 Web;Error: the destination folder name contains invalid characters.;Eroare: numele folderului destinație conține caractere invalide.
-Web;Expand in Treeview;Extinde în vizualizarea arborescentă
 Web;Export;Exportă
-Web;Files only;Doar fișiere
-Web;Folder Permissions;Permisiuni folder
 Web;Folders;Foldere
 Web;Forget your password ?;Ați uitat parola ?
-Web;Group name;Nume grup
-Web;Group name;Nume grup
 Web;Groups;Grupuri
 Web;Groups;Grupuri
 Web;Height;Înălțime
@@ -256,12 +249,10 @@ Web;Is dynamic;Este dinamic
 Web;Last execution at;Ultima execuție la
 Web;Licensed to;Licențiat către
 Web;Login;Autentificare
-Web;Login ID;ID autentificare
 Web;Logins;Autentificări
 Web;Logout;Deconectare
 Web;Logout the user;Deconectează utilizatorul
 Web;Manage Folders;Gestionează folderele
-Web;Manage sub-folders;Gestionează subfolderele
 Web;Name;Nume
 Web;New;Nou
 Web;New folder name;Nume folder nou
@@ -277,7 +268,6 @@ Web;Password;Parolă
 Web;Paste;Lipește
 Web;PDF Conversion delay;Întârziere conversie PDF
 Web;Personal;Personal
-Web;Personal folder;Folder personal
 Web;Phone;Telefon
 Web;Please wait;Vă rugăm așteptați
 Web;Profile;Profil
@@ -301,7 +291,6 @@ Web;Reset your password;Resetați-vă parola
 Web;Save;Salvează
 Web;Search;Caută
 Web;Security code;Cod de securitate
-Web;Show sub-folders;Afișează subfolderele
 Web;Startup report name;Nume raport de pornire
 Web;The favorite has been updated;Favoritul a fost actualizat
 Web;Two-Factor Authentication;Autentificare cu doi factori
@@ -312,14 +301,12 @@ Web;User groups;Grupuri de utilizatori
 Web;User identifier or email;Identificator de utilizator sau e-mail
 Web;User name;Nume de utilizator
 Web;Users;Utilizatori
-Web;Web product name;Nume produs web
 Web;Width;Lățime
 WebJS;# of % selected;# din % selectate
 WebJS;Actions;Acțiuni
 WebJS;All selected;Toate selectate
 WebJS;Allow only execution in a new window;Permite doar execuția într-o fereastră nouă
 WebJS;Cancel;Anulează
-WebJS;Configuration for;Configurație pentru
 WebJS;Contains;Conține
 WebJS;Contains all;Conține toate
 WebJS;Contains any;Conține oricare
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Este mai mic decât
 WebJS;Last modification;Ultima modificare
 WebJS;Mark as favorite;Marchează ca favorit
 WebJS;Model;Model
-WebJS;New folder configuration;Configurație folder nou
-WebJS;New group;Grup nou
-WebJS;New login;Autentificare nouă
 WebJS;No;Nu
-WebJS;No download (except files) or upload;Fără descărcare (cu excepția fișierelor) sau încărcare
-WebJS;No folder configuration;Fără configurație folder
-WebJS;No login;Fără autentificare
 WebJS;No personal folder;Fără folder personal
 WebJS;No right;Niciun drept
 WebJS;None;Niciunul
@@ -396,7 +377,6 @@ WebJS;Schedule;Programare
 WebJS;Server Version;Versiune server
 WebJS;Show _MENU_ reports;Afișează _MENU_ rapoarte
 WebJS;Starts with;Începe cu
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Configurația a fost salvată. Vă rugăm autentificați-vă din nou dacă sunteți afectat de securitate.
 WebJS;The folder has been created;Folderul a fost creat
 WebJS;The folder has been deleted;Folderul a fost șters
 WebJS;The folder has been renamed;Folderul a fost redenumit
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Folderul a fost actualizat
 WebJS;The report or file has been renamed;Raportul sau fișierul a fost redenumit
 WebJS;Toggle Report or Folders view;Comută vizualizarea Rapoarte sau Foldere
 WebJS;Unexpected error on server;Eroare neașteptată pe server
-WebJS;User can download reports;Utilizatorul poate descărca rapoarte
-WebJS;User can download reports and upload reports and files;Utilizatorul poate descărca rapoarte și încărca rapoarte și fișiere
 WebJS;View;Vizualizare
 WebJS;View Folders;Vizualizează folderele
 WebJS;View Report;Vizualizează raportul
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Vizualizări și ieșiri
 WebJS;Warning;Avertisment
 WebJS;Web Interface Version;Versiune interfață web
 WebJS;Yes;Da
-WebJS;Yes (Folder is expanded in the tree view);Da (Folderul este extins în vizualizarea arborescentă)
-WebJS;Yes (Only files can be stored);Da (Doar fișierele pot fi stocate)
-WebJS;Yes (User can browse sub-folders);Da (Utilizatorul poate naviga în subfoldere)
-WebJS;Yes (User can create and edit sub-folders);Da (Utilizatorul poate crea și edita subfoldere)
-WebJS;Yes (User can edit his profile);Da (Utilizatorul își poate edita profilul)
-WebJS;Yes (User is administrator of the Web Server);Da (Utilizatorul este administrator al serverului web)
 Web;Select agent;Selectează asistentul
 Web;Mark as favorite;Marchează ca favorit
 Web;Favorites;Favorite
@@ -492,11 +464,12 @@ WebJS;Delete;Șterge
 WebJS;No favorites yet;Niciun favorit încă
 WebJS;No recent items;Niciun element recent
 Web;Configuration;Configurație
-Web;Configuration and security;Configurație și securitate
-Web;Download/Upload;Descărcare/Încărcare
 Web;Rights;Drepturi
 Web;Agents;Asistenți
 Web;Folder;Folder
 Web;Drag to resize;Trageți pentru redimensionare
 WebJS;Copy and paste;Copiați și lipiți
 WebJS;Copy, paste and send;Copiați, lipiți și trimiteți
+Web;Empty recycle bin;Golește coșul de reciclare
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Sigur doriți să ștergeți definitiv toate elementele din coșul de reciclare?
+WebJS;The recycle bin has been emptied;Coșul de reciclare a fost golit

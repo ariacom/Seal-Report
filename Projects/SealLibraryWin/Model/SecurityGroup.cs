@@ -45,12 +45,14 @@ namespace Seal.Model
                 GetProperty("StartupReportName").SetIsBrowsable(true);
                 GetProperty("ExecutionMode").SetIsBrowsable(true);
                 GetProperty("Weight").SetIsBrowsable(true);
-                GetProperty("EditConfiguration").SetIsBrowsable(true);
+                GetProperty("ShowErrorDetail").SetIsBrowsable(true);
                 GetProperty("EditProfile").SetIsBrowsable(true);
                 GetProperty("AgentGUIDs").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
                 GetProperty("PersFolderRight").SetIsBrowsable(true);
+                GetProperty("PersonalFolderReportDownload").SetIsBrowsable(true);
+                GetProperty("PersonalFolderUpload").SetIsBrowsable(true);
                 GetProperty("ShowFoldersView").SetIsBrowsable(true);
                 GetProperty("ShowAllFolders").SetIsBrowsable(true);
 
@@ -84,7 +86,7 @@ namespace Seal.Model
         /// The report folder configurations for this group used for Web Publication of reports (relative to the repository 'Reports' folder). By default, report folders have no right.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\t\tReport Folders"), Description("The report folder configurations for this group used for Web Publication of reports (relative to the repository 'Reports' folder). By default, report folders have no right."), Id(2, 1)]
+        [Category("Definition"), DisplayName("\t\t\tReport folders"), Description("The report folder configurations for this group used for Web Publication of reports (relative to the repository 'Reports' folder). By default, report folders have no right."), Id(2, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SecurityFolder> Folders { get; set; } = new List<SecurityFolder>();
@@ -95,7 +97,7 @@ namespace Seal.Model
         /// repository root (Views, Sources, Settings, Security...), outside the 'Reports' tree. By default, repository folders have no right.
         /// </summary>
 #if WINDOWS
-        [Category("Danger Zone"), DisplayName("Repository Folders"), Description("⚠ DANGER ZONE: The repository folders published for this group. Unlike Report Folders, these can publish ANY folder located under the repository root (Views, Sources, Settings, Security...), outside the 'Reports' tree. Exposing such folders - especially with Upload enabled - can leak sensitive data or allow remote code execution (uploaded server-executed templates). A folder pointing at or inside the 'Reports' tree is forbidden here and ignored at runtime; use 'Report Folders' for that. By default, repository folders have no right."), Id(1, 9)]
+        [Category("Danger Zone"), DisplayName("Repository folders"), Description("⚠ DANGER ZONE: The repository folders published for this group. Unlike Report folders, these can publish ANY folder located under the repository root (Views, Sources, Settings, Security...), outside the 'Reports' tree. Exposing such folders - especially with Upload enabled - can leak sensitive data or allow remote code execution (uploaded server-executed templates). A folder pointing at or inside the 'Reports' tree is forbidden here and ignored at runtime; use 'Report folders' for that. By default, repository folders have no right."), Id(1, 9)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SecurityRepositoryFolder> RepositoryFolders { get; set; } = new List<SecurityRepositoryFolder>();
@@ -105,17 +107,37 @@ namespace Seal.Model
         /// Define the right of the dedicated personal folder for each user of the group
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\t\tPersonal Folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(4, 1)]
+        [Category("Definition"), DisplayName("\t\t\tPersonal folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(PersonalFolderRight.None)]
 #endif
         public PersonalFolderRight PersFolderRight { get; set; } = PersonalFolderRight.None;
 
         /// <summary>
+        /// If true, the user can download the report definition (the .srex file) of the reports stored in his personal folder. Since the Web Report Server has no report editor, this download is the only way to extract a report definition; disable it to keep definitions on the server.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\t\t\tPersonal folder report definition download"), Description("If true, the user can download the report definition (the .srex file) of the reports stored in his personal folder. Since the Web Report Server has no report editor, this download is the only way to extract a report definition; keep it disabled to keep definitions on the server."), Id(5, 1)]
+        [DefaultValue(false)]
+#endif
+        public bool PersonalFolderReportDownload { get; set; } = false;
+        public bool ShouldSerializePersonalFolderReportDownload() { return PersonalFolderReportDownload; }
+
+        /// <summary>
+        /// If true, the user can upload files and reports into his personal folder. DANGER ZONE: an uploaded report may contain tasks that execute code on the server.
+        /// </summary>
+#if WINDOWS
+        [Category("Danger Zone"), DisplayName("\tPersonal folder upload"), Description("If true, the user can upload files and reports into his personal folder.\r\n⚠ DANGER ZONE: an uploaded report may contain tasks that execute code on the server. Only allow upload for groups you fully trust."), Id(2, 9)]
+        [DefaultValue(false)]
+#endif
+        public bool PersonalFolderUpload { get; set; } = false;
+        public bool ShouldSerializePersonalFolderUpload() { return PersonalFolderUpload; }
+
+        /// <summary>
         /// If true, the folders view of the reports is shown
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\t\tShow folders view"), Description("If true, the folders view of the reports is shown."), Id(5, 1)]
+        [Category("Definition"), DisplayName("\t\t\tShow folder navigation"), Description("If true, the folder navigation of the reports is shown."), Id(5, 1)]
         [DefaultValue(true)]
 #endif
         public bool ShowFoldersView { get; set; } = true;
@@ -124,7 +146,7 @@ namespace Seal.Model
         /// If true, parent folder with no rights are also shown in the tree view
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\t\tTree view:Show all folders"), Description("If true, parent folder with no rights are also shown in the tree view."), Id(6, 1)]
+        [Category("Definition"), DisplayName("\t\t\tShow empty parent folders"), Description("If true, parent folders the user has no rights on are still shown in the navigation as empty pass-through nodes."), Id(6, 1)]
         [DefaultValue(false)]
 #endif
         public bool ShowAllFolders { get; set; } = false;
@@ -133,7 +155,7 @@ namespace Seal.Model
         /// Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\tFolders Script"), Description("Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(10, 1)]
+        [Category("Definition"), DisplayName("\tFolders script"), Description("Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(10, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string FoldersScript { get; set; }
@@ -142,7 +164,7 @@ namespace Seal.Model
         /// Optional script executed to define/modify the reports published in the Web Report Server for a given folder. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Folder Detail Script"), Description("Optional script executed to define/modify the reports published in the Web Report Server for a given folder. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(11, 1)]
+        [Category("Definition"), DisplayName("Folder detail script"), Description("Optional script executed to define/modify the reports published in the Web Report Server for a given folder. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(11, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string FolderDetailScript { get; set; }
@@ -151,7 +173,7 @@ namespace Seal.Model
         /// Optional script executed to define/modify the reports menu of the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Menu Script"), Description("Optional script executed to define/modify the reports menu of the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(12, 1)]
+        [Category("Definition"), DisplayName("Menu script"), Description("Optional script executed to define/modify the reports menu of the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(12, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MenuScript { get; set; }
@@ -160,7 +182,7 @@ namespace Seal.Model
         /// If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\t\t\tSQL Models"), Description("If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied. Note that dynamic filters set for security purpose will not be applied."), Id(1, 2)]
+        [Category("Tools Security"), DisplayName("\t\t\tSQL models"), Description("If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied. Note that dynamic filters set for security purpose will not be applied."), Id(1, 3)]
         [DefaultValue(false)]
 #endif
         public bool SqlModel { get; set; } = false;
@@ -169,7 +191,7 @@ namespace Seal.Model
         /// For the AI Tools: The data sources (identified by their GUID) that the AI tools can access for this group. If the list is empty, all data sources are allowed.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\t\tAI Tools Data Sources"), Description("The data sources that the AI tools can access for this group. If the list is empty, all data sources are allowed."), Id(2, 2)]
+        [Category("Tools Security"), DisplayName("\t\tAI tools data sources"), Description("The data sources that the AI tools can access for this group. If the list is empty, all data sources are allowed."), Id(3, 3)]
         [Editor(typeof(SecurityDataSourcesEditor), typeof(UITypeEditor))]
 #endif
         public List<string> DataSourceGUIDs { get; set; } = new List<string>();
@@ -179,7 +201,7 @@ namespace Seal.Model
         /// For the AI Tools: The output devices (identified by their GUID) that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\tAI Tools Output Devices"), Description("The output devices that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed."), Id(3, 2)]
+        [Category("Tools Security"), DisplayName("\tAI tools output devices"), Description("The output devices that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed."), Id(4, 3)]
         [Editor(typeof(SecurityDevicesEditor), typeof(UITypeEditor))]
 #endif
         public List<string> OutputDeviceGUIDs { get; set; } = new List<string>();
@@ -189,25 +211,25 @@ namespace Seal.Model
         /// Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\t\t\tWeight"), Description("Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user."), Id(1, 5)]
+        [Category("Options"), DisplayName("\t\t\tWeight"), Description("Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user."), Id(1, 2)]
 #endif
         public int Weight { get; set; } = 1;
 
         /// <summary>
-        /// Web Report Server: For Administrators of the Web Server, the user can edit the configuration and security of the Web Server.
+        /// Web Report Server: If true, the user can see the detail of exceptions (error message and stack trace) in the Web Report Server.
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Default Options"), DisplayName("\t\tEdit configuration (Administrator)"), Description("Web Report Server: For Administrators of the Web Server, the user can edit the configuration and security of the Web Server."), Id(2, 5)]
+        [Category("Options"), DisplayName("\t\tShow error detail"), Description("Web Report Server: If true, the user can see the detail of exceptions (error message and stack trace) in the Web Report Server."), Id(3, 2)]
 #endif
-        public bool EditConfiguration { get; set; } = false;
+        public bool ShowErrorDetail { get; set; } = false;
 
         /// <summary>
         /// Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.).
         /// </summary>
 #if WINDOWS
         [DefaultValue(true)]
-        [Category("Default Options"), DisplayName("\t\tEdit profile"), Description("Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.)."), Id(3, 5)]
+        [Category("Options"), DisplayName("\t\tEdit profile"), Description("Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.)."), Id(2, 2)]
 #endif
         public bool EditProfile { get; set; } = true;
 
@@ -215,7 +237,7 @@ namespace Seal.Model
         /// Web Report Server: The GUIDs of the AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\t\tAI Agents"), Description("Web Report Server: The AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group."), Id(4, 5)]
+        [Category("Tools Security"), DisplayName("\t\tAI agents"), Description("Web Report Server: The AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group."), Id(2, 3)]
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         public List<string> AgentGUIDs { get; set; } = new List<string>();
@@ -225,7 +247,7 @@ namespace Seal.Model
         /// The culture used for users belonging to the group. If empty, the default culture is used.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tCulture"), Description("The culture used for users belonging to the group. If empty, the default culture is used."), Id(6, 5)]
+        [Category("Default Options"), DisplayName("\tCulture"), Description("The culture used for users belonging to the group. If empty, the default culture is used."), Id(1, 5)]
         [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
 #endif
         public string Culture { get; set; }
@@ -234,7 +256,7 @@ namespace Seal.Model
         /// The logo file name used for to generate the reports. If empty, the default logo is used.
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(7, 5)]
+        [Category("Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(4, 2)]
 #endif
         public string LogoName { get; set; }
         /// <summary>
@@ -243,7 +265,7 @@ namespace Seal.Model
 #if WINDOWS
         [DefaultValue(StartupOptions.None)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("\tOn startup"), Description("Web Report Server: The action to take after the user logs in."), Id(8, 5)]
+        [Category("Default Options"), DisplayName("\tOn startup"), Description("Web Report Server: The action to take after the user logs in."), Id(3, 5)]
 #endif
         public StartupOptions OnStartup { get; set; } = StartupOptions.None;
 
@@ -251,7 +273,7 @@ namespace Seal.Model
         /// Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex').
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex')."), Id(9, 5)]
+        [Category("Default Options"), DisplayName("\tReport executed on startup"), Description("Web Report Server: If the startup option is 'Execute a specific report', the relative report path to execute when the user logs in (e.g. '/Samples/40-Startup Report.srex')."), Id(4, 5)]
 #endif
         public string StartupReport { get; set; }
 
@@ -259,7 +281,7 @@ namespace Seal.Model
         /// Web Report Server: Optional report name when the 'Report executed on startup' is set.).
         /// </summary>
 #if WINDOWS
-        [Category("Default Options"), DisplayName("\tReport name executed on startup"), Description("Web Report Server: Optional report name when the 'Report executed on startup' is set."), Id(10, 5)]
+        [Category("Default Options"), DisplayName("\tReport name executed on startup"), Description("Web Report Server: Optional report name when the 'Report executed on startup' is set."), Id(5, 5)]
 #endif
         public string StartupReportName { get; set; }
 
@@ -269,7 +291,7 @@ namespace Seal.Model
 #if WINDOWS
         [DefaultValue(ExecutionMode.NewWindow)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
-        [Category("Default Options"), DisplayName("Execution mode"), Description("Web Report Server: Define if reports are executed in a new window or in the same window by default."), Id(11, 5)]
+        [Category("Default Options"), DisplayName("\tExecution mode"), Description("Web Report Server: Define if reports are executed in a new window or in the same window by default."), Id(2, 5)]
 #endif
         public ExecutionMode ExecutionMode { get; set; } = ExecutionMode.NewWindow;
     }

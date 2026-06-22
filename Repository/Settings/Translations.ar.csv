@@ -221,9 +221,7 @@ Web;Device;الجهاز
 Web;Disconnect;قطع الاتصال
 Web;Display options;خيارات العرض
 Web;Edit;تحرير
-Web;Edit configuration;تحرير الإعدادات
 Web;Edit entry;تحرير الإدخال
-Web;Edit profile;تحرير الملف الشخصي
 Web;Edition;الإصدار
 Web;Email;البريد الإلكتروني
 Web;Enter password;إدخال كلمة المرور
@@ -237,14 +235,9 @@ Web;Error;خطأ
 Web;Error: only files (and not reports) can be copied to this folder.;خطأ: يمكن نسخ الملفات فقط (وليس التقارير) إلى هذا المجلد.
 Web;Error: the destination file name contains invalid characters.;خطأ: يحتوي اسم الملف الوجهة على أحرف غير صالحة.
 Web;Error: the destination folder name contains invalid characters.;خطأ: يحتوي اسم المجلد الوجهة على أحرف غير صالحة.
-Web;Expand in Treeview;توسيع في عرض الشجرة
 Web;Export;تصدير
-Web;Files only;الملفات فقط
-Web;Folder Permissions;أذونات المجلد
 Web;Folders;المجلدات
 Web;Forget your password ?;هل نسيت كلمة المرور؟
-Web;Group name;اسم المجموعة
-Web;Group name;اسم المجموعة
 Web;Groups;المجموعات
 Web;Groups;المجموعات
 Web;Height;الارتفاع
@@ -256,12 +249,10 @@ Web;Is dynamic;ديناميكي
 Web;Last execution at;آخر تنفيذ في
 Web;Licensed to;مرخّص لـ
 Web;Login;تسجيل الدخول
-Web;Login ID;معرّف الدخول
 Web;Logins;عمليات تسجيل الدخول
 Web;Logout;تسجيل الخروج
 Web;Logout the user;تسجيل خروج المستخدم
 Web;Manage Folders;إدارة المجلدات
-Web;Manage sub-folders;إدارة المجلدات الفرعية
 Web;Name;الاسم
 Web;New;جديد
 Web;New folder name;اسم المجلد الجديد
@@ -277,7 +268,6 @@ Web;Password;كلمة المرور
 Web;Paste;لصق
 Web;PDF Conversion delay;مهلة تحويل PDF
 Web;Personal;شخصي
-Web;Personal folder;المجلد الشخصي
 Web;Phone;الهاتف
 Web;Please wait;يرجى الانتظار
 Web;Profile;الملف الشخصي
@@ -301,7 +291,6 @@ Web;Reset your password;إعادة تعيين كلمة المرور الخاصة
 Web;Save;حفظ
 Web;Search;بحث
 Web;Security code;رمز الأمان
-Web;Show sub-folders;إظهار المجلدات الفرعية
 Web;Startup report name;اسم تقرير بدء التشغيل
 Web;The favorite has been updated;تم تحديث المفضلة
 Web;Two-Factor Authentication;المصادقة الثنائية
@@ -312,14 +301,12 @@ Web;User groups;مجموعات المستخدمين
 Web;User identifier or email;معرّف المستخدم أو البريد الإلكتروني
 Web;User name;اسم المستخدم
 Web;Users;المستخدمون
-Web;Web product name;اسم منتج الويب
 Web;Width;العرض
 WebJS;# of % selected;# من % محدد
 WebJS;Actions;الإجراءات
 WebJS;All selected;الكل محدد
 WebJS;Allow only execution in a new window;السماح بالتنفيذ فقط في نافذة جديدة
 WebJS;Cancel;إلغاء
-WebJS;Configuration for;إعدادات
 WebJS;Contains;يحتوي على
 WebJS;Contains all;يحتوي على الكل
 WebJS;Contains any;يحتوي على أي
@@ -366,13 +353,7 @@ WebJS;Is smaller than;أصغر من
 WebJS;Last modification;آخر تعديل
 WebJS;Mark as favorite;وضع علامة كمفضّل
 WebJS;Model;النموذج
-WebJS;New folder configuration;إعدادات مجلد جديد
-WebJS;New group;مجموعة جديدة
-WebJS;New login;تسجيل دخول جديد
 WebJS;No;لا
-WebJS;No download (except files) or upload;لا تنزيل (باستثناء الملفات) ولا تحميل
-WebJS;No folder configuration;لا توجد إعدادات للمجلد
-WebJS;No login;لا يوجد تسجيل دخول
 WebJS;No personal folder;لا يوجد مجلد شخصي
 WebJS;No right;لا توجد صلاحية
 WebJS;None;لا شيء
@@ -396,7 +377,6 @@ WebJS;Schedule;جدولة
 WebJS;Server Version;إصدار الخادم
 WebJS;Show _MENU_ reports;إظهار _MENU_ تقارير
 WebJS;Starts with;يبدأ بـ
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;تم حفظ الإعدادات. يرجى تسجيل الدخول مجددًا إذا كنت متأثرًا بالأمان.
 WebJS;The folder has been created;تم إنشاء المجلد
 WebJS;The folder has been deleted;تم حذف المجلد
 WebJS;The folder has been renamed;تمت إعادة تسمية المجلد
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;تم تحديث المجلد
 WebJS;The report or file has been renamed;تمت إعادة تسمية التقرير أو الملف
 WebJS;Toggle Report or Folders view;تبديل عرض التقارير أو المجلدات
 WebJS;Unexpected error on server;خطأ غير متوقع في الخادم
-WebJS;User can download reports;يمكن للمستخدم تنزيل التقارير
-WebJS;User can download reports and upload reports and files;يمكن للمستخدم تنزيل التقارير وتحميل التقارير والملفات
 WebJS;View;عرض
 WebJS;View Folders;عرض المجلدات
 WebJS;View Report;عرض التقرير
@@ -414,12 +392,6 @@ WebJS;Views and outputs;العروض والمخرجات
 WebJS;Warning;تحذير
 WebJS;Web Interface Version;إصدار واجهة الويب
 WebJS;Yes;نعم
-WebJS;Yes (Folder is expanded in the tree view);نعم (المجلد موسّع في عرض الشجرة)
-WebJS;Yes (Only files can be stored);نعم (يمكن تخزين الملفات فقط)
-WebJS;Yes (User can browse sub-folders);نعم (يمكن للمستخدم تصفح المجلدات الفرعية)
-WebJS;Yes (User can create and edit sub-folders);نعم (يمكن للمستخدم إنشاء وتحرير المجلدات الفرعية)
-WebJS;Yes (User can edit his profile);نعم (يمكن للمستخدم تحرير ملفه الشخصي)
-WebJS;Yes (User is administrator of the Web Server);نعم (المستخدم مسؤول عن خادم الويب)
 Web;Select agent;اختيار المساعد
 Web;Mark as favorite;وضع علامة كمفضّل
 Web;Favorites;المفضلة
@@ -492,11 +464,12 @@ WebJS;Delete;حذف
 WebJS;No favorites yet;لا توجد مفضلات بعد
 WebJS;No recent items;لا توجد عناصر حديثة
 Web;Configuration;الإعدادات
-Web;Configuration and security;الإعدادات والأمان
-Web;Download/Upload;تنزيل/تحميل
 Web;Rights;الصلاحيات
 Web;Agents;المساعدون
 Web;Folder;المجلد
 Web;Drag to resize;اسحب لتغيير الحجم
 WebJS;Copy and paste;نسخ ولصق
 WebJS;Copy, paste and send;نسخ ولصق وإرسال
+Web;Empty recycle bin;إفراغ سلة المحذوفات
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;هل تريد حقًا حذف جميع العناصر الموجودة في سلة المحذوفات نهائيًا؟
+WebJS;The recycle bin has been emptied;تم إفراغ سلة المحذوفات

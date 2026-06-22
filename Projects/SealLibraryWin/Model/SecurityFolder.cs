@@ -32,7 +32,8 @@ namespace Seal.Model
                 GetProperty("ExpandSubFolders").SetIsBrowsable(true);
                 GetProperty("ManageFolder").SetIsBrowsable(true);
                 GetProperty("FilesOnly").SetIsBrowsable(true);
-                GetProperty("DownloadUpload").SetIsBrowsable(true);
+                GetProperty("AllowReportDownload").SetIsBrowsable(true);
+                GetProperty("AllowUpload").SetIsBrowsable(true);
                 GetProperty("Icon").SetIsBrowsable(true);
 
 
@@ -59,7 +60,7 @@ namespace Seal.Model
         /// If true, sub-folders are also published with the same definition
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\tShow sub-folders"), Description("If true, sub-folders are also published with the same definition."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Include sub-folders"), Description("If true, sub-folders are also published with the same definition."), Id(2, 1)]
         [DefaultValue(true)]
 #endif
         public bool UseSubFolders
@@ -76,7 +77,7 @@ namespace Seal.Model
         /// If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Manage sub-folder"), Description("If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Manage sub-folders"), Description("If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown."), Id(3, 1)]
         [DefaultValue(true)]
 #endif
         public bool ManageFolder { get; set; } = true;
@@ -101,21 +102,30 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Defines if the user can download reports/files or upload files and reports in this folder. DANGER ZONE: enabling Upload lets web users upload files and reports into the repository; an uploaded report may contain tasks that run code on the server.
+        /// If true, the user can download the report definition (the .srex file) of the reports in this folder. Files are always downloadable; this flag only controls report definitions, which expose the report SQL, connections and task scripts.
         /// </summary>
 #if WINDOWS
-        [Category("Danger Zone"), DisplayName("Upload/Download"), Description("Defines if the user can download reports/files or upload files and reports in this folder.\r\n⚠ DANGER ZONE: setting 'Download and Upload' lets web users upload files and reports into this repository folder. An uploaded report may contain tasks that execute code on the server. Only allow Upload on folders and groups you fully trust."), Id(1, 9)]
-        [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(DownloadUpload.None)]
+        [Category("Options"), DisplayName("Allow report definition download"), Description("If true, the user can download the report definition (the .srex file) of the reports in this folder. Files are always downloadable; this flag only controls report definitions, which expose the report SQL, connections and task scripts."), Id(5, 2)]
+        [DefaultValue(false)]
 #endif
-        public DownloadUpload DownloadUpload { get; set; } = DownloadUpload.None;
-        public bool ShouldSerializeDownloadUpload() { return DownloadUpload != DownloadUpload.None; }
+        public bool AllowReportDownload { get; set; } = false;
+        public bool ShouldSerializeAllowReportDownload() { return AllowReportDownload; }
+
+        /// <summary>
+        /// If true, the user can upload files and reports into this folder. DANGER ZONE: an uploaded report may contain tasks that execute code on the server.
+        /// </summary>
+#if WINDOWS
+        [Category("Danger Zone"), DisplayName("Allow upload"), Description("If true, the user can upload files and reports into this folder.\r\n⚠ DANGER ZONE: an uploaded report may contain tasks that execute code on the server. Only allow upload on folders and groups you fully trust."), Id(1, 9)]
+        [DefaultValue(false)]
+#endif
+        public bool AllowUpload { get; set; } = false;
+        public bool ShouldSerializeAllowUpload() { return AllowUpload; }
 
         /// <summary>
         /// If true, all the Sub-folders displayed in the Tree View are expanded by default
         /// </summary>
 #if WINDOWS
-        [Category("Options"), DisplayName("Expand Tree View Sub-folders"), Description("If true, all the Sub-folders displayed in the Tree View are expanded by default."), Id(2, 2)]
+        [Category("Options"), DisplayName("Expand tree view sub-folders"), Description("If true, all the sub-folders displayed in the tree view are expanded by default."), Id(2, 2)]
         [DefaultValue(true)]
 #endif
         public bool ExpandSubFolders { get; set; } = true;
@@ -133,7 +143,7 @@ namespace Seal.Model
         /// Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-building'); legacy Glyphicon names are also accepted. If empty, the default folder icon is used.
         /// </summary>
 #if WINDOWS
-        [Category("Options"), DisplayName("Tree View icon"), Description("Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-building'); legacy Glyphicon names are also accepted. If empty, the default folder icon is used."), Id(4, 2)]
+        [Category("Options"), DisplayName("Tree view icon"), Description("Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-building'); legacy Glyphicon names are also accepted. If empty, the default folder icon is used."), Id(4, 2)]
         [Editor(typeof(FontAwesomeIconEditor), typeof(System.Drawing.Design.UITypeEditor))]
 #endif
         public string Icon { get; set; }

@@ -221,9 +221,7 @@ Web;Device;Συσκευή
 Web;Disconnect;Αποσύνδεση
 Web;Display options;Επιλογές εμφάνισης
 Web;Edit;Επεξεργασία
-Web;Edit configuration;Επεξεργασία διαμόρφωσης
 Web;Edit entry;Επεξεργασία καταχώρισης
-Web;Edit profile;Επεξεργασία προφίλ
 Web;Edition;Έκδοση
 Web;Email;Email
 Web;Enter password;Εισαγωγή κωδικού
@@ -237,14 +235,9 @@ Web;Error;Σφάλμα
 Web;Error: only files (and not reports) can be copied to this folder.;Σφάλμα: μόνο αρχεία (και όχι αναφορές) μπορούν να αντιγραφούν σε αυτόν τον φάκελο.
 Web;Error: the destination file name contains invalid characters.;Σφάλμα: το όνομα του αρχείου προορισμού περιέχει μη έγκυρους χαρακτήρες.
 Web;Error: the destination folder name contains invalid characters.;Σφάλμα: το όνομα του φακέλου προορισμού περιέχει μη έγκυρους χαρακτήρες.
-Web;Expand in Treeview;Ανάπτυξη στην προβολή δέντρου
 Web;Export;Εξαγωγή
-Web;Files only;Μόνο αρχεία
-Web;Folder Permissions;Δικαιώματα φακέλου
 Web;Folders;Φάκελοι
 Web;Forget your password ?;"Ξεχάσατε τον κωδικό σας;"
-Web;Group name;Όνομα ομάδας
-Web;Group name;Όνομα ομάδας
 Web;Groups;Ομάδες
 Web;Groups;Ομάδες
 Web;Height;Ύψος
@@ -256,12 +249,10 @@ Web;Is dynamic;Είναι δυναμικό
 Web;Last execution at;Τελευταία εκτέλεση στις
 Web;Licensed to;Άδεια χρήσης σε
 Web;Login;Σύνδεση
-Web;Login ID;Αναγνωριστικό σύνδεσης
 Web;Logins;Συνδέσεις
 Web;Logout;Αποσύνδεση
 Web;Logout the user;Αποσύνδεση χρήστη
 Web;Manage Folders;Διαχείριση φακέλων
-Web;Manage sub-folders;Διαχείριση υποφακέλων
 Web;Name;Όνομα
 Web;New;Νέο
 Web;New folder name;Όνομα νέου φακέλου
@@ -277,7 +268,6 @@ Web;Password;Κωδικός
 Web;Paste;Επικόλληση
 Web;PDF Conversion delay;Καθυστέρηση μετατροπής PDF
 Web;Personal;Προσωπικό
-Web;Personal folder;Προσωπικός φάκελος
 Web;Phone;Τηλέφωνο
 Web;Please wait;Παρακαλώ περιμένετε
 Web;Profile;Προφίλ
@@ -301,7 +291,6 @@ Web;Reset your password;Επαναφέρετε τον κωδικό σας
 Web;Save;Αποθήκευση
 Web;Search;Αναζήτηση
 Web;Security code;Κωδικός ασφαλείας
-Web;Show sub-folders;Εμφάνιση υποφακέλων
 Web;Startup report name;Όνομα αναφοράς εκκίνησης
 Web;The favorite has been updated;Το αγαπημένο ενημερώθηκε
 Web;Two-Factor Authentication;Έλεγχος ταυτότητας δύο παραγόντων
@@ -312,14 +301,12 @@ Web;User groups;Ομάδες χρηστών
 Web;User identifier or email;Αναγνωριστικό χρήστη ή email
 Web;User name;Όνομα χρήστη
 Web;Users;Χρήστες
-Web;Web product name;Όνομα προϊόντος Web
 Web;Width;Πλάτος
 WebJS;# of % selected;# από % επιλεγμένα
 WebJS;Actions;Ενέργειες
 WebJS;All selected;Όλα επιλεγμένα
 WebJS;Allow only execution in a new window;Να επιτρέπεται η εκτέλεση μόνο σε νέο παράθυρο
 WebJS;Cancel;Άκυρο
-WebJS;Configuration for;Διαμόρφωση για
 WebJS;Contains;Περιέχει
 WebJS;Contains all;Περιέχει όλα
 WebJS;Contains any;Περιέχει οποιοδήποτε
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Είναι μικρότερο από
 WebJS;Last modification;Τελευταία τροποποίηση
 WebJS;Mark as favorite;Σήμανση ως αγαπημένο
 WebJS;Model;Μοντέλο
-WebJS;New folder configuration;Διαμόρφωση νέου φακέλου
-WebJS;New group;Νέα ομάδα
-WebJS;New login;Νέα σύνδεση
 WebJS;No;Όχι
-WebJS;No download (except files) or upload;Χωρίς λήψη (εκτός αρχείων) ή μεταφόρτωση
-WebJS;No folder configuration;Χωρίς διαμόρφωση φακέλου
-WebJS;No login;Χωρίς σύνδεση
 WebJS;No personal folder;Χωρίς προσωπικό φάκελο
 WebJS;No right;Κανένα δικαίωμα
 WebJS;None;Κανένα
@@ -396,7 +377,6 @@ WebJS;Schedule;Προγραμματισμός
 WebJS;Server Version;Έκδοση διακομιστή
 WebJS;Show _MENU_ reports;Εμφάνιση _MENU_ αναφορών
 WebJS;Starts with;Ξεκινά με
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Η διαμόρφωση αποθηκεύτηκε. Παρακαλώ συνδεθείτε ξανά εάν επηρεάζεστε από την ασφάλεια.
 WebJS;The folder has been created;Ο φάκελος δημιουργήθηκε
 WebJS;The folder has been deleted;Ο φάκελος διαγράφηκε
 WebJS;The folder has been renamed;Ο φάκελος μετονομάστηκε
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Ο φάκελος ενημερώθηκε
 WebJS;The report or file has been renamed;Η αναφορά ή το αρχείο μετονομάστηκε
 WebJS;Toggle Report or Folders view;Εναλλαγή προβολής αναφοράς ή φακέλων
 WebJS;Unexpected error on server;Μη αναμενόμενο σφάλμα στον διακομιστή
-WebJS;User can download reports;Ο χρήστης μπορεί να κατεβάσει αναφορές
-WebJS;User can download reports and upload reports and files;Ο χρήστης μπορεί να κατεβάσει αναφορές και να μεταφορτώσει αναφορές και αρχεία
 WebJS;View;Προβολή
 WebJS;View Folders;Προβολή φακέλων
 WebJS;View Report;Προβολή αναφοράς
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Προβολές και έξοδοι
 WebJS;Warning;Προειδοποίηση
 WebJS;Web Interface Version;Έκδοση διεπαφής Web
 WebJS;Yes;Ναι
-WebJS;Yes (Folder is expanded in the tree view);Ναι (Ο φάκελος είναι ανεπτυγμένος στην προβολή δέντρου)
-WebJS;Yes (Only files can be stored);Ναι (Μόνο αρχεία μπορούν να αποθηκευτούν)
-WebJS;Yes (User can browse sub-folders);Ναι (Ο χρήστης μπορεί να περιηγηθεί σε υποφακέλους)
-WebJS;Yes (User can create and edit sub-folders);Ναι (Ο χρήστης μπορεί να δημιουργεί και να επεξεργάζεται υποφακέλους)
-WebJS;Yes (User can edit his profile);Ναι (Ο χρήστης μπορεί να επεξεργαστεί το προφίλ του)
-WebJS;Yes (User is administrator of the Web Server);Ναι (Ο χρήστης είναι διαχειριστής του διακομιστή Web)
 Web;Select agent;Επιλογή βοηθού
 Web;Mark as favorite;Σήμανση ως αγαπημένο
 Web;Favorites;Αγαπημένα
@@ -492,11 +464,12 @@ WebJS;Delete;Διαγραφή
 WebJS;No favorites yet;Δεν υπάρχουν αγαπημένα ακόμη
 WebJS;No recent items;Δεν υπάρχουν πρόσφατα στοιχεία
 Web;Configuration;Διαμόρφωση
-Web;Configuration and security;Διαμόρφωση και ασφάλεια
-Web;Download/Upload;Λήψη/Μεταφόρτωση
 Web;Rights;Δικαιώματα
 Web;Agents;Βοηθοί
 Web;Folder;Φάκελος
 Web;Drag to resize;Σύρετε για αλλαγή μεγέθους
 WebJS;Copy and paste;Αντιγραφή και επικόλληση
 WebJS;Copy, paste and send;Αντιγραφή, επικόλληση και αποστολή
+Web;Empty recycle bin;Άδειασμα του κάδου ανακύκλωσης
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;"Θέλετε πραγματικά να διαγράψετε οριστικά όλα τα στοιχεία στον κάδο ανακύκλωσης;"
+WebJS;The recycle bin has been emptied;Ο κάδος ανακύκλωσης άδειασε

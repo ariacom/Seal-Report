@@ -135,7 +135,6 @@ namespace SealWebServer.Controllers
                 language = Repository.CultureInfo.TwoLetterISOLanguageName,
                 folder = WebUser.Profile.LastFolder,
                 showfolders = WebUser.ShowFoldersView,
-                editconfiguration = WebUser.EditConfiguration,
                 editprofile = WebUser.EditProfile,
                 usertag = WebUser.Tag,
                 onstartup = WebUser.Profile.OnStartup,
@@ -683,6 +682,31 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Empty the current user's recycle bin: permanently delete all items it contains.
+        /// </summary>
+        public ActionResult SWIEmptyRecycleBin(string sessionId)
+        {
+            writeDebug("SWIEmptyRecycleBin");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+
+                var bin = Repository.GetRecycleBinFolder(WebUser);
+                foreach (var file in Directory.GetFiles(bin))
+                {
+                    FileHelper.DeleteFile(file);
+                    Audit.LogAudit(AuditType.FileDelete, WebUser, file);
+                }
+                return Json(new object { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
         /// Move a file or a report in the repository.
         /// </summary>
         public ActionResult SWIMoveFile(string source, string destination, bool copy, string sessionId)
@@ -916,8 +940,7 @@ namespace SealWebServer.Controllers
 
                 var file = getFileDetail(path);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-                if (!Repository.Configuration.EnableDownloadUpload) throw new Exception("Error: upload and download are not allowed for the server.");
-                if (file.isreport && folder.downloadupload < (int)DownloadUpload.Download) throw new Exception("Error: no right to download report or file.");
+                if (file.isreport && !folder.reportdownload) throw new Exception("Error: no right to download the report definition.");
                 int effRight;
                 string viewPath = file.isshortcut ? resolveShortcut(path, out effRight) : path;
                 return getFileResult(getFullPath(viewPath), null);
@@ -943,7 +966,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getFolder(path);
                 if (Request.Form.Files.Count == 0) throw new Exception("No file to upload");
                 if ((FolderRight)folder.right != FolderRight.Edit) throw new Exception("Error: no right to upload file on this folder");
-                if (folder.downloadupload < (int)DownloadUpload.DownloadUpload) throw new Exception("Error: upload is not allowed on this folder");
+                if (!folder.upload) throw new Exception("Error: upload is not allowed on this folder");
 
 
                 var file = Request.Form.Files[0];
@@ -1152,75 +1175,6 @@ namespace SealWebServer.Controllers
             {
                 //not authenticated
                 return Json(getNotAuthenticatedProfile());
-            }
-        }
-
-        /// <summary>
-        /// Save the configuration of the Web Server (including security).
-        /// </summary>
-        public ActionResult SWISetConfiguration(string sessionId)
-        {
-            writeDebug("SWISetConfiguration");
-            try
-            {
-                SetSessionId(sessionId);
-                checkSWIAuthentication();
-                if (!WebUser.DefaultGroup.EditConfiguration) throw new Exception("No right to save the configuration");
-
-                var swiConfig = JsonConvert.DeserializeObject(Request.Form["configuration"], typeof(SWIConfiguration)) as SWIConfiguration;
-                if (swiConfig == null) throw new Exception("Error: no configuration to save");
-
-                Repository.Configuration.WebProductName = swiConfig.productname;
-                Repository.Configuration.SaveToFile();
-
-                Repository.Security.Groups = swiConfig.groups;
-                Repository.Security.Logins = swiConfig.logins;
-                //Check passwords
-                foreach (var login in Repository.Security.Logins)
-                {
-                    if (login.Password != null && login.Password.StartsWith(login.HashedPassword)) login.HashedPassword = login.Password.Substring(login.HashedPassword.Length);
-                }
-
-                Repository.Security.SaveToFile();
-
-                return Json(new { });
-            }
-            catch (Exception ex)
-            {
-                return HandleSWIException(ex);
-            }
-        }
-
-        /// <summary>
-        /// Returns the configuration of the web server (including security).
-        /// </summary>
-        public ActionResult SWIGetConfiguration(string sessionId)
-        {
-            writeDebug("SWIGetConfiguration");
-            try
-            {
-                SetSessionId(sessionId);
-                if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
-
-                var result = new SWIConfiguration
-                {
-                    productname = Repository.Configuration.WebProductName,
-                    groups = Repository.Security.Groups,
-                    logins = Repository.Security.Logins,
-                    downloadupload = Repository.Configuration.EnableDownloadUpload,
-                    folders = SWIConfiguration.GetFolders(WebUser),
-                    agents = Repository.Instance.AIConfiguration.AIAgents
-                        .Where(a => a.IsEnabled)
-                        .Select(a => new StringPair { Key = a.GUID, Value = Repository.RepositoryTranslate("AIAgentName", "*", a.Name) })
-                        .ToList()
-                };
-
-                return Json(result);
-            }
-            catch
-            {
-                //not authenticated
-                return Json(new { authenticated = false });
             }
         }
 

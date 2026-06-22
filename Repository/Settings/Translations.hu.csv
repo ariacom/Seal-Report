@@ -221,9 +221,7 @@ Web;Device;Eszköz
 Web;Disconnect;Leválasztás
 Web;Display options;Megjelenítési beállítások
 Web;Edit;Szerkesztés
-Web;Edit configuration;Konfiguráció szerkesztése
 Web;Edit entry;Bejegyzés szerkesztése
-Web;Edit profile;Profil szerkesztése
 Web;Edition;Kiadás
 Web;Email;E-mail
 Web;Enter password;Adja meg a jelszót
@@ -237,14 +235,9 @@ Web;Error;Hiba
 Web;Error: only files (and not reports) can be copied to this folder.;Hiba: csak fájlokat (jelentéseket nem) lehet ebbe a mappába másolni.
 Web;Error: the destination file name contains invalid characters.;Hiba: a célfájl neve érvénytelen karaktereket tartalmaz.
 Web;Error: the destination folder name contains invalid characters.;Hiba: a célmappa neve érvénytelen karaktereket tartalmaz.
-Web;Expand in Treeview;Kibontás a fanézetben
 Web;Export;Exportálás
-Web;Files only;Csak fájlok
-Web;Folder Permissions;Mappa-jogosultságok
 Web;Folders;Mappák
 Web;Forget your password ?;Elfelejtette a jelszavát?
-Web;Group name;Csoport neve
-Web;Group name;Csoport neve
 Web;Groups;Csoportok
 Web;Groups;Csoportok
 Web;Height;Magasság
@@ -256,12 +249,10 @@ Web;Is dynamic;Dinamikus
 Web;Last execution at;Utolsó végrehajtás ekkor
 Web;Licensed to;Licenc tulajdonosa
 Web;Login;Bejelentkezés
-Web;Login ID;Bejelentkezési azonosító
 Web;Logins;Bejelentkezések
 Web;Logout;Kijelentkezés
 Web;Logout the user;Felhasználó kijelentkeztetése
 Web;Manage Folders;Mappák kezelése
-Web;Manage sub-folders;Almappák kezelése
 Web;Name;Név
 Web;New;Új
 Web;New folder name;Új mappa neve
@@ -277,7 +268,6 @@ Web;Password;Jelszó
 Web;Paste;Beillesztés
 Web;PDF Conversion delay;PDF-konverzió késleltetése
 Web;Personal;Személyes
-Web;Personal folder;Személyes mappa
 Web;Phone;Telefon
 Web;Please wait;Kérjük, várjon
 Web;Profile;Profil
@@ -301,7 +291,6 @@ Web;Reset your password;Jelszó visszaállítása
 Web;Save;Mentés
 Web;Search;Keresés
 Web;Security code;Biztonsági kód
-Web;Show sub-folders;Almappák megjelenítése
 Web;Startup report name;Indítási jelentés neve
 Web;The favorite has been updated;A kedvenc frissítve lett
 Web;Two-Factor Authentication;Kétfaktoros hitelesítés
@@ -312,14 +301,12 @@ Web;User groups;Felhasználói csoportok
 Web;User identifier or email;Felhasználói azonosító vagy e-mail
 Web;User name;Felhasználónév
 Web;Users;Felhasználók
-Web;Web product name;Webtermék neve
 Web;Width;Szélesség
 WebJS;# of % selected;A kiválasztott % darabszáma
 WebJS;Actions;Műveletek
 WebJS;All selected;Mind kiválasztva
 WebJS;Allow only execution in a new window;Csak új ablakban történő végrehajtás engedélyezése
 WebJS;Cancel;Mégse
-WebJS;Configuration for;Konfiguráció ehhez:
 WebJS;Contains;Tartalmazza
 WebJS;Contains all;Mindet tartalmazza
 WebJS;Contains any;Bármelyiket tartalmazza
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Kisebb, mint
 WebJS;Last modification;Utolsó módosítás
 WebJS;Mark as favorite;Megjelölés kedvencként
 WebJS;Model;Modell
-WebJS;New folder configuration;Új mappakonfiguráció
-WebJS;New group;Új csoport
-WebJS;New login;Új bejelentkezés
 WebJS;No;Nem
-WebJS;No download (except files) or upload;Nincs letöltés (fájlok kivételével) vagy feltöltés
-WebJS;No folder configuration;Nincs mappakonfiguráció
-WebJS;No login;Nincs bejelentkezés
 WebJS;No personal folder;Nincs személyes mappa
 WebJS;No right;Nincs jogosultság
 WebJS;None;Nincs
@@ -396,7 +377,6 @@ WebJS;Schedule;Ütemezés
 WebJS;Server Version;Szerververzió
 WebJS;Show _MENU_ reports;_MENU_ jelentés megjelenítése
 WebJS;Starts with;Kezdődik
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;A konfiguráció elmentve. Kérjük, jelentkezzen be újra, ha a biztonsági beállítások érintik.
 WebJS;The folder has been created;A mappa létrejött
 WebJS;The folder has been deleted;A mappa törölve lett
 WebJS;The folder has been renamed;A mappa át lett nevezve
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;A mappa frissítve lett
 WebJS;The report or file has been renamed;A jelentés vagy fájl át lett nevezve
 WebJS;Toggle Report or Folders view;Jelentés vagy mappa nézet váltása
 WebJS;Unexpected error on server;Váratlan hiba a szerveren
-WebJS;User can download reports;A felhasználó letöltheti a jelentéseket
-WebJS;User can download reports and upload reports and files;A felhasználó letöltheti a jelentéseket, valamint feltölthet jelentéseket és fájlokat
 WebJS;View;Megtekintés
 WebJS;View Folders;Mappák megtekintése
 WebJS;View Report;Jelentés megtekintése
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Nézetek és kimenetek
 WebJS;Warning;Figyelmeztetés
 WebJS;Web Interface Version;Webes felület verziója
 WebJS;Yes;Igen
-WebJS;Yes (Folder is expanded in the tree view);Igen (A mappa ki van bontva a fanézetben)
-WebJS;Yes (Only files can be stored);Igen (Csak fájlok tárolhatók)
-WebJS;Yes (User can browse sub-folders);Igen (A felhasználó böngészheti az almappákat)
-WebJS;Yes (User can create and edit sub-folders);Igen (A felhasználó létrehozhat és szerkeszthet almappákat)
-WebJS;Yes (User can edit his profile);Igen (A felhasználó szerkesztheti a profilját)
-WebJS;Yes (User is administrator of the Web Server);Igen (A felhasználó a webszerver rendszergazdája)
 Web;Select agent;Asszisztens kiválasztása
 Web;Mark as favorite;Megjelölés kedvencként
 Web;Favorites;Kedvencek
@@ -492,11 +464,12 @@ WebJS;Delete;Törlés
 WebJS;No favorites yet;Még nincsenek kedvencek
 WebJS;No recent items;Nincsenek legutóbbi elemek
 Web;Configuration;Konfiguráció
-Web;Configuration and security;Konfiguráció és biztonság
-Web;Download/Upload;Letöltés/Feltöltés
 Web;Rights;Jogok
 Web;Agents;Asszisztensek
 Web;Folder;Mappa
 Web;Drag to resize;Húzza az átméretezéshez
 WebJS;Copy and paste;Másolás és beillesztés
 WebJS;Copy, paste and send;Másolás, beillesztés és küldés
+Web;Empty recycle bin;Lomtár ürítése
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Biztosan véglegesen törölni szeretné a lomtár összes elemét?
+WebJS;The recycle bin has been emptied;A lomtár ki lett ürítve

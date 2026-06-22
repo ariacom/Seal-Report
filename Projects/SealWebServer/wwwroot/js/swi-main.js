@@ -58,7 +58,7 @@ class SWIMain {
             if ((e.keyCode || e.which) == 13)
                 _main.checkSecurityCode();
         });
-        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-agent-button,#search-pattern,#search-nav-item"), false);
+        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item"), false);
         $("#login-modal-submit").unbind("click").on("click", function () {
             _main.login();
         });
@@ -124,6 +124,66 @@ class SWIMain {
         //General handlers
         $(window).unbind("resize").on('resize', function () {
             _main.resize();
+        });
+        _main.initFolderSplitter();
+    }
+    //Drag handle between the folder tree and the report list (folders view).
+    //Width is stored as a percentage of the row so it survives window resizing.
+    initFolderSplitter() {
+        const DEFAULT_WIDTH = "33.333%";
+        const MIN_TREE_PX = 180; //keep the tree usable
+        const MIN_LIST_PX = 320; //keep the report list usable
+        const applyWidth = (value) => {
+            document.documentElement.style.setProperty("--folder-view-width", value);
+        };
+        //Restore the saved width.
+        try {
+            const saved = window.localStorage.getItem("swi-folder-view-width");
+            if (saved)
+                applyWidth(saved);
+        }
+        catch (e) { /* localStorage unavailable */ }
+        const $splitter = $("#folder-splitter");
+        $splitter.on("mousedown", function (e) {
+            e.preventDefault();
+            const row = document.querySelector(".swi-folder-row");
+            if (!row)
+                return;
+            $("body").addClass("folder-resizing");
+            const onMove = (ev) => {
+                const rect = row.getBoundingClientRect();
+                if (rect.width <= 0)
+                    return;
+                let px = ev.clientX - rect.left;
+                px = Math.max(MIN_TREE_PX, Math.min(rect.width - MIN_LIST_PX, px));
+                const pct = (px / rect.width) * 100;
+                applyWidth(pct.toFixed(3) + "%");
+            };
+            const onUp = () => {
+                document.removeEventListener("mousemove", onMove);
+                document.removeEventListener("mouseup", onUp);
+                $("body").removeClass("folder-resizing");
+                const current = getComputedStyle(document.documentElement)
+                    .getPropertyValue("--folder-view-width").trim();
+                try {
+                    window.localStorage.setItem("swi-folder-view-width", current);
+                }
+                catch (err) { /* localStorage unavailable */ }
+                _main.resize();
+                redrawDataTables();
+            };
+            document.addEventListener("mousemove", onMove);
+            document.addEventListener("mouseup", onUp);
+        });
+        //Double-click resets to the default split.
+        $splitter.on("dblclick", function () {
+            applyWidth(DEFAULT_WIDTH);
+            try {
+                window.localStorage.removeItem("swi-folder-view-width");
+            }
+            catch (err) { /* localStorage unavailable */ }
+            _main.resize();
+            redrawDataTables();
         });
     }
     loginSuccess(data) {
@@ -249,8 +309,6 @@ class SWIMain {
         });
         //Profile
         SWIUtil.InitProfile(_main._profile);
-        //Configuration
-        _main.initConfiguration(_main._profile);
         //Disconnect
         SWIUtil.ShowHideControl($("#disconnect-nav-item"), true);
         $("#disconnect-nav-item").unbind("click").on("click", function () {
@@ -260,7 +318,7 @@ class SWIMain {
             _gateway.Logout(function () {
                 $("#report-body").empty();
                 $("#nav_button").text("");
-                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#config-nav-item,#menu-agent-button,#search-pattern,#search-nav-item"), false);
+                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item"), false);
                 if (window.aiPanel)
                     window.aiPanel.reset();
                 _main.showLogin();
@@ -396,6 +454,22 @@ class SWIMain {
             e.preventDefault();
             $("#upload-file").click();
         });
+        $("#report-empty-bin-lightbutton").unbind("click").on("click", function (e) {
+            e.preventDefault();
+            $("#message-title").html(SWIUtil.tr("Warning"));
+            $("#message-text").html(SWIUtil.tr("Do you really want to permanently delete all items in the recycle bin ?"));
+            $("#message-cancel-button").html(SWIUtil.tr("Cancel"));
+            $("#message-ok-button").html(SWIUtil.tr("OK"));
+            $("#message-ok-button").unbind("click").on("click", function () {
+                SWIUtil.HideModal($("#message-dialog"));
+                _gateway.EmptyRecycleBin(function () {
+                    _main.ReloadReportsTable();
+                    _main.refreshMenus();
+                    SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The recycle bin has been emptied"), 5000);
+                });
+            });
+            SWIUtil.ShowModal($("#message-dialog"));
+        });
         $("#upload-file").on("change", function (e) {
             const fileInput = e.target;
             if (fileInput.files && fileInput.files.length > 0) {
@@ -433,289 +507,6 @@ class SWIMain {
             SWIUtil.HideModal($waitDialog);
         }
         SWIUtil.InitVersion();
-    }
-    initConfiguration(profile) {
-        SWIUtil.ShowHideControl($("#config-nav-item"), profile.editconfiguration);
-        $("#config-nav-item").unbind("click").on("click", function () {
-            $outputPanel.hide();
-            _gateway.GetConfiguration(function (data) {
-                _main._config = data;
-                SWIUtil.InitStandardInput("#config-webproduct-name", _main._config.productname, null, function (val) { _main._config.productname = val; });
-                _main.initDropDownGroups();
-                _main.initDropDownLogins();
-                $("#config-save").unbind("click").on("click", function (e) {
-                    if (profile.editconfiguration) {
-                        SWIUtil.ShowModal($waitDialog);
-                        _gateway.SetConfiguration(JSON.stringify(_main._config), function () {
-                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The configuration has been saved. Please login again if you are impacted by the security."), 5000);
-                            SWIUtil.HideModal($waitDialog);
-                            SWIUtil.HideModal($("#config-dialog"));
-                        }, function (data) {
-                            SWIUtil.ShowMessage("alert-danger", data.error, 0);
-                            SWIUtil.HideModal($waitDialog);
-                        });
-                    }
-                });
-                SWIUtil.ShowModal($("#config-dialog"));
-            });
-        });
-    }
-    initDropDownGroups() {
-        if (_main._configGroup != null)
-            _main._configGroup = _main._config.groups.find((i) => i.Name === _main._configGroup.Name);
-        if (!_main._configGroup && _main._config.groups.length > 0)
-            _main._configGroup = _main._config.groups[0];
-        var $ddname = $("#config-groups-dropdown");
-        $ddname.empty();
-        $.each(_main._config.groups, function (key, value) {
-            var fa = "fa fa-users-o";
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Name, value.Name, "select", fa)));
-        });
-        if ($ddname.children().length > 0)
-            $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
-        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New group"), "", "group", "fa-solid fa-circle-plus")));
-        if (_main._configGroup && _main._config.groups.length > 1) {
-            if ($ddname.children().length > 0)
-                $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroup.Name, "", "remove", "fa-solid fa-circle-minus")));
-        }
-        $("#config-groups-dropdown > li > a").unbind("click").on("click", (event) => {
-            var type = $(event.currentTarget).prop("type");
-            var id = $(event.currentTarget).prop("id");
-            if (type == "select") {
-                _main._configGroup = _main._config.groups.find((v) => v.Name === id);
-            }
-            else if (type == "group") {
-                var newGroup = {
-                    GUID: SWIUtil.Newguid(),
-                    Name: SWIUtil.UniqueName(SWIUtil.tr2("New group"), _main._config.groups),
-                    Folders: [],
-                    EditConfiguration: false,
-                    EditProfile: true,
-                    PersFolderRight: 2,
-                    AgentGUIDs: []
-                };
-                _main._config.groups.push(newGroup);
-                _main._configGroup = newGroup;
-            }
-            else {
-                var index = _main._config.groups.indexOf(_main._configGroup);
-                if (index != -1)
-                    _main._config.groups.splice(index, 1);
-                _main._configGroup = null;
-            }
-            _main.initDropDownGroups();
-            _main.initSecurityGroupDetail();
-            _main.initLoginDetail();
-        });
-        _main.initSecurityGroupDetail();
-    }
-    initSecurityGroupDetail() {
-        var detail = _main._configGroup;
-        if (!detail.Folders)
-            detail.Folders = [];
-        SWIUtil.InitStandardInput("#config-group-name", detail.Name, null, function (val) { detail.Name = val; });
-        SWIUtil.InitBoolSelect("#config-group-editconfiguration", detail.EditConfiguration, SWIUtil.tr("Yes (User is administrator of the Web Server)"), SWIUtil.tr("No"), function (val) { detail.EditConfiguration = val; });
-        SWIUtil.InitBoolSelect("#config-group-editprofile", detail.EditProfile, SWIUtil.tr("Yes (User can edit his profile)"), SWIUtil.tr("No"), function (val) { detail.EditProfile = val; });
-        var $select = $("#config-group-personalfolder");
-        $select.unbind("change");
-        $select.selectpicker("destroy");
-        $select.empty();
-        $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No personal folder"), detail.PersFolderRight));
-        $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Personal folder for files only"), detail.PersFolderRight));
-        $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Personal folder for reports and files"), detail.PersFolderRight));
-        $select.unbind("change").on("change", (event) => {
-            detail.PersFolderRight = $(event.target).val();
-        });
-        $select.selectpicker();
-        var $selectAgent = $("#config-group-agent");
-        $selectAgent.unbind("change");
-        $selectAgent.selectpicker("destroy");
-        $selectAgent.empty();
-        if (_main._config.agents) {
-            var guids = detail.AgentGUIDs || [];
-            $.each(_main._config.agents, function (key, value) {
-                var $opt = $("<option>").attr("value", value.Key).html(value.Value);
-                if (guids.indexOf(value.Key) >= 0)
-                    $opt.attr("selected", "true");
-                $selectAgent.append($opt);
-            });
-        }
-        $selectAgent.unbind("change").on("change", (event) => {
-            detail.AgentGUIDs = $(event.target).val() || [];
-        });
-        $selectAgent.selectpicker();
-        _main.initDropDownGroupsFolders();
-    }
-    initDropDownGroupsFolders() {
-        if (_main._configGroupFolder != null)
-            _main._configGroupFolder = _main._configGroup.Folders.find((i) => i.Path === _main._configGroupFolder.Path);
-        if (!_main._configGroupFolder && _main._configGroup.Folders.length > 0)
-            _main._configGroupFolder = _main._configGroup.Folders[0];
-        var $ddname = $("#config-group-folders-dropdown");
-        $ddname.empty();
-        $.each(_main._configGroup.Folders, function (key, value) {
-            var fa = "fa fa-users-o";
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Path, value.Path, "select", fa)));
-        });
-        if ($ddname.children().length > 0)
-            $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
-        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New folder configuration"), "", "folder", "fa-solid fa-circle-plus")));
-        if (_main._configGroupFolder && _main._configGroup.Folders.length > 0) {
-            if ($ddname.children().length > 0)
-                $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configGroupFolder.Path, "", "remove", "fa-solid fa-circle-minus")));
-        }
-        $("#config-group-folders-dropdown > li > a").unbind("click").on("click", (event) => {
-            var type = $(event.target).prop("type");
-            var id = $(event.target).prop("id");
-            if (type == "select") {
-                _main._configGroupFolder = _main._configGroup.Folders.find((v) => v.Path === id);
-            }
-            else if (type == "folder") {
-                var newFolder = {
-                    Path: "\\",
-                    FolderRight: 4,
-                    ManageFolder: true,
-                    UseSubFolders: true,
-                    DownloadUpload: 0,
-                    Icon: "",
-                };
-                _main._configGroup.Folders.push(newFolder);
-                _main._configGroupFolder = newFolder;
-            }
-            else {
-                var index = _main._configGroup.Folders.indexOf(_main._configGroupFolder);
-                if (index != -1)
-                    _main._configGroup.Folders.splice(index, 1);
-                _main._configGroupFolder = null;
-            }
-            _main.initDropDownGroupsFolders();
-            _main.initSecurityFolderDetail();
-        });
-        _main.initSecurityFolderDetail();
-    }
-    initSecurityFolderDetail() {
-        var detail = _main._configGroupFolder;
-        SWIUtil.ShowHideControl($(".config-group-folder"), detail);
-        if (!detail) {
-            $("#config-group-folder-name").val("<" + SWIUtil.tr2("No folder configuration") + ">");
-        }
-        else {
-            $("#config-group-folder-name").val(SWIUtil.tr2("Configuration for") + " " + detail.Path);
-            var $select = $("#config-group-folder-select");
-            $select.unbind("change");
-            $select.selectpicker("destroy");
-            $select.empty();
-            $.each(_main._config.folders, function (key, value) {
-                $select.append(SWIUtil.GetOption(value.Key, value.Key, _main._configGroupFolder.Path, "fa fa-folder-o"));
-            });
-            $select.unbind("change").on("change", (event) => {
-                _main._configGroupFolder.Path = $(event.target).val();
-                _main.initDropDownGroupsFolders();
-            });
-            $select.selectpicker();
-            var $select = $("#config-group-folder-right");
-            $select.unbind("change");
-            $select.selectpicker("destroy");
-            $select.empty();
-            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No right"), detail.FolderRight));
-            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("Execute reports / View files"), detail.FolderRight));
-            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("Execute reports and outputs / View files"), detail.FolderRight));
-            $select.append(SWIUtil.GetOption("3", SWIUtil.tr("Edit schedules / View files"), detail.FolderRight));
-            $select.append(SWIUtil.GetOption("4", SWIUtil.tr("Edit reports / Manage files"), detail.FolderRight));
-            $select.unbind("change").on("change", (event) => {
-                _main._configGroupFolder.FolderRight = $(event.target).val();
-            });
-            $select.selectpicker();
-            SWIUtil.InitBoolSelect("#config-group-folder-manage", detail.ManageFolder, SWIUtil.tr("Yes (User can create and edit sub-folders)"), SWIUtil.tr("No"), function (val) { detail.ManageFolder = val; });
-            SWIUtil.InitBoolSelect("#config-group-folder-showsub", detail.UseSubFolders, SWIUtil.tr("Yes (User can browse sub-folders)"), SWIUtil.tr("No"), function (val) { detail.UseSubFolders = val; });
-            SWIUtil.InitBoolSelect("#config-group-folder-expand", detail.ExpandSubFolders, SWIUtil.tr("Yes (Folder is expanded in the tree view)"), SWIUtil.tr("No"), function (val) { detail.ExpandSubFolders = val; });
-            SWIUtil.InitBoolSelect("#config-group-folder-filesonly", detail.FilesOnly, SWIUtil.tr("Yes (Only files can be stored)"), SWIUtil.tr("No"), function (val) { detail.FilesOnly = val; });
-            var $select = $("#config-group-folder-downloadupload");
-            $select.unbind("change");
-            $select.selectpicker("destroy");
-            $select.empty();
-            $select.append(SWIUtil.GetOption("0", SWIUtil.tr("No download (except files) or upload"), detail.DownloadUpload));
-            $select.append(SWIUtil.GetOption("1", SWIUtil.tr("User can download reports"), detail.DownloadUpload));
-            $select.append(SWIUtil.GetOption("2", SWIUtil.tr("User can download reports and upload reports and files"), detail.DownloadUpload));
-            $select.unbind("change").on("change", (event) => {
-                detail.DownloadUpload = $(event.target).val();
-            });
-            $select.selectpicker();
-            var $icon = $("#config-group-folder-icon");
-            $icon.val(detail.Icon || "");
-            $icon.unbind("change").on("change", (event) => {
-                detail.Icon = $(event.target).val();
-            });
-        }
-    }
-    initDropDownLogins() {
-        if (_main._configLogin != null)
-            _main._configLogin = _main._config.logins.find((i) => i.Id === _main._configLogin.Id);
-        if (!_main._configLogin && _main._config.logins.length > 0)
-            _main._configLogin = _main._config.logins[0];
-        var $ddname = $("#config-logins-dropdown");
-        $ddname.empty();
-        $.each(_main._config.logins, function (key, value) {
-            var fa = "fa fa-users-o";
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(value.Id, value.Id, "select", fa)));
-        });
-        if ($ddname.children().length > 0)
-            $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
-        $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("New login"), "", "login", "fa-solid fa-circle-plus")));
-        if (_main._configLogin) {
-            if ($ddname.children().length > 0)
-                $ddname.append($("<li/>").append($("<hr/>").addClass("dropdown-divider")));
-            $ddname.append($("<li/>").append(SWIUtil.GetAnchorWithIcon(SWIUtil.tr2("Remove") + " " + _main._configLogin.Id, "", "remove", "fa-solid fa-circle-minus")));
-        }
-        $("#config-logins-dropdown > li > a").unbind("click").on("click", (event) => {
-            var type = $(event.target).prop("type");
-            var id = $(event.target).prop("id");
-            if (type == "select") {
-                _main._configLogin = _main._config.logins.find((v) => v.Id === id);
-            }
-            else if (type == "login") {
-                var newFolder = {
-                    GUID: SWIUtil.Newguid(),
-                    Id: "new login",
-                };
-                _main._config.logins.push(newFolder);
-                _main._configLogin = newFolder;
-            }
-            else {
-                var index = _main._config.logins.indexOf(_main._configLogin);
-                if (index != -1)
-                    _main._config.logins.splice(index, 1);
-                _main._configLogin = null;
-            }
-            _main.initDropDownLogins();
-            _main.initLoginDetail();
-        });
-        _main.initLoginDetail();
-    }
-    initLoginDetail() {
-        var detail = _main._configLogin;
-        SWIUtil.ShowHideControl($(".config-login"), detail);
-        if (!detail) {
-            $("#config-login-id").val("<" + SWIUtil.tr2("No login") + ">");
-        }
-        else {
-            SWIUtil.InitStandardInput("#config-login-id", detail.Id, null, function (val) { detail.Id = val; });
-            SWIUtil.InitStandardInput("#config-login-name", detail.Name, null, function (val) { detail.Name = val; });
-            SWIUtil.InitStandardInput("#config-login-email", detail.Email, null, function (val) { detail.Email = val; });
-            SWIUtil.InitStandardInput("#config-login-password", "", null, function (val) { detail.Password = detail.HashedPassword + val; });
-            var select = $("#config-login-groups");
-            select.selectpicker("destroy");
-            select.empty();
-            $.each(_main._config.groups, function (index, value) {
-                select.append(SWIUtil.GetOption(value.GUID, value.Name, (detail.GroupIds && detail.GroupIds.some((i) => i === value.GUID)) ? value.GUID : ""));
-            });
-            select.unbind("change").on("change", (event) => {
-                _main._configLogin.GroupIds = $(event.target).val();
-            });
-            select.selectpicker();
-        }
     }
     search() {
         SWIUtil.ShowModal($waitDialog);
@@ -819,7 +610,8 @@ class SWIMain {
         SWIUtil.EnableButton($("#report-copy-lightbutton"), checked != 0 && right > 0);
         SWIUtil.EnableButton($("#report-paste-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-shortcut-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
-        SWIUtil.ShowHideControl($("#report-upload-lightbutton"), _main._folder && _main._folder.downloadupload > 1 && right >= folderRightEdit);
+        SWIUtil.ShowHideControl($("#report-upload-lightbutton"), _main._folder && _main._folder.upload && right >= folderRightEdit);
+        SWIUtil.ShowHideControl($("#report-empty-bin-lightbutton"), _main._folder && _main._folder.type == "bin");
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
         SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
         SWIUtil.ShowHideControl($("#nav_button"), _main._reportPath != null && _main._reportPath != "");
@@ -971,7 +763,7 @@ class SWIMain {
                     button.append($("<span class='fa-solid fa-pencil'></span>"));
                     $td.append(button);
                 }
-                if (_main._folder && _main._folder.downloadupload > 0) {
+                if (_main._folder && _main._folder.reportdownload) {
                     button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-secondary btn-table report-download d-none d-sm-inline-block");
                     button.append($("<span class='fa-solid fa-circle-down'></span>"));
                     $td.append(button);

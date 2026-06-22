@@ -43,20 +43,6 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
-    public GetConfiguration(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetConfiguration")
-            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
-    }
-
-    public SetConfiguration(configuration: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWISetConfiguration", {
-            configuration: configuration
-        })
-            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
-    }
-
     public ResetPassword(id: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIResetPassword", {
             id: id
@@ -161,6 +147,12 @@ class SWIGateway {
         $.post(_server + "SWIDeleteFolder", {
             path: path
         })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public EmptyRecycleBin(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIEmptyRecycleBin", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }

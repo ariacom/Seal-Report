@@ -221,9 +221,7 @@ Web;Device;Dispositivo
 Web;Disconnect;Desconectar
 Web;Display options;Opciones de visualización 
 Web;Edit;Editar
-Web;Edit configuration;Editar configuración
 Web;Edit entry;Editar entrada
-Web;Edit profile;Editar perfil
 Web;Edition;Edición
 Web;Email;Correo electrónico
 Web;Enter password;Introduce password
@@ -237,14 +235,9 @@ Web;Error;Error
 Web;Error: only files (and not reports) can be copied to this folder.;Error: solo ficheros (y no informes) se pueden copiar a esta carpeta.
 Web;Error: the destination file name contains invalid characters.;Error: el nombre del archivo de destino contiene caracteres no válidos.
 Web;Error: the destination folder name contains invalid characters.;Error: el nombre de la carpeta de destino contiene caracteres no válidos.
-Web;Expand in Treeview;Expandir en vista de árbol
 Web;Export;Exportar
-Web;Files only;Solo archivos
-Web;Folder Permissions;Permisos de carpeta
 Web;Folders;Carpetas
 Web;Forget your password ?;¿Olvidó su contraseña?
-Web;Group name;Nombre grupo
-Web;Group name;Nombre del grupo
 Web;Groups;Grupos
 Web;Groups;Grupos
 Web;Height;Altura
@@ -256,12 +249,10 @@ Web;Is dynamic;Dinámico
 Web;Last execution at;Última ejecución
 Web;Licensed to;Licenciado para
 Web;Login;Iniciar sesión
-Web;Login ID;ID de inicio de sesión
 Web;Logins;Inicios de sesión
 Web;Logout;Cerrar sesión
 Web;Logout the user;Inicia sesión el usuario
 Web;Manage Folders;Gestionar carpetas
-Web;Manage sub-folders;Administrar subcarpetas
 Web;Name;Nombre
 Web;New;Nuevo informe
 Web;New folder name;Nombre de la nueva carpeta
@@ -277,7 +268,6 @@ Web;Password;Contraseña
 Web;Paste;Pegar
 Web;PDF Conversion delay;Retardo de conversión PDF
 Web;Personal;Personal
-Web;Personal folder;Carpeta personal
 Web;Phone;Teléfono
 Web;Please wait;Por favor espere
 Web;Profile;Perfil
@@ -301,7 +291,6 @@ Web;Reset your password;Restablezca su contraseña
 Web;Save;Salvar
 Web;Search;Buscar
 Web;Security code;Código de seguridad
-Web;Show sub-folders;Mostrar subcarpetas
 Web;Startup report name;Nombre del informe de inicio
 Web;The favorite has been updated;El favorito ha sido actualizado
 Web;Two-Factor Authentication;Autenticación de dos factores
@@ -312,14 +301,12 @@ Web;User groups;Grupos de usuario
 Web;User identifier or email;Identificador de usuario o correo electrónico
 Web;User name;Nombre de usuario
 Web;Users;Usuarios
-Web;Web product name;Nombre del producto web
 Web;Width;Ancho
 WebJS;# of % selected;# de % seleccionado
 WebJS;Actions;Acciones
 WebJS;All selected;Todo seleccionado
 WebJS;Allow only execution in a new window;Permitir solo ejecución en una nueva ventana
 WebJS;Cancel;Cancelar
-WebJS;Configuration for;Configuración de
 WebJS;Contains;Contiene
 WebJS;Contains all;Contiene todos
 WebJS;Contains any;Contiene alguno
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Es menor a
 WebJS;Last modification;Última modificación
 WebJS;Mark as favorite;Marcar como favorito
 WebJS;Model;Modelo
-WebJS;New folder configuration;Configuración de nueva carpeta
-WebJS;New group;Nuevo grupo
-WebJS;New login;Nuevo inicio de sesión
 WebJS;No;No
-WebJS;No download (except files) or upload;Sin descarga (excepto archivos) ni carga
-WebJS;No folder configuration;Sin configuración de carpeta
-WebJS;No login;Sin inicio de sesión
 WebJS;No personal folder;Sin carpeta personal
 WebJS;No right;Sin permiso
 WebJS;None;Nínguno
@@ -396,7 +377,6 @@ WebJS;Schedule;Calendario
 WebJS;Server Version;Versión del servidor
 WebJS;Show _MENU_ reports;Muestra _MENU_reports
 WebJS;Starts with;Inicia con
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;La configuración ha sido guardada. Vuelva a iniciar sesión si le afecta la seguridad.
 WebJS;The folder has been created;La carpeta ha sido creada
 WebJS;The folder has been deleted;La carpeta ha sido eliminada
 WebJS;The folder has been renamed;La carpeta ha sido renombrada
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;La carpeta ha sido actualizada
 WebJS;The report or file has been renamed;La informe o archivo ha sido renombrado
 WebJS;Toggle Report or Folders view;Alternar vista de informes o carpetas
 WebJS;Unexpected error on server;Error no esperado en el servidor
-WebJS;User can download reports;El usuario puede descargar informes
-WebJS;User can download reports and upload reports and files;El usuario puede descargar informes y cargar informes y archivos
 WebJS;View;Vista
 WebJS;View Folders;Ver carpetas
 WebJS;View Report;Ver informe
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Vistas y salidas
 WebJS;Warning;Advertencia
 WebJS;Web Interface Version;Versión de la interfaz web
 WebJS;Yes;Sí
-WebJS;Yes (Folder is expanded in the tree view);Sí (La carpeta está expandida en la vista de árbol)
-WebJS;Yes (Only files can be stored);Sí (Solo se pueden almacenar archivos)
-WebJS;Yes (User can browse sub-folders);Sí (El usuario puede explorar subcarpetas)
-WebJS;Yes (User can create and edit sub-folders);Sí (El usuario puede crear y editar subcarpetas)
-WebJS;Yes (User can edit his profile);Sí (El usuario puede editar su perfil)
-WebJS;Yes (User is administrator of the Web Server);Sí (El usuario es administrador del servidor web)
 Web;Select agent;Seleccionar asistente
 Web;Mark as favorite;Marcar como favorito
 Web;Favorites;Favoritos
@@ -492,11 +464,12 @@ WebJS;Delete;Eliminar
 WebJS;No favorites yet;Aún no hay favoritos
 WebJS;No recent items;Sin elementos recientes
 Web;Configuration;Configuración
-Web;Configuration and security;Configuración y seguridad
-Web;Download/Upload;Descarga/Carga
 Web;Rights;Derechos
 Web;Agents;Asistentes
 Web;Folder;Carpeta
 Web;Drag to resize;Arrastrar para cambiar el tamaño
 WebJS;Copy and paste;Copiar y pegar
 WebJS;Copy, paste and send;Copiar, pegar y enviar
+Web;Empty recycle bin;Vaciar la papelera
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;¿Desea realmente eliminar permanentemente todos los elementos de la papelera?
+WebJS;The recycle bin has been emptied;La papelera ha sido vaciada

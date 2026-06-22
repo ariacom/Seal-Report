@@ -291,7 +291,8 @@ namespace Seal.Model
                         //Merge the groupFolder find in this group with the current result
                         //Highest right is applied..
                         result.FolderRight = (FolderRight)Math.Max((int)result.FolderRight, (int)current.FolderRight);
-                        result.DownloadUpload = (DownloadUpload)Math.Max((int)result.DownloadUpload, (int)current.DownloadUpload);
+                        result.AllowReportDownload = result.AllowReportDownload || current.AllowReportDownload;
+                        result.AllowUpload = result.AllowUpload || current.AllowUpload;
                         result.ExpandSubFolders = result.ExpandSubFolders || current.ExpandSubFolders;
                         result.ManageFolder = result.ManageFolder && current.ManageFolder;
                     }
@@ -351,7 +352,7 @@ namespace Seal.Model
                     {
                         //Highest right is applied
                         result.FolderRight = (RepositoryFolderRight)Math.Max((int)result.FolderRight, (int)current.FolderRight);
-                        result.DownloadUpload = (DownloadUpload)Math.Max((int)result.DownloadUpload, (int)current.DownloadUpload);
+                        result.AllowUpload = result.AllowUpload || current.AllowUpload;
                         result.ManageFolder = result.ManageFolder || current.ManageFolder;
                     }
                     else

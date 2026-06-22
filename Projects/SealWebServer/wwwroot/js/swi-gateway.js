@@ -38,18 +38,6 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    GetConfiguration(callback, errorcb) {
-        $.post(_server + "SWIGetConfiguration")
-            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
-    }
-    SetConfiguration(configuration, callback, errorcb) {
-        $.post(_server + "SWISetConfiguration", {
-            configuration: configuration
-        })
-            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
-    }
     ResetPassword(id, callback, errorcb) {
         $.post(_server + "SWIResetPassword", {
             id: id
@@ -142,6 +130,11 @@ class SWIGateway {
         $.post(_server + "SWIDeleteFolder", {
             path: path
         })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    EmptyRecycleBin(callback, errorcb) {
+        $.post(_server + "SWIEmptyRecycleBin", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }

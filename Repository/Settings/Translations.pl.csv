@@ -221,9 +221,7 @@ Web;Device;Urządzenie
 Web;Disconnect;Rozłączyć się
 Web;Display options;opcje wyświetlania
 Web;Edit;Edytuj
-Web;Edit configuration;Edytuj konfigurację
 Web;Edit entry;Edytuj wpis
-Web;Edit profile;Edytuj profil
 Web;Edition;Wydanie
 Web;Email;E-mail
 Web;Enter password;Wprowadź hasło
@@ -237,14 +235,9 @@ Web;Error;Błąd
 Web;Error: only files (and not reports) can be copied to this folder.;Błąd: tylko pliki (a nie raporty) można skopiować do tego folderu.
 Web;Error: the destination file name contains invalid characters.;Błąd: nazwa pliku docelowego zawiera nieprawidłowe znaki.
 Web;Error: the destination folder name contains invalid characters.;Błąd: nazwa folderu docelowego zawiera nieprawidłowe znaki.
-Web;Expand in Treeview;Rozwiń w widoku drzewa
 Web;Export;Eksportuj
-Web;Files only;Tylko pliki
-Web;Folder Permissions;Uprawnienia folderu
 Web;Folders;Foldery
 Web;Forget your password ?;Zapomniałeś hasła ?
-Web;Group name;Nazwa grupy
-Web;Group name;Nazwa grupy
 Web;Groups;Grupy
 Web;Groups;Grupy
 Web;Height;Wysokość
@@ -256,12 +249,10 @@ Web;Is dynamic;Jest dynamiczny
 Web;Last execution at;Ostatnie wykonanie o
 Web;Licensed to;Byc licencjonowanym
 Web;Login;Zaloguj Się
-Web;Login ID;Identyfikator logowania
 Web;Logins;Loginy
 Web;Logout;Wyloguj
 Web;Logout the user;Wyloguj użytkownika
 Web;Manage Folders;Zarządzaj folderami
-Web;Manage sub-folders;Zarządzaj podfolderami
 Web;Name;Nazwa
 Web;New;Nowy
 Web;New folder name;Nazwa nowego folderu
@@ -277,7 +268,6 @@ Web;Password;Hasło
 Web;Paste;Wklej
 Web;PDF Conversion delay;Opóźnienie konwersji PDF
 Web;Personal;Osobisty
-Web;Personal folder;Folder osobisty
 Web;Phone;Telefon
 Web;Please wait;Proszę czekać
 Web;Profile;Profil
@@ -301,7 +291,6 @@ Web;Reset your password;Zresetuj swoje hasło
 Web;Save;Zapisać
 Web;Search;Szukaj
 Web;Security code;Kod zabezpieczający
-Web;Show sub-folders;Pokaż podfoldery
 Web;Startup report name;Nazwa raportu startowego
 Web;The favorite has been updated;Ulubiony został zaktualizowany
 Web;Two-Factor Authentication;Uwierzytelnianie dwuskładnikowe
@@ -312,14 +301,12 @@ Web;User groups;Grupy użytkowników
 Web;User identifier or email;Identyfikator użytkownika lub adres e-mail
 Web;User name;Nazwa Użytkownika
 Web;Users;Użytkownicy
-Web;Web product name;Nazwa produktu Web
 Web;Width;Szerokość
 WebJS;# of % selected;#% wybrano
 WebJS;Actions;Akcje
 WebJS;All selected;Wszystko wybrane
 WebJS;Allow only execution in a new window;Zezwól tylko na wykonanie w nowym oknie
 WebJS;Cancel;Anuluj
-WebJS;Configuration for;Konfiguracja dla
 WebJS;Contains;Zawiera
 WebJS;Contains all;Zawiera wszystkie
 WebJS;Contains any;Zawiera dowolne
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Jest mniejszy od
 WebJS;Last modification;Ostatnia modyfikacja
 WebJS;Mark as favorite;Oznacz jako ulubione
 WebJS;Model;Model
-WebJS;New folder configuration;Konfiguracja nowego folderu
-WebJS;New group;Nowa grupa
-WebJS;New login;Nowy login
 WebJS;No;Nie
-WebJS;No download (except files) or upload;Brak pobierania (oprócz plików) ani przesyłania
-WebJS;No folder configuration;Brak konfiguracji folderu
-WebJS;No login;Brak loginu
 WebJS;No personal folder;Brak folderu osobistego
 WebJS;No right;Brak uprawnień
 WebJS;None;Żaden
@@ -396,7 +377,6 @@ WebJS;Schedule;Harmonogram
 WebJS;Server Version;Wersja serwera
 WebJS;Show _MENU_ reports;Pokaż raporty _MENU_
 WebJS;Starts with;Zaczynać z
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfiguracja została zapisana. Zaloguj się ponownie, jeśli dotyczą Cię zmiany zabezpieczeń.
 WebJS;The folder has been created;Folder został utworzony
 WebJS;The folder has been deleted;Folder został usunięty
 WebJS;The folder has been renamed;Nazwa folderu została zmieniona
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Folder został zaktualizowany
 WebJS;The report or file has been renamed;Nazwa raportu lub pliku została zmieniona
 WebJS;Toggle Report or Folders view;Przełącz widok raportów lub folderów
 WebJS;Unexpected error on server;Nieoczekiwany błąd na serwerze
-WebJS;User can download reports;Użytkownik może pobierać raporty
-WebJS;User can download reports and upload reports and files;Użytkownik może pobierać raporty oraz przesyłać raporty i pliki
 WebJS;View;Widok
 WebJS;View Folders;Pokaż foldery
 WebJS;View Report;Pokaż raport
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Widoki i wyjścia
 WebJS;Warning;Ostrzeżenie
 WebJS;Web Interface Version;Wersja interfejsu internetowego
 WebJS;Yes;Tak
-WebJS;Yes (Folder is expanded in the tree view);Tak (Folder jest rozwinięty w widoku drzewa)
-WebJS;Yes (Only files can be stored);Tak (Można przechowywać tylko pliki)
-WebJS;Yes (User can browse sub-folders);Tak (Użytkownik może przeglądać podfoldery)
-WebJS;Yes (User can create and edit sub-folders);Tak (Użytkownik może tworzyć i edytować podfoldery)
-WebJS;Yes (User can edit his profile);Tak (Użytkownik może edytować swój profil)
-WebJS;Yes (User is administrator of the Web Server);Tak (Użytkownik jest administratorem serwera Web)
 Web;Select agent;Wybierz asystenta
 Web;Mark as favorite;Oznacz jako ulubione
 Web;Favorites;Ulubione
@@ -492,11 +464,12 @@ WebJS;Delete;Usuń
 WebJS;No favorites yet;Brak ulubionych
 WebJS;No recent items;Brak ostatnich elementów
 Web;Configuration;Konfiguracja
-Web;Configuration and security;Konfiguracja i zabezpieczenia
-Web;Download/Upload;Pobieranie/Przesyłanie
 Web;Rights;Uprawnienia
 Web;Agents;Asystenci
 Web;Folder;Folder
 Web;Drag to resize;Przeciągnij, aby zmienić rozmiar
 WebJS;Copy and paste;Kopiuj i wklej
 WebJS;Copy, paste and send;Kopiuj, wklej i wyślij
+Web;Empty recycle bin;Opróżnij kosz
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Czy na pewno chcesz trwale usunąć wszystkie elementy z kosza?
+WebJS;The recycle bin has been emptied;Kosz został opróżniony

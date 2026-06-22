@@ -221,9 +221,7 @@ Web;Device;设备
 Web;Disconnect;断开
 Web;Display options;显示选项
 Web;Edit;编辑
-Web;Edit configuration;编辑配置
 Web;Edit entry;编辑条目
-Web;Edit profile;编辑个人资料
 Web;Edition;版本
 Web;Email;电子邮件
 Web;Enter password;输入密码
@@ -237,14 +235,9 @@ Web;Error;错误
 Web;Error: only files (and not reports) can be copied to this folder.;错误：只能将文件（而不是报告）复制到此文件夹。
 Web;Error: the destination file name contains invalid characters.;错误：目标文件名包含无效字符。
 Web;Error: the destination folder name contains invalid characters.;错误：目标文件夹名包含无效字符。
-Web;Expand in Treeview;在树状视图中展开
 Web;Export;导出
-Web;Files only;仅文件
-Web;Folder Permissions;文件夹权限
 Web;Folders;文件夹
 Web;Forget your password ?;忘记密码？
-Web;Group name;组名
-Web;Group name;组名
 Web;Groups;组
 Web;Groups;组
 Web;Height;高度
@@ -256,12 +249,10 @@ Web;Is dynamic;为动态
 Web;Last execution at;上次执行于
 Web;Licensed to;授权给
 Web;Login;登录
-Web;Login ID;登录 ID
 Web;Logins;登录账号
 Web;Logout;注销
 Web;Logout the user;注销用户
 Web;Manage Folders;管理文件夹
-Web;Manage sub-folders;管理子文件夹
 Web;Name;姓名
 Web;New;新建
 Web;New folder name;新文件夹名称
@@ -277,7 +268,6 @@ Web;Password;密码
 Web;Paste;粘贴
 Web;PDF Conversion delay;PDF 转换延迟
 Web;Personal;个人的
-Web;Personal folder;个人文件夹
 Web;Phone;电话
 Web;Please wait;请稍候
 Web;Profile;简况
@@ -301,7 +291,6 @@ Web;Reset your password;重置您的密码
 Web;Save;保存
 Web;Search;搜索
 Web;Security code;安全码
-Web;Show sub-folders;显示子文件夹
 Web;Startup report name;启动报表名称
 Web;The favorite has been updated;收藏夹已更新
 Web;Two-Factor Authentication;双因素身份验证
@@ -312,14 +301,12 @@ Web;User groups;用户组
 Web;User identifier or email;用户标识或电子邮件
 Web;User name;用户名
 Web;Users;用户
-Web;Web product name;Web 产品名称
 Web;Width;宽度
 WebJS;# of % selected;#所选百分比
 WebJS;Actions;操作
 WebJS;All selected;全部选定
 WebJS;Allow only execution in a new window;仅允许在新窗口中执行
 WebJS;Cancel;取消
-WebJS;Configuration for;配置项：
 WebJS;Contains;包含
 WebJS;Contains all;包含全部
 WebJS;Contains any;包含任意
@@ -366,13 +353,7 @@ WebJS;Is smaller than;小于
 WebJS;Last modification;上次修改
 WebJS;Mark as favorite;标记为收藏
 WebJS;Model;模型
-WebJS;New folder configuration;新建文件夹配置
-WebJS;New group;新建组
-WebJS;New login;新建登录账号
 WebJS;No;不
-WebJS;No download (except files) or upload;不允许下载（文件除外）或上传
-WebJS;No folder configuration;无文件夹配置
-WebJS;No login;无登录账号
 WebJS;No personal folder;无个人文件夹
 WebJS;No right;无权限
 WebJS;None;无
@@ -396,7 +377,6 @@ WebJS;Schedule;地铁列车时刻表
 WebJS;Server Version;服务器版本
 WebJS;Show _MENU_ reports;显示 _MENU_ 个报表
 WebJS;Starts with;开始于
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;配置已保存。如果受安全设置影响，请重新登录。
 WebJS;The folder has been created;文件夹已创建
 WebJS;The folder has been deleted;文件夹已被删除
 WebJS;The folder has been renamed;文件夹已重命名
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;文件夹已更新
 WebJS;The report or file has been renamed;报告或文件已重命名
 WebJS;Toggle Report or Folders view;切换报表或文件夹视图
 WebJS;Unexpected error on server;服务器发生意外错误
-WebJS;User can download reports;用户可以下载报表
-WebJS;User can download reports and upload reports and files;用户可以下载报表并上传报表和文件
 WebJS;View;视图
 WebJS;View Folders;查看文件夹
 WebJS;View Report;查看报表
@@ -414,12 +392,6 @@ WebJS;Views and outputs;视图和输出
 WebJS;Warning;警告
 WebJS;Web Interface Version;Web界面版本
 WebJS;Yes;是的
-WebJS;Yes (Folder is expanded in the tree view);是（文件夹在树状视图中展开）
-WebJS;Yes (Only files can be stored);是（仅可存储文件）
-WebJS;Yes (User can browse sub-folders);是（用户可以浏览子文件夹）
-WebJS;Yes (User can create and edit sub-folders);是（用户可以创建和编辑子文件夹）
-WebJS;Yes (User can edit his profile);是（用户可以编辑其个人资料）
-WebJS;Yes (User is administrator of the Web Server);是（用户是 Web 服务器的管理员）
 Web;Select agent;选择助手
 Web;Mark as favorite;标记为收藏
 Web;Favorites;收藏夹
@@ -492,11 +464,12 @@ WebJS;Delete;删除
 WebJS;No favorites yet;暂无收藏
 WebJS;No recent items;无最近项目
 Web;Configuration;配置
-Web;Configuration and security;配置和安全
-Web;Download/Upload;下载/上传
 Web;Rights;权限
 Web;Agents;助手
 Web;Folder;文件夹
 Web;Drag to resize;拖动以调整大小
 WebJS;Copy and paste;复制并粘贴
 WebJS;Copy, paste and send;复制、粘贴并发送
+Web;Empty recycle bin;清空回收站
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;确定要永久删除回收站中的所有项目吗？
+WebJS;The recycle bin has been emptied;回收站已清空

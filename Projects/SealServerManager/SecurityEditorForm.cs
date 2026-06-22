@@ -58,8 +58,8 @@ The security provider performs the authentication and select the security groups
 Rules applied if a user belongs to several groups:
 - Folders: the highest right is used (No right, Execute reports / View files, Execute reports and outputs / View files, Edit schedules / View files, Edit reports / Manage files)
 - Personal folder: the highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files)
-- Show folders view: true if one group has this flag set to true
-- Tree View: Show all folders: true if one group has this flag set to true
+- Show folder navigation: true if one group has this flag set to true
+- Show empty parent folders: true if one group has this flag set to true
 - Folders, Folder Detail and Menu Scripts are executed sequentially sorted by group name
 
 Designer and Tools Security

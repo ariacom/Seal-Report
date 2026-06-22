@@ -113,7 +113,7 @@ namespace SealWebServer.Controllers
         string getExceptionMessage(Exception ex)
         {
             var message = "";
-            if (WebUser != null && WebUser.EditConfiguration) message += string.Format("{0}<br>{1}<br>{2}", Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message, RequestUrl, ex.StackTrace);
+            if (WebUser != null && WebUser.ShowErrorDetail) message += string.Format("{0}<br>{1}<br>{2}", Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message, RequestUrl, ex.StackTrace);
             else message += "Please consult log files on the server machine to have more information (Logs Repository folder and Windows Event Logs on Windows machine)...";
             return message;
         }
@@ -1245,7 +1245,7 @@ namespace SealWebServer.Controllers
 
             setSessionValue(report.ExecutionGUID, execution);
             report.WebUrl = GetWebUrl(Request, Response);
-            report.ForceShowErrorMessages = WebUser.EditConfiguration;
+            report.ForceShowErrorMessages = WebUser.ShowErrorDetail;
 
             //Purge temp files here
             FileHelper.PurgeTempApplicationDirectory();

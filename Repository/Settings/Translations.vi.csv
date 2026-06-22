@@ -221,9 +221,7 @@ Web;Device;Thiết bị
 Web;Disconnect;Ngắt kết nối
 Web;Display options;Tùy chọn hiển thị
 Web;Edit;Chỉnh sửa
-Web;Edit configuration;Chỉnh sửa cấu hình
 Web;Edit entry;Chỉnh sửa mục
-Web;Edit profile;Chỉnh sửa hồ sơ
 Web;Edition;Phiên bản
 Web;Email;Email
 Web;Enter password;Nhập mật khẩu
@@ -237,14 +235,9 @@ Web;Error;Lỗi
 Web;Error: only files (and not reports) can be copied to this folder.;Lỗi: chỉ có thể sao chép tệp (không phải báo cáo) vào thư mục này.
 Web;Error: the destination file name contains invalid characters.;Lỗi: tên tệp đích chứa ký tự không hợp lệ.
 Web;Error: the destination folder name contains invalid characters.;Lỗi: tên thư mục đích chứa ký tự không hợp lệ.
-Web;Expand in Treeview;Mở rộng trong cây thư mục
 Web;Export;Xuất
-Web;Files only;Chỉ tệp
-Web;Folder Permissions;Quyền thư mục
 Web;Folders;Thư mục
 Web;Forget your password ?;Quên mật khẩu?
-Web;Group name;Tên nhóm
-Web;Group name;Tên nhóm
 Web;Groups;Nhóm
 Web;Groups;Nhóm
 Web;Height;Chiều cao
@@ -256,12 +249,10 @@ Web;Is dynamic;Là động
 Web;Last execution at;Lần thực thi cuối lúc
 Web;Licensed to;Được cấp phép cho
 Web;Login;Đăng nhập
-Web;Login ID;ID đăng nhập
 Web;Logins;Đăng nhập
 Web;Logout;Đăng xuất
 Web;Logout the user;Đăng xuất người dùng
 Web;Manage Folders;Quản lý thư mục
-Web;Manage sub-folders;Quản lý thư mục con
 Web;Name;Tên
 Web;New;Mới
 Web;New folder name;Tên thư mục mới
@@ -277,7 +268,6 @@ Web;Password;Mật khẩu
 Web;Paste;Dán
 Web;PDF Conversion delay;Độ trễ chuyển đổi PDF
 Web;Personal;Cá nhân
-Web;Personal folder;Thư mục cá nhân
 Web;Phone;Điện thoại
 Web;Please wait;Vui lòng đợi
 Web;Profile;Hồ sơ
@@ -301,7 +291,6 @@ Web;Reset your password;Đặt lại mật khẩu của bạn
 Web;Save;Lưu
 Web;Search;Tìm kiếm
 Web;Security code;Mã bảo mật
-Web;Show sub-folders;Hiện thư mục con
 Web;Startup report name;Tên báo cáo khởi động
 Web;The favorite has been updated;Mục yêu thích đã được cập nhật
 Web;Two-Factor Authentication;Xác thực hai yếu tố
@@ -312,14 +301,12 @@ Web;User groups;Nhóm người dùng
 Web;User identifier or email;Định danh người dùng hoặc email
 Web;User name;Tên người dùng
 Web;Users;Người dùng
-Web;Web product name;Tên sản phẩm web
 Web;Width;Chiều rộng
 WebJS;# of % selected;# trong số % đã chọn
 WebJS;Actions;Hành động
 WebJS;All selected;Đã chọn tất cả
 WebJS;Allow only execution in a new window;Chỉ cho phép thực thi trong cửa sổ mới
 WebJS;Cancel;Hủy
-WebJS;Configuration for;Cấu hình cho
 WebJS;Contains;Chứa
 WebJS;Contains all;Chứa tất cả
 WebJS;Contains any;Chứa bất kỳ
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Nhỏ hơn
 WebJS;Last modification;Sửa đổi lần cuối
 WebJS;Mark as favorite;Đánh dấu yêu thích
 WebJS;Model;Mô hình
-WebJS;New folder configuration;Cấu hình thư mục mới
-WebJS;New group;Nhóm mới
-WebJS;New login;Đăng nhập mới
 WebJS;No;Không
-WebJS;No download (except files) or upload;Không tải xuống (trừ tệp) hoặc tải lên
-WebJS;No folder configuration;Không có cấu hình thư mục
-WebJS;No login;Không đăng nhập
 WebJS;No personal folder;Không có thư mục cá nhân
 WebJS;No right;Không có quyền
 WebJS;None;Không có
@@ -396,7 +377,6 @@ WebJS;Schedule;Lịch
 WebJS;Server Version;Phiên bản máy chủ
 WebJS;Show _MENU_ reports;Hiện _MENU_ báo cáo
 WebJS;Starts with;Bắt đầu bằng
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Cấu hình đã được lưu. Vui lòng đăng nhập lại nếu bạn bị ảnh hưởng bởi bảo mật.
 WebJS;The folder has been created;Thư mục đã được tạo
 WebJS;The folder has been deleted;Thư mục đã được xóa
 WebJS;The folder has been renamed;Thư mục đã được đổi tên
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Thư mục đã được cập nhật
 WebJS;The report or file has been renamed;Báo cáo hoặc tệp đã được đổi tên
 WebJS;Toggle Report or Folders view;Chuyển đổi chế độ xem Báo cáo hoặc Thư mục
 WebJS;Unexpected error on server;Lỗi không mong muốn trên máy chủ
-WebJS;User can download reports;Người dùng có thể tải xuống báo cáo
-WebJS;User can download reports and upload reports and files;Người dùng có thể tải xuống báo cáo và tải lên báo cáo và tệp
 WebJS;View;Xem
 WebJS;View Folders;Xem thư mục
 WebJS;View Report;Xem báo cáo
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Chế độ xem và đầu ra
 WebJS;Warning;Cảnh báo
 WebJS;Web Interface Version;Phiên bản giao diện web
 WebJS;Yes;Có
-WebJS;Yes (Folder is expanded in the tree view);Có (Thư mục được mở rộng trong cây thư mục)
-WebJS;Yes (Only files can be stored);Có (Chỉ có thể lưu trữ tệp)
-WebJS;Yes (User can browse sub-folders);Có (Người dùng có thể duyệt thư mục con)
-WebJS;Yes (User can create and edit sub-folders);Có (Người dùng có thể tạo và chỉnh sửa thư mục con)
-WebJS;Yes (User can edit his profile);Có (Người dùng có thể chỉnh sửa hồ sơ của mình)
-WebJS;Yes (User is administrator of the Web Server);Có (Người dùng là quản trị viên của Máy chủ Web)
 Web;Select agent;Chọn trợ lý
 Web;Mark as favorite;Đánh dấu yêu thích
 Web;Favorites;Yêu thích
@@ -492,11 +464,12 @@ WebJS;Delete;Xóa
 WebJS;No favorites yet;Chưa có mục yêu thích nào
 WebJS;No recent items;Không có mục gần đây
 Web;Configuration;Cấu hình
-Web;Configuration and security;Cấu hình và bảo mật
-Web;Download/Upload;Tải xuống/Tải lên
 Web;Rights;Quyền
 Web;Agents;Trợ lý
 Web;Folder;Thư mục
 Web;Drag to resize;Kéo để thay đổi kích thước
 WebJS;Copy and paste;Sao chép và dán
 WebJS;Copy, paste and send;Sao chép, dán và gửi
+Web;Empty recycle bin;Dọn sạch thùng rác
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Bạn có thực sự muốn xóa vĩnh viễn tất cả các mục trong thùng rác không?
+WebJS;The recycle bin has been emptied;Thùng rác đã được dọn sạch

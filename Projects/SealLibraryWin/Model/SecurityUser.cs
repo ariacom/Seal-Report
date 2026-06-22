@@ -139,7 +139,8 @@ namespace Seal.Model
                     result.expand = false;
                     //Map the simple repository right to the internal FolderRight used by the web file management
                     result.right = (int)(repoFolder.FolderRight == RepositoryFolderRight.ReadWrite ? FolderRight.Edit : FolderRight.Execute);
-                    result.downloadupload = Security.Repository.Configuration.EnableDownloadUpload ? (int)repoFolder.DownloadUpload : 0;
+                    //Repository folders never show reports, so only upload is configurable; files are always downloadable
+                    result.upload = repoFolder.AllowUpload;
                     if (!string.IsNullOrEmpty(repoFolder.Icon)) result.icon = Parameter.GetFontAwesomeIcon(repoFolder.Icon);
                 }
             }
@@ -162,8 +163,9 @@ namespace Seal.Model
                 result.fullname = prefix + (result.FinalPath == "" ? Path.DirectorySeparatorChar.ToString() : "") + result.FinalPath;
                 result.right = (int)FolderRight.Edit;
                 result.files = (PersonalFolderRight == PersonalFolderRight.Files);
-                //Personal folders are fully owned by the user (Edit right): allow download and upload when the server enables it
-                result.downloadupload = Security.Repository.Configuration.EnableDownloadUpload ? (int)DownloadUpload.DownloadUpload : 0;
+                //Personal folder download/upload is configured on the user's groups (both opt-in, disabled by default)
+                result.reportdownload = PersonalFolderReportDownload;
+                result.upload = PersonalFolderUpload;
             }
             else
             {
@@ -177,8 +179,9 @@ namespace Seal.Model
                     result.expand = securityFolder.ExpandSubFolders;
                     result.right = (int)securityFolder.FolderRight;
                     result.files = securityFolder.FilesOnly;
-                    //Download/upload right is defined per folder in the security, gated by the server configuration
-                    result.downloadupload = Security.Repository.Configuration.EnableDownloadUpload ? (int)securityFolder.DownloadUpload : 0;
+                    //Report download and upload rights are defined per folder in the security
+                    result.reportdownload = securityFolder.AllowReportDownload;
+                    result.upload = securityFolder.AllowUpload;
                     //Optional tree view icon defined on the folder (group with the highest weight wins when several define it)
                     if (!string.IsNullOrEmpty(securityFolder.Icon)) result.icon = Parameter.GetFontAwesomeIcon(securityFolder.Icon);
                 }
@@ -459,6 +462,24 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the user can download the report definitions stored in his personal folder.
+        /// The most permissive setting among the groups granting a personal folder applies.
+        /// </summary>
+        public bool PersonalFolderReportDownload
+        {
+            get { return SecurityGroups.Any(g => g.PersFolderRight != PersonalFolderRight.None && g.PersonalFolderReportDownload); }
+        }
+
+        /// <summary>
+        /// True if the user can upload files and reports into his personal folder.
+        /// The most permissive setting among the groups granting a personal folder applies.
+        /// </summary>
+        public bool PersonalFolderUpload
+        {
+            get { return SecurityGroups.Any(g => g.PersFolderRight != PersonalFolderRight.None && g.PersonalFolderUpload); }
+        }
+
+        /// <summary>
         /// True if the user has the right to edit SQL models and to query the database (raw SQL) with the AI Tools. True if at least one of the user's groups enables SQL Models.
         /// </summary>
         public bool SqlModel
@@ -503,13 +524,13 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if user can edit the configuration (is administrator)
+        /// True if user can see the detail of exceptions (error message and stack trace) in the Web Report Server.
         /// </summary>
-        public bool EditConfiguration
+        public bool ShowErrorDetail
         {
             get
             {
-                return SecurityGroups.Any(group => group.EditConfiguration);
+                return SecurityGroups.Any(group => group.ShowErrorDetail);
             }
         }
 

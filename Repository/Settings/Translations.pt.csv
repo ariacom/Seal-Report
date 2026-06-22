@@ -221,9 +221,7 @@ Web;Device;Dispositivo
 Web;Disconnect;Sair
 Web;Display options;Opções de visualização
 Web;Edit;Editar
-Web;Edit configuration;Editar configuração
 Web;Edit entry;Editar entrada
-Web;Edit profile;Editar perfil
 Web;Edition;Edição
 Web;Email;E-mail
 Web;Enter password;Digite sua senha
@@ -237,14 +235,9 @@ Web;Error;Erro
 Web;Error: only files (and not reports) can be copied to this folder.;Erro: apenas arquivos (e não relatórios) podem ser copiados nesta pasta.
 Web;Error: the destination file name contains invalid characters.;Erro: o nome do arquivo de destino contém caracteres inválidos.
 Web;Error: the destination folder name contains invalid characters.;Erro: o nome da pasta de destino contém caracteres inválidos.
-Web;Expand in Treeview;Expandir na árvore
 Web;Export;Exportar
-Web;Files only;Apenas arquivos
-Web;Folder Permissions;Permissões da pasta
 Web;Folders;Pastas
 Web;Forget your password ?;Esqueceu sua senha ?
-Web;Group name;Nome do grupo
-Web;Group name;Nome do grupo
 Web;Groups;Grupos
 Web;Groups;Grupos
 Web;Height;Altura
@@ -256,12 +249,10 @@ Web;Is dynamic;É dinâmico
 Web;Last execution at;Última execução em
 Web;Licensed to;Licensiado para
 Web;Login;Login
-Web;Login ID;ID de login
 Web;Logins;Logins
 Web;Logout;Desconectar
 Web;Logout the user;Desconectar o usuário
 Web;Manage Folders;Gerenciar pastas
-Web;Manage sub-folders;Gerenciar subpastas
 Web;Name;Nome
 Web;New;Novo
 Web;New folder name;Nome da nova pasta
@@ -277,7 +268,6 @@ Web;Password;Senha
 Web;Paste;Colar
 Web;PDF Conversion delay;Atraso de conversão de PDF
 Web;Personal;Pessoal
-Web;Personal folder;Pasta pessoal
 Web;Phone;Telefone
 Web;Please wait;Por favor aguarde
 Web;Profile;Perfil
@@ -301,7 +291,6 @@ Web;Reset your password;Redefinir sua senha
 Web;Save;Salvar
 Web;Search;Procurar
 Web;Security code;Código de segurança
-Web;Show sub-folders;Mostrar subpastas
 Web;Startup report name;Nome do relatório de inicialização
 Web;The favorite has been updated;O favorito foi atualizado
 Web;Two-Factor Authentication;Autenticação de dois fatores
@@ -312,14 +301,12 @@ Web;User groups;Grupos de usuários
 Web;User identifier or email;Identificador de usuário ou e-mail
 Web;User name;Nome do usuário
 Web;Users;Usuários
-Web;Web product name;Nome do produto web
 Web;Width;Largura
 WebJS;# of % selected;# do % selecionado
 WebJS;Actions;Ações
 WebJS;All selected;Tudo selecionado
 WebJS;Allow only execution in a new window;Permitir apenas execução em uma nova janela
 WebJS;Cancel;Cancelar
-WebJS;Configuration for;Configuração para
 WebJS;Contains;Contém
 WebJS;Contains all;Contém todos
 WebJS;Contains any;Contém qualquer
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Menor que
 WebJS;Last modification;Última modificação
 WebJS;Mark as favorite;Marcar como favorito
 WebJS;Model;Modelo
-WebJS;New folder configuration;Configuração de nova pasta
-WebJS;New group;Novo grupo
-WebJS;New login;Novo login
 WebJS;No;Não
-WebJS;No download (except files) or upload;Sem download (exceto arquivos) ou upload
-WebJS;No folder configuration;Sem configuração de pasta
-WebJS;No login;Sem login
 WebJS;No personal folder;Sem pasta pessoal
 WebJS;No right;Sem permissão
 WebJS;None;Nenhum
@@ -396,7 +377,6 @@ WebJS;Schedule;Agendar
 WebJS;Server Version;Versão do servidor
 WebJS;Show _MENU_ reports;Mostrar_MENU_ relatórios
 WebJS;Starts with;Começa com
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;A configuração foi salva. Faça login novamente se você for afetado pela segurança.
 WebJS;The folder has been created;A pasta foi criada
 WebJS;The folder has been deleted;A pasta foi excluída
 WebJS;The folder has been renamed;A pasta foi renomeada
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;A pasta foi atualizada
 WebJS;The report or file has been renamed;O relatório ou arquivo foi renomeado
 WebJS;Toggle Report or Folders view;Alternar visualização de relatório ou pastas
 WebJS;Unexpected error on server;Erro inesperado no servidor
-WebJS;User can download reports;O usuário pode baixar relatórios
-WebJS;User can download reports and upload reports and files;O usuário pode baixar relatórios e enviar relatórios e arquivos
 WebJS;View;Visão
 WebJS;View Folders;Visualizar pastas
 WebJS;View Report;Visualizar relatório
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Visões e saídas
 WebJS;Warning;Alerta
 WebJS;Web Interface Version;Versão da Interface Web
 WebJS;Yes;Sim
-WebJS;Yes (Folder is expanded in the tree view);Sim (A pasta está expandida na árvore)
-WebJS;Yes (Only files can be stored);Sim (Apenas arquivos podem ser armazenados)
-WebJS;Yes (User can browse sub-folders);Sim (O usuário pode navegar pelas subpastas)
-WebJS;Yes (User can create and edit sub-folders);Sim (O usuário pode criar e editar subpastas)
-WebJS;Yes (User can edit his profile);Sim (O usuário pode editar seu perfil)
-WebJS;Yes (User is administrator of the Web Server);Sim (O usuário é administrador do servidor web)
 Web;Select agent;Selecionar assistente
 Web;Mark as favorite;Marcar como favorito
 Web;Favorites;Favoritos
@@ -492,11 +464,12 @@ WebJS;Delete;Excluir
 WebJS;No favorites yet;Nenhum favorito ainda
 WebJS;No recent items;Nenhum item recente
 Web;Configuration;Configuração
-Web;Configuration and security;Configuração e segurança
-Web;Download/Upload;Baixar/Enviar
 Web;Rights;Direitos
 Web;Agents;Assistentes
 Web;Folder;Pasta
 Web;Drag to resize;Arraste para redimensionar
 WebJS;Copy and paste;Copiar e colar
 WebJS;Copy, paste and send;Copiar, colar e enviar
+Web;Empty recycle bin;Esvaziar a reciclagem
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Tem certeza de que deseja excluir permanentemente todos os itens da reciclagem?
+WebJS;The recycle bin has been emptied;A reciclagem foi esvaziada

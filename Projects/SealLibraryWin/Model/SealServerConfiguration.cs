@@ -83,6 +83,7 @@ namespace Seal.Model
                 GetProperty("WebHelpLink").SetIsBrowsable(!ForPublication);
                 GetProperty("WebCultures").SetIsBrowsable(!ForPublication);
                 GetProperty("LogDays").SetIsBrowsable(!ForPublication);
+                GetProperty("RecycleBinDays").SetIsBrowsable(!ForPublication);
                 GetProperty("CsvSeparator").SetIsBrowsable(!ForPublication);
                 GetProperty("NumericFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("DateTimeFormat").SetIsBrowsable(!ForPublication);
@@ -105,7 +106,6 @@ namespace Seal.Model
                 GetProperty("EnableRazorCache").SetIsBrowsable(!ForPublication);
                 GetProperty("EnableRazorScriptValidation").SetIsBrowsable(!ForPublication);
                 GetProperty("RazorForbiddenTokens").SetIsBrowsable(!ForPublication);
-                GetProperty("EnableDownloadUpload").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportFormats").SetIsBrowsable(!ForPublication);
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
@@ -173,6 +173,15 @@ namespace Seal.Model
         [DefaultValue(30)]
 #endif
         public int LogDays { get; set; } = 30;
+
+        /// <summary>
+        /// Number of days to keep deleted reports and files in each user's recycle bin ('BIN' sub-folder of the personal folder). Older items are purged automatically. If 0, items are kept forever (no automatic purge).
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Recycle bin days to keep"), Description("Number of days to keep deleted reports and files in each user's recycle bin ('BIN' sub-folder of the personal folder). Older items are purged automatically. If 0, items are kept forever (no automatic purge)."), Id(6, 1)]
+        [DefaultValue(30)]
+#endif
+        public int RecycleBinDays { get; set; } = 30;
 
         /// <summary>
         /// The name of the product displayed on the Web site
@@ -291,17 +300,6 @@ namespace Seal.Model
 #endif
         public string RazorForbiddenTokens { get; set; } = "";
         public bool ShouldSerializeRazorForbiddenTokens() { return !string.IsNullOrEmpty(RazorForbiddenTokens); }
-
-        /// <summary>
-        /// If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.
-        /// </summary>
-#if WINDOWS
-        [Category("Server Settings"), DisplayName("Enable Download and Upload"), Description("If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right."), Id(22, 1)]
-        [DefaultValue(true)]
-#endif
-        public bool EnableDownloadUpload { get; set; } = true;
-        public bool ShouldSerializeEnableDownloadUpload() { return !EnableDownloadUpload; }
-
 
         /// <summary>
         /// List of report format allowed in view result. If empty, all formats are taken.

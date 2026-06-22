@@ -221,9 +221,7 @@ Web;Device;Пристрій
 Web;Disconnect;Відключити
 Web;Display options;Параметри відображення
 Web;Edit;Редагувати
-Web;Edit configuration;Редагувати конфігурацію
 Web;Edit entry;Редагувати запис
-Web;Edit profile;Редагувати профіль
 Web;Edition;Редакція
 Web;Email;Електронна пошта
 Web;Enter password;Введіть пароль
@@ -237,14 +235,9 @@ Web;Error;Помилка
 Web;Error: only files (and not reports) can be copied to this folder.;Помилка: до цієї папки можна копіювати лише файли (а не звіти).
 Web;Error: the destination file name contains invalid characters.;Помилка: ім'я файлу призначення містить недійсні символи.
 Web;Error: the destination folder name contains invalid characters.;Помилка: ім'я папки призначення містить недійсні символи.
-Web;Expand in Treeview;Розгорнути в дереві
 Web;Export;Експорт
-Web;Files only;Лише файли
-Web;Folder Permissions;Дозволи на папку
 Web;Folders;Папки
 Web;Forget your password ?;Забули пароль?
-Web;Group name;Назва групи
-Web;Group name;Назва групи
 Web;Groups;Групи
 Web;Groups;Групи
 Web;Height;Висота
@@ -256,12 +249,10 @@ Web;Is dynamic;Динамічний
 Web;Last execution at;Останнє виконання о
 Web;Licensed to;Ліцензовано для
 Web;Login;Вхід
-Web;Login ID;Ідентифікатор входу
 Web;Logins;Входи
 Web;Logout;Вийти
 Web;Logout the user;Вийти з облікового запису користувача
 Web;Manage Folders;Керувати папками
-Web;Manage sub-folders;Керувати підпапками
 Web;Name;Назва
 Web;New;Новий
 Web;New folder name;Назва нової папки
@@ -277,7 +268,6 @@ Web;Password;Пароль
 Web;Paste;Вставити
 Web;PDF Conversion delay;Затримка конвертації PDF
 Web;Personal;Особистий
-Web;Personal folder;Особиста папка
 Web;Phone;Телефон
 Web;Please wait;Будь ласка, зачекайте
 Web;Profile;Профіль
@@ -301,7 +291,6 @@ Web;Reset your password;Скиньте свій пароль
 Web;Save;Зберегти
 Web;Search;Пошук
 Web;Security code;Код безпеки
-Web;Show sub-folders;Показати підпапки
 Web;Startup report name;Назва звіту запуску
 Web;The favorite has been updated;Обране оновлено
 Web;Two-Factor Authentication;Двофакторна автентифікація
@@ -312,14 +301,12 @@ Web;User groups;Групи користувачів
 Web;User identifier or email;Ідентифікатор користувача або електронна пошта
 Web;User name;Ім'я користувача
 Web;Users;Користувачі
-Web;Web product name;Назва вебпродукту
 Web;Width;Ширина
 WebJS;# of % selected;# з % вибрано
 WebJS;Actions;Дії
 WebJS;All selected;Усі вибрані
 WebJS;Allow only execution in a new window;Дозволити лише виконання в новому вікні
 WebJS;Cancel;Скасувати
-WebJS;Configuration for;Конфігурація для
 WebJS;Contains;Містить
 WebJS;Contains all;Містить усі
 WebJS;Contains any;Містить будь-який
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Менше ніж
 WebJS;Last modification;Остання зміна
 WebJS;Mark as favorite;Позначити як обране
 WebJS;Model;Модель
-WebJS;New folder configuration;Конфігурація нової папки
-WebJS;New group;Нова група
-WebJS;New login;Новий вхід
 WebJS;No;Ні
-WebJS;No download (except files) or upload;Без завантаження (окрім файлів) чи вивантаження
-WebJS;No folder configuration;Немає конфігурації папки
-WebJS;No login;Без входу
 WebJS;No personal folder;Без особистої папки
 WebJS;No right;Без прав
 WebJS;None;Немає
@@ -396,7 +377,6 @@ WebJS;Schedule;Розклад
 WebJS;Server Version;Версія сервера
 WebJS;Show _MENU_ reports;Показати _MENU_ звітів
 WebJS;Starts with;Починається з
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Конфігурацію збережено. Будь ласка, увійдіть знову, якщо вас торкаються зміни безпеки.
 WebJS;The folder has been created;Папку створено
 WebJS;The folder has been deleted;Папку видалено
 WebJS;The folder has been renamed;Папку перейменовано
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Папку оновлено
 WebJS;The report or file has been renamed;Звіт або файл перейменовано
 WebJS;Toggle Report or Folders view;Перемкнути вигляд звітів або папок
 WebJS;Unexpected error on server;Неочікувана помилка на сервері
-WebJS;User can download reports;Користувач може завантажувати звіти
-WebJS;User can download reports and upload reports and files;Користувач може завантажувати звіти та вивантажувати звіти й файли
 WebJS;View;Перегляд
 WebJS;View Folders;Переглянути папки
 WebJS;View Report;Переглянути звіт
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Вигляди та виводи
 WebJS;Warning;Попередження
 WebJS;Web Interface Version;Версія вебінтерфейсу
 WebJS;Yes;Так
-WebJS;Yes (Folder is expanded in the tree view);Так (Папка розгорнута в дереві)
-WebJS;Yes (Only files can be stored);Так (Можна зберігати лише файли)
-WebJS;Yes (User can browse sub-folders);Так (Користувач може переглядати підпапки)
-WebJS;Yes (User can create and edit sub-folders);Так (Користувач може створювати та редагувати підпапки)
-WebJS;Yes (User can edit his profile);Так (Користувач може редагувати свій профіль)
-WebJS;Yes (User is administrator of the Web Server);Так (Користувач є адміністратором вебсервера)
 Web;Select agent;Вибрати асистента
 Web;Mark as favorite;Позначити як обране
 Web;Favorites;Обране
@@ -492,11 +464,12 @@ WebJS;Delete;Видалити
 WebJS;No favorites yet;Обраного ще немає
 WebJS;No recent items;Немає останніх елементів
 Web;Configuration;Конфігурація
-Web;Configuration and security;Конфігурація та безпека
-Web;Download/Upload;Завантаження/Вивантаження
 Web;Rights;Права
 Web;Agents;Помічники
 Web;Folder;Папка
 Web;Drag to resize;Перетягніть, щоб змінити розмір
 WebJS;Copy and paste;Копіювати та вставити
 WebJS;Copy, paste and send;Копіювати, вставити та надіслати
+Web;Empty recycle bin;Очистити кошик
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Ви дійсно хочете назавжди видалити всі елементи з кошика?
+WebJS;The recycle bin has been emptied;Кошик очищено

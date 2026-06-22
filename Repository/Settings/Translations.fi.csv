@@ -221,9 +221,7 @@ Web;Device;Laite
 Web;Disconnect;Katkaise yhteys
 Web;Display options;Näyttöasetukset
 Web;Edit;Muokkaa
-Web;Edit configuration;Muokkaa määritystä
 Web;Edit entry;Muokkaa merkintää
-Web;Edit profile;Muokkaa profiilia
 Web;Edition;Versio
 Web;Email;Sähköposti
 Web;Enter password;Anna salasana
@@ -237,14 +235,9 @@ Web;Error;Virhe
 Web;Error: only files (and not reports) can be copied to this folder.;Virhe: vain tiedostoja (ei raportteja) voi kopioida tähän kansioon.
 Web;Error: the destination file name contains invalid characters.;Virhe: kohdetiedoston nimi sisältää virheellisiä merkkejä.
 Web;Error: the destination folder name contains invalid characters.;Virhe: kohdekansion nimi sisältää virheellisiä merkkejä.
-Web;Expand in Treeview;Laajenna puunäkymässä
 Web;Export;Vie
-Web;Files only;Vain tiedostot
-Web;Folder Permissions;Kansion käyttöoikeudet
 Web;Folders;Kansiot
 Web;Forget your password ?;Unohditko salasanasi?
-Web;Group name;Ryhmän nimi
-Web;Group name;Ryhmän nimi
 Web;Groups;Ryhmät
 Web;Groups;Ryhmät
 Web;Height;Korkeus
@@ -256,12 +249,10 @@ Web;Is dynamic;On dynaaminen
 Web;Last execution at;Viimeisin suoritus
 Web;Licensed to;Lisensoitu käyttäjälle
 Web;Login;Kirjaudu sisään
-Web;Login ID;Kirjautumistunnus
 Web;Logins;Kirjautumiset
 Web;Logout;Kirjaudu ulos
 Web;Logout the user;Kirjaa käyttäjä ulos
 Web;Manage Folders;Hallitse kansioita
-Web;Manage sub-folders;Hallitse alikansioita
 Web;Name;Nimi
 Web;New;Uusi
 Web;New folder name;Uuden kansion nimi
@@ -277,7 +268,6 @@ Web;Password;Salasana
 Web;Paste;Liitä
 Web;PDF Conversion delay;PDF-muunnoksen viive
 Web;Personal;Henkilökohtainen
-Web;Personal folder;Henkilökohtainen kansio
 Web;Phone;Puhelin
 Web;Please wait;Odota
 Web;Profile;Profiili
@@ -301,7 +291,6 @@ Web;Reset your password;Nollaa salasanasi
 Web;Save;Tallenna
 Web;Search;Hae
 Web;Security code;Turvakoodi
-Web;Show sub-folders;Näytä alikansiot
 Web;Startup report name;Käynnistysraportin nimi
 Web;The favorite has been updated;Suosikki on päivitetty
 Web;Two-Factor Authentication;Kaksivaiheinen tunnistautuminen
@@ -312,14 +301,12 @@ Web;User groups;Käyttäjäryhmät
 Web;User identifier or email;Käyttäjätunnus tai sähköposti
 Web;User name;Käyttäjänimi
 Web;Users;Käyttäjät
-Web;Web product name;Verkkotuotteen nimi
 Web;Width;Leveys
 WebJS;# of % selected;# / % valittu
 WebJS;Actions;Toiminnot
 WebJS;All selected;Kaikki valittu
 WebJS;Allow only execution in a new window;Salli vain suoritus uudessa ikkunassa
 WebJS;Cancel;Peruuta
-WebJS;Configuration for;Määritys kohteelle
 WebJS;Contains;Sisältää
 WebJS;Contains all;Sisältää kaikki
 WebJS;Contains any;Sisältää minkä tahansa
@@ -366,13 +353,7 @@ WebJS;Is smaller than;On pienempi kuin
 WebJS;Last modification;Viimeisin muutos
 WebJS;Mark as favorite;Merkitse suosikiksi
 WebJS;Model;Malli
-WebJS;New folder configuration;Uuden kansion määritys
-WebJS;New group;Uusi ryhmä
-WebJS;New login;Uusi kirjautuminen
 WebJS;No;Ei
-WebJS;No download (except files) or upload;Ei latausta (paitsi tiedostot) tai lähetystä
-WebJS;No folder configuration;Ei kansion määritystä
-WebJS;No login;Ei kirjautumista
 WebJS;No personal folder;Ei henkilökohtaista kansiota
 WebJS;No right;Ei oikeuksia
 WebJS;None;Ei mitään
@@ -396,7 +377,6 @@ WebJS;Schedule;Aikataulu
 WebJS;Server Version;Palvelimen versio
 WebJS;Show _MENU_ reports;Näytä _MENU_ raporttia
 WebJS;Starts with;Alkaa
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Määritys on tallennettu. Kirjaudu uudelleen sisään, jos turva-asetukset koskevat sinua.
 WebJS;The folder has been created;Kansio on luotu
 WebJS;The folder has been deleted;Kansio on poistettu
 WebJS;The folder has been renamed;Kansio on nimetty uudelleen
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Kansio on päivitetty
 WebJS;The report or file has been renamed;Raportti tai tiedosto on nimetty uudelleen
 WebJS;Toggle Report or Folders view;Vaihda raportti- tai kansionäkymä
 WebJS;Unexpected error on server;Odottamaton virhe palvelimella
-WebJS;User can download reports;Käyttäjä voi ladata raportteja
-WebJS;User can download reports and upload reports and files;Käyttäjä voi ladata raportteja sekä lähettää raportteja ja tiedostoja
 WebJS;View;Näytä
 WebJS;View Folders;Näytä kansiot
 WebJS;View Report;Näytä raportti
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Näkymät ja tulosteet
 WebJS;Warning;Varoitus
 WebJS;Web Interface Version;Verkkokäyttöliittymän versio
 WebJS;Yes;Kyllä
-WebJS;Yes (Folder is expanded in the tree view);Kyllä (Kansio on laajennettu puunäkymässä)
-WebJS;Yes (Only files can be stored);Kyllä (Vain tiedostoja voi tallentaa)
-WebJS;Yes (User can browse sub-folders);Kyllä (Käyttäjä voi selata alikansioita)
-WebJS;Yes (User can create and edit sub-folders);Kyllä (Käyttäjä voi luoda ja muokata alikansioita)
-WebJS;Yes (User can edit his profile);Kyllä (Käyttäjä voi muokata profiiliaan)
-WebJS;Yes (User is administrator of the Web Server);Kyllä (Käyttäjä on verkkopalvelimen ylläpitäjä)
 Web;Select agent;Valitse avustaja
 Web;Mark as favorite;Merkitse suosikiksi
 Web;Favorites;Suosikit
@@ -492,11 +464,12 @@ WebJS;Delete;Poista
 WebJS;No favorites yet;Ei vielä suosikkeja
 WebJS;No recent items;Ei viimeisimpiä kohteita
 Web;Configuration;Määritys
-Web;Configuration and security;Määritys ja suojaus
-Web;Download/Upload;Lataus/Lähetys
 Web;Rights;Oikeudet
 Web;Agents;Avustajat
 Web;Folder;Kansio
 Web;Drag to resize;Muuta kokoa vetämällä
 WebJS;Copy and paste;Kopioi ja liitä
 WebJS;Copy, paste and send;Kopioi, liitä ja lähetä
+Web;Empty recycle bin;Tyhjennä roskakori
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Haluatko varmasti poistaa pysyvästi kaikki roskakorin kohteet?
+WebJS;The recycle bin has been emptied;Roskakori on tyhjennetty

@@ -221,9 +221,7 @@ Web;Device;장치
 Web;Disconnect;연결 해제
 Web;Display options;표시 옵션
 Web;Edit;편집
-Web;Edit configuration;구성 편집
 Web;Edit entry;항목 편집
-Web;Edit profile;프로필 편집
 Web;Edition;에디션
 Web;Email;이메일
 Web;Enter password;비밀번호 입력
@@ -237,14 +235,9 @@ Web;Error;오류
 Web;Error: only files (and not reports) can be copied to this folder.;오류: 이 폴더에는 (보고서가 아닌) 파일만 복사할 수 있습니다.
 Web;Error: the destination file name contains invalid characters.;오류: 대상 파일 이름에 잘못된 문자가 포함되어 있습니다.
 Web;Error: the destination folder name contains invalid characters.;오류: 대상 폴더 이름에 잘못된 문자가 포함되어 있습니다.
-Web;Expand in Treeview;트리뷰에서 펼치기
 Web;Export;내보내기
-Web;Files only;파일만
-Web;Folder Permissions;폴더 권한
 Web;Folders;폴더
 Web;Forget your password ?;비밀번호를 잊으셨나요?
-Web;Group name;그룹 이름
-Web;Group name;그룹 이름
 Web;Groups;그룹
 Web;Groups;그룹
 Web;Height;높이
@@ -256,12 +249,10 @@ Web;Is dynamic;동적
 Web;Last execution at;마지막 실행 시각
 Web;Licensed to;라이선스 대상
 Web;Login;로그인
-Web;Login ID;로그인 ID
 Web;Logins;로그인
 Web;Logout;로그아웃
 Web;Logout the user;사용자 로그아웃
 Web;Manage Folders;폴더 관리
-Web;Manage sub-folders;하위 폴더 관리
 Web;Name;이름
 Web;New;새로 만들기
 Web;New folder name;새 폴더 이름
@@ -277,7 +268,6 @@ Web;Password;비밀번호
 Web;Paste;붙여넣기
 Web;PDF Conversion delay;PDF 변환 지연
 Web;Personal;개인
-Web;Personal folder;개인 폴더
 Web;Phone;전화번호
 Web;Please wait;잠시 기다려 주세요
 Web;Profile;프로필
@@ -301,7 +291,6 @@ Web;Reset your password;비밀번호 재설정
 Web;Save;저장
 Web;Search;검색
 Web;Security code;보안 코드
-Web;Show sub-folders;하위 폴더 표시
 Web;Startup report name;시작 보고서 이름
 Web;The favorite has been updated;즐겨찾기가 업데이트되었습니다
 Web;Two-Factor Authentication;2단계 인증
@@ -312,14 +301,12 @@ Web;User groups;사용자 그룹
 Web;User identifier or email;사용자 식별자 또는 이메일
 Web;User name;사용자 이름
 Web;Users;사용자
-Web;Web product name;웹 제품 이름
 Web;Width;너비
 WebJS;# of % selected;선택된 % 개수
 WebJS;Actions;작업
 WebJS;All selected;모두 선택됨
 WebJS;Allow only execution in a new window;새 창에서만 실행 허용
 WebJS;Cancel;취소
-WebJS;Configuration for;다음 항목의 구성
 WebJS;Contains;포함
 WebJS;Contains all;모두 포함
 WebJS;Contains any;하나라도 포함
@@ -366,13 +353,7 @@ WebJS;Is smaller than;작음
 WebJS;Last modification;마지막 수정
 WebJS;Mark as favorite;즐겨찾기로 표시
 WebJS;Model;모델
-WebJS;New folder configuration;새 폴더 구성
-WebJS;New group;새 그룹
-WebJS;New login;새 로그인
 WebJS;No;아니요
-WebJS;No download (except files) or upload;다운로드(파일 제외) 또는 업로드 불가
-WebJS;No folder configuration;폴더 구성 없음
-WebJS;No login;로그인 없음
 WebJS;No personal folder;개인 폴더 없음
 WebJS;No right;권한 없음
 WebJS;None;없음
@@ -396,7 +377,6 @@ WebJS;Schedule;일정
 WebJS;Server Version;서버 버전
 WebJS;Show _MENU_ reports;보고서 _MENU_개 표시
 WebJS;Starts with;다음으로 시작함
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;구성이 저장되었습니다. 보안의 영향을 받는 경우 다시 로그인하세요.
 WebJS;The folder has been created;폴더가 생성되었습니다
 WebJS;The folder has been deleted;폴더가 삭제되었습니다
 WebJS;The folder has been renamed;폴더 이름이 변경되었습니다
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;폴더가 업데이트되었습니다
 WebJS;The report or file has been renamed;보고서 또는 파일 이름이 변경되었습니다
 WebJS;Toggle Report or Folders view;보고서 또는 폴더 보기 전환
 WebJS;Unexpected error on server;서버에서 예기치 않은 오류가 발생했습니다
-WebJS;User can download reports;사용자가 보고서를 다운로드할 수 있음
-WebJS;User can download reports and upload reports and files;사용자가 보고서를 다운로드하고 보고서 및 파일을 업로드할 수 있음
 WebJS;View;보기
 WebJS;View Folders;폴더 보기
 WebJS;View Report;보고서 보기
@@ -414,12 +392,6 @@ WebJS;Views and outputs;보기 및 출력
 WebJS;Warning;경고
 WebJS;Web Interface Version;웹 인터페이스 버전
 WebJS;Yes;예
-WebJS;Yes (Folder is expanded in the tree view);예(폴더가 트리뷰에서 펼쳐짐)
-WebJS;Yes (Only files can be stored);예(파일만 저장할 수 있음)
-WebJS;Yes (User can browse sub-folders);예(사용자가 하위 폴더를 탐색할 수 있음)
-WebJS;Yes (User can create and edit sub-folders);예(사용자가 하위 폴더를 만들고 편집할 수 있음)
-WebJS;Yes (User can edit his profile);예(사용자가 자신의 프로필을 편집할 수 있음)
-WebJS;Yes (User is administrator of the Web Server);예(사용자가 웹 서버의 관리자임)
 Web;Select agent;어시스턴트 선택
 Web;Mark as favorite;즐겨찾기로 표시
 Web;Favorites;즐겨찾기
@@ -492,11 +464,12 @@ WebJS;Delete;삭제
 WebJS;No favorites yet;아직 즐겨찾기가 없습니다
 WebJS;No recent items;최근 항목 없음
 Web;Configuration;구성
-Web;Configuration and security;구성 및 보안
-Web;Download/Upload;다운로드/업로드
 Web;Rights;권한
 Web;Agents;어시스턴트
 Web;Folder;폴더
 Web;Drag to resize;드래그하여 크기 조정
 WebJS;Copy and paste;복사하여 붙여넣기
 WebJS;Copy, paste and send;복사, 붙여넣기 및 보내기
+Web;Empty recycle bin;휴지통 비우기
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;휴지통의 모든 항목을 영구적으로 삭제하시겠습니까?
+WebJS;The recycle bin has been emptied;휴지통이 비워졌습니다

@@ -94,10 +94,9 @@
             <ul id="navbar-right-menu" class="navbar-nav navbar-right align-items-center">
                 <li class="nav-item d-flex align-items-center"><div class="vr mx-2" style="min-height:24px;opacity:.4;"></div></li>
                 <li class="nav-item"><a id="profile-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Profile")"><i class="fa-solid fa-user"></i></a></li>
-                <li class="nav-item d-none d-sm-flex align-items-center"><a id="config-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Configuration")"><i class="fa-solid fa-gear"></i></a></li>
                 @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
                 {
-                        <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Information")"><i class="fa-solid fa-info"></i></a></li>
+                        <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Information")"><i class="fa-solid fa-circle-info"></i></a></li>
                 }
                 <li class="nav-item"><a id="disconnect-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"><i class="fa-solid fa-right-from-bracket"></i></a></li>
             </ul>

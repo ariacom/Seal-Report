@@ -19,7 +19,8 @@
             
             $('.result-options-input').unbind("input keyup change").on("input keyup change", (e) => {
                 if ($(e.target).hasClass("numeric_input")) e.target.value = e.target.value.replace(/[^0-9\.]/g, '');
-                processSubmitViewParameter(e.target.id, e.target.value, '@view.ViewId', true);
+                //Use the input 'name' (the parameter ResultOptionName): for boolean radios the 'id' carries a _true/_false suffix that would not match the parameter
+                processSubmitViewParameter(e.target.name, e.target.value, '@view.ViewId', true);
             });
             
             $('.result-options-select').selectpicker();

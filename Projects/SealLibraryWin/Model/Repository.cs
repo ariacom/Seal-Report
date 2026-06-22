@@ -1079,7 +1079,39 @@ namespace Seal.Model
         {
             var bin = Path.Combine(GetPersonalFolder(user), RecycleBinFolderName);
             if (!Directory.Exists(bin)) Directory.CreateDirectory(bin);
+            PurgeRecycleBin(bin);
             return bin;
+        }
+
+        /// <summary>
+        /// Deletes recycle bin items older than Configuration.RecycleBinDays. Items are named '{yyyyMMddHHmmss}_{originalName}',
+        /// so the deletion date is read from the file name prefix. If RecycleBinDays is 0, items are kept forever (no purge).
+        /// </summary>
+        public void PurgeRecycleBin(string binFolder)
+        {
+            try
+            {
+                int days = Configuration != null ? Configuration.RecycleBinDays : 0;
+                if (days <= 0 || !Directory.Exists(binFolder)) return;
+
+                var limit = DateTime.UtcNow.AddDays(-days);
+                foreach (var file in Directory.GetFiles(binFolder))
+                {
+                    var name = Path.GetFileName(file);
+                    //Prefix is the UTC deletion timestamp '{yyyyMMddHHmmss}_'; fall back to last write time if it cannot be parsed
+                    DateTime deletedOn;
+                    var prefix = name.Length >= 14 ? name.Substring(0, 14) : "";
+                    if (!DateTime.TryParseExact(prefix, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out deletedOn))
+                        deletedOn = File.GetLastWriteTimeUtc(file);
+
+                    if (deletedOn < limit)
+                    {
+                        try { FileHelper.DeleteFile(file); }
+                        catch { }
+                    }
+                }
+            }
+            catch { }
         }
 
         /// <summary>

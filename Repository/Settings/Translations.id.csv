@@ -221,9 +221,7 @@ Web;Device;Perangkat
 Web;Disconnect;Putuskan koneksi
 Web;Display options;Opsi tampilan
 Web;Edit;Edit
-Web;Edit configuration;Edit konfigurasi
 Web;Edit entry;Edit entri
-Web;Edit profile;Edit profil
 Web;Edition;Edisi
 Web;Email;Email
 Web;Enter password;Masukkan kata sandi
@@ -237,14 +235,9 @@ Web;Error;Kesalahan
 Web;Error: only files (and not reports) can be copied to this folder.;Kesalahan: hanya file (dan bukan laporan) yang dapat disalin ke folder ini.
 Web;Error: the destination file name contains invalid characters.;Kesalahan: nama file tujuan mengandung karakter tidak valid.
 Web;Error: the destination folder name contains invalid characters.;Kesalahan: nama folder tujuan mengandung karakter tidak valid.
-Web;Expand in Treeview;Perluas di Tampilan Pohon
 Web;Export;Ekspor
-Web;Files only;Hanya file
-Web;Folder Permissions;Izin Folder
 Web;Folders;Folder
 Web;Forget your password ?;Lupa kata sandi Anda ?
-Web;Group name;Nama grup
-Web;Group name;Nama grup
 Web;Groups;Grup
 Web;Groups;Grup
 Web;Height;Tinggi
@@ -256,12 +249,10 @@ Web;Is dynamic;Bersifat dinamis
 Web;Last execution at;Eksekusi terakhir pada
 Web;Licensed to;Dilisensikan kepada
 Web;Login;Login
-Web;Login ID;ID Login
 Web;Logins;Login
 Web;Logout;Logout
 Web;Logout the user;Logout pengguna
 Web;Manage Folders;Kelola Folder
-Web;Manage sub-folders;Kelola sub-folder
 Web;Name;Nama
 Web;New;Baru
 Web;New folder name;Nama folder baru
@@ -277,7 +268,6 @@ Web;Password;Kata sandi
 Web;Paste;Tempel
 Web;PDF Conversion delay;Penundaan Konversi PDF
 Web;Personal;Pribadi
-Web;Personal folder;Folder pribadi
 Web;Phone;Telepon
 Web;Please wait;Mohon tunggu
 Web;Profile;Profil
@@ -301,7 +291,6 @@ Web;Reset your password;Atur ulang kata sandi Anda
 Web;Save;Simpan
 Web;Search;Cari
 Web;Security code;Kode keamanan
-Web;Show sub-folders;Tampilkan sub-folder
 Web;Startup report name;Nama laporan awal
 Web;The favorite has been updated;Favorit telah diperbarui
 Web;Two-Factor Authentication;Autentikasi Dua Faktor
@@ -312,14 +301,12 @@ Web;User groups;Grup pengguna
 Web;User identifier or email;Pengenal pengguna atau email
 Web;User name;Nama pengguna
 Web;Users;Pengguna
-Web;Web product name;Nama produk web
 Web;Width;Lebar
 WebJS;# of % selected;# dari % dipilih
 WebJS;Actions;Tindakan
 WebJS;All selected;Semua dipilih
 WebJS;Allow only execution in a new window;Izinkan eksekusi hanya di jendela baru
 WebJS;Cancel;Batal
-WebJS;Configuration for;Konfigurasi untuk
 WebJS;Contains;Mengandung
 WebJS;Contains all;Mengandung semua
 WebJS;Contains any;Mengandung salah satu
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Lebih kecil dari
 WebJS;Last modification;Modifikasi terakhir
 WebJS;Mark as favorite;Tandai sebagai favorit
 WebJS;Model;Model
-WebJS;New folder configuration;Konfigurasi folder baru
-WebJS;New group;Grup baru
-WebJS;New login;Login baru
 WebJS;No;Tidak
-WebJS;No download (except files) or upload;Tidak ada unduhan (kecuali file) atau unggahan
-WebJS;No folder configuration;Tidak ada konfigurasi folder
-WebJS;No login;Tidak ada login
 WebJS;No personal folder;Tidak ada folder pribadi
 WebJS;No right;Tidak ada hak
 WebJS;None;Tidak ada
@@ -396,7 +377,6 @@ WebJS;Schedule;Jadwal
 WebJS;Server Version;Versi Server
 WebJS;Show _MENU_ reports;Tampilkan _MENU_ laporan
 WebJS;Starts with;Diawali dengan
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfigurasi telah disimpan. Silakan login kembali jika Anda terdampak oleh keamanan.
 WebJS;The folder has been created;Folder telah dibuat
 WebJS;The folder has been deleted;Folder telah dihapus
 WebJS;The folder has been renamed;Folder telah diganti namanya
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Folder telah diperbarui
 WebJS;The report or file has been renamed;Laporan atau file telah diganti namanya
 WebJS;Toggle Report or Folders view;Alihkan tampilan Laporan atau Folder
 WebJS;Unexpected error on server;Kesalahan tak terduga di server
-WebJS;User can download reports;Pengguna dapat mengunduh laporan
-WebJS;User can download reports and upload reports and files;Pengguna dapat mengunduh laporan dan mengunggah laporan dan file
 WebJS;View;Lihat
 WebJS;View Folders;Lihat Folder
 WebJS;View Report;Lihat Laporan
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Tampilan dan keluaran
 WebJS;Warning;Peringatan
 WebJS;Web Interface Version;Versi Antarmuka Web
 WebJS;Yes;Ya
-WebJS;Yes (Folder is expanded in the tree view);Ya (Folder diperluas dalam tampilan pohon)
-WebJS;Yes (Only files can be stored);Ya (Hanya file yang dapat disimpan)
-WebJS;Yes (User can browse sub-folders);Ya (Pengguna dapat menelusuri sub-folder)
-WebJS;Yes (User can create and edit sub-folders);Ya (Pengguna dapat membuat dan mengedit sub-folder)
-WebJS;Yes (User can edit his profile);Ya (Pengguna dapat mengedit profilnya)
-WebJS;Yes (User is administrator of the Web Server);Ya (Pengguna adalah administrator Server Web)
 Web;Select agent;Pilih asisten
 Web;Mark as favorite;Tandai sebagai favorit
 Web;Favorites;Favorit
@@ -492,11 +464,12 @@ WebJS;Delete;Hapus
 WebJS;No favorites yet;Belum ada favorit
 WebJS;No recent items;Tidak ada item terbaru
 Web;Configuration;Konfigurasi
-Web;Configuration and security;Konfigurasi dan keamanan
-Web;Download/Upload;Unduh/Unggah
 Web;Rights;Hak
 Web;Agents;Asisten
 Web;Folder;Folder
 Web;Drag to resize;Seret untuk mengubah ukuran
 WebJS;Copy and paste;Salin dan tempel
 WebJS;Copy, paste and send;Salin, tempel, dan kirim
+Web;Empty recycle bin;Kosongkan tempat sampah
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Apakah Anda benar-benar ingin menghapus permanen semua item di tempat sampah?
+WebJS;The recycle bin has been emptied;Tempat sampah telah dikosongkan

@@ -134,12 +134,14 @@
 
     <!--Folders view -->
     <div id="main-container" class="container-fluid folderview" style="padding-top:62px;display:none;">
-        <div class="row">
-            <div id="folder-view" class="col-sm-4" style="padding-right:0px">
+        <div class="row swi-folder-row">
+            <div id="folder-view" style="padding-right:0px">
                 <div class="swi-tree" id="folder-tree" role="tree" style="overflow:auto;border-radius:10px;"></div>
             </div>
 
-            <div id="file-view" class="col-sm-8" style="padding-right:0px">
+            <div id="folder-splitter" class="folder-splitter" role="separator" aria-orientation="vertical" title="@repository.TranslateWeb("Drag to resize")"></div>
+
+            <div id="file-view" style="padding-right:0px">
                 <!-- Report Menus -->
                 <div id="file-menu" class="lighticon-menu d-none d-sm-block" style="margin-bottom:10px">
                     <div id="report-edit-lightbutton" class="lightbutton report-edit" title="@repository.TranslateWeb("New")"><span class="lightbutton-icon fa fa-file-o"></span></div>
@@ -150,6 +152,7 @@
                     <div id="report-delete-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Delete")"><span class="lightbutton-icon fa fa-trash"></span></div>
                     <div id="report-rename-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Rename")"><span class="lightbutton-icon fa fa-file-text"></span></div>
                     <div id="report-upload-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Upload")"><span class="lightbutton-icon fa fa-upload"></span></div>
+                    <div id="report-empty-bin-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Empty recycle bin")"><span class="lightbutton-icon fa-solid fa-trash-can"></span></div>
                 </div>
                 <div id="file-table-view" style="overflow:auto;">
                     <table id="file-table" class="table table-striped table-hover">

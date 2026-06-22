@@ -221,9 +221,7 @@ Web;Device;מכשיר
 Web;Disconnect;התנתק
 Web;Display options;אפשרויות תצוגה
 Web;Edit;ערוך
-Web;Edit configuration;ערוך תצורה
 Web;Edit entry;ערוך רשומה
-Web;Edit profile;ערוך פרופיל
 Web;Edition;מהדורה
 Web;Email;"דוא""ל"
 Web;Enter password;הזן סיסמה
@@ -237,14 +235,9 @@ Web;Error;שגיאה
 Web;Error: only files (and not reports) can be copied to this folder.;שגיאה: רק קבצים (ולא דוחות) ניתנים להעתקה לתיקייה זו.
 Web;Error: the destination file name contains invalid characters.;שגיאה: שם קובץ היעד מכיל תווים לא חוקיים.
 Web;Error: the destination folder name contains invalid characters.;שגיאה: שם תיקיית היעד מכיל תווים לא חוקיים.
-Web;Expand in Treeview;הרחב בתצוגת עץ
 Web;Export;ייצוא
-Web;Files only;קבצים בלבד
-Web;Folder Permissions;הרשאות תיקייה
 Web;Folders;תיקיות
 Web;Forget your password ?;שכחת את הסיסמה שלך?
-Web;Group name;שם הקבוצה
-Web;Group name;שם הקבוצה
 Web;Groups;קבוצות
 Web;Groups;קבוצות
 Web;Height;גובה
@@ -256,12 +249,10 @@ Web;Is dynamic;דינמי
 Web;Last execution at;הביצוע האחרון ב
 Web;Licensed to;מורשה ל
 Web;Login;התחברות
-Web;Login ID;מזהה התחברות
 Web;Logins;התחברויות
 Web;Logout;התנתקות
 Web;Logout the user;התנתק את המשתמש
 Web;Manage Folders;נהל תיקיות
-Web;Manage sub-folders;נהל תת-תיקיות
 Web;Name;שם
 Web;New;חדש
 Web;New folder name;שם תיקייה חדש
@@ -277,7 +268,6 @@ Web;Password;סיסמה
 Web;Paste;הדבק
 Web;PDF Conversion delay;השהיית המרת PDF
 Web;Personal;אישי
-Web;Personal folder;תיקייה אישית
 Web;Phone;טלפון
 Web;Please wait;אנא המתן
 Web;Profile;פרופיל
@@ -301,7 +291,6 @@ Web;Reset your password;אפס את הסיסמה שלך
 Web;Save;שמור
 Web;Search;חיפוש
 Web;Security code;קוד אבטחה
-Web;Show sub-folders;הצג תת-תיקיות
 Web;Startup report name;שם דוח ההפעלה
 Web;The favorite has been updated;המועדף עודכן
 Web;Two-Factor Authentication;אימות דו-שלבי
@@ -312,14 +301,12 @@ Web;User groups;קבוצות משתמשים
 Web;User identifier or email;"מזהה משתמש או דוא""ל"
 Web;User name;שם משתמש
 Web;Users;משתמשים
-Web;Web product name;שם מוצר הרשת
 Web;Width;רוחב
 WebJS;# of % selected;# מתוך % נבחרו
 WebJS;Actions;פעולות
 WebJS;All selected;הכל נבחר
 WebJS;Allow only execution in a new window;אפשר ביצוע רק בחלון חדש
 WebJS;Cancel;ביטול
-WebJS;Configuration for;תצורה עבור
 WebJS;Contains;מכיל
 WebJS;Contains all;מכיל את הכל
 WebJS;Contains any;מכיל אחד מ
@@ -366,13 +353,7 @@ WebJS;Is smaller than;קטן מ
 WebJS;Last modification;שינוי אחרון
 WebJS;Mark as favorite;סמן כמועדף
 WebJS;Model;מודל
-WebJS;New folder configuration;תצורת תיקייה חדשה
-WebJS;New group;קבוצה חדשה
-WebJS;New login;התחברות חדשה
 WebJS;No;לא
-WebJS;No download (except files) or upload;אין הורדה (למעט קבצים) או העלאה
-WebJS;No folder configuration;אין תצורת תיקייה
-WebJS;No login;אין התחברות
 WebJS;No personal folder;אין תיקייה אישית
 WebJS;No right;אין הרשאה
 WebJS;None;ללא
@@ -396,7 +377,6 @@ WebJS;Schedule;תזמון
 WebJS;Server Version;גרסת שרת
 WebJS;Show _MENU_ reports;הצג _MENU_ דוחות
 WebJS;Starts with;מתחיל ב
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;התצורה נשמרה. אנא התחבר שוב אם אתה מושפע מהאבטחה.
 WebJS;The folder has been created;התיקייה נוצרה
 WebJS;The folder has been deleted;התיקייה נמחקה
 WebJS;The folder has been renamed;שם התיקייה שונה
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;התיקייה עודכנה
 WebJS;The report or file has been renamed;שם הדוח או הקובץ שונה
 WebJS;Toggle Report or Folders view;החלף תצוגת דוחות או תיקיות
 WebJS;Unexpected error on server;שגיאה לא צפויה בשרת
-WebJS;User can download reports;המשתמש יכול להוריד דוחות
-WebJS;User can download reports and upload reports and files;המשתמש יכול להוריד דוחות ולהעלות דוחות וקבצים
 WebJS;View;תצוגה
 WebJS;View Folders;הצג תיקיות
 WebJS;View Report;הצג דוח
@@ -414,12 +392,6 @@ WebJS;Views and outputs;תצוגות ופלטים
 WebJS;Warning;אזהרה
 WebJS;Web Interface Version;גרסת ממשק הרשת
 WebJS;Yes;כן
-WebJS;Yes (Folder is expanded in the tree view);כן (התיקייה מורחבת בתצוגת העץ)
-WebJS;Yes (Only files can be stored);כן (ניתן לאחסן קבצים בלבד)
-WebJS;Yes (User can browse sub-folders);כן (המשתמש יכול לעיין בתת-תיקיות)
-WebJS;Yes (User can create and edit sub-folders);כן (המשתמש יכול ליצור ולערוך תת-תיקיות)
-WebJS;Yes (User can edit his profile);כן (המשתמש יכול לערוך את הפרופיל שלו)
-WebJS;Yes (User is administrator of the Web Server);כן (המשתמש הוא מנהל של שרת הרשת)
 Web;Select agent;בחר עוזר
 Web;Mark as favorite;סמן כמועדף
 Web;Favorites;מועדפים
@@ -492,11 +464,12 @@ WebJS;Delete;מחק
 WebJS;No favorites yet;אין עדיין מועדפים
 WebJS;No recent items;אין פריטים אחרונים
 Web;Configuration;תצורה
-Web;Configuration and security;תצורה ואבטחה
-Web;Download/Upload;הורדה/העלאה
 Web;Rights;הרשאות
 Web;Agents;עוזרים
 Web;Folder;תיקייה
 Web;Drag to resize;גרור לשינוי גודל
 WebJS;Copy and paste;העתק והדבק
 WebJS;Copy, paste and send;העתק, הדבק ושלח
+Web;Empty recycle bin;רוקן את סל המיחזור
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;האם אתה באמת רוצה למחוק לצמיתות את כל הפריטים בסל המיחזור?
+WebJS;The recycle bin has been emptied;סל המיחזור רוקן

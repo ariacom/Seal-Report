@@ -221,9 +221,7 @@ Web;Device;Aygıt
 Web;Disconnect;Bağlantıyı kes
 Web;Display options;Görüntüleme seçenekleri
 Web;Edit;Düzenle
-Web;Edit configuration;Yapılandırmayı düzenle
 Web;Edit entry;Girişi düzenle
-Web;Edit profile;Profili düzenle
 Web;Edition;Sürüm
 Web;Email;E-posta
 Web;Enter password;Parolayı girin
@@ -237,14 +235,9 @@ Web;Error;Hata
 Web;Error: only files (and not reports) can be copied to this folder.;Hata: bu klasöre yalnızca dosyalar (raporlar değil) kopyalanabilir.
 Web;Error: the destination file name contains invalid characters.;Hata: hedef dosya adı geçersiz karakterler içeriyor.
 Web;Error: the destination folder name contains invalid characters.;Hata: hedef klasör adı geçersiz karakterler içeriyor.
-Web;Expand in Treeview;Ağaç Görünümünde Genişlet
 Web;Export;Dışa aktar
-Web;Files only;Yalnızca dosyalar
-Web;Folder Permissions;Klasör İzinleri
 Web;Folders;Klasörler
 Web;Forget your password ?;Parolanızı mı unuttunuz ?
-Web;Group name;Grup adı
-Web;Group name;Grup adı
 Web;Groups;Gruplar
 Web;Groups;Gruplar
 Web;Height;Yükseklik
@@ -256,12 +249,10 @@ Web;Is dynamic;Dinamiktir
 Web;Last execution at;Son çalıştırma
 Web;Licensed to;Lisans sahibi
 Web;Login;Giriş
-Web;Login ID;Giriş kimliği
 Web;Logins;Girişler
 Web;Logout;Çıkış
 Web;Logout the user;Kullanıcının çıkışını yap
 Web;Manage Folders;Klasörleri Yönet
-Web;Manage sub-folders;Alt klasörleri yönet
 Web;Name;Ad
 Web;New;Yeni
 Web;New folder name;Yeni klasör adı
@@ -277,7 +268,6 @@ Web;Password;Parola
 Web;Paste;Yapıştır
 Web;PDF Conversion delay;PDF Dönüştürme gecikmesi
 Web;Personal;Kişisel
-Web;Personal folder;Kişisel klasör
 Web;Phone;Telefon
 Web;Please wait;Lütfen bekleyin
 Web;Profile;Profil
@@ -301,7 +291,6 @@ Web;Reset your password;Parolanızı sıfırlayın
 Web;Save;Kaydet
 Web;Search;Ara
 Web;Security code;Güvenlik kodu
-Web;Show sub-folders;Alt klasörleri göster
 Web;Startup report name;Başlangıç rapor adı
 Web;The favorite has been updated;Favori güncellendi
 Web;Two-Factor Authentication;İki Faktörlü Kimlik Doğrulama
@@ -312,14 +301,12 @@ Web;User groups;Kullanıcı grupları
 Web;User identifier or email;Kullanıcı tanımlayıcısı veya e-posta
 Web;User name;Kullanıcı adı
 Web;Users;Kullanıcılar
-Web;Web product name;Web ürün adı
 Web;Width;Genişlik
 WebJS;# of % selected;% seçili sayısı
 WebJS;Actions;Eylemler
 WebJS;All selected;Tümü seçili
 WebJS;Allow only execution in a new window;Yalnızca yeni pencerede çalıştırmaya izin ver
 WebJS;Cancel;İptal
-WebJS;Configuration for;Şunun için yapılandırma
 WebJS;Contains;İçerir
 WebJS;Contains all;Tümünü içerir
 WebJS;Contains any;Herhangi birini içerir
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Şundan küçüktür
 WebJS;Last modification;Son değişiklik
 WebJS;Mark as favorite;Favori olarak işaretle
 WebJS;Model;Model
-WebJS;New folder configuration;Yeni klasör yapılandırması
-WebJS;New group;Yeni grup
-WebJS;New login;Yeni giriş
 WebJS;No;Hayır
-WebJS;No download (except files) or upload;İndirme yok (dosyalar hariç) veya yükleme yok
-WebJS;No folder configuration;Klasör yapılandırması yok
-WebJS;No login;Giriş yok
 WebJS;No personal folder;Kişisel klasör yok
 WebJS;No right;Yetki yok
 WebJS;None;Yok
@@ -396,7 +377,6 @@ WebJS;Schedule;Zamanlama
 WebJS;Server Version;Sunucu Sürümü
 WebJS;Show _MENU_ reports;_MENU_ rapor göster
 WebJS;Starts with;İle başlar
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Yapılandırma kaydedildi. Güvenlikten etkilendiyseniz lütfen tekrar giriş yapın.
 WebJS;The folder has been created;Klasör oluşturuldu
 WebJS;The folder has been deleted;Klasör silindi
 WebJS;The folder has been renamed;Klasör yeniden adlandırıldı
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Klasör güncellendi
 WebJS;The report or file has been renamed;Rapor veya dosya yeniden adlandırıldı
 WebJS;Toggle Report or Folders view;Rapor veya Klasör görünümünü değiştir
 WebJS;Unexpected error on server;Sunucuda beklenmeyen hata
-WebJS;User can download reports;Kullanıcı raporları indirebilir
-WebJS;User can download reports and upload reports and files;Kullanıcı raporları indirebilir ve raporları ve dosyaları yükleyebilir
 WebJS;View;Görüntüle
 WebJS;View Folders;Klasörleri Görüntüle
 WebJS;View Report;Raporu Görüntüle
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Görünümler ve çıktılar
 WebJS;Warning;Uyarı
 WebJS;Web Interface Version;Web Arayüzü Sürümü
 WebJS;Yes;Evet
-WebJS;Yes (Folder is expanded in the tree view);Evet (Klasör ağaç görünümünde genişletilir)
-WebJS;Yes (Only files can be stored);Evet (Yalnızca dosyalar saklanabilir)
-WebJS;Yes (User can browse sub-folders);Evet (Kullanıcı alt klasörlere göz atabilir)
-WebJS;Yes (User can create and edit sub-folders);Evet (Kullanıcı alt klasörler oluşturabilir ve düzenleyebilir)
-WebJS;Yes (User can edit his profile);Evet (Kullanıcı profilini düzenleyebilir)
-WebJS;Yes (User is administrator of the Web Server);Evet (Kullanıcı Web Sunucusunun yöneticisidir)
 Web;Select agent;Asistan seç
 Web;Mark as favorite;Favori olarak işaretle
 Web;Favorites;Favoriler
@@ -492,11 +464,12 @@ WebJS;Delete;Sil
 WebJS;No favorites yet;Henüz favori yok
 WebJS;No recent items;Son kullanılan öğe yok
 Web;Configuration;Yapılandırma
-Web;Configuration and security;Yapılandırma ve güvenlik
-Web;Download/Upload;İndirme/Yükleme
 Web;Rights;Haklar
 Web;Agents;Asistanlar
 Web;Folder;Klasör
 Web;Drag to resize;Yeniden boyutlandırmak için sürükleyin
 WebJS;Copy and paste;Kopyala ve yapıştır
 WebJS;Copy, paste and send;Kopyala, yapıştır ve gönder
+Web;Empty recycle bin;Geri dönüşüm kutusunu boşalt
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Geri dönüşüm kutusundaki tüm öğeleri kalıcı olarak silmek istediğinizden emin misiniz?
+WebJS;The recycle bin has been emptied;Geri dönüşüm kutusu boşaltıldı

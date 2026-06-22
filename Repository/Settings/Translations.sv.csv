@@ -221,9 +221,7 @@ Web;Device;Enhet
 Web;Disconnect;Koppla från
 Web;Display options;Visningsalternativ
 Web;Edit;Redigera
-Web;Edit configuration;Redigera konfiguration
 Web;Edit entry;Redigera post
-Web;Edit profile;Redigera profil
 Web;Edition;Utgåva
 Web;Email;E-post
 Web;Enter password;Ange lösenord
@@ -237,14 +235,9 @@ Web;Error;Fel
 Web;Error: only files (and not reports) can be copied to this folder.;Fel: endast filer (inte rapporter) kan kopieras till den här mappen.
 Web;Error: the destination file name contains invalid characters.;Fel: målfilnamnet innehåller ogiltiga tecken.
 Web;Error: the destination folder name contains invalid characters.;Fel: målmappnamnet innehåller ogiltiga tecken.
-Web;Expand in Treeview;Expandera i trädvy
 Web;Export;Exportera
-Web;Files only;Endast filer
-Web;Folder Permissions;Mappbehörigheter
 Web;Folders;Mappar
 Web;Forget your password ?;Glömt ditt lösenord?
-Web;Group name;Gruppnamn
-Web;Group name;Gruppnamn
 Web;Groups;Grupper
 Web;Groups;Grupper
 Web;Height;Höjd
@@ -256,12 +249,10 @@ Web;Is dynamic;Är dynamisk
 Web;Last execution at;Senaste körning kl.
 Web;Licensed to;Licensierad till
 Web;Login;Logga in
-Web;Login ID;Inloggnings-ID
 Web;Logins;Inloggningar
 Web;Logout;Logga ut
 Web;Logout the user;Logga ut användaren
 Web;Manage Folders;Hantera mappar
-Web;Manage sub-folders;Hantera undermappar
 Web;Name;Namn
 Web;New;Ny
 Web;New folder name;Nytt mappnamn
@@ -277,7 +268,6 @@ Web;Password;Lösenord
 Web;Paste;Klistra in
 Web;PDF Conversion delay;Fördröjning för PDF-konvertering
 Web;Personal;Personlig
-Web;Personal folder;Personlig mapp
 Web;Phone;Telefon
 Web;Please wait;Vänta
 Web;Profile;Profil
@@ -301,7 +291,6 @@ Web;Reset your password;Återställ ditt lösenord
 Web;Save;Spara
 Web;Search;Sök
 Web;Security code;Säkerhetskod
-Web;Show sub-folders;Visa undermappar
 Web;Startup report name;Namn på startrapport
 Web;The favorite has been updated;Favoriten har uppdaterats
 Web;Two-Factor Authentication;Tvåfaktorsautentisering
@@ -312,14 +301,12 @@ Web;User groups;Användargrupper
 Web;User identifier or email;Användaridentifierare eller e-post
 Web;User name;Användarnamn
 Web;Users;Användare
-Web;Web product name;Webbproduktnamn
 Web;Width;Bredd
 WebJS;# of % selected;# av % markerade
 WebJS;Actions;Åtgärder
 WebJS;All selected;Alla markerade
 WebJS;Allow only execution in a new window;Tillåt endast körning i ett nytt fönster
 WebJS;Cancel;Avbryt
-WebJS;Configuration for;Konfiguration för
 WebJS;Contains;Innehåller
 WebJS;Contains all;Innehåller alla
 WebJS;Contains any;Innehåller något
@@ -366,13 +353,7 @@ WebJS;Is smaller than;Är mindre än
 WebJS;Last modification;Senaste ändring
 WebJS;Mark as favorite;Markera som favorit
 WebJS;Model;Modell
-WebJS;New folder configuration;Ny mappkonfiguration
-WebJS;New group;Ny grupp
-WebJS;New login;Ny inloggning
 WebJS;No;Nej
-WebJS;No download (except files) or upload;Ingen nedladdning (förutom filer) eller uppladdning
-WebJS;No folder configuration;Ingen mappkonfiguration
-WebJS;No login;Ingen inloggning
 WebJS;No personal folder;Ingen personlig mapp
 WebJS;No right;Ingen behörighet
 WebJS;None;Inget
@@ -396,7 +377,6 @@ WebJS;Schedule;Schema
 WebJS;Server Version;Serverversion
 WebJS;Show _MENU_ reports;Visa _MENU_ rapporter
 WebJS;Starts with;Börjar med
-WebJS;The configuration has been saved. Please login again if you are impacted by the security.;Konfigurationen har sparats. Logga in igen om du påverkas av säkerheten.
 WebJS;The folder has been created;Mappen har skapats
 WebJS;The folder has been deleted;Mappen har tagits bort
 WebJS;The folder has been renamed;Mappen har bytt namn
@@ -404,8 +384,6 @@ WebJS;The folder has been updated;Mappen har uppdaterats
 WebJS;The report or file has been renamed;Rapporten eller filen har bytt namn
 WebJS;Toggle Report or Folders view;Växla mellan rapport- och mappvy
 WebJS;Unexpected error on server;Oväntat fel på servern
-WebJS;User can download reports;Användaren kan ladda ner rapporter
-WebJS;User can download reports and upload reports and files;Användaren kan ladda ner rapporter och ladda upp rapporter och filer
 WebJS;View;Visa
 WebJS;View Folders;Visa mappar
 WebJS;View Report;Visa rapport
@@ -414,12 +392,6 @@ WebJS;Views and outputs;Vyer och utdata
 WebJS;Warning;Varning
 WebJS;Web Interface Version;Webbgränssnittsversion
 WebJS;Yes;Ja
-WebJS;Yes (Folder is expanded in the tree view);Ja (Mappen är expanderad i trädvyn)
-WebJS;Yes (Only files can be stored);Ja (Endast filer kan lagras)
-WebJS;Yes (User can browse sub-folders);Ja (Användaren kan bläddra i undermappar)
-WebJS;Yes (User can create and edit sub-folders);Ja (Användaren kan skapa och redigera undermappar)
-WebJS;Yes (User can edit his profile);Ja (Användaren kan redigera sin profil)
-WebJS;Yes (User is administrator of the Web Server);Ja (Användaren är administratör för webbservern)
 Web;Select agent;Välj assistent
 Web;Mark as favorite;Markera som favorit
 Web;Favorites;Favoriter
@@ -492,11 +464,12 @@ WebJS;Delete;Ta bort
 WebJS;No favorites yet;Inga favoriter ännu
 WebJS;No recent items;Inga senaste objekt
 Web;Configuration;Konfiguration
-Web;Configuration and security;Konfiguration och säkerhet
-Web;Download/Upload;Nedladdning/Uppladdning
 Web;Rights;Rättigheter
 Web;Agents;Assistenter
 Web;Folder;Mapp
 Web;Drag to resize;Dra för att ändra storlek
 WebJS;Copy and paste;Kopiera och klistra in
 WebJS;Copy, paste and send;Kopiera, klistra in och skicka
+Web;Empty recycle bin;Töm papperskorgen
+WebJS;Do you really want to permanently delete all items in the recycle bin ?;Vill du verkligen ta bort alla objekt i papperskorgen permanent?
+WebJS;The recycle bin has been emptied;Papperskorgen har tömts

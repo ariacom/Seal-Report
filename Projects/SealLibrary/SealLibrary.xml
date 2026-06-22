@@ -7813,6 +7813,12 @@
             Returns the recycle bin folder path for a user (PersonalFolder/{user}/BIN), creating it if needed
             </summary>
         </member>
+        <member name="M:Seal.Model.Repository.PurgeRecycleBin(System.String)">
+            <summary>
+            Deletes recycle bin items older than Configuration.RecycleBinDays. Items are named '{yyyyMMddHHmmss}_{originalName}',
+            so the deletion date is read from the file name prefix. If RecycleBinDays is 0, items are kept forever (no purge).
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.SchedulesFolder">
             <summary>
             SpecialsFolder Schedules folder
@@ -9283,6 +9289,11 @@
             Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.RecycleBinDays">
+            <summary>
+            Number of days to keep deleted reports and files in each user's recycle bin ('BIN' sub-folder of the personal folder). Older items are purged automatically. If 0, items are kept forever (no automatic purge).
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebProductName">
             <summary>
             The name of the product displayed on the Web site
@@ -9346,11 +9357,6 @@
         <member name="P:Seal.Model.SealServerConfiguration.RazorForbiddenTokens">
             <summary>
             Case-insensitive substrings forbidden in Razor scripts when 'Enable Razor Script Validation' is true, one per line. Lines starting with // are ignored. If empty, a conservative built-in starter list is used.
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.EnableDownloadUpload">
-            <summary>
-            If true, download and upload of files and reports are allowed through the Web Report Server if the user belongs to a group having this right.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.ReportFormats">
@@ -9613,9 +9619,14 @@
             The right applied on the reports and files of the folder
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityFolder.DownloadUpload">
+        <member name="P:Seal.Model.SecurityFolder.AllowReportDownload">
             <summary>
-            Defines if the user can download reports/files or upload files and reports in this folder. DANGER ZONE: enabling Upload lets web users upload files and reports into the repository; an uploaded report may contain tasks that run code on the server.
+            If true, the user can download the report definition (the .srex file) of the reports in this folder. Files are always downloadable; this flag only controls report definitions, which expose the report SQL, connections and task scripts.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityFolder.AllowUpload">
+            <summary>
+            If true, the user can upload files and reports into this folder. DANGER ZONE: an uploaded report may contain tasks that execute code on the server.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityFolder.ExpandSubFolders">
@@ -9666,9 +9677,9 @@
             If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown and the Right is 'Read write'.
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityRepositoryFolder.DownloadUpload">
+        <member name="P:Seal.Model.SecurityRepositoryFolder.AllowUpload">
             <summary>
-            Defines if the user can download files or upload files in this folder.
+            If true, the user can upload files into this folder. Files are always downloadable; reports are not shown in repository folders, so only upload is configurable here.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityRepositoryFolder.Icon">
@@ -9724,6 +9735,16 @@
             Define the right of the dedicated personal folder for each user of the group
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityGroup.PersonalFolderReportDownload">
+            <summary>
+            If true, the user can download the report definition (the .srex file) of the reports stored in his personal folder. Since the Web Report Server has no report editor, this download is the only way to extract a report definition; disable it to keep definitions on the server.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityGroup.PersonalFolderUpload">
+            <summary>
+            If true, the user can upload files and reports into his personal folder. DANGER ZONE: an uploaded report may contain tasks that execute code on the server.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityGroup.ShowFoldersView">
             <summary>
             If true, the folders view of the reports is shown
@@ -9769,9 +9790,9 @@
             Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user.
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityGroup.EditConfiguration">
+        <member name="P:Seal.Model.SecurityGroup.ShowErrorDetail">
             <summary>
-            Web Report Server: For Administrators of the Web Server, the user can edit the configuration and security of the Web Server.
+            Web Report Server: If true, the user can see the detail of exceptions (error message and stack trace) in the Web Report Server.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.EditProfile">
@@ -10131,6 +10152,18 @@
             Right for the personal folder
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityUser.PersonalFolderReportDownload">
+            <summary>
+            True if the user can download the report definitions stored in his personal folder.
+            The most permissive setting among the groups granting a personal folder applies.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUser.PersonalFolderUpload">
+            <summary>
+            True if the user can upload files and reports into his personal folder.
+            The most permissive setting among the groups granting a personal folder applies.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityUser.SqlModel">
             <summary>
             True if the user has the right to edit SQL models and to query the database (raw SQL) with the AI Tools. True if at least one of the user's groups enables SQL Models.
@@ -10151,9 +10184,9 @@
             True if user can edit his profile
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityUser.EditConfiguration">
+        <member name="P:Seal.Model.SecurityUser.ShowErrorDetail">
             <summary>
-            True if user can edit the configuration (is administrator)
+            True if user can see the detail of exceptions (error message and stack trace) in the Web Report Server.
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.Authenticate">
@@ -10413,11 +10446,6 @@
             Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
             </summary>
         </member>
-        <member name="T:Seal.Model.SWIConfiguration">
-            <summary>
-            Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
-            </summary>
-        </member>
         <member name="T:Seal.Model.SWIFolder">
             <summary>
             Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
@@ -10463,12 +10491,14 @@
             If true, only files can be displayed in this folder
             </summary>
         </member>
-        <member name="F:Seal.Model.SWIFolder.downloadupload">
+        <member name="F:Seal.Model.SWIFolder.reportdownload">
             <summary>
-            Download/Upload capability granted on the folder files/reports:
-            0: None
-            1: Download
-            2: Download and Upload
+            If true, the report definitions (.srex) of this folder can be downloaded. Files are always downloadable.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIFolder.upload">
+            <summary>
+            If true, files and reports can be uploaded into this folder.
             </summary>
         </member>
         <member name="F:Seal.Model.SWIFolder.icon">

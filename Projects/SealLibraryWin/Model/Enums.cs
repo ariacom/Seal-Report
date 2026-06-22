@@ -712,14 +712,4 @@ namespace Seal.Model
         [Description("Microsoft Graph")]
         MSGraph,
     }
-
-    public enum DownloadUpload
-    {
-        [Description("None")]
-        None,
-        [Description("Download")]
-        Download,
-        [Description("Download and Upload")]
-        DownloadUpload,
-    }
 }

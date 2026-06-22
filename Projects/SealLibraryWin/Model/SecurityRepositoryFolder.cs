@@ -34,7 +34,7 @@ namespace Seal.Model
                 GetProperty("FolderRight").SetIsBrowsable(true);
                 GetProperty("UseSubFolders").SetIsBrowsable(true);
                 GetProperty("ManageFolder").SetIsBrowsable(true);
-                GetProperty("DownloadUpload").SetIsBrowsable(true);
+                GetProperty("AllowUpload").SetIsBrowsable(true);
                 GetProperty("Icon").SetIsBrowsable(true);
 
                 //Managing sub-folders only makes sense when sub-folders are shown and the folder is writable
@@ -51,7 +51,7 @@ namespace Seal.Model
         /// or inside the 'Reports' folder, which is managed by the 'Report Folders' configuration.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\tPath"), Description("The folder path to publish, relative to the repository root (e.g. 'Views\\MyTheme'). It must NOT point at or inside the 'Reports' folder, which is managed by the 'Report Folders' configuration."), Id(1, 1)]
+        [Category("Definition"), DisplayName("\tPath"), Description("The folder path to publish, relative to the repository root (e.g. 'Views\\MyTheme'). It must NOT point at or inside the 'Reports' folder, which is managed by the 'Report folders' configuration."), Id(1, 1)]
         [TypeConverter(typeof(RepositoryRootFolderConverter))]
         [DefaultValue("\\")]
 #endif
@@ -81,7 +81,7 @@ namespace Seal.Model
         /// If true, sub-folders are also published with the same definition
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\tShow sub-folders"), Description("If true, sub-folders are also published with the same definition."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Include sub-folders"), Description("If true, sub-folders are also published with the same definition."), Id(3, 1)]
         [DefaultValue(true)]
 #endif
         public bool UseSubFolders
@@ -104,21 +104,20 @@ namespace Seal.Model
         public bool ManageFolder { get; set; } = false;
 
         /// <summary>
-        /// Defines if the user can download files or upload files in this folder.
+        /// If true, the user can upload files into this folder. Files are always downloadable; reports are not shown in repository folders, so only upload is configurable here.
         /// </summary>
 #if WINDOWS
-        [Category("Danger Zone"), DisplayName("Upload/Download"), Description("Defines if the user can download files or upload files in this folder.\r\n⚠ DANGER ZONE: setting 'Download and Upload' lets web users upload files into this repository folder. Uploading into a folder holding server-executed templates (e.g. Views or Sources) is a remote code execution vector. Only allow Upload on folders and groups you fully trust."), Id(1, 9)]
-        [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(DownloadUpload.None)]
+        [Category("Danger Zone"), DisplayName("Allow upload"), Description("If true, the user can upload files into this folder.\r\n⚠ DANGER ZONE: uploading into a folder holding server-executed templates (e.g. Views or Sources) is a remote code execution vector. Only allow upload on folders and groups you fully trust."), Id(1, 9)]
+        [DefaultValue(false)]
 #endif
-        public DownloadUpload DownloadUpload { get; set; } = DownloadUpload.None;
-        public bool ShouldSerializeDownloadUpload() { return DownloadUpload != DownloadUpload.None; }
+        public bool AllowUpload { get; set; } = false;
+        public bool ShouldSerializeAllowUpload() { return AllowUpload; }
 
         /// <summary>
         /// Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-database'); legacy Glyphicon names are also accepted. If empty, the default repository folder icon is used.
         /// </summary>
 #if WINDOWS
-        [Category("Options"), DisplayName("Tree View icon"), Description("Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-database'); legacy Glyphicon names are also accepted. If empty, the default repository folder icon is used."), Id(1, 2)]
+        [Category("Options"), DisplayName("Tree view icon"), Description("Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-database'); legacy Glyphicon names are also accepted. If empty, the default repository folder icon is used."), Id(1, 2)]
         [Editor(typeof(FontAwesomeIconEditor), typeof(System.Drawing.Design.UITypeEditor))]
 #endif
         public string Icon { get; set; }

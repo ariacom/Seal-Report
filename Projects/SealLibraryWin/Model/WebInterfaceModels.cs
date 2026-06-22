@@ -19,7 +19,6 @@ namespace Seal.Model
         public string language;
         public string folder;
         public bool showfolders;
-        public bool editconfiguration;
         public bool editprofile;
         public bool changepassword;
         public bool showresetpassword;
@@ -36,31 +35,6 @@ namespace Seal.Model
         public bool hasagent;
     }
 
-    /// <summary>
-    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
-    /// </summary>
-    public class SWIConfiguration
-    {
-        public List<StringPair> folders;
-        public string productname;
-        public List<SecurityGroup> groups;
-        public List<SecurityLogin> logins;
-        public bool downloadupload = true;
-        public List<StringPair> agents;
-
-        public static List<StringPair> GetFolders(SecurityUser user)
-        {
-            var result = new List<StringPair>();
-            foreach (var folder in user.Folders.Where(i => !i.IsPersonal)) fillFolders(user, folder, result);
-            return result;
-
-        }
-        static void fillFolders(SecurityUser user, SWIFolder folder, List<StringPair> choices)
-        {
-            if ((FolderRight)folder.right == FolderRight.Edit) choices.Add(new StringPair() { Key = folder.path, Value = folder.fullname });
-            foreach (var sub in folder.folders) fillFolders(user, sub, choices);
-        }
-    }
 
     /// <summary>
     /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
@@ -111,12 +85,14 @@ namespace Seal.Model
         public bool files = false;
 
         /// <summary>
-        /// Download/Upload capability granted on the folder files/reports:
-        /// 0: None
-        /// 1: Download
-        /// 2: Download and Upload
+        /// If true, the report definitions (.srex) of this folder can be downloaded. Files are always downloadable.
         /// </summary>
-        public int downloadupload = 0;
+        public bool reportdownload = false;
+
+        /// <summary>
+        /// If true, files and reports can be uploaded into this folder.
+        /// </summary>
+        public bool upload = false;
 
         /// <summary>
         /// Optional Font Awesome icon class for the folder node in the tree view. If empty, the default icon for the folder type is used.
