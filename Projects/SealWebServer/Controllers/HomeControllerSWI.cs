@@ -1705,6 +1705,11 @@ namespace SealWebServer.Controllers
 
                 if (string.IsNullOrEmpty(message)) throw new Exception("Error: message must be supplied");
 
+                // Surface a clear message when no AI provider has been configured,
+                // instead of a raw internal exception from the agent/provider resolution.
+                if (Repository.AIConfiguration.AIProviders.Count == 0)
+                    throw new Exception("No AI provider is defined. Please define an AI provider in the AI Configuration.");
+
                 // Retrieve or initialise the per-session agent
                 var agent = Agent;
 
@@ -1781,7 +1786,9 @@ namespace SealWebServer.Controllers
             catch (Exception ex)
             {
                 WebHelper.WriteWebException(ex, "SWIGetAIAgentResponse");
-                return Json(new { response = "Error: " + getExceptionMessage(ex) });
+                // The chat bubble renders plain text (HTML is escaped), so return the plain
+                // exception message rather than getExceptionMessage()'s HTML (<br>, stack trace).
+                return Json(new { response = "Error: " + ex.Message });
             }
         }
 
