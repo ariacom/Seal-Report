@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 using Seal.Model;
 
 #if WINDOWS
-using System.ComponentModel;
 using System.Drawing.Design;
 using Seal.Forms;
 using DynamicTypeDescriptor;

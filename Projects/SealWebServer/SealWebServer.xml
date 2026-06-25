@@ -353,8 +353,20 @@
             <summary>
             Signals the in-progress AI chat call for this session to stop at the next safe
             iteration boundary (i.e. sets the <see cref="P:Seal.AI.ICancelOperation.Cancel"/> flag that
-            <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> checks between tool-call iterations).
+            <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> checks between tool-call iterations).
             </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetAIAgentProgress(System.String)">
+            <summary>
+            Returns and clears the progress ("thinking") steps queued by the AI chat that is
+            currently running for this session (skill loads, tool calls). The chat panel polls
+            this while a request is in flight to show a live, collapsible step list.
+            </summary>
+            <remarks>
+            Like <see cref="M:SealWebServer.Controllers.HomeController.SWICancelAIAgentResponse(System.String)"/> this runs concurrently with the in-progress
+            <see cref="M:SealWebServer.Controllers.HomeController.SWIGetAIAgentResponse(System.String,System.String)"/> on the same session and intentionally skips
+            <c>checkSWIAuthentication()</c> to avoid touching the non-thread-safe session store.
+            </remarks>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetVersions">
             <summary>

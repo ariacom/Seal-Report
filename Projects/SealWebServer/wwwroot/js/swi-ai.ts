@@ -145,22 +145,22 @@
     function makeUserBubble(text: string): JQuery {
         var $bubble  = $('<div>').addClass('ai-panel-bubble user').text(text);
         var $actions = $('<div>').addClass('ai-bubble-actions');
-        bubbleActionBtn('fa-copy', SWIUtil.tr('Copy'), function () {
+        bubbleActionBtn('fa-copy', SWIUtil.tr2('Copy'), function () {
             copyToClipboard(text);
         }).appendTo($actions);
-        bubbleActionBtn('fa-clipboard', SWIUtil.tr('Copy and paste'), function () {
+        bubbleActionBtn('fa-clipboard', SWIUtil.tr2('Copy and paste'), function () {
             copyToClipboard(text);
             $input.val(text).trigger('input');
             $input.focus();
         }).appendTo($actions);
-        bubbleActionBtn('fa-paper-plane', SWIUtil.tr('Copy, paste and send'), function () {
+        bubbleActionBtn('fa-paper-plane', SWIUtil.tr2('Copy, paste and send'), function () {
             copyToClipboard(text);
             $input.val(text).trigger('input');
             if (!$send.prop('disabled')) $send.trigger('click');
         }).appendTo($actions);
         // Rewind: drop this user turn and everything after it, then refill the input
         // so the message can be edited and re-sent.
-        bubbleActionBtn('fa-undo', SWIUtil.tr('Rewind to here'), function () {
+        bubbleActionBtn('fa-undo', SWIUtil.tr2('Rewind to here'), function () {
             rewindToBubble($bubble, text);
         }).appendTo($actions);
         return $bubble.append($actions);
@@ -169,7 +169,7 @@
     function makeAIBubble(html: string, rawText: string): JQuery {
         var $bubble  = $('<div>').addClass('ai-panel-bubble ai').html(html);
         var $actions = $('<div>').addClass('ai-bubble-actions');
-        bubbleActionBtn('fa-copy', SWIUtil.tr('Copy'), function () {
+        bubbleActionBtn('fa-copy', SWIUtil.tr2('Copy'), function () {
             copyToClipboard(toPlainText(rawText));
         }).appendTo($actions);
         return $bubble.append($actions);
@@ -206,13 +206,13 @@
     // ── Panel open / close ──────────────────────────────────────
     function openPanel(): void {
         $panel.addClass('ai-panel-open');
-        $toggle.addClass('ai-panel-open').attr('title', SWIUtil.tr('Hide AI Agent'));
+        $toggle.addClass('ai-panel-open').attr('title', SWIUtil.tr2('Hide AI Agent'));
         $('body').addClass('ai-panel-visible');
     }
 
     function closePanel(): void {
         $panel.removeClass('ai-panel-open');
-        $toggle.removeClass('ai-panel-open').attr('title', SWIUtil.tr('AI Agent'));
+        $toggle.removeClass('ai-panel-open').attr('title', SWIUtil.tr2('AI Agent'));
         $('body').removeClass('ai-panel-visible');
         closeDropdown();
     }
@@ -384,12 +384,12 @@
         $send.addClass('ai-panel-cancel-btn');
         $input.prop('disabled', true);
         $send.prop('disabled', false);
-        $send.attr('title', SWIUtil.tr('Cancel'));
+        $send.attr('title', SWIUtil.tr2('Cancel'));
         _runningDotIndex = 0;
-        $running.text(SWIUtil.tr('Running')).show();
+        $running.text(SWIUtil.tr2('Running')).show();
         _runningInterval = window.setInterval(function () {
             _runningDotIndex = (_runningDotIndex + 1) % _runningDots.length;
-            $running.text(SWIUtil.tr('Running') + _runningDots[_runningDotIndex]);
+            $running.text(SWIUtil.tr2('Running') + _runningDots[_runningDotIndex]);
         }, 400);
     }
 
@@ -400,7 +400,7 @@
         var $panel = $('<div>').addClass('ai-panel-thinking');
         $('<div>').addClass('ai-thinking-header')
             .html('<span class="dot"></span><span class="dot"></span><span class="dot"></span>')
-            .append($('<span>').addClass('ai-thinking-label').text(SWIUtil.tr('Thinking') + '...'))
+            .append($('<span>').addClass('ai-thinking-label').text(SWIUtil.tr2('Thinking') + '...'))
             .appendTo($panel);
         $('<div>').addClass('ai-thinking-steps').appendTo($panel);
         return $panel;
@@ -423,7 +423,7 @@
         var $wrap   = $('<div>').addClass('ai-panel-steps');
         var $list   = $('<div>').addClass('ai-steps-list').hide();
         steps.forEach(function (s) { $('<div>').addClass('ai-thinking-step').text(s).appendTo($list); });
-        var label   = SWIUtil.tr('Thought for {0} steps').replace('{0}', String(steps.length));
+        var label   = SWIUtil.tr2('Thought for {0} steps').replace('{0}', String(steps.length));
         var $toggle = $('<div>').addClass('ai-steps-toggle')
             .html('<i class="fas fa-caret-right"></i> ').append($('<span>').text(label));
         $toggle.on('click', function () {
@@ -480,7 +480,7 @@
             if ($currentTyping) { $currentTyping.remove(); $currentTyping = null; }
             _requesting = false;
             setSendMode();
-            const $cancelled = $('<div>').addClass('ai-panel-bubble ai cancelled').text(SWIUtil.tr('Request cancelled.'));
+            const $cancelled = $('<div>').addClass('ai-panel-bubble ai cancelled').text(SWIUtil.tr2('Request cancelled.'));
             $messages.append($cancelled);
             $messages[0].scrollTop = $messages[0].scrollHeight;
             return;
@@ -553,7 +553,7 @@
         _isFavorite = state;
         $favBtn.find('i').toggleClass('fas', state).toggleClass('far', !state);
         $favBtn.toggleClass('fav-active', state);
-        $favBtn.attr('title', state ? SWIUtil.tr('Remove from favorites') : SWIUtil.tr('Mark as favorite'));
+        $favBtn.attr('title', state ? SWIUtil.tr2('Remove from favorites') : SWIUtil.tr2('Mark as favorite'));
     }
     $favBtn.on('click', function () {
         if (!_panelChatFileName) return;
@@ -691,7 +691,7 @@
             });
 
             // Rename button
-            var $renameBtn = $('<button>').addClass('ai-chat-item-btn').attr('title', SWIUtil.tr('Rename'))
+            var $renameBtn = $('<button>').addClass('ai-chat-item-btn').attr('title', SWIUtil.tr2('Rename'))
                 .html('<i class="fa fa-pencil"></i>');
             $renameBtn.on('click', function (e: JQuery.ClickEvent) {
                 e.stopPropagation();
@@ -730,7 +730,7 @@
             });
 
             // Delete button
-            var $deleteBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-delete').attr('title', SWIUtil.tr('Delete'))
+            var $deleteBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-delete').attr('title', SWIUtil.tr2('Delete'))
                 .html('<i class="fa fa-trash"></i>');
             $deleteBtn.on('click', function (e: JQuery.ClickEvent) {
                 e.stopPropagation();
@@ -750,7 +750,7 @@
 
             // Favorite toggle button
             var $favItemBtn = $('<button>').addClass('ai-chat-item-btn ai-chat-item-btn-fav')
-                .attr('title', isFavorite ? SWIUtil.tr('Remove from favorites') : SWIUtil.tr('Mark as favorite'))
+                .attr('title', isFavorite ? SWIUtil.tr2('Remove from favorites') : SWIUtil.tr2('Mark as favorite'))
                 .html(isFavorite ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>');
             if (isFavorite) $favItemBtn.addClass('fav-active');
             $favItemBtn.on('click', function (e: JQuery.ClickEvent) {

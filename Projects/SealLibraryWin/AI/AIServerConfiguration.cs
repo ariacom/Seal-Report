@@ -16,7 +16,6 @@ using System.Drawing.Design;
 using DynamicTypeDescriptor;
 using Seal.Forms;
 using System.ComponentModel.Design;
-using System.ComponentModel;
 #endif
 
 namespace Seal.AI

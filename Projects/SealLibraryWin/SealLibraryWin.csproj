@@ -49,7 +49,7 @@
 		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.25.0" />
 		<PackageReference Include="Azure.Storage.Queues" Version="12.25.0" />
 		<PackageReference Include="FluentFTP" Version="54.1.1" />
-		<PackageReference Include="HtmlSanitizer" Version="9.0.892" />
+		<PackageReference Include="HtmlSanitizer" Version="9.1.923-beta" />
 		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.84.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
