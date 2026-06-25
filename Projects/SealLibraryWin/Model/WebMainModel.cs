@@ -17,23 +17,6 @@ namespace Seal.Model
         public Repository Repository;
 
         /// <summary>
-        /// True is the Web Report Designer is used
-        /// </summary>
-        public bool HasEditor { get; set; }
-
-        /// <summary>
-        /// True is JavaScripts are minified
-        /// </summary>
-        public bool HasMinifiedScripts()
-        {
-#if MINIFIED
-            return true;
-#else
-            return false;
-#endif
-        }
-
-        /// <summary>
         /// Root path of the Web Report Server
         /// </summary>
         public string ServerPath = "";

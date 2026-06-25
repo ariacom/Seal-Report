@@ -47,17 +47,6 @@ var SWIUtil;
         return $('<div/>').html(tr(reference)).text();
     }
     SWIUtil.tr2 = tr2;
-    function Newguid() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-    SWIUtil.Newguid = Newguid;
-    function GetReportName(path) {
-        return (path.split(dirSeparator).pop() ?? "").replace(".srex", "");
-    }
-    SWIUtil.GetReportName = GetReportName;
     function GetDirectoryName(path) {
         return path.substring(0, path.lastIndexOf(dirSeparator));
     }
@@ -107,103 +96,21 @@ var SWIUtil;
         }
     }
     SWIUtil.EnableButton = EnableButton;
-    function EnableLinkInput(link, enabled) {
-        if (!enabled)
-            link.attr('disabled', 'true');
-        else
-            link.removeAttr('disabled');
-    }
-    SWIUtil.EnableLinkInput = EnableLinkInput;
     function IsEnabled(control) {
         return !(control.attr('disabled') || control.prop('disabled'));
     }
     SWIUtil.IsEnabled = IsEnabled;
-    function ActivatePanel(button, panel, active) {
-        if (!active) {
-            button.removeClass("active");
-            panel.hide();
-        }
-        else {
-            button.addClass("active");
-            panel.show();
-        }
-    }
-    SWIUtil.ActivatePanel = ActivatePanel;
     function ShowHideControl(control, show) {
-        if (!show)
-            control.hide();
-        else
-            control.show();
+        control.toggle(show);
     }
     SWIUtil.ShowHideControl = ShowHideControl;
-    function GetOption(val, text, valSelected, icon) {
+    function GetOption(val, text, valSelected) {
         var $result = $("<option>").attr("value", val).html(text ? text : val);
-        if (icon)
-            $result.attr("data-icon", icon);
         if (val == valSelected)
             $result.attr("selected", "true");
         return $result;
     }
     SWIUtil.GetOption = GetOption;
-    function GetAnchorWithIcon(text, id, type, icon) {
-        var $a = $("<a/>").addClass("dropdown-item").text(text);
-        $a.html("<i class='" + icon + "'></i> " + $a.html());
-        if (id)
-            $a.prop("id", id);
-        if (type)
-            $a.prop("type", type);
-        return $a;
-    }
-    SWIUtil.GetAnchorWithIcon = GetAnchorWithIcon;
-    function UniqueName(name, array) {
-        var result = name;
-        var index = 1;
-        while (true) {
-            var found = false;
-            $.each(array, function (key, value) {
-                if (value.name == result || value.Name == result)
-                    found = true;
-            });
-            if (found)
-                result = name + index.toString();
-            else
-                break;
-            index++;
-        }
-        return result;
-    }
-    SWIUtil.UniqueName = UniqueName;
-    function GetAggregateName(aggr) {
-        if (aggr == 1)
-            return SWIUtil.tr2("Minimum of");
-        else if (aggr == 2)
-            return SWIUtil.tr2("Maximum of");
-        else if (aggr == 3)
-            return SWIUtil.tr2("Average of");
-        else if (aggr == 4)
-            return SWIUtil.tr2("Count of");
-        else if (aggr == 5)
-            return SWIUtil.tr2("Count distinct of");
-        return "";
-    }
-    SWIUtil.GetAggregateName = GetAggregateName;
-    // Bootstrap 5 responsive breakpoints (Bootstrap 5 dropped the .hidden-xs/.visible-* probe
-    // classes the old detection relied on, so resolve the breakpoint from the viewport width).
-    function FindBootstrapEnvironment() {
-        var width = window.innerWidth;
-        if (width < 576)
-            return 'xs';
-        if (width < 768)
-            return 'sm';
-        if (width < 992)
-            return 'md';
-        if (width < 1200)
-            return 'lg';
-        if (width < 1400)
-            return 'xl';
-        return 'xxl';
-    }
-    SWIUtil.FindBootstrapEnvironment = FindBootstrapEnvironment;
     function IsMobile() {
         return window.innerWidth < 768;
     }
@@ -450,11 +357,10 @@ var SWIUtil;
     }
     SWIUtil.RefreshMenu = RefreshMenu;
     function executeReport(main, path, viewGUID, outputGUID) {
-        _gateway.ExecuteReport(path, viewGUID, outputGUID);
-        setTimeout(function () {
-            if (main)
-                main.refreshMenus();
-        }, 1000);
+        if (main)
+            main.executeReport(path, viewGUID, outputGUID);
+        else
+            _gateway.ExecuteReport(path, viewGUID, outputGUID);
     }
     SWIUtil.executeReport = executeReport;
     function InitProfile(profile) {
@@ -572,35 +478,5 @@ var SWIUtil;
         });
     }
     SWIUtil.InitProfile = InitProfile;
-    function InitStandardInput(id, val, modif, handler, numeric) {
-        var $input = $(id);
-        $input.val(val);
-        $input.unbind("input keyup change").on("input keyup change", (event) => {
-            if (event.type == "change" && modif)
-                modif.setModified(true);
-            const target = event.target;
-            if (numeric)
-                target.value = target.value.replace(/[^0-9\.\,\r\n\-]/g, '');
-            handler(target.value);
-        });
-        return $input;
-    }
-    SWIUtil.InitStandardInput = InitStandardInput;
-    function InitBoolSelect(id, val, textTrue, textFalse, handler) {
-        var $select = $(id);
-        var valstr = val ? "1" : "0";
-        $select.selectpicker("destroy");
-        $select.empty();
-        $select.append(SWIUtil.GetOption("1", textTrue, valstr));
-        $select.append(SWIUtil.GetOption("0", textFalse, valstr));
-        $select.unbind("change").on("change", (event) => {
-            handler($(event.target).val() == "1");
-        });
-        // Initialise once after destroy: a 'refresh' here would run buildData() twice
-        // and double the rendered text/options (bootstrap-select 1.14-beta3).
-        $select.selectpicker();
-        return $select;
-    }
-    SWIUtil.InitBoolSelect = InitBoolSelect;
 })(SWIUtil || (SWIUtil = {}));
 //# sourceMappingURL=swi-utils.js.map

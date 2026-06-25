@@ -27,16 +27,6 @@
 		<AssemblyTitle>Seal Report Web Server</AssemblyTitle>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-		<DefineConstants>DEBUG;TRACE;</DefineConstants>
-		<PlatformTarget>x64</PlatformTarget>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-		<DefineConstants>MINIFIED</DefineConstants>
-		<PlatformTarget>x64</PlatformTarget>
-	</PropertyGroup>
-
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<DefineConstants></DefineConstants>
 		<PlatformTarget>x64</PlatformTarget>
@@ -95,7 +85,15 @@
     first-party helpers only; see sync-view-assets.ps1 for the exact scope.
   -->
   <Target Name="SyncViewAssets" BeforeTargets="Build">
-    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\sync-view-assets.ps1&quot;"
-          ContinueOnError="true" />
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\sync-view-assets.ps1&quot;" ContinueOnError="true" />
+  </Target>
+
+  <!--
+    Regenerate the per-file minified Web Interface scripts (wwwroot\js\swi-*.min.js) on Release
+    builds, after the TypeScript step has produced the swi-*.js. The minified files are what the
+    web shell loads outside the Development environment; see minify-swi.ps1 and Views\Home\Main.cshtml.
+  -->
+  <Target Name="MinifySwiScripts" AfterTargets="Build" Condition="'$(Configuration)'=='Release'">
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\minify-swi.ps1&quot;" ContinueOnError="true" />
   </Target>
 </Project>

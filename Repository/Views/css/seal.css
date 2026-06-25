@@ -353,6 +353,24 @@ body {
     margin-top: 8px;
 }
 
+/* Small fade + slide animation layered on top of Bootstrap's height collapse,
+   so the restrictions panel eases in/out instead of just appearing. Bootstrap
+   sets .collapsing while the height transition runs and .collapse.show when open. */
+#restrictions_div.collapse.show,
+#restrictions_div.collapsing {
+    transition: height .35s ease, opacity .35s ease, transform .35s ease;
+}
+
+#restrictions_div.collapsing {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
+#restrictions_div.collapse.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 @media print {
     .navbar {
         display: block;

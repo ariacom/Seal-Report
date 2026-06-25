@@ -99,6 +99,19 @@
             Execute a report in a new window when triggered from a Restrictions View
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.resolveShortcut(System.String,System.Int32@)">
+            <summary>
+            Resolves a shortcut file (.srln) to its target repository path.
+            Sets effectiveRight to min(shortcut folder right, target folder right).
+            Throws if the shortcut is broken, points to another shortcut, or the user has no right on either side.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.fillShortcut(Seal.Model.SWIFolder,System.String,Seal.Model.SWIFile)">
+            <summary>
+            Fills a SWIFile representing a shortcut (.srln) with the resolved target metadata for display.
+            Does not throw: a shortcut that cannot be resolved is flagged as broken.
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWILogin(System.String,System.String,System.String)">
             <summary>
             Start a session with the Web Report Server using the user name, password, token (may be optional according to the authentication configured on the server) and returns information of the logged user (SWIUserProfile).
@@ -169,9 +182,19 @@
             Delete files or reports from the repository.
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIEmptyRecycleBin(System.String)">
+            <summary>
+            Empty the current user's recycle bin: permanently delete all items it contains.
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIMoveFile(System.String,System.String,System.Boolean,System.String)">
             <summary>
             Move a file or a report in the repository.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWICreateShortcut(System.String,System.String,System.String)">
+            <summary>
+            Create a shortcut (.srln) in a folder referencing a source report or file.
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWExecuteReportToResult(System.String,System.String,System.String,System.String,System.String)">
@@ -199,6 +222,17 @@
             Mark/Unmark report as favorite.
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIRemoveRecentReport(System.String,System.String)">
+            <summary>
+            Remove a report from the recent reports list.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIRenameFavoriteReport(System.String,System.String,System.String)">
+            <summary>
+            Rename the personal display label of a favorite report. Only the entry stored in the
+            user's profile is changed; the underlying report file is not modified.
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWILogout(System.String)">
             <summary>
             Clear the current user session.
@@ -214,16 +248,6 @@
             Returns the profile information of the logged user.
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.HomeController.SWISetConfiguration(System.String)">
-            <summary>
-            Save the configuration of the Web Server (including security).
-            </summary>
-        </member>
-        <member name="M:SealWebServer.Controllers.HomeController.SWIGetConfiguration(System.String)">
-            <summary>
-            Returns the configuration of the web server (including security).
-            </summary>
-        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetCultures">
             <summary>
             Return the list of Cultures available
@@ -233,6 +257,103 @@
         <member name="M:SealWebServer.Controllers.HomeController.SWITranslate(System.String,System.String,System.String,System.String)">
             <summary>
             Translate a text either from the public translations or the repository translations. If the optional parameter instance is not empty, the repository translations are used.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIClearAIAgent(System.String)">
+            <summary>
+            Clears the AI Agent conversation history stored in the current session.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIRewindAIAgent(System.Int32,System.String)">
+            <summary>
+            Rewinds the current AI Agent conversation to just before the selected user turn:
+            removes that user message and everything after it from the session history.
+            Returns the removed user message text so the caller can re-populate the input box.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetAIAgentSamplePrompts(System.String)">
+            <summary>
+            Returns the list of sample prompts defined for the current session's AI Agent.
+            Falls back to the default agent configuration when no conversation has started yet.
+            </summary>
+        </member>
+        <member name="P:SealWebServer.Controllers.HomeController.CurrentAgentGUID">
+            <summary>
+            Returns the GUID of the currently active agent without creating an
+            <see cref="T:Seal.AI.AIAgent"/> instance.  Respects the user-selected GUID stored in
+            <see cref="F:SealWebServer.Controllers.HomeController.SessionAgentConfiguration"/>; falls back to the first agent in
+            the user's security group.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.GetAgentSubFolder(System.String)">
+            <summary>
+            Returns the full path to one of the _Agents/{GUID} sub-folders (Recents or Favorites)
+            for the current user and the currently active agent, creating it on demand.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SAISaveAgentChat(System.String,System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            Saves the current agent conversation (taken from the server session) to a
+            file in _Agents/{GUID}/Recents.  Old entries beyond <paramref name="maxRecents"/>
+            are pruned (oldest-first).
+            </summary>
+            <param name="name">Human-readable chat name used as the file name.</param>
+            <param name="infosJson">JSON-serialised array of StringPair objects (Type, Name, Description, Instance …).</param>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SAIGetAgentChats(System.String)">
+            <summary>
+            Returns the list of saved chat sessions from _Agents/{GUID}/Recents and
+            _Agents/{GUID}/Favorites for the current user and currently active agent.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SAIMarkAgentChatFavorite(System.String,System.String)">
+            <summary>
+            Toggles the favorite status of a saved chat session.
+            If the file is in Recents it is moved (copied) to Favorites, and vice-versa.
+            The original file is removed after a successful copy.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SAILoadAgentChat(System.String,System.Boolean,System.String)">
+            <summary>
+            Loads a chat-session file and returns its raw <see cref="T:Seal.Model.ChatSessionFile"/>
+            so the client can replay the conversation history.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SAIDeleteAgentChat(System.String,System.Boolean,System.String)">
+            <summary>
+            Deletes a saved chat session from Recents or Favorites.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SAIRenameAgentChat(System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Renames a saved chat session within its current folder (Recents or Favorites).
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetUserAgents(System.String)">
+            <summary>
+            Returns the list of AI Agents available to the current user (from their security group AgentGUIDs),
+            together with the currently selected agent GUID.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWISelectAgent(System.String,System.String)">
+            <summary>
+            Selects an AI Agent for the current session by GUID.
+            The GUID must belong to one of the agents allowed for the user.
+            Clears the active session agent so the next request picks up the new configuration.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetAIAgentResponse(System.String,System.String)">
+            <summary>
+            Sends a user message to the AI Agent and returns the AI response.
+            An <see cref="T:Seal.AI.AIAgent"/> instance is maintained in the session (keyed by
+            <see cref="F:SealWebServer.Controllers.HomeController.SessionAgent"/>) so that follow-up questions retain context.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWICancelAIAgentResponse(System.String)">
+            <summary>
+            Signals the in-progress AI chat call for this session to stop at the next safe
+            iteration boundary (i.e. sets the <see cref="P:Seal.AI.ICancelOperation.Cancel"/> flag that
+            <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> checks between tool-call iterations).
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetVersions">

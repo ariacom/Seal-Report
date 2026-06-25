@@ -339,7 +339,7 @@
         <member name="F:Seal.AI.AIToolCall.CancelOperation">
             <summary>
             Optional cancellation source propagated from the outer
-            <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> loop.  Execution scripts should
+            <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> loop.  Execution scripts should
             poll <c>CancelOperation?.Cancel</c> inside any long-running loop
             and abort early when it is <c>true</c>.
             </summary>
@@ -380,6 +380,15 @@
             <summary>
             Human-readable description of what the tool does, shown to the AI model to help
             it decide when to call the tool.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIToolConfiguration.ProgressLabel">
+            <summary>
+            Friendly, end-user-facing text shown in the chat "thinking" panel while this tool runs,
+            instead of the raw tool name. Supports <c>{param}</c> placeholders that are replaced by the
+            matching argument values of the current call (e.g. <c>Getting columns from table {table}</c>).
+            Translatable via the repository <c>AIToolProgress</c> context. Leave empty to fall back to a
+            generic label built from the tool name.
             </summary>
         </member>
         <member name="P:Seal.AI.AIToolConfiguration.IsEnabled">
@@ -446,6 +455,21 @@
             Returns the output devices the current security context is allowed to use with the AI tools.
             When no security context is set, or the context defines no restriction, all repository devices are returned.
             Restrictions are defined through the OutputDeviceGUIDs of the user's security groups.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolConfiguration.GetProgressLabel(Seal.AI.AIToolCall,System.String)">
+            <summary>
+            Builds the user-facing "thinking" label shown in the chat panel while this tool runs:
+            the translated <see cref="P:Seal.AI.AIToolConfiguration.ProgressLabel"/> with any <c>{param}</c> placeholders replaced by
+            the matching argument values from <paramref name="toolCall"/>. Returns <c>null</c> when no
+            label is configured so the caller can fall back to a generic label.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolConfiguration.SubstituteArguments(System.String,System.String)">
+            <summary>
+            Replaces every <c>{name}</c> placeholder in <paramref name="template"/> with the value of the
+            matching property in the call's JSON <paramref name="argumentsJson"/>. Unknown or missing
+            arguments are replaced by an empty string.
             </summary>
         </member>
         <member name="M:Seal.AI.AIToolConfiguration.ToAITool">
@@ -615,6 +639,13 @@
             whether to load the skill.
             </summary>
         </member>
+        <member name="P:Seal.AI.AISkillConfiguration.ProgressLabel">
+            <summary>
+            Friendly, end-user-facing text shown in the chat "thinking" panel while this skill is being
+            loaded, instead of the raw skill name. Translatable via the repository <c>AIToolProgress</c>
+            context. Leave empty to fall back to a generic label built from the skill name.
+            </summary>
+        </member>
         <member name="P:Seal.AI.AISkillConfiguration.IsEnabled">
             <summary>
             When <c>false</c>, this skill is excluded from all agents without being deleted.
@@ -638,6 +669,14 @@
             Returns an empty string when no instructions file is configured.
             </summary>
         </member>
+        <member name="M:Seal.AI.AISkillConfiguration.GetProgressLabel(System.String)">
+            <summary>
+            Builds the user-facing "thinking" label shown in the chat panel while this skill loads:
+            the translated <see cref="P:Seal.AI.AISkillConfiguration.ProgressLabel"/> in the given <paramref name="culture"/> (the web
+            user's session locale) when supplied, otherwise the repository's current culture. Returns
+            <c>null</c> when no label is configured so the caller can fall back to a generic label.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AISkillConfiguration.GetToolConfigurations">
             <summary>
             Returns the list of enabled <see cref="T:Seal.AI.AIToolConfiguration"/> instances activated by this skill.
@@ -647,7 +686,7 @@
             <summary>
             Stateful AI agent that owns a conversation history and delegates to
             an <see cref="T:Seal.AI.IAIProvider"/> for all model calls.
-            Initialise once per session or per conversation; call <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/>
+            Initialise once per session or per conversation; call <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/>
             for each user turn.
             </summary>
         </member>
@@ -687,7 +726,7 @@
             Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
+        <member name="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})">
             <summary>
             Appends a user message to the conversation history, calls the AI using
             the tools scoped to this agent (via <see cref="M:Seal.AI.AIAgentConfiguration.GetToolConfigurations"/>)
@@ -732,7 +771,7 @@
         </member>
         <member name="M:Seal.AI.AIAgent.ChatHtml(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)">
             <summary>
-            Same as <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> but returns the reply sanitized as safe HTML.
+            Same as <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> but returns the reply sanitized as safe HTML.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.ChatSimple(System.String)">
@@ -757,7 +796,7 @@
             Replaces the leading system message in <see cref="P:Seal.AI.AIAgent.Messages"/> with
             <paramref name="prompt"/>.  If <paramref name="prompt"/> is null or
             whitespace the existing system message (if any) is simply removed.
-            Call this before <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32)"/> to inject a parameter-driven system
+            Call this before <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> to inject a parameter-driven system
             prompt that overrides the one from <see cref="P:Seal.AI.AIAgentConfiguration.EffectiveSystemPrompt"/>.
             </summary>
         </member>
@@ -787,6 +826,13 @@
         <member name="F:Seal.AI.AIAgent.SecurityContext">
             <summary>
             Current security user of the agent
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIAgent.Culture">
+            <summary>
+            Two-letter ISO culture code (e.g. "fr") used to translate the progress ("thinking") labels
+            in the caller's locale. Set it per request from the session culture before calling
+            <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/>; leave null to use the repository's current culture.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.ToSessionFile(System.Collections.Generic.List{Seal.Model.StringPair})">
@@ -10679,16 +10725,6 @@
         <member name="F:Seal.Model.WebMainModel.Repository">
             <summary>
             Current Repository
-            </summary>
-        </member>
-        <member name="P:Seal.Model.WebMainModel.HasEditor">
-            <summary>
-            True is the Web Report Designer is used
-            </summary>
-        </member>
-        <member name="M:Seal.Model.WebMainModel.HasMinifiedScripts">
-            <summary>
-            True is JavaScripts are minified
             </summary>
         </member>
         <member name="F:Seal.Model.WebMainModel.ServerPath">

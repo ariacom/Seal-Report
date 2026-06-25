@@ -231,6 +231,13 @@ class SWIGateway {
             .fail(function (xhr, status, error) { if (status !== 'abort')
             SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    GetAIAgentProgress(callback) {
+        // Best-effort polling: silently ignore failures (the request may have just finished).
+        $.post(_server + "SWIGetAIAgentProgress", {})
+            .done(function (data) { if (data && data.messages)
+            callback(data); })
+            .fail(function () { });
+    }
     GetAIAgentSamplePrompts(callback, errorcb) {
         $.post(_server + "SWIGetAIAgentSamplePrompts", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

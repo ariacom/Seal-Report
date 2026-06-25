@@ -32,6 +32,7 @@ namespace Seal.AI
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Description").SetIsBrowsable(true);
+                GetProperty("ProgressLabel").SetIsBrowsable(true);
                 GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("ParametersSchema").SetIsBrowsable(true);
                 GetProperty("ExecutionScriptFile").SetIsBrowsable(true);
@@ -69,6 +70,19 @@ namespace Seal.AI
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string Description { get; set; }
+
+        /// <summary>
+        /// Friendly, end-user-facing text shown in the chat "thinking" panel while this tool runs,
+        /// instead of the raw tool name. Supports <c>{param}</c> placeholders that are replaced by the
+        /// matching argument values of the current call (e.g. <c>Getting columns from table {table}</c>).
+        /// Translatable via the repository <c>AIToolProgress</c> context. Leave empty to fall back to a
+        /// generic label built from the tool name.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Progress text"), Description("Friendly text shown to the user in the chat 'thinking' panel while this tool runs, instead of the raw tool name. Supports {param} placeholders filled from the call arguments, e.g. 'Getting columns from table {table}'. Leave empty to show a generic label."), Id(3, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string ProgressLabel { get; set; }
 
         /// <summary>
         /// When <c>false</c>, this tool is excluded from all agent calls without being deleted.
@@ -184,6 +198,43 @@ namespace Seal.AI
             var devices = Repository.Instance.Devices;
             var user = CurrentToolCall?.SecurityContext;
             return user == null ? devices : devices.Where(d => user.CanAccessDevice(d));
+        }
+
+        /// <summary>
+        /// Builds the user-facing "thinking" label shown in the chat panel while this tool runs:
+        /// the translated <see cref="ProgressLabel"/> with any <c>{param}</c> placeholders replaced by
+        /// the matching argument values from <paramref name="toolCall"/>. Returns <c>null</c> when no
+        /// label is configured so the caller can fall back to a generic label.
+        /// </summary>
+        public string GetProgressLabel(AIToolCall toolCall, string culture = null)
+        {
+            if (string.IsNullOrWhiteSpace(ProgressLabel)) return null;
+            // Translate with the caller's culture (the web user's session locale) when supplied,
+            // otherwise fall back to the repository's current culture.
+            var label = string.IsNullOrEmpty(culture)
+                ? Repository.Instance.RepositoryTranslate("AIToolProgress", "*", ProgressLabel)
+                : Repository.Instance.RepositoryTranslate(culture, "AIToolProgress", "*", ProgressLabel);
+            return SubstituteArguments(label, toolCall?.Arguments).Trim();
+        }
+
+        /// <summary>
+        /// Replaces every <c>{name}</c> placeholder in <paramref name="template"/> with the value of the
+        /// matching property in the call's JSON <paramref name="argumentsJson"/>. Unknown or missing
+        /// arguments are replaced by an empty string.
+        /// </summary>
+        private static string SubstituteArguments(string template, string argumentsJson)
+        {
+            if (string.IsNullOrEmpty(template) || template.IndexOf('{') < 0) return template ?? string.Empty;
+            Newtonsoft.Json.Linq.JObject args = null;
+            if (!string.IsNullOrWhiteSpace(argumentsJson))
+            {
+                try { args = Newtonsoft.Json.Linq.JObject.Parse(argumentsJson); } catch { }
+            }
+            return System.Text.RegularExpressions.Regex.Replace(template, @"\{(\w+)\}", m =>
+            {
+                var val = args?[m.Groups[1].Value];
+                return val != null ? val.ToString() : string.Empty;
+            });
         }
 
         /// <summary>

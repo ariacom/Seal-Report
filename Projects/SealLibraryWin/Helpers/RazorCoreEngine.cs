@@ -145,6 +145,7 @@ namespace Seal.Helpers
                         b.AddUsing("System");
                         b.AddUsing("System.Collections.Generic");
                         b.AddUsing("System.Linq");
+                        b.AddUsing("System.Threading.Tasks");
 
                         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                         foreach (var a in AppDomain.CurrentDomain.GetAssemblies())

@@ -13,7 +13,6 @@ var $propertiesPanel;
 var $elementDropDown;
 var _gateway;
 var _main;
-var _editor;
 $(document).ready(function () {
     _gateway = new SWIGateway();
     _main = new SWIMain();
@@ -245,15 +244,9 @@ class SWIMain {
             $("#nav_button").attr("title", "");
             $("#nav_button").addClass("nopointer");
         }
-        if (_editor) {
-            _editor.brand();
-            _editor.agentMenu();
-        }
         //Refresh
         $("#refresh-nav-item").unbind("click").on("click", function () {
             _main.ReloadReportsTable();
-            if (_editor)
-                _editor.agentMenu();
         });
         //Reload and execute
         $("#reload-nav-item").unbind("click").on("click", function () {
@@ -380,74 +373,32 @@ class SWIMain {
             if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
-            _main._clipboard = [];
-            $(".report-checkbox:checked").each(function (key, value) {
-                _main._clipboard[key] = $(value).data("path");
-            });
-            _main._clipboardCut = false;
-            _main.enableControls();
-            SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or files(s) copied in the clipboard"), 5000);
+            _main.setClipboard(false, "report(s) or files(s) copied in the clipboard");
         });
         //Cut
         $("#report-cut-lightbutton").unbind("click").on("click", (event) => {
             if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
-            _main._clipboard = [];
-            $(".report-checkbox:checked").each(function (key, value) {
-                _main._clipboard[key] = $(value).data("path");
-            });
-            _main._clipboardCut = true;
-            _main.enableControls();
-            SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or file(s) cut in the clipboard"), 5000);
+            _main.setClipboard(true, "report(s) or file(s) cut in the clipboard");
         });
         //Paste
         $("#report-paste-lightbutton").unbind("click").on("click", (event) => {
             if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
-            if (_main._clipboard.length > 0) {
-                SWIUtil.ShowModal($waitDialog);
-                _main._clipboard.forEach(function (value, index) {
-                    var newName = value.split(dirSeparator).pop();
-                    var folder = _main._folder.path;
-                    var destination = (folder != dirSeparator ? folder : "") + dirSeparator + newName;
-                    _gateway.MoveFile(value, destination, !_main._clipboardCut, function () {
-                        if (index == _main._clipboard.length - 1) {
-                            setTimeout(function () {
-                                _main.ReloadReportsTable();
-                                _main.refreshMenus();
-                                SWIUtil.HideModal($waitDialog);
-                                SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("report(s) or file(s) processed"), 5000);
-                            }, 2000);
-                        }
-                    });
-                });
-            }
+            _main.pasteClipboard("report(s) or file(s) processed", function (source, destination, cb) {
+                _gateway.MoveFile(source, destination, !_main._clipboardCut, cb);
+            });
         });
         //Paste as shortcut
         $("#report-shortcut-lightbutton").unbind("click").on("click", (event) => {
             if (!SWIUtil.IsEnabled($(event.currentTarget)))
                 return;
             $outputPanel.hide();
-            if (_main._clipboard.length > 0) {
-                SWIUtil.ShowModal($waitDialog);
-                _main._clipboard.forEach(function (value, index) {
-                    var newName = value.split(dirSeparator).pop();
-                    var folder = _main._folder.path;
-                    var destination = (folder != dirSeparator ? folder : "") + dirSeparator + newName;
-                    _gateway.CreateShortcut(value, destination, function () {
-                        if (index == _main._clipboard.length - 1) {
-                            setTimeout(function () {
-                                _main.ReloadReportsTable();
-                                _main.refreshMenus();
-                                SWIUtil.HideModal($waitDialog);
-                                SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr("shortcut(s) created"), 5000);
-                            }, 2000);
-                        }
-                    });
-                });
-            }
+            _main.pasteClipboard("shortcut(s) created", function (source, destination, cb) {
+                _gateway.CreateShortcut(source, destination, cb);
+            });
         });
         //Upload
         $("#report-upload-lightbutton").unbind("click").on("click", function (e) {
@@ -534,7 +485,6 @@ class SWIMain {
             $("#security-code-message").text(data.message);
         SWIUtil.HideModal($waitDialog);
         $("body").children(".modal-backdrop").remove();
-        $securityModal.show();
         SWIUtil.ShowModal($securityModal);
     }
     login() {
@@ -602,7 +552,6 @@ class SWIMain {
         $outputPanel.hide();
         SWIUtil.HideTooltip($('#back-to-top'));
         SWIUtil.EnableButton($("#report-edit-lightbutton"), right >= folderRightEdit && !files);
-        SWIUtil.ShowHideControl($("#report-edit-lightbutton"), hasEditor);
         const checked = $(".report-checkbox:checked").length;
         SWIUtil.EnableButton($("#report-rename-lightbutton"), checked == 1 && right >= folderRightEdit);
         SWIUtil.EnableButton($("#report-delete-lightbutton"), checked != 0 && right >= folderRightEdit);
@@ -665,11 +614,40 @@ class SWIMain {
             SWIUtil.StopSpinning();
         });
     }
+    //Snapshot the checked reports/files into the clipboard (copy or cut).
+    setClipboard(cut, message) {
+        _main._clipboard = [];
+        $(".report-checkbox:checked").each(function (key, value) {
+            _main._clipboard[key] = $(value).data("path");
+        });
+        _main._clipboardCut = cut;
+        _main.enableControls();
+        SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr(message), 5000);
+    }
+    //Apply a per-item operation (move/copy or shortcut) to every clipboard entry.
+    pasteClipboard(message, op) {
+        if (_main._clipboard.length == 0)
+            return;
+        SWIUtil.ShowModal($waitDialog);
+        _main._clipboard.forEach(function (value, index) {
+            var newName = value.split(dirSeparator).pop();
+            var folder = _main._folder.path;
+            var destination = (folder != dirSeparator ? folder : "") + dirSeparator + newName;
+            op(value, destination, function () {
+                if (index == _main._clipboard.length - 1) {
+                    setTimeout(function () {
+                        _main.ReloadReportsTable();
+                        _main.refreshMenus();
+                        SWIUtil.HideModal($waitDialog);
+                        SWIUtil.ShowMessage("alert-success", _main._clipboard.length.toString() + " " + SWIUtil.tr(message), 5000);
+                    }, 2000);
+                }
+            });
+        });
+    }
     refreshMenus() {
         setTimeout(function () {
             SWIUtil.RefreshMenu(_main);
-            if (_editor)
-                _editor.agentMenu();
         }, 1000);
     }
     executeReport(path, viewGUID, outputGUID) {
@@ -758,11 +736,6 @@ class SWIMain {
                 var button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Views and outputs")).addClass("btn btn-secondary btn-table report-output");
                 button.append($("<span class='fa-solid fa-table-list'></span>"));
                 $td.append(button);
-                if (file.right >= folderRightSchedule && hasEditor) {
-                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Edit report")).addClass("btn btn-secondary btn-table report-edit d-none d-sm-inline-block");
-                    button.append($("<span class='fa-solid fa-pencil'></span>"));
-                    $td.append(button);
-                }
                 if (_main._folder && _main._folder.reportdownload) {
                     button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-secondary btn-table report-download d-none d-sm-inline-block");
                     button.append($("<span class='fa-solid fa-circle-down'></span>"));
@@ -913,8 +886,6 @@ class SWIMain {
         $("#file-table-view").scroll(function () {
             $outputPanel.hide();
         });
-        if (_editor)
-            _editor.init();
         var isMobile = SWIUtil.IsMobile();
         new DataTable($('#file-table'), {
             bSort: true,

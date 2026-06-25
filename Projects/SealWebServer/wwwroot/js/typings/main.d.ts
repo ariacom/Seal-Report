@@ -31,9 +31,3 @@ interface JQuery {
     dataTable(): any;
 }
 
-
-interface ReportEditorInterface {
-    brand(): void;
-    init(): void;
-    agentMenu(): void;
-}

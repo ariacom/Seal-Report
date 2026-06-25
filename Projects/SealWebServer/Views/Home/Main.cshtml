@@ -2,6 +2,8 @@
 @using Seal.Helpers
 @using SealWebServer.Controllers
 @using SealWebServer.Models.Configuration
+@using Microsoft.Extensions.Hosting
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnv
 @{
     WebMainModel model = Model as WebMainModel;
     Repository repository = model.Repository;
@@ -144,7 +146,6 @@
             <div id="file-view" style="padding-right:0px">
                 <!-- Report Menus -->
                 <div id="file-menu" class="lighticon-menu d-none d-sm-block" style="margin-bottom:10px">
-                    <div id="report-edit-lightbutton" class="lightbutton report-edit" title="@repository.TranslateWeb("New")"><span class="lightbutton-icon fa fa-file-o"></span></div>
                     <div id="report-cut-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Cut")"><span class="lightbutton-icon fa fa-cut"></span></div>
                     <div id="report-copy-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Copy")"><span class="lightbutton-icon fa fa-copy"></span></div>
                     <div id="report-paste-lightbutton" class="lightbutton" title="@repository.TranslateWeb("Paste")"><span class="lightbutton-icon fa fa-paste"></span></div>
@@ -179,11 +180,6 @@
         <button type='button' id="output-panel-close">&times;</button>
         <div id="output-panel-content"></div>
     </div>
-
-    @if (model.HasEditor)
-    {
-        @await Html.PartialAsync("~/Views/Home/MainEditor.cshtml")
-    }
 
     <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
         <div>
@@ -257,14 +253,6 @@
             <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";
             </text>
         }
-        var opers = [];
-        @if (model.HasEditor)
-        {
-            foreach (var oper in Enum.GetValues(typeof(Operator)))
-            {
-                <text>opers[@((int)oper)] = "@Helper.ToJS(repository.TranslateWebJS(Helper.GetEnumDescription(typeof(Operator), oper)))";</text>
-            }
-        }
 
         //datatables defaults
         $.fn.dataTable.moment(shortDateFormat);
@@ -312,11 +300,12 @@
 
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
-
-        var hasEditor = @Helper.ToJS(model.HasEditor);
     </script>
 
-    @if (!model.HasMinifiedScripts())
+    @* Web Interface scripts: load order matters (swi-utils -> swi-gateway -> swi-main -> swi-ai).
+       Development serves the readable sources; other environments serve the per-file minified
+       swi-*.min.js produced at build time by minify-swi.ps1 (uglify-js). *@
+    @if (HostingEnv.IsDevelopment())
     {
         <script src="~/js/swi-utils.js"></script>
         <script src="~/js/swi-gateway.js"></script>
@@ -325,7 +314,10 @@
     }
     else
     {
-        <script src="~/js/swi.js"></script>
+        <script src="~/js/swi-utils.min.js"></script>
+        <script src="~/js/swi-gateway.min.js"></script>
+        <script src="~/js/swi-main.min.js"></script>
+        <script src="~/js/swi-ai.min.js"></script>
     }
 
     @Html.Raw(RazorHelper.CompileExecute(repository.Configuration.WebMainAdditionalScript, model))

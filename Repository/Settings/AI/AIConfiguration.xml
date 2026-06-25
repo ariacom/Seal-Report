@@ -5,6 +5,7 @@
     <AIToolConfiguration>
       <GUID>975395e7-8f7f-47a8-84a7-dbf7bb3bec44</GUID>
       <Name>database_execute_query</Name>
+      <ProgressLabel>Running a database query</ProgressLabel>
       <Description>Executes a SQL SELECT statement against a data source and returns up to 50 rows as a tab-separated table.
 Use it to validate generated SQL, check sample data, debug wrong results, or preview table contents.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
@@ -14,6 +15,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
     <AIToolConfiguration>
       <GUID>f56c62db-9a53-413e-8df4-6dde496adff4</GUID>
       <Name>database_get_columns</Name>
+      <ProgressLabel>Getting columns of table {table}</ProgressLabel>
       <Description>Returns the column names and data types of a table.
 Use it to confirm column names before generating report elements, or to discover schema when scanning a data source.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
@@ -23,6 +25,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
     <AIToolConfiguration>
       <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
       <Name>database_get_sample_values</Name>
+      <ProgressLabel>Getting sample values of {table}.{column}</ProgressLabel>
       <Description>Returns up to 50 distinct non-null values from the given column.
 Use it to discover what enum or category values exist when building restriction filters or display labels.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
@@ -32,6 +35,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
     <AIToolConfiguration>
       <GUID>84ddf1ed-6473-488a-90a4-2dee3205e7ea</GUID>
       <Name>database_count_rows</Name>
+      <ProgressLabel>Counting rows of table {table}</ProgressLabel>
       <Description>Returns the row count of a table, optionally filtered by a WHERE clause.
 Use it to decide whether TopRecords makes sense or to check the cardinality of a filter before applying it.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
@@ -41,6 +45,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
     <AIToolConfiguration>
       <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
       <Name>datasource_list</Name>
+      <ProgressLabel>Listing data sources</ProgressLabel>
       <Description>Lists all configured data sources with their GUID, database type, available connections (each with its GUID), and tables.
 Call this first to discover which sources, connections, and tables are available before querying or inspecting them.
 Use the returned GUIDs with datasource_guid and connection_guid parameters in database tools.</Description>
@@ -49,6 +54,7 @@ Use the returned GUIDs with datasource_guid and connection_guid parameters in da
     <AIToolConfiguration>
       <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
       <Name>datasource_get_detail</Name>
+      <ProgressLabel>Inspecting data source {name}</ProgressLabel>
       <Description>Returns a structured summary of a data source:
 connection info (no credentials), tables with their columns and types, and joins between tables.
 Use this to understand the schema and relationships before writing SQL.</Description>
@@ -58,6 +64,7 @@ Use this to understand the schema and relationships before writing SQL.</Descrip
     <AIToolConfiguration>
       <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
       <Name>report_get_detail</Name>
+      <ProgressLabel>Reading report {path}</ProgressLabel>
       <Description>Returns full details of a report:
 display name, description, and for each model its source, elements (columns with pivot position and aggregate), and restrictions (with prompt and required flags).
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
@@ -67,6 +74,7 @@ Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.sr
     <AIToolConfiguration>
       <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
       <Name>report_get_xml</Name>
+      <ProgressLabel>Reading report definition {path}</ProgressLabel>
       <Description>Returns the raw XML content of a report file.
 Use this to inspect the full report definition or to obtain a template before modifying and saving it with report_create_from_sql.
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
@@ -76,6 +84,7 @@ Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.sr
     <AIToolConfiguration>
       <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
       <Name>report_check_model_type</Name>
+      <ProgressLabel>Analyzing the report request</ProgressLabel>
       <Description>Analyses a report request and returns whether it requires a SQL model (report_create_from_sql) or a metadata model (report_create_from_xml), with the reasoning.
 Always call this before creating any report.</Description>
       <ParametersSchema>{"type":"object","properties":{"request":{"type":"string","description":"The user's report request, exactly as stated."},"source_guid":{"type":"string","description":"GUID of the target data source, as returned by datasource_list. Pass it so a NoSQL source is detected and routed to report_create_from_xml. Omit to analyse the request text only."}},"required":["request"]}</ParametersSchema>
@@ -84,6 +93,7 @@ Always call this before creating any report.</Description>
     <AIToolConfiguration>
       <GUID>aa2baa07-6828-4f6c-9640-466feb5e1b22</GUID>
       <Name>report_create_from_sql</Name>
+      <ProgressLabel>Creating report {display_name}</ProgressLabel>
       <Description>Creates a new report with a single SQL model using the Seal Report API.
 The SQL is executed at runtime against the chosen data source; columns are resolved dynamically so no metadata GUIDs are required.
 Use datasource_get_detail to obtain the correct table and column names before writing the SQL.</Description>
@@ -93,6 +103,7 @@ Use datasource_get_detail to obtain the correct table and column names before wr
     <AIToolConfiguration>
       <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
       <Name>report_create_from_xml</Name>
+      <ProgressLabel>Creating report {path}</ProgressLabel>
       <Description>Creates a new metadata report by writing a complete XML definition.
 Use for reports built on the data source's defined metadata columns (tabular, pivot, search reports).
 Before calling this tool, set &lt;MetaSourceGUID&gt; to the GUID from datasource_list and every &lt;MetaColumnGUID&gt; to the matching column GUID from datasource_get_detail.
@@ -104,6 +115,7 @@ For SQL-based reports use report_create_from_sql instead.</Description>
     <AIToolConfiguration>
       <GUID>e8f1a2b3-c4d5-4e6f-9a0b-1c2d3e4f5a6b</GUID>
       <Name>device_list</Name>
+      <ProgressLabel>Listing output devices</ProgressLabel>
       <Description>Lists the output devices the current user is allowed to use, each with its name, type (email, ftp, or folder) and GUID.
 Call this before report_configure_output when several devices may exist or the user must choose where the output is delivered, then pass the chosen device_name (with a matching device_type) to report_configure_output.
 Read-only.</Description>
@@ -112,6 +124,7 @@ Read-only.</Description>
     <AIToolConfiguration>
       <GUID>f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c</GUID>
       <Name>report_configure_output</Name>
+      <ProgressLabel>Configuring output of report {path}</ProgressLabel>
       <Description>Configures or removes an output on an existing report.
 Use action=configure (default) to add or update a delivery output; device_type selects the delivery method:
 folder (default), email, or ftp.
@@ -127,6 +140,7 @@ Always call this before report_configure_schedule.</Description>
     <AIToolConfiguration>
       <GUID>a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d</GUID>
       <Name>report_configure_schedule</Name>
+      <ProgressLabel>Configuring schedule of report {path}</ProgressLabel>
       <Description>Adds, updates, or removes a recurring or one-time schedule on an existing report's output.
 Use action=configure (default) to add a new schedule, or pass schedule_guid to update an existing one.
 Use action=delete with schedule_guid (preferred) or schedule_name to remove a specific schedule — never use file_manage for this, and never omit both targets.
@@ -142,6 +156,7 @@ Use when the user wants automated execution:
     <AIToolConfiguration>
       <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
       <Name>report_execute_get_data</Name>
+      <ProgressLabel>Executing report {path}</ProgressLabel>
       <Description>Executes a report and returns its result tables as structured JSON data, followed by the execution messages.
 Use it to fetch the actual data produced by an existing report for analysis, answering data questions, generating a summary, or diagnosing execution issues.
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex).
@@ -152,6 +167,7 @@ Optionally pass model_name to restrict the output to a single model.</Descriptio
     <AIToolConfiguration>
       <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
       <Name>file_list</Name>
+      <ProgressLabel>Browsing files</ProgressLabel>
       <Description>Browses files in the folders the current user has access to, across the Reports and Personal roots.
 Returns relative paths in the same format file_manage expects (e.g. Reports\Sales\monthly.srex, Personal\user\notes.txt) together with size and last-modified date.
 Lists every file type, not only reports, and includes files-only folders.
@@ -163,6 +179,7 @@ Optionally filter by sub-folder name(s) via 'folders', or by file extension via 
     <AIToolConfiguration>
       <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
       <Name>file_manage</Name>
+      <ProgressLabel>Managing file {path}</ProgressLabel>
       <Description>File-level operations on a file in the repository:
 delete, rename (new filename in the same folder), move (to a different folder or root), or copy (to a new path).
 Works on any repository file (reports .srex, etc.).
@@ -177,6 +194,7 @@ Always call file_list first to discover and confirm the exact source path before
     <AIToolConfiguration>
       <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
       <Name>report_list</Name>
+      <ProgressLabel>Listing reports</ProgressLabel>
       <Description>Lists reports accessible to the current web user.
 Only folders with access rights are browsed — hidden folders (right=0) and files-only folders are excluded — and Personal folders are included when the user has personal folder rights.
 Display paths use "Reports\..." or "Personal\username\..." format compatible with other report tools.
@@ -187,6 +205,7 @@ Pass an optional list of sub-folder names to restrict the scan; omit or pass [] 
     <AIToolConfiguration>
       <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
       <Name>get_current_folder</Name>
+      <ProgressLabel>Getting the current folder</ProgressLabel>
       <Description>Returns the user's current working folder — the folder the user is currently browsing in the web interface — in the display-path format used by report_list and the report creation tools (e.g. "Reports\Sales").
 Also lists all folders where the user has write access.
 Always call this tool fresh every time you need the current folder; never reuse a result from earlier in the conversation, as the user may have navigated to a different folder since then.</Description>
@@ -196,6 +215,7 @@ Always call this tool fresh every time you need the current folder; never reuse 
     <AIToolConfiguration>
       <GUID>a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d</GUID>
       <Name>log_read</Name>
+      <ProgressLabel>Reading {type} logs</ProgressLabel>
       <Description>Reads Seal Report log files for the given date.
 Type must be one of:
 events (server start/stop, authentication, errors), executions (report execution traces), schedules (scheduler runs).
@@ -208,6 +228,7 @@ Returns up to max_lines lines (default 200).</Description>
     <AIToolConfiguration>
       <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
       <Name>view_get_parameters</Name>
+      <ProgressLabel>Reading view parameters of {path}</ProgressLabel>
       <Description>Lists the configurable rendering parameters of a report's view (e.g. the "Chart JS" view), with each parameter's type, current value, default, allowed values and description.
 Call with only 'path' to list every view in the report; then call again with view_name (e.g. "Chart JS") to see that view's parameters.
 Use this before report_configure_view to discover valid parameter names and values.
@@ -218,6 +239,7 @@ Read-only.</Description>
     <AIToolConfiguration>
       <GUID>2a3b4c5d-6e7f-4890-9a1b-2c3d4e5f6a7b</GUID>
       <Name>report_configure_view</Name>
+      <ProgressLabel>Configuring view of report {path}</ProgressLabel>
       <Description>Sets one or more rendering parameters on an existing report's view, in place, without rewriting the report.
 Use it to change how a view renders - for example to make a Chart JS view horizontal and stacked (chartjs_bar_horizontal=True, chartjs_bar_stacked=True), hide a legend, set a chart title, or switch a pie to a doughnut.
 Always call view_get_parameters first to discover valid parameter names and allowed values for the target view.
@@ -231,6 +253,7 @@ For stacked bar charts the model must have a series Splitter (a Column element),
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6072</GUID>
       <Name>build-report-from-metadata</Name>
+      <ProgressLabel>Preparing to build a report from metadata</ProgressLabel>
       <Description>Create a report using the data source's metadata columns (the default report type):
 lists, search reports, totals/counts/averages grouped by dimensions, date-filtered and pivot/cross-tab reports, with optional charts.
 Builds the report XML and creates it.
@@ -250,6 +273,7 @@ For a MongoDB/NoSQL source, load build-nosql-report instead.</Description>
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6071</GUID>
       <Name>build-report-from-sql</Name>
+      <ProgressLabel>Preparing to build a report from SQL</ProgressLabel>
       <Description>Create a new report backed by a raw SQL query:
 explore the data source, confirm the schema, validate the SQL, then create the report.
 Load this only when the user supplies SQL or the query needs window functions, CTEs, subqueries, UNION, or joins not defined in the source metadata.
@@ -268,6 +292,7 @@ For ordinary aggregation/grouping/filtering, use build-report-from-metadata inst
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6073</GUID>
       <Name>build-nosql-report</Name>
+      <ProgressLabel>Preparing to build a NoSQL report</ProgressLabel>
       <Description>Create a report on a NoSQL / MongoDB data source (one marked "/ NoSQL" by datasource_list).
 Covers the rules specific to NoSQL:
 never write SQL, inspect fields with database_get_columns/get_sample_values, always create via the metadata XML, and use the column's RAW field name (not Table.Column) for element and restriction names.
@@ -286,6 +311,7 @@ Load this whenever the target source is NoSQL.</Description>
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6074</GUID>
       <Name>style-report-view</Name>
+      <ProgressLabel>Preparing to style the report view</ProgressLabel>
       <Description>Change how an already-saved report renders, in place, without rewriting it:
 make a chart horizontal or stacked, hide the legend, set a chart title, switch a pie to a doughnut, or adjust any view parameter.
 Load this when the user asks to restyle or reconfigure the chart/view of an existing report.</Description>
@@ -299,6 +325,7 @@ Load this when the user asks to restyle or reconfigure the chart/view of an exis
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6075</GUID>
       <Name>schedule-report-delivery</Name>
+      <ProgressLabel>Preparing to schedule the report delivery</ProgressLabel>
       <Description>Configure delivery and automation for an existing report:
 add or remove folder, email, or FTP/SFTP outputs and set recurring or one-time schedules (daily, weekly, monthly, once).
 Load this when the user wants to save, email, upload, schedule, automate, or unschedule a report.</Description>
@@ -313,6 +340,7 @@ Load this when the user wants to save, email, upload, schedule, automate, or uns
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6076</GUID>
       <Name>analyze-report-data</Name>
+      <ProgressLabel>Preparing to analyze the report data</ProgressLabel>
       <Description>Answer a business data question from published reports:
 find the most relevant report, execute it, and summarize the live results in a clear, non-technical way.
 Load this when the user asks a data question ("what were the sales last quarter", "top customers", "summarize monthly orders") rather than to build or configure a report.</Description>
@@ -326,6 +354,7 @@ Load this when the user asks a data question ("what were the sales last quarter"
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6077</GUID>
       <Name>troubleshoot-with-logs</Name>
+      <ProgressLabel>Preparing to troubleshoot with the logs</ProgressLabel>
       <Description>Diagnose server and report problems using the event, execution, and schedule logs together with the System check reports:
 errors, failed logins, slow or failing executions, and scheduler issues.
 Load this when the user reports something broken, missing, or failing and wants to know why.</Description>
@@ -339,6 +368,7 @@ Load this when the user reports something broken, missing, or failing and wants 
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6078</GUID>
       <Name>audit-security-and-activity</Name>
+      <ProgressLabel>Preparing to audit security and activity</ProgressLabel>
       <Description>Answer questions about access rights, user activity, and security/audit events by running the built-in System reports (Security Summary, Audit - Search, Login Failures, Users Activity, Reports Inventory, etc.).
 Load this for "who can access what", "recent login failures", "user activity", and similar audit questions.</Description>
       <InstructionsFile>audit-security-and-activity.md</InstructionsFile>
@@ -350,6 +380,7 @@ Load this for "who can access what", "recent login failures", "user activity", a
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6079</GUID>
       <Name>manage-report-files</Name>
+      <ProgressLabel>Preparing to manage report files</ProgressLabel>
       <Description>Delete, rename, move, or copy a report file (or any repository file) safely:
 list files to confirm the exact path first, then perform the file operation.
 Load this when the user explicitly asks to delete, rename, move, or copy a report file — not to change its content, output, or schedule.</Description>

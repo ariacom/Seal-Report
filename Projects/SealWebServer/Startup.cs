@@ -85,7 +85,6 @@ namespace SealWebServer
                         options.Scope.Add("profile");
                     });
             }
-            
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson(options =>

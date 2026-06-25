@@ -1,7 +1,4 @@
 ﻿declare var tra: Record<string, string>;
-declare var availableDateKeywords : any;
-declare var shortDateFormat: string;
-declare var shortDateTimeFormat: string;
 declare var languageName: string;
 
 namespace SWIUtil {
@@ -46,17 +43,6 @@ namespace SWIUtil {
         return $('<div/>').html(tr(reference)).text();
     }
 
-    export function Newguid() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        })
-    }
-
-    export function GetReportName(path: string): string {
-        return (path.split(dirSeparator).pop() ?? "").replace(".srex", "");
-    }
-
     export function GetDirectoryName(path: string): string {
         return path.substring(0, path.lastIndexOf(dirSeparator));
     }
@@ -97,81 +83,18 @@ namespace SWIUtil {
         }
     }
 
-    export function EnableLinkInput(link: JQuery, enabled: boolean) {
-        if (!enabled) link.attr('disabled', 'true');
-        else link.removeAttr('disabled');
-    }
-
     export function IsEnabled(control: JQuery): boolean {
         return !(control.attr('disabled') || control.prop('disabled'))
     }
 
-    export function ActivatePanel(button: JQuery, panel: JQuery, active: boolean) {
-        if (!active) {
-            button.removeClass("active");
-            panel.hide();
-        }
-        else {
-            button.addClass("active");
-            panel.show();
-        }
-    }
-
     export function ShowHideControl(control: JQuery, show: boolean) {
-        if (!show) control.hide();
-        else control.show();
+        control.toggle(show);
     }
 
-    export function GetOption(val: string, text: string, valSelected: string, icon?: string) {
+    export function GetOption(val: string, text: string, valSelected: string) {
         var $result = $("<option>").attr("value", val).html(text ? text : val);
-        if (icon) $result.attr("data-icon", icon);
         if (val == valSelected) $result.attr("selected", "true");
         return $result;
-    }
-
-    export function GetAnchorWithIcon(text: string, id: string, type: string, icon: string): JQuery {
-        var $a = $("<a/>").addClass("dropdown-item").text(text);
-        $a.html("<i class='" + icon + "'></i> " + $a.html());
-        if (id) $a.prop("id", id);
-        if (type) $a.prop("type", type);
-        return $a;
-    }
-
-    export function UniqueName(name: string, array: any) {
-        var result = name;
-        var index = 1;
-        while (true) {
-            var found = false;
-            $.each(array, function (key, value) {
-                if (value.name == result || value.Name == result) found = true;
-            });
-
-            if (found) result = name + index.toString();
-            else break;
-            index++;
-        }
-        return result;
-    }
-
-    export function GetAggregateName(aggr: number) {
-        if (aggr == 1) return SWIUtil.tr2("Minimum of");
-        else if (aggr == 2) return SWIUtil.tr2("Maximum of");
-        else if (aggr == 3) return SWIUtil.tr2("Average of");
-        else if (aggr == 4) return SWIUtil.tr2("Count of");
-        else if (aggr == 5) return SWIUtil.tr2("Count distinct of");
-        return "";
-    }
-
-    // Bootstrap 5 responsive breakpoints (Bootstrap 5 dropped the .hidden-xs/.visible-* probe
-    // classes the old detection relied on, so resolve the breakpoint from the viewport width).
-    export function FindBootstrapEnvironment() {
-        var width = window.innerWidth;
-        if (width < 576) return 'xs';
-        if (width < 768) return 'sm';
-        if (width < 992) return 'md';
-        if (width < 1200) return 'lg';
-        if (width < 1400) return 'xl';
-        return 'xxl';
     }
 
     export function IsMobile() {
@@ -416,10 +339,8 @@ namespace SWIUtil {
     }
 
     export function executeReport(main : any, path: string, viewGUID: string, outputGUID: string) {
-        _gateway.ExecuteReport(path, viewGUID, outputGUID);
-        setTimeout(function () {
-            if (main) main.refreshMenus();
-        }, 1000);
+        if (main) main.executeReport(path, viewGUID, outputGUID);
+        else _gateway.ExecuteReport(path, viewGUID, outputGUID);
     }
 
     export function InitProfile(profile : any) {
@@ -549,32 +470,4 @@ namespace SWIUtil {
         });
     }
 
-    export function InitStandardInput(id: string, val: string, modif: any, handler: (val: string) => any, numeric ?: boolean) {
-        var $input = $(id);
-        $input.val(val);
-        $input.unbind("input keyup change").on("input keyup change", (event) => {
-            if (event.type == "change" && modif) modif.setModified(true);
-            const target = event.target as HTMLInputElement;
-            if (numeric) target.value = target.value.replace(/[^0-9\.\,\r\n\-]/g, '');
-            handler(target.value);
-        });
-
-        return $input;
-    }
-
-    export function InitBoolSelect(id: string, val: boolean, textTrue: string, textFalse: string, handler: (val: boolean) => any) {
-        var $select = $(id);
-        var valstr = val ? "1" : "0";
-        $select.selectpicker("destroy");
-        $select.empty();
-        $select.append(SWIUtil.GetOption("1", textTrue, valstr));
-        $select.append(SWIUtil.GetOption("0", textFalse, valstr));
-        $select.unbind("change").on("change", (event) => {
-            handler($(event.target).val() == "1");
-        });
-        // Initialise once after destroy: a 'refresh' here would run buildData() twice
-        // and double the rendered text/options (bootstrap-select 1.14-beta3).
-        $select.selectpicker();
-        return $select;
-    }
 }

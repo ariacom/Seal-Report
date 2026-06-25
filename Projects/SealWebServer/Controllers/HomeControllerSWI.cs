@@ -41,6 +41,11 @@ namespace SealWebServer.Controllers
 
         private static readonly ConcurrentDictionary<string, CancellationFlagOperation> _aiCancelTokens
             = new ConcurrentDictionary<string, CancellationFlagOperation>();
+
+        // Per-session queue of progress ("thinking") steps emitted by AIAgent.Chat while it runs.
+        // SWIGetAIAgentResponse fills it; SWIGetAIAgentProgress drains it as the chat panel polls.
+        private static readonly ConcurrentDictionary<string, ConcurrentQueue<string>> _aiProgress
+            = new ConcurrentDictionary<string, ConcurrentQueue<string>>();
         // ────────────────────────────────────────────────────────────────────
         [Authorize]
         public async Task<IActionResult> Login()
@@ -210,9 +215,6 @@ namespace SealWebServer.Controllers
                     SetWebUser(user, password, token);
                     newAuthentication = true;
                 }
-#if WEBREPORTDESIGNER
-                InitAI();
-#endif
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
@@ -1709,14 +1711,22 @@ namespace SealWebServer.Controllers
                 // Register a fresh cancel flag so SWICancelAIAgentResponse can interrupt Chat()
                 var cancelOp = new CancellationFlagOperation();
                 _aiCancelTokens[SessionKey] = cancelOp;
+                // Register a fresh progress queue so SWIGetAIAgentProgress can stream the steps
+                var progressQueue = new ConcurrentQueue<string>();
+                _aiProgress[SessionKey] = progressQueue;
+                // Refresh the agent's culture from the user's session locale each request (the
+                // agent is session-cached and the user can change language mid-conversation),
+                // so the progress ("thinking") labels are translated in the current locale.
+                agent.Culture = Repository?.CultureInfo?.TwoLetterISOLanguageName;
                 string reply;
                 try
                 {
-                    reply = agent.Chat(message, cancelOp, this, Startup.DebugMode ? this : null);
+                    reply = agent.Chat(message, cancelOp, this, Startup.DebugMode ? this : null, progress: m => progressQueue.Enqueue(m));
                 }
                 finally
                 {
                     _aiCancelTokens.TryRemove(SessionKey, out _);
+                    _aiProgress.TryRemove(SessionKey, out _);
                 }
 
                 // Parse [EXECUTE_REPORT:path|name|outputGUID] tags out of the reply and
@@ -1793,6 +1803,31 @@ namespace SealWebServer.Controllers
                     cancelOp.RequestCancel();
 
                 return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns and clears the progress ("thinking") steps queued by the AI chat that is
+        /// currently running for this session (skill loads, tool calls). The chat panel polls
+        /// this while a request is in flight to show a live, collapsible step list.
+        /// </summary>
+        /// <remarks>
+        /// Like <see cref="SWICancelAIAgentResponse"/> this runs concurrently with the in-progress
+        /// <see cref="SWIGetAIAgentResponse"/> on the same session and intentionally skips
+        /// <c>checkSWIAuthentication()</c> to avoid touching the non-thread-safe session store.
+        /// </remarks>
+        public ActionResult SWIGetAIAgentProgress(string sessionId)
+        {
+            try
+            {
+                var messages = new List<string>();
+                if (_aiProgress.TryGetValue(SessionKey, out var queue))
+                    while (queue.TryDequeue(out var m)) messages.Add(m);
+                return Json(new { messages = messages });
             }
             catch (Exception ex)
             {

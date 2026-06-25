@@ -37,6 +37,7 @@ namespace Seal.AI
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Description").SetIsBrowsable(true);
+                GetProperty("ProgressLabel").SetIsBrowsable(true);
                 GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("InstructionsFile").SetIsBrowsable(true);
                 GetProperty("ToolGUIDs").SetIsBrowsable(true);
@@ -75,6 +76,17 @@ namespace Seal.AI
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string Description { get; set; }
+
+        /// <summary>
+        /// Friendly, end-user-facing text shown in the chat "thinking" panel while this skill is being
+        /// loaded, instead of the raw skill name. Translatable via the repository <c>AIToolProgress</c>
+        /// context. Leave empty to fall back to a generic label built from the skill name.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Progress text"), Description("Friendly text shown to the user in the chat 'thinking' panel while this skill loads, instead of the raw skill name (e.g. 'Preparing to build a report from SQL'). Leave empty to show a generic label."), Id(3, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string ProgressLabel { get; set; }
 
         /// <summary>
         /// When <c>false</c>, this skill is excluded from all agents without being deleted.
@@ -126,6 +138,20 @@ namespace Seal.AI
                 }
                 return string.Empty;
             }
+        }
+
+        /// <summary>
+        /// Builds the user-facing "thinking" label shown in the chat panel while this skill loads:
+        /// the translated <see cref="ProgressLabel"/> in the given <paramref name="culture"/> (the web
+        /// user's session locale) when supplied, otherwise the repository's current culture. Returns
+        /// <c>null</c> when no label is configured so the caller can fall back to a generic label.
+        /// </summary>
+        public string GetProgressLabel(string culture = null)
+        {
+            if (string.IsNullOrWhiteSpace(ProgressLabel)) return null;
+            return string.IsNullOrEmpty(culture)
+                ? Repository.Instance.RepositoryTranslate("AIToolProgress", "*", ProgressLabel)
+                : Repository.Instance.RepositoryTranslate(culture, "AIToolProgress", "*", ProgressLabel);
         }
 
         /// <summary>

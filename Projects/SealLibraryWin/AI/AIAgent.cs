@@ -118,7 +118,7 @@ namespace Seal.AI
         /// instructions are returned as the tool result and the skill's own tools are merged into the active
         /// tool set for the rest of the conversation.
         /// </remarks>
-        public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10)
+        public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10, Action<string> progress = null)
         {
             var messageCountBefore = Messages.Count;
             Messages.Add(new UserChatMessage(userMessage));
@@ -180,6 +180,9 @@ namespace Seal.AI
                     // Built-in skill loader: return the skill instructions and unlock its tools.
                     if (toolCall.Name == LoadSkillToolName)
                     {
+                        var skillName = ExtractSkillName(toolCall.Arguments);
+                        var skillCfg = skillConfigs.FirstOrDefault(s => s.Name == skillName);
+                        progress?.Invoke(skillCfg?.GetProgressLabel(Culture) ?? $"Loading skill '{skillName}'");
                         var skillResult = LoadSkill(toolCall, skillConfigs, loadedSkills, activeToolConfigs, ref toolsChanged);
                         if (log != null) log.LogMessage($"****** Skill Load {i}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{skillResult}");
                         Messages.Add(new ToolChatMessage(toolCall.Id, skillResult));
@@ -191,6 +194,7 @@ namespace Seal.AI
                     toolCall.CancelOperation = cancelOperation;
 
                     var toolConfig = activeToolConfigs.TryGetValue(toolCall.Name, out var tc) ? tc : null;
+                    progress?.Invoke(toolConfig?.GetProgressLabel(toolCall, Culture) ?? $"Running '{toolCall.Name}'");
                     // The tool is not active yet. It almost always belongs to a skill that has not been
                     // loaded: returning an empty result silently misleads the model (it reads it as "no
                     // data" and answers wrong). Return an actionable error so it loads the skill and retries.
@@ -456,6 +460,13 @@ namespace Seal.AI
         /// Current security user of the agent
         /// </summary>
         public SecurityUser SecurityContext = null;
+
+        /// <summary>
+        /// Two-letter ISO culture code (e.g. "fr") used to translate the progress ("thinking") labels
+        /// in the caller's locale. Set it per request from the session culture before calling
+        /// <see cref="Chat"/>; leave null to use the repository's current culture.
+        /// </summary>
+        public string Culture = null;
 
         // ----------------------------------------------------------------
         //  Serialisation  (JSON format)

@@ -70,7 +70,6 @@ swi-gateway-assistant.*
 swi-assistant.*
 swiassistant.*
 swi-button-group.*
-swi.js
 MenuBig.cshtml
 MainEditor.cshtml
 DataTableEditor*.cshtml

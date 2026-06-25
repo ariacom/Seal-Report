@@ -74,6 +74,13 @@
         closeList();
         return html;
     }
+    // ── Execute-report button factory ───────────────────────────
+    function makeExecuteButton(path, name, outputGUID) {
+        return $('<button>')
+            .addClass('ai-panel-execute-btn')
+            .html('<i class="fa fa-play"></i> ' + $('<span>').text(name).html())
+            .on('click', function () { _gateway.ExecuteReport(path, '', outputGUID || ''); });
+    }
     // ── Report-action parser ────────────────────────────────────
     // Strips [EXECUTE_REPORT:path|name] tags from text, returns cleaned text
     // and a jQuery element (possibly empty) containing Execute buttons.
@@ -88,11 +95,7 @@
                 swiPath = ':' + rawPath.substring('Personal'.length);
             else
                 swiPath = rawPath;
-            $('<button>')
-                .addClass('ai-panel-execute-btn')
-                .html('<i class="fa fa-play"></i> ' + $('<span>').text(name.trim()).html())
-                .on('click', function () { _gateway.ExecuteReport(swiPath, '', outputGUID || ''); })
-                .appendTo($actions);
+            makeExecuteButton(swiPath, name.trim(), outputGUID).appendTo($actions);
             return '';
         });
         return { cleaned: cleaned.trim(), $actions };
@@ -275,9 +278,15 @@
             // picker. bootstrap-select 1.14 buildData() appends to its internal data
             // model, so a separate selectpicker('refresh') after init would list every
             // agent twice. Set the value first, then initialise the picker exactly once.
-            if (data.selectedGuid) {
-                $agentSelect.val(data.selectedGuid);
+            // Always fall back to the first agent so the picker never sits on the empty
+            // "Select agent" placeholder.
+            var selectedGuid = data.selectedGuid;
+            if (!selectedGuid || !agents.some(function (a) { return a.guid === selectedGuid; })) {
+                selectedGuid = agents[0].guid;
+                // Persist the default selection on the server so the next request uses it.
+                _gateway.SelectAgent(selectedGuid, function () { });
             }
+            $agentSelect.val(selectedGuid);
             // Apply description tooltips to the dropdown items. bootstrap-select renders
             // the menu rows LAZILY on first open (the <ul> is empty until then), so the
             // items don't exist right after init nor on the 'loaded' event. Attach on the
@@ -299,6 +308,11 @@
                 });
             });
             $agentSelect.selectpicker({ width: 'auto' });
+            // Force the picker button to display the selection. Setting the native
+            // <select>.val() before init is not reliably reflected on the rendered
+            // button, so push it through the plugin API too (safe: 'val' selects an
+            // existing option, unlike 'refresh' which would re-append the data).
+            $agentSelect.selectpicker('val', selectedGuid);
         });
     }
     $agentSelect.on('change', function () {
@@ -334,7 +348,9 @@
     });
     // ── Send button ─────────────────────────────────────────────
     var _requesting = false;
-    var $currentTyping = null;
+    var $currentTyping = null; // live "thinking" panel while a request runs
+    var _thinkingSteps = []; // steps collected for the current request
+    var _progressInterval = null;
     var $running = $('#ai-panel-running');
     var _runningInterval = null;
     var _runningDots = ['', '.', '..', '...'];
@@ -364,6 +380,61 @@
             $running.text(SWIUtil.tr('Running') + _runningDots[_runningDotIndex]);
         }, 400);
     }
+    // ── "Thinking" progress steps ───────────────────────────────
+    // Live panel shown while a request runs: an animated header plus the list of
+    // steps (skill loads, tool calls) streamed from the server via polling.
+    function makeThinkingPanel() {
+        var $panel = $('<div>').addClass('ai-panel-thinking');
+        $('<div>').addClass('ai-thinking-header')
+            .html('<span class="dot"></span><span class="dot"></span><span class="dot"></span>')
+            .append($('<span>').addClass('ai-thinking-label').text(SWIUtil.tr('Thinking') + '...'))
+            .appendTo($panel);
+        $('<div>').addClass('ai-thinking-steps').appendTo($panel);
+        return $panel;
+    }
+    function addThinkingStep(text) {
+        if (!$currentTyping || !text)
+            return;
+        // Suppress consecutive duplicates (the model can repeat the same step).
+        if (_thinkingSteps.length > 0 && _thinkingSteps[_thinkingSteps.length - 1] === text)
+            return;
+        _thinkingSteps.push(text);
+        $currentTyping.find('.ai-thinking-steps')
+            .append($('<div>').addClass('ai-thinking-step').text(text));
+        $messages[0].scrollTop = $messages[0].scrollHeight;
+    }
+    // Collapsed, persistent summary placed above the final answer ("Thought for N steps").
+    function makeStepsSummary() {
+        if (_thinkingSteps.length === 0)
+            return null;
+        var steps = _thinkingSteps.slice();
+        var $wrap = $('<div>').addClass('ai-panel-steps');
+        var $list = $('<div>').addClass('ai-steps-list').hide();
+        steps.forEach(function (s) { $('<div>').addClass('ai-thinking-step').text(s).appendTo($list); });
+        var label = SWIUtil.tr('Thought for {0} steps').replace('{0}', String(steps.length));
+        var $toggle = $('<div>').addClass('ai-steps-toggle')
+            .html('<i class="fas fa-caret-right"></i> ').append($('<span>').text(label));
+        $toggle.on('click', function () {
+            var visible = $list.is(':visible');
+            $list.toggle(!visible);
+            $toggle.find('i').toggleClass('fa-caret-right', visible).toggleClass('fa-caret-down', !visible);
+        });
+        return $wrap.append($toggle).append($list);
+    }
+    function startProgressPolling() {
+        stopProgressPolling();
+        _progressInterval = window.setInterval(function () {
+            _gateway.GetAIAgentProgress(function (data) {
+                data.messages.forEach(addThinkingStep);
+            });
+        }, 600);
+    }
+    function stopProgressPolling() {
+        if (_progressInterval !== null) {
+            window.clearInterval(_progressInterval);
+            _progressInterval = null;
+        }
+    }
     $input.on('input', function () {
         if (!_requesting)
             $send.prop('disabled', $input.val().trim() === '');
@@ -390,6 +461,7 @@
         // ── Cancel mode: interrupt the in-flight request ──────────
         if (_requesting) {
             _gateway.CancelAIAgentResponse(null, null);
+            stopProgressPolling();
             if ($currentTyping) {
                 $currentTyping.remove();
                 $currentTyping = null;
@@ -409,18 +481,24 @@
         $messages.append(userBubble);
         $messages[0].scrollTop = $messages[0].scrollHeight;
         $input.val('').trigger('input'); // clear + re-evaluate disabled state
-        // Typing indicator — three animated dots
-        $currentTyping = $('<div>').addClass('ai-panel-bubble ai typing')
-            .html('<span class="dot"></span><span class="dot"></span><span class="dot"></span>');
+        // Live "thinking" panel — animated header that fills with steps as they stream in
+        _thinkingSteps = [];
+        $currentTyping = makeThinkingPanel();
         $messages.append($currentTyping);
         $messages[0].scrollTop = $messages[0].scrollHeight;
         _requesting = true;
         setCancelMode();
+        startProgressPolling();
         _gateway.GetAIAgentResponse(message, function (data) {
+            stopProgressPolling();
             if ($currentTyping) {
                 $currentTyping.remove();
                 $currentTyping = null;
             }
+            // Persist the steps as a collapsed "Thought for N steps" summary above the answer
+            const $stepsSummary = makeStepsSummary();
+            if ($stepsSummary)
+                $messages.append($stepsSummary);
             if (data.response) {
                 const aiBubble = makeAIBubble(formatResponse(data.response || ''), data.response || '');
                 $messages.append(aiBubble);
@@ -429,13 +507,7 @@
             if (data.reportActions && data.reportActions.length > 0) {
                 const $actions = $('<div>').addClass('ai-panel-report-actions');
                 data.reportActions.forEach(function (action) {
-                    $('<button>')
-                        .addClass('ai-panel-execute-btn')
-                        .html('<i class="fa fa-play"></i> ' + $('<span>').text(action.name).html())
-                        .on('click', function () {
-                        _gateway.ExecuteReport(action.path, '', action.outputGUID || '');
-                    })
-                        .appendTo($actions);
+                    makeExecuteButton(action.path, action.name, action.outputGUID).appendTo($actions);
                 });
                 $messages.append($actions);
             }
@@ -453,6 +525,7 @@
                     _panelChatFileName = saved.fileName;
             }, undefined, isFirstSave);
         }, function (_err) {
+            stopProgressPolling();
             if ($currentTyping) {
                 $currentTyping.remove();
                 $currentTyping = null;
@@ -481,7 +554,6 @@
         });
     });
     // ── Favorites / MRU dropdown ────────────────────────────────
-    function openDropdown() { $histDrop.show(); }
     function closeDropdown() { $histDrop.hide(); }
     function toggleDropdown() { $histDrop.toggle(); }
     $histBtn.on('click', function () {
