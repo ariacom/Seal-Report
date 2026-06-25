@@ -184,6 +184,8 @@
                 }
                 plt.Layout.Frameless();
                 plt.HideGrid();
+                //Frameless() hides every panel including the title (sets Axes.Title.IsVisible=false), so the title set above would vanish on a pie. Re-enable it when a title is defined.
+                if (!string.IsNullOrEmpty(view.GetValue("chartsp_title"))) plt.Axes.Title.IsVisible = true;
 
                 var pie = plt.Add.Pie(slices);
 

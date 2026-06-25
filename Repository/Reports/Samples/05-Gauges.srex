@@ -136,21 +136,30 @@
                   <Parameters>
                     <Parameter>
                       <Name>gauge_width</Name>
-                      <Value>250</Value>
+                      <Value>300</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_height</Name>
+                      <Value>300</Value>
                     </Parameter>
                     <Parameter>
                       <Name>gauge_max</Name>
-                      <Value>25000</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_value_color</Name>
-                      <Value>green</Value>
+                      <Value>100000</Value>
                     </Parameter>
                     <Parameter>
                       <Name>gauge_colors</Name>
                       <Value>[0.4,'#30B32D'],
 [0.8,'#FFDD00'],
 [1,'#F03E3E']
+</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_value_color</Name>
+                      <Value>green</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_options</Name>
+                      <Value>pointer:{ itemStyle:{ color:'auto' } }
 </Value>
                     </Parameter>
                   </Parameters>
@@ -162,16 +171,16 @@
                   <TemplateName>Gauge</TemplateName>
                   <Parameters>
                     <Parameter>
+                      <Name>gauge_width</Name>
+                      <Value>300</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_height</Name>
+                      <Value>300</Value>
+                    </Parameter>
+                    <Parameter>
                       <Name>gauge_max</Name>
-                      <Value>25000</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_show_progress</Name>
-                      <Value>True</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_show_pointer</Name>
-                      <Value>False</Value>
+                      <Value>100000</Value>
                     </Parameter>
                     <Parameter>
                       <Name>gauge_axisline_width</Name>
@@ -184,6 +193,14 @@
 [1,'#ff0000']
 </Value>
                     </Parameter>
+                    <Parameter>
+                      <Name>gauge_show_progress</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_show_pointer</Name>
+                      <Value>False</Value>
+                    </Parameter>
                   </Parameters>
                   <SortOrder>2</SortOrder>
                 </ReportView>
@@ -193,8 +210,16 @@
                   <TemplateName>Gauge</TemplateName>
                   <Parameters>
                     <Parameter>
+                      <Name>gauge_width</Name>
+                      <Value>300</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_height</Name>
+                      <Value>300</Value>
+                    </Parameter>
+                    <Parameter>
                       <Name>gauge_max</Name>
-                      <Value>25000</Value>
+                      <Value>100000</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
@@ -232,11 +257,15 @@
                   <Parameters>
                     <Parameter>
                       <Name>gauge_width</Name>
-                      <Value>250</Value>
+                      <Value>300</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>gauge_height</Name>
+                      <Value>300</Value>
                     </Parameter>
                     <Parameter>
                       <Name>gauge_max</Name>
-                      <Value>25000</Value>
+                      <Value>100000</Value>
                     </Parameter>
                     <Parameter>
                       <Name>gauge_start_angle</Name>

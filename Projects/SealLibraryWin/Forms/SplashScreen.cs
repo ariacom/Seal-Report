@@ -32,7 +32,8 @@ namespace Seal.Forms
             InitializeComponent();
             _mainForm = mainForm;
             _label.Text = "Initializing...";
-            _versionLabel.Text = "Version " + Repository.ProductVersion;
+            var v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            _versionLabel.Text = string.Format("Version {0}.{1}.{2}", v.Major, v.Minor, v.Build);
             _copyrightLabel.Text = string.Format("© {0} Ariacom - Open Source Reporting Tool", DateTime.Now.Year);
             Opacity = 0;
         }

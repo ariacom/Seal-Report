@@ -48,6 +48,15 @@
 
     var colors = view.GetValue("gauge_colors");
     var advanced = view.GetValue("gauge_options");
+
+    //Number format (D3 style) of the value element: used to format the value displayed in the center and the axis labels,
+    //consistently with the model table (otherwise ECharts shows the raw double, e.g. 61258.07025718689).
+    string valueFormat = "";
+    if (table.ColumnCount > 0 && table.RowCount > 1)
+    {
+        var valueCell = table[table.BodyStartRow, 0];
+        if (valueCell.Element != null && valueCell.Element.IsNumeric) valueFormat = valueCell.Element.GetD3Format(view.CultureInfo);
+    }
 }
 
 <div id="@gaugeId" class="@Raw(view.GetValue("gauge_class"))" style="@Raw(Helper.AddIfNotEmpty("", view.GetValue("gauge_css"), ";"))margin-left:auto;margin-right:auto;width:@(width)px;height:@(height)px;"></div>
@@ -59,6 +68,33 @@ $(document).ready(function () {
 
     var axisColor = @Raw(string.IsNullOrEmpty(colors) ? "[[1, '#5470c6']]" : "[" + colors + "]");
     var valueColor = '@Raw(Helper.ToJS(view.GetValue("gauge_value_color")))';
+
+    //Format a numeric value using the value element format (D3 style) and the report locale separators.
+    //ECharts only knows the raw number, so the .NET/table format is reproduced here for the center value and the axis labels.
+    var gaugeNumFormat = '@Raw(Helper.ToJS(valueFormat))';
+    var gaugeValueTemplate = '@Raw(Helper.ToJS(view.GetValue("gauge_value_format")))' || '{value}';
+    function gaugeFormatNumber(v) {
+        if (v === null || v === undefined || v === '' || isNaN(v)) return v;
+        if (!gaugeNumFormat) return '' + v;
+        var isPercent = gaugeNumFormat.indexOf('%') >= 0;
+        var isCurrency = gaugeNumFormat.indexOf('$') >= 0;
+        var grouping = gaugeNumFormat.indexOf(',') >= 0;
+        var m = gaugeNumFormat.match(/\.(\d+)/);
+        var decimals = m ? parseInt(m[1], 10) : 0;
+        var n = isPercent ? v * 100 : v;
+        var neg = n < 0;
+        var s = Math.abs(n).toFixed(decimals);
+        if (grouping) {
+            var parts = s.split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            s = parts.join('.');
+        }
+        if (isCurrency) s = '$' + s;
+        if (isPercent) s = s + '%';
+        if (neg) s = '-' + s;
+        //valueFormat() converts the invariant separators/$ to the report locale
+        return s.valueFormat();
+    }
 
     var series = {
         type: 'gauge',
@@ -72,11 +108,11 @@ $(document).ready(function () {
         pointer: { show: @view.GetBoolValueJS("gauge_show_pointer") },
         axisTick: { show: @view.GetBoolValueJS("gauge_show_ticks") },
         splitLine: { show: @view.GetBoolValueJS("gauge_show_splitline") },
-        axisLabel: { show: @view.GetBoolValueJS("gauge_show_axislabel") },
+        axisLabel: { show: @view.GetBoolValueJS("gauge_show_axislabel"), fontSize: 10, distance: -@(view.GetNumericValue("gauge_axisline_width") + 22), formatter: function (v) { return gaugeFormatNumber(v); } },
         title: { show: @Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("gauge_title"))) },
         detail: {
             valueAnimation: true,
-            formatter: '@Raw(Helper.ToJS(view.GetValue("gauge_value_format")))'
+            formatter: function (v) { return gaugeValueTemplate.replace('{value}', function () { return gaugeFormatNumber(v); }); }
         },
         data: [{ value: @value, name: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("gauge_title"))))' }]
     };
@@ -103,6 +139,8 @@ $(document).ready(function () {
     }
 
     var option = {
+        //ECharts defaults to the CJK font "Microsoft YaHei", which renders Latin punctuation (e.g. the thousand separator U+2019) full-width, leaving a big gap after the separator. Force the page's Latin sans-serif stack so numbers format tightly (matching the ChartJS/Plotly/ECharts charts).
+        textStyle: { fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" },
         animationDuration: @animation,
         series: [series]
     };

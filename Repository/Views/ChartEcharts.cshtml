@@ -37,6 +37,7 @@
                 if (!chartType) chartType = 'line';
                 var xAxisType = '@xAxisType';
                 var yIsTime = @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime);
+                var y2IsTime = @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime);
                 var hasSecondary = @Helper.ToJS(hasSecondary);
 
                 var smooth = @view.GetBoolValueJS("echarts_line_smooth");
@@ -90,12 +91,17 @@
                     }
                 ];
 
-                function fmt(v, fmtStr) {
-                    if (v === null || v === undefined || v === '' || isNaN(v)) return v;
+                function fmt(v, fmtStr, isTime) {
+                    if (v === null || v === undefined || v === '') return v;
                     if (!fmtStr) return v;
-                    try { return d3.format(fmtStr)(v).valueFormat(); } catch (e) { return v; }
+                    //A date axis carries a d3.timeFormat string (e.g. %m/%d/%Y) and the value is a date (a "yyyy-MM-dd HH:mm:ss" string in the tooltip/label path, a timestamp on the axis); feeding it to d3.format (numeric) mangles it (e.g. 83936880000000%), and the isNaN guard would otherwise drop the date string and leave the raw "00:00:00". Branch on the axis type like the ChartJS view does.
+                    try {
+                        if (isTime) { var d = new Date(v); return isNaN(d.getTime()) ? v : d3.timeFormat(fmtStr)(d); }
+                        if (isNaN(v)) return v;
+                        return d3.format(fmtStr)(v).valueFormat();
+                    } catch (e) { return v; }
                 }
-                function fmtY(v, secondary) { return fmt(v, secondary ? secondaryYFormat : primaryYFormat); }
+                function fmtY(v, secondary) { return fmt(v, secondary ? secondaryYFormat : primaryYFormat, secondary ? y2IsTime : yIsTime); }
 
                 function pointData(s) {
                     var data = [];
@@ -136,7 +142,15 @@
                 }
                 else if (chartType === 'radar') {
                     if (legend) legend.data = rawSeries.map(function (s) { return s.name; });
-                    option.tooltip = { trigger: 'item' };
+                    //Radar tooltip defaults to raw unformatted values; build it from the indicators so each axis value goes through fmtY (the primary Y format).
+                    option.tooltip = {
+                        trigger: 'item',
+                        formatter: function (p) {
+                            var vals = p.value || [];
+                            var rows = xLabels.map(function (l, i) { return l + ': ' + fmtY(vals[i]); }).join('<br/>');
+                            return (p.name ? p.name + '<br/>' : '') + rows;
+                        }
+                    };
                     var indicators = xLabels.map(function (l, i) {
                         var mx = 0;
                         for (var s = 0; s < rawSeries.length; s++) { var v = rawSeries[s].y[i]; if (v > mx) { mx = v; } }
@@ -152,7 +166,7 @@
                     //Horizontal bar: category on the Y Axis, value on the X Axis (orientation set via the echarts_bar_horizontal flag)
                     if (legend) legend.data = rawSeries.map(function (s) { return s.name; });
                     option.tooltip = { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return fmtY(v); } };
-                    option.grid = { containLabel: true };
+                    option.grid = { containLabel: true, left: '2%', right: '3%', bottom: '2%', top: (title || showLegend) ? 60 : 20 };
                     option.xAxis = { type: 'value', name: xTitle || undefined, axisLabel: { formatter: function (v) { return fmtY(v); } } };
                     option.yAxis = { type: 'category', data: xLabels, name: yTitle || undefined };
                     option.series = rawSeries.map(function (s) {
@@ -169,7 +183,8 @@
                         { trigger: 'item', valueFormatter: function (v) { return fmtY(v); } } :
                         { trigger: 'axis', valueFormatter: function (v) { return fmtY(v); } };
 
-                    option.grid = { containLabel: true };
+                    //containLabel:true makes ECharts reserve room for the rotated X labels, but the grid's default bottom/left/right (60px / 10%) is then ADDED below/around that label box, leaving a large empty gap under the labels. Use small explicit margins so the chart fills the height; top keeps room for the title/legend.
+                    option.grid = { containLabel: true, left: '2%', right: '3%', bottom: '2%', top: (title || showLegend) ? 60 : 20 };
                     option.xAxis = {
                         type: xAxisType,
                         data: xAxisType === 'category' ? xLabels : undefined,
