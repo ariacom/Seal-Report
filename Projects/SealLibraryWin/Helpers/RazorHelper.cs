@@ -132,7 +132,11 @@ namespace Seal.Helpers
                     _ = ColorTranslator.FromHtml("#00000");
                     _ = new Plot();
                     _ = new Workbook();
-                    _ = SpreadsheetDocument.Create(FileHelper.GetTempUniqueFileName("dummy.xlsx"), SpreadsheetDocumentType.Workbook);
+                    //Use a MemoryStream (not a temp file): forces the DocumentFormat.OpenXml assembly load
+                    //without leaving a locked temp file behind, which caused "being used by another process"
+                    //when several Seal processes start at the same time (e.g. web server + scheduler on first run).
+                    using (var dummyStream = new MemoryStream())
+                        SpreadsheetDocument.Create(dummyStream, SpreadsheetDocumentType.Workbook, autoSave: false).Dispose();
                     _ = new SKSvg();
                     _ = new PdfOptions();
                     _ = new NpgsqlConnection("");

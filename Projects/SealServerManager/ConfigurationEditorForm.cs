@@ -141,7 +141,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
 #if DEBUG
                 FileHelper.CopyDirectory(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\wwwroot", publicationDirectory + @"\wwwroot", true);
                 File.Copy(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\web.config", publicationDirectory + @"\web.config", true);
-                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\bin\Release\net7.0";
+                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\bin\Release\net10.0";
 #endif
 
                 Microsoft.Web.Administration.ServerManager serverMgr = new Microsoft.Web.Administration.ServerManager();
@@ -155,20 +155,30 @@ New parameter values may require a restart of the Report Designer or the Web Ser
 
                 var currentConfig = Path.Combine(publicationDirectory, "appsettings.json");
 
-                //Copy installation directory
+                //Copy installation directory (appsettings.json is handled below so an existing, possibly customized, config is preserved on re-publish)
                 log.Log("Copying files from '{0}' to '{1}'", sourceDirectory, publicationDirectory);
                 FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true, null, "*", "appsettings.json");
 
-                //Check config...
-                var releaseConfig = Path.Combine(publicationDirectory, "appsettings.Release.json");
-                if (!File.Exists(currentConfig) && File.Exists(releaseConfig))
+                //Create the config only if there is none yet (re-publishing keeps the existing one)
+                if (!File.Exists(currentConfig))
                 {
-                    log.Log("Creating Config file from '{0}'", releaseConfig);
-                    //Replace repository path
-                    var configText = File.ReadAllText(releaseConfig);
-                    configText = configText.Replace("\"RepositoryPath\": \"\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
-                    configText = configText.Replace("\"RepositoryPath\": \"C:\\\\ProgramData\\\\Seal Report Repository\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
-                    File.WriteAllText(currentConfig, configText);
+                    //Use the appsettings.json shipped in the installation directory (written by the installer with the correct repository path)
+                    var sourceConfig = Path.Combine(sourceDirectory, "appsettings.json");
+                    var releaseConfig = Path.Combine(publicationDirectory, "appsettings.Release.json");
+                    if (File.Exists(sourceConfig))
+                    {
+                        log.Log("Creating Config file from '{0}'", sourceConfig);
+                        File.Copy(sourceConfig, currentConfig, true);
+                    }
+                    else if (File.Exists(releaseConfig))
+                    {
+                        log.Log("Creating Config file from '{0}'", releaseConfig);
+                        //Replace repository path
+                        var configText = File.ReadAllText(releaseConfig);
+                        configText = configText.Replace("\"RepositoryPath\": \"\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
+                        configText = configText.Replace("\"RepositoryPath\": \"C:\\\\ProgramData\\\\Seal Report Repository\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
+                        File.WriteAllText(currentConfig, configText);
+                    }
                 }
 
                 if (!filesOnly && !log.IsJobCancelled())

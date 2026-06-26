@@ -115,7 +115,7 @@ namespace Seal.Forms
                 else if (context.Instance is SecurityGroup)
                 {
                     SecurityGroup group = context.Instance as SecurityGroup;
-                    var agents = Repository.Instance.AIConfiguration.AIAgents.Where(a => a.IsEnabled).OrderBy(a => a.Name).ToList();
+                    var agents = Repository.Instance.AIConfiguration.AIAgents.Where(a => a.IsEnabled).ToList();
                     MultipleSelectForm frm = new MultipleSelectForm("Please select the AI Agents", agents, "Name");
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)

@@ -366,9 +366,14 @@ body {
     transform: translateY(-6px);
 }
 
+/* Resting open state must use transform:none — any transform value other than
+   none leaves a stacking context on the panel, which would make the result table
+   (later in the DOM) paint over the bootstrap-select restriction dropdown that
+   overflows below the panel. The slide still animates from the .collapsing
+   translateY(-6px) to none (= 0). */
 #restrictions_div.collapse.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
 }
 
 @media print {

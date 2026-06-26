@@ -179,7 +179,7 @@
         else {
             cell.AddNavigationFileDownload("View messages");
         }
-        cell.FinalValue = "&lt;span class='glyphicon glyphicon-list-alt' title='View messages'&gt;&lt;/span&gt;";
+        cell.FinalValue = "&lt;span class='fa-solid fa-rectangle-list' title='View messages'&gt;&lt;/span&gt;";
     }
 }
 </CellScript>

@@ -182,7 +182,7 @@ namespace Seal.Model
         /// If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\t\t\tSQL models"), Description("If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied. Note that dynamic filters set for security purpose will not be applied."), Id(1, 3)]
+        [Category("Tools Security"), DisplayName("\t\t\tSQL models"), Description("If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied. Note that dynamic filters set for security purpose will not be applied."), Id(1, 4)]
         [DefaultValue(false)]
 #endif
         public bool SqlModel { get; set; } = false;
@@ -191,7 +191,7 @@ namespace Seal.Model
         /// For the AI Tools: The data sources (identified by their GUID) that the AI tools can access for this group. If the list is empty, all data sources are allowed.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\t\tAI tools data sources"), Description("The data sources that the AI tools can access for this group. If the list is empty, all data sources are allowed."), Id(3, 3)]
+        [Category("Tools Security"), DisplayName("\t\tAI tools data sources"), Description("The data sources that the AI tools can access for this group. If the list is empty, all data sources are allowed."), Id(2, 4)]
         [Editor(typeof(SecurityDataSourcesEditor), typeof(UITypeEditor))]
 #endif
         public List<string> DataSourceGUIDs { get; set; } = new List<string>();
@@ -201,7 +201,7 @@ namespace Seal.Model
         /// For the AI Tools: The output devices (identified by their GUID) that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\tAI tools output devices"), Description("The output devices that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed."), Id(4, 3)]
+        [Category("Tools Security"), DisplayName("\tAI tools output devices"), Description("The output devices that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed."), Id(3, 4)]
         [Editor(typeof(SecurityDevicesEditor), typeof(UITypeEditor))]
 #endif
         public List<string> OutputDeviceGUIDs { get; set; } = new List<string>();
@@ -211,7 +211,7 @@ namespace Seal.Model
         /// Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user.
         /// </summary>
 #if WINDOWS
-        [Category("Options"), DisplayName("\t\t\tWeight"), Description("Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user."), Id(1, 2)]
+        [Category("Options"), DisplayName("\t\t\tWeight"), Description("Weight to select the default group when a user belongs to several groups. The options of the group having the highest weight are applied to the user."), Id(1, 3)]
 #endif
         public int Weight { get; set; } = 1;
 
@@ -220,7 +220,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Options"), DisplayName("\t\tShow error detail"), Description("Web Report Server: If true, the user can see the detail of exceptions (error message and stack trace) in the Web Report Server."), Id(3, 2)]
+        [Category("Options"), DisplayName("\t\tShow error detail"), Description("Web Report Server: If true, the user can see the detail of exceptions (error message and stack trace) in the Web Report Server."), Id(3, 3)]
 #endif
         public bool ShowErrorDetail { get; set; } = false;
 
@@ -229,7 +229,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(true)]
-        [Category("Options"), DisplayName("\t\tEdit profile"), Description("Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.)."), Id(2, 2)]
+        [Category("Options"), DisplayName("\t\tEdit profile"), Description("Web Report Server: If true, the user can edit his profile (default culture, startup report, etc.)."), Id(2, 3)]
 #endif
         public bool EditProfile { get; set; } = true;
 
@@ -237,7 +237,7 @@ namespace Seal.Model
         /// Web Report Server: The GUIDs of the AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\t\tAI agents"), Description("Web Report Server: The AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group."), Id(2, 3)]
+        [Category("AI Agents"), DisplayName("\tAI agents"), Description("Web Report Server: The AI Agents assigned to users of this group. Leave empty to disable the AI Agent for this group."), Id(1, 2)]
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         public List<string> AgentGUIDs { get; set; } = new List<string>();
@@ -256,7 +256,7 @@ namespace Seal.Model
         /// The logo file name used for to generate the reports. If empty, the default logo is used.
         /// </summary>
 #if WINDOWS
-        [Category("Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(4, 2)]
+        [Category("Options"), DisplayName("\tLogo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(4, 3)]
 #endif
         public string LogoName { get; set; }
         /// <summary>

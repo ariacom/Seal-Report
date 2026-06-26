@@ -4,17 +4,80 @@
   <Script />
   <Groups>
     <SecurityGroup>
+      <GUID>5f849b4716374c728ecc0550d63e677a</GUID>
       <Name>Default Group</Name>
       <Folders>
         <SecurityFolder />
+        <SecurityFolder>
+          <Path>\System\Tests</Path>
+          <ExpandSubFolders>false</ExpandSubFolders>
+        </SecurityFolder>
       </Folders>
+      <PersFolderRight>Reports</PersFolderRight>
       <Weight>1</Weight>
-      <Culture />
+      <ShowErrorDetail>true</ShowErrorDetail>
       <AgentGUIDs>
         <string>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</string>
         <string>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</string>
         <string>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e</string>
         <string>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</string>
+      </AgentGUIDs>
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <GUID>9bd43102dc1d499fba5bffddb9dc8cc9</GUID>
+      <Name>Group System Tests</Name>
+      <Folders>
+        <SecurityFolder>
+          <UseSubFolders>false</UseSubFolders>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\Samples</Path>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\System</Path>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\System\Tests</Path>
+        </SecurityFolder>
+      </Folders>
+      <SqlModel>true</SqlModel>
+      <Weight>1</Weight>
+      <AgentGUIDs>
+        <string>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</string>
+        <string>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</string>
+        <string>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e</string>
+        <string>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</string>
+      </AgentGUIDs>
+    </SecurityGroup>
+    <SecurityGroup>
+      <GUID>1ee675a360d946a7a1243c43cbb96f10</GUID>
+      <Name>Group Data Analyst Tests</Name>
+      <Folders>
+        <SecurityFolder>
+          <UseSubFolders>false</UseSubFolders>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\Samples</Path>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <SqlModel>true</SqlModel>
+      <DataSourceGUIDs>
+        <string>1f7b6741-c62f-4903-90ed-2fe3229190a7</string>
+        <string>52833575-11ae-4b7d-8b5e-0f9b29d1267a</string>
+      </DataSourceGUIDs>
+      <OutputDeviceGUIDs>
+        <string>c428a6ba-061b-4a47-b9bc-f3f02442ab4b</string>
+        <string>d84b6d14-cab2-4d90-b9e1-2cf65f471441</string>
+      </OutputDeviceGUIDs>
+      <Weight>1</Weight>
+      <AgentGUIDs>
+        <string>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</string>
       </AgentGUIDs>
     </SecurityGroup>
   </Groups>
