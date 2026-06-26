@@ -1832,6 +1832,12 @@
             </summary>
             <param name="checkOnly"></param>
         </member>
+        <member name="M:Seal.Model.MetaEnum.SetValuesHtmlIds">
+            <summary>
+            Assign positional html ids to the enum values (per connection when ValuesPerConnection), so the values
+            stay renderable after a refresh that replaced the MetaEV objects. Consistent with ReportRestriction.SetEnumHtmlIds().
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaEnum.GetDisplayValue(System.String,Seal.Model.MetaConnection,System.Boolean)">
             <summary>
             Return the display value from the identifier
@@ -10257,6 +10263,14 @@
             Returns null if no group is set or no enabled agents are found.
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityUser.DefaultAgentConfiguration">
+            <summary>
+            Default AI Agent configuration for this user. Resolution order: the last agent the user
+            selected (<see cref="P:Seal.Model.SecurityUserProfile.LastAgentGUID"/>), then the server's
+            <see cref="P:Seal.AI.AIServerConfiguration.DefaultAgentGUID"/>, then the first assigned agent.
+            Each candidate must still be among the agents assigned to the user.
+            </summary>
+        </member>
         <member name="M:Seal.Model.SecurityUser.FindSecurityFolder(System.String)">
             <summary>
             Find a security folder from a given name
@@ -10415,6 +10429,11 @@
         <member name="P:Seal.Model.SecurityUserProfile.LastFolder">
             <summary>
             Last folder of the user
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUserProfile.LastAgentGUID">
+            <summary>
+            GUID of the last AI Agent selected by the user in the chat panel
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityUserProfile.RecentReports">

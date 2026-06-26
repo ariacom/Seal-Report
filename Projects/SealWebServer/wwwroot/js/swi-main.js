@@ -562,7 +562,11 @@ class SWIMain {
         SWIUtil.ShowHideControl($("#report-upload-lightbutton"), _main._folder && _main._folder.upload && right >= folderRightEdit);
         SWIUtil.ShowHideControl($("#report-empty-bin-lightbutton"), _main._folder && _main._folder.type == "bin");
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
-        SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
+        //#file-menu is a desktop-only bar (Bootstrap "d-none d-sm-block"); those utilities are
+        //display:...!important, so an inline display set by jQuery .toggle()/ShowHideControl cannot hide
+        //it. Toggle the responsive "d-sm-block" class instead: present => visible on >=sm, removed => the
+        //remaining "d-none" hides it everywhere (so a read-only user with no editable folder sees no bar).
+        $("#file-menu").toggleClass("d-sm-block", _main._canEdit);
         SWIUtil.ShowHideControl($("#nav_button"), _main._reportPath != null && _main._reportPath != "");
         //Report or folders view
         const reportShown = _main._reportPath != "" && _main._currentView == "report";
@@ -714,7 +718,7 @@ class SWIMain {
             $tableBody.append($tr);
             //the checkbox (cut/copy/delete/rename) always acts on the file itself; for a shortcut the actions act on the resolved target
             if (_main._canEdit)
-                $tr.append($("<td class='d-none d-sm-table-cell' style='padding:8px'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
+                $tr.append($("<td class='d-none d-sm-table-cell'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
             var actionPath = (file.isshortcut && !file.broken && file.targetpath) ? file.targetpath : file.path;
             var $nameTd = $("<td>").data("path", actionPath).data("name", file.name).data("isReport", file.isreport);
             var $nameWrapper = $("<div>").addClass("report-name-cell");
@@ -985,7 +989,9 @@ class SWIFolderTree {
         var build = function (folders, parentUl) {
             for (var i = 0; i < folders.length; i++) {
                 var f = folders[i];
-                if (f.right == 4)
+                //A files-only folder (personal files folder, repository/Danger Zone folder) holds files, not
+                //reports: the report management toolbar makes no sense there, so it must not grant the edit right.
+                if (f.right == 4 && !f.files)
                     canEdit = true;
                 var hasChildren = f.folders && f.folders.length > 0;
                 var li = document.createElement("li");

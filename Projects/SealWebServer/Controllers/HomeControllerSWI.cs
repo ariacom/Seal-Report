@@ -1314,8 +1314,8 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the GUID of the currently active agent without creating an
         /// <see cref="AIAgent"/> instance.  Respects the user-selected GUID stored in
-        /// <see cref="SessionAgentConfiguration"/>; falls back to the first agent in
-        /// the user's security group.
+        /// <see cref="SessionAgentConfiguration"/>; falls back to the user's default agent
+        /// (server Default Agent if set and assigned to the user, else the first assigned agent).
         /// </summary>
         string CurrentAgentGUID
         {
@@ -1325,7 +1325,7 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(selectedGuid) &&
                     WebUser.AgentConfigurations.Any(a => a.GUID == selectedGuid))
                     return selectedGuid;
-                return WebUser.AgentConfiguration?.GUID ?? string.Empty;
+                return WebUser.DefaultAgentConfiguration?.GUID ?? string.Empty;
             }
         }
 
@@ -1619,7 +1619,7 @@ namespace SealWebServer.Controllers
                     var config = (!string.IsNullOrEmpty(selectedGuid))
                         ? WebUser.AgentConfigurations.FirstOrDefault(a => a.GUID == selectedGuid)
                         : null;
-                    config = config ?? WebUser.AgentConfiguration;
+                    config = config ?? WebUser.DefaultAgentConfiguration;
 
                     if (config == null) throw new Exception("No agent configured for the user.");
 
@@ -1647,7 +1647,7 @@ namespace SealWebServer.Controllers
 
                 var configs = WebUser.AgentConfigurations;
                 var selectedGuid = getSessionValue(SessionAgentConfiguration) as string
-                    ?? configs.FirstOrDefault()?.GUID;
+                    ?? WebUser.DefaultAgentConfiguration?.GUID;
 
                 return Json(new
                 {
@@ -1680,6 +1680,13 @@ namespace SealWebServer.Controllers
                 // Clear the cached agent instance so it is recreated with the new configuration.
                 setSessionValue(SessionAgent, null);
                 setSessionValue(SessionAgentConfiguration, guid);
+
+                // Remember the selection across sessions in the user profile.
+                if (WebUser.Profile.LastAgentGUID != guid)
+                {
+                    WebUser.Profile.LastAgentGUID = guid;
+                    WebUser.SaveProfile();
+                }
 
                 return Json(new { });
             }

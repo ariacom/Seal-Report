@@ -492,8 +492,38 @@ namespace Seal.Model
                 if (connection != null && connection.State == ConnectionState.Open) connection.Close();
                 if (checkOnly) Values = initialValues;
             }
+
+            //RefreshEnum() rebuilds Values with brand new MetaEV objects whose HtmlId is null. The html ids are
+            //normally assigned by ReportRestriction.SetEnumHtmlIds() during Report.InitForExecution(), but a report
+            //task can refresh an enum AFTER that, leaving the values without ids: every rendered prompt option then
+            //gets the same (empty) id and selecting another value silently falls back to the first/previous one.
+            //Re-stamp the positional ids here so a refreshed enum stays renderable. Mirror SetEnumHtmlIds: positional
+            //index, per connection when ValuesPerConnection (each restriction view only shows its connection subset).
+            SetValuesHtmlIds();
+
             Information = Helper.FormatMessage(Information);
             UpdateEditorAttributes();
+        }
+
+        /// <summary>
+        /// Assign positional html ids to the enum values (per connection when ValuesPerConnection), so the values
+        /// stay renderable after a refresh that replaced the MetaEV objects. Consistent with ReportRestriction.SetEnumHtmlIds().
+        /// </summary>
+        private void SetValuesHtmlIds()
+        {
+            if (ValuesPerConnection)
+            {
+                foreach (var grp in Values.GroupBy(v => v.ConnectionGUID))
+                {
+                    int i = 0;
+                    foreach (var ev in grp) ev.HtmlId = (i++).ToString();
+                }
+            }
+            else
+            {
+                int i = 0;
+                foreach (var ev in Values) ev.HtmlId = (i++).ToString();
+            }
         }
 
         /// <summary>

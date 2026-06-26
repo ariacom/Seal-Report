@@ -281,8 +281,8 @@
             <summary>
             Returns the GUID of the currently active agent without creating an
             <see cref="T:Seal.AI.AIAgent"/> instance.  Respects the user-selected GUID stored in
-            <see cref="F:SealWebServer.Controllers.HomeController.SessionAgentConfiguration"/>; falls back to the first agent in
-            the user's security group.
+            <see cref="F:SealWebServer.Controllers.HomeController.SessionAgentConfiguration"/>; falls back to the user's default agent
+            (server Default Agent if set and assigned to the user, else the first assigned agent).
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.GetAgentSubFolder(System.String)">

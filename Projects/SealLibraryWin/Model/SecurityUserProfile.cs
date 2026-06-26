@@ -90,6 +90,11 @@ namespace Seal.Model
         public string LastFolder { get; set; }
 
         /// <summary>
+        /// GUID of the last AI Agent selected by the user in the chat panel
+        /// </summary>
+        public string LastAgentGUID { get; set; }
+
+        /// <summary>
         /// List of recent reports
         /// </summary>
         public List<RecentFileItem> RecentReports { get; set; } = new List<RecentFileItem>();

@@ -635,6 +635,36 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Default AI Agent configuration for this user. Resolution order: the last agent the user
+        /// selected (<see cref="SecurityUserProfile.LastAgentGUID"/>), then the server's
+        /// <see cref="Seal.AI.AIServerConfiguration.DefaultAgentGUID"/>, then the first assigned agent.
+        /// Each candidate must still be among the agents assigned to the user.
+        /// </summary>
+        public AIAgentConfiguration DefaultAgentConfiguration
+        {
+            get
+            {
+                var configs = AgentConfigurations;
+
+                var lastGuid = Profile?.LastAgentGUID;
+                if (!string.IsNullOrEmpty(lastGuid))
+                {
+                    var last = configs.FirstOrDefault(a => a.GUID == lastGuid);
+                    if (last != null) return last;
+                }
+
+                var defaultGuid = Repository.Instance.AIConfiguration.DefaultAgentGUID;
+                if (!string.IsNullOrEmpty(defaultGuid))
+                {
+                    var match = configs.FirstOrDefault(a => a.GUID == defaultGuid);
+                    if (match != null) return match;
+                }
+
+                return configs.FirstOrDefault();
+            }
+        }
+
+        /// <summary>
         /// Find a security folder from a given name
         /// </summary>
         public SecurityFolder FindSecurityFolder(string folder)

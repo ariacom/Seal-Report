@@ -87,7 +87,9 @@ a {
 
 #file-table-body td {
     vertical-align: middle;
-    padding: 2px 4px;
+    /* Comfortable, constant row height whether or not the selection checkbox column is shown
+       (read-only users have no checkbox column, so the height must not depend on it). */
+    padding: 8px 4px;
     font-size: 0.85em;
 }
 
