@@ -1,0 +1,599 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>ef2e3584-c421-4fa8-a999-a9cad53153b3</GUID>
+  <ViewGUID>fd5f0721-da73-4c1f-ab39-fd753ba923f4</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>3ba8b1ef-b9c5-4449-84c9-dc0737f21995</GUID>
+      <Name>_FACE (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>362e15eb-9900-412a-9847-870a9d2ae490</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>df704bb7-0278-420e-9ebe-39285fdc018a</GUID>
+      <Name>Identity</Name>
+      <SourceGUID>3ba8b1ef-b9c5-4449-84c9-dc0737f21995</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>e693ab1b-de15-4368-9a1b-d647def4c0db</GUID>
+          <Name>company.name</Name>
+          <Category>Master</Category>
+          <DisplayName>Company</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>51ad1484-1477-4759-95e0-dd18ea23a622</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6e20a628-a78e-4d23-ad76-729b4510fe09</GUID>
+          <Name>company.uid_formatted</Name>
+          <Category>Master</Category>
+          <DisplayName>UID</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e854a8b9-e44f-4e0e-8812-94577361576e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6ef79bc4-9344-48c2-b07e-3a1fa62b9bf0</GUID>
+          <Name>company.ehraid</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>8f7ca93b-bef0-48c3-abbf-157f3250c5c6</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>22a0ea8a-1376-480d-8100-080548dca9a0</GUID>
+          <Name>company.legal_form_id</Name>
+          <Category>Master</Category>
+          <DisplayName>Legal Form</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5116c6e8-d3e5-41b2-85af-125b361516c6</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4ea4f0d2-50b7-4244-9b60-b57c0e6505ed</GUID>
+          <Name>company.status_code</Name>
+          <Category>Master</Category>
+          <DisplayName>Status</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e700b046-d38f-4063-a631-315753b5bf82</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d2245448-6293-4616-bf76-e6986c4a5998</GUID>
+          <Name>company.canton</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>48229d3f-44fc-4648-9ddd-33b016f77518</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>76613e26-2fe3-4096-af0b-de0dc58b231c</GUID>
+          <Name>company.legal_seat</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>0711aa89-92be-4dfd-b8c9-3788f55c5fe7</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a2147aea-6acf-42a9-8d2e-e1913f8ade8c</GUID>
+          <Name>company.purpose</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>cd756ab0-10ab-46b1-98c3-0194dd81d47e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>078613c7-eae7-45e7-851a-ecc8c3d87f94</GUID>
+          <Name>company.capital_nominal</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>efbad5ba-10f8-4b5f-aa54-9f33df2d3162</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>56fe5244-8b25-4a17-97ce-13e1deba8973</GUID>
+          <Name>company.capital_currency</Name>
+          <Category>Master</Category>
+          <DisplayName>Currency</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2219b9a6-7f19-4955-98b6-f25f02011265</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e1980b3f-36ba-4da6-b192-6b12dce72113</GUID>
+          <Name>company.date_inscription</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>0d9326bc-d289-423a-96d3-216a6b66db38</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0f7d3b65-48e0-4a21-b81f-e661c63c1f5f</GUID>
+          <Name>company.first_shab_date</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f9fe0754-b284-481f-a04e-c1bfd649f140</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>82094b67-f16e-4498-a72a-f8bafa09e2ca</GUID>
+          <Name>company.last_shab_date</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>c50f3949-f53c-4bea-b9bf-2cdeb5fcc67c</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3d4ce1ef-1e60-4c4d-8161-3ce484a4d1b3</GUID>
+          <Name>company.delete_date</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>32813bf2-6580-4054-9901-bfa2292123b3</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0922dba3-cc10-42bb-8367-dd6048ed9168</GUID>
+          <Name>company.cantonal_excerpt_url</Name>
+          <Category>Master</Category>
+          <DisplayName>Cantonal Excerpt</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9449ca91-2225-4e9f-abf7-e74580007f28</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9f3cf48a-8c04-4c74-a103-cab70d9ba331</GUID>
+          <Name>company.fetched_at</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>260a9eab-a2db-4933-90bf-bae77ab279ca</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[5236c802-3e99-4f41-a3bc-2a4d8e5880fb]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>5236c802-3e99-4f41-a3bc-2a4d8e5880fb</GUID>
+          <Name>company.uid</Name>
+          <Category>Master</Category>
+          <DisplayName>Company UID</DisplayName>
+          <DisplayOrder>1</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d43b93d7-f9f2-48fa-a56d-4c464ea966ad</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Equal</Operator>
+          <DisplayOrderRE>1</DisplayOrderRE>
+          <PlaceHolder>CHE...</PlaceHolder>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>7a75a84f-c0d9-4253-8a21-ad360044b4b4</GUID>
+      <Name>Addresses</Name>
+      <SourceGUID>3ba8b1ef-b9c5-4449-84c9-dc0737f21995</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>b5aed689-6ad2-4631-a343-088b2d68d25c</GUID>
+          <Name>company_address.kind</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>35dcd27e-7d04-4eb9-a1a1-8db90cfcea93</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>60e7f7ea-45d1-469e-913d-16020e2902a7</GUID>
+          <Name>company_address.care_of</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d27912ea-f047-43d0-a5d2-0ffdb77c30a5</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>15e28489-5847-4eb7-b4cf-d2454ce17f1f</GUID>
+          <Name>company_address.street</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>6c878d59-a862-4ee5-b180-9249470abe2b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a0676dd3-2e56-441a-8ae4-c3420a0c4070</GUID>
+          <Name>company_address.house_number</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>356e5f84-6098-489d-a71d-3de543247434</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cc144083-de1c-4a05-bbdd-16b101306e63</GUID>
+          <Name>company_address.zip</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>48097225-3b17-4cc1-8a4b-3477d9492b64</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>326f0a98-fcb7-4289-85da-bda543e61757</GUID>
+          <Name>company_address.town</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>623ea91d-922d-4380-928c-05fb7542e83d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>09ceab30-9323-4ff5-b87c-60781453bc25</GUID>
+          <Name>company_address.country</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b217c4bf-d8f4-46c4-a69d-257ed09e5034</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c11dd0a5-922b-4f59-9d74-b22a8ef66875</GUID>
+          <Name>company_address.code_etat</Name>
+          <Category>Master</Category>
+          <DisplayName>Status (A/R)</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b69b9112-f4ee-40eb-8321-03813a0ed519</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[51e2a18f-f8d9-4968-b5b3-0c0d7e12dbd4]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>51e2a18f-f8d9-4968-b5b3-0c0d7e12dbd4</GUID>
+          <Name>company.uid</Name>
+          <Category>Master</Category>
+          <DisplayName>Company UID</DisplayName>
+          <DisplayOrder>1</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d43b93d7-f9f2-48fa-a56d-4c464ea966ad</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Equal</Operator>
+          <DisplayOrderRE>1</DisplayOrderRE>
+          <PlaceHolder>CHE...</PlaceHolder>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>68bd0133-6089-421d-bfa4-c2686007d425</GUID>
+      <Name>Persons</Name>
+      <SourceGUID>3ba8b1ef-b9c5-4449-84c9-dc0737f21995</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>d578b02f-571c-456d-8b46-b6fbf3c9174e</GUID>
+          <Name>company_person.full_name</Name>
+          <Category>Master</Category>
+          <DisplayName>Person</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>13aef86c-7739-4a41-8ff9-fcae5375cb3d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2c459864-fd66-4932-bca9-1f433d9f2373</GUID>
+          <Name>company_person.role</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>c3bc8e49-09fd-4c65-8fe7-ca22540159d3</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>db92dca2-be4b-413f-8856-08f5c2104722</GUID>
+          <Name>company_person.signature</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>0696a63a-be07-4a1f-9ba3-055ba890d0ee</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c63302aa-1e6a-4dd4-a184-799ac2908c66</GUID>
+          <Name>company_person.share</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>508ba777-924c-4dc5-b012-2e8cba8e8b5a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b8e3b2f0-949d-4bfb-b4c9-16c116ada37d</GUID>
+          <Name>company_person.inscription_no</Name>
+          <Category>Master</Category>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>a3c628e5-6c0b-47e2-96bb-4cc211d92168</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>affd5ccb-588e-47d8-a799-e8be104b351e</GUID>
+          <Name>company_person.is_founder</Name>
+          <Category>Master</Category>
+          <DisplayName>Founder</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9e96ae98-bd2c-4088-b663-1939bb18d06f</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>40a21511-dbb9-4f34-a645-a278f295f854</GUID>
+          <Name>company_person.code_etat</Name>
+          <Category>Master</Category>
+          <DisplayName>Status (A/R)</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>0ff7e55b-9bda-4ba2-8f5b-d581463a2641</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[0b2eb879-e56e-4e00-b437-da5622968115]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>0b2eb879-e56e-4e00-b437-da5622968115</GUID>
+          <Name>company.uid</Name>
+          <Category>Master</Category>
+          <DisplayName>Company UID</DisplayName>
+          <DisplayOrder>1</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d43b93d7-f9f2-48fa-a56d-4c464ea966ad</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Equal</Operator>
+          <DisplayOrderRE>1</DisplayOrderRE>
+          <PlaceHolder>CHE...</PlaceHolder>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>f8e65925-98d0-47c1-8d2c-758faaa77933</GUID>
+      <Name>Publications</Name>
+      <SourceGUID>3ba8b1ef-b9c5-4449-84c9-dc0737f21995</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>91375e90-5907-428e-ab5c-c745bc354cd0</GUID>
+          <Name>company_publication.shab_date</Name>
+          <Category>Master</Category>
+          <DisplayName>SHAB Date</DisplayName>
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <MetaColumnGUID>c2ffcdec-4892-428e-9200-c451d4225fc5</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7ac2d729-cc35-4043-bee1-8461b78fe145</GUID>
+          <Name>company_publication_mutation.mutation_key</Name>
+          <Category>Master</Category>
+          <DisplayName>Mutation</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>ad33dda8-da22-46f2-ad3a-4eddf8a2dd82</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>876e1b16-c291-403b-93f7-ea622badf567</GUID>
+          <Name>company_publication.message</Name>
+          <Category>Master</Category>
+          <DisplayName>Message</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>49b83c1f-8470-4d5b-98ab-d4c0f6dae15d</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[606d8f70-0121-4ec2-bebd-0f92aff12d1c]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>606d8f70-0121-4ec2-bebd-0f92aff12d1c</GUID>
+          <Name>company.uid</Name>
+          <Category>Master</Category>
+          <DisplayName>Company UID</DisplayName>
+          <DisplayOrder>1</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d43b93d7-f9f2-48fa-a56d-4c464ea966ad</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Equal</Operator>
+          <DisplayOrderRE>1</DisplayOrderRE>
+          <PlaceHolder>CHE...</PlaceHolder>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>246e8c0d-4755-4116-a624-5c93d4c20c88</GUID>
+      <Name>Relations</Name>
+      <SourceGUID>3ba8b1ef-b9c5-4449-84c9-dc0737f21995</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>b55c65d5-004a-4921-b6a4-b59fff261421</GUID>
+          <Name>company_relation.relation_type</Name>
+          <Category>Master</Category>
+          <DisplayName>Relation</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d2312022-5357-4d35-8a05-a6bf1d3a2050</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6295d5d3-1aef-46c8-98ec-41649029cc32</GUID>
+          <Name>company_relation.related_name</Name>
+          <Category>Master</Category>
+          <DisplayName>Related Company</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2f8fdf1b-f645-4ffa-bdd7-6fac858f0a80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a92c309a-d980-4ede-86cf-a6db5e61df5c</GUID>
+          <Name>company_relation.related_uid</Name>
+          <Category>Master</Category>
+          <DisplayName>Related UID</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>932629b8-90d0-4d32-bf70-f1d9dac0c635</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[3b3e4089-c0c1-4b26-a244-268a77a18e13]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>3b3e4089-c0c1-4b26-a244-268a77a18e13</GUID>
+          <Name>company.uid</Name>
+          <Category>Master</Category>
+          <DisplayName>Company UID</DisplayName>
+          <DisplayOrder>1</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d43b93d7-f9f2-48fa-a56d-4c464ea966ad</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Equal</Operator>
+          <DisplayOrderRE>1</DisplayOrderRE>
+          <PlaceHolder>CHE...</PlaceHolder>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>fd5f0721-da73-4c1f-ab39-fd753ba923f4</GUID>
+      <Name>Company Detail</Name>
+      <Views>
+        <ReportView>
+          <GUID>649b60ec-2be3-4609-b104-c8bc742cfc00</GUID>
+          <Name>Identity</Name>
+          <Views>
+            <ReportView>
+              <GUID>3b299b0e-8775-431c-85db-c8de7b641f8a</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>55b5f546-ec75-4154-aca9-fa89c75e04ed</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>19c8a73b-a13e-486f-a5e1-24d408708c7a</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>df704bb7-0278-420e-9ebe-39285fdc018a</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>d7ea7952-a200-450b-9079-1406fd59b866</GUID>
+          <Name>Addresses</Name>
+          <Views>
+            <ReportView>
+              <GUID>d6779e47-7639-47d6-8593-86b7abdb9a16</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>44811b71-d012-4c20-af36-228bc6b387c2</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>03410471-6fee-4c3a-a001-b9d97c2230f7</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>7a75a84f-c0d9-4253-8a21-ad360044b4b4</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>6d8070f0-7d31-467c-9aeb-5ddf3f18c679</GUID>
+          <Name>Persons</Name>
+          <Views>
+            <ReportView>
+              <GUID>575f9505-2562-489f-a342-f107e87d8eed</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>a6d87f6f-67d1-4b25-ad49-54900b90e793</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>8cd1392d-effd-4533-8871-68962e553efd</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>68bd0133-6089-421d-bfa4-c2686007d425</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>ed05ce71-f533-417c-9500-402adb799924</GUID>
+          <Name>Publications</Name>
+          <Views>
+            <ReportView>
+              <GUID>d410881d-cb41-4e74-bfc0-f8623585046f</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>ac50934e-94ed-4fde-8d71-6b19af8dc013</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>5ebafeab-7a8d-4c5e-adb1-ba4d52226915</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>f8e65925-98d0-47c1-8d2c-758faaa77933</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>8afda743-4c30-4169-ad5e-8dc16469e499</GUID>
+          <Name>Relations</Name>
+          <Views>
+            <ReportView>
+              <GUID>8d48db89-708a-4605-945b-b5c9e92893a1</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>231d7817-30d5-4a21-a646-0a3ae5313467</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>a0ab3715-ea11-4599-a7fc-72ccab450ca4</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>3</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>246e8c0d-4755-4116-a624-5c93d4c20c88</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>restrictions_per_row</Name>
+          <Value>3</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>0</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

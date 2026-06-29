@@ -1,0 +1,79 @@
+@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args     = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var objType  = args.TryGetProperty("object_type", out var otp) ? otp.GetString() : null;
+    var objGuid  = args.TryGetProperty("guid", out var ogp) ? ogp.GetString() : null;
+    var objName  = args.TryGetProperty("name", out var onp) ? onp.GetString() : null;
+    var confirm  = args.TryGetProperty("confirm", out var cfp) && cfp.GetBoolean();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (object_type: {objType})..");
+
+    if (!confirm) { tool.ExecResult = "Error: removing metadata can break existing reports. First call datasource_find_usage, show the affected reports, get explicit approval, then call again with confirm=true."; return; }
+    if (string.IsNullOrEmpty(objType)) { tool.ExecResult = "Error: object_type is required (table | column | join | enum)."; return; }
+    if (string.IsNullOrEmpty(objGuid) && string.IsNullOrEmpty(objName)) { tool.ExecResult = "Error: provide guid or name of the object to remove."; return; }
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+
+    Func<MetaSource, string> backup = s => {
+        if (!string.IsNullOrEmpty(s.FilePath) && File.Exists(s.FilePath)) {
+            var b = s.FilePath + ".bak-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            File.Copy(s.FilePath, b, true); return Path.GetFileName(b);
+        }
+        return "(none)";
+    };
+    Func<string, string, bool> match = (g, n) =>
+        (!string.IsNullOrEmpty(objGuid) && string.Equals(g, objGuid, StringComparison.OrdinalIgnoreCase)) ||
+        (!string.IsNullOrEmpty(objName) && string.Equals(n, objName, StringComparison.OrdinalIgnoreCase));
+
+    try
+    {
+        string removed = null;
+        switch (objType.ToLowerInvariant())
+        {
+            case "table":
+                var t = source.MetaData.Tables.FirstOrDefault(x => match(x.GUID, x.Name) || match(x.GUID, x.AliasName));
+                if (t == null) { tool.ExecResult = "Error: table not found."; return; }
+                removed = $"table '{t.AliasName}' (and its related joins)"; source.RemoveTable(t);
+                break;
+            case "column":
+                var col = source.MetaData.Tables.SelectMany(x => x.Columns).FirstOrDefault(c => match(c.GUID, c.Name));
+                if (col == null) { tool.ExecResult = "Error: column not found."; return; }
+                var owner = source.MetaData.Tables.First(x => x.Columns.Contains(col));
+                owner.Columns.Remove(col); source.LastMetadataModification = DateTime.Now;
+                removed = $"column '{col.Name}' from table '{owner.AliasName}'";
+                break;
+            case "join":
+                var j = source.MetaData.Joins.FirstOrDefault(x => match(x.GUID, x.Name));
+                if (j == null) { tool.ExecResult = "Error: join not found."; return; }
+                removed = $"join '{j.Name}'"; source.RemoveJoin(j);
+                break;
+            case "enum":
+                var e = source.MetaData.Enums.FirstOrDefault(x => match(x.GUID, x.Name));
+                if (e == null) { tool.ExecResult = "Error: enum not found."; return; }
+                removed = $"enum '{e.Name}' (unlinked from any columns)"; source.RemoveEnum(e);
+                break;
+            default:
+                tool.ExecResult = "Error: object_type must be table, column, join, or enum."; return;
+        }
+
+        var bak = backup(source);
+        source.SaveToFile();
+        tool.ExecResult = $"Removed {removed} from source '{source.Name}'. Backup: {bak}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

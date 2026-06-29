@@ -1,0 +1,63 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var tblName   = args.TryGetProperty("table_name", out var tnp) ? tnp.GetString() : null;
+    var colName   = args.TryGetProperty("column_name", out var cnp) ? cnp.GetString() : null;
+    var display   = args.TryGetProperty("display_name", out var dnp) ? dnp.GetString() : null;
+    var category  = args.TryGetProperty("category", out var cap) ? cap.GetString() : null;
+    var format    = args.TryGetProperty("format", out var fmp) ? fmp.GetString() : null;
+    var typeStr   = args.TryGetProperty("type", out var typ) ? typ.GetString() : null;
+    var isAgg     = args.TryGetProperty("is_aggregate", out var iap) && iap.GetBoolean();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table_name: {tblName}, column_name: {colName})..");
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+    if (string.IsNullOrEmpty(tblName) || string.IsNullOrEmpty(colName))
+    { tool.ExecResult = "Error: table_name and column_name (the SQL name or expression) are required."; return; }
+
+    var table = source.MetaData.Tables.FirstOrDefault(t =>
+        string.Equals(t.Name, tblName, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(t.AliasName, tblName, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(t.Alias, tblName, StringComparison.OrdinalIgnoreCase));
+    if (table == null) { tool.ExecResult = $"Error: table '{tblName}' not found in source '{source.Name}'."; return; }
+
+    Func<MetaSource, string> backup = s => {
+        if (!string.IsNullOrEmpty(s.FilePath) && File.Exists(s.FilePath)) {
+            var b = s.FilePath + ".bak-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            File.Copy(s.FilePath, b, true); return Path.GetFileName(b);
+        }
+        return "(none)";
+    };
+
+    try
+    {
+        var col = source.AddColumn(table);
+        col.Name = colName;
+        if (!string.IsNullOrEmpty(display))  col.DisplayName = display;
+        if (!string.IsNullOrEmpty(category)) col.Category = category;
+        if (!string.IsNullOrEmpty(format))   col.Format = format;
+        col.IsAggregate = isAgg;
+        if (!string.IsNullOrEmpty(typeStr) && Enum.TryParse<ColumnType>(typeStr, true, out var ct)) col.Type = ct;
+
+        var bak = backup(source);
+        source.SaveToFile();
+        tool.ExecResult = $"Added column '{col.Name}' ({col.DisplayName}) [{col.Type}{(col.IsAggregate ? ", aggregate" : "")}] to table '{table.AliasName}' (GUID: {col.GUID}). Backup: {bak}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

@@ -81,8 +81,8 @@
         ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
         : enabled.First();
 
-    //Default result (overwritten with the match rate by the next tasks); read by '900 Tests' from report.Tag2
-    report.Tag2 = new object[] { provider.Name, 0.0, "Error", null, null };
+    //Default result (overwritten with the match rate by the next tasks); read by '900 Tests' from report.ResultTag
+    report.ResultTag = new object[] { provider.Name, 0.0, "Error", null, null };
 
     //Read-only security context: Execute right on the Reports root and Samples only ('Group Data Analyst Tests').
     //The Data Analyst answers questions using ONLY the reports it can discover in those folders.
@@ -248,12 +248,12 @@
         string status = rate &gt;= 100 ? "Success" : (rate &gt;= 80 ? "Warning" : "Error");
         string errorText = status == "Error" ? detail : null;
         string warningText = status == "Success" ? null : detail;
-        report.Tag2 = new object[] { provider.Name, rate, status, errorText, warningText };
+        report.ResultTag = new object[] { provider.Name, rate, status, errorText, warningText };
         task.LogMessage($"[{provider.Name}] Data Analyst match rate: {rate}% ({passed}/{total}). Status={status}.");
     }
     catch (Exception ex)
     {
-        report.Tag2 = new object[] { provider.Name, 0.0, "Error", $"[{task.Name}] {ex.Message}", null };
+        report.ResultTag = new object[] { provider.Name, 0.0, "Error", $"[{task.Name}] {ex.Message}", null };
         throw;
     }
 }
@@ -392,20 +392,20 @@
         var after = Snapshot(watched);
         if (before != after)
         {
-            var pr0 = report.Tag2 as object[];
+            var pr0 = report.ResultTag as object[];
             var rate0 = pr0 != null &amp;&amp; pr0[1] != null ? pr0[1] : (object)0.0;
             var msg = "SECURITY FAILURE: the read-only Data Analyst altered accessible report files.";
-            report.Tag2 = new object[] { provider.Name, rate0, "Error", msg, null };
+            report.ResultTag = new object[] { provider.Name, rate0, "Error", msg, null };
             throw new Exception(msg);
         }
         task.LogMessage("Guardrail OK: no accessible report file was modified.");
     }
     catch (Exception ex)
     {
-        var pr = report.Tag2 as object[];
+        var pr = report.ResultTag as object[];
         var rate = pr != null &amp;&amp; pr[1] != null ? pr[1] : (object)0.0;
         var warn = pr != null &amp;&amp; pr.Length &gt; 4 ? pr[4] : null;
-        report.Tag2 = new object[] { provider.Name, rate, "Error", $"[{task.Name}] {ex.Message}", warn };
+        report.ResultTag = new object[] { provider.Name, rate, "Error", $"[{task.Name}] {ex.Message}", warn };
         throw;
     }
 }
@@ -435,7 +435,7 @@
 
     //Finalize: the status was set from the match rate by 'Data questions' (Success / Warning / Error).
     //Re-throw on Error so the report run is marked failed; Warning and Success keep the run green.
-    var pr = report.Tag2 as object[];
+    var pr = report.ResultTag as object[];
     var providerName = pr != null ? (string)pr[0] : null;
     var rate = pr != null &amp;&amp; pr[1] != null ? pr[1] : (object)0.0;
     var status = pr != null &amp;&amp; pr.Length &gt; 2 ? (string)pr[2] : "Error";

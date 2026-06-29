@@ -81,8 +81,8 @@
         ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
         : enabled.First();
 
-    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2
-    report.Tag2 = new object[] { provider.Name, null, "Error", null };
+    //Default result (overwritten with the final status); read by '900 Tests' from report.ResultTag
+    report.ResultTag = new object[] { provider.Name, null, "Error", null };
 
     //Read-only context with Execute right on the System reports (Group System Tests grants \System Execute).
     var user = new SecurityUser(repository.Security);
@@ -162,7 +162,7 @@
     }
     catch (Exception ex)
     {
-        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -200,10 +200,10 @@
     ReportTask task = Model;
     Report report = task.Report;
 
-    //All checks passed: record the success result read by '900 Tests' from report.Tag2
-    var pr = report.Tag2 as object[];
+    //All checks passed: record the success result read by '900 Tests' from report.ResultTag
+    var pr = report.ResultTag as object[];
     var providerName = pr != null ? (string)pr[0] : null;
-    report.Tag2 = new object[] { providerName, null, "Success", null };
+    report.ResultTag = new object[] { providerName, null, "Success", null };
     task.LogMessage($"[{providerName}] Audit-security-and-activity check passed.");
 }
 </Script>

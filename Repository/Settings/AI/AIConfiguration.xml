@@ -248,6 +248,102 @@ For stacked bar charts the model must have a series Splitter (a Column element),
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"view_name":{"type":"string","description":"Name of the view to configure (e.g. 'Chart JS'). Required unless template_name is given."},"template_name":{"type":"string","description":"Template name of the view to configure (e.g. 'Chart JS'), used instead of or together with view_name to disambiguate."},"parameters":{"type":"object","description":"Object of parameter name/value pairs to set, e.g. {\"chartjs_bar_horizontal\":\"True\",\"chartjs_bar_stacked\":\"True\"}. Use view_get_parameters to discover valid names and values. Booleans are 'True'/'False'.","additionalProperties":{"type":"string"}}},"required":["path","parameters"]}</ParametersSchema>
       <ExecutionScriptFile>report_configure_view.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0001-1111-4aaa-bbbb-d5e000000001</GUID>
+      <Name>datasource_find_usage</Name>
+      <ProgressLabel>Checking which reports use this column</ProgressLabel>
+      <Description>Lists the reports that reference a given metadata column (or any column of a given table) of a data source.
+This is the safety primitive: ALWAYS call it before any destructive data-source change (datasource_set_column_sql, datasource_apply_join, datasource_remove, datasource_refresh_schema) and show the user the affected reports.
+Read-only. Provide column_guid (from datasource_get_detail) or table_name.</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the metadata column to find usage for (from datasource_get_detail)."},"table_name":{"type":"string","description":"Name or alias of a table; finds reports using any of its columns. Provide column_guid or table_name."}},"required":[]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_find_usage.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0006-1111-4aaa-bbbb-d5e000000006</GUID>
+      <Name>datasource_suggest_joins</Name>
+      <ProgressLabel>Suggesting joins between tables</ProgressLabel>
+      <Description>Inspects the tables of a SQL data source and proposes joins based on shared key columns (names ending with id/code/key).
+Read-only: nothing is changed. Present the suggestions to the user, then apply the chosen one with datasource_apply_join.</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."}},"required":[]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_suggest_joins.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0002-1111-4aaa-bbbb-d5e000000002</GUID>
+      <Name>datasource_add_table</Name>
+      <ProgressLabel>Adding table {table_name} to the data source</ProgressLabel>
+      <Description>Adds a table to a SQL data source, with its columns. Additive — never breaks an existing report.
+Pass table_name for a database table (columns are read from the catalog), OR sql for a custom dynamic table defined by a SELECT.
+Use datasource_get_detail first to avoid duplicating an existing table.</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Database table name, optionally schema-qualified (e.g. dbo.Orders). Use this OR sql."},"sql":{"type":"string","description":"A SELECT statement defining a custom (dynamic) table. Use this OR table_name."},"alias":{"type":"string","description":"Optional alias/display name for the table."},"connection_guid":{"type":"string","description":"GUID of the connection to read the schema from. Omit for the source default connection."}},"required":[]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_add_table.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0003-1111-4aaa-bbbb-d5e000000003</GUID>
+      <Name>datasource_add_column</Name>
+      <ProgressLabel>Adding column {column_name}</ProgressLabel>
+      <Description>Adds a derived/computed column to an existing table of a data source. Additive — never breaks an existing report.
+column_name is the SQL name or expression (e.g. Customers.FirstName + ' ' + Customers.LastName).</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Name or alias of the table to add the column to."},"column_name":{"type":"string","description":"SQL column name or expression for the new column."},"display_name":{"type":"string","description":"Friendly display name shown to end users."},"category":{"type":"string","description":"Optional category/group for the column."},"format":{"type":"string","description":"Optional .NET format (e.g. N0, N2, d)."},"type":{"type":"string","enum":["Default","Text","Numeric","DateTime","UnicodeText"],"description":"Column data type."},"is_aggregate":{"type":"boolean","description":"True if the expression is itself an aggregate (e.g. SUM(...))."}},"required":["table_name","column_name"]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_add_column.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0004-1111-4aaa-bbbb-d5e000000004</GUID>
+      <Name>datasource_set_column</Name>
+      <ProgressLabel>Updating column display</ProgressLabel>
+      <Description>Updates the display properties of an existing metadata column: display name, category, format, or type.
+Cosmetic — reports bind columns by GUID, so this never breaks references. Identify the column by column_guid (preferred) or table_name + column_name.</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the column to update (from datasource_get_detail)."},"table_name":{"type":"string","description":"Table name/alias (used with column_name when column_guid is not given)."},"column_name":{"type":"string","description":"SQL column name (used with table_name when column_guid is not given)."},"display_name":{"type":"string","description":"New friendly display name."},"category":{"type":"string","description":"New category/group."},"format":{"type":"string","description":"New .NET format (e.g. N0, N2, d)."},"type":{"type":"string","enum":["Default","Text","Numeric","DateTime","UnicodeText"],"description":"New column data type."}},"required":[]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_set_column.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0005-1111-4aaa-bbbb-d5e000000005</GUID>
+      <Name>datasource_manage_enum</Name>
+      <ProgressLabel>Configuring enumerated list {name}</ProgressLabel>
+      <Description>Creates an enumerated list (a set of allowed values) on a data source and optionally attaches it to a column.
+action=add creates a static list (optionally seeded with values); action=create_from_column builds a dynamic list from a column's distinct values.
+Use assign_to_column_guid to attach the enum to a column so its restrictions show a dropdown.</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"action":{"type":"string","enum":["add","create_from_column"],"description":"add: static list. create_from_column: dynamic list from a column's distinct values."},"name":{"type":"string","description":"Display name of the enumerated list."},"column_guid":{"type":"string","description":"For create_from_column: the source column GUID (from datasource_get_detail)."},"values":{"type":"array","items":{"type":"string"},"description":"For action=add: optional initial values."},"assign_to_column_guid":{"type":"string","description":"Optional: column GUID to attach this enum to."}},"required":[]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_manage_enum.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0007-1111-4aaa-bbbb-d5e000000007</GUID>
+      <Name>datasource_set_column_sql</Name>
+      <ProgressLabel>Changing the SQL of a column</ProgressLabel>
+      <Description>Changes a column's underlying SQL expression, type, or aggregate flag.
+HIGH IMPACT: this changes results in EVERY report that uses the column. You MUST first call datasource_find_usage, show the affected reports to the user, get explicit approval, then call this with confirm=true.</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the column to change (from datasource_get_detail)."},"sql":{"type":"string","description":"New SQL name or expression for the column."},"type":{"type":"string","enum":["Default","Text","Numeric","DateTime","UnicodeText"],"description":"New column data type."},"is_aggregate":{"type":"boolean","description":"Whether the expression is an aggregate."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the change shown by datasource_find_usage."}},"required":["column_guid","confirm"]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_set_column_sql.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0008-1111-4aaa-bbbb-d5e000000008</GUID>
+      <Name>datasource_apply_join</Name>
+      <ProgressLabel>Applying a join</ProgressLabel>
+      <Description>Adds or updates a join between two tables of a SQL data source.
+A wrong join skews results across reports — review it with the user first, then call with confirm=true.
+Pass join_guid to update an existing join; omit it to add a new one (both left_table and right_table required).</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"left_table":{"type":"string","description":"Name or alias of the left table."},"right_table":{"type":"string","description":"Name or alias of the right table."},"clause":{"type":"string","description":"Join clause, e.g. Orders.CustomerID = Customers.CustomerID."},"join_type":{"type":"string","enum":["Inner","LeftOuter","RightOuter","Cross"],"description":"Join type. Default LeftOuter when omitted on a new join."},"is_bidirectional":{"type":"boolean","description":"Whether the join can be used in both directions. Default true."},"join_guid":{"type":"string","description":"GUID of an existing join to update. Omit to add a new join."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has reviewed the join."}},"required":["confirm"]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_apply_join.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a0009-1111-4aaa-bbbb-d5e000000009</GUID>
+      <Name>datasource_remove</Name>
+      <ProgressLabel>Removing {object_type} from the data source</ProgressLabel>
+      <Description>Removes a table, column, join, or enum from a data source.
+Can break reports that use the removed object. You MUST first call datasource_find_usage, show the affected reports, get explicit approval, then call this with confirm=true.
+Identify the object by guid (preferred) or name.</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"object_type":{"type":"string","enum":["table","column","join","enum"],"description":"Kind of object to remove."},"guid":{"type":"string","description":"GUID of the object to remove (from datasource_get_detail)."},"name":{"type":"string","description":"Name of the object to remove (used when guid is not given)."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the removal shown by datasource_find_usage."}},"required":["object_type","confirm"]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_remove.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>5e1a000a-1111-4aaa-bbbb-d5e00000000a</GUID>
+      <Name>datasource_refresh_schema</Name>
+      <ProgressLabel>Refreshing the data source schema</ProgressLabel>
+      <Description>Re-reads the database schema into the source's dynamic-column tables (adds new columns, updates types, DROPS columns no longer in the database).
+Standard (non-dynamic) tables are not affected. Can change reports — you MUST first call datasource_find_usage, get explicit approval, then call with confirm=true.
+Pass table_name to refresh a single table, or omit to refresh all dynamic tables.</Description>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Optional: name/alias of a single dynamic table to refresh. Omit to refresh all dynamic tables."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the refresh."}},"required":["confirm"]}</ParametersSchema>
+      <ExecutionScriptFile>datasource_refresh_schema.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
   </AITools>
   <AISkills>
     <AISkillConfiguration>
@@ -390,6 +486,32 @@ Load this when the user explicitly asks to delete, rename, move, or copy a repor
         <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
       </ToolGUIDs>
     </AISkillConfiguration>
+    <AISkillConfiguration>
+      <GUID>5e1a5c11-1111-4aaa-bbbb-d5e0000c5c11</GUID>
+      <Name>manage-data-source</Name>
+      <ProgressLabel>Preparing to manage the data source</ProgressLabel>
+      <Description>Edit the data source / metadata model itself (not a report):
+add a table or derived column, rename/reformat a column, build an enumerated list, create or fix a join, change a column's SQL, or remove/refresh metadata.
+Because a data source is shared by many reports, destructive changes first check report usage and require confirmation.
+Load this when the user asks to change the metadata model, add tables/columns, define enums, or set up joins.</Description>
+      <InstructionsFile>manage-data-source.md</InstructionsFile>
+      <ToolGUIDs>
+        <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
+        <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
+        <GUID>f56c62db-9a53-413e-8df4-6dde496adff4</GUID>
+        <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
+        <GUID>5e1a0001-1111-4aaa-bbbb-d5e000000001</GUID>
+        <GUID>5e1a0006-1111-4aaa-bbbb-d5e000000006</GUID>
+        <GUID>5e1a0002-1111-4aaa-bbbb-d5e000000002</GUID>
+        <GUID>5e1a0003-1111-4aaa-bbbb-d5e000000003</GUID>
+        <GUID>5e1a0004-1111-4aaa-bbbb-d5e000000004</GUID>
+        <GUID>5e1a0005-1111-4aaa-bbbb-d5e000000005</GUID>
+        <GUID>5e1a0007-1111-4aaa-bbbb-d5e000000007</GUID>
+        <GUID>5e1a0008-1111-4aaa-bbbb-d5e000000008</GUID>
+        <GUID>5e1a0009-1111-4aaa-bbbb-d5e000000009</GUID>
+        <GUID>5e1a000a-1111-4aaa-bbbb-d5e00000000a</GUID>
+      </ToolGUIDs>
+    </AISkillConfiguration>
   </AISkills>
   <DefaultProviderGUID />
   <DefaultAgentGUID />
@@ -418,6 +540,7 @@ explores data sources, validates SQL, and creates SQL-based or metadata-based re
         <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6073</GUID>
         <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6074</GUID>
         <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6079</GUID>
+        <GUID>5e1a5c11-1111-4aaa-bbbb-d5e0000c5c11</GUID>
       </SkillGUIDs>
       <DefaultSystemPrompt />
       <SystemPromptFile>designer-system-prompt.md</SystemPromptFile>
@@ -477,6 +600,23 @@ reads event, execution, and schedule logs, inspects reports and sources, and man
       <DefaultSystemPrompt />
       <SystemPromptFile>admin-system-prompt.md</SystemPromptFile>
       <SamplePromptsFile>admin-sample-prompts.md</SamplePromptsFile>
+    </AIAgentConfiguration>
+    <AIAgentConfiguration>
+      <GUID>e5d4a000-1111-4aaa-bbbb-d5e0a6e70001</GUID>
+      <Name>Data Source Manager</Name>
+      <Description>Manages the data source metadata model from natural-language requests: adds tables and columns, builds enumerated lists and joins, edits or removes metadata, and checks which reports are impacted before any change.</Description>
+      <ProviderGUID>1</ProviderGUID>
+      <ToolGUIDs>
+        <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
+        <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
+        <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
+      </ToolGUIDs>
+      <SkillGUIDs>
+        <GUID>5e1a5c11-1111-4aaa-bbbb-d5e0000c5c11</GUID>
+      </SkillGUIDs>
+      <DefaultSystemPrompt />
+      <SystemPromptFile>datasource-system-prompt.md</SystemPromptFile>
+      <SamplePromptsFile>datasource-sample-prompts.md</SamplePromptsFile>
     </AIAgentConfiguration>
   </AIAgents>
 </AIServerConfiguration>

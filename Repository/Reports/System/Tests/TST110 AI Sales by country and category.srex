@@ -90,8 +90,8 @@
     Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
     report.StringTag = outputDir;
 
-    //Default result (overwritten with the match rate by 'Check Pattern'); read by '900 Tests' from report.Tag2
-    report.Tag2 = new object[] { provider.Name, 0.0, "Error", null };
+    //Default result (overwritten with the match rate by 'Check Pattern'); read by '900 Tests' from report.ResultTag
+    report.ResultTag = new object[] { provider.Name, 0.0, "Error", null };
 
     //Security context with write access to the output folder
     var user = new SecurityUser(repository.Security);
@@ -128,9 +128,9 @@
     }
     catch (Exception ex)
     {
-        var pr = report.Tag2 as object[];
+        var pr = report.ResultTag as object[];
         var pn = pr != null ? (string)pr[0] : null;
-        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -253,7 +253,7 @@
     Report report = task.Report;
     var repository = report.Repository;
     var outputDir = report.StringTag;
-    var providerName = (report.Tag2 as object[])?[0] as string;
+    var providerName = (report.ResultTag as object[])?[0] as string;
 
     task.LogMessage($"Executing '{task.Name}'");
 
@@ -303,13 +303,13 @@
 
         if (failures.Count &gt; 0)
         {
-            //Record the failed result for '900 Tests' (report.Tag2), then fail the report
-            report.Tag2 = new object[] { providerName, rate, "Error", string.Join(Environment.NewLine, failures), warningText };
+            //Record the failed result for '900 Tests' (report.ResultTag), then fail the report
+            report.ResultTag = new object[] { providerName, rate, "Error", string.Join(Environment.NewLine, failures), warningText };
             throw new Exception(string.Join(Environment.NewLine, failures));
         }
 
-        //Record the provider match rate for the test runner ('900 Tests' reads report.Tag2)
-        report.Tag2 = new object[] { providerName, rate, "Success", null, warningText };
+        //Record the provider match rate for the test runner ('900 Tests' reads report.ResultTag)
+        report.ResultTag = new object[] { providerName, rate, "Success", null, warningText };
 }
 
 @functions {

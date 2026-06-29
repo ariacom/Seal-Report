@@ -1,0 +1,74 @@
+@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var leftName  = args.TryGetProperty("left_table", out var ltp) ? ltp.GetString() : null;
+    var rightName = args.TryGetProperty("right_table", out var rtp) ? rtp.GetString() : null;
+    var clause    = args.TryGetProperty("clause", out var clp) ? clp.GetString() : null;
+    var joinType  = args.TryGetProperty("join_type", out var jtp) ? jtp.GetString() : null;
+    var biDir     = !args.TryGetProperty("is_bidirectional", out var bdp) || bdp.GetBoolean();
+    var joinGuid  = args.TryGetProperty("join_guid", out var jgp) ? jgp.GetString() : null;
+    var confirm   = args.TryGetProperty("confirm", out var cfp) && cfp.GetBoolean();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' ({leftName} <-> {rightName})..");
+
+    if (!confirm) { tool.ExecResult = "Error: a wrong join skews results in EVERY report on this source. Review the join with the user and call again with confirm=true."; return; }
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+
+    Func<string, MetaTable> findTable = n => source.MetaData.Tables.FirstOrDefault(t =>
+        string.Equals(t.Name, n, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(t.AliasName, n, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(t.Alias, n, StringComparison.OrdinalIgnoreCase));
+
+    Func<MetaSource, string> backup = s => {
+        if (!string.IsNullOrEmpty(s.FilePath) && File.Exists(s.FilePath)) {
+            var b = s.FilePath + ".bak-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            File.Copy(s.FilePath, b, true); return Path.GetFileName(b);
+        }
+        return "(none)";
+    };
+
+    try
+    {
+        MetaJoin join;
+        bool updating = !string.IsNullOrEmpty(joinGuid);
+        if (updating)
+        {
+            join = source.MetaData.Joins.FirstOrDefault(j => string.Equals(j.GUID, joinGuid, StringComparison.OrdinalIgnoreCase));
+            if (join == null) { tool.ExecResult = "Error: join_guid not found."; return; }
+        }
+        else join = source.AddJoin();
+
+        if (!string.IsNullOrEmpty(leftName))
+        { var lt = findTable(leftName); if (lt == null) { if (!updating) source.RemoveJoin(join); tool.ExecResult = $"Error: left_table '{leftName}' not found."; return; } join.LeftTableGUID = lt.GUID; }
+        if (!string.IsNullOrEmpty(rightName))
+        { var rt = findTable(rightName); if (rt == null) { if (!updating) source.RemoveJoin(join); tool.ExecResult = $"Error: right_table '{rightName}' not found."; return; } join.RightTableGUID = rt.GUID; }
+        if (!string.IsNullOrEmpty(clause)) join.Clause = clause;
+        if (!string.IsNullOrEmpty(joinType) && Enum.TryParse<JoinType>(joinType, true, out var jt)) join.JoinType = jt;
+        join.IsBiDirectional = biDir;
+
+        if (join.LeftTable == null || join.RightTable == null)
+        { if (!updating) source.RemoveJoin(join); tool.ExecResult = "Error: both left_table and right_table are required for a new join."; return; }
+
+        source.LastMetadataModification = DateTime.Now;
+        var bak = backup(source);
+        source.SaveToFile();
+        tool.ExecResult = $"{(updating ? "Updated" : "Added")} join '{join.Name}' (GUID: {join.GUID}): {join.LeftTable.AliasName} {join.JoinType} {join.RightTable.AliasName} ON {join.Clause}. Backup: {bak}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

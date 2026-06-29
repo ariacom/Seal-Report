@@ -90,8 +90,8 @@
     Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
     report.StringTag = outputDir;
 
-    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2
-    report.Tag2 = new object[] { provider.Name, null, "Error", null };
+    //Default result (overwritten with the final status); read by '900 Tests' from report.ResultTag
+    report.ResultTag = new object[] { provider.Name, null, "Error", null };
 
     //Security context with Edit access to the output folder (\System\Tests)
     var user = new SecurityUser(repository.Security);
@@ -128,9 +128,9 @@
     }
     catch (Exception ex)
     {
-        var pr = report.Tag2 as object[];
+        var pr = report.ResultTag as object[];
         var pn = pr != null ? (string)pr[0] : null;
-        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -184,9 +184,9 @@
     }
     catch (Exception ex)
     {
-        var pr = report.Tag2 as object[];
+        var pr = report.ResultTag as object[];
         var pn = pr != null ? (string)pr[0] : null;
-        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -273,7 +273,7 @@
     }
     catch (Exception ex)
     {
-        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -306,9 +306,9 @@
     ReportTask task = Model;
     Report report = task.Report;
 
-    var pr = report.Tag2 as object[];
+    var pr = report.ResultTag as object[];
     var providerName = pr != null ? (string)pr[0] : null;
-    report.Tag2 = new object[] { providerName, null, "Success", null };
+    report.ResultTag = new object[] { providerName, null, "Success", null };
     task.LogMessage($"[{providerName}] style-report-view check passed.");
 }
 </Script>

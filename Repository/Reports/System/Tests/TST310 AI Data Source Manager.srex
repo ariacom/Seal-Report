@@ -1,0 +1,436 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>a3103100-0000-4000-8000-000000000000</GUID>
+  <ViewGUID>a3103100-0000-4000-8000-000000000001</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>a3103100-0000-4000-8000-000000000010</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>a3103100-0000-4000-8000-000000000011</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>a3103100-0000-4000-8000-000000000020</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>a3103100-0000-4000-8000-000000000030</GUID>
+      <Name>Model</Name>
+      <SourceGUID>a3103100-0000-4000-8000-000000000020</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>a3103100-0000-4000-9000-000000000001</GUID>
+      <Name>Init</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a3103100-0000-4000-8000-000000000020</SourceGUID>
+      <Script>@using Seal.AI;
+@using Seal.Model;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+    const string sourceName = "TST310 Test Source";
+
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider.
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+
+    var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
+    var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
+    var outputDir = Path.Combine($@"Reports\System\Tests\Output\{subDir}", safeName);
+    var fullDir = Path.Combine(repository.RepositoryPath, outputDir);
+    report.StringTag = outputDir;
+    report.ResultTag = new object[] { provider.Name, 0.0, "Error", null, null };
+
+    //Pre-clean any leftover disposable source from a previous (possibly crashed) run.
+    var stale = Repository.Instance.Sources.FirstOrDefault(s =&gt; s.Name == sourceName);
+    if (stale != null) Repository.Instance.Sources.Remove(stale);
+    if (Directory.Exists(fullDir))
+        foreach (var f in Directory.GetFiles(fullDir)) { try { File.Delete(f); } catch { } }
+    Directory.CreateDirectory(fullDir);
+
+    //Build a DISPOSABLE source from Northwind (reusing its connection) but with EMPTY metadata and a FRESH GUID.
+    //Fresh GUID =&gt; no report references it =&gt; find_usage is clean and destructive edits are safe.
+    var northwind = repository.Sources.FirstOrDefault(s =&gt; s.Name == "Northwind");
+    if (northwind == null) throw new Exception("Northwind data source not found in the repository.");
+    var src = MetaSource.LoadFromFile(northwind.FilePath);
+    src.GUID = Guid.NewGuid().ToString();
+    src.Name = sourceName;
+    src.MetaData.Tables.Clear();
+    src.MetaData.Joins.Clear();
+    src.MetaData.Enums.Clear();
+    src.FilePath = Path.Combine(fullDir, sourceName + ".scfx");
+    src.InitReferences(repository);
+    src.SaveToFile();
+    Repository.Instance.Sources.Add(src);
+
+    //Editing context: write (Edit) access to the output folder (Group System Tests).
+    var user = new SecurityUser(repository.Security);
+    user.AddSecurityGroup("Group System Tests");
+    user.SetFolders();
+    report.SecurityContext = user;
+
+    task.LogMessage($"[{provider.Name}] Disposable source '{sourceName}' created (GUID {src.GUID}) at {outputDir}.");
+}
+</Script>
+      <SortOrder>0</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>a3103100-0000-4000-9000-000000000002</GUID>
+      <Name>Edit scenarios</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a3103100-0000-4000-8000-000000000020</SourceGUID>
+      <Script>@using Seal.AI;
+@using Seal.Model;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+    const string sourceName = "TST310 Test Source";
+    var outputDir = report.StringTag;
+    var fullDir = Path.Combine(repository.RepositoryPath, outputDir);
+
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    try
+    {
+        Func&lt;MetaSource&gt; findSource = () =&gt; Repository.Instance.Sources.FirstOrDefault(s =&gt; s.Name == sourceName);
+        Func&lt;string, MetaTable&gt; table = n =&gt; { var s = findSource(); return s == null ? null : s.MetaData.Tables.FirstOrDefault(t =&gt; t.Name == n || t.AliasName == n); };
+
+        Func&lt;string, string, string&gt; ask = (name, request) =&gt; {
+            var cfg = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Data Source Manager"));
+            cfg.ProviderGUID = provider.GUID;
+            var agent = new AIAgent(cfg);
+            agent.SecurityContext = report.SecurityContext;
+            task.LogMessage($"--- Scenario: {name} ---");
+            if (chatLog != null) task.LogMessage("Q: " + request);
+            string ans = null;
+            try { ans = agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog); }
+            catch (Exception cex) { task.LogMessage("Chat error: " + cex.Message); }
+            if (chatLog != null &amp;&amp; ans != null) task.LogMessage("A: " + ans);
+            return ans;
+        };
+
+        int passed = 0, total = 0;
+        var failures = new List&lt;string&gt;();
+        Action&lt;string, bool&gt; check = (label, ok) =&gt; {
+            total++;
+            if (ok) { passed++; task.LogMessage("OK: " + label); }
+            else { failures.Add(label); task.LogMessage("FAILED: " + label); }
+        };
+
+        if (!report.Cancel)
+        {
+            ask("Add table Orders", $"Using the data source '{sourceName}', add the database table 'Orders' to it. Add only that table.");
+            var t1 = table("Orders");
+            check("Orders table added with columns", t1 != null &amp;&amp; t1.Columns.Count &gt; 0);
+        }
+        if (!report.Cancel)
+        {
+            ask("Add table Customers", $"Using the data source '{sourceName}', add the database table 'Customers' to it. Add only that table.");
+            var t2 = table("Customers");
+            check("Customers table added with columns", t2 != null &amp;&amp; t2.Columns.Count &gt; 0);
+        }
+        if (!report.Cancel)
+        {
+            ask("Add derived column", $"Using the data source '{sourceName}', add a derived column to the Orders table. Its display name must be exactly 'Order Year' and its SQL expression must extract the year from the Orders order date column.");
+            var t1 = table("Orders");
+            check("Order Year column added", t1 != null &amp;&amp; t1.Columns.Any(c =&gt; c.DisplayName == "Order Year"));
+        }
+        if (!report.Cancel)
+        {
+            ask("Create and attach enum", $"Using the data source '{sourceName}', create an enumerated list built from the distinct values of the Customers Country column, and attach it to that Country column.");
+            var t2 = table("Customers");
+            var s = findSource();
+            bool enumOk = s != null &amp;&amp; s.MetaData.Enums.Count &gt; 0
+                &amp;&amp; t2 != null &amp;&amp; t2.Columns.Any(c =&gt; (c.DisplayName == "Country" || c.Name.EndsWith("Country")) &amp;&amp; !string.IsNullOrEmpty(c.EnumGUID));
+            check("Country enum created and attached", enumOk);
+        }
+        if (!report.Cancel)
+        {
+            ask("Add join (confirm)", $"Using the data source '{sourceName}', add a join between the Orders and Customers tables on the CustomerID column. I approve this change - proceed with confirm.");
+            var s = findSource();
+            bool joinOk = s != null &amp;&amp; s.MetaData.Joins.Any(j =&gt;
+                j.LeftTable != null &amp;&amp; j.RightTable != null &amp;&amp;
+                ((j.LeftTable.Name == "Orders" &amp;&amp; j.RightTable.Name == "Customers") || (j.LeftTable.Name == "Customers" &amp;&amp; j.RightTable.Name == "Orders")));
+            check("Orders-Customers join added", joinOk);
+        }
+        if (!report.Cancel)
+        {
+            ask("Find usage and remove (confirm)", $"Using the data source '{sourceName}', first check which reports use the 'Order Year' column of the Orders table, then - since no report uses it - remove that column. I approve the removal - proceed with confirm.");
+            var t1 = table("Orders");
+            bool removed = t1 != null &amp;&amp; !t1.Columns.Any(c =&gt; c.DisplayName == "Order Year");
+            var baks = Directory.Exists(fullDir) ? Directory.GetFiles(fullDir, "*bak*") : new string[0];
+            check("Order Year column removed", removed);
+            check("Backup created before write", baks.Length &gt; 0);
+        }
+
+        var rate = total &gt; 0 ? Math.Round(100.0 * passed / total, 1) : 0.0;
+        var detail = failures.Count &gt; 0 ? string.Join(Environment.NewLine, failures) : null;
+        //Status from the match rate: 100% = Success, &gt;= 80% = Warning (recorded but green), otherwise Error.
+        string status = rate &gt;= 100 ? "Success" : (rate &gt;= 80 ? "Warning" : "Error");
+        string errorText = status == "Error" ? detail : null;
+        string warningText = status == "Success" ? null : detail;
+        report.ResultTag = new object[] { provider.Name, rate, status, errorText, warningText };
+        task.LogMessage($"[{provider.Name}] Data Source Manager match rate: {rate}% ({passed}/{total}). Status={status}.");
+    }
+    catch (Exception ex)
+    {
+        report.ResultTag = new object[] { provider.Name, 0.0, "Error", $"[{task.Name}] {ex.Message}", null };
+        task.LogMessage($"[{task.Name}] error: {ex.Message}");
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>a3103100-0000-4000-9000-000000000003</GUID>
+      <Name>Guardrail (read-only denied)</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a3103100-0000-4000-8000-000000000020</SourceGUID>
+      <Script>@using Seal.AI;
+@using Seal.Model;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+    const string sourceName = "TST310 Test Source";
+
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    try
+    {
+        var src = Repository.Instance.Sources.FirstOrDefault(s =&gt; s.Name == sourceName);
+        if (src == null || string.IsNullOrEmpty(src.FilePath) || !File.Exists(src.FilePath))
+        {
+            task.LogMessage("Guardrail skipped: disposable source file not found.");
+            return;
+        }
+        var before = File.ReadAllBytes(src.FilePath);
+
+        //Read-only context: NO Edit right on the source folder -&gt; every edit tool must deny and change nothing.
+        var user = new SecurityUser(repository.Security);
+        user.AddSecurityGroup("Group Data Analyst Tests");
+        user.SetFolders();
+
+        var cfg = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Data Source Manager"));
+        cfg.ProviderGUID = provider.GUID;
+        var agent = new AIAgent(cfg);
+        agent.SecurityContext = user;
+        var request = $"Using the data source '{sourceName}', remove the 'Order ID' column from the Orders table. I approve - proceed with confirm.";
+        if (chatLog != null) task.LogMessage(request);
+        try { agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog); }
+        catch (Exception cex) { task.LogMessage($"Agent did not process the request ({cex.Message}); verifying the source is unchanged."); }
+        if (report.Cancel) return;
+
+        var after = File.ReadAllBytes(src.FilePath);
+        bool unchanged = before.Length == after.Length &amp;&amp; before.SequenceEqual(after);
+        if (!unchanged)
+        {
+            var msg = "SECURITY FAILURE: a read-only context modified the data source without Edit rights.";
+            report.ResultTag = new object[] { provider.Name, 0.0, "Error", msg, null };
+            task.LogMessage(msg);
+        }
+        else task.LogMessage("Guardrail OK: data source unchanged under a read-only context.");
+    }
+    catch (Exception ex)
+    {
+        task.LogMessage($"[{task.Name}] error: {ex.Message}");
+    }
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>a3103100-0000-4000-9000-000000000004</GUID>
+      <Name>Cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a3103100-0000-4000-8000-000000000020</SourceGUID>
+      <Script>@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    const string sourceName = "TST310 Test Source";
+    var outputDir = report.StringTag;
+
+    try
+    {
+        var src = Repository.Instance.Sources.FirstOrDefault(s =&gt; s.Name == sourceName);
+        if (src != null) Repository.Instance.Sources.Remove(src);
+        if (!string.IsNullOrEmpty(outputDir))
+        {
+            var dir = Path.Combine(repository.RepositoryPath, outputDir);
+            if (Directory.Exists(dir))
+                foreach (var f in Directory.GetFiles(dir)) { try { File.Delete(f); } catch { } }
+        }
+        task.LogMessage($"Cleanup done: disposable source '{sourceName}' removed.");
+    }
+    catch (Exception ex)
+    {
+        task.LogMessage($"[{task.Name}] cleanup warning: {ex.Message}");
+    }
+}
+</Script>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>a3103100-0000-4000-9000-000000000005</GUID>
+      <Name>Result</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>a3103100-0000-4000-8000-000000000020</SourceGUID>
+      <Script>@{
+    ReportTask task = Model;
+    Report report = task.Report;
+
+    //Finalize: the status was set from the match rate by 'Edit scenarios' / 'Guardrail'.
+    //Re-throw on Error so the run is marked failed; Warning and Success keep it green.
+    var pr = report.ResultTag as object[];
+    var providerName = pr != null ? (string)pr[0] : null;
+    var rate = pr != null &amp;&amp; pr[1] != null ? pr[1] : (object)0.0;
+    var status = pr != null &amp;&amp; pr.Length &gt; 2 ? (string)pr[2] : "Error";
+    var detail = pr != null &amp;&amp; pr.Length &gt; 3 ? (string)pr[3] : null;
+
+    if (status == "Error")
+    {
+        task.LogMessage($"[{providerName}] Data Source Manager test FAILED (match rate {rate}%).");
+        throw new Exception(detail ?? $"Data Source Manager match rate below threshold ({rate}%).");
+    }
+    task.LogMessage($"[{providerName}] Data Source Manager test {status} (match rate {rate}%).");
+}
+</Script>
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>a3103100-0000-4000-8000-000000000001</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>a3103100-0000-4000-8000-000000000041</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>a3103100-0000-4000-8000-000000000042</GUID>
+              <Name>Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>a3103100-0000-4000-8000-000000000043</GUID>
+                  <Name>Page Table</Name>
+                  <TemplateName>Page Table</TemplateName>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>a3103100-0000-4000-8000-000000000044</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>a3103100-0000-4000-8000-000000000030</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

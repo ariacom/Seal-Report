@@ -1,0 +1,66 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args     = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var tblName  = args.TryGetProperty("table_name", out var tnp) ? tnp.GetString() : null;
+    var confirm  = args.TryGetProperty("confirm", out var cfp) && cfp.GetBoolean();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table_name: {tblName})..");
+
+    if (!confirm) { tool.ExecResult = "Error: refreshing the schema can add columns, change types, and DROP columns no longer in the database, affecting reports. First call datasource_find_usage for the affected table, get explicit approval, then call again with confirm=true."; return; }
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+
+    Func<MetaSource, string> backup = s => {
+        if (!string.IsNullOrEmpty(s.FilePath) && File.Exists(s.FilePath)) {
+            var b = s.FilePath + ".bak-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            File.Copy(s.FilePath, b, true); return Path.GetFileName(b);
+        }
+        return "(none)";
+    };
+
+    try
+    {
+        var toRefresh = source.MetaData.Tables.Where(t => t.DynamicColumns).ToList();
+        if (!string.IsNullOrEmpty(tblName))
+        {
+            toRefresh = toRefresh.Where(t =>
+                string.Equals(t.Name, tblName, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(t.AliasName, tblName, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(t.Alias, tblName, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (toRefresh.Count == 0) { tool.ExecResult = $"Error: no dynamic-column table named '{tblName}' found. Only tables with dynamic columns can be refreshed."; return; }
+        }
+        if (toRefresh.Count == 0) { tool.ExecResult = "No dynamic-column tables to refresh in this source (standard tables keep their columns; edit them with the column tools)."; return; }
+
+        var sb = new StringBuilder();
+        foreach (var t in toRefresh)
+        {
+            int before = t.Columns.Count;
+            t.MustRefresh = true;
+            t.Refresh();
+            if (!string.IsNullOrEmpty(t.Error)) sb.AppendLine($"  {t.AliasName}: ERROR {t.Error}");
+            else sb.AppendLine($"  {t.AliasName}: {before} -> {t.Columns.Count} column(s)");
+        }
+
+        source.LastMetadataModification = DateTime.Now;
+        var bak = backup(source);
+        source.SaveToFile();
+        tool.ExecResult = $"Refreshed {toRefresh.Count} table(s) in '{source.Name}'. Backup: {bak}\r\n{sb}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

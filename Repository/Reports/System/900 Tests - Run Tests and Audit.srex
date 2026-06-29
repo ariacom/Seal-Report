@@ -428,9 +428,9 @@
 
         string messagesFile = WriteMessagesHtml(repository, name, providerName, runDate, status, messages, error);
 
-        //Prefer the report's own provider result (report.Tag2 = { name, rate, status, error });
+        //Prefer the report's own provider result (report.ResultTag = { name, rate, status, error });
         //otherwise record this iteration's provider name (if any) with the execution status.
-        var pr = report.Tag2 as object[];
+        var pr = report.ResultTag as object[];
         if (pr != null) {
             var pName = (string)pr[0];
             var pRate = pr[1] == null ? (object)null : Convert.ToDecimal(pr[1]); //match rate (%)

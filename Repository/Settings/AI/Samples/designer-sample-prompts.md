@@ -21,3 +21,10 @@ Add a bar chart to the [report name] report
 Rename the [report name] report to [new name]
 Move the [report name] report to the [folder] folder
 
+# --- Manage data source ---
+Which reports use the [column] column?
+For [source], add the [table] table
+For [source], add a full name column to the [table] table
+For [source], suggest joins between the tables
+For [source], create an enumerated list from the [column] column
+

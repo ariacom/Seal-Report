@@ -90,9 +90,9 @@
     Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
     report.StringTag = outputDir;
 
-    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2.
+    //Default result (overwritten with the final status); read by '900 Tests' from report.ResultTag.
     //Slots: provider, rate, status (Success/Warning/Error), error detail, warning detail.
-    report.Tag2 = new object[] { provider.Name, null, "Error", null, null };
+    report.ResultTag = new object[] { provider.Name, null, "Error", null, null };
 
     //Security context with Edit access to the output folder (\System\Tests)
     var user = new SecurityUser(repository.Security);
@@ -131,9 +131,9 @@
     }
     catch (Exception ex)
     {
-        var pr = report.Tag2 as object[];
+        var pr = report.ResultTag as object[];
         var pn = pr != null ? (string)pr[0] : null;
-        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}", null };
+        report.ResultTag = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}", null };
         throw;
     }
 }
@@ -181,7 +181,7 @@
     if (mongo == null)
     {
         var msg0 = "The 'Mongo DB' NoSQL data source is not configured in this repository.";
-        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {msg0}", null };
+        report.ResultTag = new object[] { provider.Name, null, "Error", $"[{task.Name}] {msg0}", null };
         throw new Exception(msg0);
     }
 
@@ -250,7 +250,7 @@
         foreach (var m in pc.Messages) task.LogMessage("  - " + m);
         if (pc.Status == "FAILURE") throw new Exception($"Pattern mismatch ({pc.Score}%): {string.Join("; ", pc.Messages)}");
 
-        report.Tag2 = new object[] { provider.Name, pc.Score, "Success", null, null };
+        report.ResultTag = new object[] { provider.Name, pc.Score, "Success", null, null };
         task.LogMessage($"[{provider.Name}] NoSQL 'sales per year' report created and matches the pattern ({pc.Score}%). (MongoDB not executed: Atlas unreachable from the test host.)");
     }
     catch (Exception ex)
@@ -258,7 +258,7 @@
         if (report.Cancel) return;
         //Model-capability shortfall (invalid/incomplete report, wrong fields, pattern mismatch): record as a
         //non-fatal Warning - weaker models often fail to emit a valid NoSQL .srex (see report comments).
-        report.Tag2 = new object[] { provider.Name, null, "Warning", null, $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { provider.Name, null, "Warning", null, $"[{task.Name}] {ex.Message}" };
         task.LogMessage($"[{provider.Name}] WARNING - build-nosql-report did not produce a valid report matching the pattern: {ex.Message}");
     }
 }
@@ -341,7 +341,7 @@
 
     //Status was set by 'Create NoSQL report': Success (valid executing report) or Warning (model could
     //not build a valid NoSQL report). Re-throw only on Error (infrastructure); Warning/Success stay green.
-    var pr = report.Tag2 as object[];
+    var pr = report.ResultTag as object[];
     var providerName = pr != null ? (string)pr[0] : null;
     var status = pr != null &amp;&amp; pr.Length &gt; 2 ? (string)pr[2] : "Error";
     var errorDetail = pr != null &amp;&amp; pr.Length &gt; 3 ? (string)pr[3] : null;

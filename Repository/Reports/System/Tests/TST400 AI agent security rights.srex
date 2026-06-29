@@ -91,8 +91,8 @@
     Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
     report.StringTag = outputDir;
 
-    //Default result (overwritten with the final status); read by '900 Tests' from report.Tag2
-    report.Tag2 = new object[] { provider.Name, null, "Error", null };
+    //Default result (overwritten with the final status); read by '900 Tests' from report.ResultTag
+    report.ResultTag = new object[] { provider.Name, null, "Error", null };
 
     task.LogMessage($"Testing AI agent security rights for provider '{provider.Name}' -&gt; {outputDir}");
 }
@@ -123,9 +123,9 @@
     }
     catch (Exception ex)
     {
-        var pr = report.Tag2 as object[];
+        var pr = report.ResultTag as object[];
         var pn = pr != null ? (string)pr[0] : null;
-        report.Tag2 = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -216,7 +216,7 @@
     }
     catch (Exception ex)
     {
-        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -302,7 +302,7 @@
     }
     catch (Exception ex)
     {
-        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -397,7 +397,7 @@
     }
     catch (Exception ex)
     {
-        report.Tag2 = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        report.ResultTag = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
         throw;
     }
 }
@@ -415,10 +415,10 @@
     ReportTask task = Model;
     Report report = task.Report;
 
-    //All security checks passed: record the success result read by '900 Tests' from report.Tag2
-    var pr = report.Tag2 as object[];
+    //All security checks passed: record the success result read by '900 Tests' from report.ResultTag
+    var pr = report.ResultTag as object[];
     var providerName = pr != null ? (string)pr[0] : null;
-    report.Tag2 = new object[] { providerName, null, "Success", null };
+    report.ResultTag = new object[] { providerName, null, "Success", null };
     task.LogMessage($"[{providerName}] All AI agent security checks passed.");
 }
 </Script>

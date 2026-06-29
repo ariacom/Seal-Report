@@ -1,0 +1,71 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+    if (source.IsNoSQL) { tool.ExecResult = "Error: join suggestions are not supported on a NoSQL source."; return; }
+
+    Func<MetaColumn, string> bare = c => {
+        var n = string.IsNullOrEmpty(c.ColumnName) ? c.Name : c.ColumnName;
+        var dot = n.LastIndexOf('.');
+        return (dot >= 0 ? n.Substring(dot + 1) : n).Trim();
+    };
+
+    var tables = source.MetaData.Tables.Where(t => t.Columns.Count > 0).ToList();
+    var existing = new HashSet<string>(source.MetaData.Joins.Select(j =>
+        (j.LeftTable?.GUID ?? "") + "|" + (j.RightTable?.GUID ?? "")), StringComparer.OrdinalIgnoreCase);
+
+    var proposals = new List<string>();
+    for (int i = 0; i < tables.Count; i++)
+        for (int k = i + 1; k < tables.Count; k++)
+        {
+            var a = tables[i]; var b = tables[k];
+            if (existing.Contains(a.GUID + "|" + b.GUID) || existing.Contains(b.GUID + "|" + a.GUID)) continue;
+
+            // key-like columns shared by name between the two tables
+            var shared = a.Columns
+                .Select(bare)
+                .Where(n => n.Length > 2 && (n.ToLower().EndsWith("id") || n.ToLower().EndsWith("code") || n.ToLower().EndsWith("key")))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Where(n => b.Columns.Select(bare).Any(bn => string.Equals(bn, n, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+
+            foreach (var key in shared)
+            {
+                var clause = $"{a.AliasName}.{key} = {b.AliasName}.{key}";
+                proposals.Add($"  {a.AliasName} <-> {b.AliasName}  (LeftOuter)\r\n      ON {clause}");
+                if (proposals.Count >= 40) break;
+            }
+            if (proposals.Count >= 40) break;
+        }
+
+    var sb = new StringBuilder();
+    sb.AppendLine($"Existing joins in '{source.Name}': {source.MetaData.Joins.Count}");
+    sb.AppendLine();
+    if (proposals.Count == 0)
+        sb.AppendLine("No additional joins suggested from shared key columns. Inspect the schema with datasource_get_detail and propose a join manually with datasource_apply_join.");
+    else
+    {
+        sb.AppendLine($"{proposals.Count} suggested join(s) (NOT applied — review with the user, then apply with datasource_apply_join):");
+        foreach (var p in proposals) sb.AppendLine(p);
+    }
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

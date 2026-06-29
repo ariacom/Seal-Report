@@ -1,0 +1,85 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args     = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var colGuid  = args.TryGetProperty("column_guid", out var cgp) ? cgp.GetString() : null;
+    var tblName  = args.TryGetProperty("table_name", out var tnp) ? tnp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (column_guid: {colGuid}, table_name: {tblName})..");
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+
+    if (string.IsNullOrEmpty(colGuid) && string.IsNullOrEmpty(tblName))
+    { tool.ExecResult = "Error: provide column_guid or table_name to search for."; return; }
+
+    // Build the set of metadata column GUIDs to look for, with a friendly label per GUID.
+    var targets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    foreach (var t in source.MetaData.Tables)
+        foreach (var c in t.Columns)
+        {
+            if (!string.IsNullOrEmpty(colGuid) && string.Equals(c.GUID, colGuid, StringComparison.OrdinalIgnoreCase))
+                targets[c.GUID] = $"{t.AliasName}.{c.Name} ({c.DisplayName})";
+            else if (!string.IsNullOrEmpty(tblName) &&
+                     (string.Equals(t.Name, tblName, StringComparison.OrdinalIgnoreCase) ||
+                      string.Equals(t.AliasName, tblName, StringComparison.OrdinalIgnoreCase) ||
+                      string.Equals(t.Alias, tblName, StringComparison.OrdinalIgnoreCase)))
+                targets[c.GUID] = $"{t.AliasName}.{c.Name} ({c.DisplayName})";
+        }
+
+    if (targets.Count == 0)
+    { tool.ExecResult = $"No matching column or table found in source '{source.Name}'. Use datasource_get_detail to get the exact GUIDs/names."; return; }
+
+    var repo = Repository.Instance;
+    var roots = new List<string>();
+    if (Directory.Exists(repo.ReportsFolder)) roots.Add(repo.ReportsFolder);
+    if (!string.IsNullOrEmpty(repo.PersonalFolder) && Directory.Exists(repo.PersonalFolder)) roots.Add(repo.PersonalFolder);
+
+    var hits = new List<string>();
+    int scanned = 0;
+    foreach (var root in roots)
+    {
+        foreach (var file in Directory.GetFiles(root, "*." + Repository.SealReportFileExtension, SearchOption.AllDirectories))
+        {
+            scanned++;
+            string content;
+            try { content = File.ReadAllText(file); } catch { continue; }
+            var matched = targets.Where(kv => content.IndexOf(kv.Key, StringComparison.OrdinalIgnoreCase) >= 0)
+                                 .Select(kv => kv.Value).ToList();
+            if (matched.Count > 0)
+            {
+                var rel = file.StartsWith(repo.ReportsFolder, StringComparison.OrdinalIgnoreCase)
+                    ? "Reports" + file.Substring(repo.ReportsFolder.Length)
+                    : file;
+                hits.Add($"  {rel}\r\n      uses: {string.Join(", ", matched)}");
+            }
+        }
+    }
+
+    var sb = new StringBuilder();
+    sb.AppendLine($"Scanned {scanned} report file(s) in source '{source.Name}'.");
+    sb.AppendLine($"Searched for {targets.Count} column(s): {string.Join(", ", targets.Values)}");
+    sb.AppendLine();
+    if (hits.Count == 0)
+        sb.AppendLine("No reports reference this column/table. A change here is safe (no known impact).");
+    else
+    {
+        sb.AppendLine($"{hits.Count} report(s) reference it — a destructive change WILL affect them:");
+        foreach (var h in hits) sb.AppendLine(h);
+    }
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

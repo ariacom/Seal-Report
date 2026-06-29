@@ -2693,6 +2693,14 @@ namespace Seal.Model
         public object Tag2;
 
         /// <summary>
+        /// Object that can be used at run-time to carry a structured result of the report,
+        /// e.g. consumed by a parent report or a test/audit harness. Dedicated, clearly-named
+        /// counterpart of <see cref="Tag"/>/<see cref="Tag2"/> for report results.
+        /// </summary>
+        [XmlIgnore]
+        public object ResultTag;
+
+        /// <summary>
         /// Object that can be used at run-time for any purpose
         /// </summary>
         [XmlIgnore]

@@ -1,0 +1,75 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using System.Data.Common
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args     = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var connGuid = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
+    var tblName  = args.TryGetProperty("table_name", out var tnp) ? tnp.GetString() : null;
+    var sql      = args.TryGetProperty("sql", out var sqp) ? sqp.GetString() : null;
+    var alias    = args.TryGetProperty("alias", out var alp) ? alp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (table_name: {tblName})..");
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+    if (source.IsNoSQL) { tool.ExecResult = "Error: adding tables to a NoSQL source is not supported by the AI tools; use the Server Manager."; return; }
+    if (string.IsNullOrEmpty(tblName) && string.IsNullOrEmpty(sql))
+    { tool.ExecResult = "Error: provide either table_name (a database table) or sql (a SELECT defining a custom table)."; return; }
+
+    Func<MetaSource, string> backup = s => {
+        if (!string.IsNullOrEmpty(s.FilePath) && File.Exists(s.FilePath)) {
+            var b = s.FilePath + ".bak-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            File.Copy(s.FilePath, b, true); return Path.GetFileName(b);
+        }
+        return "(none)";
+    };
+
+    try
+    {
+        MetaTable table = source.AddTable(false);
+        if (!string.IsNullOrEmpty(sql))
+        {
+            table.Alias = string.IsNullOrEmpty(alias) ? table.Name : alias;
+            table.Sql = sql;
+            table.DynamicColumns = true;
+            table.Refresh();
+            if (!string.IsNullOrEmpty(table.Error)) { source.RemoveTable(table); tool.ExecResult = $"Error building custom table from SQL: {table.Error}"; return; }
+        }
+        else
+        {
+            table.Name = tblName;
+            if (!string.IsNullOrEmpty(alias)) table.Alias = alias;
+            var conn = tool.GetExecConnection(source, connGuid);
+            if (conn == null) { source.RemoveTable(table); tool.ExecResult = "Error: no connection configured."; return; }
+            var connection = conn.GetOpenConnection();
+            try { source.AddColumnsFromCatalog(table.Columns, connection, table); }
+            finally { connection.Close(); }
+            if (table.Columns.Count == 0)
+            { source.RemoveTable(table); tool.ExecResult = $"Error: table '{tblName}' has no readable columns (check the name/schema qualification)."; return; }
+        }
+
+        var bak = backup(source);
+        source.SaveToFile();
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"Added table '{table.AliasName}' to source '{source.Name}' with {table.Columns.Count} column(s). Backup: {bak}");
+        foreach (var c in table.Columns.OrderBy(c => c.DisplayOrder))
+            sb.AppendLine($"  {c.Name} ({c.DisplayName}) [{c.Type}] (GUID: {c.GUID})");
+        tool.ExecResult = sb.ToString();
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

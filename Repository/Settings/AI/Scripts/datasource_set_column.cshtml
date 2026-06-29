@@ -1,0 +1,69 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args      = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid    = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var colGuid   = args.TryGetProperty("column_guid", out var cgp) ? cgp.GetString() : null;
+    var tblName   = args.TryGetProperty("table_name", out var tnp) ? tnp.GetString() : null;
+    var colName   = args.TryGetProperty("column_name", out var cnp) ? cnp.GetString() : null;
+    var display   = args.TryGetProperty("display_name", out var dnp) ? dnp.GetString() : null;
+    var category  = args.TryGetProperty("category", out var cap) ? cap.GetString() : null;
+    var format    = args.TryGetProperty("format", out var fmp) ? fmp.GetString() : null;
+    var typeStr   = args.TryGetProperty("type", out var typ) ? typ.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (column_guid: {colGuid})..");
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+
+    MetaColumn col = null;
+    if (!string.IsNullOrEmpty(colGuid))
+        col = source.MetaData.Tables.SelectMany(t => t.Columns).FirstOrDefault(c => string.Equals(c.GUID, colGuid, StringComparison.OrdinalIgnoreCase));
+    else if (!string.IsNullOrEmpty(tblName) && !string.IsNullOrEmpty(colName))
+    {
+        var table = source.MetaData.Tables.FirstOrDefault(t =>
+            string.Equals(t.Name, tblName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(t.AliasName, tblName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(t.Alias, tblName, StringComparison.OrdinalIgnoreCase));
+        col = table?.Columns.FirstOrDefault(c => string.Equals(c.Name, colName, StringComparison.OrdinalIgnoreCase));
+    }
+    if (col == null) { tool.ExecResult = "Error: column not found. Provide column_guid (from datasource_get_detail) or table_name + column_name."; return; }
+
+    Func<MetaSource, string> backup = s => {
+        if (!string.IsNullOrEmpty(s.FilePath) && File.Exists(s.FilePath)) {
+            var b = s.FilePath + ".bak-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            File.Copy(s.FilePath, b, true); return Path.GetFileName(b);
+        }
+        return "(none)";
+    };
+
+    try
+    {
+        var changes = new List<string>();
+        if (display  != null) { col.DisplayName = display; changes.Add($"display='{display}'"); }
+        if (category != null) { col.Category = category;   changes.Add($"category='{category}'"); }
+        if (format   != null) { col.Format = format;       changes.Add($"format='{format}'"); }
+        if (!string.IsNullOrEmpty(typeStr) && Enum.TryParse<ColumnType>(typeStr, true, out var ct))
+        { col.Type = ct; changes.Add($"type={ct}"); }
+        if (changes.Count == 0) { tool.ExecResult = "Nothing to change: provide display_name, category, format, or type."; return; }
+
+        source.LastMetadataModification = DateTime.Now;
+        var bak = backup(source);
+        source.SaveToFile();
+        tool.ExecResult = $"Updated column '{col.Name}' ({string.Join(", ", changes)}). Backup: {bak}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

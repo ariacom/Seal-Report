@@ -4180,6 +4180,13 @@
             Object that can be used at run-time for any purpose
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.ResultTag">
+            <summary>
+            Object that can be used at run-time to carry a structured result of the report,
+            e.g. consumed by a parent report or a test/audit harness. Dedicated, clearly-named
+            counterpart of <see cref="F:Seal.Model.Report.Tag"/>/<see cref="F:Seal.Model.Report.Tag2"/> for report results.
+            </summary>
+        </member>
         <member name="F:Seal.Model.Report.Tag3">
             <summary>
             Object that can be used at run-time for any purpose

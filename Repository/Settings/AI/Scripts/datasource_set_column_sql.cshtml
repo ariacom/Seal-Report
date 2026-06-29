@@ -1,0 +1,57 @@
+@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args     = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
+    var colGuid  = args.TryGetProperty("column_guid", out var cgp) ? cgp.GetString() : null;
+    var sql      = args.TryGetProperty("sql", out var sqp) ? sqp.GetString() : null;
+    var typeStr  = args.TryGetProperty("type", out var typ) ? typ.GetString() : null;
+    var hasAgg   = args.TryGetProperty("is_aggregate", out var iap);
+    var confirm  = args.TryGetProperty("confirm", out var cfp) && cfp.GetBoolean();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (column_guid: {colGuid})..");
+
+    if (!confirm) { tool.ExecResult = "Error: this changes a column for EVERY report that uses it. First call datasource_find_usage, show the affected reports to the user, get explicit approval, then call again with confirm=true."; return; }
+
+    var source = !string.IsNullOrEmpty(dsGuid)
+        ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
+        : tool.GetExecSource(null);
+    if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    var srcDir = Path.GetDirectoryName(source.FilePath);
+    if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
+    { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }
+
+    var col = source.MetaData.Tables.SelectMany(t => t.Columns)
+        .FirstOrDefault(c => string.Equals(c.GUID, colGuid, StringComparison.OrdinalIgnoreCase));
+    if (col == null) { tool.ExecResult = "Error: column_guid not found. Use datasource_get_detail to get the exact GUID."; return; }
+
+    Func<MetaSource, string> backup = s => {
+        if (!string.IsNullOrEmpty(s.FilePath) && File.Exists(s.FilePath)) {
+            var b = s.FilePath + ".bak-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            File.Copy(s.FilePath, b, true); return Path.GetFileName(b);
+        }
+        return "(none)";
+    };
+
+    try
+    {
+        var changes = new List<string>();
+        if (!string.IsNullOrEmpty(sql)) { changes.Add($"sql: '{col.Name}' -> '{sql}'"); col.Name = sql; }
+        if (!string.IsNullOrEmpty(typeStr) && Enum.TryParse<ColumnType>(typeStr, true, out var ct)) { changes.Add($"type={ct}"); col.Type = ct; }
+        if (hasAgg) { var v = iap.GetBoolean(); col.IsAggregate = v; changes.Add($"is_aggregate={v}"); }
+        if (changes.Count == 0) { tool.ExecResult = "Nothing to change: provide sql, type, or is_aggregate."; return; }
+
+        source.LastMetadataModification = DateTime.Now;
+        var bak = backup(source);
+        source.SaveToFile();
+        tool.ExecResult = $"Updated column (GUID: {col.GUID}): {string.Join("; ", changes)}. Backup: {bak}";
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}
