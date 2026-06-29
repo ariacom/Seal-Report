@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;نسخ ولصق وإرسال
 Web;Empty recycle bin;إفراغ سلة المحذوفات
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;هل تريد حقًا حذف جميع العناصر الموجودة في سلة المحذوفات نهائيًا؟
 WebJS;The recycle bin has been emptied;تم إفراغ سلة المحذوفات
+WebJS;Task: only the tasks are executed;مهمة: يتم تنفيذ المهام فقط
+WebJS;This report has a schedule;هذا التقرير لديه جدولة

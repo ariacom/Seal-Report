@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Copiați, lipiți și trimiteți
 Web;Empty recycle bin;Golește coșul de reciclare
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Sigur doriți să ștergeți definitiv toate elementele din coșul de reciclare?
 WebJS;The recycle bin has been emptied;Coșul de reciclare a fost golit
+WebJS;Task: only the tasks are executed;Sarcină: se execută doar sarcinile
+WebJS;This report has a schedule;Acest raport are o programare

@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;コピー、貼り付けして送信
 Web;Empty recycle bin;ごみ箱を空にする
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;ごみ箱内のすべての項目を完全に削除してもよろしいですか？
 WebJS;The recycle bin has been emptied;ごみ箱を空にしました
+WebJS;Task: only the tasks are executed;タスク: タスクのみが実行されます
+WebJS;This report has a schedule;このレポートにはスケジュールがあります

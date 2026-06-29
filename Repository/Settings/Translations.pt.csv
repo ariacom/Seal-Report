@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Copiar, colar e enviar
 Web;Empty recycle bin;Esvaziar a reciclagem
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Tem certeza de que deseja excluir permanentemente todos os itens da reciclagem?
 WebJS;The recycle bin has been emptied;A reciclagem foi esvaziada
+WebJS;Task: only the tasks are executed;Tarefa: apenas as tarefas são executadas
+WebJS;This report has a schedule;Este relatório tem um agendamento

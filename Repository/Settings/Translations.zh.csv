@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;复制、粘贴并发送
 Web;Empty recycle bin;清空回收站
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;确定要永久删除回收站中的所有项目吗？
 WebJS;The recycle bin has been emptied;回收站已清空
+WebJS;Task: only the tasks are executed;任务：仅执行任务
+WebJS;This report has a schedule;此报表已设置计划

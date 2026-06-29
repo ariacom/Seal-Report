@@ -1128,6 +1128,11 @@ namespace Seal.Forms
                 mainTreeView.SelectedNode.ImageIndex = imageIndex;
                 mainTreeView.SelectedNode.SelectedImageIndex = imageIndex;
             }
+            else if (selectedEntity is Report && propertyName == "Kind")
+            {
+                //Switching between Report and Task changes which nodes (Models/Views) are shown: rebuild the tree
+                mustInit = true;
+            }
             else
             {
                 MetaSource source = GetSource(mainTreeView.SelectedNode);

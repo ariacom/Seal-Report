@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Kopyala, yapıştır ve gönder
 Web;Empty recycle bin;Geri dönüşüm kutusunu boşalt
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Geri dönüşüm kutusundaki tüm öğeleri kalıcı olarak silmek istediğinizden emin misiniz?
 WebJS;The recycle bin has been emptied;Geri dönüşüm kutusu boşaltıldı
+WebJS;Task: only the tasks are executed;Görev: yalnızca görevler yürütülür
+WebJS;This report has a schedule;Bu raporun bir zamanlaması var

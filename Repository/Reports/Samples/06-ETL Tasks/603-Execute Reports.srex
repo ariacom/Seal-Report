@@ -2,6 +2,7 @@
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>4ded5db7b4934f0bbf80c83de09809e1</GUID>
   <ViewGUID>5c0ae5cc-8664-4771-8464-e4df51c51891</ViewGUID>
+  <Kind>Task</Kind>
   <Sources>
     <ReportSource>
       <GUID>fa1f9673-27d7-43fb-89d8-ab42003477bb</GUID>

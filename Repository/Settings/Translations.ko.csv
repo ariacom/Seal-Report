@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;복사, 붙여넣기 및 보내기
 Web;Empty recycle bin;휴지통 비우기
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;휴지통의 모든 항목을 영구적으로 삭제하시겠습니까?
 WebJS;The recycle bin has been emptied;휴지통이 비워졌습니다
+WebJS;Task: only the tasks are executed;작업: 작업만 실행됩니다
+WebJS;This report has a schedule;이 보고서에는 일정이 있습니다

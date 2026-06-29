@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Kopieren, einfügen und senden
 Web;Empty recycle bin;Papierkorb leeren
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Möchten Sie wirklich alle Elemente im Papierkorb endgültig löschen?
 WebJS;The recycle bin has been emptied;Der Papierkorb wurde geleert
+WebJS;Task: only the tasks are executed;Aufgabe: Es werden nur die Aufgaben ausgeführt
+WebJS;This report has a schedule;Dieser Bericht hat einen Zeitplan

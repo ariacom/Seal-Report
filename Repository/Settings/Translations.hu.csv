@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Másolás, beillesztés és küldés
 Web;Empty recycle bin;Lomtár ürítése
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Biztosan véglegesen törölni szeretné a lomtár összes elemét?
 WebJS;The recycle bin has been emptied;A lomtár ki lett ürítve
+WebJS;Task: only the tasks are executed;Feladat: csak a feladatok futnak le
+WebJS;This report has a schedule;Ennek a jelentésnek van ütemezése

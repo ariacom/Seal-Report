@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Kopiuj, wklej i wyślij
 Web;Empty recycle bin;Opróżnij kosz
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Czy na pewno chcesz trwale usunąć wszystkie elementy z kosza?
 WebJS;The recycle bin has been emptied;Kosz został opróżniony
+WebJS;Task: only the tasks are executed;Zadanie: wykonywane są tylko zadania
+WebJS;This report has a schedule;Ten raport ma harmonogram

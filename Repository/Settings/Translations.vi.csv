@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Sao chép, dán và gửi
 Web;Empty recycle bin;Dọn sạch thùng rác
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Bạn có thực sự muốn xóa vĩnh viễn tất cả các mục trong thùng rác không?
 WebJS;The recycle bin has been emptied;Thùng rác đã được dọn sạch
+WebJS;Task: only the tasks are executed;Tác vụ: chỉ các tác vụ được thực thi
+WebJS;This report has a schedule;Báo cáo này có một lịch trình

@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Kopioi, liitä ja lähetä
 Web;Empty recycle bin;Tyhjennä roskakori
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Haluatko varmasti poistaa pysyvästi kaikki roskakorin kohteet?
 WebJS;The recycle bin has been emptied;Roskakori on tyhjennetty
+WebJS;Task: only the tasks are executed;Tehtävä: vain tehtävät suoritetaan
+WebJS;This report has a schedule;Tällä raportilla on aikataulu

@@ -419,7 +419,8 @@ namespace SealWebServer.Controllers
                                  select new SWIMenuItem()
                                  {
                                      path = r.Path,
-                                     name = r.Name
+                                     //Translate the file name like the report listing does, unless the user gave the favorite a custom label
+                                     name = (r.Name == Path.GetFileNameWithoutExtension(r.Path)) ? Repository.TranslateFileName(getFullPath(r.Path)) : r.Name
                                  }
                                          ).ToList()
                 };

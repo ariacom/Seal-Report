@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Kopiëren, plakken en verzenden
 Web;Empty recycle bin;Prullenbak legen
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Weet u zeker dat u alle items in de prullenbak permanent wilt verwijderen?
 WebJS;The recycle bin has been emptied;De prullenbak is geleegd
+WebJS;Task: only the tasks are executed;Taak: alleen de taken worden uitgevoerd
+WebJS;This report has a schedule;Dit rapport heeft een planning

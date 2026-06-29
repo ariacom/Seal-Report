@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Salin, tempel, dan kirim
 Web;Empty recycle bin;Kosongkan tempat sampah
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Apakah Anda benar-benar ingin menghapus permanen semua item di tempat sampah?
 WebJS;The recycle bin has been emptied;Tempat sampah telah dikosongkan
+WebJS;Task: only the tasks are executed;Tugas: hanya tugas yang dijalankan
+WebJS;This report has a schedule;Laporan ini memiliki jadwal

@@ -233,6 +233,16 @@ namespace Seal.Model
         public bool broken;
 
         /// <summary>
+        /// True if the report is a Task (a job): only its Tasks are executed, no result view is rendered
+        /// </summary>
+        public bool istask;
+
+        /// <summary>
+        /// True if the report defines at least one schedule
+        /// </summary>
+        public bool isscheduled;
+
+        /// <summary>
         /// Right applied on the file/report:
         /// 0: No right
         /// 1: Execute reports / View files

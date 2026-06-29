@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;העתק, הדבק ושלח
 Web;Empty recycle bin;רוקן את סל המיחזור
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;האם אתה באמת רוצה למחוק לצמיתות את כל הפריטים בסל המיחזור?
 WebJS;The recycle bin has been emptied;סל המיחזור רוקן
+WebJS;Task: only the tasks are executed;משימה: רק המשימות מבוצעות
+WebJS;This report has a schedule;לדוח זה יש תזמון

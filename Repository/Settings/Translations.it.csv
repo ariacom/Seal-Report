@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Copia, incolla e invia
 Web;Empty recycle bin;Svuota il cestino
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Vuoi davvero eliminare definitivamente tutti gli elementi nel cestino?
 WebJS;The recycle bin has been emptied;Il cestino è stato svuotato
+WebJS;Task: only the tasks are executed;Attività: vengono eseguite solo le attività
+WebJS;This report has a schedule;Questo report ha una pianificazione

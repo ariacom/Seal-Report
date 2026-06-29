@@ -72,7 +72,8 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("DisplayName").SetIsBrowsable(true);
-                GetProperty("ViewGUID").SetIsBrowsable(true);
+                GetProperty("Kind").SetIsBrowsable(true);
+                GetProperty("ViewGUID").SetIsBrowsable(!IsTaskOnly);
                 GetProperty("InputValues").SetIsBrowsable(true);
                 GetProperty("PrintQueries").SetIsBrowsable(true);
 
@@ -174,6 +175,24 @@ namespace Seal.Model
 #endif
         public bool PrintQueries { get; set; } = false;
         public bool ShouldSerializePrintQueries() { return PrintQueries; }
+
+        /// <summary>
+        /// Kind of report: a standard Report (models and views are executed and rendered) or a Task
+        /// (a job that only executes its Tasks: ETL, data transfer, maintenance, triggering other reports; no result view is produced).
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Report kind"), Description("Report = models and views are executed and rendered. Task = only the Tasks are executed (ETL, data transfer, maintenance, triggering other reports); no result view is produced."), Id(5, 1)]
+        [DefaultValue(ReportKind.Report)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+#endif
+        public ReportKind Kind { get; set; } = ReportKind.Report;
+        public bool ShouldSerializeKind() { return Kind != ReportKind.Report; }
+
+        /// <summary>
+        /// True if the report is a Task (a job): only its Tasks are executed, no result view is rendered.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsTaskOnly => Kind == ReportKind.Task;
 
         /// <summary>
         /// List of data sources of the report (either from repository or defined in the report itself)
@@ -716,6 +735,8 @@ namespace Seal.Model
         {
             get
             {
+                //A Task report (a job) has no result view: always lead with the execution messages
+                if (IsTaskOnly) return true;
                 return ((ExecutionView.GetValue("messages_mode") == "enabledshown")
                     || (ExecutionView.GetValue("messages_mode") == "enabledshownexec" && (Status == ReportStatus.NotExecuted || Status == ReportStatus.Executing))
                     || (ExecutionView.GetValue("messages_mode") == "enabled" && !string.IsNullOrEmpty(WebExecutionErrors))
@@ -1251,6 +1272,22 @@ namespace Seal.Model
                     continue;
                 }
             }
+        }
+
+        /// <summary>
+        /// Lightweight scan of a report file (without a full load) to get the flags used for the web listing:
+        /// isTask = the report Kind is Task, hasSchedule = the report defines at least one schedule.
+        /// </summary>
+        static public (bool isTask, bool hasSchedule) GetListingFlags(string path)
+        {
+            try
+            {
+                //Report files are small (a few KB): a single read + substring check is the cheapest way to flag both.
+                //Safe because string values are XML-escaped (no CDATA in .srex), so these tags only appear as structural elements.
+                string content = File.ReadAllText(path);
+                return (content.Contains("<Kind>Task</Kind>"), content.Contains("<ReportSchedule>"));
+            }
+            catch { return (false, false); } //best effort: a non-readable file simply gets the default flags
         }
 
         /// <summary>

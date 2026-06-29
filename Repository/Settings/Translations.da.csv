@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Kopiér, indsæt og send
 Web;Empty recycle bin;Tøm papirkurven
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Vil du virkelig slette alle elementer i papirkurven permanent?
 WebJS;The recycle bin has been emptied;Papirkurven er blevet tømt
+WebJS;Task: only the tasks are executed;Opgave: kun opgaverne udføres
+WebJS;This report has a schedule;Denne rapport har en tidsplan

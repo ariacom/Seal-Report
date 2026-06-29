@@ -441,6 +441,14 @@ namespace Seal.Model
         WebOutput,
     }
 
+    public enum ReportKind
+    {
+        [Description("Report")]
+        Report,
+        [Description("Task")]
+        Task,
+    }
+
 
     public enum FolderRight
     {

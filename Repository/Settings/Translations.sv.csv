@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Kopiera, klistra in och skicka
 Web;Empty recycle bin;Töm papperskorgen
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Vill du verkligen ta bort alla objekt i papperskorgen permanent?
 WebJS;The recycle bin has been emptied;Papperskorgen har tömts
+WebJS;Task: only the tasks are executed;Uppgift: endast uppgifterna körs
+WebJS;This report has a schedule;Den här rapporten har ett schema

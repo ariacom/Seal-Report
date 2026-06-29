@@ -226,21 +226,22 @@
             $("#restrictions_button").removeClass("reportview").css("display","none");
         }
 
-        if (@Helper.ToJS(view.GetValue("information_mode") != "disabled" && !report.PrintLayout)) {
+        //A Task report (a job) only shows the execution messages: hide the Report and Information tabs, keep Messages
+        if (@Helper.ToJS(view.GetValue("information_mode") != "disabled" && !report.PrintLayout && !report.IsTaskOnly)) {
             $("#information_button").addClass("reportview").css("display","flex");
         }
         else {
             $("#information_button").removeClass("reportview").css("display","none");
         }
 
-        if (@Helper.ToJS(view.GetValue("messages_mode") != "disabled" && !report.PrintLayout)) {
+        if (@Helper.ToJS((view.GetValue("messages_mode") != "disabled" || report.IsTaskOnly) && !report.PrintLayout)) {
             $("#message_button").addClass("reportview").css("display","flex");
         }
         else {
             $("#message_button").removeClass("reportview").css("display","none");
         }
 
-        if (@Helper.ToJS(view.GetValue("information_mode") == "disabled") && @Helper.ToJS(view.GetValue("messages_mode") == "disabled")) {
+        if (@Helper.ToJS(report.IsTaskOnly || (view.GetValue("information_mode") == "disabled" && view.GetValue("messages_mode") == "disabled"))) {
             $("#report_button").removeClass("reportview").css("display", "none");
         }
         else {

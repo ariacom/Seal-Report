@@ -821,6 +821,8 @@ class SWIMain {
                 $nameWrapper.append($("<span>").addClass("report-shortcut-icon " + (file.broken ? "fa-solid fa-triangle-exclamation report-broken" : "fa-solid fa-share-nodes")).prop("title", scTitle));
             }
             $nameWrapper.append($("<a>").addClass("report-name" + (file.broken ? " report-broken" : "")).data("path", actionPath).data("isReport", file.isreport).text(file.name));
+            if (file.istask) $nameWrapper.append($("<span>").addClass("report-kind-icon fa-solid fa-gears").prop("title", SWIUtil.tr2("Task: only the tasks are executed")));
+            if (file.isscheduled) $nameWrapper.append($("<span>").addClass("report-schedule-icon fa-solid fa-clock").prop("title", SWIUtil.tr2("This report has a schedule")));
             var $td = $("<div>").addClass("report-actions").data("path", actionPath).data("name", file.name).data("isReport", file.isreport);
             $nameWrapper.append($td);
             $nameTd.append($nameWrapper);

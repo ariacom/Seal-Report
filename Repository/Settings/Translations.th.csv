@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;คัดลอก วาง และส่ง
 Web;Empty recycle bin;ล้างถังรีไซเคิล
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;คุณต้องการลบรายการทั้งหมดในถังรีไซเคิลอย่างถาวรหรือไม่?
 WebJS;The recycle bin has been emptied;ล้างถังรีไซเคิลแล้ว
+WebJS;Task: only the tasks are executed;งาน: ดำเนินการเฉพาะงานเท่านั้น
+WebJS;This report has a schedule;รายงานนี้มีกำหนดการ

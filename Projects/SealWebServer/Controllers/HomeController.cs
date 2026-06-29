@@ -942,6 +942,11 @@ namespace SealWebServer.Controllers
                         //a files only folder does not list shortcuts resolving to a report
                         if (folder.files && file.isreport) continue;
                     }
+                    if (file.isreport)
+                    {
+                        //Lightweight scan of the report file to flag Task reports and scheduled reports in the listing
+                        (file.istask, file.isscheduled) = Report.GetListingFlags(file.targetpath != null ? getFullPath(file.targetpath) : newPath);
+                    }
                     file.isfavorite = WebUser.Profile.Favorites.Exists(i => i.Path == (file.targetpath ?? file.path));
                     files.Add(file);
                 }

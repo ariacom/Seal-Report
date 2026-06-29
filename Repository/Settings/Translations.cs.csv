@@ -473,3 +473,5 @@ WebJS;Copy, paste and send;Kopírovat, vložit a odeslat
 Web;Empty recycle bin;Vyprázdnit koš
 WebJS;Do you really want to permanently delete all items in the recycle bin ?;Opravdu chcete trvale odstranit všechny položky v koši?
 WebJS;The recycle bin has been emptied;Koš byl vyprázdněn
+WebJS;Task: only the tasks are executed;Úloha: provedou se pouze úlohy
+WebJS;This report has a schedule;Tato sestava má plán

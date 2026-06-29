@@ -3375,6 +3375,17 @@
             If true, the query is printed in the report messages (for debug purpose).
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.Kind">
+            <summary>
+            Kind of report: a standard Report (models and views are executed and rendered) or a Task
+            (a job that only executes its Tasks: ETL, data transfer, maintenance, triggering other reports; no result view is produced).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.IsTaskOnly">
+            <summary>
+            True if the report is a Task (a job): only its Tasks are executed, no result view is rendered.
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.Sources">
             <summary>
             List of data sources of the report (either from repository or defined in the report itself)
@@ -3818,6 +3829,12 @@
         <member name="M:Seal.Model.Report.InitReferences">
             <summary>
             Init all references of the report: Sources, Models, Views, Taks, InputValues
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.GetListingFlags(System.String)">
+            <summary>
+            Lightweight scan of a report file (without a full load) to get the flags used for the web listing:
+            isTask = the report Kind is Task, hasSchedule = the report defines at least one schedule.
             </summary>
         </member>
         <member name="M:Seal.Model.Report.LoadFromFile(System.String,Seal.Model.Repository,System.Boolean,System.Boolean,System.Int32)">
@@ -10639,6 +10656,16 @@
         <member name="F:Seal.Model.SWIFile.broken">
             <summary>
             For a shortcut, true if the target report or file cannot be resolved (broken link)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIFile.istask">
+            <summary>
+            True if the report is a Task (a job): only its Tasks are executed, no result view is rendered
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIFile.isscheduled">
+            <summary>
+            True if the report defines at least one schedule
             </summary>
         </member>
         <member name="F:Seal.Model.SWIFile.right">

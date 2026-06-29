@@ -302,8 +302,8 @@ namespace Seal
                     }
                     _sourceTN.Expand();
 
+                    //A Task report (a job) only executes its Tasks: hide the Models and Views nodes (the objects are kept, just not shown)
                     TreeNode modelTN = new TreeNode("Models") { Tag = ModelFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
-                    mainTreeView.Nodes.Add(modelTN);
                     foreach (var model in _report.Models)
                     {
                         var index = model.IsLINQ ? 17 : (model.IsSQLModel ? 15 : 10);
@@ -312,10 +312,8 @@ namespace Seal
                         modelTN.Nodes.Add(tn);
                         UpdateModelNode(tn);
                     }
-                    modelTN.Expand();
 
                     _viewTN = new TreeNode("Views") { Tag = ViewFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
-                    mainTreeView.Nodes.Add(_viewTN);
                     foreach (ReportView view in _report.Views)
                     {
                         var imageIndex = view.Enabled ? 8 : 20;
@@ -326,7 +324,14 @@ namespace Seal
                         _viewTN.Nodes.Add(reportViewTN);
                         initTreeNodeViews(reportViewTN, view);
                     }
-                    _viewTN.ExpandAll();
+
+                    if (!_report.IsTaskOnly)
+                    {
+                        mainTreeView.Nodes.Add(modelTN);
+                        modelTN.Expand();
+                        mainTreeView.Nodes.Add(_viewTN);
+                        _viewTN.ExpandAll();
+                    }
 
                     _tasksTN = new TreeNode("Tasks") { Tag = TasksFolder.Instance, ImageIndex = 2, SelectedImageIndex = 2 };
                     mainTreeView.Nodes.Add(_tasksTN);

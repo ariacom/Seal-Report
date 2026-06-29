@@ -55,34 +55,8 @@ Loaded/
 SpecialFolders/
 Projects/SealDocumentation/Help/
 *.pubxml
-
-#web report editor files
-.env
-SealEditor*.sln
-SealAIServer.*
-SealWebServerEditor.*
-HomeControllerSWIEditor.cs
-SWIReportModels.cs
-swi-properties.*
-swi-editor.*
-swi-gateway-editor.*
-swi-gateway-assistant.*
-swi-assistant.*
-swiassistant.*
-swi-button-group.*
-MenuBig.cshtml
-MainEditor.cshtml
-DataTableEditor*.cshtml
-_ed.*.css
-_ed.*.js
-/Repository/Sources/_OLD
-*.slc
+Repository/SubReports/_*.srex
 *.srl
-TranslationsWebDesigner.xlsx
-sealweb-editor.css
-sealweb-assistant.css
-Agent.cshtml
-ModelDetailEntity.*
 
 # =========================
 # Operating System Files

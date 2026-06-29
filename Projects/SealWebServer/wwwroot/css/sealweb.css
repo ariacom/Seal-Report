@@ -189,11 +189,19 @@ a {
     position: relative;
 }
 .report-name-cell .report-name {
-    flex: 1;
+    flex: 0 1 auto;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+/* Status icons shown to the right of the report name (Task / scheduled) */
+.report-name-cell .report-kind-icon,
+.report-name-cell .report-schedule-icon {
+    flex: 0 0 auto;
+    margin-left: 6px;
+    color: #6c757d;
+    font-size: 0.85em;
 }
 /* Shortcut (.srln) indicator and broken-target state */
 .report-shortcut-icon {
