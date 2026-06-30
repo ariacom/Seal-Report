@@ -3350,6 +3350,16 @@
             The final display name of the report. It may include script execution defined in DisplayName
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.Guide">
+            <summary>
+            Optional HTML guide displayed below the prompted restrictions when the report is executed in a browser (e.g. to explain what the report does and how to fill the input values). The text can contain HTML and, if it starts with '@', is parsed with Razor (the report being the model).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.GuideHtml">
+            <summary>
+            The guide parsed with Razor (HTML). Razor errors are caught and returned as an HTML alert so a faulty guide cannot break the report rendering.
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.ViewGUID">
             <summary>
             The view used by default to execute the report.

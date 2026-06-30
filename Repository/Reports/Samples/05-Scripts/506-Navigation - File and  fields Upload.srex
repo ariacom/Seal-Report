@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>0ef51e095206405688b9eb8f10202003</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;This report demonstrates how to upload input values and/or file to the Web Report Server.&lt;/li&gt;
+&lt;li&gt;Custom 'Restrictions' views to define the input fields and button, plus event handlers.&lt;/li&gt;
+&lt;li&gt;'Report Navigation Script' in General to process the navigation: get the restriction values and the file to upload&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID>
   <Sources>
     <ReportSource>
@@ -279,22 +284,6 @@ $(document).ready(function () {
             </Parameter>
           </Parameters>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>4c8e18a7-9702-44a9-884d-b489ccb06183</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;This report demonstrates how to upload input values and/or file to the Web Report Server.&lt;/li&gt;
-&lt;li&gt;Custom 'Restrictions' views to define the input fields and button, plus event handlers.&lt;/li&gt;
-&lt;li&gt;'Report Navigation Script' in General to process the navigation: get the restriction values and the file to upload&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

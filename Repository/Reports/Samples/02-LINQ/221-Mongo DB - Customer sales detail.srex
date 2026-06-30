@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>5409f70ba7ae44cbb0a960b8108ef826</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;2 Models showing a customer detail and his transactions.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>cb20ca89-6d86-4ee6-8581-2f06bb2d7af3</ViewGUID>
   <Sources>
     <ReportSource>
@@ -279,20 +282,6 @@
       <GUID>cb20ca89-6d86-4ee6-8581-2f06bb2d7af3</GUID>
       <Name>View</Name>
       <Views>
-        <ReportView>
-          <GUID>03cb1f00-6a54-436c-837e-3cb66baf720b</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;2 Models showing a customer detail and his transactions.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
-        </ReportView>
         <ReportView>
           <GUID>9ce1cd60-3fd5-43ee-91ca-84bbbc98475b</GUID>
           <Name>Container</Name>

@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;Tisk HTML: Zobrazit informace o sesta
 Report;HTML Print: Show report information;Tisk HTML: Zobrazit informace o sestavě
 Report;HTML to PDF;HTML do PDF
 Report;Increment;Zvýšit
+Report;Information;Informace
 Report;Information panel enabled;Informační panel zapnut
 Report;Information panel enabled and shown;Informační panel zapnut a zobrazen
 Report;Information panel hidden;Informační panel skryt
@@ -80,6 +81,7 @@ Report;Is smaller than;Je menší než
 Report;Landscape;Na šířku
 Report;Logs;Protokoly
 Report;Maximum of;Maximum z
+Report;Messages;Zprávy
 Report;Messages panel enabled;Panel zpráv zapnut
 Report;Messages panel enabled and shown;Panel zpráv zapnut a zobrazen
 Report;Messages panel enabled and shown only during execution;Panel zpráv zapnut a zobrazen pouze během provádění
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;Op
 WebJS;The recycle bin has been emptied;Koš byl vyprázdněn
 WebJS;Task: only the tasks are executed;Úloha: provedou se pouze úlohy
 WebJS;This report has a schedule;Tato sestava má plán
+Report;Show/Hide Guide;Zobrazit/skrýt průvodce

@@ -72,6 +72,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("DisplayName").SetIsBrowsable(true);
+                GetProperty("Guide").SetIsBrowsable(true);
                 GetProperty("Kind").SetIsBrowsable(true);
                 GetProperty("ViewGUID").SetIsBrowsable(!IsTaskOnly);
                 GetProperty("InputValues").SetIsBrowsable(true);
@@ -133,13 +134,42 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Optional HTML guide displayed below the prompted restrictions when the report is executed in a browser (e.g. to explain what the report does and how to fill the input values). The text can contain HTML and, if it starts with '@', is parsed with Razor (the report being the model).
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Guide"), Description("Optional HTML guide displayed below the prompted restrictions when the report is executed in a browser (e.g. to explain what the report does and how to fill the input values). The text can contain HTML and, if it starts with '@', is parsed with Razor (the report being the model)."), Id(2, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string Guide { get; set; } = "";
+        public bool ShouldSerializeGuide() { return !string.IsNullOrEmpty(Guide); }
+
+        /// <summary>
+        /// The guide parsed with Razor (HTML). Razor errors are caught and returned as an HTML alert so a faulty guide cannot break the report rendering.
+        /// </summary>
+        [XmlIgnore]
+        public string GuideHtml
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Guide)) return "";
+                try
+                {
+                    return RazorHelper.CompileExecute(Guide, this);
+                }
+                catch (Exception ex)
+                {
+                    return string.Format("<div class='alert alert-danger'>{0}</div>", Helper.ToHtml(ex.Message));
+                }
+            }
+        }
 
         /// <summary>
         /// The view used by default to execute the report.
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Current view"), Description("The view used by default to execute the report."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Current view"), Description("The view used by default to execute the report."), Id(3, 1)]
         [TypeConverter(typeof(ReportViewConverter))]
 #endif
         public string ViewGUID { get; set; }
@@ -160,7 +190,7 @@ namespace Seal.Model
         /// Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Report Input Values"), Description("Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Report Input Values"), Description("Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report."), Id(4, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
@@ -170,7 +200,7 @@ namespace Seal.Model
         /// If true, the query is printed in the report messages (for debug purpose).
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Print model queries"), Description("If true, the LINQ or SQL Query executed for the models are printed in the report messages (for debug purpose)."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Print model queries"), Description("If true, the LINQ or SQL Query executed for the models are printed in the report messages (for debug purpose)."), Id(5, 1)]
         [DefaultValue(false)]
 #endif
         public bool PrintQueries { get; set; } = false;
@@ -181,7 +211,7 @@ namespace Seal.Model
         /// (a job that only executes its Tasks: ETL, data transfer, maintenance, triggering other reports; no result view is produced).
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Report kind"), Description("Report = models and views are executed and rendered. Task = only the Tasks are executed (ETL, data transfer, maintenance, triggering other reports); no result view is produced."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Report kind"), Description("Report = models and views are executed and rendered. Task = only the Tasks are executed (ETL, data transfer, maintenance, triggering other reports); no result view is produced."), Id(6, 1)]
         [DefaultValue(ReportKind.Report)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif

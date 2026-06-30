@@ -559,6 +559,12 @@ function mainInit() {
         }
     });
 
+    //guide button (animated show/hide, same behaviour as the restriction button)
+    $("#guide_button").unbind("click").on("click", function () {
+        bootstrap.Collapse.getOrCreateInstance(document.getElementById('guide_div')).toggle();
+        $("#guide_button").toggleClass("active");
+    });
+
     //widget title
     $(".widget-title").unbind("click").on("click", function () {
         if (_urlPrefix == "") alert('Execution in an new Window is not supported from the Report Designer');

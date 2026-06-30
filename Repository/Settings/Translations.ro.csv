@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;Imprimare HTML: Afișează informați
 Report;HTML Print: Show report information;Imprimare HTML: Afișează informațiile raportului
 Report;HTML to PDF;HTML în PDF
 Report;Increment;Incrementare
+Report;Information;Informații
 Report;Information panel enabled;Panou de informații activat
 Report;Information panel enabled and shown;Panou de informații activat și afișat
 Report;Information panel hidden;Panou de informații ascuns
@@ -80,6 +81,7 @@ Report;Is smaller than;Este mai mic decât
 Report;Landscape;Orizontal
 Report;Logs;Jurnale
 Report;Maximum of;Maximul pentru
+Report;Messages;Mesaje
 Report;Messages panel enabled;Panou de mesaje activat
 Report;Messages panel enabled and shown;Panou de mesaje activat și afișat
 Report;Messages panel enabled and shown only during execution;Panou de mesaje activat și afișat doar în timpul execuției
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;Si
 WebJS;The recycle bin has been emptied;Coșul de reciclare a fost golit
 WebJS;Task: only the tasks are executed;Sarcină: se execută doar sarcinile
 WebJS;This report has a schedule;Acest raport are o programare
+Report;Show/Hide Guide;Afișează/Ascunde ghidul

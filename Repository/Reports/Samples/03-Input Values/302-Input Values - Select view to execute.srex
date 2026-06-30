@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>0e0bd040-9c2f-4dba-befb-bc5450d5a892</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;1 New enumerated list: 'View Name'.&lt;/li&gt;
+&lt;li&gt;1 Input Value defined in the 'Report Input Values' property of the 'General' tree node: 'Choose a View Name'.&lt;/li&gt;
+&lt;li&gt;1 Task to change the view.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>6b74ed34-a051-4501-982e-9dfe887192a8</ViewGUID>
   <InputValues>
     <ReportRestriction>
@@ -160,21 +165,6 @@
           <TemplateName>Model</TemplateName>
           <ModelGUID>19c36839-3270-4664-a55c-70f87125e606</ModelGUID>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>80f89dce-fd59-4a90-8224-39a1e3c44655</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;1 New enumerated list: 'View Name'.&lt;/li&gt;
-&lt;li&gt;1 Input Value defined in the 'Report Input Values' property of the 'General' tree node: 'Choose a View Name'.&lt;/li&gt;
-&lt;li&gt;1 Task to change the view.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

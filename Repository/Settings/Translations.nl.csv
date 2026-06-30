@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;HTML-afdruk: Rapportinformatie tonen
 Report;HTML Print: Show report information;HTML-afdruk: Rapportinformatie tonen
 Report;HTML to PDF;HTML naar PDF
 Report;Increment;Verhogen
+Report;Information;Informatie
 Report;Information panel enabled;Informatiepaneel ingeschakeld
 Report;Information panel enabled and shown;Informatiepaneel ingeschakeld en getoond
 Report;Information panel hidden;Informatiepaneel verborgen
@@ -80,6 +81,7 @@ Report;Is smaller than;Is kleiner dan
 Report;Landscape;Liggend
 Report;Logs;Logboeken
 Report;Maximum of;Maximum van
+Report;Messages;Berichten
 Report;Messages panel enabled;Berichtenpaneel ingeschakeld
 Report;Messages panel enabled and shown;Berichtenpaneel ingeschakeld en getoond
 Report;Messages panel enabled and shown only during execution;Berichtenpaneel ingeschakeld en alleen getoond tijdens uitvoering
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;We
 WebJS;The recycle bin has been emptied;De prullenbak is geleegd
 WebJS;Task: only the tasks are executed;Taak: alleen de taken worden uitgevoerd
 WebJS;This report has a schedule;Dit rapport heeft een planning
+Report;Show/Hide Guide;Handleiding tonen/verbergen

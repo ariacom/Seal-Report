@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;HTML Yazdır: Rapor bilgilerini göst
 Report;HTML Print: Show report information;HTML Yazdır: Rapor bilgilerini göster
 Report;HTML to PDF;HTML'den PDF'e
 Report;Increment;Artır
+Report;Information;Bilgi
 Report;Information panel enabled;Bilgi paneli etkin
 Report;Information panel enabled and shown;Bilgi paneli etkin ve gösteriliyor
 Report;Information panel hidden;Bilgi paneli gizli
@@ -80,6 +81,7 @@ Report;Is smaller than;Şundan küçüktür
 Report;Landscape;Yatay
 Report;Logs;Günlükler
 Report;Maximum of;Şunun maksimumu
+Report;Messages;Mesajlar
 Report;Messages panel enabled;Mesaj paneli etkin
 Report;Messages panel enabled and shown;Mesaj paneli etkin ve gösteriliyor
 Report;Messages panel enabled and shown only during execution;Mesaj paneli etkin ve yalnızca çalıştırma sırasında gösteriliyor
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;Ge
 WebJS;The recycle bin has been emptied;Geri dönüşüm kutusu boşaltıldı
 WebJS;Task: only the tasks are executed;Görev: yalnızca görevler yürütülür
 WebJS;This report has a schedule;Bu raporun bir zamanlaması var
+Report;Show/Hide Guide;Kılavuzu Göster/Gizle

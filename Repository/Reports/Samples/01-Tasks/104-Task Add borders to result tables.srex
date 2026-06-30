@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>ee0875f1aa084546ad7d01851f51d6c3</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;A custom task 'Add borders'.&lt;/li&gt;
+&lt;li&gt;Data table Sort Configuration set to "[{LAST}-1,'desc']" to sort by total amount descending.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>cdbccd20-d833-4783-ac0c-4f0ae9fb83f4</ViewGUID>
   <Sources>
     <ReportSource>
@@ -317,21 +321,6 @@
           <ModelGUID>ee8de4d1-1c22-42bf-8c6f-2afd971d4369</ModelGUID>
           <CustomTemplate />
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>cd934a9d-95bc-4751-8bd3-80156a177729</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;A custom task 'Add borders'.&lt;/li&gt;
-&lt;li&gt;Data table Sort Configuration set to "[{LAST}-1,'desc']" to sort by total amount descending.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

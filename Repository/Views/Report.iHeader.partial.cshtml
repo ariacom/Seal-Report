@@ -42,6 +42,12 @@
             }
             @if (report.GenerateHTMLDisplay)
             {
+                if (!string.IsNullOrEmpty(report.Guide))
+                {
+                    <button id="guide_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show/Hide Guide")">
+                        <span class="fa-solid fa-book-open"></span>
+                    </button>
+                }
                 <button id="restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show/Hide Restrictions")">
                     <span class="fa-solid fa-filter"></span>
                 </button>

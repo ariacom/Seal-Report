@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>20d6419a-600e-4698-a27e-7698f1f42f9a</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;A model displaying 2 amounts.&lt;/li&gt;
+&lt;li&gt;Sort descending for 'Amount'. No sort for the other elements.&lt;/li&gt;
+&lt;li&gt;Cell script for the '%' to calculate the running total.&lt;/li&gt;
+&lt;li&gt;Series configuration with use of Primary and Secondary axis.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>5da39c31-69f8-4cf6-ab55-8d6d7f1aebc3</ViewGUID>
   <Sources>
     <ReportSource>
@@ -172,23 +178,6 @@
           <TemplateName>Model</TemplateName>
           <ModelGUID>d904d9bc-ffd4-46ed-9b41-3573ed7a099f</ModelGUID>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>1f7f3ea3-d97a-4be1-ac77-06382f4fe1ac</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;A model displaying 2 amounts.&lt;/li&gt;
-&lt;li&gt;Sort descending for 'Amount'. No sort for the other elements.&lt;/li&gt;
-&lt;li&gt;Cell script for the '%' to calculate the running total.&lt;/li&gt;
-&lt;li&gt;Series configuration with use of Primary and Secondary axis.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

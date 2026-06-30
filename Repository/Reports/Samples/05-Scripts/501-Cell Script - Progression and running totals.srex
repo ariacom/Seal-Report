@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>91d37b6f-f58c-488c-a305-2180eaf51d33</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;2 Custom 'Cell Scripts' of the 'Progression' and 'Running' elements.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>16af14fb-10bb-44e4-ba73-09a9cb908f89</ViewGUID>
   <Sources>
     <ReportSource>
@@ -258,20 +261,6 @@ col-sm-12;</Value>
           <TemplateName>Model</TemplateName>
           <ModelGUID>f2f99268-d508-4fbe-954d-a4859fb22cab</ModelGUID>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>83048c78-17ce-436c-8888-473278153da3</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;2 Custom 'Cell Scripts' of the 'Progression' and 'Running' elements.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

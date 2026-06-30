@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>2216f64c4aa14b1d8888a86381760eb4</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;1 Reference Model referenced by 3 other models. Elements and restrictions are copied.&lt;/li&gt;
+&lt;li&gt;'Insert Position' property of the 'Customer Country' element in the Reference Model set to 1 to force the first position.&lt;/li&gt;
+&lt;li&gt;1 Reference Chart  JS View referenced by 3 other Chart JS View&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>9341322a-7415-45b1-9b77-28624924cd16</ViewGUID>
   <Sources>
     <ReportSource>
@@ -330,22 +335,6 @@
             </Parameter>
           </Parameters>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>0c2d938b-4a88-4346-ba42-7baff49f4175</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;1 Reference Model referenced by 3 other models. Elements and restrictions are copied.&lt;/li&gt;
-&lt;li&gt;'Insert Position' property of the 'Customer Country' element in the Reference Model set to 1 to force the first position.&lt;/li&gt;
-&lt;li&gt;1 Reference Chart  JS View referenced by 3 other Chart JS View&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

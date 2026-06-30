@@ -6,12 +6,27 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Seal.Forms
 {
     public class FormHelper
     {
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool EnableWindow(IntPtr hWnd, bool bEnable);
+
+        /// <summary>
+        /// Re-enable a top-level window that may have been disabled by an active modal dialog.
+        /// Form.ShowDialog() disables every other window in the application; this lets a window (e.g. the
+        /// Report Viewer) stay clickable while a modal script editor is open and runs the report.
+        /// </summary>
+        public static void EnsureWindowEnabled(Form form)
+        {
+            if (form != null && form.IsHandleCreated) EnableWindow(form.Handle, true);
+        }
+
         /// <summary>
         /// Windows Forms Objects and Helpers
         /// </summary>

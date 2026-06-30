@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>1c2b3e5cc7a54ea98e0ebe714d060a75</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;1 Model linking the Northwind table 'Customer' and the Mongo DB Movies collection (the Join is defined on Customer Country = Movie Country).&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>b5261f11-90c5-440c-a949-3ad50f9d81a4</ViewGUID>
   <Sources>
     <ReportSource>
@@ -261,20 +264,6 @@ AND [c9868c09-39af-4e95-b959-a2efecf83357]</Restriction>
             </Parameter>
           </Parameters>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>d2db274b-c5b5-430d-9350-d97d19fc57c6</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;1 Model linking the Northwind table 'Customer' and the Mongo DB Movies collection (the Join is defined on Customer Country = Movie Country).&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

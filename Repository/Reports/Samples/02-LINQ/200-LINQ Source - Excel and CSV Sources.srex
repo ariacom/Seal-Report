@@ -2,6 +2,9 @@
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CurrentViewGUID>d359fdf1-fd73-4504-b7c7-41635006cdb1</CurrentViewGUID>
   <GUID>0c1a30cd-6a6a-45b3-8b60-6ff8d6ebdbd6</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;1 new LINQ Data source with one CSV and one Excel No SQL tables.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>d359fdf1-fd73-4504-b7c7-41635006cdb1</ViewGUID>
   <Sources>
     <ReportSource>
@@ -275,20 +278,6 @@
       <GUID>d359fdf1-fd73-4504-b7c7-41635006cdb1</GUID>
       <Name>view</Name>
       <Views>
-        <ReportView>
-          <GUID>251678bf-d35e-4413-a656-9198182bc6bb</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;1 new LINQ Data source with one CSV and one Excel No SQL tables.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
-        </ReportView>
         <ReportView>
           <GUID>4483c1a8-1bba-4b57-97b2-10d1c6c2ec6a</GUID>
           <Name>Tab Control</Name>

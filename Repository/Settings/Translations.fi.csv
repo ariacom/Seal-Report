@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;HTML-tulostus: Näytä raportin tiedo
 Report;HTML Print: Show report information;HTML-tulostus: Näytä raportin tiedot
 Report;HTML to PDF;HTML PDF:ksi
 Report;Increment;Lisää
+Report;Information;Tiedot
 Report;Information panel enabled;Tietopaneeli käytössä
 Report;Information panel enabled and shown;Tietopaneeli käytössä ja näkyvissä
 Report;Information panel hidden;Tietopaneeli piilotettu
@@ -80,6 +81,7 @@ Report;Is smaller than;On pienempi kuin
 Report;Landscape;Vaaka
 Report;Logs;Lokit
 Report;Maximum of;Maksimi
+Report;Messages;Viestit
 Report;Messages panel enabled;Viestipaneeli käytössä
 Report;Messages panel enabled and shown;Viestipaneeli käytössä ja näkyvissä
 Report;Messages panel enabled and shown only during execution;Viestipaneeli käytössä ja näkyvissä vain suorituksen aikana
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;Ha
 WebJS;The recycle bin has been emptied;Roskakori on tyhjennetty
 WebJS;Task: only the tasks are executed;Tehtävä: vain tehtävät suoritetaan
 WebJS;This report has a schedule;Tällä raportilla on aikataulu
+Report;Show/Hide Guide;Näytä/piilota opas

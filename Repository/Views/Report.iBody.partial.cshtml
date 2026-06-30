@@ -288,6 +288,7 @@
                 @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
             </div>
         </div>
+        @Include(view.GetPartialTemplateKey("Report.iGuide", view), view)
     }
     else if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "left")
     {
@@ -299,12 +300,14 @@
                 @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
             </div>
         </div>
+        @Include(view.GetPartialTemplateKey("Report.iGuide", view), view)
     }
     else
     {
         <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "show": "")">
             @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
         </div>
+        @Include(view.GetPartialTemplateKey("Report.iGuide", view), view)
         <div>
             @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
         </div>

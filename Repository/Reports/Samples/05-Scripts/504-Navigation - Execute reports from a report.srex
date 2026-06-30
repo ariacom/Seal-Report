@@ -2,6 +2,11 @@
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CurrentViewGUID>62ff2828-ce28-40a7-b89b-dce393f4d399</CurrentViewGUID>
   <GUID>9b4462d6-d81d-4743-97ab-3d4bd01cea7d</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;A LINQ Source 'Reports' (No SQL) to list all reports in the repository.&lt;/li&gt;
+&lt;li&gt;'Fill reports list' task to fill the reports source.&lt;/li&gt;
+&lt;li&gt;Cell script on the 'Name' element to add 2 different navigation menus.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>62ff2828-ce28-40a7-b89b-dce393f4d399</ViewGUID>
   <Sources>
     <ReportSource>
@@ -261,22 +266,6 @@
           <TemplateName>Model</TemplateName>
           <ModelGUID>f31eea7f-e982-44e1-8d12-0d304f372949</ModelGUID>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>e5434897-ecdc-478e-a7c4-a9167ad805a6</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;A LINQ Source 'Reports' (No SQL) to list all reports in the repository.&lt;/li&gt;
-&lt;li&gt;'Fill reports list' task to fill the reports source.&lt;/li&gt;
-&lt;li&gt;Cell script on the 'Name' element to add 2 different navigation menus.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

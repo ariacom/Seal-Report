@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;HTML-Druck: Berichtsinformationen anz
 Report;HTML Print: Show report information;HTML-Druck: Berichtsinformationen anzeigen
 Report;HTML to PDF;HTML zu PDF
 Report;Increment;Erhöhen
+Report;Information;Informationen
 Report;Information panel enabled;Informationsbereich aktiviert
 Report;Information panel enabled and shown;Informationsbereich aktiviert und angezeigt
 Report;Information panel hidden;Informationsbereich ausgeblendet
@@ -80,6 +81,7 @@ Report;Is smaller than;Ist kleiner als
 Report;Landscape;Querformat
 Report;Logs;Protokolle
 Report;Maximum of;Maximum von
+Report;Messages;Meldungen
 Report;Messages panel enabled;Meldungsbereich aktiviert
 Report;Messages panel enabled and shown;Meldungsbereich aktiviert und angezeigt
 Report;Messages panel enabled and shown only during execution;Meldungsbereich aktiviert und nur während der Ausführung angezeigt
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;M�
 WebJS;The recycle bin has been emptied;Der Papierkorb wurde geleert
 WebJS;Task: only the tasks are executed;Aufgabe: Es werden nur die Aufgaben ausgeführt
 WebJS;This report has a schedule;Dieser Bericht hat einen Zeitplan
+Report;Show/Hide Guide;Anleitung ein-/ausblenden

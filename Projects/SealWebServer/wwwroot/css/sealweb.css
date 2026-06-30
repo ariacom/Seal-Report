@@ -203,10 +203,10 @@ a {
     color: #6c757d;
     font-size: 0.85em;
 }
-/* Shortcut (.srln) indicator and broken-target state */
+/* Shortcut (.srln) indicator and broken-target state (shown to the right of the report name) */
 .report-shortcut-icon {
     flex: 0 0 auto;
-    margin-right: 6px;
+    margin-left: 6px;
     font-size: 0.85em;
     color: #888;
 }

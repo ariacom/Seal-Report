@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>0587f498-5062-4939-b802-a46b31b6e156</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;1 Data Source: Local MSSQL server.&lt;/li&gt;
+&lt;li&gt;2 Temporary tables having Pre/Post SQL Statements: #Columns, #Tables.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>4bcef94e-cfb5-477b-ba05-bb4be90f9f98</ViewGUID>
   <Sources>
     <ReportSource>
@@ -805,21 +809,6 @@ from sys.tables</PreSQL>
             </Parameter>
           </Parameters>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>941e54ac-0ee1-4155-9513-764c366e1b9b</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;1 Data Source: Local MSSQL server.&lt;/li&gt;
-&lt;li&gt;2 Temporary tables having Pre/Post SQL Statements: #Columns, #Tables.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

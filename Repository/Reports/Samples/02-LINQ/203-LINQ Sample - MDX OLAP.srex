@@ -2,6 +2,11 @@
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CurrentViewGUID>8c53cc07-4d26-473a-b8c1-06093973db16</CurrentViewGUID>
   <GUID>a7294592-cd8f-4634-a5ae-5caaf9d6dead</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;1 New LINQ Source with a No SQL table based on the 'Adomd OLAP MDX' Template (a connection string and an MDX Query).&lt;/li&gt;
+&lt;li&gt;The LINQ Source has table links on Northwind tables.&lt;/li&gt;
+&lt;li&gt;1 LINQ join between the No SQL Table and the Northwind database.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>8c53cc07-4d26-473a-b8c1-06093973db16</ViewGUID>
   <Sources>
     <ReportSource>
@@ -292,22 +297,6 @@ OR [112390c6-5573-42f2-adf5-7798794db3ab]</Restriction>
       <GUID>8c53cc07-4d26-473a-b8c1-06093973db16</GUID>
       <Name>View</Name>
       <Views>
-        <ReportView>
-          <GUID>6df13613-7a77-4a08-9535-7b925bbbc4a8</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;1 New LINQ Source with a No SQL table based on the 'Adomd OLAP MDX' Template (a connection string and an MDX Query).&lt;/li&gt;
-&lt;li&gt;The LINQ Source has table links on Northwind tables.&lt;/li&gt;
-&lt;li&gt;1 LINQ join between the No SQL Table and the Northwind database.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
-        </ReportView>
         <ReportView>
           <GUID>e2ecfd82-c437-46fd-8914-ab18e4cada85</GUID>
           <Name>MDX Northwind AdventureWorks Sales</Name>

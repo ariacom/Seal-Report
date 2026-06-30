@@ -722,11 +722,11 @@ class SWIMain {
             var actionPath = (file.isshortcut && !file.broken && file.targetpath) ? file.targetpath : file.path;
             var $nameTd = $("<td>").data("path", actionPath).data("name", file.name).data("isReport", file.isreport);
             var $nameWrapper = $("<div>").addClass("report-name-cell");
+            $nameWrapper.append($("<a>").addClass("report-name" + (file.broken ? " report-broken" : "")).data("path", actionPath).data("isReport", file.isreport).text(file.name));
             if (file.isshortcut) {
                 var scTitle = file.broken ? SWIUtil.tr("Shortcut target not found") : (SWIUtil.tr("Shortcut to") + " " + file.targetpath);
                 $nameWrapper.append($("<span>").addClass("report-shortcut-icon " + (file.broken ? "fa-solid fa-triangle-exclamation report-broken" : "fa-solid fa-share-nodes")).prop("title", scTitle));
             }
-            $nameWrapper.append($("<a>").addClass("report-name" + (file.broken ? " report-broken" : "")).data("path", actionPath).data("isReport", file.isreport).text(file.name));
             if (file.istask)
                 $nameWrapper.append($("<span>").addClass("report-kind-icon fa-solid fa-gears").prop("title", SWIUtil.tr2("Task: only the tasks are executed")));
             if (file.isscheduled)

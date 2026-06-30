@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;הדפסת HTML: הצג מידע על
 Report;HTML Print: Show report information;הדפסת HTML: הצג מידע על הדוח
 Report;HTML to PDF;HTML ל-PDF
 Report;Increment;הגדלה
+Report;Information;מידע
 Report;Information panel enabled;פאנל מידע מופעל
 Report;Information panel enabled and shown;פאנל מידע מופעל ומוצג
 Report;Information panel hidden;פאנל מידע מוסתר
@@ -80,6 +81,7 @@ Report;Is smaller than;קטן מ
 Report;Landscape;לרוחב
 Report;Logs;יומנים
 Report;Maximum of;מקסימום של
+Report;Messages;הודעות
 Report;Messages panel enabled;פאנל הודעות מופעל
 Report;Messages panel enabled and shown;פאנל הודעות מופעל ומוצג
 Report;Messages panel enabled and shown only during execution;פאנל הודעות מופעל ומוצג רק במהלך הביצוע
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;ה
 WebJS;The recycle bin has been emptied;סל המיחזור רוקן
 WebJS;Task: only the tasks are executed;משימה: רק המשימות מבוצעות
 WebJS;This report has a schedule;לדוח זה יש תזמון
+Report;Show/Hide Guide;הצג/הסתר מדריך

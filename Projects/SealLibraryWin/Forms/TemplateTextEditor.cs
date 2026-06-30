@@ -49,6 +49,18 @@ namespace Seal.Forms
 }
 @Raw(result)";
 
+        const string razorGuideTemplate = @"@{
+    Report report = Model;
+}
+<h3>@report.DisplayNameEx</h3>
+<p>Please enter the values below and execute the report. Prompted restrictions:</p>
+<ul>
+@foreach (var restriction in report.ExecutionPromptedRestrictions)
+{
+    <li>@restriction.DisplayNameElTranslated</li>
+}
+</ul>";
+
 
         const string razorCellScriptTemplate = @"@{
     ResultCell cell = Model;
@@ -1747,6 +1759,13 @@ $('<div>', {{
                         frm.ObjectForCheckSyntax = new NavigationLink() { Report = (Report)context.Instance };
                         frm.Text = "Edit the navigation script executed for the report";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "Guide")
+                    {
+                        template = razorGuideTemplate;
+                        frm.ObjectForCheckSyntax = (Report)context.Instance;
+                        frm.Text = "Edit the report guide (HTML, may contain Razor)";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Html);
                     }
                 }
                 else if (context.Instance is ReportElement)

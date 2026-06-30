@@ -1,6 +1,18 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>6051adb4-dcea-473f-bb42-bde78f401cad</GUID>
+  <Guide>&lt;p&gt;This report demonstrates the use of the result set returned by a stored procedure in a local SQL Server.&lt;br&gt;
+Note that to use OPENROWSET to define your table, you must configure your SQL Server with the following commands:&lt;br&gt;
+exec sp_configure 'show advanced options', 1;&lt;br&gt;
+RECONFIGURE;&lt;br&gt;
+exec sp_configure 'Ad Hoc Distributed Queries', 1;&lt;br&gt;
+RECONFIGURE;&lt;/p&gt;&#xD;
+&lt;ul&gt;
+&lt;li&gt;2 Tasks to create a dummy SP in SQL Server&lt;/li&gt;
+&lt;li&gt;test 1 Model: Use of the custom table 'sp_testSR' defined with 'OPENROWSET' and a 'Common Restriction' Label1&lt;/li&gt;
+&lt;li&gt;test 2 Model: Direct call of the SP with a SQL Model configured with the 'Use Raw SQL' set to true and a 'Common Restriction' Label2&lt;/li&gt;
+&lt;li&gt;test 3 Model: Use of the custom temporary table 'tempTestSR' created in the 'Pre SQL Statement' and a 'Common Restriction' Label3.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>4bcef94e-cfb5-477b-ba05-bb4be90f9f98</ViewGUID>
   <Sources>
     <ReportSource>
@@ -516,29 +528,6 @@ GO
           <TemplateName>Model</TemplateName>
           <ModelGUID>76af6ce9-f5bc-4b7c-8ea2-4b39231fd8f0</ModelGUID>
           <SortOrder>4</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>ea3052df-4c76-47ad-b622-2846dcc8ed36</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-This report demontrates the use of the result set returned by a stored procedure in a local SQL Server.&lt;br&gt;
-Note that to use OPENROWSET to define your table, you must configure your SQL Server with the following commands:&lt;br&gt;
-exec sp_configure 'show advanced options', 1;&lt;br&gt;
-RECONFIGURE;&lt;br&gt;
-exec sp_configure 'Ad Hoc Distributed Queries', 1;&lt;br&gt;
-RECONFIGURE;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;2 Tasks to create a dummy SP in SQL Server&lt;/li&gt;
-&lt;li&gt;test 1 Model: Use of the custom table 'sp_testSR' defined with 'OPENROWSET' and a 'Common Restriction' Label1&lt;/li&gt;
-&lt;li&gt;test 2 Model: Direct call of the SP with a SQL Model configured with the 'Use Raw SQL' set to true and a 'Common Restriction' Label2&lt;/li&gt;
-&lt;li&gt;test 3 Model: Use of the custom temporary table 'tempTestSR' created in the 'Pre SQL Statement' and a 'Common Restriction' Label3.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>29aa03c9-f71f-404c-a447-3814a4141b9d</GUID>

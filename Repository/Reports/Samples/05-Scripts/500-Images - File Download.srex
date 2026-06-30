@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;Common Script 'GetImageBytesFromOLEField' to get image from an OLE field&lt;/li&gt;
+&lt;li&gt;'Final Script' of the model to set the image in the third column.&lt;/li&gt;
+&lt;li&gt;'Cell Script' of the 'Photo' element to display the file download.&lt;/li&gt;
+&lt;li&gt;'Cell Navigation Script' of the 'Photo' element to download the file created from the Photo column of the table for the employee.&lt;/li&gt;
+&lt;li&gt;Property 'Columns to hide' is set to 1 in the Data Table to hide the 'Employee ID' element.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID>
   <Sources>
     <ReportSource>
@@ -272,24 +279,6 @@
           <TemplateName>Model</TemplateName>
           <ModelGUID>d826ff6e-821a-4834-aab8-d50ec18a6024</ModelGUID>
           <SortOrder>2</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>7ddc6c9a-50de-4cd0-8307-500529f0f5e8</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;Common Script 'GetImageBytesFromOLEField' to get image from an OLE field&lt;/li&gt;
-&lt;li&gt;'Final Script' of the model to set the image in the third column.&lt;/li&gt;
-&lt;li&gt;'Cell Script' of the 'Photo' element to display the file download.&lt;/li&gt;
-&lt;li&gt;'Cell Navigation Script' of the 'Photo' element to download the file created from the Photo column of the table for the employee.&lt;/li&gt;
-&lt;li&gt;Property 'Columns to hide' is set to 1 in the Data Table to hide the 'Employee ID' element.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>1</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

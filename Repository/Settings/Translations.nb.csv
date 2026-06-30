@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;HTML-utskrift: Vis rapportinformasjon
 Report;HTML Print: Show report information;HTML-utskrift: Vis rapportinformasjon
 Report;HTML to PDF;HTML til PDF
 Report;Increment;Øk
+Report;Information;Informasjon
 Report;Information panel enabled;Informasjonspanel aktivert
 Report;Information panel enabled and shown;Informasjonspanel aktivert og vist
 Report;Information panel hidden;Informasjonspanel skjult
@@ -80,6 +81,7 @@ Report;Is smaller than;Er mindre enn
 Report;Landscape;Liggende
 Report;Logs;Logger
 Report;Maximum of;Maksimum av
+Report;Messages;Meldinger
 Report;Messages panel enabled;Meldingspanel aktivert
 Report;Messages panel enabled and shown;Meldingspanel aktivert og vist
 Report;Messages panel enabled and shown only during execution;Meldingspanel aktivert og vist kun under kjøring
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;Vi
 WebJS;The recycle bin has been emptied;Papirkurven er tømt
 WebJS;Task: only the tasks are executed;Oppgave: bare oppgavene kjøres
 WebJS;This report has a schedule;Denne rapporten har en tidsplan
+Report;Show/Hide Guide;Vis/skjul veiledning

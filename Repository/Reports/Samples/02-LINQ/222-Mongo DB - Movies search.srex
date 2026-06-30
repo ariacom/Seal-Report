@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>27ec1e21-b888-484f-b44b-88479f2da094</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;2 Models showing a search on the Movies collection and their Casts (Movies array).&lt;/li&gt;
+&lt;/ul&gt;</Guide>
   <ViewGUID>b5261f11-90c5-440c-a949-3ad50f9d81a4</ViewGUID>
   <Sources>
     <ReportSource>
@@ -507,20 +510,6 @@ new BsonDocument("cast", new BsonDocument("$in", new BsonArray {new BsonRegularE
           </Views>
           <TemplateName>Tab Control</TemplateName>
           <SortOrder>1</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>dea4e4f2-74c6-4382-b8c2-68d6208f0974</GUID>
-          <Name>Highlights</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;p&gt;
-&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;
-&lt;ul&gt;
-&lt;li&gt;2 Models showing a search on the Movies collection and their Casts (Movies array).&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-</CustomTemplate>
-          <SortOrder>0</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

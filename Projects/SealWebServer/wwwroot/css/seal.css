@@ -348,20 +348,24 @@ body {
     box-shadow: 0 0 0 .12rem rgba(13, 110, 253, .12);
 }
 
-/* Small blank gap between the header bar and the restrictions panel below it. */
-#restrictions_div {
+/* Small blank gap between the header bar and the restrictions/guide panels below it. */
+#restrictions_div,
+#guide_div {
     margin-top: 8px;
 }
 
 /* Small fade + slide animation layered on top of Bootstrap's height collapse,
-   so the restrictions panel eases in/out instead of just appearing. Bootstrap
+   so the restrictions and guide panels ease in/out instead of just appearing. Bootstrap
    sets .collapsing while the height transition runs and .collapse.show when open. */
 #restrictions_div.collapse.show,
-#restrictions_div.collapsing {
+#restrictions_div.collapsing,
+#guide_div.collapse.show,
+#guide_div.collapsing {
     transition: height .35s ease, opacity .35s ease, transform .35s ease;
 }
 
-#restrictions_div.collapsing {
+#restrictions_div.collapsing,
+#guide_div.collapsing {
     opacity: 0;
     transform: translateY(-6px);
 }
@@ -371,9 +375,44 @@ body {
    (later in the DOM) paint over the bootstrap-select restriction dropdown that
    overflows below the panel. The slide still animates from the .collapsing
    translateY(-6px) to none (= 0). */
-#restrictions_div.collapse.show {
+#restrictions_div.collapse.show,
+#guide_div.collapse.show {
     opacity: 1;
     transform: none;
+}
+
+/* Guide panel: a card with an info accent and check-marker bullets. The bullet
+   markers are supplied here so each report's Guide text can stay plain HTML
+   (a simple <ul><li> list). */
+.card.guide {
+    border-color: var(--bs-info-border-subtle, #9eeaf9);
+    border-left: 3px solid var(--bs-info, #0dcaf0);
+}
+
+.card.guide .card-body > :last-child {
+    margin-bottom: 0;
+}
+
+.card.guide .card-body ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+.card.guide .card-body ul li {
+    position: relative;
+    padding-left: 1.6em;
+    margin-bottom: .25rem;
+}
+
+.card.guide .card-body ul li::before {
+    content: "\f058"; /* fa-circle-check */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top: .1em;
+    color: var(--bs-info, #0dcaf0);
 }
 
 @media print {

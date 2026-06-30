@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;Друк HTML: показувати �
 Report;HTML Print: Show report information;Друк HTML: показувати інформацію про звіт
 Report;HTML to PDF;HTML у PDF
 Report;Increment;Збільшити
+Report;Information;Інформація
 Report;Information panel enabled;Інформаційну панель увімкнено
 Report;Information panel enabled and shown;Інформаційну панель увімкнено та показано
 Report;Information panel hidden;Інформаційну панель приховано
@@ -80,6 +81,7 @@ Report;Is smaller than;Менше ніж
 Report;Landscape;Альбомна
 Report;Logs;Журнали
 Report;Maximum of;Максимум
+Report;Messages;Повідомлення
 Report;Messages panel enabled;Панель повідомлень увімкнено
 Report;Messages panel enabled and shown;Панель повідомлень увімкнено та показано
 Report;Messages panel enabled and shown only during execution;Панель повідомлень увімкнено та показано лише під час виконання
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;В
 WebJS;The recycle bin has been emptied;Кошик очищено
 WebJS;Task: only the tasks are executed;Завдання: виконуються лише завдання
 WebJS;This report has a schedule;Цей звіт має розклад
+Report;Show/Hide Guide;Показати/Сховати посібник

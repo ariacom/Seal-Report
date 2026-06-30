@@ -92,6 +92,11 @@ namespace Seal.Forms
             RestoreWindowState();
             Show();
 
+            //The script editor (TemplateTextEditorForm) runs the report through ShowDialog(), which disables every
+            //other window in the application - including this viewer if it was already open. Re-enable it so it can
+            //be activated/clicked while the modal script editor stays open.
+            FormHelper.EnsureWindowEnabled(this);
+
             Text = Path.GetFileNameWithoutExtension(originalFilePath) + " - " + Repository.SealRootProductName + " Report Viewer";
             BringToFront();
             TopLevel = true;

@@ -59,6 +59,7 @@ Report;HTML Print: Show report information;HTML प्रिंट: रिपो
 Report;HTML Print: Show report information;HTML प्रिंट: रिपोर्ट जानकारी दिखाएँ
 Report;HTML to PDF;HTML से PDF
 Report;Increment;बढ़ाएँ
+Report;Information;सूचना
 Report;Information panel enabled;सूचना पैनल सक्षम
 Report;Information panel enabled and shown;सूचना पैनल सक्षम और दिखाया गया
 Report;Information panel hidden;सूचना पैनल छिपा हुआ
@@ -80,6 +81,7 @@ Report;Is smaller than;से कम है
 Report;Landscape;लैंडस्केप
 Report;Logs;लॉग
 Report;Maximum of;का अधिकतम
+Report;Messages;संदेश
 Report;Messages panel enabled;संदेश पैनल सक्षम
 Report;Messages panel enabled and shown;संदेश पैनल सक्षम और दिखाया गया
 Report;Messages panel enabled and shown only during execution;संदेश पैनल सक्षम और केवल निष्पादन के दौरान दिखाया गया
@@ -475,3 +477,4 @@ WebJS;Do you really want to permanently delete all items in the recycle bin ?;�
 WebJS;The recycle bin has been emptied;रीसायकल बिन खाली कर दिया गया है
 WebJS;Task: only the tasks are executed;कार्य: केवल कार्य निष्पादित होते हैं
 WebJS;This report has a schedule;इस रिपोर्ट में एक शेड्यूल है
+Report;Show/Hide Guide;गाइड दिखाएँ/छिपाएँ

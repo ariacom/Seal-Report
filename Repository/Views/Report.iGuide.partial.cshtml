@@ -1,0 +1,22 @@
+@using Seal.Model
+@using Seal.Helpers
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+
+    //Displayed only for the HTML result (not for print/PDF) when a guide has been defined on the report.
+    //The visibility is toggled by the #guide_button in the header (animated Bootstrap collapse).
+    var content = (report.GenerateHTMLDisplay && !report.PrintLayout && !string.IsNullOrEmpty(report.Guide))
+        ? report.GuideHtml : "";
+}
+
+@if (!string.IsNullOrEmpty(content))
+{
+    <div id="guide_div" class="collapse @(view.GetBoolValue("show_guide") ? "show" : "")">
+        <div class="card guide mb-3">
+            <div class="card-body">
+                @Raw(content)
+            </div>
+        </div>
+    </div>
+}
