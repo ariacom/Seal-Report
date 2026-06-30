@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Papperskorgen har tömts
 WebJS;Task: only the tasks are executed;Uppgift: endast uppgifterna körs
 WebJS;This report has a schedule;Den här rapporten har ett schema
 Report;Show/Hide Guide;Visa/dölj guide
+Report;Show Restrictions;Visa begränsningar
+Report;Hide Restrictions;Dölj begränsningar
+Report;Show Guide;Visa guide
+Report;Hide Guide;Dölj guide

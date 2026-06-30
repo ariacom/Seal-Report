@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;De prullenbak is geleegd
 WebJS;Task: only the tasks are executed;Taak: alleen de taken worden uitgevoerd
 WebJS;This report has a schedule;Dit rapport heeft een planning
 Report;Show/Hide Guide;Handleiding tonen/verbergen
+Report;Show Restrictions;Beperkingen tonen
+Report;Hide Restrictions;Beperkingen verbergen
+Report;Show Guide;Handleiding tonen
+Report;Hide Guide;Handleiding verbergen

@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Roskakori on tyhjennetty
 WebJS;Task: only the tasks are executed;Tehtävä: vain tehtävät suoritetaan
 WebJS;This report has a schedule;Tällä raportilla on aikataulu
 Report;Show/Hide Guide;Näytä/piilota opas
+Report;Show Restrictions;Näytä rajoitukset
+Report;Hide Restrictions;Piilota rajoitukset
+Report;Show Guide;Näytä opas
+Report;Hide Guide;Piilota opas

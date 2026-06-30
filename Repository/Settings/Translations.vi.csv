@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Thùng rác đã được dọn sạch
 WebJS;Task: only the tasks are executed;Tác vụ: chỉ các tác vụ được thực thi
 WebJS;This report has a schedule;Báo cáo này có một lịch trình
 Report;Show/Hide Guide;Hiện/Ẩn hướng dẫn
+Report;Show Restrictions;Hiện hạn chế
+Report;Hide Restrictions;Ẩn hạn chế
+Report;Show Guide;Hiện hướng dẫn
+Report;Hide Guide;Ẩn hướng dẫn

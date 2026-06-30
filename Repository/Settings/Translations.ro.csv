@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Coșul de reciclare a fost golit
 WebJS;Task: only the tasks are executed;Sarcină: se execută doar sarcinile
 WebJS;This report has a schedule;Acest raport are o programare
 Report;Show/Hide Guide;Afișează/Ascunde ghidul
+Report;Show Restrictions;Afișează restricțiile
+Report;Hide Restrictions;Ascunde restricțiile
+Report;Show Guide;Afișează ghidul
+Report;Hide Guide;Ascunde ghidul

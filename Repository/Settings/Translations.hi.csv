@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;रीसायकल बिन खाल
 WebJS;Task: only the tasks are executed;कार्य: केवल कार्य निष्पादित होते हैं
 WebJS;This report has a schedule;इस रिपोर्ट में एक शेड्यूल है
 Report;Show/Hide Guide;गाइड दिखाएँ/छिपाएँ
+Report;Show Restrictions;प्रतिबंध दिखाएँ
+Report;Hide Restrictions;प्रतिबंध छिपाएँ
+Report;Show Guide;गाइड दिखाएँ
+Report;Hide Guide;गाइड छिपाएँ

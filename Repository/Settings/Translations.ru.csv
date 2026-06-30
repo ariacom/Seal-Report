@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Корзина очищена
 WebJS;Task: only the tasks are executed;Задача: выполняются только задачи
 WebJS;This report has a schedule;У этого отчёта есть расписание
 Report;Show/Hide Guide;Показать / скрыть руководство
+Report;Show Restrictions;Показать ограничения
+Report;Hide Restrictions;Скрыть ограничения
+Report;Show Guide;Показать руководство
+Report;Hide Guide;Скрыть руководство

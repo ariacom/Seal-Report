@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Geri dönüşüm kutusu boşaltıldı
 WebJS;Task: only the tasks are executed;Görev: yalnızca görevler yürütülür
 WebJS;This report has a schedule;Bu raporun bir zamanlaması var
 Report;Show/Hide Guide;Kılavuzu Göster/Gizle
+Report;Show Restrictions;Kısıtlamaları Göster
+Report;Hide Restrictions;Kısıtlamaları Gizle
+Report;Show Guide;Kılavuzu Göster
+Report;Hide Guide;Kılavuzu Gizle

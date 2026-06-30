@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;تم إفراغ سلة المحذوفات
 WebJS;Task: only the tasks are executed;مهمة: يتم تنفيذ المهام فقط
 WebJS;This report has a schedule;هذا التقرير لديه جدولة
 Report;Show/Hide Guide;إظهار/إخفاء الدليل
+Report;Show Restrictions;إظهار القيود
+Report;Hide Restrictions;إخفاء القيود
+Report;Show Guide;إظهار الدليل
+Report;Hide Guide;إخفاء الدليل

@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;La papelera ha sido vaciada
 WebJS;Task: only the tasks are executed;Tarea: solo se ejecutan las tareas
 WebJS;This report has a schedule;Este informe tiene una programación
 Report;Show/Hide Guide;Muestra/Oculta Guía
+Report;Show Restrictions;Muestra Restricciones
+Report;Hide Restrictions;Oculta Restricciones
+Report;Show Guide;Muestra Guía
+Report;Hide Guide;Oculta Guía

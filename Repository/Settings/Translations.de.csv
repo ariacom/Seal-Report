@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Der Papierkorb wurde geleert
 WebJS;Task: only the tasks are executed;Aufgabe: Es werden nur die Aufgaben ausgeführt
 WebJS;This report has a schedule;Dieser Bericht hat einen Zeitplan
 Report;Show/Hide Guide;Anleitung ein-/ausblenden
+Report;Show Restrictions;Einschränkungen einblenden
+Report;Hide Restrictions;Einschränkungen ausblenden
+Report;Show Guide;Anleitung einblenden
+Report;Hide Guide;Anleitung ausblenden

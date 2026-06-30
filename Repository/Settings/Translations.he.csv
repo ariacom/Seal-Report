@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;סל המיחזור רוקן
 WebJS;Task: only the tasks are executed;משימה: רק המשימות מבוצעות
 WebJS;This report has a schedule;לדוח זה יש תזמון
 Report;Show/Hide Guide;הצג/הסתר מדריך
+Report;Show Restrictions;הצג מגבלות
+Report;Hide Restrictions;הסתר מגבלות
+Report;Show Guide;הצג מדריך
+Report;Hide Guide;הסתר מדריך

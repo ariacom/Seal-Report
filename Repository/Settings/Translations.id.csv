@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Tempat sampah telah dikosongkan
 WebJS;Task: only the tasks are executed;Tugas: hanya tugas yang dijalankan
 WebJS;This report has a schedule;Laporan ini memiliki jadwal
 Report;Show/Hide Guide;Tampilkan/Sembunyikan Panduan
+Report;Show Restrictions;Tampilkan Pembatasan
+Report;Hide Restrictions;Sembunyikan Pembatasan
+Report;Show Guide;Tampilkan Panduan
+Report;Hide Guide;Sembunyikan Panduan

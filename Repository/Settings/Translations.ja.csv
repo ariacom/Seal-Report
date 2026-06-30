@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;ごみ箱を空にしました
 WebJS;Task: only the tasks are executed;タスク: タスクのみが実行されます
 WebJS;This report has a schedule;このレポートにはスケジュールがあります
 Report;Show/Hide Guide;ガイドの表示/非表示
+Report;Show Restrictions;制限を表示
+Report;Hide Restrictions;制限を非表示
+Report;Show Guide;ガイドを表示
+Report;Hide Guide;ガイドを非表示

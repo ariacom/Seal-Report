@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Koš byl vyprázdněn
 WebJS;Task: only the tasks are executed;Úloha: provedou se pouze úlohy
 WebJS;This report has a schedule;Tato sestava má plán
 Report;Show/Hide Guide;Zobrazit/skrýt průvodce
+Report;Show Restrictions;Zobrazit omezení
+Report;Hide Restrictions;Skrýt omezení
+Report;Show Guide;Zobrazit průvodce
+Report;Hide Guide;Skrýt průvodce

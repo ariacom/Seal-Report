@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;휴지통이 비워졌습니다
 WebJS;Task: only the tasks are executed;작업: 작업만 실행됩니다
 WebJS;This report has a schedule;이 보고서에는 일정이 있습니다
 Report;Show/Hide Guide;가이드 표시/숨기기
+Report;Show Restrictions;제한 표시
+Report;Hide Restrictions;제한 숨기기
+Report;Show Guide;가이드 표시
+Report;Hide Guide;가이드 숨기기

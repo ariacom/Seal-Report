@@ -531,10 +531,23 @@ function mainInit() {
         executeReport();
     });
 
+    //set a toggle button title (Show.../Hide...) according to its visible state
+    function setToggleTitle(selector, shown) {
+        var $btn = $(selector);
+        if ($btn.length && $btn.attr("data-show-title")) {
+            $btn.attr("title", shown ? $btn.attr("data-hide-title") : $btn.attr("data-show-title"));
+        }
+    }
+
+    //initial titles reflect the current visibility of the related panels
+    setToggleTitle("#restrictions_button", $("#restrictions_div").hasClass("show"));
+    setToggleTitle("#guide_button", $("#guide_div").hasClass("show"));
+
     //restriction button
     $("#restrictions_button").unbind("click").on("click", function () {
         var showRestriction = !$("#restrictions_div").hasClass("show");
         var hasContentDiv = $("#content_div").length > 0;
+        setToggleTitle("#restrictions_button", showRestriction);
         if (_generateHTMLDisplay) processSubmitViewParameter("restriction_button", showRestriction);
 
         if (hasContentDiv) {
@@ -561,8 +574,10 @@ function mainInit() {
 
     //guide button (animated show/hide, same behaviour as the restriction button)
     $("#guide_button").unbind("click").on("click", function () {
+        var showGuide = !$("#guide_div").hasClass("show");
         bootstrap.Collapse.getOrCreateInstance(document.getElementById('guide_div')).toggle();
         $("#guide_button").toggleClass("active");
+        setToggleTitle("#guide_button", showGuide);
     });
 
     //widget title

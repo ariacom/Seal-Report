@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Kosz został opróżniony
 WebJS;Task: only the tasks are executed;Zadanie: wykonywane są tylko zadania
 WebJS;This report has a schedule;Ten raport ma harmonogram
 Report;Show/Hide Guide;Pokaż/ukryj przewodnik
+Report;Show Restrictions;Pokaż ograniczenia
+Report;Hide Restrictions;Ukryj ograniczenia
+Report;Show Guide;Pokaż przewodnik
+Report;Hide Guide;Ukryj przewodnik

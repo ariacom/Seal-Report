@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;A lomtár ki lett ürítve
 WebJS;Task: only the tasks are executed;Feladat: csak a feladatok futnak le
 WebJS;This report has a schedule;Ennek a jelentésnek van ütemezése
 Report;Show/Hide Guide;Útmutató megjelenítése/elrejtése
+Report;Show Restrictions;Korlátozások megjelenítése
+Report;Hide Restrictions;Korlátozások elrejtése
+Report;Show Guide;Útmutató megjelenítése
+Report;Hide Guide;Útmutató elrejtése

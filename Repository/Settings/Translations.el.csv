@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Ο κάδος ανακύκλωσης άδ
 WebJS;Task: only the tasks are executed;Εργασία: εκτελούνται μόνο οι εργασίες
 WebJS;This report has a schedule;Αυτή η αναφορά έχει προγραμματισμό
 Report;Show/Hide Guide;Εμφάνιση/Απόκρυψη οδηγού
+Report;Show Restrictions;Εμφάνιση περιορισμών
+Report;Hide Restrictions;Απόκρυψη περιορισμών
+Report;Show Guide;Εμφάνιση οδηγού
+Report;Hide Guide;Απόκρυψη οδηγού

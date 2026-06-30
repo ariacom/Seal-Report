@@ -44,11 +44,11 @@
             {
                 if (!string.IsNullOrEmpty(report.Guide))
                 {
-                    <button id="guide_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show/Hide Guide")">
+                    <button id="guide_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show Guide")" data-show-title="@report.Translate("Show Guide")" data-hide-title="@report.Translate("Hide Guide")">
                         <span class="fa-solid fa-book-open"></span>
                     </button>
                 }
-                <button id="restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show/Hide Restrictions")">
+                <button id="restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show Restrictions")" data-show-title="@report.Translate("Show Restrictions")" data-hide-title="@report.Translate("Hide Restrictions")">
                     <span class="fa-solid fa-filter"></span>
                 </button>
                 <button id="execute_button" class="btn btn-success">@report.Translate("Execute")</button>

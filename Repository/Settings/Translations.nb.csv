@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Papirkurven er tømt
 WebJS;Task: only the tasks are executed;Oppgave: bare oppgavene kjøres
 WebJS;This report has a schedule;Denne rapporten har en tidsplan
 Report;Show/Hide Guide;Vis/skjul veiledning
+Report;Show Restrictions;Vis begrensninger
+Report;Hide Restrictions;Skjul begrensninger
+Report;Show Guide;Vis veiledning
+Report;Hide Guide;Skjul veiledning

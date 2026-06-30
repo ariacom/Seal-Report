@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Кошик очищено
 WebJS;Task: only the tasks are executed;Завдання: виконуються лише завдання
 WebJS;This report has a schedule;Цей звіт має розклад
 Report;Show/Hide Guide;Показати/Сховати посібник
+Report;Show Restrictions;Показати обмеження
+Report;Hide Restrictions;Сховати обмеження
+Report;Show Guide;Показати посібник
+Report;Hide Guide;Сховати посібник

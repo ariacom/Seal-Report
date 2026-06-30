@@ -478,3 +478,7 @@ WebJS;The recycle bin has been emptied;Il cestino è stato svuotato
 WebJS;Task: only the tasks are executed;Attività: vengono eseguite solo le attività
 WebJS;This report has a schedule;Questo report ha una pianificazione
 Report;Show/Hide Guide;Mostra/Nascondi guida
+Report;Show Restrictions;Mostra restrizioni
+Report;Hide Restrictions;Nascondi restrizioni
+Report;Show Guide;Mostra guida
+Report;Hide Guide;Nascondi guida
