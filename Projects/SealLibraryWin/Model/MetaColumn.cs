@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.Drawing.Design;
+using System.ComponentModel.Design;
 using Seal.Forms;
 #endif
 using Seal.Helpers;
@@ -37,6 +38,7 @@ namespace Seal.Model
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Type").SetIsBrowsable(true);
                 GetProperty("IsAggregate").SetIsBrowsable(IsSQL);
+                GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("Category").SetIsBrowsable(true);
                 GetProperty("Tag").SetIsBrowsable(true);
                 GetProperty("DisplayName").SetIsBrowsable(true);
@@ -123,7 +125,7 @@ namespace Seal.Model
         protected ColumnType _type = ColumnType.Default;
 #if WINDOWS
         [DefaultValue(ColumnType.Default)]
-        [Category("Definition"), DisplayName("Data type"), Description("Data type of the column."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Data type"), Description("Data type of the column."), Id(3, 1)]
         [TypeConverter(typeof(NamedEnumConverterNoDefault))]
 #endif
         public ColumnType Type
@@ -141,10 +143,20 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Is aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Is aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG."), Id(4, 1)]
 #endif
         public bool IsAggregate { get; set; } = false;
         public bool ShouldSerializeIsAggregate() { return IsAggregate; }
+
+        /// <summary>
+        /// Business description of the column. Used by the AI agent, shown as help in the Report Designer and as a tooltip on the result table header.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Description"), Description("Business description of the column. Used by the AI agent, shown as help in the Report Designer and as a tooltip on the result table header."), Id(2, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string Description { get; set; }
+        public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         /// <summary>
         /// Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2').

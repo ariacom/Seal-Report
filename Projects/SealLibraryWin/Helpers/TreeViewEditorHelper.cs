@@ -159,15 +159,19 @@ namespace Seal.Forms
 
         public void addSource(TreeNodeCollection nodes, MetaSource source, int noSQLIndex)
         {
+            //Show the semantic-layer descriptions as node tooltips
+            if (mainTreeView != null) mainTreeView.ShowNodeToolTips = true;
+            var repository = source.Repository ?? Repository.Instance;
+
             int index = source.IsNoSQL ? noSQLIndex : 0;
-            TreeNode mainTN = new TreeNode() { Tag = source, Text = source.Name, ImageIndex = index, SelectedImageIndex = index };
+            TreeNode mainTN = new TreeNode() { Tag = source, Text = source.Name, ImageIndex = index, SelectedImageIndex = index, ToolTipText = source.Description };
             nodes.Add(mainTN);
 
             TreeNode sourceConnectionTN = new TreeNode("Connections") { Tag = source.EditorConnectionFolder, ImageIndex = 2, SelectedImageIndex = 2 };
             mainTN.Nodes.Add(sourceConnectionTN);
             foreach (var item in source.Connections.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
             {
-                TreeNode tn = new TreeNode(item.Name + (!item.IsEditable ? " (Repository)" : "")) { Tag = item, ImageIndex = 1, SelectedImageIndex = 1 };
+                TreeNode tn = new TreeNode(item.Name + (!item.IsEditable ? " (Repository)" : "")) { Tag = item, ImageIndex = 1, SelectedImageIndex = 1, ToolTipText = repository.TranslateConnectionDescription(item) };
                 sourceConnectionTN.Nodes.Add(tn);
             }
             if (!ForReport) sourceConnectionTN.ExpandAll();
@@ -176,13 +180,13 @@ namespace Seal.Forms
             mainTN.Nodes.Add(sourceTableTN);
             foreach (var table in source.MetaData.Tables.OrderByDescending(i => i.IsEditable).ThenBy(i => i.AliasName))
             {
-                TreeNode tableTN = new TreeNode(table.AliasName + (!table.IsEditable ? " (Repository)" : "")) { Tag = table, ImageIndex = 4, SelectedImageIndex = 4 };
+                TreeNode tableTN = new TreeNode(table.AliasName + (!table.IsEditable ? " (Repository)" : "")) { Tag = table, ImageIndex = 4, SelectedImageIndex = 4, ToolTipText = repository.TranslateTableDescription(table) };
                 sourceTableTN.Nodes.Add(tableTN);
 
                 //Add elements
                 foreach (var column in table.Columns.OrderBy(i => i.DisplayOrder))
                 {
-                    TreeNode columnTN = new TreeNode(column.DisplayName) { Tag = column, ImageIndex = 7, SelectedImageIndex = 7 };
+                    TreeNode columnTN = new TreeNode(column.DisplayName) { Tag = column, ImageIndex = 7, SelectedImageIndex = 7, ToolTipText = repository.TranslateColumnDescription(column) };
                     tableTN.Nodes.Add(columnTN);
                 }
             }
@@ -207,7 +211,7 @@ namespace Seal.Forms
             mainTN.Nodes.Add(sourceJoinTN);
             foreach (var item in source.MetaData.Joins.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
             {
-                TreeNode tn = new TreeNode(item.Name + (!item.IsEditable ? " (Repository)" : "")) { Tag = item, ImageIndex = 5, SelectedImageIndex = 5 };
+                TreeNode tn = new TreeNode(item.Name + (!item.IsEditable ? " (Repository)" : "")) { Tag = item, ImageIndex = 5, SelectedImageIndex = 5, ToolTipText = repository.TranslateJoinDescription(item) };
                 sourceJoinTN.Nodes.Add(tn);
             }
             if (!ForReport) sourceJoinTN.ExpandAll();
@@ -216,7 +220,7 @@ namespace Seal.Forms
             mainTN.Nodes.Add(sourceEnumTN);
             foreach (var item in source.MetaData.Enums.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
             {
-                TreeNode tn = new TreeNode(item.Name + (!item.IsEditable ? " (Repository)" : "")) { Tag = item, ImageIndex = 6, SelectedImageIndex = 6 };
+                TreeNode tn = new TreeNode(item.Name + (!item.IsEditable ? " (Repository)" : "")) { Tag = item, ImageIndex = 6, SelectedImageIndex = 6, ToolTipText = repository.TranslateEnumDescription(item) };
                 sourceEnumTN.Nodes.Add(tn);
             }
             if (!ForReport) sourceEnumTN.ExpandAll();

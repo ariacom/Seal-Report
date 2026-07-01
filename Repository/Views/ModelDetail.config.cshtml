@@ -11,6 +11,7 @@
     Template.Parameters.Add(new Parameter() { Name = "modeldetail_css", Value = "margin-top:5px;", DisplayName = "Model: CSS Style", Description = "CSS style attribute of the main model DIV.", Enums = new string[] { "margin:10px;", "padding:10px;", "margin-top:5px;border:solid 1px grey;border-radius:5px;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "pagetable_css", Value = "", DisplayName = "Page table: CSS Style", Description = "CSS style attribute of the Page table.", Enums = new string[] { "width:600px;", "padding:10px;", "margin-top:5px;border:solid 1px grey;border-radius:5px;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "datatable_css", Value = "", DisplayName = "Data table: CSS Style", Description = "CSS style attribute of the Data table.", Enums = new string[] { "width:600px;", "padding:10px;", "margin-top:5px;border:solid 1px grey;border-radius:5px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "modeldetail_show_header_information", DisplayName = "Model detail: Show header information", BoolValue = true, Description = "If true, the description of the column (semantic layer) is shown as a tooltip on the header." });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container", "Container Grid Flex", "Widget" };

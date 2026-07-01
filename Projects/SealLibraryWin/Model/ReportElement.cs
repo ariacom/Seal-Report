@@ -105,6 +105,15 @@ namespace Seal.Model
                 GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom expression");
                 GetProperty("SQL").SetDescription(IsSQL ? "If not empty, overwrite the default SQL used for the element in the SELECT statement." : "If not empty, overwrite the default LINQ Expression used for the element in the SELECT LINQ query.");
 
+                //Description override (semantic layer): shown in the Advanced category, just below Custom SQL
+                var descriptionProperty = GetProperty("Description");
+                descriptionProperty.SetIsBrowsable(true);
+                descriptionProperty.SetCategory("Advanced");
+                descriptionProperty.SetDisplayName("Description");
+                descriptionProperty.SetDescription("If not empty, overwrites the description of the element (used by the AI agent and shown as a tooltip on the result table header). If empty, the description of the column is used.");
+                descriptionProperty.CategoryId = 5;
+                descriptionProperty.PropertyId = 2;
+
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -739,6 +748,19 @@ namespace Seal.Model
         {
             _metaColumn = null;
             _source = source;
+        }
+
+        /// <summary>
+        /// Effective business description of the element: its own if set, otherwise the description of the underlying MetaColumn. Shown as a tooltip on the result table header.
+        /// </summary>
+        [XmlIgnore]
+        public string EffectiveDescription
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Description)) return Description;
+                return MetaColumn?.Description;
+            }
         }
 
         /// <summary>

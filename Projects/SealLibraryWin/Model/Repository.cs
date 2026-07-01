@@ -1521,6 +1521,46 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Translate the description of a Column (semantic layer)
+        /// </summary>
+        public string TranslateColumnDescription(MetaColumn col)
+        {
+            return RepositoryTranslate("ElementDescription", col.Category + '.' + col.DisplayName, col.Description);
+        }
+
+        /// <summary>
+        /// Translate the description of a Table (semantic layer)
+        /// </summary>
+        public string TranslateTableDescription(MetaTable table)
+        {
+            return RepositoryTranslate("TableDescription", table.AliasName, table.Description);
+        }
+
+        /// <summary>
+        /// Translate the description of a Join (semantic layer)
+        /// </summary>
+        public string TranslateJoinDescription(MetaJoin join)
+        {
+            return RepositoryTranslate("JoinDescription", join.Name, join.Description);
+        }
+
+        /// <summary>
+        /// Translate the description of an Enumerated list (semantic layer)
+        /// </summary>
+        public string TranslateEnumDescription(MetaEnum instance)
+        {
+            return RepositoryTranslate("EnumDescription", instance.Name, instance.Description);
+        }
+
+        /// <summary>
+        /// Translate the description of a Connection (semantic layer)
+        /// </summary>
+        public string TranslateConnectionDescription(MetaConnection connection)
+        {
+            return RepositoryTranslate("ConnectionDescription", connection.Source.Name + '.' + connection.Name, connection.Description);
+        }
+
+        /// <summary>
         /// Translate a Category
         /// </summary>
         public string TranslateCategory(string instance, string reference)

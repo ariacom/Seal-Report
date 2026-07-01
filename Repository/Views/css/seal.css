@@ -487,6 +487,21 @@ body {
         cursor: pointer;
     }
 
+    /* Highlighted item in the drill / navigation popup menu. Match the softer BS3
+       look instead of BS5's solid primary-blue active state: light-gray highlight
+       with dark text. */
+    #nav_popupmenu .dropdown-item:hover,
+    #nav_popupmenu .dropdown-item:focus,
+    #nav_popupmenu .dropdown-item.active,
+    #nav_popupmenu .dropdown-item:active,
+    #nav_menu .dropdown-item:hover,
+    #nav_menu .dropdown-item:focus,
+    #nav_menu .dropdown-item.active,
+    #nav_menu .dropdown-item:active {
+        background-color: #f5f5f5;
+        color: #262626;
+    }
+
 .disabled {
     pointer-events: none;
     opacity: 0.4;
@@ -652,6 +667,23 @@ body {
     box-shadow: none;
     text-decoration: underline;
     color: var(--bs-link-hover-color, #0a58ca);
+}
+
+/* Highlighted (hover / keyboard-focused) item in a bootstrap-select dropdown.
+   BS5 paints the active item with the solid primary blue (--bs-dropdown-link-active-bg),
+   which is heavy inside these small restriction/enum pickers. Restore the softer BS3
+   look: a light-gray highlight with dark text. bootstrap-select marks the highlighted
+   entry with .active on the <li> (and .dropdown-item), so cover both. */
+.bootstrap-select .dropdown-menu li.active > .dropdown-item,
+.bootstrap-select .dropdown-menu .dropdown-item.active,
+.bootstrap-select .dropdown-menu .dropdown-item:hover,
+.bootstrap-select .dropdown-menu .dropdown-item:focus {
+    background-color: #f5f5f5;
+    color: #262626;
+}
+/* Muted meta text (subtext / count) stays legible on the light highlight. */
+.bootstrap-select .dropdown-menu li.active small {
+    color: #6c757d !important;
 }
 
 /* Restriction / result-option Yes-No toggle buttons (BS5 btn-check + btn-secondary

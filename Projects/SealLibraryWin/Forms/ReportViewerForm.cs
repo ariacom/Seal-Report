@@ -166,12 +166,17 @@ namespace Seal.Forms
         }
 
 
-        void setCurrentExecution()
+        void setCurrentExecution(string executionGUID = null)
         {
             Icon = Properties.Resources.reportDesigner;
             if (ReportDesignerForm != null) ReportDesignerForm.Icon = Icon;
-            string executionGUID = getAttributeValue(ReportExecution.HtmlId_execution_guid, "value").ToString();
-            if (_navigation.Navigations.ContainsKey(executionGUID))
+            //Re-sync the current execution with the report actually displayed in the browser. This is
+            //required after navigating back to a previous report from the navigation menu: the menu
+            //link loads that report's result file (a different execution) while _execution still points
+            //to the last drilled/sub report. The GUID comes from the submitted form (execution_guid hidden
+            //field). Note: it cannot be read from the DOM here as WebView2 ExecuteScriptAsync would
+            //deadlock when invoked from a synchronous host object call.
+            if (!string.IsNullOrEmpty(executionGUID) && _navigation.Navigations.ContainsKey(executionGUID))
             {
                 _execution = _navigation.Navigations[executionGUID].Execution;
                 _report = _execution.Report;
@@ -208,12 +213,6 @@ namespace Seal.Forms
                     }
                 }
             }
-        }
-
-        private async Task<string> getAttributeValue(string id, string attribute)
-        {
-            var s = await webBrowser.CoreWebView2.ExecuteScriptAsync($"$('#{id}').attr('{attribute}')");
-            return JsonDocument.Parse(s).RootElement.ToString();
         }
 
         private async void setProperty(string id, string property, string value)
@@ -360,7 +359,7 @@ namespace Seal.Forms
             public void ExecuteReport(string formValues)
             {
                 _iconExecuting = true;
-                Container.setCurrentExecution();
+                Container.setCurrentExecution(HttpUtility.ParseQueryString(formValues)[ReportExecution.HtmlId_execution_guid]);
                 Container.initFromForm(formValues);
                 Report.ExecutionTriggerView = null;
                 Report.IsNavigating = false;
@@ -447,7 +446,7 @@ namespace Seal.Forms
             {
                 Container.InitIcon();
                 _iconExecuting = true;
-                Container.setCurrentExecution();
+                Container.setCurrentExecution(HttpUtility.ParseQueryString(formValues)[ReportExecution.HtmlId_execution_guid]);
                 lock (Execution)
                 {
                     Container.initFromForm(formValues);

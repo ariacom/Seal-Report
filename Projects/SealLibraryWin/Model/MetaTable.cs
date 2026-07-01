@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using MongoDB.Bson;
 #if WINDOWS
 using System.Drawing.Design;
+using System.ComponentModel.Design;
 using Seal.Forms;
 using DynamicTypeDescriptor;
 #endif
@@ -44,6 +45,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Name").SetIsBrowsable(!IsSubTable);
+                GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("Type").SetIsBrowsable(IsSQL);
                 GetProperty("Alias").SetIsBrowsable(IsSQL);
                 GetProperty("DynamicColumns").SetIsBrowsable(IsSQL);
@@ -119,10 +121,20 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Business description of the table (what it holds, its grain). Used by the AI agent and shown as help in the Report Designer.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Description"), Description("Business description of the table (what it holds, its grain). Used by the AI agent and shown as help in the Report Designer."), Id(2, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string Description { get; set; }
+        public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
+
+        /// <summary>
         /// SQL Select Statement executed to define the table. If empty, the table name is used.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SQL Select Statement"), Description("SQL Select Statement executed to define the table. If empty, the table name is used."), Id(2, 1)]
+        [Category("Definition"), DisplayName("SQL Select Statement"), Description("SQL Select Statement executed to define the table. If empty, the table name is used."), Id(4, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string Sql { get; set; }
@@ -150,7 +162,7 @@ namespace Seal.Model
         /// The Razor Script used to built the DataTable object that defines the table
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Template"), Description("The Template used to define the NoSQL table."), Id(1, 1)]
+        [Category("Definition"), DisplayName("Template"), Description("The Template used to define the NoSQL table."), Id(3, 1)]
 #endif
         public string TemplateName { get; set; }
 
@@ -370,7 +382,7 @@ namespace Seal.Model
         /// Optional Razor Script executed before the execution of the DefinitionScript
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Definition Init Script"), Description("Optional Razor Script executed before the execution of the DefinitionScript."), Id(1, 1)]
+        [Category("Definition"), DisplayName("Definition Init Script"), Description("Optional Razor Script executed before the execution of the DefinitionScript."), Id(3, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string DefinitionInitScript { get; set; }
@@ -379,7 +391,7 @@ namespace Seal.Model
         /// The Razor Script used to built the DataTable object that defines the table
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string DefinitionScript { get; set; }
@@ -388,7 +400,7 @@ namespace Seal.Model
         /// Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false. Use the 'Refresh Sub-Models and Sub-Tables' button in the model to generate and view the script. 
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Mongo DB Stages Script"), Description("Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false.  Use the 'Refresh Sub-Models and Sub-Tables' button in the model to generate and view the script."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Mongo DB Stages Script"), Description("Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false.  Use the 'Refresh Sub-Models and Sub-Tables' button in the model to generate and view the script."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MongoStagesScript { get; set; }
@@ -397,7 +409,7 @@ namespace Seal.Model
         /// The Default Razor Script used to load the data in the table. This can be overwritten in the model.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model. If the definition script includes also the load of the data, this script can be left empty/blank."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model. If the definition script includes also the load of the data, this script can be left empty/blank."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string LoadScript { get; set; }
@@ -412,7 +424,7 @@ namespace Seal.Model
         /// The functions got for edition.
         /// </summary>
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Script functions"), Description("The task functions got from the main script."), Category("Definition"), Id(5, 1)]
+        [DisplayName("Script functions"), Description("The task functions got from the main script."), Category("Definition"), Id(7, 1)]
         [XmlIgnore]
         public FunctionsEditor Functions
         {
@@ -429,7 +441,7 @@ namespace Seal.Model
         /// Duration in seconds to keep the result DataTable in cache after a load. If 0, the table is always reloaded.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Cache duration"), Description("Duration in seconds to keep the result DataTable in cache after a load. If 0, the table is always reloaded."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Cache duration"), Description("Duration in seconds to keep the result DataTable in cache after a load. If 0, the table is always reloaded."), Id(7, 1)]
         [DefaultValue(0)]
 #endif
         public int CacheDuration { get; set; } = 0;
@@ -440,7 +452,7 @@ namespace Seal.Model
         /// If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Table alias"), Description("If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Table alias"), Description("If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified."), Id(7, 1)]
 #endif
         public string Alias { get; set; }
 
@@ -450,7 +462,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Dynamic columns"), Description("If true, columns are generated automatically from the Table Name or the SQL Select Statement by reading the database catalog."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Dynamic columns"), Description("If true, columns are generated automatically from the Table Name or the SQL Select Statement by reading the database catalog."), Id(8, 1)]
 #endif
         public bool DynamicColumns
         {
@@ -468,7 +480,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Keep column names"), Description("If true, the display names of the columns are kept when generated from the source SQL."), Id(7, 1)]
+        [Category("Definition"), DisplayName("Keep column names"), Description("If true, the display names of the columns are kept when generated from the source SQL."), Id(9, 1)]
 #endif
         public bool KeepColumnNames { get; set; } = false;
         public bool ShouldSerializeKeepColumnNames() { return KeepColumnNames; }
@@ -477,7 +489,7 @@ namespace Seal.Model
         /// Type of the table got from database catalog
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Table type"), Description("Type of the table got from database catalog."), Id(8, 1)]
+        [Category("Definition"), DisplayName("Table type"), Description("Type of the table got from database catalog."), Id(10, 1)]
 #endif
         public string Type { get; set; }
 
@@ -486,7 +498,7 @@ namespace Seal.Model
         /// The parameter values for edition.
         /// </summary>
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Table Parameters"), Description("The table parameter values."), Category("Definition"), Id(10, 1)]
+        [DisplayName("Table Parameters"), Description("The table parameter values."), Category("Definition"), Id(12, 1)]
         [XmlIgnore]
         public ParametersEditor ParameterValues
         {

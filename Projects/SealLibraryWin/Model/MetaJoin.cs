@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using Seal.Helpers;
 #if WINDOWS
 using System.Drawing.Design;
+using System.ComponentModel.Design;
 using Seal.Forms;
 using DynamicTypeDescriptor;
 #endif
@@ -32,6 +33,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Name").SetIsBrowsable(true);
+                GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("LeftTableGUID").SetIsBrowsable(true);
                 GetProperty("RightTableGUID").SetIsBrowsable(true);
                 GetProperty("Clause").SetIsBrowsable(true);
@@ -88,13 +90,23 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Business description of the join (relationship meaning, cardinality). Used by the AI agent and shown as help in the Report Designer.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Description"), Description("Business description of the join (relationship meaning, cardinality). Used by the AI agent and shown as help in the Report Designer."), Id(2, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string Description { get; set; }
+        public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
+
         private string _leftTableGUID;
         /// <summary>
         /// Left table GUID for the join definition
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Left table"), Description("Left table for the join definition."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Left table"), Description("Left table for the join definition."), Id(5, 1)]
         [TypeConverter(typeof(SourceTableConverter))]
 #endif
         public string LeftTableGUID
@@ -132,7 +144,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Right table"), Description("Right table for the join definition."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Right table"), Description("Right table for the join definition."), Id(6, 1)]
         [TypeConverter(typeof(SourceTableConverter))]
 #endif
         public string RightTableGUID
@@ -168,7 +180,7 @@ namespace Seal.Model
         /// SQL Clause or LINQ Clause (for No SQL Source) used to define the join between the 2 tables.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Join clause"), Description("SQL Clause or LINQ Clause (for No SQL Source) used to define the join between the 2 tables."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Join clause"), Description("SQL Clause or LINQ Clause (for No SQL Source) used to define the join between the 2 tables."), Id(7, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string Clause
@@ -184,7 +196,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
        [DefaultValue(JoinType.Inner)]
-        [Category("Definition"), DisplayName("Join type"), Description("The type of join used to link the 2 tables."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Join type"), Description("The type of join used to link the 2 tables."), Id(3, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public JoinType JoinType
@@ -202,7 +214,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
        [DefaultValue(true)]
-        [Category("Definition"), DisplayName("Is bi-directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left). For LINQ tables, the join clause must have the pattern with 'equals' (e.g. 'Helper.ToString(leftTable[\"col1\"]) equals Helper.ToString(rightTable[\"col2\"])')."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Is bi-directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left). For LINQ tables, the join clause must have the pattern with 'equals' (e.g. 'Helper.ToString(leftTable[\"col1\"]) equals Helper.ToString(rightTable[\"col2\"])')."), Id(4, 1)]
 #endif
         public bool IsBiDirectional { get; set; } = true;
         public bool ShouldSerializeIsBiDirectional() { return !IsBiDirectional; }

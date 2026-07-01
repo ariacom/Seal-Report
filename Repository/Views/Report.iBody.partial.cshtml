@@ -26,11 +26,12 @@
 
     function processSubmitViewParameter(parameterName, parameterValue, viewId, resultOptions) {
         if (!viewId) viewId = '@view.ViewId';
+        resultOptions = resultOptions === true;
         if (_urlPrefix != "") {
             $.post(_urlPrefix + "ActionUpdateViewParameter", { execution_guid: _executionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue, result_options: resultOptions });
         }
         else {
-            window.chrome.webview.hostObjects.sync.dotnet.UpdateViewParameter(viewId, parameterName, String(parameterValue), true);
+            window.chrome.webview.hostObjects.sync.dotnet.UpdateViewParameter(viewId, parameterName, String(parameterValue), resultOptions);
         }
     }
 

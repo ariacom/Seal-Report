@@ -246,9 +246,12 @@ namespace Seal.Controls
         {
             Button button = new Button() { Text = element.DisplayNameEl };
             button.Tag = element;
-            //Add tool tip
+            //Add tool tip: show the semantic-layer description if any, else the element name
             var toolTip = new ToolTip();
-            toolTip.SetToolTip(button, element.DisplayNameEl);
+            var description = element.MetaColumn != null && Model.Source?.Repository != null
+                ? Model.Source.Repository.TranslateColumnDescription(element.MetaColumn)
+                : null;
+            toolTip.SetToolTip(button, !string.IsNullOrEmpty(description) ? description : element.DisplayNameEl);
 
             button.MouseDown += new MouseEventHandler(btn_MouseDown);
             panel.Controls.Add(button);
@@ -569,6 +572,8 @@ namespace Seal.Controls
 
         void initTreeView()
         {
+            //Show the semantic-layer column descriptions as node tooltips
+            elementTreeView.ShowNodeToolTips = true;
             var tableList = Model.Source.MetaData.AllTables;
             object entityToSelect = elementTreeView.SelectedNode?.Tag;
             if (Model.IsSQLModel)

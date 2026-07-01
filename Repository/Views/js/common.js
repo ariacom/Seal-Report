@@ -575,6 +575,7 @@ function mainInit() {
     //guide button (animated show/hide, same behaviour as the restriction button)
     $("#guide_button").unbind("click").on("click", function () {
         var showGuide = !$("#guide_div").hasClass("show");
+        if (_generateHTMLDisplay) processSubmitViewParameter("show_guide", showGuide);
         bootstrap.Collapse.getOrCreateInstance(document.getElementById('guide_div')).toggle();
         $("#guide_button").toggleClass("active");
         setToggleTitle("#guide_button", showGuide);

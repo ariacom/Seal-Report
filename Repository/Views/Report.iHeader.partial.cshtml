@@ -29,7 +29,7 @@
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
                             @report.Translate("Results")
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             <li><a id="ResultOptions" class="dropdown-item" href="#">@report.Translate("Options")...</a></li>
                             <li><hr class="dropdown-divider"></li>
                             @foreach (var format in repository.ResultAllowedFormats)

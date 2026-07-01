@@ -27,7 +27,7 @@
             }
 
             <tr>
-                <th @Raw(Helper.AddAttribute("class", header.CellCssPageClass)) @Raw(Helper.AddAttribute("style", header.CellCssPageStyle))>
+                <th @Raw(Helper.AddAttribute("class", header.CellCssPageClass)) @Raw(Helper.AddAttribute("style", header.CellCssPageStyle)) @Raw(view.GetBoolValue("page_table_show_header_information") ? Helper.AddAttribute("title", header.TitleTooltip) : "")>
                     @Raw(header.HTMLValue)
                 </th>
 

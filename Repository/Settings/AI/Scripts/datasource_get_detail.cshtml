@@ -17,6 +17,7 @@
     sb.AppendLine($"GUID           : {source.GUID}");
     sb.AppendLine($"Database type  : {source.Connection?.DatabaseType}");
     sb.AppendLine($"Connection type: {source.Connection?.ConnectionType}");
+    if (!string.IsNullOrEmpty(source.Connection?.Description)) sb.AppendLine($"Connection     : {source.Connection.Description}");
     sb.AppendLine($"Is default     : {source.IsDefault}");
     sb.AppendLine($"Storage        : {(source.IsNoSQL ? "NoSQL — use report_create_from_xml; SQL tools (database_execute_query, SQL dialects) do not apply" : "SQL")}");
     sb.AppendLine();
@@ -26,14 +27,15 @@
     foreach (var table in source.MetaData.Tables)
     {
         var tableName = string.IsNullOrEmpty(table.Alias) ? table.Name : $"{table.Name} (alias: {table.Alias})";
-        sb.AppendLine($"### {tableName}");
+        sb.AppendLine($"### {tableName}{(string.IsNullOrEmpty(table.Description) ? "" : $" — {table.Description}")}");
         foreach (var col in table.Columns)
         {
             var label = col.DisplayName != col.Name && !string.IsNullOrEmpty(col.DisplayName)
                         ? $"{col.Name} ({col.DisplayName})"
                         : col.Name;
-            var enumInfo = col.Enum != null ? $", enumerated list: {col.Enum.Name}" : "";
-            sb.AppendLine($"  {label} [{col.Type}{(col.IsAggregate ? ", aggregate" : "")}{enumInfo}] (GUID: {col.GUID})");
+            var enumInfo = col.Enum != null ? $", enumerated list: {col.Enum.Name}{(string.IsNullOrEmpty(col.Enum.Description) ? "" : $" ({col.Enum.Description})")}" : "";
+            var colDescription = string.IsNullOrEmpty(col.Description) ? "" : $" — {col.Description}";
+            sb.AppendLine($"  {label} [{col.Type}{(col.IsAggregate ? ", aggregate" : "")}{enumInfo}] (GUID: {col.GUID}){colDescription}");
         }
         sb.AppendLine();
     }
@@ -46,7 +48,7 @@
         {
             var left  = join.LeftTable?.AliasName  ?? "?";
             var right = join.RightTable?.AliasName ?? "?";
-            sb.AppendLine($"  {left} → {right}");
+            sb.AppendLine($"  {left} → {right}{(string.IsNullOrEmpty(join.Description) ? "" : $" — {join.Description}")}");
             if (!string.IsNullOrWhiteSpace(join.Clause))
                 sb.AppendLine($"    ON {join.Clause.Trim()}");
         }

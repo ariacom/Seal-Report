@@ -13,6 +13,7 @@ using System.Data.Common;
 #if WINDOWS
 using DynamicTypeDescriptor;
 using System.Drawing.Design;
+using System.ComponentModel.Design;
 using Seal.Forms;
 #endif
 
@@ -34,6 +35,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Name").SetIsBrowsable(true);
+                GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("IsDynamic").SetIsBrowsable(true);
                 GetProperty("IsDbRefresh").SetIsBrowsable(true);
                 GetProperty("ValuesPerConnection").SetIsBrowsable(true);
@@ -95,13 +97,23 @@ namespace Seal.Model
             set { _name = value; }
         }
 
+        /// <summary>
+        /// Business description of the enumerated list. Used by the AI agent and shown as help in the Report Designer.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Description"), Description("Business description of the enumerated list. Used by the AI agent and shown as help in the Report Designer."), Id(2, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string Description { get; set; }
+        public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
+
         private bool _isDynamic = false;
         /// <summary>
         /// If True, the list is loaded using the 'SQL Select Statement' and/or the 'Script' defined.
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("List is dynamically loaded from the 'SQL Select Statement' or from the 'Load Script'"), Description("If True, the list is loaded using the 'SQL Select Statement' and/or the 'Script' defined."), Id(2, 1)]
+        [Category("Definition"), DisplayName("List is dynamically loaded from the 'SQL Select Statement' or from the 'Load Script'"), Description("If True, the list is loaded using the 'SQL Select Statement' and/or the 'Script' defined."), Id(3, 1)]
 #endif
         public bool IsDynamic
         {
@@ -120,7 +132,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("List is refreshed before the report execution"), Description("If True, the list is loaded before a report execution. Should be set to False if the SQL or the Load Script has poor performances."), Id(3, 1)]
+        [Category("Definition"), DisplayName("List is refreshed before the report execution"), Description("If True, the list is loaded before a report execution. Should be set to False if the SQL or the Load Script has poor performances."), Id(4, 1)]
 #endif
         public bool IsDbRefresh
         {
@@ -138,7 +150,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("List values depend on the connection"), Description("If True, the enum loads and stores the values for each connection."), Id(4, 1)]
+        [Category("Definition"), DisplayName("List values depend on the connection"), Description("If True, the enum loads and stores the values for each connection."), Id(5, 1)]
 #endif
         public bool ValuesPerConnection { get; set; } = false;
         public bool ShouldSerializeValuesPerConnection() { return ValuesPerConnection; }
@@ -167,7 +179,7 @@ namespace Seal.Model
         /// If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SQL Select Statement"), Description("If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(5, 1)]
+        [Category("Definition"), DisplayName("SQL Select Statement"), Description("If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(6, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string Sql
@@ -186,7 +198,7 @@ namespace Seal.Model
         /// If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Script"), Description("If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Script"), Description("If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string Script
@@ -204,7 +216,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Use defined position to sort in reports"), Description("If True, the current position of the values in the list is used to sort the column in the report result."), Id(7, 1)]
+        [Category("Definition"), DisplayName("Use defined position to sort in reports"), Description("If True, the current position of the values in the list is used to sort the column in the report result."), Id(8, 1)]
 #endif
         public bool UsePosition { get; set; } = false;
         public bool ShouldSerializeUsePosition() { return UsePosition; }
@@ -214,7 +226,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are translated using the Repository translations."), Id(8, 1)]
+        [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are translated using the Repository translations."), Id(9, 1)]
 #endif
         public bool Translate { get; set; } = false;
         public bool ShouldSerializeTranslate() { return Translate; }

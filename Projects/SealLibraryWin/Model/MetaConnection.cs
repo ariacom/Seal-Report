@@ -12,6 +12,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data;
 #if WINDOWS
 using System.Drawing.Design;
+using System.ComponentModel.Design;
 using Seal.Forms;
 using DynamicTypeDescriptor;
 using System.Windows.Forms;
@@ -44,6 +45,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Name").SetIsBrowsable(true);
+                GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("DatabaseType").SetIsBrowsable(true);
                 GetProperty("DateTimeFormat").SetIsBrowsable(true);
                 GetProperty("CommandTimeout").SetIsBrowsable(true);
@@ -109,11 +111,21 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Business description of the connection. Used by the AI agent and shown as help in the Report Designer.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Description"), Description("Business description of the connection. Used by the AI agent and shown as help in the Report Designer."), Category("Definition"), Id(2, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string Description { get; set; }
+        public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
+
+        /// <summary>
         /// The type of the source database
         /// </summary>
 #if WINDOWS
         [DefaultValue(DatabaseType.Standard)]
-        [DisplayName("Database type"), Description("The type of the source database."), Category("Definition"), Id(2, 1)]
+        [DisplayName("Database type"), Description("The type of the source database."), Category("Definition"), Id(3, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public DatabaseType DatabaseType { get; set; } = DatabaseType.Standard;
@@ -147,7 +159,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(ConnectionType.OleDb)]
-        [DisplayName("Connection type"), Description("The type of the connection object used: OleDbConnection, OdbcConnection, SqlConnection (either from System.Data or Microsoft.Data) or MongoClient (valid only for a LINQ Source)."), Category("Definition"), Id(3, 1)]
+        [DisplayName("Connection type"), Description("The type of the connection object used: OleDbConnection, OdbcConnection, SqlConnection (either from System.Data or Microsoft.Data) or MongoClient (valid only for a LINQ Source)."), Category("Definition"), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public ConnectionType ConnectionType
@@ -277,7 +289,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
-        [DisplayName("Connection Script"), Description("If set, script executed to instanciate and open the connection."), Category("Definition"), Id(7, 1)]
+        [DisplayName("Connection Script"), Description("If set, script executed to instanciate and open the connection."), Category("Definition"), Id(8, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ConnectionScript { get; set; } = null;
@@ -288,7 +300,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue("yyyy-MM-dd HH:mm:ss")]
-        [DisplayName("Database Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(10, 1)]
+        [DisplayName("Database Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(11, 1)]
 #endif
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
         public bool ShouldSerializeDateTimeFormat() { return DateTimeFormat != "yyyy-MM-dd HH:mm:ss"; }
@@ -298,7 +310,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [DefaultValue(0)]
-        [DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed. 0 means no Timeout."), Category("Definition"), Id(11, 1)]
+        [DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed. 0 means no Timeout."), Category("Definition"), Id(12, 1)]
 #endif
         public int CommandTimeout { get; set; } = 0;
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != 0; }

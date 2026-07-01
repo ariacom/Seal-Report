@@ -27,6 +27,20 @@ namespace Seal.Model
         public ReportElement Element;
 
         /// <summary>
+        /// HTML-encoded business description shown as a tooltip on the result table header. Empty unless the cell is a title cell whose element (or its MetaColumn) has a description.
+        /// </summary>
+        public string TitleTooltip
+        {
+            get
+            {
+                if (!IsTitle || Element == null) return "";
+                var report = Element.Model?.Report;
+                var description = report != null ? report.TranslateElementDescription(Element) : Element.EffectiveDescription;
+                return string.IsNullOrEmpty(description) ? "" : System.Net.WebUtility.HtmlEncode(description);
+            }
+        }
+
+        /// <summary>
         /// True if the cell is not for a total and not for a title
         /// </summary>
         public bool IsValue

@@ -41,7 +41,7 @@ else
                         ResultCell title = page.DataTable[0, i];
                         ResultCell value = page.DataTable[1, i];
                         <tr>
-                                <th @Raw(Helper.AddAttribute("class", title.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", title.CellCssDetailStyle))>@Raw(title.HTMLValue)</th>
+                                <th @Raw(Helper.AddAttribute("class", title.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", title.CellCssDetailStyle)) @Raw(view.GetBoolValue("modeldetail_show_header_information") ? Helper.AddAttribute("title", title.TitleTooltip) : "")>@Raw(title.HTMLValue)</th>
                                 <td @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle))>@Raw(value.HTMLValue)</td>
                         </tr>
                     }

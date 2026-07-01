@@ -59,6 +59,16 @@
     var sb = new StringBuilder();
     sb.AppendLine($"Existing joins in '{source.Name}': {source.MetaData.Joins.Count}");
     sb.AppendLine();
+
+    // Table descriptions (semantic layer) to help review the proposals
+    var describedTables = tables.Where(t => !string.IsNullOrEmpty(t.Description)).ToList();
+    if (describedTables.Count > 0)
+    {
+        sb.AppendLine("Table context:");
+        foreach (var t in describedTables) sb.AppendLine($"  {t.AliasName}: {t.Description}");
+        sb.AppendLine();
+    }
+
     if (proposals.Count == 0)
         sb.AppendLine("No additional joins suggested from shared key columns. Inspect the schema with datasource_get_detail and propose a join manually with datasource_apply_join.");
     else

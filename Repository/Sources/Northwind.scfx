@@ -5,6 +5,7 @@
   <Connections>
     <MetaConnection>
       <GUID>442f6511-a22b-47ec-a33e-e1c7344adb68</GUID>
+      <Description>Local SQL Server instance hosting the Northwind database (Windows authentication).</Description>
       <Name>Local MS SQL Server</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
@@ -12,6 +13,7 @@
     </MetaConnection>
     <MetaConnection>
       <GUID>164f0017-471d-4741-937c-3df7881ca392</GUID>
+      <Description>Public demonstration SQL Server (ariacom.com) hosting Northwind. Active connection used by this data source.</Description>
       <Name>Demonstration Server</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
@@ -21,6 +23,7 @@
     </MetaConnection>
     <MetaConnection>
       <GUID>cc91199c-1b51-4e61-8630-feb2eef21466</GUID>
+      <Description>Local SQL Server instance hosting Northwind using the Microsoft.Data.SqlClient driver.</Description>
       <Name>Local MS SQL Server Microsoft</Name>
       <DatabaseType>MSSQLServer</DatabaseType>
       <ConnectionType>MSSQLServerMicrosoft</ConnectionType>
@@ -33,11 +36,13 @@
     <Tables>
       <MetaTable>
         <GUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</GUID>
+        <Description>Companies that place orders. One row per customer, keyed by CustomerID, with contact and address details.</Description>
         <Name>Customers</Name>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
             <GUID>e39285bf-1ca4-4059-a72a-73c90cc168dd</GUID>
+            <Description>Street address of the customer.</Description>
             <Name>Customers.Address</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -48,6 +53,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</GUID>
+            <Description>City where the customer is located.</Description>
             <Name>Customers.City</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -61,6 +67,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</GUID>
+            <Description>Customer company name, used as the customer label.</Description>
             <Name>Customers.CompanyName</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -83,6 +90,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</GUID>
+            <Description>Name of the primary contact person at the customer.</Description>
             <Name>Customers.ContactName</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -93,6 +101,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>ecab8418-c406-4837-8fdb-7341c9b45f56</GUID>
+            <Description>Job title of the customer contact.</Description>
             <Name>Customers.ContactTitle</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -103,6 +112,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</GUID>
+            <Description>Country where the customer is located.</Description>
             <Name>Customers.Country</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -117,6 +127,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>9cdc0eb2-eb64-4b96-8ea9-0405736b4809</GUID>
+            <Description>Customer fax number.</Description>
             <Name>Customers.Fax</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -127,6 +138,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>add7d793-5327-4604-997d-cdfeb474b09a</GUID>
+            <Description>Customer phone number.</Description>
             <Name>Customers.Phone</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -137,6 +149,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>e24a016c-11d6-4b7c-9319-c1ad5864841c</GUID>
+            <Description>Postal or ZIP code of the customer address.</Description>
             <Name>Customers.PostalCode</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -147,6 +160,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>7386da67-f083-4527-a303-aa24de5f7d13</GUID>
+            <Description>State, province or region of the customer.</Description>
             <Name>Customers.Region</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -157,6 +171,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>d937c8fc-64a6-415f-a77f-d3d1914e406d</GUID>
+            <Description>Unique customer identifier (five-letter code). Primary key of Customers.</Description>
             <Name>Customers.CustomerID</Name>
             <Type>Text</Type>
             <Category>Customers</Category>
@@ -169,12 +184,14 @@
       </MetaTable>
       <MetaTable>
         <GUID>61152bde-427a-4113-8f7d-322a1280bede</GUID>
+        <Description>Sales representatives and staff who handle orders. Includes the reporting hierarchy through Reports To.</Description>
         <Name>Employees</Name>
         <Type>TABLE</Type>
         <WhereSQL />
         <Columns>
           <MetaColumn>
             <GUID>a17dc90f-cf54-4da1-b655-019a5ca175ed</GUID>
+            <Description>Employee home street address.</Description>
             <Name>Employees.Address</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -186,6 +203,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</GUID>
+            <Description>Employee date of birth.</Description>
             <Name>Employees.BirthDate</Name>
             <Type>DateTime</Type>
             <Category>Employees</Category>
@@ -199,6 +217,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</GUID>
+            <Description>City of the employee residence.</Description>
             <Name>Employees.City</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -213,6 +232,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</GUID>
+            <Description>Country of the employee residence.</Description>
             <Name>Employees.Country</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -228,6 +248,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>9af39b8d-8b3a-4db2-a093-8abac0fb8e62</GUID>
+            <Description>Internal phone extension of the employee.</Description>
             <Name>Employees.Extension</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -239,6 +260,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>da2dbe92-e90c-4415-b354-1bc589839048</GUID>
+            <Description>Employee last name, used as the employee label.</Description>
             <Name>Employees.LastName</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -263,6 +285,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>b4a7f5d4-1045-4c67-b724-578e116ceff5</GUID>
+            <Description>Date the employee was hired.</Description>
             <Name>Employees.HireDate</Name>
             <Type>DateTime</Type>
             <Category>Employees</Category>
@@ -276,6 +299,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>9b0f675f-fbb0-4f9c-9dca-9e15039e75ec</GUID>
+            <Description>Employee home phone number.</Description>
             <Name>Employees.HomePhone</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -287,6 +311,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>0a5fef96-fd6b-4d51-bff0-59d458533a57</GUID>
+            <Description>Free-text notes and short biography for the employee.</Description>
             <Name>convert(varchar(max),Employees.Notes)</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -298,6 +323,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</GUID>
+            <Description>Postal or ZIP code of the employee address.</Description>
             <Name>Employees.PostalCode</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -309,6 +335,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>80720d2a-0ebf-457b-8539-6eb07205c6c9</GUID>
+            <Description>State, province or region of the employee.</Description>
             <Name>Employees.Region</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -320,6 +347,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>a042cb87-8838-46a8-a679-3e49f666a7b7</GUID>
+            <Description>EmployeeID of this employee manager (self-reference within Employees).</Description>
             <Name>Employees.ReportsTo</Name>
             <Type>Numeric</Type>
             <Category>Employees</Category>
@@ -333,6 +361,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>793c07a5-b7bd-41ae-bdea-506ad244005e</GUID>
+            <Description>Job title of the employee.</Description>
             <Name>Employees.Title</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -344,6 +373,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>4d365f0e-0e2a-4a58-8411-11fd6d8900db</GUID>
+            <Description>Courtesy title of the employee, for example Mr., Ms. or Dr.</Description>
             <Name>Employees.TitleOfCourtesy</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -355,6 +385,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</GUID>
+            <Description>Unique employee identifier. Primary key of Employees.</Description>
             <Name>Employees.EmployeeID</Name>
             <Type>Numeric</Type>
             <Category>Employees</Category>
@@ -367,6 +398,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>adf4d26e-1dc0-4fdd-9de7-c7469cbc9d1a</GUID>
+            <Description>Employee first name.</Description>
             <Name>Employees.FirstName</Name>
             <Type>Text</Type>
             <Category>Employees</Category>
@@ -380,12 +412,14 @@
       </MetaTable>
       <MetaTable>
         <GUID>691ae384-bd74-4708-93a7-abea6ed56e55</GUID>
+        <Description>Sales order headers. One row per order, linking the customer, the employee who took it and the shipper.</Description>
         <Name>Orders</Name>
         <Type>TABLE</Type>
         <WhereSQL />
         <Columns>
           <MetaColumn>
             <GUID>b5dee061-380a-4dac-a74d-fd573de1a07c</GUID>
+            <Description>Shipping cost charged on the order.</Description>
             <Name>Orders.Freight</Name>
             <Type>Numeric</Type>
             <Category>Orders/Shipping</Category>
@@ -399,6 +433,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>4a3f4d69-3781-4679-8797-f425478de0d9</GUID>
+            <Description>Date the order was placed.</Description>
             <Name>Orders.OrderDate</Name>
             <Type>DateTime</Type>
             <Category>Orders</Category>
@@ -412,6 +447,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>12ce241a-1f80-4b69-a023-66df46152046</GUID>
+            <Description>Unique order identifier. Primary key of Orders.</Description>
             <Name>Orders.OrderID</Name>
             <Type>Numeric</Type>
             <Category>Orders</Category>
@@ -434,6 +470,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>ab168a45-6852-44b7-8eff-378968669f14</GUID>
+            <Description>Date by which the customer required the order to be delivered.</Description>
             <Name>Orders.RequiredDate</Name>
             <Type>DateTime</Type>
             <Category>Orders</Category>
@@ -447,6 +484,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>2003a407-ab31-4514-bc83-8e9479c42e2d</GUID>
+            <Description>Street address the order is shipped to.</Description>
             <Name>Orders.ShipAddress</Name>
             <Type>Text</Type>
             <Category>Orders/Shipping</Category>
@@ -458,6 +496,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>e93c456c-40d9-494e-ba21-711177339870</GUID>
+            <Description>City the order is shipped to.</Description>
             <Name>Orders.ShipCity</Name>
             <Type>Text</Type>
             <Category>Orders/Shipping</Category>
@@ -472,6 +511,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</GUID>
+            <Description>Country the order is shipped to.</Description>
             <Name>Orders.ShipCountry</Name>
             <Type>Text</Type>
             <Category>Orders/Shipping</Category>
@@ -487,6 +527,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</GUID>
+            <Description>Name of the recipient the order is shipped to.</Description>
             <Name>Orders.ShipName</Name>
             <Type>Text</Type>
             <Category>Orders/Shipping</Category>
@@ -501,6 +542,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>ce574340-1504-4bf7-9228-c64f79cf9803</GUID>
+            <Description>Date the order was actually shipped; blank if not yet shipped.</Description>
             <Name>Orders.ShippedDate</Name>
             <Type>DateTime</Type>
             <Category>Orders/Shipping</Category>
@@ -514,6 +556,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</GUID>
+            <Description>Postal or ZIP code of the shipping address.</Description>
             <Name>Orders.ShipPostalCode</Name>
             <Type>Text</Type>
             <Category>Orders/Shipping</Category>
@@ -525,6 +568,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</GUID>
+            <Description>State, province or region of the shipping address.</Description>
             <Name>Orders.ShipRegion</Name>
             <Type>Text</Type>
             <Category>Orders/Shipping</Category>
@@ -536,6 +580,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</GUID>
+            <Description>ShipperID of the carrier used to ship the order.</Description>
             <Name>Orders.ShipVia</Name>
             <Type>Numeric</Type>
             <Category>Orders/Shipping</Category>
@@ -549,6 +594,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>64369c69-f298-466f-a241-d7388b2b0e80</GUID>
+            <Description>Year of the order date, derived for grouping and drill-down.</Description>
             <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
             <Type>DateTime</Type>
             <Category>Orders</Category>
@@ -564,6 +610,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>057c81db-d2c0-4938-9a64-6d6d33668baa</GUID>
+            <Description>Month of the order date, derived for grouping and drill-down.</Description>
             <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
             <Type>DateTime</Type>
             <Category>Orders</Category>
@@ -581,11 +628,13 @@
       </MetaTable>
       <MetaTable>
         <GUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</GUID>
+        <Description>Catalog of products sold. Each product belongs to a category and is provided by a supplier.</Description>
         <Name>Products</Name>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
             <GUID>b372adcc-127b-4044-98ba-12d9b94af34c</GUID>
+            <Description>Flag indicating the product is no longer sold (1 = discontinued).</Description>
             <Name>Products.Discontinued</Name>
             <Type>Numeric</Type>
             <Category>Products</Category>
@@ -599,6 +648,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</GUID>
+            <Description>Product identifier displayed as the product name through the Product Name list.</Description>
             <Name>Products.ProductID</Name>
             <Type>Numeric</Type>
             <Category>Products</Category>
@@ -625,6 +675,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID>
+            <Description>Packaging description, for example the number of units per box or bottle size.</Description>
             <Name>Products.QuantityPerUnit</Name>
             <Type>Text</Type>
             <Category>Products</Category>
@@ -636,6 +687,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>75715efd-6f8a-48ba-8f8e-2297d956d184</GUID>
+            <Description>Stock level at which the product should be reordered.</Description>
             <Name>Products.ReorderLevel</Name>
             <Type>Numeric</Type>
             <Category>Products</Category>
@@ -649,6 +701,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</GUID>
+            <Description>Current catalog list price per unit of the product.</Description>
             <Name>Products.UnitPrice</Name>
             <Type>Numeric</Type>
             <Category>Products</Category>
@@ -662,6 +715,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</GUID>
+            <Description>Quantity currently in stock.</Description>
             <Name>Products.UnitsInStock</Name>
             <Type>Numeric</Type>
             <Category>Products</Category>
@@ -675,6 +729,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>6fa87b3b-048f-4680-9516-35679cba84bf</GUID>
+            <Description>Quantity currently on order from the supplier.</Description>
             <Name>Products.UnitsOnOrder</Name>
             <Type>Numeric</Type>
             <Category>Products</Category>
@@ -688,6 +743,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID>
+            <Description>Category the product belongs to, shown through the Category list.</Description>
             <Name>Products.CategoryID</Name>
             <Type>Numeric</Type>
             <Category>Products</Category>
@@ -703,6 +759,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>d0a693f9-e276-4e6d-9ac2-d4d031610430</GUID>
+            <Description>Unique product identifier. Primary key of Products.</Description>
             <Name>Products.ProductID</Name>
             <Type>Numeric</Type>
             <Category>Products</Category>
@@ -715,6 +772,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>a99f63bf-4cd8-4f0c-8090-087f00291221</GUID>
+            <Description>Product name.</Description>
             <Name>Products.ProductName</Name>
             <Type>Text</Type>
             <Category>Products</Category>
@@ -725,11 +783,13 @@
       </MetaTable>
       <MetaTable>
         <GUID>44179bfc-3a4a-4568-8137-364f06941c23</GUID>
+        <Description>Carriers used to ship orders to customers.</Description>
         <Name>Shippers</Name>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
             <GUID>9026a76c-6c06-4240-8320-cf6debcc73ca</GUID>
+            <Description>Shipping company name, used as the shipper label.</Description>
             <Name>Shippers.CompanyName</Name>
             <Type>Text</Type>
             <Category>Shippers</Category>
@@ -741,6 +801,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>f1689c68-6619-4c2b-8b1f-5b0b9a66ace7</GUID>
+            <Description>Shipper phone number.</Description>
             <Name>Shippers.Phone</Name>
             <Type>Text</Type>
             <Category>Shippers</Category>
@@ -752,6 +813,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>d56fe600-8f12-411b-b4cc-a73152d2e040</GUID>
+            <Description>Unique shipper identifier. Primary key of Shippers.</Description>
             <Name>Shippers.ShipperID</Name>
             <Type>Numeric</Type>
             <Category>Shippers</Category>
@@ -766,11 +828,13 @@
       </MetaTable>
       <MetaTable>
         <GUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</GUID>
+        <Description>Vendors that supply the products sold.</Description>
         <Name>Suppliers</Name>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
             <GUID>24c64479-ab3a-462d-a3e5-eddd4be4dcc9</GUID>
+            <Description>Supplier street address.</Description>
             <Name>Suppliers.Address</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -782,6 +846,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>e2113646-4a55-4077-8d34-a22bdef1354b</GUID>
+            <Description>City where the supplier is located.</Description>
             <Name>Suppliers.City</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -796,6 +861,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</GUID>
+            <Description>Supplier company name, used as the supplier label.</Description>
             <Name>Suppliers.CompanyName</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -819,6 +885,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>7e3f60fc-66fc-4b35-aa56-ef06b4a6bf22</GUID>
+            <Description>Name of the primary contact person at the supplier.</Description>
             <Name>Suppliers.ContactName</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -830,6 +897,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</GUID>
+            <Description>Job title of the supplier contact.</Description>
             <Name>Suppliers.ContactTitle</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -841,6 +909,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>70328799-b9e4-4e93-b851-88be7514c802</GUID>
+            <Description>Country where the supplier is located.</Description>
             <Name>Suppliers.Country</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -856,6 +925,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</GUID>
+            <Description>Supplier fax number.</Description>
             <Name>Suppliers.Fax</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -867,6 +937,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</GUID>
+            <Description>Supplier home page or web address.</Description>
             <Name>convert(varchar,Suppliers.HomePage)</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -878,6 +949,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>41e673d0-7852-43d0-9ef4-c64649f9020a</GUID>
+            <Description>Supplier phone number.</Description>
             <Name>Suppliers.Phone</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -889,6 +961,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>addf0212-9876-4747-919d-830cb40d2506</GUID>
+            <Description>Postal or ZIP code of the supplier address.</Description>
             <Name>Suppliers.PostalCode</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -900,6 +973,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</GUID>
+            <Description>State, province or region of the supplier.</Description>
             <Name>Suppliers.Region</Name>
             <Type>Text</Type>
             <Category>Suppliers</Category>
@@ -911,6 +985,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</GUID>
+            <Description>Unique supplier identifier. Primary key of Suppliers.</Description>
             <Name>Suppliers.SupplierID</Name>
             <Type>Numeric</Type>
             <Category>Suppliers</Category>
@@ -925,11 +1000,13 @@
       </MetaTable>
       <MetaTable>
         <GUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</GUID>
+        <Description>Order line items: one row per product on an order, with unit price, quantity and discount.</Description>
         <Name>[Order Details]</Name>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
             <GUID>f2cf72ab-afdc-4d0e-ba73-80c3d6f47eea</GUID>
+            <Description>Discount applied to the line item, expressed as a percentage.</Description>
             <Name>100*[Order Details].Discount</Name>
             <Type>Numeric</Type>
             <Category>Order Details</Category>
@@ -943,6 +1020,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>cb20a340-73d5-4e52-b7fc-59dab043c176</GUID>
+            <Description>Number of units of the product ordered on this line.</Description>
             <Name>[Order Details].Quantity</Name>
             <Type>Numeric</Type>
             <Category>Order Details</Category>
@@ -956,6 +1034,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</GUID>
+            <Description>Unit price of the product at the time of the order.</Description>
             <Name>[Order Details].UnitPrice</Name>
             <Type>Numeric</Type>
             <Category>Order Details</Category>
@@ -968,6 +1047,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>067548ce-bc83-48b8-8212-aa359bd12f9b</GUID>
+            <Description>Net line amount: quantity times unit price, less the discount.</Description>
             <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
             <Type>Numeric</Type>
             <Category>Order Details</Category>
@@ -981,6 +1061,7 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>a63be915-3593-4377-8155-5ab3a78f45ba</GUID>
+            <Description>Discount amount granted on the line: discount rate times quantity times unit price.</Description>
             <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
             <Type>Numeric</Type>
             <Category>Order Details</Category>
@@ -998,6 +1079,7 @@
     <Joins>
       <MetaJoin>
         <GUID>a9008ab3-aece-4d4e-9eb6-547e99e4584e</GUID>
+        <Description>Each order belongs to one customer (Customers.CustomerID = Orders.CustomerID).</Description>
         <Name>Customers - Orders</Name>
         <LeftTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</LeftTableGUID>
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
@@ -1005,6 +1087,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>4e512b9e-fb6e-4b50-8c42-551d8f1e59e6</GUID>
+        <Description>Each order was taken by one employee (Employees.EmployeeID = Orders.EmployeeID).</Description>
         <Name>Employees - Orders</Name>
         <LeftTableGUID>61152bde-427a-4113-8f7d-322a1280bede</LeftTableGUID>
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
@@ -1012,6 +1095,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>c28e50ed-ac67-4f1b-8ec9-58c26b3506d6</GUID>
+        <Description>Each order is shipped by one shipper (Shippers.ShipperID = Orders.ShipVia).</Description>
         <Name>Shippers - Orders</Name>
         <LeftTableGUID>44179bfc-3a4a-4568-8137-364f06941c23</LeftTableGUID>
         <RightTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</RightTableGUID>
@@ -1020,6 +1104,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>a5486989-c2b9-4797-9adc-4191d73f073f</GUID>
+        <Description>Each product is provided by one supplier (Suppliers.SupplierID = Products.SupplierID).</Description>
         <Name>Suppliers - Products</Name>
         <LeftTableGUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</LeftTableGUID>
         <RightTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</RightTableGUID>
@@ -1028,6 +1113,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>cc460fce-7f59-4d77-a440-953ea8ffd85c</GUID>
+        <Description>Each order has one or more detail lines (Orders.OrderID = Order Details.OrderID).</Description>
         <Name>Orders - [Order Details]</Name>
         <LeftTableGUID>691ae384-bd74-4708-93a7-abea6ed56e55</LeftTableGUID>
         <RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID>
@@ -1036,6 +1122,7 @@
       </MetaJoin>
       <MetaJoin>
         <GUID>b493bd23-60d1-409d-84c4-8dab23304c20</GUID>
+        <Description>Each detail line references one product (Products.ProductID = Order Details.ProductID).</Description>
         <Name>Products - [Order Details]</Name>
         <LeftTableGUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</LeftTableGUID>
         <RightTableGUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</RightTableGUID>
@@ -1045,6 +1132,7 @@
     <Enums>
       <MetaEnum>
         <GUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</GUID>
+        <Description>Product categories, loaded from the Categories table.</Description>
         <Name>Category</Name>
         <IsDynamic>true</IsDynamic>
         <Sql>SELECT DISTINCT 
@@ -1089,6 +1177,7 @@ ORDER BY 2</Sql>
       </MetaEnum>
       <MetaEnum>
         <GUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</GUID>
+        <Description>Distinct list of customer countries.</Description>
         <Name>Customer Country</Name>
         <IsDynamic>true</IsDynamic>
         <Sql>SELECT DISTINCT 
@@ -1163,6 +1252,7 @@ ORDER BY 1</Sql>
       </MetaEnum>
       <MetaEnum>
         <GUID>c94b4e37-2c8a-4f34-965f-004b888f5c66</GUID>
+        <Description>Distinct list of supplier countries.</Description>
         <Name>Supplier Country</Name>
         <IsDynamic>true</IsDynamic>
         <Sql>SELECT DISTINCT 
@@ -1222,6 +1312,7 @@ ORDER BY 1</Sql>
       </MetaEnum>
       <MetaEnum>
         <GUID>f2611e98-b25e-450d-a9cc-6811dda32d94</GUID>
+        <Description>Distinct list of employee last names.</Description>
         <Name>Employee Name</Name>
         <IsDynamic>true</IsDynamic>
         <Sql>SELECT DISTINCT 
@@ -1260,6 +1351,7 @@ ORDER BY 1</Sql>
       </MetaEnum>
       <MetaEnum>
         <GUID>fcf64fca-579d-4b79-be22-3c2059989ec3</GUID>
+        <Description>Distinct list of destination countries for orders.</Description>
         <Name>Ship Country</Name>
         <IsDynamic>true</IsDynamic>
         <Sql>SELECT DISTINCT 
@@ -1334,6 +1426,7 @@ ORDER BY 1</Sql>
       </MetaEnum>
       <MetaEnum>
         <GUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</GUID>
+        <Description>Distinct list of employee countries.</Description>
         <Name>Employee Country</Name>
         <IsDynamic>true</IsDynamic>
         <Sql>SELECT DISTINCT 
@@ -1351,6 +1444,7 @@ ORDER BY 1</Sql>
       </MetaEnum>
       <MetaEnum>
         <GUID>b9126304-1091-45e0-93e6-c2f028c02f8f</GUID>
+        <Description>List of products, cascaded from the currently selected Category.</Description>
         <Name>Product Name</Name>
         <IsDynamic>true</IsDynamic>
         <IsDbRefresh>true</IsDbRefresh>

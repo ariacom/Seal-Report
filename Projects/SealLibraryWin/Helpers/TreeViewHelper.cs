@@ -61,7 +61,7 @@ namespace Seal.Helpers
 
                     var col = column.DisplayName;
                     if (!Repository.IsServerManager) col = repository.TranslateColumn(column);
-                    var tn = new TreeNode(col) { Tag = column, ImageIndex = 7, SelectedImageIndex = 7 };
+                    var tn = new TreeNode(col) { Tag = column, ImageIndex = 7, SelectedImageIndex = 7, ToolTipText = repository.TranslateColumnDescription(column) };
                     categoryNode.Nodes.Add(tn);
                 }
             }

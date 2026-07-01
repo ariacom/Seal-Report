@@ -3055,6 +3055,17 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Translate the effective description of an Element in the execution culture (semantic layer, shown as a result header tooltip)
+        /// </summary>
+        public string TranslateElementDescription(ReportElement element)
+        {
+            var description = element.EffectiveDescription;
+            if (string.IsNullOrEmpty(description)) return description;
+            var instance = string.IsNullOrEmpty(element.MetaColumnGUID) ? element.DisplayNameEl : element.MetaColumn.Category + '.' + element.DisplayNameEl;
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "ElementDescription", instance, description);
+        }
+
+        /// <summary>
         /// Translate using the Enum context
         /// </summary>
         public string TranslateEnumValue(MetaEnum instance, string reference)

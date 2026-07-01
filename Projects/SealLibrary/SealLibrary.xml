@@ -1350,6 +1350,11 @@
             Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaColumn.Description">
+            <summary>
+            Business description of the column. Used by the AI agent, shown as help in the Report Designer and as a tooltip on the result table header.
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaColumn.Category">
             <summary>
             Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2').
@@ -1540,6 +1545,11 @@
             The name of the connection
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaConnection.Description">
+            <summary>
+            Business description of the connection. Used by the AI agent and shown as help in the Report Designer.
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaConnection.DatabaseType">
             <summary>
             The type of the source database
@@ -1719,6 +1729,11 @@
         <member name="P:Seal.Model.MetaEnum.Name">
             <summary>
             Name of the enumerated list
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEnum.Description">
+            <summary>
+            Business description of the enumerated list. Used by the AI agent and shown as help in the Report Designer.
             </summary>
         </member>
         <member name="P:Seal.Model.MetaEnum.IsDynamic">
@@ -1936,6 +1951,11 @@
         <member name="P:Seal.Model.MetaJoin.Name">
             <summary>
             Name of the join. If reset to an Empty String, the name is built using the table names.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaJoin.Description">
+            <summary>
+            Business description of the join (relationship meaning, cardinality). Used by the AI agent and shown as help in the Report Designer.
             </summary>
         </member>
         <member name="P:Seal.Model.MetaJoin.LeftTableGUID">
@@ -2302,6 +2322,11 @@
         <member name="P:Seal.Model.MetaTable.Name">
             <summary>
             Name of the table in the database. The name can be empty if an SQL Statement is specified.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaTable.Description">
+            <summary>
+            Business description of the table (what it holds, its grain). Used by the AI agent and shown as help in the Report Designer.
             </summary>
         </member>
         <member name="P:Seal.Model.MetaTable.Sql">
@@ -4339,6 +4364,11 @@
             Translate using the Element context
             </summary>
         </member>
+        <member name="M:Seal.Model.Report.TranslateElementDescription(Seal.Model.ReportElement)">
+            <summary>
+            Translate the effective description of an Element in the execution culture (semantic layer, shown as a result header tooltip)
+            </summary>
+        </member>
         <member name="M:Seal.Model.Report.TranslateEnumValue(Seal.Model.MetaEnum,System.String)">
             <summary>
             Translate using the Enum context
@@ -4583,6 +4613,11 @@
         <member name="M:Seal.Model.ReportElement.SetSourceReference(Seal.Model.MetaSource)">
             <summary>
             Change the source of the element, set MetColumn to NULL
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportElement.EffectiveDescription">
+            <summary>
+            Effective business description of the element: its own if set, otherwise the description of the underlying MetaColumn. Shown as a tooltip on the result table header.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.RawDisplayName">
@@ -8045,6 +8080,31 @@
             Translate an Element
             </summary>
         </member>
+        <member name="M:Seal.Model.Repository.TranslateColumnDescription(Seal.Model.MetaColumn)">
+            <summary>
+            Translate the description of a Column (semantic layer)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.TranslateTableDescription(Seal.Model.MetaTable)">
+            <summary>
+            Translate the description of a Table (semantic layer)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.TranslateJoinDescription(Seal.Model.MetaJoin)">
+            <summary>
+            Translate the description of a Join (semantic layer)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.TranslateEnumDescription(Seal.Model.MetaEnum)">
+            <summary>
+            Translate the description of an Enumerated list (semantic layer)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.TranslateConnectionDescription(Seal.Model.MetaConnection)">
+            <summary>
+            Translate the description of a Connection (semantic layer)
+            </summary>
+        </member>
         <member name="M:Seal.Model.Repository.TranslateCategory(System.String,System.String)">
             <summary>
             Translate a Category
@@ -8198,6 +8258,11 @@
         <member name="F:Seal.Model.ResultCell.Element">
             <summary>
             The ReportElement of the element model
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultCell.TitleTooltip">
+            <summary>
+            HTML-encoded business description shown as a tooltip on the result table header. Empty unless the cell is a title cell whose element (or its MetaColumn) has a description.
             </summary>
         </member>
         <member name="P:Seal.Model.ResultCell.IsValue">
