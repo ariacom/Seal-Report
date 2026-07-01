@@ -2404,7 +2404,9 @@ namespace Seal.Model
 
                 foreach (var enumDef in restriction.MetaEnumValuesRE.Where(i => values.Exists(j => i.Id == j.Id)))
                 {
-                    var display = restriction.GetEnumDisplayValue(enumDef.Id);
+                    //Collapse newlines to a space: a raw CR/LF would break this JSON string (and a <br> in the
+                    //rebuilt <option> would blank the bootstrap-select menu), so keep the label single-line.
+                    var display = restriction.GetEnumDisplayValue(enumDef.Id).Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
                     result.Append(result.Length == 0 ? "[" : ",");
                     result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + enumDef.HtmlId, display.Replace("\"", "\\\""));
                 }

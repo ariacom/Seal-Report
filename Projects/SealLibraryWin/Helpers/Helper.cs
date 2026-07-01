@@ -334,6 +334,15 @@ namespace Seal.Helpers
             return "";
         }
 
+        //Like ToHtml but for single-line contexts (e.g. a <select> restriction option label): newlines are
+        //collapsed to a space instead of <br>. A <br> injected inside an <option> breaks bootstrap-select's
+        //menu build and blanks the whole dropdown, so a stray CR/LF in an enum value must never reach it.
+        static public string ToHtmlNoBr(string value)
+        {
+            if (value != null) return HttpUtility.HtmlEncode(value).Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
+            return "";
+        }
+
         static public string ToJS(bool value)
         {
             return value.ToString().ToLower();

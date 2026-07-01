@@ -66,7 +66,7 @@
                                         @foreach (var enumDef in restriction.PromptedEnumValues)
                                         {
                                             <input type="@(restriction.Prompt == PromptType.PromptOneValue ? "radio" : "checkbox")" class="btn-check @(trigger ? "trigger_enum" : "")" name='@restriction.OptionValueHtmlId' id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' autocomplete="off" @(restriction.EnumValues.Contains(enumDef.Id) ? "checked" : "")>
-                                            <label class="btn btn-secondary" for='@(restriction.OptionHtmlId + enumDef.HtmlId)'>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</label>
+                                            <label class="btn btn-secondary" for='@(restriction.OptionHtmlId + enumDef.HtmlId)'>@Raw(Helper.ToHtmlNoBr(restriction.GetEnumDisplayValue(enumDef.Id)))</label>
                                         }
                                     </div>
                                 }
@@ -75,7 +75,7 @@
                                     <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum @(trigger ? "trigger_enum" : "") @(restriction.EnumRE.RequestServerOnPopup ? "enum_dynamic" : "")" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple") @Raw(restriction.EnumLayout == RestrictionLayout.SelectWithFilter ? " data-live-search='true'" : "") data-actions-box="true" data-size="@view.GetValue("restrictions_select_size")" dependencies="@Helper.ToJS(restriction.EnumRE.HasDependencies)" filterchars="@restriction.EnumRE.FilterChars" message="@Raw(restriction.GetEnumMessage())">
                                         @foreach (var enumDef in restriction.PromptedEnumValues)
                                         {
-                                            <option id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
+                                            <option id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtmlNoBr(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
                                         }
                                     </select>
                                 }

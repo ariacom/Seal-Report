@@ -168,6 +168,11 @@ body {
     display: none;
 }
 
+/* Small space between the column label and the sort arrow */
+table.dataTable thead .dt-column-order {
+    margin-left: 5px;
+}
+
 .tr-totals {
     font-weight: bold;
 }
